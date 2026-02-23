@@ -1,5 +1,127 @@
 # @orderly.network/hooks
 
+## 2.9.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+- Updated dependencies
+- Updated dependencies [f22ab39]
+  - @orderly.network/core@2.9.1
+  - @orderly.network/default-evm-adapter@2.9.1
+  - @orderly.network/default-solana-adapter@2.9.1
+  - @orderly.network/net@2.9.1
+  - @orderly.network/perp@4.9.1
+  - @orderly.network/types@2.9.1
+  - @orderly.network/utils@2.9.1
+  - @orderly.network/web3-provider-ethers@2.9.1
+
+## 2.9.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.9.1-alpha.0
+  - @orderly.network/default-evm-adapter@2.9.1-alpha.0
+  - @orderly.network/default-solana-adapter@2.9.1-alpha.0
+  - @orderly.network/net@2.9.1-alpha.0
+  - @orderly.network/perp@4.9.1-alpha.0
+  - @orderly.network/types@2.9.1-alpha.0
+  - @orderly.network/utils@2.9.1-alpha.0
+  - @orderly.network/web3-provider-ethers@2.9.1-alpha.0
+
+## 2.9.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
+### Patch Changes
+
+- Updated dependencies [b875f72]
+- Updated dependencies
+- Updated dependencies [84dd4e0]
+  - @orderly.network/core@2.9.0
+  - @orderly.network/default-evm-adapter@2.9.0
+  - @orderly.network/default-solana-adapter@2.9.0
+  - @orderly.network/net@2.9.0
+  - @orderly.network/perp@4.9.0
+  - @orderly.network/types@2.9.0
+  - @orderly.network/utils@2.9.0
+  - @orderly.network/web3-provider-ethers@2.9.0
+
+## 2.9.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.9.0-alpha.1
+  - @orderly.network/default-evm-adapter@2.9.0-alpha.1
+  - @orderly.network/default-solana-adapter@2.9.0-alpha.1
+  - @orderly.network/net@2.9.0-alpha.1
+  - @orderly.network/perp@4.9.0-alpha.1
+  - @orderly.network/types@2.9.0-alpha.1
+  - @orderly.network/utils@2.9.0-alpha.1
+  - @orderly.network/web3-provider-ethers@2.9.0-alpha.1
+
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.9.0-alpha.0
+  - @orderly.network/default-evm-adapter@2.9.0-alpha.0
+  - @orderly.network/default-solana-adapter@2.9.0-alpha.0
+  - @orderly.network/net@2.9.0-alpha.0
+  - @orderly.network/perp@4.9.0-alpha.0
+  - @orderly.network/types@2.9.0-alpha.0
+  - @orderly.network/utils@2.9.0-alpha.0
+  - @orderly.network/web3-provider-ethers@2.9.0-alpha.0
+
+## 2.8.14
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+- Updated dependencies
+- Updated dependencies [6355a39]
+  - @orderly.network/core@2.8.14
+  - @orderly.network/default-evm-adapter@2.8.14
+  - @orderly.network/default-solana-adapter@2.8.14
+  - @orderly.network/net@2.8.14
+  - @orderly.network/perp@4.8.14
+  - @orderly.network/types@2.8.14
+  - @orderly.network/utils@2.8.14
+  - @orderly.network/web3-provider-ethers@2.8.14
+
+## 2.8.14-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.8.14-alpha.0
+  - @orderly.network/default-evm-adapter@2.8.14-alpha.0
+  - @orderly.network/default-solana-adapter@2.8.14-alpha.0
+  - @orderly.network/net@2.8.14-alpha.0
+  - @orderly.network/perp@4.8.14-alpha.0
+  - @orderly.network/types@2.8.14-alpha.0
+  - @orderly.network/utils@2.8.14-alpha.0
+  - @orderly.network/web3-provider-ethers@2.8.14-alpha.0
+
 ## 2.8.13
 
 ### Patch Changes

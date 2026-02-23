@@ -113,7 +113,12 @@ const AppRoute: React.FC = () => {
       children: [
         {
           index: true,
-          element: <Navigate to={getSymbol()} />,
+          element: (
+            <Navigate
+              // preserve the search parameters to ensure link device via url params works
+              to={`${getSymbol()}${window.location.search}`}
+            />
+          ),
         },
         {
           path: ":symbol",
@@ -176,6 +181,11 @@ const AppRoute: React.FC = () => {
       element: <TradingRewardsLayout />,
       children: [
         {
+          index: true,
+          // /rewards => /rewards/affiliate
+          element: <Navigate to={`affiliate${window.location.search}`} />,
+        },
+        {
           path: "trading",
           element: <TradingRewardsPage />,
         },
@@ -222,7 +232,7 @@ const AppRoute: React.FC = () => {
           children: [
             {
               index: true,
-              element: <Navigate to="perp" />,
+              element: <Navigate to={`perp${window.location.search}`} />,
             },
             ...baseRoutes,
           ],

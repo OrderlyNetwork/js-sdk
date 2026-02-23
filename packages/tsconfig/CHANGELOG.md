@@ -1,5 +1,51 @@
 # tsconfig
 
+## 0.12.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+
+## 0.12.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.12.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
+## 0.12.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+## 0.12.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 0.11.14
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+
+## 0.11.14-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.11.13
 
 ### Patch Changes

@@ -135,16 +135,20 @@ const config: StorybookConfig = {
           ignored: getWatchIgnores(),
         },
       },
-      // build: {
-      //   rollupOptions: {
-      //     maxParallelFileOps: 10,
-      //   },
-      //   commonjsOptions: {
-      //     sourceMap: false,
-      //   },
-      //   chunkSizeWarningLimit: 1000,
-      //   sourcemap: false,
-      // },
+      // Optimize dependencies to handle missing peer dependencies
+      optimizeDeps: {
+        exclude: ["@project-serum/sol-wallet-adapter"],
+      },
+      build: {
+        rollupOptions: {
+          external: ["@project-serum/sol-wallet-adapter"],
+        },
+        // commonjsOptions: {
+        //   sourceMap: false,
+        // },
+        // chunkSizeWarningLimit: 1000,
+        // sourcemap: false,
+      },
     });
 
     // return config;

@@ -92,6 +92,7 @@ export type MainNavItem = {
    * @default false
    **/
   onlyInMainAccount?: boolean;
+  /** @deprecated */
   tooltipConfig?: {
     /**
      * if true, the tooltip will be shown on first visit

@@ -4,6 +4,7 @@ import {
   LoadingScreenOptions,
   Overrides,
   ThemeName,
+  type ChartingLibraryWidgetOptions,
 } from "../charting_library";
 import type { AbstractDatafeed } from "../datafeed/abstract-datafeed";
 import type {
@@ -67,6 +68,8 @@ export interface WidgetOptions {
     instance: IChartingLibraryWidget,
     host: IBrokerConnectionAdapterHost,
   ): IBrokerWithoutRealtime | IBrokerTerminal;
+  /** Optional custom indicators getter; passed through to TradingView widget as custom_indicators_getter. */
+  customIndicatorsGetter?: ChartingLibraryWidgetOptions["custom_indicators_getter"];
 }
 
 export interface WidgetProps {
@@ -287,6 +290,7 @@ export class Widget {
             return this._broker;
           }
         : undefined,
+      custom_indicators_getter: options.customIndicatorsGetter,
     };
 
     this._datafeed = options.datafeed;
@@ -304,9 +308,20 @@ export class Widget {
     // @ts-ignore
     this._adapterSetting = adapterSetting;
     this._savedData = savedData;
-    // Pass external enabled_features and disabled_features to getOptions for merging
+    // Pass external enabled_features and disabled_features to getOptions for merging.
+    // Explicitly pass custom_indicators_getter so it is never dropped when merging options.
+    const mergedOptions = getOptions(
+      widgetOptions,
+      mode,
+      enabled_features,
+      disabled_features,
+    );
+
     this._instance = new TradingView.widget({
-      ...getOptions(widgetOptions, mode, enabled_features, disabled_features),
+      ...mergedOptions,
+      ...(options.customIndicatorsGetter != null && {
+        custom_indicators_getter: options.customIndicatorsGetter,
+      }),
       interval:
         adapterSetting["chart.lastUsedTimeBasedResolution"] ??
         widgetOptions.interval,
