@@ -13,7 +13,11 @@ export {
   type OrderlyPluginContextValue,
 } from "./pluginContext";
 
-export { installExtension, setExtensionBuilder, type ExtensionOptions } from "./install";
+export {
+  installExtension,
+  setExtensionBuilder,
+  type ExtensionOptions,
+} from "./install";
 export { ExtensionSlot } from "./slot";
 export { useInjectedComponent } from "./useInjectedComponent";
 export { injectable } from "./injectable";
@@ -34,3 +38,11 @@ export {
   type Extension,
   type ExtensionBuilder,
 } from "./types";
+
+export {
+  APP_EVENT_NAMES,
+  createEventsFacade,
+  type AppEventName,
+  type PluginEventsAPI,
+  type PluginSubscribableEvent,
+} from "./apis/events";

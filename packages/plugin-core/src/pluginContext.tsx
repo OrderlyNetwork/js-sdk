@@ -6,8 +6,13 @@ import React, {
   type FC,
   type PropsWithChildren,
 } from "react";
-import type { OrderlyPlugin, OrderlyPluginAPI, PluginRegistrationFn } from "./types";
+import { createEventsFacade, NOOP_EVENTS } from "./apis/events";
 import { OrderlyPluginRegistry } from "./pluginRegistry";
+import type {
+  OrderlyPlugin,
+  OrderlyPluginAPI,
+  PluginRegistrationFn,
+} from "./types";
 
 export type ExtensionContextState = Record<string, never>;
 
@@ -34,7 +39,7 @@ export interface OrderlyPluginContextValue {
 
 const DEFAULT_PLUGIN_CONTEXT: OrderlyPluginContextValue = {
   plugins: [],
-  apiFacade: {},
+  apiFacade: { events: NOOP_EVENTS },
 };
 
 export const OrderlyPluginContext =
@@ -71,7 +76,10 @@ export const OrderlyPluginProvider: FC<OrderlyPluginProviderProps> = ({
     return [...collected, ...OrderlyPluginRegistry.getPlugins()];
   }, [plugins, pluginState]);
 
-  const apiFacade = useMemo<OrderlyPluginAPI>(() => ({}), []);
+  const apiFacade = useMemo<OrderlyPluginAPI>(
+    () => ({ events: createEventsFacade() }),
+    [],
+  );
 
   useEffect(() => {
     resolvedPlugins.forEach((plugin) => {
@@ -87,7 +95,7 @@ export const OrderlyPluginProvider: FC<OrderlyPluginProviderProps> = ({
 
   const value = useMemo<OrderlyPluginContextValue>(
     () => ({ plugins: resolvedPlugins, apiFacade }),
-    [resolvedPlugins, apiFacade]
+    [resolvedPlugins, apiFacade],
   );
 
   return (

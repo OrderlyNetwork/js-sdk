@@ -18,6 +18,8 @@
     "react-dom": ">=18"
   },
   "dependencies": {
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "react-error-boundary": "^4.0.13"
   },

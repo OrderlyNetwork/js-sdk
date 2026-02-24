@@ -1,4 +1,5 @@
 import { ElementType, ReactElement, ReactNode } from "react";
+import type { PluginEventsAPI } from "./apis/events";
 
 /* ========== New Plugin System (path-based interceptor) ========== */
 
@@ -7,12 +8,14 @@ export interface OrderlyPluginAPI {
   data?: Record<string, unknown>;
   actions?: Record<string, unknown>;
   utils?: Record<string, unknown>;
+  /** Event subscription - forwards to global EventEmitter (SimpleDI "EE") */
+  events: PluginEventsAPI;
 }
 
 /** Interceptor component signature: (Original, props, api) => ReactNode */
 export type PluginInterceptorComponent = (
-  Original: React.ComponentType<any>,
-  props: any,
+  Original: React.ComponentType<Record<string, unknown>>,
+  props: Record<string, unknown>,
   api: OrderlyPluginAPI,
 ) => ReactNode;
 
@@ -51,15 +54,15 @@ export type PluginRegistrationFn<TState = unknown> = (
 /* ========== Legacy Extension System (position-based) ========== */
 
 /** @deprecated Use PluginInterceptor with path-based target instead */
-export type ExtensionBuilder<Props = any> = (
-  props?: Partial<Props> & Record<string, any>,
+export type ExtensionBuilder<Props = Record<string, unknown>> = (
+  props?: Partial<Props> & Record<string, unknown>,
 ) => Props;
 
 /** @deprecated Use path strings (e.g. 'Deposit.DepositForm') instead */
 export type ExtensionPosition = ExtensionPositionEnum | string;
 
 /** @deprecated Use OrderlyPlugin with interceptors instead */
-export interface Extension<Props extends any = {}> {
+export interface Extension<Props extends object = object> {
   __isInternal: boolean;
   name: string;
   positions: ExtensionPosition[];
@@ -76,6 +79,7 @@ export enum ExtensionPositionEnum {
   MobileAccountMenu = "mobileAccountMenu",
   MainMenus = "mainMenus",
   EmptyDataIdentifier = "emptyDataIdentifier",
-  /** @deprecated Use EmptyDataIdentifier */
+  /** @deprecated Use EmptyDataIdentifier - same value for backward compatibility */
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- intentional alias for backward compat
   EmptyDataState = "emptyDataIdentifier",
 }

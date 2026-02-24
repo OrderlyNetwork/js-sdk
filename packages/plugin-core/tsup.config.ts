@@ -9,4 +9,10 @@ export default defineConfig((options) => ({
   clean: !options.watch,
   dts: true,
   tsconfig: "tsconfig.json",
+  external: [
+    "react",
+    "react-dom",
+    "@orderly.network/core",
+    "@orderly.network/types",
+  ],
 }));
