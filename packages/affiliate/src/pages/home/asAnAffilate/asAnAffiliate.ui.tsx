@@ -2,8 +2,8 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn, Flex, Text } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
-import { ArrowRightIcon } from "../../../components/arrowRightIcon";
-import { USDCIcon } from "../../../components/usdcIcon";
+import { ArrowRightIcon } from "../../../icons/arrowRightIcon";
+import { USDCIcon } from "../../../icons/usdcIcon";
 import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
 
 export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {

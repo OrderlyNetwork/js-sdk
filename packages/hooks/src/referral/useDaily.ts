@@ -1,8 +1,9 @@
 import { max, min } from "ramda";
+import { getTimestamp } from "@orderly.network/utils";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { RefferalAPI } from "./api";
 import { formatDate } from "./format";
-import { getTimestamp } from "@orderly.network/utils";
+
 export const useDaily = (options?: {
   //** default Date() - 30d */
   startDate?: Date;
@@ -22,12 +23,12 @@ export const useDaily = (options?: {
 
   const url = `${path}?start_date=${min(start_date, end_date)}&end_date=${max(
     start_date,
-    end_date
+    end_date,
   )}`;
   const { data: dailyVolume, mutate } = usePrivateQuery<
     RefferalAPI.DayliVolume[]
   >(url, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   return {

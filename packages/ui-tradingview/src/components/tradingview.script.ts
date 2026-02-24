@@ -69,6 +69,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     classNames,
     enabled_features,
     disabled_features,
+    customIndicatorsGetter,
   } = props;
 
   const localeCode = useLocaleCode();
@@ -334,7 +335,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
           brokerHostHandler(instance, host);
           return getBrokerAdapter(host, broker);
         },
-        // getBroker: undefined,
+        customIndicatorsGetter,
       };
 
       const chartProps: WidgetProps = {
@@ -363,6 +364,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     colorConfig,
     locale,
     localeCode,
+    customIndicatorsGetter,
   ]);
 
   useEffect(() => {

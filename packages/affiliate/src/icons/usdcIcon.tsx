@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 export const USDCIcon: FC<{
-    className?: string;
+  className?: string;
 }> = (props) => {
   return (
     <svg
