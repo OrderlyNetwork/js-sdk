@@ -46,6 +46,8 @@ export const markets = {
   "markets.funding.column.90dAvg": "90D avg.",
   "markets.funding.column.positiveRate": "Positive rate",
 
+  "markets.symbolInfoBar.lastPrice.tooltip":
+    "The price of the most recent executed trade on this symbol.",
   "markets.symbolInfoBar.Mark": "Mark",
   "markets.symbolInfoBar.Mark.tooltip":
     "Price for the computation of unrealized PnL and liquidation.",
