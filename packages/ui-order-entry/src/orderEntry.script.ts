@@ -113,14 +113,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setOrderValues({
       tp_trigger_price: "",
       sl_trigger_price: "",
-      position_type: PositionType.FULL,
+      position_type: PositionType.PARTIAL,
     });
   };
 
   const enableTP_SL = () => {
     setOrderValues({
       order_type_ext: undefined,
-      position_type: PositionType.FULL,
+      position_type: PositionType.PARTIAL,
     });
   };
 
