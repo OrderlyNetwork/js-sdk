@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { PublicKey } from "@solana/web3.js";
 import { WooFiSwapWidgetReact } from "woofi-swap-widget-kit/react";
 import { useWalletConnector } from "@orderly.network/hooks";
@@ -15,6 +21,19 @@ import {
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 import "woofi-swap-widget-kit/style.css";
+
+function useLatestCallback<T extends (...args: never[]) => unknown>(fn: T): T {
+  const fnRef = useRef(fn);
+
+  useEffect(() => {
+    fnRef.current = fn;
+  }, [fn]);
+
+  return useCallback(
+    ((...args: Parameters<T>) => fnRef.current(...args)) as T,
+    [],
+  );
+}
 
 function resolveSolanaPublicKey(
   provider: { publicKey?: unknown } | undefined,
@@ -55,7 +74,7 @@ const SwapWidget = () => {
     }
   }, []);
 
-  const handleConnectWallet = useCallback(
+  const handleConnectWallet = useLatestCallback(
     (config?: { network: string }) => {
       if (config?.network === "solana") {
         return connect({ chainId: SOLANA_MAINNET_CHAINID });
@@ -66,10 +85,9 @@ const SwapWidget = () => {
 
       return connect({ chainId: evmChainId });
     },
-    [connect, connectedChain],
   );
 
-  const handleChainSwitch = useCallback(
+  const handleChainSwitch = useLatestCallback(
     (targetChain: { chainName: string; chainId?: string; key: string }) => {
       if (targetChain.key === "solana" || targetChain.chainId === "solana") {
         setChain({ chainId: SOLANA_MAINNET_CHAINID });
@@ -80,7 +98,6 @@ const SwapWidget = () => {
         setChain({ chainId: targetChain.chainId });
       }
     },
-    [setChain],
   );
 
   const evmProvider = useMemo(() => {
