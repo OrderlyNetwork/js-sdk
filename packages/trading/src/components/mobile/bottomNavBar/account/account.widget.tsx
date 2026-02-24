@@ -1,22 +1,20 @@
-import { ExtensionPositionEnum, ExtensionSlot, installExtension } from "@orderly.network/ui";
+import { injectable } from "@orderly.network/ui";
 import { useAccountScript } from "./account.script";
 import { Account } from "./account.ui";
 
+/** Default mobile account menu - can be intercepted by plugins via Account.MobileAccountMenu path */
+const InjectableAccount = injectable(Account, "Account.MobileAccountMenu");
+
 export const AccountWidget = () => {
-    const state = useAccountScript();
-    return (<Account {...state} />);
+  const state = useAccountScript();
+  return <Account {...state} />;
 };
-installExtension<any>({
-    name: "mobile-account-menu",
-    scope: ["*"],
-    positions: [ExtensionPositionEnum.MobileAccountMenu],
-    builder: useAccountScript,
-    __isInternal: true,
-  })((props:any) => {
-    return <Account {...props} />;
-  });
-  
-  export const MobileAccountMenuExtension = () => {
-    return <ExtensionSlot position={ExtensionPositionEnum.MobileAccountMenu} />;
-  };
-  
+
+/**
+ * Extension slot for mobile account menu. Uses injectable pattern -
+ * plugins can register interceptors for 'Account.MobileAccountMenu' via OrderlyPluginProvider.
+ */
+export const MobileAccountMenuExtension = () => {
+  const state = useAccountScript();
+  return <InjectableAccount {...state} />;
+};

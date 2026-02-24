@@ -1,15 +1,24 @@
-import { ExtensionPositionEnum, installExtension } from "../..";
+import { injectable } from "@orderly.network/plugin-core";
 import Comp from "./comp";
 
-// const Comp = lazy(() => import("./comp"));
+/** Props for Deposit.DepositForm injectable; used by plugins for typed interceptor */
+export interface DepositFormProps {
+  onOk?: () => void;
+  position?: string;
+  [k: string]: unknown;
+}
 
-installExtension<{
-  onOk: () => void;
-}>({
-  name: "deposit-form",
-  scope: ["*"],
-  positions: [ExtensionPositionEnum.DepositForm],
-})((props: any) => {
-  const { position, ...rest } = props;
-  return <Comp {...rest} />;
-});
+/**
+ * Wrapper that strips `position` from slot props before passing to Comp.
+ * Plugins can intercept via 'Deposit.DepositForm' path.
+ */
+const DepositFormWithProps = (props: DepositFormProps) => {
+  const { position: _position, ...rest } = props;
+  return <Comp {...(rest as Record<string, never>)} />;
+};
+
+/** Injectable default for Deposit.DepositForm slot - plugins can intercept via OrderlyPluginProvider */
+export const InjectableDepositForm = injectable(
+  DepositFormWithProps,
+  "Deposit.DepositForm",
+);

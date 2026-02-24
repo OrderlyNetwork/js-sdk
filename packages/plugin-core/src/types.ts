@@ -12,17 +12,53 @@ export interface OrderlyPluginAPI {
   events: PluginEventsAPI;
 }
 
-/** Interceptor component signature: (Original, props, api) => ReactNode */
-export type PluginInterceptorComponent = (
-  Original: React.ComponentType<Record<string, unknown>>,
-  props: Record<string, unknown>,
+/**
+ * Mapping from interceptor target path to component props type.
+ * Extend via module augmentation in UI packages to enable typed props inference.
+ */
+export interface InterceptorTargetPropsMap {
+  [path: string]: Record<string, unknown>;
+}
+
+/** Union of known interceptor target paths (keys of InterceptorTargetPropsMap) */
+export type KnownInterceptorTarget = keyof InterceptorTargetPropsMap;
+
+/**
+ * Descriptor for one interceptable target (path + optional props type name for docs).
+ * Returned lazily by window.__ORDERLY_INTERCEPTOR_TARGETS_REGISTRY__() when called.
+ */
+export interface InterceptorTargetDescriptor {
+  path: string;
+  /** Props type name (e.g. 'DepositFormProps') for documentation / Inspector */
+  propsType?: string;
+  description?: string;
+}
+
+declare global {
+  interface Window {
+    /** Lazy getter: when called, collects supported targets from current plugins' interceptors. Set by OrderlyPluginProvider. Same style as __ORDERLY_EXTENSION_REGISTRY__. */
+    __ORDERLY_INTERCEPTOR_TARGETS_REGISTRY__?: () => InterceptorTargetDescriptor[];
+  }
+}
+
+/**
+ * Interceptor component signature: (Original, props, api) => ReactNode.
+ * Use generic TProps to get typed props when targeting a known path.
+ */
+export type PluginInterceptorComponent<
+  TProps extends object = Record<string, unknown>,
+> = (
+  Original: React.ComponentType<TProps>,
+  props: TProps,
   api: OrderlyPluginAPI,
 ) => ReactNode;
 
-/** Single interceptor targeting a component path */
-export interface PluginInterceptor {
+/** Single interceptor targeting a component path. TProps defaults to Record<string, unknown> for backward compat. */
+export interface PluginInterceptor<
+  TProps extends object = Record<string, unknown>,
+> {
   target: string;
-  component: PluginInterceptorComponent;
+  component: PluginInterceptorComponent<TProps>;
 }
 
 /** Plugin descriptor (per GUIDE.md) */
@@ -31,8 +67,8 @@ export interface OrderlyPlugin {
   name?: string;
   version?: string;
   orderlyVersion?: string;
-  /** Interceptors targeting component paths (e.g. Trading.OrderEntry.SubmitButton) */
-  interceptors?: PluginInterceptor[];
+  /** Interceptors targeting component paths (e.g. Trading.OrderEntry.SubmitButton). Uses array of any to accept interceptors whose props are augmented (and may not have index signature required by Record<string, unknown>). */
+  interceptors?: Array<PluginInterceptor<any>>;
   setup?: (api: OrderlyPluginAPI) => void;
   onInitialize?: () => void;
   onInstall?: () => void | Promise<void>;

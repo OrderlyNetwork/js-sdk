@@ -1298,6 +1298,9 @@ importers:
       '@orderly.network/markets':
         specifier: workspace:*
         version: link:../markets
+      '@orderly.network/plugin-core':
+        specifier: workspace:*
+        version: link:../plugin-core
       '@orderly.network/portfolio':
         specifier: workspace:*
         version: link:../portfolio
@@ -2144,6 +2147,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@orderly.network/plugin-core':
+        specifier: workspace:*
+        version: link:../plugin-core
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app

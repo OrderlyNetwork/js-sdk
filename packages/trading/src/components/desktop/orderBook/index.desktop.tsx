@@ -2,15 +2,15 @@ import { FC, useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, Flex, Grid, Spinner, Text, VectorIcon } from "@orderly.network/ui";
+import { cn, Flex, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { BuySellRatioBar, BuySellRatio } from "../../base/orderBook";
 import {
   ORDERBOOK_COIN_TYPE_KEY,
   OrderBookProvider,
 } from "../../base/orderBook/orderContext";
-import { DesktopAsks } from "./asks.desktop";
-import { DesktopBids } from "./bids.desktop";
+import { InjectableDesktopAsks } from "./asks.desktop";
+import { InjectableDesktopBids } from "./bids.desktop";
 import { BuySellRatioSettings } from "./buySellRatio";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { DesktopHeader } from "./header.desktop";
@@ -128,7 +128,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           />
         </Flex>
         <DesktopHeader quote={quote} base={base} />
-        <DesktopAsks data={[...props.asks]} />
+        <InjectableDesktopAsks data={[...props.asks]} />
         <DesktopMarkPrice
           lastPrice={lastPrice}
           markPrice={markPrice}
@@ -141,11 +141,11 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           bids={[...props.bids]}
           symbolInfo={props.symbolInfo}
         />
-        <DesktopBids data={[...props.bids]} />
+        <InjectableDesktopBids data={[...props.bids]} />
         {showBuySellRatio && (
           <BuySellRatioBar
             ratio={buySellRatio || null}
-            className="oui-text-2xs oui-px-3 oui-h-[38px]"
+            className="oui-h-[38px] oui-px-3 oui-text-2xs"
           />
         )}
         {isLoading && (

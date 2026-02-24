@@ -15,9 +15,12 @@ export class OrderlyExtensionRegistry {
     return (globalObject as any).__ORDERLY_EXTENSION_REGISTRY__;
   }
 
-  private extensionMap: Map<ExtensionPosition, Extension<unknown>> = new Map();
+  private extensionMap: Map<
+    ExtensionPosition,
+    Extension<Record<string, unknown>>
+  > = new Map();
 
-  register<Props>(
+  register<Props extends object>(
     plugin: Omit<Extension<Props>, "builder"> & {
       builder?: (props: any) => Props;
     },
@@ -26,14 +29,16 @@ export class OrderlyExtensionRegistry {
       if (typeof plugin.builder !== "function") {
         const builder = this.extensionMap.get(plugin.positions[index])?.builder;
         plugin.builder =
-          typeof builder === "undefined" ? undefined : (builder as ExtensionBuilder);
+          typeof builder === "undefined"
+            ? undefined
+            : (builder as (props?: any) => Props);
       }
       const pos = plugin.positions[index];
       this.registerToPosition<Props>(pos, plugin as Extension<Props>);
     }
   }
 
-  private registerToPosition<Props>(
+  private registerToPosition<Props extends object>(
     position: ExtensionPosition,
     plugin: Extension<Props>,
   ) {
@@ -52,13 +57,13 @@ export class OrderlyExtensionRegistry {
     this.extensionMap.set(position, plugin as Extension<any>);
   }
 
-  setBuilder<Props>(
+  setBuilder<Props extends object>(
     position: ExtensionPosition,
     builder: ExtensionBuilder<Props>,
   ) {
     const plugin = this.extensionMap.get(position);
     if (plugin) {
-      plugin.builder = builder;
+      plugin.builder = builder as ExtensionBuilder<Record<string, unknown>>;
     }
   }
 

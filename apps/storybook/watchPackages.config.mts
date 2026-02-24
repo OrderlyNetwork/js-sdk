@@ -61,6 +61,11 @@ const base: Package[] = [
     path: "../../packages/web3-provider-ethers/src",
     watch: false,
   },
+  {
+    package: "@orderly.network/plugin-core",
+    path: "../../packages/plugin-core/src",
+    watch: true,
+  },
 ];
 
 const ui: Package[] = [

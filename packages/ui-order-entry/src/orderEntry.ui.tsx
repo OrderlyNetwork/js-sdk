@@ -25,6 +25,7 @@ import {
   ThrottledButton,
   toast,
   useScreen,
+  injectable,
 } from "@orderly.network/ui";
 import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
@@ -49,7 +50,7 @@ import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { getScaledPlaceOrderMessage } from "./utils";
 
-type OrderEntryProps = OrderEntryScriptReturn & {
+export type OrderEntryProps = OrderEntryScriptReturn & {
   containerRef?: React.RefObject<HTMLDivElement>;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 };

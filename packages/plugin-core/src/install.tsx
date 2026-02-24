@@ -1,8 +1,8 @@
 import React, { ElementType, ReactElement, createElement } from "react";
-import { OrderlyExtensionRegistry } from "./registry";
-import { OrderlyPluginRegistry } from "./pluginRegistry";
-import { ExtensionPosition } from "./types";
 import { positionToPath } from "./pathMap";
+import { OrderlyPluginRegistry } from "./pluginRegistry";
+import { OrderlyExtensionRegistry } from "./registry";
+import { ExtensionPosition } from "./types";
 
 /** @deprecated Use OrderlyPlugin with interceptors instead */
 export type ExtensionOptions<Props> = {
@@ -27,7 +27,7 @@ type ExtensionRenderComponentType<Props> =
  * Registers an extension. Registers to both legacy registry and new plugin registry.
  * @deprecated Prefer registerPlugin via OrderlyPluginProvider plugins prop
  */
-export const installExtension = <Props,>(
+export const installExtension = <Props extends object>(
   options: ExtensionOptions<Props>,
 ): ((component: ExtensionRenderComponentType<Props>) => void) => {
   return (component) => {
@@ -48,7 +48,10 @@ export const installExtension = <Props,>(
         target: positionToPath(position),
         component: (Original, props, api) => {
           const transformed = builder ? builder(props) : props;
-          return createElement(component as React.ComponentType<any>, transformed);
+          return createElement(
+            component as React.ComponentType<any>,
+            transformed,
+          );
         },
       })),
     });
@@ -58,7 +61,9 @@ export const installExtension = <Props,>(
 /**
  * @deprecated Prefer registerPlugin via OrderlyPluginProvider plugins prop
  */
-export const setExtensionBuilder = <Props extends unknown = {}>(
+export const setExtensionBuilder = <
+  Props extends object = Record<string, unknown>,
+>(
   position: ExtensionPosition,
   builder: () => Props,
 ) => {

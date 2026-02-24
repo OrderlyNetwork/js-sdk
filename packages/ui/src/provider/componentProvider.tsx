@@ -1,7 +1,17 @@
-import { ExtensionPosition, installExtension } from "../plugin";
-import { ComponentType, FC, PropsWithChildren, useEffect } from "react";
+import {
+  createElement,
+  type ComponentType,
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+} from "react";
+import {
+  type ExtensionPosition,
+  OrderlyPluginRegistry,
+  positionToPath,
+} from "../plugin";
 
-/// layout cache: size, position
+const COMPONENTS_PLUGIN_ID = "orderly-components-provider-overrides";
 
 const ComponentsProvider: FC<
   PropsWithChildren<{
@@ -10,17 +20,19 @@ const ComponentsProvider: FC<
 > = (props) => {
   useEffect(() => {
     if (props.components && Object.keys(props.components).length) {
-      for (const position in props.components) {
-        const Element = props.components[position];
-        installExtension<any>({
-          name: Element.displayName ?? `custom-component-${position}`,
-          scope: ["*"],
-          positions: [position],
-          __isInternal: false,
-        })((props: any) => {
-          return <Element {...props} />;
-        });
-      }
+      const interceptors = Object.entries(props.components).map(
+        ([position, Element]) => ({
+          target: positionToPath(position),
+          component: (_Original: ComponentType<any>, slotProps: any) =>
+            createElement(Element as ComponentType<any>, slotProps),
+        }),
+      );
+
+      OrderlyPluginRegistry.register({
+        id: COMPONENTS_PLUGIN_ID,
+        name: "ComponentsProvider",
+        interceptors,
+      });
     }
   }, [props.components]);
 

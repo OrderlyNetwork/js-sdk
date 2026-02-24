@@ -8,6 +8,7 @@ export {
 export {
   OrderlyPluginProvider,
   useOrderlyPluginContext,
+  useInterceptorTargets,
   ExtensionProvider,
   useExtensionContext,
   type OrderlyPluginContextValue,
@@ -23,6 +24,7 @@ export { useInjectedComponent } from "./useInjectedComponent";
 export { injectable } from "./injectable";
 export { positionToPath } from "./pathMap";
 export { OrderlyPluginRegistry, createOrderlySDK } from "./pluginRegistry";
+export { createInterceptor } from "./createInterceptor";
 export { OrderlyExtensionRegistry } from "./registry";
 export { PluginErrorBoundary } from "./PluginErrorBoundary";
 
@@ -35,14 +37,11 @@ export {
   type PluginRegistrationFn,
   type PluginInterceptor,
   type PluginInterceptorComponent,
+  type InterceptorTargetDescriptor,
+  type InterceptorTargetPropsMap,
+  type KnownInterceptorTarget,
   type Extension,
   type ExtensionBuilder,
 } from "./types";
 
-export {
-  APP_EVENT_NAMES,
-  createEventsFacade,
-  type AppEventName,
-  type PluginEventsAPI,
-  type PluginSubscribableEvent,
-} from "./apis/events";
+export { createEventsFacade, type PluginEventsAPI } from "./apis/events";

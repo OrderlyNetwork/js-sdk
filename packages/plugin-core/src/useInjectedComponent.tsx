@@ -1,6 +1,6 @@
 import React, { useMemo, type ComponentType } from "react";
-import { useOrderlyPluginContext } from "./pluginContext";
 import { PluginErrorBoundary } from "./PluginErrorBoundary";
+import { useOrderlyPluginContext } from "./pluginContext";
 import { PluginScopeProvider } from "./pluginScopeContext";
 
 /**
@@ -10,7 +10,7 @@ import { PluginScopeProvider } from "./pluginScopeContext";
  */
 export function useInjectedComponent<P extends object>(
   name: string,
-  DefaultComponent: ComponentType<P>
+  DefaultComponent: ComponentType<P>,
 ): ComponentType<P> {
   const { plugins, apiFacade } = useOrderlyPluginContext();
 
@@ -25,7 +25,7 @@ export function useInjectedComponent<P extends object>(
           pluginVersion: p.version,
           onError: p.onError,
           onFallback: p.onFallback,
-        }))
+        })),
     );
 
     if (interceptorsWithPlugin.length === 0) {
@@ -57,7 +57,11 @@ export function useInjectedComponent<P extends object>(
             onError={onError}
             onFallback={onFallback}
           >
-            {component(PreviousRender as any, props, apiFacade)}
+            {component(
+              PreviousRender as React.ComponentType<Record<string, unknown>>,
+              props as Record<string, unknown>,
+              apiFacade,
+            )}
           </PluginErrorBoundary>
         </PluginScopeProvider>
       );
