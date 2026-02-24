@@ -79,7 +79,11 @@ export const useTPSLBuilder = (
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const [{ rows: positions }] = usePositionStream();
-  const mainAccountPosition = positions.find((item) => item.symbol === symbol);
+  const mainAccountPosition = positions.find(
+    (item) =>
+      item.symbol === symbol &&
+      item.margin_mode === options.position?.margin_mode,
+  );
 
   const isSubAccount =
     options.position?.account_id &&
