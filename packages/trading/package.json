@@ -45,7 +45,7 @@
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/plugin-core": "workspace:*",
+    "@orderly.network/layout-core": "workspace:*",
     "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {
