@@ -46,10 +46,11 @@
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/layout-core": "workspace:*",
-    "@uiw/react-split": "^5.9.3"
+    "@uiw/react-split": "^5.9.3",
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/plugin-core": "workspace:*"
   },
   "devDependencies": {
-    "@orderly.network/core": "workspace:*",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",

@@ -8,6 +8,7 @@ export type {
   TradingPageProps,
   ReferralProps,
   TradingRewardsProps,
+  DesktopLayoutInitialOptions,
 } from "./types/types";
 export type { AccountState } from "./components/mobile/bottomNavBar/account/account.script";
 export type { Props as OrderBookDesktopAsksProps } from "./components/desktop/orderBook/asks.desktop";
@@ -24,6 +25,22 @@ export * from "./components/mobile/portfolioSheet";
 export * from "./components/mobile/fundingRate";
 export * from "./components/mobile/fundingRateModal";
 export * from "./pages/trading";
+export type { DesktopLayoutProps } from "./pages/trading/trading.ui.desktop";
+export {
+  OrderEntryDragOverlayContent,
+  type OrderEntryDragOverlayContentProps,
+} from "./components/desktop/layout/OrderEntryDragOverlayContent";
 export * from "./provider/tradingPageContext";
 export * from "./provider/tradingPageProvider";
 export * from "./hooks";
+/** Layout constants for split chrome (min heights, scrollBarWidth, etc.) */
+export {
+  scrollBarWidth,
+  topBarHeight,
+  bottomBarHeight,
+  space,
+  orderbookMinHeight,
+  orderbookMaxHeight,
+  tradindviewMinHeight,
+  dataListInitialHeight,
+} from "./pages/trading/trading.script";

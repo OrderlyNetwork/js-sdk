@@ -1,14 +1,12 @@
 /**
- * Trading page with split layout strategy.
- * Layout strategy and initial layout factory are passed from outside (layout-split package).
+ * Trading page with split layout.
+ * Uses registerLayoutSplitPlugin so the full split chrome (markets, DnD, Flex) is applied.
  */
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  createTradingSplitLayout,
-  splitStrategy,
-} from "@orderly.network/layout-split";
+import { registerLayoutSplitPlugin } from "@orderly.network/layout-split";
 import { TradingPage } from "@orderly.network/trading";
+import { OrderlyPluginProvider } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
@@ -19,9 +17,11 @@ const meta: Meta<typeof TradingPage> = {
   component: TradingPage,
   decorators: [
     (Story) => (
-      <BaseLayout>
-        <Story />
-      </BaseLayout>
+      <OrderlyPluginProvider plugins={[registerLayoutSplitPlugin()]}>
+        <BaseLayout>
+          <Story />
+        </BaseLayout>
+      </OrderlyPluginProvider>
     ),
   ],
   parameters: {
@@ -62,16 +62,6 @@ export const SplitLayoutPage: Story = {
         sharePnLConfig={tradingPageConfig.sharePnLConfig}
         symbol={symbol}
         onSymbolChange={(s) => setSymbol(s.symbol)}
-        layoutStrategy={splitStrategy}
-        getInitialLayout={(opts) =>
-          createTradingSplitLayout({
-            variant: opts.variant,
-            layoutSide: opts.layoutSide,
-            mainSplitSize: opts.mainSplitSize,
-            orderBookSplitSize: opts.orderBookSplitSize,
-            dataListSplitSize: opts.dataListSplitSize,
-          })
-        }
       />
     );
   },

@@ -1,47 +1,26 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragOverlay,
-  DragStartEvent,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS, Transform } from "@dnd-kit/utilities";
+/**
+ * Minimal desktop layout: builds panel registry and renders LayoutHost.
+ * Chrome (markets, DnD, Flex) is provided by layout plugins (e.g. layout-split).
+ */
+import React, { useEffect, useMemo } from "react";
 import {
   useGetRwaSymbolOpenStatus,
   useLocalStorage,
 } from "@orderly.network/hooks";
+import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 import { LayoutHost } from "@orderly.network/layout-core";
-import {
-  SideMarketsWidget,
-  HorizontalMarketsWidget,
-} from "@orderly.network/markets";
-import {
-  OrderEntrySortKeys,
-  TradingviewFullscreenKey,
-} from "@orderly.network/types";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { API } from "@orderly.network/types";
+import { Box, cn } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import {
   createTradingPanelRegistry,
   type TradingPanelRegistryProps,
 } from "../../components/desktop/layout/TradingPanelRegistry";
-import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import { useTradingPageContext } from "../../provider/tradingPageContext";
+import type { DesktopLayoutInitialOptions } from "../../types/types";
 import { dataListInitialHeight, TradingState } from "./trading.script";
 import {
   scrollBarWidth,
@@ -54,25 +33,29 @@ import {
 } from "./trading.script";
 
 const LazyRiskRateWidget = React.lazy(() =>
-  import("../../components/desktop/riskRate").then((mod) => {
-    return {
-      default: mod.RiskRateWidget,
-    };
-  }),
+  import("../../components/desktop/riskRate").then((mod) => ({
+    default: mod.RiskRateWidget,
+  })),
 );
-
 const LazyAssetViewWidget = React.lazy(() =>
-  import("../../components/desktop/assetView").then((mod) => {
-    return {
-      default: mod.AssetViewWidget,
-    };
-  }),
+  import("../../components/desktop/assetView").then((mod) => ({
+    default: mod.AssetViewWidget,
+  })),
 );
 
 export type DesktopLayoutProps = TradingState & {
   className?: string;
+  /** Injected by layout plugin interceptor when not provided by host */
+  layoutStrategy?: LayoutStrategy;
+  getInitialLayout?: (
+    options: DesktopLayoutInitialOptions,
+  ) => LayoutModel | undefined;
 };
 
+/**
+ * Desktop layout core: defines panels and renders LayoutHost.
+ * Strategy and initial layout come from context (injected by host or layout plugin).
+ */
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const {
     resizeable,
@@ -86,134 +69,39 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     dataListSplitSize,
     mainSplitSize,
     max2XL,
-    max4XL,
-    animating,
-    setAnimating,
     showPositionIcon,
     horizontalDraggable,
     marketsWidth,
     dataListMinHeight,
+    sortableItems,
+    animating,
+    setAnimating,
+    tradingViewFullScreen,
   } = props;
 
   const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
-  const symbolInfoBarHeight = useMemo(() => {
-    return showCountdown ? 104 : 56;
-  }, [showCountdown]);
+  const symbolInfoBarHeight = useMemo(
+    () => (showCountdown ? 104 : 56),
+    [showCountdown],
+  );
 
   const { isRwa, open } = useGetRwaSymbolOpenStatus(props.symbol);
-
   useEffect(() => {
     if (isRwa && !open) {
       showRwaOutsideMarketHoursNotify();
     }
   }, [isRwa, open, props.symbol]);
 
-  const [tradingViewFullScreen] = useLocalStorage(
-    TradingviewFullscreenKey,
-    false,
-  );
-
-  const [sortableItems, setSortableItems] = useLocalStorage<string[]>(
-    OrderEntrySortKeys,
-    ["margin", "assets", "orderEntry"],
-  );
-
-  const dropAnimationConfig = useMemo(() => {
-    return {
-      keyframes({
-        transform,
-      }: {
-        transform: {
-          initial: Transform;
-          final: Transform;
-        };
-      }) {
-        return [
-          {
-            transform: CSS.Transform.toString({
-              ...transform.initial,
-              scaleX: 1.05,
-              scaleY: 1.05,
-            }),
-          },
-          {
-            transform: CSS.Transform.toString({
-              ...transform.final,
-              scaleX: 1,
-              scaleY: 1,
-            }),
-          },
-        ];
-      },
-      sideEffects: ({ active, dragOverlay }) => {
-        active.node.style.opacity = "0";
-        const innerElement = dragOverlay.node.querySelector(".inner-content");
-        if (innerElement) {
-          innerElement.classList.add("oui-animate-shake");
-        }
-        return () => {
-          active.node.style.opacity = "";
-        };
-      },
-    };
-  }, []);
-
-  // Configure sensors for drag and drop interactions
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  // State for drag overlay management
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  /**
-   * Handle drag start event for sortable panels
-   * Sets the active dragging item for overlay rendering
-   */
-  function handleDragStart(event: DragStartEvent) {
-    setActiveId(event.active.id as string);
-  }
-
-  /**
-   * Handle drag end event for sortable panels
-   * Updates the order of sortable items and corresponding positions
-   */
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (active.id !== over?.id && over) {
-      const oldIndex = sortableItems.indexOf(active.id as string);
-      const newIndex = sortableItems.indexOf(over.id as string);
-
-      if (oldIndex !== -1 && newIndex !== -1) {
-        // Update sortableItems order
-        const newItems = arrayMove(sortableItems, oldIndex, newIndex);
-        setSortableItems(newItems as string[]);
-
-        // Also update positions to keep them in sync
-        // updatePositions(oldIndex, newIndex);
-      }
-    }
-
-    // Reset active id after drag ends
-    setActiveId(null);
-  }
-
-  const minScreenHeight = useMemo(() => {
-    return tradingViewFullScreen
-      ? 0
-      : symbolInfoBarHeight +
+  const minScreenHeight = useMemo(
+    () =>
+      tradingViewFullScreen
+        ? 0
+        : symbolInfoBarHeight +
           orderbookMaxHeight +
           dataListInitialHeight +
-          space * 4;
-  }, [tradingViewFullScreen]);
+          space * 4,
+    [tradingViewFullScreen, symbolInfoBarHeight],
+  );
 
   const minScreenHeightSM =
     topBarHeight +
@@ -224,65 +112,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     dataListMinHeight +
     space * 4;
 
-  const horizontalMarketsView = (
-    <HorizontalMarketsWidget
-      symbol={props.symbol}
-      onSymbolChange={props.onSymbolChange}
-      maxItems={-1} // show all markets
-      dropdownPos={marketLayout === "bottom" ? "top" : "bottom"}
-    />
-  );
-
-  const containerPaddingX = useMemo(() => (max2XL ? 12 : 8), [max2XL]);
-
-  const stickyHorizontalMarketsView = (
-    <Box
-      className={cn(
-        "oui-bg-base-10",
-        // -8 is for reducing the container's padding
-        "oui-sticky oui-z-30 oui-mb-[-8px] oui-py-2",
-        // Split line disabled for > 2xl screens
-        !max2XL && "oui-mt-[-8px]",
-      )}
-      style={{
-        bottom: 0,
-        minWidth:
-          (max2XL ? 1024 : 1440) - scrollBarWidth - containerPaddingX * 2,
-      }}
-    >
-      {horizontalMarketsView}
-    </Box>
-  );
-
-  const marketsWidget = (
-    <SideMarketsWidget
-      resizeable={resizeable}
-      panelSize={panelSize}
-      onPanelSizeChange={
-        onPanelSizeChange as (size: "small" | "middle" | "large") => void
-      }
-      symbol={props.symbol}
-      onSymbolChange={props.onSymbolChange}
-    />
-  );
-
-  const marketsView = (
-    <Box
-      intensity={900}
-      pt={3}
-      r="2xl"
-      height="100%"
-      width={marketsWidth}
-      style={{ minWidth: marketsWidth }}
-      className="oui-transition-all oui-duration-150"
-      onTransitionEnd={() => setAnimating(false)}
-    >
-      {!animating && marketLayout === "left" && marketsWidget}
-    </Box>
-  );
-
-  const orderInteractionWidgets = useMemo(() => {
-    return {
+  const orderInteractionWidgets = useMemo(
+    () => ({
       margin: {
         className: "",
         element: (
@@ -313,27 +144,27 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           <OrderEntryWidget
             symbol={props.symbol}
             disableFeatures={
-              props.disableFeatures as unknown as (
-                | "slippageSetting"
-                | "feesInfo"
-              )[]
+              props.disableFeatures as
+                | ("slippageSetting" | "feesInfo")[]
+                | undefined
             }
           />
         ),
       },
-    };
-  }, [
-    props.isFirstTimeDeposit,
-    props.disableFeatures,
-    props.navigateToPortfolio,
-    props.symbol,
-  ]);
+    }),
+    [
+      props.isFirstTimeDeposit,
+      props.disableFeatures,
+      props.navigateToPortfolio,
+      props.symbol,
+    ],
+  );
 
-  /** Registry props for strategy-based layout; passed to createTradingPanelRegistry */
-  const registryProps: TradingPanelRegistryProps = useMemo(
+  const registryProps = useMemo<TradingPanelRegistryProps>(
     () => ({
       symbol: props.symbol,
-      onSymbolChange: props.onSymbolChange,
+      onSymbolChange: (sym: unknown) =>
+        props.onSymbolChange?.(sym as API.Symbol),
       tradingViewConfig: props.tradingViewConfig,
       disableFeatures: props.disableFeatures,
       navigateToPortfolio: props.navigateToPortfolio,
@@ -347,7 +178,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       marketLayout,
       onMarketLayout,
       symbolInfoBarHeight,
-      showCountdown,
+      showCountdown: showCountdown ?? false,
       closeCountdown,
       showPositionIcon,
       tradingViewFullScreen,
@@ -398,8 +229,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     [registryProps],
   );
 
-  const { layoutStrategy, getInitialLayout } = useTradingPageContext();
-
+  const contextLayout = useTradingPageContext();
+  /** Prefer props (injected by layout plugin interceptor) over context */
+  const layoutStrategy = props.layoutStrategy ?? contextLayout.layoutStrategy;
+  const getInitialLayout =
+    props.getInitialLayout ?? contextLayout.getInitialLayout;
   const panelIds = useMemo(() => Array.from(panels.keys()), [panels]);
 
   const initialLayout = useMemo(() => {
@@ -431,110 +265,44 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     ? "orderly_trading_desktop_layout_sm"
     : "orderly_trading_desktop_layout";
 
-  /** Strategy-based layout: LayoutHost renders panels; strategy and optional initial layout from context */
-  const layoutHostContent = !layoutStrategy ? (
-    <div className="oui-flex oui-flex-1 oui-items-center oui-justify-center oui-text-base-4">
-      Desktop layout requires layoutStrategy (e.g. split or grid) from the
-      consumer.
-    </div>
-  ) : (
-    <LayoutHost
-      strategy={layoutStrategy}
-      panels={panels}
-      initialLayout={initialLayout}
-      storageKey={layoutStorageKey}
-      className={cn(
-        "oui-flex oui-flex-1 oui-overflow-hidden",
-        max2XL && "oui-size-full oui-min-w-[1018px] oui-px-3 oui-py-2",
-      )}
-      style={
-        max2XL
-          ? {
-              minHeight: minScreenHeightSM,
-              minWidth: 1024 - scrollBarWidth,
-            }
-          : { flex: 1, minHeight: minScreenHeight }
-      }
-    />
+  const defaultLayoutHostClassName = cn(
+    "oui-flex oui-flex-1 oui-overflow-hidden",
+    max2XL && "oui-size-full oui-min-w-[1018px] oui-px-3 oui-py-2",
   );
+  const defaultLayoutHostStyle = max2XL
+    ? {
+        minHeight: minScreenHeightSM,
+        minWidth: 1024 - scrollBarWidth,
+      }
+    : { flex: 1, minHeight: minScreenHeight };
+
+  if (!layoutStrategy) {
+    return (
+      <div
+        className={cn(defaultLayoutHostClassName, props.className)}
+        style={defaultLayoutHostStyle}
+      >
+        <div className="oui-flex oui-flex-1 oui-items-center oui-justify-center oui-text-base-4">
+          Desktop layout requires layoutStrategy (e.g. split or grid) from the
+          consumer.
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis]}
+    <Box
+      className={cn(defaultLayoutHostClassName, props.className)}
+      style={defaultLayoutHostStyle}
     >
-      <SortableContext
-        items={sortableItems}
-        strategy={verticalListSortingStrategy}
-      >
-        {max2XL ? (
-          <Box height="100%">
-            {marketLayout === "top" && (
-              <Box
-                className={cn("oui-mt-2 oui-max-h-8 oui-px-3", props.className)}
-              >
-                {horizontalMarketsView}
-              </Box>
-            )}
-            {layoutHostContent}
-            {marketLayout === "bottom" && stickyHorizontalMarketsView}
-          </Box>
-        ) : (
-          <Flex
-            style={{
-              minHeight: minScreenHeight,
-              minWidth: 1440 - scrollBarWidth,
-            }}
-            className={cn(
-              props.className,
-              "oui-justify-start",
-              tradingViewFullScreen &&
-                "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
-            )}
-            width="100%"
-            p={2}
-            gap={2}
-            itemAlign="stretch"
-            direction="column"
-          >
-            {marketLayout === "top" && horizontalMarketsView}
-            <Flex
-              className={cn(
-                "oui-flex-1 oui-overflow-hidden",
-                layout === "left" && "oui-flex-row-reverse",
-              )}
-              gap={2}
-            >
-              {!max4XL && marketLayout === "left" && marketsView}
-              {layoutHostContent}
-            </Flex>
-            {marketLayout === "bottom" && stickyHorizontalMarketsView}
-          </Flex>
-        )}
-      </SortableContext>
-      <DragOverlay dropAnimation={dropAnimationConfig}>
-        {activeId ? (
-          <SortablePanel
-            id={activeId}
-            showIndicator={showPositionIcon}
-            dragOverlay
-            className={`${
-              orderInteractionWidgets[
-                activeId as keyof typeof orderInteractionWidgets
-              ].className
-            } oui-shadow-lg oui-shadow-base-9`}
-          >
-            {
-              orderInteractionWidgets[
-                activeId as keyof typeof orderInteractionWidgets
-              ].element
-            }
-          </SortablePanel>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+      <LayoutHost
+        strategy={layoutStrategy}
+        panels={panels}
+        initialLayout={initialLayout}
+        storageKey={layoutStorageKey}
+        className="oui-flex oui-flex-1 oui-overflow-hidden"
+        style={{ flex: 1, minHeight: 0 }}
+      />
+    </Box>
   );
 };

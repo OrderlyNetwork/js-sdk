@@ -14,11 +14,11 @@ export interface OrderlyPluginAPI {
 
 /**
  * Mapping from interceptor target path to component props type.
- * Extend via module augmentation in UI packages to enable typed props inference.
+ * Extend via module augmentation in UI packages (e.g. @orderly.network/trading)
+ * to enable typed props in createInterceptor(target, (Original, props, api) => ...).
+ * No index signature so that augmented entries keep their exact prop types.
  */
-export interface InterceptorTargetPropsMap {
-  [path: string]: Record<string, unknown>;
-}
+export interface InterceptorTargetPropsMap {}
 
 /** Union of known interceptor target paths (keys of InterceptorTargetPropsMap) */
 export type KnownInterceptorTarget = keyof InterceptorTargetPropsMap;

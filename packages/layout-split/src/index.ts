@@ -27,3 +27,10 @@ export {
   createTradingSplitLayout,
   type TradingSplitLayoutOptions,
 } from "./utils/tradingSplitLayout";
+
+/** Plugin and chrome for Trading desktop */
+export { registerLayoutSplitPlugin } from "./plugin";
+export {
+  SplitTradingDesktopChrome,
+  type SplitTradingDesktopChromeProps,
+} from "./components/SplitTradingDesktopChrome";

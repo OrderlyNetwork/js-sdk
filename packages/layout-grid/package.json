@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "@orderly.network/layout-core": "workspace:*",
-    "react-grid-layout": "^2.2.2"
+    "react-grid-layout": "^2.2.2",
+    "@orderly.network/trading": "workspace:*",
+    "@orderly.network/ui": "workspace:*"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

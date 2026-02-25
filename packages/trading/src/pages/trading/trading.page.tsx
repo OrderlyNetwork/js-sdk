@@ -1,9 +1,11 @@
 import React from "react";
+import { injectable } from "@orderly.network/ui";
 import { TradingPageProvider } from "../../provider/tradingPageProvider";
 import { TradingPageProps } from "../../types/types";
 import { TradingWidget } from "./trading.widget";
 
-export const TradingPage: React.FC<TradingPageProps> = (props) => {
+/** Inner page: receives props and renders provider + widget. Layout strategy from props (host or plugin). */
+const TradingPageInner: React.FC<TradingPageProps> = (props) => {
   return (
     <TradingPageProvider
       symbol={props.symbol}
@@ -22,3 +24,6 @@ export const TradingPage: React.FC<TradingPageProps> = (props) => {
     </TradingPageProvider>
   );
 };
+
+/** Injectable so layout plugins can intercept and inject layoutStrategy/getInitialLayout when host does not pass them */
+export const TradingPage = injectable(TradingPageInner, "Trading.Page");

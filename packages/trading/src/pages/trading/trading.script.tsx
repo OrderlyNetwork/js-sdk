@@ -8,6 +8,10 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import {
+  OrderEntrySortKeys,
+  TradingviewFullscreenKey,
+} from "@orderly.network/types";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
@@ -85,6 +89,17 @@ export const useTradingScript = () => {
   const [marketLayout, setMarketLayout] = useLocalStorage<MarketLayoutPosition>(
     ORDERLY_HORIZONTAL_MARKETS_LAYOUT,
     "left",
+  );
+
+  /** Order-entry sortable keys (margin, assets, orderEntry); used by desktop layout and split chrome */
+  const [sortableItems, setSortableItems] = useLocalStorage<string[]>(
+    OrderEntrySortKeys,
+    ["margin", "assets", "orderEntry"],
+  );
+
+  const [tradingViewFullScreen] = useLocalStorage(
+    TradingviewFullscreenKey,
+    false,
   );
 
   const canTrade = useMemo<boolean>(() => {
@@ -175,6 +190,9 @@ export const useTradingScript = () => {
     navigateToPortfolio,
     isFirstTimeDeposit,
     symbolInfoBarHeight,
+    sortableItems,
+    setSortableItems,
+    tradingViewFullScreen,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;

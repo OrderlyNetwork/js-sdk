@@ -24,3 +24,9 @@ export {
   DEFAULT_COLS,
 } from "./utils/gridLayoutUtils";
 export { createTradingGridLayout } from "./utils/tradingGridLayout";
+
+/** Grid layout plugin: register to use grid layout via intercept (no layoutStrategy/getInitialLayout from host) */
+export {
+  registerLayoutGridPlugin,
+  type LayoutGridPluginOptions,
+} from "./plugin";

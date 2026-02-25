@@ -1,16 +1,19 @@
 /**
  * Module augmentation: maps interceptor target paths to their component props types.
  * Import from @orderly.network/trading to enable typed props in
- * createInterceptor('Account.MobileAccountMenu', ...) and createInterceptor('OrderBook.Desktop.Asks', ...).
+ * createInterceptor('Trading.DesktopLayout', ...), createInterceptor('Account.MobileAccountMenu', ...), etc.
  */
+/// <reference types="@orderly.network/plugin-core" />
 import type { Props as OrderBookDesktopAsksProps } from "../components/desktop/orderBook/asks.desktop";
 import type { Props as OrderBookDesktopBidsProps } from "../components/desktop/orderBook/bids.desktop";
 import type { AccountState } from "../components/mobile/bottomNavBar/account/account.script";
+import type { DesktopLayoutProps } from "../pages/trading/trading.ui.desktop";
 
 declare module "@orderly.network/plugin-core" {
   interface InterceptorTargetPropsMap {
     "Account.MobileAccountMenu": AccountState;
     "OrderBook.Desktop.Asks": OrderBookDesktopAsksProps;
     "OrderBook.Desktop.Bids": OrderBookDesktopBidsProps;
+    "Trading.Layout.Desktop": DesktopLayoutProps;
   }
 }
