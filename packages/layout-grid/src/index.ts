@@ -23,3 +23,4 @@ export {
   DEFAULT_BREAKPOINTS,
   DEFAULT_COLS,
 } from "./utils/gridLayoutUtils";
+export { createTradingGridLayout } from "./utils/tradingGridLayout";

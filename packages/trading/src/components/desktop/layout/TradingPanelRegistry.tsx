@@ -3,7 +3,10 @@
  * Widget creation logic is centralized here so layout (LayoutHost) stays decoupled from content.
  */
 import React, { type ReactNode } from "react";
-import type { PanelRegistry } from "@orderly.network/layout-core";
+import {
+  type PanelRegistry,
+  TRADING_PANEL_IDS,
+} from "@orderly.network/layout-core";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
@@ -13,18 +16,9 @@ import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { SortablePanel } from "./sortablePanel";
 import type { LayoutPosition } from "./switchLayout";
 
-/** Panel IDs used by layout strategies; must match SplitLayoutModel / GridLayoutModel */
-export const TRADING_PANEL_IDS = {
-  SYMBOL_INFO_BAR: "symbolInfoBar",
-  TRADING_VIEW: "tradingView",
-  ORDERBOOK: "orderbook",
-  DATA_LIST: "dataList",
-  ORDER_ENTRY: "orderEntry",
-  MARKETS: "markets",
-} as const;
-
-export type TradingPanelId =
-  (typeof TRADING_PANEL_IDS)[keyof typeof TRADING_PANEL_IDS];
+/** Re-export for consumers that import from trading package */
+export { TRADING_PANEL_IDS };
+export type { TradingPanelId } from "@orderly.network/layout-core";
 
 const LazyDataListWidget = React.lazy(() =>
   import("../dataList").then((mod) => ({ default: mod.DataListWidget })),

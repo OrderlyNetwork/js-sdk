@@ -15,9 +15,8 @@ import type {
   PanelRegistry,
 } from "@orderly.network/layout-core";
 import { LayoutHost } from "@orderly.network/layout-core";
-import { splitStrategy } from "@orderly.network/layout-split";
 
-// import { gridStrategy } from "@orderly.network/layout-grid"; // Uncomment when grid is needed
+/** Strategy must be provided by the consumer, e.g. splitStrategy from @orderly.network/layout-split or gridStrategy from @orderly.network/layout-grid */
 
 /**
  * Example: TradingLayoutHost component

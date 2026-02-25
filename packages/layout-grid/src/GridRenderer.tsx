@@ -2,26 +2,26 @@ import React, { useMemo, useCallback, useEffect, useRef } from "react";
 import {
   Responsive,
   useContainerWidth,
-  Layout,
-  Layouts,
+  type Layout,
+  type LayoutItem,
 } from "react-grid-layout";
-import type {
-  LayoutRendererProps,
-  PanelRegistry,
-} from "@orderly.network/layout-core";
+import type { LayoutRendererProps } from "@orderly.network/layout-core";
 import type { GridLayoutModel, GridLayoutItem } from "./types";
 import { DEFAULT_BREAKPOINTS, DEFAULT_COLS } from "./utils/gridLayoutUtils";
 
 /** Breakpoint key type */
 type BreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";
 
+/** Responsive layouts: breakpoint -> Layout (readonly LayoutItem[] in v2) */
+type ResponsiveLayouts = Partial<Record<string, Layout>>;
+
 /**
- * Convert GridLayoutItem[] to react-grid-layout Layout[]
+ * Convert GridLayoutItem[] to react-grid-layout Layout (readonly LayoutItem[]).
  */
 function toReactGridLayouts(
   layouts: GridLayoutModel["layouts"],
-): Record<string, Layout[]> {
-  const result: Record<string, Layout[]> = {};
+): ResponsiveLayouts {
+  const result: Record<string, LayoutItem[]> = {};
 
   (Object.keys(layouts) as BreakpointKey[]).forEach((breakpoint) => {
     const items = layouts[breakpoint];
@@ -43,7 +43,7 @@ function toReactGridLayouts(
     }
   });
 
-  return result;
+  return result as ResponsiveLayouts;
 }
 
 /**
@@ -71,16 +71,16 @@ export function GridRenderer(
     [layout.layouts],
   );
 
-  // Handle layout change from react-grid-layout
+  // Handle layout change from react-grid-layout (v2: layout is current breakpoint Layout, layouts is ResponsiveLayouts)
   const handleLayoutChange = useCallback(
-    (_currentLayout: Layout[], allLayouts: Layouts) => {
-      // Convert react-grid-layout Layout[] back to GridLayoutItem[]
+    (_currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
+      // Convert react-grid-layout Layout back to GridLayoutItem[]
       const updatedLayouts: GridLayoutModel["layouts"] = {};
 
       (Object.keys(allLayouts) as BreakpointKey[]).forEach((breakpoint) => {
         const items = allLayouts[breakpoint];
         if (items) {
-          updatedLayouts[breakpoint] = items.map((item) => {
+          updatedLayouts[breakpoint] = items.map((item: LayoutItem) => {
             // Find the original item to preserve panelId
             const originalItem = layoutsRef.current[breakpoint]?.find(
               (i) => i.i === item.i,
@@ -118,46 +118,74 @@ export function GridRenderer(
     return Array.from(ids);
   }, [layout.layouts]);
 
+  // Memoize children so the grid compares by reference (react-grid-layout perf recommendation).
+  // Must be declared before any early return to satisfy Rules of Hooks.
+  const children = useMemo(
+    () =>
+      panelIds.map((panelId) => {
+        const panel = panels.get(panelId);
+        if (!panel) {
+          console.warn(`Panel ${panelId} not found in registry`);
+          return null;
+        }
+        return (
+          <div
+            key={panelId}
+            className="oui-layout-grid-item"
+            style={{ width: "100%", height: "100%" }}
+          >
+            {panel}
+          </div>
+        );
+      }),
+    [panelIds, panels],
+  );
+
   // Handle empty panels
   if (panels.size === 0) {
     return (
-      <div ref={containerRef} className={className} style={style}>
+      <div
+        ref={containerRef as React.RefObject<HTMLDivElement>}
+        className={className}
+        style={style}
+      >
         {/* Empty state - no panels registered */}
       </div>
     );
   }
 
   if (!mounted) {
-    return <div ref={containerRef} className={className} style={style} />;
+    return (
+      <div
+        ref={containerRef as React.RefObject<HTMLDivElement>}
+        className={className}
+        style={style}
+      />
+    );
   }
 
   return (
-    <div ref={containerRef} className={className} style={style}>
+    <div
+      ref={containerRef as React.RefObject<HTMLDivElement>}
+      className={className}
+      style={style}
+    >
       <Responsive
-        layouts={reactGridLayouts}
-        breakpoints={layout.breakpoints || DEFAULT_BREAKPOINTS}
-        cols={layout.cols || DEFAULT_COLS}
-        width={width}
-        onLayoutChange={handleLayoutChange}
-        compactType={layout.compactType || "vertical"}
-        isDraggable={layout.isDraggable !== false}
-        isResizable={layout.isResizable !== false}
-        margin={layout.margin || [8, 8]}
-        containerPadding={layout.containerPadding || [0, 0]}
-      >
-        {panelIds.map((panelId) => {
-          const panel = panels.get(panelId);
-          if (!panel) {
-            console.warn(`Panel ${panelId} not found in registry`);
-            return null;
-          }
-          return (
-            <div key={panelId} style={{ width: "100%", height: "100%" }}>
-              {panel}
-            </div>
-          );
-        })}
-      </Responsive>
+        {...({
+          layouts: reactGridLayouts,
+          breakpoints: layout.breakpoints || DEFAULT_BREAKPOINTS,
+          cols: layout.cols || DEFAULT_COLS,
+          width,
+          onLayoutChange: handleLayoutChange,
+          margin: layout.margin || [8, 8],
+          // gridConfig: { cols: 12, rowHeight: 30 },
+          containerPadding: layout.containerPadding || [0, 0],
+          compactType: layout.compactType ?? "vertical",
+          isDraggable: layout.isDraggable !== false,
+          isResizable: layout.isResizable !== false,
+          children,
+        } as unknown as React.ComponentProps<typeof Responsive>)}
+      />
     </div>
   );
 }

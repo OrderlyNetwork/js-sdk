@@ -1,32 +1,29 @@
 /**
  * Trading desktop layout strategy registry.
- * Central list of available strategies so layout can be switched (e.g. split vs grid)
- * and future user preference or custom strategies can be plugged in.
+ * Strategies are provided by the consumer (e.g. split, grid); this module
+ * exports resolveTradingLayoutStrategy for resolving by preferred ID.
  */
 import type { LayoutStrategy } from "@orderly.network/layout-core";
 import { resolveStrategy } from "@orderly.network/layout-core";
-import { splitStrategy } from "./tradingSplitStrategy";
 
-/** Strategies available for the trading desktop layout */
-export const TRADING_LAYOUT_STRATEGIES: LayoutStrategy[] = [splitStrategy];
-
-/** Default strategy ID when no preference is set */
-export const DEFAULT_TRADING_LAYOUT_STRATEGY_ID = splitStrategy.id;
+/** Strategies available for the trading desktop; consumer must pass their own (e.g. [splitStrategy, gridStrategy]) */
+export const TRADING_LAYOUT_STRATEGIES: LayoutStrategy[] = [];
 
 /**
  * Resolve the layout strategy to use for the trading desktop.
- * Use when supporting strategy preference (e.g. from settings or localStorage).
+ * Caller must pass availableStrategies (e.g. from @orderly.network/layout-split and layout-grid).
  *
- * @param preferredId - Optional preferred strategy ID (e.g. "split" or "grid")
+ * @param options - preferredId and available strategies (and optional defaultStrategy)
  * @returns Resolved strategy and its ID
  */
-export function resolveTradingLayoutStrategy(preferredId?: string): {
-  strategy: LayoutStrategy;
-  id: string;
-} {
+export function resolveTradingLayoutStrategy(options: {
+  preferredId?: string;
+  availableStrategies: LayoutStrategy[];
+  defaultStrategy?: LayoutStrategy;
+}): { strategy: LayoutStrategy; id: string } {
   return resolveStrategy({
-    preferredId,
-    availableStrategies: TRADING_LAYOUT_STRATEGIES,
-    defaultStrategy: splitStrategy,
+    preferredId: options.preferredId,
+    availableStrategies: options.availableStrategies,
+    defaultStrategy: options.defaultStrategy,
   });
 }

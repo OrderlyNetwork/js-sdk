@@ -19,6 +19,10 @@ export type {
   StrategyResolverOptions,
 } from "./types";
 
+// Trading panel IDs (used by layout strategies; component mapping in trading package)
+export { TRADING_PANEL_IDS } from "./tradingPanelIds";
+export type { TradingPanelId } from "./tradingPanelIds";
+
 // Components
 export { LayoutHost } from "./LayoutHost";
 

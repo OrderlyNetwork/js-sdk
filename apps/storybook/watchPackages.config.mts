@@ -212,8 +212,28 @@ const i18n: Package[] = [
   },
 ];
 
+/** Layout packages: resolve to src in dev so exports (e.g. TRADING_PANEL_IDS) are available without relying on dist */
+const layout: Package[] = [
+  {
+    package: "@orderly.network/layout-core",
+    path: "../../packages/layout-core/src",
+    watch: true,
+  },
+  {
+    package: "@orderly.network/layout-split",
+    path: "../../packages/layout-split/src",
+    watch: true,
+  },
+  {
+    package: "@orderly.network/layout-grid",
+    path: "../../packages/layout-grid/src",
+    watch: true,
+  },
+];
+
 export const packages: Package[] = [
   ...base,
+  ...layout,
   ...ui,
   ...page,
   ...walletConnect,

@@ -34,15 +34,14 @@ import {
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
-import { resolveTradingLayoutStrategy } from "../../components/desktop/layout/TradingLayoutStrategyRegistry";
 import {
   createTradingPanelRegistry,
   type TradingPanelRegistryProps,
 } from "../../components/desktop/layout/TradingPanelRegistry";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
-import { createTradingDesktopLayout } from "../../components/desktop/layout/tradingSplitStrategy";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
+import { useTradingPageContext } from "../../provider/tradingPageContext";
 import { dataListInitialHeight, TradingState } from "./trading.script";
 import {
   scrollBarWidth,
@@ -399,26 +398,48 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     [registryProps],
   );
 
-  const initialLayout = useMemo(
-    () =>
-      createTradingDesktopLayout(max2XL ? "max2XL" : "default", layout, {
+  const { layoutStrategy, getInitialLayout } = useTradingPageContext();
+
+  const panelIds = useMemo(() => Array.from(panels.keys()), [panels]);
+
+  const initialLayout = useMemo(() => {
+    if (getInitialLayout) {
+      return getInitialLayout({
+        variant: max2XL ? "max2XL" : "default",
+        layoutSide: layout,
         mainSplitSize,
         orderBookSplitSize,
         dataListSplitSize,
-      }),
-    [max2XL, layout, mainSplitSize, orderBookSplitSize, dataListSplitSize],
-  );
+      });
+    }
+    if (layoutStrategy) {
+      return layoutStrategy.defaultLayout(panelIds);
+    }
+    return undefined;
+  }, [
+    getInitialLayout,
+    layoutStrategy,
+    max2XL,
+    layout,
+    mainSplitSize,
+    orderBookSplitSize,
+    dataListSplitSize,
+    panelIds,
+  ]);
 
   const layoutStorageKey = max2XL
     ? "orderly_trading_desktop_layout_sm"
     : "orderly_trading_desktop_layout";
 
-  const { strategy } = resolveTradingLayoutStrategy();
-
-  /** Strategy-based layout: LayoutHost renders panels according to initialLayout (split tree) */
-  const layoutHostContent = (
+  /** Strategy-based layout: LayoutHost renders panels; strategy and optional initial layout from context */
+  const layoutHostContent = !layoutStrategy ? (
+    <div className="oui-flex oui-flex-1 oui-items-center oui-justify-center oui-text-base-4">
+      Desktop layout requires layoutStrategy (e.g. split or grid) from the
+      consumer.
+    </div>
+  ) : (
     <LayoutHost
-      strategy={strategy}
+      strategy={layoutStrategy}
       panels={panels}
       initialLayout={initialLayout}
       storageKey={layoutStorageKey}

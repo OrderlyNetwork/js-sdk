@@ -46,7 +46,6 @@
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/layout-core": "workspace:*",
-    "@orderly.network/layout-split": "workspace:*",
     "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {

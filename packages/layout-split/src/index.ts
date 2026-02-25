@@ -23,3 +23,7 @@ export {
   serializeSplitLayout,
   deserializeSplitLayout,
 } from "./utils/splitLayoutUtils";
+export {
+  createTradingSplitLayout,
+  type TradingSplitLayoutOptions,
+} from "./utils/tradingSplitLayout";

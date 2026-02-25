@@ -1,15 +1,16 @@
 /**
- * Trading desktop split layout: nested SplitLayoutModel for default and max2XL variants.
- * Used as initialLayout for LayoutHost with splitStrategy so layout is strategy-driven.
+ * Default trading split layout for LayoutHost with splitStrategy.
+ * Uses TRADING_PANEL_IDS from layout-core; component mapping is in the trading package.
  */
-import type {
-  SplitLayoutModel,
-  SplitLayoutNode,
-} from "@orderly.network/layout-split";
-import { TRADING_PANEL_IDS } from "./TradingPanelRegistry";
+import { TRADING_PANEL_IDS } from "@orderly.network/layout-core";
+import type { SplitLayoutModel, SplitLayoutNode } from "../types";
 
-/** Options for creating the trading desktop layout (sizes from persistence or defaults) */
-export interface CreateTradingDesktopLayoutOptions {
+/** Options for creating the trading split layout (sizes from persistence or defaults) */
+export interface TradingSplitLayoutOptions {
+  /** "default" for large screen (orderEntry + main column), "max2XL" for smaller desktop */
+  variant?: "default" | "max2XL";
+  /** "left" | "right" for order entry position */
+  layoutSide?: "left" | "right";
   /** Main split: orderEntry vs main column (e.g. "30%" or "280px") */
   mainSplitSize?: string;
   /** Orderbook vs tradingView horizontal split (e.g. "40%" or "280px") */
@@ -68,16 +69,21 @@ function mainColumnNode(
 }
 
 /**
- * Creates the default (large screen) trading desktop split layout.
+ * Creates the default (large screen) trading split layout.
  * Root: horizontal [ mainColumn | orderEntry ] or [ orderEntry | mainColumn ] depending on layoutSide.
  */
 function createDefaultVariant(
   layoutSide: "left" | "right",
-  options: CreateTradingDesktopLayoutOptions,
+  options: Required<
+    Pick<
+      TradingSplitLayoutOptions,
+      "mainSplitSize" | "orderBookSplitSize" | "dataListSplitSize"
+    >
+  >,
 ): SplitLayoutModel {
-  const mainSplit = options.mainSplitSize ?? DEFAULT_MAIN_SPLIT;
-  const orderBookSplit = options.orderBookSplitSize ?? DEFAULT_ORDERBOOK_SPLIT;
-  const dataListSplit = options.dataListSplitSize ?? DEFAULT_DATALIST_SPLIT;
+  const mainSplit = options.mainSplitSize;
+  const orderBookSplit = options.orderBookSplitSize;
+  const dataListSplit = options.dataListSplitSize;
 
   const mainCol = mainColumnNode(orderBookSplit, dataListSplit);
   const orderEntry = {
@@ -85,7 +91,6 @@ function createDefaultVariant(
     panelId: TRADING_PANEL_IDS.ORDER_ENTRY,
   };
 
-  /* mainSplitSize from persistence is the order-entry pane size */
   const orderEntrySize = mainSplit;
   const mainColSize = secondSize(mainSplit);
 
@@ -109,16 +114,19 @@ function createDefaultVariant(
 
 /**
  * Creates the max2XL (smaller desktop) layout: vertical [ symbolInfoBar | (trading|orderbook + orderEntry) | dataList ].
- * Three rows: symbol bar, then horizontal(trading+orderbook, orderEntry), then dataList.
  */
 function createMax2XLVariant(
   layoutSide: "left" | "right",
-  options: CreateTradingDesktopLayoutOptions,
+  options: Required<
+    Pick<
+      TradingSplitLayoutOptions,
+      "mainSplitSize" | "orderBookSplitSize" | "dataListSplitSize"
+    >
+  >,
 ): SplitLayoutModel {
-  const dataListSplit = options.dataListSplitSize ?? DEFAULT_DATALIST_SPLIT;
-  const orderBookSplit = options.orderBookSplitSize ?? DEFAULT_ORDERBOOK_SPLIT;
-  // Use mainSplitSize if provided, otherwise default to 280px for order entry
-  const orderEntrySize = options.mainSplitSize ?? "280px";
+  const dataListSplit = options.dataListSplitSize;
+  const orderBookSplit = options.orderBookSplitSize;
+  const orderEntrySize = options.mainSplitSize;
 
   const tradingOrderbook: SplitLayoutNode = {
     type: "split",
@@ -134,7 +142,6 @@ function createMax2XLVariant(
     type: "panel" as const,
     panelId: TRADING_PANEL_IDS.ORDER_ENTRY,
   };
-  // Sizes array must match children order: [firstChildSize, secondChildSize]
   const middleRowSizes =
     layoutSide === "left"
       ? [orderEntrySize, secondSize(orderEntrySize)]
@@ -167,18 +174,22 @@ function createMax2XLVariant(
  * Creates a SplitLayoutModel for the trading desktop.
  * Use as initialLayout with splitStrategy; persist with storageKey and migrate from legacy keys if needed.
  *
- * @param variant - "default" for large screen (orderEntry + main column), "max2XL" for smaller desktop
- * @param layoutSide - "left" | "right" for order entry position (default variant only)
- * @param options - Optional sizes from persistence (mainSplitSize, orderBookSplitSize, dataListSplitSize)
+ * @param options - variant, layoutSide, and optional sizes from persistence
  * @returns SplitLayoutModel
  */
-export function createTradingDesktopLayout(
-  variant: "default" | "max2XL",
-  layoutSide: "left" | "right",
-  options?: CreateTradingDesktopLayoutOptions,
+export function createTradingSplitLayout(
+  options?: TradingSplitLayoutOptions,
 ): SplitLayoutModel {
+  const variant = options?.variant ?? "default";
+  const layoutSide = options?.layoutSide ?? "left";
+  const opts = {
+    mainSplitSize: options?.mainSplitSize ?? DEFAULT_MAIN_SPLIT,
+    orderBookSplitSize: options?.orderBookSplitSize ?? DEFAULT_ORDERBOOK_SPLIT,
+    dataListSplitSize: options?.dataListSplitSize ?? DEFAULT_DATALIST_SPLIT,
+  };
   if (variant === "max2XL") {
-    return createMax2XLVariant(layoutSide, options ?? {});
+    opts.mainSplitSize = options?.mainSplitSize ?? "280px";
+    return createMax2XLVariant(layoutSide, opts);
   }
-  return createDefaultVariant(layoutSide, options ?? {});
+  return createDefaultVariant(layoutSide, opts);
 }
