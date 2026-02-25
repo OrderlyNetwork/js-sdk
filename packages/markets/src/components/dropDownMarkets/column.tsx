@@ -78,6 +78,23 @@ export const useDropDownMarketsColumns = () => {
             );
           },
         },
+        {
+          title: t("markets.openInterest"),
+          dataIndex: "openInterest",
+          align: "right",
+          onSort: true,
+          width: 80,
+          render: (value) => (
+            <Text.numeral
+              rule="human"
+              dp={0}
+              rm={Decimal.ROUND_DOWN}
+              size="2xs"
+            >
+              {value}
+            </Text.numeral>
+          ),
+        },
       ] as Column[];
     },
     [t],
