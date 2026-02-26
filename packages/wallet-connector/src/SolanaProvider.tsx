@@ -78,7 +78,10 @@ export function SolanaProvider({ children, ...props }: SolanaInitialProps) {
         window.open(adapter?.url, "_blank");
       }
     } else {
-      ee.emit("wallet:connect-error", { message: error?.message });
+      ee.emit("wallet:connect-error", {
+        message:
+          error?.message || "Please switch to a wallet with Solana address.",
+      });
     }
   };
 

@@ -4,9 +4,6 @@ import { create } from "zustand";
 import { ChainNamespace } from "@orderly.network/types";
 import { Network, SolanaChainsMap } from "../types";
 
-const CONNECT_POLL_INTERVAL_MS = 250;
-const CONNECT_PUBLIC_KEY_TIMEOUT_MS = 2_000;
-
 interface WalletAccount {
   address: string;
 }
@@ -38,6 +35,7 @@ interface WalletMethods {
   connectSolana: () => Promise<void>;
   walletSolana: any;
   publicKey: any;
+  connecting: boolean;
   signMessage: any;
   signTransaction: any;
   sendTransaction: any;
@@ -113,26 +111,31 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
 
       if (!get().walletMethods?.publicKey) {
         await new Promise<void>((resolve, reject) => {
-          const startedAt = Date.now();
+          const unsubscribe = useSolanaWalletStore.subscribe((state) => {
+            const methods = state.walletMethods;
 
-          const waitForPublicKey = () => {
-            const latestPublicKey = get().walletMethods?.publicKey;
-            if (latestPublicKey) {
+            if (methods?.publicKey) {
+              unsubscribe();
               resolve();
               return;
             }
 
-            if (Date.now() - startedAt >= CONNECT_PUBLIC_KEY_TIMEOUT_MS) {
+            if (methods && !methods.connecting) {
+              unsubscribe();
               reject(
                 new Error("Please switch to a wallet with Solana address."),
               );
-              return;
             }
+          });
 
-            setTimeout(waitForPublicKey, CONNECT_POLL_INTERVAL_MS);
-          };
-
-          waitForPublicKey();
+          const methods = get().walletMethods;
+          if (methods?.publicKey) {
+            unsubscribe();
+            resolve();
+          } else if (methods && !methods.connecting) {
+            unsubscribe();
+            reject(new Error("Please switch to a wallet with Solana address."));
+          }
         });
       }
 

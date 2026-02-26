@@ -105,7 +105,10 @@ export function useWallet() {
       if (params.walletType === WalletConnectType.SOL) {
         setConnectorKey(WalletConnectType.SOL);
         connectSOL(params.walletAdapter!.name).catch((err: Error) => {
-          ee.emit("wallet:connect-error", { message: err?.message });
+          ee.emit("wallet:connect-error", {
+            message:
+              err?.message || "Please switch to a wallet with Solana address.",
+          });
         });
       }
       if (params.walletType === WalletConnectType.PRIVY) {
