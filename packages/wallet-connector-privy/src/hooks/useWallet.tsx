@@ -105,6 +105,11 @@ export function useWallet() {
       if (params.walletType === WalletConnectType.SOL) {
         setConnectorKey(WalletConnectType.SOL);
         connectSOL(params.walletAdapter!.name).catch((err: Error) => {
+          const message = String(err?.message ?? "").toLowerCase();
+          if (message === "wallet not connected") {
+            return;
+          }
+
           ee.emit("wallet:connect-error", {
             message:
               err?.message || "Please switch to a wallet with Solana address.",

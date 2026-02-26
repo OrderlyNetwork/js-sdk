@@ -109,42 +109,12 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
         await updatedWalletMethods.connectSolana();
       }
 
-      if (!get().walletMethods?.publicKey) {
-        await new Promise<void>((resolve, reject) => {
-          const unsubscribe = useSolanaWalletStore.subscribe((state) => {
-            const methods = state.walletMethods;
-
-            if (methods?.publicKey) {
-              unsubscribe();
-              resolve();
-              return;
-            }
-
-            if (methods && !methods.connecting) {
-              unsubscribe();
-              reject(
-                new Error("Please switch to a wallet with Solana address."),
-              );
-            }
-          });
-
-          const methods = get().walletMethods;
-          if (methods?.publicKey) {
-            unsubscribe();
-            resolve();
-          } else if (methods && !methods.connecting) {
-            unsubscribe();
-            reject(new Error("Please switch to a wallet with Solana address."));
-          }
-        });
-      }
-
       const lastestWalletMethods = get().walletMethods;
       if (!lastestWalletMethods) {
         throw new Error("Wallet methods not initialized");
       }
       if (!lastestWalletMethods.publicKey) {
-        throw new Error("Please switch to a wallet with Solana address.");
+        throw new Error("Wallet not connected");
       }
 
       const wallet: Wallet = {
