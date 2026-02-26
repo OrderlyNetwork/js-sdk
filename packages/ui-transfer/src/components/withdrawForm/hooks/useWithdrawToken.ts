@@ -5,10 +5,9 @@ import {
   useTokensInfo,
 } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
-import { WithdrawTo } from "../../../types";
-import { getTokenByTokenList } from "../../../utils";
-import { CurrentChain } from "../../depositForm/hooks";
-import { useToken } from "../../depositForm/hooks/useToken";
+import { CurrentChain, WithdrawTo } from "../../../types";
+import { getUSDCToken } from "../../../utils";
+import { useToken } from "../hooks/useToken";
 
 export function useWithdrawToken(params: {
   currentChain?: CurrentChain | null;
@@ -68,7 +67,7 @@ export function useWithdrawToken(params: {
   useEffect(() => {
     if (!allTokens.length) return;
 
-    const usdcToken = getTokenByTokenList(allTokens);
+    const usdcToken = getUSDCToken(allTokens);
     setToken(usdcToken || allTokens?.[0]);
     setTokens(allTokens);
   }, [allTokens]);
@@ -117,7 +116,7 @@ export function useWithdrawToken(params: {
 
     const holdingSymbols = new Set(allTokens.map((t) => t.symbol));
     if (!sourceToken?.symbol || !holdingSymbols.has(sourceToken.symbol)) {
-      const defaultToken = getTokenByTokenList(allTokens);
+      const defaultToken = getUSDCToken(allTokens);
       if (defaultToken) {
         handleSourceTokenChange(defaultToken);
       }

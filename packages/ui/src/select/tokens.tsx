@@ -45,9 +45,11 @@ export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
     if (typeof props.valueFormatter === "function") {
       return props.valueFormatter(value, {});
     }
+    const findItem = options?.find((token) => token.value === value);
     return (
       <Flex gapX={1}>
         <TokenIcon
+          url={(findItem as any)?.logo_uri}
           name={value}
           className={iconSize ? undefined : icon({ size: props.size })}
           size={iconSize}

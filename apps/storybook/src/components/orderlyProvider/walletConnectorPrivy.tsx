@@ -27,34 +27,22 @@ const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
 
   return Promise.reject(new WalletNotReadyError("wallet not ready"));
 };
-const networkId = import.meta.env.VITE_NETWORK_ID || "testnet";
-const network = networkId === "testnet" ? Network.testnet : Network.mainnet;
-const solanaNetwork =
-  networkId === "testnet"
-    ? WalletAdapterNetwork.Devnet
-    : WalletAdapterNetwork.Mainnet;
-
-const wallets = [
-  new PhantomWalletAdapter(),
-  new SolflareWalletAdapter(),
-  new LedgerWalletAdapter(),
-  new SolanaMobileWalletAdapter({
-    addressSelector: createDefaultAddressSelector(),
-    appIdentity: {
-      uri: `${location.protocol}//${location.host}`,
-    },
-    authorizationResultCache: createDefaultAuthorizationResultCache(),
-    chain: solanaNetwork,
-    onWalletNotFound: mobileWalletNotFoundHanlder,
-  }),
-];
 
 type WalletConnectorPrivyProps = {
   children: ReactNode;
   usePrivy?: boolean;
+  networkId?: string;
 };
 
 export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
+  const networkId =
+    props.networkId || import.meta.env.VITE_NETWORK_ID || "testnet";
+  const network = networkId === "testnet" ? Network.testnet : Network.mainnet;
+  const solanaNetwork =
+    networkId === "testnet"
+      ? WalletAdapterNetwork.Devnet
+      : WalletAdapterNetwork.Mainnet;
+
   return (
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
@@ -78,7 +66,6 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
             }
           : undefined
       }
-      enableSwapDeposit={true}
       wagmiConfig={{
         connectors: [
           wagmiConnectors.injected(),

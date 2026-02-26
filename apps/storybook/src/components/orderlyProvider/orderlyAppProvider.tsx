@@ -1,5 +1,13 @@
 import { FC, PropsWithChildren } from "react";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
+import {
+  Arbitrum,
+  ARBITRUM_MAINNET_CHAINID,
+  ARBITRUM_TESTNET_CHAINID,
+  ArbitrumSepolia,
+  ETHEREUM_MAINNET_CHAINID,
+  SOLANA_TESTNET_CHAINID,
+} from "@orderly.network/types";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
@@ -20,7 +28,7 @@ export const OrderlyAppRootProvider: FC<
       configStore={configStore}
       appIcons={orderlyAppProviderConfig.appIcons}
       restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
-      enableSwapDeposit={true}
+      enableSwapDeposit
       onRouteChange={onRouteChange}
       widgetConfigs={widgetConfigs}
       notification={notification}
@@ -28,23 +36,16 @@ export const OrderlyAppRootProvider: FC<
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}
-      // chainFilter={(config) => {
-      //   return {
-      //     mainnet: [
-      //       { id: ARBITRUM_MAINNET_CHAINID },
-      //       { id: SOLANA_MAINNET_CHAINID },
-      //     ],
-      //     testnet: [
-      //       { id: ARBITRUM_TESTNET_CHAINID },
-      //       { id: SOLANA_TESTNET_CHAINID },
-      //     ],
-      //   };
+      // chainFilter={{
+      //   mainnet: [
+      //     { id: ARBITRUM_MAINNET_CHAINID },
+      //     { id: ETHEREUM_MAINNET_CHAINID },
+      //   ],
+      //   testnet: [
+      //     { id: ARBITRUM_TESTNET_CHAINID },
+      //     { id: SOLANA_TESTNET_CHAINID },
+      //   ],
       // }}
-      // customChains={{
-      //   mainnet: [{ id: Arbitrum.id }],
-      //   testnet: [{ id: ArbitrumSepolia.id }],
-      // }}
-
       // orderMetadata={(order) => {
       //   return {
       //     order_tag: "test_tag",

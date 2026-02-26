@@ -51,12 +51,27 @@ export interface Web3Provider {
     },
   ): Promise<any>;
 
-  getBalance(userAddress: string): Promise<bigint>;
-
   pollTransactionReceiptWithBackoff(
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
     maxRetries?: number,
   ): Promise<any>;
+
+  getBalance(userAddress: string): Promise<bigint>;
+  getBalances(addresses: string[]): Promise<any>;
+
+  estimateGasFee(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+    options: {
+      abi: any;
+    },
+  ): Promise<bigint>;
 }

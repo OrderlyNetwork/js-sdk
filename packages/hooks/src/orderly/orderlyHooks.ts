@@ -68,7 +68,7 @@ export type {
 export { useChain } from "./useChain";
 export { useChainInfo } from "./useChainInfo";
 export { useWithdraw } from "./useWithdraw";
-export { useDeposit } from "./useDeposit";
+export { useDeposit, type UseDepositReturn } from "./useDeposit";
 export { useConvert } from "./useConvert";
 export { useTransfer } from "./useTransfer";
 export { useInternalTransfer } from "./useInternalTransfer";

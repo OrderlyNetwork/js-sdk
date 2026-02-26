@@ -19,7 +19,6 @@ export type TipsProps = {
   /** Optional className for the wrapper (button on mobile, or Tooltip trigger on desktop). */
   className?: string;
   classNames?: {
-    root?: string;
     trigger?: string;
   };
 };

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { API } from "@orderly.network/types";
-import { getTokenByTokenList } from "../../../utils";
-import { CurrentChain } from "../../depositForm/hooks/useChainSelect";
+import { CurrentChain } from "../../../types";
+import { getUSDCToken } from "../../../utils";
 
 type Options = {
   currentChain: CurrentChain | null;
@@ -24,7 +24,7 @@ export function useToken(options: Options) {
 
         setTokens(tokens);
 
-        const newToken = getTokenByTokenList(tokens);
+        const newToken = getUSDCToken(tokens);
 
         if (!newToken) return;
 
