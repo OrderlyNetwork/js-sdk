@@ -91,7 +91,7 @@ export const getMarketsSheetColumns = (
           </Text.numeral>
           <Text.numeral
             rule="human"
-            dp={0}
+            dp={2}
             rm={Decimal.ROUND_DOWN}
             size="2xs"
             intensity={54}

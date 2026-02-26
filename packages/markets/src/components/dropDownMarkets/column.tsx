@@ -87,7 +87,7 @@ export const useDropDownMarketsColumns = () => {
           render: (value) => (
             <Text.numeral
               rule="human"
-              dp={0}
+              dp={2}
               rm={Decimal.ROUND_DOWN}
               size="2xs"
             >
