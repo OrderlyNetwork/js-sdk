@@ -152,13 +152,13 @@ type BaseTradingPageProps = {
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
 };
 
-/** Options passed to getInitialLayout for desktop trading layout (strategy-specific layout creation) */
+/**
+ * Options passed to getInitialLayout for desktop trading layout.
+ * Trading only passes non-layout fields (e.g. variant); layout-related state is owned by layout plugins.
+ */
 export type DesktopLayoutInitialOptions = {
-  variant: "default" | "max2XL";
-  layoutSide: "left" | "right";
-  mainSplitSize?: string;
-  orderBookSplitSize?: string;
-  dataListSplitSize?: string;
+  /** Viewport/screen size variant; layout plugins may use for breakpoint behaviour */
+  variant?: "default" | "max2XL";
 };
 
 export type TradingPageProps = BaseTradingPageProps & {

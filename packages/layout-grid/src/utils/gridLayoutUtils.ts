@@ -1,4 +1,18 @@
-import type { GridLayoutModel, GridLayoutItem } from "../types";
+import type {
+  GridLayoutModel,
+  GridLayoutItem,
+  GridLayoutRule,
+  GridLayoutItemSpec,
+  GridLayoutBreakpointKey,
+} from "../types";
+
+const BREAKPOINT_ORDER: GridLayoutBreakpointKey[] = [
+  "lg",
+  "md",
+  "sm",
+  "xs",
+  "xxs",
+];
 
 /**
  * Default breakpoints for responsive grid layout
@@ -23,32 +37,91 @@ export const DEFAULT_COLS = {
 };
 
 /**
- * Create a default grid layout for given panel IDs
- * Arranges panels in a simple grid pattern
- *
- * @param panelIds - Array of panel IDs to include
- * @returns Default grid layout model
+ * Convert a breakpoint's GridLayoutItemSpec[] to GridLayoutItem[].
+ * Only includes items whose panelId is in panelIds; sets i = panelId.
  */
-export function createDefaultGridLayout(panelIds: string[]): GridLayoutModel {
+function specsToItems(
+  specs: GridLayoutItemSpec[],
+  panelIds: string[],
+): GridLayoutItem[] {
+  const idSet = new Set(panelIds);
+  return specs
+    .filter((spec) => idSet.has(spec.panelId))
+    .map((spec) => ({
+      i: spec.panelId,
+      panelId: spec.panelId,
+      x: spec.x,
+      y: spec.y,
+      w: spec.w,
+      h: spec.h,
+      minW: spec.minW,
+      minH: spec.minH,
+      maxW: spec.maxW,
+      maxH: spec.maxH,
+    }));
+}
+
+/**
+ * Build layouts from a rule: for each breakpoint use its specs or fall back to lg.
+ */
+function buildLayoutsFromRule(
+  rule: GridLayoutRule,
+  panelIds: string[],
+): GridLayoutModel["layouts"] {
+  const result: GridLayoutModel["layouts"] = {};
+  const fallbackSpecs = rule.lg ?? [];
+  for (const bp of BREAKPOINT_ORDER) {
+    const specs = rule[bp] ?? fallbackSpecs;
+    result[bp] = specsToItems(specs, panelIds);
+  }
+  return result;
+}
+
+/**
+ * Default 2-column layout (used when no rule is provided).
+ */
+function defaultTwoColumnLayout(
+  panelIds: string[],
+): GridLayoutModel["layouts"] {
   const items: GridLayoutItem[] = panelIds.map((panelId, index) => ({
     i: panelId,
     panelId,
-    x: (index % 2) * 6, // 2 columns
+    x: (index % 2) * 6,
     y: Math.floor(index / 2),
     w: 6,
     h: 4,
     minW: 3,
     minH: 2,
   }));
+  return {
+    lg: items,
+    md: items,
+    sm: items.map((item) => ({ ...item, x: 0, w: 6 })),
+    xs: items.map((item) => ({ ...item, x: 0, w: 4 })),
+    xxs: items.map((item) => ({ ...item, x: 0, w: 2 })),
+  };
+}
+
+/**
+ * Create a grid layout for given panel IDs, optionally from a layout rule.
+ * When rule is provided, layouts are built from rule (missing breakpoints fall back to lg).
+ * When rule is omitted, uses built-in 2-column default for backward compatibility.
+ *
+ * @param panelIds - Panel IDs to include
+ * @param rule - Optional layout rule (per-breakpoint specs)
+ * @returns Grid layout model
+ */
+export function createDefaultGridLayout(
+  panelIds: string[],
+  rule?: GridLayoutRule,
+): GridLayoutModel {
+  const layouts =
+    rule != null
+      ? buildLayoutsFromRule(rule, panelIds)
+      : defaultTwoColumnLayout(panelIds);
 
   return {
-    layouts: {
-      lg: items,
-      md: items,
-      sm: items.map((item) => ({ ...item, x: 0, w: 6 })),
-      xs: items.map((item) => ({ ...item, x: 0, w: 4 })),
-      xxs: items.map((item) => ({ ...item, x: 0, w: 2 })),
-    },
+    layouts,
     breakpoints: DEFAULT_BREAKPOINTS,
     cols: DEFAULT_COLS,
     compactType: "vertical",

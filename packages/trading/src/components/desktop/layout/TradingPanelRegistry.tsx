@@ -257,35 +257,33 @@ export function createTradingPanelRegistry(
     </Flex>,
   );
 
-  // markets (optional; register only when side markets are shown)
-  if (marketLayout === "left" && resizeable !== false) {
-    const marketsWidget = (
-      <SideMarketsWidget
-        resizeable={resizeable}
-        panelSize={panelSize as "small" | "middle" | "large"}
-        onPanelSizeChange={
-          onPanelSizeChange as (s: "small" | "middle" | "large") => void
-        }
-        symbol={symbol}
-        onSymbolChange={onSymbolChange}
-      />
-    );
-    panels.set(
-      TRADING_PANEL_IDS.MARKETS,
-      <Box
-        intensity={900}
-        pt={3}
-        r="2xl"
-        height="100%"
-        width={marketsWidth ?? 280}
-        style={{ minWidth: marketsWidth ?? 280 }}
-        className="oui-transition-all oui-duration-150"
-        onTransitionEnd={() => setAnimating?.(false)}
-      >
-        {!animating && marketsWidget}
-      </Box>,
-    );
-  }
+  // markets: always register; layout plugin decides whether to show (e.g. include in layout model)
+  const marketsWidget = (
+    <SideMarketsWidget
+      resizeable={resizeable}
+      panelSize={panelSize as "small" | "middle" | "large"}
+      onPanelSizeChange={
+        onPanelSizeChange as (s: "small" | "middle" | "large") => void
+      }
+      symbol={symbol}
+      onSymbolChange={onSymbolChange}
+    />
+  );
+  panels.set(
+    TRADING_PANEL_IDS.MARKETS,
+    <Box
+      intensity={900}
+      pt={3}
+      r="2xl"
+      height="100%"
+      width={marketsWidth ?? 280}
+      style={{ minWidth: marketsWidth ?? 280 }}
+      className="oui-transition-all oui-duration-150"
+      onTransitionEnd={() => setAnimating?.(false)}
+    >
+      {!animating && marketsWidget}
+    </Box>,
+  );
 
   return panels;
 }

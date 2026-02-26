@@ -1,6 +1,47 @@
 import type { LayoutItem } from "react-grid-layout";
 import type { LayoutModel } from "@orderly.network/layout-core";
 
+/** Breakpoint keys aligned with GridLayoutModel.layouts */
+export type GridLayoutBreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";
+
+/**
+ * Single cell layout spec (position and size only; used in rule config).
+ * Does not include `i`; that is set from panelId when building GridLayoutItem.
+ */
+export interface GridLayoutItemSpec {
+  panelId: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  minW?: number;
+  minH?: number;
+  maxW?: number;
+  maxH?: number;
+}
+
+/**
+ * Layout rule: per-breakpoint specs for initial position and size.
+ * Used by createDefaultGridLayout(panelIds, rule). Missing breakpoints fall back to lg.
+ */
+export interface GridLayoutRule {
+  lg?: GridLayoutItemSpec[];
+  md?: GridLayoutItemSpec[];
+  sm?: GridLayoutItemSpec[];
+  xs?: GridLayoutItemSpec[];
+  xxs?: GridLayoutItemSpec[];
+}
+
+/**
+ * One named layout preset for end-user selection.
+ * Multiple presets form the "layouts" array (built-in or resolved by plugin options).
+ */
+export interface GridLayoutPreset {
+  id: string;
+  name: string;
+  rule: GridLayoutRule;
+}
+
 /**
  * Grid layout item configuration
  * Extends react-grid-layout LayoutItem with panel ID

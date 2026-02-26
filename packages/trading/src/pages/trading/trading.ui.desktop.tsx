@@ -3,10 +3,7 @@
  * Chrome (markets, DnD, Flex) is provided by layout plugins (e.g. layout-split).
  */
 import React, { useEffect, useMemo } from "react";
-import {
-  useGetRwaSymbolOpenStatus,
-  useLocalStorage,
-} from "@orderly.network/hooks";
+import { useGetRwaSymbolOpenStatus } from "@orderly.network/hooks";
 import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 import { LayoutHost } from "@orderly.network/layout-core";
 import { API } from "@orderly.network/types";
@@ -50,6 +47,8 @@ export type DesktopLayoutProps = TradingState & {
   getInitialLayout?: (
     options: DesktopLayoutInitialOptions,
   ) => LayoutModel | undefined;
+  /** Optional storage key for layout persistence; when provided (e.g. by grid plugin) overrides default. */
+  storageKey?: string;
 };
 
 /**
@@ -240,30 +239,19 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     if (getInitialLayout) {
       return getInitialLayout({
         variant: max2XL ? "max2XL" : "default",
-        layoutSide: layout,
-        mainSplitSize,
-        orderBookSplitSize,
-        dataListSplitSize,
       });
     }
     if (layoutStrategy) {
       return layoutStrategy.defaultLayout(panelIds);
     }
     return undefined;
-  }, [
-    getInitialLayout,
-    layoutStrategy,
-    max2XL,
-    layout,
-    mainSplitSize,
-    orderBookSplitSize,
-    dataListSplitSize,
-    panelIds,
-  ]);
+  }, [getInitialLayout, layoutStrategy, max2XL, panelIds]);
 
-  const layoutStorageKey = max2XL
-    ? "orderly_trading_desktop_layout_sm"
-    : "orderly_trading_desktop_layout";
+  const layoutStorageKey =
+    props.storageKey ??
+    (max2XL
+      ? "orderly_trading_desktop_layout_sm"
+      : "orderly_trading_desktop_layout");
 
   const defaultLayoutHostClassName = cn(
     "oui-flex oui-flex-1 oui-overflow-hidden",
