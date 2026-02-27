@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext } from "react";
 import { RefferalAPI as API } from "@orderly.network/hooks";
+import { MultiLevelReferralData } from "../hooks/useMultiLevelReferralData";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -105,7 +106,8 @@ export type ReferralContextReturns = {
   wrongNetwork: boolean;
   disabledConnect: boolean;
   generateCode: API.AutoGenerateCode | undefined;
-} & ReferralContextProps;
+} & ReferralContextProps &
+  MultiLevelReferralData;
 
 export const ReferralContext = createContext<ReferralContextReturns>(
   {} as ReferralContextReturns,

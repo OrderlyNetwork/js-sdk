@@ -1,5 +1,38 @@
 # @orderly.network/net
 
+## 2.9.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+
+## 2.9.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 2.9.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
+## 2.9.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.8.14
 
 ### Patch Changes

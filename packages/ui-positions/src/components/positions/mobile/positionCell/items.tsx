@@ -1,8 +1,16 @@
 import { FC, useMemo, useRef } from "react";
-import { ERROR_MSG_CODES, useTpslPriceChecker } from "@orderly.network/hooks";
+import { useTpslPriceChecker } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, PositionType } from "@orderly.network/types";
-import { Badge, cn, Flex, Grid, Statistic, Text } from "@orderly.network/ui";
+import {
+  Badge,
+  cn,
+  Flex,
+  Grid,
+  Statistic,
+  Text,
+  Tips,
+} from "@orderly.network/ui";
 import { SymbolLeverageSheetId } from "@orderly.network/ui-leverage";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
@@ -12,6 +20,7 @@ import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { ShareButtonWidget } from "../../desktop/shareButton";
+import { UnrealizedPnLPopoverCard } from "../../desktop/unrealPnLHover";
 import { PositionCellState } from "./positionCell.script";
 
 export const SymbolToken: FC<PositionCellState> = (props) => {
@@ -48,13 +57,26 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
 export const UnrealPnL: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
+
+  const unrealPnlLabel = (
+    <div className="oui-text-right">
+      <Text intensity={36} className="oui-underline oui-decoration-dotted">
+        {t("common.unrealizedPnl")}
+      </Text>
+      <Text intensity={20} className="oui-ml-0.5">
+        (USDC)
+      </Text>
+    </div>
+  );
+
   return (
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
-        <div className="oui-text-right">
-          <Text intensity={36}>{t("common.unrealizedPnl")}</Text>
-          <Text intensity={20}>(USDC)</Text>
-        </div>
+        <Tips
+          trigger={unrealPnlLabel}
+          content={<UnrealizedPnLPopoverCard />}
+          title={t("common.tips")}
+        />
 
         <Text.pnl
           size="xs"
@@ -114,13 +136,28 @@ export const Margin: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
 
+  const marginTipsContent = (
+    <div className="oui-text-2xs oui-text-base-contrast-80">
+      <div>{t("positions.column.margin.tooltip")}</div>
+      <div className="oui-my-2 oui-h-px oui-w-full oui-bg-base-8" />
+      <div>{t("positions.column.margin.formula")}</div>
+    </div>
+  );
+
+  const marginLabel = (
+    <Text className="oui-underline oui-decoration-dotted">
+      {t("positions.column.margin")}
+    </Text>
+  );
+
   return (
     <Statistic
       label={
-        <span>
-          {t("positions.column.margin")}
-          <Text intensity={20}>(USDC)</Text>
-        </span>
+        <Tips
+          trigger={marginLabel}
+          content={marginTipsContent}
+          title={t("common.tips")}
+        />
       }
       classNames={{
         root: "oui-text-xs",
@@ -214,9 +251,39 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
     return estLiqPrice;
   }, [item.est_liq_price, item.mark_price]);
 
+  const liqTipsContent = (
+    <div className="oui-text-2xs oui-text-base-contrast-80">
+      <div className="oui-text-pretty">
+        {t("common.liquidationPrice.tooltip")}
+      </div>
+      <div className="oui-mt-2">
+        <a
+          href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="oui-text-primary oui-underline"
+        >
+          {t("common.liquidationPrice.tooltip.learnMore")}
+        </a>
+      </div>
+    </div>
+  );
+
+  const liqLabel = (
+    <Text className="oui-underline oui-decoration-dotted">
+      {t("positions.column.liqPrice")}
+    </Text>
+  );
+
   return (
     <Statistic
-      label={t("positions.column.liqPrice")}
+      label={
+        <Tips
+          trigger={liqLabel}
+          content={liqTipsContent}
+          title={t("common.tips")}
+        />
+      }
       align="end"
       classNames={{
         root: "oui-text-xs",
@@ -318,7 +385,7 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
         {fullTPSL}
       </Flex>
       <Flex
-        className="oui-text-2xs oui-text-base-contrast-36 oui-grid-cols-end"
+        className="oui-text-2xs oui-grid-cols-end oui-text-base-contrast-36"
         direction={"column"}
         itemAlign={"end"}
       >

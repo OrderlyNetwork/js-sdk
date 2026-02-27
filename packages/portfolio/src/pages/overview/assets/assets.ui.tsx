@@ -12,6 +12,7 @@ import {
   gradientTextVariants,
   EditIcon,
   EyeCloseIcon,
+  Tooltip,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { AssetScriptReturn } from "./assets.script";
@@ -77,6 +78,7 @@ export const AssetsUI: React.FC<
             unrealROI={props.unrealROI}
             unrealPnL={props.unrealPnL}
             freeCollateral={props.freeCollateral}
+            maxWithdrawAmount={props.maxWithdrawAmount}
             currentLeverage={props.currentLeverage}
             onLeverageEdit={props.onLeverageEdit}
             visible={props.visible}
@@ -106,10 +108,16 @@ type AssetStatisticProps = Pick<
   | "freeCollateral"
   | "onLeverageEdit"
   | "visible"
+  | "maxWithdrawAmount"
 >;
 
 export const AssetStatistic = (props: AssetStatisticProps) => {
   const { t } = useTranslation();
+
+  const maxWithdrawAmountText =
+    props.maxWithdrawAmount === undefined || props.maxWithdrawAmount === null
+      ? "--"
+      : props.maxWithdrawAmount.toString();
 
   return (
     <Grid cols={2} className="oui-h-12">
@@ -137,7 +145,23 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
         </Flex>
       </Statistic>
       <Statistic
-        label={t("portfolio.overview.availableWithdraw")}
+        label={
+          <Tooltip
+            content={t("transfer.withdraw.available.tooltip", {
+              amount: maxWithdrawAmountText,
+            })}
+            className="oui-max-w-[274px]"
+            delayDuration={300}
+          >
+            <Text
+              size="xs"
+              intensity={36}
+              className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+            >
+              {t("portfolio.overview.availableWithdraw")}
+            </Text>
+          </Tooltip>
+        }
         // @ts-ignore
         align="right"
         // @ts-ignore
