@@ -8,12 +8,11 @@ import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 import { LayoutHost } from "@orderly.network/layout-core";
 import { API } from "@orderly.network/types";
 import { Box, cn } from "@orderly.network/ui";
-import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
-import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import {
   createTradingPanelRegistry,
   type TradingPanelRegistryProps,
 } from "../../components/desktop/layout/TradingPanelRegistry";
+import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import { useTradingPageContext } from "../../provider/tradingPageContext";
@@ -29,16 +28,14 @@ import {
   tradindviewMinHeight,
 } from "./trading.script";
 
-const LazyRiskRateWidget = React.lazy(() =>
-  import("../../components/desktop/riskRate").then((mod) => ({
-    default: mod.RiskRateWidget,
-  })),
-);
-const LazyAssetViewWidget = React.lazy(() =>
-  import("../../components/desktop/assetView").then((mod) => ({
-    default: mod.AssetViewWidget,
-  })),
-);
+/** Stable noops to avoid useMemo invalidation when layout props are undefined. */
+const NOOP = () => {};
+const NOOP_LAYOUT = (() => {}) as (v: LayoutPosition) => void;
+const NOOP_MARKET_LAYOUT = (() => {}) as (
+  v: "left" | "top" | "bottom" | "hide",
+) => void;
+/** Stable style object to avoid LayoutHost re-renders from inline object ref change. */
+const LAYOUT_HOST_STYLE = { flex: 1, minHeight: 0 } as const;
 
 export type DesktopLayoutProps = TradingState & {
   className?: string;
@@ -49,6 +46,20 @@ export type DesktopLayoutProps = TradingState & {
   ) => LayoutModel | undefined;
   /** Optional storage key for layout persistence; when provided (e.g. by grid plugin) overrides default. */
   storageKey?: string;
+  /** Optional layout props when plugin provides rule-based layout; defaults used for SwitchLayout. */
+  layout?: LayoutPosition;
+  marketLayout?: "left" | "top" | "bottom" | "hide";
+  onLayout?: (v: LayoutPosition) => void;
+  onMarketLayout?: (v: "left" | "top" | "bottom" | "hide") => void;
+  resizeable?: boolean;
+  panelSize?: "small" | "middle" | "large";
+  onPanelSizeChange?: (v: "small" | "middle" | "large") => void;
+  orderBookSplitSize?: string;
+  dataListSplitSize?: string;
+  mainSplitSize?: string;
+  marketsWidth?: number;
+  animating?: boolean;
+  setAnimating?: (v: boolean) => void;
 };
 
 /**
@@ -57,26 +68,25 @@ export type DesktopLayoutProps = TradingState & {
  */
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const {
-    resizeable,
-    panelSize,
-    onPanelSizeChange,
-    layout,
-    onLayout,
-    marketLayout,
-    onMarketLayout,
-    orderBookSplitSize,
-    dataListSplitSize,
-    mainSplitSize,
     max2XL,
-    showPositionIcon,
     horizontalDraggable,
-    marketsWidth,
     dataListMinHeight,
-    sortableItems,
-    animating,
-    setAnimating,
     tradingViewFullScreen,
   } = props;
+  /* Layout props optional when plugin provides rule-based layout; use defaults for SwitchLayout. */
+  const layout = props.layout ?? "right";
+  const marketLayout = props.marketLayout ?? "left";
+  const onLayout = props.onLayout ?? NOOP_LAYOUT;
+  const onMarketLayout = props.onMarketLayout ?? NOOP_MARKET_LAYOUT;
+  const resizeable = props.resizeable ?? false;
+  const panelSize = props.panelSize ?? "large";
+  const onPanelSizeChange = props.onPanelSizeChange ?? NOOP;
+  const orderBookSplitSize = props.orderBookSplitSize ?? "280px";
+  const dataListSplitSize = props.dataListSplitSize ?? "350px";
+  const mainSplitSize = props.mainSplitSize ?? "280px";
+  const marketsWidth = props.marketsWidth ?? 280;
+  const animating = props.animating ?? false;
+  const setAnimating = props.setAnimating ?? NOOP;
 
   const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
   const symbolInfoBarHeight = useMemo(
@@ -111,54 +121,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     dataListMinHeight +
     space * 4;
 
-  const orderInteractionWidgets = useMemo(
-    () => ({
-      margin: {
-        className: "",
-        element: (
-          <React.Suspense fallback={null}>
-            <LazyRiskRateWidget />
-          </React.Suspense>
-        ),
-      },
-      assets: {
-        className: "oui-border oui-border-line-12",
-        element: (
-          <>
-            <React.Suspense fallback={null}>
-              <LazyAssetViewWidget
-                isFirstTimeDeposit={props.isFirstTimeDeposit}
-              />
-            </React.Suspense>
-            <DepositStatusWidget
-              className="oui-mt-3 oui-gap-y-2"
-              onClick={props.navigateToPortfolio}
-            />
-          </>
-        ),
-      },
-      orderEntry: {
-        className: "",
-        element: (
-          <OrderEntryWidget
-            symbol={props.symbol}
-            disableFeatures={
-              props.disableFeatures as
-                | ("slippageSetting" | "feesInfo")[]
-                | undefined
-            }
-          />
-        ),
-      },
-    }),
-    [
-      props.isFirstTimeDeposit,
-      props.disableFeatures,
-      props.navigateToPortfolio,
-      props.symbol,
-    ],
-  );
-
   const registryProps = useMemo<TradingPanelRegistryProps>(
     () => ({
       symbol: props.symbol,
@@ -179,7 +141,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       symbolInfoBarHeight,
       showCountdown: showCountdown ?? false,
       closeCountdown,
-      showPositionIcon,
       tradingViewFullScreen,
       horizontalDraggable,
       orderBookSplitSize,
@@ -188,8 +149,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       marketsWidth,
       animating,
       setAnimating,
-      sortableItems,
-      orderInteractionWidgets,
     }),
     [
       props.symbol,
@@ -209,7 +168,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       symbolInfoBarHeight,
       showCountdown,
       closeCountdown,
-      showPositionIcon,
       tradingViewFullScreen,
       horizontalDraggable,
       orderBookSplitSize,
@@ -218,8 +176,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       marketsWidth,
       animating,
       setAnimating,
-      sortableItems,
-      orderInteractionWidgets,
     ],
   );
 
@@ -289,7 +245,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         initialLayout={initialLayout}
         storageKey={layoutStorageKey}
         className="oui-flex oui-flex-1 oui-overflow-hidden"
-        style={{ flex: 1, minHeight: 0 }}
+        style={LAYOUT_HOST_STYLE}
       />
     </Box>
   );

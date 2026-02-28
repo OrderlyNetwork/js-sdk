@@ -2,7 +2,7 @@
  * Trading panel registry: builds PanelRegistry from trading state for strategy-based layout.
  * Widget creation logic is centralized here so layout (LayoutHost) stays decoupled from content.
  */
-import React, { type ReactNode } from "react";
+import React from "react";
 import {
   type PanelRegistry,
   TRADING_PANEL_IDS,
@@ -11,9 +11,11 @@ import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
 } from "@orderly.network/markets";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { cn } from "@orderly.network/ui";
+import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
+import type { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { SortablePanel } from "./sortablePanel";
+import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import type { LayoutPosition } from "./switchLayout";
 
 /** Re-export for consumers that import from trading package */
@@ -31,6 +33,16 @@ const LazyOrderBookAndTradesWidget = React.lazy(() =>
     default: mod.OrderBookAndTradesWidget,
   })),
 );
+const LazyRiskRateWidget = React.lazy(() =>
+  import("../riskRate").then((mod) => ({
+    default: mod.RiskRateWidget,
+  })),
+);
+const LazyAssetViewWidget = React.lazy(() =>
+  import("../assetView").then((mod) => ({
+    default: mod.AssetViewWidget,
+  })),
+);
 
 /**
  * Props required to build the trading panel registry.
@@ -44,20 +56,20 @@ export interface TradingPanelRegistryProps {
   tradingViewConfig?: unknown;
   disableFeatures?: unknown;
   navigateToPortfolio?: () => void;
-  sharePnLConfig?: unknown;
+  sharePnLConfig?: SharePnLConfig;
   isFirstTimeDeposit?: boolean;
   resizeable?: boolean;
   panelSize?: "small" | "middle" | "large";
   onPanelSizeChange?: (size: "small" | "middle" | "large") => void;
-  layout: LayoutPosition;
-  onLayout: (layout: LayoutPosition) => void;
-  marketLayout: "left" | "top" | "bottom" | "hide";
-  onMarketLayout: (layout: "left" | "top" | "bottom" | "hide") => void;
+  /** Optional when layout is rule-driven; defaults used for SwitchLayout when undefined. */
+  layout?: LayoutPosition;
+  onLayout?: (layout: LayoutPosition) => void;
+  marketLayout?: "left" | "top" | "bottom" | "hide";
+  onMarketLayout?: (layout: "left" | "top" | "bottom" | "hide") => void;
   /** Computed: symbol bar height (e.g. 104 with countdown, 56 without) */
   symbolInfoBarHeight: number;
   showCountdown: boolean;
   closeCountdown: () => void;
-  showPositionIcon: boolean;
   /** TradingView fullscreen from localStorage */
   tradingViewFullScreen: boolean;
   /** Whether horizontal split is draggable (e.g. min-width 1440px) */
@@ -69,13 +81,6 @@ export interface TradingPanelRegistryProps {
   marketsWidth?: number;
   animating?: boolean;
   setAnimating?: (v: boolean) => void;
-  /** Order-entry sortable keys (e.g. ["margin", "assets", "orderEntry"]) */
-  sortableItems: string[];
-  /** Map of order-entry sub-widgets (margin, assets, orderEntry) for SortablePanel */
-  orderInteractionWidgets: Record<
-    string,
-    { className: string; element: ReactNode }
-  >;
 }
 
 /**
@@ -85,68 +90,57 @@ export interface TradingPanelRegistryProps {
 export function createTradingPanelRegistry(
   props: TradingPanelRegistryProps,
 ): PanelRegistry {
+  const layoutResolved = props.layout ?? "right";
+  const marketLayoutResolved = props.marketLayout ?? "left";
+  const onLayoutResolved = props.onLayout ?? (() => {});
+  const onMarketLayoutResolved = props.onMarketLayout ?? (() => {});
+
   const {
     symbol,
     onSymbolChange,
     tradingViewConfig,
-    layout,
-    onLayout,
-    marketLayout,
-    onMarketLayout,
-    symbolInfoBarHeight,
     showCountdown,
     closeCountdown,
-    showPositionIcon,
     tradingViewFullScreen,
-    horizontalDraggable,
-    orderBookSplitSize,
-    dataListSplitSize,
-    mainSplitSize,
     resizeable,
     panelSize,
     onPanelSizeChange,
     sharePnLConfig,
-    marketsWidth,
     animating,
     setAnimating,
   } = props;
+  const layout = layoutResolved;
+  const onLayout = onLayoutResolved;
+  const marketLayout = marketLayoutResolved;
+  const onMarketLayout = onMarketLayoutResolved;
 
   const config = (tradingViewConfig ?? {}) as {
     library_path?: string;
     [key: string]: unknown;
   };
   const { library_path, ...restTradingViewConfig } = config;
-  const { sortableItems, orderInteractionWidgets } = props;
 
-  const panels = new Map<string, ReactNode>();
+  const panels = new Map<string, React.ReactNode>();
 
   // symbolInfoBar
   panels.set(
     TRADING_PANEL_IDS.SYMBOL_INFO_BAR,
-    <Box
-      intensity={900}
-      r="2xl"
-      px={3}
-      width="100%"
-      style={{ minHeight: symbolInfoBarHeight, height: symbolInfoBarHeight }}
-    >
-      <SymbolInfoBarFullWidget
-        symbol={symbol}
-        onSymbolChange={onSymbolChange}
-        closeCountdown={closeCountdown}
-        showCountdown={showCountdown}
-        trailing={
-          <React.Suspense fallback={null}>
-            <LazySwitchLayout
-              layout={layout}
-              onLayout={onLayout}
-              marketLayout={marketLayout}
-              onMarketLayout={onMarketLayout}
-            />
-          </React.Suspense>
-        }
-      />
-    </Box>,
+    <SymbolInfoBarFullWidget
+      symbol={symbol}
+      onSymbolChange={onSymbolChange}
+      closeCountdown={closeCountdown}
+      showCountdown={showCountdown}
+      trailing={
+        <React.Suspense fallback={null}>
+          <LazySwitchLayout
+            layout={layout}
+            onLayout={onLayout}
+            marketLayout={marketLayout}
+            onMarketLayout={onMarketLayout}
+          />
+        </React.Suspense>
+      }
+    />,
   );
 
   // tradingView (chart)
@@ -169,92 +163,57 @@ export function createTradingPanelRegistry(
       libraryPath={library_path}
     />
   );
-  panels.set(
-    TRADING_PANEL_IDS.TRADING_VIEW,
-    <Box
-      width="100%"
-      height="100%"
-      intensity={900}
-      r="2xl"
-      style={{ flex: 1, minWidth: 540 }}
-      className="oui-overflow-hidden"
-    >
-      {tradingviewWidget}
-    </Box>,
-  );
+  panels.set(TRADING_PANEL_IDS.TRADING_VIEW, tradingviewWidget);
 
   // orderbook
   panels.set(
     TRADING_PANEL_IDS.ORDERBOOK,
-    <Box
-      r="2xl"
-      height="100%"
-      style={{
-        minWidth: 280,
-        maxWidth: horizontalDraggable ? 732 : 280,
-        width: orderBookSplitSize ?? "280px",
-      }}
-      className="oui-overflow-hidden"
-    >
-      <React.Suspense fallback={null}>
-        <LazyOrderBookAndTradesWidget symbol={symbol} />
-      </React.Suspense>
-    </Box>,
+    <React.Suspense fallback={null}>
+      <LazyOrderBookAndTradesWidget symbol={symbol} />
+    </React.Suspense>,
   );
 
   // dataList
   panels.set(
     TRADING_PANEL_IDS.DATA_LIST,
-    <Box
-      intensity={900}
-      r="2xl"
-      p={2}
-      style={{
-        height: dataListSplitSize ?? "350px",
-        minHeight: 350,
-      }}
-      className="oui-overflow-hidden"
-    >
-      <React.Suspense fallback={null}>
-        <LazyDataListWidget
-          current={undefined}
-          symbol={symbol}
-          sharePnLConfig={sharePnLConfig}
-        />
-      </React.Suspense>
-    </Box>,
+    <React.Suspense fallback={null}>
+      <LazyDataListWidget
+        current={undefined}
+        symbol={symbol}
+        sharePnLConfig={sharePnLConfig}
+      />
+    </React.Suspense>,
   );
 
-  // orderEntry (SortablePanel list)
+  // order-entry sub panels: margin / assets / main order entry
   panels.set(
-    TRADING_PANEL_IDS.ORDER_ENTRY,
-    <Flex
-      gapY={2}
-      direction="column"
-      height="100%"
-      style={{
-        minWidth: 280,
-        maxWidth: horizontalDraggable ? 360 : 280,
-        width: mainSplitSize ?? "280px",
-      }}
-    >
-      {sortableItems.map((key: string) => (
-        <SortablePanel
-          key={key}
-          id={key}
-          showIndicator={showPositionIcon}
-          className={
-            orderInteractionWidgets[key as keyof typeof orderInteractionWidgets]
-              ?.className ?? ""
-          }
-        >
-          {
-            orderInteractionWidgets[key as keyof typeof orderInteractionWidgets]
-              ?.element
-          }
-        </SortablePanel>
-      ))}
-    </Flex>,
+    TRADING_PANEL_IDS.MARGIN,
+    <React.Suspense fallback={null}>
+      <LazyRiskRateWidget />
+    </React.Suspense>,
+  );
+
+  panels.set(
+    TRADING_PANEL_IDS.ASSETS,
+    <>
+      <React.Suspense fallback={null}>
+        <LazyAssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+      </React.Suspense>
+      <DepositStatusWidget
+        className="oui-mt-3 oui-gap-y-2"
+        onClick={props.navigateToPortfolio}
+      />
+    </>,
+  );
+
+  panels.set(
+    TRADING_PANEL_IDS.MAIN,
+    <OrderEntryWidget
+      symbol={symbol}
+      disableFeatures={
+        props.disableFeatures as ("slippageSetting" | "feesInfo")[] | undefined
+      }
+    />,
   );
 
   // markets: always register; layout plugin decides whether to show (e.g. include in layout model)
@@ -263,7 +222,9 @@ export function createTradingPanelRegistry(
       resizeable={resizeable}
       panelSize={panelSize as "small" | "middle" | "large"}
       onPanelSizeChange={
-        onPanelSizeChange as (s: "small" | "middle" | "large") => void
+        onPanelSizeChange as unknown as React.Dispatch<
+          React.SetStateAction<"small" | "middle" | "large">
+        >
       }
       symbol={symbol}
       onSymbolChange={onSymbolChange}
@@ -271,18 +232,9 @@ export function createTradingPanelRegistry(
   );
   panels.set(
     TRADING_PANEL_IDS.MARKETS,
-    <Box
-      intensity={900}
-      pt={3}
-      r="2xl"
-      height="100%"
-      width={marketsWidth ?? 280}
-      style={{ minWidth: marketsWidth ?? 280 }}
-      className="oui-transition-all oui-duration-150"
-      onTransitionEnd={() => setAnimating?.(false)}
-    >
+    <div onTransitionEnd={() => setAnimating?.(false)}>
       {!animating && marketsWidget}
-    </Box>,
+    </div>,
   );
 
   return panels;

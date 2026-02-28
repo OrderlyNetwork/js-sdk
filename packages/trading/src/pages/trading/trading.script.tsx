@@ -14,8 +14,6 @@ import {
 } from "@orderly.network/types";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
-import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
-import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { PortfolioSheetWidget } from "../../components/mobile/portfolioSheet";
 import { useTradingLocalStorage } from "../../hooks/";
 import { useTradingPageContext } from "../../provider/tradingPageContext";
@@ -46,13 +44,6 @@ export const tradingViewMinWidth = 540;
 export const dataListMaxHeight = 800;
 export const dataListInitialHeight = 350;
 
-const ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
-  "orderly_order_entry_side_markets_layout";
-
-const ORDERLY_SIDE_MARKETS_MODE_KEY = "orderly_side_markets_mode";
-
-const ORDERLY_HORIZONTAL_MARKETS_LAYOUT = "orderly_horizontal_markets_layout";
-
 export type MarketLayoutPosition = "left" | "top" | "bottom" | "hide";
 
 export const useTradingScript = () => {
@@ -78,18 +69,6 @@ export const useTradingScript = () => {
 
   /** max-width: 1680px */
   const max4XL = useMediaQuery("(max-width: 1680px)");
-
-  // Order entry and side market list position, default Order entry in right
-  const [layout, setLayout] = useLocalStorage<LayoutPosition>(
-    ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT,
-    "right",
-  );
-
-  // Horizontal markets layout position, default left
-  const [marketLayout, setMarketLayout] = useLocalStorage<MarketLayoutPosition>(
-    ORDERLY_HORIZONTAL_MARKETS_LAYOUT,
-    "left",
-  );
 
   /** Order-entry sortable keys (margin, assets, orderEntry); used by desktop layout and split chrome */
   const [sortableItems, setSortableItems] = useLocalStorage<string[]>(
@@ -128,28 +107,11 @@ export const useTradingScript = () => {
     isFirstTimeDeposit,
   });
 
-  const marketsCollapseState = useMarketsCollapse({ resizeable: min3XL });
-
   const observerState = useObserverOrderEntry({ max2XL });
-
-  const marketsWidth = useMemo(() => {
-    switch (marketsCollapseState.panelSize) {
-      case "small":
-        return 0;
-      case "middle":
-        return 70;
-      case "large":
-        return 280;
-      default:
-        return 0;
-    }
-  }, [marketsCollapseState.panelSize]);
 
   const tradindviewMaxHeight = max2XL ? 1200 : 600;
 
   const dataListMinHeight = canTrade ? 379 : 277;
-
-  const splitSizeState = useSplitSize({ dep: layout });
 
   const tradingViewHeightState = useExtraHeight({
     orderEntryViewRef: observerState.orderEntryViewRef,
@@ -163,10 +125,6 @@ export const useTradingScript = () => {
       : undefined;
 
   const map = {
-    layout,
-    onLayout: setLayout,
-    marketLayout,
-    onMarketLayout: setMarketLayout,
     max2XL,
     min3XL,
     max4XL,
@@ -174,13 +132,10 @@ export const useTradingScript = () => {
     openMarketsSheet,
     onOpenMarketsSheetChange: setOpenMarketsSheet,
     horizontalDraggable,
-    ...marketsCollapseState,
     ...positionsState,
-    ...splitSizeState,
     ...observerState,
     restrictedInfo,
     ...tradingViewHeightState,
-    marketsWidth,
     tradindviewMaxHeight,
     dataListMinHeight,
     total,
@@ -196,35 +151,6 @@ export const useTradingScript = () => {
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
-};
-
-const useMarketsCollapse = (options: { resizeable: boolean }) => {
-  const { resizeable } = options;
-  const [animating, setAnimating] = useState(false);
-
-  const [panelSize, setPanelSize] = useLocalStorage<
-    "small" | "middle" | "large"
-  >(ORDERLY_SIDE_MARKETS_MODE_KEY, "large");
-
-  const onPanelSizeChange = (collapsed: "small" | "middle" | "large") => {
-    setPanelSize(collapsed);
-    setAnimating(true);
-  };
-
-  const memoizedPanelSize = useMemo<"small" | "middle" | "large">(() => {
-    // Force only two states
-    const normalized = panelSize === "large" ? "large" : "middle";
-    // under 1440px markets force collapsed
-    return resizeable ? normalized : "middle";
-  }, [resizeable, panelSize]);
-
-  return {
-    resizeable: resizeable,
-    panelSize: memoizedPanelSize,
-    onPanelSizeChange: onPanelSizeChange,
-    animating: animating,
-    setAnimating: setAnimating,
-  } as const;
 };
 
 const useOrderEntryPositions = (options: {
@@ -273,46 +199,6 @@ const useOrderEntryPositions = (options: {
     positions: pos,
     showPositionIcon,
     updatePositions,
-  };
-};
-
-const useSplitSize = (options: { dep: any }) => {
-  const { dep } = options;
-  const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
-    "orderly_main_split_size",
-    `${orderEntryMinWidth}px`,
-    dep,
-  );
-  const [dataListSplitSize, setDataListSplitSize] = useSplitPersistent(
-    "orderly_datalist_split_size",
-    `${dataListInitialHeight}px`,
-    // undefined,
-  );
-  const [orderBookSplitSize, setOrderbookSplitSize] = useSplitPersistent(
-    "orderly_orderbook_split_size",
-    "280px",
-    dep,
-  );
-
-  const [dataListSplitHeightSM, setDataListSplitHeightSM] = useSplitPersistent(
-    "orderly_datalist_split_height_sm",
-    "350px",
-  );
-
-  const [orderBookSplitHeightSM, setOrderbookSplitHeightSM] =
-    useSplitPersistent("orderly_orderbook_split_height_sm", "280px");
-
-  return {
-    orderBookSplitSize,
-    setOrderbookSplitSize,
-    dataListSplitSize,
-    setDataListSplitSize,
-    mainSplitSize,
-    setMainSplitSize,
-    dataListSplitHeightSM,
-    setDataListSplitHeightSM,
-    orderBookSplitHeightSM,
-    setOrderbookSplitHeightSM,
   };
 };
 

@@ -4,10 +4,7 @@
  */
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  createTradingSplitLayout,
-  registerLayoutSplitPlugin,
-} from "@orderly.network/layout-split";
+import { registerLayoutSplitPlugin } from "@orderly.network/layout-split";
 import { TradingPage } from "@orderly.network/trading";
 import { OrderlyPluginProvider } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
@@ -72,21 +69,14 @@ export const SplitLayoutViaPlugin: Story = {
   },
 };
 
-/** With plugin options: custom getInitialLayout (same split, plugin still injects strategy) */
+/** With plugin options: customize preset list via layouts(builtIn) => finalPresets */
 export const SplitLayoutViaPluginWithOptions: Story = {
   decorators: [
     (Story) => (
       <OrderlyPluginProvider
         plugins={[
           registerLayoutSplitPlugin({
-            getInitialLayout: (opts) =>
-              createTradingSplitLayout({
-                variant: opts?.variant,
-                layoutSide: opts?.layoutSide,
-                mainSplitSize: opts?.mainSplitSize,
-                orderBookSplitSize: opts?.orderBookSplitSize,
-                dataListSplitSize: opts?.dataListSplitSize,
-              }),
+            layouts: (builtIn) => builtIn,
           }),
         ]}
       >

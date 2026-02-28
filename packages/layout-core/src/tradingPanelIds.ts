@@ -9,6 +9,9 @@ export const TRADING_PANEL_IDS = {
   ORDERBOOK: "orderbook",
   DATA_LIST: "dataList",
   ORDER_ENTRY: "orderEntry",
+  MARGIN: "orderEntryMargin",
+  ASSETS: "orderEntryAssets",
+  MAIN: "orderEntryMain",
   MARKETS: "markets",
 } as const;
 

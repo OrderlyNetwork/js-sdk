@@ -1,148 +1,77 @@
-import React, { useMemo, useCallback } from "react";
-import type {
-  LayoutRendererProps,
-  PanelRegistry,
-} from "@orderly.network/layout-core";
-import { SplitLayout } from "./components/SplitLayout";
-import type { SplitLayoutModel, SplitLayoutNode } from "./types";
+import React, { useRef, useCallback } from "react";
+import type { LayoutRendererProps } from "@orderly.network/layout-core";
+import { SplitNodeRenderer } from "./components/SplitNodeRenderer";
+import { useBreakpointFromWidth } from "./hooks/useBreakpointFromWidth";
+import type { SplitLayoutModel } from "./types";
+import {
+  getNodeAtPath,
+  getSizesFromChildren,
+  sizesAreEqual,
+  updateSizeAtPath,
+} from "./utils/splitRendererUtils";
 
 /**
- * Deep clone and update sizes at a specific path in the split tree
- * @param node - The root node
- * @param path - Array of indices representing the path to the target split
- * @param newSize - The new size value
- * @returns Updated node (immutable update)
- */
-function updateSizeAtPath(
-  node: SplitLayoutNode,
-  path: number[],
-  newSize: string,
-): SplitLayoutNode {
-  // If we've reached the target (path is empty), update the size
-  if (node.type === "panel") {
-    return { ...node, size: newSize };
-  }
-
-  // Clone the split node
-  const updatedNode: SplitLayoutNode = {
-    ...node,
-    children: [...node.children],
-    sizes: node.sizes ? [...node.sizes] : undefined,
-  };
-
-  // If path is empty, this is the split we need to update sizes for
-  if (path.length === 0) {
-    // Store the new size - the first child's percentage
-    updatedNode.sizes = updatedNode.sizes || [];
-    updatedNode.sizes[0] = newSize;
-    return updatedNode;
-  }
-
-  // Otherwise, recurse into the child at path[0]
-  const [childIndex, ...restPath] = path;
-  if (childIndex < updatedNode.children.length) {
-    updatedNode.children[childIndex] = updateSizeAtPath(
-      updatedNode.children[childIndex],
-      restPath,
-      newSize,
-    );
-  }
-
-  return updatedNode;
-}
-
-/**
- * Props for internal split node rendering
- */
-interface RenderSplitNodeProps {
-  node: SplitLayoutNode;
-  panels: PanelRegistry;
-  path: number[];
-  onSizeChange: (path: number[], size: string) => void;
-}
-
-/**
- * Render a single split layout node
- */
-function SplitNodeRenderer({
-  node,
-  panels,
-  path,
-  onSizeChange,
-}: RenderSplitNodeProps): React.ReactElement | null {
-  if (node.type === "panel") {
-    const panel = panels.get(node.panelId);
-    if (!panel) {
-      console.warn(`Panel ${node.panelId} not found in registry`);
-      return null;
-    }
-    // Wrap panel in a div to ensure it can receive styles from SplitLayout
-    return <>{panel}</>;
-  }
-
-  // node.type === "split"
-  const { mode, children, sizes } = node;
-
-  return (
-    <SplitLayout
-      mode={mode}
-      onSizeChange={(size) => {
-        // Notify parent with the path to this split
-        onSizeChange(path, size);
-      }}
-    >
-      {children.map((child, index) => (
-        <SplitNodeRenderer
-          key={`child-${index}`}
-          node={child}
-          panels={panels}
-          path={[...path, index]}
-          onSizeChange={onSizeChange}
-        />
-      ))}
-    </SplitLayout>
-  );
-}
-
-/**
- * Split layout renderer component
- * Renders a split layout tree based on the layout model
+ * Split layout renderer: picks root by current breakpoint (from container width),
+ * renders that tree, and on size change updates only the current breakpoint's root.
  */
 export function SplitRenderer(
   props: LayoutRendererProps<SplitLayoutModel>,
 ): React.ReactElement {
   const { layout, panels, onLayoutChange, className, style } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const breakpoint = useBreakpointFromWidth(containerRef, {
+    breakpoints: layout.breakpoints,
+    fallbackWidth: layout.breakpoints.lg,
+  });
 
-  // Handle size change at a specific path
+  const rootNode = layout.layouts[breakpoint] ?? layout.layouts.lg;
+
   const handleSizeChange = useCallback(
-    (path: number[], size: string) => {
-      // Create updated layout with new size at the specified path
-      const updatedRoot = updateSizeAtPath(layout.root, path, size);
+    (path: number[], sizes: string[]) => {
+      const nodeAtPath = getNodeAtPath(rootNode, path);
+      const currentSizes =
+        nodeAtPath?.type === "split"
+          ? getSizesFromChildren(nodeAtPath.children)
+          : undefined;
+      if (sizesAreEqual(currentSizes, sizes)) {
+        return;
+      }
+      const updatedRoot = updateSizeAtPath(rootNode, path, sizes);
       const updatedLayout: SplitLayoutModel = {
         ...layout,
-        root: updatedRoot,
+        layouts: {
+          ...layout.layouts,
+          [breakpoint]: updatedRoot,
+        },
       };
       onLayoutChange(updatedLayout);
     },
-    [layout, onLayoutChange],
+    [layout, breakpoint, rootNode, onLayoutChange],
   );
 
-  // Handle empty panels
   if (panels.size === 0) {
     return (
-      <div className={className} style={style}>
+      <div ref={containerRef} className={className} style={style}>
         {/* Empty state - no panels registered */}
       </div>
     );
   }
 
   return (
-    <div className={className} style={style}>
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ ...style, width: "100%", minWidth: 0 }}
+    >
       <SplitNodeRenderer
-        node={layout.root}
+        node={rootNode}
         panels={panels}
         path={[]}
         onSizeChange={handleSizeChange}
+        rootNode={rootNode}
+        breakpoint={breakpoint}
+        layout={layout}
+        onLayoutChange={onLayoutChange}
       />
     </div>
   );

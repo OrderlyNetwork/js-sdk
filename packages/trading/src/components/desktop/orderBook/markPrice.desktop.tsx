@@ -1,11 +1,12 @@
 import { FC, useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { BasicSymbolInfo } from "../../../types/types";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
-import { MiddlePriceView } from "../../base/orderBook/midPriceView";
-import { MarkPriceView } from "../../base/orderBook/markPrice";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { BasicSymbolInfo } from "../../../types/types";
+import { MarkPriceView } from "../../base/orderBook/markPrice";
+import { MiddlePriceView } from "../../base/orderBook/midPriceView";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
+
 interface DesktopMarkPriceProps {
   markPrice: number;
   lastPrice: number[];
@@ -23,7 +24,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
       <div
         className={cn(
           "oui-basis-7/12 oui-flex oui-flex-row oui-items-center oui-mr-2 oui-justify-between",
-          showTotal && "oui-basis-5/12"
+          showTotal && "oui-basis-5/12",
         )}
       >
         <MiddlePriceView
@@ -38,7 +39,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
         className={cn(
           "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
           showTotal && "oui-basis-7/12",
-          "oui-pr-3"
+          "oui-pr-3",
         )}
       >
         <Spread asks={asks} bids={bids} />
@@ -56,23 +57,31 @@ const Spread: FC<{
   const { t } = useTranslation();
 
   const spread = useMemo(() => {
-    if (bids.length === 0 && asks.length === 0) {
+    if (!bids?.length || !asks?.length) {
       return 0;
     }
-    const bid1 = Number.isNaN(bids[0][0]) ? 0 : bids[0][0];
-    const index = asks.reverse().findIndex((item) => !Number.isNaN(item[0]));
 
-    let ask1 = 0.0;
-    if (index !== -1) {
-      ask1 = Number.isNaN(asks[index][0]) ? 0 : asks[index][0];
+    const rawBid = bids[0]?.[0];
+    const bid1 = Number.isNaN(Number(rawBid)) ? 0 : Number(rawBid);
+
+    let ask1 = 0;
+    for (let i = asks.length - 1; i >= 0; i--) {
+      const price = asks[i]?.[0];
+      if (!Number.isNaN(Number(price))) {
+        ask1 = Number(price);
+        break;
+      }
     }
+
+    if (!bid1 || !ask1) {
+      return 0;
+    }
+
     const dValue = new Decimal(ask1)
       .sub(bid1)
       .div(new Decimal(ask1).add(bid1).div(2));
-    // 0.00006416604461251195
-    // 0.000065
-    // 0.0065
-    return Math.ceil(dValue.toNumber() * 1000000 + 0.1) / 10000;
+
+    return Math.ceil(dValue.toNumber() * 1_000_000 + 0.1) / 10_000;
   }, [asks, bids]);
 
   return (

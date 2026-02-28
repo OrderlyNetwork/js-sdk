@@ -1,39 +1,61 @@
 /**
  * @orderly.network/layout-split
  *
- * Split layout strategy implementation for Orderly layout system.
- * Provides split-pane layout with resizable panels using @uiw/react-split.
+ * Split layout strategy: responsive tree-based layout with layouts per breakpoint (lg, md, sm, xs, xxs).
+ * Provides split-pane layout with resizable panels using react-resizable-panels (Resizable).
  */
 
-// Strategy
 export { splitStrategy } from "./splitStrategy";
-
-// Components (for backward compatibility or direct use)
 export { SplitLayout } from "./components/SplitLayout";
-export type { SplitLayoutProps } from "./components/SplitLayout";
-export { SplitLineBar } from "./components/SplitLineBar";
-export type { SplitLineBarProps } from "./components/SplitLineBar";
+export type {
+  SplitLayoutProps,
+  PanelConstraints,
+} from "./components/SplitLayout";
 
-// Types
-export type { SplitLayoutModel, SplitLayoutNode } from "./types";
+export type {
+  SplitLayoutModel,
+  SplitLayoutNode,
+  SplitLayoutRuleNode,
+  SplitLayoutRule,
+  SplitLayoutPreset,
+  SplitLayoutBreakpointKey,
+  SplitLayoutBreakpoints,
+  SplitLayoutChildConstraints,
+} from "./types";
 
-// Utils
 export {
   createDefaultSplitLayout,
+  createDefaultSplitLayoutFromRule,
+  buildSplitLayoutFromRule,
+  normalizeRuleNodeToRuntime,
+  getSortableIdForChild,
+  updateOrderAtPath,
   serializeSplitLayout,
   deserializeSplitLayout,
 } from "./utils/splitLayoutUtils";
+export { getDefaultSplitPresets } from "./utils/defaultPresets";
 export {
   createTradingSplitLayout,
   type TradingSplitLayoutOptions,
 } from "./utils/tradingSplitLayout";
 
-/** Plugin and chrome for Trading desktop */
+export {
+  SplitPresetProvider,
+  useSplitPresetContext,
+} from "./SplitPresetContext";
+export type {
+  SplitPresetContextValue,
+  SplitPresetProviderProps,
+} from "./SplitPresetContext";
+
 export {
   registerLayoutSplitPlugin,
   type LayoutSplitPluginOptions,
+  type ResolveSplitLayoutPresets,
 } from "./plugin";
 export {
   SplitTradingDesktopChrome,
   type SplitTradingDesktopChromeProps,
 } from "./components/SplitTradingDesktopChrome";
+
+export { DEFAULT_SPLIT_BREAKPOINTS, SPLIT_BREAKPOINT_ORDER } from "./constants";

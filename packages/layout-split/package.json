@@ -30,7 +30,6 @@
     "@orderly.network/trading": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@uiw/react-split": "^5.9.3",
     "react-resizable-panels": "^4.6.5"
   },
   "devDependencies": {
