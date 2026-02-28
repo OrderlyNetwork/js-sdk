@@ -7,7 +7,7 @@ import {
   positions as positionsPerp,
   account as accountPerp,
 } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 
 export const calculatePositions = (
   positions: API.PositionExt[],
@@ -86,7 +86,7 @@ export const calculatePositions = (
       (tpslOrder) => tpslOrder.account_id === item.account_id,
     );
 
-    const tpsl = formatTPSL(filteredTPSLOrders, item.symbol);
+    const tpsl = formatTPSL(filteredTPSLOrders, item.symbol, item.margin_mode);
 
     return {
       ...item,
@@ -101,7 +101,11 @@ export const calculatePositions = (
   });
 };
 
-function formatTPSL(tpslOrders: API.AlgoOrder[], symbol: string) {
+function formatTPSL(
+  tpslOrders: API.AlgoOrder[],
+  symbol: string,
+  marginMode?: MarginMode,
+) {
   /**
    * Merge TP/SL order data into position rows
    * Each position gets two TP/SL categories:
@@ -112,7 +116,7 @@ function formatTPSL(tpslOrders: API.AlgoOrder[], symbol: string) {
   if (Array.isArray(tpslOrders) && tpslOrders.length) {
     // Find TP/SL orders matching this position's symbol
     const { fullPositionOrder, partialPositionOrders } =
-      findPositionTPSLFromOrders(tpslOrders, symbol);
+      findPositionTPSLFromOrders(tpslOrders, symbol, marginMode);
 
     // Extract TP/SL prices from full position order
     const full_tp_sl = fullPositionOrder

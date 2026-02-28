@@ -27,10 +27,15 @@ const useOrderEntryNextInternal = (
   const orderEntity = useOrderStore((state) => state.entry);
   const orderEntryActions = useOrderStore((state) => state.actions);
 
-  // Initialize order when symbol changes (global store: single form at a time)
+  // Initialize order when symbol changes (global store: single form at a time).
+  // When initialOrder is provided (e.g. from Advanced TPSL popup), apply it fully after init
+  // so quantity, price, TP/SL etc. are not left empty and main form / popup stay in sync.
   useEffect(() => {
     console.log("---------", symbol, options.initialOrder);
     orderEntryActions.initOrder(symbol, options.initialOrder);
+    if (options.initialOrder) {
+      orderEntryActions.updateOrder(options.initialOrder);
+    }
   }, [symbol]);
 
   // console.log("orderEntity", orderEntity);

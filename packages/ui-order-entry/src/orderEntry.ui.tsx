@@ -595,15 +595,17 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         }}
         contentProps={{ side: "right", closeable: false }}
       >
-        <TPSLAdvancedWidget
-          setOrderValue={setOrderValue}
-          order={formattedOrder as OrderlyOrder}
-          onSubmit={onSubmitAdvancedTPSL}
-          onClose={() => {
-            setShowTPSLAdvanced(false);
-          }}
-          symbolLeverage={props.symbolLeverage}
-        />
+        {showTPSLAdvanced && (
+          <TPSLAdvancedWidget
+            setOrderValue={setOrderValue}
+            order={formattedOrder as OrderlyOrder}
+            onSubmit={onSubmitAdvancedTPSL}
+            onClose={() => {
+              setShowTPSLAdvanced(false);
+            }}
+            symbolLeverage={props.symbolLeverage}
+          />
+        )}
       </SimpleSheet>
     </OrderEntryProvider>
   );

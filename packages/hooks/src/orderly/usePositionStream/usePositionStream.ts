@@ -280,7 +280,7 @@ export const usePositionStream = (
       rows = rows.map((item) => {
         // Find TP/SL orders matching this position's symbol
         const { fullPositionOrder, partialPositionOrders } =
-          findPositionTPSLFromOrders(tpslOrders, item.symbol);
+          findPositionTPSLFromOrders(tpslOrders, item.symbol, item.margin_mode);
 
         // Extract TP/SL prices from full position order
         const full_tp_sl = fullPositionOrder

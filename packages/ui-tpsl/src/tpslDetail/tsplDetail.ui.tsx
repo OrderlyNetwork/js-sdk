@@ -33,6 +33,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     symbolInfo,
   } = props;
   const { estLiqPrice } = useTPSLDetailContext();
+  console.log("----- position", position);
   return (
     <Box>
       <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-100px)]")}>

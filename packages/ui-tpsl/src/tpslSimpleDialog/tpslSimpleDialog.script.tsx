@@ -51,6 +51,7 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
       symbol: symbol!,
       position_qty: position?.position_qty,
       average_open_price: position?.average_open_price,
+      margin_mode: position?.margin_mode,
     },
     {
       defaultOrder: undefined,
