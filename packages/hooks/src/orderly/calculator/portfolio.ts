@@ -137,6 +137,8 @@ class PortfolioCalculator extends BaseCalculator<any> {
       USDCHolding: USDC_holding,
       nonUSDCHolding: nonUSDC,
       unsettlementPnL: unsettledPnL,
+      usdcBalancePendingShortQty: usdc?.pending_short ?? 0,
+      usdcBalanceIsolatedOrderFrozen: usdc?.isolated_order_frozen ?? 0,
     });
 
     const sumIsolatedMargin = positions.rows.reduce<Decimal>((acc, curr) => {

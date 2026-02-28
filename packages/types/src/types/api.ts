@@ -412,6 +412,8 @@ export declare namespace API {
     holding: number;
     frozen: number;
     pending_short: number;
+    isolated_margin: number;
+    isolated_order_frozen: number;
     updated_time: number;
   }
 
