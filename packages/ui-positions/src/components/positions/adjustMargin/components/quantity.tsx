@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Input, Slider, Text, inputFormatter } from "@orderly.network/ui";
 
@@ -22,6 +22,23 @@ export const Quantity: FC<QuantityProps> = ({
   const percentMarks = useMemo(
     () => [0, 25, 50, 75, 100].map((m) => ({ value: m, label: `${m}%` })),
     [],
+  );
+
+  const isMaxClickable = maxAmount > 0;
+
+  const handleSetToMax = useCallback(() => {
+    if (!isMaxClickable) return;
+    onSliderChange(100);
+  }, [isMaxClickable, onSliderChange]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleSetToMax();
+      }
+    },
+    [handleSetToMax],
   );
 
   return (
@@ -71,7 +88,19 @@ export const Quantity: FC<QuantityProps> = ({
           <Text size="2xs" className="oui-text-primary">
             {`${sliderValue.toFixed(0)}%`}
           </Text>
-          <Flex gap={1} itemAlign="baseline">
+          <Flex
+            gap={1}
+            itemAlign="baseline"
+            role={isMaxClickable ? "button" : undefined}
+            tabIndex={isMaxClickable ? 0 : undefined}
+            onClick={isMaxClickable ? handleSetToMax : undefined}
+            onKeyDown={isMaxClickable ? handleKeyDown : undefined}
+            className={
+              isMaxClickable
+                ? "oui-cursor-pointer oui-opacity-90 hover:oui-opacity-100"
+                : undefined
+            }
+          >
             <Text size="2xs" className="oui-text-primary">
               {t("positions.adjustMargin.max")}
             </Text>
