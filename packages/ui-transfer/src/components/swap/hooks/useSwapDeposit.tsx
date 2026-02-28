@@ -3,7 +3,7 @@ import { useConfig, useLocalStorage } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { CurrentChain } from "../../depositForm/hooks/useChainSelect";
+import { CurrentChain } from "../../../types";
 import { SwapDialog } from "../components/swapDialog";
 import { DST, SwapMode } from "../types";
 import { useSwapEnquiry } from "./useSwapEnquiry";

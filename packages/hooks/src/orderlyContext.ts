@@ -19,29 +19,17 @@ export type FilteredChains = {
 };
 
 export interface OrderlyConfigContextState {
+  /** @deprecated will be removed in next minor version */
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
-
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
-  // getWalletAdapter: getWalletAdapterFunc;
   walletAdapters: WalletAdapter[];
 
   networkId: NetworkId;
 
-  /**
-   * @hidden
-   */
-  onlyTestnet?: boolean;
-  // extraApis:ExtraAPIs
   filteredChains?: FilteredChains;
+  /** custom chains, please include all chain information, otherwise there will be problems */
   customChains?: Chains<undefined, undefined>;
-  chainTransformer?: (params: {
-    chains: API.Chain[];
-    tokenChains: API.Token[];
-    chainInfos: any[];
-    swapChains: any[];
-    mainnet: boolean;
-  }) => API.Chain[];
   /** enable swap deposit, default is false */
   enableSwapDeposit?: boolean;
   /**
@@ -54,11 +42,16 @@ export interface OrderlyConfigContextState {
    */
   defaultOrderbookSymbolDepths?: Record<PropertyKey, number[]>;
 
+  /** when use this, please keep the reference stable, otherwise it will cause unnecessary renders */
   dataAdapter?: {
+    /**
+     * custom useChains return list data
+     */
+    chainsList?: (chains: API.Chain[]) => API.Chain[];
     /**
      * Custom `/v1/public/futures` response data.
      */
-    symbolList?: (originalVal: API.MarketInfoExt[]) => any[];
+    symbolList?: (data: API.MarketInfoExt[]) => any[];
     /**
      * custom `/v2/public/announcement` response data
      */

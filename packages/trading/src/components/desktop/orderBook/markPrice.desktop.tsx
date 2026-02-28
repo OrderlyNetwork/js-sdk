@@ -1,11 +1,12 @@
 import { FC, useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { BasicSymbolInfo } from "../../../types/types";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
-import { MiddlePriceView } from "../../base/orderBook/midPriceView";
-import { MarkPriceView } from "../../base/orderBook/markPrice";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Text, Tooltip } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { BasicSymbolInfo } from "../../../types/types";
+import { MarkPriceView } from "../../base/orderBook/markPrice";
+import { MiddlePriceView } from "../../base/orderBook/midPriceView";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
+
 interface DesktopMarkPriceProps {
   markPrice: number;
   lastPrice: number[];
@@ -23,7 +24,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
       <div
         className={cn(
           "oui-basis-7/12 oui-flex oui-flex-row oui-items-center oui-mr-2 oui-justify-between",
-          showTotal && "oui-basis-5/12"
+          showTotal && "oui-basis-5/12",
         )}
       >
         <MiddlePriceView
@@ -38,7 +39,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
         className={cn(
           "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
           showTotal && "oui-basis-7/12",
-          "oui-pr-3"
+          "oui-pr-3",
         )}
       >
         <Spread asks={asks} bids={bids} />

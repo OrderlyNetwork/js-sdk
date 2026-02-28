@@ -35,6 +35,7 @@ interface WalletMethods {
   connectSolana: () => Promise<void>;
   walletSolana: any;
   publicKey: any;
+  connecting: boolean;
   signMessage: any;
   signTransaction: any;
   sendTransaction: any;

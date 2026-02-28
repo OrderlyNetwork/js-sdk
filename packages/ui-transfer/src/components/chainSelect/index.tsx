@@ -16,7 +16,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { ExchangeIcon } from "../../icons";
-import { CurrentChain } from "../depositForm/hooks";
+import { CurrentChain } from "../../types";
 
 type ChainSelectProps = {
   chains: API.NetworkInfos[];

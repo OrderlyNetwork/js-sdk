@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
-import {
-  useVaultLpInfoById,
-  useVaultsStore,
-} from "../../../store";
+import { useVaultLpInfoById, useVaultsStore } from "../../../store";
 import { OperationType } from "../../../types/vault";
 import { useOperationScript } from "../depositAndWithdraw/operation.script";
 

@@ -11,7 +11,6 @@ interface MarkPriceProps {
 
 export const MarkPrice: FC<MarkPriceProps> = (props) => {
   const { symbolInfo } = useOrderBookContext();
-
   const { quote_dp } = symbolInfo;
 
   return (
