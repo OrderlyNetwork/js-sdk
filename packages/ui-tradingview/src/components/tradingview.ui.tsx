@@ -91,7 +91,10 @@ export const TradingviewUI = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("oui-relative oui-size-full", props.classNames?.root)}
+      className={cn(
+        "oui-tradingview-root oui-relative oui-size-full",
+        props.classNames?.root,
+      )}
     >
       {!tradingViewScriptSrc ? (
         <NoTradingview />

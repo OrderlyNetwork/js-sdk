@@ -141,7 +141,7 @@ export const OrderBookAndTrades: Story = {
         p={10}
         justify={"center"}
         itemAlign={"start"}
-        className="oui-bg-[rgba(255,255,255,0.3)]"
+        className="oui-bg-base-contrast-36"
       >
         <Box className="oui-w-[50vw] oui-h-[600px]">
           <OrderBookAndTradesWidget symbol={arg.symbol} />

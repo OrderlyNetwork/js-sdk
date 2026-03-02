@@ -61,7 +61,8 @@ export const AccountItem = (props: AccountItemProps) => {
         className={cn(
           "oui-relative oui-cursor-pointer oui-rounded-[6px] oui-bg-base-6 oui-px-3 oui-py-4",
           "oui-border oui-border-base-6",
-          props.isCurrent && " oui-border-[#38E2FE] ",
+          props.isCurrent &&
+            " oui-border-[rgb(var(--oui-gradient-brand-start))] ",
           !props.isCurrent && "hover:oui-border-base-contrast-16",
         )}
       >
@@ -77,9 +78,9 @@ export const AccountItem = (props: AccountItemProps) => {
         {props.isCurrent && (
           <div
             className={cn(
-              "oui-absolute -oui-right-[1px] -oui-top-[1px] oui-leading-3 oui-text-base-contrast-54",
-              "oui-text-[10px] oui-font-semibold oui-text-black",
-              "oui-rounded-[6px] oui-rounded-br-none oui-rounded-tl-none oui-bg-[#38E2FE] oui-py-0.5 oui-pl-1  oui-pr-[5px]",
+              "oui-absolute -oui-right-[1px] -oui-top-[1px] oui-leading-3",
+              "oui-text-[10px] oui-font-semibold oui-text-base-10",
+              "oui-rounded-[6px] oui-rounded-br-none oui-rounded-tl-none oui-bg-[rgb(var(--oui-gradient-brand-start))] oui-py-0.5 oui-pl-1  oui-pr-[5px]",
             )}
           >
             {t("subAccount.modal.current")}

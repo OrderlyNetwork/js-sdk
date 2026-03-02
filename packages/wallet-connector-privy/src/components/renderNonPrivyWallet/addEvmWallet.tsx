@@ -46,7 +46,7 @@ export function AddEvmWallet() {
   }, [open]);
 
   return (
-    <div className="oui-rounded-[8px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]">
+    <div className="oui-rounded-[8px] oui-bg-base-10 oui-px-2 oui-py-[11px]">
       <Tooltip
         className="oui-z-[65] oui-max-w-[200px] oui-text-warning-darken"
         open={open}
@@ -59,7 +59,7 @@ export function AddEvmWallet() {
                 src="https://oss.orderly.network/static/sdk/chains.png"
                 className="oui-relative oui-z-0 oui-h-[18px]"
               />
-              <div className="oui-absolute oui-right-0 oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-[#282e3a]">
+              <div className="oui-absolute oui-right-0 oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
                 <EVMChainPopover>
                   <MoreIcon
                     className="oui-relative oui-z-10 oui-size-3 oui-text-base-contrast-54 hover:oui-text-base-contrast"
@@ -99,7 +99,7 @@ export function AddEvmWallet() {
         {connectors.map((item, index) => (
           <div
             key={index}
-            className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center  oui-gap-1 oui-bg-[#131519] oui-px-2 oui-py-[11px] oui-text-2xs"
+            className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center  oui-gap-1 oui-bg-base-9 oui-px-2 oui-py-[11px] oui-text-2xs"
             onClick={() =>
               connect({ walletType: WalletConnectType.EVM, connector: item })
             }

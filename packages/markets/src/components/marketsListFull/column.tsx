@@ -45,11 +45,7 @@ export const useMarketsListFullColumns = (
               onClick={isFavoriteList ? onDelSymbol : undefined}
               data-testid="oui-testid-markets-table-row-favorite-icon"
             >
-              {value ? (
-                <FavoritesIcon className="oui-text-[rgba(255,154,46,1)]" />
-              ) : (
-                <UnFavoritesIcon className="oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
-              )}
+              {value ? <FavoritesIcon /> : <UnFavoritesIcon />}
             </Flex>
           );
 

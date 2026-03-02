@@ -15,6 +15,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import { useThemeAttribute } from "@orderly.network/ui";
 import {
   Network,
   WalletConnectorPrivyProvider,
@@ -42,9 +43,12 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
     networkId === "testnet"
       ? WalletAdapterNetwork.Devnet
       : WalletAdapterNetwork.Mainnet;
+  const themeId = useThemeAttribute();
+  const themeMode = themeId === "light" ? "light" : "dark";
 
   return (
     <WalletConnectorPrivyProvider
+      key={themeMode}
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
       network={network}
       headerProps={{
@@ -57,9 +61,12 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
               appid: "cm50h5kjc011111gdn7i8cd2k",
               config: {
                 appearance: {
-                  theme: "dark",
-                  accentColor: "#181C23",
-                  logo: "/orderly-logo.svg",
+                  theme: themeMode,
+                  accentColor: "rgb(var(--oui-color-base-8))",
+                  logo:
+                    themeMode === "light"
+                      ? "/orderly-black.png"
+                      : "/orderly-white.png",
                 },
                 loginMethods: ["email", "google", "twitter", "telegram"],
               },
@@ -72,6 +79,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
           wagmiConnectors.walletConnect({
             projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
             showQrModal: true,
+            qrModalOptions: { themeMode },
             storageOptions: {},
             metadata: {
               name: "Orderly Network",

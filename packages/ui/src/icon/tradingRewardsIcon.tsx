@@ -17,25 +17,25 @@ export const TradingRewardsIcon: FC = () => {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M19.3296 5.18278C19.3806 5.22417 19.3507 5.30493 19.285 5.30493H12.8438C12.778 5.30493 12.7482 5.22417 12.7993 5.18278C13.6911 4.46035 14.8272 4.02759 16.0643 4.02759C17.3016 4.02759 18.4376 4.46035 19.3296 5.18278Z"
-        fill="white"
+        fill="rgb(var(--oui-color-base-foreground))"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M14.0452 10.6322C14.0081 10.5792 13.9483 10.5459 13.8836 10.5459H11.1677C11.1055 10.5459 11.0601 10.605 11.0774 10.6647C11.7036 12.8282 13.6994 14.4099 16.0646 14.4099C18.4298 14.4099 20.4256 12.8282 21.0517 10.6647C21.069 10.605 21.0236 10.5459 20.9614 10.5459H18.2456C18.1809 10.5459 18.1211 10.5792 18.084 10.6322C17.6382 11.2679 16.8999 11.6834 16.0646 11.6834C15.2293 11.6834 14.491 11.2679 14.0452 10.6322Z"
-        fill="white"
+        fill="rgb(var(--oui-color-base-foreground))"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M17.8902 7.56345C17.9277 7.60484 17.9805 7.62978 18.0363 7.62978H20.8773C20.9418 7.62978 20.9874 7.56711 20.9661 7.50639C20.7656 6.93242 20.4672 6.40442 20.0908 5.94243C20.0555 5.89906 20.0022 5.87451 19.9462 5.87451H12.1818C12.1259 5.87451 12.0727 5.89906 12.0373 5.94243C11.661 6.40442 11.3625 6.93242 11.162 7.50639C11.1408 7.56711 11.1864 7.62978 11.2508 7.62978H14.0918C14.1477 7.62978 14.2005 7.60484 14.238 7.56345C14.6889 7.06633 15.34 6.75415 16.0641 6.75415C16.7881 6.75415 17.4392 7.06633 17.8902 7.56345Z"
-        fill="white"
+        fill="rgb(var(--oui-color-base-foreground))"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M18.5077 9.9775C18.4594 9.9775 18.425 9.93038 18.4381 9.88382C18.4973 9.67209 18.5289 9.44887 18.5289 9.21826C18.5289 8.89376 18.4662 8.58388 18.3523 8.30011C18.333 8.25208 18.3676 8.19849 18.4193 8.19849H21.0969C21.1308 8.19849 21.1602 8.22244 21.1664 8.2558C21.2248 8.56772 21.2554 8.88947 21.2554 9.21834C21.2554 9.45516 21.2395 9.68821 21.2089 9.91654C21.2041 9.95154 21.1742 9.9775 21.1389 9.9775H18.5077ZM13.6904 9.88382C13.7034 9.93038 13.6692 9.9775 13.6209 9.9775H10.9896C10.9543 9.9775 10.9243 9.95154 10.9196 9.91654C10.8889 9.68821 10.873 9.45516 10.873 9.21834C10.873 8.88947 10.9036 8.56772 10.9621 8.2558C10.9684 8.22244 10.9976 8.19849 11.0316 8.19849H13.7092C13.7609 8.19849 13.7955 8.25208 13.7762 8.30011C13.6622 8.58388 13.5995 8.89376 13.5995 9.21826C13.5995 9.44887 13.6312 9.67209 13.6904 9.88382Z"
-        fill="white"
+        fill="rgb(var(--oui-color-base-foreground))"
       />
       <path
         fillRule="evenodd"
@@ -88,8 +88,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="9.12524"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#5806D4" />
-          <stop offset="1" stopColor="#BB6CED" />
+          <stop stopColor="rgb(var(--oui-gradient-secondary-start))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-secondary-end))" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1609_7349"
@@ -99,8 +99,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="17.8625"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#BD6CED" />
-          <stop offset="1" stopColor="#5A08DD" />
+          <stop stopColor="rgb(var(--oui-gradient-secondary-start))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-secondary-end))" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1609_7349"
@@ -110,8 +110,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="20.7365"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#28303B" />
-          <stop offset="1" stopColor="#333948" />
+          <stop stopColor="rgb(var(--oui-color-base-5))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-4))" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_1609_7349"
@@ -121,8 +121,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="30.9792"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#636D85" />
-          <stop offset="1" stopColor="#1B2028" />
+          <stop stopColor="rgb(var(--oui-color-base-1))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_1609_7349"
@@ -132,8 +132,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="14.5052"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#181C23" />
-          <stop offset="1" stopColor="#333948" />
+          <stop stopColor="rgb(var(--oui-color-base-8))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-4))" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_1609_7349"
@@ -143,8 +143,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="22.8511"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#636D85" />
-          <stop offset="1" stopColor="#1B2028" />
+          <stop stopColor="rgb(var(--oui-color-base-1))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_1609_7349"
@@ -154,8 +154,8 @@ export const TradingRewardsIcon: FC = () => {
           y2="14.5052"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#181C23" />
-          <stop offset="1" stopColor="#333948" />
+          <stop stopColor="rgb(var(--oui-color-base-8))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-4))" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_1609_7349"
@@ -165,8 +165,11 @@ export const TradingRewardsIcon: FC = () => {
           y2="22.8511"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#636D85" stopOpacity="0.411765" />
-          <stop offset="1" stopColor="#1B2028" />
+          <stop
+            stopColor="rgb(var(--oui-color-base-1))"
+            stopOpacity="0.411765"
+          />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
       </defs>
     </svg>

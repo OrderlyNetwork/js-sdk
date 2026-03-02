@@ -93,7 +93,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
         <Box width={"100%"}>
           <Title
             id="oui-order-book-header-price"
-            className="oui-text-base-contrast-36"
+            className="oui-orderBook-header-price oui-text-base-contrast-36"
           >
             {`${t("common.price")}(${quote})`}
           </Title>
@@ -102,7 +102,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
           <Title
             justifyEnd
             id="oui-order-book-header-qty"
-            className="oui-text-base-contrast-36"
+            className="oui-orderBook-header-qty oui-text-base-contrast-36"
           >
             {`${t("common.qty")}(${optimizedBase})`}
           </Title>
@@ -116,12 +116,20 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
         {showTotal ? (
           <>
             <Box className="oui-text-base-contrast-36" width={"100%"}>
-              <Title id="oui-order-book-header-total-quote" justifyEnd>
+              <Title
+                id="oui-order-book-header-total-quote"
+                className="oui-orderBook-header-total-quote"
+                justifyEnd
+              >
                 {`${t("common.total")}(${optimizedBase})`}
               </Title>
             </Box>
             <Box className="oui-text-base-contrast-36" width={"100%"}>
-              <Title justifyEnd id="oui-order-book-header-total-base">
+              <Title
+                id="oui-order-book-header-total-base"
+                className="oui-orderBook-header-total-base"
+                justifyEnd
+              >
                 {`${t("common.total")}(${quote})`}
               </Title>
             </Box>
@@ -156,7 +164,11 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
                 itemAlign="center"
                 className="oui-cursor-pointer oui-select-none oui-text-base-contrast-36 oui-transition-all hover:oui-text-base-contrast"
               >
-                <Title justifyEnd id="oui-order-book-header-total-base">
+                <Title
+                  id="oui-order-book-header-total-base"
+                  className="oui-orderBook-header-total-base"
+                  justifyEnd
+                >
                   {`${t("common.total")}(${optimizedCoinType})`}
                 </Title>
                 <TriggerIcon

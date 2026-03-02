@@ -19,7 +19,7 @@ export const ProductItem: FC<{
       size="sm"
       angle={45}
       className={cn(
-        active ? "oui-text-[rgba(0_,_0_,_0_,_0.88)]" : "hover:oui-bg-base-7",
+        active ? "oui-text-base-contrast-80" : "hover:oui-bg-base-7",
       )}
       onClick={() => {
         onClick?.(item);

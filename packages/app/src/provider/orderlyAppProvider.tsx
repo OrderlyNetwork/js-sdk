@@ -3,7 +3,6 @@ import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
-  OrderlyThemeProvider,
   Toaster,
   TooltipProvider,
 } from "@orderly.network/ui";
@@ -14,6 +13,7 @@ import { useUILocale } from "../hooks/useUILocale";
 import { OrderlyAppConfig } from "../types";
 import { AppConfigProvider } from "./appConfigProvider";
 import { AppStateProvider, AppStateProviderProps } from "./appStateProvider";
+import { AppThemeProvider } from "./appThemeProvider";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
@@ -30,6 +30,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     // dateFormatting,
     components,
     appIcons,
+    themes,
     onChainChanged,
     defaultChain,
     widgetConfigs,
@@ -43,10 +44,11 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
 
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
-      <OrderlyThemeProvider
+      <AppThemeProvider
         // dateFormatting={dateFormatting}
         components={components}
         overrides={props.overrides}
+        themes={themes}
       >
         <OrderlyConfigProvider {...configProps}>
           <ExecutionReportListener />
@@ -65,7 +67,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
           </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>
-      </OrderlyThemeProvider>
+      </AppThemeProvider>
     </AppConfigProvider>
   );
 };

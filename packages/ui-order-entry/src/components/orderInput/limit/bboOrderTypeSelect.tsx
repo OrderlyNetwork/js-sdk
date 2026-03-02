@@ -1,7 +1,7 @@
 import { CSSProperties, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { BBOOrderType } from "@orderly.network/types";
-import { Box, Select, Text } from "@orderly.network/ui";
+import { Box, cn, Select, Text } from "@orderly.network/ui";
 
 export const BBOOrderTypeSelect = (props: {
   value?: BBOOrderType;
@@ -40,12 +40,18 @@ export const BBOOrderTypeSelect = (props: {
       options={options}
       onValueChange={props.onChange}
       contentProps={{
-        className: "oui-bg-base-8 oui-w-full",
+        className: cn(
+          "oui-orderEntry-bboOrderTypeSelect-content",
+          "oui-bg-base-8 oui-w-full",
+        ),
         style: props.contentStyle,
       }}
       size={"sm"}
       classNames={{
-        trigger: "oui-border-none oui-bg-transparent",
+        trigger: cn(
+          "oui-orderEntry-bboOrderTypeSelect-btn",
+          "oui-border-none oui-bg-transparent",
+        ),
       }}
       valueFormatter={(value, option) => {
         const item = options.find((item) => item.value === value);

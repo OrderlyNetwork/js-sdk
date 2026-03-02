@@ -146,7 +146,7 @@ export const TooltipContent: FC<TooltipContentProps> = (props) => {
       {typeof description !== "undefined" && description !== null && (
         <span>{description}</span>
       )}
-      <Divider className="oui-border-white/10" my={2} />
+      <Divider color="oui-border-line-10" my={2} />
       {typeof formula !== "undefined" && formula !== null && (
         <span>{formula}</span>
       )}
@@ -179,7 +179,10 @@ const TotalValue: FC<TotalValueProps> = (props) => {
         <Text size="2xs" color="neutral" weight="semibold">
           {`${t("trading.asset.myAssets")} (USDC)`}
         </Text>
-        <button onClick={onToggleVisibility}>
+        <button
+          className="oui-assetView-toggle-visibility-btn"
+          onClick={onToggleVisibility}
+        >
           {visible ? (
             <EyeIcon size={18} className="oui-text-base-contrast-54" />
           ) : (
@@ -408,6 +411,7 @@ export const AssetView: FC<
 
   const transferButton = hasSubAccount && (
     <Button
+      className="oui-assetView-transfer-btn"
       fullWidth
       color="secondary"
       size="md"
@@ -420,6 +424,7 @@ export const AssetView: FC<
 
   const depositButton = isMainAccount && (
     <Button
+      className="oui-assetView-deposit-btn"
       data-testid="oui-testid-assetView-deposit-button"
       fullWidth
       size="md"
@@ -434,6 +439,7 @@ export const AssetView: FC<
 
   const withdrawButton = isMainAccount && (
     <Button
+      className="oui-assetView-withdraw-btn"
       fullWidth
       color="secondary"
       size="md"
@@ -452,7 +458,7 @@ export const AssetView: FC<
   );
 
   return (
-    <Box className="oui-relative">
+    <Box className="oui-assetView oui-relative">
       {title && description && (
         <Flex direction="column" gap={1} className="oui-mb-[32px]">
           <Text
@@ -490,6 +496,7 @@ export const AssetView: FC<
               </Flex>
             </Box>
             <Button
+              className="oui-assetView-deposit-btn"
               data-testid="oui-testid-assetView-deposit-button"
               fullWidth
               size="md"
@@ -548,7 +555,7 @@ export const AssetView: FC<
         )}
         style={{
           background:
-            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",
+            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(var(--oui-color-base-foreground)/0) -48.92deg, rgba(var(--oui-color-base-foreground)/0) 125.18deg, rgb(var(--oui-color-primary)) 193.41deg, rgb(var(--oui-color-warning)) 216.02deg, rgb(var(--oui-color-link)) 236.07deg, rgb(var(--oui-color-primary-light)) 259.95deg, rgba(var(--oui-color-base-foreground)/0) 311.08deg, rgba(var(--oui-color-base-foreground)/0) 485.18deg)",
         }}
       />
     </Box>

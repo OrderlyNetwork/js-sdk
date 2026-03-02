@@ -313,7 +313,7 @@ export class TPSLService {
           disableUndo: true,
           zOrder: "top",
           overrides: {
-            linecolor: "rgba(255,255,255, 0.2)",
+            linecolor: "rgba(var(--oui-color-base-foreground)/0.2)",
             linewidth: 1,
             rightEnd: 1,
             leftEnd: 1,

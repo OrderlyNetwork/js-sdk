@@ -120,7 +120,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
         itemAlign="center"
       >
         <Flex
-          className="oui-w-[220px] oui-h-[220px] oui-rounded-lg oui-bg-white"
+          className="oui-w-[220px] oui-h-[220px] oui-rounded-lg oui-bg-base-8"
           justify="center"
           itemAlign="center"
         >
@@ -269,8 +269,7 @@ const Spinner = () => {
       />
       <path
         d="M73 40C73 58.2254 58.2254 73 40 73C21.7746 73 7 58.2254 7 40C7 21.7746 21.7746 7 40 7C58.2254 7 73 21.7746 73 40ZM13.6 40C13.6 54.5803 25.4197 66.4 40 66.4C54.5803 66.4 66.4 54.5803 66.4 40C66.4 25.4197 54.5803 13.6 40 13.6C25.4197 13.6 13.6 25.4197 13.6 40Z"
-        fill="white"
-        fillOpacity="0.06"
+        className="oui-fill-base-contrast-6"
       />
       <defs>
         <linearGradient

@@ -270,6 +270,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Tijdens de upgradeperiode worden alle openstaande orders geannuleerd om uw risico te beheren in geval van hoge marktvolatiliteit.",
   "portfolio.setting.soundAlerts": "Geluidmelding",
   "portfolio.setting.soundAlerts.description": "Speel een meldingsgeluid af bij uitvoering of annulering van orders.",
+  "portfolio.setting.theme": "Thema",
   "trading.layout": "Layout",
   "trading.layout.advanced": "Geavanceerd",
   "trading.layout.advanced.right": "Rechts",

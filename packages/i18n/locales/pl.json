@@ -270,6 +270,7 @@
   "portfolio.setting.cancelOpenOrders.description": "W okresie aktualizacji wszystkie otwarte zlecenia zostaną anulowane, aby zarządzać ryzykiem w przypadku dużej zmienności rynku.",
   "portfolio.setting.soundAlerts": "Powiadomienie dźwiękowe",
   "portfolio.setting.soundAlerts.description": "Odtwarzaj dźwięk powiadomienia przy realizacji lub anulowaniu zleceń.",
+  "portfolio.setting.theme": "Motyw",
   "trading.layout": "Układ",
   "trading.layout.advanced": "Zaawansowany",
   "trading.layout.advanced.right": "Prawy",

@@ -11,6 +11,7 @@ import {
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
+import { themeConfig } from "../../orderlyConfig/themeConfig";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
@@ -36,15 +37,18 @@ export const OrderlyAppRootProvider: FC<
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}
-      // chainFilter={{
-      //   mainnet: [
-      //     { id: ARBITRUM_MAINNET_CHAINID },
-      //     { id: ETHEREUM_MAINNET_CHAINID },
-      //   ],
-      //   testnet: [
-      //     { id: ARBITRUM_TESTNET_CHAINID },
-      //     { id: SOLANA_TESTNET_CHAINID },
-      //   ],
+      themes={themeConfig}
+      // chainFilter={(config) => {
+      //   return {
+      //     mainnet: [
+      //       { id: ARBITRUM_MAINNET_CHAINID },
+      //       { id: SOLANA_MAINNET_CHAINID },
+      //     ],
+      //     testnet: [
+      //       { id: ARBITRUM_TESTNET_CHAINID },
+      //       { id: SOLANA_TESTNET_CHAINID },
+      //     ],
+      //   };
       // }}
       // orderMetadata={(order) => {
       //   return {
@@ -58,6 +62,11 @@ export const OrderlyAppRootProvider: FC<
       // }}
       // customChains={customChainsAbstarct}
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
+      // overrides={{
+      //   tabs: {
+      //     variant: "text",
+      //   },
+      // }}
     >
       {children}
     </OrderlyAppProvider>

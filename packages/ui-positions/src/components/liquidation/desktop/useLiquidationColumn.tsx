@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Column, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Column, Flex, Text, Tooltip, cn } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
 
 const TooltipButton: FC<{
@@ -203,14 +203,13 @@ const ArrowIcon: FC<{
       width="16"
       height="16"
       viewBox="0 0 16 16"
-      fill="none"
+      fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      className={props.className}
+      className={cn(props.className, "oui-fill-base-contrast-54")}
     >
       <path
         d="M3.884 6.02a.67.67 0 0 0-.436.27.68.68 0 0 0 .187.933L7.63 9.88a.68.68 0 0 0 .749 0l3.994-2.657a.68.68 0 0 0 .187-.934.68.68 0 0 0-.936-.186L8.003 8.51l-3.62-2.407a.65.65 0 0 0-.499-.084"
-        fill="#fff"
-        fillOpacity=".54"
+        fill="currentColor"
       />
     </svg>
   );

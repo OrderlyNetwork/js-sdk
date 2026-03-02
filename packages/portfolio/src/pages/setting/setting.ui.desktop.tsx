@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card, Flex, Switch, Text } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
+import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
@@ -79,6 +80,15 @@ export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
           </Flex>
         </Card>
       )}
+      <ThemeSettingCard
+        themes={props.themes}
+        currentThemeId={props.currentThemeId}
+        setCurrentThemeId={props.setCurrentThemeId}
+        classNames={{
+          card: "oui-bg-base-9 oui-font-semibold oui-mt-3",
+          content: "oui-pt-4",
+        }}
+      />
     </>
   );
 };

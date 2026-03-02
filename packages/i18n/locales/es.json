@@ -270,6 +270,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Durante el período de actualización, todas las órdenes abiertas serán canceladas para gestionar tu riesgo en caso de alta volatilidad del mercado.",
   "portfolio.setting.soundAlerts": "Notificación de sonido",
   "portfolio.setting.soundAlerts.description": "Reproducir un sonido de notificación cuando se ejecuten o cancelen órdenes.",
+  "portfolio.setting.theme": "Tema",
   "trading.layout": "Diseño",
   "trading.layout.advanced": "Avanzado",
   "trading.layout.advanced.right": "Derecha",

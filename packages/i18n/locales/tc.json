@@ -270,6 +270,7 @@
   "portfolio.setting.cancelOpenOrders.description": "在升級期間，所有未完成的訂單將被取消，以便在市場波動較大时管理您的風險。",
   "portfolio.setting.soundAlerts": "声音通知",
   "portfolio.setting.soundAlerts.description": "訂單成交或取消时播放提示音。",
+  "portfolio.setting.theme": "主題",
   "trading.layout": "佈局",
   "trading.layout.advanced": "高級",
   "trading.layout.advanced.right": "右",

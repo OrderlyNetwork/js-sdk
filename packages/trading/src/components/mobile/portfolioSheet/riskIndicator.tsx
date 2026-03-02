@@ -23,8 +23,8 @@ export const RiskIndicator: FC<RiskIndicatorProps> = (props) => {
     >
       <div
         className={cn(
-          "oui-relative oui-w-[2px] oui-h-[2px] oui-rounded-full oui-bg-white after:oui-block after:oui-content-[''] after:oui-absolute after:oui-right-0 after:oui-w-[10px] after:oui-h-[2px] after:oui-bg-white/50",
-          className
+          "oui-relative oui-w-[2px] oui-h-[2px] oui-rounded-full oui-bg-base-contrast after:oui-block after:oui-content-[''] after:oui-absolute after:oui-right-0 after:oui-w-[10px] after:oui-h-[2px] after:oui-bg-base-contrast-50",
+          className,
           // {
           //   "oui-rotate-0": value > 1,
           //   "oui-rotate-90": value >= 0.05 && value <= 1,

@@ -90,8 +90,8 @@ export const ArrowRightLinearGradientIcon: FC<IconProps> = ({
         y2="9.994"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stopColor="#59B0FE" />
-        <stop offset="1" stopColor="#26FEFE" />
+        <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+        <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
       </linearGradient>
     </defs>
   </svg>
