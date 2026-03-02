@@ -2,9 +2,11 @@ import { useMemo } from "react";
 import {
   useAppStore,
   useCollateral,
+  useMarkPrice,
   usePositions,
 } from "@orderly.network/hooks";
-import { account } from "@orderly.network/perp";
+import { account, positions as positionsLib } from "@orderly.network/perp";
+import { MarginMode } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 
 const usePositionMargin = (
@@ -32,9 +34,27 @@ const usePositionMargin = (
 
   const fundingRates = useAppStore((state) => state.fundingRates);
   const symbolsInfo = useAppStore((state) => state.symbolsInfo);
+  const accountInfo = useAppStore((state) => state.accountInfo);
+  const { data: markPrice } = useMarkPrice(symbol);
+  const totalUnsettlementPnl = useMemo(() => {
+    if (!positions?.length) {
+      return null;
+    }
+
+    return positions.reduce((acc, item) => {
+      // Align with calculator's unsettlementPnL_total aggregation.
+      const itemAny = item as unknown as Record<string, number | undefined>;
+      const positionUnsettlementPnl =
+        itemAny["unsettlement_pnl"] ?? item.unsettled_pnl ?? 0;
+      return acc.add(positionUnsettlementPnl);
+    }, new Decimal(0));
+  }, [positions]);
 
   const currentPosition = useMemo(() => {
-    return positions?.find((item) => item.symbol === symbol);
+    return positions?.find(
+      (item) =>
+        item.symbol === symbol && item.margin_mode === MarginMode.ISOLATED,
+    );
   }, [positions]);
 
   const notional = useMemo(() => {
@@ -126,21 +146,91 @@ const usePositionMargin = (
 
   // Calculate liquidation price after margin adjustment
   // Note: This calculation may need review based on liquidation price formula
+  // total_collateral_value = isolated margin + unsettled PNL + margin_add
+  // after margin adjustment: finalMargin = adjusted position margin, so total = finalMargin + unsettled_PNL (add/reduce margin both)
   const liquidationPrice = useMemo(() => {
-    if (!unSettledPnl) return null;
-    if (isAdd) {
-      // Add margin: isolatedMargin + unSettledPnl + finalMargin
-      return new Decimal(isolatedMargin)
-        .add(unSettledPnl)
-        .add(finalMargin)
-        .toNumber();
+    if (
+      !totalUnsettlementPnl ||
+      !currentPosition ||
+      !symbolsInfo?.[symbol] ||
+      !accountInfo?.imr_factor
+    ) {
+      return null;
     }
-    // Reduce margin: isolatedMargin + unSettledPnl - finalMargin
-    return new Decimal(isolatedMargin)
-      .add(unSettledPnl)
-      .sub(finalMargin)
+
+    const currentSymbolInfo = symbolsInfo[symbol];
+    const currentPositionNotional = notional?.toNumber() ?? 0;
+    const currentPositionIMRFactor =
+      accountInfo.imr_factor[symbol] ?? currentSymbolInfo.imr_factor ?? 0;
+    const currentPositionMMR = positionsLib.MMR({
+      baseMMR: currentSymbolInfo.base_mmr ?? 0,
+      baseIMR: currentSymbolInfo.base_imr ?? 0,
+      IMRFactor: currentPositionIMRFactor,
+      positionNotional: currentPositionNotional,
+      IMR_factor_power: 4 / 5,
+    });
+
+    const otherPositions =
+      positions
+        ?.filter((item) => item.symbol !== symbol)
+        .map((item) => {
+          const itemSymbolInfo = symbolsInfo[item.symbol];
+          const itemIMRFactor =
+            accountInfo.imr_factor[item.symbol] ??
+            itemSymbolInfo?.imr_factor ??
+            0;
+          const itemNotional =
+            item.notional ??
+            new Decimal(item.position_qty)
+              .mul(item.mark_price)
+              .abs()
+              .toNumber();
+          const itemMMR =
+            item.mmr ??
+            positionsLib.MMR({
+              baseMMR: itemSymbolInfo?.base_mmr ?? 0,
+              baseIMR: itemSymbolInfo?.base_imr ?? 0,
+              IMRFactor: itemIMRFactor,
+              positionNotional: itemNotional,
+              IMR_factor_power: 4 / 5,
+            });
+
+          return {
+            symbol: item.symbol,
+            position_qty: item.position_qty,
+            mark_price: item.mark_price,
+            mmr: itemMMR,
+          };
+        }) ?? [];
+
+    const totalCollateral = new Decimal(finalMargin)
+      .add(totalUnsettlementPnl)
       .toNumber();
-  }, [isolatedMargin, unSettledPnl, finalMargin]);
+
+    const liqPrice = positionsLib.liqPrice({
+      markPrice,
+      symbol,
+      totalCollateral,
+      positionQty: currentPosition.position_qty,
+      positions: otherPositions,
+      MMR: currentPositionMMR,
+      baseMMR: currentSymbolInfo.base_mmr ?? 0,
+      baseIMR: currentSymbolInfo.base_imr ?? 0,
+      IMRFactor: currentPositionIMRFactor,
+      costPosition: currentPosition.cost_position ?? 0,
+    });
+    return liqPrice;
+  }, [
+    totalUnsettlementPnl,
+    currentPosition,
+    symbolsInfo,
+    symbol,
+    accountInfo,
+    notional,
+    positions,
+    finalMargin,
+    markPrice,
+  ]);
 
   const total_collateral_value = useMemo(() => {
     if (!unSettledPnl) return null;
