@@ -45,6 +45,7 @@ import {
   appendOrderMetadata,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
+import { useOrderStore } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
@@ -178,7 +179,6 @@ const useOrderEntry = (
   if (!symbol) {
     throw new SDKError("Symbol is required");
   }
-
   const ee = useEventEmitter();
   const { track } = useTrack();
 
@@ -209,7 +209,12 @@ const useOrderEntry = (
   const symbolConfig = useSymbolsInfo();
   const accountInfo = useAccountInfo();
   const positions = usePositions();
-  const symbolLeverage = useLeverageBySymbol(symbol);
+  const entry = useOrderStore((s) => s.entry);
+  const effectiveMarginMode =
+    (options as OrderEntryParameters[1])?.initialOrder?.margin_mode ??
+    entry?.margin_mode ??
+    MarginMode.CROSS;
+  const symbolLeverage = useLeverageBySymbol(symbol, effectiveMarginMode);
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
   const markPrice = actions.getMarkPriceBySymbol(symbol);
@@ -246,7 +251,7 @@ const useOrderEntry = (
 
   const maxQtyValue = useMaxQty(symbol, formattedOrder.side, {
     reduceOnly: formattedOrder.reduce_only,
-    marginMode: formattedOrder.margin_mode || MarginMode.CROSS,
+    marginMode: effectiveMarginMode,
     currentOrderReferencePrice:
       referencePriceFromOrder && referencePriceFromOrder > 0
         ? referencePriceFromOrder

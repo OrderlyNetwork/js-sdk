@@ -3,7 +3,6 @@ import {
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
-  useLeverageBySymbol,
   useMarginModeBySymbol,
   useMarginRatio,
   useMemoizedFn,
@@ -56,13 +55,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const canTrade = useCanTrade();
   const { marginMode } = useMarginModeBySymbol(symbol);
 
-  const symbolLeverage = useLeverageBySymbol(symbol, marginMode);
-
   const {
     formattedOrder,
     setValue,
     setValues: setOrderValues,
     symbolInfo,
+    symbolLeverage,
     ...state
   } = useOrderEntry(symbol, {
     initialOrder: {
