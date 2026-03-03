@@ -1,51 +1,35 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
+import { UseDepositReturn, useSWR } from "@orderly.network/hooks";
 import { API, nativeTokenAddress } from "@orderly.network/types";
 
-const retryInterval = 3000;
-
 export function useNativeBalance(options: {
-  fetchBalance: (token: string, decimal: number) => Promise<string>;
   targetChain?: API.Chain;
+  fetchBalance: UseDepositReturn["fetchBalance"];
 }) {
-  const { fetchBalance, targetChain } = options;
-  const [balance, setBalance] = useState<string>();
+  const { targetChain, fetchBalance } = options;
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const decimal = targetChain?.network_infos?.currency_decimal;
 
-  const loopGetTokenBalance = async (timeout = 0) => {
-    const decimal = targetChain?.network_infos?.currency_decimal;
+  const key = useMemo(() => {
+    const chainId = targetChain?.network_infos?.chain_id;
 
-    if (typeof fetchBalance !== "function" || !decimal) {
-      return;
+    if (!chainId || !decimal) {
+      return null;
     }
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    return ["nativeBalance", chainId, decimal];
+  }, [fetchBalance, targetChain, decimal]);
 
-    timeoutRef.current = setTimeout(async () => {
-      fetchBalance(nativeTokenAddress, decimal)
-        .then((balance) => {
-          console.log("native balance", balance);
-          setBalance(balance);
-        })
-        .catch((error) => {
-          console.error("fetch native balance error", error);
-          loopGetTokenBalance(retryInterval);
-        });
-    }, timeout);
+  const fetcher = async () => {
+    const balance = await fetchBalance(nativeTokenAddress, decimal);
+    return balance;
   };
 
-  useEffect(() => {
-    // get balance first, no timeout
-    loopGetTokenBalance(0);
+  const { data: balance, isLoading } = useSWR<string>(key, fetcher, {
+    revalidateOnFocus: true,
+    refreshInterval: 3000,
+    errorRetryCount: 3,
+  });
 
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  return balance;
+  return { balance, isLoading };
 }

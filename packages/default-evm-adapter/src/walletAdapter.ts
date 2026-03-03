@@ -1,5 +1,5 @@
 import * as ed from "@noble/ed25519";
-import { encode as bs58encode, decode as bs58Decode } from "bs58";
+import { encode as bs58encode } from "bs58";
 import {
   AddOrderlyKeyInputs,
   BaseWalletAdapter,
@@ -239,10 +239,6 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     };
   }
 
-  getBalance(): Promise<bigint> {
-    return this.web3Provider.getBalance(this.address);
-  }
-
   call(
     address: string,
     method: string,
@@ -317,6 +313,35 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
       baseInterval,
       maxInterval,
       maxRetries,
+    );
+  }
+
+  getBalance(): Promise<bigint> {
+    return this.web3Provider.getBalance(this.address);
+  }
+
+  getBalances(addresses: string[]): Promise<any> {
+    return this.web3Provider.getBalances(addresses);
+  }
+
+  estimateGasFee(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+    options: {
+      abi: any;
+    },
+  ): Promise<bigint> {
+    return this.web3Provider.estimateGasFee(
+      contractAddress,
+      method,
+      payload,
+      options,
     );
   }
 }

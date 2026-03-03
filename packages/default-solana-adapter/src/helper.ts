@@ -583,10 +583,7 @@ export async function getDepositQuoteFee({
 
   // Convert the Base64 return data
   const decodedBuffer = Buffer.from(encodedReturnData, "base64");
-  console.log(
-    decodedBuffer.readBigUInt64LE(0),
-    decodedBuffer.readBigUInt64LE(1),
-  );
+
   return decodedBuffer.readBigUInt64LE(0);
 }
 const getDepositParams = (

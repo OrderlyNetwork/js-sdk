@@ -37,6 +37,8 @@ export const trading = {
   "trading.orderBook.markPrice.tooltip":
     "Obtained from a third-party oracle, the mark price is calculated as the median of three prices: the last price, the fair price based on the funding rate basis, and the fair price based on the order books.",
   "trading.orderBook.spreadRatio.tooltip": "Spread Ratio of the ask1 and bid1.",
+  "trading.orderBook.middlePrice.tooltip":
+    "A stabilized reference price calculated as the median of the best bid, best ask, and 24-hour closing price.",
 
   "trading.faucet.getTestUSDC": "Get test USDC",
   "trading.faucet.getTestUSDC.success":
@@ -90,7 +92,9 @@ export const trading = {
 
   "trading.asset&Margin": "Asset & Margin",
 
-  "trading.fundingRate.predFundingRate": "Pred. funding rate",
+  "trading.fundingRate.predFundingRate": "Est. funding rate",
+  "trading.fundingRate.estFundingRateWithTimeframe":
+    "Est. funding rate ({{timeframe}})",
   "trading.fundingRate.predFundingRate.interval": "Interval",
   "trading.fundingRate.predFundingRate.cap": "Funding cap",
   "trading.fundingRate.predFundingRate.floor": "floor",

@@ -71,7 +71,7 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
         </Box>
         <AvailableQuantity
           token={token}
-          amount={amount}
+          quantity={amount}
           maxQuantity={maxQuantity}
           onClick={() => {
             onQuantityChange(maxQuantity.toString());

@@ -14,18 +14,14 @@ import { mainnet } from "viem/chains";
 import {
   Chains,
   useMainnetChainsStore,
-  useSwapSupportStore,
   useTestnetChainsStore,
 } from "@orderly.network/hooks";
 import {
   AbstractChains,
   API,
   ArbitrumSepoliaChainInfo,
-  ArbitrumSepoliaTokenInfo,
   SolanaChains,
   SolanaDevnetChainInfo,
-  SolanaDevnetTokenInfo,
-  TesnetTokenFallback,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
@@ -47,28 +43,6 @@ import {
 } from "./types";
 
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
-
-// const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-const formatSwapChainInfo = (data: any = {}) => {
-  return Object.keys(data).map((key) => {
-    const chain = data[key];
-    const { network_infos, token_infos } = chain;
-
-    const nativeToken = token_infos.find(
-      (item: any) => item.symbol === network_infos.currency_symbol,
-    );
-
-    if (nativeToken) {
-      network_infos.currency_decimal = nativeToken.decimals;
-    } else {
-      // default 18 decimals
-      network_infos.currency_decimal = 18;
-    }
-
-    return network_infos;
-  });
-};
 
 const processChainInfo = (chainInfo: any) =>
   chainInfo.map((row: any) =>
@@ -169,7 +143,6 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   headerProps?: {
     mobile: React.ReactNode;
   };
-  enableSwapDeposit?: boolean;
 }
 
 const defaultPrivyLoginMethod = [
@@ -263,25 +236,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     });
     return chainTypeObj;
   }, [initChains]);
-
-  const {
-    data: swapChainInfoRes,
-    // loading: swapLoading,
-    fetchData: fetchSwapData,
-  } = useSwapSupportStore();
-
-  // const { data: swapChainInfoRes, isLoading: swapLoading } = useSWR(
-  //   !props.customChains && props.enableSwapDeposit
-  //     ? "https://fi-api.woo.org/swap_support"
-  //     : null,
-  //   fetcher,
-  //   commonSwrOpts,
-  // );
-
-  useEffect(() => {
-    if (!props.enableSwapDeposit || !!props.customChains) return;
-    fetchSwapData();
-  }, [props.enableSwapDeposit, props.customChains]);
 
   useEffect(() => {
     if (!mainnetChainsHydrated || !testChainsHydrated) return;
@@ -409,11 +363,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       return;
     }
 
-    // Always wait for swap loading to complete when swap is enabled
-    if (props.enableSwapDeposit && !swapChainInfoRes) {
-      return;
-    }
-
     let testChainsList = [];
     let mainnetChainsList = [];
     try {
@@ -430,20 +379,12 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       const testChains = processChainInfo(testChainsList);
       const mainnetChains = processChainInfo(mainnetChainsList);
 
-      const swapChains = processChainInfo(
-        formatSwapChainInfo(swapChainInfoRes || {}),
-      );
-
       const chains = [...testChains, ...mainnetChains];
-
-      const filterSwapChains = swapChains.filter(
-        (item: any) => !chains.some((chain) => chain.id === item.id),
-      );
 
       setTestnetChains(testChains);
       setMainnetChains(mainnetChains);
 
-      setInitChains([...chains, ...filterSwapChains] as [Chain, ...Chain[]]);
+      setInitChains(chains);
     } catch (error) {
       console.error("Error initChains:", error);
       testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
@@ -457,9 +398,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     testChainInfos,
     mainnetChainInfosFromStore,
     testChainInfosFromStore,
-    swapChainInfoRes,
-    props.enableSwapDeposit,
-    // swapLoading,
   ]);
 
   useEffect(() => {

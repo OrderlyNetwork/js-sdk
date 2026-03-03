@@ -14,11 +14,12 @@ import { Decimal } from "@orderly.network/utils";
 
 export type AvailableQuantityProps = {
   token?: Partial<API.TokenInfo>;
-  amount?: number | string;
-  maxQuantity?: number | string;
+  quantity?: string | number;
+  maxQuantity?: string | number;
   onClick?: () => void;
   loading?: boolean;
   tooltipContent?: React.ReactNode;
+  notional?: number;
 };
 
 type AvailableTooltipMessageProps = {
@@ -49,7 +50,7 @@ const AvailableTooltipMessage: FC<AvailableTooltipMessageProps> = ({
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
-  const { amount, maxQuantity, token, loading } = props;
+  const { quantity, maxQuantity, token, loading } = props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
@@ -59,13 +60,17 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
   const dp = token?.precision ?? token?.decimals ?? 2;
 
   const notional = useMemo(() => {
-    if (amount && token?.symbol && getIndexPrice(token?.symbol)) {
-      return new Decimal(amount)
+    if (props.notional !== undefined && props.notional !== null) {
+      return props.notional;
+    }
+
+    if (quantity && token?.symbol) {
+      return new Decimal(quantity)
         .mul(getIndexPrice(token?.symbol) || 1)
         .toNumber();
     }
     return 0;
-  }, [amount, token?.symbol]);
+  }, [quantity, token?.symbol, props.notional]);
 
   return (
     <Flex px={2}>

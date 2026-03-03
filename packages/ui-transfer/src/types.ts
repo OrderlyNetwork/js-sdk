@@ -1,10 +1,4 @@
-export type DST = {
-  symbol: string;
-  address?: string;
-  decimals?: number;
-  chainId?: number;
-  network?: string;
-};
+import { Chain, ConnectedChain } from "@orderly.network/hooks";
 
 export enum DepositAction {
   Deposit,
@@ -21,3 +15,8 @@ export enum WithdrawTo {
 }
 
 export type InputStatus = "error" | "warning" | "success" | "default";
+
+export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
+  id: number;
+  info?: Chain;
+};

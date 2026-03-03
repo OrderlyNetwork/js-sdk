@@ -7,6 +7,7 @@ import { SwapDepositForm } from "./swapDepositForm.ui";
 
 export type SwapDepositFormWidgetProps = UseSwapDepositFormScriptOptions;
 
+/** @deprecated unused, will be removed in the future */
 export const SwapDepositFormWidget: FC<SwapDepositFormWidgetProps> = (
   props,
 ) => {

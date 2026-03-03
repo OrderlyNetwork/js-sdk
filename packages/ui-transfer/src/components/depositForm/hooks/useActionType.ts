@@ -2,17 +2,16 @@ import { useMemo } from "react";
 import { DepositAction } from "../../../types";
 
 type Options = {
-  isNativeToken: boolean;
   allowance: string;
   quantity: string;
   maxQuantity: string;
 };
 
 export function useActionType(options: Options) {
-  const { isNativeToken, allowance, quantity, maxQuantity } = options;
+  const { allowance, quantity, maxQuantity } = options;
 
   const actionType = useMemo(() => {
-    const allowanceNum = isNativeToken ? Number.MAX_VALUE : Number(allowance);
+    const allowanceNum = Number(allowance);
 
     if (allowanceNum <= 0) {
       return DepositAction.ApproveAndDeposit;
@@ -22,12 +21,11 @@ export function useActionType(options: Options) {
     const maxQty = Number(maxQuantity);
 
     if (allowanceNum < qty && qty <= maxQty) {
-      // return DepositAction.Increase;
       return DepositAction.ApproveAndDeposit;
     }
 
     return DepositAction.Deposit;
-  }, [isNativeToken, allowance, quantity, maxQuantity]);
+  }, [allowance, quantity, maxQuantity]);
 
   return actionType;
 }

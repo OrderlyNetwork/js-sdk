@@ -54,14 +54,14 @@ export const CustomIndicators: Story = {
     customIndicatorsGetter: function (PineJS) {
       return Promise.resolve([
         {
-          name: 'My Custom Coloring Candles',
+          name: "My Custom Coloring Candles",
           metainfo: {
             _metainfoVersion: 51,
 
-            id: 'mycustomcolouringcandles@tv-basicstudies-1',
-            name: 'My Custom Coloring Candles',
-            description: 'My Custom Coloring Candles',
-            shortDescription: 'My Custom Coloring Candles',
+            id: "mycustomcolouringcandles@tv-basicstudies-1",
+            name: "My Custom Coloring Candles",
+            description: "My Custom Coloring Candles",
+            shortDescription: "My Custom Coloring Candles",
 
             isCustomIndicator: true,
 
@@ -69,54 +69,54 @@ export const CustomIndicators: Story = {
             linkedToSeries: true, // whether the study price scale should be the same as the main series one.
 
             format: {
-              type: 'price',
+              type: "price",
               precision: 2,
             },
 
             plots: [
               {
-                id: 'plot_open',
-                type: 'ohlc_open',
-                target: 'plot_candle',
+                id: "plot_open",
+                type: "ohlc_open",
+                target: "plot_candle",
               },
               {
-                id: 'plot_high',
-                type: 'ohlc_high',
-                target: 'plot_candle',
+                id: "plot_high",
+                type: "ohlc_high",
+                target: "plot_candle",
               },
               {
-                id: 'plot_low',
-                type: 'ohlc_low',
-                target: 'plot_candle',
+                id: "plot_low",
+                type: "ohlc_low",
+                target: "plot_candle",
               },
               {
-                id: 'plot_close',
-                type: 'ohlc_close',
-                target: 'plot_candle',
+                id: "plot_close",
+                type: "ohlc_close",
+                target: "plot_candle",
               },
               {
-                id: 'plot_bar_color',
-                type: 'ohlc_colorer',
-                palette: 'palette_bar',
-                target: 'plot_candle',
+                id: "plot_bar_color",
+                type: "ohlc_colorer",
+                palette: "palette_bar",
+                target: "plot_candle",
               },
               {
-                id: 'plot_wick_color',
-                type: 'wick_colorer',
-                palette: 'palette_wick',
-                target: 'plot_candle',
+                id: "plot_wick_color",
+                type: "wick_colorer",
+                palette: "palette_wick",
+                target: "plot_candle",
               },
               {
-                id: 'plot_border_color',
-                type: 'border_colorer',
-                palette: 'palette_border',
-                target: 'plot_candle',
+                id: "plot_border_color",
+                type: "border_colorer",
+                palette: "palette_border",
+                target: "plot_candle",
               },
             ],
 
             palettes: {
               palette_bar: {
-                colors: [{ name: 'Colour One' }, { name: 'Colour Two' }],
+                colors: [{ name: "Colour One" }, { name: "Colour Two" }],
 
                 valToIndex: {
                   0: 0,
@@ -124,7 +124,7 @@ export const CustomIndicators: Story = {
                 },
               },
               palette_wick: {
-                colors: [{ name: 'Colour One' }, { name: 'Colour Two' }],
+                colors: [{ name: "Colour One" }, { name: "Colour Two" }],
 
                 valToIndex: {
                   0: 0,
@@ -132,7 +132,7 @@ export const CustomIndicators: Story = {
                 },
               },
               palette_border: {
-                colors: [{ name: 'Colour One' }, { name: 'Colour Two' }],
+                colors: [{ name: "Colour One" }, { name: "Colour Two" }],
 
                 valToIndex: {
                   0: 0,
@@ -143,41 +143,35 @@ export const CustomIndicators: Story = {
 
             ohlcPlots: {
               plot_candle: {
-                title: 'Candles',
+                title: "Candles",
               },
             },
 
             defaults: {
               ohlcPlots: {
                 plot_candle: {
-                  borderColor: '#000000',
-                  color: '#000000',
+                  borderColor: "#000000",
+                  color: "#000000",
                   drawBorder: true,
                   drawWick: true,
-                  plottype: 'ohlc_candles',
+                  plottype: "ohlc_candles",
                   visible: true,
-                  wickColor: '#000000',
+                  wickColor: "#000000",
                 },
               },
 
               palettes: {
                 palette_bar: {
                   colors: [
-                    { color: '#1948CC', width: 1, style: 0 },
-                    { color: '#F47D02', width: 1, style: 0 },
+                    { color: "#1948CC", width: 1, style: 0 },
+                    { color: "#F47D02", width: 1, style: 0 },
                   ],
                 },
                 palette_wick: {
-                  colors: [
-                    { color: '#0C3299', },
-                    { color: '#E65000', },
-                  ],
+                  colors: [{ color: "#0C3299" }, { color: "#E65000" }],
                 },
                 palette_border: {
-                  colors: [
-                    { color: '#5B9CF6', },
-                    { color: '#FFB74D', },
-                  ],
+                  colors: [{ color: "#5B9CF6" }, { color: "#FFB74D" }],
                 },
               },
 
@@ -201,11 +195,19 @@ export const CustomIndicators: Story = {
 
               // Color is determined randomly
               const colour = Math.round(Math.random());
-              return [o, h, l, c, colour /*bar*/, colour /*wick*/, colour /*border*/];
+              return [
+                o,
+                h,
+                l,
+                c,
+                colour /*bar*/,
+                colour /*wick*/,
+                colour /*border*/,
+              ];
             };
           },
         },
       ]);
-    }
+    },
   },
 };

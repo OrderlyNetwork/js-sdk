@@ -60,6 +60,7 @@ export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
 
 export const MEDIA_TABLET = "(max-width: 768px)";
 
+/** deposit buffer factor */
 export const DEPOSIT_FEE_RATE = 1.05;
 
 /**
@@ -74,8 +75,15 @@ export const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 // TODO: remove this
 export const nativeETHAddress = "0x0000000000000000000000000000000000000000";
 
-export const isNativeTokenChecker = (address: string) =>
-  address === nativeTokenAddress || address === nativeETHAddress;
+export const isNativeTokenChecker = (address?: string) => {
+  if (!address) {
+    return false;
+  }
+  return (
+    address?.toLowerCase() === nativeTokenAddress.toLowerCase() ||
+    address === nativeETHAddress
+  );
+};
 
 export const ArbitrumSepoliaChainInfo = {
   name: "Arbitrum Sepolia",
