@@ -1,5 +1,20 @@
 # @orderly.network/core
 
+## 2.10.0
+
+### Minor Changes
+
+- e8fcd4a: publish
+- 12142ab: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [e8fcd4a]
+- Updated dependencies [12142ab]
+- Updated dependencies
+  - @orderly.network/types@2.10.0
+
 ## 2.10.0-alpha.1
 
 ### Minor Changes

@@ -1,5 +1,24 @@
 # @orderly.network/ui-chain-selector
 
+## 2.10.0
+
+### Minor Changes
+
+- e8fcd4a: publish
+- 12142ab: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [e8fcd4a]
+- Updated dependencies [12142ab]
+- Updated dependencies
+  - @orderly.network/react-app@2.10.0
+  - @orderly.network/hooks@2.10.0
+  - @orderly.network/i18n@2.10.0
+  - @orderly.network/types@2.10.0
+  - @orderly.network/ui@2.10.0
+
 ## 2.10.0-alpha.1
 
 ### Minor Changes

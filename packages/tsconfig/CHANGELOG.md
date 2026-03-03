@@ -1,5 +1,13 @@
 # tsconfig
 
+## 0.13.0
+
+### Minor Changes
+
+- e8fcd4a: publish
+- 12142ab: publish
+- publish
+
 ## 0.13.0-alpha.1
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @orderly.network/i18n
 
+## 2.10.0
+
+### Minor Changes
+
+- e8fcd4a: publish
+- 12142ab: publish
+- publish
+
 ## 2.10.0-alpha.1
 
 ### Minor Changes
