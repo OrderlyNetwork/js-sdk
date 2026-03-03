@@ -13,7 +13,7 @@ import { getSymbol, updateSymbol } from "../../../utils/storage";
 import { OrderlyIcon } from "../trading/icons";
 
 const meta: Meta<typeof TradingPage> = {
-  title: "Package/plugin-core/SplitLayoutPlugin",
+  title: "Package/plugin/SplitLayoutPlugin",
   component: TradingPage,
 
   parameters: {

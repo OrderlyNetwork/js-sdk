@@ -30,7 +30,7 @@ const lgTree: SplitLayoutRuleNode = {
           type: "panel",
           id: S.SYMBOL_INFO_BAR,
           size: "fixed",
-          className: "oui-px-3",
+          className: "oui-px-3 oui-mb-2",
           disabled: true,
         },
         {
@@ -47,7 +47,7 @@ const lgTree: SplitLayoutRuleNode = {
             { type: "panel", id: S.ORDERBOOK, size: "40%" },
           ],
         },
-        { type: "panel", id: S.DATA_LIST, size: "30%" },
+        { type: "panel", id: S.DATA_LIST, size: "30%", className: "oui-p-2" },
       ],
     },
     {
@@ -57,9 +57,14 @@ const lgTree: SplitLayoutRuleNode = {
       minSize: "280px",
       maxSize: "360px",
       children: [
-        { type: "panel", id: S.MARGIN, size: "auto" },
-        { type: "panel", id: S.ASSETS, size: "auto" },
-        { type: "panel", id: S.MAIN, size: "auto" },
+        { type: "panel", id: S.MARGIN, size: "auto", className: "oui-p-3" },
+        { type: "panel", id: S.ASSETS, size: "auto", className: "oui-p-3" },
+        {
+          type: "panel",
+          id: S.ORDER_ENTRY,
+          size: "auto",
+          className: "oui-p-3",
+        },
       ],
     },
   ],
@@ -89,7 +94,7 @@ const smTree: SplitLayoutRuleNode = {
       children: [
         { type: "panel", id: S.MARGIN, size: "auto" },
         { type: "panel", id: S.ASSETS, size: "auto" },
-        { type: "panel", id: S.MAIN, size: "auto" },
+        { type: "panel", id: S.ORDER_ENTRY, size: "auto" },
       ],
     },
     { type: "panel", id: S.DATA_LIST, size: "30%" },
@@ -109,7 +114,7 @@ const xsTree: SplitLayoutRuleNode = {
     { type: "panel", id: S.ORDERBOOK, size: "auto" },
     { type: "panel", id: S.MARGIN, size: "auto" },
     { type: "panel", id: S.ASSETS, size: "auto" },
-    { type: "panel", id: S.MAIN, size: "auto" },
+    { type: "panel", id: S.ORDER_ENTRY, size: "auto" },
     { type: "panel", id: S.DATA_LIST, size: "auto" },
   ],
 };

@@ -22,11 +22,13 @@ export interface SplitLayoutChildConstraints {
 /**
  * Split layout node (runtime): single panel, split container, or sort container.
  * Used when rendering; built from rule nodes via normalizeRuleNodeToRuntime.
+ * Panel identifier is kept as `id` (same as rule) with no conversion.
  */
 export type SplitLayoutNode =
   | ({
       type: "panel";
-      panelId: string;
+      /** Panel ID; same key as in rule (no id→panelId conversion). */
+      id: string;
       /** Optional class name applied to the outer panel wrapper. */
       className?: string;
       /** Optional inline style applied to the outer panel wrapper. */
@@ -50,12 +52,12 @@ export type SplitLayoutNode =
 
 /**
  * Rule tree node (low-code style): orientation + id for panels.
- * At build time orientation → orientation, id → panelId.
+ * Runtime layout keeps the same `id` (no conversion).
  */
 export type SplitLayoutRuleNode =
   | ({
       type: "panel";
-      /** Panel ID; alias panelId also supported */
+      /** Panel ID; kept as-is in runtime layout and storage. */
       id: string;
       /** Optional class name applied to the outer panel wrapper for this rule. */
       className?: string;

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useCallback } from "react";
 import { cn } from "@orderly.network/ui";
-import { parseSizeToPercent } from "../utils/splitLayoutUtils";
+import type { SplitLayoutClassNames } from "../SplitPresetContext";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -32,6 +32,10 @@ export interface SplitLayoutProps extends PropsWithChildren {
   className?: string;
   /** Optional inline style for the group container */
   style?: React.CSSProperties;
+  /** Optional classNames for panel group, panel, and handle (from plugin options). */
+  classNames?: SplitLayoutClassNames;
+  /** Optional gap between panels in px (total; handle margin = gap/2 each side). Undefined preserves default 3px per side. */
+  gap?: number;
 }
 
 /**
@@ -39,11 +43,20 @@ export interface SplitLayoutProps extends PropsWithChildren {
  * Keeps existing handle style: transparent default, primary-light + shadow on hover/active/focus.
  * Thickness and orientation are delegated to the underlying ResizableHandle implementation.
  */
-const SPLIT_HANDLE_BASE_CLASSNAME =
-  "!oui-transition-none !oui-shadow-none !oui-bg-transparent " +
-  "hover:!oui-bg-primary-light hover:!oui-shadow-[0px_0px_4px_0px] hover:!oui-shadow-primary-light/80 " +
-  "active:!oui-bg-primary-light active:!oui-shadow-[0px_0px_4px_0px] active:!oui-shadow-primary-light/80 " +
-  "focus:!oui-bg-primary-light focus:!oui-shadow-[0px_0px_4px_0px] focus:!oui-shadow-primary-light/80";
+const SPLIT_HANDLE_BASE_CLASSNAME = [
+  "!oui-transition-none",
+  "!oui-shadow-none",
+  "!oui-bg-transparent",
+  "hover:!oui-bg-primary-light",
+  "hover:!oui-shadow-[0px_0px_2px_0px]",
+  "hover:!oui-shadow-primary-light/80",
+  "active:!oui-bg-primary-light",
+  "active:!oui-shadow-[0px_0px_2px_0px]",
+  "active:!oui-shadow-primary-light/80",
+  // "focus:!oui-bg-primary-light",
+  // "focus:!oui-shadow-[0px_0px_4px_0px]",
+  // "focus:!oui-shadow-primary-light/80",
+];
 
 export function SplitLayout({
   orientation,
@@ -53,6 +66,8 @@ export function SplitLayout({
   children,
   className,
   style,
+  classNames,
+  gap,
 }: SplitLayoutProps): React.ReactElement {
   const childArray = React.Children.toArray(children);
   const count = childArray.length;
@@ -75,14 +90,18 @@ export function SplitLayout({
 
   if (count === 0) return <></>;
 
-  const handleSpacingClass =
-    orientation === "horizontal" ? "oui-mx-[3px]" : "oui-my-[3px]";
+  /** Handle margin: gap = total px between panels (gap/2 each side). Undefined → 3px per side (backward compat). */
+  const marginPx = gap != null ? gap * 2 : 4;
+  const handleStyle: React.CSSProperties =
+    orientation === "horizontal"
+      ? { width: 2, marginLeft: marginPx, marginRight: marginPx }
+      : { height: 2, marginTop: marginPx, marginBottom: marginPx };
 
   return (
     <ResizablePanelGroup
       orientation={orientation}
       onLayoutChanged={handleLayoutChanged}
-      className={className}
+      className={cn(className, classNames?.panelGroup)}
       style={style}
     >
       {childArray.map((child, index) => {
@@ -97,17 +116,19 @@ export function SplitLayout({
             ) : (
               <ResizablePanel
                 id={String(index)}
-                defaultSize={parseSizeToPercent(size, count)}
-                minSize={constraints?.minSize ?? "1%"}
-                maxSize={constraints?.maxSize ?? "100%"}
+                defaultSize={size}
+                minSize={constraints?.minSize}
+                maxSize={constraints?.maxSize}
                 disabled={constraints?.disabled}
+                className={classNames?.panel}
               >
                 {child}
               </ResizablePanel>
             )}
-            {index < count - 1 && (
+            {index < count - 1 && !isFixed && (
               <ResizableHandle
-                className={`${SPLIT_HANDLE_BASE_CLASSNAME} ${handleSpacingClass}`}
+                className={cn(SPLIT_HANDLE_BASE_CLASSNAME, classNames?.handle)}
+                style={handleStyle}
               />
             )}
           </React.Fragment>

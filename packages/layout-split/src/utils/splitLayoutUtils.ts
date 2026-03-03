@@ -11,60 +11,53 @@ import type {
 } from "../types";
 
 /**
- * Converts a rule tree node to runtime SplitLayoutNode (orientation preserved, id→panelId).
- * Supports both `id` and `panelId` on panel rule nodes.
+ * Converts a rule tree node to runtime SplitLayoutNode (orientation preserved).
+ * - Panel: same shape so pass through. Sort: recurse children. Split: recurse then copy size/minSize/maxSize/disabled from rule child onto normalized node.
  */
 export function normalizeRuleNodeToRuntime(
   ruleNode: SplitLayoutRuleNode,
 ): SplitLayoutNode {
-  if (ruleNode.type === "panel") {
-    const { id, ...rest } = ruleNode as SplitLayoutRuleNode & {
-      panelId?: string;
-    };
-    return { ...rest, panelId: id ?? rest.panelId ?? "" };
-  }
+  if (ruleNode.type === "panel") return ruleNode as SplitLayoutNode;
   if (ruleNode.type === "sort") {
-    const children = ruleNode.children.map((child) =>
-      normalizeRuleNodeToRuntime(child),
-    );
     return {
       type: "sort",
       orientation: ruleNode.orientation,
-      children,
+      children: ruleNode.children.map(normalizeRuleNodeToRuntime),
     };
   }
-  /* type === "split" */
+  const childOpts = (c: SplitLayoutRuleNode) =>
+    c as unknown as {
+      size?: string;
+      minSize?: string;
+      maxSize?: string;
+      disabled?: boolean;
+    };
   const children = ruleNode.children.map((child) => {
-    const runtime = normalizeRuleNodeToRuntime(child);
-    const size = runtime.size ?? (child as { size?: string }).size;
-    const minSize = runtime.minSize ?? (child as { minSize?: string }).minSize;
-    const maxSize = runtime.maxSize ?? (child as { maxSize?: string }).maxSize;
-    const disabled =
-      runtime.disabled ?? (child as { disabled?: boolean }).disabled;
+    const r = normalizeRuleNodeToRuntime(child);
+    const o = childOpts(child);
     return {
-      ...runtime,
-      ...(size !== undefined && { size }),
-      ...(minSize !== undefined && { minSize }),
-      ...(maxSize !== undefined && { maxSize }),
-      ...(disabled !== undefined && { disabled }),
+      ...r,
+      ...(o.size !== undefined && { size: o.size }),
+      ...(o.minSize !== undefined && { minSize: o.minSize }),
+      ...(o.maxSize !== undefined && { maxSize: o.maxSize }),
+      ...(o.disabled !== undefined && { disabled: o.disabled }),
     };
   });
-  return {
-    type: "split",
-    orientation: ruleNode.orientation,
-    children,
-  };
+  return { type: "split", orientation: ruleNode.orientation, children };
 }
 
 /**
- * Returns a stable sortable id for a child node (panel uses panelId, others use path).
+ * Returns a stable sortable id for a child node (panel uses id, others use path).
+ * Never returns empty string to avoid React duplicate key warnings when id is missing.
  */
 export function getSortableIdForChild(
   child: SplitLayoutNode,
   path: number[],
   index: number,
 ): string {
-  if (child.type === "panel") return child.panelId;
+  if (child.type === "panel" && child.id) {
+    return child.id;
+  }
   return `sortable-${path.join("-")}-${index}`;
 }
 
@@ -143,12 +136,15 @@ export function createDefaultSplitLayout(panelIds: string[]): SplitLayoutModel {
 
   let singleRoot: SplitLayoutNode;
   if (panelIds.length === 1) {
-    singleRoot = { type: "panel", panelId: panelIds[0] };
+    singleRoot = { type: "panel", id: panelIds[0] };
   } else {
     singleRoot = {
       type: "split",
       orientation: "horizontal",
-      children: panelIds.map((id) => ({ type: "panel" as const, panelId: id })),
+      children: panelIds.map((panelId) => ({
+        type: "panel" as const,
+        id: panelId,
+      })),
     };
   }
 
@@ -164,32 +160,6 @@ export function createDefaultSplitLayout(panelIds: string[]): SplitLayoutModel {
     layouts,
     breakpoints: DEFAULT_SPLIT_BREAKPOINTS,
   };
-}
-
-/**
- * Parses a size string to a percentage (1–100) for react-resizable-panels defaultSize.
- * - "40%" → 40
- * - "auto" or missing → equal share (100 / total)
- *
- * @param size - Size string from layout node (e.g. "40%", "auto")
- * @param total - Total number of panels (for equal share)
- * @returns Percentage 1–100
- */
-export function parseSizeToPercent(
-  size: string | undefined,
-  total: number,
-): number {
-  if (total <= 0) return 100;
-  const equalShare = 100 / total;
-  if (size === undefined || size === "auto" || size.trim() === "") {
-    return Math.max(1, Math.round(equalShare));
-  }
-  const match = size.trim().match(/^(\d+(?:\.\d+)?)\s*%?$/);
-  if (match) {
-    const n = Number(match[1]);
-    return Math.max(1, Math.min(100, Math.round(n)));
-  }
-  return Math.max(1, Math.round(equalShare));
 }
 
 /** Checks that value is a valid orientation. */
@@ -213,8 +183,8 @@ function validateSplitLayoutNode(node: unknown): node is SplitLayoutNode {
 
   if (n.type === "panel") {
     return (
-      typeof n.panelId === "string" &&
-      n.panelId.length > 0 &&
+      typeof n.id === "string" &&
+      n.id.length > 0 &&
       (n.size === undefined || typeof n.size === "string") &&
       (n.minSize === undefined || typeof n.minSize === "string") &&
       (n.maxSize === undefined || typeof n.maxSize === "string") &&
@@ -256,6 +226,7 @@ export function serializeSplitLayout(layout: SplitLayoutModel): string {
 
 /**
  * Deserializes JSON to split layout model; validates layouts and breakpoints.
+ * No conversion: panel nodes keep `id` as stored.
  */
 export function deserializeSplitLayout(json: string): SplitLayoutModel {
   try {

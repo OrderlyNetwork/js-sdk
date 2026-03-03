@@ -9,7 +9,6 @@
 
 // Types
 export type {
-  LayoutCapabilities,
   LayoutModel,
   PanelRegistry,
   OnLayoutChange,
@@ -28,6 +27,15 @@ export { LayoutHost } from "./LayoutHost";
 
 // Hooks
 export { useLayoutPersistence } from "./hooks/useLayoutPersistence";
+export {
+  useLayoutRuleManager,
+  type UseLayoutRuleManagerResult,
+} from "./hooks/useLayoutRuleManager";
 
 // Utils
 export { resolveStrategy } from "./utils/strategyResolver";
+export {
+  LayoutRuleManager,
+  type LayoutPreset,
+  type LayoutRuleManagerOptions,
+} from "./utils/LayoutRuleManager";

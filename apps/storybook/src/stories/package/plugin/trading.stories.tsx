@@ -13,7 +13,7 @@ import { OrderlyIcon } from "../trading/icons";
 import { registerOrderbookStripedFlashPlugin } from "./orderbookStripedFlashPlugin";
 
 const meta: Meta<typeof OrderBookWidget> = {
-  title: "Package/plugin-core/Trading",
+  title: "Package/plugin/Trading",
   component: OrderBookWidget,
   decorators: [
     (Story) => (

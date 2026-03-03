@@ -18,6 +18,11 @@ export interface LayoutSplitPluginOptions {
   /** Receives built-in presets; return the final preset list. */
   layouts?: ResolveSplitLayoutPresets;
   gap?: number;
+  classNames?: {
+    panelGroup?: string;
+    panel?: string;
+    handle?: string;
+  };
 }
 
 const PLUGIN_ID = "orderly-layout-split";
@@ -39,7 +44,11 @@ export function registerLayoutSplitPlugin(
       orderlyVersion: ">=1.0.0",
       interceptors: [
         createInterceptor("Trading.Layout.Desktop", (Original, props, _api) => (
-          <SplitPresetProvider presets={resolvedPresets}>
+          <SplitPresetProvider
+            presets={resolvedPresets}
+            classNames={options?.classNames}
+            gap={options?.gap ?? 2}
+          >
             <SplitLayoutDesktopInjector
               Original={Original as React.ComponentType<DesktopLayoutProps>}
               props={props as DesktopLayoutProps}

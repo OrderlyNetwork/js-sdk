@@ -19,32 +19,45 @@ import { useTradingLocalStorage } from "../../hooks/";
 import { useTradingPageContext } from "../../provider/tradingPageContext";
 import { TradingPageState } from "../../types/types";
 import { useFirstTimeDeposit } from "./hooks/useFirstTimeDeposit";
+import {
+  scrollBarWidth,
+  topBarHeight,
+  bottomBarHeight,
+  space,
+  symbolInfoBarHeight,
+  orderEntryMinWidth,
+  orderEntryMaxWidth,
+  orderbookMinWidth,
+  orderbookMaxWidth,
+  orderbookMinHeight,
+  orderbookMaxHeight,
+  tradindviewMinHeight,
+  tradingViewMinWidth,
+  dataListMaxHeight,
+  dataListInitialHeight,
+} from "./trading.constants";
+
+// Re-export constants and types so existing importers continue to work without changes.
+export type { MarketLayoutPosition } from "./trading.constants";
+export {
+  scrollBarWidth,
+  topBarHeight,
+  bottomBarHeight,
+  space,
+  symbolInfoBarHeight,
+  orderEntryMinWidth,
+  orderEntryMaxWidth,
+  orderbookMinWidth,
+  orderbookMaxWidth,
+  orderbookMinHeight,
+  orderbookMaxHeight,
+  tradindviewMinHeight,
+  tradingViewMinWidth,
+  dataListMaxHeight,
+  dataListInitialHeight,
+};
 
 export type TradingState = ReturnType<typeof useTradingScript>;
-
-export const scrollBarWidth = 6;
-export const topBarHeight = 48;
-export const bottomBarHeight = 29;
-export const space = 8;
-export const symbolInfoBarHeight = 54;
-
-export const orderEntryMinWidth = 280;
-export const orderEntryMaxWidth = 360;
-
-export const orderbookMinWidth = 280;
-export const orderbookMaxWidth = 732;
-
-export const orderbookMinHeight = 464;
-export const orderbookMaxHeight = 728;
-
-export const tradindviewMinHeight = 320;
-
-export const tradingViewMinWidth = 540;
-
-export const dataListMaxHeight = 800;
-export const dataListInitialHeight = 350;
-
-export type MarketLayoutPosition = "left" | "top" | "bottom" | "hide";
 
 export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);

@@ -72,15 +72,13 @@ export interface TradingPanelRegistryProps {
   closeCountdown: () => void;
   /** TradingView fullscreen from localStorage */
   tradingViewFullScreen: boolean;
-  /** Whether horizontal split is draggable (e.g. min-width 1440px) */
-  horizontalDraggable?: boolean;
-  /** Current split sizes (used for min/max styling only when layout is strategy-driven) */
-  orderBookSplitSize?: string;
-  dataListSplitSize?: string;
-  mainSplitSize?: string;
-  marketsWidth?: number;
   animating?: boolean;
   setAnimating?: (v: boolean) => void;
+  dataListHeight?: {
+    height: number;
+    minHeight: number;
+    maxHeight: number;
+  };
 }
 
 /**
@@ -108,6 +106,8 @@ export function createTradingPanelRegistry(
     sharePnLConfig,
     animating,
     setAnimating,
+    symbolInfoBarHeight,
+    dataListHeight,
   } = props;
   const layout = layoutResolved;
   const onLayout = onLayoutResolved;
@@ -125,22 +125,26 @@ export function createTradingPanelRegistry(
   // symbolInfoBar
   panels.set(
     TRADING_PANEL_IDS.SYMBOL_INFO_BAR,
-    <SymbolInfoBarFullWidget
-      symbol={symbol}
-      onSymbolChange={onSymbolChange}
-      closeCountdown={closeCountdown}
-      showCountdown={showCountdown}
-      trailing={
-        <React.Suspense fallback={null}>
-          <LazySwitchLayout
-            layout={layout}
-            onLayout={onLayout}
-            marketLayout={marketLayout}
-            onMarketLayout={onMarketLayout}
-          />
-        </React.Suspense>
-      }
-    />,
+    <div
+      style={{ minHeight: symbolInfoBarHeight, height: symbolInfoBarHeight }}
+    >
+      <SymbolInfoBarFullWidget
+        symbol={symbol}
+        onSymbolChange={onSymbolChange}
+        closeCountdown={closeCountdown}
+        showCountdown={showCountdown}
+        trailing={
+          <React.Suspense fallback={null}>
+            <LazySwitchLayout
+              layout={layout}
+              onLayout={onLayout}
+              marketLayout={marketLayout}
+              onMarketLayout={onMarketLayout}
+            />
+          </React.Suspense>
+        }
+      />
+    </div>,
   );
 
   // tradingView (chart)
@@ -176,6 +180,7 @@ export function createTradingPanelRegistry(
   // dataList
   panels.set(
     TRADING_PANEL_IDS.DATA_LIST,
+
     <React.Suspense fallback={null}>
       <LazyDataListWidget
         current={undefined}
@@ -207,7 +212,7 @@ export function createTradingPanelRegistry(
   );
 
   panels.set(
-    TRADING_PANEL_IDS.MAIN,
+    TRADING_PANEL_IDS.ORDER_ENTRY,
     <OrderEntryWidget
       symbol={symbol}
       disableFeatures={

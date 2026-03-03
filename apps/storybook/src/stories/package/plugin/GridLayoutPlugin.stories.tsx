@@ -16,7 +16,7 @@ import { getSymbol, updateSymbol } from "../../../utils/storage";
 import { OrderlyIcon } from "../trading/icons";
 
 const meta: Meta<typeof TradingPage> = {
-  title: "Package/plugin-core/GridLayoutPlugin",
+  title: "Package/plugin/GridLayoutPlugin",
   component: TradingPage,
 
   parameters: {

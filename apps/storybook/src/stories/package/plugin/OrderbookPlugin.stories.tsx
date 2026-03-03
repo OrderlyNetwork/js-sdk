@@ -8,7 +8,7 @@ import { Box, OrderlyPluginProvider } from "@orderly.network/ui";
 import { registerOrderbookStripedFlashPlugin } from "./orderbookStripedFlashPlugin";
 
 const meta: Meta<typeof OrderBookWidget> = {
-  title: "Package/plugin-core/OrderbookPlugin",
+  title: "Package/plugin/OrderbookPlugin",
   component: OrderBookWidget,
   decorators: [
     (Story) => (

@@ -1,27 +1,6 @@
 import { ComponentType, ReactNode } from "react";
 
 /**
- * Layout strategy capabilities declaration
- * Used for UI control, feature gating, and permission switches
- */
-export interface LayoutCapabilities {
-  /** Whether the strategy supports resizing panels */
-  resize: boolean;
-  /** Whether the strategy supports dragging panels to different positions */
-  drag: boolean;
-  /** Whether the strategy supports docking panels */
-  dock: boolean;
-  /** Whether the strategy supports tabbed panels */
-  tabs: boolean;
-  /** Type of constraints this strategy enforces */
-  constraints: "grid" | "split" | "free" | "none";
-  /** Whether panels can be hidden/collapsed */
-  collapsible: boolean;
-  /** Whether the strategy supports nested layouts */
-  nested: boolean;
-}
-
-/**
  * Base layout model type - each strategy defines its own concrete type
  * This is a marker type to ensure type safety in serialization
  */
@@ -49,8 +28,6 @@ export interface LayoutStrategy<TLayout extends LayoutModel = LayoutModel> {
   id: string;
   /** Human-readable display name */
   displayName: string;
-  /** Capabilities this strategy provides */
-  capabilities: LayoutCapabilities;
   /** Create default layout model for given panel IDs */
   defaultLayout: (panelIds: string[]) => TLayout;
   /** Serialize layout model to JSON for persistence */

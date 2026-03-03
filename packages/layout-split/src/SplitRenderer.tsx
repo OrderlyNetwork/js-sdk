@@ -1,5 +1,6 @@
 import React, { useRef, useCallback } from "react";
 import type { LayoutRendererProps } from "@orderly.network/layout-core";
+import { useSplitPresetContext } from "./SplitPresetContext";
 import { SplitNodeRenderer } from "./components/SplitNodeRenderer";
 import { useBreakpointFromWidth } from "./hooks/useBreakpointFromWidth";
 import type { SplitLayoutModel } from "./types";
@@ -18,6 +19,8 @@ export function SplitRenderer(
   props: LayoutRendererProps<SplitLayoutModel>,
 ): React.ReactElement {
   const { layout, panels, onLayoutChange, className, style } = props;
+
+  const ctx = useSplitPresetContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const breakpoint = useBreakpointFromWidth(containerRef, {
     breakpoints: layout.breakpoints,
@@ -72,6 +75,8 @@ export function SplitRenderer(
         breakpoint={breakpoint}
         layout={layout}
         onLayoutChange={onLayoutChange}
+        classNames={ctx?.classNames}
+        gap={ctx?.gap}
       />
     </div>
   );

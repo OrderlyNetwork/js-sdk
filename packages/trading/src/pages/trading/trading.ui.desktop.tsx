@@ -17,8 +17,8 @@ import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import { useTradingPageContext } from "../../provider/tradingPageContext";
 import type { DesktopLayoutInitialOptions } from "../../types/types";
-import { dataListInitialHeight, TradingState } from "./trading.script";
 import {
+  dataListInitialHeight,
   scrollBarWidth,
   topBarHeight,
   bottomBarHeight,
@@ -26,7 +26,9 @@ import {
   orderbookMinHeight,
   orderbookMaxHeight,
   tradindviewMinHeight,
-} from "./trading.script";
+  dataListMaxHeight,
+} from "./trading.constants";
+import type { TradingState } from "./trading.script";
 
 /** Stable noops to avoid useMemo invalidation when layout props are undefined. */
 const NOOP = () => {};
@@ -54,10 +56,6 @@ export type DesktopLayoutProps = TradingState & {
   resizeable?: boolean;
   panelSize?: "small" | "middle" | "large";
   onPanelSizeChange?: (v: "small" | "middle" | "large") => void;
-  orderBookSplitSize?: string;
-  dataListSplitSize?: string;
-  mainSplitSize?: string;
-  marketsWidth?: number;
   animating?: boolean;
   setAnimating?: (v: boolean) => void;
 };
@@ -69,9 +67,9 @@ export type DesktopLayoutProps = TradingState & {
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const {
     max2XL,
-    horizontalDraggable,
     dataListMinHeight,
     tradingViewFullScreen,
+    // dataListSplitHeightSM,
   } = props;
   /* Layout props optional when plugin provides rule-based layout; use defaults for SwitchLayout. */
   const layout = props.layout ?? "right";
@@ -81,10 +79,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const resizeable = props.resizeable ?? false;
   const panelSize = props.panelSize ?? "large";
   const onPanelSizeChange = props.onPanelSizeChange ?? NOOP;
-  const orderBookSplitSize = props.orderBookSplitSize ?? "280px";
-  const dataListSplitSize = props.dataListSplitSize ?? "350px";
-  const mainSplitSize = props.mainSplitSize ?? "280px";
-  const marketsWidth = props.marketsWidth ?? 280;
   const animating = props.animating ?? false;
   const setAnimating = props.setAnimating ?? NOOP;
 
@@ -121,6 +115,14 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     dataListMinHeight +
     space * 4;
 
+  const dataListHeight = useMemo(() => {
+    return {
+      height: 0,
+      minHeight: Math.max(dataListMinHeight, 0),
+      maxHeight: dataListMaxHeight,
+    };
+  }, [dataListMinHeight, 0]);
+
   const registryProps = useMemo<TradingPanelRegistryProps>(
     () => ({
       symbol: props.symbol,
@@ -142,13 +144,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       showCountdown: showCountdown ?? false,
       closeCountdown,
       tradingViewFullScreen,
-      horizontalDraggable,
-      orderBookSplitSize,
-      dataListSplitSize,
-      mainSplitSize,
-      marketsWidth,
       animating,
       setAnimating,
+      dataListHeight,
     }),
     [
       props.symbol,
@@ -169,13 +167,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       showCountdown,
       closeCountdown,
       tradingViewFullScreen,
-      horizontalDraggable,
-      orderBookSplitSize,
-      dataListSplitSize,
-      mainSplitSize,
-      marketsWidth,
       animating,
       setAnimating,
+      dataListHeight,
     ],
   );
 

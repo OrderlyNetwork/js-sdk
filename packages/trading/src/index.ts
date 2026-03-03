@@ -43,4 +43,4 @@ export {
   orderbookMaxHeight,
   tradindviewMinHeight,
   dataListInitialHeight,
-} from "./pages/trading/trading.script";
+} from "./pages/trading/trading.constants";

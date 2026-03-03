@@ -11,7 +11,7 @@ export const TRADING_PANEL_IDS = {
   ORDER_ENTRY: "orderEntry",
   MARGIN: "orderEntryMargin",
   ASSETS: "orderEntryAssets",
-  MAIN: "orderEntryMain",
+  // MAIN: "orderEntryMain",
   MARKETS: "markets",
 } as const;
 

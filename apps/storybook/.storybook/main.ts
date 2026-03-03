@@ -43,6 +43,7 @@ function getStories() {
       affiliate: "affiliate",
       rewards: "trading-rewards",
       leaderboard: "trading-leaderboard",
+      plugin: "plugin",
     };
 
     const prefix = "../src/stories/package";

@@ -228,11 +228,13 @@ const layout: Package[] = [
     package: "@orderly.network/layout-split",
     path: "../../packages/layout-split/src",
     watch: true,
+    alwaysWatch: true,
   },
   {
     package: "@orderly.network/layout-grid",
     path: "../../packages/layout-grid/src",
     watch: true,
+    alwaysWatch: true,
   },
 ];
 

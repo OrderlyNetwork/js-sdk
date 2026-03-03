@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   DndContext,
   closestCenter,
@@ -19,6 +19,8 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { PanelRegistry } from "@orderly.network/layout-core";
+import { cn } from "@orderly.network/ui";
+import { useSplitSortIndicatorContext } from "../SplitSortIndicatorContext";
 import type { SplitLayoutModel, SplitLayoutNode } from "../types";
 import {
   getSortableIdForChild,
@@ -31,14 +33,38 @@ import { SplitNodeRenderer } from "./SplitNodeRenderer";
 interface SortableSortChildProps extends SplitNodeRendererProps {
   id: string;
   child: SplitLayoutNode;
+  /** When true, show drag handle on panel children; from SplitSortIndicatorContext. */
+  showIndicator: boolean;
+}
+
+/** Drag handle icon (matches SortablePanel). */
+function IndicatorIcon(
+  props: React.SVGProps<SVGSVGElement>,
+): React.ReactElement {
+  return (
+    <svg
+      width="10"
+      height="16"
+      viewBox="0 0 10 16"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect x="2" y="2" width="6" height="2" rx="1" />
+      <rect x="2" y="7" width="6" height="2" rx="1" />
+      <rect x="2" y="12" width="6" height="2" rx="1" />
+    </svg>
+  );
 }
 
 /**
  * Wraps a panel in a sortable drag handle for use inside a sort container.
+ * Single wrapper div only: panel className is applied once by SplitNodeRenderer, not here.
  */
 function SortableSortChild({
   id,
   child,
+  showIndicator,
   panels,
   path,
   onSizeChange,
@@ -46,45 +72,99 @@ function SortableSortChild({
   breakpoint,
   layout,
   onLayoutChange,
+  classNames,
+  gap,
 }: SortableSortChildProps): React.ReactElement {
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = React.useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+
   const {
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
     isDragging,
   } = useSortable({ id });
+
+  useEffect(() => {
+    if (isDragging && nodeRef.current && !dimensions) {
+      const rect = nodeRef.current.getBoundingClientRect();
+      setDimensions({ width: rect.width, height: rect.height });
+    } else if (!isDragging && dimensions) {
+      setDimensions(null);
+    }
+  }, [isDragging, dimensions]);
+
+  const combinedRef = (node: HTMLDivElement | null) => {
+    setNodeRef(node);
+    (nodeRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+  };
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
+  const showHandle = showIndicator && child.type === "panel";
+
+  /** Placeholder: minimal styling, no panel className (avoid duplication). */
+  if (isDragging && dimensions) {
+    return (
+      <div
+        className="oui-relative oui-rounded-2xl"
+        style={{
+          ...style,
+          width: dimensions.width,
+          height: dimensions.height,
+          minWidth: dimensions.width,
+          minHeight: dimensions.height,
+          maxWidth: dimensions.width,
+          maxHeight: dimensions.height,
+          border: "1px solid rgb(var(--oui-color-primary))",
+          backgroundImage: `repeating-linear-gradient(135deg, rgb(var(--oui-color-base-6)) 0px, rgb(var(--oui-color-base-6)) 4px, transparent 4px, transparent 8px)`,
+        }}
+      />
+    );
+  }
+
   return (
-    <div ref={setNodeRef} style={style} className="oui-relative">
-      {child.type === "panel" ? (
-        <div
+    <div
+      ref={combinedRef}
+      style={style}
+      className={cn("oui-relative", isDragging && "oui-opacity-50")}
+    >
+      {showHandle && (
+        <button
           {...attributes}
           {...listeners}
-          className="oui-absolute oui-right-1 oui-top-2 oui-z-10 oui-cursor-grab oui-opacity-50 hover:oui-opacity-100"
+          className="oui-absolute oui-right-0 oui-top-4 oui-cursor-move oui-py-1"
           style={{ touchAction: "none" }}
+          ref={setActivatorNodeRef}
         >
-          <span className="oui-text-base-contrast-60">⋮⋮</span>
-        </div>
-      ) : null}
-      <div className={isDragging ? "oui-opacity-50" : ""}>
-        <SplitNodeRenderer
-          node={child}
-          panels={panels}
-          path={path}
-          onSizeChange={onSizeChange}
-          rootNode={rootNode}
-          breakpoint={breakpoint}
-          layout={layout}
-          onLayoutChange={onLayoutChange}
-        />
-      </div>
+          <IndicatorIcon
+            className={cn(
+              "oui-text-base-contrast-20 hover:oui-text-base-contrast-80",
+            )}
+          />
+        </button>
+      )}
+      <SplitNodeRenderer
+        node={child}
+        panels={panels}
+        path={path}
+        onSizeChange={onSizeChange}
+        rootNode={rootNode}
+        breakpoint={breakpoint}
+        layout={layout}
+        onLayoutChange={onLayoutChange}
+        classNames={classNames}
+        gap={gap}
+      />
     </div>
   );
 }
@@ -99,6 +179,10 @@ export interface SortNodeRendererProps {
   layout: SplitLayoutModel;
   onSizeChange: (path: number[], sizes: string[]) => void;
   onLayoutChange: (layout: SplitLayoutModel) => void;
+  /** Optional classNames for panel group, panel, and handle (from plugin options). */
+  classNames?: SplitNodeRendererProps["classNames"];
+  /** Optional gap between panels in px (from plugin options). */
+  gap?: SplitNodeRendererProps["gap"];
 }
 
 /**
@@ -113,8 +197,11 @@ export function SortNodeRenderer({
   breakpoint,
   layout,
   onLayoutChange,
+  classNames,
+  gap,
 }: SortNodeRendererProps): React.ReactElement {
   const { orientation, children } = node;
+  const showIndicator = useSplitSortIndicatorContext();
   const items = children.map((child: SplitLayoutNode, index: number) =>
     getSortableIdForChild(child, path, index),
   );
@@ -178,6 +265,7 @@ export function SortNodeRenderer({
               key={getSortableIdForChild(child, path, index)}
               id={getSortableIdForChild(child, path, index)}
               child={child}
+              showIndicator={showIndicator}
               node={node}
               panels={panels}
               path={[...path, index]}
@@ -186,6 +274,8 @@ export function SortNodeRenderer({
               breakpoint={breakpoint}
               layout={layout}
               onLayoutChange={onLayoutChange}
+              classNames={classNames}
+              gap={gap}
             />
           ))}
         </div>
