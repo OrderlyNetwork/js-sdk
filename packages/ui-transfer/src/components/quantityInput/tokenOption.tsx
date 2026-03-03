@@ -13,7 +13,6 @@ import {
 import { Decimal } from "@orderly.network/utils";
 import { isYieldBearingAsset } from "../../constants/yieldBearingAssets";
 import { useYieldAPY } from "../depositForm/hooks/useYieldAPY";
-import { useBalance } from "./useBalance";
 
 interface TokenOptionProps {
   token: API.TokenInfo & {
@@ -21,23 +20,31 @@ interface TokenOptionProps {
     value: string;
     insufficientBalance?: boolean;
     balance?: string;
+    quantity?: string;
+    amount?: number;
   };
-  fetchBalance?: (token: string, decimals: number) => Promise<any>;
   onTokenChange?: (token: API.TokenInfo) => void;
   isActive: boolean;
   index?: number;
   displayType?: "balance" | "vaultBalance";
   open?: boolean;
+  isLoading?: boolean;
+  showBalance?: boolean;
 }
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
-  const { token, isActive, displayType, onTokenChange, fetchBalance, open } =
-    props;
+  const {
+    token,
+    isActive,
+    displayType,
+    onTokenChange,
+    open,
+    isLoading,
+    showBalance,
+  } = props;
   const { symbol, precision, insufficientBalance } = token;
-  const { balance, loading } = useBalance(token, fetchBalance, open);
   const { apy } = useYieldAPY(symbol);
 
-  const showBalance = typeof fetchBalance === "function";
   const showAPY = isYieldBearingAsset(symbol) && apy !== null;
 
   const { t } = useTranslation();
@@ -60,8 +67,14 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         )}
       >
         <Flex itemAlign="center" gapX={1}>
-          <TokenIcon name={symbol} className="oui-size-[16px] oui-opacity-50" />
-          <Text intensity={36}>{token.label}</Text>
+          <TokenIcon
+            url={(token as any).logo_uri}
+            name={symbol}
+            className="oui-size-[16px] oui-opacity-50"
+          />
+          <Text intensity={36} className="oui-max-w-[200px] oui-truncate">
+            {token.label}
+          </Text>
           <Badge color="neutral" size="xs">
             {t("transfer.withdraw.InsufficientVaultBalance")}
           </Badge>
@@ -75,21 +88,22 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       return null;
     }
 
-    if (loading && !token.balance) {
+    if (isLoading && !token.amount) {
       return <Spinner size="sm" />;
     }
 
     return (
       <Text.numeral
         rule="price"
-        dp={precision ?? 2}
+        dp={precision}
         rm={Decimal.ROUND_DOWN}
+        ignoreDP
         className={cn(
           "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",
           isActive && "oui-text-base-contrast-54",
         )}
       >
-        {balance || token.balance!}
+        {token.amount!}
       </Text.numeral>
     );
   };
@@ -113,11 +127,16 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       }}
     >
       <Flex gapX={1} itemAlign="center">
-        <TokenIcon name={symbol} className="oui-size-[16px]" />
+        <TokenIcon
+          name={symbol}
+          url={(token as any).logo_uri}
+          className="oui-size-[16px]"
+        />
         <Text
           className={cn(
             "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",
             isActive && "oui-text-base-contrast-80",
+            "oui-max-w-[200px] oui-truncate",
           )}
         >
           {token.label}

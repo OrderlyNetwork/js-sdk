@@ -137,7 +137,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         </Box>
         <AvailableQuantity
           token={sourceToken}
-          amount={amount}
+          quantity={amount}
           maxQuantity={maxQuantity.toString()}
           loading={props.balanceRevalidating}
           onClick={() => {

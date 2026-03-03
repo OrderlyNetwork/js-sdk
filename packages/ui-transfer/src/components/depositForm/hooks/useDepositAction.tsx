@@ -6,41 +6,31 @@ import { getDepositKnownErrorMessage } from "../../../utils";
 
 type Options = {
   quantity: string;
-  allowance?: string;
   approve: (quantity?: string) => Promise<any>;
   deposit: () => Promise<any>;
   onSuccess?: () => void;
-  onError?: (err: unknown, knownErrorMessage?: string) => void;
-  customDeposit?: () => Promise<any>;
-  enableCustomDeposit?: boolean;
+  swapDeposit?: () => Promise<any>;
+  needSwap?: boolean;
 };
 
 export function useDepositAction(options: Options) {
-  const {
-    quantity,
-    allowance,
-    approve,
-    deposit,
-    enableCustomDeposit,
-    customDeposit,
-    onSuccess,
-  } = options;
-  const [submitting, setSubmitting] = useState(false);
+  const { quantity, approve, deposit, swapDeposit, onSuccess, needSwap } =
+    options;
+  const [isMutating, setIsMutating] = useState(false);
+  const [depositError, setDepositError] = useState("");
+
   const ee = useEventEmitter();
   const { t } = useTranslation();
 
   const doDeposit = useCallback(async () => {
     try {
       await deposit();
-      toast.success(t("transfer.deposit.requested"));
-      ee.emit("deposit:requested");
-      onSuccess?.();
+      setDepositError("");
     } catch (err: any) {
-      console.error("deposit error", err);
-
+      console.error("orderly deposit error", err);
       const knownErrorMessage = getDepositKnownErrorMessage(err.message);
-      options.onError?.(err, knownErrorMessage);
       if (knownErrorMessage) {
+        setDepositError(knownErrorMessage);
         toast.error(
           <div>
             {t("common.somethingWentWrong")}
@@ -53,8 +43,9 @@ export function useDepositAction(options: Options) {
       } else {
         toast.error(err.message || t("common.somethingWentWrong"));
       }
+      throw err;
     }
-  }, [deposit, onSuccess, t, ee, options.onError]);
+  }, [deposit, onSuccess, t, ee]);
 
   const onDeposit = useCallback(async () => {
     const num = Number(quantity);
@@ -64,20 +55,29 @@ export function useDepositAction(options: Options) {
       return;
     }
 
-    if (submitting) return;
+    if (isMutating) return;
 
-    setSubmitting(true);
+    setIsMutating(true);
 
-    const execDeposit = enableCustomDeposit ? customDeposit : doDeposit;
-
-    await execDeposit?.()?.finally(() => {
-      setSubmitting(false);
-    });
-  }, [quantity, submitting, doDeposit, enableCustomDeposit, customDeposit, t]);
+    try {
+      if (needSwap) {
+        await swapDeposit?.();
+      } else {
+        await doDeposit();
+      }
+      toast.success(t("transfer.deposit.requested"));
+      ee.emit("deposit:requested");
+      onSuccess?.();
+    } catch (err: any) {
+      // all errors are handled by toast.error in doDeposit or swapDeposit
+    } finally {
+      setIsMutating(false);
+    }
+  }, [quantity, isMutating, needSwap, doDeposit, swapDeposit, t]);
 
   const onApprove = useCallback(async () => {
-    if (submitting) return;
-    setSubmitting(true);
+    if (isMutating) return;
+    setIsMutating(true);
 
     try {
       await approve(quantity);
@@ -89,13 +89,13 @@ export function useDepositAction(options: Options) {
       );
       throw err;
     } finally {
-      setSubmitting(false);
+      setIsMutating(false);
     }
-  }, [approve, submitting, quantity, allowance, t]);
+  }, [approve, isMutating, quantity, t]);
 
   const onApproveAndDeposit = useCallback(async () => {
-    if (submitting) return;
-    setSubmitting(true);
+    if (isMutating) return;
+    setIsMutating(true);
 
     try {
       await onApprove();
@@ -103,9 +103,16 @@ export function useDepositAction(options: Options) {
     } catch (err) {
       console.error("approve and deposit error", err);
     } finally {
-      setSubmitting(false);
+      setIsMutating(false);
     }
-  }, [submitting, onApprove, onDeposit]);
+  }, [isMutating, onApprove, onDeposit]);
 
-  return { submitting, onApprove, onDeposit, onApproveAndDeposit };
+  return {
+    isMutating,
+    depositError,
+    setDepositError,
+    onApprove,
+    onDeposit,
+    onApproveAndDeposit,
+  };
 }

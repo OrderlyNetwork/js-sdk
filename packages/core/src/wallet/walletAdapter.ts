@@ -160,6 +160,24 @@ export interface WalletAdapter<Config = any> {
     },
   ): Promise<any>;
 
+  /**
+   * Estimate gas for a contract call (optional, e.g. EVM adapters).
+   * Returns gas limit as bigint. Gas cost in native token = gasLimit * gasPrice.
+   */
+  estimateGasFee?(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+    options: {
+      abi: any;
+    },
+  ): Promise<bigint>;
+
   callOnChain(
     chain: API.NetworkInfos,
     address: string,
@@ -171,6 +189,7 @@ export interface WalletAdapter<Config = any> {
   ): Promise<any>;
 
   getBalance(): Promise<bigint>;
+  getBalances(addresses: string[]): Promise<any>;
 
   pollTransactionReceiptWithBackoff(
     txHash: string,

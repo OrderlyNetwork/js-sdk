@@ -17,6 +17,7 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
+import { useEventEmitter } from "@orderly.network/hooks";
 import { useScreen } from "@orderly.network/ui";
 import { getGlobalObject } from "@orderly.network/utils";
 import { SolanaInitialProps } from "./types";
@@ -62,12 +63,25 @@ export function SolanaProvider({ children, ...props }: SolanaInitialProps) {
     return Promise.reject(new WalletNotReadyError("wallet not ready"));
   };
 
+  const ee = useEventEmitter();
+
   const handleSolanaError = (error: WalletError, adapter?: Adapter) => {
     console.log("-- solanan error", error);
     console.log("-- solana adapter", adapter);
 
-    if (!isMobile && error instanceof WalletNotReadyError) {
-      window.open(adapter?.url, "_blank");
+    if (error instanceof WalletNotReadyError) {
+      if (isMobile) {
+        ee.emit("wallet:connect-error", {
+          message: "Please open the wallet app and use the in-app browser.",
+        });
+      } else {
+        window.open(adapter?.url, "_blank");
+      }
+    } else {
+      ee.emit("wallet:connect-error", {
+        message:
+          error?.message || "Please switch to a wallet with Solana address.",
+      });
     }
   };
 

@@ -1,13 +1,6 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { WalletAdapterNetwork, WalletName } from "@solana/wallet-adapter-base";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import React, { createContext, useContext, useEffect, useMemo } from "react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useStorageLedgerAddress } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
@@ -29,6 +22,7 @@ const defaultUseSolanaWallet = {
   connect: () => Promise.resolve(),
   wallet: null,
   publicKey: null,
+  connecting: false,
   signMessage: () => Promise.resolve(),
   signTransaction: () => Promise.resolve(),
   sendTransaction: () => Promise.resolve(),
@@ -52,6 +46,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     connect: connectSolana,
     wallet: walletSolana,
     publicKey,
+    connecting,
     signMessage,
     signTransaction,
     sendTransaction,
@@ -122,6 +117,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       connectSolana,
       walletSolana,
       publicKey,
+      connecting,
       signMessage,
       signTransaction,
       sendTransaction,
@@ -134,6 +130,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     connectSolana,
     walletSolana,
     publicKey,
+    connecting,
     signMessage,
     signTransaction,
     sendTransaction,
@@ -142,9 +139,19 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     solanaInfo,
   ]);
 
+  const dedupedWallets = useMemo(() => {
+    const seen = new Set<string>();
+    return wallets.filter((w: any) => {
+      const name = w?.adapter?.name?.toLowerCase?.();
+      if (!name || seen.has(name)) return !name;
+      seen.add(name);
+      return true;
+    });
+  }, [wallets]);
+
   const value = useMemo(
     () => ({
-      wallets,
+      wallets: dedupedWallets,
       connectedChain: publicKey
         ? {
             id: SolanaChainsMap.get(network)!,
@@ -156,7 +163,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       disconnect: disconnectWallet,
       isConnected: !!publicKey,
     }),
-    [wallets, publicKey, wallet, network],
+    [dedupedWallets, publicKey, wallet, network],
   );
 
   return (

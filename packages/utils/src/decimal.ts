@@ -221,3 +221,24 @@ export const checkIsNaN = (value: string | number | undefined | null) => {
   }
   return Number.isNaN(Number(value));
 };
+
+/**
+ * Format number for display: use decimal places when >= 1, otherwise significant digits.
+ * Returns number when >= 1, string when < 1 (to preserve leading zeros in small numbers).
+ * @example
+ * formatWithPrecision(new Decimal(0.0000000123456), 2) => 0.000000012
+ * formatWithPrecision(new Decimal(1.23456), 2) => 1.23
+ */
+export const formatWithPrecision = (
+  num: number | string | Decimal,
+  precision: number = 2,
+): number | string => {
+  const numDecimal = new Decimal(num || 0);
+
+  if (numDecimal.gte(1)) {
+    return numDecimal.todp(precision, Decimal.ROUND_DOWN).toNumber();
+  }
+  return numDecimal
+    .toSignificantDigits(precision, Decimal.ROUND_DOWN)
+    .toFixed();
+};

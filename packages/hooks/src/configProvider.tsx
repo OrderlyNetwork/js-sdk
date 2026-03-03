@@ -36,8 +36,8 @@ export type ChainFilter = FilteredChains | ChainFilterFunc;
 export type BaseConfigProviderProps = {
   keyStore?: OrderlyKeyStore;
   contracts?: IContract;
-  // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
+  /** filter chains, only show chains in the filter */
   chainFilter?: ChainFilter;
   /**
    * Custom orderbook default tick sizes.
@@ -51,7 +51,6 @@ export type BaseConfigProviderProps = {
   OrderlyConfigContextState,
   | "enableSwapDeposit"
   | "customChains"
-  | "chainTransformer"
   | "dataAdapter"
   | "notification"
   | "amplitudeConfig"
@@ -82,7 +81,6 @@ export const OrderlyConfigProvider: FC<
   const {
     configStore,
     keyStore,
-    // getWalletAdapter,
     walletAdapters,
     brokerId,
     brokerName,
@@ -91,7 +89,6 @@ export const OrderlyConfigProvider: FC<
     chainFilter,
     customChains,
     enableSwapDeposit = false,
-    chainTransformer,
     dataAdapter,
     notification,
     amplitudeConfig,
@@ -189,13 +186,12 @@ export const OrderlyConfigProvider: FC<
       configStore: innerConfigStore,
       keyStore: innerKeyStore,
       networkId: innerConfigStore.get("networkId") || networkId,
-      filteredChains: filteredChains,
+      filteredChains,
       walletAdapters: innerWalletAdapters,
       customChains,
       enableSwapDeposit,
       defaultOrderbookTickSizes,
       defaultOrderbookSymbolDepths,
-      chainTransformer,
       dataAdapter,
       notification: notification,
       amplitudeConfig,
@@ -213,7 +209,6 @@ export const OrderlyConfigProvider: FC<
     defaultOrderbookSymbolDepths,
     dataAdapter,
     notification,
-    chainTransformer,
     amplitudeConfig,
     orderMetadata,
   ]);

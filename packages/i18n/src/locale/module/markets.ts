@@ -34,6 +34,9 @@ export const markets = {
   "markets.column.price&Change": "Price / Change",
   "markets.column.last": "Last",
   "markets.column.24hPercentage": "24h%",
+  "markets.column.24hVol": "24h Vol",
+  "markets.column.OI": "OI",
+  "markets.column.last&24hPercentage": "Last/24h%",
 
   "markets.funding.comparison": "Comparison",
   "markets.funding.column.estFunding": "Est. funding",
@@ -46,6 +49,8 @@ export const markets = {
   "markets.funding.column.90dAvg": "90D avg.",
   "markets.funding.column.positiveRate": "Positive rate",
 
+  "markets.symbolInfoBar.lastPrice.tooltip":
+    "The price of the most recent executed trade on this symbol.",
   "markets.symbolInfoBar.Mark": "Mark",
   "markets.symbolInfoBar.Mark.tooltip":
     "Price for the computation of unrealized PnL and liquidation.",
@@ -55,7 +60,7 @@ export const markets = {
   "markets.symbolInfoBar.24hVolume": "24h volume",
   "markets.symbolInfoBar.24hVolume.tooltip":
     "24 hour total trading volume on the Orderly Network.",
-  "markets.symbolInfoBar.predFundingRate": "Pred. funding rate",
+  "markets.symbolInfoBar.predFundingRate": "Est. funding rate",
   "markets.symbolInfoBar.predFundingRate.tooltip":
     "Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions.",
 };

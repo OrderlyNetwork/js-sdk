@@ -15,10 +15,9 @@ export const FundingRateHint: FC<FundingRateHintProps> = (props) => {
     capFunding,
     floorFunding,
     lastFundingRate,
-    estFundingRate,
     estFundingFee,
     lastFundingRateAnnualized,
-    estFundingRateAnnualized,
+    estFundingRateByTimeframe,
   } = props;
 
   const renderRow = (
@@ -62,10 +61,13 @@ export const FundingRateHint: FC<FundingRateHintProps> = (props) => {
         lastFundingRate,
         lastFundingRateAnnualized,
       )}
-      {renderRow(
-        t("trading.fundingRate.estimatedFundingRate"),
-        estFundingRate,
-        estFundingRateAnnualized,
+      {estFundingRateByTimeframe.map(({ timeframe, value }) =>
+        renderRow(
+          t("trading.fundingRate.estFundingRateWithTimeframe", {
+            timeframe: timeframe as string,
+          }),
+          value,
+        ),
       )}
       {renderRow(t("trading.fundingRate.estimatedFundingFee"), estFundingFee)}
       <Divider className="oui-w-full" intensity={8} />

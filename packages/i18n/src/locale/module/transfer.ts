@@ -22,8 +22,12 @@ export const transfer = {
   "transfer.deposit.notEnoughGas":
     "Not enough gas. Add some {{token}} to your wallet to continue.",
   "transfer.deposit.exceedCap": "Amount exceeds user deposit cap",
+  "transfer.deposit.closeToMaxLimit":
+    "Deposit amount too close to maximum limit. To ensure your transaction succeeds, please reduce the amount",
 
   "transfer.deposit.estGasFee": "Est. gas fee",
+  "transfer.deposit.estGasFee.tooltip":
+    "Estimated gas fee includes: transaction execution cost on this chain, and destination chain operation fee for Orderly deposit. Please prepare extra to ensure sufficient coverage.",
   "transfer.deposit.destinationGasFee": "Destination gas fee",
   "transfer.deposit.destinationGasFee.description":
     "Additional gas tokens are required to cover operations on the destination chain. The amount shown is an estimate - please prepare extra to ensure sufficient coverage.",
@@ -68,7 +72,7 @@ export const transfer = {
     "Please enter an Account ID instead of a wallet address.",
   "transfer.withdraw.accountId.invalid": "No account found",
   "transfer.withdraw.available.tooltip":
-    "Current maximum withdrawal per request is {{amount}}. To withdraw more, please submit multiple requests.",
+    "Available to withdraw equals your free collateral. If you have unsettled PnL, please settle first in the withdraw modal to increase available amount. Current maximum withdrawal per request is {{amount}} USDC. To withdraw more, please submit multiple requests.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "Account ID or address",
   "transfer.withdraw.accountIdOrAddress.hint":
     "Enter an account ID or address to find the account",
@@ -128,6 +132,8 @@ export const transfer = {
   "transfer.slippage.slippageTolerance": "Slippage tolerance",
   "transfer.slippage.slippageTolerance.description":
     "Your transaction will revert if the price changes unfavorably by more than this percentage.",
+  "transfer.slippage.error.high":
+    "High slippage may result in significant loss",
 
   "transfer.swapDeposit.swapFee": "Swap fee",
   "transfer.swapDeposit.swapFee.description":
