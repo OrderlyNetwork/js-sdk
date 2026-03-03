@@ -1,5 +1,31 @@
 # @orderly.network/portfolio
 
+## 2.10.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.10.0-alpha.0
+  - @orderly.network/chart@2.10.0-alpha.0
+  - @orderly.network/hooks@2.10.0-alpha.0
+  - @orderly.network/i18n@2.10.0-alpha.0
+  - @orderly.network/perp@4.10.0-alpha.0
+  - @orderly.network/types@2.10.0-alpha.0
+  - @orderly.network/ui@2.10.0-alpha.0
+  - @orderly.network/ui-chain-selector@2.10.0-alpha.0
+  - @orderly.network/ui-connector@2.10.0-alpha.0
+  - @orderly.network/ui-leverage@2.10.0-alpha.0
+  - @orderly.network/ui-orders@2.10.0-alpha.0
+  - @orderly.network/ui-positions@2.10.0-alpha.0
+  - @orderly.network/ui-scaffold@2.10.0-alpha.0
+  - @orderly.network/ui-share@2.10.0-alpha.0
+  - @orderly.network/ui-transfer@2.10.0-alpha.0
+  - @orderly.network/utils@2.10.0-alpha.0
+
 ## 2.9.1
 
 ### Patch Changes
