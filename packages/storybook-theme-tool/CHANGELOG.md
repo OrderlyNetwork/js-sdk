@@ -1,5 +1,13 @@
 # storybook-theme-tool
 
+## 2.10.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/ui@2.10.1-alpha.0
+
 ## 2.10.0
 
 ### Minor Changes
