@@ -12,6 +12,7 @@ import type {
   OrderlyOrder,
 } from "@orderly.network/types";
 import type { Chains } from "./orderly/useChains";
+import { RwaSymbolsInfo } from "./orderly/useRwaSymbolsInfo";
 
 export type FilteredChains = {
   mainnet?: { id: number }[];
@@ -51,7 +52,10 @@ export interface OrderlyConfigContextState {
     /**
      * Custom `/v1/public/futures` response data.
      */
-    symbolList?: (data: API.MarketInfoExt[]) => any[];
+    symbolList?: (
+      data: API.MarketInfoExt[],
+      context: { rwaSymbolsInfo: RwaSymbolsInfo },
+    ) => any[];
     /**
      * custom `/v2/public/announcement` response data
      */

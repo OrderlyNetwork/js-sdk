@@ -92,3 +92,10 @@
   --oui-spacing-lg: 30rem;
   --oui-spacing-xl: 33.75rem;
 }
+
+/* .oui-dropDownMarkets-tabs .oui-tabs-rwa-trigger, 
+.oui-expandMarkets-tabs .oui-tabs-rwa-trigger, 
+.oui-marketsSheet-tabs .oui-tabs-rwa-trigger,
+.oui-markets-list-tabs .oui-tabs-rwa-trigger {
+  display: none !important;
+} */

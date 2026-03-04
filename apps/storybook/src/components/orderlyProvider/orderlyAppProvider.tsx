@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/types";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
+import { useSymbolList } from "../../orderlyConfig/hooks/useSymbolList";
 import { notification } from "../../orderlyConfig/notification";
 import { themeConfig } from "../../orderlyConfig/themeConfig";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
@@ -24,6 +25,8 @@ export const OrderlyAppRootProvider: FC<
   const { children, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
+  const symbolList = useSymbolList();
+
   return (
     <OrderlyAppProvider
       configStore={configStore}
@@ -33,7 +36,7 @@ export const OrderlyAppRootProvider: FC<
       onRouteChange={onRouteChange}
       widgetConfigs={widgetConfigs}
       notification={notification}
-      dataAdapter={dataAdapter}
+      dataAdapter={{ ...dataAdapter, symbolList }}
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}

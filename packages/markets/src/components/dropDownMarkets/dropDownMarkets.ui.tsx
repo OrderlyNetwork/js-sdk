@@ -60,7 +60,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   const getColumns = useDropDownMarketsColumns();
 
   const search = (
-    <Flex mx={3} gapX={3} pt={3} pb={2}>
+    <Flex className="oui-dropDownMarkets-search" mx={3} gapX={3} pt={3} pb={2}>
       <SearchInput
         classNames={{
           root: "oui-w-full",
@@ -68,7 +68,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       />
       <CloseIcon
         size={12}
-        className="oui-cursor-pointer oui-text-base-contrast-80"
+        className="oui-dropDownMarkets-close-btn oui-cursor-pointer oui-text-base-contrast-80"
         onClick={props.hide}
         opacity={1}
       />
@@ -88,7 +88,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           onSort={onTabSort(type)}
           getColumns={getColumns}
           tableClassNames={{
-            root: "!oui-bg-base-8",
+            root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
             scroll: "oui-pb-5 oui-px-1",
           }}
           rowClassName="!oui-h-[34px]"
@@ -106,7 +106,10 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 
   return (
     <Box
-      className={cn("oui-overflow-hidden oui-font-semibold")}
+      className={cn(
+        "oui-markets-dropDownMarkets",
+        "oui-overflow-hidden oui-font-semibold",
+      )}
       height="100%"
       intensity={800}
     >
@@ -121,24 +124,56 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           tabsList: "oui-my-[6px] oui-px-3",
           tabsContent: "oui-h-full",
         }}
-        className={cls}
+        className={cn("oui-dropDownMarkets-tabs", cls)}
       >
-        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-favorites-trigger",
+            content: "oui-tabs-favorites-content",
+          }}
+          title={<FavoritesIcon />}
+          value={MarketsTabName.Favorites}
+        >
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-all-trigger",
+            content: "oui-tabs-all-content",
+          }}
+          title={t("common.all")}
+          value={MarketsTabName.All}
+        >
           {renderTab(MarketsTabName.All)}
         </TabPanel>
-        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-rwa-trigger",
+            content: "oui-tabs-rwa-content",
+          }}
+          title={<RwaTab />}
+          value={MarketsTabName.Rwa}
+        >
           {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-newListings-trigger",
+            content: "oui-tabs-newListings-content",
+          }}
           title={t("markets.newListings")}
           value={MarketsTabName.NewListing}
         >
           {renderTab(MarketsTabName.NewListing)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-recent-trigger",
+            content: "oui-tabs-recent-content",
+          }}
+          title={t("markets.recent")}
+          value={MarketsTabName.Recent}
+        >
           {renderTab(MarketsTabName.Recent)}
         </TabPanel>
       </Tabs>
