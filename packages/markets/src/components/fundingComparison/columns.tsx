@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, TokenIcon, useScreen } from "@orderly.network/ui";
+import { cn, Flex, TokenIcon, useScreen, Badge } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 import { Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -31,17 +31,39 @@ export const useFundingColumns = () => {
         width: 150,
         onSort: true,
         className: isMobile ? "oui-pl-0" : undefined,
-        render: (value) => (
-          <Flex gapX={1}>
-            <TokenIcon
-              symbol={value}
-              className={isMobile ? "oui-size-[18px]" : "oui-size-5"}
-            />
-            <SymbolDisplay formatString="base" size="xs">
-              {value}
-            </SymbolDisplay>
-          </Flex>
-        ),
+        render: (value, record) => {
+          if (isMobile) {
+            return (
+              <Flex direction="column" itemAlign="start" gapY={1}>
+                <Flex gapX={1} itemAlign="center">
+                  <TokenIcon symbol={value} className="oui-size-[18px]" />
+                  <SymbolDisplay formatString="base" size="2xs">
+                    {value}
+                  </SymbolDisplay>
+                </Flex>
+                {typeof record.leverage === "number" && (
+                  <Badge size="xs" color="primary">
+                    {record.leverage}x
+                  </Badge>
+                )}
+              </Flex>
+            );
+          }
+
+          return (
+            <Flex gapX={1} itemAlign="center">
+              <TokenIcon symbol={value} className="oui-size-5" />
+              <SymbolDisplay formatString="base" size="xs">
+                {value}
+              </SymbolDisplay>
+              {typeof record.leverage === "number" && (
+                <Badge size="xs" color="primary">
+                  {record.leverage}x
+                </Badge>
+              )}
+            </Flex>
+          );
+        },
       },
       {
         title: (

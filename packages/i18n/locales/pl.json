@@ -161,6 +161,8 @@
   "markets.column.24hVol": "Wolumen 24h",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Ostatnia/24h%",
+  "markets.column.mark": "Mark",
+  "markets.column.index": "Indeks",
   "markets.funding.comparison": "Porównanie",
   "markets.funding.column.estFunding": "Szac. finansowanie",
   "markets.funding.column.lastFunding": "Ostatnie finansowanie",

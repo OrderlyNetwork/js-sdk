@@ -6,7 +6,9 @@ import { RwaIconTab } from "../../../components/rwaTab";
 import { SearchInput } from "../../../components/searchInput";
 import {
   get24hPercentageColumn,
+  getIndexColumn,
   getLastColumn,
+  getMarkColumn,
   getSymbolColumn,
 } from "../../../components/shared/column";
 import { useFavoritesProps } from "../../../components/shared/hooks/useFavoritesExtraProps";
@@ -27,6 +29,8 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
       return [
         getSymbolColumn(favorite, isFavoriteList),
         getLastColumn(),
+        getMarkColumn(),
+        getIndexColumn(),
         get24hPercentageColumn(),
       ] as Column[];
     },

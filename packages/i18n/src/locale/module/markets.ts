@@ -37,6 +37,8 @@ export const markets = {
   "markets.column.24hVol": "24h Vol",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Last/24h%",
+  "markets.column.mark": "Mark",
+  "markets.column.index": "Index",
 
   "markets.funding.comparison": "Comparison",
   "markets.funding.column.estFunding": "Est. funding",

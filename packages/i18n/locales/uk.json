@@ -161,6 +161,8 @@
   "markets.column.24hVol": "Об'єм за 24г",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Остання/24г%",
+  "markets.column.mark": "Марка",
+  "markets.column.index": "Індекс",
   "markets.funding.comparison": "Порівняння",
   "markets.funding.column.estFunding": "Очікуване фінансування",
   "markets.funding.column.lastFunding": "Останнє фінансування",

@@ -161,6 +161,8 @@
   "markets.column.24hVol": "24u volume",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Laatste/24u%",
+  "markets.column.mark": "Mark",
+  "markets.column.index": "Index",
   "markets.funding.comparison": "Vergelijking",
   "markets.funding.column.estFunding": "Geschatte financiering",
   "markets.funding.column.lastFunding": "Laatste financiering",
