@@ -11,7 +11,7 @@ export type FreeCollateralInputs = {
  * @formula Free Collateral = Total_collateral_value - total_initial_margin_with_orders
  * Total_collateral_value = (usdc balance.holding + usdc balance.pending_short_qty - usdc balance.isolated_order_frozen) + SUM(non-usdc balance.holding * mark price * discount) + total_cross_unsettled_PNL
  * total_initial_margin_with_orders = sum ( cross_position_notional_with_orders_i * cross_IMR_i (with_orders))
- * IMR_i (with_orders) = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
+ * IMR_i (with_orders) = Max(1 / Symbol Leverage i, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  * position_notional_with_orders_i = abs( mark_price_i * position_qty_with_orders_i)
  * position_qty_with_orders_i = max[ abs(position_qty_i + sum_position_qty_buy_orders_i), abs(position_qty_i - sum_position_qty_sell_orders_i)]
  * @description
@@ -36,7 +36,7 @@ export type FreeCollateralInputs = {
  *
  * **IMR_i (with_orders)**: Initial margin rate for a single symbol (considering both position and order notional)
  *
- * **Max Account Leverage**: Maximum leverage set by the user, from `/v1/client/info.max_leverage`
+ * **Symbol Leverage i**: Leverage for symbol i under current margin mode (cross/isolated). Use `position.leverage` when position exists; otherwise resolve by symbol + mode leverage source.
  *
  * **Base IMR i**: Base initial margin rate for a single symbol, from `/v1/public/info`
  *

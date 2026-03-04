@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import {
-  useAccountInfo,
   useReferralInfo,
   useLeverageBySymbol,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { account, positions } from "@orderly.network/perp";
+import { MarginMode } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { formatNum } from "@orderly.network/utils";
@@ -24,13 +24,15 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
   const { position, sharePnLConfig, iconSize } = props;
   const { getFirstRefCode } = useReferralInfo();
   const symbolsInfo = useSymbolsInfo();
-  const { data: accountInfo } = useAccountInfo();
 
   const refCode = useMemo(() => {
     return getFirstRefCode()?.code;
   }, [getFirstRefCode]);
 
-  const symbolLeverage = useLeverageBySymbol(position.symbol);
+  const symbolLeverage = useLeverageBySymbol(
+    position.symbol,
+    position.margin_mode ?? MarginMode.CROSS,
+  );
 
   const getHistoryEntity = () => {
     const netPnL = position.netPnL || 0;
@@ -48,16 +50,25 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
       netPnL !== 0 &&
       quantity !== 0 &&
       openPrice !== 0 &&
-      accountInfo?.max_leverage &&
       baseIMR &&
       // IMR_Factor is possible to be 0
       typeof IMR_Factor !== "undefined"
     ) {
       const notional = positions.notional(quantity, openPrice);
 
-      const maxLeverage = position.leverage
-        ? position.leverage
-        : accountInfo.max_leverage;
+      const maxLeverage = position.leverage || symbolLeverage;
+      if (!maxLeverage) {
+        return {
+          side: position.side,
+          pnl: netPnL,
+          roi,
+          openPrice: openPrice,
+          closePrice: Math.abs(position.avg_close_price),
+          openTime: position.open_timestamp,
+          closeTime: position.close_timestamp,
+          quantity: position.closed_position_qty,
+        };
+      }
 
       const imr = account.IMR({
         maxLeverage,

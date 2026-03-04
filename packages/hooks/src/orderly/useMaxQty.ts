@@ -249,7 +249,6 @@ export function useMaxQty(
       symbolInfo,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
-      maxLeverage: accountInfo.max_leverage,
     });
 
     return account.maxQty(side, {

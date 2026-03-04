@@ -19,7 +19,7 @@ function calculateSymbolInitialMargin(params: {
   markPrice: number;
   IMR_Factors: { [key: string]: number };
   symbolInfo: any;
-  accountMaxLeverage: number;
+  symbolMaxLeverage: number;
 }): number {
   const {
     symbol,
@@ -29,7 +29,7 @@ function calculateSymbolInitialMargin(params: {
     markPrice,
     IMR_Factors,
     symbolInfo,
-    accountMaxLeverage,
+    symbolMaxLeverage,
   } = params;
 
   // Formula: cross_position_qty_with_orders_i = max[abs(pos + buy), abs(pos - sell)]
@@ -55,7 +55,7 @@ function calculateSymbolInitialMargin(params: {
     ordersNotional: markPriceDecimal
       .mul(new Decimal(buyOrdersQty).sub(sellOrdersQty))
       .toNumber(),
-    maxLeverage: accountMaxLeverage,
+    maxLeverage: symbolMaxLeverage,
     IMR_Factor: IMR_Factors[symbol],
     baseIMR: symbolInfo[symbol]("base_imr", 0),
   });
@@ -102,7 +102,7 @@ function IMR(inputs: {
  * @param markPrices - Mark prices by symbol
  * @param symbolInfo - Symbol info accessor
  * @param IMR_Factors - IMR factors by symbol
- * @param maxLeverage - Account max leverage
+ * @param maxLeverageBySymbol - Symbol leverage map (symbol + margin mode)
  */
 export function totalInitialMarginWithQty(inputs: {
   positions: API.Position[];
@@ -110,7 +110,7 @@ export function totalInitialMarginWithQty(inputs: {
   markPrices: { [key: string]: number };
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
-  maxLeverage: number;
+  maxLeverageBySymbol?: Record<string, number>;
 }): number {
   const {
     positions,
@@ -118,7 +118,7 @@ export function totalInitialMarginWithQty(inputs: {
     markPrices,
     IMR_Factors,
     symbolInfo,
-    maxLeverage,
+    maxLeverageBySymbol,
   } = inputs;
 
   // Filter to cross margin only (isolated margin is excluded)
@@ -127,6 +127,15 @@ export function totalInitialMarginWithQty(inputs: {
   );
   const crossOrders = orders.filter(
     (o) => o.margin_mode !== MarginMode.ISOLATED,
+  );
+  const crossLeverageBySymbol = crossPositions.reduce<Record<string, number>>(
+    (acc, position) => {
+      if (!acc[position.symbol] && position.leverage) {
+        acc[position.symbol] = position.leverage;
+      }
+      return acc;
+    },
+    {},
   );
 
   // Extract all symbols from both positions and orders
@@ -148,6 +157,8 @@ export function totalInitialMarginWithQty(inputs: {
         symbol,
         OrderSide.SELL,
       );
+      const symbolMaxLeverage =
+        crossLeverageBySymbol[symbol] ?? maxLeverageBySymbol?.[symbol] ?? 1;
 
       return calculateSymbolInitialMargin({
         symbol,
@@ -157,7 +168,7 @@ export function totalInitialMarginWithQty(inputs: {
         markPrice,
         IMR_Factors,
         symbolInfo,
-        accountMaxLeverage: maxLeverage,
+        symbolMaxLeverage,
       });
     })
     .reduce((acc, margin) => acc.add(margin), zero)

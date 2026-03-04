@@ -4,13 +4,6 @@ import { positionQtyWithOrders_by_symbol } from "./positionNotional";
 import { positionNotionalWithOrder_by_symbol } from "./positionNotional";
 import { getQtyFromPositions } from "./positionUtils";
 
-function maxLeverage(inputs: {
-  symbolLeverage: number;
-  accountLeverage: number;
-}): number {
-  return Math.min(inputs.symbolLeverage, inputs.accountLeverage);
-}
-
 function IMR(inputs: {
   maxLeverage: number;
   baseIMR: number;
@@ -52,10 +45,6 @@ export function otherIMs(inputs: {
   // the position list for other symbols except the current symbol
   positions: API.Position[];
   markPrices: { [key: string]: number };
-  /**
-   * account max leverage
-   */
-  maxLeverage: number;
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
 }): number {
@@ -101,10 +90,8 @@ export function otherIMs(inputs: {
       }
 
       const imr = IMR({
-        maxLeverage: maxLeverage({
-          symbolLeverage: position!.leverage,
-          accountLeverage: inputs.maxLeverage,
-        }),
+        // Use symbol + mode leverage from position directly.
+        maxLeverage: position?.leverage || 1,
         IMR_Factor,
         baseIMR: symbolInfo[symbol]("base_imr", 0),
         positionNotional,

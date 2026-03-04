@@ -159,6 +159,19 @@ class PortfolioCalculator extends BaseCalculator<any> {
       totalUnrealizedPnL: unrealizedPnL,
       totalValue: totalValue.toNumber(),
     });
+    const maxLeverageBySymbol = positions.rows.reduce<Record<string, number>>(
+      (acc, position) => {
+        if (
+          position.margin_mode !== MarginMode.ISOLATED &&
+          position.leverage &&
+          !acc[position.symbol]
+        ) {
+          acc[position.symbol] = position.leverage;
+        }
+        return acc;
+      },
+      {},
+    );
 
     // TODO: Pass actual orders data for accurate initial margin calculation
     const totalInitialMarginWithOrders = account.totalInitialMarginWithQty({
@@ -166,7 +179,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       orders: [],
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
-      maxLeverage: accountInfo.max_leverage,
+      maxLeverageBySymbol,
       symbolInfo: createGetter({ ...symbolsInfo }),
     });
 

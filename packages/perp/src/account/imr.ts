@@ -5,11 +5,11 @@ import { IMRFactorPower } from "../constants";
  * @formulaId imr
  * @description
  * Initial margin rate for a symbol.
- * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
+ * Max(1 / Symbol Leverage i, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  */
 export function IMR(inputs: {
   /**
-   * effective max leverage
+   * effective symbol leverage (resolved by symbol + margin mode)
    */
   maxLeverage: number;
   baseIMR: number;

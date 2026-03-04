@@ -384,6 +384,17 @@ function useCalc(inputs: {
           return item;
         })
       : positions?.rows;
+    const maxLeverageBySymbol =
+      positionList?.reduce<Record<string, number>>((acc, item) => {
+        if (
+          item.margin_mode !== MarginMode.ISOLATED &&
+          item.leverage &&
+          !acc[item.symbol]
+        ) {
+          acc[item.symbol] = item.leverage;
+        }
+        return acc;
+      }, {}) ?? {};
 
     // TODO: Pass actual orders data for accurate initial margin calculation
     const totalInitialMarginWithOrders = accountPerp.totalInitialMarginWithQty({
@@ -391,7 +402,7 @@ function useCalc(inputs: {
       orders: [],
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
-      maxLeverage: accountInfo.max_leverage,
+      maxLeverageBySymbol,
       symbolInfo: symbolsInfo,
     });
 

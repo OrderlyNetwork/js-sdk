@@ -32,14 +32,14 @@ export function unrealizedPnL(inputs: {
 /**
  * @formulaId unrealizedPnLROI
  * @name Position unrealized ROI
- * @formula Position unrealized ROI = Position unrealized PNL / ( IMR_i *  abs(position_qty_i * entry_price_i) ) * 100%, IMR_i = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i)^(4/5))
+ * @formula Position unrealized ROI = Position unrealized PNL / ( IMR_i *  abs(position_qty_i * entry_price_i) ) * 100%, IMR_i = Max(1 / Symbol Leverage i, Base IMR i, IMR Factor i * Abs(Position Notional i)^(4/5))
  * @description
  * ## Term Definitions
  *
  * - **Position unrealized ROI**: Single symbol unrealized return on investment
  * - **Position unrealized PNL**: Single symbol unrealized profit and loss
  * - **IMR_i**: Single symbol initial margin rate
- * - **Max Account Leverage**: User's current maximum account leverage setting
+ * - **Symbol Leverage_i**: Current leverage for symbol i under current margin mode
  * - **Base IMR_i**: Single symbol base initial margin rate
  * - **IMR Factor_i**: Single symbol IMR calculation factor, from v1/client/info
  * - **Position Notional_i**: Single symbol position notional sum
@@ -52,7 +52,7 @@ export function unrealizedPnL(inputs: {
  *
  * **ETH IMR_i** = Max(1/10, 0.1, 0.0000003754 * abs(-4915.23)^(4/5)) = Max(0.1, 0.1, 0.000337077174) = 0.1
  *
- * - Max Account Leverage = 10
+ * - Symbol Leverage_i = 10
  * - ETH Base IMR_i = 0.1
  * - ETH IMR Factor_i = 0.0000003754
  * - ETH position_qty_i = -3

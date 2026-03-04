@@ -45,7 +45,7 @@ export type MaxQtyInputs = {
  * ```
  * max long qty = MIN (
  *   base max,
- *   (((Total_collateral_value - Other_IMs) / (Max(1 / Max Account Leverage, Base IMR i) + 2 * futures_take_fee_rate * 0.0001) / mark_price_i) * 0.995 - position_qty_this_symbol - sum_buy_order_qty_this_symbol),
+ *   (((Total_collateral_value - Other_IMs) / (Max(1 / Symbol Leverage i, Base IMR i) + 2 * futures_take_fee_rate * 0.0001) / mark_price_i) * 0.995 - position_qty_this_symbol - sum_buy_order_qty_this_symbol),
  *   ((((Total_collateral_value - Other_IMs) / IMR Factor i)^(1/1.8)) / mark_price_i - position_qty_this_symbol - sum_buy_order_qty_this_symbol) / (1 + 2 * futures_take_fee_rate * 0.0001) * 0.995
  * )
  * ```
@@ -55,7 +55,7 @@ export type MaxQtyInputs = {
  * ```
  * max short qty = MIN (
  *   base max,
- *   (((Total_collateral_value - Other_IMs) / (Max(1 / Max Account Leverage, Base IMR i) + 2 * futures_take_fee_rate * 0.0001) / mark_price_i) * 0.995 + position_qty_this_symbol - sum_sell_order_qty_this_symbol),
+ *   (((Total_collateral_value - Other_IMs) / (Max(1 / Symbol Leverage i, Base IMR i) + 2 * futures_take_fee_rate * 0.0001) / mark_price_i) * 0.995 + position_qty_this_symbol - sum_sell_order_qty_this_symbol),
  *   ((((Total_collateral_value - Other_IMs) / IMR Factor i)^(1/1.8)) / mark_price_i + position_qty_this_symbol - sum_sell_order_qty_this_symbol) / (1 + 2 * futures_take_fee_rate * 0.0001) * 0.995
  * )
  * ```
@@ -77,7 +77,7 @@ export type MaxQtyInputs = {
  * | `Total_collateral_value` | Total value of collateral assets in user account (USDC denominated) | |
  * | `Other_IMs` | Initial margin occupied by all other symbols excluding current symbol | |
  * | `IMR_i (with_orders)` | Initial margin rate for a single symbol (considering both position/orders notional) | |
- * | `Max Account Leverage` | Maximum leverage set by user | `/v1/client/info.max_leverage` |
+ * | `Symbol Leverage i` | Leverage for symbol i under current margin mode | `position.leverage` or symbol+mode leverage source |
  * | `Base IMR i` | Base initial margin rate for a single symbol | `/v1/public/info` |
  * | `IMR Factor i` | IMR calculation factor for a single symbol | `v1/client/info` |
  * | `Position Notional i` | Sum of position notional for a single symbol | |
@@ -95,7 +95,7 @@ export type MaxQtyInputs = {
  * ```
  * Other_IMs = sum(position_notional_with_orders_i * IMR_i (with_orders)) // excluding current symbol
  *
- * IMR_i (with_orders) = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
+ * IMR_i (with_orders) = Max(1 / Symbol Leverage i, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  *
  * position_notional_with_orders_i = abs(mark_price_i * position_qty_with_orders_i)
  *
@@ -164,7 +164,7 @@ export type MaxQtyInputs = {
  * **ITERATE() Algorithm:**
  * ```
  * ITERATE() {
- *     iteratorLeverage = min(1 / Max Account Leverage, Base IMR i)
+ *     iteratorLeverage = min(1 / Symbol Leverage i, Base IMR i)
  *     iteratorStep = 2
  *
  *     // First iteration (30 times)
@@ -176,7 +176,7 @@ export type MaxQtyInputs = {
  *     }
  *
  *     leftLeverage = iteratorLeverage
- *     rightLeverage = min(maxLeverage_account, leftLeverage + iteratorStep)
+ *     rightLeverage = min(symbolLeverage_i, leftLeverage + iteratorStep)
  *
  *     // Binary search (30 times)
  *     for (i = 0; i < 30; i++) {

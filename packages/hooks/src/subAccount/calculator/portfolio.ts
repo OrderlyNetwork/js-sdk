@@ -1,6 +1,6 @@
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { parseHolding } from "../../utils/parseHolding";
@@ -73,6 +73,19 @@ export function formatPortfolio(inputs: {
     totalUnrealizedPnL: unrealizedPnL,
     totalValue: totalValue.toNumber(),
   });
+  const maxLeverageBySymbol = positions.rows.reduce<Record<string, number>>(
+    (acc, position) => {
+      if (
+        position.margin_mode !== MarginMode.ISOLATED &&
+        position.leverage &&
+        !acc[position.symbol]
+      ) {
+        acc[position.symbol] = position.leverage;
+      }
+      return acc;
+    },
+    {},
+  );
 
   // TODO: Pass actual orders data for accurate initial margin calculation
   const totalInitialMarginWithOrders = account.totalInitialMarginWithQty({
@@ -80,7 +93,7 @@ export function formatPortfolio(inputs: {
     orders: [],
     markPrices,
     IMR_Factors: accountInfo.imr_factor,
-    maxLeverage: accountInfo.max_leverage,
+    maxLeverageBySymbol,
     symbolInfo: symbolsInfo,
   });
 
