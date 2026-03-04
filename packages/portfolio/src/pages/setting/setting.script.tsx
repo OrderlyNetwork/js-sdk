@@ -12,6 +12,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { toast, useOrderlyTheme } from "@orderly.network/ui";
 
 const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
+const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 
 const ORDERLY_MWEB_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
   "orderly_mweb_order_entry_side_markets_layout";
@@ -28,10 +29,19 @@ export const useSettingScript = () => {
   const { notification } = useOrderlyContext();
   const { themes, currentThemeId, setCurrentThemeId } = useOrderlyTheme();
 
+  const soundOptions = notification?.orderFilled?.soundOptions;
+  const hasSoundOptions = Boolean(soundOptions && soundOptions.length > 0);
+  const defaultSoundValue =
+    notification?.orderFilled?.defaultSoundValue ?? soundOptions?.[0]?.value;
+
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
     ORDERLY_ORDER_SOUND_ALERT_KEY,
     notification?.orderFilled?.defaultOpen ?? false,
   );
+
+  const [selectedSoundValue, setSelectedSoundValue] = useLocalStorage<
+    string | null
+  >(ORDERLY_ORDER_SOUND_OPTION_KEY, defaultSoundValue ?? null);
 
   const [orderPanelLayout, setOrderPanelLayout] =
     useLocalStorage<OrderPanelLayout>(
@@ -76,6 +86,10 @@ export const useSettingScript = () => {
     soundAlert,
     setSoundAlert,
     hasOrderFilledMedia: Boolean(notification?.orderFilled?.media),
+    soundOptions,
+    hasSoundOptions,
+    selectedSoundValue,
+    setSelectedSoundValue,
     orderPanelLayout,
     setOrderPanelLayout,
     themes,

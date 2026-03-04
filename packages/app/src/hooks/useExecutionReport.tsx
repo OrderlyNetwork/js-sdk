@@ -13,6 +13,7 @@ import { toast } from "@orderly.network/ui";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 
 export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
+export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 
 export const useExecutionReport = () => {
   const ee = useEventEmitter();
@@ -26,15 +27,33 @@ export const useExecutionReport = () => {
     symbolsInfoRef.current = symbolsInfo;
   }, [symbolsInfo]);
 
-  const src = notification?.orderFilled?.media ?? "";
+  const orderFilledConfig = notification?.orderFilled;
+  const soundOptions = orderFilledConfig?.soundOptions;
+
+  const defaultSoundValue =
+    orderFilledConfig?.defaultSoundValue ?? soundOptions?.[0]?.value;
+
+  const [selectedSoundValue] = useLocalStorage<string | null>(
+    ORDERLY_ORDER_SOUND_OPTION_KEY,
+    defaultSoundValue ?? null,
+  );
+
+  const selectedOption =
+    soundOptions?.find((option) => option.value === selectedSoundValue) ??
+    soundOptions?.[0];
+
+  const src =
+    (soundOptions && soundOptions.length ? selectedOption?.media : undefined) ??
+    orderFilledConfig?.media ??
+    "";
 
   const [soundAutoPlay] = useLocalStorage<boolean>(
     ORDERLY_ORDER_SOUND_ALERT_KEY,
-    notification?.orderFilled?.defaultOpen ?? false,
+    orderFilledConfig?.defaultOpen ?? false,
   );
 
-  const [audioElement] = useAudioPlayer(src, {
-    autoPlay: soundAutoPlay,
+  const { play: playOrderFilledSound } = useAudioPlayer(src, {
+    enabled: soundAutoPlay,
     volume: 1,
   });
 
@@ -46,6 +65,9 @@ export const useExecutionReport = () => {
       );
       const isFilled =
         status === OrderStatus.FILLED || status === OrderStatus.PARTIAL_FILLED;
+      if (isFilled) {
+        playOrderFilledSound();
+      }
       // only show latest msg for same order type
       const orderType = data.algo_type || data.type;
       if (title && msg) {
@@ -56,7 +78,6 @@ export const useExecutionReport = () => {
             <div className="orderly-text-white/[0.54] orderly-text-xs">
               {msg}
             </div>
-            {isFilled && audioElement}
           </div>,
           { id: orderType },
         );

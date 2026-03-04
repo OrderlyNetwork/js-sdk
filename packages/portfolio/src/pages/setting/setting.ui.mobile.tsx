@@ -1,4 +1,4 @@
-import { FC, SVGProps, useState } from "react";
+import { FC, SVGProps, useCallback, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Card,
@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+import { SoundRadioButton } from "./components/soundRadioButton";
 import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
 
@@ -21,6 +22,23 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
   const onLanguageChange = () => {
     setOpen(true);
   };
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playPreview = useCallback((media?: string) => {
+    if (!media) return;
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+      }
+      const audio = audioRef.current;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = media;
+      void audio.play().catch(() => undefined);
+    } catch {
+      // ignore runtime audio errors
+    }
+  }, []);
 
   const renderItem = (position: OrderPanelPosition) => {
     const isSelected = props.orderPanelLayout === position;
@@ -157,7 +175,7 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
         </Flex>
       </Card>
 
-      {props.hasOrderFilledMedia && (
+      {(props.hasOrderFilledMedia || props.hasSoundOptions) && (
         <Card
           // @ts-ignore
           title={
@@ -196,6 +214,28 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
                   data-testid="oui-testid-setting-sound-switch-btn"
                 />
               </AuthGuardTooltip>
+
+              {props.hasSoundOptions &&
+                props.soundOptions?.length &&
+                props.soundAlert && (
+                  <Flex direction="row" gap={3} wrap="wrap">
+                    {props.soundOptions.map((option) => {
+                      const sel = props.selectedSoundValue === option.value;
+                      return (
+                        <SoundRadioButton
+                          key={option.value}
+                          sel={sel}
+                          label={option.label}
+                          onCheckChange={() => {
+                            props.setSelectedSoundValue(option.value);
+                            props.setSoundAlert(Boolean(option.media));
+                            playPreview(option.media);
+                          }}
+                        />
+                      );
+                    })}
+                  </Flex>
+                )}
             </Flex>
           </Flex>
         </Card>
