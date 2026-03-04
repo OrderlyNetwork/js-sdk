@@ -1,5 +1,38 @@
 # tsconfig
 
+## 0.13.1
+
+### Patch Changes
+
+- 4fadc11: publish
+- publish
+
+## 0.13.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.13.0
+
+### Minor Changes
+
+- e8fcd4a: publish
+- 12142ab: publish
+- publish
+
+## 0.13.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+## 0.13.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 0.12.1
 
 ### Patch Changes
