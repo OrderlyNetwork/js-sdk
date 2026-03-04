@@ -1,5 +1,15 @@
 # storybook-theme-tool
 
+## 2.10.1
+
+### Patch Changes
+
+- 4fadc11: publish
+- publish
+- Updated dependencies [4fadc11]
+- Updated dependencies
+  - @orderly.network/ui@2.10.1
+
 ## 2.10.1-alpha.0
 
 ### Patch Changes

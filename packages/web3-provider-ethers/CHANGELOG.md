@@ -1,5 +1,16 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.10.1
+
+### Patch Changes
+
+- 4fadc11: publish
+- publish
+- Updated dependencies [4fadc11]
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.10.1
+  - @orderly.network/types@2.10.1
+
 ## 2.10.1-alpha.0
 
 ### Patch Changes
