@@ -262,7 +262,9 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
         // otherwise (CROSS margin), use account total collateral value.
         const totalCollateral =
           item.margin_mode === MarginMode.ISOLATED
-            ? new Decimal(item.margin ?? 0).add(unsettlementPnL).toNumber()
+            ? new Decimal(item.margin ?? 0)
+                .add(item.unsettlement_pnl ?? 0)
+                .toNumber()
             : crossMarginCollateral.toNumber();
 
         const est_liq_price = positions.liqPrice({

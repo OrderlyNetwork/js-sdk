@@ -79,19 +79,24 @@ const usePositionMargin = (
   }, [notional, currentPosition, fundingRates]);
 
   const imr = useMemo(() => {
-    // INSERT_YOUR_CODE
-    // max(base_IMR, IMR_factor * abs(position_notional)^(4/5))
-    if (!symbolsInfo || !symbolsInfo[symbol] || !notional) {
+    if (!currentPosition || !symbolsInfo?.[symbol] || !notional) {
       return null;
     }
-    const { base_imr, imr_factor } = symbolsInfo[symbol];
-    const baseIMR = new Decimal(base_imr ?? 0);
-    const imrFactor = new Decimal(imr_factor ?? 0);
-    const absNotional = notional.abs();
-    const expFactor = absNotional.pow(new Decimal(4).div(5));
-    const value = imrFactor.mul(expFactor);
-    return decimalMax(baseIMR, value);
-  }, [symbolsInfo, symbol, notional]);
+    const currentSymbolInfo = symbolsInfo[symbol];
+    const maxLeverage = Math.max(currentPosition.leverage ?? 1, 1);
+    const IMR_Factor =
+      accountInfo?.imr_factor?.[symbol] ?? currentSymbolInfo.imr_factor ?? 0;
+
+    return new Decimal(
+      account.IMR({
+        maxLeverage,
+        baseIMR: currentSymbolInfo.base_imr ?? 0,
+        IMR_Factor,
+        positionNotional: notional.toNumber(),
+        ordersNotional: 0,
+      }),
+    );
+  }, [currentPosition, symbolsInfo, symbol, notional, accountInfo]);
 
   //   console.log(
   //     "positions",
@@ -204,9 +209,8 @@ const usePositionMargin = (
         }) ?? [];
 
     const totalCollateral = new Decimal(finalMargin)
-      .add(totalUnsettlementPnl)
+      .add(currentPosition.unsettled_pnl ?? 0)
       .toNumber();
-
     const liqPrice = positionsLib.liqPrice({
       markPrice,
       symbol,
@@ -245,20 +249,20 @@ const usePositionMargin = (
     return notional.div(total_collateral_value).toNumber();
   }, [notional, total_collateral_value]);
 
-  console.log(
-    "effectiveLeverage",
-    effectiveLeverage,
-    "notional=",
-    notional?.toNumber(),
-    "total_collateral_value=",
-    total_collateral_value,
-    "isolatedMargin=",
-    isolatedMargin,
-    "finalMargin=",
-    finalMargin,
-    "unSettledPnl=",
-    unSettledPnl?.toNumber(),
-  );
+  // console.log(
+  //   "effectiveLeverage",
+  //   effectiveLeverage,
+  //   "notional=",
+  //   notional?.toNumber(),
+  //   "total_collateral_value=",
+  //   total_collateral_value,
+  //   "isolatedMargin=",
+  //   isolatedMargin,
+  //   "finalMargin=",
+  //   finalMargin,
+  //   "unSettledPnl=",
+  //   unSettledPnl?.toNumber(),
+  // );
 
   return {
     maxAmount,
@@ -266,13 +270,5 @@ const usePositionMargin = (
     effectiveLeverage,
   };
 };
-
-function decimalMax(a: Decimal, b: Decimal) {
-  return a.gte(b) ? a : b;
-}
-
-function decimalMin(a: Decimal, b: Decimal) {
-  return a.lte(b) ? a : b;
-}
 
 export default usePositionMargin;
