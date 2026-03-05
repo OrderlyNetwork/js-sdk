@@ -45,6 +45,7 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
             symbol={item.symbol}
             leverage={item.leverage}
             modalId={SymbolLeverageSheetId}
+            marginMode={item.margin_mode}
           />
         </div>
       }
