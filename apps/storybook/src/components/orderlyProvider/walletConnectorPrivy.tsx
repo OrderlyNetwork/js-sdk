@@ -21,6 +21,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
+import { themes } from "../../orderlyConfig/themes";
 import { CustomProductNav } from "../customProductNav";
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
@@ -35,6 +36,12 @@ type WalletConnectorPrivyProps = {
   networkId?: string;
 };
 
+function useThemeMode() {
+  const themeId = useThemeAttribute();
+  const theme = themes.find((theme) => theme.id === themeId);
+  return theme?.mode === "light" ? "light" : "dark";
+}
+
 export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
   const networkId =
     props.networkId || import.meta.env.VITE_NETWORK_ID || "testnet";
@@ -43,8 +50,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
     networkId === "testnet"
       ? WalletAdapterNetwork.Devnet
       : WalletAdapterNetwork.Mainnet;
-  const themeId = useThemeAttribute();
-  const themeMode = themeId === "light" ? "light" : "dark";
+  const themeMode = useThemeMode();
 
   return (
     <WalletConnectorPrivyProvider

@@ -14,7 +14,7 @@ import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { useIsRwaRoute } from "../../orderlyConfig/hooks/useIsRwaRoute";
 import { useSymbolList } from "../../orderlyConfig/hooks/useSymbolList";
 import { notification } from "../../orderlyConfig/notification";
-import { themeConfig } from "../../orderlyConfig/themeConfig";
+import { themes } from "../../orderlyConfig/themes";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
@@ -44,7 +44,7 @@ export const OrderlyAppRootProvider: FC<
         amplitudeConfig={{
           amplitudeId: "4463418c103f3a66c6d863357f951e25",
         }}
-        themes={themeConfig}
+        themes={themes}
         // chainFilter={(config) => {
         //   return {
         //     mainnet: [
