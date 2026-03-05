@@ -44,7 +44,7 @@ const TotalValue: FC<{
     <Flex
       direction={"column"}
       gap={0}
-      className="oui-text-2xs"
+      className="oui-text-2xs oui-text-base-contrast"
       itemAlign={"start"}
     >
       <Flex gap={1} itemAlign={"center"}>
@@ -72,6 +72,7 @@ const TotalValue: FC<{
         <Text intensity={54}>≈</Text>
       </Flex>
       <Text.numeral
+        intensity={98}
         visible={props.visible}
         unit="USDC"
         unitClassName="oui-text-base-contrast-20 oui-ml-1"
@@ -102,7 +103,7 @@ const FreeCollateral: FC<{
     <Flex
       direction={"column"}
       gap={0}
-      className="oui-text-2xs"
+      className="oui-text-2xs oui-text-base-contrast"
       itemAlign={"start"}
     >
       <Flex gap={1} itemAlign={"center"}>
@@ -133,6 +134,7 @@ const FreeCollateral: FC<{
         </Text>
       </Box> */}
       <Text.numeral
+        intensity={98}
         unit="USDC"
         unitClassName="oui-text-base-contrast-20 oui-ml-1"
         visible={visible}
@@ -155,7 +157,7 @@ const CurrentLeverage: FC<{
     <Flex
       direction={"column"}
       gap={0}
-      className="oui-text-2xs"
+      className="oui-text-2xs oui-text-base-contrast"
       itemAlign={"start"}
     >
       <Box>
@@ -163,7 +165,7 @@ const CurrentLeverage: FC<{
           {t("leverage.currentLeverage")}
         </Text>
       </Box>
-      <Text.numeral as={"div"} unit="x">
+      <Text.numeral as={"div"} unit="x" intensity={98}>
         {currentLeverage ?? 0}
       </Text.numeral>
     </Flex>
@@ -185,7 +187,7 @@ const UnrealPnL: FC<{
     <Flex
       direction={"column"}
       gap={0}
-      className="oui-text-2xs"
+      className="oui-text-2xs oui-text-base-contrast"
       itemAlign={"start"}
     >
       <Flex gap={1} itemAlign={"center"}>
@@ -216,6 +218,7 @@ const UnrealPnL: FC<{
         showIdentifier
         weight={"semibold"}
         visible={visible}
+        intensity={98}
         suffix={
           <Text.numeral coloring prefix={"("} suffix={")"} rule={"percentages"}>
             {props.unrealized_pnl_ROI ?? "-"}
@@ -265,9 +268,10 @@ const AccountInfoPopover = (props: {
               <span>{t("common.totalValue")}</span>
             </Flex>
             <Text.numeral
+              intensity={98}
               visible={props.visible}
               unit="USDC"
-              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              className="oui-transition-transform group-hover:-oui-translate-x-5"
               unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
             >
               {totalValue ?? "-"}
@@ -285,9 +289,10 @@ const AccountInfoPopover = (props: {
               <span>{t("trading.asset.freeCollateral")}</span>
             </Flex>
             <Text.numeral
+              intensity={98}
               unit="USDC"
               visible={props.visible}
-              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              className="oui-transition-transform group-hover:-oui-translate-x-5"
               unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
             >
               {props.freeCollateral ?? "-"}
@@ -305,10 +310,11 @@ const AccountInfoPopover = (props: {
               <span>{t("common.unrealizedPnl")}</span>
             </Flex>
             <Text.pnl
+              intensity={98}
               coloring
               showIdentifier
               visible={props.visible}
-              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              className="oui-transition-transform group-hover:-oui-translate-x-5"
               suffix={
                 <Text.roi
                   coloring
@@ -336,7 +342,8 @@ const AccountInfoPopover = (props: {
               <span>{t("leverage.currentLeverage")}</span>
             </Flex>
             <Text.numeral
-              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              intensity={98}
+              className="oui-transition-transform group-hover:-oui-translate-x-5"
               unit="x"
             >
               {props.currentLeverage ?? "-"}
