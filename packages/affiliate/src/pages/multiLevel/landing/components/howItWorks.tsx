@@ -36,7 +36,10 @@ export const HowItWorks = () => {
   }, [t]);
 
   return (
-    <Box id="oui-affiliate-landing-how-it-works">
+    <Box
+      id="oui-affiliate-landing-how-it-works"
+      className="oui-affiliate-howItWorks"
+    >
       {/* Title and subtitle */}
       <Flex direction="column" itemAlign="start">
         <Text weight="semibold" className="oui-text-[32px]">
@@ -48,7 +51,10 @@ export const HowItWorks = () => {
       </Flex>
 
       {/* Step cards */}
-      <Grid className="oui-grid-cols-1 md:oui-grid-cols-3" gap={6}>
+      <Grid
+        className="oui-howItWorks-steps oui-grid-cols-1 md:oui-grid-cols-3"
+        gap={6}
+      >
         {steps.map((step) => (
           <StepCard
             key={step.step}

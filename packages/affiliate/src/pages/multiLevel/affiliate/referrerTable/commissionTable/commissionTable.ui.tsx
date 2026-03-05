@@ -144,8 +144,12 @@ export const CommissionTableUI: FC<CommissionTableUIProps> = (props) => {
   }, [t]);
 
   return (
-    <div className="oui-flex oui-w-full oui-flex-col">
-      <Flex width="100%" height={49} className="oui-border-b oui-border-line-6">
+    <div className="oui-affiliate-commissionTable oui-flex oui-w-full oui-flex-col">
+      <Flex
+        width="100%"
+        height={49}
+        className="oui-commissionTable-header oui-border-b oui-border-line-6"
+      >
         <div className="oui-px-3">
           <DatePicker.range
             size="xs"
@@ -158,7 +162,7 @@ export const CommissionTableUI: FC<CommissionTableUIProps> = (props) => {
       </Flex>
 
       {isMobile ? (
-        <div className="oui-flex oui-flex-col oui-px-4">
+        <div className="oui-affiliate-commissionTable-list oui-flex oui-flex-col oui-px-4">
           <ListView
             dataSource={props.commissionData}
             contentClassName="!oui-space-y-0 oui-pb-3"
@@ -171,7 +175,9 @@ export const CommissionTableUI: FC<CommissionTableUIProps> = (props) => {
           />
         </div>
       ) : (
-        <div className={`oui-px-3 ${showPagination ? "" : "oui-pb-3"}`}>
+        <div
+          className={`oui-affiliate-commissionTable-container oui-px-3 ${showPagination ? "" : "oui-pb-3"}`}
+        >
           <AuthGuardDataTable
             bordered
             columns={columns}
@@ -179,8 +185,8 @@ export const CommissionTableUI: FC<CommissionTableUIProps> = (props) => {
             loading={props.isLoading}
             pagination={showPagination ? props.pagination : undefined}
             onSort={props.onSort}
-            onRow={() => ({ className: "oui-h-12" })}
-            className="[&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
+            onRow={() => ({ className: "oui-commissionTable-row oui-h-12" })}
+            className="oui-commissionTable-table [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
           />
         </div>
       )}

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { SVGProps } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Button } from "@orderly.network/ui";
+import { Flex, Text, Button, cn } from "@orderly.network/ui";
 import { TradingVolumeProgress } from "../../components/tradingVolumeProgress";
 import { MultiLevelReferralReturns } from "./multiLevelReferral.script";
 
@@ -18,7 +18,10 @@ export const MultiLevelReferral: FC<MultiLevelReferralReturns> = (props) => {
       p={5}
       direction={"column"}
       intensity={900}
-      className="oui-border oui-border-line-6"
+      className={cn(
+        "oui-affiliate-multiLevelReferral",
+        "oui-border oui-border-line-6",
+      )}
     >
       <Text size="lg" className="oui-w-full oui-text-start">
         {t("affiliate.referral")}
