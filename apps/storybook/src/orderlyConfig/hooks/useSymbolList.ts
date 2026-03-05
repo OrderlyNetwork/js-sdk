@@ -1,12 +1,6 @@
 import { useCallback } from "react";
-import { useMatch } from "react-router";
 import { OrderlyAppProviderProps } from "@orderly.network/react-app";
-
-export function useIsRwaRoute() {
-  // match /:lang/rwa or /:lang/rwa/:symbol
-  const match = useMatch("/:lang/rwa/*");
-  return Boolean(match);
-}
+import { useIsRwaRoute } from "./useIsRwaRoute";
 
 type SymbolListType = NonNullable<
   NonNullable<OrderlyAppProviderProps["dataAdapter"]>["symbolList"]

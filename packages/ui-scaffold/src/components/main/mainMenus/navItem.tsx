@@ -333,8 +333,9 @@ const SubMenus: React.FC<
           }
         }}
         className={cn(
+          "oui-subMenu",
           customSubMenuRender
-            ? "oui-w-auto oui-p-0 oui-border-0 oui-rounded-lg"
+            ? "oui-w-auto oui-rounded-lg oui-border-0 oui-p-0"
             : "oui-w-[200px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
           className,
         )}
