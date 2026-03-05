@@ -1,5 +1,18 @@
 # @orderly.network/i18n
 
+## 2.10.1
+
+### Patch Changes
+
+- 4fadc11: publish
+- publish
+
+## 2.10.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.10.0
 
 ### Minor Changes
