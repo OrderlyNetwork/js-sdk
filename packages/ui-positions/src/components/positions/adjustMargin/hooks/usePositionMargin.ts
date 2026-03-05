@@ -98,20 +98,6 @@ const usePositionMargin = (
     );
   }, [currentPosition, symbolsInfo, symbol, notional, accountInfo]);
 
-  //   console.log(
-  //     "positions",
-  //     positions?.length,
-  //     "notional",
-  //     notional?.toNumber(),
-  //     "imr",
-  //     imr?.toNumber(),
-  //     "usdcHolding",
-  //     usdcHolding,
-  //     "freeCollateral",
-  //     freeCollateral,
-  //     "total_cross_unsettled_pnl",
-  //     total_cross_unsettled_pnl?.toNumber(),
-  //   );
   const maxAmount = useMemo(() => {
     if (isAdd) {
       if (!total_cross_unsettled_pnl) return null;
@@ -248,21 +234,6 @@ const usePositionMargin = (
     if (!notional || !total_collateral_value) return null;
     return notional.div(total_collateral_value).toNumber();
   }, [notional, total_collateral_value]);
-
-  // console.log(
-  //   "effectiveLeverage",
-  //   effectiveLeverage,
-  //   "notional=",
-  //   notional?.toNumber(),
-  //   "total_collateral_value=",
-  //   total_collateral_value,
-  //   "isolatedMargin=",
-  //   isolatedMargin,
-  //   "finalMargin=",
-  //   finalMargin,
-  //   "unSettledPnl=",
-  //   unSettledPnl?.toNumber(),
-  // );
 
   return {
     maxAmount,
