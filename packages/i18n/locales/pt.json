@@ -161,6 +161,8 @@
   "markets.column.24hVol": "Volume 24h",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Último/24h%",
+  "markets.column.mark": "Marcação",
+  "markets.column.index": "Índice",
   "markets.funding.comparison": "Comparação",
   "markets.funding.column.estFunding": "Financiamento est.",
   "markets.funding.column.lastFunding": "Último financiamento",

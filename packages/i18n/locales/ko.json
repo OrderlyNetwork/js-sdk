@@ -161,6 +161,8 @@
   "markets.column.24hVol": "24시간 거래량",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "마지막/24시간%",
+  "markets.column.mark": "마크",
+  "markets.column.index": "인덱스",
   "markets.funding.comparison": "비교",
   "markets.funding.column.estFunding": "예상 자금",
   "markets.funding.column.lastFunding": "마지막 자금",

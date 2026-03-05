@@ -65,11 +65,16 @@ export interface OrderlyConfigContextState {
     orderFilled?: {
       /**
        * Sound to play when an order is successful.
+       * If `soundOptions` is provided, this field is treated as the legacy
+       * single-sound configuration and only used when `soundOptions` is
+       * absent.
        * @default undefined
        */
       media?: string;
       /**
        * Whether to open the notification by default.
+       * For multi-sound mode this controls whether the initial selection
+       * should be sound-on or muted when there is no stored preference.
        * @default false
        */
       defaultOpen?: boolean;
@@ -78,6 +83,22 @@ export interface OrderlyConfigContextState {
        * @default true
        */
       displayInOrderEntry?: boolean;
+      /**
+       * Multiple sound options for order filled notification.
+       * When provided, the UI should render a single-choice selector
+       * (e.g. radio group) instead of a simple on/off toggle. One of the
+       * options should represent the muted/off state.
+       */
+      soundOptions?: Array<{
+        label: string;
+        value: string;
+        media: string;
+      }>;
+      /**
+       * Default selected sound option value when there is no stored
+       * preference. If omitted, the first item in `soundOptions` is used.
+       */
+      defaultSoundValue?: string;
     };
   };
 

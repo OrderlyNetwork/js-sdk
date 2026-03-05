@@ -1,12 +1,31 @@
-import { FC } from "react";
+import { FC, useCallback, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card, Flex, Switch, Text } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
+import { SoundRadioButton } from "./components/soundRadioButton";
 import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
   const { t } = useTranslation();
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playPreview = useCallback((media?: string) => {
+    if (!media) return;
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+      }
+      const audio = audioRef.current;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = media;
+      // ignore play promise rejection (e.g. autoplay policy)
+      void audio.play().catch(() => undefined);
+    } catch {
+      // ignore runtime audio errors
+    }
+  }, []);
 
   return (
     <>
@@ -45,38 +64,64 @@ export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
         </Flex>
       </Card>
 
-      {props.hasOrderFilledMedia && (
+      {(props.hasOrderFilledMedia || props.hasSoundOptions) && (
         <Card
           title={t("portfolio.setting.soundAlerts")}
           id="portfolio-sound-alert-setting"
           className="oui-bg-base-9 oui-font-semibold oui-mt-3"
         >
           <Flex
-            direction={"row"}
-            gap={4}
+            direction={"column"}
+            gap={3}
             width={"100%"}
-            itemAlign={"center"}
             pt={4}
+            itemAlign={"start"}
             className="oui-border-t-2 oui-border-line-6 oui-font-semibold"
           >
-            <Flex
-              direction={"column"}
-              itemAlign={"start"}
-              className="oui-flex-1"
-            >
-              <Text intensity={54} size="sm">
-                {t("portfolio.setting.soundAlerts.description")}
-              </Text>
+            <Flex direction={"row"} gap={4} width={"100%"} itemAlign={"center"}>
+              <Flex
+                direction={"column"}
+                itemAlign={"start"}
+                className="oui-flex-1"
+              >
+                <Text intensity={54} size="sm">
+                  {t("portfolio.setting.soundAlerts.description")}
+                </Text>
+              </Flex>
+
+              <AuthGuardTooltip align="end">
+                <Switch
+                  checked={props.soundAlert}
+                  onCheckedChange={(checked) => props.setSoundAlert(checked)}
+                  disabled={!props.canTouch}
+                  data-testid="oui-testid-setting-sound-switch-btn"
+                />
+              </AuthGuardTooltip>
             </Flex>
 
-            <AuthGuardTooltip align="end">
-              <Switch
-                checked={props.soundAlert}
-                onCheckedChange={(checked) => props.setSoundAlert(checked)}
-                disabled={!props.canTouch}
-                data-testid="oui-testid-setting-sound-switch-btn"
-              />
-            </AuthGuardTooltip>
+            {props.hasSoundOptions &&
+              props.soundOptions?.length &&
+              props.soundAlert && (
+                <AuthGuardTooltip align="end">
+                  <Flex direction="row" gap={3} className="oui-cursor-pointer">
+                    {props.soundOptions.map((option) => {
+                      const sel = props.selectedSoundValue === option.value;
+                      return (
+                        <SoundRadioButton
+                          key={option.value}
+                          sel={sel}
+                          label={option.label}
+                          onCheckChange={() => {
+                            props.setSelectedSoundValue(option.value);
+                            props.setSoundAlert(Boolean(option.media));
+                            playPreview(option.media);
+                          }}
+                        />
+                      );
+                    })}
+                  </Flex>
+                </AuthGuardTooltip>
+              )}
           </Flex>
         </Card>
       )}

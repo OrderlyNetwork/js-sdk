@@ -349,7 +349,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     !isMobile;
 
   const showSoundSection =
-    Boolean(notification?.orderFilled?.media) &&
+    (Boolean(notification?.orderFilled?.media) ||
+      Boolean(notification?.orderFilled?.soundOptions?.length)) &&
     (notification?.orderFilled?.displayInOrderEntry ?? true);
 
   const additionalInfoProps: AdditionalInfoProps = {

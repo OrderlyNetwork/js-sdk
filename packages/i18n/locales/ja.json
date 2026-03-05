@@ -161,6 +161,8 @@
   "markets.column.24hVol": "24時間のボリューム",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "最終/24時間%",
+  "markets.column.mark": "マーク",
+  "markets.column.index": "インデックス",
   "markets.funding.comparison": "比較",
   "markets.funding.column.estFunding": "推定資金調達",
   "markets.funding.column.lastFunding": "最終資金調達",

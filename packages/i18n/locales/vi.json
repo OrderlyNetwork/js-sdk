@@ -161,6 +161,8 @@
   "markets.column.24hVol": "Khối lượng 24h",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Cuối cùng/24h%",
+  "markets.column.mark": "Đánh dấu",
+  "markets.column.index": "Chỉ số",
   "markets.funding.comparison": "So sánh",
   "markets.funding.column.estFunding": "Tài trợ ước tính",
   "markets.funding.column.lastFunding": "Tài trợ cuối",
