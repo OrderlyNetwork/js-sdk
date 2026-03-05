@@ -122,7 +122,13 @@ class PortfolioCalculator extends BaseCalculator<any> {
       return null;
     }
 
-    const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
+    const unsettledPnL = positions.rows.reduce(
+      (sum, pos) =>
+        pos.margin_mode === MarginMode.ISOLATED
+          ? sum
+          : sum + (pos.unsettled_pnl ?? 0),
+      0,
+    );
     const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
     const [USDC_holding, nonUSDC] = parseHolding(
