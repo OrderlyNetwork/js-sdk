@@ -360,7 +360,7 @@
   "positions.column.liqPrice": "Harga lik.",
   "positions.column.unrealPnl.tooltip": "Keuntungan atau kerugian belum direalisasi saat ini pada posisi terbuka Anda di semua widget yang dihitung menggunakan Harga Mark.",
   "positions.column.unrealPnl.priceBasis": "Dasar Harga PnL Belum Direalisasi",
-  "positions.column.margin": "Margin Pemeliharaan",
+  "positions.column.margin": "Margin",
   "positions.column.margin.tooltip": "Ekuitas minimum untuk mempertahankan posisi Anda.",
   "positions.column.margin.formula": "Margin Pemeliharaan = Ukuran posisi * Harga mark * MMR",
   "positions.column.close": "Tutup",

@@ -360,7 +360,7 @@
   "positions.column.liqPrice": "Cena likw.",
   "positions.column.unrealPnl.tooltip": "Aktualny niezrealizowany zysk lub strata na Twoich otwartych pozycjach we wszystkich widgetach obliczana przy użyciu ceny mark.",
   "positions.column.unrealPnl.priceBasis": "Podstawa ceny niezrealizowanego PnL",
-  "positions.column.margin": "Marża utrzymania",
+  "positions.column.margin": "Marża",
   "positions.column.margin.tooltip": "Minimalny kapitał własny do utrzymania pozycji.",
   "positions.column.margin.formula": "Marża utrzymania = Rozmiar pozycji * Cena mark * MMR",
   "positions.column.close": "Zamknij",

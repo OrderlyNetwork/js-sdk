@@ -360,7 +360,7 @@
   "positions.column.liqPrice": "Liq. prijs",
   "positions.column.unrealPnl.tooltip": "Huidige ongerealiseerde winst of verlies op uw open posities over alle widgets berekend met behulp van de Markprijs.",
   "positions.column.unrealPnl.priceBasis": "Ongerealiseerde W/V prijsbasis",
-  "positions.column.margin": "Onderhoudsmarge",
+  "positions.column.margin": "Marge",
   "positions.column.margin.tooltip": "Het minimale eigen vermogen om uw positie te behouden.",
   "positions.column.margin.formula": "Onderhoudsmarge = Positiegrootte * Markprijs * MMR",
   "positions.column.close": "Sluiten",

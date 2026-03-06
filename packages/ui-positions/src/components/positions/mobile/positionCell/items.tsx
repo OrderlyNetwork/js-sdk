@@ -172,7 +172,7 @@ export const Margin: FC<PositionCellState> = (props) => {
     >
       <Flex gap={1}>
         <Text.numeral dp={2} intensity={80}>
-          {isIsolated ? (item.margin ?? "--") : item.mm}
+          {isIsolated ? (item.margin ?? "--") : "--"}
         </Text.numeral>
         {isIsolated && (
           <IconButton

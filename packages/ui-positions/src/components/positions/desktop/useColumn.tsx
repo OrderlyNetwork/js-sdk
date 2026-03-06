@@ -323,7 +323,7 @@ export const useColumn = (config: ColumnConfig) => {
           return (
             <Flex gap={2} itemAlign="center">
               <Text.numeral>
-                {isIsolated ? (record.margin ?? "--") : value}
+                {isIsolated ? (record.margin ?? "--") : "--"}
               </Text.numeral>
               {isIsolated && (
                 <IconButton

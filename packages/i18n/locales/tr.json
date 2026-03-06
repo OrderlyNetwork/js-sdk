@@ -360,7 +360,7 @@
   "positions.column.liqPrice": "Lik. fiyatı",
   "positions.column.unrealPnl.tooltip": "İşaret Fiyatı kullanılarak hesaplanan tüm widget'lardaki açık pozisyonlarınızın mevcut gerçekleşmemiş kar veya zararı.",
   "positions.column.unrealPnl.priceBasis": "Gerçekleşmemiş K/Z Fiyat Temeli",
-  "positions.column.margin": "Bakım Teminatı",
+  "positions.column.margin": "Teminat",
   "positions.column.margin.tooltip": "Pozisyonunuzu korumak için minimum özkaynak.",
   "positions.column.margin.formula": "Bakım Teminatı = Pozisyon büyüklüğü * İşaret fiyatı * BTO",
   "positions.column.close": "Kapat",

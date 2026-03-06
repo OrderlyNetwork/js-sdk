@@ -360,7 +360,7 @@
   "positions.column.liqPrice": "Liquidationspreis",
   "positions.column.unrealPnl.tooltip": "Aktueller nicht realisierter Gewinn oder Verlust auf Ihren offenen Positionen über alle Widgets, berechnet mit dem Marktpreis.",
   "positions.column.unrealPnl.priceBasis": "Preisbasis für nicht realisierten PnL",
-  "positions.column.margin": "Erhaltungsmarge",
+  "positions.column.margin": "Marge",
   "positions.column.margin.tooltip": "Das minimale Eigenkapital, um Ihre Position zu halten.",
   "positions.column.margin.formula": "Erhaltungsmarge = Positionsgröße * Marktpreis * MMR",
   "positions.column.close": "Schließen",

@@ -360,7 +360,7 @@
   "positions.column.liqPrice": "Цена ликв.",
   "positions.column.unrealPnl.tooltip": "Текущая нереализованная прибыль или убыток по вашим открытым позициям во всех виджетах, рассчитанная с использованием маркировочной цены.",
   "positions.column.unrealPnl.priceBasis": "Основа цены нереализованного PnL",
-  "positions.column.margin": "Маржа поддержания",
+  "positions.column.margin": "Маржа",
   "positions.column.margin.tooltip": "Минимальный капитал для поддержания вашей позиции.",
   "positions.column.margin.formula": "Маржа поддержания = Размер позиции * Маркировочная цена * MMR",
   "positions.column.close": "Закрыть",
