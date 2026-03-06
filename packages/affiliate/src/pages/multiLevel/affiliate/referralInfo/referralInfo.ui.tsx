@@ -18,9 +18,14 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
       p={5}
       direction={"column"}
       intensity={900}
-      className="oui-border oui-border-line-6"
+      className="oui-affiliate-referralInfo oui-border oui-border-line-6"
     >
-      <Flex direction={"row"} justify={"between"} width={"100%"}>
+      <Flex
+        direction={"row"}
+        justify={"between"}
+        width={"100%"}
+        className="oui-referralInfo-header"
+      >
         <Text size="lg">{t("affiliate.referral")}</Text>
         <Button
           size="xs"
@@ -31,7 +36,7 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
         </Button>
       </Flex>
 
-      <Container className="oui-flex-col oui-items-start oui-gap-4 oui-p-5">
+      <Container className="oui-referralInfo-code oui-flex-col oui-items-start oui-gap-4 oui-p-5">
         <Flex
           r="full"
           px={2}
@@ -52,7 +57,7 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
         </Flex>
       </Container>
 
-      <Container className="oui-p-5">
+      <Container className="oui-referralInfo-link oui-p-5">
         <Text size="lg" color="primaryLight">
           {props.referralLink}
         </Text>
@@ -66,7 +71,12 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
       >
         <Flex direction={"row"} justify={"between"} width={"100%"}>
           <Text size="sm">{t("affiliate.revenueSplitStrategy")}</Text>
-          <Button size="xs" color="secondary" onClick={() => props.onEdit()}>
+          <Button
+            size="xs"
+            color="secondary"
+            className="oui-affiliate-referralInfo-editSplit-btn"
+            onClick={() => props.onEdit()}
+          >
             {t("common.edit")}
           </Button>
         </Flex>

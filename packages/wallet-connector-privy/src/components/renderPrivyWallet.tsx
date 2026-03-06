@@ -27,7 +27,7 @@ function NoWallet() {
             {t("connector.privy.noWallet")}
           </div>
         </div>
-        <div className="oui-flex oui-items-start oui-gap-1 oui-rounded-[4px] oui-bg-[rgba(232,136,0,0.15)] oui-px-2 oui-py-[6px] ">
+        <div className="oui-flex oui-items-start oui-gap-1 oui-rounded-[4px] oui-bg-[rgba(var(--oui-color-warning-darken)/0.15)] oui-px-2 oui-py-[6px] ">
           <ExclamationFillIcon
             size={10}
             className="oui-mt-1 oui-size-[10px] oui-shrink-0 oui-text-warning-darken"
@@ -71,7 +71,7 @@ function CreateEVMWallet() {
       });
   };
   return (
-    <div className="oui-w-full oui-rounded-[8px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]">
+    <div className="oui-w-full oui-rounded-[8px] oui-bg-base-10 oui-px-2 oui-py-[11px]">
       <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
         <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
           <div className="oui-relative oui-flex oui-w-[55px] oui-items-center oui-justify-start">
@@ -79,7 +79,7 @@ function CreateEVMWallet() {
               src="https://oss.orderly.network/static/sdk/chains.png"
               className="oui-relative oui-z-0 oui-h-[18px]"
             />
-            <div className="oui-absolute oui-right-0 oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-[#282e3a]">
+            <div className="oui-absolute oui-right-0 oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
               <EVMChainPopover>
                 <MoreIcon
                   className="oui-relative oui-z-10 oui-size-3 oui-text-base-contrast-54 hover:oui-text-base-contrast"
@@ -122,7 +122,7 @@ function CreateSOLWallet() {
       });
   };
   return (
-    <div className="oui-w-full oui-rounded-[8px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]">
+    <div className="oui-w-full oui-rounded-[8px] oui-bg-base-10 oui-px-2 oui-py-[11px]">
       <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
         <img
           src="https://oss.orderly.network/static/sdk/solana-logo.png"

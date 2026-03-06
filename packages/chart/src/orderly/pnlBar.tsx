@@ -71,7 +71,7 @@ export const XAxisLabel: React.FC<any> = (props) => {
         textAnchor={index === 0 ? "start" : "end"}
         // textAnchor={"start"}
         fontSize={10}
-        fill={"rgba(255,255,255,0.54)"}
+        fill={"rgba(var(--oui-color-base-foreground)/0.54)"}
       >
         {index === 0 ? payload.value : t("chart.now")}
       </text>
@@ -88,7 +88,7 @@ const CustomizedCross: React.FC<any> = (props) => {
       top={props.top}
       height={height}
       width={1}
-      stroke={"rgba(255,255,255,0.16)"}
+      stroke={"rgba(var(--oui-color-base-foreground)/0.16)"}
       strokeDasharray={"3 2"}
       fill={"none"}
     />
@@ -137,9 +137,13 @@ export const PnLBarChart: React.FC<PnLChartProps> = (props) => {
           />
         )}
 
-        <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
+        <CartesianGrid
+          vertical={false}
+          stroke="rgb(var(--oui-color-line))"
+          strokeOpacity={0.04}
+        />
 
-        <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
+        <ReferenceLine y={0} stroke="rgba(var(--oui-color-line), 0.04)" />
 
         {!invisible && (
           <Bar dataKey="pnl" shape={<RoundedRectangle />}>
@@ -155,7 +159,10 @@ export const PnLBarChart: React.FC<PnLChartProps> = (props) => {
         )}
 
         <YAxis
-          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          tick={{
+            fontSize: 10,
+            fill: "rgba(var(--oui-color-base-foreground)/0.54)",
+          }}
           tickFormatter={(value) => tickFormatter(value)}
           tickLine={false}
           axisLine={false}
@@ -171,7 +178,7 @@ export const PnLBarChart: React.FC<PnLChartProps> = (props) => {
           // scale="time"
           // tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
           tick={<XAxisLabel containerWidth={widthRef.current} />}
-          stroke="#FFFFFF"
+          stroke="rgb(var(--oui-color-line))"
           strokeOpacity={0.04}
         />
       </BarChart>

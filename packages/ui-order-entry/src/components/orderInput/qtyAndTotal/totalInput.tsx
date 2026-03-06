@@ -74,7 +74,7 @@ export const TotalInput: FC<TotalInputProps> = memo((props) => {
         formatters={[inputFormatter.dpFormatter(2)]}
         onFocus={onFocus(InputType.MARGIN)}
         onBlur={onBlur(InputType.MARGIN)}
-        className="!oui-rounded-l"
+        className="oui-orderEntry-marginInput !oui-rounded-l"
         classNames={{
           suffix: "oui-justify-end",
         }}
@@ -94,7 +94,7 @@ export const TotalInput: FC<TotalInputProps> = memo((props) => {
       onChange={(val) => {
         setOrderValue("total", val);
       }}
-      className="!oui-rounded-l"
+      className="oui-orderEntry-totalInput !oui-rounded-l"
       classNames={{
         suffix: "oui-justify-end",
       }}

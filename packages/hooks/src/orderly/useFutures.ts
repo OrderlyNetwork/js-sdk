@@ -2,12 +2,15 @@ import { useMemo } from "react";
 import { API } from "@orderly.network/types";
 import { useOrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
+import { useRwaSymbolsInfoStore } from "./useRwaSymbolsInfo";
 
 /**
  * get symbol list
  */
 export const useFutures = () => {
   const { dataAdapter } = useOrderlyContext();
+
+  const rwaSymbolsInfo = useRwaSymbolsInfoStore();
 
   const { data } = useQuery<API.MarketInfo[]>("/v1/public/futures", {
     // 24 hours
@@ -27,12 +30,14 @@ export const useFutures = () => {
   const futures = useMemo(() => {
     if (Array.isArray(data)) {
       return typeof dataAdapter?.symbolList === "function"
-        ? dataAdapter.symbolList(data as API.MarketInfoExt[])
+        ? dataAdapter.symbolList(data as API.MarketInfoExt[], {
+            rwaSymbolsInfo,
+          })
         : data;
     }
 
     return [];
-  }, [data, dataAdapter?.symbolList]);
+  }, [data, dataAdapter?.symbolList, rwaSymbolsInfo]);
 
   return {
     data: futures,

@@ -221,6 +221,7 @@ export const DataList: React.FC<DataListState> = (props) => {
 
   return (
     <Tabs
+      className="oui-trading-dataList-tabs oui-h-full"
       defaultValue={current || DataListTabType.positions}
       variant="contained"
       trailing={
@@ -236,7 +237,6 @@ export const DataList: React.FC<DataListState> = (props) => {
         </React.Suspense>
       }
       size="lg"
-      className="oui-h-full"
       classNames={{
         trigger: "oui-group",
         tabsContent: "oui-h-[calc(100%_-_32px)]",

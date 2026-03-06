@@ -1,6 +1,6 @@
 import { MouseEventHandler, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Box, Tooltip, Column } from "@orderly.network/ui";
+import { Flex, Text, Box, Tooltip, Column, Badge } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   FavoritesIcon,
@@ -45,11 +45,7 @@ export const useMarketsListFullColumns = (
               onClick={isFavoriteList ? onDelSymbol : undefined}
               data-testid="oui-testid-markets-table-row-favorite-icon"
             >
-              {value ? (
-                <FavoritesIcon className="oui-text-[rgba(255,154,46,1)]" />
-              ) : (
-                <UnFavoritesIcon className="oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
-              )}
+              {value ? <FavoritesIcon /> : <UnFavoritesIcon />}
             </Flex>
           );
 
@@ -67,19 +63,54 @@ export const useMarketsListFullColumns = (
       {
         title: t("markets.column.market"),
         dataIndex: "symbol",
-        width: 90,
+        width: 120,
         onSort: true,
-        render: (value) => {
+        render: (value, record) => {
           return (
-            <SymbolDisplay formatString="base" showIcon>
-              {value}
-            </SymbolDisplay>
+            <Flex gapX={1} itemAlign="center">
+              <SymbolDisplay formatString="base" showIcon>
+                {value}
+              </SymbolDisplay>
+              {typeof record.leverage === "number" && (
+                <Badge size="xs" color="primary">
+                  {record.leverage}x
+                </Badge>
+              )}
+            </Flex>
           );
         },
       },
       {
-        title: t("common.price"),
+        title: t("markets.column.last"),
         dataIndex: "24h_close",
+        width: 100,
+        align: "right",
+        onSort: true,
+        render: (value, record) => {
+          return (
+            <Text.numeral dp={record.quote_dp || 2} currency="$">
+              {value}
+            </Text.numeral>
+          );
+        },
+      },
+      {
+        title: t("markets.column.mark"),
+        dataIndex: "mark_price",
+        width: 100,
+        align: "right",
+        onSort: true,
+        render: (value, record) => {
+          return (
+            <Text.numeral dp={record.quote_dp || 2} currency="$">
+              {value}
+            </Text.numeral>
+          );
+        },
+      },
+      {
+        title: t("markets.column.index"),
+        dataIndex: "index_price",
         width: 100,
         align: "right",
         onSort: true,

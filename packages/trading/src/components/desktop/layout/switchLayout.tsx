@@ -30,6 +30,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
       <Flex
         px={3}
         className={cn(
+          "oui-switchLayout",
           "oui-rounded-md",
           "oui-h-[28px]",
           "oui-cursor-pointer oui-transition-all",
@@ -252,9 +253,21 @@ export const OrderEntryIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect width="36" height="17" rx="2" fill="#181C23" />
-    <rect y="19" width="36" height="54" rx="2" fill="#181C23" />
-    <rect y="75" width="36" height="9" rx="2" fill="#181C23" />
+    <rect width="36" height="17" rx="2" fill="rgb(var(--oui-color-base-7))" />
+    <rect
+      y="19"
+      width="36"
+      height="54"
+      rx="2"
+      fill="rgb(var(--oui-color-base-7))"
+    />
+    <rect
+      y="75"
+      width="36"
+      height="9"
+      rx="2"
+      fill="rgb(var(--oui-color-base-7))"
+    />
     <rect
       x="3"
       y="79"
@@ -263,11 +276,46 @@ export const OrderEntryIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       rx="0.5"
       fill="url(#paint0_linear_17647_26849)"
     />
-    <rect x="3" y="22" width="14" height="6" rx="2" fill="#008676" />
-    <rect x="19" y="22" width="14" height="6" rx="2" fill="#D92D6B" />
-    <rect x="3" y="11" width="14" height="3" rx="1.5" fill="#333948" />
-    <rect x="19" y="11" width="14" height="3" rx="1.5" fill="#335FFC" />
-    <rect x="3" y="62" width="30" height="8" rx="2" fill="#008676" />
+    <rect
+      x="3"
+      y="22"
+      width="14"
+      height="6"
+      rx="2"
+      fill="rgb(var(--oui-color-success-darken))"
+    />
+    <rect
+      x="19"
+      y="22"
+      width="14"
+      height="6"
+      rx="2"
+      fill="rgb(var(--oui-color-danger-darken))"
+    />
+    <rect
+      x="3"
+      y="11"
+      width="14"
+      height="3"
+      rx="1.5"
+      fill="rgb(var(--oui-color-base-4))"
+    />
+    <rect
+      x="19"
+      y="11"
+      width="14"
+      height="3"
+      rx="1.5"
+      fill="rgb(var(--oui-color-primary-darken))"
+    />
+    <rect
+      x="3"
+      y="62"
+      width="30"
+      height="8"
+      rx="2"
+      fill="rgb(var(--oui-color-success-darken))"
+    />
     <defs>
       <linearGradient
         id="paint0_linear_17647_26849"
@@ -277,8 +325,8 @@ export const OrderEntryIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
         y2="79.5"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stopColor="#779eff" />
-        <stop offset="1" stopColor="#26FEFE" />
+        <stop stopColor="rgb(var(--oui-color-primary-light))" />
+        <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
       </linearGradient>
     </defs>
   </svg>
@@ -308,16 +356,58 @@ export const MarketLeftIcon: FC<
         width="144"
         height="96"
         rx="10"
-        fill="#07080A"
+        fill="rgb(var(--oui-color-base-10))"
         stroke={getStrokeColor()}
         strokeWidth="4"
       />
-      <rect x="8" y="8" width="24" height="84" rx="2" fill="#181C23" />
-      <rect x="16" y="10" width="4" height="2" rx="1" fill="#333948" />
-      <rect x="21" y="10" width="4" height="2" rx="1" fill="#333948" />
-      <rect x="26" y="10" width="4" height="2" rx="1" fill="#333948" />
-      <rect x="10" y="10" width="5" height="2" rx="1" fill="#335FFC" />
-      <rect x="10" y="14" width="20" height="76" rx="2" fill="#282E3A" />
+      <rect
+        x="8"
+        y="8"
+        width="24"
+        height="84"
+        rx="2"
+        fill="rgb(var(--oui-color-base-7))"
+      />
+      <rect
+        x="16"
+        y="10"
+        width="4"
+        height="2"
+        rx="1"
+        fill="rgb(var(--oui-color-base-4))"
+      />
+      <rect
+        x="21"
+        y="10"
+        width="4"
+        height="2"
+        rx="1"
+        fill="rgb(var(--oui-color-base-4))"
+      />
+      <rect
+        x="26"
+        y="10"
+        width="4"
+        height="2"
+        rx="1"
+        fill="rgb(var(--oui-color-base-4))"
+      />
+      <rect
+        x="10"
+        y="10"
+        width="5"
+        height="2"
+        rx="1"
+        fill="rgb(var(--oui-color-primary-darken))"
+      />
+      <rect
+        x="10"
+        y="14"
+        width="20"
+        height="76"
+        rx="2"
+        fill="rgb(var(--oui-color-base-5))"
+      />
     </svg>
   );
 };
@@ -346,27 +436,90 @@ export const MarketTopIcon: FC<
         width="144"
         height="96"
         rx="10"
-        fill="#07080A"
+        fill="rgb(var(--oui-color-base-10))"
         stroke={getStrokeColor()}
         strokeWidth="4"
       />
-      <rect x="8" y="8" width="132" height="8" rx="2" fill="#181C23" />
+      <rect
+        x="8"
+        y="8"
+        width="132"
+        height="8"
+        rx="2"
+        fill="rgb(var(--oui-color-base-7))"
+      />
       <g clipPath="url(#clip0_31319_74729)">
-        <rect x="10" y="10" width="16" height="4" rx="2" fill="#335FFC" />
-        <rect x="28" y="10" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="46" y="10" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="64" y="10" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="82" y="10" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="100" y="10" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="118" y="10" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="136" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect
+          x="10"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-primary-darken))"
+        />
+        <rect
+          x="28"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="46"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="64"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="82"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="100"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="118"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="136"
+          y="10"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
       </g>
       <defs>
         <clipPath id="clip0_31319_74729">
           <rect
             width="130"
             height="4"
-            fill="white"
+            fill="rgb(var(--oui-color-base-foreground))"
             transform="translate(10 10)"
           />
         </clipPath>
@@ -399,27 +552,90 @@ export const MarketBottomIcon: FC<
         width="144"
         height="96"
         rx="10"
-        fill="#07080A"
+        fill="rgb(var(--oui-color-base-10))"
         stroke={getStrokeColor()}
         strokeWidth="4"
       />
-      <rect x="8" y="84" width="132" height="8" rx="2" fill="#181C23" />
+      <rect
+        x="8"
+        y="84"
+        width="132"
+        height="8"
+        rx="2"
+        fill="rgb(var(--oui-color-base-7))"
+      />
       <g clipPath="url(#clip0_31319_74743)">
-        <rect x="10" y="86" width="16" height="4" rx="2" fill="#335FFC" />
-        <rect x="28" y="86" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="46" y="86" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="64" y="86" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="82" y="86" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="100" y="86" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="118" y="86" width="16" height="4" rx="2" fill="#333948" />
-        <rect x="136" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect
+          x="10"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-primary-darken))"
+        />
+        <rect
+          x="28"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="46"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="64"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="82"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="100"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="118"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
+        <rect
+          x="136"
+          y="86"
+          width="16"
+          height="4"
+          rx="2"
+          fill="rgb(var(--oui-color-base-4))"
+        />
       </g>
       <defs>
         <clipPath id="clip0_31319_74743">
           <rect
             width="130"
             height="4"
-            fill="white"
+            fill="rgb(var(--oui-color-base-foreground))"
             transform="translate(10 86)"
           />
         </clipPath>
@@ -452,12 +668,19 @@ export const MarketHideIcon: FC<
         width="144"
         height="96"
         rx="10"
-        fill="#07080A"
+        fill="rgb(var(--oui-color-base-10))"
         stroke={getStrokeColor()}
         strokeWidth="4"
       />
       <g clipPath="url(#clip0_31319_74757)">
-        <rect x="8" y="8" width="132" height="84" rx="2" fill="#181C23" />
+        <rect
+          x="8"
+          y="8"
+          width="132"
+          height="84"
+          rx="2"
+          fill="rgb(var(--oui-color-base-7))"
+        />
         <rect
           x="66.8789"
           y="-76"
@@ -465,7 +688,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 66.8789 -76)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="73.9492"
@@ -474,7 +697,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 73.9492 -68.929)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="81.0195"
@@ -483,7 +706,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 81.0195 -61.8579)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="88.0938"
@@ -492,7 +715,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 88.0938 -54.7867)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="95.1641"
@@ -501,7 +724,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 95.1641 -47.7157)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="102.234"
@@ -510,7 +733,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 102.234 -40.6447)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="109.305"
@@ -519,7 +742,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 109.305 -33.5736)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="116.375"
@@ -528,7 +751,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 116.375 -26.5026)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="123.449"
@@ -537,7 +760,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 123.449 -19.4315)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="130.52"
@@ -546,7 +769,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 130.52 -12.3604)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="137.59"
@@ -555,7 +778,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 137.59 -5.28931)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="144.66"
@@ -564,7 +787,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 144.66 1.78174)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="151.73"
@@ -573,7 +796,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 151.73 8.85278)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="158.805"
@@ -582,7 +805,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 158.805 15.9238)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="165.875"
@@ -591,7 +814,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 165.875 22.995)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="172.945"
@@ -600,7 +823,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 172.945 30.066)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="180.016"
@@ -609,7 +832,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 180.016 37.1371)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="187.086"
@@ -618,7 +841,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 187.086 44.2081)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="194.156"
@@ -627,7 +850,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 194.156 51.2792)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
         <rect
           x="201.23"
@@ -636,7 +859,7 @@ export const MarketHideIcon: FC<
           height="188"
           rx="2"
           transform="rotate(45 201.23 58.3503)"
-          fill="#20252F"
+          fill="rgb(var(--oui-color-base-6))"
         />
       </g>
       <defs>
@@ -644,7 +867,7 @@ export const MarketHideIcon: FC<
           <rect
             width="132"
             height="84"
-            fill="white"
+            fill="rgb(var(--oui-color-base-foreground))"
             transform="translate(8 8)"
           />
         </clipPath>

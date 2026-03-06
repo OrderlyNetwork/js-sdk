@@ -20,7 +20,7 @@ import { AccountType } from "./assets.ui.desktop";
 
 const AccountTag: React.FC<{ name: string }> = ({ name }) => {
   return (
-    <div className="oui-mt-2 oui-flex oui-h-[18px] oui-w-fit oui-items-center oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+    <div className="oui-mt-2 oui-flex oui-h-[18px] oui-w-fit oui-items-center oui-rounded oui-bg-base-contrast-6 oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
       {name}
     </div>
   );
@@ -189,7 +189,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
               });
             }}
             className={cn(
-              "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
+              "oui-flex-1 oui-border-base-contrast-36 oui-text-base-contrast-54",
             )}
           >
             {t("transfer.convert")}
@@ -207,7 +207,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
             });
           }}
           className={cn(
-            "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
+            "oui-flex-1 oui-border-base-contrast-36 oui-text-base-contrast-54",
           )}
         >
           {t("common.transfer")}

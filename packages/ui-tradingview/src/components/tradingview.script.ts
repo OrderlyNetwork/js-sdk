@@ -3,7 +3,6 @@ import {
   useAccount,
   useConfig,
   useLocalStorage,
-  useMediaQuery,
   useOrderEntry_deprecated,
   useSymbolsInfo,
   useWS,
@@ -12,14 +11,15 @@ import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
 import { WS } from "@orderly.network/net";
 import {
   AccountStatusEnum,
-  MEDIA_TABLET,
   OrderSide,
   OrderType,
   TradingviewFullscreenKey,
 } from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
+import { modal, toast, useOrderlyTheme, useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useCssVariables } from "../hooks/useCssVariables";
 import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
+import { LoadingScreenOptions } from "../tradingviewAdapter/charting_library";
 import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
 import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
 import useBroker from "../tradingviewAdapter/hooks/useBroker";
@@ -33,16 +33,15 @@ import {
 import {
   getOveriides,
   withExchangePrefix,
-  defaultColorConfig,
-  chartBG,
+  getColorConfig,
+  getOverridesConfigHash,
 } from "../utils/chart.util";
 import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
 
-const CHART_KEY = "SDK_Tradingview";
-const MOBILE_CHART_KEY = "SDK_Moblie_Tradingview";
-
-const getChartKey = (isMobile?: boolean) => {
-  return isMobile ? MOBILE_CHART_KEY : CHART_KEY;
+const getChartLocalStorageKey = (suffix: string, isMobile?: boolean) => {
+  return isMobile
+    ? `orderly_tradingview_mobile_${suffix}`
+    : `orderly_tradingview_${suffix}`;
 };
 
 const defaultLocale = (localeCode: LocaleCode) => {
@@ -61,7 +60,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     overrides: customerOverrides,
     studiesOverrides: customerStudiesOverrides,
     symbol,
-    theme,
     loadingScreen: customerLoadingScreen,
     mode,
     colorConfig: customerColorConfig,
@@ -73,6 +71,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   } = props;
 
   const localeCode = useLocaleCode();
+  const { isMobile } = useScreen();
+  const { currentTheme } = useOrderlyTheme();
+  const theme = props.theme ?? currentTheme?.mode ?? "dark";
+  const cssVariables = useCssVariables(theme);
 
   const chart = useRef<Widget | null>(null);
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
@@ -133,21 +135,14 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     return lastUsedLineType;
   });
 
-  const isMobile = useMediaQuery(MEDIA_TABLET);
+  const colorConfig = useMemo(() => {
+    return getColorConfig({
+      theme,
+      customerColorConfig,
+      cssVariables,
+    });
+  }, [theme, customerColorConfig, cssVariables]);
 
-  const colorConfig = useMemo(
-    () => Object.assign({}, defaultColorConfig, customerColorConfig ?? {}),
-    [customerColorConfig],
-  );
-
-  const loadingScreen = useMemo(() => {
-    if (typeof customerLoadingScreen === "object") {
-      return customerLoadingScreen;
-    }
-    return {
-      backgroundColor: chartBG,
-    };
-  }, [customerLoadingScreen]);
   const ws = useWS();
   const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] =
     useState<boolean>(false);
@@ -282,6 +277,51 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     }
   }, [chartRef, chartingLibrarySciprtReady, tradingViewScriptSrc]);
 
+  const { overrides, studiesOverrides, configHash, toolbarBg, loadingScreen } =
+    useMemo(() => {
+      const defaultOverrides = getOveriides({
+        theme,
+        colorConfig,
+        isMobile,
+      });
+
+      const overrides = { ...defaultOverrides.overrides, ...customerOverrides };
+      const studiesOverrides = {
+        ...defaultOverrides.studiesOverrides,
+        ...customerStudiesOverrides,
+      };
+
+      const configHash = getOverridesConfigHash(
+        theme,
+        overrides,
+        studiesOverrides,
+      );
+
+      const toolbarBg = cssVariables.chartBG;
+
+      const loadingScreen =
+        customerLoadingScreen ??
+        ({
+          backgroundColor: colorConfig.chartBG,
+          foregroundColor: cssVariables.primary,
+        } as LoadingScreenOptions);
+
+      return {
+        overrides,
+        studiesOverrides,
+        configHash,
+        toolbarBg,
+        loadingScreen,
+      };
+    }, [
+      theme,
+      colorConfig,
+      isMobile,
+      customerOverrides,
+      customerStudiesOverrides,
+      customerLoadingScreen,
+    ]);
+
   useEffect(() => {
     if (!symbol) {
       return;
@@ -290,20 +330,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       return;
     }
 
-    const defaultOverrides = getOveriides(colorConfig, isMobile);
-    const overrides = customerOverrides
-      ? Object.assign({}, defaultOverrides.overrides, customerOverrides)
-      : defaultOverrides.overrides;
-
-    console.log("-- overides", overrides, mode);
-    // console.log('-- overrides', overrides);
-    const studiesOverrides = customerStudiesOverrides
-      ? Object.assign(
-          {},
-          defaultOverrides.studiesOverrides,
-          customerStudiesOverrides,
-        )
-      : defaultOverrides.studiesOverrides;
     if (chartRef.current) {
       // options example: https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/
       // ChartingLibraryWidgetOptions
@@ -318,10 +344,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         libraryPath: libraryPath,
         customCssUrl: tradingViewCustomCssUrl,
         interval: interval ?? "1",
-        theme: theme ?? "dark",
-        loadingScreen: loadingScreen ?? {},
-
-        overrides: overrides,
+        theme,
+        loadingScreen,
+        toolbarBg,
+        overrides,
         studiesOverrides,
         datafeed: new Datafeed(apiBaseUrl!, ws),
         contextMenu: {
@@ -340,7 +366,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
       const chartProps: WidgetProps = {
         options,
-        chartKey: getChartKey(isMobile),
+        chartKey: getChartLocalStorageKey(`${configHash}`, isMobile),
         mode,
         onClick: () => {},
         enabled_features,
@@ -354,16 +380,20 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       chart.current?.remove();
     };
   }, [
-    chartingLibrarySciprtReady,
     isMobile,
     mode,
     chart,
     chartRef,
     chartingLibrarySciprtReady,
     tradingViewScriptSrc,
-    colorConfig,
     locale,
     localeCode,
+    theme,
+    overrides,
+    studiesOverrides,
+    configHash,
+    loadingScreen,
+    toolbarBg,
     customIndicatorsGetter,
   ]);
 

@@ -63,7 +63,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
           <Flex direction={"row"} gap={1}>
             {typeof props.telegramUrl !== "undefined" && (
               <CommuntiyTelegramIcon
-                className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
+                className="oui-fill-base-contrast-54 hover:oui-fill-base-contrast oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
                 onClick={(e) => openUrl(props.telegramUrl)}
@@ -71,7 +71,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
             )}
             {typeof props.discordUrl !== "undefined" && (
               <CommuntiyDiscordIcon
-                className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
+                className="oui-fill-base-contrast-54 hover:oui-fill-base-contrast oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
                 onClick={(e) => openUrl(props.discordUrl)}
@@ -79,7 +79,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
             )}
             {typeof props.twitterUrl !== "undefined" && (
               <CommuntiyXIcon
-                className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
+                className="oui-fill-base-contrast-54 hover:oui-fill-base-contrast oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
                 onClick={(e) => openUrl(props.twitterUrl)}

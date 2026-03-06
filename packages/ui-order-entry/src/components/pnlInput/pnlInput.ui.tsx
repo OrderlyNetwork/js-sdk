@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   CaretDownIcon,
+  cn,
   Input,
   MenuItem,
   Text,
@@ -70,14 +71,18 @@ export const PNLInput = (props: PNLInputProps) => {
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[
+        inputFormatter.numberFormatter,
         props.formatter({ dp: quote_dp, mode, type }),
         inputFormatter.currencyFormatter,
         // inputFormatter.identifierFormatter(),
       ]}
       classNames={{
-        root: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
+        root: cn(
+          "oui-orderEntry-pnlInput-container",
+          type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
+        ),
         additional: "oui-text-base-contrast-54",
-        input: "oui-text-inherit",
+        input: "oui-orderEntry-pnlInput oui-text-inherit",
       }}
       onFocus={() => {
         setPrefix("");
@@ -121,11 +126,14 @@ const PNLMenus = (props: {
       menu={props.modes}
       align={"end"}
       size={"xs"}
-      className={"oui-min-w-[80px]"}
+      className={"oui-pnlInput-menu oui-min-w-[80px]"}
       onCloseAutoFocus={(event) => event.preventDefault()}
       onSelect={(item) => props.onModeChange(item as MenuItem)}
     >
-      <button className={"oui-p-2"} data-testid={props.testId}>
+      <button
+        className={"oui-pnlInput-menuTrigger-btn oui-p-2"}
+        data-testid={props.testId}
+      >
         <CaretDownIcon size={12} color={"white"} />
       </button>
     </SimpleDropdownMenu>

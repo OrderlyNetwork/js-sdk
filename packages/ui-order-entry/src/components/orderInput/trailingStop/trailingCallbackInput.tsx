@@ -94,7 +94,7 @@ export const TrailingCallbackInput: FC<TrailingCallbackInputProps> = memo(
         //   sideOffset={-25}
         //   className="!oui-p-3"
         // >
-        <div className="oui-relative">
+        <div className="oui-orderEntry-trailingCallback oui-relative">
           <CustomInput
             id="order_callback_rate_input"
             name="order_callback_rate_input"
@@ -102,6 +102,7 @@ export const TrailingCallbackInput: FC<TrailingCallbackInputProps> = memo(
             suffix={suffix}
             error={getErrorMsg("callback_rate")}
             value={callback_rate}
+            className="oui-trailingCallback-rateInput"
             onChange={(val: string) => {
               setOrderValue("callback_rate", val);
             }}
@@ -121,7 +122,7 @@ export const TrailingCallbackInput: FC<TrailingCallbackInputProps> = memo(
             }}
           />
           <CallbackRatePercentages
-            className="oui-absolute oui-bottom-1 oui-left-2"
+            className="oui-trailingCallback-percentages oui-absolute oui-bottom-1 oui-left-2"
             callback_rate={callback_rate}
             // onClick={openTooltip}
           />
@@ -138,6 +139,7 @@ export const TrailingCallbackInput: FC<TrailingCallbackInputProps> = memo(
         suffix={suffix}
         error={getErrorMsg("callback_value")}
         value={callback_value}
+        className="oui-trailingCallback-valueInput"
         onChange={(val: string) => {
           setOrderValue("callback_value", val);
         }}

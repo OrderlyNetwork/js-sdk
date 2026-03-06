@@ -44,6 +44,10 @@ export const Funding: React.FC<FundingScriptReturn> = (props) => {
         }
       >
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-funding-overview-trigger",
+            content: "oui-tabs-funding-overview-content",
+          }}
           title={t("common.overview")}
           value="overview"
           testid="oui-testid-funding-overview-tab"
@@ -53,6 +57,10 @@ export const Funding: React.FC<FundingScriptReturn> = (props) => {
           </React.Suspense>
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-funding-comparison-trigger",
+            content: "oui-tabs-funding-comparison-content",
+          }}
           title={t("markets.funding.comparison")}
           value="comparison"
           testid="oui-testid-funding-comparison-tab"

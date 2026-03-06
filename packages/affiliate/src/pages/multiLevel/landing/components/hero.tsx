@@ -93,7 +93,7 @@ export const Hero = () => {
   return (
     <Flex
       gap={8}
-      className="oui-flex-col-reverse md:oui-flex-row"
+      className="oui-affiliate-hero oui-flex-col-reverse md:oui-flex-row"
       id="oui-affiliate-landing-hero"
       itemAlign={"center"}
     >

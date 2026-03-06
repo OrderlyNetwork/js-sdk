@@ -91,7 +91,10 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         direction={"column"}
         p={2}
         id="oui-orderbook-mobile"
-        className={cn("oui-relative oui-size-full", props.className)}
+        className={cn(
+          "oui-orderBook oui-relative oui-size-full",
+          props.className,
+        )}
         justify={"start"}
         itemAlign={"start"}
       >

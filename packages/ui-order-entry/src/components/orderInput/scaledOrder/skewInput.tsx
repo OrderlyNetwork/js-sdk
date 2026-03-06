@@ -19,6 +19,7 @@ export const SkewInput = memo((props: SkewInputProps) => {
     <CustomInput
       id="order_skew_input"
       label={t("orderEntry.skew")}
+      className="oui-orderEntry-scaledOrder-skewInput"
       value={props.skew}
       error={getErrorMsg("skew")}
       onChange={(val) => {

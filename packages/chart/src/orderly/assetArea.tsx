@@ -61,18 +61,25 @@ export const AssetAreaChart: React.FC<PnlAreaChartProps> = (props) => {
       data={props.data}
       margin={{ top: 20, right: 10, left: -20, bottom: -10 }}
     >
-      <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
+      <CartesianGrid
+        vertical={false}
+        stroke="rgb(var(--oui-color-line))"
+        strokeOpacity={0.04}
+      />
       <XAxis
         dataKey="date"
         interval={props.data.length - 2}
-        // tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+        // tick={{ fontSize: 10, fill: "rgba(var(--oui-color-base-foreground)/0.54)" }}
         tick={<XAxisLabel />}
-        stroke="#FFFFFF"
+        stroke="rgb(var(--oui-color-line))"
         strokeOpacity={0.04}
       />
       <YAxis
         dataKey="account_value"
-        tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+        tick={{
+          fontSize: 10,
+          fill: "rgba(var(--oui-color-base-foreground)/0.54)",
+        }}
         tickLine={false}
         axisLine={false}
         tickFormatter={tickFormatter}
@@ -87,8 +94,16 @@ export const AssetAreaChart: React.FC<PnlAreaChartProps> = (props) => {
         <>
           <defs>
             <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
-              <stop stopColor="#00B49E" offset="0%" stopOpacity={0.5} />
-              <stop stopColor="#00B49E" offset="100%" stopOpacity={0} />
+              <stop
+                stopColor="rgb(var(--oui-color-success))"
+                offset="0%"
+                stopOpacity={0.5}
+              />
+              <stop
+                stopColor="rgb(var(--oui-color-success))"
+                offset="100%"
+                stopOpacity={0}
+              />
             </linearGradient>
           </defs>
           <Area

@@ -122,6 +122,7 @@ export const portfolio = {
   "portfolio.setting.soundAlerts": "Sound notification",
   "portfolio.setting.soundAlerts.description":
     "Play a notification sound when an order is filled or canceled.",
+  "portfolio.setting.theme": "Theme",
 };
 
 export type Portfolio = typeof portfolio;

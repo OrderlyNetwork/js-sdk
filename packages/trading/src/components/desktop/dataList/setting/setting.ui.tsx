@@ -115,22 +115,23 @@ export const Setting: FC<SettingState> = (props) => {
       size="xs"
       type="button"
       variant="contained"
-      className="oui-bg-transparent hover:oui-bg-transparent"
+      className="oui-preference-trigger-btn oui-bg-transparent hover:oui-bg-transparent"
     >
       <SettingFillIcon
         size={16}
         color="white"
         opacity={1}
-        className="oui-text-white/[.36] hover:oui-text-white/80"
+        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80"
       />
     </Button>
   );
 
   return (
-    <Flex gap={0}>
+    <Flex className="oui-preference" gap={0}>
       <Flex gap={1}>
         <Checkbox
           id="oui-checkbox-hideOtherSymbols"
+          className="oui-checkbox-hideOtherSymbols"
           color="white"
           checked={props.hideOtherSymbols}
           onCheckedChange={(checked: boolean) => {
@@ -268,7 +269,11 @@ const RadioButton = (props: {
       gap={1}
       className="oui-cursor-pointer"
     >
-      {sel ? <SelIcon /> : <UnselIcon />}
+      {sel ? (
+        <SelIcon className="oui-fill-base-contrast" />
+      ) : (
+        <UnselIcon className="oui-fill-base-contrast-54" />
+      )}
       <Text size="2xs" intensity={sel ? 98 : 54}>
         {label}
       </Text>
@@ -276,7 +281,7 @@ const RadioButton = (props: {
   );
 };
 
-const SelIcon = () => {
+const SelIcon = (props: { className: string }) => {
   return (
     <svg
       width="16"
@@ -284,32 +289,25 @@ const SelIcon = () => {
       viewBox="0 0 16 16"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      className="oui-fill-white"
+      className={props.className}
     >
-      <path
-        d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"
-        fill="#fff"
-        fillOpacity=".36"
-      />
+      <path d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667" />
       <circle cx="8" cy="8" r="3.333" />
     </svg>
   );
 };
 
-const UnselIcon = () => {
+const UnselIcon = (props: { className: string }) => {
   return (
     <svg
       width="16"
       height="16"
       viewBox="0 0 16 16"
-      fill="none"
+      fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
+      className={props.className}
     >
-      <path
-        d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"
-        fill="#fff"
-        fillOpacity=".54"
-      />
+      <path d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667" />
     </svg>
   );
 };

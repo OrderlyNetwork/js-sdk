@@ -1,4 +1,5 @@
 import { HTMLAttributes, useState } from "react";
+import { cn } from "@orderly.network/ui";
 
 const defaultPath =
   "M10.007 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.852-2.523 1.233.361 1.95.015 2.961-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103 5.35 5.35 0 0 0-2.104-1.312c-.448-.15-.808-.208-1.042-.208";
@@ -6,7 +7,10 @@ const defaultPath =
 export const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
   const [path, setPath] = useState(defaultPath);
   return (
-    <button {...props}>
+    <button
+      {...props}
+      className={cn("oui-orderEntry-pin-btn", props.className)}
+    >
       <svg
         width={16}
         height={16}

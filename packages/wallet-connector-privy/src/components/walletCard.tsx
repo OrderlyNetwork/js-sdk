@@ -47,9 +47,9 @@ const getCardActiveClassName = (
   type: WalletType = WalletType.EVM,
 ) => {
   const cardActiveColorMap: { [key in WalletType]: string } = {
-    [WalletType.EVM]: "oui-border-[2px] oui-border-[#B9D1FF]",
-    [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-[#B9D1FF]",
-    [WalletType.SOL]: "oui-border-[2px] oui-border-[#faedff]",
+    [WalletType.EVM]: "oui-border-[2px] oui-border-primary-light",
+    [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-primary-light",
+    [WalletType.SOL]: "oui-border-[2px] oui-border-link-light",
   };
   return isActive && isMulti && cardActiveColorMap[type];
 };
@@ -90,7 +90,7 @@ export function WalletCard(props: WalletCardProps) {
       />
       <div className="oui-relative oui-z-10 oui-flex oui-h-full oui-flex-col oui-justify-between">
         <div className="oui-flex oui-items-center oui-justify-between">
-          <div className="oui-text-sm oui-font-semibold oui-text-base-contrast">
+          <div className="oui-text-sm oui-font-semibold oui-text-secondary">
             {formatAddress(props.address)}
           </div>
           <div className="oui-flex oui-items-center oui-justify-center oui-gap-2">
@@ -98,7 +98,7 @@ export function WalletCard(props: WalletCardProps) {
               <CopyIcon
                 size={16}
                 opacity={1}
-                className="oui-cursor-pointer oui-text-base-contrast-80 hover:oui-text-base-contrast"
+                className="oui-cursor-pointer oui-text-secondary/80 hover:oui-text-secondary"
                 onClick={() => copyAddress(props.address)}
               />
             </Tooltip>
@@ -117,7 +117,7 @@ export function WalletCard(props: WalletCardProps) {
           <RenderWalletType walletType={props.type} />
 
           {props.isMulti && (
-            <div>
+            <div className="[&_button]:oui-border-secondary/80 [&_svg]:oui-text-secondary">
               <Checkbox
                 checked={props.isActive}
                 onCheckedChange={props.onActiveChange}
@@ -152,7 +152,7 @@ function NonPrivyWalletHandleOption({
   };
   return (
     <div onClick={() => disconnectWallet()}>
-      <DisconnectIcon className="oui-size-4 oui-cursor-pointer oui-text-base-contrast-80 hover:oui-text-base-contrast" />
+      <DisconnectIcon className="oui-size-4 oui-cursor-pointer oui-text-secondary/80 hover:oui-text-secondary" />
     </div>
   );
 }
@@ -170,7 +170,7 @@ function PrivyWalletHandleOption({
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>
         <button>
-          <MoreIcon className="oui-cursor-pointer oui-text-base-contrast-80 hover:oui-text-base-contrast" />
+          <MoreIcon className="oui-cursor-pointer oui-text-secondary/80 hover:oui-text-secondary" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
@@ -207,7 +207,7 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
             className="oui-w-4"
           />
         </div>
-        <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast">
+        <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
           Solana
         </div>
       </div>
@@ -220,7 +220,7 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
           src={`${PrivyConnectorImagePath}/abstract-transparent.png`}
           className="oui-w-4"
         />
-        <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast">
+        <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
           Abstract
         </div>
       </div>
@@ -237,15 +237,15 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
             />
           </div>
           <div className="oui-relative oui-left-[-9px] oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-[#282e3a]">
+            <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
               <EVMChainPopover>
                 <MoreIcon
-                  className="oui-relative oui-z-10 oui-size-3 oui-text-base-contrast-54 hover:oui-text-base-contrast"
+                  className="oui-relative oui-z-10 oui-size-3 oui-text-secondary/80 hover:oui-text-secondary"
                   style={{ zIndex: 1 }}
                 />
               </EVMChainPopover>
             </div>
-            <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast">
+            <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
               Evm
             </div>
           </div>
