@@ -304,8 +304,8 @@ export const useColumn = (config: ColumnConfig) => {
                 className="oui-rounded-sm oui-bg-base-8 oui-text-base-contrast-54"
               >
                 <span>{t("positions.column.margin.tooltip")}</span>
-                <Divider className="oui-w-full" />
-                <span>{t("positions.column.margin.formula")}</span>
+                {/* <Divider className="oui-w-full" />
+                <span>{t("positions.column.margin.formula")}</span> */}
               </Flex>
             }
           >

@@ -145,8 +145,8 @@ export const Margin: FC<PositionCellState> = (props) => {
   const marginTipsContent = (
     <div className="oui-text-2xs oui-text-base-contrast-80">
       <div>{t("positions.column.margin.tooltip")}</div>
-      <div className="oui-my-2 oui-h-px oui-w-full oui-bg-base-8" />
-      <div>{t("positions.column.margin.formula")}</div>
+      {/* <div className="oui-my-2 oui-h-px oui-w-full oui-bg-base-8" />
+      <div>{t("positions.column.margin.formula")}</div> */}
     </div>
   );
 
