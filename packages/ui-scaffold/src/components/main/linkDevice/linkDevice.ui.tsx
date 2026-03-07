@@ -113,14 +113,14 @@ const QRCode: FC<QRCodeProps> = (props) => {
 
       <Flex
         className={cn(
-          "oui-w-[272px] oui-h-[272px] ",
+          "oui-w-[276px] oui-h-[276px] ",
           "oui-border oui-border-base-contrast-20 oui-rounded-2xl",
         )}
         justify="center"
         itemAlign="center"
       >
         <Flex
-          className="oui-w-[256px] oui-h-[256px] oui-rounded-lg oui-bg-base-8"
+          className="oui-w-[256px] oui-h-[256px] oui-rounded-lg oui-bg-base-contrast"
           justify="center"
           itemAlign="center"
         >
