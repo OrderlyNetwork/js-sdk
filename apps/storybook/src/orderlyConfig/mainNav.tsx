@@ -103,7 +103,7 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       customRender: customArenRender("mainNav"),
     },
     {
-      name: i18n.t("tradingPoints.points"),
+      name: "points",
       href: "/points",
     },
     {
