@@ -38,6 +38,7 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
     "@orderly.network/ui-notification": "workspace:*",
+    "@orderly.network/ui-onramp": "workspace:*",
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-orders": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",

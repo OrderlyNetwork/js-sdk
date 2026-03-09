@@ -11,6 +11,9 @@
       "@orderly.network/utils": [
         "../utils/src"
       ],
+      "@orderly.network/ui-onramp": [
+        "../ui-onramp/src"
+      ],
       "@orderly.network/ui-connector": [
         "../ui-connector/src"
       ],

@@ -140,6 +140,11 @@ const ui: Package[] = [
     path: "../../packages/ui-notification/src",
     watch: true,
   },
+  {
+    package: "@orderly.network/ui-onramp",
+    path: "../../packages/ui-onramp/src",
+    watch: true,
+  },
 ];
 
 const page: Package[] = [

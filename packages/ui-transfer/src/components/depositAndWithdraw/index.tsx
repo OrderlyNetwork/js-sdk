@@ -8,6 +8,7 @@ import {
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
+import { OnrampForm, BuyCryptoIcon } from "@orderly.network/ui-onramp";
 import { DepositSlot } from "./depositSlot";
 import { WithdrawSlot } from "./withdrawSlot";
 
@@ -15,8 +16,18 @@ export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";
 
 export type DepositAndWithdrawProps = {
-  activeTab?: "deposit" | "withdraw";
+  activeTab?: "deposit" | "withdraw" | "onramp";
   close?: () => void;
+};
+
+const BuyCryptoTabIcon = (props: React.HTMLAttributes<HTMLDivElement>) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { className: _, ...rest } = props;
+  return (
+    <div className="oui-flex oui-items-center oui-justify-center" {...rest}>
+      <BuyCryptoIcon width={11} height={11} />
+    </div>
+  );
 };
 
 export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
@@ -51,6 +62,9 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       >
         <WithdrawSlot close={props.close} />
         {/* <WithdrawFormWidget close={props.close} /> */}
+      </TabPanel>
+      <TabPanel title="Buy Crypto" icon={<BuyCryptoTabIcon />} value="onramp">
+        <OnrampForm close={props.close} />
       </TabPanel>
     </Tabs>
   );

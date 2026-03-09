@@ -30,6 +30,7 @@ module.exports = withTV({
     "../../packages/trading-leaderboard/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/app/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-notification/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-onramp/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),

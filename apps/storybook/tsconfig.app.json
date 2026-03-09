@@ -91,6 +91,9 @@
       "@orderly.network/ui-notification": [
         "../../packages/ui-notification/src"
       ],
+      "@orderly.network/ui-onramp": [
+        "../../packages/ui-onramp/src"
+      ],
       "@orderly.network/ui-order-entry": [
         "../../packages/ui-order-entry/src"
       ],
