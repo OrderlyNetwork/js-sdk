@@ -3,6 +3,8 @@ import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
+  OrderlyPluginProvider,
+  OrderlyThemeProvider,
   Toaster,
   TooltipProvider,
 } from "@orderly.network/ui";
@@ -31,6 +33,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     components,
     appIcons,
     themes,
+    plugins,
     onChainChanged,
     defaultChain,
     widgetConfigs,
@@ -51,20 +54,22 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         themes={themes}
       >
         <OrderlyConfigProvider {...configProps}>
-          <ExecutionReportListener />
-          <AppStateProvider
-            onChainChanged={onChainChanged}
-            defaultChain={defaultChain}
-            restrictedInfo={props.restrictedInfo}
-            onRouteChange={props.onRouteChange}
-            widgetConfigs={widgetConfigs}
-          >
-            <UILocaleProvider locale={uiLocale}>
-              <TooltipProvider delayDuration={300}>
-                <ModalProvider>{props.children}</ModalProvider>
-              </TooltipProvider>
-            </UILocaleProvider>
-          </AppStateProvider>
+          <OrderlyPluginProvider plugins={plugins ?? []}>
+            <ExecutionReportListener />
+            <AppStateProvider
+              onChainChanged={onChainChanged}
+              defaultChain={defaultChain}
+              restrictedInfo={props.restrictedInfo}
+              onRouteChange={props.onRouteChange}
+              widgetConfigs={widgetConfigs}
+            >
+              <UILocaleProvider locale={uiLocale}>
+                <TooltipProvider delayDuration={300}>
+                  <ModalProvider>{props.children}</ModalProvider>
+                </TooltipProvider>
+              </UILocaleProvider>
+            </AppStateProvider>
+          </OrderlyPluginProvider>
           <Toaster />
         </OrderlyConfigProvider>
       </AppThemeProvider>

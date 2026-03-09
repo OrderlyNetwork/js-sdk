@@ -1,4 +1,5 @@
 import { FC, useMemo } from "react";
+import { injectable } from "@orderly.network/ui";
 import { OrderBookCellType } from "../../base/orderBook/types";
 import { DesktopListBox } from "./listBox.desktop";
 
@@ -29,3 +30,8 @@ export const DesktopBids: FC<Props> = (props) => {
     />
   );
 };
+
+export const InjectableDesktopBids = injectable<Props>(
+  DesktopBids,
+  "OrderBook.Desktop.Bids",
+);
