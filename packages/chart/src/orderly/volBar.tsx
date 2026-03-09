@@ -67,7 +67,7 @@ const CustomizedCross = (props: any) => {
       top={props.top}
       height={height}
       width={1}
-      stroke={"rgba(255,255,255,0.16)"}
+      stroke={"rgba(var(--oui-color-base-foreground)/0.16)"}
       strokeDasharray={"3 2"}
       fill={"none"}
     />
@@ -135,12 +135,12 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
           />
           <CartesianGrid
             vertical={false}
-            stroke="#FFFFFF"
+            stroke="rgb(var(--oui-color-line))"
             strokeOpacity={0.08}
             repeatCount={6}
           />
           {/* @ts-ignore */}
-          <ReferenceLine y={0} stroke="#000" />
+          <ReferenceLine y={0} stroke="rgb(var(--oui-color-base-10))" />
           {/* @ts-ignore */}
           <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
             {props.data.map((entry, index) => {
@@ -156,7 +156,10 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
           </Bar>
           {/* @ts-ignore */}
           <YAxis
-            tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+            tick={{
+              fontSize: 10,
+              fill: "rgba(var(--oui-color-base-foreground)/0.54)",
+            }}
             tickLine={false}
             axisLine={false}
             dataKey={"volume"}
@@ -175,8 +178,11 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
             // tick={renderQuarterTick}
             height={1}
             // scale="time"
-            tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-            stroke="rgb(229, 231, 235)"
+            tick={{
+              fontSize: 10,
+              fill: "rgba(var(--oui-color-base-foreground)/0.54)",
+            }}
+            stroke="rgb(var(--oui-color-base-2))"
             strokeOpacity={0.2}
           />
         </BarChart>

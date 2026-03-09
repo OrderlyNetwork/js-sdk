@@ -88,7 +88,13 @@ export const EffectiveFeeUI: React.FC<{ taker: string; maker: string }> = (
   const { taker, maker } = props;
 
   const originalTrailingFees = (
-    <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
+    <Flex
+      itemAlign="center"
+      justify="between"
+      width={"100%"}
+      gap={1}
+      className="oui-orderEntry-effectiveFees"
+    >
       <Flex width={"100%"} itemAlign="center" justify={"between"}>
         <Text className="oui-truncate" size="2xs">
           {t("common.fees")}

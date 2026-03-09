@@ -29,7 +29,7 @@ export function AdvancedTPSLResult(props: {
         <Flex
           direction={"column"}
           itemAlign={"start"}
-          className="oui-w-full"
+          className="oui-advancedTPSLResult-tp oui-w-full"
           gap={4}
         >
           <Flex
@@ -110,7 +110,7 @@ export function AdvancedTPSLResult(props: {
         <Flex
           direction={"column"}
           itemAlign={"start"}
-          className="oui-w-full"
+          className="oui-advancedTPSLResult-sl oui-w-full"
           gap={4}
         >
           <Flex
@@ -189,21 +189,25 @@ export function AdvancedTPSLResult(props: {
     <Flex
       direction={"column"}
       itemAlign={"start"}
-      className="oui-w-full oui-text-2xs"
+      className="oui-orderEntry-advancedTpslResult oui-w-full oui-text-2xs"
       gap={4}
     >
-      <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
+      <Flex
+        justify={"between"}
+        itemAlign={"start"}
+        className="oui-advancedTpslResult-header oui-w-full"
+      >
         <Text>{t("common.tpsl")}</Text>
-        <Flex gap={2}>
+        <Flex gap={2} className="oui-advancedTpslResult-actions">
           <DeleteIcon
             size={12}
-            className="oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast"
+            className="oui-delete-btn oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast"
             opacity={1}
             onClick={onDelete}
           />
           <EditIcon
             size={12}
-            className="oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast"
+            className="oui-edit-btn oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast"
             onClick={onEdit}
           />
         </Flex>

@@ -19,9 +19,5 @@ export const WalletConnectorProvider: FC<WalletConnectorProviderProps> = (
   );
 
   // use wallet-connector(web3 onboard)
-  // return (
-  //   <WalletConnector>
-  //     {props.children}
-  //   </WalletConnector>
-  // );
+  // return <WalletConnector>{props.children}</WalletConnector>;
 };

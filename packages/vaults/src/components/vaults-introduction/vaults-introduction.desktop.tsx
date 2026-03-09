@@ -13,8 +13,8 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
   return (
     <div
       className={cn(
-        "oui-flex oui-items-center  ",
-        "oui-bg-gradient-to-b oui-from-[#26292E] oui-to-[#1B1D22]",
+        "oui-flex oui-items-center",
+        "oui-bg-gradient-to-b oui-from-[rgb(var(--oui-gradient-neutral-start))] oui-to-[rgb(var(--oui-gradient-neutral-end))]",
         isMobile
           ? "oui-gap-3 oui-rounded-xl oui-p-3"
           : "oui-gap-6 oui-rounded-2xl oui-p-6",
@@ -28,10 +28,8 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
       />
       <Divider
         direction="vertical"
-        className={cn(
-          "oui-bg-white/[0.12]",
-          isMobile ? "oui-h-[44px]" : "oui-h-[64px]",
-        )}
+        intensity={12}
+        className={isMobile ? "oui-h-[44px]" : "oui-h-[64px]"}
       />
       <VaultsIntroductionItem
         title={t("common.vaults")}
@@ -40,10 +38,8 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
       />
       <Divider
         direction="vertical"
-        className={cn(
-          "oui-bg-white/[0.12]",
-          isMobile ? "oui-h-[44px]" : "oui-h-[64px]",
-        )}
+        intensity={12}
+        className={isMobile ? "oui-h-[44px]" : "oui-h-[64px]"}
       />
       <VaultsIntroductionItem
         title={t("vaults.introduction.depositors")}

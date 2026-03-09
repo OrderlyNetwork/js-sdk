@@ -7,6 +7,7 @@ const radioVariants = tv({
   slots: {
     group: "oui-grid oui-gap-2",
     item: [
+      "oui-radio-item",
       "aspect-square",
       "h-4",
       "w-4",

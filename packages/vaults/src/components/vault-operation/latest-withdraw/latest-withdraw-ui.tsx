@@ -21,7 +21,7 @@ export const LatestWithdrawUI: FC<LatestWithdrawUIProps> = (props) => {
       <div className="oui-text-xs oui-font-normal oui-text-base-contrast-54">
         {t("vaults.withdraw.latestWithdraw")}
       </div>
-      <div className="oui-h-[44px] oui-rounded-lg oui-border oui-border-white/[0.12] oui-p-3">
+      <div className="oui-h-[44px] oui-rounded-lg oui-border oui-border-line-12 oui-p-3">
         <div className="oui-flex oui-items-center">
           <div
             className={cn(

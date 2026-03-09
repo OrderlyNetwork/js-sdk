@@ -82,8 +82,8 @@ export const TraderMobileIcon: FC = () => {
           y2="23.3335"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#181C23" />
-          <stop offset="1" stopColor="#333948" />
+          <stop stopColor="rgb(var(--oui-color-base-8))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-4))" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1609_10673"
@@ -93,8 +93,8 @@ export const TraderMobileIcon: FC = () => {
           y2="29.3335"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#4A5369" />
-          <stop offset="1" stopColor="#1B2028" />
+          <stop stopColor="rgb(var(--oui-color-base-2))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1609_10673"
@@ -104,8 +104,8 @@ export const TraderMobileIcon: FC = () => {
           y2="19.3783"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#015B50" />
-          <stop offset="1" stopColor="#01B49E" />
+          <stop stopColor="rgb(var(--oui-color-success-darken))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-success))" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_1609_10673"
@@ -115,8 +115,8 @@ export const TraderMobileIcon: FC = () => {
           y2="29.3334"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#01B49E" />
-          <stop offset="1" stopColor="#01B49E" />
+          <stop stopColor="rgb(var(--oui-color-success))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-success))" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_1609_10673"
@@ -126,8 +126,8 @@ export const TraderMobileIcon: FC = () => {
           y2="22.0001"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#181C23" />
-          <stop offset="1" stopColor="#333948" />
+          <stop stopColor="rgb(var(--oui-color-base-8))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-4))" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_1609_10673"
@@ -137,8 +137,8 @@ export const TraderMobileIcon: FC = () => {
           y2="29.3334"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#4A5369" />
-          <stop offset="1" stopColor="#1B2028" />
+          <stop stopColor="rgb(var(--oui-color-base-2))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_1609_10673"
@@ -148,8 +148,8 @@ export const TraderMobileIcon: FC = () => {
           y2="25.3335"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#181C23" />
-          <stop offset="1" stopColor="#333948" />
+          <stop stopColor="rgb(var(--oui-color-base-8))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-4))" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_1609_10673"
@@ -159,8 +159,8 @@ export const TraderMobileIcon: FC = () => {
           y2="29.3335"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#4A5369" />
-          <stop offset="1" stopColor="#1B2028" />
+          <stop stopColor="rgb(var(--oui-color-base-2))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint8_linear_1609_10673"
@@ -170,8 +170,8 @@ export const TraderMobileIcon: FC = () => {
           y2="-4.99792"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#01B49E" stopOpacity="0.36" />
-          <stop offset="1" stopColor="#01B49E" />
+          <stop stopColor="rgb(var(--oui-color-success))" stopOpacity="0.36" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-success))" />
         </linearGradient>
       </defs>
     </svg>

@@ -6,7 +6,6 @@ export type SearchParams = {
   brokerId?: string;
   brokerName?: string;
   env?: string;
-  theme?: string;
   usePrivy?: boolean;
   asyncLoadLocale?: boolean;
 };
@@ -16,7 +15,6 @@ export function useEnvFormUrl() {
 
   return useMemo(() => {
     const env = searchParams.get("env") || undefined;
-    const theme = searchParams.get("theme") || undefined;
     const networkId = searchParams.get("networkId") || undefined;
     const brokerId = searchParams.get("brokerId") || undefined;
     const brokerName = searchParams.get("brokerName") || undefined;
@@ -28,7 +26,6 @@ export function useEnvFormUrl() {
       networkId,
       brokerId,
       brokerName,
-      theme,
       // default true
       usePrivy: usePrivy !== "false",
       // default false

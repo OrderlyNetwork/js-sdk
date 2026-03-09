@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import {
+  MarketsType,
   useFundingRates,
+  useMarkets,
   useMarketsStream,
   useQuery,
 } from "@orderly.network/hooks";
@@ -19,11 +21,12 @@ export type FundingComparisonReturn = ReturnType<
 >;
 
 export const useFundingComparisonScript = () => {
-  const { pagination } = usePagination({ pageSize: 10 });
+  const { pagination } = usePagination({ pageSize: 100 });
   const { onSort, getSortedList } = useSort();
   const { searchValue } = useMarketsContext();
   const { exchanges, brokerName } = useEXchanges();
   const fundingRates = useFundingRates();
+  const [markets] = useMarkets(MarketsType.ALL);
 
   const { data, isLoading } = useQuery<
     Array<{ symbol: string; exchanges: Array<{ name: string; last: number }> }>
@@ -36,8 +39,10 @@ export const useFundingComparisonScript = () => {
     }
     return data.map((row) => {
       const target = futures?.find((item) => item.symbol === row.symbol);
+      const marketMeta = markets?.find((item) => item.symbol === row.symbol);
       const result: Record<PropertyKey, any> = {
         symbol: row.symbol,
+        leverage: marketMeta?.leverage,
         openInterest: target
           ? getOpenInterest(
               target?.open_interest as number,
@@ -74,7 +79,7 @@ export const useFundingComparisonScript = () => {
       }
       return result;
     });
-  }, [data, futures, fundingRates, exchanges, brokerName]);
+  }, [data, futures, markets, fundingRates, exchanges, brokerName]);
 
   const filteredData = useMemo(() => {
     return searchBySymbol(processedData, searchValue, "base-type");

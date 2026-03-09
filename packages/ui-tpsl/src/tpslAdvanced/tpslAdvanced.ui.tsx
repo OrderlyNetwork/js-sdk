@@ -211,8 +211,8 @@ export const TPSLAdvancedUI = (props: Props) => {
                 gap={2}
                 className="oui-mt-3 oui-w-full"
               >
-                <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-[#D25f00]" />
-                <Text className="oui-text-2xs oui-text-[#D25f00]">
+                <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-warning-darken" />
+                <Text className="oui-text-2xs oui-text-warning-darken">
                   {t("tpsl.positionType.full.tips.market")}
                 </Text>
               </Flex>

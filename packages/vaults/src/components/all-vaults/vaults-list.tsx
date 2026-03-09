@@ -190,26 +190,26 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
     if (status === "live") {
       return {
         text: t("vaults.card.status.active"),
-        color: "#00C076",
-        bgColor: "rgba(0, 192, 118, 0.15)",
+        color: "rgb(var(--oui-color-success))",
+        bgColor: "rgba(var(--oui-color-success) / 0.15)",
       };
     } else if (status === "pre_launch") {
       return {
         text: t("vaults.card.launchingSoon"),
-        color: "#E88800",
-        bgColor: "rgba(232, 136, 0, 0.15)",
+        color: "rgb(var(--oui-color-warning))",
+        bgColor: "rgba(var(--oui-color-warning) / 0.15)",
       };
     } else if (status === "closing") {
       return {
         text: t("vaults.card.status.closing"),
-        color: "#FF6B6B",
-        bgColor: "rgba(255, 107, 107, 0.15)",
+        color: "rgb(var(--oui-color-danger))",
+        bgColor: "rgba(var(--oui-color-danger) / 0.15)",
       };
     } else if (status === "closed") {
       return {
         text: t("vaults.card.status.closed"),
-        color: "#999999",
-        bgColor: "rgba(153, 153, 153, 0.15)",
+        color: "rgb(var(--oui-color-base-foreground) / 0.54)",
+        bgColor: "rgba(var(--oui-color-base-foreground) / 0.15)",
       };
     }
     return null;
@@ -315,12 +315,11 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
             )}
             <button
               onClick={openVaultWebsite}
-              className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-medium"
-              style={{ color: "#608CFF" }}
+              className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-medium oui-text-primary"
             >
               <span>{t("vaults.card.viewMore")}</span>
               <ArrowRightUpSquareFillIcon
-                style={{ color: "#608CFF" }}
+                className="oui-fill-primary"
                 width={16}
                 height={16}
                 viewBox="0 0 18 18"

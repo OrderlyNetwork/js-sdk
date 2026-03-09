@@ -61,8 +61,8 @@ export const BuySellRatioBar: FC<BuySellRatioBarProps> = (props) => {
           position: "relative",
           borderRadius: "2px",
           overflow: "hidden",
-          backgroundColor: "rgb(var(--oui-line-4))",
         }}
+        className="oui-bg-line-4"
       >
         <div
           className="oui-bg-trade-profit oui-mr-[2px] oui-rounded-sm"

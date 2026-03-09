@@ -21,7 +21,7 @@ export interface TradingviewWidgetPropsInterface {
   colorConfig?: ColorConfigInterface;
   libraryPath?: string;
   fullscreen?: boolean;
-  theme?: string;
+  theme?: "dark" | "light";
   loadingScreen?: LoadingScreenOptions;
   /**
    * The locale of the tradingview.

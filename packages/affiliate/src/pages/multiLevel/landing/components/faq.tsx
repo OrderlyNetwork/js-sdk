@@ -73,12 +73,17 @@ export const Faq = () => {
   }, [faqItemsData, expandedItems]);
 
   return (
-    <Box>
+    <Box className="oui-affiliate-faq">
       {/* Title */}
       <Text className="oui-text-[32px]">{t("affiliate.faq.title")}</Text>
 
       {/* FAQ Items */}
-      <Flex direction="column" itemAlign="stretch" gap={0}>
+      <Flex
+        direction="column"
+        itemAlign="stretch"
+        gap={0}
+        className="oui-faq-list"
+      >
         {faqItems.map((item, index) => (
           <Fragment key={item.id}>
             <Collapsible

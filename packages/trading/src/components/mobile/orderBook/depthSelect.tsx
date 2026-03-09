@@ -15,7 +15,10 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
     }));
   }, [props.depth]);
   return (
-    <Box id="oui-order-book-depth" className="oui-w-full oui-pt-2">
+    <Box
+      id="oui-order-book-depth"
+      className="oui-orderBook-depth oui-w-full oui-pt-2"
+    >
       {/* <Select size={"small"} value={"0.001"} /> */}
       <Picker
         options={options}

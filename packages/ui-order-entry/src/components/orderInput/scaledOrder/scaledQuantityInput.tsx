@@ -45,7 +45,7 @@ export const ScaledQuantityInput = memo((props: ScaledQuantityInputProps) => {
         suffix={suffix}
         id="order_quantity_input"
         name="order_quantity_input"
-        className="!oui-rounded-r"
+        className="oui-orderEntry-scaledOrder-quantityInput !oui-rounded-r"
         value={props.order_quantity}
         error={getErrorMsg(
           "order_quantity",
@@ -67,7 +67,7 @@ export const ScaledQuantityInput = memo((props: ScaledQuantityInputProps) => {
       suffix={suffix}
       id="order_total_input"
       name="order_total_input"
-      className="!oui-rounded-r"
+      className="oui-orderEntry-scaledOrder-totalInput !oui-rounded-r"
       value={props.total}
       error={getErrorMsg("order_quantity", `${errors?.total?.value} ${quote}`)}
       onChange={(val) => {

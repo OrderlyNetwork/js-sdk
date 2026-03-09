@@ -5,7 +5,31 @@ import walletConnectModule from "@web3-onboard/walletconnect";
 
 let onboardInstance: OnboardAPI | null = null;
 
-export async function initOnBoard() {
+type OnboardThemePreset = "dark" | "light" | Record<string, string>;
+
+const ONBOARD_THEME_PRESETS: Record<string, OnboardThemePreset> = {
+  light: "light",
+  dark: "dark",
+  orderly: {
+    "--w3o-background-color": "#1b112c",
+    "--w3o-foreground-color": "#28183e",
+    "--w3o-text-color": "#ffffff",
+    "--w3o-border-color": "#3a2b50",
+    "--w3o-action-color": "#b084e9",
+    "--w3o-border-radius": "16px",
+    "--w3o-font-family": "Atyp Text, sans-serif",
+  },
+};
+
+export function themeIdToOnboardPreset(themeId: string): OnboardThemePreset {
+  const id = themeId.toLowerCase();
+  if (id === "light" || id === "lightprimary")
+    return ONBOARD_THEME_PRESETS.light;
+  if (id === "dark") return ONBOARD_THEME_PRESETS.dark;
+  return ONBOARD_THEME_PRESETS.orderly;
+}
+
+export async function initOnBoard(theme?: OnboardThemePreset) {
   const mainChains = [
     {
       id: `0x${(42161).toString(16)}`,
@@ -160,17 +184,12 @@ export async function initOnBoard() {
       appMetadata: {
         name: "Aden DEX",
         description: "Aden DEX",
-        icon: `${import.meta.env.VITE_BASE_URL || ""}/logo-secondary.svg`,
+        icon:
+          theme === "light"
+            ? `${import.meta.env.BASE_URL}orderly-black.png`
+            : `${import.meta.env.BASE_URL}orderly-white.png`,
       },
-      theme: {
-        "--w3o-background-color": "#1b112c",
-        "--w3o-foreground-color": "#28183e",
-        "--w3o-text-color": "#ffffff",
-        "--w3o-border-color": "#3a2b50",
-        "--w3o-action-color": "#b084e9",
-        "--w3o-border-radius": "16px",
-        "--w3o-font-family": "Atyp Text, sans-serif",
-      },
+      theme: theme ?? ONBOARD_THEME_PRESETS.orderly,
       accountCenter: {
         desktop: {
           enabled: false,

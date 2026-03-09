@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { Flex, Text } from "@orderly.network/ui";
-import { useAppConfig } from "@orderly.network/react-app";
 import { useConfig } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppConfig } from "@orderly.network/react-app";
+import { Flex, Text } from "@orderly.network/ui";
 
 export const BrokerWallet: FC = () => {
   const { t } = useTranslation();
@@ -12,15 +12,15 @@ export const BrokerWallet: FC = () => {
   const icon = useMemo(() => {
     const { secondary } = appIcons || {};
 
-    if (!secondary?.img && secondary?.component) return null;
-
     if (secondary?.img) {
-      return <img src={secondary?.img} className="oui-w-5 oui-h-5" />;
+      return <img src={secondary?.img} className="oui-size-5" />;
     }
 
     if (secondary?.component) {
       return <>{secondary.component}</>;
     }
+
+    return null;
   }, [appIcons]);
 
   return (

@@ -56,6 +56,7 @@ export const Header: FC<Props> = (props) => {
         direction={"column"}
         itemAlign={"start"}
         id="oui-order-book-header-price"
+        className="oui-orderBook-header-price"
       >
         <Text>{t("common.price")}</Text>
         <Text>{`(${quote})`}</Text>

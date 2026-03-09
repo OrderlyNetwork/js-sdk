@@ -343,7 +343,7 @@ export const Dot: React.FC<{
     <button
       onClick={() => onClick?.(index)}
       className={cn(
-        "oui-size-2 oui-rounded-full oui-bg-white/30",
+        "oui-size-2 oui-rounded-full oui-bg-base-contrast-30",
         className,
         active && `active ${activedClassName}`,
       )}

@@ -17,7 +17,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cnBase(
-      "oui-fixed oui-inset-0 oui-z-50 oui-bg-black/80  data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=open]:oui-fade-in-0",
+      "oui-sheet-overlay oui-fixed oui-inset-0 oui-z-50 oui-bg-black/80 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=open]:oui-fade-in-0",
       className,
     )}
     {...props}
@@ -27,7 +27,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = tv({
-  base: "oui-fixed oui-z-50 oui-gap-4 oui-bg-base-8 oui-px-4 oui-shadow-lg oui-transition oui-ease-in-out data-[state=closed]:oui-duration-260 data-[state=open]:oui-duration-300 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
+  base: "oui-sheet-content oui-fixed oui-z-50 oui-gap-4 oui-bg-base-8 oui-px-4 oui-shadow-lg oui-transition oui-ease-in-out data-[state=closed]:oui-duration-260 data-[state=open]:oui-duration-300 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
   variants: {
     side: {
       top: "oui-inset-x-0 oui-top-0 oui-border-b data-[state=closed]:oui-slide-out-to-top data-[state=open]:oui-slide-in-from-top",
@@ -44,7 +44,8 @@ const sheetVariants = tv({
 });
 
 export interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+  extends
+    React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {
   // if true, show close button
   closeable?: boolean;
@@ -84,7 +85,7 @@ const SheetContent = React.forwardRef<
         {closeable && (
           <SheetPrimitive.Close
             className={cnBase(
-              "oui-ring-offset-base-700 focus:oui-ring-ring oui-absolute oui-right-4 oui-top-4 oui-z-10 oui-rounded-sm oui-transition-opacity focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-offset-2 active:oui-outline-none focus:orderly-outline-none disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary",
+              "oui-sheet-close-btn oui-ring-offset-base-700 focus:oui-ring-ring oui-absolute oui-right-4 oui-top-4 oui-z-10 oui-rounded-sm oui-transition-opacity focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-offset-2 active:oui-outline-none focus:orderly-outline-none disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary",
               props?.closeClassName,
             )}
           >

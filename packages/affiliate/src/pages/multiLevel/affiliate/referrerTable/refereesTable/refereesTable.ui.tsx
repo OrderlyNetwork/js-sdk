@@ -118,14 +118,14 @@ const MobileRefereeItem: FC<{
         {item.bind_type !== "legacy" && (
           <Flex gap={2}>
             <Text
-              className="oui-cursor-pointer oui-text-primary-light"
+              className="oui-refereesTable-edit-btn oui-cursor-pointer oui-text-primary-light"
               onClick={() => onEditReferee(ReferralCodeFormType.Edit, item)}
             >
               {t("common.edit")}
             </Text>
             {!item.is_default_rate && (
               <Text
-                className="oui-cursor-pointer oui-text-primary-light"
+                className="oui-refereesTable-reset-btn oui-cursor-pointer oui-text-primary-light"
                 onClick={() => onEditReferee(ReferralCodeFormType.Reset, item)}
               >
                 {t("common.reset")}
@@ -245,7 +245,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
           record.bind_type !== "legacy" ? (
             <>
               <Text
-                className="oui-cursor-pointer oui-text-primary-light"
+                className="oui-refereesTable-edit-btn oui-cursor-pointer oui-text-primary-light"
                 onClick={() =>
                   props.onEditReferee(ReferralCodeFormType.Edit, record)
                 }
@@ -254,7 +254,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
               </Text>
               {!record.is_default_rate && (
                 <Text
-                  className="oui-ml-2 oui-cursor-pointer oui-text-primary-light"
+                  className="oui-refereesTable-reset-btn oui-ml-2 oui-cursor-pointer oui-text-primary-light"
                   onClick={() =>
                     props.onEditReferee(ReferralCodeFormType.Reset, record)
                   }
@@ -271,7 +271,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
   return (
     <>
       {isMobile ? (
-        <div className="oui-flex oui-flex-col oui-px-4">
+        <div className="oui-affiliate-refereesTable oui-flex oui-flex-col oui-px-4">
           <ListView
             dataSource={props.refereesData}
             contentClassName="!oui-space-y-0 oui-pb-3"
@@ -287,7 +287,11 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
           />
         </div>
       ) : (
-        <div className={`oui-px-3 ${showPagination ? "" : "oui-pb-3"}`}>
+        <div
+          className={`oui-affiliate-refereesTable oui-px-3 ${
+            showPagination ? "" : "oui-pb-3"
+          }`}
+        >
           <AuthGuardDataTable
             bordered
             columns={refereeColumns}
@@ -295,8 +299,8 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
             loading={props.isRefereesLoading}
             pagination={showPagination ? props.refereesPagination : undefined}
             onSort={props.onRefereesSort}
-            onRow={() => ({ className: "oui-h-12" })}
-            className="[&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
+            onRow={() => ({ className: "oui-refereesTable-row oui-h-12" })}
+            className="oui-refereesTable-table [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
           />
         </div>
       )}

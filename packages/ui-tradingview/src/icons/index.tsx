@@ -132,8 +132,7 @@ export const HollowCandlesIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
         fillRule="evenodd"
         clipRule="evenodd"
         d="M5.5 14.5V5.5H7.5V14.5H5.5Z"
-        fill="white"
-        fillOpacity="0.12"
+        className="oui-fill-base-contrast-12"
       />
       <path
         id="Union"
@@ -182,8 +181,7 @@ export const AreaIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
         fillRule="evenodd"
         clipRule="evenodd"
         d="M2.7608 17.7562C2.84602 17.899 3.00106 18 3.19016 18H16.362C17.4665 18 18.362 17.1046 18.362 16V3.94663C18.362 3.86618 18.3453 3.79397 18.3162 3.73108L13.495 12.4968C13.0776 13.2557 12.1061 13.5044 11.3754 13.0394L7.19881 10.3816L2.9774 17.558C2.92465 17.6477 2.84826 17.7148 2.7608 17.7562Z"
-        fill="white"
-        fillOpacity="0.12"
+        className="oui-fill-base-contrast-12"
       />
     </g>
   </svg>
@@ -218,8 +216,7 @@ export const UnSelectIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       <path
         id="Vector"
         d="M6.00684 0.999023C3.24544 0.999023 1.00684 3.23752 1.00684 5.99902C1.00684 8.76051 3.24544 10.999 6.00684 10.999C8.76834 10.999 11.0068 8.76051 11.0068 5.99902C11.0068 3.23752 8.76834 0.999023 6.00684 0.999023ZM6.00684 1.99902C8.21584 1.99902 10.0068 3.79002 10.0068 5.99902C10.0068 8.20801 8.21584 9.99901 6.00684 9.99901C3.79769 9.99901 2.00684 8.20801 2.00684 5.99902C2.00684 3.79002 3.79769 1.99902 6.00684 1.99902Z"
-        fill="white"
-        fillOpacity="0.2"
+        className="oui-fill-base-contrast-20"
       />
     </g>
   </svg>

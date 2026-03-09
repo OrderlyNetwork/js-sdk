@@ -8,9 +8,13 @@ import {
   ETHEREUM_MAINNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
 } from "@orderly.network/types";
+import { cn } from "@orderly.network/ui";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
+import { useIsRwaRoute } from "../../orderlyConfig/hooks/useIsRwaRoute";
+import { useSymbolList } from "../../orderlyConfig/hooks/useSymbolList";
 import { notification } from "../../orderlyConfig/notification";
+import { themes } from "../../orderlyConfig/themes";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
@@ -23,43 +27,56 @@ export const OrderlyAppRootProvider: FC<
   const { children, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
+  const symbolList = useSymbolList();
+  const isRwaRoute = useIsRwaRoute();
+
   return (
-    <OrderlyAppProvider
-      configStore={configStore}
-      appIcons={orderlyAppProviderConfig.appIcons}
-      restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
-      enableSwapDeposit
-      onRouteChange={onRouteChange}
-      widgetConfigs={widgetConfigs}
-      notification={notification}
-      dataAdapter={dataAdapter}
-      amplitudeConfig={{
-        amplitudeId: "4463418c103f3a66c6d863357f951e25",
-      }}
-      // chainFilter={{
-      //   mainnet: [
-      //     { id: ARBITRUM_MAINNET_CHAINID },
-      //     { id: ETHEREUM_MAINNET_CHAINID },
-      //   ],
-      //   testnet: [
-      //     { id: ARBITRUM_TESTNET_CHAINID },
-      //     { id: SOLANA_TESTNET_CHAINID },
-      //   ],
-      // }}
-      // orderMetadata={(order) => {
-      //   return {
-      //     order_tag: "test_tag",
-      //     client_order_id: "test_client_id",
-      //   };
-      // }}
-      // orderMetadata={{
-      //   order_tag: "test_tag",
-      //   client_order_id: "test_client_id",
-      // }}
-      // customChains={customChainsAbstarct}
-      // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
-    >
-      {children}
-    </OrderlyAppProvider>
+    <div className={cn(isRwaRoute && "oui-rwa-route")}>
+      <OrderlyAppProvider
+        configStore={configStore}
+        appIcons={orderlyAppProviderConfig.appIcons}
+        restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
+        enableSwapDeposit
+        onRouteChange={onRouteChange}
+        widgetConfigs={widgetConfigs}
+        notification={notification}
+        dataAdapter={{ ...dataAdapter, symbolList }}
+        amplitudeConfig={{
+          amplitudeId: "4463418c103f3a66c6d863357f951e25",
+        }}
+        themes={themes}
+        // chainFilter={(config) => {
+        //   return {
+        //     mainnet: [
+        //       { id: ARBITRUM_MAINNET_CHAINID },
+        //       { id: SOLANA_MAINNET_CHAINID },
+        //     ],
+        //     testnet: [
+        //       { id: ARBITRUM_TESTNET_CHAINID },
+        //       { id: SOLANA_TESTNET_CHAINID },
+        //     ],
+        //   };
+        // }}
+        // orderMetadata={(order) => {
+        //   return {
+        //     order_tag: "test_tag",
+        //     client_order_id: "test_client_id",
+        //   };
+        // }}
+        // orderMetadata={{
+        //   order_tag: "test_tag",
+        //   client_order_id: "test_client_id",
+        // }}
+        // customChains={customChainsAbstarct}
+        // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
+        // overrides={{
+        //   tabs: {
+        //     variant: "text",
+        //   },
+        // }}
+      >
+        {children}
+      </OrderlyAppProvider>
+    </div>
   );
 };

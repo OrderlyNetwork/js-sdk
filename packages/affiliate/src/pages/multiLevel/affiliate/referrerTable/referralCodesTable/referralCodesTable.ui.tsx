@@ -101,7 +101,7 @@ const MobileReferralCodeItem: FC<{
 
       <MobileCell label={t("common.action")}>
         <Text
-          className="oui-cursor-pointer oui-text-primary-light"
+          className="oui-referralCodesTable-copyCode-btn oui-cursor-pointer oui-text-primary-light"
           onClick={(e) => {
             e.stopPropagation();
             copyCode(item.code);
@@ -233,7 +233,7 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
   return (
     <>
       {isMobile ? (
-        <div className="oui-flex oui-flex-col oui-px-4">
+        <div className="oui-affiliate-referralCodesTable oui-flex oui-flex-col oui-px-4">
           <ListView
             dataSource={props.sortedCodes}
             contentClassName="!oui-space-y-0 oui-pb-3"
@@ -246,15 +246,15 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
           />
         </div>
       ) : (
-        <div className="oui-px-3">
+        <div className="oui-affiliate-referralCodesTable oui-px-3">
           <AuthGuardDataTable
             bordered
             columns={columns}
             dataSource={props.sortedCodes}
             loading={props.isLoading}
             onSort={props.onSort}
-            onRow={() => ({ className: "oui-h-12" })}
-            className="oui-pb-3 [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
+            onRow={() => ({ className: "oui-referralCodesTable-row oui-h-12" })}
+            className="oui-referralCodesTable-table oui-pb-3 [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
           />
         </div>
       )}
