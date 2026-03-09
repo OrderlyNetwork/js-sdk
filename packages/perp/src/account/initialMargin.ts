@@ -79,18 +79,19 @@ function IMR(inputs: {
     ordersNotional: orderNotional,
     IMR_factor_power = IMRFactorPower,
   } = inputs;
-  return Math.max(
-    1 / maxLeverage,
-    baseIMR,
-    new Decimal(IMR_Factor)
-      .mul(
-        new Decimal(positionNotional)
-          .add(orderNotional)
-          .abs()
-          .toPower(IMR_factor_power),
-      )
-      .toNumber(),
-  );
+
+  const imr =
+    IMR_Factor === 0
+      ? 0
+      : new Decimal(IMR_Factor)
+          .mul(
+            new Decimal(positionNotional)
+              .add(orderNotional)
+              .abs()
+              .toPower(IMR_factor_power),
+          )
+          .toNumber();
+  return Math.max(1 / maxLeverage, baseIMR, imr);
 }
 
 /**
