@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
 import {
-  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
@@ -17,6 +16,7 @@ import {
   OrderSide,
   OrderType,
   PositionType,
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
 } from "@orderly.network/types";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
@@ -36,6 +36,8 @@ export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
+  /** Active user window for treating estLiqPrice as coming from an actively edited order. */
+  const ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS = 1 * 60 * 1000;
   const { symbol } = inputs;
   const [localOrderType, setLocalOrderType] = useLocalStorage(
     "orderly-order-entry-order-type",
@@ -91,6 +93,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const activatedPriceInputRef = useRef<HTMLInputElement | null>(null);
+  /** Tracks last time the user interacted with core order inputs (used to gate estLiqPrice emission). */
+  const lastUserActiveTimeRef = useRef<number>(Date.now());
 
   const { bboStatus, bboType, setBBOType, onBBOChange, toggleBBO } =
     useBBOState({
@@ -384,11 +388,29 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   }, [tpslSwitch]);
 
-  /** Broadcast estimated liquidation price for TradingView chart liquidation line (avoids parent state / callback loops). */
+  /** Track user activity via core order fields (price, quantity, side) to drive estLiqPrice active window. */
   useEffect(() => {
+    lastUserActiveTimeRef.current = Date.now();
+  }, [
+    formattedOrder.order_price,
+    formattedOrder.order_quantity,
+    formattedOrder.side,
+  ]);
+
+  /**
+   * Broadcast estimated liquidation price for TradingView chart liquidation line (avoids parent state / callback loops).
+   * Includes a user-activity flag so downstream consumers can decide whether to treat this estLiqPrice as active.
+   */
+  useEffect(() => {
+    const lastActive = lastUserActiveTimeRef.current;
+    const now = Date.now();
+    const isUserActive =
+      now - lastActive <= ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS;
+
     ee.emit(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, {
       symbol,
       estLiqPrice: state.estLiqPrice ?? null,
+      isUserActive,
     });
   }, [ee, symbol, state.estLiqPrice]);
 

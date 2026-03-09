@@ -10,18 +10,17 @@ export interface LiquidationLineRenderParams {
   estimatedLiqPrice: number | null;
 }
 
-const FALLBACK_MS = 3000;
-
 /**
  * Maintains a single horizontal liquidation price line on the chart.
- * Shows estimated liq. price when valid; falls back to position liq. price after 3s or when estimated becomes invalid.
- * Color comes from ColorConfig.liqLineColor (e.g. --oui-color-warning-light); no hardcoded colors.
+ * Shows estimated liq. price when valid; otherwise position liq. price. No internal fallback timer
+ * so the line stays in sync with OrderEntry (hook controls when to clear estimated).
  */
 export class LiquidationLineService {
   private instance: IChartingLibraryWidget;
   private broker: ReturnType<typeof useBroker>;
   private line: IOrderLineAdapter | null = null;
-  private fallbackTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Tracks whether the current line source is estimated liq. price (vs position liq. price). */
+  private isUsingEstimatedPrice: boolean = false;
 
   constructor(
     instance: IChartingLibraryWidget,
@@ -36,7 +35,6 @@ export class LiquidationLineService {
    */
   renderLiquidationLine(params: LiquidationLineRenderParams): void {
     const { positionLiqPrice, estimatedLiqPrice } = params;
-    this.clearFallbackTimer();
 
     const hasValidEst =
       estimatedLiqPrice != null && Number.isFinite(estimatedLiqPrice);
@@ -44,12 +42,13 @@ export class LiquidationLineService {
       positionLiqPrice != null && Number.isFinite(positionLiqPrice);
 
     if (hasValidEst) {
+      this.isUsingEstimatedPrice = true;
       this.setLinePrice(estimatedLiqPrice!);
-      this.startFallbackTimer(positionLiqPrice);
       return;
     }
 
     if (hasValidPosition) {
+      this.isUsingEstimatedPrice = false;
       this.setLinePrice(positionLiqPrice!);
       return;
     }
@@ -57,27 +56,9 @@ export class LiquidationLineService {
     this.removeLine();
   }
 
-  /** Clear timer and remove the line (e.g. on destroy). */
+  /** Remove the line (e.g. on destroy). */
   remove(): void {
-    this.clearFallbackTimer();
     this.removeLine();
-  }
-
-  private clearFallbackTimer(): void {
-    if (this.fallbackTimer != null) {
-      clearTimeout(this.fallbackTimer);
-      this.fallbackTimer = null;
-    }
-  }
-
-  private startFallbackTimer(positionLiqPrice: number | null): void {
-    this.clearFallbackTimer();
-    this.fallbackTimer = setTimeout(() => {
-      this.fallbackTimer = null;
-      if (positionLiqPrice != null && Number.isFinite(positionLiqPrice)) {
-        this.setLinePrice(positionLiqPrice);
-      }
-    }, FALLBACK_MS);
   }
 
   private getOrCreateLine(): IOrderLineAdapter | null {
@@ -98,13 +79,15 @@ export class LiquidationLineService {
 
       this.line = orderLine
         .setCancellable(false)
+        .setLineLength(100)
         .setEditable(false)
         .setExtendLeft(true)
-        .setTooltip(i18n.t("orderEntry.estLiqPrice"))
-        .setText(i18n.t("orderEntry.estLiqPrice"))
         .setQuantity("")
         .setLineStyle(1)
-        .setLineColor(lineColor);
+        .setLineColor(lineColor)
+        .setBodyBorderColor(lineColor);
+
+      this.updateLineLabel();
 
       if (colorConfig.chartBG) {
         this.line = this.line
@@ -129,6 +112,7 @@ export class LiquidationLineService {
     const line = this.getOrCreateLine();
     if (line) {
       line.setPrice(price);
+      this.updateLineLabel();
     }
   }
 
@@ -137,5 +121,15 @@ export class LiquidationLineService {
       this.line.remove();
       this.line = null;
     }
+  }
+
+  /** Ensure tooltip/text reflect whether we are showing estimated or position liq. price. */
+  private updateLineLabel(): void {
+    if (!this.line) return;
+    const key = this.isUsingEstimatedPrice
+      ? "orderEntry.estLiqPrice"
+      : "positions.column.liqPrice";
+    const label = i18n.t(key);
+    this.line.setTooltip(label).setText(label);
   }
 }

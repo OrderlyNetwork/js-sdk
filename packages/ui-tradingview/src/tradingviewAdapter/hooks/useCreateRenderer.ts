@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
   useAccount,
   useEventEmitter,
   useLocalStorage,
@@ -8,7 +7,12 @@ import {
   usePositionStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  OrderStatus,
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
+  OrderEntryEstLiqPriceChangePayload,
+} from "@orderly.network/types";
 import { DisplayControlSettingInterface } from "../../type";
 import { Renderer } from "../renderer/renderer";
 import { AlgoType } from "../type";
@@ -93,12 +97,12 @@ export default function useCreateRenderer(
 
   /** Subscribe to Order Entry estimated liq. price for the single liquidation line. */
   useEffect(() => {
-    const handler = (payload: {
-      symbol: string;
-      estLiqPrice: number | null;
-    }) => {
+    const handler = (payload: OrderEntryEstLiqPriceChangePayload) => {
       if (payload.symbol === symbol) {
-        setEstimatedLiqPrice(payload.estLiqPrice);
+        // Trust OrderEntry side to manage active window and timers; we just mirror estLiqPrice.
+        setEstimatedLiqPrice(
+          payload.isUserActive !== false ? payload.estLiqPrice : null,
+        );
       }
     };
     ee.on(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, handler);
@@ -116,9 +120,19 @@ export default function useCreateRenderer(
         ? ((symbolPosition as { est_liq_price?: number | null })
             .est_liq_price ?? null)
         : null;
+
+    const effectiveEstimatedLiqPrice =
+      estimatedLiqPrice != null && Number.isFinite(estimatedLiqPrice)
+        ? estimatedLiqPrice
+        : null;
+
+    // Rendering rule:
+    // - When effectiveEstimatedLiqPrice exists: render estimated liq. price line.
+    // - When no estimated but positionLiqPrice exists: render position liq. price line.
+    // - When neither exists: remove line.
     renderer.renderLiquidationLine({
       positionLiqPrice,
-      estimatedLiqPrice,
+      estimatedLiqPrice: effectiveEstimatedLiqPrice,
     });
   }, [
     renderer,
