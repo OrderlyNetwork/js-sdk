@@ -18,6 +18,9 @@ export const useCssVariables = (theme: "dark" | "light") => {
 
     const base9 = rootStyle.getPropertyValue("--oui-color-base-9").trim();
     const primaryVar = rootStyle.getPropertyValue("--oui-color-primary").trim();
+    const warningLightVar = rootStyle
+      .getPropertyValue("--oui-color-warning-light")
+      .trim();
 
     // const profitColor = rootStyle
     //   .getPropertyValue("--oui-color-trading-profit")
@@ -30,6 +33,8 @@ export const useCssVariables = (theme: "dark" | "light") => {
     setCssVariables({
       chartBG: cssVar2Hex(base9),
       primary: cssVar2Hex(primaryVar),
+      /** For liquidation line; same as Position list Liq. Price (--oui-color-warning-light). */
+      warningLight: warningLightVar ? cssVar2Hex(warningLightVar) : "",
       // upColor: cssVar2Hex(profitColor),
       // downColor: cssVar2Hex(lossColor),
     });

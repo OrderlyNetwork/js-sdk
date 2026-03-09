@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
   useAccount,
+  useEventEmitter,
   useLocalStorage,
   useOrderStream,
   usePositionStream,
@@ -36,6 +38,11 @@ export default function useCreateRenderer(
     status: OrderStatus.FILLED,
     size: 500,
   });
+
+  const ee = useEventEmitter();
+  const [estimatedLiqPrice, setEstimatedLiqPrice] = useState<number | null>(
+    null,
+  );
 
   const createRenderer = useRef(
     (instance: any, host: any, broker: any, container: HTMLDivElement) => {
@@ -77,10 +84,49 @@ export default function useCreateRenderer(
           interest: 0,
           unrealPnlDecimal: 2,
           basePriceDecimal: 4,
+          est_liq_price:
+            (item as { est_liq_price?: number | null }).est_liq_price ?? null,
         };
       });
     renderer?.renderPositions(positionList);
   }, [renderer, positions, symbol, displayControlSetting, state]);
+
+  /** Subscribe to Order Entry estimated liq. price for the single liquidation line. */
+  useEffect(() => {
+    const handler = (payload: {
+      symbol: string;
+      estLiqPrice: number | null;
+    }) => {
+      if (payload.symbol === symbol) {
+        setEstimatedLiqPrice(payload.estLiqPrice);
+      }
+    };
+    ee.on(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, handler);
+    return () => {
+      ee.off(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, handler);
+    };
+  }, [ee, symbol]);
+
+  /** Drive liquidation line from position liq. price + estimated liq. price (from event). */
+  useEffect(() => {
+    if (!renderer || !displayControlSetting?.position) return;
+    const symbolPosition = (positions ?? []).find((p) => p.symbol === symbol);
+    const positionLiqPrice =
+      symbolPosition != null
+        ? ((symbolPosition as { est_liq_price?: number | null })
+            .est_liq_price ?? null)
+        : null;
+    renderer.renderLiquidationLine({
+      positionLiqPrice,
+      estimatedLiqPrice,
+    });
+  }, [
+    renderer,
+    positions,
+    symbol,
+    estimatedLiqPrice,
+    displayControlSetting?.position,
+  ]);
 
   useEffect(() => {
     if (!displayControlSetting || !displayControlSetting.buySell) {

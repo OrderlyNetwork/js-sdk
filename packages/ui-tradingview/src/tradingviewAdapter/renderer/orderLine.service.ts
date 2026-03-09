@@ -23,6 +23,8 @@ import {
   isActivatedQuantityTpsl,
   isPositionTpsl,
   isTpslOrder,
+  isTpOrder,
+  isSlOrder,
   formatPnl,
   textDash,
 } from "./tpsl.util";
@@ -312,14 +314,24 @@ export class OrderLineService {
       return null;
     }
 
-    const color =
+    // Base colors from side; for TP/SL orders override by algo_type (TP = profit/up, SL = loss/down)
+    let color =
       pendingOrder.side === SideType.BUY
         ? colorConfig.upColor
         : colorConfig.downColor;
-    const borderColor =
+    let borderColor =
       pendingOrder.side === SideType.BUY
         ? colorConfig.pnlUpColor
         : colorConfig.pnlDownColor;
+    if (isTpslOrder(pendingOrder)) {
+      if (isTpOrder(pendingOrder)) {
+        color = colorConfig.upColor;
+        borderColor = colorConfig.pnlUpColor;
+      } else if (isSlOrder(pendingOrder)) {
+        color = colorConfig.downColor;
+        borderColor = colorConfig.pnlDownColor;
+      }
+    }
     const price = OrderLineService.getOrderPrice(pendingOrder);
     const lineLength = 100;
     const quantity = this.getOrderQuantity(pendingOrder);
@@ -330,8 +342,8 @@ export class OrderLineService {
       .setCancelButtonIconColor(colorConfig.closeIcon!)
       .setCancelButtonBorderColor(color!)
       .setBodyTextColor(textColor!)
-      .setBodyBorderColor(color!)
-      .setQuantityBorderColor(color!)
+      .setBodyBorderColor(borderColor!)
+      .setQuantityBorderColor(borderColor!)
       .setQuantityTextColor(color!)
       // .setBodyBackgroundColor(color)
       .setLineColor(color!)

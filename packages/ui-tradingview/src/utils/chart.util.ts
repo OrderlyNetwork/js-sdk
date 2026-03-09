@@ -64,10 +64,15 @@ export const getColorConfig = ({
   //   cssVariables.downColor ||
   //   defaultCconfig.downColor;
 
+  /** Liquidation line uses same color as Position list Liq. Price (--oui-color-warning-light). */
+  const liqLineColor =
+    customerColorConfig?.liqLineColor ?? cssVariables.warningLight;
+
   return {
     ...defaultCconfig,
     ...customerColorConfig,
     chartBG,
+    liqLineColor,
     // upColor,
     // downColor,
   };

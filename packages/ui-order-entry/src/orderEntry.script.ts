@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import {
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
@@ -382,6 +383,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       setOrderValue("reduce_only", false);
     }
   }, [tpslSwitch]);
+
+  /** Broadcast estimated liquidation price for TradingView chart liquidation line (avoids parent state / callback loops). */
+  useEffect(() => {
+    ee.emit(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, {
+      symbol,
+      estLiqPrice: state.estLiqPrice ?? null,
+    });
+  }, [ee, symbol, state.estLiqPrice]);
 
   return {
     ...state,

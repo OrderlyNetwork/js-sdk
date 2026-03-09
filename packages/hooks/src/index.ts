@@ -24,7 +24,10 @@ export { useAccountInstance } from "./useAccountInstance";
 
 export { usePreLoadData } from "./usePreloadData";
 
-export { useEventEmitter } from "./useEventEmitter";
+export {
+  useEventEmitter,
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
+} from "./useEventEmitter";
 
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
