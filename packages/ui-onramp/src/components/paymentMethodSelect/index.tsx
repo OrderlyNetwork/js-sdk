@@ -76,7 +76,7 @@ export const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = (
                   alt={value.name}
                   width={16}
                   height={16}
-                  className="oui-rounded-lg oui-bg-base-contrast oui-object-contain oui-p-px"
+                  className="oui-rounded-lg oui-bg-secondary oui-object-contain oui-p-px"
                 />
               )}
               <Text size="sm" intensity={80}>
@@ -116,7 +116,7 @@ export const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = (
               alt={method.name}
               width={14}
               height={14}
-              className="oui-rounded-lg oui-bg-base-contrast oui-object-contain oui-p-px"
+              className="oui-rounded-lg oui-bg-secondary oui-object-contain oui-p-px"
             />
           )}
           <Text size="2xs" intensity={isActive ? 80 : 54}>

@@ -5,5 +5,5 @@
     "skipLibCheck": true,
     "noImplicitAny": false
   },
-  "include": ["**/*.ts", "**/*.tsx", "packages/ui-onramp/cloudflare-worker/index.js"],
+  "include": ["**/*.ts", "**/*.tsx"],
 }

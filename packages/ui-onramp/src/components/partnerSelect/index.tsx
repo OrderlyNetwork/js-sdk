@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, RefObject, useRef, useState } from "react";
 import {
   Box,
   CaretDownIcon,
@@ -24,20 +24,31 @@ type PartnerSelectProps = {
   partners: OnrampPartner[];
   value: OnrampPartner;
   onValueChange: (partner: OnrampPartner) => void;
+  containerRef?: RefObject<HTMLElement | null>;
 };
 
 export const PartnerSelect: FC<PartnerSelectProps> = ({
   partners,
   value,
   onValueChange,
+  containerRef,
 }) => {
   const [open, setOpen] = useState(false);
   const selectable = partners.length > 1;
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  const getAlignOffset = () => {
+    if (!containerRef?.current || !triggerRef.current) return 0;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    return triggerRect.right - containerRect.right;
+  };
 
   return (
     <DropdownMenuRoot open={selectable ? open : false} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <Flex
+          ref={triggerRef}
           itemAlign="center"
           gap={1}
           className="oui-cursor-pointer oui-select-none"
@@ -66,12 +77,18 @@ export const PartnerSelect: FC<PartnerSelectProps> = ({
         <DropdownMenuContent
           onCloseAutoFocus={(e: Event) => e.preventDefault()}
           align="end"
-          sideOffset={4}
+          sideOffset={10}
+          alignOffset={getAlignOffset()}
           className={cn(
             "oui-z-50 oui-bg-base-8 oui-p-1",
-            "oui-w-[260px] oui-select-none oui-rounded-[6px]",
+            "oui-min-w-[270px] oui-select-none oui-rounded-[6px]",
             "oui-border oui-border-line-6",
           )}
+          style={
+            containerRef?.current
+              ? { width: containerRef.current.offsetWidth }
+              : undefined
+          }
         >
           <ScrollArea>
             <div className="oui-flex oui-max-h-[220px] oui-flex-col oui-gap-1">

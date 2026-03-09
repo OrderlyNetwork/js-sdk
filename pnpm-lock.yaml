@@ -1904,6 +1904,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@orderly.network/plugin-core':
+        specifier: workspace:*
+        version: link:../plugin-core
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types
@@ -2401,6 +2404,9 @@ importers:
       '@orderly.network/perp':
         specifier: workspace:*
         version: link:../perp
+      '@orderly.network/plugin-core':
+        specifier: workspace:*
+        version: link:../plugin-core
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
@@ -2416,9 +2422,6 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-onramp':
-        specifier: workspace:*
-        version: link:../ui-onramp
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils

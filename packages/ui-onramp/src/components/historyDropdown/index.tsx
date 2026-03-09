@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, RefObject } from "react";
 import {
   CaretDownIcon,
   DropdownMenuContent,
@@ -16,11 +16,13 @@ import { WebhookEvent } from "../../hooks/useOnrampTransactionStatus";
 export type HistoryDropdownProps = {
   transactions: WebhookEvent[];
   pendingTransactions: WebhookEvent[];
+  containerRef?: RefObject<HTMLElement | null>;
 };
 
 export const HistoryDropdown: FC<HistoryDropdownProps> = ({
   transactions,
   pendingTransactions,
+  containerRef,
 }) => {
   if (transactions.length === 0) {
     return (
@@ -34,16 +36,16 @@ export const HistoryDropdown: FC<HistoryDropdownProps> = ({
 
   return (
     <DropdownMenuRoot>
-      <DropdownMenuTrigger asChild>
-        <Flex
-          justify="between"
-          itemAlign="center"
-          className="oui-group oui-w-full oui-cursor-pointer"
-        >
-          <Text size="sm" intensity={98}>
-            You spend
-          </Text>
-          <Flex gap={1} itemAlign="center">
+      <Flex justify="between" itemAlign="center" className="oui-w-full">
+        <Text size="sm" intensity={98}>
+          You spend
+        </Text>
+        <DropdownMenuTrigger asChild>
+          <Flex
+            gap={1}
+            itemAlign="center"
+            className="oui-group oui-cursor-pointer"
+          >
             {pendingTransactions.length > 0 ? (
               <Flex itemAlign="center" className="oui-gap-1.5">
                 <Spinner size="sm" className="oui-text-primaryLight" />
@@ -63,13 +65,17 @@ export const HistoryDropdown: FC<HistoryDropdownProps> = ({
               opacity={1}
             />
           </Flex>
-        </Flex>
-      </DropdownMenuTrigger>
+        </DropdownMenuTrigger>
+      </Flex>
       <DropdownMenuPortal>
         <DropdownMenuContent
           align="end"
-          className="oui-text-semibold oui-custom-scrollbar oui-z-50 oui-max-h-[105px] oui-overflow-y-auto oui-rounded-lg oui-border oui-border-line-12 oui-bg-base-7 oui-p-1 oui-shadow-lg"
-          style={{ width: "var(--radix-dropdown-menu-trigger-width)" }}
+          className="oui-text-semibold oui-custom-scrollbar oui-z-50 oui-max-h-[105px] oui-overflow-y-auto oui-rounded-lg oui-border oui-border-line-12 oui-bg-base-8 oui-p-1 oui-shadow-lg"
+          style={
+            containerRef?.current
+              ? { width: containerRef.current.offsetWidth }
+              : undefined
+          }
         >
           <Flex direction="column" gap={1}>
             {transactions.map((tx) => (
@@ -77,15 +83,19 @@ export const HistoryDropdown: FC<HistoryDropdownProps> = ({
                 key={tx.transactionId}
                 className="oui-flex oui-w-full oui-cursor-default oui-items-start oui-justify-between oui-rounded-md oui-px-2 oui-py-0.5 oui-outline-none focus:oui-bg-base-6 data-[disabled]:oui-pointer-events-none data-[disabled]:oui-opacity-50"
               >
-                <div className="oui-grid oui-w-full oui-grid-cols-[1.5fr_1fr_1fr_minmax(auto,max-content)] oui-items-center oui-gap-1">
+                <div className="oui-grid oui-w-full oui-grid-cols-[0.5fr_1fr_1fr_1.2fr_minmax(auto,max-content)] oui-items-center oui-gap-1">
+                  <Text
+                    size="xs"
+                    weight="semibold"
+                    className="oui-truncate oui-whitespace-nowrap oui-uppercase oui-text-base-contrast-80"
+                  >
+                    {tx.sourceCurrency}
+                  </Text>
                   <Text
                     size="xs"
                     weight="semibold"
                     className="oui-truncate oui-whitespace-nowrap"
                   >
-                    <span className="oui-mr-2 oui-uppercase oui-text-base-contrast-80">
-                      {tx.sourceCurrency}
-                    </span>
                     {tx.inAmount}
                   </Text>
                   <Text

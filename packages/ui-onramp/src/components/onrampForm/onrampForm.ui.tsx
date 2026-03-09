@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 import {
   Box,
   Flex,
@@ -57,10 +57,15 @@ export const OnrampFormUI: FC<OnrampFormProps> = (props) => {
     pendingTransactions,
   } = props;
   console.log("onramperIframeUrl", onramperIframeUrl);
+  const formRef = useRef<HTMLDivElement>(null);
 
   return (
     <Box id="oui-onramp-form" className={textVariants({ weight: "semibold" })}>
-      <Flex direction="column" className="oui-w-full oui-tracking-[0.03em]">
+      <Flex
+        ref={formRef}
+        direction="column"
+        className="oui-w-full oui-tracking-[0.03em]"
+      >
         {/* ════════════════ YOU SPEND ════════════════ */}
         <Flex
           direction="column"
@@ -71,6 +76,7 @@ export const OnrampFormUI: FC<OnrampFormProps> = (props) => {
           <HistoryDropdown
             transactions={transactions}
             pendingTransactions={pendingTransactions}
+            containerRef={formRef}
           />
 
           <Flex direction="column" className="oui-w-full" gap={2}>
@@ -204,6 +210,7 @@ export const OnrampFormUI: FC<OnrampFormProps> = (props) => {
                   partners={partners}
                   value={selectedPartner}
                   onValueChange={onPartnerChange}
+                  containerRef={formRef}
                 />
               ) : isQuoteLoading ? (
                 <Spinner size="sm" />

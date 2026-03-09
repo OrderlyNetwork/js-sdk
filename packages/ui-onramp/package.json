@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",

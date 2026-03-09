@@ -1,5 +1,6 @@
-import { FC, useState } from "react";
+import { FC, isValidElement, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { injectable } from "@orderly.network/plugin-core";
 import {
   ArrowDownSquareFillIcon,
   ArrowUpSquareFillIcon,
@@ -8,33 +9,35 @@ import {
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { OnrampForm, BuyCryptoIcon } from "@orderly.network/ui-onramp";
 import { DepositSlot } from "./depositSlot";
 import { WithdrawSlot } from "./withdrawSlot";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";
 
-export type DepositAndWithdrawProps = {
-  activeTab?: "deposit" | "withdraw" | "onramp";
-  close?: () => void;
-};
+export interface DepositTabExtension {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  component: React.ComponentType<{ close?: () => void }>;
+  order?: number;
+}
 
-const BuyCryptoTabIcon = (props: React.HTMLAttributes<HTMLDivElement>) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { className: _, ...rest } = props;
-  return (
-    <div className="oui-flex oui-items-center oui-justify-center" {...rest}>
-      <BuyCryptoIcon width={11} height={11} />
-    </div>
-  );
+export type DepositAndWithdrawProps = {
+  activeTab?: string;
+  close?: () => void;
+  extraTabs?: DepositTabExtension[];
 };
 
 export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
+  const { extraTabs = [] } = props;
   const [activeTab, setActiveTab] = useState<string>(
     props.activeTab || "deposit",
   );
   const { t } = useTranslation();
+  const sortedExtra = [...extraTabs].sort(
+    (a, b) => (a.order ?? 100) - (b.order ?? 100),
+  );
 
   return (
     <Tabs
@@ -63,18 +66,37 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         <WithdrawSlot close={props.close} />
         {/* <WithdrawFormWidget close={props.close} /> */}
       </TabPanel>
-      <TabPanel title="Buy Crypto" icon={<BuyCryptoTabIcon />} value="onramp">
-        <OnrampForm close={props.close} />
-      </TabPanel>
+      {sortedExtra.map((tab) => (
+        <TabPanel
+          key={tab.id}
+          title={tab.title}
+          icon={isValidElement(tab.icon) ? tab.icon : undefined}
+          value={tab.id}
+        >
+          <tab.component close={props.close} />
+        </TabPanel>
+      ))}
     </Tabs>
   );
 };
 
-registerSimpleDialog(DepositAndWithdrawWithDialogId, DepositAndWithdraw, {
-  size: "md",
-  classNames: {
-    content: "oui-border oui-border-line-6",
-  },
-});
+export const InjectableDepositAndWithdraw = injectable(
+  DepositAndWithdraw,
+  "Transfer.DepositAndWithdraw",
+);
 
-registerSimpleSheet(DepositAndWithdrawWithSheetId, DepositAndWithdraw);
+registerSimpleDialog(
+  DepositAndWithdrawWithDialogId,
+  InjectableDepositAndWithdraw,
+  {
+    size: "md",
+    classNames: {
+      content: "oui-border oui-border-line-6",
+    },
+  },
+);
+
+registerSimpleSheet(
+  DepositAndWithdrawWithSheetId,
+  InjectableDepositAndWithdraw,
+);
