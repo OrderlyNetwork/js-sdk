@@ -164,6 +164,7 @@ const ui: Package[] = [
     package: "@orderly.network/ui-onramp",
     path: "../../packages/ui-onramp/src",
     watch: true,
+    includeCSS: true,
   },
 ];
 
