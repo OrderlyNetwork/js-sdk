@@ -1,10 +1,9 @@
 import React from "react";
-import "@orderly.network/trading";
-import type { DesktopLayoutProps } from "@orderly.network/trading";
 import type { OrderlySDK } from "@orderly.network/ui";
 import { createInterceptor } from "@orderly.network/ui";
 import { SplitPresetProvider } from "./SplitPresetContext";
 import { SplitLayoutDesktopInjector } from "./components/SplitLayoutDesktopInjector";
+import { SymbolBarLayoutSwitcher } from "./components/SymbolBarLayoutSwitcher";
 import type { SplitLayoutPreset } from "./types";
 import { getDefaultSplitPresets } from "./utils/defaultPresets";
 
@@ -43,18 +42,34 @@ export function registerLayoutSplitPlugin(
       version: PLUGIN_VERSION,
       orderlyVersion: ">=1.0.0",
       interceptors: [
-        createInterceptor("Trading.Layout.Desktop", (Original, props, _api) => (
+        createInterceptor("Trading.Layout.Desktop", (Original, props) => (
           <SplitPresetProvider
             presets={resolvedPresets}
             classNames={options?.classNames}
             gap={options?.gap ?? 2}
           >
             <SplitLayoutDesktopInjector
-              Original={Original as React.ComponentType<DesktopLayoutProps>}
-              props={props as DesktopLayoutProps}
+              Original={Original as React.ComponentType<any>}
+              props={props as any}
             />
           </SplitPresetProvider>
         )),
+        createInterceptor(
+          "Trading.SymbolInfoBar.Desktop",
+          (Original, props) => {
+            return (
+              <Original
+                {...props}
+                trailing={
+                  <>
+                    {props.trailing}
+                    <SymbolBarLayoutSwitcher />
+                  </>
+                }
+              />
+            );
+          },
+        ),
       ],
     });
   };

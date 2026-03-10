@@ -25,9 +25,6 @@ export type { TradingPanelId } from "@orderly.network/layout-core";
 const LazyDataListWidget = React.lazy(() =>
   import("../dataList").then((mod) => ({ default: mod.DataListWidget })),
 );
-const LazySwitchLayout = React.lazy(() =>
-  import("./switchLayout").then((mod) => ({ default: mod.SwitchLayout })),
-);
 const LazyOrderBookAndTradesWidget = React.lazy(() =>
   import("../orderBookAndTrades").then((mod) => ({
     default: mod.OrderBookAndTradesWidget,
@@ -88,11 +85,6 @@ export interface TradingPanelRegistryProps {
 export function createTradingPanelRegistry(
   props: TradingPanelRegistryProps,
 ): PanelRegistry {
-  const layoutResolved = props.layout ?? "right";
-  const marketLayoutResolved = props.marketLayout ?? "left";
-  const onLayoutResolved = props.onLayout ?? (() => {});
-  const onMarketLayoutResolved = props.onMarketLayout ?? (() => {});
-
   const {
     symbol,
     onSymbolChange,
@@ -109,10 +101,6 @@ export function createTradingPanelRegistry(
     symbolInfoBarHeight,
     dataListHeight,
   } = props;
-  const layout = layoutResolved;
-  const onLayout = onLayoutResolved;
-  const marketLayout = marketLayoutResolved;
-  const onMarketLayout = onMarketLayoutResolved;
 
   const config = (tradingViewConfig ?? {}) as {
     library_path?: string;
@@ -133,16 +121,6 @@ export function createTradingPanelRegistry(
         onSymbolChange={onSymbolChange}
         closeCountdown={closeCountdown}
         showCountdown={showCountdown}
-        trailing={
-          <React.Suspense fallback={null}>
-            <LazySwitchLayout
-              layout={layout}
-              onLayout={onLayout}
-              marketLayout={marketLayout}
-              onMarketLayout={onMarketLayout}
-            />
-          </React.Suspense>
-        }
       />
     </div>,
   );

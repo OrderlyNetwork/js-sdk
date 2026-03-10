@@ -5,6 +5,7 @@ import type { SplitLayoutClassNames } from "../SplitPresetContext";
 import type { SplitLayoutModel, SplitLayoutNode } from "../types";
 import { SortNodeRenderer } from "./SortNodeRenderer";
 import { SplitLayout } from "./SplitLayout";
+import { useSplitTradingDesktopContext } from "./SplitTradingDesktopContext";
 
 /** Shared props for recursively rendering a split layout node tree. */
 export interface SplitNodeRendererProps {
@@ -40,6 +41,10 @@ export function SplitNodeRenderer({
   classNames,
   gap,
 }: SplitNodeRendererProps): React.ReactElement | null {
+  /** Trading desktop props (state, layout, callbacks); null when not under SplitTradingDesktopChrome. Use for conditional layout or passing into panel content. */
+  const tradingDesktop = useSplitTradingDesktopContext();
+  void tradingDesktop;
+
   if (node.type === "panel") {
     const panel = panels.get(node.id);
     if (!panel) {

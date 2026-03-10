@@ -57,5 +57,6 @@ export {
   SplitTradingDesktopChrome,
   type SplitTradingDesktopChromeProps,
 } from "./components/SplitTradingDesktopChrome";
+export { useSplitTradingDesktopContext } from "./components/SplitTradingDesktopContext";
 
 export { DEFAULT_SPLIT_BREAKPOINTS, SPLIT_BREAKPOINT_ORDER } from "./constants";

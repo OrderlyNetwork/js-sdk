@@ -25,9 +25,10 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/trading": "workspace:*",
     "@orderly.network/layout-core": "workspace:*",
     "@orderly.network/markets": "workspace:*",
-    "@orderly.network/trading": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "react-resizable-panels": "^4.6.5"

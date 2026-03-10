@@ -26,14 +26,15 @@ import {
   OrderEntryDragOverlayContent,
   type DesktopLayoutProps,
 } from "@orderly.network/trading";
-import {
-  scrollBarWidth,
-  space,
-  orderbookMaxHeight,
-  dataListInitialHeight,
-} from "@orderly.network/trading";
+// import {
+//   scrollBarWidth,
+//   space,
+//   orderbookMaxHeight,
+//   dataListInitialHeight,
+// } from "@orderly.network/trading";
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { SplitSortIndicatorProvider } from "../SplitSortIndicatorContext";
+import { SplitTradingDesktopContext } from "./SplitTradingDesktopContext";
 
 export interface SplitTradingDesktopChromeProps extends DesktopLayoutProps {
   /** The minimal desktop layout (panels + LayoutHost) to wrap */
@@ -133,64 +134,68 @@ export function SplitTradingDesktopChrome(
     setActiveId(null);
   };
 
-  const minScreenHeight = useMemo(
-    () =>
-      tradingViewFullScreen
-        ? 0
-        : orderbookMaxHeight + dataListInitialHeight + space * 4 + 56,
-    [tradingViewFullScreen],
-  );
+  // const minScreenHeight = useMemo(
+  //   () =>
+  //     tradingViewFullScreen
+  //       ? 0
+  //       : orderbookMaxHeight + dataListInitialHeight + space * 4 + 56,
+  //   [tradingViewFullScreen],
+  // );
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis]}
-    >
-      <SortableContext
-        items={sortableItems}
-        strategy={verticalListSortingStrategy}
+    <SplitTradingDesktopContext.Provider value={props}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
       >
-        <SplitSortIndicatorProvider showIndicator={showPositionIcon ?? false}>
-          {max2XL ? (
-            <Box height="100%" className={className}>
-              {children}
-            </Box>
-          ) : (
-            <Flex
-              style={{
-                minHeight: minScreenHeight,
-                minWidth: 1440 - scrollBarWidth,
-              }}
-              className={cn(
-                className,
-                "oui-flex-1 oui-justify-start oui-overflow-hidden",
-                tradingViewFullScreen &&
-                  "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
-              )}
-              width="100%"
-              p={2}
-              gap={2}
-              itemAlign="stretch"
-              direction="column"
-            >
-              {children}
-            </Flex>
-          )}
-        </SplitSortIndicatorProvider>
-      </SortableContext>
-      <DragOverlay dropAnimation={dropAnimationConfig}>
-        <OrderEntryDragOverlayContent
-          activeId={activeId}
-          showPositionIcon={showPositionIcon}
-          symbol={symbol}
-          disableFeatures={props.disableFeatures}
-          navigateToPortfolio={props.navigateToPortfolio}
-          isFirstTimeDeposit={props.isFirstTimeDeposit}
-        />
-      </DragOverlay>
-    </DndContext>
+        <SortableContext
+          items={sortableItems}
+          strategy={verticalListSortingStrategy}
+        >
+          <SplitSortIndicatorProvider showIndicator={showPositionIcon ?? false}>
+            {max2XL ? (
+              <Box height="100%" className={className}>
+                {children}
+              </Box>
+            ) : (
+              <Flex
+                style={
+                  {
+                    // minHeight: minScreenHeight,
+                    // minWidth: 1440 - scrollBarWidth,
+                  }
+                }
+                className={cn(
+                  className,
+                  "oui-flex-1 oui-justify-start oui-overflow-hidden",
+                  tradingViewFullScreen &&
+                    "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
+                )}
+                width="100%"
+                p={2}
+                gap={2}
+                itemAlign="stretch"
+                direction="column"
+              >
+                {children}
+              </Flex>
+            )}
+          </SplitSortIndicatorProvider>
+        </SortableContext>
+        <DragOverlay dropAnimation={dropAnimationConfig}>
+          {/* <OrderEntryDragOverlayContent
+            activeId={activeId}
+            showPositionIcon={showPositionIcon}
+            symbol={symbol}
+            disableFeatures={props.disableFeatures}
+            navigateToPortfolio={props.navigateToPortfolio}
+            isFirstTimeDeposit={props.isFirstTimeDeposit}
+          /> */}
+        </DragOverlay>
+      </DndContext>
+    </SplitTradingDesktopContext.Provider>
   );
 }
