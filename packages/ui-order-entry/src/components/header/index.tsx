@@ -45,6 +45,7 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
       </div>
       <div
         className={cn(
+          "oui-orderEntry-side",
           "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
           "oui-grid-cols-2",
         )}
@@ -57,6 +58,7 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
           fullWidth
           data-type={OrderSide.BUY}
           className={cn(
+            "oui-orderEntry-side-buy-btn",
             side === OrderSide.BUY && canTrade
               ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
               : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
@@ -73,6 +75,7 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
           fullWidth
           size={"md"}
           className={cn(
+            "oui-orderEntry-side-sell-btn",
             side === OrderSide.SELL && props.canTrade
               ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
               : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",

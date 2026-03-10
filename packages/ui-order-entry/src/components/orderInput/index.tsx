@@ -42,7 +42,7 @@ export function OrderInput(props: OrderInputProps) {
   );
 
   return (
-    <div className={"oui-space-y-1"}>
+    <div className={"oui-orderEntry-orderInput-container oui-space-y-1"}>
       {triggerPriceInput}
       {priceInput}
       <QtyAndTotalInput

@@ -170,10 +170,16 @@ export const OrderTypeSelect = (props: {
       options={allOptions}
       onValueChange={props.onChange}
       contentProps={{
-        className: "oui-bg-base-8",
+        className: cn(
+          "oui-orderEntry-orderTypeSelect-content",
+          "oui-bg-base-8",
+        ),
       }}
       classNames={{
-        trigger: "oui-bg-base-7 oui-border-line-12 oui-h-8 oui-rounded-md",
+        trigger: cn(
+          "oui-orderEntry-orderTypeSelect-btn",
+          "oui-bg-base-7 oui-border-line-12 oui-h-8 oui-rounded-md",
+        ),
       }}
       valueFormatter={(value, option) => {
         const item = allOptions.find((o) => o.value === value);

@@ -1,70 +1,55 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
+
+let orderFilledAudio: HTMLAudioElement | null = null;
+
+function getOrderFilledAudio(): HTMLAudioElement {
+  if (!orderFilledAudio) {
+    orderFilledAudio = new Audio();
+  }
+  return orderFilledAudio;
+}
 
 export interface AudioPlayerOptions {
   volume?: number;
-  loop?: boolean;
-  autoPlay?: boolean;
+  /** When true, play() will run; when false, play() no-ops. Used for on/off toggle. */
+  enabled?: boolean;
 }
 
+/**
+ * Single shared Audio instance. Play is explicit: pause() then set src then play().
+ * Use for order-filled notification sound (and any other one-shot global sound).
+ * Compatible with legacy single-sound + on/off: pass enabled = user's on/off and src = media or "".
+ */
 export const useAudioPlayer = (
   src: string,
   options: AudioPlayerOptions = {},
 ) => {
-  const { volume = 1, loop, autoPlay } = options;
-
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const [status, setStatus] = useState<
-    "idle" | "play" | "playing" | "paused" | "ended" | "error"
-  >("idle");
-
-  const onPlay = () => {
-    setStatus("play");
-  };
-
-  const onPlaying = () => {
-    setStatus("playing");
-  };
-
-  const onPause = () => {
-    setStatus("paused");
-  };
-
-  const onEnded = () => {
-    setStatus("ended");
-  };
-
-  const onError = () => {
-    setStatus("error");
-  };
-
-  const element = useMemo(() => {
-    return React.createElement("audio", {
-      controls: false,
-      ref: audioRef,
-      autoPlay: autoPlay,
-      src: src,
-      style: { display: "none" },
-      onPlay: onPlay,
-      onPlaying: onPlaying,
-      onPause: onPause,
-      onEnded: onEnded,
-      onError: onError,
-    });
-  }, [autoPlay, src, onPlay, onPlaying, onPause, onEnded, onError]);
+  const { volume = 1, enabled = true } = options;
+  const srcRef = useRef(src);
+  const enabledRef = useRef(enabled);
+  const volumeRef = useRef(volume);
 
   useEffect(() => {
-    const el = audioRef.current;
-    if (!el) {
-      return;
-    }
-    el.loop = loop ?? false;
-    el.volume = Math.max(0, Math.min(1, volume));
-    return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
-    };
-  }, [loop, volume]);
+    srcRef.current = src;
+    enabledRef.current = enabled;
+    volumeRef.current = volume;
+  }, [src, enabled, volume]);
 
-  return [element, audioRef, status] as const;
+  useEffect(() => {
+    const el = getOrderFilledAudio();
+    el.volume = Math.max(0, Math.min(1, volume));
+  }, [volume]);
+
+  const play = useCallback(() => {
+    const currentSrc = srcRef.current;
+    const currentEnabled = enabledRef.current;
+    if (!currentEnabled || !currentSrc) return;
+    const el = getOrderFilledAudio();
+    el.pause();
+    el.src = currentSrc;
+    el.volume = Math.max(0, Math.min(1, volumeRef.current));
+    el.play()?.catch(() => {});
+  }, []);
+
+  return { play };
 };

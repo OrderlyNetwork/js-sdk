@@ -92,3 +92,16 @@
   --oui-spacing-lg: 30rem;
   --oui-spacing-xl: 33.75rem;
 }
+
+/** trade nav subMenu  */
+/* .oui-subMenuMarkets-tabs .oui-tabs-rwa-trigger, */
+/** mobile side markets */
+/* .oui-marketsSheet-tabs .oui-tabs-rwa-trigger, */
+/** symbol info bar dropDown markets */
+.oui-rwa-route .oui-dropDownMarkets-tabs .oui-tabs-rwa-trigger, 
+/** desktop side markets */
+.oui-rwa-route .oui-expandMarkets-tabs .oui-tabs-rwa-trigger,
+/** markets page  */
+.oui-rwa-route .oui-markets-list-tabs .oui-tabs-rwa-trigger {
+  display: none !important;
+}

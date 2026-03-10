@@ -31,8 +31,10 @@ export const ScaledQuantityUnit: FC<QuantityUnitProps> = (props) => {
       tokens={options}
       classNames={{
         trigger: cn(
+          "oui-orderEntry-scaledQuantityUnit-btn",
           "oui-absolute oui-right-0 oui-top-1",
           "oui-w-full oui-justify-end",
+          "oui-shadow-none",
         ),
       }}
       value={props.value}

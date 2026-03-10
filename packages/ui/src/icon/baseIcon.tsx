@@ -14,7 +14,7 @@ const iconVariants = tv({
       warning: "oui-text-warning-darken",
       //   secondary: "oui-text-secondary",
       //   tertiary: "oui-text-tertiary",
-      white: "oui-text-white",
+      white: "oui-text-base-contrast",
       black: "oui-text-black",
       inherit: "oui-text-inherit",
       //   gray: "oui-text-gray",
@@ -27,7 +27,8 @@ const iconVariants = tv({
 });
 
 export interface BaseIconProps
-  extends ComponentPropsWithout<"svg", RemovedProps>,
+  extends
+    ComponentPropsWithout<"svg", RemovedProps>,
     VariantProps<typeof iconVariants> {
   // width?: number;
   size?: number;

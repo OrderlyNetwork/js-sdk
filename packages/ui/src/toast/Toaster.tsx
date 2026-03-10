@@ -30,28 +30,26 @@ export const Toaster: FC<ToastProps> = (props) => {
         // },
         success: {
           iconTheme: {
-            primary: "rgba(123, 220, 138, 1)",
-            secondary: "rgba(25, 14, 44, 1)",
+            primary: "rgb(var(--oui-color-success-light))",
+            secondary: "rgb(var(--oui-color-base-10))",
           },
           style: {
-            // color: "rgba(123, 220, 138, 1)",
-            background: "rgba(40, 46, 58, 1)",
+            background: "rgb(var(--oui-color-base-5))",
           },
         },
         loading: {
           duration: 5000,
           style: {
-            background: "rgba(40, 46, 58, 1)",
+            background: "rgb(var(--oui-color-base-5))",
           },
         },
         error: {
           iconTheme: {
-            primary: "rgba(217, 91, 129, 1)",
-            secondary: "rgba(25, 14, 44, 1)",
+            primary: "rgb(var(--oui-color-danger))",
+            secondary: "rgb(var(--oui-color-base-10))",
           },
           style: {
-            // color: "rgba(217, 91, 129, 1)",
-            background: "rgba(40, 46, 58, 1)",
+            background: "rgb(var(--oui-color-base-5))",
           },
         },
         custom: {
@@ -59,7 +57,7 @@ export const Toaster: FC<ToastProps> = (props) => {
           removeDelay: 0,
           position: "top-right",
           style: {
-            background: "rgba(40, 46, 58, 1)",
+            background: "rgb(var(--oui-color-base-5))",
           },
         },
       }}
@@ -75,12 +73,11 @@ export const Toaster: FC<ToastProps> = (props) => {
           toast={t}
           style={{
             ...t.style,
-            color: "rgba(255, 255, 255, 0.8)",
-            // background: "rgba(25, 14, 44, 1)",
+            color: "rgb(var(--oui-color-base-foreground) / 0.8)",
             borderRadius: "6px",
             wordBreak: "break-all",
             maxWidth: 800,
-            boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.36)",
+            boxShadow: "0px 4px 8px 0px rgb(var(--oui-color-base-10) / 0.36)",
           }}
         >
           {({ icon, message }) => {

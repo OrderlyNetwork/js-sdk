@@ -109,7 +109,7 @@ export const CustomStyling: StringStory = {
     renderItem: (item: string, index: number) => (
       <div
         key={index}
-        className="oui-flex oui-items-center oui-justify-center oui-whitespace-nowrap oui-px-6 oui-py-3 oui-bg-gradient-to-r oui-from-cyan-500 oui-to-blue-500 oui-text-white oui-rounded-full oui-mr-6 oui-shadow-lg oui-transform oui-hover:scale-105 oui-transition-transform"
+        className="oui-flex oui-items-center oui-justify-center oui-whitespace-nowrap oui-px-6 oui-py-3 oui-bg-gradient-to-r oui-from-cyan-500 oui-to-blue-500 oui-text-base-static oui-rounded-full oui-mr-6 oui-shadow-lg oui-transform oui-hover:scale-105 oui-transition-transform"
       >
         <span className="oui-text-lg oui-font-semibold">{item}</span>
       </div>

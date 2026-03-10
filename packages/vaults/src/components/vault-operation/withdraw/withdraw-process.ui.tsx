@@ -3,11 +3,13 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Text, cn } from "@orderly.network/ui";
 
 const ProcessDot = () => {
-  return <div className="oui-size-2 oui-rounded-full oui-bg-white/[0.54]" />;
+  return (
+    <div className="oui-size-2 oui-rounded-full oui-bg-base-contrast-54" />
+  );
 };
 
 const ProcessLine = () => {
-  return <div className="oui-h-px oui-flex-1 oui-bg-white/[0.2]" />;
+  return <div className="oui-h-px oui-flex-1 oui-bg-base-contrast-20" />;
 };
 
 const ProcessText = ({
@@ -60,7 +62,7 @@ const WithdrawProcess: FC = () => {
 export const WithdrawProcessWidget: FC = () => {
   const { t } = useTranslation();
   return (
-    <div className="oui-flex oui-flex-col oui-gap-2 oui-rounded-xl oui-border oui-border-white/[0.12] oui-p-3">
+    <div className="oui-flex oui-flex-col oui-gap-2 oui-rounded-xl oui-border oui-border-line-12 oui-p-3">
       <div className="oui-flex oui-items-center oui-justify-between oui-text-sm oui-font-semibold oui-text-base-contrast-54">
         <div>{t("vaults.withdraw.process.withdrawProcess")}</div>
         <Text color="primary">{t("vaults.withdraw.process.upTo")}</Text>

@@ -30,14 +30,11 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@orderly.network/eslint-config':
-        specifier: 0.0.5
-        version: 0.0.5(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)
+        specifier: 0.0.6
+        version: 0.0.6(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)
       '@orderly.network/prettier-config':
         specifier: 0.2.5
         version: 0.2.5(@vue/compiler-sfc@3.5.18)(prettier@3.8.1)
-      '@trivago/prettier-plugin-sort-imports':
-        specifier: ^5.2.2
-        version: 5.2.2(@vue/compiler-sfc@3.5.18)(prettier@3.8.1)
       '@turbo/gen':
         specifier: ^2.0.11
         version: 2.5.5(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)
@@ -5139,8 +5136,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@orderly.network/eslint-config@0.0.5':
-    resolution: {integrity: sha512-swpm5V8dk1iHtYzan25HKT2V5jfDesUV39jdCJRaKlXUbxd5xHEhbhFV6qIT2Rp+HyS51GY0wCSXEw2QPiuzTA==}
+  '@orderly.network/eslint-config@0.0.6':
+    resolution: {integrity: sha512-QLQf20q5u87sBP3tWMBANaVma134PKlvLalF5K66/r3NeKIQJ1senmHz8dW+Ks1sMfOAJ9xScpedY37MY81zOw==}
     peerDependencies:
       eslint: '>=9.0.0'
 
@@ -7334,22 +7331,6 @@ packages:
     resolution: {integrity: sha512-vu9L1V/5yh8LHQCmsGC9scCnihELsVuR5Tri1IvW3CdgTUFFcfjsEgXsFqFME3HlxuUmx6qokw0Gx/o0/hzaSQ==}
     peerDependencies:
       tslib: ^2.6.2
-
-  '@trivago/prettier-plugin-sort-imports@5.2.2':
-    resolution: {integrity: sha512-fYDQA9e6yTNmA13TLVSA+WMQRc5Bn/c0EUBditUHNfMMxN7M82c38b1kEggVE3pLpZ0FwkwJkUEKMiOi52JXFA==}
-    engines: {node: '>18.12'}
-    peerDependencies:
-      '@vue/compiler-sfc': 3.x
-      prettier: 2.x - 3.x
-      prettier-plugin-svelte: 3.x
-      svelte: 4.x || 5.x
-    peerDependenciesMeta:
-      '@vue/compiler-sfc':
-        optional: true
-      prettier-plugin-svelte:
-        optional: true
-      svelte:
-        optional: true
 
   '@trivago/prettier-plugin-sort-imports@6.0.2':
     resolution: {integrity: sha512-3DgfkukFyC/sE/VuYjaUUWoFfuVjPK55vOFDsxD56XXynFMCZDYFogH2l/hDfOsQAm1myoU/1xByJ3tWqtulXA==}
@@ -19503,7 +19484,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@orderly.network/eslint-config@0.0.5(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)':
+  '@orderly.network/eslint-config@0.0.6(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)':
     dependencies:
       '@eslint/js': 9.39.2
       '@stylistic/eslint-plugin': 5.7.0(eslint@9.32.0(jiti@1.21.7))
@@ -23193,20 +23174,6 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-
-  '@trivago/prettier-plugin-sort-imports@5.2.2(@vue/compiler-sfc@3.5.18)(prettier@3.8.1)':
-    dependencies:
-      '@babel/generator': 7.28.3
-      '@babel/parser': 7.28.4
-      '@babel/traverse': 7.28.4
-      '@babel/types': 7.28.4
-      javascript-natural-sort: 0.7.1
-      lodash: 4.17.21
-      prettier: 3.8.1
-    optionalDependencies:
-      '@vue/compiler-sfc': 3.5.18
-    transitivePeerDependencies:
-      - supports-color
 
   '@trivago/prettier-plugin-sort-imports@6.0.2(@vue/compiler-sfc@3.5.18)(prettier@3.8.1)':
     dependencies:

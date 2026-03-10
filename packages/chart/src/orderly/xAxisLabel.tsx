@@ -11,7 +11,7 @@ export const XAxisLabel = (props: any) => {
         dy={16}
         textAnchor="end"
         fontSize={10}
-        fill={"rgba(255,255,255,0.54)"}
+        fill={"rgba(var(--oui-color-base-foreground)/0.54)"}
       >
         {index === 0 ? payload.value : t("chart.now")}
       </text>

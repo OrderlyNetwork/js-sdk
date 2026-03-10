@@ -11,6 +11,7 @@ import { useSort, searchBySymbol } from "../../utils";
 
 export type ProcessedFundingData = {
   symbol: string;
+  leverage?: number;
   estFunding: number;
   lastFunding: number;
   fundingInterval: number;
@@ -31,7 +32,7 @@ export type ProcessedFundingData = {
 export type FundingOverviewReturn = ReturnType<typeof useFundingOverviewScript>;
 
 export const useFundingOverviewScript = () => {
-  const { pagination } = usePagination({ pageSize: 10 });
+  const { pagination } = usePagination({ pageSize: 100 });
   const [marketData] = useMarkets(MarketsType.ALL);
 
   const {
@@ -73,6 +74,7 @@ export const useFundingOverviewScript = () => {
 
       return {
         symbol,
+        leverage: item.leverage,
         estFunding: fundingRate("est_funding_rate"),
         lastFunding: fundingRate("last_funding_rate"),
         fundingInterval,

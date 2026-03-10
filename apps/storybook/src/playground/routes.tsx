@@ -107,24 +107,30 @@ const AppRoute: React.FC = () => {
     i18n.changeLanguage(currentLocale);
   }
 
+  const tradeRoutes: RouteObject[] = [
+    {
+      index: true,
+      element: (
+        <Navigate
+          // preserve the search parameters to ensure link device via url params works
+          to={`${getSymbol()}${window.location.search}`}
+        />
+      ),
+    },
+    {
+      path: ":symbol",
+      element: <PerpPage />,
+    },
+  ];
+
   const baseRoutes: RouteObject[] = [
     {
       path: "perp",
-      children: [
-        {
-          index: true,
-          element: (
-            <Navigate
-              // preserve the search parameters to ensure link device via url params works
-              to={`${getSymbol()}${window.location.search}`}
-            />
-          ),
-        },
-        {
-          path: ":symbol",
-          element: <PerpPage />,
-        },
-      ],
+      children: tradeRoutes,
+    },
+    {
+      path: "rwa",
+      children: tradeRoutes,
     },
     {
       path: "portfolio",

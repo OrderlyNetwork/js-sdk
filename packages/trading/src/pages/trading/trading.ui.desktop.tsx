@@ -307,6 +307,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const stickyHorizontalMarketsView = (
     <Box
       className={cn(
+        "oui-trading-markets-container",
         "oui-bg-base-10",
         // -8 is for reducing the container's padding
         "oui-sticky oui-z-30 oui-mb-[-8px] oui-py-2",
@@ -341,7 +342,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       height="100%"
       width={marketsWidth}
       style={{ minWidth: marketsWidth }}
-      className="oui-transition-all oui-duration-150"
+      className="oui-trading-markets-container oui-transition-all oui-duration-150"
       onTransitionEnd={() => setAnimating(false)}
     >
       {!animating && marketLayout === "left" && marketsWidget}
@@ -350,6 +351,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const symbolInfoBarView = (
     <Box
+      className="oui-trading-symbolInfoBar-container"
       intensity={900}
       r="2xl"
       px={3}
@@ -407,7 +409,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       intensity={900}
       r="2xl"
       style={{ flex: 1, minWidth: tradingViewMinWidth }}
-      className="oui-overflow-hidden"
+      className="oui-trading-tradingview-container oui-overflow-hidden"
     >
       {tradingviewWidget}
     </Box>
@@ -428,7 +430,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         maxWidth: horizontalDraggable ? orderbookMaxWidth : orderbookMinWidth,
         width: orderBookSplitSize,
       }}
-      className="oui-overflow-hidden"
+      className="oui-trading-orderBook-container oui-overflow-hidden"
     >
       {orderbookWidget}
     </Box>
@@ -455,7 +457,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         minHeight: dataListInitialHeight,
         // minHeight: `max(${dataListMinHeight}px, calc(100vh - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px))`,
       }}
-      className="oui-overflow-hidden"
+      className="oui-trading-dataList-container oui-overflow-hidden"
     >
       {dataListWidget}
     </Box>
@@ -464,7 +466,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const orderInteractionWidgets = useMemo(() => {
     return {
       margin: {
-        className: "",
+        className: "oui-trading-riskRate-container",
         element: (
           <React.Suspense fallback={null}>
             <LazyRiskRateWidget />
@@ -472,7 +474,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         ),
       },
       assets: {
-        className: "oui-border oui-border-line-12",
+        className:
+          "oui-trading-assetsView-container oui-border oui-border-line-12",
         element: (
           <>
             <React.Suspense fallback={null}>
@@ -488,7 +491,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         ),
       },
       orderEntry: {
-        className: "",
+        className: "oui-trading-orderEntry-container",
         element: (
           <OrderEntryWidget
             symbol={props.symbol}
@@ -511,6 +514,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const orderEntryView = (
     <Flex
+      className="oui-trading-orderEntry-container"
       gapY={2}
       direction="column"
       height="100%"
@@ -636,7 +640,10 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           <Box height="100%">
             {marketLayout === "top" && (
               <Box
-                className={cn("oui-mt-2 oui-max-h-8 oui-px-3", props.className)}
+                className={cn(
+                  "oui-trading-markets-container oui-mt-2 oui-max-h-8 oui-px-3",
+                  props.className,
+                )}
               >
                 {horizontalMarketsView}
               </Box>

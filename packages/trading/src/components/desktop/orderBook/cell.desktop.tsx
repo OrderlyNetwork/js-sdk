@@ -154,7 +154,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
       )}
 
       {props.isHover && (
-        <div className="oui-absolute oui-inset-0 oui-bg-white oui-opacity-[.12]" />
+        <div className="oui-absolute oui-inset-0 oui-bg-base-contrast-12" />
       )}
       {currentHover && (
         <div

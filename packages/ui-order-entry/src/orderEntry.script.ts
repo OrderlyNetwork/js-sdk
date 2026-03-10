@@ -31,6 +31,7 @@ export type OrderEntryScriptInputs = {
 };
 
 export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
+export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
@@ -47,10 +48,21 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const { notification } = useOrderlyContext();
 
+  const orderFilledConfig = notification?.orderFilled;
+  const defaultSoundValue =
+    orderFilledConfig?.defaultSoundValue ??
+    orderFilledConfig?.soundOptions?.[0]?.value;
+
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
     ORDERLY_ORDER_SOUND_ALERT_KEY,
-    notification?.orderFilled?.defaultOpen ?? false,
+    orderFilledConfig?.defaultOpen ?? false,
   );
+
+  const [initialSoundValue] = useLocalStorage<string | null>(
+    ORDERLY_ORDER_SOUND_OPTION_KEY,
+    defaultSoundValue ?? null,
+  );
+  void initialSoundValue;
 
   const canTrade = useCanTrade();
   const { marginMode } = useMarginModeBySymbol(symbol);

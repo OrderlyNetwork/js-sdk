@@ -53,7 +53,7 @@ export const OrderBookAndEntry: React.FC<
   return (
     <div
       className={cn(
-        "oui-mx-1 oui-grid oui-gap-1",
+        "oui-trading-orderBookAndEntry oui-mx-1 oui-grid oui-gap-1",
         props.layout === "right"
           ? "oui-grid-cols-[4fr,6fr]"
           : "oui-grid-cols-[6fr,4fr]",

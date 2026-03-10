@@ -145,8 +145,8 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           rewardsTooltip={props.rewardsTooltip}
           background={
             state.notConnected
-              ? "linear-gradient(28.29deg, #1B1D22 21.6%, #26292E 83.23%)"
-              : "linear-gradient(0deg, #2D0061 2.62%, #BD6BED 86.5%)"
+              ? "linear-gradient(28.29deg, rgb(var(--oui-gradient-neutral-start)) 21.6%, rgb(var(--oui-gradient-neutral-end)) 83.23%)"
+              : "linear-gradient(0deg, rgb(var(--oui-gradient-secondary-end)) 2.62%, rgb(var(--oui-gradient-secondary-start)) 86.5%)"
           }
         />
         {/* {state.notConnected && (
@@ -408,7 +408,12 @@ export const ArrowRightIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="21"
       height="20"
     >
-      <rect x="0.5" width="20" height="20" fill="#D9D9D9" />
+      <rect
+        x="0.5"
+        width="20"
+        height="20"
+        fill="rgb(var(--oui-color-tertiary))"
+      />
     </mask>
     <g mask="url(#mask0_1997_45723)">
       <path

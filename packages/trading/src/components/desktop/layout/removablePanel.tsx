@@ -8,6 +8,7 @@ export type RemovablePanelProps = {
   showIndicator?: boolean;
 };
 
+/** @deprecated unused */
 export const RemovablePanel: React.FC<
   PropsWithChildren<RemovablePanelProps>
 > = (props) => {
@@ -113,7 +114,7 @@ export const TopIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="10.667"
       height="1.333"
       rx=".667"
-      fill="#fff"
+      fill="rgb(var(--oui-color-base-foreground))"
       fillOpacity=".2"
     />
     <rect
@@ -122,7 +123,7 @@ export const TopIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="10.667"
       height="1.333"
       rx=".667"
-      fill="#fff"
+      fill="rgb(var(--oui-color-base-foreground))"
       fillOpacity=".2"
     />
   </svg>
@@ -151,7 +152,7 @@ export const MiddleIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="10.667"
       height="1.333"
       rx=".667"
-      fill="#fff"
+      fill="rgb(var(--oui-color-base-foreground))"
       fillOpacity=".2"
     />
     <rect
@@ -160,7 +161,7 @@ export const MiddleIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="10.667"
       height="1.333"
       rx=".667"
-      fill="#fff"
+      fill="rgb(var(--oui-color-base-foreground))"
       fillOpacity=".2"
     />
   </svg>
@@ -189,7 +190,7 @@ export const BottomIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="10.667"
       height="1.333"
       rx=".667"
-      fill="#fff"
+      fill="rgb(var(--oui-color-base-foreground))"
       fillOpacity=".2"
     />
     <rect
@@ -198,7 +199,7 @@ export const BottomIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="10.667"
       height="1.333"
       rx=".667"
-      fill="#fff"
+      fill="rgb(var(--oui-color-base-foreground))"
       fillOpacity=".2"
     />
   </svg>

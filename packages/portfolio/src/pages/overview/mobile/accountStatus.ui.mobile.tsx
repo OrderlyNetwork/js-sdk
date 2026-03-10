@@ -34,19 +34,23 @@ const useCurrentStatus = () => {
   const statusText = {
     wrongNetwork: {
       description: t("connector.wrongNetwork.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#D25F00_0%,transparent_30%)]",
+      rootClass:
+        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-warning-darken))_0%,transparent_30%)]",
     },
     connectWallet: {
       description: t("connector.trade.connectWallet.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#27FDFE_0%,transparent_30%)]",
+      rootClass:
+        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-gradient-brand-start))_0%,transparent_30%)]",
     },
     notSignedIn: {
       description: t("connector.trade.createAccount.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_0%,transparent_30%)]",
+      rootClass:
+        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-primary-darken))_0%,transparent_30%)]",
     },
     disabledTrading: {
       description: t("connector.trade.enableTrading.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_0%,transparent_30%)]",
+      rootClass:
+        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-primary-darken))_0%,transparent_30%)]",
     },
     default: {
       description: "",
@@ -135,7 +139,7 @@ const EVMChains = () => {
         />
       </div>
       <div className="oui-relative oui-left-[-9px] oui-flex oui-items-center oui-justify-center oui-gap-1">
-        <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-[#282e3a]">
+        <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
           <EVMChainPopover>
             <MoreIcon
               className="oui-relative oui-z-10 oui-size-3 oui-text-base-contrast-54 hover:oui-text-base-contrast"
@@ -212,10 +216,10 @@ const ShowAccount: FC = () => {
     let bg = "";
     if (currentNamespace == ChainNamespace.evm) {
       bg =
-        "oui-bg-[linear-gradient(15deg,#283BEE_-11%,transparent_30%,transparent_77%,#A53411_100%)]";
+        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-primary))_-11%,transparent_30%,transparent_77%,rgb(var(--oui-color-danger-darken))_100%)]";
     } else if (currentNamespace == ChainNamespace.solana) {
       bg =
-        "oui-bg-[linear-gradient(15deg,#7400D0_-11%,transparent_30%,transparent_77%,#009A7E_100%)]";
+        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-link))_-11%,transparent_30%,transparent_77%,rgb(var(--oui-color-success))_100%)]";
     }
     return bg;
   }, [currentNamespace]);

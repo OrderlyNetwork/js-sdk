@@ -65,10 +65,6 @@ Start building with Orderly SDKs using these ready-to-use templates:
 
   set broker name
 
-- theme
-
-  orderly/custom
-
 - usePrivy
 
   true/false

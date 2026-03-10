@@ -5,6 +5,7 @@ import { tv } from "../utils/tv";
 
 const popoverVariants = tv({
   base: [
+    "oui-popover-content",
     "oui-z-50",
     "oui-w-72",
     "oui-rounded-md",

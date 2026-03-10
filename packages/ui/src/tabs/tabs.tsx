@@ -31,6 +31,10 @@ type tabConfig = {
   content: ReactNode;
   collapsed?: boolean;
   className?: string;
+  classNames?: {
+    content?: string;
+    trigger?: string;
+  };
   style?: React.CSSProperties;
 };
 
@@ -70,9 +74,11 @@ const Tabs: FC<TabsProps> = (props) => {
     ...rest
   } = props;
 
-  const tabsOverrides = getComponentTheme("tabs", { variant: "contained" });
+  const tabsOverrides = getComponentTheme("tabs", {
+    variant: variant ?? "contained",
+  });
 
-  const tabsVariant = variant || tabsOverrides.variant;
+  const tabsVariant = tabsOverrides.variant;
 
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
@@ -112,7 +118,7 @@ const Tabs: FC<TabsProps> = (props) => {
               variant={tabsVariant}
               size={rest.size}
               data-testid={tab.testid}
-              className={classNames?.trigger}
+              className={cnBase(classNames?.trigger, tab.classNames?.trigger)}
             >
               {tab.title}
             </TabsTrigger>
@@ -176,11 +182,16 @@ export interface TabPanelProps {
   icon?: React.ReactElement;
   testid?: string;
   className?: string;
+  classNames?: {
+    content?: string;
+    trigger?: string;
+  };
   style?: React.CSSProperties;
 }
 
 const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
-  const { title, value, icon, className, style, testid, children } = props;
+  const { title, value, icon, style, testid, children, className, classNames } =
+    props;
 
   const { registerTab, unregisterTab } = useContext(TabsContext);
 
@@ -191,6 +202,7 @@ const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
       icon,
       testid,
       className,
+      classNames,
       style,
       content: children,
     };
@@ -198,7 +210,7 @@ const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
     return () => {
       unregisterTab(tabConfig);
     };
-  }, [children, className, style, icon, testid, title, value]);
+  }, [children, style, icon, testid, title, value, className, classNames]);
 
   return null;
 };

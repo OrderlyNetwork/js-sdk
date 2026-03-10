@@ -165,7 +165,7 @@ export const DesktopSharePnLContent: FC<{
             ))}
           </Flex>
 
-          <Divider className="oui-w-full oui-border-white/10 oui-pt-6" />
+          <Divider className="oui-w-full oui-pt-6 oui-border-line-10" />
 
           <Flex
             mt={6}

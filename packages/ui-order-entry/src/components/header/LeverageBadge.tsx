@@ -56,6 +56,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
     <div
       className={cn(
         "oui-flex oui-w-full oui-items-center oui-rounded-md oui-border oui-border-line-12 oui-bg-base-6",
+        "oui-orderEntry-leverage-btn",
         "oui-h-8",
         "oui-select-none",
       )}

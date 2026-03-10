@@ -31,7 +31,7 @@ export const QuantityInput: FC<QuantityInputProps> = memo((props) => {
       formatters={[inputFormatter.dpFormatter(base_dp)]}
       onFocus={onFocus(InputType.QUANTITY)}
       onBlur={onBlur(InputType.QUANTITY)}
-      className="!oui-rounded-r"
+      className="oui-orderEntry-quantityInput !oui-rounded-r"
       classNames={{
         suffix: "oui-justify-end",
       }}

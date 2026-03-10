@@ -46,7 +46,7 @@ export const Tab: FC<
             props.anATrader();
           }}
         >
-          <TraderIcon />
+          <TraderIcon className="oui-text-base-contrast" />
           <Text>{t("affiliate.asTrader.title")}</Text>
         </Button>
       );
@@ -68,7 +68,7 @@ export const Tab: FC<
             props.anAnAffiliate();
           }}
         >
-          <AffiliateIcon />
+          <AffiliateIcon className="oui-text-base-contrast" />
           <Text>{t("affiliate.asAffiliate.title")}</Text>
         </Button>
       );
@@ -118,12 +118,10 @@ export const Tab: FC<
           >
             <Flex direction={"row"} gap={1} mb={2}>
               <AffiliateIcon
-                fillOpacity={1}
-                fill="currentColor"
                 className={
                   props.tab === TabTypes.affiliate
-                    ? "oui-fill-white/[.98]"
-                    : "oui-fill-white/[.36]"
+                    ? "oui-text-base-contrast"
+                    : "oui-text-base-contrast-36"
                 }
               />
               <Text>{t("common.affiliate")}</Text>
@@ -137,12 +135,10 @@ export const Tab: FC<
           >
             <Flex direction={"row"} gap={1} mb={2}>
               <TraderIcon
-                fillOpacity={1}
-                fill="currentColor"
                 className={
                   props.tab === TabTypes.trader
-                    ? "oui-fill-white/[.98]"
-                    : "oui-fill-white/[.36]"
+                    ? "oui-text-base-contrast"
+                    : "oui-text-base-contrast-36"
                 }
               />
               <Text>{t("affiliate.trader")}</Text>

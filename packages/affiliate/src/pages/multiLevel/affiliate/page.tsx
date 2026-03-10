@@ -14,8 +14,12 @@ export const MultiLevelAffiliatePage = () => {
 
   return (
     <Flex
-      id="oui-affiliate-affiliate-page"
-      className={cn("oui-h-lvw", "oui-font-semibold", "oui-pb-24 oui-pt-16")}
+      className={cn(
+        "oui-multiLevel-affiliate-page",
+        "oui-h-lvw",
+        "oui-font-semibold",
+        "oui-pb-24 oui-pt-16",
+      )}
       direction={"column"}
       gap={4}
     >
@@ -42,7 +46,7 @@ export const MultiLevelAffiliatePage = () => {
             rows={1}
             className="md:oui-grid-cols-2"
           >
-            <div className="oui-order-2 md:oui-order-1">
+            <div className="oui-multiLevel-affiliate-summary-container oui-order-2 md:oui-order-1">
               <SummaryWidget />
             </div>
             <div className="oui-order-1 md:oui-order-2">
@@ -56,7 +60,9 @@ export const MultiLevelAffiliatePage = () => {
 
           <CommissionChartWidget />
 
-          <ReferrerTableWidget />
+          <div className="oui-multiLevel-affiliate-referrerTables-container">
+            <ReferrerTableWidget />
+          </div>
         </Flex>
       </div>
     </Flex>

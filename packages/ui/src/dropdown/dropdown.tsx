@@ -18,6 +18,7 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 const dropdownMenuVariants = tv({
   slots: {
     content: [
+      "oui-dropdown-menu-content",
       "oui-z-50",
       "oui-min-w-[8rem]",
       "oui-overflow-hidden",
@@ -40,6 +41,7 @@ const dropdownMenuVariants = tv({
       "data-[side=top]:oui-slide-in-from-bottom-2",
     ],
     item: [
+      "oui-dropdown-menu-item",
       "oui-relative",
       "oui-flex",
       "oui-cursor-default",

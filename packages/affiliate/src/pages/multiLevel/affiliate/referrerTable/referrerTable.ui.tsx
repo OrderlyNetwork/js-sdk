@@ -15,7 +15,7 @@ export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
   return (
     <Flex
       direction="column"
-      className="oui-rounded-2xl oui-bg-base-9 [&_td]:oui-font-medium [&_td]:oui-tracking-[0.03em] [&_th]:oui-font-semibold"
+      className="oui-affiliate-referrerTable oui-rounded-2xl oui-bg-base-9 [&_td]:oui-font-medium [&_td]:oui-tracking-[0.03em] [&_th]:oui-font-semibold"
       px={3}
       pt={4}
       gap={4}
@@ -24,7 +24,7 @@ export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
       <Tabs
         value={props.activeTab}
         onValueChange={(value) => props.setActiveTab(value as ReferrerTableTab)}
-        className="oui-w-full oui-text-base"
+        className="oui-referrerTable-tabs oui-w-full oui-text-base"
         variant="text"
         classNames={{
           tabsListContainer: "oui-px-3",
