@@ -70,7 +70,7 @@ export const useSymbolLeverageScript = (
     maxPositionLeverage,
     overMaxPositionLeverage,
     overRequiredMargin,
-  } = useCalc({ symbol: symbol!, leverage, maxLeverage });
+  } = useCalc({ symbol: symbol!, leverage, maxLeverage, marginMode });
 
   const formattedLeverageLevers = useMemo(() => {
     return generateLeverageLeversForSelector(maxLeverage);
@@ -313,8 +313,9 @@ function useCalc(inputs: {
   symbol: string;
   leverage: number;
   maxLeverage: number;
+  marginMode: MarginMode;
 }) {
-  const { symbol, leverage, maxLeverage } = inputs;
+  const { symbol, leverage, maxLeverage, marginMode } = inputs;
 
   const symbolsInfo = useSymbolsInfo();
   const { data: accountInfo } = useAccountInfo();
@@ -331,9 +332,11 @@ function useCalc(inputs: {
 
   const position = useMemo(() => {
     if (symbol && positions?.rows?.length) {
-      return positions.rows.find((item) => item.symbol === symbol);
+      return positions.rows.find(
+        (item) => item.symbol === symbol && item.margin_mode === marginMode,
+      );
     }
-  }, [positions, symbol]);
+  }, [positions, symbol, marginMode]);
 
   /** the highest allowable leverage. Block users from setting leverage above this limit. */
   const maxPositionLeverage = useMemo(() => {
@@ -375,7 +378,7 @@ function useCalc(inputs: {
 
     const positionList = leverage
       ? positions?.rows.map((item) => {
-          if (item.symbol === symbol) {
+          if (item.symbol === symbol && item.margin_mode === marginMode) {
             return {
               ...item,
               leverage,
@@ -420,6 +423,7 @@ function useCalc(inputs: {
     totalCollateral,
     leverage,
     symbol,
+    marginMode,
   ]);
 
   const overRequiredMargin = useMemo(() => {

@@ -6,6 +6,7 @@ import {
   useEstLiqPriceBySymbol,
   useEventEmitter,
   useLocalStorage,
+  useMarginModeBySymbol,
   useMemoizedFn,
   usePositionStream,
   useSymbolsInfo,
@@ -17,6 +18,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
   API,
+  MarginMode,
   OrderType,
   PositionType,
   SDKError,
@@ -78,11 +80,12 @@ export const useTPSLBuilder = (
   // const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+  const { marginMode: symbolMarginMode } = useMarginModeBySymbol(symbol);
   const [{ rows: positions }] = usePositionStream();
   const mainAccountPosition = positions.find(
     (item) =>
       item.symbol === symbol &&
-      item.margin_mode === options.position?.margin_mode,
+      item.margin_mode === (options.position?.margin_mode ?? symbolMarginMode),
   );
 
   const isSubAccount =
@@ -91,7 +94,10 @@ export const useTPSLBuilder = (
 
   const position = isSubAccount ? options.position : mainAccountPosition;
 
-  const estLiqPrice = useEstLiqPriceBySymbol(symbol);
+  const estLiqPrice = useEstLiqPriceBySymbol(
+    symbol,
+    position?.margin_mode ?? options.position?.margin_mode ?? MarginMode.CROSS,
+  );
 
   useEffect(() => {
     if (!position) {

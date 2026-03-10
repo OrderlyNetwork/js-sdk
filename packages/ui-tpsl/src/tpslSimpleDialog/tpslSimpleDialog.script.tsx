@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
   useLocalStorage,
+  useMarginModeBySymbol,
   useMemoizedFn,
   usePositionStream,
   useSymbolsInfo,
@@ -28,8 +29,9 @@ export type TPSLBuilderOptions = {
 export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   const { type, triggerPrice, symbol } = options;
   const symbolInfo = useSymbolsInfo();
+  const { marginMode } = useMarginModeBySymbol(symbol ?? "");
   const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
-  const position = positions?.[0];
+  const position = positions?.find((item) => item.margin_mode === marginMode);
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { t } = useTranslation();
