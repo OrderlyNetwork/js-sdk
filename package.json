@@ -61,6 +61,11 @@
     "node": ">=20.19.0",
     "pnpm": ">=10.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "@orderly.network/plugin-core": "workspace:*"
+    }
+  },
   "packageManager": "pnpm@10.26.2",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,html,css,md}": [

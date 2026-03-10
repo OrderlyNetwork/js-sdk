@@ -33,7 +33,7 @@ import {
   OrderEntrySortKeys,
   TradingviewFullscreenKey,
 } from "@orderly.network/types";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { Box, cn, Flex, injectable } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
@@ -944,4 +944,18 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       </DragOverlay>
     </DndContext>
   );
+};
+
+/** Default desktop trading page - can be intercepted by plugins via Trading.TradingPage path */
+const InjectableTradingPage = injectable<DesktopLayoutProps>(
+  DesktopLayout,
+  "Trading.TradingPage",
+);
+
+/**
+ * Extension slot for desktop trading page. Plugins can register interceptors
+ * for 'Trading.TradingPage' via OrderlyPluginProvider.
+ */
+export const TradingPageExtension: React.FC<DesktopLayoutProps> = (props) => {
+  return <InjectableTradingPage {...props} />;
 };
