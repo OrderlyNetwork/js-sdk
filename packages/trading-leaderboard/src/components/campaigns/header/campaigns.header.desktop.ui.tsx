@@ -112,7 +112,7 @@ export const CampaignsHeaderUI: FC<{
         />
       </div>
 
-      <div className="oui-h-[78px] oui-w-px oui-bg-white/[0.16]" />
+      <div className="oui-h-[78px] oui-w-px oui-bg-base-contrast-16" />
 
       <button
         onClick={scrollPrev}

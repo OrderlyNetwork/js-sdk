@@ -41,7 +41,12 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
   }, [props.hidden]);
 
   return (
-    <div className={"oui-text-base-contrast-54"}>
+    <div
+      className={cn(
+        "oui-orderEntry-additionalInfo",
+        "oui-text-base-contrast-54",
+      )}
+    >
       <Flex
         justify={pinned ? "start" : "between"}
         mb={3}
@@ -54,7 +59,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
           <Checkbox
             data-testid="oui-testid-orderEntry-postOnly-checkBox"
             id={"toggle_order_post_only"}
-            className="oui-peer"
+            className={"oui-postOnly-checkbox oui-peer"}
             color={"white"}
             variant={"radio"}
             disabled={!props.showExtra}
@@ -68,6 +73,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             <label
               htmlFor={"toggle_order_post_only"}
               className={cn(
+                "oui-postOnly-label",
                 "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
                 "oui-cursor-pointer oui-whitespace-nowrap oui-break-normal oui-border-b oui-border-dashed oui-border-line-12",
               )}
@@ -81,7 +87,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             data-testid="oui-testid-orderEntry-ioc-checkBox"
             id={"toggle_order_iov"}
             color={"white"}
-            className="oui-peer"
+            className={cn("oui-ioc-checkbox", "oui-peer")}
             variant={"radio"}
             checked={orderTypeExtra === OrderType.IOC}
             onCheckedChange={onTypeToggle(OrderType.IOC)}
@@ -94,6 +100,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             <label
               htmlFor={"toggle_order_iov"}
               className={cn(
+                "oui-ioc-label",
                 "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
                 "oui-cursor-pointer oui-whitespace-nowrap oui-break-normal oui-border-b oui-border-dashed oui-border-line-12",
               )}
@@ -108,7 +115,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             id={"toggle_order_fok"}
             color={"white"}
             variant={"radio"}
-            className="oui-peer"
+            className={cn("oui-fok-checkbox", "oui-peer")}
             checked={orderTypeExtra === OrderType.FOK}
             onCheckedChange={onTypeToggle(OrderType.FOK)}
             disabled={!props.showExtra}
@@ -120,6 +127,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             <label
               htmlFor={"toggle_order_fok"}
               className={cn(
+                "oui-fok-label",
                 "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
                 "oui-cursor-pointer oui-whitespace-nowrap oui-break-normal oui-border-b oui-border-dashed oui-border-line-12",
               )}
@@ -136,6 +144,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             data-testid="oui-testid-orderEntry-orderConfirm-checkBox"
             id={"toggle_order_confirm"}
             color={"white"}
+            className="oui-orderConfirm-checkbox"
             checked={props.needConfirm}
             onCheckedChange={(checked) => {
               props.setNeedConfirm(!!checked);
@@ -143,7 +152,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
           />
           <label
             htmlFor={"toggle_order_confirm"}
-            className={"oui-ml-1 oui-text-2xs"}
+            className={"oui-orderConfirm-label oui-ml-1 oui-text-2xs"}
           >
             {t("orderEntry.orderConfirm")}
           </label>
@@ -153,6 +162,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             data-testid="oui-testid-orderEntry-hidden-checkBox"
             id={"toggle_order_hidden"}
             color={"white"}
+            className="oui-orderHidden-checkbox"
             checked={props.hidden}
             onCheckedChange={(checked: boolean) => {
               props.setHidden(checked);
@@ -165,7 +175,7 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             <label
               htmlFor={"toggle_order_hidden"}
               className={
-                "oui-ml-1 oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-2xs"
+                "oui-orderHidden-label oui-ml-1 oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-2xs"
               }
             >
               {t("orderEntry.hidden")}
@@ -180,13 +190,14 @@ export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
             <Switch
               data-testid="oui-testid-orderEntry-additional-keepVisible-switch"
               id={"toggle_order_keep_visible"}
+              className="oui-keepVisible-switch"
               onCheckedChange={(checked) => {
                 props.setPinned(checked);
               }}
             />
             <label
               htmlFor={"toggle_order_keep_visible"}
-              className={"oui-ml-1 oui-text-2xs"}
+              className={"oui-keepVisible-label oui-ml-1 oui-text-2xs"}
             >
               {t("orderEntry.keepVisible")}
             </label>

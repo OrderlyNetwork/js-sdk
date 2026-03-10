@@ -129,10 +129,11 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
   }, [t, symbolInfo, askAndBid, base_dp, quote_dp]);
 
   return (
-    <div className="oui-font-semibold">
+    <div className="oui-orderEntry-scaledOrderConfirm oui-font-semibold">
       <DataTable
         classNames={{
           root: cn(
+            "oui-scaledOrderConfirm-table",
             "oui-bg-base-7",
             "oui-rounded-lg",
             // need to set overflow hidden because table header will avoid the border radius
@@ -153,7 +154,7 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
           };
         }}
       />
-      <div className="oui-mb-5 oui-mt-4 oui-text-2xs">
+      <div className="oui-scaledOrderConfirm-content oui-mb-5 oui-mt-4 oui-text-2xs">
         <Flex justify="between">
           <Text>{t("orderEntry.totalOrders")}</Text>
           <Text intensity={80}>{order.orders?.length}</Text>
@@ -189,10 +190,19 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
       </div>
 
       <Grid cols={2} gapX={3}>
-        <Button color={"secondary"} size={"md"} onClick={onCancel}>
+        <Button
+          color={"secondary"}
+          size={"md"}
+          className="oui-scaledOrderConfirm-cancel-btn"
+          onClick={onCancel}
+        >
           {t("common.cancel")}
         </Button>
-        <Button size={"md"} onClick={onConfirm}>
+        <Button
+          size={"md"}
+          className="oui-scaledOrderConfirm-confirm-btn"
+          onClick={onConfirm}
+        >
           {t("common.confirm")}
         </Button>
       </Grid>

@@ -26,7 +26,7 @@ const FAQItem: FC<FAQItemProps> = ({ question, answer }) => {
       >
         <Text
           className={cn(
-            "oui-flex-1 oui-text-white oui-font-semibold oui-tracking-[0.03em]",
+            "oui-flex-1 oui-text-base-contrast oui-font-semibold oui-tracking-[0.03em]",
             isMobile
               ? "oui-text-lg oui-leading-[26px]"
               : "oui-text-xl oui-leading-8",
@@ -37,7 +37,7 @@ const FAQItem: FC<FAQItemProps> = ({ question, answer }) => {
         <ChevronDownIcon
           size={24}
           className={cn(
-            "oui-text-white oui-transition-transform oui-duration-300 oui-flex-shrink-0",
+            "oui-text-base-contrast oui-transition-transform oui-duration-300 oui-flex-shrink-0",
             isOpen && "oui-rotate-180",
           )}
         />

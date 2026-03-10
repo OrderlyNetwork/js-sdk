@@ -43,8 +43,17 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
             <LazySearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
           </React.Suspense>
         }
+        classNames={{
+          tabsList: "oui-tabs-markets-list",
+          tabsContent: "oui-tabs-markets-content",
+        }}
+        className="oui-markets-list-tabs"
       >
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-favorites-trigger",
+            content: "oui-tabs-favorites-content",
+          }}
           title={<FavoritesIcon />}
           value="favorites"
           testid="oui-testid-markets-favorites-tab"
@@ -62,6 +71,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           </React.Suspense>
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-all-trigger",
+            content: "oui-tabs-all-content",
+          }}
           title={t("markets.allMarkets")}
           icon={<AllMarketsIcon />}
           value="all"
@@ -75,6 +88,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           </React.Suspense>
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-rwa-trigger",
+            content: "oui-tabs-rwa-content",
+          }}
           title={<RwaIconTab />}
           value="rwa"
           testid="oui-testid-markets-rwa-tab"
@@ -87,6 +104,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           </React.Suspense>
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-newListings-trigger",
+            content: "oui-tabs-newListings-content",
+          }}
           title={t("markets.newListings")}
           icon={<NewListingsIcon />}
           value="new"

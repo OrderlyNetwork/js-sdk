@@ -1,13 +1,14 @@
-const { withTV } = require("tailwind-variants/transformer");
-
-const { sizePlugin } = require("./src/tailwind/size");
-const { gradientPlugin } = require("./src/tailwind/gradient");
-const { positionPlugin } = require("./src/tailwind/position");
-const { basePlugin } = require("./src/tailwind/base");
-const { componentsPlugin } = require("./src/tailwind/components");
-const { themePlugin } = require("./src/tailwind/theme");
-const { scrollBarPlugin } = require("./src/tailwind/scrollBar");
-const { chartPlugin } = require("./src/tailwind/chart");
+import { withTV } from "tailwind-variants/transformer";
+import {
+  darkThemePlugin,
+  basePlugin,
+  sizePlugin,
+  chartPlugin,
+  gradientPlugin,
+  positionPlugin,
+  componentsPlugin,
+  scrollBarPlugin,
+} from "./src/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -156,15 +157,35 @@ module.exports = withTV({
             80: "rgb(var(--oui-color-base-foreground) / 0.80)",
             54: "rgb(var(--oui-color-base-foreground) / 0.54)",
             36: "rgb(var(--oui-color-base-foreground) / 0.36)",
+            30: "rgb(var(--oui-color-base-foreground) / 0.30)",
             20: "rgb(var(--oui-color-base-foreground) / 0.2)",
-            12: "rgb(var(--oui-color-base-foreground) / 0.12)",
             16: "rgb(var(--oui-color-base-foreground) / 0.16)",
+            12: "rgb(var(--oui-color-base-foreground) / 0.12)",
+            10: "rgb(var(--oui-color-base-foreground) / 0.10)",
+            8: "rgb(var(--oui-color-base-foreground) / 0.08)",
+            6: "rgb(var(--oui-color-base-foreground) / 0.06)",
+            4: "rgb(var(--oui-color-base-foreground) / 0.04)",
+          },
+          static: {
+            DEFAULT: "rgb(var(--oui-color-base-static) / 0.98)",
+            80: "rgb(var(--oui-color-base-static) / 0.80)",
+            54: "rgb(var(--oui-color-base-static) / 0.54)",
+            36: "rgb(var(--oui-color-base-static) / 0.36)",
+            20: "rgb(var(--oui-color-base-static) / 0.2)",
+            contrast: {
+              DEFAULT: "rgb(var(--oui-color-base-static-contrast) / 0.98)",
+              80: "rgb(var(--oui-color-base-static-contrast) / 0.80)",
+              54: "rgb(var(--oui-color-base-static-contrast) / 0.54)",
+              36: "rgb(var(--oui-color-base-static-contrast) / 0.36)",
+              20: "rgb(var(--oui-color-base-static-contrast) / 0.2)",
+            },
           },
         },
         line: {
           4: "rgb(var(--oui-color-line, 255 255 255) / 0.04)",
           6: "rgb(var(--oui-color-line, 255 255 255) / 0.06)",
           DEFAULT: "rgb(var(--oui-color-line, 255 255 255) / 0.08)",
+          10: "rgb(var(--oui-color-line, 255 255 255) / 0.10)",
           12: "rgb(var(--oui-color-line, 255 255 255) / 0.12)",
           16: "rgb(var(--oui-color-line, 255 255 255) / 0.16)",
         },
@@ -239,7 +260,7 @@ module.exports = withTV({
     },
   },
   plugins: [
-    themePlugin(),
+    darkThemePlugin(),
     basePlugin(),
     sizePlugin(),
     chartPlugin(),

@@ -38,7 +38,7 @@ export const OfflineInfo: FC<OfflineInfoProps> = (props) => {
         color="warning"
         size={"xs"}
         icon={<RefreshIcon />}
-        className="oui-bg-[#d25f00]"
+        className="oui-bg-warning-darken"
         onClick={() => {
           if (props.onRefresh) {
             props.onRefresh();

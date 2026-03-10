@@ -78,7 +78,7 @@ export const DesktopListBox: React.FC<DesktopListBoxProps> = (props) => {
   const [hoverIndex, setHoverIndex] = useState<number>(-1);
 
   return (
-    <div className="oui-order-book-list oui-flex oui-flex-col oui-gap-px">
+    <div className="oui-order-book-list oui-orderBook-list oui-flex oui-flex-col oui-gap-px">
       {data.map((item, index) => {
         return (
           <Tip

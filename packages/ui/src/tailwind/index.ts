@@ -5,4 +5,4 @@ export { gradientPlugin } from "./gradient";
 export { positionPlugin } from "./position";
 export { scrollBarPlugin } from "./scrollBar";
 export { sizePlugin } from "./size";
-export { themePlugin } from "./theme";
+export * from "./theme";

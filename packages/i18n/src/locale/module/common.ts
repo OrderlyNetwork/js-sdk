@@ -13,6 +13,9 @@ export const common = {
   "common.save": "Save",
   "common.add": "Add",
   "common.delete": "Delete",
+  "common.action": "Action",
+  "common.code": "Code",
+  "common.reset": "Reset",
   "common.tips": "Tips",
   "common.max": "Max",
   "common.download": "Download",
@@ -49,8 +52,6 @@ export const common = {
   "common.notional": "Notional",
   "common.fee": "Fee",
   "common.fees": "Fees",
-  "common.effectiveFee": "Effective Fees",
-
   "common.orderPrice": "Order price",
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",

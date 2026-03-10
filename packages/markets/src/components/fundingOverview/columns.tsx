@@ -8,6 +8,7 @@ import {
   Text,
   TokenIcon,
   useScreen,
+  Badge,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { SymbolDisplay } from "../symbolDisplay";
@@ -48,17 +49,39 @@ export const useFundingOverviewColumns = (
         onSort: true,
         width: 135,
         className: isMobile ? "oui-pl-0" : undefined,
-        render: (value) => (
-          <Flex gapX={1}>
-            <TokenIcon
-              symbol={value}
-              className={isMobile ? "oui-size-[18px]" : "oui-size-5"}
-            />
-            <SymbolDisplay formatString="base" size="xs">
-              {value}
-            </SymbolDisplay>
-          </Flex>
-        ),
+        render: (value, record) => {
+          if (isMobile) {
+            return (
+              <Flex direction="column" itemAlign="start" gapY={1}>
+                <Flex gapX={1} itemAlign="center">
+                  <TokenIcon symbol={value} className="oui-size-[18px]" />
+                  <SymbolDisplay formatString="base" size="2xs">
+                    {value}
+                  </SymbolDisplay>
+                </Flex>
+                {typeof record.leverage === "number" && (
+                  <Badge size="xs" color="primary">
+                    {record.leverage}x
+                  </Badge>
+                )}
+              </Flex>
+            );
+          }
+
+          return (
+            <Flex gapX={1} itemAlign="center">
+              <TokenIcon symbol={value} className="oui-size-5" />
+              <SymbolDisplay formatString="base" size="xs">
+                {value}
+              </SymbolDisplay>
+              {typeof record.leverage === "number" && (
+                <Badge size="xs" color="primary">
+                  {record.leverage}x
+                </Badge>
+              )}
+            </Flex>
+          );
+        },
       },
       {
         title: t("markets.funding.column.estFunding"),

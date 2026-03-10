@@ -106,11 +106,11 @@ export function ConnectDrawer(props: {
         body: "oui-h-full oui-py-0  oui-border-none oui-relative",
         // overlay: "!oui-bg-base-10/60",
         content: cn(
-          "!oui-p-4  !oui-bg-[#131519] !oui-border !oui-border-solid !oui-border-line-12",
+          "!oui-p-4  !oui-bg-base-9 !oui-border !oui-border-solid !oui-border-line-12",
 
           isMobile
-            ? "oui-inset-y-0 oui-right-0 oui-w-[280px] oui-rounded-none !oui-bg-[#181C23]"
-            : "!oui-bottom-[30px] oui-right-3 oui-top-[48px] !oui-h-auto oui-w-[300px] oui-overflow-hidden oui-rounded-[16px] !oui-bg-[#131519] ",
+            ? "oui-inset-y-0 oui-right-0 oui-w-[280px] oui-rounded-none !oui-bg-base-8"
+            : "!oui-bottom-[30px] oui-right-3 oui-top-[48px] !oui-h-auto oui-w-[300px] oui-overflow-hidden oui-rounded-[16px] !oui-bg-base-9 ",
         ),
       }}
       contentProps={{ side: "right", closeable: false }}
@@ -142,10 +142,10 @@ export function ConnectDrawer(props: {
                 itemAlign="center"
                 justify="between"
                 gap={4}
-                className="oui-rounded-[8px] oui-px-3 oui-py-2 oui-text-2xs oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.10)_0%,rgba(38,254,254,0.10)_100%)] oui-w-full"
+                className="oui-rounded-[8px] oui-px-3 oui-py-2 oui-text-2xs oui-bg-[linear-gradient(270deg,rgba(var(--oui-gradient-brand-end),0.10)_0%,rgba(var(--oui-gradient-brand-start),0.10)_100%)] oui-w-full"
                 onClick={() => showPwaDialog()}
               >
-                <Text className="oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-bg-clip-text oui-text-transparent">
+                <Text className="oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)] oui-bg-clip-text oui-text-transparent">
                   {t("connector.privy.pwa.title")}
                 </Text>
                 <ArrowRightLinearGradientIcon

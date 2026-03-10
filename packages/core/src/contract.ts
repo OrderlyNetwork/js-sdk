@@ -46,21 +46,30 @@ import stagingVaultAbiOnArbitrumTestnet from "./wallet/abis/stagingVaultAbi.json
  * Orderly contracts information
  */
 export type OrderlyContracts = {
-  usdcAddress: string;
   usdcAbi: any;
   erc20Abi: any;
-  vaultAddress: string;
   vaultAbi: any;
   verifyContractAddress: string;
+  usdcAddress: string;
+  /** @deprecated, will be removed in the future */
+  vaultAddress: string;
+  /** @deprecated, will be removed in the future */
   solanaUSDCAddress: string;
+  /** @deprecated, will be removed in the future */
   solanaVaultAddress: string;
-  // only for testnet, mainnet vault on evm chain is all same address
+  /** @deprecated, will be removed in the future */
   storyTestnetVaultAddress?: string;
+  /** @deprecated, will be removed in the future */
   monadTestnetVaultAddress?: string;
+  /** @deprecated, will be removed in the future */
   monadTestnetUSDCAddress?: string;
+  /** @deprecated, will be removed in the future */
   abstractVaultAddress?: string;
+  /** @deprecated, will be removed in the future */
   abstractUSDCAddress?: string;
+  /** @deprecated, will be removed in the future */
   bscVaultAddress?: string;
+  /** @deprecated, will be removed in the future */
   bscUSDCAddress?: string;
 };
 

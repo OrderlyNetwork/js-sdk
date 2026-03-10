@@ -11,13 +11,12 @@ interface MarkPriceProps {
 
 export const MarkPrice: FC<MarkPriceProps> = (props) => {
   const { symbolInfo } = useOrderBookContext();
-
   const { quote_dp } = symbolInfo;
 
   return (
     <Flex
       id="oui-order-book-mark-price"
-      className="oui-py-[6px]"
+      className="oui-orderBook-markPrice oui-py-[6px]"
       width={"100%"}
       justify={"between"}
     >

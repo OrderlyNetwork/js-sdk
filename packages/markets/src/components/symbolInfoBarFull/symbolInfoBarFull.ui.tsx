@@ -9,6 +9,7 @@ import {
   Divider,
   NewsFillIcon,
   Box,
+  Tooltip,
 } from "@orderly.network/ui";
 import { CloseIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -110,7 +111,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
         className="oui-shrink-0 oui-gap-y-[2px]"
       >
         <LazyDropDownMarketsWidget
-          contentClassName="oui-w-[429px] oui-h-[496px]"
+          contentClassName="oui-w-[580px] oui-h-[496px]"
           symbol={props.symbol}
           onSymbolChange={props.onSymbolChange}
         >
@@ -192,7 +193,14 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
             direction="vertical"
             intensity={8}
           />
-          {price}
+          <Tooltip
+            content={t("markets.symbolInfoBar.lastPrice.tooltip")}
+            className="oui-max-w-[240px]"
+          >
+            <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-inline-block">
+              {price}
+            </span>
+          </Tooltip>
           <div className="oui-relative oui-h-full oui-overflow-hidden">
             <div
               ref={containerRef}
@@ -315,7 +323,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
       }}
       style={{
         background:
-          "linear-gradient(90deg, #07080A 0%, rgba(7, 8, 10, 0.60) 65%, rgba(7, 8, 10, 0.00) 100%)",
+          "linear-gradient(90deg, rgb(var(--oui-color-base-10)) 0%, rgba(var(--oui-color-base-10), 0.60) 65%, rgba(var(--oui-color-base-10), 0.00) 100%)",
       }}
       className={cn(
         "oui-flex oui-w-[80px] oui-items-center",

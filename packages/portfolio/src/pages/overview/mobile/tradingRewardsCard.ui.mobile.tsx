@@ -189,7 +189,7 @@ const CountDownItem: React.FC<{ type: string; value: number }> = (props) => {
     <Flex
       direction="column"
       itemAlign={"center"}
-      className="oui-h-11 oui-w-8 oui-rounded-[6px] oui-bg-white/[0.08]"
+      className="oui-h-11 oui-w-8 oui-rounded-[6px] oui-bg-base-contrast-8"
     >
       <Text className="oui-text-base oui-font-bold oui-text-base-contrast">
         {value}

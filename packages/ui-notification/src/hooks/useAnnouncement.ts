@@ -99,8 +99,6 @@ const useAnnouncementData = () => {
       list = dataAdapter.announcementList(list);
     }
 
-    console.log("list", list);
-
     list = list.filter((item) =>
       shouldShowListingDelistingAnnouncement(item, marketList),
     );

@@ -37,7 +37,7 @@ export const TopTab: React.FC<TopTabState & { className?: string }> = (
         props.setTab(e as TopTabType);
         props.setVisible(true);
       }}
-      className={props.className}
+      className={cn("oui-trading-topTab", props.className)}
       classNames={{
         tabsList: "oui-p-2",
         tabsContent: "oui-min-h-[176px] oui-max-h-[396px]",

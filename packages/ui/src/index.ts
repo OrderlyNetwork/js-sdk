@@ -55,7 +55,10 @@ export {
   OrderlyThemeProvider,
   type OrderlyThemeProviderProps,
 } from "./provider/orderlyThemeProvider";
-export { useOrderlyTheme } from "./provider/orderlyThemeContext";
+export {
+  useOrderlyTheme,
+  type ThemeConfig,
+} from "./provider/orderlyThemeContext";
 export * from "./plugin";
 
 //===== Misc widgets
@@ -80,10 +83,17 @@ export * from "embla-carousel-autoplay";
 export { default as Autoplay } from "embla-carousel-autoplay";
 export * from "embla-carousel";
 
-//===== tailwind
-export * as OUITailwind from "./tailwind";
 export * from "./hooks";
 
+export * from "./tips";
 export * from "./locale";
 export * from "./scrollIndicator";
 export * from "./status";
+
+//===== tailwind
+export * as OUITailwind from "./tailwind";
+export {
+  DARK_THEME_CSS_VARS,
+  LIGHT_THEME_CSS_VARS,
+  type ThemeCssVars,
+} from "./tailwind/theme";

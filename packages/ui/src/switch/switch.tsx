@@ -1,11 +1,11 @@
 import React from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { tv, type VariantProps } from "tailwind-variants";
-import { cn } from "..";
 
 const switchVariants = tv({
   slots: {
     root: [
+      "oui-switch",
       "peer",
       "oui-inline-flex",
       "oui-h-[16px]",
@@ -34,8 +34,9 @@ const switchVariants = tv({
       "oui-h-[10px]",
       "oui-w-[10px]",
       "oui-rounded-full",
-      // "oui-bg-white/80",
-      "oui-bg-primary-contrast",
+      // hardcode white display better than primary-contrast, because primary-contrast is too dark in light mode
+      "oui-bg-white",
+      // "oui-bg-primary-contrast",
       "oui-shadow-lg",
       "oui-ring-0",
       "oui-transition-transform",
@@ -77,7 +78,8 @@ const switchVariants = tv({
 });
 
 interface SwitchProps
-  extends VariantProps<typeof switchVariants>,
+  extends
+    VariantProps<typeof switchVariants>,
     Omit<
       React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
       "color"

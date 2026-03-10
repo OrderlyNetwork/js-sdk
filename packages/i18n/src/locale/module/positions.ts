@@ -12,12 +12,19 @@ export const positions = {
   "positions.closeAll.description":
     "Are you sure you want to close all of your positions? They will be closed using market orders.",
   "positions.closeAll.success": "All positions closed successfully",
+  "positions.closeAll.optionAll": "Close all positions",
+  "positions.closeAll.optionProfit": "Close profitable positions",
+  "positions.closeAll.optionLoss": "Close loss-making positions",
+  "positions.closeAll.noPositions.profit": "No profitable positions to close.",
+  "positions.closeAll.noPositions.loss": "No loss-making positions to close.",
+  "positions.closeAll.popover.desc":
+    "Select which positions you want to close. They will  be closed at the market price of the corresponding market.",
 
   "positions.column.liqPrice": "Liq. price",
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",
-  "positions.column.margin": "Margin",
+  "positions.column.margin": "Maintenance Margin",
   "positions.column.margin.tooltip":
     "The minimum equity to keep your position.",
   "positions.column.margin.formula":

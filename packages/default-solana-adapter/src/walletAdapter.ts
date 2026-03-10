@@ -1,5 +1,5 @@
 import * as ed from "@noble/ed25519";
-import { getAccount } from "@solana/spl-token";
+import { getAccount, getMultipleAccounts } from "@solana/spl-token";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   clusterApiUrl,
@@ -8,7 +8,7 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { encode as bs58encode, decode as bs58Decode } from "bs58";
+import { encode as bs58encode } from "bs58";
 import { bytesToHex } from "ethereum-cryptography/utils";
 import {
   AddOrderlyKeyInputs,
@@ -24,14 +24,17 @@ import {
   DexRequestInputs,
   InternalTransferInputs,
 } from "@orderly.network/core";
-import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
+import {
+  API,
+  MaxUint256,
+  ChainNamespace,
+  isNativeTokenChecker,
+} from "@orderly.network/types";
 import {
   addOrderlyKeyMessage,
   checkIsLedgerWallet,
   deposit,
-  encodeLzMessage,
   getDepositQuoteFee,
-  MsgType,
   registerAccountMessage,
   settleMessage,
   internalTransferMessage,
@@ -330,7 +333,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       chainId: this.chainId,
     });
 
-    // 使用 signMessage 方法签名，而不是 signTypedData
+    // use signMessage method to sign, instead of signTypedData
     const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
     return {
@@ -349,6 +352,76 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     return BigInt(lamports);
   }
 
+  async getBalances(addresses: string[]) {
+    const userPublicKey = new PublicKey(this._address);
+    const connection = this.connection;
+
+    // Check which addresses are native SOL vs SPL tokens
+    const isNativeToken = addresses.map((address) =>
+      isNativeTokenChecker(address),
+    );
+
+    // Get native SOL balance once (if any address is SOL)
+    const hasNativeSOL = addresses.some((address) =>
+      isNativeTokenChecker(address),
+    );
+    let nativeSolBalance: bigint | null = null;
+    if (hasNativeSOL) {
+      nativeSolBalance = await this.getBalance();
+    }
+
+    // Get SPL token accounts for non-SOL addresses
+    const splTokenAddresses = addresses.filter(
+      (address) => !isNativeTokenChecker(address),
+    );
+
+    let splTokenBalances: bigint[] = [];
+
+    if (splTokenAddresses.length > 0) {
+      const tokenPublicKeys = splTokenAddresses.map(
+        (address) => new PublicKey(address),
+      );
+      const userTokenAccounts = tokenPublicKeys.map((tokenPublicKey) =>
+        getTokenAccounts(tokenPublicKey, userPublicKey),
+      );
+
+      const tokenAmount = await getMultipleAccounts(
+        connection,
+        userTokenAccounts,
+        "confirmed",
+      );
+      splTokenBalances = tokenAmount.map((item) => item.amount);
+    }
+
+    // Combine results in original order
+    const results: bigint[] = [];
+    let splIndex = 0;
+    for (let i = 0; i < addresses.length; i++) {
+      if (isNativeToken[i]) {
+        results.push(nativeSolBalance!);
+      } else {
+        results.push(splTokenBalances[splIndex]);
+        splIndex++;
+      }
+    }
+
+    return results;
+  }
+
+  async getBalanceByAddress(address: string): Promise<bigint> {
+    const tokenPublicKey = new PublicKey(address);
+    const userPublicKey = new PublicKey(this._address);
+    const userTokenAccount = getTokenAccounts(tokenPublicKey, userPublicKey);
+    const connection = this.connection;
+
+    const tokenAmount = await getAccount(
+      connection,
+      userTokenAccount,
+      "confirmed",
+    );
+    return tokenAmount.amount;
+  }
+
   async call(
     address: string,
     method: string,
@@ -357,26 +430,11 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       abi: any;
     },
   ) {
-    // console.log('-- solanan call', {
-    //   address,
-    //   method,
-    //   params,
-    //   options,
-    // })
     if (method === "balanceOf") {
-      const tokenPublicKey = new PublicKey(address);
-      const userPublicKey = new PublicKey(this._address);
-      const userTokenAccount = getTokenAccounts(tokenPublicKey, userPublicKey);
-      const connection = this.connection;
-
-      const tokenAmount = await getAccount(
-        connection,
-        userTokenAccount,
-        "confirmed",
-      );
-      return tokenAmount.amount;
+      return this.getBalanceByAddress(address);
     }
     if (method === "allowance") {
+      // sol does not require allowance
       return MaxUint256;
     }
     return BigInt(0);
@@ -436,6 +494,19 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       });
     }
     return 0;
+  }
+
+  async estimateGasFee(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+  ): Promise<bigint> {
+    return BigInt(0);
   }
 
   async pollTransactionReceiptWithBackoff(

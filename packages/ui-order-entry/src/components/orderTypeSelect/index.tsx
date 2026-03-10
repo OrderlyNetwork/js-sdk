@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide, OrderType } from "@orderly.network/types";
-import { Select, Text } from "@orderly.network/ui";
+import { cn, Select, Text } from "@orderly.network/ui";
 
 export const OrderTypeSelect = (props: {
   type: OrderType;
@@ -53,10 +53,16 @@ export const OrderTypeSelect = (props: {
       options={options}
       onValueChange={props.onChange}
       contentProps={{
-        className: "oui-bg-base-8",
+        className: cn(
+          "oui-orderEntry-orderTypeSelect-content",
+          "oui-bg-base-8",
+        ),
       }}
       classNames={{
-        trigger: "oui-bg-base-6 oui-border-line",
+        trigger: cn(
+          "oui-orderEntry-orderTypeSelect-btn",
+          "oui-bg-base-6 oui-border-line",
+        ),
       }}
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);

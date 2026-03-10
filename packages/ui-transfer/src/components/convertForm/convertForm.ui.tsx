@@ -54,7 +54,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
         </Box>
         <AvailableQuantity
           token={token}
-          amount={quantity}
+          quantity={quantity}
           maxQuantity={maxQuantity.toString()}
           loading={balanceRevalidating}
           onClick={() => {

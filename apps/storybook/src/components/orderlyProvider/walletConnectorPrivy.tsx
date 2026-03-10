@@ -15,11 +15,13 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import { useThemeAttribute } from "@orderly.network/ui";
 import {
   Network,
   WalletConnectorPrivyProvider,
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
+import { themes } from "../../orderlyConfig/themes";
 import { CustomProductNav } from "../customProductNav";
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
@@ -27,36 +29,32 @@ const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
 
   return Promise.reject(new WalletNotReadyError("wallet not ready"));
 };
-const networkId = import.meta.env.VITE_NETWORK_ID || "testnet";
-const network = networkId === "testnet" ? Network.testnet : Network.mainnet;
-const solanaNetwork =
-  networkId === "testnet"
-    ? WalletAdapterNetwork.Devnet
-    : WalletAdapterNetwork.Mainnet;
-
-const wallets = [
-  new PhantomWalletAdapter(),
-  new SolflareWalletAdapter(),
-  new LedgerWalletAdapter(),
-  new SolanaMobileWalletAdapter({
-    addressSelector: createDefaultAddressSelector(),
-    appIdentity: {
-      uri: `${location.protocol}//${location.host}`,
-    },
-    authorizationResultCache: createDefaultAuthorizationResultCache(),
-    chain: solanaNetwork,
-    onWalletNotFound: mobileWalletNotFoundHanlder,
-  }),
-];
 
 type WalletConnectorPrivyProps = {
   children: ReactNode;
   usePrivy?: boolean;
+  networkId?: string;
 };
 
+function useThemeMode() {
+  const themeId = useThemeAttribute();
+  const theme = themes.find((theme) => theme.id === themeId);
+  return theme?.mode === "light" ? "light" : "dark";
+}
+
 export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
+  const networkId =
+    props.networkId || import.meta.env.VITE_NETWORK_ID || "testnet";
+  const network = networkId === "testnet" ? Network.testnet : Network.mainnet;
+  const solanaNetwork =
+    networkId === "testnet"
+      ? WalletAdapterNetwork.Devnet
+      : WalletAdapterNetwork.Mainnet;
+  const themeMode = useThemeMode();
+
   return (
     <WalletConnectorPrivyProvider
+      key={themeMode}
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
       network={network}
       headerProps={{
@@ -69,22 +67,25 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
               appid: "cm50h5kjc011111gdn7i8cd2k",
               config: {
                 appearance: {
-                  theme: "dark",
-                  accentColor: "#181C23",
-                  logo: "/orderly-logo.svg",
+                  theme: themeMode,
+                  accentColor: "rgb(var(--oui-color-base-8))",
+                  logo:
+                    themeMode === "light"
+                      ? "/orderly-black.png"
+                      : "/orderly-white.png",
                 },
                 loginMethods: ["email", "google", "twitter", "telegram"],
               },
             }
           : undefined
       }
-      enableSwapDeposit={true}
       wagmiConfig={{
         connectors: [
           wagmiConnectors.injected(),
           wagmiConnectors.walletConnect({
             projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
             showQrModal: true,
+            qrModalOptions: { themeMode },
             storageOptions: {},
             metadata: {
               name: "Orderly Network",

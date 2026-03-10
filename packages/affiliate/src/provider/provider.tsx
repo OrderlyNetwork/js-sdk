@@ -17,6 +17,7 @@ import {
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useMultiLevelReferralData } from "../hooks/useMultiLevelReferralData";
 import {
   ReferralContext,
   ReferralContextProps,
@@ -49,7 +50,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     mutate: referralInfoMutate,
     isLoading,
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
     errorRetryCount: 3,
     ...noCacheConfig,
   });
@@ -58,8 +59,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     usePrivateQuery<API.AutoGenerateCode>(
       "/v1/referral/auto_referral/progress",
       {
-        revalidateOnFocus: true,
-        errorRetryCount: 2,
+        revalidateOnFocus: false,
+        errorRetryCount: 0,
         formatter: (data) => {
           return {
             code: data.auto_referral_code,
@@ -69,6 +70,16 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
         },
       },
     );
+
+  const {
+    volumePrerequisite,
+    multiLevelRebateInfo,
+    isMultiLevelEnabled,
+    isMultiLevelReferralUnlocked,
+    multiLevelRebateInfoMutate,
+    maxRebateRate,
+    isLoading: isMultiLevelLoading,
+  } = useMultiLevelReferralData();
 
   const [showHome, setShowHome] = useState(isLoading);
 
@@ -83,7 +94,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
 
   const { data: volumeStatistics, mutate: volumeStatisticsMutate } =
     usePrivateQuery<API.UserVolStats>("/v1/volume/user/stats", {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
     });
 
   const isAffiliate = useMemo(() => {
@@ -179,17 +190,23 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       dailyVolume,
       chartConfig,
       overwrite,
-      isLoading,
+      isLoading: isLoading || isMultiLevelLoading,
       wrongNetwork,
       disabledConnect,
       setShowHome,
-      setTab: setTab,
+      setTab,
       mutate: memoMutate,
       onBecomeAnAffiliate,
       bindReferralCodeState,
       onLearnAffiliate,
       showReferralPage,
       splashPage,
+      volumePrerequisite,
+      multiLevelRebateInfo,
+      isMultiLevelEnabled,
+      isMultiLevelReferralUnlocked,
+      multiLevelRebateInfoMutate,
+      maxRebateRate,
     };
   }, [
     becomeAnAffiliateUrl,
@@ -214,6 +231,13 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     showReferralPage,
     splashPage,
     memoMutate,
+    volumePrerequisite,
+    multiLevelRebateInfo,
+    isMultiLevelEnabled,
+    isMultiLevelReferralUnlocked,
+    multiLevelRebateInfoMutate,
+    maxRebateRate,
+    isMultiLevelLoading,
   ]);
 
   return (

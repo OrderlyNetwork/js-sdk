@@ -24,8 +24,8 @@ const buttonVariants = tv(
       variant: {
         text: "oui-bg-transparent",
         outlined: "oui-border",
-        contained: "oui-text-white",
-        gradient: "oui-gradient-brand oui-text-[rgba(0,0,0,0.88)]",
+        contained: "oui-text-base-contrast",
+        gradient: "oui-gradient-brand oui-text-base-10",
       },
       size: {
         xs: ["oui-px-2", "oui-rounded", "oui-h-6", "oui-text-2xs"], //24px
@@ -47,7 +47,7 @@ const buttonVariants = tv(
           "hover:oui-bg-warning-darken/80 active:oui-bg-warning-darken/70",
         gray: "hover:oui-bg-base-2/80 active:oui-bg-base-2/70",
         light:
-          "hover:oui-bg-white/80 active:oui-bg-white/50 disable:oui-bg-white/20",
+          "hover:oui-bg-base-static-80 active:oui-bg-base-static-54 disable:oui-bg-base-static-20",
       },
       fullWidth: {
         true: "oui-w-full",
@@ -102,9 +102,9 @@ const buttonVariants = tv(
         variant: "contained",
         color: "light",
         className: [
-          "oui-bg-white",
-          "oui-text-black/[.88]",
-          "disabled:oui-bg-white/30 hover:disabled:oui-bg-white/30 disabled:oui-text-black/[.36]",
+          "oui-bg-base-static",
+          "oui-text-base-static-contrast-80 disabled:oui-text-base-static-contrast-36",
+          "disabled:oui-bg-base-static-36 hover:disabled:oui-bg-base-static-36",
         ],
       },
 
@@ -209,8 +209,7 @@ const buttonVariants = tv(
 );
 
 interface ButtonProps
-  extends Omit<BaseButtonProps, "size">,
-    VariantProps<typeof buttonVariants> {
+  extends Omit<BaseButtonProps, "size">, VariantProps<typeof buttonVariants> {
   angle?: number;
   "data-testid"?: string;
 }

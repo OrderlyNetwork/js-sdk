@@ -1,9 +1,9 @@
-import { useRef, useEffect, useCallback, useMemo } from "react";
+import { useRef, useEffect, useCallback } from "react";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 import useCancelOrder from "../hooks/useCancelOrder";
+import { ChartMode, ColorConfigInterface } from "../type";
 import useEditOrder from "./useEditOrder";
 import useSenderOrder from "./useSendOrder";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { ChartMode, ColorConfigInterface } from "../type";
 
 const createBrokerMethod = <T extends (...args: any) => any>(method: T) => {
   return (params: T) => method(params);
@@ -27,9 +27,9 @@ const useBroker = ({
   const symbolData = useSymbolsInfo();
   const closePosition = useCallback(
     (position: any) => closeConfirm && closeConfirm(position),
-    [closeConfirm]
+    [closeConfirm],
   );
-  const { sendMarketOrder, sendLimitOrder} = useSenderOrder(symbol);
+  const { sendMarketOrder, sendLimitOrder } = useSenderOrder(symbol);
 
   const getSymbolInfo = useCallback(
     (symbol: string) => {
@@ -43,7 +43,7 @@ const useBroker = ({
         quoteTick: symbolData[symbol]("quote_tick"),
       };
     },
-    [symbolData]
+    [symbolData],
   );
   const broker = useRef({
     cancelOrder,
@@ -63,7 +63,7 @@ const useBroker = ({
   useEffect(() => {
     broker.current.sendLimitOrder = sendLimitOrder;
     broker.current.sendMarketOrder = sendMarketOrder;
-  }, [sendLimitOrder,  sendMarketOrder]);
+  }, [sendLimitOrder, sendMarketOrder]);
 
   useEffect(() => {
     broker.current.closePosition = closePosition;
@@ -72,6 +72,11 @@ const useBroker = ({
   useEffect(() => {
     broker.current.cancelOrder = cancelOrder;
   }, [cancelOrder]);
+
+  useEffect(() => {
+    // when theme change, update the color config
+    broker.current.colorConfig = colorConfig;
+  }, [colorConfig]);
 
   return broker.current;
 };

@@ -26,15 +26,16 @@ export type QuantityInputProps = {
   hintSuffix?: ReactNode;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: any) => void;
-  fetchBalance?: (token: string, decimals: number) => Promise<any>;
   loading?: boolean;
   testId?: string;
   formatters?: InputFormatter[];
+  // TOOD: remove this prop
   vaultBalanceList?: API.VaultBalance[];
   displayType?: "balance" | "vaultBalance";
-  tokenBalances?: Record<string, string>;
   tokenValueFormatter?: (value: string) => ReactNode;
   tokenShowCaret?: boolean;
+  balancesRevalidating?: boolean;
+  showBalance?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
@@ -48,16 +49,16 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     hintSuffix,
     value,
     onValueChange,
-    fetchBalance,
     onTokenChange,
     loading,
     placeholder,
     formatters,
     vaultBalanceList,
     displayType,
-    tokenBalances,
     tokenValueFormatter,
     tokenShowCaret,
+    balancesRevalidating,
+    showBalance,
     ...rest
   } = props;
 
@@ -79,10 +80,9 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         ...token,
         name: token.display_name || token.symbol!,
         insufficientBalance,
-        balance: tokenBalances?.[token.symbol!],
       };
     });
-  }, [tokens, value, vaultBalanceList, tokenBalances]);
+  }, [tokens, value, vaultBalanceList]);
 
   useEffect(() => {
     const rect = inputRef?.current?.getBoundingClientRect();
@@ -105,13 +105,14 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       <TokenOption
         token={item}
         isActive={isActive}
-        fetchBalance={fetchBalance}
         displayType={displayType}
         onTokenChange={(item) => {
           onTokenChange?.(item);
           setOpen(false);
         }}
         open={selectOpen}
+        isLoading={balancesRevalidating}
+        showBalance={showBalance}
       />
     );
   };

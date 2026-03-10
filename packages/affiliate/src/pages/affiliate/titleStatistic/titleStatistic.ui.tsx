@@ -21,7 +21,7 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
       <Flex className="oui-h-[170px] 2xl:oui-h-[196px] oui-w-full oui-flex oui-flex-row oui-items-stretch">
         <VolBarChart
           data={props.dataSource || EMPTY_LIST}
-          colors={{ fill: "rgba(0, 180, 158, 1)" }}
+          colors={{ fill: "rgb(var(--oui-color-success))" }}
           className="oui-w-full oui-flex-1"
           tooltip={{
             rm: Decimal.ROUND_DOWN,

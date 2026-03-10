@@ -86,7 +86,7 @@ export const QuantitySlider = memo((props: QuantitySliderProps) => {
   }, [order_quantity, maxQty]);
 
   return (
-    <div>
+    <div className="oui-orderEntry-quantitySlider">
       <Slider
         disabled={maxQty === 0 || !canTrade}
         value={[sliderValue]}
@@ -99,7 +99,10 @@ export const QuantitySlider = memo((props: QuantitySliderProps) => {
         min={SLIDER_MIN}
         max={SLIDER_MAX}
       />
-      <Flex justify={"between"} className="oui-pt-1 xl:oui-pt-2">
+      <Flex
+        justify={"between"}
+        className="oui-quantitySlider-footer oui-pt-1 xl:oui-pt-2"
+      >
         <Text.numeral
           size={"2xs"}
           color={color}
@@ -113,7 +116,7 @@ export const QuantitySlider = memo((props: QuantitySliderProps) => {
           <button
             className={textVariants({
               size: "2xs",
-              className: "oui-mr-1",
+              className: "oui-quantitySlider-maxQty-btn oui-mr-1",
             })}
             onClick={onMax}
             data-testid="oui-testid-orderEntry-maxQty-value-button"
@@ -125,6 +128,7 @@ export const QuantitySlider = memo((props: QuantitySliderProps) => {
             color={color}
             dp={base_dp}
             padding={false}
+            className="oui-quantitySlider-maxQty-value"
             data-testid="oui-testid-orderEntry-maxQty-value"
           >
             {canTrade ? maxQty : 0}

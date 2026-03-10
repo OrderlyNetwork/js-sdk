@@ -114,7 +114,7 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
   return (
     <Box
       className={cn(
-        "oui-overflow-hidden oui-font-semibold oui-bg-base-9",
+        "oui-subMenuMarkets oui-overflow-hidden oui-bg-base-9 oui-font-semibold",
         className,
       )}
       height="100%"
@@ -134,10 +134,17 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
           tabsContent: "oui-h-full",
           scrollIndicator: "oui-mx-1",
         }}
-        className={cn(cls, "oui-my-1.5")}
+        className={cn(cls, "oui-subMenuMarkets-tabs oui-my-1.5")}
         showScrollIndicator
       >
-        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-favorites-trigger",
+            content: "oui-tabs-favorites-content",
+          }}
+          title={<FavoritesIcon />}
+          value={MarketsTabName.Favorites}
+        >
           {(() => {
             const favProps = getFavoritesProps(MarketsTabName.Favorites) as {
               dataFilter?: any;
@@ -159,7 +166,14 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
             );
           })()}
         </TabPanel>
-        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-all-trigger",
+            content: "oui-tabs-all-content",
+          }}
+          title={t("common.all")}
+          value={MarketsTabName.All}
+        >
           <MarketTabPanel
             type={MarketsTabName.All}
             getColumns={getColumns}
@@ -167,7 +181,14 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
             onSort={onTabSort(MarketsTabName.All)}
           />
         </TabPanel>
-        <TabPanel title={<RwaIconTab />} value={MarketsTabName.Rwa}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-rwa-trigger",
+            content: "oui-tabs-rwa-content",
+          }}
+          title={<RwaIconTab />}
+          value={MarketsTabName.Rwa}
+        >
           <MarketTabPanel
             type={MarketsTabName.Rwa}
             getColumns={getColumns}
@@ -176,6 +197,10 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
           />
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-newListings-trigger",
+            content: "oui-tabs-newListings-content",
+          }}
           title={t("markets.newListings")}
           value={MarketsTabName.NewListing}
         >
@@ -186,7 +211,14 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
             onSort={onTabSort(MarketsTabName.NewListing)}
           />
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-recent-trigger",
+            content: "oui-tabs-recent-content",
+          }}
+          title={t("markets.recent")}
+          value={MarketsTabName.Recent}
+        >
           <MarketTabPanel
             type={MarketsTabName.Recent}
             getColumns={getColumns}

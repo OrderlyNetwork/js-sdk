@@ -110,6 +110,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
         id="oui-orderbook-desktop"
         ref={divRef}
         className={cn(
+          "oui-orderBook",
           "oui-relative oui-size-full",
           showBuySellRatio
             ? "oui-grid-rows-[auto,auto,1fr,auto,1fr,auto]"

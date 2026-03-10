@@ -301,7 +301,7 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Card
-      className={"oui-bg-transparent oui-p-0"}
+      className={"oui-bg-transparent oui-p-0 oui-border-none oui-shadow-none"}
       classNames={{ content: "!oui-pt-0" }}
     >
       <Tabs

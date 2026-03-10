@@ -1,9 +1,9 @@
 import React, { type InputHTMLAttributes, useId } from "react";
 import { cnBase, cn, type VariantProps } from "tailwind-variants";
+import { tv } from "../utils/tv";
 import { BaseInput, BaseInputProps } from "./baseInput";
 import { InputPrefix } from "./prefix";
 import { InputSuffix } from "./suffix";
-import { tv } from "../utils/tv";
 
 const inputVariants = tv(
   {
@@ -17,7 +17,7 @@ const inputVariants = tv(
         "placeholder:oui-text-base-contrast-20",
         "placeholder:oui-text-xs",
         "oui-tabular-nums",
-        "oui-text-white",
+        "oui-text-base-contrast",
         "autofill:oui-bg-transparent",
         "oui-input-input",
         "disabled:oui-cursor-not-allowed",
@@ -87,7 +87,10 @@ const inputVariants = tv(
           input: ["oui-text-danger"],
         },
         warning: {
-          box: ["oui-outline-warning-darken", "focus-within:oui-outline-warning-darken"],
+          box: [
+            "oui-outline-warning-darken",
+            "focus-within:oui-outline-warning-darken",
+          ],
           input: ["oui-text-warning-darken"],
         },
         default: {
@@ -141,13 +144,12 @@ const inputVariants = tv(
   },
   {
     responsiveVariants: ["md", "lg"],
-  }
+  },
 );
 
 // @ts-ignore
 interface InputProps<T = string>
-  extends BaseInputProps<T>,
-    VariantProps<typeof inputVariants> {
+  extends BaseInputProps<T>, VariantProps<typeof inputVariants> {
   prefix?: string | React.ReactNode;
   suffix?: string | React.ReactNode;
   fullWidth?: boolean;
@@ -212,7 +214,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         id={id || cid}
         prefix={prefix}
         className={additional({
-          className: cnBase(classNames?.additional, classNames?.prefix),
+          className: cnBase(
+            "oui-input-prefix",
+            classNames?.additional,
+            classNames?.prefix,
+          ),
         })}
       />
       <BaseInput
@@ -226,7 +232,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         id={id || cid}
         suffix={suffixElement}
         className={additional({
-          className: cnBase(classNames?.additional, classNames?.suffix),
+          className: cnBase(
+            "oui-input-suffix",
+            classNames?.additional,
+            classNames?.suffix,
+          ),
         })}
       />
     </div>
@@ -244,20 +254,17 @@ const ClearButton = React.forwardRef<
         props.onClick();
       }}
       ref={ref}
-      className={props.className}
+      className={cnBase("oui-input-clear-btn", props.className)}
     >
       <svg
         width="16"
         height="16"
         viewBox="0 0 16 16"
-        fill="none"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
+        className="oui-fill-base-contrast-20"
       >
-        <path
-          d="M8 1.302a6.667 6.667 0 1 0 0 13.333A6.667 6.667 0 0 0 8 1.302m-2 4c.17 0 .349.057.479.187l1.52 1.521L9.52 5.49a.68.68 0 0 1 .48-.188c.17 0 .348.057.479.187.26.261.26.698 0 .96l-1.52 1.52 1.52 1.52c.26.261.26.698 0 .96a.687.687 0 0 1-.959 0L8 8.926l-1.521 1.521a.686.686 0 0 1-.959 0 .686.686 0 0 1 0-.959l1.521-1.52-1.52-1.52a.686.686 0 0 1 0-.96A.68.68 0 0 1 6 5.302"
-          fill="#fff"
-          fillOpacity=".2"
-        />
+        <path d="M8 1.302a6.667 6.667 0 1 0 0 13.333A6.667 6.667 0 0 0 8 1.302m-2 4c.17 0 .349.057.479.187l1.52 1.521L9.52 5.49a.68.68 0 0 1 .48-.188c.17 0 .348.057.479.187.26.261.26.698 0 .96l-1.52 1.52 1.52 1.52c.26.261.26.698 0 .96a.687.687 0 0 1-.959 0L8 8.926l-1.521 1.521a.686.686 0 0 1-.959 0 .686.686 0 0 1 0-.959l1.521-1.52-1.52-1.52a.686.686 0 0 1 0-.96A.68.68 0 0 1 6 5.302" />
       </svg>
     </button>
   );
