@@ -5,17 +5,17 @@ const { multiJson2Csv } = require("./json-csv-converter");
 const { defaultLanguages } = require("../dist");
 
 /** Generate a locale CSV file */
-async function generateCsv(outputPath) {
+async function generateCsv(inputDir, outputPath) {
   const headers = [""];
   const jsonList = [];
 
   for (const item of defaultLanguages) {
     headers.push(item.localCode);
     const json = await fs.readJSON(
-      path.resolve(__dirname, `../locales/${item.localCode}.json`),
+      path.resolve(inputDir, `${item.localCode}.json`),
       {
         encoding: "utf8",
-      }
+      },
     );
     jsonList.push(json);
   }

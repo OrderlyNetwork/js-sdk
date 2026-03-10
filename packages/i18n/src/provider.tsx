@@ -33,10 +33,6 @@ export type LocaleProviderProps = {
    * supported languages, you can select supported languages from default languages
    */
   supportedLanguages?: LocaleCode[];
-  /**
-   * @deprecated use onLanguageChanged instead, will be removed in next patch version
-   */
-  onLocaleChange?: (locale: LocaleCode) => void;
   /** optional conversion function to use to modify the detected language code */
   convertDetectedLanguage?: (lang: string) => LocaleCode;
   backend?: BackendOptions;
@@ -54,7 +50,6 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
     onLanguageChanged,
     convertDetectedLanguage,
     onLanguageBeforeChanged,
-    onLocaleChange,
   } = props;
 
   const [languages, setLanguages] = useState<Language[]>(defaultLanguages);
@@ -126,9 +121,8 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
   const languageChangedHandle = useCallback(
     async (lang: LocaleCode) => {
       onLanguageChanged?.(lang);
-      onLocaleChange?.(lang);
     },
-    [onLanguageChanged, onLocaleChange],
+    [onLanguageChanged],
   );
 
   const memoizedValue = useMemo<LocaleContextState>(() => {
