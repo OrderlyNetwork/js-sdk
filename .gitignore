@@ -60,3 +60,6 @@ specs/
 .tmp.*
 .qoder/
 .specflow/
+.agents
+.specflow
+skills-lock.json
