@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Об'єм торгівлі за обраний період.",
   "portfolio.overview.performance.dailyPnl": "Щоденний PnL",
   "portfolio.overview.performance.cumulativePnl": "Накопичений PnL",
+  "portfolio.overview.performance.dailyVolume": "Щоденний об'єм",
+  "portfolio.overview.performance.cumulativeVolume": "Накопичений об'єм",
   "portfolio.overview.distribution": "Розподіл",
   "portfolio.overview.transferHistory": "Історія переказів",
   "portfolio.overview.vaults": "Сховища",

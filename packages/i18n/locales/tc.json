@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "选定期間的交易量。",
   "portfolio.overview.performance.dailyPnl": "每日盈虧",
   "portfolio.overview.performance.cumulativePnl": "累計盈虧",
+  "portfolio.overview.performance.dailyVolume": "每日成交量",
+  "portfolio.overview.performance.cumulativeVolume": "累計成交量",
   "portfolio.overview.distribution": "分配",
   "portfolio.overview.transferHistory": "轉帳歷史",
   "portfolio.overview.vaults": "金庫",

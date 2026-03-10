@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Объем торговли за выбранный период.",
   "portfolio.overview.performance.dailyPnl": "Дневной PnL",
   "portfolio.overview.performance.cumulativePnl": "Накопленный PnL",
+  "portfolio.overview.performance.dailyVolume": "Дневной объём",
+  "portfolio.overview.performance.cumulativeVolume": "Накопленный объём",
   "portfolio.overview.distribution": "Распределение",
   "portfolio.overview.transferHistory": "История переводов",
   "portfolio.overview.vaults": "Хранилища",

@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Seçilen dönemdeki işlem hacmi.",
   "portfolio.overview.performance.dailyPnl": "Günlük K/Z",
   "portfolio.overview.performance.cumulativePnl": "Kümülatif K/Z",
+  "portfolio.overview.performance.dailyVolume": "Günlük Hacim",
+  "portfolio.overview.performance.cumulativeVolume": "Kümülatif Hacim",
   "portfolio.overview.distribution": "Dağıtım",
   "portfolio.overview.transferHistory": "Transfer geçmişi",
   "portfolio.overview.vaults": "Kasalar",

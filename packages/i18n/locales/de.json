@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Handelsvolumen über den ausgewählten Zeitraum.",
   "portfolio.overview.performance.dailyPnl": "Täglicher PnL",
   "portfolio.overview.performance.cumulativePnl": "Kumulativer PnL",
+  "portfolio.overview.performance.dailyVolume": "Tägliches Volumen",
+  "portfolio.overview.performance.cumulativeVolume": "Kumulatives Volumen",
   "portfolio.overview.distribution": "Verteilung",
   "portfolio.overview.transferHistory": "Transferhistorie",
   "portfolio.overview.vaults": "Tresore",

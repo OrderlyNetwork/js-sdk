@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Volume perdagangan atas periode yang dipilih.",
   "portfolio.overview.performance.dailyPnl": "PnL Harian",
   "portfolio.overview.performance.cumulativePnl": "PnL Kumulatif",
+  "portfolio.overview.performance.dailyVolume": "Volume Harian",
+  "portfolio.overview.performance.cumulativeVolume": "Volume Kumulatif",
   "portfolio.overview.distribution": "Distribusi",
   "portfolio.overview.transferHistory": "Riwayat transfer",
   "portfolio.overview.vaults": "Brankas",

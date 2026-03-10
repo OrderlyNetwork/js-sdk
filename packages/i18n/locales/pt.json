@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Volume de trading sobre o período selecionado.",
   "portfolio.overview.performance.dailyPnl": "L/P Diário",
   "portfolio.overview.performance.cumulativePnl": "L/P Acumulado",
+  "portfolio.overview.performance.dailyVolume": "Volume Diário",
+  "portfolio.overview.performance.cumulativeVolume": "Volume Acumulado",
   "portfolio.overview.distribution": "Distribuição",
   "portfolio.overview.transferHistory": "Histórico de transferências",
   "portfolio.overview.vaults": "Cofres",

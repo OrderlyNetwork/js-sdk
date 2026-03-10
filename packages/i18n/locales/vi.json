@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Khối lượng giao dịch trong khoảng thời gian đã chọn.",
   "portfolio.overview.performance.dailyPnl": "PnL hàng ngày",
   "portfolio.overview.performance.cumulativePnl": "PnL tích lũy",
+  "portfolio.overview.performance.dailyVolume": "Khối lượng hàng ngày",
+  "portfolio.overview.performance.cumulativeVolume": "Khối lượng tích lũy",
   "portfolio.overview.distribution": "Phân phối",
   "portfolio.overview.transferHistory": "Lịch sử chuyển khoản",
   "portfolio.overview.vaults": "Kho bạc",

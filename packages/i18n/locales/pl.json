@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "Wolumen handlowy z wybranego okresu.",
   "portfolio.overview.performance.dailyPnl": "Dzienny PnL",
   "portfolio.overview.performance.cumulativePnl": "Skumulowany PnL",
+  "portfolio.overview.performance.dailyVolume": "Dzienny wolumen",
+  "portfolio.overview.performance.cumulativeVolume": "Wolumen skumulowany",
   "portfolio.overview.distribution": "Dystrybucja",
   "portfolio.overview.transferHistory": "Historia transferów",
   "portfolio.overview.vaults": "Skarbce",

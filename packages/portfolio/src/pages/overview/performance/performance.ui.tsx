@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { PnlAreaChart, PnLBarChart } from "@orderly.network/chart";
+import {
+  PnlAreaChart,
+  PnLBarChart,
+  VolBarChart,
+  VolumeAreaChart,
+} from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
 import {
@@ -143,6 +148,16 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
           invisible={props.invisible || (props.data?.length ?? 0) <= 2}
         />
       </Grid>
+      <Grid cols={2} gap={4}>
+        <DailyVolumeChart
+          data={props.data ?? EMPTY_LIST}
+          invisible={props.invisible}
+        />
+        <CumulativeVolumeChart
+          data={props.data ?? EMPTY_LIST}
+          invisible={props.invisible || (props.data?.length ?? 0) <= 2}
+        />
+      </Grid>
     </Card>
   );
 };
@@ -209,6 +224,58 @@ export const CumulativePnlChart: React.FC<{
       <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
         <PnlAreaChart
           data={props.data}
+          invisible={props.invisible || (props.data?.length ?? 0) <= 2}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const DailyVolumeChart: React.FC<{
+  data: ReadonlyArray<any> | any[];
+  invisible: boolean;
+}> = (props) => {
+  const { t } = useTranslation();
+  const volumeData = React.useMemo(
+    () =>
+      (props.data ?? []).map((d) => ({
+        ...d,
+        volume: d.perp_volume ?? 0,
+      })),
+    [props.data],
+  );
+  return (
+    <Box mt={4} height={"188px"}>
+      <Text as="div" size="sm" className="oui-mb-3">
+        {t("portfolio.overview.performance.dailyVolume")}
+      </Text>
+      <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
+        <VolBarChart
+          data={volumeData}
+          invisible={props.invisible || volumeData.length <= 2}
+          responsiveContainerProps={{
+            width: "100%",
+            height: 188,
+          }}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const CumulativeVolumeChart: React.FC<{
+  data: ReadonlyArray<any> | any[];
+  invisible: boolean;
+}> = (props) => {
+  const { t } = useTranslation();
+  return (
+    <Box mt={4}>
+      <Text as="div" size="sm" className="oui-mb-3">
+        {t("portfolio.overview.performance.cumulativeVolume")}
+      </Text>
+      <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
+        <VolumeAreaChart
+          data={props.data ?? EMPTY_LIST}
           invisible={props.invisible || (props.data?.length ?? 0) <= 2}
         />
       </Box>

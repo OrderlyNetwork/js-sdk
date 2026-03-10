@@ -196,6 +196,8 @@
   "portfolio.overview.performance.volume.tooltip": "選択された期間の取引量。",
   "portfolio.overview.performance.dailyPnl": "日次損益",
   "portfolio.overview.performance.cumulativePnl": "累積損益",
+  "portfolio.overview.performance.dailyVolume": "日次ボリューム",
+  "portfolio.overview.performance.cumulativeVolume": "累積ボリューム",
   "portfolio.overview.distribution": "配分",
   "portfolio.overview.transferHistory": "送金履歴",
   "portfolio.overview.vaults": "ボルト",
