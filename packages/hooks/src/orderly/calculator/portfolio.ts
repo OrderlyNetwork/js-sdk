@@ -122,11 +122,15 @@ class PortfolioCalculator extends BaseCalculator<any> {
       return null;
     }
 
-    const unsettledPnL = positions.rows.reduce(
+    const totallCrossUnsettledPnL = positions.rows.reduce(
       (sum, pos) =>
         pos.margin_mode === MarginMode.ISOLATED
           ? sum
           : sum + (pos.unsettled_pnl ?? 0),
+      0,
+    );
+    const totalUnsettlementPnL = positions.rows.reduce(
+      (sum, pos) => sum + (pos.unsettled_pnl ?? 0),
       0,
     );
     const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
@@ -142,7 +146,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     const totalCollateral = account.totalCollateral({
       USDCHolding: USDC_holding,
       nonUSDCHolding: nonUSDC,
-      unsettlementPnL: unsettledPnL,
+      unsettlementPnL: totallCrossUnsettledPnL,
       usdcBalancePendingShortQty: usdc?.pending_short ?? 0,
       usdcBalanceIsolatedOrderFrozen: usdc?.isolated_order_frozen ?? 0,
     });
@@ -155,7 +159,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     }, zero);
 
     const totalValue = account.totalValue({
-      totalUnsettlementPnL: unsettledPnL,
+      totalUnsettlementPnL: totalUnsettlementPnL,
       USDCHolding: USDC_holding,
       nonUSDCHolding: nonUSDC,
       totalIsolatedPositionMargin: sumIsolatedMargin.toNumber(),
@@ -205,7 +209,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       totalUnrealizedROI,
       freeCollateral,
       availableBalance,
-      unsettledPnL,
+      unsettledPnL: totalUnsettlementPnL,
       holding,
       usdcHolding: USDC_holding,
     };
