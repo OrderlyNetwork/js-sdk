@@ -4,11 +4,11 @@ interface ImportMetaEnv {
   VITE_BROKER_ID: string;
   VITE_BROKER_NAME: string;
   VITE_ENV: string;
-  VITE_DEFAULT_THEME: string;
-  VITE_WATCH_PACKAGES: string;
+  VITE_WATCH_PACKAGES?: string;
+  VITE_WATCH_PACKAGE_PATHS?: string;
   STORYBOOK: string;
-  STORYBOOK_DEFAULT_THEME: string;
-  STORYBOOK_DISABLED_ADDONS: string;
+  STORYBOOK_DEFAULT_THEME?: string;
+  STORYBOOK_DISABLED_ADDONS?: string;
   VITE_AMPLITUDE_ID: string;
 }
 
