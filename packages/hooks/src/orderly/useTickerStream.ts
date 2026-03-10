@@ -5,9 +5,9 @@ import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 import { useIndexPrice } from "./useIndexPrice";
 import { useMarkPrice } from "./useMarkPrice";
+import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMarketMap } from "./useMarket/market.store";
 import { useOpenInterest } from "./useOpenInterest";
-import { useMarkPricesStream } from "./useMarkPricesStream";
 
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
