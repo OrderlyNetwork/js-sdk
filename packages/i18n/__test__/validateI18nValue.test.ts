@@ -1,4 +1,4 @@
-import { validateI18nValue, i18nValidErrors } from "../script/utils";
+import { validateI18nValue, i18nValidErrors } from "../scripts/utils";
 
 describe("validateI18nValue", () => {
   it("should return error for non-string input", () => {
@@ -123,8 +123,8 @@ describe("validateI18nValue", () => {
     });
     expect(
       validateI18nValue(
-        "<div><span>{{name}}</span> <strong>{{age}}</strong></div>"
-      )
+        "<div><span>{{name}}</span> <strong>{{age}}</strong></div>",
+      ),
     ).toEqual({
       valid: true,
       error: null,
