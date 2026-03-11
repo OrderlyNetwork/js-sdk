@@ -58,6 +58,10 @@ export type OrderEntryReturn = {
   resetMetaState: () => void;
   formattedOrder: Partial<FullOrderState>;
   maxQty: number;
+  maxQtys: {
+    maxBuy: number;
+    maxSell: number;
+  };
   /**
    * The estimated liquidation price.
    */
@@ -233,14 +237,41 @@ const useOrderEntry = (
     getCreateOrderUrl(formattedOrder),
   );
 
-  const maxQtyValue = useMaxQty(
+  const maxBuyQtyValue = useMaxQty(
     symbol,
-    formattedOrder.side,
+    OrderSide.BUY,
     formattedOrder.reduce_only,
   );
-
+  const maxSellQtyValue = useMaxQty(
+    symbol,
+    OrderSide.SELL,
+    formattedOrder.reduce_only,
+  );
+  const maxQtyValue =
+    formattedOrder.side === OrderSide.BUY ? maxBuyQtyValue : maxSellQtyValue;
   // @ts-ignore
   const maxQty = options.maxQty ?? maxQtyValue;
+  const maxQtys = useMemo(
+    () => ({
+      maxBuy:
+        formattedOrder.side === OrderSide.BUY
+          ? // @ts-ignore
+            (options.maxQty ?? maxBuyQtyValue)
+          : maxBuyQtyValue,
+      maxSell:
+        formattedOrder.side === OrderSide.SELL
+          ? // @ts-ignore
+            (options.maxQty ?? maxSellQtyValue)
+          : maxSellQtyValue,
+    }),
+    [
+      formattedOrder.side,
+      maxBuyQtyValue,
+      maxSellQtyValue,
+      // @ts-ignore
+      options.maxQty,
+    ],
+  );
 
   const updateOrderPrice = () => {
     const order_type = formattedOrder.order_type;
@@ -742,6 +773,7 @@ const useOrderEntry = (
     resetMetaState,
     formattedOrder,
     maxQty,
+    maxQtys,
     estLiqPrice,
     estLiqPriceDistance,
     currentPosition,
