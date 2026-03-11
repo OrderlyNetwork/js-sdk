@@ -192,8 +192,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/wallet-connector-privy
       '@orderly.network/youtube-live-plugin':
-        specifier: 0.1.1-dev.0
-        version: 0.1.1-dev.0(@orderly.network/hooks@packages+hooks)(@orderly.network/i18n@packages+i18n)(@orderly.network/types@packages+types)(@orderly.network/ui@packages+ui)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.1.1-dev.1
+        version: 0.1.1-dev.1(@orderly.network/hooks@packages+hooks)(@orderly.network/i18n@packages+i18n)(@orderly.network/types@packages+types)(@orderly.network/ui@packages+ui)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@project-serum/sol-wallet-adapter':
         specifier: ^0.2.6
         version: 0.2.6(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))
@@ -5228,8 +5228,8 @@ packages:
     peerDependencies:
       prettier: '>=3.0.0'
 
-  '@orderly.network/youtube-live-plugin@0.1.1-dev.0':
-    resolution: {integrity: sha512-831XUyJq44VwMA/dC1Oq0huGIRCRv5Zkdp+oRYHwkCs+Q1xXtib7kdq+MfRKeUfOe7p0xiRoJsl5KsTJ+rRoIg==}
+  '@orderly.network/youtube-live-plugin@0.1.1-dev.1':
+    resolution: {integrity: sha512-t+uFRzqxoOF6OaaM1dYpfH08VGQN8EZaX88fzaSC6KHNlWOug0nd7RnWIbCYM+jCoc46JnyXzBj4Br0IK74YeQ==}
     peerDependencies:
       '@orderly.network/hooks': 2.10.2-internal-plugin-1.0
       '@orderly.network/i18n': 2.10.2-internal-plugin-1.0
@@ -19610,7 +19610,7 @@ snapshots:
       - supports-color
       - svelte
 
-  '@orderly.network/youtube-live-plugin@0.1.1-dev.0(@orderly.network/hooks@packages+hooks)(@orderly.network/i18n@packages+i18n)(@orderly.network/types@packages+types)(@orderly.network/ui@packages+ui)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@orderly.network/youtube-live-plugin@0.1.1-dev.1(@orderly.network/hooks@packages+hooks)(@orderly.network/i18n@packages+i18n)(@orderly.network/types@packages+types)(@orderly.network/ui@packages+ui)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@orderly.network/hooks': link:packages/hooks
       '@orderly.network/i18n': link:packages/i18n

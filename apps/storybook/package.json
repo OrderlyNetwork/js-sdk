@@ -55,7 +55,7 @@
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.95.3",
-    "@orderly.network/youtube-live-plugin": "0.1.1-dev.0",
+    "@orderly.network/youtube-live-plugin": "0.1.1-dev.1",
     "@uiw/react-split": "^5.9.3",
     "@web3-onboard/bitget": "^2.1.1",
     "@web3-onboard/core": "^2.22.2",
