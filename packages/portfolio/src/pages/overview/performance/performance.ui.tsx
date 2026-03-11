@@ -18,6 +18,7 @@ import {
   Tooltip,
   cn,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import type { UsePerformanceScriptReturn } from "./performance.script";
 
 const LazyPeriodTitle = React.lazy(() =>
@@ -31,6 +32,12 @@ export type PerformanceUIProps = {
   // period: string;
   // onPeriodChange: (period: string) => void;
 } & UsePerformanceScriptReturn;
+
+const formatForChart = (value: number | null | undefined, dp: number = 2) => {
+  if (value == null) return 0;
+  const decimal = new Decimal(value);
+  return Number(decimal.toFixed(dp, Decimal.ROUND_DOWN));
+};
 
 export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
   const {
@@ -196,6 +203,14 @@ export const PerformancePnL: React.FC<{
   invisible: boolean;
 }> = (props) => {
   const { t } = useTranslation();
+  const chartData = React.useMemo(
+    () =>
+      (props.data ?? []).map((d) => ({
+        ...d,
+        pnl: formatForChart(d.pnl),
+      })),
+    [props.data],
+  );
   return (
     <Box mt={4} height={"188px"}>
       <Text as="div" size="sm" className="oui-mb-3">
@@ -203,8 +218,8 @@ export const PerformancePnL: React.FC<{
       </Text>
       <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
         <PnLBarChart
-          data={props.data}
-          invisible={props.invisible || (props.data?.length ?? 0) <= 2}
+          data={chartData}
+          invisible={props.invisible || (chartData?.length ?? 0) <= 2}
         />
       </Box>
     </Box>
@@ -240,7 +255,7 @@ export const DailyVolumeChart: React.FC<{
     () =>
       (props.data ?? []).map((d) => ({
         ...d,
-        volume: d.perp_volume ?? 0,
+        volume: formatForChart(d.perp_volume ?? 0),
       })),
     [props.data],
   );

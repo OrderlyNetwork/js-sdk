@@ -85,10 +85,6 @@ export const XAxisLabel: React.FC<any> = (props) => {
 const CustomizedCross = (props: any) => {
   const { width, height, payload, stroke, fill } = props;
 
-  if (payload?.[0]?.value === 0) {
-    return null;
-  }
-
   return (
     // @ts-ignore
     <Cross
@@ -108,10 +104,6 @@ const CustomTooltip = (
   props: TooltipProps<any, any> & { tooltip?: VolChartTooltip },
 ) => {
   const { active, payload, label, tooltip } = props;
-
-  if (payload?.[0]?.value === 0) {
-    return null;
-  }
 
   if (active && payload && payload.length) {
     return (
@@ -179,7 +171,7 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
           {/* @ts-ignore */}
           <ReferenceLine y={0} stroke="rgb(var(--oui-color-base-10))" />
           {!props.invisible && (
-            <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
+            <Bar dataKey="volume" shape={<RoundedRectangle />}>
               {props.data.map((entry, index) => {
                 return (
                   // @ts-ignore
