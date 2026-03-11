@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "Laatste/24u%",
   "markets.column.mark": "Mark",
   "markets.column.index": "Index",
+  "markets.column.mark&Index": "Mark / Index",
   "markets.funding.comparison": "Vergelijking",
   "markets.funding.column.estFunding": "Geschatte financiering",
   "markets.funding.column.lastFunding": "Laatste financiering",

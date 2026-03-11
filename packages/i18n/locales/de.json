@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "Letzter/24h%",
   "markets.column.mark": "Mark",
   "markets.column.index": "Index",
+  "markets.column.mark&Index": "Mark / Index",
   "markets.funding.comparison": "Vergleich",
   "markets.funding.column.estFunding": "Geschätzte Finanzierung",
   "markets.funding.column.lastFunding": "Letzte Finanzierung",

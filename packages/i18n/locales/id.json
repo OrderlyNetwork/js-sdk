@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "Terakhir/24h%",
   "markets.column.mark": "Mark",
   "markets.column.index": "Indeks",
+  "markets.column.mark&Index": "Mark / Indeks",
   "markets.funding.comparison": "Perbandingan",
   "markets.funding.column.estFunding": "Perkiraan pendanaan",
   "markets.funding.column.lastFunding": "Pendanaan terakhir",

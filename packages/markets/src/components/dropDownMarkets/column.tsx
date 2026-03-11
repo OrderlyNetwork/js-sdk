@@ -20,7 +20,7 @@ export const useDropDownMarketsColumns = () => {
         getLastColumn(),
         get24hPercentageColumn(),
         {
-          title: t("common.volume"),
+          title: t("markets.column.24hVol"),
           dataIndex: "24h_amount",
           align: "right",
           onSort: true,

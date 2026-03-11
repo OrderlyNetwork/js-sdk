@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "Остання/24г%",
   "markets.column.mark": "Марка",
   "markets.column.index": "Індекс",
+  "markets.column.mark&Index": "Марка / Індекс",
   "markets.funding.comparison": "Порівняння",
   "markets.funding.column.estFunding": "Очікуване фінансування",
   "markets.funding.column.lastFunding": "Останнє фінансування",

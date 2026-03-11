@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "Cuối cùng/24h%",
   "markets.column.mark": "Đánh dấu",
   "markets.column.index": "Chỉ số",
+  "markets.column.mark&Index": "Đánh dấu / Chỉ số",
   "markets.funding.comparison": "So sánh",
   "markets.funding.column.estFunding": "Tài trợ ước tính",
   "markets.funding.column.lastFunding": "Tài trợ cuối",

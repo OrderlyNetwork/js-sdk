@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "最新/24小时%",
   "markets.column.mark": "标记",
   "markets.column.index": "指数",
+  "markets.column.mark&Index": "标记/指数",
   "markets.funding.comparison": "比较",
   "markets.funding.column.estFunding": "预计资金",
   "markets.funding.column.lastFunding": "最后资金",

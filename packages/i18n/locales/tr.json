@@ -163,6 +163,7 @@
   "markets.column.last&24hPercentage": "Son/24s%",
   "markets.column.mark": "İşaret",
   "markets.column.index": "Endeks",
+  "markets.column.mark&Index": "İşaret / Endeks",
   "markets.funding.comparison": "Karşılaştırma",
   "markets.funding.column.estFunding": "Tah. fonlama",
   "markets.funding.column.lastFunding": "Son fonlama",
