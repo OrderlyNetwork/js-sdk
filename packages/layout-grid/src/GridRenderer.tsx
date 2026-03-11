@@ -1,9 +1,12 @@
 import React, { useMemo, useCallback, useEffect, useRef } from "react";
 import {
-  Responsive,
+  GridLayout,
   useContainerWidth,
+  useResponsiveLayout,
+  getCompactor,
   type Layout,
   type LayoutItem,
+  type CompactType,
 } from "react-grid-layout";
 import type { LayoutRendererProps } from "@orderly.network/layout-core";
 import type { GridLayoutModel, GridLayoutItem } from "./types";
@@ -39,6 +42,7 @@ function toReactGridLayouts(
         static: item.static,
         isDraggable: item.isDraggable,
         isResizable: item.isResizable,
+        resizeHandles: item.resizeHandles,
       }));
     }
   });
@@ -71,39 +75,61 @@ export function GridRenderer(
     [layout.layouts],
   );
 
-  // Handle layout change from react-grid-layout (v2: layout is current breakpoint Layout, layouts is ResponsiveLayouts)
+  // Handle layout change from react-grid-layout v2
+  // The callback receives current breakpoint layout and all layouts
   const handleLayoutChange = useCallback(
-    (_currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
-      // Convert react-grid-layout Layout back to GridLayoutItem[]
+    (_currentLayout: Layout, _allLayouts: ResponsiveLayouts) => {
+      // We use the ref to get the current layouts state
+      // The callback is mainly to trigger state sync
+      // Notify parent of layout change
+      onLayoutChange({
+        ...layout,
+        layouts: layoutsRef.current,
+      });
+    },
+    [layout, onLayoutChange],
+  );
+
+  // Handle layout change for current breakpoint only
+  const handleCurrentLayoutChange = useCallback(
+    (newLayout: Layout) => {
+      // Update all breakpoints with the new layout
+      // This ensures consistency across breakpoints
+
       const updatedLayouts: GridLayoutModel["layouts"] = {};
 
-      (Object.keys(allLayouts) as BreakpointKey[]).forEach((breakpoint) => {
-        const items = allLayouts[breakpoint];
-        if (items) {
-          updatedLayouts[breakpoint] = items.map((item: LayoutItem) => {
-            // Find the original item to preserve panelId
-            const originalItem = layoutsRef.current[breakpoint]?.find(
-              (i) => i.i === item.i,
-            );
-            return {
-              ...item,
-              panelId: originalItem?.panelId || item.i,
-            } as GridLayoutItem;
-          });
-        }
+      (Object.keys(layoutsRef.current) as BreakpointKey[]).forEach((bp) => {
+        updatedLayouts[bp] = newLayout.map((item: LayoutItem) => {
+          const originalItem = layoutsRef.current[bp]?.find(
+            (i) => i.i === item.i,
+          );
+          return {
+            ...item,
+            panelId: originalItem?.panelId || item.i,
+          } as GridLayoutItem;
+        });
       });
 
-      // Update ref
       layoutsRef.current = updatedLayouts;
 
       // Notify parent of layout change
       onLayoutChange({
         ...layout,
-        layouts: updatedLayouts,
+        layouts: layoutsRef.current,
       });
     },
     [layout, onLayoutChange],
   );
+
+  // Use responsive layout hook (v2 API)
+  // Must be called after handleLayoutChange and reactGridLayouts are defined
+  const { layout: currentLayout, cols } = useResponsiveLayout({
+    width,
+    breakpoints: layout.breakpoints || DEFAULT_BREAKPOINTS,
+    cols: layout.cols || DEFAULT_COLS,
+    layouts: reactGridLayouts,
+    onLayoutChange: handleLayoutChange,
+  });
 
   // Get panel IDs from layout
   const panelIds = useMemo(() => {
@@ -131,7 +157,7 @@ export function GridRenderer(
         return (
           <div
             key={panelId}
-            className="oui-layout-grid-item"
+            className="oui-layout-grid-item oui-bg-base-9 oui-rounded-2xl oui-p-2 oui-relative oui-overflow-hidden"
             style={{ width: "100%", height: "100%" }}
           >
             {panel}
@@ -170,22 +196,30 @@ export function GridRenderer(
       className={className}
       style={style}
     >
-      <Responsive
-        {...({
-          layouts: reactGridLayouts,
-          breakpoints: layout.breakpoints || DEFAULT_BREAKPOINTS,
-          cols: layout.cols || DEFAULT_COLS,
-          width,
-          onLayoutChange: handleLayoutChange,
+      <GridLayout
+        width={width}
+        layout={currentLayout}
+        gridConfig={{
+          cols: cols,
+          rowHeight: layout.rowHeight ?? 30,
           margin: layout.margin || [8, 8],
-          // gridConfig: { cols: 12, rowHeight: 30 },
           containerPadding: layout.containerPadding || [0, 0],
-          compactType: layout.compactType ?? "vertical",
-          isDraggable: layout.isDraggable !== false,
-          isResizable: layout.isResizable !== false,
-          children,
-        } as unknown as React.ComponentProps<typeof Responsive>)}
-      />
+        }}
+        compactor={getCompactor(
+          layout.compactType as CompactType,
+          false,
+          layout.compactType === null, // preventCollision when compactType is null
+        )}
+        dragConfig={{
+          enabled: layout.isDraggable !== false,
+        }}
+        resizeConfig={{
+          enabled: layout.isResizable !== false,
+        }}
+        onLayoutChange={handleCurrentLayoutChange}
+      >
+        {children}
+      </GridLayout>
     </div>
   );
 }

@@ -88,16 +88,16 @@ export function updateOrderAtPath(
 
 /**
  * Builds runtime SplitLayoutNode for one breakpoint from a rule.
- * Falls back to lg when the breakpoint has no rule tree.
+ * Falls back to default when the breakpoint has no rule tree.
  */
 export function buildSplitLayoutFromRule(
   rule: SplitLayoutRule,
   breakpointKey: SplitLayoutBreakpointKey,
 ): SplitLayoutNode {
-  const tree = rule[breakpointKey] ?? rule.lg;
+  const tree = rule[breakpointKey] ?? rule.default;
   if (!tree) {
     throw new Error(
-      `Split layout rule must define at least 'lg'; missing for ${breakpointKey}`,
+      `Split layout rule must define at least 'default'; missing for ${breakpointKey}`,
     );
   }
   return normalizeRuleNodeToRuntime(tree);
@@ -149,11 +149,10 @@ export function createDefaultSplitLayout(panelIds: string[]): SplitLayoutModel {
   }
 
   const layouts = {
-    lg: singleRoot,
-    md: singleRoot,
-    sm: singleRoot,
-    xs: singleRoot,
-    xxs: singleRoot,
+    min3XL: singleRoot,
+    max4XL: singleRoot,
+    default: singleRoot,
+    max2XL: singleRoot,
   };
 
   return {
@@ -233,7 +232,7 @@ export function deserializeSplitLayout(json: string): SplitLayoutModel {
     const parsed = JSON.parse(json) as unknown;
     if (!validateSplitLayoutModel(parsed)) {
       throw new Error(
-        "Invalid split layout: must have layouts (lg,md,sm,xs,xxs) and breakpoints",
+        "Invalid split layout: must have layouts (min3XL,max4XL,default,max2XL) and breakpoints",
       );
     }
     const layout = parsed as SplitLayoutModel & {

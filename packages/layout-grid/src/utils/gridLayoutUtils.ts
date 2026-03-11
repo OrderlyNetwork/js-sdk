@@ -58,6 +58,10 @@ function specsToItems(
       minH: spec.minH,
       maxW: spec.maxW,
       maxH: spec.maxH,
+      isDraggable: spec.isDraggable,
+      isResizable: spec.isResizable,
+      resizeHandles: spec.resizeHandles,
+      static: spec.static,
     }));
 }
 
@@ -109,11 +113,13 @@ function defaultTwoColumnLayout(
  *
  * @param panelIds - Panel IDs to include
  * @param rule - Optional layout rule (per-breakpoint specs)
+ * @param rowHeight - Optional row height for finer grid adjustment
  * @returns Grid layout model
  */
 export function createDefaultGridLayout(
   panelIds: string[],
   rule?: GridLayoutRule,
+  rowHeight?: number,
 ): GridLayoutModel {
   const layouts =
     rule != null
@@ -129,6 +135,7 @@ export function createDefaultGridLayout(
     isResizable: true,
     margin: [8, 8],
     containerPadding: [0, 0],
+    rowHeight: rowHeight ?? 30,
   };
 }
 

@@ -21,12 +21,16 @@ export interface GridPresetContextValue {
   layoutStorageKey: string;
   /** Clears persisted layout for current preset (reset to preset rule). */
   reset: () => void;
+  /** Row height of the selected preset for finer grid adjustment */
+  rowHeight?: number;
 }
 
 const GridPresetContext = createContext<GridPresetContextValue | null>(null);
 
 export interface GridPresetProviderProps {
   presets: GridLayoutPreset[];
+  /** When false, no localStorage persistence for preset selection or layout. Default true. */
+  persistLayout?: boolean;
   children: React.ReactNode;
 }
 
@@ -36,6 +40,7 @@ export interface GridPresetProviderProps {
  */
 export function GridPresetProvider({
   presets,
+  persistLayout = true,
   children,
 }: GridPresetProviderProps): React.ReactElement {
   const manager = useMemo(
@@ -43,28 +48,32 @@ export function GridPresetProvider({
       new LayoutRuleManager(presets, {
         presetIdStorageKey: GRID_PRESET_ID_STORAGE_KEY,
         layoutStorageKeyPrefix: GRID_LAYOUT_STORAGE_KEY_PREFIX,
+        persist: persistLayout,
       }),
-    [presets],
+    [presets, persistLayout],
   );
 
   const ruleState = useLayoutRuleManager(manager);
 
-  const value = useMemo<GridPresetContextValue>(
-    () => ({
+  const value = useMemo<GridPresetContextValue>(() => {
+    const selectedPreset = (ruleState.presets as GridLayoutPreset[]).find(
+      (p) => p.id === ruleState.selectedPresetId,
+    );
+    return {
       presets: ruleState.presets as GridLayoutPreset[],
       selectedPresetId: ruleState.selectedPresetId,
       setSelectedPresetId: ruleState.setSelectedPresetId,
       layoutStorageKey: ruleState.layoutStorageKey,
       reset: ruleState.reset,
-    }),
-    [
-      ruleState.presets,
-      ruleState.selectedPresetId,
-      ruleState.setSelectedPresetId,
-      ruleState.layoutStorageKey,
-      ruleState.reset,
-    ],
-  );
+      rowHeight: selectedPreset?.rowHeight,
+    };
+  }, [
+    ruleState.presets,
+    ruleState.selectedPresetId,
+    ruleState.setSelectedPresetId,
+    ruleState.layoutStorageKey,
+    ruleState.reset,
+  ]);
 
   return (
     <GridPresetContext.Provider value={value}>

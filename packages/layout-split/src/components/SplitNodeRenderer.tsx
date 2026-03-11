@@ -1,26 +1,15 @@
 import React from "react";
-import type { PanelRegistry } from "@orderly.network/layout-core";
-import { cn } from "@orderly.network/ui";
-import type { SplitLayoutClassNames } from "../SplitPresetContext";
-import type { SplitLayoutModel, SplitLayoutNode } from "../types";
+import { useMemo } from "react";
+import { useSplitLayoutConfig } from "../SplitLayoutConfigContext";
+import type { SplitLayoutNode } from "../types";
 import { SortNodeRenderer } from "./SortNodeRenderer";
 import { SplitLayout } from "./SplitLayout";
-import { useSplitTradingDesktopContext } from "./SplitTradingDesktopContext";
 
 /** Shared props for recursively rendering a split layout node tree. */
 export interface SplitNodeRendererProps {
   node: SplitLayoutNode;
-  panels: PanelRegistry;
   path: number[];
-  onSizeChange: (path: number[], sizes: string[]) => void;
   rootNode: SplitLayoutNode;
-  breakpoint: keyof SplitLayoutModel["layouts"];
-  layout: SplitLayoutModel;
-  onLayoutChange: (layout: SplitLayoutModel) => void;
-  /** Optional classNames for panel group, panel, and handle (from plugin options). */
-  classNames?: SplitLayoutClassNames;
-  /** Optional gap between panels in px (from plugin options). */
-  gap?: number;
 }
 
 /**
@@ -31,32 +20,29 @@ export interface SplitNodeRendererProps {
  */
 export function SplitNodeRenderer({
   node,
-  panels,
   path,
-  onSizeChange,
   rootNode,
-  breakpoint,
-  layout,
-  onLayoutChange,
-  classNames,
-  gap,
 }: SplitNodeRendererProps): React.ReactElement | null {
-  /** Trading desktop props (state, layout, callbacks); null when not under SplitTradingDesktopChrome. Use for conditional layout or passing into panel content. */
-  const tradingDesktop = useSplitTradingDesktopContext();
-  void tradingDesktop;
+  const { panels, onSizeChange, classNames, gap, isPanelCollapsed } =
+    useSplitLayoutConfig();
 
   if (node.type === "panel") {
+    // Check if panel is collapsed - don't render if collapsed
+    if (node.id && isPanelCollapsed(node.id)) {
+      return null;
+    }
+
     const panel = panels.get(node.id);
     if (!panel) {
       /** Placeholder when panel not in registry (empty or unknown id). */
       return (
         <div
-          className={cn(
-            "oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-text-base-contrast-40 oui-text-xs",
-            node.size !== "fixed" ? "oui-size-full" : "",
-            classNames?.panel,
-            node.className,
-          )}
+          className={
+            "oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-text-base-contrast-40 oui-text-xs" +
+            (node.size !== "fixed" ? " oui-size-full" : "") +
+            (classNames?.panel ? ` ${classNames.panel}` : "") +
+            (node.className ? ` ${node.className}` : "")
+          }
           style={node.style}
           data-panel-id={node.id}
         >
@@ -67,12 +53,12 @@ export function SplitNodeRenderer({
     /** Wrap panel content so layout can attach per-panel styling via rule. */
     return (
       <div
-        className={cn(
-          "oui-bg-base-9 oui-rounded-2xl",
-          node.size !== "fixed" ? "oui-size-full" : "",
-          classNames?.panel,
-          node.className,
-        )}
+        className={
+          "oui-bg-base-9 oui-rounded-2xl" +
+          (node.size !== "fixed" ? " oui-size-full" : "") +
+          (classNames?.panel ? ` ${classNames.panel}` : "") +
+          (node.className ? ` ${node.className}` : "")
+        }
         style={node.style}
         data-panel-id={node.id}
       >
@@ -85,15 +71,8 @@ export function SplitNodeRenderer({
     return (
       <SortNodeRenderer
         node={node as Extract<SplitLayoutNode, { type: "sort" }>}
-        panels={panels}
         path={path}
-        onSizeChange={onSizeChange}
         rootNode={rootNode}
-        breakpoint={breakpoint}
-        layout={layout}
-        onLayoutChange={onLayoutChange}
-        classNames={classNames}
-        gap={gap}
       />
     );
   }
@@ -120,15 +99,8 @@ export function SplitNodeRenderer({
         <SplitNodeRenderer
           key={`child-${index}`}
           node={child}
-          panels={panels}
           path={[...path, index]}
-          onSizeChange={onSizeChange}
           rootNode={rootNode}
-          breakpoint={breakpoint}
-          layout={layout}
-          onLayoutChange={onLayoutChange}
-          classNames={classNames}
-          gap={gap}
         />
       ))}
     </SplitLayout>

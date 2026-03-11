@@ -18,21 +18,24 @@ import {
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { PanelRegistry } from "@orderly.network/layout-core";
 import { cn } from "@orderly.network/ui";
-import { useSplitSortIndicatorContext } from "../SplitSortIndicatorContext";
-import type { SplitLayoutModel, SplitLayoutNode } from "../types";
+import { useSplitLayoutConfig } from "../SplitLayoutConfigContext";
+import { useSplitPresetContext } from "../SplitPresetContext";
+import type { SplitLayoutNode } from "../types";
 import {
   getSortableIdForChild,
   updateOrderAtPath,
 } from "../utils/splitLayoutUtils";
-import type { SplitNodeRendererProps } from "./SplitNodeRenderer";
 import { SplitNodeRenderer } from "./SplitNodeRenderer";
 
+const DEFAULT_SHOW_INDICATOR = true;
+
 /** Props for sortable child wrapper (needs sort context props for nested sort/split). */
-interface SortableSortChildProps extends SplitNodeRendererProps {
+interface SortableSortChildProps {
   id: string;
   child: SplitLayoutNode;
+  path: number[];
+  rootNode: SplitLayoutNode;
   /** When true, show drag handle on panel children; from SplitSortIndicatorContext. */
   showIndicator: boolean;
 }
@@ -65,15 +68,8 @@ function SortableSortChild({
   id,
   child,
   showIndicator,
-  panels,
   path,
-  onSizeChange,
   rootNode,
-  breakpoint,
-  layout,
-  onLayoutChange,
-  classNames,
-  gap,
 }: SortableSortChildProps): React.ReactElement {
   const nodeRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = React.useState<{
@@ -153,18 +149,7 @@ function SortableSortChild({
           />
         </button>
       )}
-      <SplitNodeRenderer
-        node={child}
-        panels={panels}
-        path={path}
-        onSizeChange={onSizeChange}
-        rootNode={rootNode}
-        breakpoint={breakpoint}
-        layout={layout}
-        onLayoutChange={onLayoutChange}
-        classNames={classNames}
-        gap={gap}
-      />
+      <SplitNodeRenderer node={child} path={path} rootNode={rootNode} />
     </div>
   );
 }
@@ -172,17 +157,8 @@ function SortableSortChild({
 /** Props for sort container renderer (node is narrowed to sort type). */
 export interface SortNodeRendererProps {
   node: Extract<SplitLayoutNode, { type: "sort" }>;
-  panels: PanelRegistry;
   path: number[];
   rootNode: SplitLayoutNode;
-  breakpoint: keyof SplitLayoutModel["layouts"];
-  layout: SplitLayoutModel;
-  onSizeChange: (path: number[], sizes: string[]) => void;
-  onLayoutChange: (layout: SplitLayoutModel) => void;
-  /** Optional classNames for panel group, panel, and handle (from plugin options). */
-  classNames?: SplitNodeRendererProps["classNames"];
-  /** Optional gap between panels in px (from plugin options). */
-  gap?: SplitNodeRendererProps["gap"];
 }
 
 /**
@@ -190,18 +166,13 @@ export interface SortNodeRendererProps {
  */
 export function SortNodeRenderer({
   node,
-  panels,
   path,
-  onSizeChange,
   rootNode,
-  breakpoint,
-  layout,
-  onLayoutChange,
-  classNames,
-  gap,
 }: SortNodeRendererProps): React.ReactElement {
+  const { onLayoutChange, layout, breakpoint } = useSplitLayoutConfig();
   const { orientation, children } = node;
-  const showIndicator = useSplitSortIndicatorContext();
+  const ctx = useSplitPresetContext();
+  const showIndicator = ctx?.showIndicator ?? DEFAULT_SHOW_INDICATOR;
   const items = children.map((child: SplitLayoutNode, index: number) =>
     getSortableIdForChild(child, path, index),
   );
@@ -266,16 +237,8 @@ export function SortNodeRenderer({
               id={getSortableIdForChild(child, path, index)}
               child={child}
               showIndicator={showIndicator}
-              node={node}
-              panels={panels}
               path={[...path, index]}
-              onSizeChange={onSizeChange}
               rootNode={rootNode}
-              breakpoint={breakpoint}
-              layout={layout}
-              onLayoutChange={onLayoutChange}
-              classNames={classNames}
-              gap={gap}
             />
           ))}
         </div>

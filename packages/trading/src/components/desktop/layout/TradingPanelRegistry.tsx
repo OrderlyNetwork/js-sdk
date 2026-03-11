@@ -56,8 +56,6 @@ export interface TradingPanelRegistryProps {
   sharePnLConfig?: SharePnLConfig;
   isFirstTimeDeposit?: boolean;
   resizeable?: boolean;
-  panelSize?: "small" | "middle" | "large";
-  onPanelSizeChange?: (size: "small" | "middle" | "large") => void;
   /** Optional when layout is rule-driven; defaults used for SwitchLayout when undefined. */
   layout?: LayoutPosition;
   onLayout?: (layout: LayoutPosition) => void;
@@ -93,13 +91,10 @@ export function createTradingPanelRegistry(
     closeCountdown,
     tradingViewFullScreen,
     resizeable,
-    panelSize,
-    onPanelSizeChange,
     sharePnLConfig,
     animating,
     setAnimating,
     symbolInfoBarHeight,
-    dataListHeight,
   } = props;
 
   const config = (tradingViewConfig ?? {}) as {
@@ -203,12 +198,6 @@ export function createTradingPanelRegistry(
   const marketsWidget = (
     <SideMarketsWidget
       resizeable={resizeable}
-      panelSize={panelSize as "small" | "middle" | "large"}
-      onPanelSizeChange={
-        onPanelSizeChange as unknown as React.Dispatch<
-          React.SetStateAction<"small" | "middle" | "large">
-        >
-      }
       symbol={symbol}
       onSymbolChange={onSymbolChange}
     />

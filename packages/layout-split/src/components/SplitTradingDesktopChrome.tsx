@@ -26,14 +26,7 @@ import {
   OrderEntryDragOverlayContent,
   type DesktopLayoutProps,
 } from "@orderly.network/trading";
-// import {
-//   scrollBarWidth,
-//   space,
-//   orderbookMaxHeight,
-//   dataListInitialHeight,
-// } from "@orderly.network/trading";
 import { Box, cn, Flex } from "@orderly.network/ui";
-import { SplitSortIndicatorProvider } from "../SplitSortIndicatorContext";
 import { SplitTradingDesktopContext } from "./SplitTradingDesktopContext";
 
 export interface SplitTradingDesktopChromeProps extends DesktopLayoutProps {
@@ -155,35 +148,33 @@ export function SplitTradingDesktopChrome(
           items={sortableItems}
           strategy={verticalListSortingStrategy}
         >
-          <SplitSortIndicatorProvider showIndicator={showPositionIcon ?? false}>
-            {max2XL ? (
-              <Box height="100%" className={className}>
-                {children}
-              </Box>
-            ) : (
-              <Flex
-                style={
-                  {
-                    // minHeight: minScreenHeight,
-                    // minWidth: 1440 - scrollBarWidth,
-                  }
+          {max2XL ? (
+            <Box height="100%" className={className}>
+              {children}
+            </Box>
+          ) : (
+            <Flex
+              style={
+                {
+                  // minHeight: minScreenHeight,
+                  // minWidth: 1440 - scrollBarWidth,
                 }
-                className={cn(
-                  className,
-                  "oui-flex-1 oui-justify-start oui-overflow-hidden",
-                  tradingViewFullScreen &&
-                    "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
-                )}
-                width="100%"
-                p={2}
-                gap={2}
-                itemAlign="stretch"
-                direction="column"
-              >
-                {children}
-              </Flex>
-            )}
-          </SplitSortIndicatorProvider>
+              }
+              className={cn(
+                className,
+                "oui-flex-1 oui-justify-start oui-overflow-hidden",
+                tradingViewFullScreen &&
+                  "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
+              )}
+              width="100%"
+              p={2}
+              gap={2}
+              itemAlign="stretch"
+              direction="column"
+            >
+              {children}
+            </Flex>
+          )}
         </SortableContext>
         <DragOverlay dropAnimation={dropAnimationConfig}>
           {/* <OrderEntryDragOverlayContent

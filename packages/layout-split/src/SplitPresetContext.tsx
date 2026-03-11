@@ -1,5 +1,6 @@
 /**
  * Context for split layout preset list and selected preset id (persisted via LayoutRuleManager).
+ * Also provides showIndicator for sort indicator visibility.
  * Used by the plugin interceptor to pass getInitialLayout and storageKey that depend on selection.
  */
 import React, { createContext, useContext, useMemo } from "react";
@@ -32,6 +33,8 @@ export interface SplitPresetContextValue {
   classNames?: SplitLayoutClassNames;
   /** Optional gap between panels in px (similar to Tailwind gap-*; applied to handle margin). */
   gap?: number;
+  /** When true, show drag handle on sortable panels; when false, hide it. */
+  showIndicator?: boolean;
 }
 
 const SplitPresetContext = createContext<SplitPresetContextValue | null>(null);
@@ -42,6 +45,8 @@ export interface SplitPresetProviderProps {
   classNames?: SplitLayoutClassNames;
   /** Optional gap between panels in px (similar to Tailwind gap-*). */
   gap?: number;
+  /** Optional showIndicator for sort indicator visibility. */
+  showIndicator?: boolean;
   children: React.ReactNode;
 }
 
@@ -53,6 +58,7 @@ export function SplitPresetProvider({
   presets,
   classNames,
   gap,
+  showIndicator,
   children,
 }: SplitPresetProviderProps): React.ReactElement {
   const manager = useMemo(
@@ -75,6 +81,7 @@ export function SplitPresetProvider({
       reset: ruleState.reset,
       classNames: classNames ?? undefined,
       gap: gap ?? undefined,
+      showIndicator,
     }),
     [
       ruleState.presets,
@@ -84,6 +91,7 @@ export function SplitPresetProvider({
       ruleState.reset,
       classNames,
       gap,
+      showIndicator,
     ],
   );
 

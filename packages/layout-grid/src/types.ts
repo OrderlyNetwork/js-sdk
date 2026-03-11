@@ -8,17 +8,11 @@ export type GridLayoutBreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";
  * Single cell layout spec (position and size only; used in rule config).
  * Does not include `i`; that is set from panelId when building GridLayoutItem.
  */
-export interface GridLayoutItemSpec {
+export type GridLayoutItemSpec = Omit<LayoutItem, "i"> & {
   panelId: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  minW?: number;
-  minH?: number;
-  maxW?: number;
-  maxH?: number;
-}
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 /**
  * Layout rule: per-breakpoint specs for initial position and size.
@@ -40,6 +34,8 @@ export interface GridLayoutPreset {
   id: string;
   name: string;
   rule: GridLayoutRule;
+  /** Row height in pixels - smaller values = finer grid adjustment */
+  rowHeight?: number;
 }
 
 /**
@@ -90,4 +86,6 @@ export interface GridLayoutModel extends LayoutModel {
   margin?: [number, number];
   /** Container padding [x, y] */
   containerPadding?: [number, number];
+  /** Row height in pixels - smaller values = finer grid adjustment (default: 30) */
+  rowHeight?: number;
 }

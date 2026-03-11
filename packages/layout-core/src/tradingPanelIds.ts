@@ -17,3 +17,11 @@ export const TRADING_PANEL_IDS = {
 
 export type TradingPanelId =
   (typeof TRADING_PANEL_IDS)[keyof typeof TRADING_PANEL_IDS];
+
+/**
+ * Returns all trading panel IDs from layout-core.
+ * Used by layout strategies (split, grid) to derive panel set; component mapping is in trading package.
+ */
+export function getTradingPanelIds(): readonly string[] {
+  return Object.values(TRADING_PANEL_IDS);
+}

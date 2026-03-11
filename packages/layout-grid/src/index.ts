@@ -31,7 +31,7 @@ export {
 } from "./utils/gridLayoutUtils";
 export {
   createTradingGridLayout,
-  TRADING_GRID_PANEL_IDS,
+  createTradingGridLayoutFromPreset,
 } from "./utils/tradingGridLayout";
 export {
   getDefaultGridPresets,

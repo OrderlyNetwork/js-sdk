@@ -1,5 +1,4 @@
 import React from "react";
-import { pick } from "ramda";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { CollapseIcon, ExpandIcon } from "../../icons";
@@ -63,14 +62,25 @@ export const SideMarketsHeader: React.FC<
 export type SideMarketsProps = SideMarketsScriptReturn & { className?: string };
 
 export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
-  const { panelSize, activeTab, onTabChange, className, tabSort } = props;
+  const {
+    activeTab,
+    onTabChange,
+    className,
+    tabSort,
+    panelSize: panelSizeProp = "large",
+    onPanelSizeChange,
+    resizeable = true,
+  } = props;
+
+  // panelSizeProp can be: "small" (collapsed), "large" (expanded), "middle" (partial)
+  // "small" = collapsed (shows compact list), "middle" = partial (shows compact list), "large" = expanded (shows full UI)
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
   const { getFavoritesProps } = useFavoritesProps();
 
   const renderContent = () => {
-    if (panelSize === "large") {
+    if (panelSizeProp === "large") {
       return (
         <ExpandMarketsWidget
           activeTab={activeTab}
@@ -100,13 +110,15 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       width="100%"
     >
       <SideMarketsHeader
-        {...pick(["resizeable", "panelSize", "onPanelSizeChange"], props)}
+        resizeable={resizeable}
+        panelSize={panelSizeProp}
+        onPanelSizeChange={onPanelSizeChange}
       />
       <Box
         width="100%"
         className={cn(
-          panelSize === "large" && "oui-h-[calc(100%_-_56px)]",
-          panelSize === "middle" && "oui-h-[calc(100%_-_52px)]",
+          panelSizeProp === "large" && "oui-h-[calc(100%_-_56px)]",
+          panelSizeProp === "middle" && "oui-h-[calc(100%_-_52px)]",
         )}
       >
         {renderContent()}

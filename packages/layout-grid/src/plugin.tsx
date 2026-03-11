@@ -14,11 +14,7 @@ import { GridPresetProvider, useGridPresetContext } from "./GridPresetContext";
 import { gridStrategy } from "./gridStrategy";
 import type { GridLayoutModel, GridLayoutPreset } from "./types";
 import { getDefaultGridPresets } from "./utils/defaultPresets";
-import { createDefaultGridLayout } from "./utils/gridLayoutUtils";
-import {
-  getTradingGridPanelIds,
-  createTradingGridLayout,
-} from "./utils/tradingGridLayout";
+import { createTradingGridLayoutFromPreset } from "./utils/tradingGridLayout";
 
 /**
  * Receives built-in presets and returns the final preset list (merge or replace).
@@ -38,6 +34,11 @@ export interface LayoutGridPluginOptions {
   layouts?: ResolveLayoutPresets;
   /** Override initial layout when provided (ignores preset selection). */
   getInitialLayout?: () => GridLayoutModel;
+  /**
+   * When true (default), user layout config (preset selection + panel positions) is saved to localStorage.
+   * When false, no persistence occurs.
+   */
+  persistLayout?: boolean;
 }
 
 const PLUGIN_ID = "orderly-layout-grid";
@@ -49,32 +50,35 @@ type DesktopLayoutInterceptorProps = Record<string, unknown>;
 
 /**
  * Injects getInitialLayout and storageKey from grid preset context when we are providing grid.
+ * When persistLayout is false, storageKey is undefined so LayoutHost does not persist to localStorage.
  */
 function GridDesktopInjector({
   Original,
   props,
   usePresetSelection,
+  persistLayout,
 }: {
   Original: React.ComponentType<DesktopLayoutInterceptorProps>;
   props: DesktopLayoutInterceptorProps;
   usePresetSelection: boolean;
+  persistLayout: boolean;
 }): React.ReactElement {
   const ctx = useGridPresetContext();
 
   const getInitialLayout = React.useCallback(() => {
     if (!usePresetSelection || !ctx) {
-      return createTradingGridLayout();
+      return createTradingGridLayoutFromPreset();
     }
     const preset =
       ctx.presets.find((p) => p.id === ctx.selectedPresetId) ?? ctx.presets[0];
-    if (!preset) return createTradingGridLayout();
-    return createDefaultGridLayout(getTradingGridPanelIds(), preset.rule);
+    return createTradingGridLayoutFromPreset(preset ?? undefined);
   }, [usePresetSelection, ctx?.presets, ctx?.selectedPresetId]);
 
-  const storageKey =
-    usePresetSelection && ctx
+  const storageKey = persistLayout
+    ? usePresetSelection && ctx
       ? ctx.layoutStorageKey
-      : (props.storageKey as string | undefined);
+      : (props.storageKey as string | undefined)
+    : undefined;
 
   return (
     <Original
@@ -111,6 +115,7 @@ export function registerLayoutGridPlugin(
     : getDefaultGridPresets();
 
   const usePresetSelection = options?.getInitialLayout == null;
+  const persistLayout = options?.persistLayout ?? false;
 
   return (SDK: OrderlySDK) => {
     SDK.registerPlugin({
@@ -120,13 +125,17 @@ export function registerLayoutGridPlugin(
       orderlyVersion: ">=1.0.0",
       interceptors: [
         createInterceptor("Trading.Layout.Desktop", (Original, props, _api) => (
-          <GridPresetProvider presets={resolvedPresets}>
+          <GridPresetProvider
+            presets={resolvedPresets}
+            persistLayout={persistLayout}
+          >
             <GridDesktopInjector
               Original={
                 Original as unknown as React.ComponentType<DesktopLayoutInterceptorProps>
               }
               props={props as unknown as DesktopLayoutInterceptorProps}
               usePresetSelection={usePresetSelection}
+              persistLayout={persistLayout}
             />
           </GridPresetProvider>
         )),

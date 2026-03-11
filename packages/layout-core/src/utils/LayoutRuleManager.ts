@@ -20,15 +20,23 @@ export interface LayoutRuleManagerOptions {
   presetIdStorageKey: string;
   /** Base key for layout persistence; actual key is `${layoutStorageKeyPrefix}_${presetId}`. */
   layoutStorageKeyPrefix: string;
+  /**
+   * When false, no localStorage read/write; preset selection kept in memory only.
+   * Default true for backward compatibility.
+   */
+  persist?: boolean;
 }
 
 /**
  * Manages layout presets, selected preset persistence, and reset.
  * Persistence of the user-selected rule (preset id) is done via presetIdStorageKey.
+ * When persist is false, selection is kept in memory only (no localStorage).
  */
 export class LayoutRuleManager<TRule = unknown> {
   private readonly _presets: readonly LayoutPreset<TRule>[];
   private readonly options: LayoutRuleManagerOptions;
+  /** In-memory selected preset id when persist is false. */
+  private _selectedId?: string;
 
   constructor(
     presets: LayoutPreset<TRule>[],
@@ -38,6 +46,11 @@ export class LayoutRuleManager<TRule = unknown> {
     this.options = { ...options };
   }
 
+  /** Whether persistence to localStorage is enabled. */
+  private get persist(): boolean {
+    return this.options.persist !== false;
+  }
+
   /** Read-only preset list. */
   get presets(): readonly LayoutPreset<TRule>[] {
     return this._presets;
@@ -45,10 +58,17 @@ export class LayoutRuleManager<TRule = unknown> {
 
   /**
    * Reads selected preset id from localStorage (presetIdStorageKey).
+   * When persist is false, returns in-memory selection or first preset.
    * Validates against presets; falls back to first preset id when missing or invalid.
    */
   getSelectedPresetId(): string {
-    if (!hasStorage() || this._presets.length === 0) {
+    if (this._presets.length === 0) {
+      return "";
+    }
+    if (!this.persist) {
+      return this._selectedId ?? this._presets[0]?.id ?? "";
+    }
+    if (!hasStorage()) {
       return this._presets[0]?.id ?? "";
     }
     try {
@@ -67,10 +87,15 @@ export class LayoutRuleManager<TRule = unknown> {
 
   /**
    * Writes selected preset id to localStorage (presetIdStorageKey).
+   * When persist is false, only updates in-memory selection.
    * Validates id exists in presets before writing.
    */
   setSelectedPresetId(id: string): void {
     if (!this._presets.some((p) => p.id === id)) return;
+    if (!this.persist) {
+      this._selectedId = id;
+      return;
+    }
     if (!hasStorage()) return;
     try {
       window.localStorage.setItem(this.options.presetIdStorageKey, id);
@@ -97,9 +122,10 @@ export class LayoutRuleManager<TRule = unknown> {
   /**
    * Clears persisted layout data for the current preset (reset to preset rule).
    * After this, next load will use getInitialLayout() from preset rule.
+   * No-op when persist is false (nothing to clear).
    */
   reset(): void {
-    if (!hasStorage()) return;
+    if (!this.persist || !hasStorage()) return;
     try {
       window.localStorage.removeItem(this.getLayoutStorageKey());
     } catch {
@@ -110,9 +136,10 @@ export class LayoutRuleManager<TRule = unknown> {
   /**
    * Returns whether the current preset has any persisted layout data.
    * Useful for UI "custom" badge or "Reset to default" visibility.
+   * Returns false when persist is false.
    */
   hasPersistedLayout(): boolean {
-    if (!hasStorage()) return false;
+    if (!this.persist || !hasStorage()) return false;
     try {
       const key = this.getLayoutStorageKey();
       const value = window.localStorage.getItem(key);

@@ -2,21 +2,38 @@ import type { SplitLayoutBreakpointKey, SplitLayoutBreakpoints } from "./types";
 
 /** Breakpoint key order (largest to smallest). */
 export const SPLIT_BREAKPOINT_ORDER: SplitLayoutBreakpointKey[] = [
-  "lg",
-  "md",
-  "sm",
-  "xs",
-  "xxs",
+  "min3XL",
+  "max4XL",
+  "default",
+  "max2XL",
 ];
 
 /** Default breakpoint widths (min width in px; aligned with layout-grid). */
 export const DEFAULT_SPLIT_BREAKPOINTS: SplitLayoutBreakpoints = {
-  lg: 1200,
-  md: 996,
-  sm: 768,
-  xs: 480,
-  xxs: 0,
+  min3XL: 1440,
+  max4XL: 1680,
+  default: 1440,
+  max2XL: 1279,
 };
+
+/** Viewport-based breakpoint keys for responsive split layout. */
+export type ViewportBreakpointKey = "max2XL" | "default" | "min3XL" | "max4XL";
+
+/** Viewport breakpoint values (max width in px). */
+export const VIEWPORT_BREAKPOINTS: Record<ViewportBreakpointKey, number> = {
+  max2XL: 1279,
+  default: 1440,
+  min3XL: 1440,
+  max4XL: 1680,
+};
+
+/** Viewport breakpoint key order (largest to smallest). */
+export const VIEWPORT_BREAKPOINT_ORDER: ViewportBreakpointKey[] = [
+  "min3XL",
+  "max4XL",
+  "default",
+  "max2XL",
+];
 
 /** LocalStorage key for selected split preset id. */
 export const SPLIT_PRESET_ID_STORAGE_KEY =

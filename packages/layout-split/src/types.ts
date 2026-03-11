@@ -1,8 +1,12 @@
 import type React from "react";
 import type { LayoutModel } from "@orderly.network/layout-core";
 
-/** Breakpoint keys for responsive split layout (aligned with grid). */
-export type SplitLayoutBreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";
+/** Breakpoint keys for responsive split layout (viewport-based). */
+export type SplitLayoutBreakpointKey =
+  | "min3XL"
+  | "max4XL"
+  | "default"
+  | "max2XL";
 
 /**
  * Constraints shared by panel and split-child nodes (size per child).
@@ -17,6 +21,10 @@ export interface SplitLayoutChildConstraints {
   maxSize?: string;
   /** When true, panel cannot be resized (maps to ResizablePanel disabled) */
   disabled?: boolean;
+  /** When true, panel can be collapsed/expanded by user */
+  collapsible?: boolean;
+  /** When true, panel is initially collapsed */
+  defaultCollapsed?: boolean;
 }
 
 /**
@@ -80,14 +88,13 @@ export type SplitLayoutRuleNode =
     } & Partial<SplitLayoutChildConstraints>);
 
 /**
- * Layout rule: one tree per breakpoint; missing breakpoints fall back to lg.
+ * Layout rule: one tree per breakpoint; missing breakpoints fall back to default.
  */
 export interface SplitLayoutRule {
-  lg?: SplitLayoutRuleNode;
-  md?: SplitLayoutRuleNode;
-  sm?: SplitLayoutRuleNode;
-  xs?: SplitLayoutRuleNode;
-  xxs?: SplitLayoutRuleNode;
+  min3XL?: SplitLayoutRuleNode;
+  max4XL?: SplitLayoutRuleNode;
+  default?: SplitLayoutRuleNode;
+  max2XL?: SplitLayoutRuleNode;
 }
 
 /** One named preset for user selection (like grid). */
@@ -99,25 +106,23 @@ export interface SplitLayoutPreset {
 
 /** Breakpoint width map (min width for each key). */
 export interface SplitLayoutBreakpoints {
-  lg: number;
-  md: number;
-  sm: number;
-  xs: number;
-  xxs: number;
+  min3XL: number;
+  max4XL: number;
+  default: number;
+  max2XL: number;
 }
 
 /**
  * Split layout model (responsive only).
- * layouts: one tree per breakpoint; renderer picks by current width.
+ * layouts: one tree per breakpoint; renderer picks by current viewport width.
  * Aligned with GridLayoutModel.layouts naming.
  */
 export interface SplitLayoutModel extends LayoutModel {
   layouts: {
-    lg: SplitLayoutNode;
-    md: SplitLayoutNode;
-    sm: SplitLayoutNode;
-    xs: SplitLayoutNode;
-    xxs: SplitLayoutNode;
+    min3XL: SplitLayoutNode;
+    max4XL: SplitLayoutNode;
+    default: SplitLayoutNode;
+    max2XL: SplitLayoutNode;
   };
   breakpoints: SplitLayoutBreakpoints;
 }

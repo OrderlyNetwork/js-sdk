@@ -8,18 +8,21 @@ import type {
 const S = TRADING_PANEL_IDS;
 
 /**
- * lg: horizontal [ markets | mainCol | orderEntry* ]; mainCol = vertical [ symbolBar | (tradingView|orderbook) | dataList ].
+ * default: horizontal [ markets | mainCol | orderEntry* ]; mainCol = vertical [ symbolBar | (tradingView|orderbook) | dataList ].
  * Right column is a sort container with margin/assets/orderEntry panels.
  */
-const lgRightMarketsLeftTree: SplitLayoutRuleNode = {
+const defaultRightMarketsLeftTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
     {
       type: "panel",
       id: S.MARKETS,
-      size: "20%",
+      size: "fixed",
       maxSize: "280px",
+      disabled: true,
+      className: "oui-mr-2",
+      collapsible: true,
     },
     {
       type: "split",
@@ -71,9 +74,9 @@ const lgRightMarketsLeftTree: SplitLayoutRuleNode = {
 };
 
 /**
- * lg: horizontal [ mainCol | orderEntry* ]; markets in mainCol top.
+ * default: horizontal [ mainCol | orderEntry* ]; markets in mainCol top.
  */
-const lgRightMarketsTopTree: SplitLayoutRuleNode = {
+const defaultRightMarketsTopTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -93,6 +96,7 @@ const lgRightMarketsTopTree: SplitLayoutRuleNode = {
           type: "panel",
           id: S.MARKETS,
           size: "20%",
+          collapsible: true,
         },
         {
           type: "split",
@@ -132,9 +136,9 @@ const lgRightMarketsTopTree: SplitLayoutRuleNode = {
 };
 
 /**
- * lg: horizontal [ mainCol | orderEntry* ]; markets in mainCol bottom (above data list).
+ * default: horizontal [ mainCol | orderEntry* ]; markets in mainCol bottom (above data list).
  */
-const lgRightMarketsBottomTree: SplitLayoutRuleNode = {
+const defaultRightMarketsBottomTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -167,7 +171,8 @@ const lgRightMarketsBottomTree: SplitLayoutRuleNode = {
         {
           type: "panel",
           id: S.MARKETS,
-          size: "20%",
+          size: "fixed",
+          collapsible: true,
         },
         { type: "panel", id: S.DATA_LIST, size: "30%", className: "oui-p-2" },
       ],
@@ -193,9 +198,9 @@ const lgRightMarketsBottomTree: SplitLayoutRuleNode = {
 };
 
 /**
- * lg: horizontal [ mainCol | orderEntry* ]; markets hidden.
+ * default: horizontal [ mainCol | orderEntry* ]; markets hidden.
  */
-const lgRightMarketsHideTree: SplitLayoutRuleNode = {
+const defaultRightMarketsHideTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -249,15 +254,15 @@ const lgRightMarketsHideTree: SplitLayoutRuleNode = {
 };
 
 /**
- * sm: vertical stack [ symbolBar | markets | (tradingView | orderbook) | orderEntry* | dataList ].
+ * max2XL: vertical stack [ symbolBar | markets | (tradingView | orderbook) | orderEntry* | dataList ].
  * Order-entry column is a vertical sort container of subpanels.
  */
-const smMarketsLeftTree: SplitLayoutRuleNode = {
+const max2XLMarketsLeftTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "vertical",
   children: [
     { type: "panel", id: S.SYMBOL_INFO_BAR, size: "auto" },
-    { type: "panel", id: S.MARKETS, size: "auto" },
+    { type: "panel", id: S.MARKETS, size: "auto", collapsible: true },
     {
       type: "split",
       orientation: "horizontal",
@@ -280,14 +285,14 @@ const smMarketsLeftTree: SplitLayoutRuleNode = {
 };
 
 /**
- * sm: [ symbolBar | markets at top of main | (tradingView | orderbook) | orderEntry* | dataList ].
+ * max2XL: [ symbolBar | markets at top of main | (tradingView | orderbook) | orderEntry* | dataList ].
  */
-const smMarketsTopTree: SplitLayoutRuleNode = {
+const max2XLMarketsTopTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "vertical",
   children: [
     { type: "panel", id: S.SYMBOL_INFO_BAR, size: "auto" },
-    { type: "panel", id: S.MARKETS, size: "auto" },
+    { type: "panel", id: S.MARKETS, size: "auto", collapsible: true },
     {
       type: "split",
       orientation: "horizontal",
@@ -310,9 +315,9 @@ const smMarketsTopTree: SplitLayoutRuleNode = {
 };
 
 /**
- * sm: [ symbolBar | (tradingView | orderbook) | markets | orderEntry* | dataList ].
+ * max2XL: [ symbolBar | (tradingView | orderbook) | markets | orderEntry* | dataList ].
  */
-const smMarketsBottomTree: SplitLayoutRuleNode = {
+const max2XLMarketsBottomTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "vertical",
   children: [
@@ -325,7 +330,7 @@ const smMarketsBottomTree: SplitLayoutRuleNode = {
         { type: "panel", id: S.ORDERBOOK, size: "50%" },
       ],
     },
-    { type: "panel", id: S.MARKETS, size: "auto" },
+    { type: "panel", id: S.MARKETS, size: "auto", collapsible: true },
     {
       type: "sort",
       orientation: "vertical",
@@ -340,9 +345,9 @@ const smMarketsBottomTree: SplitLayoutRuleNode = {
 };
 
 /**
- * sm: [ symbolBar | (tradingView | orderbook) | orderEntry* | dataList ]; markets hidden.
+ * max2XL: [ symbolBar | (tradingView | orderbook) | orderEntry* | dataList ]; markets hidden.
  */
-const smMarketsHideTree: SplitLayoutRuleNode = {
+const max2XLMarketsHideTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "vertical",
   children: [
@@ -365,72 +370,50 @@ const smMarketsHideTree: SplitLayoutRuleNode = {
       ],
     },
     { type: "panel", id: S.DATA_LIST, size: "30%" },
-  ],
-};
-
-/**
- * xs / xxs: simple vertical stack of all panels including markets and order-entry subpanels.
- */
-const xsTree: SplitLayoutRuleNode = {
-  type: "split",
-  orientation: "vertical",
-  children: [
-    { type: "panel", id: S.SYMBOL_INFO_BAR, size: "auto" },
-    { type: "panel", id: S.MARKETS, size: "auto" },
-    { type: "panel", id: S.TRADING_VIEW, size: "auto" },
-    { type: "panel", id: S.ORDERBOOK, size: "auto" },
-    { type: "panel", id: S.MARGIN, size: "auto" },
-    { type: "panel", id: S.ASSETS, size: "auto" },
-    { type: "panel", id: S.ORDER_ENTRY, size: "auto" },
-    { type: "panel", id: S.DATA_LIST, size: "auto" },
   ],
 };
 
 const exchangeStyleRightMarketsLeftRule: SplitLayoutRule = {
-  lg: lgRightMarketsLeftTree,
-  md: lgRightMarketsLeftTree,
-  sm: smMarketsLeftTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultRightMarketsLeftTree,
+  max4XL: defaultRightMarketsLeftTree,
+  default: defaultRightMarketsLeftTree,
+  max2XL: max2XLMarketsLeftTree,
 };
 
 /**
  * Advanced-right + markets top.
  */
 const exchangeStyleRightMarketsTopRule: SplitLayoutRule = {
-  lg: lgRightMarketsTopTree,
-  md: lgRightMarketsTopTree,
-  sm: smMarketsTopTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultRightMarketsTopTree,
+  max4XL: defaultRightMarketsTopTree,
+  default: defaultRightMarketsTopTree,
+  max2XL: max2XLMarketsTopTree,
 };
 
 /**
  * Advanced-right + markets bottom.
  */
 const exchangeStyleRightMarketsBottomRule: SplitLayoutRule = {
-  lg: lgRightMarketsBottomTree,
-  md: lgRightMarketsBottomTree,
-  sm: smMarketsBottomTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultRightMarketsBottomTree,
+  max4XL: defaultRightMarketsBottomTree,
+  default: defaultRightMarketsBottomTree,
+  max2XL: max2XLMarketsBottomTree,
 };
 
 /**
  * Advanced-right + markets hide.
  */
 const exchangeStyleRightMarketsHideRule: SplitLayoutRule = {
-  lg: lgRightMarketsHideTree,
-  md: lgRightMarketsHideTree,
-  sm: smMarketsHideTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultRightMarketsHideTree,
+  max4XL: defaultRightMarketsHideTree,
+  default: defaultRightMarketsHideTree,
+  max2XL: max2XLMarketsHideTree,
 };
 
 /**
  * Advanced-left variants: mirror advanced-right by swapping markets and order-entry columns.
  */
-const lgLeftMarketsLeftTree: SplitLayoutRuleNode = {
+const defaultLeftMarketsLeftTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -483,7 +466,7 @@ const lgLeftMarketsLeftTree: SplitLayoutRuleNode = {
   ],
 };
 
-const lgLeftMarketsTopTree: SplitLayoutRuleNode = {
+const defaultLeftMarketsTopTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -520,6 +503,7 @@ const lgLeftMarketsTopTree: SplitLayoutRuleNode = {
           type: "panel",
           id: S.MARKETS,
           size: "20%",
+          collapsible: true,
         },
         {
           type: "split",
@@ -541,7 +525,7 @@ const lgLeftMarketsTopTree: SplitLayoutRuleNode = {
   ],
 };
 
-const lgLeftMarketsBottomTree: SplitLayoutRuleNode = {
+const defaultLeftMarketsBottomTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -592,6 +576,7 @@ const lgLeftMarketsBottomTree: SplitLayoutRuleNode = {
           type: "panel",
           id: S.MARKETS,
           size: "20%",
+          collapsible: true,
         },
         { type: "panel", id: S.DATA_LIST, size: "30%", className: "oui-p-2" },
       ],
@@ -599,7 +584,7 @@ const lgLeftMarketsBottomTree: SplitLayoutRuleNode = {
   ],
 };
 
-const lgLeftMarketsHideTree: SplitLayoutRuleNode = {
+const defaultLeftMarketsHideTree: SplitLayoutRuleNode = {
   type: "split",
   orientation: "horizontal",
   children: [
@@ -653,35 +638,31 @@ const lgLeftMarketsHideTree: SplitLayoutRuleNode = {
 };
 
 const exchangeStyleLeftMarketsLeftRule: SplitLayoutRule = {
-  lg: lgLeftMarketsLeftTree,
-  md: lgLeftMarketsLeftTree,
-  sm: smMarketsLeftTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultLeftMarketsLeftTree,
+  max4XL: defaultLeftMarketsLeftTree,
+  default: defaultLeftMarketsLeftTree,
+  max2XL: max2XLMarketsLeftTree,
 };
 
 const exchangeStyleLeftMarketsTopRule: SplitLayoutRule = {
-  lg: lgLeftMarketsTopTree,
-  md: lgLeftMarketsTopTree,
-  sm: smMarketsTopTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultLeftMarketsTopTree,
+  max4XL: defaultLeftMarketsTopTree,
+  default: defaultLeftMarketsTopTree,
+  max2XL: max2XLMarketsTopTree,
 };
 
 const exchangeStyleLeftMarketsBottomRule: SplitLayoutRule = {
-  lg: lgLeftMarketsBottomTree,
-  md: lgLeftMarketsBottomTree,
-  sm: smMarketsBottomTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultLeftMarketsBottomTree,
+  max4XL: defaultLeftMarketsBottomTree,
+  default: defaultLeftMarketsBottomTree,
+  max2XL: max2XLMarketsBottomTree,
 };
 
 const exchangeStyleLeftMarketsHideRule: SplitLayoutRule = {
-  lg: lgLeftMarketsHideTree,
-  md: lgLeftMarketsHideTree,
-  sm: smMarketsHideTree,
-  xs: xsTree,
-  xxs: xsTree,
+  min3XL: defaultLeftMarketsHideTree,
+  max4XL: defaultLeftMarketsHideTree,
+  default: defaultLeftMarketsHideTree,
+  max2XL: max2XLMarketsHideTree,
 };
 
 /** Built-in split layout presets: advanced-left/right × markets left/top/bottom/hide. */
