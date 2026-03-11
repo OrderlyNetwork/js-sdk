@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { subDays, format } from "date-fns";
 import {
   useAssetsHistory,
@@ -7,8 +7,8 @@ import {
   useLocalStorage,
   usePrivateQuery,
   useStatisticsDaily,
+  useUserStatistics,
   useBalanceTopic,
-  useDaily,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -134,17 +134,12 @@ export const useAssetsHistoryData = (
     },
   );
 
-  const { data: dailyVolume } = useDaily({
-    startDate: today,
-    endDate: today,
-  });
+  const [userStatistics] = useUserStatistics();
 
-  const todayVolume = useMemo(() => {
-    if (!dailyVolume?.length) return 0;
-    const todayStr = format(today, "yyyy-MM-dd");
-    const todayItem = dailyVolume.find((item) => item.date === todayStr);
-    return todayItem?.perp_volume ?? 0;
-  }, [dailyVolume, today]);
+  const todayVolume = useMemo(
+    () => userStatistics?.perp_trading_volume_last_24_hours ?? 0,
+    [userStatistics],
+  );
 
   // Refresh the transfer history once after the balance change event.
   const lastBalanceEventRef = useRef<number>(0);

@@ -96,6 +96,7 @@ export { useLeverageBySymbol } from "./useLeverageBySymbol";
 export { useAssetsHistory } from "./statistics/useAssetHistory";
 
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
+export { useUserStatistics } from "./statistics/useUserStatistics";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
 export { useTransferHistory } from "./statistics/useTransferHistory";
