@@ -135,7 +135,7 @@ export class PositionLineService {
       text += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
     }
 
-    this.positionLines[idx]
+    let line = (this.positionLines[idx] = this.getBasePositionLine()
       .setQuantity(quantity)
       .setPrice(price)
       .setCloseButtonIconColor(colorConfig.closeIcon!)
@@ -145,7 +145,7 @@ export class PositionLineService {
       .setBodyBorderColor(pnlColor!)
       .setLineColor(sideColor!)
       .setQuantityBorderColor(sideColor!)
-      .setText(text);
+      .setText(text));
 
     if (colorConfig.closeIcon) {
       line = line.setCloseButtonIconColor(colorConfig.closeIcon);

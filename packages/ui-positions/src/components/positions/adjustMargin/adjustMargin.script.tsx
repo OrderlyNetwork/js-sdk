@@ -150,7 +150,13 @@ export const useAdjustMarginScript = (
         amount: new Decimal(inputValue).toString(),
         type: tab === "add" ? "ADD" : "REDUCE",
       };
-      await updateMargin(payload);
+      const response = await updateMargin(payload);
+
+      if (!response?.success) {
+        toast.error(response?.message || t("positions.adjustMargin.failed"));
+        return;
+      }
+
       toast.success(t("positions.adjustMargin.success"));
       close();
     } catch (error: unknown) {
