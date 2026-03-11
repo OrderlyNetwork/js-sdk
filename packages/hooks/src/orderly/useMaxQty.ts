@@ -103,7 +103,8 @@ export function useMaxQty(
 
   const symbolInfo = useSymbolsInfo();
 
-  const { totalCollateral, usdcHolding, unsettledPnL } = useCollateral();
+  const { totalCollateral, usdcHolding, unsettledPnL, freeCollateral } =
+    useCollateral();
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -174,7 +175,7 @@ export function useMaxQty(
       const availableBalance = account.availableBalanceForIsolatedMargin({
         USDCHolding: usdcHolding,
         totalCrossUnsettledPnL: unsettledPnL ?? 0,
-        freeCollateral: totalCollateral,
+        freeCollateral: freeCollateral,
       });
       // Build pending orders arrays (only if quantity > 0)
       // Use mark price as reference price (since we don't have actual order prices)
