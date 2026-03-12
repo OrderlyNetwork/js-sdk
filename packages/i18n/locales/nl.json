@@ -895,6 +895,7 @@
   "transfer.LTV.description": "LTV (Loan-to-Value) is de verhouding tussen uw negatieve USDC en de huidige waarde van uw onderpand. Als uw LTV {{threshold}} overschrijdt, wordt uw onderpand automatisch geconverteerd naar USDC.",
   "transfer.LTV.tooltip": "Als uw LTV {{threshold}}% overschrijdt of uw USDC-saldo plus onafgewikkelde PnL onder {{usdcThreshold}} valt, wordt uw onderpand automatisch geconverteerd met korting. Om dit te voorkomen, kunt u handmatig activa naar USDC converteren.",
   "transfer.LTV.currentLTV": "Huidige LTV",
+  "transfer.LTV.isolatedModeUsdcOnly": "Only USDC can be used as margin in Isolated Mode.",
   "transfer.convert": "Converteren",
   "transfer.deposit.globalMaxQty.error": "Uw storting kon niet worden verwerkt omdat het wereldwijde stortingslimiet voor {{token}} op {{chain}} is bereikt. Dit wordt meestal opgelost na herbalancering, wat ongeveer 1 uur duurt. Probeer het later opnieuw of gebruik een kleiner bedrag of een andere keten. <0>Meer informatie</0>",
   "transfer.deposit.gasFee.error": "Zorg ervoor dat u voldoende {{token}} heeft voor de gas-kosten.",

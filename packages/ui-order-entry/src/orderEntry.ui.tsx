@@ -417,6 +417,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           canTrade={props.canTrade}
           quote={symbolInfo?.quote}
           freeCollateral={freeCollateral}
+          marginMode={props.marginMode}
         />
 
         <OrderInput
