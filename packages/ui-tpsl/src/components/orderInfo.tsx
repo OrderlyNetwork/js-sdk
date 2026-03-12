@@ -4,7 +4,7 @@ import {
   useLeverageBySymbol,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder } from "@orderly.network/types";
+import { MarginMode, OrderlyOrder } from "@orderly.network/types";
 import {
   cn,
   Flex,
@@ -26,7 +26,7 @@ type Props = {
     container?: string;
   };
   symbolLeverage?: number;
-  marginMode?: string;
+  marginMode?: MarginMode;
 };
 export const OrderInfo = (props: Props) => {
   const { t } = useTranslation();
@@ -35,7 +35,10 @@ export const OrderInfo = (props: Props) => {
   const markPrice = useMarkPrice(symbol!);
   const indexPrice = useIndexPrice(symbol!);
 
-  const leverage = useLeverageBySymbol(symbolLeverage ? undefined : symbol);
+  const leverage = useLeverageBySymbol(
+    symbolLeverage ? undefined : symbol,
+    props.marginMode,
+  );
 
   const currentLeverage = symbolLeverage || leverage;
 

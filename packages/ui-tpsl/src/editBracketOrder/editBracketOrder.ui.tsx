@@ -192,6 +192,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
               positionType={
                 formattedOrder.position_type ?? PositionType.PARTIAL
               }
+              marginMode={formattedOrder.margin_mode}
             />
             {/* )} */}
             {/* {formattedOrder.sl_enable && formattedOrder.tp_enable && ( */}
@@ -228,6 +229,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
               onChange={(key, value) => {
                 setOrderValue(key as keyof OrderlyOrder, value);
               }}
+              marginMode={formattedOrder.margin_mode}
             />
             {/* )} */}
           </Flex>

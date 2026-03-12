@@ -10,6 +10,7 @@ export type Portfolio = {
   holding?: API.Holding[];
   totalCollateral: Decimal;
   freeCollateral: Decimal;
+  freeCollateralUSDCOnly: Decimal;
   totalValue: Decimal | null;
   availableBalance: number;
   unsettledPnL: number;
@@ -123,6 +124,11 @@ export function formatPortfolio(inputs: {
     totalInitialMarginWithOrders,
   });
 
+  const freeCollateralUSDCOnly = account.freeCollateralUSDCOnly({
+    freeCollateral,
+    nonUSDCHolding: nonUSDC,
+  });
+
   const availableBalance = account.availableBalance({
     USDCHolding: usdc?.holding ?? 0,
     unsettlementPnL: positions.total_unsettled_pnl ?? 0,
@@ -136,5 +142,6 @@ export function formatPortfolio(inputs: {
     availableBalance,
     unsettledPnL: totalUnsettlementPnL,
     holding,
+    freeCollateralUSDCOnly,
   };
 }

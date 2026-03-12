@@ -3,6 +3,7 @@ import { ERROR_MSG_CODES } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
+  MarginMode,
   OrderlyOrder,
   OrderSide,
   OrderType,
@@ -123,7 +124,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               order_quantity: position.position_qty.toString(),
               order_price: position.average_open_price.toString(),
             }}
-            marginMode={(position as any).margin_mode || "cross"}
+            marginMode={position.margin_mode ?? MarginMode.CROSS}
             symbolLeverage={position.leverage}
           />
           <Flex

@@ -198,6 +198,12 @@ class PortfolioCalculator extends BaseCalculator<any> {
       totalInitialMarginWithOrders,
     });
 
+    // TODO: op code
+    const freeCollateralUSDCOnly = account.freeCollateralUSDCOnly({
+      freeCollateral,
+      nonUSDCHolding: nonUSDC,
+    });
+
     const availableBalance = account.availableBalance({
       USDCHolding: usdc?.holding ?? 0,
       unsettlementPnL: positions.total_unsettled_pnl ?? 0,
@@ -212,6 +218,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       unsettledPnL: totalUnsettlementPnL,
       holding,
       usdcHolding: USDC_holding,
+      freeCollateralUSDCOnly,
     };
   }
 
@@ -224,6 +231,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
         totalCollateral: data.totalCollateral as Decimal,
         totalValue: data.totalValue as Decimal,
         freeCollateral: data.freeCollateral as Decimal,
+        freeCollateralUSDCOnly: data.freeCollateralUSDCOnly as Decimal,
         availableBalance: data.availableBalance as number,
         totalUnrealizedROI: data.totalUnrealizedROI as number,
         unsettledPnL: data.unsettledPnL as number,

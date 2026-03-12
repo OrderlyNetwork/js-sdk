@@ -146,7 +146,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
             {leverage}
           </Text.numeral>
         ) : (
-          <LeverageDisplay symbol={symbol} />
+          <LeverageDisplay symbol={symbol} marginMode={marginMode} />
         )}
         <ChevronRightIcon
           size={12}
@@ -159,8 +159,14 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
 };
 
 /** TODO: remove this */
-export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
-  const leverage = useLeverageBySymbol(symbol);
+export const LeverageDisplay = ({
+  symbol,
+  marginMode,
+}: {
+  symbol: string;
+  marginMode?: MarginMode;
+}) => {
+  const leverage = useLeverageBySymbol(symbol, marginMode);
 
   return (
     <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">

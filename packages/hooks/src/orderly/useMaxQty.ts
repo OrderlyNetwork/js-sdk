@@ -103,8 +103,7 @@ export function useMaxQty(
 
   const symbolInfo = useSymbolsInfo();
 
-  const { totalCollateral, usdcHolding, unsettledPnL, freeCollateral } =
-    useCollateral();
+  const { totalCollateral, freeCollateralUSDCOnly } = useCollateral();
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -172,11 +171,7 @@ export function useMaxQty(
     const sellOrdersQty = currentSymbolPosition?.pending_short_qty ?? 0;
 
     if (finalMarginMode === MarginMode.ISOLATED) {
-      const availableBalance = account.availableBalanceForIsolatedMargin({
-        USDCHolding: usdcHolding,
-        totalCrossUnsettledPnL: unsettledPnL ?? 0,
-        freeCollateral: freeCollateral,
-      });
+      const availableBalance = freeCollateralUSDCOnly;
       // Build pending orders arrays (only if quantity > 0)
       // Use mark price as reference price (since we don't have actual order prices)
       const pendingLongOrders: Array<{

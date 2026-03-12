@@ -1,5 +1,6 @@
 export * from "./totalValue";
 export * from "./freeCollateral";
+export * from "./freeCollateralUSDCOnly";
 export * from "./totalCollateral";
 export * from "./positionNotional";
 export * from "./imr";

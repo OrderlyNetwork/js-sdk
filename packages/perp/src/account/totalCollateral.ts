@@ -68,7 +68,7 @@ export function totalCollateral(inputs: {
   // Calculate USDC part: holding + pending_short_qty - isolated_order_frozen
   const usdcPart = new Decimal(USDCHolding)
     .add(usdcBalancePendingShortQty)
-    .add(usdcBalanceIsolatedOrderFrozen);
+    .sub(Math.abs(usdcBalanceIsolatedOrderFrozen));
 
   // Calculate non-USDC holdings value
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {

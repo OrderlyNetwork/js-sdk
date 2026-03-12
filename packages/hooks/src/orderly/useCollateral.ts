@@ -18,6 +18,12 @@ export type CollateralOutputs = {
    */
   freeCollateral: number;
   /**
+   * Free collateral that can be used for new positions (USDC only)
+   *
+   * Calculated as: freeCollateral - SUM(non-USDC holding.holding × mark_price × discount)
+   */
+  freeCollateralUSDCOnly: number;
+  /**
    * Total portfolio value including all positions and collateral
    *
    * Can be null if data is not available
@@ -84,6 +90,7 @@ export const useCollateral = (
     totalCollateral,
     totalValue,
     freeCollateral,
+    freeCollateralUSDCOnly,
     availableBalance,
     unsettledPnL,
     holding,
@@ -93,6 +100,9 @@ export const useCollateral = (
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
     freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
+    freeCollateralUSDCOnly: freeCollateralUSDCOnly
+      .toDecimalPlaces(dp)
+      .toNumber(),
     totalValue: totalValue?.toDecimalPlaces(dp).toNumber() ?? null,
     availableBalance,
     unsettledPnL,

@@ -18,9 +18,11 @@ const usePositionMargin = (
    */
   finalMargin: number,
 ) => {
-  const { freeCollateral, usdcHolding } = useCollateral({
-    dp: 2,
-  });
+  const { freeCollateral, freeCollateralUSDCOnly, usdcHolding } = useCollateral(
+    {
+      dp: 2,
+    },
+  );
 
   const positions = usePositions();
 
@@ -100,12 +102,9 @@ const usePositionMargin = (
 
   const maxAmount = useMemo(() => {
     if (isAdd) {
-      if (!total_cross_unsettled_pnl) return null;
-      return account.maxAdd({
-        USDCHolding: usdcHolding,
-        freeCollateral: freeCollateral,
-        totalCrossUnsettledPnL: total_cross_unsettled_pnl.toNumber(),
-      });
+      if (!freeCollateralUSDCOnly) return null;
+      // Max add = max(0, free_collateral_usdc_only)
+      return Math.max(0, freeCollateralUSDCOnly);
     }
     if (
       !imr ||
