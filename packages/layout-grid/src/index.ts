@@ -1,17 +1,9 @@
-/**
- * @orderly.network/layout-grid
- *
- * Grid layout strategy implementation for Orderly layout system.
- * Provides responsive grid layout with draggable and resizable panels using react-grid-layout.
- */
-// Import CSS for react-grid-layout
+/** @orderly.network/layout-grid */
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import "./styles.css";
 
-// Strategy
 export { gridStrategy } from "./gridStrategy";
-
-// Types
 export type {
   GridLayoutModel,
   GridLayoutItem,
@@ -19,9 +11,8 @@ export type {
   GridLayoutItemSpec,
   GridLayoutBreakpointKey,
   GridLayoutPreset,
+  GridConfig,
 } from "./types";
-
-// Utils
 export {
   createDefaultGridLayout,
   serializeGridLayout,
@@ -37,16 +28,11 @@ export {
   getDefaultGridPresets,
   DEFAULT_GRID_PRESETS,
 } from "./utils/defaultPresets";
-
-// Preset context and switcher (for use when grid plugin is active)
-export { GridPresetProvider, useGridPresetContext } from "./GridPresetContext";
 export type { GridPresetContextValue } from "./GridPresetContext";
 export { GridLayoutSwitcher } from "./GridLayoutSwitcher";
 export type { GridLayoutSwitcherProps } from "./GridLayoutSwitcher";
 
-/** Grid layout plugin: register to use grid layout via intercept (no layoutStrategy/getInitialLayout from host) */
 export {
   registerLayoutGridPlugin,
   type LayoutGridPluginOptions,
-  type ResolveLayoutPresets,
 } from "./plugin";

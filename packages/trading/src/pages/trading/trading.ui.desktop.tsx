@@ -48,6 +48,11 @@ export type DesktopLayoutProps = TradingState & {
   ) => LayoutModel | undefined;
   /** Optional storage key for layout persistence; when provided (e.g. by grid plugin) overrides default. */
   storageKey?: string;
+  /**
+   * When true, disables LayoutHost localStorage persistence.
+   * Useful in development when layout should reset on every refresh.
+   */
+  disableLayoutPersistence?: boolean;
   /** Optional layout props when plugin provides rule-based layout; defaults used for SwitchLayout. */
   layout?: LayoutPosition;
   marketLayout?: "left" | "top" | "bottom" | "hide";
@@ -114,6 +119,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     orderbookMinHeight +
     dataListMinHeight +
     space * 4;
+
+  const disableLayoutPersistence = props.disableLayoutPersistence ?? false;
 
   const dataListHeight = useMemo(() => {
     return {
@@ -197,11 +204,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     return undefined;
   }, [getInitialLayout, layoutStrategy, max2XL, panelIds]);
 
-  const layoutStorageKey =
-    props.storageKey ??
-    (max2XL
-      ? "orderly_trading_desktop_layout_sm"
-      : "orderly_trading_desktop_layout");
+  const layoutStorageKey = disableLayoutPersistence
+    ? undefined
+    : (props.storageKey ??
+      (max2XL
+        ? "orderly_trading_desktop_layout_sm"
+        : "orderly_trading_desktop_layout"));
 
   const defaultLayoutHostClassName = cn(
     "oui-flex oui-flex-1 oui-overflow-hidden",

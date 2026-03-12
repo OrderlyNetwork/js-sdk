@@ -35,6 +35,7 @@ export const SideMarketsHeader: React.FC<
       justify={panelSize === "large" ? "between" : "center"}
       width="100%"
       px={3}
+      pt={3}
     >
       {panelSize === "large" && (
         <Text size="base" intensity={80}>

@@ -12,6 +12,7 @@ export type {
   LayoutModel,
   PanelRegistry,
   OnLayoutChange,
+  OnLayoutPersist,
   LayoutStrategy,
   LayoutRendererProps,
   LayoutHostProps,

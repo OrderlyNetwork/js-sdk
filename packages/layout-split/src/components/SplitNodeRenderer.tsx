@@ -1,5 +1,5 @@
 import React from "react";
-import { useMemo } from "react";
+import { cn } from "@orderly.network/ui";
 import { useSplitLayoutConfig } from "../SplitLayoutConfigContext";
 import type { SplitLayoutNode } from "../types";
 import { SortNodeRenderer } from "./SortNodeRenderer";
@@ -23,14 +23,20 @@ export function SplitNodeRenderer({
   path,
   rootNode,
 }: SplitNodeRendererProps): React.ReactElement | null {
-  const { panels, onSizeChange, classNames, gap, isPanelCollapsed } =
-    useSplitLayoutConfig();
+  const {
+    panels,
+    onSizeChange,
+    onSizePersist,
+    classNames,
+    gap,
+    isPanelCollapsed,
+  } = useSplitLayoutConfig();
 
   if (node.type === "panel") {
     // Check if panel is collapsed - don't render if collapsed
-    if (node.id && isPanelCollapsed(node.id)) {
-      return null;
-    }
+    // if (node.id && isPanelCollapsed(node.id)) {
+    //   return null;
+    // }
 
     const panel = panels.get(node.id);
     if (!panel) {
@@ -50,16 +56,25 @@ export function SplitNodeRenderer({
         </div>
       );
     }
-    /** Wrap panel content so layout can attach per-panel styling via rule. */
+    const styles = Object.assign(
+      {},
+      node.style,
+      node.collapsible
+        ? isPanelCollapsed(node.id)
+          ? { width: node.minSize }
+          : { width: node.maxSize }
+        : {},
+    );
+
     return (
       <div
-        className={
-          "oui-bg-base-9 oui-rounded-2xl" +
-          (node.size !== "fixed" ? " oui-size-full" : "") +
-          (classNames?.panel ? ` ${classNames.panel}` : "") +
-          (node.className ? ` ${node.className}` : "")
-        }
-        style={node.style}
+        className={cn(
+          "oui-overflow-hidden oui-rounded-2xl oui-bg-base-9",
+          node.size !== "fixed" ? " oui-size-full" : "",
+          classNames?.panel ? classNames.panel : "",
+          node.className ? node.className : "",
+        )}
+        style={styles}
         data-panel-id={node.id}
       >
         {panel}
@@ -91,7 +106,10 @@ export function SplitNodeRenderer({
       orientation={orientation}
       sizes={sizes}
       panelConstraints={panelConstraints}
-      onSizeChange={(sizesAsStrings) => onSizeChange(path, sizesAsStrings)}
+      onSizeChange={(sizesAsStrings) => {
+        onSizeChange(path, sizesAsStrings);
+        onSizePersist?.(path, sizesAsStrings);
+      }}
       classNames={classNames}
       gap={gap}
     >

@@ -84,20 +84,25 @@ export function LayoutHost<TLayout extends LayoutModel = LayoutModel>(
     setCurrentLayout(resolvedLayout);
   }, [resolvedLayout]);
 
-  // Handle layout changes with useCallback for stable reference
+  // Handle layout changes - only updates internal state, no persistence
   const handleLayoutChange = useCallback(
     (newLayout: TLayout) => {
       setCurrentLayout(newLayout);
+      // Notify parent
+      onLayoutChange?.(newLayout);
+    },
+    [onLayoutChange],
+  );
 
+  // Handle layout persist - persists layout to storage
+  const handleLayoutPersist = useCallback(
+    (newLayout: TLayout) => {
       // Persist if storage key is provided
       if (storageKey) {
         setPersistedLayout(newLayout);
       }
-
-      // Notify parent
-      onLayoutChange?.(newLayout);
     },
-    [storageKey, setPersistedLayout, onLayoutChange],
+    [storageKey, setPersistedLayout],
   );
 
   // Get the Renderer component from strategy
@@ -117,6 +122,7 @@ export function LayoutHost<TLayout extends LayoutModel = LayoutModel>(
       layout={currentLayout}
       panels={panels}
       onLayoutChange={handleLayoutChange}
+      onLayoutPersist={handleLayoutPersist}
       className={className}
       style={style}
     />

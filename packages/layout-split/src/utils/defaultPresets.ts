@@ -19,6 +19,7 @@ const defaultRightMarketsLeftTree: SplitLayoutRuleNode = {
       type: "panel",
       id: S.MARKETS,
       size: "fixed",
+      minSize: "56px",
       maxSize: "280px",
       disabled: true,
       className: "oui-mr-2",

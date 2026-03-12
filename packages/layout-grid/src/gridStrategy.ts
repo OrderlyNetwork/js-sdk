@@ -7,10 +7,6 @@ import {
   deserializeGridLayout,
 } from "./utils/gridLayoutUtils";
 
-/**
- * Grid layout strategy implementation
- * Provides responsive grid layout with draggable and resizable panels
- */
 export const gridStrategy: LayoutStrategy<GridLayoutModel> = {
   id: "grid",
   displayName: "Grid Layout",

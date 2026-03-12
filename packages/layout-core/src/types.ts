@@ -20,6 +20,14 @@ export type OnLayoutChange<TLayout extends LayoutModel = LayoutModel> = (
 ) => void;
 
 /**
+ * Layout persist callback - called when layout should be persisted (e.g., on drag stop)
+ * @param layout - The layout model to persist
+ */
+export type OnLayoutPersist<TLayout extends LayoutModel = LayoutModel> = (
+  layout: TLayout,
+) => void;
+
+/**
  * Layout strategy interface
  * Each layout strategy (split, grid, etc.) must implement this interface
  */
@@ -50,6 +58,8 @@ export interface LayoutRendererProps<
   panels: PanelRegistry;
   /** Callback when layout changes (typed to the specific layout model) */
   onLayoutChange: OnLayoutChange<TLayout>;
+  /** Callback when layout should be persisted (e.g., on drag stop or resize stop) */
+  onLayoutPersist?: OnLayoutPersist<TLayout>;
   /** Optional className for the root container */
   className?: string;
   /** Optional style for the root container */

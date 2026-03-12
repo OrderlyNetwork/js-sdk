@@ -34,6 +34,7 @@ module.exports = withTV({
     "../../packages/app/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-notification/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/layout-split/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/layout-grid/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),

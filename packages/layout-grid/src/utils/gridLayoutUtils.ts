@@ -14,9 +14,6 @@ const BREAKPOINT_ORDER: GridLayoutBreakpointKey[] = [
   "xxs",
 ];
 
-/**
- * Default breakpoints for responsive grid layout
- */
 export const DEFAULT_BREAKPOINTS = {
   lg: 1200,
   md: 996,
@@ -25,21 +22,14 @@ export const DEFAULT_BREAKPOINTS = {
   xxs: 0,
 };
 
-/**
- * Default column counts for each breakpoint
- */
 export const DEFAULT_COLS = {
-  lg: 12,
+  lg: 24,
   md: 10,
   sm: 6,
   xs: 4,
   xxs: 2,
 };
 
-/**
- * Convert a breakpoint's GridLayoutItemSpec[] to GridLayoutItem[].
- * Only includes items whose panelId is in panelIds; sets i = panelId.
- */
 function specsToItems(
   specs: GridLayoutItemSpec[],
   panelIds: string[],
@@ -62,12 +52,11 @@ function specsToItems(
       isResizable: spec.isResizable,
       resizeHandles: spec.resizeHandles,
       static: spec.static,
+      className: spec.className,
+      style: spec.style,
     }));
 }
 
-/**
- * Build layouts from a rule: for each breakpoint use its specs or fall back to lg.
- */
 function buildLayoutsFromRule(
   rule: GridLayoutRule,
   panelIds: string[],
@@ -81,9 +70,6 @@ function buildLayoutsFromRule(
   return result;
 }
 
-/**
- * Default 2-column layout (used when no rule is provided).
- */
 function defaultTwoColumnLayout(
   panelIds: string[],
 ): GridLayoutModel["layouts"] {
@@ -106,16 +92,7 @@ function defaultTwoColumnLayout(
   };
 }
 
-/**
- * Create a grid layout for given panel IDs, optionally from a layout rule.
- * When rule is provided, layouts are built from rule (missing breakpoints fall back to lg).
- * When rule is omitted, uses built-in 2-column default for backward compatibility.
- *
- * @param panelIds - Panel IDs to include
- * @param rule - Optional layout rule (per-breakpoint specs)
- * @param rowHeight - Optional row height for finer grid adjustment
- * @returns Grid layout model
- */
+/** Build grid layout from panelIds; optional rule (missing breakpoints fall back to lg), else 2-column default. */
 export function createDefaultGridLayout(
   panelIds: string[],
   rule?: GridLayoutRule,
@@ -139,26 +116,13 @@ export function createDefaultGridLayout(
   };
 }
 
-/**
- * Serialize grid layout model to JSON string
- *
- * @param layout - Grid layout model
- * @returns JSON string
- */
 export function serializeGridLayout(layout: GridLayoutModel): string {
   return JSON.stringify(layout);
 }
 
-/**
- * Deserialize JSON string to grid layout model
- *
- * @param json - JSON string
- * @returns Grid layout model
- */
 export function deserializeGridLayout(json: string): GridLayoutModel {
   try {
     const parsed = JSON.parse(json);
-    // Basic validation
     if (!parsed.layouts) {
       throw new Error("Invalid grid layout: missing layouts");
     }

@@ -18,6 +18,8 @@ export interface SplitLayoutConfigValue {
   onLayoutChange: (layout: SplitLayoutModel) => void;
   /** Callback when panel sizes change at a path. */
   onSizeChange: (path: number[], sizes: string[]) => void;
+  /** Callback when panel sizes should be persisted (e.g., on resize end). */
+  onSizePersist?: (path: number[], sizes: string[]) => void;
   /** Optional classNames for panel group, panel, and handle (from plugin options). */
   classNames?: SplitLayoutClassNames;
   /** Optional gap between panels in px (from plugin options). */
@@ -49,6 +51,8 @@ export interface SplitLayoutConfigProviderProps {
   onLayoutChange: (layout: SplitLayoutModel) => void;
   /** Callback when panel sizes change. */
   onSizeChange: (path: number[], sizes: string[]) => void;
+  /** Callback when panel sizes should be persisted. */
+  onSizePersist?: (path: number[], sizes: string[]) => void;
   /** Optional classNames for panel group, panel, and handle. */
   classNames?: SplitLayoutClassNames;
   /** Optional gap between panels in px. */
@@ -76,6 +80,7 @@ export function SplitLayoutConfigProvider({
   breakpoint,
   onLayoutChange,
   onSizeChange,
+  onSizePersist,
   classNames,
   gap,
   collapsedPanels,
@@ -92,6 +97,7 @@ export function SplitLayoutConfigProvider({
       breakpoint,
       onLayoutChange,
       onSizeChange,
+      onSizePersist,
       classNames,
       gap,
       collapsedPanels,
@@ -106,6 +112,7 @@ export function SplitLayoutConfigProvider({
       breakpoint,
       onLayoutChange,
       onSizeChange,
+      onSizePersist,
       classNames,
       gap,
       collapsedPanels,

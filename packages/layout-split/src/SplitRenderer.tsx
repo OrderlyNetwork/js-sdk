@@ -54,7 +54,8 @@ function getCollapsiblePanels(node: SplitLayoutNode): Map<string, boolean> {
 export function SplitRenderer(
   props: LayoutRendererProps<SplitLayoutModel>,
 ): React.ReactElement {
-  const { layout, panels, onLayoutChange, className, style } = props;
+  const { layout, panels, onLayoutChange, onLayoutPersist, className, style } =
+    props;
 
   const ctx = useSplitPresetContext();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,9 +83,35 @@ export function SplitRenderer(
           [breakpoint]: updatedRoot,
         },
       };
+      // Update UI state only (no persistence)
       onLayoutChange(updatedLayout);
     },
     [layout, breakpoint, rootNode, onLayoutChange],
+  );
+
+  const handleSizePersist = useCallback(
+    (path: number[], sizes: string[]) => {
+      if (!onLayoutPersist) return;
+      const nodeAtPath = getNodeAtPath(rootNode, path);
+      const currentSizes =
+        nodeAtPath?.type === "split"
+          ? getSizesFromChildren(nodeAtPath.children)
+          : undefined;
+      if (sizesAreEqual(currentSizes, sizes)) {
+        return;
+      }
+      const updatedRoot = updateSizeAtPath(rootNode, path, sizes);
+      const updatedLayout: SplitLayoutModel = {
+        ...layout,
+        layouts: {
+          ...layout.layouts,
+          [breakpoint]: updatedRoot,
+        },
+      };
+      // Persist layout to storage
+      onLayoutPersist(updatedLayout);
+    },
+    [layout, breakpoint, rootNode, onLayoutPersist],
   );
 
   // Collapse state management - initialize from defaultCollapsed in node config
@@ -143,6 +170,7 @@ export function SplitRenderer(
         breakpoint={breakpoint}
         onLayoutChange={onLayoutChange}
         onSizeChange={handleSizeChange}
+        onSizePersist={handleSizePersist}
         classNames={ctx?.classNames}
         gap={ctx?.gap}
         collapsedPanels={collapsedPanels}

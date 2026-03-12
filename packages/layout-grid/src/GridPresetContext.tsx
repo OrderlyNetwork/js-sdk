@@ -1,7 +1,4 @@
-/**
- * Context for grid layout preset list and selected preset id (persisted via LayoutRuleManager).
- * Used by the plugin interceptor to pass getInitialLayout and storageKey that depend on selection.
- */
+/** Preset list + selected id (LayoutRuleManager); used by plugin for getInitialLayout/storageKey. */
 import React, { createContext, useContext, useMemo } from "react";
 import {
   LayoutRuleManager,
@@ -17,11 +14,8 @@ export interface GridPresetContextValue {
   presets: GridLayoutPreset[];
   selectedPresetId: string;
   setSelectedPresetId: (id: string) => void;
-  /** Storage key for LayoutHost for the current preset (per-preset layout persistence). */
   layoutStorageKey: string;
-  /** Clears persisted layout for current preset (reset to preset rule). */
   reset: () => void;
-  /** Row height of the selected preset for finer grid adjustment */
   rowHeight?: number;
 }
 
@@ -29,15 +23,10 @@ const GridPresetContext = createContext<GridPresetContextValue | null>(null);
 
 export interface GridPresetProviderProps {
   presets: GridLayoutPreset[];
-  /** When false, no localStorage persistence for preset selection or layout. Default true. */
   persistLayout?: boolean;
   children: React.ReactNode;
 }
 
-/**
- * Provides preset list and selected preset id (synced to localStorage via LayoutRuleManager).
- * Use with grid strategy so getInitialLayout and storageKey can depend on selection.
- */
 export function GridPresetProvider({
   presets,
   persistLayout = true,
