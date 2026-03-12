@@ -276,7 +276,7 @@ export class OrderLineService {
                 const per = qty
                   .div(new Decimal(pendingOrder.position_qty!))
                   .mul(100)
-                  .todp(2)
+                  .todp(0)
                   .toNumber();
                 return `${Math.min(Math.abs(per), 100).toString()}%`;
               })();

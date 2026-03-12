@@ -44,12 +44,14 @@ export class LiquidationLineService {
     if (hasValidEst) {
       this.isUsingEstimatedPrice = true;
       this.setLinePrice(estimatedLiqPrice!);
+      this.line?.setLineStyle(1);
       return;
     }
 
     if (hasValidPosition) {
       this.isUsingEstimatedPrice = false;
       this.setLinePrice(positionLiqPrice!);
+      this.line?.setLineStyle(0);
       return;
     }
 

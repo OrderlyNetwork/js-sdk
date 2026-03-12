@@ -35,7 +35,7 @@ export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
-const ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS = 3 * 60 * 1000;
+const ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS = 3 * 1000;
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   /** Active user window for treating estLiqPrice as coming from an actively edited order. */
