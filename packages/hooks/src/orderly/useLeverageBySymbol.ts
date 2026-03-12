@@ -1,9 +1,5 @@
-import { useEffect, useMemo } from "react";
-import { mutate } from "swr";
-import { API, MarginMode } from "@orderly.network/types";
-import { useAccount } from "../useAccount";
-import { usePrivateQuery } from "../usePrivateQuery";
-import { useWS } from "../useWS";
+import { MarginMode } from "@orderly.network/types";
+import { useSymbolLeverageMap } from "./useSymbolLeverageMap";
 
 /**
  * A hook to fetch and subscribe to leverage for a given trading symbol.
@@ -24,50 +20,7 @@ export const useLeverageBySymbol = (
   symbol?: string,
   marginMode?: MarginMode,
 ) => {
-  const { state } = useAccount();
-  const ws = useWS();
+  const { getSymbolLeverage } = useSymbolLeverageMap();
 
-  const queryUrl = useMemo(() => {
-    if (!symbol) return null;
-    const queryParams = new URLSearchParams();
-    queryParams.set("symbol", symbol);
-    if (marginMode) {
-      queryParams.set("margin_mode", marginMode);
-    }
-    return `/v1/client/leverage?${queryParams.toString()}`;
-  }, [symbol, marginMode]);
-
-  const { data } = usePrivateQuery<API.LeverageInfo>(queryUrl, {
-    revalidateOnFocus: false,
-  });
-
-  useEffect(() => {
-    if (!state.accountId || !symbol) return;
-
-    const unsubscribe = ws.privateSubscribe("account", {
-      onMessage: (data: any) => {
-        const res = data?.accountDetail?.symbolLeverage || {};
-        // update leverage when symbol leverage changed
-        if (res.symbol === symbol) {
-          // update leverage by swr to fix displayed previous value at short time when switching symbol.
-          const key = [queryUrl, state.accountId];
-          mutate(
-            key,
-            (prevData: any) => {
-              return {
-                ...prevData,
-                //TODO: different margin mode leverage value
-                leverage: res.leverage,
-              };
-            },
-            { revalidate: false },
-          );
-        }
-      },
-    });
-
-    return () => unsubscribe?.();
-  }, [symbol, state.accountId, queryUrl]);
-
-  return data?.leverage;
+  return getSymbolLeverage(symbol, marginMode);
 };

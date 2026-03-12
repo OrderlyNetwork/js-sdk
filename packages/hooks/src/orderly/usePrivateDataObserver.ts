@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { mutate } from "swr";
 import { unstable_serialize } from "swr/infinite";
 import { AccountState, EVENT_NAMES } from "@orderly.network/core";
-import { API, WSMessage } from "@orderly.network/types";
+import { API, MarginMode, WSMessage } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import {
@@ -278,34 +278,80 @@ export const usePrivateDataObserver = (options: {
     //       }
     //   }
     // }
-    const key = ["/v1/positions", state.accountId];
+    const positionsKey = ["/v1/positions", state.accountId];
+    const leveragesKey = ["/v1/client/leverages", state.accountId];
     const unsubscribe = ws.privateSubscribe("account", {
       onMessage: (data) => {
         const { symbol, leverage, marginMode } =
           data?.accountDetail?.symbolLeverage || {};
-        if (symbol && leverage) {
-          mutate(
-            key,
-            (prevPositions: API.PositionInfo | undefined) => {
-              if (prevPositions?.rows?.length) {
-                return {
-                  ...prevPositions,
-                  rows: prevPositions.rows.map((row: API.Position) => {
-                    // update position leverage when symbol leverage changed
-                    return row.symbol === symbol &&
-                      row.margin_mode === marginMode
-                      ? { ...row, leverage }
-                      : row;
-                  }),
-                };
-              }
-              return prevPositions;
-            },
-            {
-              revalidate: false,
-            },
-          );
+        if (!symbol || leverage === undefined) {
+          return;
         }
+
+        mutate(
+          positionsKey,
+          (prevPositions: API.PositionInfo | undefined) => {
+            if (prevPositions?.rows?.length) {
+              return {
+                ...prevPositions,
+                rows: prevPositions.rows.map((row: API.Position) => {
+                  // update position leverage when symbol leverage changed
+                  return row.symbol === symbol && row.margin_mode === marginMode
+                    ? { ...row, leverage }
+                    : row;
+                }),
+              };
+            }
+            return prevPositions;
+          },
+          {
+            revalidate: false,
+          },
+        );
+
+        mutate(
+          leveragesKey,
+          (prev: API.LeverageInfo[] | undefined) => {
+            if (!prev) {
+              return [
+                {
+                  symbol,
+                  leverage,
+                  margin_mode: marginMode,
+                },
+              ];
+            }
+
+            const index = prev.findIndex(
+              (item) =>
+                item.symbol === symbol &&
+                (item.margin_mode ?? MarginMode.CROSS) ===
+                  (marginMode ?? MarginMode.CROSS),
+            );
+
+            if (index === -1) {
+              return [
+                ...prev,
+                {
+                  symbol,
+                  leverage,
+                  margin_mode: marginMode,
+                },
+              ];
+            }
+
+            const next = [...prev];
+            next[index] = {
+              ...next[index],
+              leverage,
+            };
+
+            return next;
+          },
+          {
+            revalidate: false,
+          },
+        );
       },
     });
 

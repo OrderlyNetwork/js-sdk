@@ -65,7 +65,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   void initialSoundValue;
 
   const canTrade = useCanTrade();
-  const { marginMode } = useMarginModeBySymbol(symbol);
+  const { marginMode } = useMarginModeBySymbol(symbol, null);
 
   const {
     formattedOrder,

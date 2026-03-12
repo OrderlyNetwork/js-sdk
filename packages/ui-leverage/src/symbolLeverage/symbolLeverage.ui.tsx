@@ -133,13 +133,19 @@ const LeverageBadge = ({
       )}
     >
       <Text>
-        {marginMode === MarginMode.ISOLATED
-          ? t("marginMode.isolated")
-          : t("marginMode.cross")}
+        {marginMode === undefined
+          ? "--"
+          : marginMode === MarginMode.ISOLATED
+            ? t("marginMode.isolated")
+            : t("marginMode.cross")}
       </Text>
-      <Text.numeral dp={0} size="2xs" unit="X">
-        {leverage}
-      </Text.numeral>
+      {leverage === undefined ? (
+        <Text size="2xs">--</Text>
+      ) : (
+        <Text.numeral dp={0} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      )}
     </div>
   );
 };

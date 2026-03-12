@@ -107,12 +107,12 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   const { symbol, leverage, marginMode } = props;
   const { t } = useTranslation();
 
-  const resolvedMarginMode = marginMode ?? MarginMode.CROSS;
+  const resolvedMarginMode = marginMode;
 
   const showModal = () => {
     modal.show(props.modalId, {
       symbol,
-      curLeverage: Number(leverage),
+      curLeverage: leverage,
       marginMode: resolvedMarginMode,
     });
   };
@@ -127,9 +127,11 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
         )}
       >
         <Text>
-          {resolvedMarginMode === MarginMode.ISOLATED
-            ? t("marginMode.isolated")
-            : t("marginMode.cross")}
+          {resolvedMarginMode === undefined
+            ? "--"
+            : resolvedMarginMode === MarginMode.ISOLATED
+              ? t("marginMode.isolated")
+              : t("marginMode.cross")}
         </Text>
       </div>
       <div
@@ -141,12 +143,12 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
         )}
         onClick={showModal}
       >
-        {leverage ? (
+        {leverage === undefined ? (
+          <LeverageDisplay symbol={symbol} marginMode={marginMode} />
+        ) : (
           <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
             {leverage}
           </Text.numeral>
-        ) : (
-          <LeverageDisplay symbol={symbol} marginMode={marginMode} />
         )}
         <ChevronRightIcon
           size={12}
@@ -169,8 +171,14 @@ export const LeverageDisplay = ({
   const leverage = useLeverageBySymbol(symbol, marginMode);
 
   return (
-    <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
-      {leverage || 1}
-    </Text.numeral>
+    <>
+      {leverage === undefined ? (
+        <Text size="2xs">--</Text>
+      ) : (
+        <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      )}
+    </>
   );
 };

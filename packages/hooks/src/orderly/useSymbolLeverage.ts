@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { mutate } from "swr";
-import { MarginMode } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { useMutation } from "../useMutation";
 import { useSymbolInfo } from "./useSymbolInfo";
@@ -42,21 +42,48 @@ export const useSymbolLeverage = (symbol?: string) => {
     const result = await updateMutation(data);
 
     if (result?.success && data.symbol && state.accountId) {
-      const queryParams = new URLSearchParams();
-      queryParams.set("symbol", data.symbol);
-      if (data.margin_mode) {
-        queryParams.set("margin_mode", data.margin_mode);
-      }
-      const queryUrl = `/v1/client/leverage?${queryParams.toString()}`;
-      const key = [queryUrl, state.accountId];
+      const key = ["/v1/client/leverages", state.accountId];
 
       mutate(
         key,
-        (prevData: any) => ({
-          ...prevData,
-          leverage: data.leverage,
-        }),
-        // { revalidate: false },
+        (prev: API.LeverageInfo[] | undefined) => {
+          if (!prev) {
+            return [
+              {
+                symbol: data.symbol,
+                leverage: data.leverage,
+                margin_mode: data.margin_mode,
+              },
+            ];
+          }
+
+          const index = prev.findIndex(
+            (item) =>
+              item.symbol === data.symbol &&
+              (item.margin_mode ?? MarginMode.CROSS) ===
+                (data.margin_mode ?? MarginMode.CROSS),
+          );
+
+          if (index === -1) {
+            return [
+              ...prev,
+              {
+                symbol: data.symbol,
+                leverage: data.leverage,
+                margin_mode: data.margin_mode,
+              },
+            ];
+          }
+
+          const next = [...prev];
+          next[index] = {
+            ...next[index],
+            leverage: data.leverage,
+          };
+
+          return next;
+        },
+        { revalidate: false },
       );
     }
 

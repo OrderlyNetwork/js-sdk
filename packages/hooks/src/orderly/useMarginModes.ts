@@ -30,7 +30,7 @@ export const useMarginModes = () => {
     Array<MarginModesResponseItem>
   >("/v1/client/margin_modes", {
     revalidateOnFocus: false,
-    revalidateOnMount: false,
+    revalidateOnMount: true,
   });
 
   const [setMarginModeInternal, { isMutating }] = useMutation(
@@ -79,12 +79,13 @@ export const useMarginModes = () => {
 
 export const useMarginModeBySymbol = (
   symbol: string,
-  fallback: MarginMode = MarginMode.CROSS,
+  fallback: MarginMode | null = MarginMode.CROSS,
 ) => {
   const { marginModes, isLoading, error, refresh, updateMarginMode } =
     useMarginModes();
 
-  const marginMode = marginModes[symbol] ?? fallback;
+  const marginMode =
+    fallback === null ? marginModes[symbol] : (marginModes[symbol] ?? fallback);
 
   const update = useCallback(
     async (mode: MarginMode) => {
