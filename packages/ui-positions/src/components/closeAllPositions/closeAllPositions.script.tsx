@@ -86,6 +86,7 @@ export const useCloseAllPositionsScript = (
           side,
           order_quantity: quantity,
           reduce_only: true,
+          margin_mode: position.margin_mode,
         };
       }),
     [],

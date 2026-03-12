@@ -570,7 +570,8 @@ const useOrderEntry = (
     );
   };
 
-  const { freeCollateral, totalCollateral } = useCollateral();
+  const { freeCollateral, freeCollateralUSDCOnly, totalCollateral } =
+    useCollateral();
 
   const currentPosition = useMemo(() => {
     const rows = positions ?? [];
@@ -782,7 +783,10 @@ const useOrderEntry = (
       validator: validateOrder,
       validate: validateOrder,
     },
-    freeCollateral,
+    freeCollateral:
+      effectiveMarginMode === MarginMode.ISOLATED
+        ? freeCollateralUSDCOnly
+        : freeCollateral,
     setValue: useMemoizedFn(setValue),
     setValues: useMemoizedFn(setValues),
     symbolInfo: symbolInfo || EMPTY_OBJECT,
