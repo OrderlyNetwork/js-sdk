@@ -5,6 +5,7 @@ import { i18n, useTranslation } from "@orderly.network/i18n";
 import {
   BBOOrderType,
   API,
+  MarginMode,
   OrderSide,
   OrderType,
   PositionType,
@@ -36,9 +37,19 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   const { symbolInfo, order, onConfirm, onCancel } = props;
   const { quote, quote_dp, base_dp } = symbolInfo;
   const { side, order_type, order_type_ext, level, symbol } = order;
+  const orderMarginMode = (order as { margin_mode?: MarginMode }).margin_mode;
   const { t } = useTranslation();
   const [{ rows: positions }] = usePositionStream(symbol);
-  const position = positions?.[0];
+  const position = useMemo(
+    () =>
+      orderMarginMode != null
+        ? positions?.find(
+            (row) =>
+              row.symbol === symbol && row.margin_mode === orderMarginMode,
+          )
+        : positions?.[0],
+    [positions, symbol, orderMarginMode],
+  );
   const positionQty = position?.position_qty;
 
   const [_, setNeedConfirm] = useLocalStorage("orderly_order_confirm", true);

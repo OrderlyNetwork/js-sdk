@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { API, PositionType } from "@orderly.network/types";
+import { API, MarginMode, PositionType } from "@orderly.network/types";
 import {
   Box,
   ChevronDownIcon,
@@ -33,11 +33,12 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     symbolInfo,
   } = props;
   const { estLiqPrice } = useTPSLDetailContext();
-
+  console.log("----- position", position);
   return (
     <Box>
       <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-100px)]")}>
         <OrderInfo
+          marginMode={position.margin_mode ?? MarginMode.CROSS}
           order={{
             symbol: position.symbol,
             order_quantity: position.position_qty.toString(),

@@ -24,11 +24,10 @@ export const positions = {
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",
-  "positions.column.margin": "Maintenance Margin",
-  "positions.column.margin.tooltip":
-    "The minimum equity to keep your position.",
+  "positions.column.margin": "Margin",
+  "positions.column.margin.tooltip": "Isolated margin locked in the position",
   "positions.column.margin.formula":
-    "Margin = Position size * Mark price * MMR",
+    "Margin = Position size * Open price * IMR",
   "positions.column.close": "Close",
 
   "positions.limitClose": "Limit close",
@@ -96,6 +95,21 @@ export const positions = {
   "positions.reverse.marketOpenShort": "Market Open Short",
   "positions.reverse.reverseToLong": "Reverse to Long",
   "positions.reverse.reverseToShort": "Reverse to Short",
+
+  // Adjust Margin
+  "positions.adjustMargin.title": "Adjust Margin",
+  "positions.adjustMargin.add": "Add Margin",
+  "positions.adjustMargin.reduce": "Reduce Margin",
+  "positions.adjustMargin.quantity": "Quantity",
+  "positions.adjustMargin.max": "Max",
+  "positions.adjustMargin.currentMargin": "Current margin:",
+  "positions.adjustMargin.liqPriceAfter": "Liquidation price after adjustment:",
+  "positions.adjustMargin.leverageAfter":
+    "Effective leverage after adjustment:",
+  "positions.adjustMargin.success": "Margin adjusted successfully",
+  "positions.adjustMargin.failed": "Failed to adjust margin",
+  "positions.adjustMargin.marginCannotMoreThanMax":
+    "Margin cannot be more than max",
 };
 
 export type Positions = typeof positions;

@@ -12,7 +12,10 @@ export const useFundingRates = () => {
 };
 
 export const useFundingRatesStore = () => {
-  const data = useAppStore((state) => state.fundingRates);
+  const data = useAppStore((state) => state.fundingRates) as Record<
+    string,
+    API.FundingRate
+  >;
   return data;
 };
 

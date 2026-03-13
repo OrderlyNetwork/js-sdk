@@ -1,4 +1,4 @@
-import { OrderStatus } from "@orderly.network/types";
+import { MarginMode, OrderStatus } from "@orderly.network/types";
 import type { Order } from "./charting_library";
 
 export type {
@@ -98,6 +98,7 @@ export type ChartPosition = {
   positionSide?: PositionSide;
   /** Liquidation price from position (est_liq_price); used for chart liquidation line and 3s fallback. */
   est_liq_price?: number | null;
+  marginMode?: MarginMode;
 };
 
 export enum SideType {

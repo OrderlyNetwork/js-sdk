@@ -13,9 +13,26 @@ import {
   OrderValidationResult,
 } from "./interface";
 import { OrderValidation } from "./orderValidation";
+import { TriggerPriceValidationStrategy } from "./validators/PriceValidationStrategy";
+import { QuantityValidator } from "./validators/QuantityValidator";
+import { TriggerPriceValidator } from "./validators/TriggerPriceValidator";
+import { ValidationChain } from "./validators/ValidationChain";
 
+/**
+ * Creator for stop-market orders
+ * Uses Strategy pattern for validation and Template Method pattern for creation
+ */
 export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
-  create(
+  private triggerPriceValidationStrategy = new TriggerPriceValidationStrategy();
+  private validationChain = new ValidationChain()
+    .addValidator(new QuantityValidator())
+    .addValidator(new TriggerPriceValidator());
+
+  /**
+   * Builds the stop-market order
+   * Implements template method hook
+   */
+  protected buildOrder(
     values: AlgoOrderEntity & {
       order_quantity: number;
       order_price: number;
@@ -23,12 +40,10 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   ) {
     const order = {
       ...this.baseOrder(values as unknown as OrderEntity),
-      // order_price: values.order_price,
       trigger_price: values.trigger_price!,
       algo_type: AlgoOrderRootType.STOP,
       type: OrderType.MARKET,
       quantity: values["order_quantity"]!,
-      // price: values["order_price"],
       trigger_price_type: TriggerPriceType.MARK_PRICE,
     };
 
@@ -39,34 +54,30 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
         "algo_type",
         "type",
         "quantity",
-        // "price",
         "trigger_price_type",
         "side",
         "reduce_only",
+        "margin_mode",
         "visible_quantity",
       ],
       order,
     );
   }
-  validate(
+
+  /**
+   * Runs validations using validation chain
+   * Implements template method hook
+   */
+  protected runValidations(
     values: OrderFormEntity,
     config: ValuesDepConfig,
-  ): Promise<OrderValidationResult> {
-    return this.baseValidate(values, config).then((errors) => {
-      const { trigger_price } = values;
-      const { symbol } = config;
-      const { quote_max, quote_min } = symbol;
+  ): OrderValidationResult {
+    const errors = this.baseValidate(values, config);
 
-      if (!trigger_price) {
-        errors.trigger_price = OrderValidation.required("trigger_price");
-      } else if (trigger_price > quote_max) {
-        // validate trigger price
-        errors.trigger_price = OrderValidation.max("trigger_price", quote_max);
-      } else if (trigger_price < quote_min || trigger_price == 0) {
-        errors.trigger_price = OrderValidation.min("trigger_price", quote_min);
-      }
+    // Use validation chain for trigger price and quantity validation
+    const chainErrors = this.validationChain.validate(values, config);
+    Object.assign(errors, chainErrors);
 
-      return errors;
-    });
+    return errors;
   }
 }
