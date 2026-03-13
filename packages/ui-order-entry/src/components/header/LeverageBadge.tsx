@@ -30,6 +30,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   const marginMode = props.marginMode;
 
   const isDisabled = !!disabled;
+  const curLeverage = symbolLeverage ?? 1;
 
   const showLeverageModal = () => {
     if (isDisabled) return;
@@ -38,7 +39,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
     modal.show(modalId, {
       symbol,
       side,
-      curLeverage: symbolLeverage,
+      curLeverage,
       marginMode,
     });
   };
@@ -101,18 +102,14 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
         onClick={showLeverageModal}
         data-testid="oui-testid-orderEntry-leverage"
       >
-        {symbolLeverage === undefined ? (
-          <Text>--</Text>
-        ) : (
-          <Text.numeral
-            dp={0}
-            rm={Decimal.ROUND_DOWN}
-            unit="x"
-            unitClassName="oui-ml-0"
-          >
-            {symbolLeverage}
-          </Text.numeral>
-        )}
+        <Text.numeral
+          dp={0}
+          rm={Decimal.ROUND_DOWN}
+          unit="x"
+          unitClassName="oui-ml-0"
+        >
+          {curLeverage}
+        </Text.numeral>
       </button>
     </div>
   );
