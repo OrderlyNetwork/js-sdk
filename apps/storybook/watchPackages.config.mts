@@ -41,7 +41,7 @@ const base: Package[] = [
   {
     package: "@orderly.network/utils",
     path: "../../packages/utils/src",
-    watch: false,
+    watch: true,
   },
   {
     package: "@orderly.network/types",

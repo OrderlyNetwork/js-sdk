@@ -110,6 +110,9 @@ importers:
       '@orderly.network/default-solana-adapter':
         specifier: workspace:*
         version: link:../../packages/default-solana-adapter
+      '@orderly.network/fast-place-order-plugin':
+        specifier: 0.1.1-dev.0
+        version: 0.1.1-dev.0(@orderly.network/hooks@packages+hooks)(@orderly.network/i18n@packages+i18n)(@orderly.network/types@packages+types)(@orderly.network/ui@packages+ui)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
@@ -5222,6 +5225,17 @@ packages:
     resolution: {integrity: sha512-QLQf20q5u87sBP3tWMBANaVma134PKlvLalF5K66/r3NeKIQJ1senmHz8dW+Ks1sMfOAJ9xScpedY37MY81zOw==}
     peerDependencies:
       eslint: '>=9.0.0'
+
+  '@orderly.network/fast-place-order-plugin@0.1.1-dev.0':
+    resolution: {integrity: sha512-66Kq43YmyS+uQpcTka28sNrqFWK/CC+Po93vMbxkuc6pwPL9UybXW+X7E8WCbU+2g7CIa3voJFTDzFulLNmwXg==}
+    peerDependencies:
+      '@orderly.network/hooks': 2.10.2-internal-plugin-1.1
+      '@orderly.network/i18n': 2.10.2-internal-plugin-1.1
+      '@orderly.network/plugin-core': workspace:*
+      '@orderly.network/types': 2.10.2-internal-plugin-1.1
+      '@orderly.network/ui': 2.10.2-internal-plugin-1.1
+      react: '>=18'
+      react-dom: '>=18'
 
   '@orderly.network/prettier-config@0.2.5':
     resolution: {integrity: sha512-L/2XwpYssuPck7VibeoRnzqoHx0Rp+EmmMLjYWjZ4yXAUL7LWTyKtKfNB3KY4WZDok7uwYGV701Uk5pr4zIuXQ==}
@@ -19598,6 +19612,15 @@ snapshots:
       - supports-color
       - tailwindcss
       - typescript
+
+  '@orderly.network/fast-place-order-plugin@0.1.1-dev.0(@orderly.network/hooks@packages+hooks)(@orderly.network/i18n@packages+i18n)(@orderly.network/types@packages+types)(@orderly.network/ui@packages+ui)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@orderly.network/hooks': link:packages/hooks
+      '@orderly.network/i18n': link:packages/i18n
+      '@orderly.network/types': link:packages/types
+      '@orderly.network/ui': link:packages/ui
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@orderly.network/prettier-config@0.2.5(@vue/compiler-sfc@3.5.18)(prettier@3.8.1)':
     dependencies:

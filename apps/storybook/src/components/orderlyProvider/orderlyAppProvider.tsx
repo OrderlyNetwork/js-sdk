@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from "react";
+import { registerFastPlaceOrderPlugin } from "@orderly.network/fast-place-order-plugin";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import {
   Arbitrum,
@@ -43,9 +44,12 @@ export const OrderlyAppRootProvider: FC<
         notification={notification}
         dataAdapter={{ ...dataAdapter, symbolList }}
         plugins={[
-          registerOrderlyYoutubeLivePlugin({
-            src: "https://www.youtube.com/embed/NOrvXR48WaY?mute=0&autoplay=1",
-            title: "Youtube Live",
+          // registerOrderlyYoutubeLivePlugin({
+          //   src: "https://www.youtube.com/embed/NOrvXR48WaY?mute=0&autoplay=1",
+          //   title: "Youtube Live",
+          // }),
+          registerFastPlaceOrderPlugin({
+            className: "oui-w-full",
           }),
         ]}
         amplitudeConfig={{
