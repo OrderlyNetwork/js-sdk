@@ -5,6 +5,10 @@ import {
 import useBroker from "../hooks/useBroker";
 import { ChartPosition } from "../type";
 import { ExecutionService } from "./execution.service";
+import {
+  LiquidationLineService,
+  type LiquidationLineRenderParams,
+} from "./liquidationLine.service";
 import { OrderLineService } from "./orderLine.service";
 import { PositionLineService } from "./positionLine.service";
 import { TPSLService } from "./tpsl.service";
@@ -15,6 +19,7 @@ export class Renderer {
   private orderLineService: OrderLineService;
   private executionService: ExecutionService;
   private tpslService: TPSLService;
+  private liquidationLineService: LiquidationLineService;
 
   constructor(
     instance: IChartingLibraryWidget,
@@ -26,6 +31,7 @@ export class Renderer {
     this.orderLineService = new OrderLineService(instance, broker);
     this.executionService = new ExecutionService(instance, broker);
     this.tpslService = new TPSLService(instance, broker);
+    this.liquidationLineService = new LiquidationLineService(instance, broker);
   }
 
   async renderPositions(positions: ChartPosition[] | null) {
@@ -34,6 +40,11 @@ export class Renderer {
     this.positionLineService.renderPositions(positions);
     this.orderLineService.updatePositions(positions);
     this.tpslService.updatePositions(positions);
+  }
+
+  /** Update the single liquidation price line (position + optional estimated from Order Entry). */
+  renderLiquidationLine(params: LiquidationLineRenderParams): void {
+    this.liquidationLineService.renderLiquidationLine(params);
   }
 
   async renderPendingOrders(pendingOrders: any) {
@@ -51,6 +62,7 @@ export class Renderer {
   remove() {
     this.orderLineService.removeAll();
     this.positionLineService.removePositions();
+    this.liquidationLineService.remove();
     this.executionService.destroy();
   }
 

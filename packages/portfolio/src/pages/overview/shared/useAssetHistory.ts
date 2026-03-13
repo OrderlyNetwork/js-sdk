@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { subDays, format } from "date-fns";
 import {
-  useAccount,
   useAssetsHistory,
   useCollateral,
   useIndexPricesStream,
   useLocalStorage,
   usePrivateQuery,
   useStatisticsDaily,
+  useUserStatistics,
   useBalanceTopic,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -132,6 +132,13 @@ export const useAssetsHistoryData = (
     {
       ignoreAggregation: true,
     },
+  );
+
+  const [userStatistics] = useUserStatistics();
+
+  const todayVolume = useMemo(
+    () => userStatistics?.perp_trading_volume_last_24_hours ?? 0,
+    [userStatistics],
   );
 
   // Refresh the transfer history once after the balance change event.
@@ -346,13 +353,14 @@ export const useAssetsHistoryData = (
     totalValue: number | null,
     totalTransferIn: Decimal,
     totalTransferOut: Decimal,
+    todayVol: number,
   ) => {
     const lastItem = data[data.length - 1];
 
     return {
       ...lastItem,
       date: getUTCStr(today),
-      perp_volume: 0,
+      perp_volume: todayVol,
       account_value:
         totalValue !== null ? totalValue : (lastItem?.account_value ?? 0),
       pnl:
@@ -374,6 +382,7 @@ export const useAssetsHistoryData = (
     totalValue: number | null,
     totalTransferIn: Decimal,
     totalTransferOut: Decimal,
+    todayVol: number,
   ) => {
     if (!Array.isArray(data) || data.length === 0) {
       return data;
@@ -384,7 +393,7 @@ export const useAssetsHistoryData = (
     }
 
     return data.concat([
-      calculate(data, totalValue, totalTransferIn, totalTransferOut),
+      calculate(data, totalValue, totalTransferIn, totalTransferOut, todayVol),
     ]);
   };
 
@@ -394,10 +403,17 @@ export const useAssetsHistoryData = (
     totalValue: number | null,
     totalTransferIn: Decimal,
     totalTransferOut: Decimal,
+    todayVol: number,
   ) => {
     const _data = !realtime
       ? data
-      : mergeData(data, totalValue, totalTransferIn, totalTransferOut);
+      : mergeData(
+          data,
+          totalValue,
+          totalTransferIn,
+          totalTransferOut,
+          todayVol,
+        );
 
     return _data.slice(Math.max(0, _data.length - periodValue));
   };
@@ -420,6 +436,7 @@ export const useAssetsHistoryData = (
       totalValue,
       totalTransferIn,
       totalTransferOut,
+      todayVolume,
     );
   }, [
     data,
@@ -427,10 +444,9 @@ export const useAssetsHistoryData = (
     assetHistory,
     isRealtime,
     getIndexPrice,
-    // transferOutHistory,
-    // transferInHistory,
     totalTransferIn,
     totalTransferOut,
+    todayVolume,
   ]);
 
   const aggregateValue = useMemo(() => {
@@ -440,7 +456,7 @@ export const useAssetsHistoryData = (
 
     if (Array.isArray(calculatedData) && calculatedData.length) {
       calculatedData.forEach((d) => {
-        // vol = vol.add(d.perp_volume);
+        vol = vol.add(d.perp_volume ?? 0);
         pnl = pnl.add(d.pnl);
       });
 
@@ -449,8 +465,6 @@ export const useAssetsHistoryData = (
       const dataTailIndex = data.findIndex((d) => d.date === tail.date);
 
       const lastAccountValue = data[dataTailIndex - 1]?.account_value;
-
-      // console.log(data, calculatedData, tail, dataTailIndex);
 
       if (typeof lastAccountValue === "undefined" || lastAccountValue === 0) {
         roi = zero;
@@ -461,26 +475,8 @@ export const useAssetsHistoryData = (
       }
     }
 
-    if (data.length > 0) {
-      for (let i = 0; i < periodValue; i++) {
-        const item = data[data.length - 1 - i];
-
-        if (item) {
-          vol = vol.add(item.perp_volume ?? 0);
-        }
-      }
-    }
-
-    // console.log("---------------------------");
-
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
-  }, [
-    calculatedData,
-    data,
-    periodValue,
-    totalTransferInForROI,
-    totalDepositForROI,
-  ]);
+  }, [calculatedData, data, totalTransferInForROI, totalDepositForROI]);
 
   const createFakeData = (
     start: Partial<API.DailyRow>,
