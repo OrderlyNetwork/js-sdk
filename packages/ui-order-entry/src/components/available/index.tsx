@@ -40,9 +40,17 @@ export const Available = (props: AvailableProps) => {
       justify={"between"}
       className="oui-orderEntry-available"
     >
-      <Text className="oui-available-label" size={"2xs"}>
-        {t("common.available")}
-      </Text>
+      {marginMode === MarginMode.ISOLATED ? (
+        <Tooltip content={t("transfer.LTV.isolatedModeUsdcOnly")}>
+          <Text className="oui-available-label oui-cursor-pointer" size={"2xs"}>
+            {t("common.available")}
+          </Text>
+        </Tooltip>
+      ) : (
+        <Text className="oui-available-label" size={"2xs"}>
+          {t("common.available")}
+        </Text>
+      )}
       <Flex itemAlign={"center"} justify={"center"} gap={1}>
         {showLTV && (
           <Tooltip

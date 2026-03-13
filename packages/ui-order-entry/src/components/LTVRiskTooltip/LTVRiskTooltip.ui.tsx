@@ -66,16 +66,6 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
           </Flex>
         );
       })}
-      {marginMode === MarginMode.ISOLATED && (
-        <>
-          <Divider className="oui-w-full" />
-          <Text className="oui-py-1 oui-text-left" intensity={54} size="2xs">
-            {t(
-              "transfer.LTV.isolatedModeUsdcOnly" as keyof LocaleMessages as "transfer.LTV.isolatedModeUsdcOnly",
-            )}
-          </Text>
-        </>
-      )}
       <Divider className="oui-w-full" />
       <Flex width={"100%"} justify="between" itemAlign="center">
         <Text intensity={36} size="xs">
