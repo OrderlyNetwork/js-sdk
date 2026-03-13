@@ -4,6 +4,7 @@
  */
 import React, { useEffect, useMemo } from "react";
 import { useGetRwaSymbolOpenStatus } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 import { LayoutHost } from "@orderly.network/layout-core";
 import { API } from "@orderly.network/types";
@@ -88,6 +89,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const setAnimating = props.setAnimating ?? NOOP;
 
   const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
+  const { t } = useTranslation();
   const symbolInfoBarHeight = useMemo(
     () => (showCountdown ? 104 : 56),
     [showCountdown],
@@ -181,7 +183,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   );
 
   const panels = useMemo(
-    () => createTradingPanelRegistry(registryProps),
+    () => createTradingPanelRegistry(registryProps, t),
     [registryProps],
   );
 

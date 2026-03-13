@@ -48,6 +48,26 @@ function getCollapsiblePanels(node: SplitLayoutNode): Map<string, boolean> {
 }
 
 /**
+ * Creates an updated layout with new sizes at the given path.
+ */
+function createUpdatedLayout(
+  rootNode: SplitLayoutNode,
+  layout: SplitLayoutModel,
+  breakpoint: string,
+  path: number[],
+  sizes: string[],
+): SplitLayoutModel {
+  const updatedRoot = updateSizeAtPath(rootNode, path, sizes);
+  return {
+    ...layout,
+    layouts: {
+      ...layout.layouts,
+      [breakpoint]: updatedRoot,
+    },
+  };
+}
+
+/**
  * Split layout renderer: picks root by current breakpoint (from viewport width),
  * renders that tree, and on size change updates only the current breakpoint's root.
  */
@@ -75,14 +95,13 @@ export function SplitRenderer(
       if (sizesAreEqual(currentSizes, sizes)) {
         return;
       }
-      const updatedRoot = updateSizeAtPath(rootNode, path, sizes);
-      const updatedLayout: SplitLayoutModel = {
-        ...layout,
-        layouts: {
-          ...layout.layouts,
-          [breakpoint]: updatedRoot,
-        },
-      };
+      const updatedLayout = createUpdatedLayout(
+        rootNode,
+        layout,
+        breakpoint,
+        path,
+        sizes,
+      );
       // Update UI state only (no persistence)
       onLayoutChange(updatedLayout);
     },
@@ -100,14 +119,13 @@ export function SplitRenderer(
       if (sizesAreEqual(currentSizes, sizes)) {
         return;
       }
-      const updatedRoot = updateSizeAtPath(rootNode, path, sizes);
-      const updatedLayout: SplitLayoutModel = {
-        ...layout,
-        layouts: {
-          ...layout.layouts,
-          [breakpoint]: updatedRoot,
-        },
-      };
+      const updatedLayout = createUpdatedLayout(
+        rootNode,
+        layout,
+        breakpoint,
+        path,
+        sizes,
+      );
       // Persist layout to storage
       onLayoutPersist(updatedLayout);
     },

@@ -129,7 +129,8 @@ export function GridRenderer(
     () =>
       layoutItems.map((config) => {
         const panelId = config.panelId;
-        const panel = panels.get(panelId);
+        const panelWrapper = panels.get(panelId);
+        const panel = panelWrapper?.node;
         if (!panel) {
           console.warn(`Panel ${panelId} not found in registry`);
           return null;

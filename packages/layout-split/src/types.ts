@@ -25,6 +25,8 @@ export interface SplitLayoutChildConstraints {
   collapsible?: boolean;
   /** When true, panel is initially collapsed */
   defaultCollapsed?: boolean;
+  /** Panel title displayed in collapsible header */
+  title?: string;
 }
 
 /**

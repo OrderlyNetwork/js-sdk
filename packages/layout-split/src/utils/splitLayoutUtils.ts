@@ -168,9 +168,11 @@ function isValidOrientation(v: unknown): v is "horizontal" | "vertical" {
 
 /** Validates a container node (split or sort): orientation + children array. */
 function validateContainerNode(n: Record<string, unknown>): boolean {
-  if (!isValidOrientation(n.orientation)) return false;
-  if (!Array.isArray(n.children)) return false;
-  return (n.children as unknown[]).every((c) => validateSplitLayoutNode(c));
+  return (
+    isValidOrientation(n.orientation) &&
+    Array.isArray(n.children) &&
+    (n.children as unknown[]).every((c) => validateSplitLayoutNode(c))
+  );
 }
 
 /**
@@ -206,12 +208,11 @@ function validateSplitLayoutModel(parsed: unknown): parsed is SplitLayoutModel {
   if (!layoutsSource || typeof layoutsSource !== "object") return false;
   if (!p.breakpoints || typeof p.breakpoints !== "object") return false;
   const layouts = layoutsSource as Record<string, unknown>;
-  for (const bp of SPLIT_BREAKPOINT_ORDER) {
-    if (!validateSplitLayoutNode(layouts[bp])) return false;
-  }
   const bp = p.breakpoints as Record<string, unknown>;
   for (const k of SPLIT_BREAKPOINT_ORDER) {
-    if (typeof bp[k] !== "number") return false;
+    if (!validateSplitLayoutNode(layouts[k]) || typeof bp[k] !== "number") {
+      return false;
+    }
   }
   return true;
 }

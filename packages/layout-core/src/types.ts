@@ -7,9 +7,17 @@ import { ComponentType, ReactNode } from "react";
 export type LayoutModel = Record<string, unknown>;
 
 /**
+ * Panel registry entry: maps panel IDs to React component with optional props
+ */
+export type PanelRegistryEntry = {
+  node: ReactNode;
+  props?: Record<string, unknown>;
+};
+
+/**
  * Panel registry: maps panel IDs to React components/nodes
  */
-export type PanelRegistry = Map<string, ReactNode>;
+export type PanelRegistry = Map<string, PanelRegistryEntry>;
 
 /**
  * Layout change callback (generic version)
@@ -72,8 +80,8 @@ export interface LayoutRendererProps<
 export interface LayoutHostProps<TLayout extends LayoutModel = LayoutModel> {
   /** The layout strategy to use */
   strategy: LayoutStrategy<TLayout>;
-  /** Panel registry: map of panel ID to ReactNode */
-  panels: PanelRegistry | Record<string, ReactNode>;
+  /** Panel registry: map of panel ID to ReactNode or PanelRegistryEntry */
+  panels: PanelRegistry | Record<string, PanelRegistryEntry | ReactNode>;
   /** Initial layout model (optional, will use defaultLayout if not provided) */
   initialLayout?: TLayout;
   /** Callback when layout changes (typed to the specific layout model) */

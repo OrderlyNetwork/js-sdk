@@ -1,7 +1,3 @@
-/**
- * Trading panel registry: builds PanelRegistry from trading state for strategy-based layout.
- * Widget creation logic is centralized here so layout (LayoutHost) stays decoupled from content.
- */
 import React from "react";
 import {
   type PanelRegistry,
@@ -82,6 +78,7 @@ export interface TradingPanelRegistryProps {
  */
 export function createTradingPanelRegistry(
   props: TradingPanelRegistryProps,
+  t: (key: string) => string,
 ): PanelRegistry {
   const {
     symbol,
@@ -103,22 +100,27 @@ export function createTradingPanelRegistry(
   };
   const { library_path, ...restTradingViewConfig } = config;
 
-  const panels = new Map<string, React.ReactNode>();
+  const panels = new Map<
+    string,
+    { node: React.ReactNode; props?: Record<string, unknown> }
+  >();
 
   // symbolInfoBar
-  panels.set(
-    TRADING_PANEL_IDS.SYMBOL_INFO_BAR,
-    <div
-      style={{ minHeight: symbolInfoBarHeight, height: symbolInfoBarHeight }}
-    >
-      <SymbolInfoBarFullWidget
-        symbol={symbol}
-        onSymbolChange={onSymbolChange}
-        closeCountdown={closeCountdown}
-        showCountdown={showCountdown}
-      />
-    </div>,
-  );
+  panels.set(TRADING_PANEL_IDS.SYMBOL_INFO_BAR, {
+    node: (
+      <div
+        style={{ minHeight: symbolInfoBarHeight, height: symbolInfoBarHeight }}
+      >
+        <SymbolInfoBarFullWidget
+          symbol={symbol}
+          onSymbolChange={onSymbolChange}
+          closeCountdown={closeCountdown}
+          showCountdown={showCountdown}
+        />
+      </div>
+    ),
+    props: {},
+  });
 
   // tradingView (chart)
   const tradingviewWidget = (
@@ -140,59 +142,73 @@ export function createTradingPanelRegistry(
       libraryPath={library_path}
     />
   );
-  panels.set(TRADING_PANEL_IDS.TRADING_VIEW, tradingviewWidget);
+  panels.set(TRADING_PANEL_IDS.TRADING_VIEW, {
+    node: tradingviewWidget,
+    props: {},
+  });
 
   // orderbook
-  panels.set(
-    TRADING_PANEL_IDS.ORDERBOOK,
-    <React.Suspense fallback={null}>
-      <LazyOrderBookAndTradesWidget symbol={symbol} />
-    </React.Suspense>,
-  );
+  panels.set(TRADING_PANEL_IDS.ORDERBOOK, {
+    node: (
+      <React.Suspense fallback={null}>
+        <LazyOrderBookAndTradesWidget symbol={symbol} />
+      </React.Suspense>
+    ),
+    props: {},
+  });
 
   // dataList
-  panels.set(
-    TRADING_PANEL_IDS.DATA_LIST,
-
-    <React.Suspense fallback={null}>
-      <LazyDataListWidget
-        current={undefined}
-        symbol={symbol}
-        sharePnLConfig={sharePnLConfig}
-      />
-    </React.Suspense>,
-  );
+  panels.set(TRADING_PANEL_IDS.DATA_LIST, {
+    node: (
+      <React.Suspense fallback={null}>
+        <LazyDataListWidget
+          current={undefined}
+          symbol={symbol}
+          sharePnLConfig={sharePnLConfig}
+        />
+      </React.Suspense>
+    ),
+    props: {},
+  });
 
   // order-entry sub panels: margin / assets / main order entry
-  panels.set(
-    TRADING_PANEL_IDS.MARGIN,
-    <React.Suspense fallback={null}>
-      <LazyRiskRateWidget />
-    </React.Suspense>,
-  );
-
-  panels.set(
-    TRADING_PANEL_IDS.ASSETS,
-    <>
+  panels.set(TRADING_PANEL_IDS.MARGIN, {
+    node: (
       <React.Suspense fallback={null}>
-        <LazyAssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+        <LazyRiskRateWidget />
       </React.Suspense>
-      <DepositStatusWidget
-        className="oui-mt-3 oui-gap-y-2"
-        onClick={props.navigateToPortfolio}
-      />
-    </>,
-  );
+    ),
+    props: {},
+  });
 
-  panels.set(
-    TRADING_PANEL_IDS.ORDER_ENTRY,
-    <OrderEntryWidget
-      symbol={symbol}
-      disableFeatures={
-        props.disableFeatures as ("slippageSetting" | "feesInfo")[] | undefined
-      }
-    />,
-  );
+  panels.set(TRADING_PANEL_IDS.ASSETS, {
+    node: (
+      <>
+        <React.Suspense fallback={null}>
+          <LazyAssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+        </React.Suspense>
+        <DepositStatusWidget
+          className="oui-mt-3 oui-gap-y-2"
+          onClick={props.navigateToPortfolio}
+        />
+      </>
+    ),
+    props: {},
+  });
+
+  panels.set(TRADING_PANEL_IDS.ORDER_ENTRY, {
+    node: (
+      <OrderEntryWidget
+        symbol={symbol}
+        disableFeatures={
+          props.disableFeatures as
+            | ("slippageSetting" | "feesInfo")[]
+            | undefined
+        }
+      />
+    ),
+    props: {},
+  });
 
   // markets: always register; layout plugin decides whether to show (e.g. include in layout model)
   const marketsWidget = (
@@ -202,12 +218,14 @@ export function createTradingPanelRegistry(
       onSymbolChange={onSymbolChange}
     />
   );
-  panels.set(
-    TRADING_PANEL_IDS.MARKETS,
-    <div onTransitionEnd={() => setAnimating?.(false)}>
-      {!animating && marketsWidget}
-    </div>,
-  );
+  panels.set(TRADING_PANEL_IDS.MARKETS, {
+    node: (
+      <div onTransitionEnd={() => setAnimating?.(false)}>
+        {!animating && marketsWidget}
+      </div>
+    ),
+    props: { title: t("common.markets") },
+  });
 
   return panels;
 }

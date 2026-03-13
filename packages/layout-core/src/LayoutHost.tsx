@@ -1,16 +1,21 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useLayoutPersistence } from "./hooks/useLayoutPersistence";
-import type { LayoutHostProps, LayoutModel, PanelRegistry } from "./types";
+import type {
+  LayoutHostProps,
+  LayoutModel,
+  PanelRegistry,
+  PanelRegistryEntry,
+} from "./types";
 
 /**
  * Check if a value is a Map instance (handles cross-realm scenarios)
  */
-function isMap(value: unknown): value is Map<string, React.ReactNode> {
+function isMap(value: unknown): value is Map<string, PanelRegistryEntry> {
   return (
     value !== null &&
     typeof value === "object" &&
-    typeof (value as Map<string, React.ReactNode>).get === "function" &&
-    typeof (value as Map<string, React.ReactNode>).keys === "function"
+    typeof (value as Map<string, PanelRegistryEntry>).get === "function" &&
+    typeof (value as Map<string, PanelRegistryEntry>).keys === "function"
   );
 }
 
@@ -48,9 +53,14 @@ export function LayoutHost<TLayout extends LayoutModel = LayoutModel>(
       return panelsInput;
     }
     // Convert Record to Map
-    const map = new Map<string, React.ReactNode>();
-    Object.entries(panelsInput).forEach(([id, node]) => {
-      map.set(id, node);
+    const map = new Map<string, PanelRegistryEntry>();
+    Object.entries(panelsInput).forEach(([id, entry]) => {
+      // Handle both old format (ReactNode) and new format (PanelRegistryEntry)
+      if (entry && typeof entry === "object" && "node" in entry) {
+        map.set(id, entry as PanelRegistryEntry);
+      } else {
+        map.set(id, { node: entry as React.ReactNode, props: {} });
+      }
     });
     return map;
   }, [panelsInput]);
