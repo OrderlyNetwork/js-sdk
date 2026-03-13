@@ -135,7 +135,7 @@ export class PositionLineService {
       text += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
     }
 
-    let line = (this.positionLines[idx] = this.getBasePositionLine()
+    const line = this.positionLines[idx]
       .setQuantity(quantity)
       .setPrice(price)
       .setCloseButtonIconColor(colorConfig.closeIcon!)
@@ -145,23 +145,22 @@ export class PositionLineService {
       .setBodyBorderColor(pnlColor!)
       .setLineColor(sideColor!)
       .setQuantityBorderColor(sideColor!)
-      .setText(text));
+      .setText(text);
 
     if (colorConfig.closeIcon) {
-      line = line.setCloseButtonIconColor(colorConfig.closeIcon);
+      line.setCloseButtonIconColor(colorConfig.closeIcon);
     }
 
     if (sideColor) {
-      line = line
+      line
         .setCloseButtonBorderColor(sideColor)
         .setQuantityTextColor(sideColor)
         .setLineColor(sideColor)
         .setQuantityBorderColor(sideColor);
     }
     if (pnlColor) {
-      line = line.setBodyBackgroundColor(pnlColor).setBodyBorderColor(pnlColor);
+      line.setBodyBackgroundColor(pnlColor).setBodyBorderColor(pnlColor);
     }
-    this.positionLines[idx] = line;
 
     if (this.broker.mode !== ChartMode.MOBILE) {
       this.positionLines[idx].onClose(null, () => {
