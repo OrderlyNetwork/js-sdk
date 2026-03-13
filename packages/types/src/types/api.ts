@@ -624,6 +624,7 @@ export declare namespace API {
     close_timestamp: number; // Timestamp when the position was closed
     last_update_time: number; // Timestamp of the last update to the position
     leverage: number; // Leverage of the position
+    margin_mode?: MarginMode | 1 | 0;
   }
 
   export interface LiquidationPositionByPerp {
