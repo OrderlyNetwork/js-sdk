@@ -1,5 +1,5 @@
+/// <reference types="@orderly.network/trading" />
 import React from "react";
-import type { DesktopLayoutProps } from "@orderly.network/trading";
 import type { OrderlySDK } from "@orderly.network/ui";
 import { createInterceptor } from "@orderly.network/ui";
 import { SplitPresetProvider } from "./SplitPresetContext";
@@ -44,7 +44,7 @@ export function registerLayoutSplitPlugin(
       orderlyVersion: ">=1.0.0",
       interceptors: [
         createInterceptor("Trading.Layout.Desktop", (Original, props) => {
-          const desktopProps = props as DesktopLayoutProps;
+          const desktopProps = props;
           return (
             <SplitPresetProvider
               presets={resolvedPresets}
@@ -52,10 +52,7 @@ export function registerLayoutSplitPlugin(
               gap={options?.gap ?? 2}
               showIndicator={desktopProps.showPositionIcon ?? false}
             >
-              <SplitInlinedLayout
-                Original={Original as React.ComponentType<DesktopLayoutProps>}
-                props={desktopProps}
-              />
+              <SplitInlinedLayout Original={Original} props={desktopProps} />
             </SplitPresetProvider>
           );
         }),

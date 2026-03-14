@@ -22,11 +22,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS, Transform } from "@dnd-kit/utilities";
-import {
-  OrderEntryDragOverlayContent,
-  type DesktopLayoutProps,
-} from "@orderly.network/trading";
 import { Box, cn, Flex } from "@orderly.network/ui";
+import type { DesktopLayoutProps } from "../types";
 import { SplitTradingDesktopContext } from "./SplitTradingDesktopContext";
 
 export interface SplitTradingDesktopChromeProps extends DesktopLayoutProps {
@@ -90,7 +87,7 @@ export function SplitTradingDesktopChrome(
 ): React.ReactElement {
   const {
     children,
-    max2XL,
+    isSM,
     tradingViewFullScreen,
     showPositionIcon,
     sortableItems,
@@ -116,11 +113,11 @@ export function SplitTradingDesktopChrome(
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id && over) {
-      const oldIndex = sortableItems.indexOf(active.id as string);
-      const newIndex = sortableItems.indexOf(over.id as string);
+      const oldIndex = sortableItems?.indexOf(active.id as string) ?? -1;
+      const newIndex = sortableItems?.indexOf(over.id as string) ?? -1;
       if (oldIndex !== -1 && newIndex !== -1) {
-        setSortableItems(
-          arrayMove(sortableItems, oldIndex, newIndex) as string[],
+        setSortableItems?.(
+          arrayMove(sortableItems ?? [], oldIndex, newIndex) as string[],
         );
       }
     }
@@ -145,10 +142,10 @@ export function SplitTradingDesktopChrome(
         modifiers={[restrictToVerticalAxis]}
       >
         <SortableContext
-          items={sortableItems}
+          items={sortableItems ?? []}
           strategy={verticalListSortingStrategy}
         >
-          {max2XL ? (
+          {isSM ? (
             <Box height="100%" className={className}>
               {children}
             </Box>

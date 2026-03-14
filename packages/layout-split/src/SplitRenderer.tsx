@@ -79,11 +79,14 @@ export function SplitRenderer(
 
   const ctx = useSplitPresetContext();
   const containerRef = useRef<HTMLDivElement>(null);
+  const presetName = ctx?.presets?.find(
+    (p) => p.id === ctx?.selectedPresetId,
+  )?.name;
   const breakpoint = useViewportBreakpoint({
     fallbackWidth: typeof window !== "undefined" ? window.innerWidth : 1440,
   });
 
-  const rootNode = layout.layouts[breakpoint] ?? layout.layouts.default;
+  const rootNode = layout.layouts[breakpoint];
 
   const handleSizeChange = useCallback(
     (path: number[], sizes: string[]) => {
@@ -199,6 +202,13 @@ export function SplitRenderer(
       >
         <SplitNodeRenderer node={rootNode} path={[]} rootNode={rootNode} />
       </SplitLayoutConfigProvider>
+      <div
+        className="oui-fixed oui-right-2 oui-bottom-5 oui-text-lg oui-text-trade-loss oui-flex oui-flex-col oui-items-end"
+        style={{ zIndex: 1000 }}
+      >
+        <span>{breakpoint}</span>
+        {presetName && <span className="oui-text-sm">{presetName}</span>}
+      </div>
     </div>
   );
 }

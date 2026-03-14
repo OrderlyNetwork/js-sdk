@@ -1,50 +1,10 @@
 import React from "react";
 import { cn } from "@orderly.network/ui";
-import { Flex, Text } from "@orderly.network/ui";
 import { useSplitLayoutConfig } from "../SplitLayoutConfigContext";
 import type { SplitLayoutNode } from "../types";
+import { CollapsiblePanel } from "./CollapsiblePanel";
 import { SortNodeRenderer } from "./SortNodeRenderer";
 import { SplitLayout } from "./SplitLayout";
-
-/** Inline SVG for collapse icon */
-const CollapseIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    className={className}
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M10 4L6 8L10 12"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-/** Inline SVG for expand icon */
-const ExpandIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    className={className}
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M6 4L10 8L6 12"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 /** Shared props for recursively rendering a split layout node tree. */
 export interface SplitNodeRendererProps {
@@ -53,12 +13,6 @@ export interface SplitNodeRendererProps {
   rootNode: SplitLayoutNode;
 }
 
-/**
- * Recursively renders a split layout node:
- * - panel: renders panel from registry
- * - sort: renders sortable container
- * - split: renders resizable SplitLayout with nested children
- */
 export function SplitNodeRenderer({
   node,
   path,
@@ -75,7 +29,7 @@ export function SplitNodeRenderer({
     isPanelCollapsible,
   } = useSplitLayoutConfig();
 
-  console.log("node", node);
+  // console.log("node", node);
 
   if (node.type === "panel") {
     // Check if panel is collapsed - don't render if collapsed
@@ -102,60 +56,33 @@ export function SplitNodeRenderer({
         </div>
       );
     }
-    const styles = Object.assign(
-      {},
-      node.style,
-      node.collapsible
-        ? isPanelCollapsed(node.id)
-          ? { width: node.minSize }
-          : { width: node.maxSize }
-        : {},
-    );
+    const title =
+      node.title ?? (panelWrapper?.props?.title as string | undefined);
 
-    const isCollapsed = isPanelCollapsed(node.id);
-    const collapsible =
-      node.collapsible === true || isPanelCollapsible(node.id);
-    const title = node.title ?? panelWrapper?.props?.title;
-
-    const renderCollapsibleHeader = () => {
-      if (typeof collapsible !== "undefined" && !collapsible) return null;
-
+    // Use CollapsiblePanel only when collapsible is explicitly set
+    if (typeof node.collapsible !== "undefined") {
       return (
-        <Flex
+        <CollapsiblePanel
+          title={title}
+          collapsible={node.collapsible || isPanelCollapsible(node.id)}
+          collapsed={isPanelCollapsed(node.id)}
+          onToggle={() => togglePanelCollapse(node.id)}
+          minSize={node.minSize}
+          maxSize={node.maxSize}
           className={cn(
-            "oui-text-base-contrast-36",
-            isCollapsed
-              ? "oui-absolute oui-end-[-20px] oui-z-50"
-              : "oui-relative",
+            node.size !== "fixed" && "oui-size-full",
+            classNames?.panel,
+            node.className,
           )}
-          justify={isCollapsed ? "center" : "between"}
-          width="100%"
-          px={3}
-          pt={3}
+          style={node.style}
+          data-panel-id={node.id}
         >
-          {!isCollapsed && title && (
-            <Text size="base" intensity={80}>
-              {title}
-            </Text>
-          )}
-          <div
-            onClick={() => togglePanelCollapse(node.id)}
-            className={cn(
-              "oui-cursor-pointer hover:oui-text-base-contrast-80",
-              isCollapsed &&
-                "oui-absolute oui-start-1/2 oui-transform oui-translate-x-[-50%]",
-            )}
-          >
-            {isCollapsed ? (
-              <ExpandIcon className="oui-text-base-contrast-36" />
-            ) : (
-              <CollapseIcon className="oui-text-base-contrast-36" />
-            )}
-          </div>
-        </Flex>
+          {panel}
+        </CollapsiblePanel>
       );
-    };
+    }
 
+    // Non-collapsible panel: render as regular div
     return (
       <div
         className={cn(
@@ -164,17 +91,10 @@ export function SplitNodeRenderer({
           classNames?.panel,
           node.className,
         )}
-        style={styles}
+        style={node.style}
         data-panel-id={node.id}
       >
-        {renderCollapsibleHeader()}
-        <div
-          className={cn(
-            collapsible && isCollapsed ? "oui-hidden" : "oui-h-full",
-          )}
-        >
-          {panel}
-        </div>
+        {panel}
       </div>
     );
   }
@@ -193,7 +113,10 @@ export function SplitNodeRenderer({
   const { orientation, children } = node;
   const sizes = children.map((child) => child.size ?? "auto");
   const panelConstraints = children.map((child) => ({
-    minSize: child.minSize,
+    // Nested split/sort nodes need minSize to prevent collapse (lib default 0% causes inner area to collapse)
+    minSize:
+      child.minSize ??
+      (child.type === "split" || child.type === "sort" ? "10%" : undefined),
     maxSize: child.maxSize,
     disabled: child.disabled,
   }));

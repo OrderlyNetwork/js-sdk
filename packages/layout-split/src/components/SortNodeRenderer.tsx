@@ -217,32 +217,34 @@ export function SortNodeRenderer({
     : horizontalListSortingStrategy;
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={isVertical ? [restrictToVerticalAxis] : []}
-    >
-      <SortableContext items={items} strategy={strategy}>
-        <div
-          className={
-            isVertical
-              ? "oui-flex oui-w-full oui-flex-col oui-gap-2"
-              : "oui-flex oui-w-full oui-flex-row oui-gap-2"
-          }
-        >
-          {children.map((child: SplitLayoutNode, index: number) => (
-            <SortableSortChild
-              key={getSortableIdForChild(child, path, index)}
-              id={getSortableIdForChild(child, path, index)}
-              child={child}
-              showIndicator={showIndicator}
-              path={[...path, index]}
-              rootNode={rootNode}
-            />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+    <div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={isVertical ? [restrictToVerticalAxis] : []}
+      >
+        <SortableContext items={items} strategy={strategy}>
+          <div
+            className={
+              isVertical
+                ? "oui-flex oui-w-full oui-flex-col oui-gap-2"
+                : "oui-flex oui-w-full oui-flex-row oui-gap-2"
+            }
+          >
+            {children.map((child: SplitLayoutNode, index: number) => (
+              <SortableSortChild
+                key={getSortableIdForChild(child, path, index)}
+                id={getSortableIdForChild(child, path, index)}
+                child={child}
+                showIndicator={showIndicator}
+                path={[...path, index]}
+                rootNode={rootNode}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 }

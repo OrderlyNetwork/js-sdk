@@ -12,11 +12,6 @@ export const Trading: FC<TradingState> = (props) => {
   if (isMobile) {
     return <MobileLayout {...props} />;
   }
-
-  return (
-    <InjectableDesktopLayout
-      className="oui-h-[calc(100vh_-_48px_-_29px_16px)] oui-bg-base-10"
-      {...props}
-    />
-  );
+  // className: oui-h-[calc(100vh_-_48px_-_29px_-_16px)]
+  return <InjectableDesktopLayout className="oui-bg-base-10" {...props} />;
 };

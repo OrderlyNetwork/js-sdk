@@ -1,7 +1,7 @@
 /**
  * @orderly.network/layout-split
  *
- * Split layout strategy: responsive tree-based layout with layouts per viewport breakpoint (min3XL, max4XL, default, max2XL).
+ * Split layout strategy: responsive tree-based layout with layouts per viewport breakpoint (lg, md, sm, xs).
  * Provides split-pane layout with resizable panels using react-resizable-panels (Resizable).
  */
 
@@ -21,13 +21,13 @@ export type {
   SplitLayoutBreakpointKey,
   SplitLayoutBreakpoints,
   SplitLayoutChildConstraints,
+  DesktopLayoutProps,
 } from "./types";
 
 export {
   createDefaultSplitLayout,
   createDefaultSplitLayoutFromRule,
   buildSplitLayoutFromRule,
-  normalizeRuleNodeToRuntime,
   getSortableIdForChild,
   updateOrderAtPath,
   serializeSplitLayout,

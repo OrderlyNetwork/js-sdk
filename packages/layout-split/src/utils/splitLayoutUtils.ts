@@ -6,45 +6,8 @@ import type {
   SplitLayoutNode,
   SplitLayoutModel,
   SplitLayoutRule,
-  SplitLayoutRuleNode,
   SplitLayoutBreakpointKey,
 } from "../types";
-
-/**
- * Converts a rule tree node to runtime SplitLayoutNode (orientation preserved).
- * - Panel: same shape so pass through. Sort: recurse children. Split: recurse then copy size/minSize/maxSize/disabled from rule child onto normalized node.
- */
-export function normalizeRuleNodeToRuntime(
-  ruleNode: SplitLayoutRuleNode,
-): SplitLayoutNode {
-  if (ruleNode.type === "panel") return ruleNode as SplitLayoutNode;
-  if (ruleNode.type === "sort") {
-    return {
-      type: "sort",
-      orientation: ruleNode.orientation,
-      children: ruleNode.children.map(normalizeRuleNodeToRuntime),
-    };
-  }
-  const childOpts = (c: SplitLayoutRuleNode) =>
-    c as unknown as {
-      size?: string;
-      minSize?: string;
-      maxSize?: string;
-      disabled?: boolean;
-    };
-  const children = ruleNode.children.map((child) => {
-    const r = normalizeRuleNodeToRuntime(child);
-    const o = childOpts(child);
-    return {
-      ...r,
-      ...(o.size !== undefined && { size: o.size }),
-      ...(o.minSize !== undefined && { minSize: o.minSize }),
-      ...(o.maxSize !== undefined && { maxSize: o.maxSize }),
-      ...(o.disabled !== undefined && { disabled: o.disabled }),
-    };
-  });
-  return { type: "split", orientation: ruleNode.orientation, children };
-}
 
 /**
  * Returns a stable sortable id for a child node (panel uses id, others use path).
@@ -88,19 +51,19 @@ export function updateOrderAtPath(
 
 /**
  * Builds runtime SplitLayoutNode for one breakpoint from a rule.
- * Falls back to default when the breakpoint has no rule tree.
+ * Falls back to md when the breakpoint has no rule tree.
  */
 export function buildSplitLayoutFromRule(
   rule: SplitLayoutRule,
   breakpointKey: SplitLayoutBreakpointKey,
 ): SplitLayoutNode {
-  const tree = rule[breakpointKey] ?? rule.default;
+  const tree = rule[breakpointKey] ?? rule.md;
   if (!tree) {
     throw new Error(
-      `Split layout rule must define at least 'default'; missing for ${breakpointKey}`,
+      `Split layout rule must define at least 'md'; missing for ${breakpointKey}`,
     );
   }
-  return normalizeRuleNodeToRuntime(tree);
+  return tree as SplitLayoutNode;
 }
 
 /**
@@ -114,6 +77,7 @@ export function createDefaultSplitLayoutFromRule(
   for (const bp of SPLIT_BREAKPOINT_ORDER) {
     layouts[bp] = buildSplitLayoutFromRule(rule, bp);
   }
+
   return {
     layouts,
     breakpoints: DEFAULT_SPLIT_BREAKPOINTS,
@@ -122,6 +86,7 @@ export function createDefaultSplitLayoutFromRule(
 
 /**
  * Creates default split layout for given panel IDs (strategy.defaultLayout).
+ * This is a fallback when getInitialLayout is not provided.
  * Same simple horizontal tree for all breakpoints.
  *
  * @param panelIds - Panel IDs to include
@@ -149,10 +114,10 @@ export function createDefaultSplitLayout(panelIds: string[]): SplitLayoutModel {
   }
 
   const layouts = {
-    min3XL: singleRoot,
-    max4XL: singleRoot,
-    default: singleRoot,
-    max2XL: singleRoot,
+    lg: singleRoot,
+    md: singleRoot,
+    sm: singleRoot,
+    xs: singleRoot,
   };
 
   return {
@@ -233,7 +198,7 @@ export function deserializeSplitLayout(json: string): SplitLayoutModel {
     const parsed = JSON.parse(json) as unknown;
     if (!validateSplitLayoutModel(parsed)) {
       throw new Error(
-        "Invalid split layout: must have layouts (min3XL,max4XL,default,max2XL) and breakpoints",
+        "Invalid split layout: must have layouts (lg,md,sm,xs) and breakpoints",
       );
     }
     const layout = parsed as SplitLayoutModel & {

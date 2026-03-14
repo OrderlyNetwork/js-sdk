@@ -4,7 +4,7 @@
  * can use useSplitTradingDesktopContext() to access TradingState and layout-related props without prop drilling.
  */
 import React from "react";
-import type { DesktopLayoutProps } from "@orderly.network/trading";
+import type { DesktopLayoutProps } from "../types";
 
 /** Context value: full desktop layout props (TradingState + layout injection). Null when outside provider. */
 export const SplitTradingDesktopContext =

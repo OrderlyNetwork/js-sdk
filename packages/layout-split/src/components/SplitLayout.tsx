@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback } from "react";
+import React, { PropsWithChildren, useCallback, useMemo } from "react";
 import { cn } from "@orderly.network/ui";
 import type { SplitLayoutClassNames } from "../SplitPresetContext";
 import {
@@ -6,6 +6,40 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "./ui/resizable";
+
+/**
+ * Converts sizes array (e.g. ["40%", "auto", "30%"]) to defaultLayout object for ResizablePanelGroup.
+ * Ensures preset sizes are applied to child panels (including nested split/sort).
+ * Skips "fixed" entries (they are not wrapped in ResizablePanel).
+ */
+function sizesToDefaultLayout(
+  sizes: string[] | undefined,
+  count: number,
+): Record<string, number> | undefined {
+  if (!sizes || sizes.length !== count) return undefined;
+  const result: Record<string, number> = {};
+  let fixedTotal = 0;
+  const autoIndices: number[] = [];
+  for (let i = 0; i < count; i++) {
+    const s = sizes[i];
+    if (s === "fixed") continue; // fixed panels are not in Group
+    const num = parseFloat(String(s).replace(/%/g, ""));
+    if (!isNaN(num)) {
+      result[String(i)] = Math.round(num);
+      fixedTotal += num;
+    } else {
+      autoIndices.push(i);
+    }
+  }
+  if (autoIndices.length > 0) {
+    const remainder = Math.max(0, 100 - fixedTotal);
+    const autoSize = remainder / autoIndices.length;
+    for (const i of autoIndices) {
+      result[String(i)] = Math.round(autoSize);
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
+}
 
 /** Per-panel constraints for minSize, maxSize (both "%" format), and fixed. */
 export interface PanelConstraints {
@@ -72,6 +106,12 @@ export function SplitLayout({
   const childArray = React.Children.toArray(children);
   const count = childArray.length;
 
+  /** Apply preset sizes to Group so child panels (including nested split/sort) get correct initial layout. */
+  const defaultLayout = useMemo(
+    () => sizesToDefaultLayout(sizes, count),
+    [sizes, count],
+  );
+
   const handleLayoutChanged = useCallback(
     (layout: { [id: string]: number }) => {
       const panelIds = Array.from({ length: count }, (_, i) => String(i));
@@ -100,6 +140,7 @@ export function SplitLayout({
   return (
     <ResizablePanelGroup
       orientation={orientation}
+      defaultLayout={defaultLayout}
       onLayoutChanged={handleLayoutChanged}
       className={cn(className, classNames?.panelGroup)}
       style={style}

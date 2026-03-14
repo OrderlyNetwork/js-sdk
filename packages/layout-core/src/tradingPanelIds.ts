@@ -13,6 +13,7 @@ export const TRADING_PANEL_IDS = {
   ASSETS: "orderEntryAssets",
   // MAIN: "orderEntryMain",
   MARKETS: "markets",
+  HORIZONTAL_MARKETS: "horizontalMarkets",
 } as const;
 
 export type TradingPanelId =

@@ -6,6 +6,7 @@ import {
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
+  HorizontalMarketsWidget,
 } from "@orderly.network/markets";
 import { cn } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
@@ -78,7 +79,7 @@ export interface TradingPanelRegistryProps {
  */
 export function createTradingPanelRegistry(
   props: TradingPanelRegistryProps,
-  t: (key: string) => string,
+  // t: (key: string) => string,
 ): PanelRegistry {
   const {
     symbol,
@@ -210,22 +211,34 @@ export function createTradingPanelRegistry(
     props: {},
   });
 
+  panels.set(TRADING_PANEL_IDS.HORIZONTAL_MARKETS, {
+    node: (
+      <HorizontalMarketsWidget
+        symbol={props.symbol}
+        onSymbolChange={props.onSymbolChange}
+        maxItems={-1}
+      />
+    ),
+    props: {},
+  });
+
   // markets: always register; layout plugin decides whether to show (e.g. include in layout model)
   const marketsWidget = (
     <SideMarketsWidget
-      resizeable={resizeable}
+      // resizeable={resizeable}
       symbol={symbol}
       onSymbolChange={onSymbolChange}
     />
   );
   panels.set(TRADING_PANEL_IDS.MARKETS, {
-    node: (
-      <div onTransitionEnd={() => setAnimating?.(false)}>
-        {!animating && marketsWidget}
-      </div>
-    ),
-    props: { title: t("common.markets") },
+    node: marketsWidget,
+    // node: (
+    //   <div onTransitionEnd={() => setAnimating?.(false)}>
+    //     {!animating && marketsWidget}
+    //   </div>
+    // ),
+    props: { title: "" },
   });
-
+  // t("common.markets")
   return panels;
 }

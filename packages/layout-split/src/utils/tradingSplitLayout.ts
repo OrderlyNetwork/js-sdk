@@ -8,7 +8,7 @@ import { createDefaultSplitLayoutFromRule } from "./splitLayoutUtils";
 
 /** Options kept for API compatibility; layout structure comes from preset rule. */
 export interface TradingSplitLayoutOptions {
-  variant?: "default" | "max2XL";
+  variant?: "md" | "sm";
   layoutSide?: "left" | "right";
   mainSplitSize?: string;
   orderBookSplitSize?: string;

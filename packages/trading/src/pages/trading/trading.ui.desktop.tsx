@@ -183,7 +183,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   );
 
   const panels = useMemo(
-    () => createTradingPanelRegistry(registryProps, t),
+    () => createTradingPanelRegistry(registryProps),
     [registryProps],
   );
 
@@ -240,7 +240,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   return (
     <Box
-      className={cn(defaultLayoutHostClassName, props.className)}
+      className={cn("oui-flex oui-flex-1 oui-overflow-hidden", props.className)}
       style={defaultLayoutHostStyle}
     >
       <LayoutHost

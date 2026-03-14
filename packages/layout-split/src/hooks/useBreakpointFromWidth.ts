@@ -15,7 +15,7 @@ export function getBreakpointKeyForWidth(
   for (const bp of SPLIT_BREAKPOINT_ORDER) {
     if (width >= breakpoints[bp]) return bp;
   }
-  return "xxs";
+  return "xs";
 }
 
 export interface UseBreakpointFromWidthOptions {
@@ -31,7 +31,7 @@ export interface UseBreakpointFromWidthOptions {
  *
  * @param containerRef - Ref to the layout container element
  * @param options - Optional breakpoints and fallbackWidth
- * @returns Current breakpoint key (lg | md | sm | xs | xxs)
+ * @returns Current breakpoint key (lg | md | sm | xs)
  */
 export function useBreakpointFromWidth(
   containerRef: React.RefObject<HTMLElement | null>,

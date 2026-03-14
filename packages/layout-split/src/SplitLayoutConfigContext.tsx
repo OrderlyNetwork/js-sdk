@@ -12,7 +12,7 @@ export interface SplitLayoutConfigValue {
   panels: PanelRegistry;
   /** Current layout model with breakpoint roots. */
   layout: SplitLayoutModel;
-  /** Current breakpoint key (e.g. "default", "max2XL"). */
+  /** Current breakpoint key (e.g. "md", "sm"). */
   breakpoint: keyof SplitLayoutModel["layouts"];
   /** Callback when layout model changes. */
   onLayoutChange: (layout: SplitLayoutModel) => void;

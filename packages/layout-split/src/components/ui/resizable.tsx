@@ -9,7 +9,7 @@ function ResizablePanelGroup({
     <ResizablePrimitive.Group
       data-slot="resizable-panel-group"
       className={cn(
-        "aria-[orientation=vertical]:oui-flex-col oui-flex oui-size-full",
+        "aria-[orientation=vertical]:oui-flex-col oui-flex oui-w-full oui-h-full",
         className,
       )}
       {...props}
