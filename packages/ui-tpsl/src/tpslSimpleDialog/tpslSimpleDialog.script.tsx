@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
   useLocalStorage,
+  useMarginModeBySymbol,
   useMemoizedFn,
   usePositionStream,
   useSymbolsInfo,
@@ -28,8 +29,9 @@ export type TPSLBuilderOptions = {
 export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   const { type, triggerPrice, symbol } = options;
   const symbolInfo = useSymbolsInfo();
+  const { marginMode } = useMarginModeBySymbol(symbol ?? "");
   const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
-  const position = positions?.[0];
+  const position = positions?.find((item) => item.margin_mode === marginMode);
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { t } = useTranslation();
@@ -49,8 +51,9 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   ] = useTPSLOrder(
     {
       symbol: symbol!,
-      position_qty: position?.position_qty,
-      average_open_price: position?.average_open_price,
+      position_qty: position?.position_qty ?? 0,
+      average_open_price: position?.average_open_price ?? 0,
+      margin_mode: position?.margin_mode,
     },
     {
       defaultOrder: undefined,
@@ -76,8 +79,8 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   };
 
   const maxQty = useMemo(
-    () => Math.abs(Number(position.position_qty)),
-    [position.position_qty],
+    () => Math.abs(Number(position?.position_qty ?? 0)),
+    [position?.position_qty],
   );
 
   useEffect(() => {
@@ -93,6 +96,9 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   }, [type, triggerPrice, maxQty]);
 
   const onSubmit = async () => {
+    if (!position) {
+      return Promise.reject(new Error("Position is required"));
+    }
     try {
       const validOrder = await validate();
       if (validOrder) {

@@ -114,6 +114,24 @@ export const orderEntry = {
   "orderEntry.initialMarginTotal.error.min":
     "The initial margin should be greater or equal to {{value}} USDC",
 
+  // Margin mode (Cross / Isolated)
+  "marginMode.switchMarginMode": "Switch Margin Mode",
+  "marginMode.cross": "Cross",
+  "marginMode.isolated": "Isolated",
+  "marginMode.crossMargin": "Cross Margin",
+  "marginMode.isolatedMargin": "Isolated Margin",
+  "marginMode.crossMarginDescription":
+    "Margin and PnL are shared across positions. You may lose all positions if liquidation occurs.",
+  "marginMode.isolatedMarginDescription":
+    "Margin and PnL are independent for each position. You'll only lose the current position if liquidation occurs.",
+  "marginMode.current": "Current",
+  "marginMode.marginModeSettings": "Margin mode settings",
+  "marginMode.updatedSuccessfully": "Updated successfully",
+  "marginMode.perpetualFutures": "Perpetual futures",
+  "marginMode.searchPlaceholder": "Search",
+  "marginMode.selectAll": "Select all",
+  "marginMode.setAs": "Set as",
+
   "orderEntry.startPrice.error.required": "Start price is required",
   "orderEntry.startPrice.error.min":
     "Start price must be greater than {{value}}",

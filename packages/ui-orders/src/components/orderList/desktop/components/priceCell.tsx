@@ -92,6 +92,11 @@ export const PriceCell = (props: {
       data.client_order_id = order.client_order_id;
     }
 
+    // include original margin_mode so backend receives it when editing
+    if (order.margin_mode !== undefined) {
+      data.margin_mode = order.margin_mode;
+    }
+
     if (isAlgoOrder) {
       order_id = order.algo_order_id as number;
       data = {

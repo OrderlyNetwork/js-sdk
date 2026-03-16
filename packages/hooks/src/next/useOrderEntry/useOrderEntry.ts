@@ -10,11 +10,13 @@ import {
   TrackerEventName,
   OrderSide,
   EMPTY_OBJECT,
+  MarginMode,
 } from "@orderly.network/types";
 import { Decimal, getBBOType, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
+  useFundingRatesStore,
   useLeverageBySymbol,
   useMaxQty,
   useSymbolsInfo,
@@ -30,6 +32,7 @@ import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
+import { getOrderReferencePriceFromOrder } from "../../utils/order/orderPrice";
 import { getScaledOrderSkew } from "../../utils/order/scaledOrder";
 import {
   calcEstLeverage,
@@ -42,6 +45,7 @@ import {
   appendOrderMetadata,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
+import { useOrderStore } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
@@ -179,7 +183,6 @@ const useOrderEntry = (
   if (!symbol) {
     throw new SDKError("Symbol is required");
   }
-
   const ee = useEventEmitter();
   const { track } = useTrack();
 
@@ -199,6 +202,7 @@ const useOrderEntry = (
   const lastChangedField = useRef<keyof FullOrderState | undefined>();
   const lastOrderTypeExt = useRef<OrderType>();
   const lastLevel = useRef<OrderLevel>();
+  const fundingRates = useFundingRatesStore();
 
   const calculateTPSL_baseOn = useRef<{ tp: string; sl: string }>({
     tp: "",
@@ -209,7 +213,12 @@ const useOrderEntry = (
   const symbolConfig = useSymbolsInfo();
   const accountInfo = useAccountInfo();
   const positions = usePositions();
-  const symbolLeverage = useLeverageBySymbol(symbol);
+  const entry = useOrderStore((s) => s.entry);
+  const effectiveMarginMode =
+    (options as OrderEntryParameters[1])?.initialOrder?.margin_mode ??
+    entry?.margin_mode ??
+    MarginMode.CROSS;
+  const symbolLeverage = useLeverageBySymbol(symbol, effectiveMarginMode);
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
   const markPrice = actions.getMarkPriceBySymbol(symbol);
@@ -237,18 +246,32 @@ const useOrderEntry = (
     getCreateOrderUrl(formattedOrder),
   );
 
-  const maxBuyQtyValue = useMaxQty(
-    symbol,
-    OrderSide.BUY,
-    formattedOrder.reduce_only,
-  );
-  const maxSellQtyValue = useMaxQty(
-    symbol,
-    OrderSide.SELL,
-    formattedOrder.reduce_only,
-  );
+  // Calculate reference price for the new order using best bid/ask when available.
+  const bestAskBid = askAndBid.current?.[0] || [];
+  const referencePriceFromOrder =
+    bestAskBid.length >= 2 && formattedOrder.order_type && formattedOrder.side
+      ? getOrderReferencePriceFromOrder(formattedOrder, bestAskBid)
+      : null;
+
+  const maxBuyQtyValue = useMaxQty(symbol, OrderSide.BUY, {
+    reduceOnly: formattedOrder.reduce_only,
+    marginMode: effectiveMarginMode,
+    currentOrderReferencePrice:
+      referencePriceFromOrder && referencePriceFromOrder > 0
+        ? referencePriceFromOrder
+        : undefined,
+  });
+  const maxSellQtyValue = useMaxQty(symbol, OrderSide.SELL, {
+    reduceOnly: formattedOrder.reduce_only,
+    marginMode: effectiveMarginMode,
+    currentOrderReferencePrice:
+      referencePriceFromOrder && referencePriceFromOrder > 0
+        ? referencePriceFromOrder
+        : undefined,
+  });
   const maxQtyValue =
     formattedOrder.side === OrderSide.BUY ? maxBuyQtyValue : maxSellQtyValue;
+
   // @ts-ignore
   const maxQty = options.maxQty ?? maxQtyValue;
   const maxQtys = useMemo(
@@ -402,7 +425,10 @@ const useOrderEntry = (
   }, []);
 
   useEffect(() => {
-    // console.log("markPrice", markPrice);
+    // Skip if formattedOrder.symbol doesn't match current symbol (stale state from previous symbol)
+    if (formattedOrder.symbol !== symbol) {
+      return;
+    }
 
     if (
       (formattedOrder.order_type === OrderType.MARKET ||
@@ -421,7 +447,7 @@ const useOrderEntry = (
       }
       orderEntryActions.onMarkPriceChange(markPrice, Array.from(baseOn));
     }
-  }, [markPrice, formattedOrder.order_type]);
+  }, [markPrice, formattedOrder.order_type, formattedOrder.symbol, symbol]);
 
   const prepareData = useCallback(() => {
     return {
@@ -577,7 +603,8 @@ const useOrderEntry = (
     );
   };
 
-  const { freeCollateral, totalCollateral } = useCollateral();
+  const { freeCollateral, freeCollateralUSDCOnly, totalCollateral } =
+    useCollateral();
 
   const currentPosition = useMemo(() => {
     const rows = positions ?? [];
@@ -596,6 +623,8 @@ const useOrderEntry = (
       return null;
     }
 
+    const sumUnitaryFunding = fundingRates[symbol]?.sum_unitary_funding ?? 0;
+
     const estLiqPrice = calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
       markPrice,
       totalCollateral,
@@ -604,6 +633,7 @@ const useOrderEntry = (
       symbol,
       positions,
       symbolInfo,
+      sumUnitaryFunding,
     });
 
     return estLiqPrice;
@@ -615,6 +645,7 @@ const useOrderEntry = (
     symbol,
     maxQty,
     symbolInfo,
+    fundingRates,
   ]);
 
   const estLiqPriceDistance = useMemo(() => {
@@ -786,7 +817,10 @@ const useOrderEntry = (
       validator: validateOrder,
       validate: validateOrder,
     },
-    freeCollateral,
+    freeCollateral:
+      effectiveMarginMode === MarginMode.ISOLATED
+        ? freeCollateralUSDCOnly
+        : freeCollateral,
     setValue: useMemoizedFn(setValue),
     setValues: useMemoizedFn(setValues),
     symbolInfo: symbolInfo || EMPTY_OBJECT,

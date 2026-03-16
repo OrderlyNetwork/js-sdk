@@ -70,6 +70,10 @@ export const TrailingCallbackCell = (props: {
       callback_value: isCallbackValue ? value : undefined,
       callback_rate: isCallbackRate ? `${Number(value) / 100}` : undefined,
     };
+    // include original margin_mode so backend receives it when editing
+    if (order.margin_mode !== undefined) {
+      data.margin_mode = order.margin_mode;
+    }
 
     editAlgoOrder(order.algo_order_id.toString(), data)
       .then((result: any) => {

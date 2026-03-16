@@ -1,5 +1,10 @@
 import { i18n } from "@orderly.network/i18n";
-import { Decimal, commify, getTrailingStopPrice } from "@orderly.network/utils";
+import {
+  Decimal,
+  commify,
+  getTrailingStopPrice,
+  getPrecisionByNumber,
+} from "@orderly.network/utils";
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import {
@@ -18,6 +23,10 @@ import {
   isActivatedQuantityTpsl,
   isPositionTpsl,
   isTpslOrder,
+  isTpOrder,
+  isSlOrder,
+  formatPnl,
+  textDash,
 } from "./tpsl.util";
 import { TpslCalService } from "./tpslCal.service";
 
@@ -46,7 +55,10 @@ export class OrderLineService {
     this.cleanOldPendingOrders(this.pendingOrders);
     this.tpslCalService.prepareTpslPnlMap(this.pendingOrders);
     this.tpslCalService.prepareQuantityTpslNoMap(this.pendingOrders);
-    this.pendingOrders.forEach((order) => this.renderPendingOrder(order));
+    const needDrawMarginMode = this.pendingOrders.length > 1;
+    this.pendingOrders.forEach((order) =>
+      this.renderPendingOrder(order, needDrawMarginMode),
+    );
   }
 
   updatePositions(positions: ChartPosition[] | null) {
@@ -60,12 +72,12 @@ export class OrderLineService {
       .forEach((order) => this.renderPendingOrder(order));
   }
 
-  renderPendingOrder(order: any) {
+  renderPendingOrder(order: any, needDrawMarginMode: boolean = false) {
     const orderId = OrderLineService.getOrderId(order);
     if (!orderId) {
       return;
     }
-    const orderLine = this.drawOrderLine(orderId, order);
+    const orderLine = this.drawOrderLine(orderId, order, needDrawMarginMode);
 
     if (orderLine) {
       this.pendingOrderLineMap.set(orderId, orderLine);
@@ -219,19 +231,18 @@ export class OrderLineService {
     return order.algo_order_id || order.order_id;
   };
 
+  /**
+   * Builds TP/SL label body: type + PnL (e.g. "Take profit | 123.45 USDC").
+   * Falls back to "--" when PnL unavailable.
+   */
   getTPSLTextWithTpsl(text: string, pendingOrder: OrderInterface) {
     const orderId = getOrderId(pendingOrder);
     if (!orderId) {
       return text;
     }
-
-    // first hiden pnl
-    // const unrealPnl = this.tpslCalService.getTpslPnlMap().get(orderId);
-    // if (unrealPnl) {
-    //   return `${text} | PnL ${unrealPnl}`;
-    // }
-
-    return text;
+    const pnlStr = this.tpslCalService.getFormattedEstPnl(pendingOrder);
+    const displayPnl = pnlStr ? pnlStr : formatPnl(undefined);
+    return `${text} | ${displayPnl} USDC`;
   }
 
   getTPSLText(pendingOrder: any) {
@@ -247,32 +258,54 @@ export class OrderLineService {
     return null;
   }
 
+  /**
+   * Returns quantity string for order line. For TP/SL: "qty (percent%)".
+   * Uses baseDp from broker.getSymbolInfo; falls back to CHART_QTY_DECIMAL.
+   */
   getOrderQuantity(pendingOrder: OrderInterface) {
     if (pendingOrder.algo_order_id) {
-      if (
+      const isTpsl =
         isActivatedPositionTpsl(pendingOrder) ||
-        isPositionTpsl(pendingOrder)
-      ) {
-        return "100%";
-      }
-      if (isActivatedQuantityTpsl(pendingOrder)) {
-        const qty = new Decimal(pendingOrder.quantity).minus(
-          pendingOrder.executed ?? 0,
-        );
-        const per = qty
-          .div(new Decimal(pendingOrder.position_qty!))
-          .mul(100)
-          .todp(2)
-          .toNumber();
-        return `${Math.min(Math.abs(per), 100).toString()}%`;
+        isPositionTpsl(pendingOrder) ||
+        isActivatedQuantityTpsl(pendingOrder);
+      if (isTpsl) {
+        const percentStr =
+          isActivatedPositionTpsl(pendingOrder) || isPositionTpsl(pendingOrder)
+            ? "100%"
+            : (() => {
+                const qty = new Decimal(pendingOrder.quantity).minus(
+                  pendingOrder.executed ?? 0,
+                );
+                const per = qty
+                  .div(new Decimal(pendingOrder.position_qty!))
+                  .mul(100)
+                  .todp(0)
+                  .toNumber();
+                return `${Math.min(Math.abs(per), 100).toString()}%`;
+              })();
+        const qty = this.tpslCalService.getTpslQuantity(pendingOrder);
+        const symbolInfo = this.broker.getSymbolInfo?.(pendingOrder.symbol);
+        const baseDp =
+          symbolInfo?.baseTick != null
+            ? getPrecisionByNumber(symbolInfo.baseTick)
+            : CHART_QTY_DECIMAL;
+        const qtyStr =
+          qty != null
+            ? commify(new Decimal(qty).todp(baseDp).toString())
+            : textDash;
+        return `${qtyStr} (${percentStr})`;
       }
     }
     return commify(new Decimal(pendingOrder.quantity).toString());
   }
 
-  drawOrderLine(orderId: number, pendingOrder: any) {
+  drawOrderLine(
+    orderId: number,
+    pendingOrder: any,
+    needDrawMarginMode: boolean = false,
+  ) {
     // const text = OrderLineService.getText(pendingOrder);
-    const text = isTpslOrder(pendingOrder)
+    let text = isTpslOrder(pendingOrder)
       ? this.getTPSLText(pendingOrder)
       : OrderLineService.getText(pendingOrder);
     if (text === null) {
@@ -288,31 +321,45 @@ export class OrderLineService {
       return null;
     }
 
-    const color =
+    // Base colors from side; for TP/SL orders override by algo_type (TP = profit/up, SL = loss/down)
+    let color =
       pendingOrder.side === SideType.BUY
         ? colorConfig.upColor
         : colorConfig.downColor;
-    const borderColor =
+    let borderColor =
       pendingOrder.side === SideType.BUY
         ? colorConfig.pnlUpColor
         : colorConfig.pnlDownColor;
+    if (isTpslOrder(pendingOrder)) {
+      if (isTpOrder(pendingOrder)) {
+        color = colorConfig.upColor;
+        borderColor = colorConfig.pnlUpColor;
+      } else if (isSlOrder(pendingOrder)) {
+        color = colorConfig.downColor;
+        borderColor = colorConfig.pnlDownColor;
+      }
+    }
     const price = OrderLineService.getOrderPrice(pendingOrder);
     const lineLength = 100;
     const quantity = this.getOrderQuantity(pendingOrder);
     const textColor = colorConfig.textColor;
+
+    if (needDrawMarginMode) {
+      text += ` (${pendingOrder.margin_mode === "ISOLATED" ? "Isolated" : "Cross"})`;
+    }
 
     orderLine
       .setText(text)
       .setCancelButtonIconColor(colorConfig.closeIcon!)
       .setCancelButtonBorderColor(color!)
       .setBodyTextColor(textColor!)
-      .setBodyBorderColor(color!)
-      .setQuantityBorderColor(color!)
+      .setBodyBorderColor(borderColor!)
+      .setQuantityBorderColor(borderColor!)
       .setQuantityTextColor(color!)
       // .setBodyBackgroundColor(color)
       .setLineColor(color!)
       .setLineLength(lineLength)
-      .setQuantity(quantity ?? "")
+      .setQuantity(quantity)
       .setPrice(price);
 
     if (this.broker.mode !== ChartMode.MOBILE) {

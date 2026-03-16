@@ -3,6 +3,7 @@ import {
   DistributionType,
   OrderlyOrder,
   OrderType,
+  MarginMode,
 } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { getOrderPrice } from "./orderPrice";
@@ -175,6 +176,7 @@ export function calcScaledOrderBatchBody(
       skew,
       reduce_only,
       visible_quantity,
+      margin_mode,
     } = order;
 
     const prices = calcScaledOrderPrices({
@@ -203,6 +205,7 @@ export function calcScaledOrderBatchBody(
         order_quantity: qtys[index],
         order_price: price,
         reduce_only,
+        margin_mode: margin_mode || MarginMode.CROSS, // Default to CROSS if not provided for backward compatibility
         // it will be used for identify the scaled order from ws
         client_order_id: `scaled_${index}_${now}`,
       };

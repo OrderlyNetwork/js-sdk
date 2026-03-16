@@ -5,6 +5,7 @@
 export { PnLBarChart } from "./orderly/pnlBar";
 export { PnlLineChart } from "./orderly/pnlLine";
 export { PnlAreaChart } from "./orderly/pnlArea";
+export { VolumeAreaChart } from "./orderly/volumeArea";
 export {
   AssetLineChart,
   type PnlLineChartProps,

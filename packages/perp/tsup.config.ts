@@ -6,6 +6,7 @@ export default defineConfig((options) => ({
   target: "es6",
   splitting: false,
   sourcemap: true,
+  treeshake: true,
   clean: !options.watch,
   dts: true,
   tsconfig: "tsconfig.build.json",

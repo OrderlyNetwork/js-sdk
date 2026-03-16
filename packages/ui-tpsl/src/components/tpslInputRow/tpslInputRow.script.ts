@@ -4,7 +4,12 @@ import {
   useLeverageBySymbol,
 } from "@orderly.network/hooks";
 import { order } from "@orderly.network/perp";
-import { OrderSide, OrderType, PositionType } from "@orderly.network/types";
+import {
+  MarginMode,
+  OrderSide,
+  OrderType,
+  PositionType,
+} from "@orderly.network/types";
 
 export type Props = {
   disableOrderTypeSelector?: boolean;
@@ -30,12 +35,14 @@ export type Props = {
   symbolLeverage?: number;
   side: OrderSide;
   inputWarnNode?: React.ReactNode;
+  marginMode?: MarginMode;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   const { values, side, type, rootOrderPrice } = props;
   // if symbolLeverage is not provided, get it from useLeverageBySymbol
   const symbolLeverage = useLeverageBySymbol(
     props.symbolLeverage ? undefined : props.symbol,
+    props.marginMode,
   );
 
   const leverage = props.symbolLeverage || symbolLeverage;

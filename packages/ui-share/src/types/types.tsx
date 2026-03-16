@@ -93,6 +93,7 @@ export type ShareOptions =
 export type ShareEntity = {
   symbol: string;
   side: "LONG" | "SHORT";
+  marginMode?: "isolated" | "cross";
   pnl?: number;
   roi?: number;
   openPrice?: number;

@@ -180,7 +180,11 @@ const calculateAccountValue = (
     if (!price) {
       return acc;
     }
-    return acc + new Decimal(holding.holding).times(price).toNumber();
+    return new Decimal(holding.holding)
+      .times(price)
+      .add(holding.isolated_margin ?? 0)
+      .add(acc)
+      .toNumber();
   }, 0);
   return holding + unsettlePnl;
 };

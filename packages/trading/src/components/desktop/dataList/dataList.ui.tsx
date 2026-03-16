@@ -86,7 +86,7 @@ export const LiquidationTab: React.FC = () => {
         }
         arrow={{ className: "oui-fill-base-6" }}
       >
-        <span className="oui-hidden group-data-[state=active]:oui-block oui-cursor-pointer">
+        <span className="oui-hidden oui-cursor-pointer group-data-[state=active]:oui-block">
           <InfoCircleIcon />
         </span>
       </Tooltip>

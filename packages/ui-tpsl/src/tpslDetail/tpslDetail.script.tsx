@@ -21,6 +21,7 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
   const { position } = props;
 
   const symbol = position.symbol;
+  const marginMode = position.margin_mode;
   const symbolInfo = useSymbolsInfo()[symbol];
 
   const ee = useEventEmitter();
@@ -131,12 +132,12 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
   useEffect(() => {
     if (tpslOrders) {
       const { fullPositionOrder, partialPositionOrders } =
-        findPositionTPSLFromOrders(tpslOrders, symbol);
+        findPositionTPSLFromOrders(tpslOrders, symbol, marginMode);
 
       setFullPositionOrders(fullPositionOrder ? [fullPositionOrder] : []);
       setPartialPositionOrders(partialPositionOrders ?? []);
     }
-  }, [tpslOrders, symbol]);
+  }, [tpslOrders, symbol, marginMode]);
 
   return {
     symbolInfo,
