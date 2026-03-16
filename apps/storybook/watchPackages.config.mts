@@ -249,12 +249,14 @@ const layout: Package[] = [
     path: "../../packages/layout-split/src",
     watch: true,
     alwaysWatch: true,
+    includeCSS: true,
   },
   {
     package: "@orderly.network/layout-grid",
     path: "../../packages/layout-grid/src",
     watch: true,
     alwaysWatch: true,
+    includeCSS: true,
   },
 ];
 
