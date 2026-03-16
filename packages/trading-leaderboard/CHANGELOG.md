@@ -1,5 +1,21 @@
 # @orderly.network/trading-leaderboard
 
+## 2.10.2
+
+### Patch Changes
+
+- publish
+- 95b95a6: publish
+- Updated dependencies
+- Updated dependencies [95b95a6]
+  - @orderly.network/react-app@2.10.2
+  - @orderly.network/hooks@2.10.2
+  - @orderly.network/i18n@2.10.2
+  - @orderly.network/types@2.10.2
+  - @orderly.network/ui@2.10.2
+  - @orderly.network/ui-connector@2.10.2
+  - @orderly.network/utils@2.10.2
+
 ## 2.10.2-alpha.0
 
 ### Patch Changes
