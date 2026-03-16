@@ -1,7 +1,8 @@
 import { FC, useEffect, useRef } from "react";
-import { useChartContext } from "../hooks/chartContext";
 import { axisBottom, axisLeft } from "d3-axis";
 import { select } from "d3-selection";
+import { useChartContext } from "../hooks/chartContext";
+
 // import
 export type AxisProps = {
   // direction?: "x" | "y";
@@ -44,13 +45,15 @@ export const Axis: FC<AxisProps> = (props) => {
       .call(axis)
       .call((g) => g.select(".domain").remove())
       .call((g) =>
-        g.selectAll(".tick line").attr("stroke", "rgba(255,255,255,0.08)")
+        g
+          .selectAll(".tick line")
+          .attr("stroke", "rgba(var(--oui-color-line), 0.08)"),
       )
       .call((g) =>
         g
           .selectAll(".tick text")
-          .attr("fill", "rgba(255,255,255,0.54)")
-          .attr("font-size", 10)
+          .attr("fill", "rgba(var(--oui-color-base-foreground)/0.54)")
+          .attr("font-size", 10),
       );
   }, [scale, orientation]);
 

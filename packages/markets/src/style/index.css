@@ -1,3 +1,4 @@
+/** TODO: remove this, use packages/ui/src/tailwind/scrollBar.ts config */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
   height: 0px;
@@ -9,7 +10,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(255,255,255,0.04);
+  background-color: rgb(var(--oui-color-line) / 0.04);
   border-radius: 4px;
 }
 
@@ -17,7 +18,7 @@
   background-color: transparent;
 }
 
-
+/** TODO: remove this, use packages/ui/src/tailwind/scrollBar.ts config */
 .hide-scrollbar::-webkit-scrollbar {
   width: 0px;
   height: 0px;

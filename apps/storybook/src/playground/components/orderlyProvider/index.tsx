@@ -6,28 +6,18 @@ import { WalletConnectorProvider } from "../../../components/orderlyProvider/wal
 import { useEnvFormUrl } from "../../hooks/useEnvFormUrl";
 import { useNav } from "../../hooks/useNav";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import { useTheme } from "../../hooks/useTheme";
 import { LocaleProvider } from "./localeProvider";
-
-const ScrollToTop: React.FC = () => {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
-  return null;
-};
 
 export const OrderlyProvider: React.FC = () => {
   const { onRouteChange } = useNav();
   usePageTitle();
-  useTheme();
   const { networkId, brokerId, brokerName, env, usePrivy, asyncLoadLocale } =
     useEnvFormUrl();
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
       <LocaleProvider asyncLoadLocale={asyncLoadLocale}>
-        <WalletConnectorProvider usePrivy={usePrivy}>
+        <WalletConnectorProvider usePrivy={usePrivy} networkId={networkId}>
           <OrderlyAppRootProvider
             networkId={networkId}
             brokerId={brokerId}
@@ -42,4 +32,13 @@ export const OrderlyProvider: React.FC = () => {
       </LocaleProvider>
     </RouteProvider>
   );
+};
+
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+  return null;
 };

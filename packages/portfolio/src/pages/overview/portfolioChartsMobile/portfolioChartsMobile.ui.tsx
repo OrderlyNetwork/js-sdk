@@ -73,14 +73,22 @@ export const PortfolioChartsMobileUI: React.FC<
             <>
               <defs>
                 <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
-                  <stop stopColor="#00B49E" offset="0%" stopOpacity={0.5} />
-                  <stop stopColor="#00B49E" offset="100%" stopOpacity={0} />
+                  <stop
+                    stopColor="rgb(var(--oui-color-success))"
+                    offset="0%"
+                    stopOpacity={0.5}
+                  />
+                  <stop
+                    stopColor="rgb(var(--oui-color-success))"
+                    offset="100%"
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <Area
                 type="natural"
                 dataKey="account_value"
-                stroke={"rgb(41, 233, 169)"}
+                stroke="rgb(var(--oui-color-trading-profit))"
                 strokeWidth={1.5}
                 dot={false}
                 isAnimationActive={false}

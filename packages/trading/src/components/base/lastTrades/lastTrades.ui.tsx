@@ -1,9 +1,9 @@
 import React, { FC, ReactNode } from "react";
-import { Box, cn, Grid, ListView, Text } from "@orderly.network/ui";
-import { LastTradesState } from "./lastTrades.script";
-import { OrderSide } from "@orderly.network/types";
-import { commifyOptional } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderSide } from "@orderly.network/types";
+import { Box, cn, Grid, ListView, Text } from "@orderly.network/ui";
+import { commifyOptional } from "@orderly.network/utils";
+import { LastTradesState } from "./lastTrades.script";
 
 export const LastTrades: FC<
   LastTradesState & {
@@ -23,8 +23,9 @@ export const LastTrades: FC<
   return (
     <Box
       className={cn(
+        "oui-lastTrades",
         "oui-grid oui-grid-rows=[auto,1fr] oui-h-full oui-w-full",
-        props.classNames?.root
+        props.classNames?.root,
       )}
       style={props.style}
     >
@@ -100,7 +101,7 @@ const Header = (props: { base: string; quote: string; className?: string }) => {
       classNames={{
         root: cn(
           "oui-text-base-contrast-54 oui-h-[32px] oui-sticky",
-          props.className
+          props.className,
         ),
       }}
     />
@@ -126,7 +127,7 @@ const List = (props: {
         "oui-last-trades-list",
         "oui-w-full oui-h-full",
         props.className,
-        "oui-overflow-auto"
+        "oui-overflow-auto",
       )}
       contentClassName="!oui-space-y-0 oui-pr-[-4px]"
       renderItem={(item, index) => {
@@ -146,13 +147,13 @@ const List = (props: {
                 item.side === OrderSide.BUY
                   ? "oui-text-trade-profit"
                   : "oui-text-trade-loss",
-                props.classNames?.mid
+                props.classNames?.mid,
               ),
               mid: cn(
                 item.side === OrderSide.BUY
                   ? "oui-text-trade-profit"
                   : "oui-text-trade-loss",
-                props.classNames?.right
+                props.classNames?.right,
               ),
             }}
           />

@@ -31,7 +31,7 @@ export const Countdown: FC<CountdownTimerProps> = ({ className }) => {
     }
 
     const calculateTimeLeft = (): TimeLeft => {
-      const targetDate = currentStage.start_time * 1000; // 转换为毫秒
+      const targetDate = currentStage.start_time * 1000; // Convert to milliseconds
       const now = new Date().getTime();
       const difference = targetDate - now;
 
@@ -91,12 +91,12 @@ export const Countdown: FC<CountdownTimerProps> = ({ className }) => {
       )}
       <Box className="oui-rounded-2xl" p={5}>
         <Flex direction="column" gap={2} itemAlign="center">
-          <Text className="oui-text-white/[.36] oui-text-lg">
+          <Text className="oui-text-base-contrast-36 oui-text-lg">
             {t("tradingPoints.startsIn")}
           </Text>
           <Flex gap={2} itemAlign="center" justify="center">
             <Flex direction="column" gap={1} itemAlign="center">
-              <Text className="oui-text-white/98 oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
+              <Text className="oui-text-base-contrast oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
                 {formatNumber(timeLeft.days)}
               </Text>
               <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-16 oui-text-center">
@@ -105,7 +105,7 @@ export const Countdown: FC<CountdownTimerProps> = ({ className }) => {
             </Flex>
             <Box className="oui-w-1 oui-h-1 oui-rounded-full oui-bg-base-4" />
             <Flex direction="column" gap={1} itemAlign="center">
-              <Text className="oui-text-white/98 oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
+              <Text className="oui-text-base-contrast oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
                 {formatNumber(timeLeft.hours)}
               </Text>
               <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-16 oui-text-center">
@@ -114,7 +114,7 @@ export const Countdown: FC<CountdownTimerProps> = ({ className }) => {
             </Flex>
             <Box className="oui-w-1 oui-h-1 oui-rounded-full oui-bg-base-4" />
             <Flex direction="column" gap={1} itemAlign="center">
-              <Text className="oui-text-white/98 oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
+              <Text className="oui-text-base-contrast oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
                 {formatNumber(timeLeft.minutes)}
               </Text>
               <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-16 oui-text-center">
@@ -123,7 +123,7 @@ export const Countdown: FC<CountdownTimerProps> = ({ className }) => {
             </Flex>
             <Box className="oui-w-1 oui-h-1 oui-rounded-full oui-bg-base-4" />
             <Flex direction="column" gap={1} itemAlign="center">
-              <Text className="oui-text-white/98 oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
+              <Text className="oui-text-base-contrast oui-text-4xl oui-font-bold oui-w-16 oui-text-center">
                 {formatNumber(timeLeft.seconds)}
               </Text>
               <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-16 oui-text-center">

@@ -8,6 +8,8 @@ import {
   EarnInactiveIcon,
   TradingActiveIcon,
   TradingInactiveIcon,
+  MarketsActiveIcon,
+  MarketsInactiveIcon,
 } from "@orderly.network/ui";
 import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../playground/constant";
@@ -36,58 +38,80 @@ const LeftSection = (props: {
   onSelect: (tab: string) => void;
   onSpotClick: () => void;
   onPerpsClick: () => void;
+  onRWAClick: () => void;
   onHoverTab: (tab: "perps" | null) => void;
 }) => {
-  const { selectedTab, onSelect, onSpotClick, onPerpsClick, onHoverTab } =
-    props;
+  const {
+    selectedTab,
+    onSelect,
+    onSpotClick,
+    onPerpsClick,
+    onRWAClick,
+    onHoverTab,
+  } = props;
   const { t } = useTranslation();
+
+  const menus = [
+    {
+      key: "spot",
+      activeIcon: <EarnActiveIcon size={20} />,
+      inactiveIcon: <EarnInactiveIcon size={20} />,
+      title: t("extend.spot"),
+      description: t("extend.spot.description"),
+      onClick: () => {
+        onSelect("spot");
+        onSpotClick();
+      },
+    },
+    {
+      key: "perps",
+      activeIcon: <TradingActiveIcon size={20} />,
+      inactiveIcon: <TradingInactiveIcon size={20} />,
+      title: t("extend.perps"),
+      description: t("extend.perps.description"),
+      onClick: () => {
+        onSelect("perps");
+        onPerpsClick();
+      },
+      onMouseEnter: () => {
+        onHoverTab("perps");
+      },
+    },
+    {
+      key: "rwa",
+      activeIcon: <MarketsActiveIcon size={20} />,
+      inactiveIcon: <MarketsInactiveIcon size={20} />,
+      title: t("common.rwa"),
+      description: t("common.rwa"),
+      onClick: () => {
+        onSelect("rwa");
+        onRWAClick();
+      },
+    },
+  ];
 
   return (
     <div className="oui-w-[240px] oui-flex-shrink-0 oui-rounded-lg">
-      <MenuItemRow
-        key="spot"
-        activeIcon={
-          selectedTab === "spot" ? (
-            <EarnActiveIcon size={20} />
-          ) : (
-            <EarnInactiveIcon size={20} />
-          )
-        }
-        title={t("extend.spot")}
-        description={t("extend.spot.description")}
-        onClick={() => {
-          onSelect("spot");
-          onSpotClick();
-        }}
-        onMouseEnter={() => {
-          onHoverTab(null);
-        }}
-        isActive={selectedTab === "spot"}
-        showArrow={true}
-      />
-
-      <MenuItemRow
-        key="perps"
-        className="oui-mt-1"
-        activeIcon={
-          selectedTab === "perps" ? (
-            <TradingActiveIcon size={20} />
-          ) : (
-            <TradingInactiveIcon size={20} />
-          )
-        }
-        title={t("extend.perps")}
-        description={t("extend.perps.description")}
-        onClick={() => {
-          onSelect("perps");
-          onPerpsClick();
-        }}
-        onMouseEnter={() => {
-          onHoverTab("perps");
-        }}
-        isActive={selectedTab === "perps"}
-        showArrow={true}
-      />
+      {menus.map((menu) => {
+        const isActive = selectedTab === menu.key;
+        return (
+          <MenuItemRow
+            key={menu.key}
+            activeIcon={isActive ? menu.activeIcon : menu.inactiveIcon}
+            title={menu.title}
+            description={menu.description}
+            onClick={menu.onClick}
+            onMouseEnter={
+              menu.onMouseEnter ??
+              (() => {
+                onHoverTab(null);
+              })
+            }
+            isActive={isActive}
+            showArrow={true}
+          />
+        );
+      })}
     </div>
   );
 };
@@ -149,9 +173,14 @@ export const customTradeSubMenuRender = () => {
       onRouteChange({ href: PathEnum.Perp, name: "perps" });
     };
 
+    const handleRWAClick = () => {
+      onRouteChange({ href: PathEnum.Rwa, name: "rwa" });
+    };
+
     useEffect(() => {
       const pathname = location.pathname || "";
       if (pathname.includes(PathEnum.Swap)) setSelectedTab("spot");
+      if (pathname.includes(PathEnum.Rwa)) setSelectedTab("rwa");
     }, [location.pathname]);
 
     const showPerpsRightSection =
@@ -170,6 +199,7 @@ export const customTradeSubMenuRender = () => {
           onSelect={setSelectedTab}
           onSpotClick={handleSpotClick}
           onPerpsClick={handlePerpsClick}
+          onRWAClick={handleRWAClick}
           onHoverTab={setHoverTab}
         />
         <div

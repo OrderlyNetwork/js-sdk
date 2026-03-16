@@ -8,7 +8,11 @@ export const OrderBook: React.FC<OrderBookState & { className?: string }> = (
   props,
 ) => {
   return (
-    <Box className="oui-font-semibold" width={"100%"} height={"100%"}>
+    <Box
+      className="oui-orderBook oui-font-semibold"
+      width={"100%"}
+      height={"100%"}
+    >
       {props.isMobile ? (
         <MWebOrderBook
           level={props.level}

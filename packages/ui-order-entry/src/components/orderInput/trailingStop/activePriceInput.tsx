@@ -21,7 +21,7 @@ export const ActivePriceInput = memo<ActivePriceInputProps>((props) => {
   } = useOrderEntryContext();
 
   return (
-    <div className="oui-group">
+    <div className="oui-orderEntry-activatedPriceInput-container oui-group">
       <CustomInput
         ref={activatedPriceInputRef}
         id="order_activated_price_input"
@@ -31,6 +31,7 @@ export const ActivePriceInput = memo<ActivePriceInputProps>((props) => {
         suffix={symbolInfo.quote}
         error={getErrorMsg("activated_price")}
         value={props.activated_price}
+        className="oui-orderEntry-activatedPriceInput"
         onChange={(val: string) => {
           setOrderValue("activated_price", val);
         }}

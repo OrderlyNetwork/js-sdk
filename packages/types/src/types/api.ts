@@ -664,6 +664,54 @@ export declare namespace API {
     symbol: string;
     leverage: number;
   }
+
+  export namespace Referral {
+    /** /v1/referral/multi_level/volume_prerequisite */
+    export interface VolumePrerequisite {
+      required_volume: number;
+      current_volume: number;
+    }
+
+    /** /v1/referral/multi_level/max_rebate_rate */
+    export interface MaxRebateRate {
+      max_rebate_rate: number;
+    }
+
+    /** /v1/referral/multi_level/rebate_info */
+    export interface MultiLevelRebateInfo {
+      referral_code: string;
+      max_rebate_rate: number;
+      default_referee_rebate_rate: number;
+      direct_invites?: number;
+      indirect_invites?: number;
+      direct_volume?: number;
+      indirect_volume?: number;
+      direct_rebate?: number;
+      indirect_rebate?: number;
+      direct_bonus_rebate_rate?: number;
+      direct_bonus_rebate?: number;
+    }
+
+    /** /v1/referral/multi_level/admin */
+    export interface MultiLevelReferralConfig {
+      enable: boolean;
+      required_volume: number;
+      max_rebate_rate: number;
+    }
+
+    /** /v1/referral/multi_level/statistics */
+    export interface MultiLevelStatistics {
+      direct_invites: number;
+      indirect_invites: number;
+      direct_traded: number;
+      indirect_traded: number;
+      direct_volume: number;
+      indirect_volume: number;
+      direct_rebate: number;
+      indirect_rebate: number;
+      direct_bonus_rebate?: number;
+    }
+  }
 }
 
 export declare namespace WSMessage {

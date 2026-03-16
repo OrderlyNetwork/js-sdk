@@ -175,7 +175,7 @@ const AxisPoint: FC<{ type: "past" | "active" | "future" }> = ({ type }) => {
         type === "active" &&
           "oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-start))] oui-to-[rgba(var(--oui-gradient-brand-end))]",
         type === "future" &&
-          "oui-border-[2.5px] oui-border-solid oui-border-base-contrast-80 oui-bg-[#07080A]",
+          "oui-border-[2.5px] oui-border-solid oui-border-base-contrast-80 oui-bg-base-10",
       ])}
     />
   );

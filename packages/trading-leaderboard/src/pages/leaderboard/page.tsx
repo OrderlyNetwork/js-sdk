@@ -63,8 +63,10 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
 
   if (currentCampaignId === "general") {
     return (
-      <Box px={3} className={cn("oui-mix-blend-screen")}>
-        <LeaderboardBackground backgroundSrc={backgroundSrc} />
+      <Box px={3}>
+        <div className="oui-mix-blend-screen">
+          <LeaderboardBackground backgroundSrc={backgroundSrc} />
+        </div>
         <GeneralLeaderboardWidget {...props} className="oui-mt-10" />
       </Box>
     );

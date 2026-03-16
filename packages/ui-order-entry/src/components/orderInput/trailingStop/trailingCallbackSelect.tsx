@@ -26,6 +26,7 @@ export const TrailingCallbackSelect: FC<TrailingCallbackSelectProps> = memo(
         options={options}
         classNames={{
           trigger: cn(
+            "oui-orderEntry-trailingCallbackSelect-btn",
             "oui-absolute oui-right-0 oui-top-1",
             "oui-w-[124px] oui-justify-end",
             "oui-text-base-contrast-36",
@@ -37,7 +38,8 @@ export const TrailingCallbackSelect: FC<TrailingCallbackSelectProps> = memo(
           align: "end",
           alignOffset: -1,
           sideOffset: -4,
-          className: "oui-border oui-border-line-6",
+          className:
+            "oui-orderEntry-trailingCallbackSelect-content oui-border oui-border-line-6",
         }}
       />
     );

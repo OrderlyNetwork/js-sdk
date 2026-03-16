@@ -145,7 +145,7 @@ const DesktopTimeInterval: React.FC<IProps> = (props) => {
             "hover:oui-text-base-contrast-80",
             "oui-break-normal oui-whitespace-nowrap",
             props.interval === item.value &&
-              "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded",
+              "oui-text-base-contrast-80 oui-bg-base-contrast-6 oui-rounded",
           )}
           id={item.value}
           onClick={() => props.changeInterval(item.value)}
@@ -220,7 +220,7 @@ export const MobileTimeInterval: React.FC<IProps> = (props) => {
               "oui-px-2",
               "oui-break-normal oui-whitespace-nowrap",
               props.interval === item.value &&
-                "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded",
+                "oui-text-base-contrast-80 oui-bg-base-contrast-6 oui-rounded",
             )}
             key={item.value}
             onClick={() => props.changeInterval(item.value)}

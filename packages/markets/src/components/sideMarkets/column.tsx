@@ -49,9 +49,9 @@ export const useSideMarketsColumns = (
                 className="oui-mr-1 oui-cursor-pointer"
               >
                 {record.isFavorite ? (
-                  <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+                  <FavoritesIcon2 className="oui-size-3" />
                 ) : (
-                  <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                  <UnFavoritesIcon2 className="oui-size-3" />
                 )}
               </Flex>
             </FavoritesDropdownMenuWidget>

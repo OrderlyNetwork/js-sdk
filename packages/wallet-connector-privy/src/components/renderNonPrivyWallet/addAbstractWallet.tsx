@@ -45,7 +45,7 @@ export function AddAbstractWallet() {
   }, [open]);
 
   return (
-    <div className="oui-rounded-[8px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]">
+    <div className="oui-rounded-[8px] oui-bg-base-10 oui-px-2 oui-py-[11px]">
       <Tooltip
         className="oui-z-[65] oui-max-w-[200px] oui-text-warning-darken"
         open={open}
@@ -84,7 +84,7 @@ export function AddAbstractWallet() {
         )}
       >
         <div
-          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-start  oui-gap-1 oui-bg-[#131519] oui-px-2 oui-py-[11px]"
+          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-start  oui-gap-1 oui-bg-base-9 oui-px-2 oui-py-[11px]"
           onClick={() =>
             connect({
               walletType: WalletConnectType.ABSTRACT,

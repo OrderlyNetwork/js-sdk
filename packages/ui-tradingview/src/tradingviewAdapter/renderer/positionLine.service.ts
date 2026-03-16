@@ -46,18 +46,31 @@ export class PositionLineService {
   }
 
   getBasePositionLine() {
-    return this.instance
+    const colorConfig = this.broker.colorConfig;
+    let line = this.instance
       .activeChart()
       .createPositionLine()
       .setTooltip(i18n.t("positions.closePosition"))
-      .setQuantityBackgroundColor(this.broker.colorConfig.chartBG!)
-      .setCloseButtonBackgroundColor(this.broker.colorConfig.chartBG!)
-      .setBodyTextColor(this.broker.colorConfig.textColor!)
-      .setQuantityTextColor(this.broker.colorConfig.qtyTextColor!)
-      .setBodyFont(this.broker.colorConfig.font!)
-      .setQuantityFont(this.broker.colorConfig.font!)
       .setLineLength(100)
       .setLineStyle(1);
+
+    if (colorConfig.chartBG) {
+      line = line
+        .setQuantityBackgroundColor(colorConfig.chartBG)
+        .setCloseButtonBackgroundColor(colorConfig.chartBG);
+    }
+    if (colorConfig.textColor) {
+      line = line.setBodyTextColor(colorConfig.textColor);
+    }
+    if (colorConfig.qtyTextColor) {
+      line = line.setQuantityTextColor(colorConfig.qtyTextColor);
+    }
+    if (colorConfig.font) {
+      line = line
+        .setBodyFont(colorConfig.font)
+        .setQuantityFont(colorConfig.font);
+    }
+    return line;
   }
 
   static getPositionQuantity(balance: number) {
@@ -85,19 +98,17 @@ export class PositionLineService {
 
   drawPositionLine(position: ChartPosition, idx: number) {
     const colorConfig = this.broker.colorConfig;
-    const isPositiveUnrealPnl = position.unrealPnl >= 0;
     const isPositiveBalance = position.balance >= 0;
-
-    let pnlColor = colorConfig.pnlZoreColor;
     const pnlDecimal = new Decimal(position.unrealPnl);
+
+    let pnlColor: string | undefined;
     if (pnlDecimal.greaterThan(0)) {
       pnlColor = colorConfig.upColor;
     } else if (pnlDecimal.lessThan(0)) {
       pnlColor = colorConfig.downColor;
+    } else {
+      pnlColor = colorConfig.pnlZoreColor;
     }
-    const borderColor = isPositiveUnrealPnl
-      ? colorConfig.pnlUpColor
-      : colorConfig.pnlDownColor;
     const sideColor = isPositiveBalance
       ? colorConfig.upColor
       : colorConfig.downColor;
@@ -105,22 +116,31 @@ export class PositionLineService {
 
     this.positionLines[idx] =
       this.positionLines[idx] ?? this.getBasePositionLine();
-    this.positionLines[idx]
+    let line = this.positionLines[idx]
       .setQuantity(PositionLineService.getPositionQuantity(position.balance))
       .setPrice(price)
-      .setCloseButtonIconColor(colorConfig.closeIcon!)
-      .setCloseButtonBorderColor(sideColor!)
-      .setBodyBackgroundColor(pnlColor!)
-      .setQuantityTextColor(sideColor!)
-      .setBodyBorderColor(pnlColor!)
-      .setLineColor(sideColor!)
-      .setQuantityBorderColor(sideColor!)
       .setText(
         PositionLineService.getPositionPnL(
           position.unrealPnl,
           position.unrealPnlDecimal,
         ),
       );
+
+    if (colorConfig.closeIcon) {
+      line = line.setCloseButtonIconColor(colorConfig.closeIcon);
+    }
+
+    if (sideColor) {
+      line = line
+        .setCloseButtonBorderColor(sideColor)
+        .setQuantityTextColor(sideColor)
+        .setLineColor(sideColor)
+        .setQuantityBorderColor(sideColor);
+    }
+    if (pnlColor) {
+      line = line.setBodyBackgroundColor(pnlColor).setBodyBorderColor(pnlColor);
+    }
+    this.positionLines[idx] = line;
 
     if (this.broker.mode !== ChartMode.MOBILE) {
       this.positionLines[idx].onClose(null, () => {

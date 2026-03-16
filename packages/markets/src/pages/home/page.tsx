@@ -91,6 +91,10 @@ const MarketsDesktopContent: React.FC<MarketsContentProps> = (props) => {
         onValueChange={props.onTabChange as (value: string) => void}
       >
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-markets-trigger",
+            content: "oui-tabs-markets-content",
+          }}
           title={t("common.markets")}
           value={MarketsPageTab.Markets}
           testid="oui-testid-markets-tab"
@@ -103,6 +107,10 @@ const MarketsDesktopContent: React.FC<MarketsContentProps> = (props) => {
           </React.Suspense>
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-funding-trigger",
+            content: "oui-tabs-funding-content",
+          }}
           title={t("common.funding")}
           value={MarketsPageTab.Funding}
           testid="oui-testid-funding-tab"

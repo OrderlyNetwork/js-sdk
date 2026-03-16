@@ -30,9 +30,9 @@ export function getSymbolColumn(
               className="oui-mr-1 oui-cursor-pointer"
             >
               {record.isFavorite ? (
-                <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+                <FavoritesIcon2 className="oui-size-3" />
               ) : (
-                <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                <UnFavoritesIcon2 className="oui-size-3" />
               )}
             </Flex>
           </FavoritesDropdownMenuWidget>
@@ -42,14 +42,18 @@ export function getSymbolColumn(
       return (
         <Flex gapX={1}>
           {favoritesIcon}
-          <TokenIcon symbol={value} className="oui-size-[18px]" />
-          <SymbolDisplay formatString="base" size="2xs">
-            {value}
-          </SymbolDisplay>
-          <RwaDotTooltip record={record} />
-          <Badge size="xs" color="primary">
-            {record.leverage}x
-          </Badge>
+          <Flex direction="column" itemAlign="start" gapY={1}>
+            <Flex gapX={1} itemAlign="center">
+              <TokenIcon symbol={value} className="oui-size-[18px]" />
+              <SymbolDisplay formatString="base" size="2xs">
+                {value}
+              </SymbolDisplay>
+              <RwaDotTooltip record={record} />
+            </Flex>
+            <Badge size="xs" color="primary">
+              {record.leverage}x
+            </Badge>
+          </Flex>
         </Flex>
       );
     },
@@ -60,6 +64,40 @@ export function getLastColumn() {
   return {
     title: i18n.t("markets.column.last"),
     dataIndex: "24h_close",
+    align: "right",
+    onSort: true,
+    width: 100,
+    render: (value, record) => {
+      return (
+        <Text.numeral dp={record.quote_dp || 2} size="2xs">
+          {value}
+        </Text.numeral>
+      );
+    },
+  } as Column<any>;
+}
+
+export function getMarkColumn() {
+  return {
+    title: i18n.t("markets.column.mark"),
+    dataIndex: "mark_price",
+    align: "right",
+    onSort: true,
+    width: 100,
+    render: (value, record) => {
+      return (
+        <Text.numeral dp={record.quote_dp || 2} size="2xs">
+          {value}
+        </Text.numeral>
+      );
+    },
+  } as Column<any>;
+}
+
+export function getIndexColumn() {
+  return {
+    title: i18n.t("markets.column.index"),
+    dataIndex: "index_price",
     align: "right",
     onSort: true,
     width: 100,

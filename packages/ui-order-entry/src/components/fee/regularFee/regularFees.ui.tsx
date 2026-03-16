@@ -11,9 +11,15 @@ export const RegularFeesUI: React.FC<{ taker: string; maker: string }> = (
   const { taker, maker } = props;
 
   const originalTrailingFees = (
-    <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
+    <Flex
+      itemAlign="center"
+      justify="between"
+      width={"100%"}
+      gap={1}
+      className="oui-orderEntry-fees"
+    >
       <Flex width={"100%"} itemAlign="center" justify={"between"}>
-        <Text className="oui-truncate" size="2xs">
+        <Text className="oui-fees-label oui-truncate" size="2xs">
           {t("common.fees")}
         </Text>
         <AuthGuard
@@ -23,7 +29,7 @@ export const RegularFeesUI: React.FC<{ taker: string; maker: string }> = (
             </Text>
           )}
         >
-          <Flex gap={1}>
+          <Flex gap={1} className="oui-fees-value-container">
             <Text className="oui-truncate" size="2xs">
               {t("dmm.taker")}:
             </Text>

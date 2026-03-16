@@ -156,7 +156,10 @@ export const OrderBookAndTrades: React.FC<OrderBookAndTradesState> = (
 ) => {
   const { containerRef, containerSize } = props;
   return (
-    <div ref={containerRef} className="oui-h-full">
+    <div
+      ref={containerRef}
+      className="oui-trading-orderBookAndTrades oui-h-full"
+    >
       {(containerSize?.width ?? 0) >= 572 ? (
         <TwoColLayout {...props} />
       ) : (

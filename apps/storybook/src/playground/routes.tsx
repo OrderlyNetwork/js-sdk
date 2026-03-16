@@ -71,17 +71,19 @@ const PortfolioPage = lazyImportPage(() => import("./pages/portfolio/page"));
 const PositionsPage = lazyImportPage(
   () => import("./pages/portfolio/positions/page"),
 );
-const SettingsPage = React.lazy(() => import("./pages/portfolio/setting/page"));
-const AffiliatePage = React.lazy(
+const SettingsPage = lazyImportPage(
+  () => import("./pages/portfolio/setting/page"),
+);
+const AffiliatePage = lazyImportPage(
   () => import("./pages/rewards/affiliate/page"),
 );
-const TradingRewardsPage = React.lazy(
+const TradingRewardsPage = lazyImportPage(
   () => import("./pages/rewards/trading/page"),
 );
-const SwapPage = React.lazy(() => import("./pages/swap/page"));
-const VaultsPage = React.lazy(() => import("./pages/vaults/page"));
+const SwapPage = lazyImportPage(() => import("./pages/swap/page"));
+const VaultsPage = lazyImportPage(() => import("./pages/vaults/page"));
 
-const PointsPage = React.lazy(() => import("./pages/points/page"));
+const PointsPage = lazyImportPage(() => import("./pages/points/page"));
 
 const AppRoute: React.FC = () => {
   // console.log("browser language", i18n?.language);
@@ -106,19 +108,30 @@ const AppRoute: React.FC = () => {
     i18n.changeLanguage(currentLocale);
   }
 
+  const tradeRoutes: RouteObject[] = [
+    {
+      index: true,
+      element: (
+        <Navigate
+          // preserve the search parameters to ensure link device via url params works
+          to={`${getSymbol()}${window.location.search}`}
+        />
+      ),
+    },
+    {
+      path: ":symbol",
+      element: <PerpPage />,
+    },
+  ];
+
   const baseRoutes: RouteObject[] = [
     {
       path: "perp",
-      children: [
-        {
-          index: true,
-          element: <Navigate to={getSymbol()} />,
-        },
-        {
-          path: ":symbol",
-          element: <PerpPage />,
-        },
-      ],
+      children: tradeRoutes,
+    },
+    {
+      path: "rwa",
+      children: tradeRoutes,
     },
     {
       path: "perp-grid",
@@ -188,6 +201,11 @@ const AppRoute: React.FC = () => {
       element: <TradingRewardsLayout />,
       children: [
         {
+          index: true,
+          // /rewards => /rewards/affiliate
+          element: <Navigate to={`affiliate${window.location.search}`} />,
+        },
+        {
           path: "trading",
           element: <TradingRewardsPage />,
         },
@@ -234,7 +252,7 @@ const AppRoute: React.FC = () => {
           children: [
             {
               index: true,
-              element: <Navigate to="perp" />,
+              element: <Navigate to={`perp${window.location.search}`} />,
             },
             ...baseRoutes,
           ],

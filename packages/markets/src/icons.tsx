@@ -1,4 +1,5 @@
 import React, { FC, PropsWithChildren, SVGProps } from "react";
+import { cn } from "@orderly.network/ui";
 
 export const EditIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
@@ -18,7 +19,7 @@ export const EditIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="16"
       height="16"
     >
-      <path fill="#D9D9D9" d="M0 0h16v16H0z" />
+      <path fill="rgb(var(--oui-color-tertiary))" d="M0 0h16v16H0z" />
     </mask>
     <g mask="url(#a)">
       <path d="M3.333 12.667h.95L10.8 6.15l-.95-.95-6.517 6.517zM2.667 14a.65.65 0 0 1-.475-.192.65.65 0 0 1-.192-.475v-1.616a1.32 1.32 0 0 1 .383-.934l8.417-8.4q.2-.183.442-.283.24-.1.508-.1.267 0 .517.1.249.1.433.3l.917.933q.2.184.291.434a1.44 1.44 0 0 1 0 1.008 1.25 1.25 0 0 1-.291.442l-8.4 8.4a1.32 1.32 0 0 1-.933.383zm7.65-8.317L9.85 5.2l.95.95z" />
@@ -57,7 +58,7 @@ export const AllMarketsIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="12"
       height="12"
     >
-      <path fill="#D9D9D9" d="M0 0h12v12H0z" />
+      <path fill="rgb(var(--oui-color-tertiary))" d="M0 0h12v12H0z" />
     </mask>
     <g mask="url(#a)">
       <path d="M8.5 10a.48.48 0 0 1-.356-.144A.48.48 0 0 1 8 9.5V7q0-.213.144-.356A.48.48 0 0 1 8.5 6.5h1q.212 0 .356.144A.48.48 0 0 1 10 7v2.5q0 .212-.144.356A.48.48 0 0 1 9.5 10zm-3 0a.48.48 0 0 1-.356-.144A.48.48 0 0 1 5 9.5v-7q0-.212.144-.356A.48.48 0 0 1 5.5 2h1q.213 0 .356.144A.48.48 0 0 1 7 2.5v7q0 .212-.144.356A.48.48 0 0 1 6.5 10zm-3 0a.48.48 0 0 1-.356-.144A.48.48 0 0 1 2 9.5V5q0-.213.144-.356A.48.48 0 0 1 2.5 4.5h1q.212 0 .356.144A.48.48 0 0 1 4 5v4.5q0 .212-.144.356A.48.48 0 0 1 3.5 10z" />
@@ -86,6 +87,8 @@ export const FavoritesIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    // The color of the favorite icon does not change with the theme.
+    className={cn("oui-text-[rgba(255,154,46,1)]", props.className)}
   >
     <mask
       id="a"
@@ -112,6 +115,11 @@ export const UnFavoritesIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    // The color of the favorite icon does not change with the theme.
+    className={cn(
+      "oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]",
+      props.className,
+    )}
   >
     <mask
       id="a"
@@ -148,7 +156,7 @@ export const CirclePlusIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
       width="18"
       height="18"
     >
-      <path fill="#D9D9D9" d="M0 0h18v18H0z" />
+      <path fill="rgb(var(--oui-color-tertiary))" d="M0 0h18v18H0z" />
     </mask>
     <g mask="url(#a)">
       <path d="M8.325 12.6h1.35V9.675H12.6v-1.35H9.675V5.4h-1.35v2.925H5.4v1.35h2.925zm.68 3.6a7 7 0 0 1-2.799-.562A7.3 7.3 0 0 1 3.91 14.09a7.3 7.3 0 0 1-1.546-2.296A7 7 0 0 1 1.8 8.99q0-1.49.563-2.794a7.26 7.26 0 0 1 3.843-3.834A7 7 0 0 1 9.009 1.8q1.49 0 2.794.562 1.303.563 2.288 1.547a7.3 7.3 0 0 1 1.547 2.292q.561 1.308.562 2.794a7 7 0 0 1-.562 2.799 7.3 7.3 0 0 1-1.547 2.297 7.3 7.3 0 0 1-2.292 1.547 7 7 0 0 1-2.794.562M9 14.85q2.437 0 4.144-1.706Q14.85 11.437 14.85 9t-1.706-4.144Q11.437 3.15 9 3.15T4.856 4.856 3.15 9t1.706 4.144Q6.563 14.85 9 14.85" />
@@ -207,6 +215,8 @@ export const FavoritesIcon2: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    // The color of the favorite icon does not change with the theme.
+    className={cn("oui-text-[rgba(255,154,46,1)]", props.className)}
   >
     <path d="M6.012 1.72c-.286 0-.577.178-.75.532L4.2 4.438l-2.42.344c-.78.108-1.03.872-.47 1.42l1.75 1.703-.407 2.39c-.133.773.508 1.24 1.203.874.268-.142 1.648-.857 2.155-1.124l2.155 1.124c.695.367 1.339-.1 1.202-.874l-.421-2.39 1.749-1.702c.565-.547.326-1.31-.453-1.421l-2.436-.344L6.76 2.252c-.172-.354-.464-.531-.75-.531" />
   </svg>
@@ -220,6 +230,11 @@ export const UnFavoritesIcon2: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    // The color of the favorite icon does not change with the theme.
+    className={cn(
+      "oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]",
+      props.className,
+    )}
   >
     <path d="M6.012 1.72c-.286 0-.577.178-.75.532L4.2 4.438l-2.42.344c-.78.108-1.03.872-.47 1.42l1.75 1.703-.407 2.39c-.133.773.508 1.24 1.203.874.268-.142 1.648-.857 2.155-1.124l2.155 1.124c.695.367 1.339-.1 1.202-.874l-.421-2.39 1.749-1.702c.565-.547.326-1.31-.453-1.421l-2.436-.344L6.76 2.252c-.172-.354-.464-.531-.75-.531m0 1.297 1.03 2.108c.073.15.211.242.375.266l2.343.343-1.702 1.64a.48.48 0 0 0-.14.437l.405 2.312L6.246 9.03a.5.5 0 0 0-.468 0L3.7 10.123l.39-2.296a.52.52 0 0 0-.14-.453l-1.687-1.64 2.327-.328a.52.52 0 0 0 .39-.28z" />
   </svg>
@@ -402,8 +417,7 @@ export const SortingIcon = () => {
     <BaseSortIcon>
       <path
         d="M5 1.042a.47.47 0 0 0-.338.135L2.166 3.844c-.206.22-.005.531.338.531h4.992c.342 0 .543-.311.337-.531L5.338 1.177A.47.47 0 0 0 5 1.042m0 7.916a.47.47 0 0 1-.338-.135L2.166 6.156c-.206-.22-.005-.531.338-.531h4.992c.342 0 .543.311.337.531L5.338 8.823A.47.47 0 0 1 5 8.958"
-        fill="#fff"
-        fillOpacity=".2"
+        fill="rgb(var(--oui-color-base-foreground) / 0.2)"
       />
     </BaseSortIcon>
   );
@@ -414,13 +428,11 @@ export const AscendingIcon = () => {
     <BaseSortIcon>
       <path
         d="M5 1.042a.47.47 0 0 0-.338.135L2.166 3.844c-.206.22-.005.531.338.531h4.992c.342 0 .543-.311.337-.531L5.338 1.177A.47.47 0 0 0 5 1.042"
-        fill="#fff"
-        fillOpacity=".8"
+        fill="rgb(var(--oui-color-base-foreground)/0.8)"
       />
       <path
         d="M5 8.958a.47.47 0 0 1-.338-.135L2.166 6.156c-.206-.22-.005-.531.338-.531h4.992c.342 0 .543.311.337.531L5.338 8.823A.47.47 0 0 1 5 8.958"
-        fill="#fff"
-        fillOpacity=".2"
+        fill="rgb(var(--oui-color-base-foreground)/0.2)"
       />
     </BaseSortIcon>
   );
@@ -431,13 +443,11 @@ export const DescendingIcon = () => {
     <BaseSortIcon>
       <path
         d="M5 1.042a.47.47 0 0 0-.338.135L2.166 3.844c-.206.22-.005.531.338.531h4.992c.342 0 .543-.311.337-.531L5.338 1.177A.47.47 0 0 0 5 1.042"
-        fill="#fff"
-        fillOpacity=".2"
+        fill="rgb(var(--oui-color-base-foreground)/0.2)"
       />
       <path
         d="M5 8.958a.47.47 0 0 1-.338-.135L2.166 6.156c-.206-.22-.005-.531.338-.531h4.992c.342 0 .543.311.337.531L5.338 8.823A.47.47 0 0 1 5 8.958"
-        fill="#fff"
-        fillOpacity=".8"
+        fill="rgb(var(--oui-color-base-foreground)/0.8)"
       />
     </BaseSortIcon>
   );

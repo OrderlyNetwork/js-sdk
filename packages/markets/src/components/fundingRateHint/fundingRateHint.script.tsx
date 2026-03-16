@@ -6,12 +6,25 @@ import {
 } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 
+const TIMEFRAME_CONFIG = [
+  { key: "1H", hours: 1 },
+  { key: "4H", hours: 4 },
+  { key: "1D", hours: 24 },
+  { key: "7D", hours: 168 },
+  { key: "30D", hours: 720 },
+  { key: "1Y", hours: 8760 },
+] as const;
+
 export const useFundingRateHintScript = (symbol: string) => {
   const { data: fundingDetails, isLoading: isFundingLoading } =
     useFundingDetails(symbol);
 
-  const { last_funding_rate, est_funding_rate } =
-    useFundingRateBySymbol(symbol) ?? {};
+  const {
+    last_funding_rate,
+    est_funding_rate,
+    next_funding_time,
+    last_funding_rate_timestamp,
+  } = useFundingRateBySymbol(symbol) ?? {};
 
   const [{ aggregated, rows }] = usePositionStream(symbol);
 
@@ -45,13 +58,6 @@ export const useFundingRateHintScript = (symbol: string) => {
     return `${new Decimal(last_funding_rate).mul(100).toNumber()}%`;
   }, [last_funding_rate]);
 
-  const estFundingRate = useMemo(() => {
-    if (!est_funding_rate) {
-      return undefined;
-    }
-    return `${new Decimal(est_funding_rate).mul(100).toNumber()}%`;
-  }, [est_funding_rate]);
-
   const estFundingFee = useMemo(() => {
     if (!est_funding_rate || !notional || rows.length === 0) {
       return "--";
@@ -84,17 +90,30 @@ export const useFundingRateHintScript = (symbol: string) => {
     return annualized ? `${annualized}%` : undefined;
   }, [last_funding_rate, fundingDetails?.funding_period]);
 
-  const estFundingRateAnnualized = useMemo(() => {
-    if (!est_funding_rate || !fundingDetails?.funding_period) {
-      return undefined;
+  const settlementIntervalHours = useMemo(() => {
+    if (!next_funding_time || !last_funding_rate_timestamp) return 8;
+    const diff = next_funding_time - last_funding_rate_timestamp;
+    return diff / 3_600_000;
+  }, [next_funding_time, last_funding_rate_timestamp]);
+
+  const estFundingRateByTimeframe = useMemo(() => {
+    if (
+      est_funding_rate === undefined ||
+      est_funding_rate === null ||
+      settlementIntervalHours <= 0
+    ) {
+      return [];
     }
-    const rate = new Decimal(est_funding_rate).mul(100).toNumber();
-    const annualized = calculateAnnualizedRate(
-      rate,
-      fundingDetails.funding_period,
-    );
-    return annualized ? `${annualized}%` : undefined;
-  }, [est_funding_rate, fundingDetails?.funding_period]);
+    return TIMEFRAME_CONFIG.map(({ key, hours }) => {
+      const rate = new Decimal(est_funding_rate)
+        .mul(hours)
+        .div(settlementIntervalHours)
+        .mul(100);
+      const str = rate.toFixed(5);
+      const trimmed = str.replace(/\.?0+$/, "") || "0";
+      return { timeframe: key, value: `${trimmed}%` };
+    });
+  }, [est_funding_rate, settlementIntervalHours]);
 
   return useMemo(() => {
     return {
@@ -102,20 +121,18 @@ export const useFundingRateHintScript = (symbol: string) => {
       capFunding,
       floorFunding,
       lastFundingRate,
-      estFundingRate,
       estFundingFee,
       lastFundingRateAnnualized,
-      estFundingRateAnnualized,
+      estFundingRateByTimeframe,
     };
   }, [
     fundingPeriod,
     capFunding,
     floorFunding,
     lastFundingRate,
-    estFundingRate,
     estFundingFee,
     lastFundingRateAnnualized,
-    estFundingRateAnnualized,
+    estFundingRateByTimeframe,
     symbol,
   ]);
 };

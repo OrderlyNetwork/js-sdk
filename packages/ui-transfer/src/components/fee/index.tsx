@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, modal, Text } from "@orderly.network/ui";
+import { modal, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { type UseDepositFeeReturn } from "../depositForm/depositForm.script";
+import { UseDepositFeeReturn } from "../depositForm/hooks/useDepositFee";
 
 type FeeProps = Partial<UseDepositFeeReturn> & {
   nativeSymbol?: string;
@@ -13,33 +13,13 @@ export const Fee: FC<FeeProps> = (props) => {
   const { t } = useTranslation();
 
   const onShowFee = () => {
-    const content = (
-      <div className="oui-text-2xs">
-        <Flex gapX={1}>
-          <Text size="2xs" intensity={54}>
-            {`${t("transfer.deposit.destinationGasFee")}: `}
-          </Text>
-          <Text.numeral
-            intensity={80}
-            dp={dp}
-            rm={Decimal.ROUND_UP}
-            padding={false}
-          >
-            {feeQty!}
-          </Text.numeral>
-          <Text intensity={54}>{nativeSymbol}</Text>
-        </Flex>
-        <Box mt={2}>
-          <Text intensity={36}>
-            {t("transfer.deposit.destinationGasFee.description")}
-          </Text>
-        </Box>
-      </div>
-    );
-
     modal.alert({
-      title: t("common.fee"),
-      message: content,
+      title: t("transfer.deposit.estGasFee"),
+      message: (
+        <Text intensity={36} size="2xs">
+          {t("transfer.deposit.estGasFee.tooltip")}
+        </Text>
+      ),
     });
   };
 
@@ -49,7 +29,7 @@ export const Fee: FC<FeeProps> = (props) => {
     <Text
       size="2xs"
       intensity={36}
-      className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
+      className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
       onClick={onShowFee}
     >
       {`${t("transfer.deposit.estGasFee")} ≈ `}

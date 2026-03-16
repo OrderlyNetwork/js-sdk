@@ -11,6 +11,7 @@ import {
   ComponentOverrides,
   OrderlyThemeContext,
   OrderlyThemeContextState,
+  ThemeConfig,
 } from "./orderlyThemeContext";
 
 export type OrderlyThemeProviderProps = {
@@ -19,12 +20,24 @@ export type OrderlyThemeProviderProps = {
     [position in ExtensionPosition]: ComponentType;
   };
   overrides?: Partial<ComponentOverrides>;
+  themes?: ThemeConfig[];
+  currentThemeId?: string;
+  currentTheme?: ThemeConfig;
+  setCurrentThemeId?: (id: string) => void;
 };
 
 export const OrderlyThemeProvider: FC<
   PropsWithChildren<OrderlyThemeProviderProps>
 > = (props) => {
-  const { components, overrides, children } = props;
+  const {
+    components,
+    overrides,
+    themes,
+    currentThemeId,
+    currentTheme,
+    setCurrentThemeId,
+    children,
+  } = props;
 
   const resolveComponentTheme = useCallback(
     <T extends keyof ComponentOverrides>(
@@ -37,8 +50,20 @@ export const OrderlyThemeProvider: FC<
   );
 
   const memoizedValue = useMemo<OrderlyThemeContextState>(() => {
-    return { getComponentTheme: resolveComponentTheme };
-  }, [resolveComponentTheme]);
+    return {
+      getComponentTheme: resolveComponentTheme,
+      themes: themes ?? [],
+      currentThemeId,
+      currentTheme,
+      setCurrentThemeId,
+    };
+  }, [
+    resolveComponentTheme,
+    themes,
+    currentThemeId,
+    currentTheme,
+    setCurrentThemeId,
+  ]);
 
   return (
     <OrderlyThemeContext.Provider value={memoizedValue}>

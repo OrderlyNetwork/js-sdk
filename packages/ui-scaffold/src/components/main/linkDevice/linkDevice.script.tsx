@@ -144,5 +144,6 @@ function createUrl(params: Record<string, any>) {
   const base64 = window.btoa(str);
   console.log("str", str.length, str);
   console.log("base64", base64.length, base64);
-  return `${window.location.origin}?link=${base64}`;
+  const { origin, pathname } = window.location;
+  return `${origin + pathname}?link=${base64}`;
 }

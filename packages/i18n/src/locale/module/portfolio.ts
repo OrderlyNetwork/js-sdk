@@ -62,9 +62,6 @@ export const portfolio = {
   "portfolio.feeTier.column.or": "or",
   "portfolio.feeTier.column.maker": "Maker / RWA Maker",
   "portfolio.feeTier.column.taker": "Taker / RWA Taker",
-  "portfolio.feeTier.effectiveFee.tooltip":
-    "Effective fee rate after applying your referee rebate.",
-  "portfolio.feeTier.effectiveFee.tooltipLink": "Check rebate history",
   "portfolio.apiKey.accountId.copied": "Account id copied",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Secret key",
@@ -125,6 +122,7 @@ export const portfolio = {
   "portfolio.setting.soundAlerts": "Sound notification",
   "portfolio.setting.soundAlerts.description":
     "Play a notification sound when an order is filled or canceled.",
+  "portfolio.setting.theme": "Theme",
 };
 
 export type Portfolio = typeof portfolio;

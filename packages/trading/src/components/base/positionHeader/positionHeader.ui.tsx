@@ -23,12 +23,12 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
 
   return (
     <Flex
+      className="oui-positionHeader oui-rounded-b-xl oui-bg-base-9"
       direction={"column"}
       gap={2}
       width={"100%"}
       itemAlign={"start"}
       p={2}
-      className="oui-rounded-b-xl oui-bg-base-9"
     >
       <Flex width={"100%"} justify={"between"} gap={2}>
         <UnrealPnL
@@ -74,7 +74,14 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
 
 const DesktopLayout: React.FC<PositionHeaderState> = (props) => {
   return (
-    <Flex py={2} px={3} gap={6} width={"100%"} justify={"between"}>
+    <Flex
+      className="oui-positionHeader"
+      py={2}
+      px={3}
+      gap={6}
+      width={"100%"}
+      justify={"between"}
+    >
       <Flex gap={5}>
         <UnrealPnL
           {...props}

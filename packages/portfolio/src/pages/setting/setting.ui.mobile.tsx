@@ -1,4 +1,4 @@
-import { FC, SVGProps, useState } from "react";
+import { FC, SVGProps, useCallback, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Card,
@@ -10,6 +10,8 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+import { SoundRadioButton } from "./components/soundRadioButton";
+import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
 
 type OrderPanelPosition = "left" | "right";
@@ -20,6 +22,23 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
   const onLanguageChange = () => {
     setOpen(true);
   };
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playPreview = useCallback((media?: string) => {
+    if (!media) return;
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+      }
+      const audio = audioRef.current;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = media;
+      void audio.play().catch(() => undefined);
+    } catch {
+      // ignore runtime audio errors
+    }
+  }, []);
 
   const renderItem = (position: OrderPanelPosition) => {
     const isSelected = props.orderPanelLayout === position;
@@ -156,7 +175,7 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
         </Flex>
       </Card>
 
-      {props.hasOrderFilledMedia && (
+      {(props.hasOrderFilledMedia || props.hasSoundOptions) && (
         <Card
           // @ts-ignore
           title={
@@ -195,10 +214,42 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
                   data-testid="oui-testid-setting-sound-switch-btn"
                 />
               </AuthGuardTooltip>
+
+              {props.hasSoundOptions &&
+                props.soundOptions?.length &&
+                props.soundAlert && (
+                  <Flex direction="row" gap={3} wrap="wrap">
+                    {props.soundOptions.map((option) => {
+                      const sel = props.selectedSoundValue === option.value;
+                      return (
+                        <SoundRadioButton
+                          key={option.value}
+                          sel={sel}
+                          label={option.label}
+                          onCheckChange={() => {
+                            props.setSelectedSoundValue(option.value);
+                            props.setSoundAlert(Boolean(option.media));
+                            playPreview(option.media);
+                          }}
+                        />
+                      );
+                    })}
+                  </Flex>
+                )}
             </Flex>
           </Flex>
         </Card>
       )}
+
+      <ThemeSettingCard
+        themes={props.themes}
+        currentThemeId={props.currentThemeId}
+        setCurrentThemeId={props.setCurrentThemeId}
+        classNames={{
+          card: "oui-mt-2 oui-bg-base-9 oui-font-semibold oui-p-3",
+          content: "oui-pt-3",
+        }}
+      />
 
       <Card
         // @ts-ignore
@@ -228,11 +279,12 @@ const EmptyBlockIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     width="50"
     height="80"
     viewBox="0 0 50 80"
-    fill="none"
+    fill="currentColor"
+    className="oui-fill-base-7"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect width="50" height="80" rx="2" fill="#181C23" />
+    <rect width="50" height="80" rx="2" />
   </svg>
 );
 
@@ -245,9 +297,30 @@ const OrderEntryStripIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect width="50" height="80" rx="2" fill="#181C23" />
-    <rect x="3" y="3" width="21" height="11" rx="2" fill="#008676" />
-    <rect x="26" y="3" width="21" height="11" rx="2" fill="#D92D6B" />
-    <rect x="3" y="69" width="44" height="8" rx="2" fill="#008676" />
+    <rect width="50" height="80" rx="2" fill="rgb(var(--oui-color-base-7))" />
+    <rect
+      x="3"
+      y="3"
+      width="21"
+      height="11"
+      rx="2"
+      fill="rgb(var(--oui-color-success-darken))"
+    />
+    <rect
+      x="26"
+      y="3"
+      width="21"
+      height="11"
+      rx="2"
+      fill="rgb(var(--oui-color-danger-darken))"
+    />
+    <rect
+      x="3"
+      y="69"
+      width="44"
+      height="8"
+      rx="2"
+      fill="rgb(var(--oui-color-success-darken))"
+    />
   </svg>
 );

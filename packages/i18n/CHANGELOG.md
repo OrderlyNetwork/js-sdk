@@ -1,5 +1,84 @@
 # @orderly.network/i18n
 
+## 2.10.1
+
+### Patch Changes
+
+- 4fadc11: publish
+- publish
+
+## 2.10.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 2.10.0
+
+### Minor Changes
+
+- e8fcd4a: publish
+- 12142ab: publish
+- publish
+
+## 2.10.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+## 2.10.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 2.9.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+
+## 2.9.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 2.9.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
+## 2.9.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 2.8.14
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+
+## 2.8.14-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.8.13
 
 ### Patch Changes

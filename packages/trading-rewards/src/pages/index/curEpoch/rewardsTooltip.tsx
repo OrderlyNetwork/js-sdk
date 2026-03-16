@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, Tooltip } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type RewardsTooltipProps = {
   brokerName: string | undefined;
@@ -78,7 +78,7 @@ export const RewardsTooltip: FC<{
         >
           <path
             d="M10.5 1.678a8.333 8.333 0 1 0-.001 16.667 8.333 8.333 0 0 0 0-16.667m0 4.167a.833.833 0 1 1-.001 1.667.833.833 0 0 1 0-1.667m0 2.5c.46 0 .832.373.832.833v4.167a.833.833 0 0 1-1.666 0V9.178c0-.46.373-.833.833-.833"
-            fill="#fff"
+            fill="rgb(var(--oui-color-base-foreground))"
             fillOpacity=".36"
           />
         </svg>

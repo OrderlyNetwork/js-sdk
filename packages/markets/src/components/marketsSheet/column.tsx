@@ -10,6 +10,7 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { RwaDotTooltip } from "../rwaDotTooltip";
 import { SymbolDisplay } from "../symbolDisplay";
 
 export const getMarketsSheetColumns = (
@@ -18,21 +19,12 @@ export const getMarketsSheetColumns = (
 ) => {
   return [
     {
-      title: `${i18n.t("markets.column.market")} / ${i18n.t("common.volume")}`,
-      dataIndex: "24h_amount",
-      multiSort: {
-        fields: [
-          {
-            sortKey: "symbol",
-            label: i18n.t("markets.column.market"),
-          },
-          {
-            sortKey: "24h_amount",
-            label: i18n.t("common.volume"),
-          },
-        ],
-      },
+      title: i18n.t("common.symbol"),
+      dataIndex: "symbol",
+      align: "left",
+      onSort: true,
       className: "oui-h-[36px]",
+      width: 124,
       render: (value, record) => {
         let favoritesIcon: ReactNode;
         if (!isFavoriteList) {
@@ -46,14 +38,15 @@ export const getMarketsSheetColumns = (
                 className="oui-mr-1 oui-cursor-pointer"
               >
                 {record.isFavorite ? (
-                  <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+                  <FavoritesIcon2 className="oui-size-3" />
                 ) : (
-                  <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                  <UnFavoritesIcon2 className="oui-size-3" />
                 )}
               </Flex>
             </FavoritesDropdownMenuWidget>
           );
         }
+
         return (
           <Flex>
             {favoritesIcon}
@@ -63,30 +56,58 @@ export const getMarketsSheetColumns = (
                 <SymbolDisplay formatString="base" size="2xs">
                   {record.symbol}
                 </SymbolDisplay>
-                <Badge size="xs" color="primary">
-                  {record.leverage}x
-                </Badge>
+                <RwaDotTooltip record={record} />
               </Flex>
-
-              <Text.numeral
-                intensity={54}
-                rule="human"
-                dp={2}
-                rm={Decimal.ROUND_DOWN}
-              >
-                {value}
-              </Text.numeral>
+              <Badge size="xs" color="primary">
+                {record.leverage}x
+              </Badge>
             </Flex>
           </Flex>
         );
       },
     },
     {
-      title: i18n.t("markets.column.price&Change"),
+      title: i18n.t("markets.column.24hVolOI"),
+      dataIndex: "24h_amount",
+      align: "right",
+      className: "oui-h-[36px]",
+      width: 100,
+      multiSort: {
+        fields: [
+          {
+            sortKey: "24h_amount",
+            label: i18n.t("markets.column.24hVol"),
+          },
+          {
+            sortKey: "openInterest",
+            label: i18n.t("markets.column.OI"),
+          },
+        ],
+      },
+      render: (value, record) => (
+        <Flex direction="column" itemAlign="end" gapY={1}>
+          <Text.numeral rule="human" dp={2} rm={Decimal.ROUND_DOWN}>
+            {value}
+          </Text.numeral>
+          <Text.numeral
+            rule="human"
+            dp={2}
+            rm={Decimal.ROUND_DOWN}
+            size="2xs"
+            intensity={54}
+          >
+            {record.openInterest}
+          </Text.numeral>
+        </Flex>
+      ),
+    },
+    {
+      title: i18n.t("markets.column.last&24hPercentage"),
       dataIndex: "change",
       align: "right",
       onSort: true,
       className: "oui-h-[36px]",
+      width: 100,
       render: (value, record) => {
         const onDelSymbol: MouseEventHandler = (e) => {
           favorite.updateSymbolFavoriteState(

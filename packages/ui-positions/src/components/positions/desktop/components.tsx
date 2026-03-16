@@ -102,7 +102,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   const showModal = () => {
     modal.show(props.modalId, {
       symbol,
-      curLeverage: leverage,
+      curLeverage: Number(leverage),
     });
   };
 

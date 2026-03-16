@@ -1,7 +1,5 @@
 import { useCallback, useMemo } from "react";
 import {
-  Chain,
-  ConnectedChain,
   useChains,
   useConfig,
   useLocalStorage,
@@ -11,11 +9,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-
-export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
-  id: number;
-  info?: Chain;
-};
+import { CurrentChain } from "../../../types";
 
 export function useChainSelect() {
   const { t } = useTranslation();

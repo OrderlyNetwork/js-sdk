@@ -5,6 +5,7 @@ import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 import { useIndexPrice } from "./useIndexPrice";
 import { useMarkPrice } from "./useMarkPrice";
+import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMarketMap } from "./useMarket/market.store";
 import { useOpenInterest } from "./useOpenInterest";
 
@@ -49,10 +50,14 @@ export const useTickerStream = (symbol: string) => {
     };
   }, [symbol]);
 
-  const { data: markPrice } = useMarkPrice(symbol);
+  const { data: markPrices } = useMarkPricesStream();
   const { data: indexPrice } = useIndexPrice(symbol);
   const { data: openInterest } = useOpenInterest(symbol);
   const marketMap = useMarketMap();
+
+  const markPrice = useMemo(() => {
+    return markPrices?.[symbol];
+  }, [markPrices, symbol]);
 
   const value = useMemo(() => {
     if (!info) return null;

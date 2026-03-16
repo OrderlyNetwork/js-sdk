@@ -9,38 +9,39 @@ import {
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { toast, useOrderlyTheme } from "@orderly.network/ui";
 
 const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
+const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 
 const ORDERLY_MWEB_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
   "orderly_mweb_order_entry_side_markets_layout";
 
 export type OrderPanelLayout = "left" | "right";
 
-export type SettingScriptReturns = {
-  maintenance_cancel_orders?: boolean;
-  setMaintainConfig: (maintenance_cancel_order_flag: boolean) => void;
-  isSetting: boolean;
-  canTouch: boolean;
-  soundAlert: boolean;
-  setSoundAlert: (value: boolean) => void;
-  hasOrderFilledMedia: boolean;
-  orderPanelLayout: OrderPanelLayout;
-  setOrderPanelLayout: (v: OrderPanelLayout) => void;
-};
+export type SettingScriptReturns = ReturnType<typeof useSettingScript>;
 
-export const useSettingScript = (): SettingScriptReturns => {
-  const { data, mutate: refresh } = useAccountInfo();
+export const useSettingScript = () => {
+  const { data } = useAccountInfo();
   const { wrongNetwork, disabledConnect } = useAppContext();
-  const [update, { isMutating }] = useMutation("/v1/client/maintenance_config");
+  const [update] = useMutation("/v1/client/maintenance_config");
   const [checked, setChecked] = useState(false);
   const { notification } = useOrderlyContext();
+  const { themes, currentThemeId, setCurrentThemeId } = useOrderlyTheme();
+
+  const soundOptions = notification?.orderFilled?.soundOptions;
+  const hasSoundOptions = Boolean(soundOptions && soundOptions.length > 0);
+  const defaultSoundValue =
+    notification?.orderFilled?.defaultSoundValue ?? soundOptions?.[0]?.value;
 
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
     ORDERLY_ORDER_SOUND_ALERT_KEY,
     notification?.orderFilled?.defaultOpen ?? false,
   );
+
+  const [selectedSoundValue, setSelectedSoundValue] = useLocalStorage<
+    string | null
+  >(ORDERLY_ORDER_SOUND_OPTION_KEY, defaultSoundValue ?? null);
 
   const [orderPanelLayout, setOrderPanelLayout] =
     useLocalStorage<OrderPanelLayout>(
@@ -85,7 +86,14 @@ export const useSettingScript = (): SettingScriptReturns => {
     soundAlert,
     setSoundAlert,
     hasOrderFilledMedia: Boolean(notification?.orderFilled?.media),
+    soundOptions,
+    hasSoundOptions,
+    selectedSoundValue,
+    setSelectedSoundValue,
     orderPanelLayout,
     setOrderPanelLayout,
+    themes,
+    currentThemeId,
+    setCurrentThemeId,
   };
 };

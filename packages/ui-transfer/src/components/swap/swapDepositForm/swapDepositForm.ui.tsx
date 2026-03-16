@@ -32,7 +32,6 @@ export const SwapDepositForm: FC<UseSwapDepositFormScriptReturn> = (props) => {
     actionType,
     onDeposit,
     onApprove,
-    fetchBalance,
     dst,
     wrongNetwork,
     balanceRevalidating,
@@ -76,14 +75,13 @@ export const SwapDepositForm: FC<UseSwapDepositFormScriptReturn> = (props) => {
             onTokenChange={onTokenChange}
             status={inputStatus}
             hintMessage={hintMessage}
-            fetchBalance={fetchBalance}
             data-testid="oui-testid-swap-deposit-dialog-quantity-input"
           />
         </Box>
 
         <AvailableQuantity
           token={token}
-          amount={amount}
+          quantity={amount}
           maxQuantity={maxQuantity}
           loading={balanceRevalidating}
           onClick={() => {

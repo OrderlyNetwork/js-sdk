@@ -31,7 +31,7 @@ import {
   toNonExponential,
 } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
-import { CurrentChain } from "../depositForm/hooks";
+import { CurrentChain } from "../../types";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useVaultBalance } from "./hooks/useVaultBalance";
 import { useWithdrawAccountId } from "./hooks/useWithdrawAccountId";

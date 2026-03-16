@@ -53,7 +53,7 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
   return (
     <div
       ref={priceInputContainerRef}
-      className="oui-group oui-relative oui-w-full"
+      className="oui-orderEntry-priceInput-container oui-group oui-relative oui-w-full"
     >
       <CustomInput
         id="order_price_input"
@@ -61,6 +61,7 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
         label={t("common.price")}
         suffix={suffix}
         value={props.order_price}
+        className="oui-orderEntry-priceInput"
         onChange={(e) => {
           setOrderValue("order_price", e);
         }}
@@ -76,7 +77,12 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
         }}
       />
       {bbo.bboStatus === BBOStatus.ON && (
-        <div className={cn("oui-absolute oui-bottom-1 oui-left-0")}>
+        <div
+          className={cn(
+            "oui-orderEntry-bboSelect",
+            "oui-absolute oui-bottom-1 oui-left-0",
+          )}
+        >
           <BBOOrderTypeSelect
             value={bbo.bboType}
             onChange={bbo.onBBOChange}

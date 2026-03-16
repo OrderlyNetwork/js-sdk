@@ -5,10 +5,10 @@ import { Decimal } from "@orderly.network/utils";
 
 export const CollateralContribution: React.FC<{
   value: number;
-  precision: number;
+  precision?: number;
 }> = (props) => {
   const { t } = useTranslation();
-  const { value, precision } = props;
+  const { value, precision = 6 } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex itemAlign="center" justify="start">
