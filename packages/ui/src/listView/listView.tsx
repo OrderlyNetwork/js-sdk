@@ -107,7 +107,7 @@ const ListViewInner = <T, D>(props: ListViewProps<T, D>, ref: ListViewRef) => {
         className={cn(
           "oui-space-y-3 oui-h-full oui-w-full",
           emptyDataSouce &&
-            "oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0",
+            "oui-absolute oui-bottom-0 oui-left-0 oui-right-0 oui-top-0",
           props.contentClassName,
         )({ twMerge: true })}
       >

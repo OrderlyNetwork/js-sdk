@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useWS } from "../../useWS";
 // import { useMarkPriceActions } from "../useMarkPrice/useMarkPriceStore";
-import { Calculator, CalculatorScope } from "../../types";
+import { CalculatorScope } from "../../types";
+import { useWS } from "../../useWS";
 import { CalculatorService } from "../calculator/calculatorService";
 
 export const useWSObserver = (calculatorService: CalculatorService) => {

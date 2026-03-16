@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
+import { AlgoOrderRootType, MarginMode, OrderSide, OrderType } from "../order";
 
 export enum AnnouncementType {
   Listing = "LISTING",
@@ -171,6 +171,7 @@ export declare namespace API {
     reduce_only: boolean;
     trigger_price?: number;
     order_tag?: string;
+    margin_mode?: MarginMode;
   }
 
   export interface OrderExt extends Order {
@@ -210,6 +211,7 @@ export declare namespace API {
     callback_value?: number;
     callback_rate?: number;
     extreme_price?: number;
+    margin_mode?: MarginMode;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {
@@ -362,6 +364,8 @@ export declare namespace API {
     fee_24_h: number;
     fundingFee?: number;
     leverage: number;
+    margin?: number;
+    margin_mode?: MarginMode;
   }
 
   export interface PositionExt extends Position {
@@ -408,6 +412,8 @@ export declare namespace API {
     holding: number;
     frozen: number;
     pending_short: number;
+    isolated_margin: number;
+    isolated_order_frozen: number;
     updated_time: number;
   }
 
@@ -618,6 +624,7 @@ export declare namespace API {
     close_timestamp: number; // Timestamp when the position was closed
     last_update_time: number; // Timestamp of the last update to the position
     leverage: number; // Leverage of the position
+    margin_mode?: MarginMode | 1 | 0;
   }
 
   export interface LiquidationPositionByPerp {
@@ -663,6 +670,7 @@ export declare namespace API {
   export interface LeverageInfo {
     symbol: string;
     leverage: number;
+    margin_mode?: MarginMode;
   }
 
   export namespace Referral {
@@ -736,6 +744,7 @@ export declare namespace WSMessage {
 
   export interface Position {
     symbol: string;
+    marginMode?: MarginMode;
     positionQty: number;
     costPosition: number;
     lastSumUnitaryFunding: number;
@@ -788,6 +797,7 @@ export declare namespace WSMessage {
     timestamp: number;
     reduceOnly: boolean;
     maker: boolean;
+    marginMode?: MarginMode;
   }
 
   export interface Holding {
@@ -835,6 +845,7 @@ export declare namespace WSMessage {
     maker: boolean;
     rootAlgoStatus: string;
     algoStatus: string;
+    marginMode?: MarginMode;
   }
 
   export interface Announcement {

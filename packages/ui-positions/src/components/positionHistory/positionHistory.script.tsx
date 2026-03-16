@@ -7,7 +7,7 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, MarginMode } from "@orderly.network/types";
 import { API } from "@orderly.network/types";
 import { usePagination, useScreen } from "@orderly.network/ui";
 import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
@@ -78,6 +78,12 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
                 item.trading_fee;
               return {
                 ...item,
+                // convert margin_mode to MarginMode
+                margin_mode:
+                  item.margin_mode === 1 ||
+                  item.margin_mode === MarginMode.ISOLATED
+                    ? MarginMode.ISOLATED
+                    : MarginMode.CROSS,
                 netPnL: netPnL,
               };
             }

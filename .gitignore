@@ -57,6 +57,10 @@ storybook-static/
 .claude/
 .specify/
 .specs/
+specs/
 .tmp.*
 .qoder/
 .specflow/
+.agents
+.specflow
+skills-lock.json

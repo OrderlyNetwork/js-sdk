@@ -23,6 +23,7 @@ export class BracketLimitOrderCreator extends LimitOrderCreator {
   ): Promise<OrderValidationResult> {
     const value = await super.validate(values, config);
 
+    // bracketOrderValidator is async, so we need to await it
     const bracketData = await bracketOrderValidator(values as any, config);
 
     return { ...value, ...bracketData };

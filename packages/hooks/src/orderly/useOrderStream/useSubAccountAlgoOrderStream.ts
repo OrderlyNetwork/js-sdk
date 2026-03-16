@@ -258,6 +258,8 @@ export const useSubAccountAlgoOrderStream = (
             activated_price: order.activated_price,
             callback_value: order.callback_value,
             callback_rate: order.callback_rate,
+            // include margin_mode if present (align with useOrderStream)
+            ...(order.margin_mode && { margin_mode: order.margin_mode }),
           });
         default:
           return doUpdateOrder({ ...order, order_id: orderId });

@@ -3,10 +3,13 @@ import { useTpslPriceChecker } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, PositionType } from "@orderly.network/types";
 import {
+  AddCircleIcon,
   Badge,
   cn,
   Flex,
   Grid,
+  IconButton,
+  modal,
   Statistic,
   Text,
   Tips,
@@ -17,6 +20,7 @@ import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../../constants";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { AdjustMarginSheetId } from "../../adjustMargin";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { ShareButtonWidget } from "../../desktop/shareButton";
@@ -41,6 +45,7 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
             symbol={item.symbol}
             leverage={item.leverage}
             modalId={SymbolLeverageSheetId}
+            marginMode={item.margin_mode}
           />
         </div>
       }
@@ -136,11 +141,12 @@ export const Margin: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
 
+  const isIsolated = item.margin_mode === "ISOLATED";
   const marginTipsContent = (
     <div className="oui-text-2xs oui-text-base-contrast-80">
       <div>{t("positions.column.margin.tooltip")}</div>
-      <div className="oui-my-2 oui-h-px oui-w-full oui-bg-base-8" />
-      <div>{t("positions.column.margin.formula")}</div>
+      {/* <div className="oui-my-2 oui-h-px oui-w-full oui-bg-base-8" />
+      <div>{t("positions.column.margin.formula")}</div> */}
     </div>
   );
 
@@ -164,9 +170,25 @@ export const Margin: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={2} intensity={80}>
-        {item.mm}
-      </Text.numeral>
+      <Flex gap={1}>
+        <Text.numeral dp={2} intensity={80}>
+          {isIsolated ? (item.margin ?? "--") : "--"}
+        </Text.numeral>
+        {isIsolated && (
+          <IconButton
+            color="secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              modal.show(AdjustMarginSheetId, {
+                position: item,
+                symbol: item.symbol,
+              });
+            }}
+          >
+            <AddCircleIcon size={16} fill="currentColor" opacity={1} />
+          </IconButton>
+        )}
+      </Flex>
     </Statistic>
   );
 };

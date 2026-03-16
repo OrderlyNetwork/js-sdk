@@ -7,16 +7,24 @@ import {
 } from "@orderly.network/types";
 
 /**
- * if order_type = market order,
- * order side = buy/long, then order_price_i = ask0
- * order side = sell/short, then order_price_i = bid0
- * if order_type = limit order
- * order side = buy/long
- * limit_price >= ask0, then order_price_i = ask0
- * limit_price < ask0, then order_price_i = limit_price
- * order side = sell/short
- * limit_price <= bid0, then order_price_i = bid0
- * limit_price > ask0, then order_price_i = ask0
+ * Compute the effective execution price for an order.
+ *
+ * Business rules:
+ *
+ * - MARKET / STOP_MARKET
+ *   - BUY:  price = Ask1
+ *   - SELL: price = Bid1
+ *
+ * - LIMIT
+ *   - BUY:
+ *     - if limit_price >= Ask1 -> price = Ask1
+ *     - else                   -> price = limit_price
+ *   - SELL:
+ *     - if limit_price <= Bid1 -> price = Bid1
+ *     - else                   -> price = limit_price
+ *
+ * This function pre-dates isolated-margin reference price logic and is kept
+ * for backward compatibility with existing order helpers.
  */
 export function getOrderPrice(
   order: Partial<OrderlyOrder>,
@@ -48,6 +56,49 @@ export function getOrderPrice(
       }
     }
   }
+}
+
+/**
+ * Convenience re-export of the core reference price calculator from
+ * `@orderly.network/perp`.
+ *
+ * NOTE: This exposes the low-level API that operates on the light-weight
+ * `OrderReferencePriceInput` type. Most UI callers should instead use
+ * `getOrderReferencePriceFromOrder`, which adapts a full `OrderlyOrder`.
+ */
+export const getOrderReferencePrice = orderUtils.getOrderReferencePrice;
+
+/**
+ * Adapter to calculate reference price directly from an `OrderlyOrder`
+ * and the best bid / ask prices from orderbook.
+ *
+ * @param order    Partial order entity (side / type / price fields)
+ * @param askAndBid `[Ask1, Bid1]` tuple
+ * @returns Reference price or null when it cannot be determined
+ */
+export function getOrderReferencePriceFromOrder(
+  order: Partial<OrderlyOrder>,
+  askAndBid: number[],
+): number | null {
+  if (!askAndBid || askAndBid.length < 2) return null;
+
+  if (!order.order_type || !order.side) {
+    return null;
+  }
+
+  return orderUtils.getOrderReferencePrice(
+    {
+      orderType: order.order_type,
+      orderTypeExt: order.order_type_ext,
+      side: order.side,
+      limitPrice: order.order_price ? Number(order.order_price) : undefined,
+      triggerPrice: order.trigger_price
+        ? Number(order.trigger_price)
+        : undefined,
+    },
+    askAndBid[0],
+    askAndBid[1],
+  );
 }
 
 export function getPriceRange(inputs: {

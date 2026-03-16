@@ -17,10 +17,12 @@ export type Portfolio = {
   holding?: API.Holding[];
   totalCollateral: Decimal;
   freeCollateral: Decimal;
+  freeCollateralUSDCOnly: Decimal;
   totalValue: Decimal | null;
   availableBalance: number;
   unsettledPnL: number;
   totalUnrealizedROI: number;
+  usdcHolding: number;
 };
 
 export type AppState = {
@@ -76,9 +78,11 @@ export const useAppStore = create<
       totalCollateral: zero,
       totalValue: null,
       freeCollateral: zero,
+      freeCollateralUSDCOnly: zero,
       availableBalance: 0,
       unsettledPnL: 0,
       totalUnrealizedROI: 0,
+      usdcHolding: 0,
     },
     appState: {
       positionsLoading: false,
@@ -99,9 +103,11 @@ export const useAppStore = create<
             totalCollateral: zero,
             totalValue: null,
             freeCollateral: zero,
+            freeCollateralUSDCOnly: zero,
             availableBalance: 0,
             unsettledPnL: 0,
             totalUnrealizedROI: 0,
+            usdcHolding: 0,
           };
         }, false);
       },

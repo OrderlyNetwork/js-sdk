@@ -8,6 +8,7 @@ import {
   AlgoOrderChildOrders,
   OrderSide,
   PositionType,
+  MarginMode,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { getMinNotional } from "../../utils/createOrder";
@@ -19,15 +20,101 @@ import {
 } from "./interface";
 import { OrderValidation } from "./orderValidation";
 
+/**
+ * Base order creator implementing Template Method pattern
+ * Defines the skeleton of order creation and validation algorithms,
+ * deferring some steps to subclasses
+ */
 export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
-  abstract create(values: T, config?: ValuesDepConfig): T;
+  abstract orderType: OrderType;
 
-  abstract validate(
+  /**
+   * Template method for order creation
+   * Defines the algorithm structure with hooks for subclasses
+   */
+  create(values: T, config?: ValuesDepConfig): T {
+    this.beforeCreate(values, config);
+    const order = this.buildOrder(values, config);
+    return this.afterCreate(order, config);
+  }
+
+  /**
+   * Template method for order validation
+   * Defines the algorithm structure with hooks for subclasses
+   */
+  validate(values: T, config: ValuesDepConfig): Promise<OrderValidationResult> {
+    this.beforeValidate(values, config);
+    const errors = this.runValidations(values, config);
+    return Promise.resolve(this.afterValidate(errors, values, config));
+  }
+
+  /**
+   * Hook method called before order creation
+   * Subclasses can override to perform pre-creation setup
+   * @param values - Order values
+   * @param config - Configuration
+   */
+  protected beforeCreate(values: T, config?: ValuesDepConfig): void {
+    // Default implementation does nothing
+  }
+
+  /**
+   * Hook method to build the order
+   * Must be implemented by subclasses
+   * @param values - Order values
+   * @param config - Configuration
+   * @returns The created order
+   */
+  protected abstract buildOrder(values: T, config?: ValuesDepConfig): T;
+
+  /**
+   * Hook method called after order creation
+   * Subclasses can override to perform post-creation processing
+   * @param order - The created order
+   * @param config - Configuration
+   * @returns The final order (possibly modified)
+   */
+  protected afterCreate(order: T, config?: ValuesDepConfig): T {
+    return order;
+  }
+
+  /**
+   * Hook method called before validation
+   * Subclasses can override to perform pre-validation setup
+   * @param values - Order values to validate
+   * @param config - Configuration
+   */
+  protected beforeValidate(values: T, config: ValuesDepConfig): void {
+    // Default implementation does nothing
+  }
+
+  /**
+   * Hook method to run validations
+   * Must be implemented by subclasses
+   * @param values - Order values to validate
+   * @param config - Configuration
+   * @returns Validation result with any errors
+   */
+  protected abstract runValidations(
     values: T,
     config: ValuesDepConfig,
-  ): Promise<OrderValidationResult>;
+  ): OrderValidationResult;
 
-  abstract orderType: OrderType;
+  /**
+   * Hook method called after validation
+   * Subclasses can override to perform post-validation processing
+   * @param errors - Validation errors found
+   * @param values - Original order values
+   * @param config - Configuration
+   * @returns Final validation result (possibly modified)
+   */
+  protected afterValidate(
+    errors: OrderValidationResult,
+    values: T,
+    config: ValuesDepConfig,
+  ): OrderValidationResult {
+    return errors;
+  }
 
   baseOrder(data: OrderlyOrder): OrderlyOrder {
     const order: Pick<
@@ -40,6 +127,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       | "total"
       | "visible_quantity"
       | "slippage"
+      | "margin_mode"
     > = {
       symbol: data.symbol!,
       order_type:
@@ -52,6 +140,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       reduce_only: data.reduce_only!,
       order_quantity: data.order_quantity!,
       total: data.total,
+      margin_mode: data.margin_mode || MarginMode.CROSS,
       // slippage: data.slippage,
     };
 
@@ -77,19 +166,35 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     } as OrderlyOrder;
   }
 
+  /**
+   * Base validation method that can be called by subclasses
+   * Validates common order properties like quantity and min notional
+   * @param values - Order values to validate
+   * @param configs - Configuration
+   * @returns Validation result (synchronous, not a Promise)
+   */
   baseValidate(
     values: OrderlyOrder,
     configs: ValuesDepConfig,
-  ): Promise<OrderValidationResult> {
+  ): OrderValidationResult {
     const errors: {
       [P in keyof OrderEntity]?: OrderValidationItem;
     } = {};
 
     const { maxQty, symbol, markPrice } = configs;
 
-    // @ts-ignore
-    let { order_quantity, total, order_price, reduce_only, order_type } =
-      values;
+    // Extract order properties with proper type handling
+    let order_quantity = (values as any).order_quantity as
+      | number
+      | string
+      | undefined;
+    const total = (values as any).total as string | number | undefined;
+    const order_price = (values as any).order_price as
+      | number
+      | string
+      | undefined;
+    const reduce_only = (values as any).reduce_only as boolean | undefined;
+    const order_type = (values as any).order_type as OrderType | undefined;
 
     const { min_notional, base_tick, quote_dp, quote_tick, base_dp } =
       symbol || {};
@@ -165,7 +270,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
     this.validateBracketOrder(values, configs, errors);
 
-    return Promise.resolve(errors);
+    return errors;
   }
 
   totalToQuantity(

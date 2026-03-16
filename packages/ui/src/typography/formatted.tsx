@@ -181,8 +181,13 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       //   return text;
       // }
 
+      // Apply capitalization if requested
+      if (capitalize && typeof children === "string") {
+        return children.charAt(0).toUpperCase() + children.slice(1);
+      }
+
       return children;
-    }, [children, rule, formatString, range, symbolElement]);
+    }, [children, rule, formatString, range, symbolElement, capitalize]);
 
     const contentWithFix = useMemo(() => {
       if (

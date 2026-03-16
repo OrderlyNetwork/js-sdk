@@ -1,7 +1,13 @@
 import { useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
-import { cn, EditIcon, Text, useScreen } from "@orderly.network/ui";
+import { MarginMode, PositionType } from "@orderly.network/types";
+import {
+  cn,
+  EditIcon,
+  Text,
+  useScreen,
+  ChevronRightIcon,
+} from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
   PositionTPSLPopover,
@@ -94,45 +100,85 @@ type LeverageBadgeProps = {
   symbol: string;
   leverage: number;
   modalId: string;
+  marginMode?: MarginMode;
 };
 
 export const LeverageBadge = (props: LeverageBadgeProps) => {
-  const { symbol, leverage } = props;
+  const { symbol, leverage, marginMode } = props;
+  const { t } = useTranslation();
+
+  const resolvedMarginMode = marginMode;
 
   const showModal = () => {
     modal.show(props.modalId, {
       symbol,
-      curLeverage: Number(leverage),
+      curLeverage: leverage,
+      marginMode: resolvedMarginMode,
     });
   };
 
   return (
-    <div
-      className={cn(
-        "oui-flex oui-h-[18px] oui-items-center oui-gap-1",
-        "oui-cursor-pointer oui-rounded oui-bg-line-6 oui-px-2",
-        "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
-      )}
-      onClick={showModal}
-    >
-      {leverage ? (
-        <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
-          {leverage}
-        </Text.numeral>
-      ) : (
-        <LeverageDisplay symbol={symbol} />
-      )}
+    <div className="oui-flex oui-items-center oui-gap-1">
+      <div
+        className={cn(
+          "oui-flex oui-h-[18px] oui-items-center",
+          "oui-rounded oui-bg-line-6 oui-px-2",
+          "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
+        )}
+      >
+        <Text>
+          {resolvedMarginMode === undefined
+            ? "--"
+            : resolvedMarginMode === MarginMode.ISOLATED
+              ? t("marginMode.isolated")
+              : t("marginMode.cross")}
+        </Text>
+      </div>
+      <div
+        className={cn(
+          "oui-flex oui-h-[18px] oui-items-center oui-gap-1",
+          "oui-rounded oui-bg-line-6 oui-px-2",
+          "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
+          "oui-cursor-pointer",
+        )}
+        onClick={showModal}
+      >
+        {leverage === undefined ? (
+          <LeverageDisplay symbol={symbol} marginMode={marginMode} />
+        ) : (
+          <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
+            {leverage}
+          </Text.numeral>
+        )}
+        <ChevronRightIcon
+          size={12}
+          className="oui-text-base-contrast-36"
+          opacity={1}
+        />
+      </div>
     </div>
   );
 };
 
 /** TODO: remove this */
-export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
-  const leverage = useLeverageBySymbol(symbol);
+export const LeverageDisplay = ({
+  symbol,
+  marginMode,
+}: {
+  symbol: string;
+  marginMode?: MarginMode;
+}) => {
+  const leverage = useLeverageBySymbol(symbol, marginMode);
 
   return (
-    <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
-      {leverage || 1}
-    </Text.numeral>
+    <>
+      {leverage === undefined ? (
+        <Text size="2xs">--</Text>
+      ) : (
+        <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      )}
+    </>
   );
 };

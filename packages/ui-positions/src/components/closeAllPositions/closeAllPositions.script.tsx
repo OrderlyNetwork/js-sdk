@@ -7,6 +7,7 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import {
   API,
+  MarginMode,
   OrderSide,
   OrderType,
   TrackerEventName,
@@ -85,6 +86,7 @@ export const useCloseAllPositionsScript = (
           side,
           order_quantity: quantity,
           reduce_only: true,
+          margin_mode: position.margin_mode,
         };
       }),
     [],

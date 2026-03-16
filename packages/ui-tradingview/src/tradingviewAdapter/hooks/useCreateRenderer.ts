@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useEventEmitter,
@@ -9,9 +9,10 @@ import {
 } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
-  OrderStatus,
   ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
   OrderEntryEstLiqPriceChangePayload,
+  MarginMode,
+  OrderStatus,
 } from "@orderly.network/types";
 import { DisplayControlSettingInterface } from "../../type";
 import { Renderer } from "../renderer/renderer";
@@ -20,14 +21,24 @@ import { AlgoType } from "../type";
 export default function useCreateRenderer(
   symbol: string,
   displayControlSetting?: DisplayControlSettingInterface,
+  marginMode?: MarginMode,
 ) {
   const [renderer, setRenderer] = useState<Renderer>();
   const rendererRef = useRef<Renderer>();
   const { state } = useAccount();
   const [unPnlPriceBasis] = useLocalStorage("unPnlPriceBasis", "markPrice");
-  const [{ rows: positions }, positionsInfo] = usePositionStream(symbol, {
+  const [{ rows }, positionsInfo] = usePositionStream(symbol, {
     calcMode: unPnlPriceBasis,
   });
+
+  const positions = useMemo(() => {
+    if (!rows?.length) return [];
+    return rows.filter(
+      (item) =>
+        item.symbol === symbol &&
+        (marginMode == null || item.margin_mode === marginMode),
+    );
+  }, [rows, symbol, marginMode]);
   const [pendingOrders] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
     symbol: symbol,
@@ -75,23 +86,20 @@ export default function useCreateRenderer(
       renderer?.renderPositions([]);
       return;
     }
-    const positionList = (positions ?? [])
-      .filter((_) => _.symbol === symbol)
-      .map((item) => {
-        return {
-          symbol: item.symbol,
-          open: item.average_open_price,
-          balance: item.position_qty,
-          closablePosition: 9999,
-          // @ts-ignore
-          unrealPnl: item.unrealized_pnl ?? 0,
-          interest: 0,
-          unrealPnlDecimal: 2,
-          basePriceDecimal: 4,
-          est_liq_price:
-            (item as { est_liq_price?: number | null }).est_liq_price ?? null,
-        };
-      });
+    const positionList = positions.map((item) => {
+      return {
+        symbol: item.symbol,
+        open: item.average_open_price,
+        balance: item.position_qty,
+        closablePosition: 9999,
+        // @ts-ignore
+        unrealPnl: item.unrealized_pnl ?? 0,
+        interest: 0,
+        unrealPnlDecimal: 2,
+        basePriceDecimal: 4,
+        marginMode: item.margin_mode,
+      };
+    });
     renderer?.renderPositions(positionList);
   }, [renderer, positions, symbol, displayControlSetting, state]);
 
@@ -169,9 +177,7 @@ export default function useCreateRenderer(
       return;
     }
 
-    const symbolPosition = (positions ?? []).find(
-      (item) => item.symbol === symbol,
-    );
+    const symbolPosition = positions.find((item) => item.symbol === symbol);
     pendingOrders?.forEach((order) => {
       if (symbol !== order.symbol) {
         return;

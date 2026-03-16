@@ -18,6 +18,12 @@ export type CollateralOutputs = {
    */
   freeCollateral: number;
   /**
+   * Free collateral that can be used for new positions (USDC only)
+   *
+   * Calculated as: freeCollateral - SUM(non-USDC holding.holding × mark_price × discount)
+   */
+  freeCollateralUSDCOnly: number;
+  /**
    * Total portfolio value including all positions and collateral
    *
    * Can be null if data is not available
@@ -47,6 +53,10 @@ export type CollateralOutputs = {
    * Contains account configuration, limits and risk parameters
    */
   accountInfo?: API.AccountInfo;
+  /**
+   * USDC holding in the account
+   */
+  usdcHolding: number;
   // positions: API.Position[];
 };
 
@@ -80,20 +90,25 @@ export const useCollateral = (
     totalCollateral,
     totalValue,
     freeCollateral,
+    freeCollateralUSDCOnly,
     availableBalance,
     unsettledPnL,
     holding,
+    usdcHolding,
   } = useAppStore((state) => state.portfolio);
   const accountInfo = useAppStore((state) => state.accountInfo);
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
     freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
+    freeCollateralUSDCOnly: freeCollateralUSDCOnly
+      .toDecimalPlaces(dp)
+      .toNumber(),
     totalValue: totalValue?.toDecimalPlaces(dp).toNumber() ?? null,
     availableBalance,
     unsettledPnL,
     accountInfo,
     holding,
-
+    usdcHolding,
     // @hidden
     // positions: positionsPath(positions),
   };

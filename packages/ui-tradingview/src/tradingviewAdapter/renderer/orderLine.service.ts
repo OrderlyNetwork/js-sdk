@@ -55,7 +55,10 @@ export class OrderLineService {
     this.cleanOldPendingOrders(this.pendingOrders);
     this.tpslCalService.prepareTpslPnlMap(this.pendingOrders);
     this.tpslCalService.prepareQuantityTpslNoMap(this.pendingOrders);
-    this.pendingOrders.forEach((order) => this.renderPendingOrder(order));
+    const needDrawMarginMode = this.pendingOrders.length > 1;
+    this.pendingOrders.forEach((order) =>
+      this.renderPendingOrder(order, needDrawMarginMode),
+    );
   }
 
   updatePositions(positions: ChartPosition[] | null) {
@@ -69,12 +72,12 @@ export class OrderLineService {
       .forEach((order) => this.renderPendingOrder(order));
   }
 
-  renderPendingOrder(order: any) {
+  renderPendingOrder(order: any, needDrawMarginMode: boolean = false) {
     const orderId = OrderLineService.getOrderId(order);
     if (!orderId) {
       return;
     }
-    const orderLine = this.drawOrderLine(orderId, order);
+    const orderLine = this.drawOrderLine(orderId, order, needDrawMarginMode);
 
     if (orderLine) {
       this.pendingOrderLineMap.set(orderId, orderLine);
@@ -296,9 +299,13 @@ export class OrderLineService {
     return commify(new Decimal(pendingOrder.quantity).toString());
   }
 
-  drawOrderLine(orderId: number, pendingOrder: any) {
+  drawOrderLine(
+    orderId: number,
+    pendingOrder: any,
+    needDrawMarginMode: boolean = false,
+  ) {
     // const text = OrderLineService.getText(pendingOrder);
-    const text = isTpslOrder(pendingOrder)
+    let text = isTpslOrder(pendingOrder)
       ? this.getTPSLText(pendingOrder)
       : OrderLineService.getText(pendingOrder);
     if (text === null) {
@@ -337,6 +344,10 @@ export class OrderLineService {
     const quantity = this.getOrderQuantity(pendingOrder);
     const textColor = colorConfig.textColor;
 
+    if (needDrawMarginMode) {
+      text += ` (${pendingOrder.margin_mode === "ISOLATED" ? "Isolated" : "Cross"})`;
+    }
+
     orderLine
       .setText(text)
       .setCancelButtonIconColor(colorConfig.closeIcon!)
@@ -348,7 +359,7 @@ export class OrderLineService {
       // .setBodyBackgroundColor(color)
       .setLineColor(color!)
       .setLineLength(lineLength)
-      .setQuantity(quantity ?? "")
+      .setQuantity(quantity)
       .setPrice(price);
 
     if (this.broker.mode !== ChartMode.MOBILE) {

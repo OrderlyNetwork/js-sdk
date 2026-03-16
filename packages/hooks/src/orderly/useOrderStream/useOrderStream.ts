@@ -7,9 +7,7 @@ import {
   AlgoOrderRootType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
-import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { generateKeyFun } from "../../utils/swr";
@@ -149,24 +147,24 @@ export const useOrderStream = (
     };
   }, [normalOrderKeyFn, options?.keeplive]);
 
-  const normalOrdersResponse = usePrivateInfiniteQuery<{
-    rows: any[];
-    meta: any;
-  }>(normalOrderKeyFn, {
-    initialSize: 1,
-    formatter: (data) => data,
-    revalidateOnFocus: false,
-  });
+  const normalOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
+    normalOrderKeyFn,
+    {
+      initialSize: 1,
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    },
+  );
 
   // console.log("ordersResponse", ordersResponse);
 
-  const algoOrdersResponse = usePrivateInfiniteQuery<{
-    rows: any[];
-    meta: any;
-  }>(algoOrderKeyFn, {
-    formatter: (data) => data,
-    revalidateOnFocus: false,
-  });
+  const algoOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
+    algoOrderKeyFn,
+    {
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    },
+  );
 
   // console.log("algoOrdersResponse", algoOrdersResponse, algoOrdersResponse);
 
@@ -348,6 +346,8 @@ export const useOrderStream = (
             activated_price: order.activated_price,
             callback_value: order.callback_value,
             callback_rate: order.callback_rate,
+            // Include margin_mode if present
+            ...(order.margin_mode && { margin_mode: order.margin_mode }),
           });
         default:
           return doUpdateOrder({ ...order, order_id: orderId });
