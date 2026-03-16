@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.10.1
 
 ### Patch Changes

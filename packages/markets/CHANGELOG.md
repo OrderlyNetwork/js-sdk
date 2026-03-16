@@ -1,5 +1,18 @@
 # @orderly.network/markets
 
+## 2.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.10.2-alpha.0
+  - @orderly.network/i18n@2.10.2-alpha.0
+  - @orderly.network/types@2.10.2-alpha.0
+  - @orderly.network/ui@2.10.2-alpha.0
+  - @orderly.network/ui-scaffold@2.10.2-alpha.0
+  - @orderly.network/utils@2.10.2-alpha.0
+
 ## 2.10.1
 
 ### Patch Changes
