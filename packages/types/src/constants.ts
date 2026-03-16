@@ -154,3 +154,22 @@ export const EMPTY_LIST: ReadonlyArray<any> = [];
 export const EMPTY_OBJECT: Readonly<Record<PropertyKey, any>> = {};
 
 export const EMPTY_OPERATION = () => {};
+
+/**
+ * Event name for broadcasting Order Entry estimated liquidation price changes
+ * so that UI consumers (e.g. TradingView adapters) can update their visuals
+ * without introducing tight coupling between widgets.
+ */
+export const ORDER_ENTRY_EST_LIQ_PRICE_CHANGE =
+  "orderEntry:estLiqPriceChange" as const;
+
+/**
+ * Payload for the ORDER_ENTRY_EST_LIQ_PRICE_CHANGE event, carrying the symbol
+ * and the latest estimated liquidation price derived from the order form.
+ */
+export interface OrderEntryEstLiqPriceChangePayload {
+  symbol: string;
+  estLiqPrice: number | null;
+  /** Whether the user is considered active when this payload is emitted (within the active window). */
+  isUserActive?: boolean;
+}

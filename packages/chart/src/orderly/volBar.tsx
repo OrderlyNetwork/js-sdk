@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   BarChart,
   XAxis,
@@ -12,6 +12,8 @@ import {
   Cross,
 } from "recharts";
 import type { TooltipProps } from "recharts";
+import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn } from "@orderly.network/ui";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";
@@ -32,6 +34,8 @@ export type VolChartProps = {
   data: ReadonlyArray<VolChartDataItem> | VolChartDataItem[];
   tooltip?: VolChartTooltip;
   className?: string;
+  invisible?: boolean;
+  responsiveContainerProps?: Omit<ResponsiveContainerProps, "children">;
 };
 
 const RoundedRectangle = (props: any) => {
@@ -52,12 +56,34 @@ const RoundedRectangle = (props: any) => {
   );
 };
 
+export const XAxisLabel: React.FC<any> = (props) => {
+  const { x, y, payload, index, width, containerWidth } = props;
+  const { t } = useTranslation();
+  const _x =
+    index === 0
+      ? 48
+      : containerWidth > 0
+        ? containerWidth - 10
+        : width + payload.offset;
+
+  return (
+    <g transform={`translate(${_x},${y - 6})`}>
+      <text
+        x={0}
+        y={0}
+        dy={16}
+        textAnchor={index === 0 ? "start" : "end"}
+        fontSize={10}
+        fill={"rgba(var(--oui-color-base-foreground)/0.54)"}
+      >
+        {index === 0 ? payload.value : t("chart.now")}
+      </text>
+    </g>
+  );
+};
+
 const CustomizedCross = (props: any) => {
   const { width, height, payload, stroke, fill } = props;
-
-  if (payload?.[0]?.value === 0) {
-    return null;
-  }
 
   return (
     // @ts-ignore
@@ -78,10 +104,6 @@ const CustomTooltip = (
   props: TooltipProps<any, any> & { tooltip?: VolChartTooltip },
 ) => {
   const { active, payload, label, tooltip } = props;
-
-  if (payload?.[0]?.value === 0) {
-    return null;
-  }
 
   if (active && payload && payload.length) {
     return (
@@ -105,6 +127,7 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
       ? { profit: props.colors?.fill, loss: props.colors?.fill }
       : undefined,
   );
+  const widthRef = useRef<number | null>(null);
 
   const isEmpty =
     (props.data as any)?.reduce((pre: any, cur: any) => pre + cur.volume, 0) ===
@@ -121,18 +144,24 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
     // @ts-ignore
     <Box className={cn(props.className)}>
       {/* @ts-ignore */}
-      <ResponsiveContainer>
+      <ResponsiveContainer
+        className={cn(props.invisible && "chart-invisible")}
+        onResize={(width) => {
+          widthRef.current = width;
+        }}
+        {...props.responsiveContainerProps}
+      >
         {/* @ts-ignore */}
         <BarChart
           data={props.data as any[]}
-          margin={{ left: -0, top: 6, right: 0, bottom: 20 }}
+          margin={{ left: -10, top: 10, right: 10, bottom: 30 }}
         >
-          {/* @ts-ignore */}
-          <Tooltip
-            // cursor={{ fillOpacity: 0.1 }}
-            cursor={<CustomizedCross />}
-            content={<CustomTooltip tooltip={props.tooltip} />}
-          />
+          {!props.invisible && (
+            <Tooltip
+              cursor={<CustomizedCross />}
+              content={<CustomTooltip tooltip={props.tooltip} />}
+            />
+          )}
           <CartesianGrid
             vertical={false}
             stroke="rgb(var(--oui-color-line))"
@@ -141,19 +170,20 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
           />
           {/* @ts-ignore */}
           <ReferenceLine y={0} stroke="rgb(var(--oui-color-base-10))" />
-          {/* @ts-ignore */}
-          <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
-            {props.data.map((entry, index) => {
-              return (
-                // @ts-ignore
-                <Cell
-                  key={`cell-${index}`}
-                  fill={entry.volume > 0 ? colors.profit : colors.loss}
-                  opacity={entry.opacity}
-                />
-              );
-            })}
-          </Bar>
+          {!props.invisible && (
+            <Bar dataKey="volume" shape={<RoundedRectangle />}>
+              {props.data.map((entry, index) => {
+                return (
+                  // @ts-ignore
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.volume > 0 ? colors.profit : colors.loss}
+                    opacity={entry.opacity}
+                  />
+                );
+              })}
+            </Bar>
+          )}
           {/* @ts-ignore */}
           <YAxis
             tick={{
@@ -172,18 +202,17 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
           {/* @ts-ignore */}
           <XAxis
             dataKey="date"
-            // axisLine={false}
             tickLine={false}
-            interval={props.data.length - 2}
-            // tick={renderQuarterTick}
+            interval={Math.max(0, (props.data?.length ?? 0) - 2)}
             height={1}
-            // scale="time"
-            tick={{
-              fontSize: 10,
-              fill: "rgba(var(--oui-color-base-foreground)/0.54)",
-            }}
-            stroke="rgb(var(--oui-color-base-2))"
-            strokeOpacity={0.2}
+            tick={(tickProps) => (
+              <XAxisLabel
+                {...tickProps}
+                containerWidth={widthRef.current ?? tickProps.width}
+              />
+            )}
+            stroke="rgb(var(--oui-color-line))"
+            strokeOpacity={0.04}
           />
         </BarChart>
       </ResponsiveContainer>

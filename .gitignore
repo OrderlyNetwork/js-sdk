@@ -50,6 +50,7 @@ hooks-example/
 
 .vscode
 
+CLAUDE.md
 
 *storybook.log
 storybook-static/
@@ -59,6 +60,3 @@ storybook-static/
 .tmp.*
 .qoder/
 .specflow/
-.agents
-skills-lock.json
-.specflow

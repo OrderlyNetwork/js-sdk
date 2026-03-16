@@ -42,6 +42,23 @@ export class TpslCalService {
     return formatPnl(estPnl);
   }
 
+  /**
+   * Returns the quantity for a TP/SL order for label display.
+   * Position TP/SL: |position.balance|; partial TP/SL: |order.quantity - executed|.
+   * @returns quantity number or undefined when positions unavailable
+   */
+  getTpslQuantity(tpslOrder: OrderInterface): number | undefined {
+    if (this.positions === null) {
+      return undefined;
+    }
+    const position = this.positions[0];
+    if (!position) {
+      return undefined;
+    }
+    const { quantity } = getTpslEstPnl(tpslOrder, position);
+    return quantity;
+  }
+
   prepareTpslPnlMap(newPendingOrders: OrderInterface[]) {
     const changed: number[] = [];
 
@@ -68,7 +85,7 @@ export class TpslCalService {
 
   recalculatePnl(
     positions: ChartPosition[] | null,
-    pendingOrders: OrderInterface[]
+    pendingOrders: OrderInterface[],
   ) {
     this.positions = positions;
 

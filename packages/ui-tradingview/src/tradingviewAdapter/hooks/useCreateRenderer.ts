@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import {
   useAccount,
+  useEventEmitter,
   useLocalStorage,
   useOrderStream,
   usePositionStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  OrderStatus,
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
+  OrderEntryEstLiqPriceChangePayload,
+} from "@orderly.network/types";
 import { DisplayControlSettingInterface } from "../../type";
 import { Renderer } from "../renderer/renderer";
 import { AlgoType } from "../type";
@@ -36,6 +42,11 @@ export default function useCreateRenderer(
     status: OrderStatus.FILLED,
     size: 500,
   });
+
+  const ee = useEventEmitter();
+  const [estimatedLiqPrice, setEstimatedLiqPrice] = useState<number | null>(
+    null,
+  );
 
   const createRenderer = useRef(
     (instance: any, host: any, broker: any, container: HTMLDivElement) => {
@@ -77,10 +88,59 @@ export default function useCreateRenderer(
           interest: 0,
           unrealPnlDecimal: 2,
           basePriceDecimal: 4,
+          est_liq_price:
+            (item as { est_liq_price?: number | null }).est_liq_price ?? null,
         };
       });
     renderer?.renderPositions(positionList);
   }, [renderer, positions, symbol, displayControlSetting, state]);
+
+  /** Subscribe to Order Entry estimated liq. price for the single liquidation line. */
+  useEffect(() => {
+    const handler = (payload: OrderEntryEstLiqPriceChangePayload) => {
+      if (payload.symbol === symbol) {
+        // Trust OrderEntry side to manage active window and timers; we just mirror estLiqPrice.
+        setEstimatedLiqPrice(
+          payload.isUserActive !== false ? payload.estLiqPrice : null,
+        );
+      }
+    };
+    ee.on(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, handler);
+    return () => {
+      ee.off(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, handler);
+    };
+  }, [ee, symbol]);
+
+  /** Drive liquidation line from position liq. price + estimated liq. price (from event). */
+  useEffect(() => {
+    if (!renderer || !displayControlSetting?.position) return;
+    const symbolPosition = (positions ?? []).find((p) => p.symbol === symbol);
+    const positionLiqPrice =
+      symbolPosition != null
+        ? ((symbolPosition as { est_liq_price?: number | null })
+            .est_liq_price ?? null)
+        : null;
+
+    const effectiveEstimatedLiqPrice =
+      estimatedLiqPrice != null && Number.isFinite(estimatedLiqPrice)
+        ? estimatedLiqPrice
+        : null;
+
+    // Rendering rule:
+    // - When effectiveEstimatedLiqPrice exists: render estimated liq. price line.
+    // - When no estimated but positionLiqPrice exists: render position liq. price line.
+    // - When neither exists: remove line.
+    renderer.renderLiquidationLine({
+      positionLiqPrice,
+      estimatedLiqPrice: effectiveEstimatedLiqPrice,
+    });
+  }, [
+    renderer,
+    positions,
+    symbol,
+    estimatedLiqPrice,
+    displayControlSetting?.position,
+  ]);
 
   useEffect(() => {
     if (!displayControlSetting || !displayControlSetting.buySell) {
