@@ -11,8 +11,8 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "leo",
-  "license": "ISC",
+  "author": "Orderly Network",
+  "license": "MIT",
   "files": [
     "dist"
   ],

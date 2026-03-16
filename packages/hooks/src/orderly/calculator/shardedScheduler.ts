@@ -17,7 +17,7 @@ interface IdleDeadline {
  */
 const requestIdleCallbackPolyfill = (
   callback: (deadline: IdleDeadline) => void,
-  options?: { timeout: number }
+  options?: { timeout: number },
 ): ReturnType<typeof setTimeout> => {
   const startTime = Date.now();
 
@@ -58,7 +58,7 @@ class ShardingScheduler implements CalculatorScheduler {
     scope: CalculatorScope,
     calculators: Calculator[],
     data: any,
-    ctx: CalculatorCtx
+    ctx: CalculatorCtx,
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
@@ -80,7 +80,7 @@ class ShardingScheduler implements CalculatorScheduler {
           },
           (results) => {
             resolve(results);
-          }
+          },
         );
       } catch (error) {
         console.error("ShardingScheduler calc error", error);
@@ -110,45 +110,55 @@ class ShardingScheduler implements CalculatorScheduler {
     return Promise.resolve();
   }
 
+  /**
+   * Maximum continuous execution time per frame (in milliseconds)
+   * Prevents blocking the main thread for too long
+   */
+  private readonly MAX_CONTINUOUS_MS = 5;
+
+  /**
+   * Minimum remaining idle time threshold (in milliseconds)
+   * Ensures the browser has enough idle time for other tasks
+   */
+  private readonly MIN_IDLE_REMAINING = 2;
+
   private computation<T, R>(
     data: T[],
     processor: ShardProcessor<T, R[]>,
-    onComplete: (results: R[]) => void
+    onComplete: (results: R[]) => void,
   ): void {
-    let index = 0; // Current starting index of the shard
-    const results: R[][] = []; // Used to store the calculation results of each shard
-    const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
-    // const estimatedShardSize = 1;
+    let index = 0;
+    const results: R[] = [];
+    const MAX_CONTINUOUS_MS = this.MAX_CONTINUOUS_MS;
+    const MIN_IDLE_REMAINING = this.MIN_IDLE_REMAINING;
 
-    // Function to process shards
-    function processNextShard(deadline: IdleDeadline) {
-      // Dynamic calculation of shard size
-      let shardSize = estimatedShardSize;
+    const processNextShard = (deadline: IdleDeadline) => {
+      const frameStart = performance.now();
 
-      // If the remaining time is not enough to process the current shard size, reduce the shard size
-      while (index + shardSize <= data.length && deadline.timeRemaining() > 0) {
-        const shard = data.slice(index, index + shardSize);
-        const result = processor(shard);
-        results.push(result);
-        index += shardSize;
+      while (index < data.length) {
+        // Dual condition check: both actual elapsed time and idle deadline
+        const elapsed = performance.now() - frameStart;
+        const remaining = deadline.timeRemaining();
 
-        // Dynamic adjustment of shard size
-        if (deadline.timeRemaining() < 1) {
-          shardSize = Math.max(1, Math.floor(shardSize / 2)); // Reduce shard size
-        } else {
-          shardSize = Math.min(data.length - index, shardSize * 2); // Increase shard size
+        // Yield control when time budget is exhausted
+        if (elapsed > MAX_CONTINUOUS_MS || remaining < MIN_IDLE_REMAINING) {
+          safeRequestIdleCallback(processNextShard, {
+            timeout: 1000,
+          });
+          return;
         }
+
+        // Process one item at a time for better granularity
+        const result = processor([data[index]]);
+        if (result && result.length > 0) {
+          results.push(...result);
+        }
+        index++;
       }
 
-      if (index < data.length) {
-        // There are still unprocessed data shards, request the next idle callback
-        safeRequestIdleCallback(processNextShard, {
-          timeout: 1000,
-        });
-      } else {
-        onComplete(results.flat());
-      }
-    }
+      // All items processed
+      onComplete(results);
+    };
 
     safeRequestIdleCallback(processNextShard, {
       timeout: 1000,

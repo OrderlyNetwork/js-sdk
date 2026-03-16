@@ -1,5 +1,10 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  MarginMode,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { Button, cn } from "@orderly.network/ui";
 import { OrderTypeSelect } from "../orderTypeSelect";
 import { LeverageBadge } from "./LeverageBadge";
@@ -9,8 +14,9 @@ type OrderEntryHeaderProps = {
   side: OrderSide;
   canTrade: boolean;
   order_type: OrderType;
-  setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
+  setOrderValue: (key: keyof OrderlyOrder, value: unknown) => void;
   symbolLeverage?: number;
+  marginMode?: MarginMode;
 };
 
 export function OrderEntryHeader(props: OrderEntryHeaderProps) {
@@ -19,6 +25,25 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
 
   return (
     <>
+      <div className="oui-w-full">
+        <LeverageBadge
+          symbol={props.symbol}
+          side={props.side}
+          symbolLeverage={props.symbolLeverage}
+          marginMode={props.marginMode}
+          disabled={!props.canTrade}
+        />
+      </div>
+      <div className="oui-w-full">
+        <OrderTypeSelect
+          type={order_type!}
+          side={side}
+          canTrade={canTrade}
+          onChange={(type) => {
+            setOrderValue("order_type", type);
+          }}
+        />
+      </div>
       <div
         className={cn(
           "oui-orderEntry-side",
@@ -60,31 +85,6 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
         >
           {t("common.sell")}
         </Button>
-      </div>
-      <div
-        className={cn(
-          "oui-orderEntry-header-controls",
-          "oui-grid oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
-          "oui-grid-cols-2",
-        )}
-      >
-        <div className="oui-w-full oui-orderEntry-orderTypeSelect">
-          <OrderTypeSelect
-            type={order_type!}
-            side={side}
-            canTrade={canTrade}
-            onChange={(type) => {
-              setOrderValue("order_type", type);
-            }}
-          />
-        </div>
-        <div className="oui-w-full oui-orderEntry-leverage">
-          <LeverageBadge
-            symbol={props.symbol}
-            side={props.side}
-            symbolLeverage={props.symbolLeverage}
-          />
-        </div>
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import {
   useEstLiqPriceBySymbol,
   useEventEmitter,
   useLocalStorage,
+  useMarginModeBySymbol,
   useMemoizedFn,
   usePositionStream,
   useSymbolsInfo,
@@ -17,6 +18,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
   API,
+  MarginMode,
   OrderType,
   PositionType,
   SDKError,
@@ -78,8 +80,13 @@ export const useTPSLBuilder = (
   // const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+  const { marginMode: symbolMarginMode } = useMarginModeBySymbol(symbol);
   const [{ rows: positions }] = usePositionStream();
-  const mainAccountPosition = positions.find((item) => item.symbol === symbol);
+  const mainAccountPosition = positions.find(
+    (item) =>
+      item.symbol === symbol &&
+      item.margin_mode === (options.position?.margin_mode ?? symbolMarginMode),
+  );
 
   const isSubAccount =
     options.position?.account_id &&
@@ -87,13 +94,18 @@ export const useTPSLBuilder = (
 
   const position = isSubAccount ? options.position : mainAccountPosition;
 
-  const estLiqPrice = useEstLiqPriceBySymbol(symbol);
+  const estLiqPrice = useEstLiqPriceBySymbol(
+    symbol,
+    position?.margin_mode ?? options.position?.margin_mode ?? MarginMode.CROSS,
+  );
 
   useEffect(() => {
     if (!position) {
       options.close?.();
     }
   }, [position]);
+
+  // console.log("----- position", position);
 
   const [
     tpslOrder,
@@ -113,6 +125,8 @@ export const useTPSLBuilder = (
       symbol,
       position_qty: position?.position_qty ?? 0,
       average_open_price: position?.average_open_price ?? 0,
+      // Prefer options.position?.margin_mode: mainAccountPosition (from stream) often has wrong default CROSS
+      margin_mode: options.position?.margin_mode ?? position?.margin_mode,
     },
     {
       defaultOrder: order,

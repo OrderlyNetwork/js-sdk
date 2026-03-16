@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
+  useMarginModeBySymbol,
   useMarginRatio,
   useMemoizedFn,
   useOrderEntry,
@@ -68,12 +69,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   void initialSoundValue;
 
   const canTrade = useCanTrade();
+  const { marginMode } = useMarginModeBySymbol(symbol);
 
   const {
     formattedOrder,
     setValue,
     setValues: setOrderValues,
     symbolInfo,
+    symbolLeverage,
     ...state
   } = useOrderEntry(symbol, {
     initialOrder: {
@@ -81,6 +84,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type: localOrderType,
       position_type: PositionType.PARTIAL,
       side: localOrderSide,
+      margin_mode: marginMode,
     },
   });
 
@@ -125,30 +129,30 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setOrderValues({
       tp_trigger_price: "",
       sl_trigger_price: "",
-      position_type: PositionType.FULL,
+      position_type: PositionType.PARTIAL,
     });
   };
 
   const enableTP_SL = () => {
     setOrderValues({
       order_type_ext: undefined,
-      position_type: PositionType.FULL,
+      position_type: PositionType.PARTIAL,
     });
   };
 
   const setOrderValue = useMemoizedFn(
     (
-      key: any,
-      value: any,
+      key: keyof typeof formattedOrder | string,
+      value: unknown,
       options?: {
         shouldUpdateLastChangedField?: boolean;
       },
     ) => {
       if (key === "order_type") {
-        setLocalOrderType(value);
+        setLocalOrderType(value as OrderType);
       }
       if (key === "side") {
-        setLocalOrderSide(value);
+        setLocalOrderSide(value as OrderSide);
       }
 
       if (
@@ -158,42 +162,47 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       ) {
         // cancelTP_SL();
 
-        const data = {
+        const data: Record<string, unknown> = {
           tp_trigger_price: "",
           sl_trigger_price: "",
           [key]: value,
         };
 
         if (key === "order_type") {
-          data["order_type_ext" as any] = "";
+          (data as Record<string, unknown>)["order_type_ext"] = "";
         }
 
-        setOrderValues(data);
+        setOrderValues(data as Partial<typeof formattedOrder>);
 
         return;
       }
 
       if (key === "order_type" && value !== OrderType.LIMIT) {
-        const data = {
+        const data: Record<string, unknown> = {
           level: undefined,
           order_type_ext: undefined,
           [key]: value,
         };
 
-        setOrderValues(data);
+        setOrderValues(data as Partial<typeof formattedOrder>);
 
         return;
       }
 
       if (key === "order_type" && value === OrderType.SCALED) {
-        setOrderValues({
+        const data: Record<string, unknown> = {
           distribution_type: DistributionType.FLAT,
           [key]: value,
-        });
+        };
+        setOrderValues(data as Partial<typeof formattedOrder>);
         return;
       }
 
-      setValue(key, value, options);
+      setValue(
+        key as keyof typeof formattedOrder,
+        value as (typeof formattedOrder)[keyof typeof formattedOrder],
+        options,
+      );
     },
   );
 
@@ -414,6 +423,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       isUserActive,
     });
   }, [ee, symbol, state.estLiqPrice]);
+  useEffect(() => {
+    setOrderValue("margin_mode", marginMode);
+  }, [marginMode]);
 
   return {
     ...state,
@@ -424,7 +436,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     formattedOrder,
     setOrderValue,
     setOrderValues,
+    // account-level leverage (for other consumers)
     currentLeverage,
+    // symbol-level leverage & margin mode for this order entry
+    symbolLeverage,
+    marginMode,
 
     // cancelTP_SL,
     // enableTP_SL,

@@ -35,7 +35,12 @@ export type OrderValidationResult = {
 
 export type OrderFormEntity = Pick<
   OrderlyOrder,
-  "order_price" | "order_quantity" | "total" | "reduce_only" | "slippage"
+  | "order_price"
+  | "order_quantity"
+  | "total"
+  | "reduce_only"
+  | "slippage"
+  | "margin_mode"
 >;
 
 export type ValuesDepConfig = {

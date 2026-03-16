@@ -1,9 +1,5 @@
-import { useEffect } from "react";
-import { mutate } from "swr";
-import { API } from "@orderly.network/types";
-import { useAccount } from "../useAccount";
-import { usePrivateQuery } from "../usePrivateQuery";
-import { useWS } from "../useWS";
+import { MarginMode } from "@orderly.network/types";
+import { useSymbolLeverageMap } from "./useSymbolLeverageMap";
 
 /**
  * A hook to fetch and subscribe to leverage for a given trading symbol.
@@ -11,52 +7,20 @@ import { useWS } from "../useWS";
  * updates through a WebSocket subscription to keep the leverage value current.
  *
  * @param symbol - The trading symbol (e.g. "PERP_BTC_USDC")
+ * @param marginMode - Optional margin mode (CROSS or ISOLATED). If not provided, defaults to CROSS.
  * @returns The current leverage value associated with the symbol, or undefined if not available
  *
  * @example
  * ```typescript
  * const leverage = useLeverageBySymbol("PERP_BTC_USDC");
+ * const isolatedLeverage = useLeverageBySymbol("PERP_BTC_USDC", MarginMode.ISOLATED);
  * ```
  */
-export const useLeverageBySymbol = (symbol?: string) => {
-  const { state } = useAccount();
-  const ws = useWS();
+export const useLeverageBySymbol = (
+  symbol?: string,
+  marginMode?: MarginMode,
+) => {
+  const { getSymbolLeverage } = useSymbolLeverageMap();
 
-  const { data } = usePrivateQuery<API.LeverageInfo>(
-    symbol ? `/v1/client/leverage?symbol=${symbol}` : null,
-    {
-      revalidateOnFocus: false,
-    },
-  );
-
-  useEffect(() => {
-    if (!state.accountId || !symbol) return;
-
-    const unsubscribe = ws.privateSubscribe("account", {
-      onMessage: (data: any) => {
-        const res = data?.accountDetail?.symbolLeverage || {};
-        // update leverage when symbol leverage changed
-        if (res.symbol === symbol) {
-          // update leverage by swr to fix displayed previous value at short time when switching symbol.
-          const key = [`/v1/client/leverage?symbol=${symbol}`, state.accountId];
-          mutate(
-            key,
-            (prevData: any) => {
-              return {
-                ...prevData,
-                leverage: res.leverage,
-              };
-            },
-            {
-              revalidate: false,
-            },
-          );
-        }
-      },
-    });
-
-    return () => unsubscribe?.();
-  }, [symbol, state.accountId]);
-
-  return data?.leverage;
+  return getSymbolLeverage(symbol, marginMode);
 };
