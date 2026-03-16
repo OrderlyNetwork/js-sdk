@@ -64,3 +64,4 @@ specs/
 .agents
 .specflow
 skills-lock.json
+.specflow
