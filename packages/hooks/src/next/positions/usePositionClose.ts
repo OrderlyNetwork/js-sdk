@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   API,
+  MarginMode,
   OrderlyOrder,
   OrderSide,
   OrderType,
@@ -57,6 +58,8 @@ export const usePositionClose = (options: PositionCloseOptions) => {
       order_type: type,
       side,
       reduce_only: true,
+      // Use position's margin_mode or default to CROSS for backward compatibility
+      margin_mode: position.margin_mode || MarginMode.CROSS,
     };
 
     if (type === OrderType.LIMIT) {
@@ -64,7 +67,7 @@ export const usePositionClose = (options: PositionCloseOptions) => {
     }
 
     return data;
-  }, [symbol, price, type, quantity]);
+  }, [symbol, price, type, quantity, position.margin_mode]);
 
   const maxQty = useMemo(() => {
     if (!position) {

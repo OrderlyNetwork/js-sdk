@@ -18,6 +18,8 @@ export const portfolio = {
     "Trading volume over the selected period.",
   "portfolio.overview.performance.dailyPnl": "Daily PnL",
   "portfolio.overview.performance.cumulativePnl": "Cumulative PnL",
+  "portfolio.overview.performance.dailyVolume": "Daily Volume",
+  "portfolio.overview.performance.cumulativeVolume": "Cumulative Volume",
 
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Transfer history",

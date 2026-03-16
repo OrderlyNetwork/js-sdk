@@ -2,8 +2,7 @@ import { useEffect, useRef } from "react";
 import { mutate } from "swr";
 import { unstable_serialize } from "swr/infinite";
 import { AccountState, EVENT_NAMES } from "@orderly.network/core";
-import { API, WSMessage } from "@orderly.network/types";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { API, MarginMode, WSMessage } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import {
@@ -125,15 +124,6 @@ export const usePrivateDataObserver = (options: {
 
           if (holding) {
             console.log("---->>>>>>!!!! holding", holding);
-
-            // updateHolding(holding);
-            // ws message format
-            // {
-            //   USDC: {
-            //     holding: 5555815.47398272,
-            //     frozen: 0,
-            //   },
-            // };
             calculatorService.calc(CalculatorScope.PORTFOLIO, { holding });
           }
         },
@@ -288,30 +278,80 @@ export const usePrivateDataObserver = (options: {
     //       }
     //   }
     // }
-    const key = ["/v1/positions", state.accountId];
+    const positionsKey = ["/v1/positions", state.accountId];
+    const leveragesKey = ["/v1/client/leverages", state.accountId];
     const unsubscribe = ws.privateSubscribe("account", {
-      onMessage: (data: any) => {
-        const { symbol, leverage } = data?.accountDetail?.symbolLeverage || {};
-        if (symbol && leverage) {
-          mutate(
-            key,
-            (prevPositions: any) => {
-              if (prevPositions?.rows?.length) {
-                return {
-                  ...prevPositions,
-                  rows: prevPositions.rows.map((row: any) => {
-                    // update position leverage when symbol leverage changed
-                    return row.symbol === symbol ? { ...row, leverage } : row;
-                  }),
-                };
-              }
-              return prevPositions;
-            },
-            {
-              revalidate: false,
-            },
-          );
+      onMessage: (data) => {
+        const { symbol, leverage, marginMode } =
+          data?.accountDetail?.symbolLeverage || {};
+        if (!symbol || leverage === undefined) {
+          return;
         }
+
+        mutate(
+          positionsKey,
+          (prevPositions: API.PositionInfo | undefined) => {
+            if (prevPositions?.rows?.length) {
+              return {
+                ...prevPositions,
+                rows: prevPositions.rows.map((row: API.Position) => {
+                  // update position leverage when symbol leverage changed
+                  return row.symbol === symbol && row.margin_mode === marginMode
+                    ? { ...row, leverage }
+                    : row;
+                }),
+              };
+            }
+            return prevPositions;
+          },
+          {
+            revalidate: false,
+          },
+        );
+
+        mutate(
+          leveragesKey,
+          (prev: API.LeverageInfo[] | undefined) => {
+            if (!prev) {
+              return [
+                {
+                  symbol,
+                  leverage,
+                  margin_mode: marginMode,
+                },
+              ];
+            }
+
+            const index = prev.findIndex(
+              (item) =>
+                item.symbol === symbol &&
+                (item.margin_mode ?? MarginMode.CROSS) ===
+                  (marginMode ?? MarginMode.CROSS),
+            );
+
+            if (index === -1) {
+              return [
+                ...prev,
+                {
+                  symbol,
+                  leverage,
+                  margin_mode: marginMode,
+                },
+              ];
+            }
+
+            const next = [...prev];
+            next[index] = {
+              ...next[index],
+              leverage,
+            };
+
+            return next;
+          },
+          {
+            revalidate: false,
+          },
+        );
       },
     });
 
@@ -337,9 +377,11 @@ export const usePrivateDataObserver = (options: {
             if (!!prevPositions) {
               const newPositions = {
                 ...prevPositions,
-                rows: prevPositions.rows.map((row: any) => {
+                rows: prevPositions.rows.map((row: API.PositionExt) => {
                   const itemIndex = nextPositions.findIndex(
-                    (item) => item.symbol === row.symbol,
+                    (item) =>
+                      item.symbol === row.symbol &&
+                      item.marginMode === row.margin_mode,
                   );
 
                   // const item = nextPositions.find(

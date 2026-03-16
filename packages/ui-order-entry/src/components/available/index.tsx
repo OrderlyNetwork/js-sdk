@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import {
   Flex,
   Tooltip,
@@ -17,10 +18,11 @@ type AvailableProps = {
   currentLtv: number;
   freeCollateral: number;
   quote?: string;
+  marginMode?: MarginMode;
 };
 
 export const Available = (props: AvailableProps) => {
-  const { canTrade, currentLtv, quote, freeCollateral } = props;
+  const { canTrade, currentLtv, quote, freeCollateral, marginMode } = props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
@@ -38,14 +40,22 @@ export const Available = (props: AvailableProps) => {
       justify={"between"}
       className="oui-orderEntry-available"
     >
-      <Text className="oui-available-label" size={"2xs"}>
-        {t("common.available")}
-      </Text>
+      {marginMode === MarginMode.ISOLATED ? (
+        <Tooltip content={t("transfer.LTV.isolatedModeUsdcOnly")}>
+          <Text className="oui-available-label oui-cursor-pointer" size={"2xs"}>
+            {t("common.available")}
+          </Text>
+        </Tooltip>
+      ) : (
+        <Text className="oui-available-label" size={"2xs"}>
+          {t("common.available")}
+        </Text>
+      )}
       <Flex itemAlign={"center"} justify={"center"} gap={1}>
         {showLTV && (
           <Tooltip
             className={"oui-available-ltvRisk-tooltip oui-bg-base-6 oui-p-2"}
-            content={<LTVRiskTooltipWidget />}
+            content={<LTVRiskTooltipWidget marginMode={marginMode} />}
           >
             <InfoCircleIcon
               className={"oui-cursor-pointer oui-text-warning oui-opacity-80"}

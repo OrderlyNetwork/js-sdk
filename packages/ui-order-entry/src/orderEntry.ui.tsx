@@ -410,6 +410,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           order_type={formattedOrder.order_type!}
           setOrderValue={setOrderValue}
           symbolLeverage={props.symbolLeverage}
+          marginMode={props.marginMode}
         />
 
         <Available
@@ -417,6 +418,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           canTrade={props.canTrade}
           quote={symbolInfo?.quote}
           freeCollateral={freeCollateral}
+          marginMode={props.marginMode}
         />
 
         <OrderInput
@@ -624,15 +626,17 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         }}
         contentProps={{ side: "right", closeable: false }}
       >
-        <TPSLAdvancedWidget
-          setOrderValue={setOrderValue}
-          order={formattedOrder as OrderlyOrder}
-          onSubmit={onSubmitAdvancedTPSL}
-          onClose={() => {
-            setShowTPSLAdvanced(false);
-          }}
-          symbolLeverage={props.symbolLeverage}
-        />
+        {showTPSLAdvanced && (
+          <TPSLAdvancedWidget
+            setOrderValue={setOrderValue}
+            order={formattedOrder as OrderlyOrder}
+            onSubmit={onSubmitAdvancedTPSL}
+            onClose={() => {
+              setShowTPSLAdvanced(false);
+            }}
+            symbolLeverage={props.symbolLeverage}
+          />
+        )}
       </SimpleSheet>
     </OrderEntryProvider>
   );

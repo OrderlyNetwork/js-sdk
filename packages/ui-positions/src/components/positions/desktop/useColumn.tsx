@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -10,13 +10,18 @@ import {
   Column,
   Text,
   Tooltip,
+  modal,
+  useScreen,
+  AddCircleIcon,
+  Button,
+  IconButton,
 } from "@orderly.network/ui";
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
-import { Decimal, formatNum } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../constants";
-import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
+import { AdjustMarginDialogId } from "../adjustMargin/adjustMargin.widget";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
@@ -42,7 +47,7 @@ export const useColumn = (config: ColumnConfig) => {
     positionReverse,
   } = config;
   const { t } = useTranslation();
-  const fundingFeeEndTime = useRef(Date.now().toString());
+  const { isMobile } = useScreen();
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
     () => [
       {
@@ -87,6 +92,7 @@ export const useColumn = (config: ColumnConfig) => {
                   symbol={value}
                   leverage={record.leverage}
                   modalId={SymbolLeverageDialogId}
+                  marginMode={record.margin_mode as any}
                 />
                 <RwaStatusTag symbol={value} />
               </Flex>
@@ -298,8 +304,8 @@ export const useColumn = (config: ColumnConfig) => {
                 className="oui-rounded-sm oui-bg-base-8 oui-text-base-contrast-54"
               >
                 <span>{t("positions.column.margin.tooltip")}</span>
-                <Divider className="oui-w-full" />
-                <span>{t("positions.column.margin.formula")}</span>
+                {/* <Divider className="oui-w-full" />
+                <span>{t("positions.column.margin.formula")}</span> */}
               </Flex>
             }
           >
@@ -312,7 +318,30 @@ export const useColumn = (config: ColumnConfig) => {
         onSort: true,
         width: 140,
         rule: "price",
-        render: (value: string) => <Text.numeral>{value}</Text.numeral>,
+        render: (value: string, record: API.PositionTPSLExt) => {
+          const isIsolated = record.margin_mode === "ISOLATED";
+          return (
+            <Flex gap={2} itemAlign="center">
+              <Text.numeral>
+                {isIsolated ? (record.margin ?? "--") : "--"}
+              </Text.numeral>
+              {isIsolated && (
+                <IconButton
+                  color="secondary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    modal.show(AdjustMarginDialogId, {
+                      position: record,
+                      symbol: record.symbol,
+                    });
+                  }}
+                >
+                  <AddCircleIcon size={16} fill="currentColor" opacity={1} />
+                </IconButton>
+              )}
+            </Flex>
+          );
+        },
       },
       // {
       //   title: t("funding.fundingFee"),

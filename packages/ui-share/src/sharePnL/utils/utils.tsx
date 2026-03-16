@@ -51,6 +51,7 @@ export function getPnLPosterData(
     symbol,
     currency,
     side: position.side,
+    marginMode: position.marginMode,
   };
 
   switch (pnlType) {

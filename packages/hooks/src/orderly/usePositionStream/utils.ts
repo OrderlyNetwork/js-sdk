@@ -1,3 +1,4 @@
+import { MarginMode } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import {
   API,
@@ -81,6 +82,7 @@ export const findTPSLOrderPriceFromOrder = (
 export const findPositionTPSLFromOrders = (
   orders: API.AlgoOrder[],
   symbol: string,
+  marginMode: MarginMode = MarginMode.CROSS,
 ): {
   fullPositionOrder?: API.AlgoOrder;
   partialPositionOrders?: API.AlgoOrder[];
@@ -89,6 +91,7 @@ export const findPositionTPSLFromOrders = (
     return (
       order.symbol === symbol &&
       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
+      order.margin_mode === marginMode &&
       (order.root_algo_status === OrderStatus.NEW ||
         order.root_algo_status === OrderStatus.REPLACED ||
         order.root_algo_status === OrderStatus.PARTIAL_FILLED)
@@ -98,6 +101,7 @@ export const findPositionTPSLFromOrders = (
     ?.filter((order) => {
       return (
         order.symbol === symbol &&
+        order.margin_mode === marginMode &&
         order.algo_type === AlgoOrderRootType.TP_SL &&
         (order.root_algo_status === OrderStatus.NEW ||
           order.root_algo_status === OrderStatus.REPLACED ||

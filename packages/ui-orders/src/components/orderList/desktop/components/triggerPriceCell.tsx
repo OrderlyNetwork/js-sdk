@@ -55,6 +55,10 @@ export const TriggerPriceCell = (props: {
       trigger_price: value,
       algo_order_id: order.algo_order_id,
     };
+    // include original margin_mode so backend receives it when editing
+    if (order.margin_mode !== undefined) {
+      data.margin_mode = order.margin_mode;
+    }
 
     editAlgoOrder(`${order.algo_order_id}`, data)
       .then((result: any) => {

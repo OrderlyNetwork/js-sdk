@@ -3,6 +3,7 @@ import {
   useAccount,
   useConfig,
   useLocalStorage,
+  useMarginModeBySymbol,
   useOrderEntry_deprecated,
   useSymbolsInfo,
   useWS,
@@ -96,6 +97,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       watchOrderbook: true,
     },
   );
+  const { marginMode } = useMarginModeBySymbol(symbol ?? "");
   const [displayControlState, setDisplayControlState] =
     useState<DisplayControlSettingInterface>(() => {
       const displaySettingInfo = localStorage.getItem(
@@ -201,6 +203,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const [createRenderer, removeRenderer] = useCreateRenderer(
     symbol!,
     displayControlState,
+    marginMode,
   );
 
   const onFullScreenChange = () => {

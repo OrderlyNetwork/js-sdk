@@ -190,7 +190,7 @@ npm_minor_stable:
     - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
-      
+
 # patch rc version
 npm_patch_rc:
   <<: *npm_publish_template
@@ -206,7 +206,20 @@ npm_patch_rc:
     - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
-      
+
+# major beta version
+npm_major_beta:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: major
+    CUSTOM_PRE_TAG: beta
+  environment:
+    name: npm_major_beta
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^npm\// && $CI_COMMIT_MESSAGE !~ /publish/'
+      when: manual
+    - when: never
+
 # major alpha version
 # npm_major_alpha:
 #   <<: *npm_publish_template
@@ -241,7 +254,7 @@ npm_patch_rc:
   image:
     name: node:22
   script:
-    - |    
+    - |
       npm run trigger:pipeline
   rules:
     - if: '($CI_COMMIT_BRANCH =~ /^internal\// || $CI_COMMIT_BRANCH =~ /^pre-release/) && $CI_COMMIT_MESSAGE =~ /publish/'
@@ -259,7 +272,7 @@ trigger_pipeline_dex:
     TRIGGER_PIPELINE_TOKEN: $TRIGGER_PIPELINE_TOKEN_DEX
     TRIGGER_PIPELINE_BRANCH: $TRIGGER_PIPELINE_BRANCH_DEX
     GIT_TOKEN: $GIT_TOKEN_INTERNAL
-    
+
 
 # Trigger demo pipeline
 trigger_pipeline_demo:

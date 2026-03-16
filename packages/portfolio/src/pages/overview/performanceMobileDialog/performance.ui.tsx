@@ -5,6 +5,8 @@ import {
   PnlAreaChart,
   PnLBarChart,
   PnlLineChartProps,
+  VolBarChart,
+  VolumeAreaChart,
 } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { Tabs, TabPanel, Flex, Text } from "@orderly.network/ui";
@@ -51,6 +53,15 @@ export const PerformanceMobileUI: React.FC<
         { account_value: 0, pnl: 0 },
         { account_value: 500, pnl: 500 },
       ) as any[]);
+
+  const volumeData = React.useMemo(
+    () =>
+      (mergedData ?? []).map((d) => ({
+        ...d,
+        volume: d.perp_volume ?? 0,
+      })),
+    [mergedData],
+  );
 
   return (
     <div>
@@ -153,6 +164,28 @@ export const PerformanceMobileUI: React.FC<
           className="oui-min-h-40"
         >
           <PnlAreaChart
+            data={mergedData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
+            responsiveContainerProps={responsiveProps}
+          />
+        </TabPanel>
+        <TabPanel
+          value={"dailyVolume"}
+          title={t("portfolio.overview.performance.dailyVolume")}
+          className="oui-min-h-40"
+        >
+          <VolBarChart
+            data={volumeData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
+            responsiveContainerProps={responsiveProps}
+          />
+        </TabPanel>
+        <TabPanel
+          value={"cumulativeVolume"}
+          title={t("portfolio.overview.performance.cumulativeVolume")}
+          className="oui-min-h-40"
+        >
+          <VolumeAreaChart
             data={mergedData}
             invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}

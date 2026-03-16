@@ -7,7 +7,7 @@ import {
   useAppStore,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { Decimal, zero } from "@orderly.network/utils";
 
@@ -24,7 +24,7 @@ const useConvertThreshold = () => {
   } as const;
 };
 
-export const useLTVTooltipScript = () => {
+export const useLTVTooltipScript = (marginMode?: MarginMode) => {
   const { data: holdingList = [], isLoading: isHoldingLoading } =
     useHoldingStream();
 
@@ -83,6 +83,7 @@ export const useLTVTooltipScript = () => {
     isThresholdLoading,
     currentLtv: currentLtv,
     onConvert: onConvert,
+    marginMode,
   };
 };
 

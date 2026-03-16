@@ -1,6 +1,10 @@
 import { Calculator, CalculatorScheduler, CalculatorScope } from "../../types";
 import { CalculatorContext } from "./calculatorContext";
-import { PositionCalculator } from "./positions";
+
+/**
+ * Batch update collector type for grouping updates by scope and calculator name
+ */
+type BatchUpdateCollector = Map<CalculatorScope, Map<string, any>>;
 
 type CalcOptions = {
   skipUpdate?: boolean;
@@ -127,11 +131,16 @@ class CalculatorService {
   // }
 
   private async handleCalcQueue(context?: CalculatorContext) {
-    const first = this.calcQueue.shift();
-    if (first) {
-      // console.log("[calcQueue:]", first.scope);
+    // Phase 1: Collect all updates from queue tasks
+    const batchCollector: BatchUpdateCollector = new Map();
+    let currentContext = context;
+
+    while (this.calcQueue.length > 0) {
+      const first = this.calcQueue.shift();
+      if (!first) break;
+
       const { scope, data, options } = first;
-      const ctx = context || CalculatorContext.create(scope, data);
+      const ctx = currentContext || CalculatorContext.create(scope, data);
       const calculators = this.calculators.get(scope);
 
       if (Array.isArray(calculators) && calculators.length) {
@@ -141,17 +150,72 @@ class CalculatorService {
           console.error(e);
         }
 
+        // Collect updates (skip immediate update call)
         if (!options?.skipUpdate) {
-          this.scheduler.update(scope, calculators, ctx.outputToValue());
+          this.collectUpdates(
+            batchCollector,
+            scope,
+            calculators,
+            ctx.outputToValue(),
+          );
         }
       }
-      if (this.calcQueue.length) {
-        // requestAnimationFrame(() => this.handleCalcQueue());
-        // setTimeout(() => this.handleCalcQueue(ctx), 0);
-        this.handleCalcQueue(ctx);
+
+      // Update context for next task
+      currentContext = ctx;
+    }
+
+    // Phase 2: Batch commit all updates
+    await this.commitBatchUpdates(batchCollector);
+
+    // Save context
+    this.ctx = currentContext;
+  }
+
+  private collectUpdates(
+    collector: BatchUpdateCollector,
+    scope: CalculatorScope,
+    calculators: Calculator[],
+    data: Record<string, any>,
+  ): void {
+    if (!collector.has(scope)) {
+      collector.set(scope, new Map());
+    }
+
+    const scopeCollector = collector.get(scope)!;
+
+    for (const calculator of calculators) {
+      const item = data[calculator.name];
+      if (item !== undefined && item !== null) {
+        scopeCollector.set(calculator.name, item);
       }
     }
   }
+
+  private async commitBatchUpdates(
+    collector: BatchUpdateCollector,
+  ): Promise<void> {
+    if (collector.size === 0) return;
+
+    for (const [scope, updateMap] of collector.entries()) {
+      const calculators = this.calculators.get(scope);
+      if (!Array.isArray(calculators)) continue;
+
+      const batchData: Record<string, any> = {};
+      for (const [calculatorName, data] of updateMap.entries()) {
+        batchData[calculatorName] = data;
+      }
+
+      try {
+        this.scheduler.update(scope, calculators, batchData);
+      } catch (e) {
+        console.error(`Batch update failed for scope ${scope}:`, e);
+      }
+    }
+
+    collector.clear();
+  }
+
   stop() {
     this.calcQueue = [];
     this.ctx?.clearCache();
