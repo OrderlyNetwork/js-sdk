@@ -9,7 +9,6 @@ import {
   SOLANA_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { cn } from "@orderly.network/ui";
-import { registerOnrampPlugin } from "@orderly.network/ui-onramp";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { useIsRwaRoute } from "../../orderlyConfig/hooks/useIsRwaRoute";

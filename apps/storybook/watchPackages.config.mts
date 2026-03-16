@@ -160,12 +160,6 @@ const ui: Package[] = [
     watch: true,
     includeCSS: true,
   },
-  {
-    package: "@orderly.network/ui-onramp",
-    path: "../../packages/ui-onramp/src",
-    watch: true,
-    includeCSS: true,
-  },
 ];
 
 const page: Package[] = [
