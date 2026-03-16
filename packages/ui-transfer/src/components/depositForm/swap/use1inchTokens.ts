@@ -57,9 +57,5 @@ export const useSwapTokens = (
     }));
   }, [data]);
 
-  if (!enableSwapDeposit) {
-    return [];
-  }
-
   return tokens as unknown as API.TokenInfo[];
 };

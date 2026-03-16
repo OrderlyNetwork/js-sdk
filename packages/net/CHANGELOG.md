@@ -1,5 +1,18 @@
 # @orderly.network/net
 
+## 2.10.2
+
+### Patch Changes
+
+- publish
+- 95b95a6: publish
+
+## 2.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.10.1
 
 ### Patch Changes
