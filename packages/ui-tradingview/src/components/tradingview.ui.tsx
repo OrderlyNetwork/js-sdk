@@ -3,12 +3,10 @@ import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { Box, cn, Divider, Flex } from "@orderly.network/ui";
 import { IndicatorsIcon, SettingIcon } from "../icons";
-import type {
-  TradingviewDesktopLayoutProps,
-  TradingviewUIPropsInterface,
-} from "../type";
+import type { TradingviewUIPropsInterface } from "../type";
 import { NoTradingview } from "./noTradingview";
 import TopBar from "./topBar";
+import { InjectableTradingviewDesktop } from "./tradingview.injectable";
 
 const LazyLineType = React.lazy(() => import("./lineType"));
 
@@ -28,12 +26,123 @@ const LazyDesktopDisplayControl = React.lazy(() =>
   })),
 );
 
-/** Lazy-loaded to avoid circular dependency: injectable imports TradingviewDesktopLayout from this file. */
-const LazyInjectableDesktop = React.lazy(() =>
-  import("./tradingview.injectable").then((mod) => ({
-    default: mod.InjectableTradingviewDesktop,
-  })),
-);
+type MobileTopBarProps = Pick<
+  TradingviewUIPropsInterface,
+  | "interval"
+  | "changeInterval"
+  | "displayControlState"
+  | "changeDisplaySetting"
+  | "openChartIndicators"
+>;
+
+const MobileTopBar: React.FC<MobileTopBarProps> = ({
+  interval,
+  changeInterval,
+  displayControlState,
+  changeDisplaySetting,
+  openChartIndicators,
+}) => {
+  return (
+    <Flex
+      gapX={2}
+      width="100%"
+      justify="between"
+      className="oui-hide-scrollbar oui-overflow-x-scroll"
+    >
+      <React.Suspense fallback={null}>
+        <LazyTimeInterval
+          interval={interval ?? "15"}
+          changeInterval={changeInterval}
+        />
+      </React.Suspense>
+      <OperateButton onClick={openChartIndicators}>
+        <IndicatorsIcon />
+      </OperateButton>
+      <React.Suspense fallback={null}>
+        <LazyMobileDisplayControl
+          displayControlState={displayControlState}
+          changeDisplayControlState={changeDisplaySetting}
+        />
+      </React.Suspense>
+    </Flex>
+  );
+};
+
+type DesktopTopBarProps = Pick<
+  TradingviewUIPropsInterface,
+  | "interval"
+  | "changeInterval"
+  | "displayControlState"
+  | "changeDisplaySetting"
+  | "openChartIndicators"
+  | "lineType"
+  | "changeLineType"
+  | "openChartSetting"
+  | "fullscreen"
+  | "onFullScreenChange"
+>;
+
+const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
+  interval,
+  changeInterval,
+  displayControlState,
+  changeDisplaySetting,
+  openChartIndicators,
+  lineType,
+  changeLineType,
+  openChartSetting,
+  fullscreen,
+  onFullScreenChange,
+}) => {
+  return (
+    <Flex justify={"between"} itemAlign={"center"} width={"100%"}>
+      <Flex>
+        <React.Suspense fallback={null}>
+          <LazyTimeInterval
+            interval={interval ?? "1"}
+            changeInterval={changeInterval}
+          />
+        </React.Suspense>
+        <Divider
+          direction="vertical"
+          className="oui-h-4"
+          mx={2}
+          intensity={8}
+        />
+        <Flex justify="start" itemAlign="center" gap={2}>
+          <React.Suspense fallback={null}>
+            <LazyDesktopDisplayControl
+              displayControlState={displayControlState}
+              changeDisplayControlState={changeDisplaySetting}
+            />
+          </React.Suspense>
+          <OperateButton onClick={openChartIndicators}>
+            <IndicatorsIcon />
+          </OperateButton>
+          <React.Suspense fallback={null}>
+            <LazyLineType lineType={lineType} changeLineType={changeLineType} />
+          </React.Suspense>
+          <OperateButton onClick={openChartSetting}>
+            <SettingIcon />
+          </OperateButton>
+        </Flex>
+      </Flex>
+      <Flex>
+        {fullscreen ? (
+          <ZoomOutIcon
+            className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
+            onClick={onFullScreenChange}
+          />
+        ) : (
+          <ZoomInIcon
+            className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
+            onClick={onFullScreenChange}
+          />
+        )}
+      </Flex>
+    </Flex>
+  );
+};
 
 const OperateButton: React.FC<
   React.PropsWithChildren<{ onClick?: React.MouseEventHandler<HTMLElement> }>
@@ -78,81 +187,6 @@ export const ZoomInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   );
 };
 
-/** Desktop-only layout: TopBar (desktop toolbar) + chart container. Exported for injectable wrapper. */
-export const TradingviewDesktopLayout: React.FC<
-  TradingviewDesktopLayoutProps
-> = (props) => {
-  const {
-    chartRef,
-    interval,
-    changeInterval,
-    displayControlState,
-    changeDisplaySetting,
-    lineType,
-    changeLineType,
-    openChartIndicators,
-    openChartSetting,
-    onFullScreenChange,
-    fullscreen,
-  } = props;
-  return (
-    <>
-      <TopBar>
-        <Flex justify={"between"} itemAlign={"center"} width={"100%"}>
-          <Flex>
-            <React.Suspense fallback={null}>
-              <LazyTimeInterval
-                interval={interval ?? "1"}
-                changeInterval={changeInterval}
-              />
-            </React.Suspense>
-            <Divider
-              direction="vertical"
-              className="oui-h-4"
-              mx={2}
-              intensity={8}
-            />
-            <Flex justify="start" itemAlign="center" gap={2}>
-              <React.Suspense fallback={null}>
-                <LazyDesktopDisplayControl
-                  displayControlState={displayControlState}
-                  changeDisplayControlState={changeDisplaySetting}
-                />
-              </React.Suspense>
-              <OperateButton onClick={openChartIndicators}>
-                <IndicatorsIcon />
-              </OperateButton>
-              <React.Suspense fallback={null}>
-                <LazyLineType
-                  lineType={lineType}
-                  changeLineType={changeLineType}
-                />
-              </React.Suspense>
-              <OperateButton onClick={openChartSetting}>
-                <SettingIcon />
-              </OperateButton>
-            </Flex>
-          </Flex>
-          <Flex>
-            {fullscreen ? (
-              <ZoomOutIcon
-                className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-                onClick={onFullScreenChange}
-              />
-            ) : (
-              <ZoomInIcon
-                className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-                onClick={onFullScreenChange}
-              />
-            )}
-          </Flex>
-        </Flex>
-      </TopBar>
-      <div ref={chartRef} className="oui-size-full oui-overflow-hidden" />
-    </>
-  );
-};
-
 export const TradingviewUI = forwardRef<
   HTMLDivElement,
   TradingviewUIPropsInterface
@@ -192,35 +226,29 @@ export const TradingviewUI = forwardRef<
         >
           <TopBar>
             {isMobile ? (
-              <Flex
-                gapX={2}
-                width="100%"
-                justify="between"
-                className="oui-hide-scrollbar oui-overflow-x-scroll"
-              >
-                <React.Suspense fallback={null}>
-                  <LazyTimeInterval
-                    interval={interval ?? "15"}
-                    changeInterval={changeInterval}
-                  />
-                </React.Suspense>
-                <OperateButton onClick={openChartIndicators}>
-                  <IndicatorsIcon />
-                </OperateButton>
-                <React.Suspense fallback={null}>
-                  <LazyMobileDisplayControl
-                    displayControlState={displayControlState}
-                    changeDisplayControlState={changeDisplaySetting}
-                  />
-                </React.Suspense>
-              </Flex>
+              <MobileTopBar
+                interval={interval}
+                changeInterval={changeInterval}
+                displayControlState={displayControlState}
+                changeDisplaySetting={changeDisplaySetting}
+                openChartIndicators={openChartIndicators}
+              />
             ) : (
-              <React.Suspense fallback={null}>
-                <LazyInjectableDesktop {...props} />
-              </React.Suspense>
+              <DesktopTopBar
+                interval={interval}
+                changeInterval={changeInterval}
+                displayControlState={displayControlState}
+                changeDisplaySetting={changeDisplaySetting}
+                openChartIndicators={openChartIndicators}
+                lineType={lineType}
+                changeLineType={changeLineType}
+                openChartSetting={openChartSetting}
+                fullscreen={props.fullscreen}
+                onFullScreenChange={onFullScreenChange}
+              />
             )}
           </TopBar>
-          <div ref={chartRef} className="oui-size-full oui-overflow-hidden" />
+          <InjectableTradingviewDesktop {...props} />
         </div>
       )}
     </div>

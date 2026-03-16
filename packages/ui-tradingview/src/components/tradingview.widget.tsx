@@ -8,5 +8,5 @@ export const TradingviewWidget = forwardRef<
   TradingviewWidgetPropsInterface
 >((props, ref) => {
   const state = useTradingviewScript(props);
-  return <TradingviewUI {...state} ref={ref} />;
+  return <TradingviewUI {...state} />;
 });

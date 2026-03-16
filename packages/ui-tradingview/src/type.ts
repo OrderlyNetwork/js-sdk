@@ -71,23 +71,6 @@ export interface TradingviewUIPropsInterface {
   fullscreen?: boolean;
 }
 
-/** Props for TradingviewDesktopLayout injectable; used by plugins for typed interceptor */
-export type TradingviewDesktopLayoutProps = Pick<
-  TradingviewUIPropsInterface,
-  | "chartRef"
-  | "interval"
-  | "changeDisplaySetting"
-  | "displayControlState"
-  | "changeInterval"
-  | "lineType"
-  | "changeLineType"
-  | "openChartSetting"
-  | "openChartIndicators"
-  | "onFullScreenChange"
-  | "fullscreen"
-  | "classNames"
->;
-
 export interface DisplayControlSettingInterface {
   position: boolean;
   buySell: boolean;

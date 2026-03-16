@@ -1,21 +1,9 @@
-import React from "react";
 import { injectable } from "@orderly.network/ui";
-import type { TradingviewDesktopLayoutProps } from "../type";
-import { TradingviewDesktopLayout } from "./tradingview.ui";
+import type { TradingviewUIPropsInterface } from "../type";
+import { TradingviewChart } from "./tradingview.chart";
 
-const InjectableTradingviewDesktop = injectable<TradingviewDesktopLayoutProps>(
-  TradingviewDesktopLayout,
-  "TradingView.Desktop",
-);
-
-/**
- * Extension slot for TradingView desktop layout. Plugins can register interceptors
- * for 'TradingView.Desktop' via OrderlyPluginProvider.
- */
-export const TradingviewDesktopExtension: React.FC<
-  TradingviewDesktopLayoutProps
-> = (props) => {
-  return <InjectableTradingviewDesktop {...props} />;
-};
-
-export { InjectableTradingviewDesktop };
+export const InjectableTradingviewDesktop =
+  injectable<TradingviewUIPropsInterface>(
+    TradingviewChart,
+    "TradingView.Desktop",
+  );
