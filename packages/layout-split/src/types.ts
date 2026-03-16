@@ -67,6 +67,10 @@ export type SplitLayoutNode =
       sizes?: string[];
       /** Size of this split when used as a child (e.g. "30%", "auto"). Used by parent SplitLayout for ResizablePanel. */
       size?: string;
+      /** Optional class name applied to the ResizablePanelGroup wrapper. */
+      className?: string;
+      /** Optional inline style applied to the ResizablePanelGroup wrapper. */
+      style?: React.CSSProperties;
     } & Partial<SplitLayoutChildConstraints>)
   | ({
       type: "sort";
@@ -76,6 +80,10 @@ export type SplitLayoutNode =
       children: SplitLayoutNode[];
       /** Size of this sort when used as a child (e.g. "30%", "auto"). Used by parent SplitLayout for ResizablePanel. */
       size?: string;
+      /** Optional class name applied to the sort container wrapper. */
+      className?: string;
+      /** Optional inline style applied to the sort container wrapper. */
+      style?: React.CSSProperties;
     } & Partial<SplitLayoutChildConstraints>);
 
 /**

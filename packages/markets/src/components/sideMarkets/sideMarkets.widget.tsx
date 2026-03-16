@@ -12,20 +12,17 @@ const LazySideMarkets = React.lazy(() =>
 
 export type SideMarketsWidgetProps = MarketsProviderProps &
   Partial<Pick<SideMarketsProps, "className">> & {
-    panelSize?: "small" | "middle" | "large";
+    // panelSize?: "small" | "middle" | "large";
+    collapsed?: boolean;
   };
 
 export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
-  const state = useSideMarketsScript();
+  const state = useSideMarketsScript(props);
 
   return (
     <MarketsProvider {...pick(["symbol", "onSymbolChange"], props)}>
       <React.Suspense fallback={null}>
-        <LazySideMarkets
-          {...state}
-          className={props.className}
-          panelSize={props.panelSize}
-        />
+        <LazySideMarkets {...state} className={props.className} />
       </React.Suspense>
     </MarketsProvider>
   );

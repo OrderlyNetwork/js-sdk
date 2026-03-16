@@ -32,28 +32,26 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
 
   const renderTab = (type: MarketsTabName) => {
     return (
-      <div className={cls}>
-        <React.Suspense fallback={null}>
-          <LazyMarketsListWidget
-            type={type}
-            initialSort={tabSort[type]}
-            onSort={onTabSort(type)}
-            tableClassNames={{
-              scroll: cn(
-                "oui-px-1",
-                type === MarketsTabName.Favorites ? "oui-pb-9" : "oui-pb-2",
-              ),
-            }}
-            {...getFavoritesProps(type)}
-            emptyView={renderEmptyView({
-              type,
-              onClick: () => {
-                onTabChange(MarketsTabName.All);
-              },
-            })}
-          />
-        </React.Suspense>
-      </div>
+      <React.Suspense fallback={null}>
+        <LazyMarketsListWidget
+          type={type}
+          initialSort={tabSort[type]}
+          onSort={onTabSort(type)}
+          tableClassNames={{
+            scroll: cn(
+              "oui-px-1",
+              type === MarketsTabName.Favorites ? "oui-pb-9" : "oui-pb-2",
+            ),
+          }}
+          {...getFavoritesProps(type)}
+          emptyView={renderEmptyView({
+            type,
+            onClick: () => {
+              onTabChange(MarketsTabName.All);
+            },
+          })}
+        />
+      </React.Suspense>
     );
   };
 

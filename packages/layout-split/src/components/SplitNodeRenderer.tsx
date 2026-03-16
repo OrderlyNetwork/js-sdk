@@ -105,6 +105,7 @@ export function SplitNodeRenderer({
         node={node as Extract<SplitLayoutNode, { type: "sort" }>}
         path={path}
         rootNode={rootNode}
+        classNames={classNames}
       />
     );
   }
@@ -132,6 +133,8 @@ export function SplitNodeRenderer({
       }}
       classNames={classNames}
       gap={gap}
+      className={node.className}
+      style={node.style}
     >
       {children.map((child, index) => (
         <SplitNodeRenderer

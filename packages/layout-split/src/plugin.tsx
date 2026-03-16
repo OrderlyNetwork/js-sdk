@@ -22,6 +22,7 @@ export interface LayoutSplitPluginOptions {
     panelGroup?: string;
     panel?: string;
     handle?: string;
+    container?: string;
   };
 }
 

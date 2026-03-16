@@ -80,6 +80,7 @@ export interface TradingPanelRegistryProps {
 export function createTradingPanelRegistry(
   props: TradingPanelRegistryProps,
   // t: (key: string) => string,
+  languageMap: Record<string, string>,
 ): PanelRegistry {
   const {
     symbol,
@@ -237,7 +238,7 @@ export function createTradingPanelRegistry(
     //     {!animating && marketsWidget}
     //   </div>
     // ),
-    props: { title: "" },
+    props: { title: languageMap["common.markets"] },
   });
   // t("common.markets")
   return panels;

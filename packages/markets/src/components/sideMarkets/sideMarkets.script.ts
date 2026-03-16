@@ -6,6 +6,7 @@ import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type SideMarketsScriptOptions = {
   panelSize?: "small" | "middle" | "large";
+  collapsed?: boolean;
   onPanelSizeChange?: React.Dispatch<
     React.SetStateAction<"small" | "middle" | "large">
   >;
@@ -25,6 +26,13 @@ export const useSideMarketsScript = (options?: SideMarketsScriptOptions) => {
     storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
   });
 
+  const panelSize = useMemo(() => {
+    if (options?.collapsed) {
+      return "small";
+    }
+    return options?.panelSize || "large";
+  }, [options?.collapsed, options?.panelSize]);
+
   const onPanelSizeChange = useCallback(
     (size: "small" | "middle" | "large") => {
       if (typeof options?.onPanelSizeChange === "function") {
@@ -38,5 +46,6 @@ export const useSideMarketsScript = (options?: SideMarketsScriptOptions) => {
     activeTab: activeTab as MarketsTabName,
     onTabChange: setActiveTab,
     tabSort: tabSort,
+    panelSize,
   } as const;
 };

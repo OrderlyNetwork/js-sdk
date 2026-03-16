@@ -149,6 +149,7 @@ export function SplitLayout({
         const constraints = panelConstraints?.[index];
         const size = sizes?.[index];
         const isFixed = size === "fixed";
+        const nextIsFixed = sizes?.[index + 1] === "fixed";
 
         return (
           <React.Fragment key={`panel-${index}`}>
@@ -166,7 +167,7 @@ export function SplitLayout({
                 {child}
               </ResizablePanel>
             )}
-            {index < count - 1 && !isFixed && (
+            {index < count - 1 && !isFixed && !nextIsFixed && (
               <ResizableHandle
                 className={cn(SPLIT_HANDLE_BASE_CLASSNAME, classNames?.handle)}
                 style={handleStyle}

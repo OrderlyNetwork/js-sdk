@@ -124,7 +124,7 @@ export const CollapsiblePanel: React.FC<CollapsiblePanelProps> = ({
       <div className={cn("oui-collapsible-content", bodyClassName)}>
         {React.cloneElement(children as React.ReactElement, {
           collapsed,
-          panelSize: "small",
+          // panelSize: "small",
         })}
       </div>
     </div>

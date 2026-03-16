@@ -159,6 +159,9 @@ export interface SortNodeRendererProps {
   node: Extract<SplitLayoutNode, { type: "sort" }>;
   path: number[];
   rootNode: SplitLayoutNode;
+  classNames?: {
+    panel?: string;
+  };
 }
 
 /**
@@ -168,6 +171,7 @@ export function SortNodeRenderer({
   node,
   path,
   rootNode,
+  classNames,
 }: SortNodeRendererProps): React.ReactElement {
   const { onLayoutChange, layout, breakpoint } = useSplitLayoutConfig();
   const { orientation, children } = node;
@@ -226,11 +230,14 @@ export function SortNodeRenderer({
       >
         <SortableContext items={items} strategy={strategy}>
           <div
-            className={
+            className={cn(
               isVertical
                 ? "oui-flex oui-w-full oui-flex-col oui-gap-2"
-                : "oui-flex oui-w-full oui-flex-row oui-gap-2"
-            }
+                : "oui-flex oui-w-full oui-flex-row oui-gap-2",
+              node.className,
+              classNames?.panel,
+            )}
+            style={node.style}
           >
             {children.map((child: SplitLayoutNode, index: number) => (
               <SortableSortChild

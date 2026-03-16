@@ -1,8 +1,9 @@
-import React, { useRef, useCallback, useState, useMemo } from "react";
+import React, { useRef, useCallback, useMemo } from "react";
 import type { LayoutRendererProps } from "@orderly.network/layout-core";
 import { SplitLayoutConfigProvider } from "./SplitLayoutConfigContext";
 import { useSplitPresetContext } from "./SplitPresetContext";
 import { SplitNodeRenderer } from "./components/SplitNodeRenderer";
+import { BREAKPOINT_KEYS } from "./constants";
 import { useViewportBreakpoint } from "./hooks/useViewportBreakpoint";
 import type { SplitLayoutModel, SplitLayoutNode } from "./types";
 import {
@@ -10,40 +11,27 @@ import {
   getSizesFromChildren,
   sizesAreEqual,
   updateSizeAtPath,
+  updateDefaultCollapsedAtPath,
 } from "./utils/splitRendererUtils";
 
 /**
- * Recursively collect panel IDs that have defaultCollapsed: true.
- */
-function getDefaultCollapsedPanels(node: SplitLayoutNode): string[] {
-  const collapsed: string[] = [];
-  if (node.type === "panel" && node.id && node.defaultCollapsed) {
-    collapsed.push(node.id);
-  }
-  if (node.type === "split" || node.type === "sort") {
-    for (const child of node.children ?? []) {
-      collapsed.push(...getDefaultCollapsedPanels(child));
-    }
-  }
-  return collapsed;
-}
-
-/**
- * Recursively collect panel IDs that have collapsible: true.
+ * Recursively collect panel IDs that are collapsible.
  */
 function getCollapsiblePanels(node: SplitLayoutNode): Map<string, boolean> {
   const collapsible = new Map<string, boolean>();
-  if (node.type === "panel" && node.id) {
-    collapsible.set(node.id, node.collapsible ?? false);
-  }
-  if (node.type === "split" || node.type === "sort") {
-    for (const child of node.children ?? []) {
-      const childCollapsible = getCollapsiblePanels(child);
-      childCollapsible.forEach((value, key) => {
-        collapsible.set(key, value);
-      });
+
+  const traverse = (n: SplitLayoutNode) => {
+    if (n.type === "panel" && n.id) {
+      collapsible.set(n.id, n.collapsible ?? false);
     }
-  }
+    if (n.type === "split" || n.type === "sort") {
+      for (const child of n.children ?? []) {
+        traverse(child);
+      }
+    }
+  };
+
+  traverse(node);
   return collapsible;
 }
 
@@ -88,7 +76,7 @@ export function SplitRenderer(
 
   const rootNode = layout.layouts[breakpoint];
 
-  const handleSizeChange = useCallback(
+  const computeUpdatedLayout = useCallback(
     (path: number[], sizes: string[]) => {
       const nodeAtPath = getNodeAtPath(rootNode, path);
       const currentSizes =
@@ -96,57 +84,68 @@ export function SplitRenderer(
           ? getSizesFromChildren(nodeAtPath.children)
           : undefined;
       if (sizesAreEqual(currentSizes, sizes)) {
-        return;
+        return null;
       }
-      const updatedLayout = createUpdatedLayout(
-        rootNode,
-        layout,
-        breakpoint,
-        path,
-        sizes,
-      );
-      // Update UI state only (no persistence)
-      onLayoutChange(updatedLayout);
+      return createUpdatedLayout(rootNode, layout, breakpoint, path, sizes);
     },
-    [layout, breakpoint, rootNode, onLayoutChange],
+    [layout, breakpoint, rootNode],
+  );
+
+  const handleSizeChange = useCallback(
+    (path: number[], sizes: string[]) => {
+      const updatedLayout = computeUpdatedLayout(path, sizes);
+      if (updatedLayout) {
+        onLayoutChange(updatedLayout);
+      }
+    },
+    [computeUpdatedLayout, onLayoutChange],
   );
 
   const handleSizePersist = useCallback(
     (path: number[], sizes: string[]) => {
       if (!onLayoutPersist) return;
-      const nodeAtPath = getNodeAtPath(rootNode, path);
-      const currentSizes =
-        nodeAtPath?.type === "split"
-          ? getSizesFromChildren(nodeAtPath.children)
-          : undefined;
-      if (sizesAreEqual(currentSizes, sizes)) {
-        return;
+      const updatedLayout = computeUpdatedLayout(path, sizes);
+      if (updatedLayout) {
+        onLayoutPersist(updatedLayout);
       }
-      const updatedLayout = createUpdatedLayout(
-        rootNode,
-        layout,
-        breakpoint,
-        path,
-        sizes,
-      );
-      // Persist layout to storage
-      onLayoutPersist(updatedLayout);
     },
-    [layout, breakpoint, rootNode, onLayoutPersist],
+    [computeUpdatedLayout, onLayoutPersist],
   );
 
-  // Collapse state management - initialize from defaultCollapsed in node config
-  const initialCollapsed = useMemo(
-    () => new Set(getDefaultCollapsedPanels(rootNode)),
-    [rootNode],
-  );
-  const [collapsedPanels, setCollapsedPanels] =
-    useState<Set<string>>(initialCollapsed);
-
-  // Collect collapsible panels from node config
   const collapsiblePanels = useMemo(
     () => getCollapsiblePanels(rootNode),
     [rootNode],
+  );
+
+  const collapsedPanels = useMemo(() => {
+    const collapsed = new Set<string>();
+    const traverse = (node: SplitLayoutNode) => {
+      if (node.type === "panel" && node.id && node.defaultCollapsed) {
+        collapsed.add(node.id);
+      }
+      if (node.type === "split" || node.type === "sort") {
+        node.children?.forEach(traverse);
+      }
+    };
+    traverse(rootNode);
+    return collapsed;
+  }, [rootNode]);
+
+  const computeUpdatedLayoutForCollapse = useCallback(
+    (panelId: string, collapsed: boolean) => {
+      const updatedLayouts: SplitLayoutModel["layouts"] = {} as any;
+      for (const bp of BREAKPOINT_KEYS) {
+        if (layout.layouts[bp]) {
+          updatedLayouts[bp] = updateDefaultCollapsedAtPath(
+            layout.layouts[bp],
+            panelId,
+            collapsed,
+          );
+        }
+      }
+      return { ...layout, layouts: updatedLayouts };
+    },
+    [layout],
   );
 
   const isPanelCollapsible = useCallback(
@@ -154,17 +153,23 @@ export function SplitRenderer(
     [collapsiblePanels],
   );
 
-  const togglePanelCollapse = useCallback((panelId: string) => {
-    setCollapsedPanels((prev) => {
-      const next = new Set(prev);
-      if (next.has(panelId)) {
-        next.delete(panelId);
-      } else {
-        next.add(panelId);
-      }
-      return next;
-    });
-  }, []);
+  const togglePanelCollapse = useCallback(
+    (panelId: string) => {
+      const isCurrentlyCollapsed = collapsedPanels.has(panelId);
+      const updatedLayout = computeUpdatedLayoutForCollapse(
+        panelId,
+        !isCurrentlyCollapsed,
+      );
+      onLayoutChange(updatedLayout);
+      onLayoutPersist?.(updatedLayout);
+    },
+    [
+      collapsedPanels,
+      computeUpdatedLayoutForCollapse,
+      onLayoutChange,
+      onLayoutPersist,
+    ],
+  );
 
   const isPanelCollapsed = useCallback(
     (panelId: string) => collapsedPanels.has(panelId),
@@ -180,11 +185,7 @@ export function SplitRenderer(
   }
 
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      style={{ ...style, width: "100%", minWidth: 0 }}
-    >
+    <div ref={containerRef} className={className}>
       <SplitLayoutConfigProvider
         panels={panels}
         layout={layout}
@@ -208,6 +209,12 @@ export function SplitRenderer(
       >
         <span>{breakpoint}</span>
         {presetName && <span className="oui-text-sm">{presetName}</span>}
+        <button
+          onClick={() => ctx?.reset()}
+          className="oui-mt-1 oui-px-2 oui-py-1 oui-text-sm oui-bg-gray-500 oui-text-white oui-rounded"
+        >
+          Reset
+        </button>
       </div>
     </div>
   );

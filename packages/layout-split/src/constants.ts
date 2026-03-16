@@ -13,7 +13,7 @@ export const BREAKPOINT_VALUES: SplitLayoutBreakpoints = {
   lg: 1680,
   md: 1440,
   sm: 1280,
-  xs: 480,
+  xs: 768,
 };
 
 /** @deprecated Use BREAKPOINT_KEYS */

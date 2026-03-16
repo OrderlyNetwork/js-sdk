@@ -42,10 +42,10 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
     <Box
       width="100%"
       height="100%"
-      className={cn(
-        panelSize === "large" && "oui-h-[calc(100%_-_56px)]",
-        panelSize === "middle" && "oui-h-[calc(100%_-_52px)]",
-      )}
+      // className={cn(
+      //   panelSize === "large" && "oui-h-[calc(100%_-_56px)]",
+      //   panelSize === "middle" && "oui-h-[calc(100%_-_52px)]",
+      // )}
     >
       {renderContent()}
     </Box>

@@ -45,6 +45,31 @@ export function sizesAreEqual(
 }
 
 /**
+ * Deep clone and update defaultCollapsed for a panel across the entire tree.
+ * Updates ALL nodes with matching panelId (used when updating all breakpoints).
+ */
+export function updateDefaultCollapsedAtPath(
+  node: SplitLayoutNode,
+  panelId: string,
+  defaultCollapsed: boolean,
+): SplitLayoutNode {
+  if (node.type === "panel" && node.id === panelId) {
+    return { ...node, defaultCollapsed };
+  }
+
+  if (node.type === "split" || node.type === "sort") {
+    return {
+      ...node,
+      children: node.children.map((child) =>
+        updateDefaultCollapsedAtPath(child, panelId, defaultCollapsed),
+      ),
+    };
+  }
+
+  return node;
+}
+
+/**
  * Deep clone and update sizes at a specific path in the split tree.
  * When path targets a split, updates each child's size from the new sizes array.
  *

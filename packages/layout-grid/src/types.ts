@@ -17,6 +17,9 @@ export interface LayoutGridPluginOptions {
   grid?: GridConfig;
   persistLayout?: boolean;
   getInitialLayout?: () => GridLayoutModel;
+  classNames?: {
+    item?: string;
+  };
 }
 
 export type GridLayoutBreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";

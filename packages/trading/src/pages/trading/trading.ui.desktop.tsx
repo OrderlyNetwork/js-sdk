@@ -124,6 +124,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const disableLayoutPersistence = props.disableLayoutPersistence ?? false;
 
+  const languageMap = useMemo(() => {
+    return {
+      "common.markets": t("common.markets"),
+    };
+  }, [t]);
+
   const dataListHeight = useMemo(() => {
     return {
       height: 0,
@@ -156,6 +162,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       animating,
       setAnimating,
       dataListHeight,
+      languageMap,
     }),
     [
       props.symbol,
@@ -179,12 +186,13 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       animating,
       setAnimating,
       dataListHeight,
+      languageMap,
     ],
   );
 
   const panels = useMemo(
-    () => createTradingPanelRegistry(registryProps),
-    [registryProps],
+    () => createTradingPanelRegistry(registryProps, languageMap),
+    [registryProps, languageMap],
   );
 
   const contextLayout = useTradingPageContext();

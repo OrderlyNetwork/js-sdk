@@ -36,6 +36,8 @@ type CNode =
       s?: string;
       mn?: string;
       mx?: string;
+      cn?: string;
+      st?: React.CSSProperties;
     }
   | {
       t: "sort";
@@ -44,6 +46,8 @@ type CNode =
       s?: string;
       mn?: string;
       mx?: string;
+      cn?: string;
+      st?: React.CSSProperties;
     };
 
 /** Compressed rule: lg/md/sm/xs keys unchanged. */
@@ -63,34 +67,122 @@ const ORDER_ENTRY_SORT_CHILDREN_CN: CNode[] = [
   { t: "panel", i: S.ORDER_ENTRY, s: "auto", cn: "oui-p-3" },
 ];
 
+/**
+ * HORIZONTAL_MARKETS panel fixed at page bottom (above scaffold footer).
+ * Used in markets-bottom preset for all breakpoints.
+ */
+const HORIZONTAL_MARKETS_BOTTOM_PANEL: CNode = {
+  t: "panel",
+  i: S.HORIZONTAL_MARKETS,
+  s: "fixed",
+  cn: "oui-mt-2",
+  d: true,
+};
+
+/**
+ * HORIZONTAL_MARKETS panel fixed at vertical top. Used in markets-top preset.
+ */
+const HORIZONTAL_MARKETS_TOP_PANEL: CNode = {
+  t: "panel",
+  i: S.HORIZONTAL_MARKETS,
+  s: "fixed",
+  cn: "oui-mb-2",
+  d: true,
+};
+
+/** sm: Symbol bar in vertical layout (auto height, padding). */
+const SYMBOL_BAR_FIXED: CNode = {
+  t: "panel",
+  i: S.SYMBOL_INFO_BAR,
+  s: "fixed",
+  d: true,
+  cn: "oui-px-3 oui-mb-2",
+};
+
+/**
+ * sm: Horizontal split [TradingView | Orderbook]. Reused in sm vertical layouts.
+ */
+function smTradingOrderbookSplit(opts?: {
+  splitSize?: string;
+  obMn?: string;
+  obMx?: string;
+}): CNode {
+  return {
+    t: "split",
+    o: "horizontal",
+    s: opts?.splitSize ?? "40%",
+    c: [
+      { t: "panel", i: S.TRADING_VIEW, s: "50%" },
+      {
+        t: "panel",
+        i: S.ORDERBOOK,
+        s: "50%",
+        mn: opts?.obMn ?? "240px",
+        mx: opts?.obMx ?? "300px",
+      },
+    ],
+  };
+}
+
+/**
+ * Data list panel with default padding. Size and optional minSize configurable.
+ */
+function dataList(s: string, opts?: { mn?: string; cn?: string }): CNode {
+  return {
+    t: "panel",
+    i: S.DATA_LIST,
+    s,
+    mn: opts?.mn,
+    cn: opts?.cn ?? "oui-p-2",
+  };
+}
+
 /** Builds order-entry sort node (vertical, Margin|Assets|OrderEntry). */
-function orderEntrySort(opts: {
-  s: string;
+function orderEntrySort(opts?: {
+  s?: string;
   mn?: string;
   mx?: string;
-  cn?: boolean;
+  cn?: string;
 }): CNode {
+  // { s: "280px", mn: "280px", mx: "360px" }
   return {
     t: "sort",
     o: "vertical",
-    s: opts.s,
-    mn: opts.mn,
-    mx: opts.mx,
+    s: opts?.s ?? "280px",
+    mn: opts?.mn ?? "280px",
+    mx: opts?.mx ?? "360px",
+    cn: opts?.cn,
     c: ORDER_ENTRY_SORT_CHILDREN_CN,
   };
 }
 
-/** Maps optional child props (s, mn, mx) to full SplitLayoutChildConstraints. */
-function mapChildProps(n: { s?: string; mn?: string; mx?: string }): Partial<{
+/** Maps optional child props (s, mn, mx, cn, st) for split/sort nodes. */
+function mapChildProps(n: {
+  s?: string;
+  mn?: string;
+  mx?: string;
+  cn?: string;
+  st?: React.CSSProperties;
+}): Partial<{
   size: string;
   minSize: string;
   maxSize: string;
+  className: string;
+  style: React.CSSProperties;
 }> {
-  const out: Record<string, string> = {};
+  const out: Record<string, string | React.CSSProperties> = {};
   if (n.s !== undefined) out.size = n.s;
   if (n.mn !== undefined) out.minSize = n.mn;
   if (n.mx !== undefined) out.maxSize = n.mx;
-  return out as Partial<{ size: string; minSize: string; maxSize: string }>;
+  if (n.cn !== undefined) out.className = n.cn;
+  if (n.st !== undefined) out.style = n.st;
+  return out as Partial<{
+    size: string;
+    minSize: string;
+    maxSize: string;
+    className: string;
+    style: React.CSSProperties;
+  }>;
 }
 
 /** Maps optional panel props to full panel node shape. */
@@ -164,11 +256,55 @@ function expandRule(r: CRule): SplitLayoutRule {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Shared small-screen layout trees (sm breakpoint) – used by both right and left
+// sm layout trees (768px–1199px) – separate Right (orderEntry right) and Left (orderEntry left)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** sm: [ symbolBar | markets | (tradingView | orderbook) | orderEntry* | dataList ]. */
-const smMarketsLeftTree: CNode = {
+/** sm Left: [ orderEntry* | mainCol ]; orderEntry on left. */
+const smLeftMarketsLeftTree: CNode = {
+  t: "split",
+  o: "horizontal",
+  c: [
+    orderEntrySort(),
+    {
+      t: "split",
+      o: "vertical",
+      s: "75%",
+      c: [
+        {
+          t: "panel",
+          i: S.SYMBOL_INFO_BAR,
+          s: "fixed",
+          d: true,
+          cn: "oui-px-3 oui-mb-2",
+        },
+        {
+          t: "split",
+          o: "horizontal",
+          s: "50%",
+          c: [
+            { t: "panel", i: S.TRADING_VIEW, s: "70%" },
+            { t: "panel", i: S.ORDERBOOK, s: "30%", mn: "240px", mx: "300px" },
+            {
+              t: "panel",
+              i: S.MARKETS,
+              s: "fixed",
+              mn: "70px",
+              mx: "280px",
+              d: true,
+              cn: "oui-ml-2",
+              cl: true,
+              dc: true,
+            },
+          ],
+        },
+        { t: "panel", i: S.DATA_LIST, s: "50%", cn: "oui-p-2" },
+      ],
+    },
+  ],
+};
+
+/** sm Right: [ mainCol | orderEntry* ]; orderEntry on right. */
+const smRightMarketsLeftTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
@@ -194,90 +330,80 @@ const smMarketsLeftTree: CNode = {
               i: S.MARKETS,
               s: "fixed",
               mn: "70px",
-              mx: "300px",
+              mx: "280px",
               d: true,
               cn: "oui-mr-2",
               cl: true,
+              dc: true,
             },
-            { t: "panel", i: S.TRADING_VIEW, s: "50%" },
-            { t: "panel", i: S.ORDERBOOK, s: "50%" },
+            { t: "panel", i: S.TRADING_VIEW, s: "70%" },
+            { t: "panel", i: S.ORDERBOOK, s: "30%", mn: "240px", mx: "300px" },
           ],
         },
         { t: "panel", i: S.DATA_LIST, s: "50%", cn: "oui-p-2" },
       ],
     },
-    orderEntrySort({ s: "auto", cn: true }),
+    orderEntrySort(),
   ],
 };
 
-/** sm: [ symbolBar | markets at top | (tradingView | orderbook) | orderEntry* | dataList ]. */
-const smMarketsTopTree: CNode = {
+/** sm Left: vertical; orderEntry before tradingView. */
+const smLeftMarketsTopTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
-    { t: "panel", i: S.SYMBOL_INFO_BAR, s: "auto" },
+    SYMBOL_BAR_FIXED,
     { t: "panel", i: S.MARKETS, s: "auto", cl: true },
-    {
-      t: "split",
-      o: "horizontal",
-      s: "40%",
-      c: [
-        { t: "panel", i: S.TRADING_VIEW, s: "50%" },
-        { t: "panel", i: S.ORDERBOOK, s: "50%" },
-      ],
-    },
-    orderEntrySort({ s: "auto" }),
-    { t: "panel", i: S.DATA_LIST, s: "30%" },
+    orderEntrySort(),
+    smTradingOrderbookSplit(),
+    dataList("30%"),
   ],
 };
 
-/** sm: [ symbolBar | (tradingView | orderbook) | markets | orderEntry* | dataList ]. */
-const smMarketsBottomTree: CNode = {
+/** sm Right: vertical; orderEntry after tradingView. */
+const smRightMarketsTopTree: CNode = {
+  t: "split",
+  o: "horizontal",
+  c: [
+    {
+      t: "split",
+      o: "vertical",
+      c: [
+        HORIZONTAL_MARKETS_TOP_PANEL,
+        {
+          t: "split",
+          o: "vertical",
+          c: [SYMBOL_BAR_FIXED, smTradingOrderbookSplit(), dataList("30%")],
+        },
+      ],
+    },
+    orderEntrySort(),
+  ],
+};
+
+/** sm Left: horizontal [ orderEntry* | mainCol ]; HORIZONTAL_MARKETS at bottom. */
+const smLeftMarketsBottomTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
-    { t: "panel", i: S.SYMBOL_INFO_BAR, s: "auto" },
     {
       t: "split",
       o: "horizontal",
-      s: "40%",
       c: [
-        { t: "panel", i: S.TRADING_VIEW, s: "50%" },
-        { t: "panel", i: S.ORDERBOOK, s: "50%" },
+        orderEntrySort(),
+        {
+          t: "split",
+          o: "vertical",
+          c: [SYMBOL_BAR_FIXED, smTradingOrderbookSplit(), dataList("30%")],
+        },
       ],
     },
-    { t: "panel", i: S.MARKETS, s: "auto", cl: true },
-    orderEntrySort({ s: "auto" }),
-    { t: "panel", i: S.DATA_LIST, s: "30%" },
+    HORIZONTAL_MARKETS_BOTTOM_PANEL,
   ],
 };
 
-/** sm: [ symbolBar | (tradingView | orderbook) | orderEntry* | dataList ]; markets hidden. */
-const smMarketsHideTree: CNode = {
-  t: "split",
-  o: "vertical",
-  c: [
-    { t: "panel", i: S.SYMBOL_INFO_BAR, s: "auto" },
-    {
-      t: "split",
-      o: "horizontal",
-      s: "40%",
-      c: [
-        { t: "panel", i: S.TRADING_VIEW, s: "50%" },
-        { t: "panel", i: S.ORDERBOOK, s: "50%" },
-      ],
-    },
-    orderEntrySort({ s: "auto" }),
-    { t: "panel", i: S.DATA_LIST, s: "30%" },
-  ],
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// xs layout trees (≤480px) – mobile-optimized, full vertical stack
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** xs: vertical [ symbolBar | markets | tradingView | orderbook | orderEntry* | dataList ]; markets collapsible at top. */
-const xsMarketsLeftTree: CNode = {
+/** sm Right: horizontal [ mainCol | orderEntry* ]; HORIZONTAL_MARKETS at bottom. */
+const smRightMarketsBottomTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
@@ -288,85 +414,200 @@ const xsMarketsLeftTree: CNode = {
         {
           t: "split",
           o: "vertical",
-          s: "75%",
-          c: [
-            {
-              t: "panel",
-              i: S.SYMBOL_INFO_BAR,
-              s: "fixed",
-              cn: "oui-px-2 oui-mb-2",
-              d: true,
-            },
-            {
-              t: "split",
-              o: "horizontal",
-              c: [
-                {
-                  t: "panel",
-                  i: S.MARKETS,
-                  s: "auto",
-                  cl: true,
-                  dc: true,
-                  cn: "oui-p-2",
-                },
-                {
-                  t: "split",
-                  o: "vertical",
-                  c: [
-                    { t: "panel", i: S.TRADING_VIEW, s: "40%", mn: "200px" },
-                    { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
-                  ],
-                },
-              ],
-            },
-          ],
+          c: [SYMBOL_BAR_FIXED, smTradingOrderbookSplit(), dataList("30%")],
         },
-
-        orderEntrySort({ s: "25%", mn: "200px", mx: "300px" }),
+        orderEntrySort(),
       ],
     },
+    HORIZONTAL_MARKETS_BOTTOM_PANEL,
+  ],
+};
 
+/** sm Left: vertical; orderEntry before tradingView. */
+const smLeftMarketsHideTree: CNode = {
+  t: "split",
+  o: "horizontal",
+  c: [
+    orderEntrySort(),
+    {
+      t: "split",
+      o: "vertical",
+      s: "85%",
+      c: [SYMBOL_BAR_FIXED, smTradingOrderbookSplit(), dataList("30%")],
+    },
+  ],
+};
+
+/** sm Right: vertical; orderEntry after tradingView. */
+const smRightMarketsHideTree: CNode = {
+  t: "split",
+  o: "horizontal",
+  c: [
+    {
+      t: "split",
+      o: "vertical",
+      s: "75%",
+      c: [SYMBOL_BAR_FIXED, smTradingOrderbookSplit(), dataList("30%")],
+    },
+    orderEntrySort(),
+  ],
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// xs layout trees (≤480px) – separate Right (orderEntry right) and Left (orderEntry left)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const xsMarketsLeftMainCol: CNode = {
+  t: "split",
+  o: "vertical",
+  s: "75%",
+  c: [
+    {
+      t: "panel",
+      i: S.SYMBOL_INFO_BAR,
+      s: "fixed",
+      cn: "oui-px-2 oui-mb-2",
+      d: true,
+    },
+    {
+      t: "split",
+      o: "horizontal",
+      c: [
+        {
+          t: "split",
+          o: "vertical",
+          c: [
+            { t: "panel", i: S.TRADING_VIEW, s: "40%", mn: "200px" },
+            { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
+          ],
+        },
+        {
+          t: "panel",
+          i: S.MARKETS,
+          s: "fixed",
+          mn: "70px",
+          mx: "280px",
+          d: true,
+          cl: true,
+          dc: true,
+          cn: "oui-ml-2",
+        },
+      ],
+    },
+  ],
+};
+
+/** xs Left: horizontal [ orderEntry* | mainCol ]; orderEntry on left. */
+const xsLeftMarketsLeftTree: CNode = {
+  t: "split",
+  o: "vertical",
+  c: [
+    {
+      t: "split",
+      o: "horizontal",
+      s: "60%",
+      c: [orderEntrySort(), xsMarketsLeftMainCol],
+    },
+    dataList("40%", { mn: "100px" }),
+  ],
+};
+
+/** xs Right: horizontal [ mainCol | orderEntry* ]; orderEntry on right. */
+const xsRightMarketsLeftTree: CNode = {
+  t: "split",
+  o: "vertical",
+  c: [
+    {
+      t: "split",
+      o: "horizontal",
+      s: "60%",
+      c: [xsMarketsLeftMainCol, orderEntrySort()],
+    },
+    dataList("40%", { mn: "100px" }),
+  ],
+};
+
+/** xs Left: vertical; orderEntry before tradingView. */
+const xsLeftMarketsTopTree: CNode = {
+  t: "split",
+  o: "vertical",
+  c: [
+    SYMBOL_BAR_FIXED,
+    { t: "panel", i: S.MARKETS, s: "auto", cl: true, cn: "oui-p-2" },
+    orderEntrySort(),
+    { t: "panel", i: S.TRADING_VIEW, s: "40%", mn: "200px" },
+    { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
     { t: "panel", i: S.DATA_LIST, s: "25%", mn: "100px", cn: "oui-p-2" },
   ],
 };
 
-/** xs: vertical [ symbolBar | markets | tradingView | orderbook | orderEntry* | dataList ]; markets at top. */
-const xsMarketsTopTree: CNode = {
+/** xs Right: vertical; orderEntry after tradingView. */
+const xsRightMarketsTopTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
-    { t: "panel", i: S.SYMBOL_INFO_BAR, s: "auto", cn: "oui-px-2 oui-mb-1" },
+    HORIZONTAL_MARKETS_TOP_PANEL,
+    SYMBOL_BAR_FIXED,
     { t: "panel", i: S.MARKETS, s: "auto", cl: true, cn: "oui-p-2" },
     { t: "panel", i: S.TRADING_VIEW, s: "40%", mn: "200px" },
     { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
-    orderEntrySort({ s: "auto", cn: true }),
+    orderEntrySort(),
     { t: "panel", i: S.DATA_LIST, s: "25%", mn: "100px", cn: "oui-p-2" },
   ],
 };
 
-/** xs: vertical [ symbolBar | tradingView | orderbook | markets | orderEntry* | dataList ]; markets at bottom. */
-const xsMarketsBottomTree: CNode = {
+/** xs Left: vertical; orderEntry before tradingView; HORIZONTAL_MARKETS at bottom. */
+const xsLeftMarketsBottomTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
-    { t: "panel", i: S.SYMBOL_INFO_BAR, s: "auto", cn: "oui-px-2 oui-mb-1" },
+    SYMBOL_BAR_FIXED,
+    orderEntrySort(),
     { t: "panel", i: S.TRADING_VIEW, s: "40%", mn: "200px" },
     { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
     { t: "panel", i: S.MARKETS, s: "auto", cl: true, cn: "oui-p-2" },
-    orderEntrySort({ s: "auto", cn: true }),
     { t: "panel", i: S.DATA_LIST, s: "25%", mn: "100px", cn: "oui-p-2" },
+    HORIZONTAL_MARKETS_BOTTOM_PANEL,
   ],
 };
 
-/** xs: vertical [ symbolBar | tradingView | orderbook | orderEntry* | dataList ]; markets hidden. */
-const xsMarketsHideTree: CNode = {
+/** xs Right: vertical; orderEntry after tradingView; HORIZONTAL_MARKETS at bottom. */
+const xsRightMarketsBottomTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
-    { t: "panel", i: S.SYMBOL_INFO_BAR, s: "auto", cn: "oui-px-2 oui-mb-1" },
+    SYMBOL_BAR_FIXED,
+    { t: "panel", i: S.TRADING_VIEW, s: "40%", mn: "200px" },
+    { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
+    { t: "panel", i: S.MARKETS, s: "auto", cl: true, cn: "oui-p-2" },
+    orderEntrySort(),
+    { t: "panel", i: S.DATA_LIST, s: "25%", mn: "100px", cn: "oui-p-2" },
+    HORIZONTAL_MARKETS_BOTTOM_PANEL,
+  ],
+};
+
+/** xs Left: vertical; orderEntry before tradingView. */
+const xsLeftMarketsHideTree: CNode = {
+  t: "split",
+  o: "vertical",
+  c: [
+    SYMBOL_BAR_FIXED,
+    orderEntrySort(),
     { t: "panel", i: S.TRADING_VIEW, s: "45%", mn: "200px" },
     { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
-    orderEntrySort({ s: "auto", cn: true }),
+    { t: "panel", i: S.DATA_LIST, s: "25%", mn: "100px", cn: "oui-p-2" },
+  ],
+};
+
+/** xs Right: vertical; orderEntry after tradingView. */
+const xsRightMarketsHideTree: CNode = {
+  t: "split",
+  o: "vertical",
+  c: [
+    SYMBOL_BAR_FIXED,
+    { t: "panel", i: S.TRADING_VIEW, s: "45%", mn: "200px" },
+    { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "120px" },
+    orderEntrySort(),
     { t: "panel", i: S.DATA_LIST, s: "25%", mn: "100px", cn: "oui-p-2" },
   ],
 };
@@ -413,75 +654,98 @@ const lgRightMarketsLeftTree: CNode = {
         { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
       ],
     },
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    orderEntrySort(),
   ],
 };
 
 /** lg: horizontal [ mainCol 75% | orderEntry* 25% ]; markets in mainCol top. */
 const lgRightMarketsTopTree: CNode = {
   t: "split",
-  o: "horizontal",
+  o: "vertical",
   c: [
+    HORIZONTAL_MARKETS_TOP_PANEL,
     {
       t: "split",
-      o: "vertical",
-      s: "75%",
+      o: "horizontal",
       c: [
         {
-          t: "panel",
-          i: S.SYMBOL_INFO_BAR,
-          s: "fixed",
-          cn: "oui-px-3 oui-mb-2",
-          d: true,
-        },
-        { t: "panel", i: S.MARKETS, s: "20%", cl: true },
-        {
           t: "split",
-          o: "horizontal",
-          s: "70%",
+          o: "vertical",
+          s: "75%",
           c: [
-            { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "600px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            {
+              t: "split",
+              o: "vertical",
+              c: [
+                {
+                  t: "panel",
+                  i: S.SYMBOL_INFO_BAR,
+                  s: "fixed",
+                  cn: "oui-px-3 oui-mb-2",
+                  d: true,
+                },
+                {
+                  t: "split",
+                  o: "horizontal",
+                  s: "70%",
+                  c: [
+                    { t: "panel", i: S.TRADING_VIEW, s: "65%", mn: "600px" },
+                    {
+                      t: "panel",
+                      i: S.ORDERBOOK,
+                      s: "35%",
+                      mn: "280px",
+                    },
+                  ],
+                },
+                { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
+              ],
+            },
           ],
         },
-        { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
+        orderEntrySort(),
       ],
     },
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
   ],
 };
 
-/** lg: horizontal [ mainCol 75% | orderEntry* 25% ]; markets in mainCol bottom. */
+/** lg: horizontal [ mainCol 75% | orderEntry* 25% ]; HORIZONTAL_MARKETS fixed at bottom. */
 const lgRightMarketsBottomTree: CNode = {
   t: "split",
-  o: "horizontal",
+  o: "vertical",
   c: [
     {
       t: "split",
-      o: "vertical",
-      s: "75%",
+      o: "horizontal",
       c: [
         {
-          t: "panel",
-          i: S.SYMBOL_INFO_BAR,
-          s: "fixed",
-          cn: "oui-px-3 oui-mb-2",
-          d: true,
-        },
-        {
           t: "split",
-          o: "horizontal",
-          s: "70%",
+          o: "vertical",
+
           c: [
-            { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "600px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            {
+              t: "panel",
+              i: S.SYMBOL_INFO_BAR,
+              s: "fixed",
+              cn: "oui-px-3 oui-mb-2",
+              d: true,
+            },
+            {
+              t: "split",
+              o: "horizontal",
+              s: "70%",
+              c: [
+                { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "600px" },
+                { t: "panel", i: S.ORDERBOOK, s: "40%" },
+              ],
+            },
+            { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
           ],
         },
-        { t: "panel", i: S.MARKETS, s: "fixed", cl: true },
-        { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
+        orderEntrySort(),
       ],
     },
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    HORIZONTAL_MARKETS_BOTTOM_PANEL,
   ],
 };
 
@@ -514,7 +778,7 @@ const lgRightMarketsHideTree: CNode = {
         { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
       ],
     },
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    orderEntrySort(),
   ],
 };
 
@@ -530,7 +794,6 @@ const mdRightMarketsLeftTree: CNode = {
     {
       t: "split",
       o: "vertical",
-      s: "70%",
       c: [
         {
           t: "panel",
@@ -542,7 +805,7 @@ const mdRightMarketsLeftTree: CNode = {
         {
           t: "split",
           o: "horizontal",
-          s: "70%",
+          s: "50%",
           mn: "320px",
           c: [
             {
@@ -559,10 +822,10 @@ const mdRightMarketsLeftTree: CNode = {
             { t: "panel", i: S.ORDERBOOK, s: "40%", mn: "280px" },
           ],
         },
-        { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
+        { t: "panel", i: S.DATA_LIST, s: "50%", cn: "oui-p-2" },
       ],
     },
-    orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+    orderEntrySort(),
   ],
 };
 
@@ -571,13 +834,7 @@ const mdRightMarketsTopTree: CNode = {
   t: "split",
   o: "vertical",
   c: [
-    {
-      t: "panel",
-      i: S.HORIZONTAL_MARKETS,
-      s: "fixed",
-      cn: "oui-mb-2",
-      d: true,
-    },
+    HORIZONTAL_MARKETS_TOP_PANEL,
     {
       t: "split",
       o: "horizontal",
@@ -585,7 +842,6 @@ const mdRightMarketsTopTree: CNode = {
         {
           t: "split",
           o: "vertical",
-          s: "70%",
           c: [
             {
               t: "panel",
@@ -598,16 +854,16 @@ const mdRightMarketsTopTree: CNode = {
             {
               t: "split",
               o: "horizontal",
-              s: "70%",
+              s: "50%",
               c: [
-                { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-                { t: "panel", i: S.ORDERBOOK, s: "40%" },
+                { t: "panel", i: S.TRADING_VIEW, s: "70%", mn: "540px" },
+                { t: "panel", i: S.ORDERBOOK, s: "30%", mn: "280px" },
               ],
             },
-            { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
+            { t: "panel", i: S.DATA_LIST, s: "50%", cn: "oui-p-2" },
           ],
         },
-        orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+        orderEntrySort(),
       ],
     },
   ],
@@ -641,23 +897,17 @@ const mdRightMarketsBottomTree: CNode = {
               s: "70%",
               c: [
                 { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-                { t: "panel", i: S.ORDERBOOK, s: "40%" },
+                { t: "panel", i: S.ORDERBOOK, s: "40%", mn: "280px" },
               ],
             },
 
             { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
           ],
         },
-        orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+        orderEntrySort(),
       ],
     },
-    {
-      t: "panel",
-      i: S.HORIZONTAL_MARKETS,
-      s: "fixed",
-      cn: "oui-fixed oui-bottom-0 oui-left-0 oui-right-0",
-      d: true,
-    },
+    HORIZONTAL_MARKETS_BOTTOM_PANEL,
   ],
 };
 
@@ -669,7 +919,7 @@ const mdRightMarketsHideTree: CNode = {
     {
       t: "split",
       o: "vertical",
-      s: "70%",
+      // s: "70%",
       c: [
         {
           t: "panel",
@@ -681,46 +931,46 @@ const mdRightMarketsHideTree: CNode = {
         {
           t: "split",
           o: "horizontal",
-          s: "70%",
+          s: "55%",
           c: [
-            { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            { t: "panel", i: S.TRADING_VIEW, s: "75%", mn: "540px" },
+            { t: "panel", i: S.ORDERBOOK, s: "25%", mn: "280px" },
           ],
         },
-        { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
+        { t: "panel", i: S.DATA_LIST, s: "45%", cn: "oui-p-2" },
       ],
     },
-    orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+    orderEntrySort(),
   ],
 };
 
-/** Advanced-right rules: lg + md + sm + xs. */
+/** Advanced-right rules: orderEntry on right at all breakpoints. */
 const exchangeStyleRightMarketsLeftRule: CRule = {
   lg: lgRightMarketsLeftTree,
   md: mdRightMarketsLeftTree,
-  sm: smMarketsLeftTree,
-  xs: xsMarketsLeftTree,
+  sm: smRightMarketsLeftTree,
+  xs: xsRightMarketsLeftTree,
 };
 
 const exchangeStyleRightMarketsTopRule: CRule = {
   lg: lgRightMarketsTopTree,
   md: mdRightMarketsTopTree,
-  sm: smMarketsTopTree,
-  xs: xsMarketsTopTree,
+  sm: smRightMarketsTopTree,
+  xs: xsRightMarketsTopTree,
 };
 
 const exchangeStyleRightMarketsBottomRule: CRule = {
   lg: lgRightMarketsBottomTree,
   md: mdRightMarketsBottomTree,
-  sm: smMarketsBottomTree,
-  xs: xsMarketsBottomTree,
+  sm: smRightMarketsBottomTree,
+  xs: xsRightMarketsBottomTree,
 };
 
 const exchangeStyleRightMarketsHideRule: CRule = {
   lg: lgRightMarketsHideTree,
   md: mdRightMarketsHideTree,
-  sm: smMarketsHideTree,
-  xs: xsMarketsHideTree,
+  sm: smRightMarketsHideTree,
+  xs: xsRightMarketsHideTree,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -732,7 +982,7 @@ const lgLeftMarketsLeftTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    orderEntrySort(),
     {
       t: "split",
       o: "vertical",
@@ -772,32 +1022,38 @@ const lgLeftMarketsLeftTree: CNode = {
 /** lg: orderEntry* left | mainCol right; markets top in mainCol. */
 const lgLeftMarketsTopTree: CNode = {
   t: "split",
-  o: "horizontal",
+  o: "vertical",
   c: [
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    HORIZONTAL_MARKETS_TOP_PANEL,
     {
       t: "split",
-      o: "vertical",
-      s: "75%",
+      o: "horizontal",
       c: [
-        {
-          t: "panel",
-          i: S.SYMBOL_INFO_BAR,
-          s: "fixed",
-          cn: "oui-px-3 oui-mb-2",
-          d: true,
-        },
-        { t: "panel", i: S.MARKETS, s: "20%", cl: true },
+        orderEntrySort(),
         {
           t: "split",
-          o: "horizontal",
-          s: "70%",
+          o: "vertical",
+          s: "75%",
           c: [
-            { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "600px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            {
+              t: "panel",
+              i: S.SYMBOL_INFO_BAR,
+              s: "fixed",
+              cn: "oui-px-3 oui-mb-2",
+              d: true,
+            },
+            {
+              t: "split",
+              o: "horizontal",
+              s: "70%",
+              c: [
+                { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "600px" },
+                { t: "panel", i: S.ORDERBOOK, s: "40%" },
+              ],
+            },
+            { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
           ],
         },
-        { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
       ],
     },
   ],
@@ -808,7 +1064,7 @@ const lgLeftMarketsBottomTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    orderEntrySort(),
     {
       t: "split",
       o: "vertical",
@@ -842,7 +1098,7 @@ const lgLeftMarketsHideTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
-    orderEntrySort({ s: "25%", mn: "300px", mx: "400px", cn: true }),
+    orderEntrySort(),
     {
       t: "split",
       o: "vertical",
@@ -879,11 +1135,10 @@ const mdLeftMarketsLeftTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
-    orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+    orderEntrySort(),
     {
       t: "split",
       o: "vertical",
-      s: "70%",
       c: [
         {
           t: "panel",
@@ -899,8 +1154,18 @@ const mdLeftMarketsLeftTree: CNode = {
           mx: "540px",
           mn: "480px",
           c: [
-            { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            { t: "panel", i: S.TRADING_VIEW, s: "65%", mn: "540px" },
+            { t: "panel", i: S.ORDERBOOK, s: "35%", mn: "280px" },
+            {
+              t: "panel",
+              i: S.MARKETS,
+              s: "fixed",
+              mn: "70px",
+              mx: "280px",
+              cl: true,
+              dc: true,
+              cn: "oui-ml-2",
+            },
           ],
         },
         { t: "panel", i: S.DATA_LIST, s: "40%", cn: "oui-p-2" },
@@ -912,32 +1177,38 @@ const mdLeftMarketsLeftTree: CNode = {
 /** md: orderEntry* left | mainCol right; markets top in mainCol. */
 const mdLeftMarketsTopTree: CNode = {
   t: "split",
-  o: "horizontal",
+  o: "vertical",
   c: [
-    orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+    HORIZONTAL_MARKETS_TOP_PANEL,
     {
       t: "split",
-      o: "vertical",
-      s: "70%",
+      o: "horizontal",
       c: [
-        {
-          t: "panel",
-          i: S.SYMBOL_INFO_BAR,
-          s: "fixed",
-          cn: "oui-px-3 oui-mb-2",
-          d: true,
-        },
-        { t: "panel", i: S.MARKETS, s: "20%", cl: true },
+        orderEntrySort(),
         {
           t: "split",
-          o: "horizontal",
+          o: "vertical",
           s: "70%",
           c: [
-            { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            {
+              t: "panel",
+              i: S.SYMBOL_INFO_BAR,
+              s: "fixed",
+              cn: "oui-px-3 oui-mb-2",
+              d: true,
+            },
+            {
+              t: "split",
+              o: "horizontal",
+              s: "60%",
+              c: [
+                { t: "panel", i: S.TRADING_VIEW, s: "65%", mn: "540px" },
+                { t: "panel", i: S.ORDERBOOK, s: "35%", mn: "280px" },
+              ],
+            },
+            { t: "panel", i: S.DATA_LIST, s: "40%", cn: "oui-p-2" },
           ],
         },
-        { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
       ],
     },
   ],
@@ -948,7 +1219,7 @@ const mdLeftMarketsBottomTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
-    orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+    orderEntrySort(),
     {
       t: "split",
       o: "vertical",
@@ -967,7 +1238,7 @@ const mdLeftMarketsBottomTree: CNode = {
           s: "70%",
           c: [
             { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            { t: "panel", i: S.ORDERBOOK, s: "40%", mn: "280px" },
           ],
         },
         { t: "panel", i: S.MARKETS, s: "20%", cl: true },
@@ -982,7 +1253,7 @@ const mdLeftMarketsHideTree: CNode = {
   t: "split",
   o: "horizontal",
   c: [
-    orderEntrySort({ s: "30%", mn: "280px", mx: "360px", cn: true }),
+    orderEntrySort(),
     {
       t: "split",
       o: "vertical",
@@ -1001,7 +1272,7 @@ const mdLeftMarketsHideTree: CNode = {
           s: "70%",
           c: [
             { t: "panel", i: S.TRADING_VIEW, s: "60%", mn: "540px" },
-            { t: "panel", i: S.ORDERBOOK, s: "40%" },
+            { t: "panel", i: S.ORDERBOOK, s: "40%", mn: "280px" },
           ],
         },
         { t: "panel", i: S.DATA_LIST, s: "30%", cn: "oui-p-2" },
@@ -1010,33 +1281,33 @@ const mdLeftMarketsHideTree: CNode = {
   ],
 };
 
-/** Advanced-left rules: lg + md + sm + xs. */
+/** Advanced-left rules: orderEntry on left at all breakpoints. */
 const exchangeStyleLeftMarketsLeftRule: CRule = {
   lg: lgLeftMarketsLeftTree,
   md: mdLeftMarketsLeftTree,
-  sm: smMarketsLeftTree,
-  xs: xsMarketsLeftTree,
+  sm: smLeftMarketsLeftTree,
+  xs: xsLeftMarketsLeftTree,
 };
 
 const exchangeStyleLeftMarketsTopRule: CRule = {
   lg: lgLeftMarketsTopTree,
   md: mdLeftMarketsTopTree,
-  sm: smMarketsTopTree,
-  xs: xsMarketsTopTree,
+  sm: smLeftMarketsTopTree,
+  xs: xsLeftMarketsTopTree,
 };
 
 const exchangeStyleLeftMarketsBottomRule: CRule = {
   lg: lgLeftMarketsBottomTree,
   md: mdLeftMarketsBottomTree,
-  sm: smMarketsBottomTree,
-  xs: xsMarketsBottomTree,
+  sm: smLeftMarketsBottomTree,
+  xs: xsLeftMarketsBottomTree,
 };
 
 const exchangeStyleLeftMarketsHideRule: CRule = {
   lg: lgLeftMarketsHideTree,
   md: mdLeftMarketsHideTree,
-  sm: smMarketsHideTree,
-  xs: xsMarketsHideTree,
+  sm: smLeftMarketsHideTree,
+  xs: xsLeftMarketsHideTree,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
