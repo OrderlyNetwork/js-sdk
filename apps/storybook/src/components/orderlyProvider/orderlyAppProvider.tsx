@@ -48,9 +48,7 @@ export const OrderlyAppRootProvider: FC<
           //   src: "https://www.youtube.com/embed/NOrvXR48WaY?mute=0&autoplay=1",
           //   title: "Youtube Live",
           // }),
-          registerFastPlaceOrderPlugin({
-            className: "oui-w-full",
-          }),
+          // registerFastPlaceOrderPlugin(),
         ]}
         amplitudeConfig={{
           amplitudeId: "4463418c103f3a66c6d863357f951e25",
