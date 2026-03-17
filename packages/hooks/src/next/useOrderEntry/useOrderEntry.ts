@@ -601,6 +601,7 @@ const useOrderEntry = (
       positions,
       symbolInfo,
       sumUnitaryFunding,
+      symbolLeverage: symbolLeverage,
     });
 
     return estLiqPrice;
@@ -613,6 +614,7 @@ const useOrderEntry = (
     maxQty,
     symbolInfo,
     fundingRates,
+    symbolLeverage,
   ]);
 
   const estLiqPriceDistance = useMemo(() => {
