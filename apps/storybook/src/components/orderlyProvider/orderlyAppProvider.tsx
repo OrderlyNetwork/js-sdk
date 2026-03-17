@@ -16,7 +16,7 @@ import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { useIsRwaRoute } from "../../orderlyConfig/hooks/useIsRwaRoute";
 import { useSymbolList } from "../../orderlyConfig/hooks/useSymbolList";
 import { notification } from "../../orderlyConfig/notification";
-import { plugins } from "../../orderlyConfig/plugins";
+// import { plugins } from "../../orderlyConfig/plugins";
 import { themes } from "../../orderlyConfig/themes";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
