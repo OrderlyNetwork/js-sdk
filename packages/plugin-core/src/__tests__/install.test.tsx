@@ -2,8 +2,8 @@ import React from "react";
 import { installExtension, setExtensionBuilder } from "../install";
 import { OrderlyPluginRegistry } from "../pluginRegistry";
 import { OrderlyExtensionRegistry } from "../registry";
-import { ExtensionPositionEnum } from "../types";
 import { resetExtensionRegistry } from "../setupTests";
+import { ExtensionPositionEnum } from "../types";
 
 describe("installExtension", () => {
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe("installExtension", () => {
     expect(plugins[0].interceptors![0].target).toBe("Deposit.DepositForm");
 
     const legacy = OrderlyExtensionRegistry.getInstance().getPluginsByPosition(
-      ExtensionPositionEnum.DepositForm
+      ExtensionPositionEnum.DepositForm,
     );
     expect(legacy).toBeDefined();
     expect(legacy?.name).toBe("TestExt");
@@ -66,7 +66,9 @@ describe("setExtensionBuilder", () => {
     });
     const builder = jest.fn(() => ({}));
     setExtensionBuilder(ExtensionPositionEnum.AccountMenu, builder);
-    const plugin = registry.getPluginsByPosition(ExtensionPositionEnum.AccountMenu);
+    const plugin = registry.getPluginsByPosition(
+      ExtensionPositionEnum.AccountMenu,
+    );
     expect(plugin?.builder).toBe(builder);
   });
 });

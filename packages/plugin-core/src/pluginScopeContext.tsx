@@ -22,8 +22,7 @@ export const usePluginScope = (): PluginScopeValue | null =>
   useContext(PluginScopeContext);
 
 export interface PluginScopeProviderProps
-  extends PropsWithChildren,
-    PluginScopeValue {}
+  extends PropsWithChildren, PluginScopeValue {}
 
 /**
  * Wraps plugin output so useQuery/useMutation etc. can inject X-Orderly-Plugin-Id header.
@@ -36,7 +35,7 @@ export const PluginScopeProvider: FC<PluginScopeProviderProps> = ({
 }) => {
   const value = useMemo<PluginScopeValue>(
     () => ({ pluginId, pluginName, pluginVersion }),
-    [pluginId, pluginName, pluginVersion]
+    [pluginId, pluginName, pluginVersion],
   );
   return (
     <PluginScopeContext.Provider value={value}>

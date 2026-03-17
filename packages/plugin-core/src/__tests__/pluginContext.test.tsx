@@ -30,7 +30,7 @@ describe("OrderlyPluginProvider", () => {
     render(
       <OrderlyPluginProvider plugins={[]}>
         <ContextConsumer />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByTestId("plugin-count").textContent).toBe("0");
     expect(screen.getByTestId("plugin-ids").textContent).toBe("");
@@ -45,7 +45,7 @@ describe("OrderlyPluginProvider", () => {
     render(
       <OrderlyPluginProvider plugins={plugins}>
         <ContextConsumer />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByTestId("plugin-count").textContent).toBe("2");
     expect(screen.getByTestId("plugin-ids").textContent).toBe("p1,p2");
@@ -62,33 +62,44 @@ describe("OrderlyPluginProvider", () => {
         pluginState={{ foo: "bar" }}
       >
         <ContextConsumer />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByTestId("plugin-ids").textContent).toBe("from-fn");
   });
 
   it("calls setup on each plugin that has setup", () => {
     const setup = jest.fn();
-    const plugins: OrderlyPlugin[] = [{ id: "with-setup", name: "WithSetup", setup }];
+    const plugins: OrderlyPlugin[] = [
+      { id: "with-setup", name: "WithSetup", setup },
+    ];
     render(
       <OrderlyPluginProvider plugins={plugins}>
         <ContextConsumer />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(setup).toHaveBeenCalledTimes(1);
     expect(setup).toHaveBeenCalledWith(expect.any(Object));
   });
 
   it("merges plugins from OrderlyPluginRegistry with props plugins", () => {
-    OrderlyPluginRegistry.register({ id: "from-registry", name: "FromRegistry" });
+    OrderlyPluginRegistry.register({
+      id: "from-registry",
+      name: "FromRegistry",
+    });
     render(
-      <OrderlyPluginProvider plugins={[{ id: "from-props", name: "FromProps" }]}>
+      <OrderlyPluginProvider
+        plugins={[{ id: "from-props", name: "FromProps" }]}
+      >
         <ContextConsumer />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByTestId("plugin-count").textContent).toBe("2");
-    expect(screen.getByTestId("plugin-ids").textContent).toContain("from-props");
-    expect(screen.getByTestId("plugin-ids").textContent).toContain("from-registry");
+    expect(screen.getByTestId("plugin-ids").textContent).toContain(
+      "from-props",
+    );
+    expect(screen.getByTestId("plugin-ids").textContent).toContain(
+      "from-registry",
+    );
   });
 });
 
@@ -110,7 +121,7 @@ describe("ExtensionProvider and useExtensionContext", () => {
     render(
       <ExtensionProvider>
         <ExtensionConsumer />
-      </ExtensionProvider>
+      </ExtensionProvider>,
     );
     expect(screen.getByTestId("ext-ctx").textContent).toBe("{}");
   });

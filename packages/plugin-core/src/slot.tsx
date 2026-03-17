@@ -1,9 +1,9 @@
 import React from "react";
-import { NotFound } from "./notFound";
-import { ExtensionPosition } from "./types";
-import { positionToPath } from "./pathMap";
-import { useInjectedComponent } from "./useInjectedComponent";
 import { PluginErrorBoundary } from "./PluginErrorBoundary";
+import { NotFound } from "./notFound";
+import { positionToPath } from "./pathMap";
+import { ExtensionPosition } from "./types";
+import { useInjectedComponent } from "./useInjectedComponent";
 
 interface SlotProps {
   position: ExtensionPosition;

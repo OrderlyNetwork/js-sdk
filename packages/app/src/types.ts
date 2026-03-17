@@ -3,7 +3,11 @@ import {
   ExclusiveConfigProviderProps,
   ConfigProviderProps,
 } from "@orderly.network/hooks";
-import { ExtensionPosition, type OrderlyPlugin, type PluginRegistrationFn } from "@orderly.network/ui";
+import {
+  ExtensionPosition,
+  type OrderlyPlugin,
+  type PluginRegistrationFn,
+} from "@orderly.network/ui";
 
 type Logo = {
   // the logo image url

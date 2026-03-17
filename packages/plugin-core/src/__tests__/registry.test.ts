@@ -1,6 +1,6 @@
-import { ExtensionPositionEnum } from "../types";
 import { OrderlyExtensionRegistry } from "../registry";
 import { resetExtensionRegistry } from "../setupTests";
+import { ExtensionPositionEnum } from "../types";
 
 describe("OrderlyExtensionRegistry", () => {
   beforeEach(() => {
@@ -22,7 +22,9 @@ describe("OrderlyExtensionRegistry", () => {
       positions: [ExtensionPositionEnum.DepositForm],
       render,
     });
-    const plugin = registry.getPluginsByPosition(ExtensionPositionEnum.DepositForm);
+    const plugin = registry.getPluginsByPosition(
+      ExtensionPositionEnum.DepositForm,
+    );
     expect(plugin).toBeDefined();
     expect(plugin?.name).toBe("TestExt");
     expect(plugin?.render).toBe(render);
@@ -39,7 +41,7 @@ describe("OrderlyExtensionRegistry", () => {
     });
     registry.setBuilder(ExtensionPositionEnum.WithdrawForm, builder);
     const plugin = registry.getPluginsByPosition(
-      ExtensionPositionEnum.WithdrawForm
+      ExtensionPositionEnum.WithdrawForm,
     );
     expect(plugin?.builder).toBe(builder);
   });
@@ -47,7 +49,7 @@ describe("OrderlyExtensionRegistry", () => {
   it("getPluginsByPosition returns undefined for unregistered position", () => {
     const registry = OrderlyExtensionRegistry.getInstance();
     expect(
-      registry.getPluginsByPosition(ExtensionPositionEnum.AccountMenu)
+      registry.getPluginsByPosition(ExtensionPositionEnum.AccountMenu),
     ).toBeUndefined();
   });
 });

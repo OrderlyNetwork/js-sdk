@@ -1,15 +1,14 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import {
-  PluginScopeProvider,
-  usePluginScope,
-} from "../pluginScopeContext";
+import { PluginScopeProvider, usePluginScope } from "../pluginScopeContext";
 
 const ScopeConsumer = () => {
   const scope = usePluginScope();
   return (
     <span data-testid="scope">
-      {scope ? `${scope.pluginId}|${scope.pluginName ?? ""}|${scope.pluginVersion ?? ""}` : "null"}
+      {scope
+        ? `${scope.pluginId}|${scope.pluginName ?? ""}|${scope.pluginVersion ?? ""}`
+        : "null"}
     </span>
   );
 };
@@ -23,10 +22,10 @@ describe("PluginScopeProvider", () => {
         pluginVersion="1.0.0"
       >
         <ScopeConsumer />
-      </PluginScopeProvider>
+      </PluginScopeProvider>,
     );
     expect(screen.getByTestId("scope").textContent).toBe(
-      "my-plugin|My Plugin|1.0.0"
+      "my-plugin|My Plugin|1.0.0",
     );
   });
 
@@ -34,7 +33,7 @@ describe("PluginScopeProvider", () => {
     render(
       <PluginScopeProvider pluginId="minimal">
         <ScopeConsumer />
-      </PluginScopeProvider>
+      </PluginScopeProvider>,
     );
     expect(screen.getByTestId("scope").textContent).toBe("minimal||");
   });
