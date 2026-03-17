@@ -59,6 +59,10 @@ export declare namespace API {
     "24h_volumn": number;
     "24h_volume": number;
     "24h_amount": number;
+    /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
+    display_symbol_name?: string;
+    /** Permissionless listing: broker id; null for non-community-listed symbols */
+    broker_id?: string | null;
   }
 
   export interface MarketInfoExt extends MarketInfo {
@@ -107,6 +111,10 @@ export declare namespace API {
     imr_factor: number;
     base_mmr: number;
     base_imr: number;
+    /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
+    display_symbol_name?: string;
+    /** Permissionless listing: broker id; null for non-community-listed symbols */
+    broker_id?: string | null;
   }
 
   export interface TokenItem {
@@ -276,6 +284,10 @@ export declare namespace API {
     base_imr: number;
     imr_factor: number;
     deviation_factor: number;
+    /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
+    display_symbol_name?: string;
+    /** Permissionless listing: broker id; null for non-community-listed symbols */
+    broker_id?: string | null;
   }
 
   export interface FundingHistory {
