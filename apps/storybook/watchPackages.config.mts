@@ -46,7 +46,7 @@ const base: Package[] = [
   {
     package: "@orderly.network/types",
     path: "../../packages/types/src",
-    watch: false,
+    watch: true,
   },
   {
     package: "@orderly.network/default-evm-adapter",

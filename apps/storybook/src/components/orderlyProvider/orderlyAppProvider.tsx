@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { registerFastPlaceOrderPlugin } from "@orderly.network/fast-place-order-plugin";
+// import { registerFastPlaceOrderPlugin } from "@orderly.network/fast-place-order-plugin";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import {
   Arbitrum,
@@ -10,7 +10,7 @@ import {
   SOLANA_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { cn } from "@orderly.network/ui";
-import { registerOrderlyYoutubeLivePlugin } from "@orderly.network/youtube-live-plugin";
+// import { registerOrderlyYoutubeLivePlugin } from "@orderly.network/youtube-live-plugin";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { useIsRwaRoute } from "../../orderlyConfig/hooks/useIsRwaRoute";
@@ -43,15 +43,15 @@ export const OrderlyAppRootProvider: FC<
         widgetConfigs={widgetConfigs}
         notification={notification}
         dataAdapter={{ ...dataAdapter, symbolList }}
-        plugins={[
-          // registerOrderlyYoutubeLivePlugin({
-          //   src: "https://www.youtube.com/embed/NOrvXR48WaY?mute=0&autoplay=1",
-          //   title: "Youtube Live",
-          // }),
-          registerFastPlaceOrderPlugin({
-            className: "oui-w-full",
-          }),
-        ]}
+        plugins={
+          [
+            // registerOrderlyYoutubeLivePlugin({
+            //   src: "https://www.youtube.com/embed/NOrvXR48WaY?mute=0&autoplay=1",
+            //   title: "Youtube Live",
+            // }),
+            // registerFastPlaceOrderPlugin(),
+          ]
+        }
         amplitudeConfig={{
           amplitudeId: "4463418c103f3a66c6d863357f951e25",
         }}
