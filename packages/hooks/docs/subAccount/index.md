@@ -1,18 +1,17 @@
-# subAccount
+# subAccount — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Sub-account queries, mutations, WebSocket, max withdrawal, data observer, and portfolio/positions calculators.
+Sub-account data and WS: query, mutation, data observer, WebSocket, and max withdrawal. Used by UIs that manage or display sub-accounts.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [index](./index.md) | TypeScript | Sub-account exports |
-| [useSubAccountDataObserver](./useSubAccountDataObserver.md) | TypeScript | Sub-account data observer |
-| [useSubAccountMaxWithdrawal](./useSubAccountMaxWithdrawal.md) | TypeScript | Max withdrawal for sub-account |
-| [useSubAccountMutation](./useSubAccountMutation.md) | TypeScript | Sub-account mutation |
-| [useSubAccountQuery](./useSubAccountQuery.md) | TypeScript | Sub-account query |
-| [useSubAccountWS](./useSubAccountWS.md) | TypeScript | Sub-account WebSocket |
-| [calculator/portfolio](./calculator/portfolio.md) | TypeScript | Portfolio calculator |
-| [calculator/positions](./calculator/positions.md) | TypeScript | Positions calculator |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| index.ts | TS | Re-exports sub-account module | useSubAccountQuery, useSubAccountMutation, useSubAccountDataObserver, useSubAccountWS, useSubAccountMaxWithdrawal | [index.md](index.md) |
+| useSubAccountQuery.ts | TS | Sub-account query hook | useSubAccountQuery | [useSubAccountQuery.md](useSubAccountQuery.md) |
+| useSubAccountMutation.ts | TS | Sub-account mutation hook | useSubAccountMutation | [useSubAccountMutation.md](useSubAccountMutation.md) |
+| useSubAccountDataObserver.ts | TS | Sub-account data observer | useSubAccountDataObserver | [useSubAccountDataObserver.md](useSubAccountDataObserver.md) |
+| useSubAccountWS.ts | TS | Sub-account WebSocket hook | useSubAccountWS | [useSubAccountWS.md](useSubAccountWS.md) |
+| useSubAccountMaxWithdrawal.ts | TS | Sub-account max withdrawal hook | useSubAccountMaxWithdrawal | [useSubAccountMaxWithdrawal.md](useSubAccountMaxWithdrawal.md) |
+| calculator/ | — | Sub-account calculator (portfolio, positions) | (see calculator/) | [calculator/index.md](calculator/index.md) |

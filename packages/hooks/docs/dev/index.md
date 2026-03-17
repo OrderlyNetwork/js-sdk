@@ -1,11 +1,11 @@
-# dev
+# dev — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Development and proxy configuration utilities.
+Development-only utilities: proxy config store for overriding config in development. Not for production use.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [proxyConfigStore](./proxyConfigStore.md) | TypeScript | Proxy config store for dev environments |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| proxyConfigStore.ts | TS | Proxy config store (dev) | ProxyConfigStore | [proxyConfigStore.md](proxyConfigStore.md) |

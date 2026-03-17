@@ -1,26 +1,22 @@
-# utils
+# utils — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Fetcher (with useQueryOptions), SWR helpers, order helpers (createOrder, orderPrice, scaledOrder), orderEntryHelper, JSON parse, WS utilities, createGetter, dev utilities.
+Shared utilities: fetcher (for SWR), JSON parse, createGetter, order helpers (createOrder, orderEntryHelper, order price, scaled order), parseHolding, SWR helpers, WS helpers, dev helpers. Used by hooks and services for HTTP, formatting, and order math.
 
-## Subdirectories
+## Files
 
-| Directory | Description |
-|-----------|-------------|
-| [order](./order/index.md) | Order price and scaled order utilities |
-
-## Root-level files
-
-| File | Language | Description |
-|------|----------|-------------|
-| [index](./index.md) | TypeScript | Utils barrel exports |
-| [fetcher](./fetcher.md) | TypeScript | Fetcher and noCacheConfig, useQueryOptions |
-| [swr](./swr.md) | TypeScript | getPositionBySymbol and SWR helpers |
-| [createOrder](./createOrder.md) | TypeScript | createOrder, checkNotional, getMinNotional |
-| [orderEntryHelper](./orderEntryHelper.md) | TypeScript | cleanStringStyle, formatNumber |
-| [json](./json.md) | TypeScript | parseJSON |
-| [ws](./ws.md) | TypeScript | WebSocket utilities |
-| [createGetter](./createGetter.md) | TypeScript | Create getter utility |
-| [dev](./dev.md) | TypeScript | Dev utilities |
-| [parseHolding](./parseHolding.md) | TypeScript | Parse holding data |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| index.ts | TS | Re-exports utils (fetcher, order helpers, etc.) | fetcher, noCacheConfig, useQueryOptions, findTPSLFromOrder, cleanStringStyle, formatNumber, priceToPnl, calcTPSL_ROI, getPositionBySymbol | [index.md](index.md) |
+| fetcher.ts | TS | SWR fetcher and options | fetcher, noCacheConfig, useQueryOptions | [fetcher.md](fetcher.md) |
+| json.ts | TS | JSON parse utility | parseJSON | [json.md](json.md) |
+| createGetter.ts | TS | Create getter utility | (createGetter) | [createGetter.md](createGetter.md) |
+| createOrder.ts | TS | Order creation helpers (notional, etc.) | checkNotional, getMinNotional | [createOrder.md](createOrder.md) |
+| orderEntryHelper.ts | TS | Order entry string/style helpers | cleanStringStyle, formatNumber | [orderEntryHelper.md](orderEntryHelper.md) |
+| parseHolding.ts | TS | Parse holding data | (parseHolding) | [parseHolding.md](parseHolding.md) |
+| swr.ts | TS | SWR helpers (e.g. getPositionBySymbol) | getPositionBySymbol | [swr.md](swr.md) |
+| ws.ts | TS | WebSocket helpers | (ws) | [ws.md](ws.md) |
+| dev.ts | TS | Dev-only utilities | (dev) | [dev.md](dev.md) |
+| order/orderPrice.ts | TS | Order price helpers | (orderPrice) | [order/orderPrice.md](order/orderPrice.md) |
+| order/scaledOrder.ts | TS | Scaled order helpers | (scaledOrder) | [order/scaledOrder.md](order/scaledOrder.md) |

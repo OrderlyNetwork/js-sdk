@@ -1,15 +1,29 @@
-# transfer
+# transfer.ts
 
-## Overview
+## transfer.ts responsibility
 
-Copy for deposit, withdraw, internal transfer, cross-chain flows, swap/bridge deposit, slippage, LTV, convert, and gas/vault warnings. Includes placeholders like `{{brokerName}}`, `{{token}}`, `{{networkName}}`, `{{minAmount}}`, `{{amount}}`, `{{apy}}`, etc.
+Provides transfer and deposit/withdraw copy: network, lowest fee, Web3 wallet labels, broker account, quantity invalid, insufficient balance/allowance, reject transaction, deposit (approve, requested/completed/failed, fee unavailable, not enough gas, exceed cap, close to max limit, est. gas fee, destination gas fee), withdraw (unsupported chain/network/token, cross-chain confirm/process/warning, vault warning, min amount, LTV error, requested/completed/failed, other account, account ID tips and invalid, available tooltip, external wallet add), internal transfer (from/to, success, unsettled tooltip, settle PnL description, errors), swap deposit (cross-swap/swap notice, bridging, deposit, view status, failed, slippage, swap/bridge fee, minimum received, confirm swap, average swap time, dialog title, FAQs, not enough liquidity), convert completed/failed, deposit cap, convert rate, collateral contribution, LTV description/tooltip/current/isolated mode, convert, global max qty and gas fee errors, deposit status (pending/completed one/multiple), yield reminder (earn APY, rewards, distribution, disclaimer).
 
-## Exports
+## transfer.ts exports
 
-### `transfer`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| transfer | object | Key-value map | Keys under "transfer.*" |
+| Transfer | type | typeof transfer | Type export |
 
-Object of keys under `transfer.*`: e.g. `transfer.network`, `transfer.deposit.approve`, `transfer.withdraw.crossChain.confirmWithdraw`, `transfer.internalTransfer.success`, `transfer.LTV.description`, `transfer.deposit.yieldReminder.earnAPY`.
+## transfer.ts key groups (sample)
 
-### `Transfer` (type)
+| Theme | Examples |
+|-------|----------|
+| Deposit | transfer.deposit.approve, transfer.deposit.estGasFee.tooltip |
+| Withdraw | transfer.withdraw.crossChain.confirmWithdraw, transfer.withdraw.available.tooltip |
+| Internal | transfer.internalTransfer.success, transfer.internalTransfer.error.transferToSelf |
+| Swap | transfer.swapDeposit.bridging, transfer.swapDeposit.slippage.slippageTolerance.description |
 
-`typeof transfer`.
+## transfer.ts Example
+
+```typescript
+t("transfer.deposit.approve");
+t("transfer.LTV.description");
+t("transfer.internalTransfer.settlePnl.description");
+```

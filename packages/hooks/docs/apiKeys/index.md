@@ -1,11 +1,20 @@
-# apiKeys
+# apiKeys — Directory Index
 
-## Overview
+## Directory Responsibility
 
-API key management for Orderly (create, list, revoke, scope types).
+Provides API key management for Orderly: listing, creating, and scoping API keys. Used by apps that need to manage trading API keys.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [useApiKeyManager](./useApiKeyManager.md) | TypeScript | Hook for API key CRUD and scope types |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| index.ts | TS | Re-exports API key hooks and types | useApiKeyManager, APIKeyItem, ScopeType | [index.md](index.md) |
+| useApiKeyManager.ts | TS | Hook for API key CRUD and scope management | useApiKeyManager, APIKeyItem, ScopeType | [useApiKeyManager.md](useApiKeyManager.md) |
+
+## Key Entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| useApiKeyManager | useApiKeyManager.ts | Load/create/delete API keys, scope type |
+| APIKeyItem | useApiKeyManager.ts | API key item shape |
+| ScopeType | useApiKeyManager.ts | Scope type for keys |

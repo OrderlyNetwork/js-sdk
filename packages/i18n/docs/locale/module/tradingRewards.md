@@ -1,15 +1,20 @@
-# tradingRewards
+# tradingRewards.ts
 
-## Overview
+## tradingRewards.ts responsibility
 
-Trading rewards: subtitle (broker name, esORDER/$ORDER), learn more, my est. rewards, epoch/epoch rewards, other Orderly DEX, claim/available to claim, stake/booster/stake booster, avg. staked amount, reward history (columns, rewards earned), epoch pause countdown, epoch status (pause, ended), link description.
+Provides trading rewards copy: rewards, subtitle (trade to earn), learn more, my est. rewards, epoch and epoch rewards, other Orderly DEX, claim and available to claim, stake and booster, avg. staked amount, reward history and rewards earned, column labels (start/end date), epoch pause countdown, status (pause, ended), and link description.
 
-## Exports
+## tradingRewards.ts exports
 
-### `tradingRewards`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| tradingRewards | object | Key-value map | Keys under "tradingRewards.*" |
+| TradingRewards | type | typeof tradingRewards | Type export |
 
-Object of keys under `tradingRewards.*`: e.g. `tradingRewards.subtitle`, `tradingRewards.claim`, `tradingRewards.eopchStatus.pause`.
+## tradingRewards.ts Example
 
-### `TradingRewards` (type)
-
-`typeof tradingRewards`.
+```typescript
+t("tradingRewards.myEstRewards");
+t("tradingRewards.claim");
+t("tradingRewards.eopchStatus.pause");
+```

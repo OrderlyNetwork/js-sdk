@@ -1,57 +1,111 @@
-# index
+# @orderly.network/hooks — Documentation Index
 
-## Overview
+## Module Overview
 
-Main entry point for `@orderly.network/hooks`. Re-exports version, fetcher, query/mutation/infinite query hooks, middleware, shared hooks, referral, account, config/wallet providers, orderly hooks, store providers, SWR, use-debounce, painter types, utils, referral, trading-rewards, apiKeys, IndexedDB middleware, next order entry, restricted info, subAccount, position close, and market list/map.
+The `packages/hooks/src` directory contains the **@orderly.network/hooks** package: React hooks, providers, and services for Orderly Network trading and account flows. It provides data fetching (SWR-based), WebSocket streams, order creation/merge logic, config/wallet wiring, referral and trading-rewards hooks, and shared utilities.
 
-## Exports (summary)
+## Module Responsibilities
 
-- **Version**: `version`
-- **Data fetching**: `fetcher`, `noCacheConfig`, `useQueryOptions`, `useQuery`, `useLazyQuery`, `useMutation`, `usePrivateQuery`, `usePrivateInfiniteQuery`, `useInfiniteQuery`
-- **Middleware**: `timestampWaitingMiddleware`, `resetTimestampOffsetState`
-- **Shared**: `useBoolean`, `useUpdatedRef`, `useMemoizedFn`, `useAudioPlayer`
-- **Referral**: `useReferralInfo`, `RefferalAPI`
-- **Account**: `useAccount`, `SubAccount`, `useAccountInstance`
-- **Preload**: `usePreLoadData`
-- **Events**: `useEventEmitter`
-- **Storage**: `useSessionStorage`, `useLocalStorage`
-- **Network**: `useNetworkInfo`, `useFeeState`, `useTrack`, `useTrackingInstance`
-- **Utils**: `parseJSON`, `useConstant`, `useWS`, `useConfig`, `useKeyStore`, `useSimpleDI`
-- **Context**: `orderlyContext` exports, `useWsStatus`, `WsNetworkStatus`, `OrderlyConfigProvider`, `ChainFilter`, `ExtendedConfigStore`, `WalletConnectorContext`, `useWalletConnector`, wallet types
-- **Orderly**: `orderlyHooks` (all orderly hooks), `useAppStore`
-- **Store**: provider store exports, deprecated `useOrderEntry_deprecated`, `UseOrderEntryMetaState`, `OrderParams`
-- **SWR**: `useSWR`, `useSWRConfig`, SWR types, `swr` namespace
-- **Debounce**: `use-debounce` exports
-- **Media**: `useMediaQuery`
-- **Poster**: `usePoster`, `DefaultLayoutConfig`, `PosterLayoutConfig`, `DrawOptions`
-- **Order utils**: `cleanStringStyle`, `checkNotional`, `getMinNotional`, `utils` namespace
-- **Wallet**: `WalletAdapter`
-- **Referral / Trading rewards / API keys**: full module exports
-- **IndexedDB**: `indexedDBManager`, `initializeAppDatabase`, `persistIndexedDB`
-- **Next**: `useOrderEntry` and related, `useRestrictedInfo`, subAccount, `usePositionClose`, `useMarketList`, `useMarketMap`, `next/tpsl` exports
+| Responsibility | Description |
+|----------------|-------------|
+| **Data & queries** | `useQuery`, `usePrivateQuery`, `useInfiniteQuery`, `useLazyQuery`, `useMutation`, fetcher, SWR middleware |
+| **Account & wallet** | `useAccount`, `useAccountInstance`, wallet connector context, key store, config provider |
+| **Orderly domain** | Order book, positions, orders, markets, funding, leverage, deposit/withdraw, TPSL (orderly/) |
+| **Order creation** | Order creator services, validators, builders, merge handlers (services/orderCreator, services/orderMerge) |
+| **Next / order entry** | `useOrderEntry`, order store, position close, TPSL helpers (next/) |
+| **Provider & config** | OrderlyConfigProvider, status/dataCenter/store providers, extended config store |
+| **Referral & rewards** | Referral hooks, trading-rewards hooks (referral/, trading-rewards/) |
+| **Utilities** | Utils, middleware (IndexedDB, timestamp, signature), painter service, feature flags, API keys |
 
-## Usage example
+## Key Entities and Entry Points
 
-```ts
-import {
-  useQuery,
-  useAccount,
-  useOrderEntry,
-  OrderlyConfigProvider,
-} from "@orderly.network/hooks";
+| Entity | Type | Role | Entry / Location |
+|--------|------|------|------------------|
+| `version` | constant | Package version | `src/version.ts` |
+| `useAccount` | hook | Account state, create key, switch account | `src/useAccount.ts` |
+| `useAccountInstance` | hook | Raw account instance from context | `src/useAccountInstance.ts` |
+| `useQuery` / `usePrivateQuery` / `useInfiniteQuery` / `useMutation` | hooks | Data fetching with SWR | `src/useQuery.ts`, `usePrivateQuery.ts`, etc. |
+| `OrderlyConfigProvider` | component | Config, wallet adapters, chain filter | `src/configProvider.tsx` |
+| `WalletConnectorContext` / `useWalletConnector` | context/hook | Wallet connection state | `src/walletConnectorContext.tsx` |
+| `OrderlyProvider` / `OrderlyContext` | context | Core orderly context | `src/orderlyContext.ts` |
+| `useOrderEntry` | hook | Order entry (next) | `src/next/useOrderEntry/useOrderEntry.ts` |
+| Order creator factory & creators | service | Build and submit orders | `src/services/orderCreator/` |
+| `orderlyHooks` | re-exports | All orderly domain hooks | `src/orderly/orderlyHooks.ts` |
+| `useApiKeyManager` | hook | API key management | `src/apiKeys/useApiKeyManager.ts` |
+| `useReferralInfo` / referral hooks | hooks | Referral data | `src/referral/` |
+| Trading rewards hooks | hooks | Epoch, rewards history, status | `src/trading-rewards/` |
 
-function App() {
-  return (
-    <OrderlyConfigProvider networkId={NetworkId.MAINNET} brokerId="...">
-      <MyTrading />
-    </OrderlyConfigProvider>
-  );
-}
+## Package Entry (index.ts)
 
-function MyTrading() {
-  const { data } = useQuery("/v1/public/futures/BTC_PERP");
-  const account = useAccount();
-  const orderEntry = useOrderEntry();
-  // ...
-}
-```
+The main entry `src/index.ts` re-exports the public API: version, data hooks (useQuery, usePrivateQuery, useInfiniteQuery, useMutation, etc.), account/wallet hooks, OrderlyConfigProvider, orderly context, middleware, orderly domain hooks, referral, trading-rewards, API keys, next order entry, sub-account, feature flag, and SWR/debounce utilities. Consumers import from `@orderly.network/hooks` (e.g. `import { useAccount, useOrderEntry } from "@orderly.network/hooks"`). See [useAccount](useAccount.md), [configProvider](configProvider.md), [orderlyContext](orderlyContext.md) for core setup.
+
+## Subdirectories
+
+| Directory | Description | Index |
+|-----------|-------------|--------|
+| [apiKeys](apiKeys/index.md) | API key management hooks | [apiKeys/index.md](apiKeys/index.md) |
+| [deprecated](deprecated/index.md) | Deprecated order entry | [deprecated/index.md](deprecated/index.md) |
+| [dev](dev/index.md) | Dev-only stores (e.g. proxy config) | [dev/index.md](dev/index.md) |
+| [feature-flag](feature-flag/index.md) | Feature flags and keys | [feature-flag/index.md](feature-flag/index.md) |
+| [middleware](middleware/index.md) | SWR/IndexedDB/timestamp middleware | [middleware/index.md](middleware/index.md) |
+| [next](next/index.md) | Next-order-entry, positions, TPSL, order book | [next/index.md](next/index.md) |
+| [orderly](orderly/index.md) | Orderly hooks (markets, positions, funding, etc.) | [orderly/index.md](orderly/index.md) |
+| [provider](provider/index.md) | Status, dataCenter, store providers | [provider/index.md](provider/index.md) |
+| [referral](referral/index.md) | Referral hooks and API | [referral/index.md](referral/index.md) |
+| [services](services/index.md) | Order creator, merge, painter, dataCenter | [services/index.md](services/index.md) |
+| [shared](shared/index.md) | Shared hooks (useMemoizedFn, useAudio, etc.) | [shared/index.md](shared/index.md) |
+| [subAccount](subAccount/index.md) | Sub-account queries, mutations, WS | [subAccount/index.md](subAccount/index.md) |
+| [trading-rewards](trading-rewards/index.md) | Trading rewards hooks and types | [trading-rewards/index.md](trading-rewards/index.md) |
+| [utils](utils/index.md) | Fetcher, JSON, order helpers, WS, etc. | [utils/index.md](utils/index.md) |
+
+## Top-Level Files (root of src)
+
+| File | Language | Responsibility | Entry symbol(s) | Link |
+|------|----------|----------------|-----------------|------|
+| index.ts | TS | Package re-exports | (all public API) | (this index) |
+| version.ts | TS | Package version | version | [version.md](version.md) |
+| constants.ts | TS | Default tick sizes, depths | constants | [constants.md](constants.md) |
+| types.ts | TS | Shared types | types | [types.md](types.md) |
+| configProvider.tsx | TSX | OrderlyConfigProvider, config props | OrderlyConfigProvider, ConfigProviderProps | [configProvider.md](configProvider.md) |
+| extendedConfigStore.ts | TS | Extended config store | ExtendedConfigStore | [extendedConfigStore.md](extendedConfigStore.md) |
+| orderlyContext.ts | TS | OrderlyProvider, OrderlyContext | OrderlyProvider, OrderlyContext | [orderlyContext.md](orderlyContext.md) |
+| walletConnectorContext.tsx | TSX | Wallet connector context/hook | WalletConnectorContext, useWalletConnector | [walletConnectorContext.md](walletConnectorContext.md) |
+| useAccount.ts | TS | Account hook | useAccount | [useAccount.md](useAccount.md) |
+| useAccountInstance.ts | TS | Account instance hook | useAccountInstance | [useAccountInstance.md](useAccountInstance.md) |
+| useQuery.ts | TS | SWR-based query hook | useQuery | [useQuery.md](useQuery.md) |
+| useLazyQuery.ts | TS | Lazy query hook | useLazyQuery | [useLazyQuery.md](useLazyQuery.md) |
+| useMutation.ts | TS | Mutation hook | useMutation | [useMutation.md](useMutation.md) |
+| usePrivateQuery.ts | TS | Private (auth) query hook | usePrivateQuery | [usePrivateQuery.md](usePrivateQuery.md) |
+| usePrivateInfiniteQuery.ts | TS | Private infinite query hook | usePrivateInfiniteQuery | [usePrivateInfiniteQuery.md](usePrivateInfiniteQuery.md) |
+| useInfiniteQuery.ts | TS | Infinite query hook | useInfiniteQuery | [useInfiniteQuery.md](useInfiniteQuery.md) |
+| useBoolean.ts | TS | Boolean state hook | useBoolean | [useBoolean.md](useBoolean.md) |
+| useConfig.ts | TS | Config hook | useConfig | [useConfig.md](useConfig.md) |
+| useKeyStore.ts | TS | Key store hook | useKeyStore | [useKeyStore.md](useKeyStore.md) |
+| useSimpleDI.ts | TS | Simple DI hook | useSimpleDI | [useSimpleDI.md](useSimpleDI.md) |
+| useWS.ts | TS | WebSocket hook | useWS | [useWS.md](useWS.md) |
+| useWsStatus.ts | TS | WS status hook | useWsStatus, WsNetworkStatus | [useWsStatus.md](useWsStatus.md) |
+| useSessionStorage.ts | TS | Session storage hook | useSessionStorage | [useSessionStorage.md](useSessionStorage.md) |
+| useLocalStorage.ts | TS | Local storage hook | useLocalStorage | [useLocalStorage.md](useLocalStorage.md) |
+| useNetworkInfo.ts | TS | Network info hook | useNetworkInfo | [useNetworkInfo.md](useNetworkInfo.md) |
+| useFeeState.ts | TS | Fee state hook | useFeeState | [useFeeState.md](useFeeState.md) |
+| useTrack.ts | TS | Tracking hook | useTrack | [useTrack.md](useTrack.md) |
+| useTrackingInstance.ts | TS | Tracking instance hook | useTrackingInstance | [useTrackInstance.md](useTrackInstance.md) |
+| useEventEmitter.ts | TS | Event emitter hook | useEventEmitter | [useEventEmitter.md](useEventEmitter.md) |
+| usePreloadData.ts | TS | Preload data hook | usePreLoadData | [usePreloadData.md](usePreloadData.md) |
+| useMediaQuery.ts | TS | Media query hook | useMediaQuery | [useMediaQuery.md](useMediaQuery.md) |
+| usePoster.ts | TS | Poster hook | usePoster | [usePoster.md](usePoster.md) |
+| useRestrictedInfo.ts | TS | Restricted info hook | useRestrictedInfo | [useRestrictedInfo.md](useRestrictedInfo.md) |
+| useCalculatorService.ts | TS | Calculator service hook | useCalculatorService | [useCalculatorService.md](useCalculatorService.md) |
+| useDatabaseInitialization.ts | TS | DB init hook | (internal) | [useDatabaseInitialization.md](useDatabaseInitialization.md) |
+| useObserve.ts | TS | Observe hook | useObserve | [useObserve.md](useObserve.md) |
+| useParamsCheck.ts | TS | Params check hook | (internal) | [useParamsCheck.md](useParamsCheck.md) |
+| useTimestampAwareQuery.ts | TS | Timestamp-aware query | (internal) | [useTimestampAwareQuery.md](useTimestampAwareQuery.md) |
+
+## Search Keywords / Aliases
+
+- hooks, React hooks, SWR, useQuery, usePrivateQuery, useAccount, order entry
+- Orderly, config provider, wallet connector, key store
+- order book, positions, orders, markets, funding, leverage
+- order creator, order validation, merge handler
+- referral, trading rewards, API key, feature flag
+- middleware, IndexedDB, timestamp, fetcher

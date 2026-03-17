@@ -1,45 +1,33 @@
 # @orderly.network/net
 
-## Overview
+## Package 职责
 
-This package provides network utilities for the Orderly ecosystem: HTTP client (get/post/put/delete), WebSocket client with public/private streams, version info, and shared constants.
+`@orderly.network/net` 提供 Orderly 前端的网络层能力：HTTP 请求封装、WebSocket 客户端、版本与常量。不负责业务路由或 UI，仅负责与后端的通信与流式数据。
 
-## Directory structure
+## 关键实体表
 
-| Directory | Description |
-| --------- | ----------- |
-| [types](./types/index.md) | WebSocket-related types and interfaces |
-| [errors](./errors/index.md) | API error class |
-| [fetch](./fetch/index.md) | HTTP request helpers |
-| [ws](./ws/index.md) | WebSocket client and handlers |
+| 实体名 | 类型 | 职责 | 入口 |
+|--------|------|------|------|
+| version | string (default export) | 包版本号，并写入 `window.__ORDERLY_VERSION__` | `./version` |
+| get, post, del, put, mutate | function | HTTP GET/POST/DELETE/PUT 及通用请求 | `./fetch` |
+| __ORDERLY_API_URL_KEY__ | string constant | API base URL 的全局 key | `./constants` |
+| WS | class | 公/私 WebSocket 连接、订阅、重连、心跳 | `./ws/ws` |
+| WebSocketEvent | enum | WebSocket 事件名（open/close/error/message/connecting/reconnecting） | `./ws/ws` |
+| ApiError | class | HTTP 错误封装（message + code） | `./errors/apiError` |
 
-## Top-level files
+## 子目录与顶层文件
 
-| File | Language | Description | Link |
-| ---- | -------- | ----------- | ---- |
-| `index.ts` | TypeScript | Package entry; re-exports version, fetch, constants, WS | (this file) |
-| `version.ts` | TypeScript | Package version and global `__ORDERLY_VERSION__` | [version.md](./version.md) |
-| `constants.ts` | TypeScript | API URL key constant | [constants.md](./constants.md) |
-| `sum.ts` | TypeScript | Utility `sum(a, b)` | [sum.md](./sum.md) |
-| `sum.test.ts` | TypeScript | Tests for `sum` | [sum.test.md](./sum.test.md) |
+| 路径 | 类型 | 职责 | 链接 |
+|------|------|------|------|
+| [errors/](errors/index.md) | 目录 | API 错误类型 | errors/index.md |
+| [types/](types/index.md) | 目录 | WebSocket 相关类型与接口 | types/index.md |
+| [fetch/](fetch/index.md) | 目录 | HTTP 请求封装（get/post/del/put/mutate） | fetch/index.md |
+| [ws/](ws/index.md) | 目录 | WebSocket 客户端与事件处理 | ws/index.md |
+| version.ts | TypeScript | 包版本与全局版本注册 | [version.md](version.md) |
+| constants.ts | TypeScript | API URL key 常量 | [constants.md](constants.md) |
+| sum.ts | TypeScript | 工具函数 sum(a, b) | [sum.md](sum.md) |
+| index.ts | TypeScript | 包入口，聚合导出 | [entry.md](entry.md) |
 
-## Package entry (index.ts)
+## 检索关键词
 
-Re-exports:
-
-- `version` (default) from `./version`
-- `get`, `post`, `del`, `put`, `mutate` from `./fetch`
-- `__ORDERLY_API_URL_KEY__` from `./constants`
-- `WS`, `WebSocketEvent` from `./ws/ws`
-
-## Usage example
-
-```typescript
-import { get, post, WS, WebSocketEvent, version, __ORDERLY_API_URL_KEY__ } from "@orderly.network/net";
-
-const data = await get("/api/v1/...");
-await post("/api/v1/...", { key: "value" });
-
-const ws = new WS({ privateUrl: "...", publicUrl: "...", accountId: "..." });
-ws.on("status:change", (e) => console.log(e));
-```
+- orderly net, network, HTTP, fetch, WebSocket, WS, API, version, ApiError, get, post, del, put, mutate, subscribe, reconnect, mainnet, testnet

@@ -1,20 +1,20 @@
-# provider/store
+# provider/store — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Stores for chain info (mainnet/testnet), main/test token, swap support.
+Zustand stores for chain info (mainnet/testnet), main/test token config, symbol store, and swap support. Used by config and UI to resolve chains and tokens.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [index](./index.md) | TypeScript | Store exports |
-| [chainInfoMainStore](./chainInfoMainStore.md) | TypeScript | Mainnet chain info store |
-| [chainInfoTestStore](./chainInfoTestStore.md) | TypeScript | Testnet chain info store |
-| [mainTokenStore](./mainTokenStore.md) | TypeScript | Main token store |
-| [testTokenStore](./testTokenStore.md) | TypeScript | Test token store |
-| [swapSupportStore](./swapSupportStore.md) | TypeScript | Swap support store |
-| [symbolStore](./symbolStore.md) | TypeScript | Symbol store |
-| [createDataStore](./createDataStore.md) | TypeScript | Generic data store factory |
-| [storeProvider](./storeProvider.md) | TSX | Store provider component |
-| [storeContext](./storeContext.md) | TSX | Store context |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| index.ts | TS | Re-exports stores | useMainnetChainsStore, useTestnetChainsStore, useMainTokenStore, useTestTokenStore, useSwapSupportStore | [index.md](index.md) |
+| chainInfoMainStore.ts | TS | Mainnet chains store | useMainnetChainsStore | [chainInfoMainStore.md](chainInfoMainStore.md) |
+| chainInfoTestStore.ts | TS | Testnet chains store | useTestnetChainsStore | [chainInfoTestStore.md](chainInfoTestStore.md) |
+| mainTokenStore.ts | TS | Main token store | useMainTokenStore | [mainTokenStore.md](mainTokenStore.md) |
+| testTokenStore.ts | TS | Test token store | useTestTokenStore | [testTokenStore.md](testTokenStore.md) |
+| swapSupportStore.ts | TS | Swap support store | useSwapSupportStore | [swapSupportStore.md](swapSupportStore.md) |
+| symbolStore.ts | TS | Symbol store | (store) | [symbolStore.md](symbolStore.md) |
+| createDataStore.ts | TS | Factory for data stores | createDataStore | [createDataStore.md](createDataStore.md) |
+| storeContext.tsx | TSX | Store context | (context) | [storeContext.md](storeContext.md) |
+| storeProvider.tsx | TSX | Store provider | (provider) | [storeProvider.md](storeProvider.md) |

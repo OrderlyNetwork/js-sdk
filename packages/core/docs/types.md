@@ -1,22 +1,31 @@
-# types
+# types.ts
 
-> Location: `packages/core/src/types.ts`
+## types.ts Responsibility
 
-## Overview
+Exports shared types used across the core package. Currently only `Ed25519Keypair` (secretKey and publicKey strings).
 
-Shared type for Ed25519 key pair representation (e.g. for API key creation).
+## types.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| Ed25519Keypair | interface | Type | secretKey, publicKey strings |
 
-### Ed25519Keypair (interface)
+## Ed25519Keypair Fields
 
 | Field | Type | Description |
-| ----- | ---- | ----------- |
-| secretKey | string | Secret key string. |
-| publicKey | string | Public key string. |
+|-------|------|-------------|
+| secretKey | string | Private key representation |
+| publicKey | string | Public key representation |
 
-## Usage Example
+## types.ts Dependencies and Call Relationships
 
-```ts
+- **Upstream**: None.
+- **Downstream**: Re-exported from package entry; may be used by wallet or key-related code for type hints.
+
+## types.ts Example
+
+```typescript
 import type { Ed25519Keypair } from "@orderly.network/core";
+
+const keypair: Ed25519Keypair = { secretKey: "...", publicKey: "..." };
 ```

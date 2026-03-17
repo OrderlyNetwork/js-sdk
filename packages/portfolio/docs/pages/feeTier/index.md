@@ -1,20 +1,37 @@
-# pages/feeTier
+# feeTier – directory index
 
-## Overview
+## Directory responsibility
 
-Fee tier page: table of volume tiers and maker/taker fees, data source, columns, header, and icons.
+Fee tier page: display and script for fee tier data. Exposes FeeTierPage, useFeeTierScript, FeeDataType, UseFeeTierScriptOptions.
+
+## Key entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| FeeTierPage | page.tsx | Page component |
+| useFeeTierScript | feeTier.script.ts | Script/hook for fee tier data |
+| FeeTierWidget | feeTier.widget.tsx | Widget |
+| feeTier.ui | feeTier.ui.tsx | UI layout |
+| dataSource | dataSource.ts | Data source for fee tier |
+| column | column.tsx | Table columns |
+| feeTierHeader | feeTierHeader.tsx | Header component |
+| icons | icons/* | Effective fee icon, etc. |
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [module.md](module.md) | TSX | Module entry (index.tsx). |
-| [page.md](page.md) | TSX | Fee tier page. |
-| [feeTier.widget.md](feeTier.widget.md) | TSX | Fee tier widget. |
-| [feeTier.ui.md](feeTier.ui.md) | TSX | Fee tier table UI. |
-| [feeTier.script.md](feeTier.script.md) | TS | Fee tier script (FeeDataType). |
-| [feeTierHeader.md](feeTierHeader.md) | TSX | Page header. |
-| [dataSource.md](dataSource.md) | TS | Static fee tier data (tiers 1–7). |
-| [column.md](column.md) | TSX | Table columns. |
-| [icons/index.md](icons/index.md) | TS | Icons exports. |
-| [icons/effectiveFee.md](icons/effectiveFee.md) | TSX | Effective fee icon. |
+| File | Language | Link |
+|------|----------|------|
+| index.tsx | TSX | [index.md](index.md) |
+| page.tsx | TSX | [page.md](page.md) |
+| feeTier.script.ts | TypeScript | [feeTier.script.md](feeTier.script.md) |
+| feeTier.widget.tsx | TSX | [feeTier.widget.md](feeTier.widget.md) |
+| feeTier.ui.tsx | TSX | [feeTier.ui.md](feeTier.ui.md) |
+| dataSource.ts | TypeScript | [dataSource.md](dataSource.md) |
+| column.tsx | TSX | [column.md](column.md) |
+| feeTierHeader.tsx | TSX | [feeTierHeader.md](feeTierHeader.md) |
+| icons/index.ts | TypeScript | [icons/index.md](icons/index.md) |
+| icons/effectiveFee.tsx | TSX | [icons/effectiveFee.md](icons/effectiveFee.md) |
+
+## Subdirectories
+
+[icons](icons/index.md) – Fee tier icons.

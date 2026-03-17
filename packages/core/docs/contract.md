@@ -1,50 +1,71 @@
-# contract
+# contract.ts
 
-> Location: `packages/core/src/contract.ts`
+## contract.ts Responsibility
 
-## Overview
+Defines `OrderlyContracts` type, `IContract` interface, `BaseContract` implementation that returns contract info (USDC/vault/verify addresses and ABIs) by env/networkId, and `getContractInfoByChainId` to resolve vault/token address by chainId.
 
-Contract configuration: type definitions and `BaseContract` that returns USDC/vault/verify addresses and ABI per network/env. Helper `getContractInfoByChainId` resolves vault and token by chain.
+## contract.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| OrderlyContracts | type | Data shape | usdcAbi, erc20Abi, vaultAbi, verifyContractAddress, usdcAddress, vaultAddress, solana*, story*, monad*, abstract*, bsc* |
+| IContract | interface | Contract provider | getContractInfoByEnv(): OrderlyContracts |
+| BaseContract | class | Default impl | Reads networkId/env from ConfigStore, returns matching addresses and ABIs |
+| getContractInfoByChainId | function | Resolver | (chainId, contractInfo) → { vaultAddress, tokenAddress } for Story, Monad, Abstract, BSC |
 
-### OrderlyContracts (type)
+## IContract Responsibility
+
+Provides Orderly contract metadata (addresses and ABIs) for the current environment. Used by Account (options.contracts), Assets, and wallet adapters.
+
+## IContract Input and Output
+
+- **Input**: None (getContractInfoByEnv() takes no args).
+- **Output**: OrderlyContracts (usdcAddress, vaultAddress, verifyContractAddress, usdcAbi, vaultAbi, erc20Abi, and optional chain-specific addresses).
+
+## OrderlyContracts Fields
 
 | Field | Type | Description |
-| ----- | ---- | ----------- |
-| usdcAddress | string | USDC contract address. |
-| usdcAbi | any | USDC ABI. |
-| erc20Abi | any | ERC20 ABI. |
-| vaultAddress | string | Vault address. |
-| vaultAbi | any | Vault ABI. |
-| verifyContractAddress | string | Verify contract for EIP-712. |
-| solanaUSDCAddress | string | Solana USDC. |
-| solanaVaultAddress | string | Solana vault. |
-| storyTestnetVaultAddress? | string | Story testnet vault. |
-| monadTestnetVaultAddress? | string | Monad testnet vault. |
-| monadTestnetUSDCAddress? | string | Monad testnet USDC. |
-| abstractVaultAddress? | string | Abstract vault. |
-| abstractUSDCAddress? | string | Abstract USDC. |
-| bscVaultAddress? | string | BSC vault. |
-| bscUSDCAddress? | string | BSC USDC. |
+|-------|------|-------------|
+| usdcAbi | any | USDC/ERC-20 ABI |
+| erc20Abi | any | ERC-20 ABI |
+| vaultAbi | any | Vault ABI |
+| verifyContractAddress | string | Verify contract for EIP-712 |
+| usdcAddress | string | USDC token address |
+| vaultAddress | string | Vault address (deprecated in favor of chain-specific) |
+| solanaUSDCAddress, solanaVaultAddress | string | Solana (deprecated) |
+| storyTestnetVaultAddress, monadTestnetVaultAddress, monadTestnetUSDCAddress | string | Optional testnet |
+| abstractVaultAddress, abstractUSDCAddress | string | Optional Abstract |
+| bscVaultAddress, bscUSDCAddress | string | Optional BSC |
 
-### IContract (interface)
+## BaseContract Responsibility
 
-- **getContractInfoByEnv(): OrderlyContracts**
+Implements IContract using ConfigStore networkId and env. mainnet returns mainnet addresses; otherwise returns testnet/staging addresses (env qa/dev alter verify and some vaults).
 
-### BaseContract (class)
+## getContractInfoByChainId Execution Flow
 
-Implements `IContract`. Constructor: `(configStore)`. Returns contract info based on `networkId` and `env` (mainnet vs testnet; prod/qa/dev).
+1. Start with contractInfo.vaultAddress and contractInfo.usdcAddress.
+2. If chainId === STORY_TESTNET_CHAINID → use storyTestnetVaultAddress.
+3. If chainId === MONAD_TESTNET_CHAINID → use monadTestnetVaultAddress and monadTestnetUSDCAddress.
+4. If chainId in ABSTRACT_CHAIN_ID_MAP → use abstractVaultAddress and abstractUSDCAddress.
+5. If chainId === BSC_TESTNET_CHAINID → use bscVaultAddress and bscUSDCAddress.
+6. Return { vaultAddress, tokenAddress }.
 
-### getContractInfoByChainId(chainId, contractInfo)
+## contract.ts Dependencies and Call Relationships
 
-Returns `{ vaultAddress, tokenAddress }` for the given chain (Story, Monad, Abstract, BSC testnet, etc.).
+- **Upstream**: ConfigStore (get networkId, env); constants.ts for addresses; wallet/abis for JSON ABIs.
+- **Downstream**: Account, Assets, wallet adapters use getContractInfoByEnv() or getContractInfoByChainId.
 
-## Usage Example
+## contract.ts Extension and Modification Points
 
-```ts
-import { BaseContractManager, getContractInfoByChainId } from "@orderly.network/core";
-const contract = new BaseContractManager(configStore);
-const info = contract.getContractInfoByEnv();
-const { vaultAddress, tokenAddress } = getContractInfoByChainId(chainId, info);
+- **New env/network**: Extend BaseContract.getContractInfoByEnv() and add constants.
+- **New chain**: Add branch in getContractInfoByChainId and optional OrderlyContracts fields; ensure constants and BaseContract are updated.
+
+## contract.ts Example
+
+```typescript
+import { BaseContract, getContractInfoByChainId, IContract } from "@orderly.network/core";
+
+const contractManager = new BaseContract(configStore);
+const info = contractManager.getContractInfoByEnv();
+const { vaultAddress, tokenAddress } = getContractInfoByChainId(421614, info);
 ```

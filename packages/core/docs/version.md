@@ -1,19 +1,24 @@
-# version
+# version.ts
 
-> Location: `packages/core/src/version.ts`
+## version.ts Responsibility
 
-## Overview
+Exports the package version string for `@orderly.network/core` and, in browser, sets `window.__ORDERLY_VERSION__["@orderly.network/core"]` to that version for runtime checks.
 
-Sets package version on `window.__ORDERLY_VERSION__["@orderly.network/core"]` in browser and exports default version string.
+## version.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| default | string | Version | Current package version (e.g. "2.10.2") |
 
-- **default** – Version string (e.g. `"2.9.1"`).
-- **window.__ORDERLY_VERSION__** – In browser, object mapping package names to versions; this file sets the core package entry.
+## version.ts Behavior
 
-## Usage Example
+- In browser (typeof window !== "undefined"): assigns `window.__ORDERLY_VERSION__["@orderly.network/core"] = "2.10.2"` (or current version).
+- Default export is the version string.
 
-```ts
-import version from "@orderly.network/core/version";
-// or read window.__ORDERLY_VERSION__["@orderly.network/core"]
+## version.ts Example
+
+```typescript
+import version from "@orderly.network/core";
+console.log(version); // "2.10.2"
+// In browser: window.__ORDERLY_VERSION__?.["@orderly.network/core"]
 ```

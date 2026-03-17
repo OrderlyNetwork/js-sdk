@@ -1,64 +1,52 @@
-# constant
+# constant.ts
 
-## Overview
+## constant.ts responsibility
 
-Locale-related constants: supported locale enum, default language list with display names, default namespace, and storage keys used by the language detector.
+Defines supported locale codes, default language list with display names, default namespace, and storage/cookie keys used by the language detector. Used by i18n instance, LocaleProvider, and language switchers.
 
-## Exports
+## constant.ts exports
 
-### `LocaleEnum` (enum)
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| LocaleEnum | enum | Locale codes | en, zh, ja, es, ko, vi, de, fr, ru, id, tr, it, pt, uk, pl, nl, tc |
+| defaultLanguages | array | Language options | Language[] with localCode and displayName |
+| defaultLng | LocaleEnum | Fallback locale | LocaleEnum.en |
+| defaultNS | string | Default namespace | "translation" |
+| i18nLocalStorageKey | string | Storage key | "orderly_i18nLng" |
+| i18nCookieKey | string | Cookie key | "orderly_i18nLng" |
 
-Supported locale codes and their string values.
+## LocaleEnum values
 
-| Member | Value | Description |
-|--------|-------|-------------|
-| `en` | `"en"` | English |
-| `zh` | `"zh"` | Chinese |
-| `ja` | `"ja"` | Japanese |
-| `es` | `"es"` | Spanish |
-| `ko` | `"ko"` | Korean |
-| `vi` | `"vi"` | Vietnamese |
-| `de` | `"de"` | German |
-| `fr` | `"fr"` | French |
-| `ru` | `"ru"` | Russian |
-| `id` | `"id"` | Indonesian |
-| `tr` | `"tr"` | Turkish |
-| `it` | `"it"` | Italian |
-| `pt` | `"pt"` | Portuguese |
-| `uk` | `"uk"` | Ukrainian |
-| `pl` | `"pl"` | Polish |
-| `nl` | `"nl"` | Dutch |
-| `tc` | `"tc"` | Traditional Chinese |
+| Value | Description |
+|-------|-------------|
+| en | English |
+| zh | Chinese |
+| ja | Japanese |
+| es | Spanish |
+| ko | Korean |
+| vi | Vietnamese |
+| de | German |
+| fr | French |
+| ru | Russian |
+| id | Indonesian |
+| tr | Turkish |
+| it | Italian |
+| pt | Portuguese |
+| uk | Ukrainian |
+| pl | Polish |
+| nl | Dutch |
+| tc | Traditional Chinese |
 
-### `defaultLanguages`
+## constant.ts dependency
 
-`Language[]` – list of `{ localCode, displayName }` for the locales above (e.g. English, 中文, 日本語).
+- **Upstream**: context (Language type).
+- **Downstream**: types, i18n.ts, provider.tsx, utils.ts, backend.
 
-### `defaultLng`
-
-`LocaleEnum.en` – default locale when none is detected.
-
-### `defaultNS`
-
-`"translation"` – default i18next namespace.
-
-### `i18nLocalStorageKey`
-
-`"orderly_i18nLng"` – key used by the language detector in localStorage.
-
-### `i18nCookieKey`
-
-`"orderly_i18nLng"` – key used by the language detector in cookies (preferred-language).
-
-## Usage example
+## constant.ts Example
 
 ```typescript
-import {
-  LocaleEnum,
-  defaultLanguages,
-  defaultLng,
-  defaultNS,
-  i18nLocalStorageKey,
-  i18nCookieKey,
-} from "@orderly.network/i18n";
+import { LocaleEnum, defaultLanguages, defaultLng, defaultNS, i18nLocalStorageKey } from "@orderly.network/i18n";
+
+const lang = LocaleEnum.zh;
+const list = defaultLanguages; // [{ localCode: "en", displayName: "English" }, ...]
 ```

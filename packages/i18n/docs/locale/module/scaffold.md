@@ -1,15 +1,27 @@
-# scaffold
+# scaffold.ts
 
-## Overview
+## scaffold.ts responsibility
 
-Scaffold/layout: announcement (campaign), footer (join community, operational, powered by).
+Provides scaffold/layout copy: announcement campaign, footer (join community, operational, powered by).
 
-## Exports
+## scaffold.ts exports
 
-### `scaffold`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| scaffold | object | Key-value map | Keys under "scaffold.*" |
+| Scaffold | type | typeof scaffold | Type export |
 
-Object of keys: `scaffold.announcement.campaign`, `scaffold.footer.joinCommunity`, `scaffold.footer.operational`, `scaffold.footer.poweredBy`.
+## scaffold.ts keys
 
-### `Scaffold` (type)
+| Key | Purpose |
+|-----|---------|
+| scaffold.announcement.campaign | Latest Campaign is coming |
+| scaffold.footer.joinCommunity | Join our community |
+| scaffold.footer.operational | Operational |
+| scaffold.footer.poweredBy | Powered by |
 
-`typeof scaffold`.
+## scaffold.ts Example
+
+```typescript
+t("scaffold.footer.poweredBy");
+```

@@ -1,28 +1,32 @@
-# subAccount
+# subAccount.ts
 
-> Location: `packages/core/src/subAccount.ts`
+## subAccount.ts Responsibility
 
-## Overview
+Defines the `SubAccount` type used by Account state: sub-account id, description, and holding (balance) list from the API.
 
-Type definition for a sub-account: id, description, and holdings from API.
+## subAccount.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| SubAccount | type | Data shape | id, description, holding (API.Holding[]) |
 
-### SubAccount (type)
+## SubAccount Fields
 
 | Field | Type | Description |
-| ----- | ---- | ----------- |
-| id | string | Sub-account ID. |
-| description | string | User-defined description. |
-| holding | API.Holding[] | Holdings from @orderly.network/types. |
+|-------|------|-------------|
+| id | string | Sub-account ID |
+| description | string | User-defined description |
+| holding | API.Holding[] | Balance/holding list from Orderly API |
 
-## Usage Example
+## subAccount.ts Dependencies and Call Relationships
 
-```ts
+- **Upstream**: @orderly.network/types (API.Holding).
+- **Downstream**: account.ts (AccountState.subAccounts, _restoreSubAccount, createSubAccount, updateSubAccount, switchAccount).
+
+## subAccount.ts Example
+
+```typescript
 import type { SubAccount } from "@orderly.network/core";
-const sub: SubAccount = {
-  id: "0x...",
-  description: "Trading",
-  holding: [],
-};
+
+const sub: SubAccount = { id: "0", description: "Trading", holding: [] };
 ```
