@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "Накопленный PnL",
   "portfolio.overview.performance.dailyVolume": "Дневной объём",
   "portfolio.overview.performance.cumulativeVolume": "Накопленный объём",
+  "portfolio.overview.todaysPnl": "Сегодняшний PnL",
+  "portfolio.overview.todaysVol": "Сегодняшний объём",
   "portfolio.overview.distribution": "Распределение",
   "portfolio.overview.transferHistory": "История переводов",
   "portfolio.overview.vaults": "Хранилища",

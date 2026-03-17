@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "P/L cumulativo",
   "portfolio.overview.performance.dailyVolume": "Volume giornaliero",
   "portfolio.overview.performance.cumulativeVolume": "Volume cumulativo",
+  "portfolio.overview.todaysPnl": "P/L di oggi",
+  "portfolio.overview.todaysVol": "Volume di oggi",
   "portfolio.overview.distribution": "Distribuzione",
   "portfolio.overview.transferHistory": "Storico trasferimenti",
   "portfolio.overview.vaults": "Caveau",

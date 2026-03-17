@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "PnL Kumulatif",
   "portfolio.overview.performance.dailyVolume": "Volume Harian",
   "portfolio.overview.performance.cumulativeVolume": "Volume Kumulatif",
+  "portfolio.overview.todaysPnl": "PnL Hari Ini",
+  "portfolio.overview.todaysVol": "Volume Hari Ini",
   "portfolio.overview.distribution": "Distribusi",
   "portfolio.overview.transferHistory": "Riwayat transfer",
   "portfolio.overview.vaults": "Brankas",

@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "累計盈虧",
   "portfolio.overview.performance.dailyVolume": "每日成交量",
   "portfolio.overview.performance.cumulativeVolume": "累計成交量",
+  "portfolio.overview.todaysPnl": "今日盈虧",
+  "portfolio.overview.todaysVol": "今日成交量",
   "portfolio.overview.distribution": "分配",
   "portfolio.overview.transferHistory": "轉帳歷史",
   "portfolio.overview.vaults": "金庫",

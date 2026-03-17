@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "Kümülatif K/Z",
   "portfolio.overview.performance.dailyVolume": "Günlük Hacim",
   "portfolio.overview.performance.cumulativeVolume": "Kümülatif Hacim",
+  "portfolio.overview.todaysPnl": "Bugünkü K/Z",
+  "portfolio.overview.todaysVol": "Bugünkü Hacim",
   "portfolio.overview.distribution": "Dağıtım",
   "portfolio.overview.transferHistory": "Transfer geçmişi",
   "portfolio.overview.vaults": "Kasalar",

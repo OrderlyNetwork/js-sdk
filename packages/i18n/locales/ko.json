@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "누적 손익",
   "portfolio.overview.performance.dailyVolume": "일일 거래량",
   "portfolio.overview.performance.cumulativeVolume": "누적 거래량",
+  "portfolio.overview.todaysPnl": "오늘 손익",
+  "portfolio.overview.todaysVol": "오늘 거래량",
   "portfolio.overview.distribution": "분배",
   "portfolio.overview.transferHistory": "이체 내역",
   "portfolio.overview.vaults": "볼트",

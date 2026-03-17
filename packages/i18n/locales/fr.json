@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "PnL cumulé",
   "portfolio.overview.performance.dailyVolume": "Volume quotidien",
   "portfolio.overview.performance.cumulativeVolume": "Volume cumulé",
+  "portfolio.overview.todaysPnl": "PnL du jour",
+  "portfolio.overview.todaysVol": "Volume du jour",
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Historique des transferts",
   "portfolio.overview.vaults": "Coffres",

@@ -200,6 +200,8 @@
   "portfolio.overview.performance.cumulativePnl": "Skumulowany PnL",
   "portfolio.overview.performance.dailyVolume": "Dzienny wolumen",
   "portfolio.overview.performance.cumulativeVolume": "Wolumen skumulowany",
+  "portfolio.overview.todaysPnl": "Dzisiejszy PnL",
+  "portfolio.overview.todaysVol": "Dzisiejszy wolumen",
   "portfolio.overview.distribution": "Dystrybucja",
   "portfolio.overview.transferHistory": "Historia transferów",
   "portfolio.overview.vaults": "Skarbce",
