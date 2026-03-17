@@ -1,19 +1,5 @@
 # @orderly.network/trading-points
 
-## 1.2.3-internal-20260317-hotfix-iso.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/react-app@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/hooks@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/i18n@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/types@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/ui@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/ui-connector@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/utils@2.10.3-internal-20260317-hotfix-iso.0
-
 ## 1.2.2
 
 ### Patch Changes

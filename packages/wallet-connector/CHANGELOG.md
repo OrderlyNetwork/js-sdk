@@ -1,17 +1,5 @@
 # @orderly.network/wallet-connector
 
-## 2.10.3-internal-20260317-hotfix-iso.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/core@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/hooks@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/types@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/ui@2.10.3-internal-20260317-hotfix-iso.0
-  - @orderly.network/utils@2.10.3-internal-20260317-hotfix-iso.0
-
 ## 2.10.2
 
 ### Patch Changes

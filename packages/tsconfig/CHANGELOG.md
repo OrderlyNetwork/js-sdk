@@ -1,11 +1,5 @@
 # tsconfig
 
-## 0.13.3-internal-20260317-hotfix-iso.0
-
-### Patch Changes
-
-- publish
-
 ## 0.13.2
 
 ### Patch Changes
