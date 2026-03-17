@@ -137,6 +137,7 @@ export const calcEstLiqPrice = (
     positions: API.PositionTPSLExt[] | null;
     symbolInfo: API.SymbolExt;
     sumUnitaryFunding: number;
+    symbolLeverage?: number;
   },
 ) => {
   const { symbolInfo } = inputs;
@@ -154,7 +155,7 @@ export const calcEstLiqPrice = (
     totalCollateral,
     futures_taker_fee_rate,
     positions,
-    // leverage,
+    symbolLeverage,
     sumUnitaryFunding,
   } = inputs;
 
@@ -186,7 +187,7 @@ export const calcEstLiqPrice = (
       costPosition = 0,
       positionQty = 0,
       lastSumUnitaryFunding = 0,
-      leverage = 1;
+      leverage = symbolLeverage ?? 1;
 
     if (positions) {
       const position = positions.find(

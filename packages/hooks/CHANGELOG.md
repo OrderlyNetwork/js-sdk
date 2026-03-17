@@ -1,5 +1,43 @@
 # @orderly.network/hooks
 
+## 2.11.0
+
+### Minor Changes
+
+- d8edbeb: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [d8edbeb]
+- Updated dependencies
+  - @orderly.network/core@2.11.0
+  - @orderly.network/default-evm-adapter@2.11.0
+  - @orderly.network/default-solana-adapter@2.11.0
+  - @orderly.network/net@2.11.0
+  - @orderly.network/perp@4.11.0
+  - @orderly.network/types@2.11.0
+  - @orderly.network/utils@2.11.0
+  - @orderly.network/web3-provider-ethers@2.11.0
+
+## 2.11.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.11.0-alpha.0
+  - @orderly.network/default-evm-adapter@2.11.0-alpha.0
+  - @orderly.network/default-solana-adapter@2.11.0-alpha.0
+  - @orderly.network/net@2.11.0-alpha.0
+  - @orderly.network/perp@4.11.0-alpha.0
+  - @orderly.network/types@2.11.0-alpha.0
+  - @orderly.network/utils@2.11.0-alpha.0
+  - @orderly.network/web3-provider-ethers@2.11.0-alpha.0
+
 ## 2.10.2
 
 ### Patch Changes
