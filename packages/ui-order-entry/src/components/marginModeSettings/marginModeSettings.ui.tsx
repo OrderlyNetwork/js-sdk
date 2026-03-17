@@ -11,8 +11,10 @@ import {
   IconButton,
   Input,
   Text,
+  Tooltip,
   cn,
 } from "@orderly.network/ui";
+import { SymbolBadge } from "../symbolBadge";
 import type {
   MarginModeSettingsItem,
   MarginModeSettingsState,
@@ -176,6 +178,7 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
               checked={props.selectedKeys.has(item.key)}
               marginMode={props.itemMarginModes[item.key] ?? MarginMode.CROSS}
               onToggle={props.onToggleItem}
+              disabled={!!item.brokerId}
             />
           ))}
         </Flex>
@@ -282,17 +285,20 @@ const SymbolRow: FC<{
   checked: boolean;
   marginMode: MarginMode;
   onToggle: (key: string) => void;
+  disabled?: boolean;
 }> = (props) => {
   const { t } = useTranslation();
   const handleCheckedChange = useCallback(() => {
+    if (props.disabled) return;
     props.onToggle(props.item.key);
   }, [props]);
 
-  return (
+  const row = (
     <Flex itemAlign="center" className="oui-w-full">
       <label
         className={cn(
           "oui-flex oui-items-center oui-gap-2 oui-flex-1 oui-cursor-pointer oui-select-none oui-w-full",
+          props.disabled ? "oui-cursor-not-allowed oui-opacity-50" : "",
         )}
         data-testid={`oui-testid-marginModeSettings-item-${props.item.key}`}
       >
@@ -301,10 +307,12 @@ const SymbolRow: FC<{
           checked={props.checked}
           onCheckedChange={handleCheckedChange}
           aria-label={props.item.symbol}
+          disabled={props.disabled}
         />
         <Text className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
           {props.item.symbol}
         </Text>
+        <SymbolBadge symbol={props.item.key} />
         <span
           className={cn(
             "oui-inline-flex oui-items-center",
@@ -320,6 +328,19 @@ const SymbolRow: FC<{
       </label>
     </Flex>
   );
+
+  if (props.disabled) {
+    return (
+      <Tooltip
+        content={t("marginMode.disabledSymbolTooltip")}
+        className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-80"
+      >
+        {row}
+      </Tooltip>
+    );
+  }
+
+  return row;
 };
 
 const SearchGlyph: FC<{ className?: string }> = (props) => {

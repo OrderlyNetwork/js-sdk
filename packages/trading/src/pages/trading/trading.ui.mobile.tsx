@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo } from "react";
-import { useGetRwaSymbolInfo } from "@orderly.network/hooks";
+import { useBadgeBySymbol, useGetRwaSymbolInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   MarketsSheetWidget,
+  SymbolInfoBarRiskNotice,
   SymbolInfoBarWidget,
 } from "@orderly.network/markets";
 import {
@@ -55,6 +56,15 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
   const { t } = useTranslation();
 
   const { isRwa, open, closeTimeInterval } = useGetRwaSymbolInfo(props.symbol);
+  const { brokerId, brokerName, brokerNameRaw, displayName } = useBadgeBySymbol(
+    props.symbol,
+  );
+  const isCommunityListed = Boolean(brokerId ?? brokerName);
+  const baseFromSymbol = props.symbol?.split("_")[1] ?? props.symbol ?? "";
+  const symbolWithBroker =
+    brokerName != null
+      ? `${baseFromSymbol}-${brokerNameRaw}`
+      : (displayName ?? props.symbol ?? "");
 
   useEffect(() => {
     if (isRwa && !open) {
@@ -152,13 +162,22 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
   );
 
   const topBar = (
-    <Box intensity={900} className="oui-rounded-xl" mx={1} px={3} py={2}>
+    <Box>
+      <Flex mx={1}>
+        <SymbolInfoBarRiskNotice
+          visible={isCommunityListed}
+          symbolWithBroker={symbolWithBroker}
+          brokerName={brokerNameRaw ?? brokerName ?? ""}
+          autoHeight
+          className="oui-my-1"
+        />
+      </Flex>
       {symbolInfoBar}
       <SimpleSheet
         open={props.openMarketsSheet}
         onOpenChange={props.onOpenMarketsSheetChange}
         classNames={{
-          body: "oui-h-full oui-pb-0",
+          body: "oui-h-full oui-pb-0 ",
           content: "!oui-w-[372px] !oui-max-w-[372px] !oui-p-0",
         }}
         contentProps={{ side: "left", closeable: false }}

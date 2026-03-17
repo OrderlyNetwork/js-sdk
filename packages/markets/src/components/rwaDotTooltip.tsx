@@ -28,7 +28,7 @@ export const RwaDotTooltip = ({ record }: RwaDotTooltipProps) => {
         </Text>
       }
     >
-      <Box p={2}>
+      <Box py={2} px={1}>
         <Box
           width={4}
           height={4}

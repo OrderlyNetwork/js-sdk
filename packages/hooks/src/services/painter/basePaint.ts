@@ -8,6 +8,7 @@ export type posterDataSource = {
   message?: string;
   position: {
     symbol: string;
+    brokerName?: string;
     // side: OrderSide;
     side: "LONG" | "SHORT";
     marginMode?: "isolated" | "cross";

@@ -12,8 +12,10 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { MarketsListWidget } from "../marketsList";
 import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
@@ -104,6 +106,25 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
     );
   };
 
+  const renderCommunityList = (selected: string) => {
+    return (
+      <div className={cls}>
+        <MarketsListWidget
+          type={MarketsTabName.All}
+          initialSort={tabSort[MarketsTabName.Community]}
+          onSort={onTabSort(MarketsTabName.Community)}
+          getColumns={getColumns}
+          tableClassNames={{
+            root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
+            scroll: "oui-pb-5 oui-px-1",
+          }}
+          rowClassName="!oui-h-[34px]"
+          dataFilter={createCommunityBrokerFilter(selected)}
+        />
+      </div>
+    );
+  };
+
   return (
     <Box
       className={cn(
@@ -136,6 +157,27 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         >
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
+
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-community-trigger",
+            content: "oui-tabs-community-content",
+          }}
+          title={t("markets.community")}
+          value={MarketsTabName.Community}
+        >
+          <CommunityBrokerTabs
+            storageKey="orderly_dropdown_markets_community_sel_sub_tab"
+            classNames={{
+              tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+              tabsContent: "oui-h-full",
+            }}
+            className={cn("oui-dropDownMarkets-community-tabs", cls)}
+            showScrollIndicator
+            renderPanel={renderCommunityList}
+          />
+        </TabPanel>
+
         <TabPanel
           classNames={{
             trigger: "oui-tabs-all-trigger",

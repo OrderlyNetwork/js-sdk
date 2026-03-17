@@ -1,8 +1,10 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { RwaTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import type { ExpandMarketsScriptReturn } from "./expandMarkets.script";
@@ -58,6 +60,25 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
     );
   };
 
+  const renderCommunityList = (selected: string) => {
+    return (
+      <div className={cls}>
+        <React.Suspense fallback={null}>
+          <LazyMarketsListWidget
+            type={MarketsTabName.All}
+            initialSort={tabSort[MarketsTabName.Community]}
+            onSort={onTabSort(MarketsTabName.Community)}
+            tableClassNames={{
+              root: "oui-expandMarkets-list",
+              scroll: cn("oui-px-1", "oui-pb-2"),
+            }}
+            dataFilter={createCommunityBrokerFilter(selected)}
+          />
+        </React.Suspense>
+      </div>
+    );
+  };
+
   return (
     <Box
       className={cn(
@@ -95,6 +116,25 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           value={MarketsTabName.Favorites}
         >
           {renderTab(MarketsTabName.Favorites)}
+        </TabPanel>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-community-trigger",
+            content: "oui-tabs-community-content",
+          }}
+          title={t("markets.community")}
+          value={MarketsTabName.Community}
+        >
+          <CommunityBrokerTabs
+            storageKey="orderly_expand_markets_community_sel_sub_tab"
+            classNames={{
+              tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+              tabsContent: "oui-h-full",
+            }}
+            className={cn("oui-expandMarkets-community-tabs", cls)}
+            showScrollIndicator
+            renderPanel={renderCommunityList}
+          />
         </TabPanel>
         <TabPanel
           classNames={{

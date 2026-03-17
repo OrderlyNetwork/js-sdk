@@ -10,12 +10,14 @@ import {
   Badge,
   EmptyDataState,
 } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { FavoritesIcon } from "../../icons";
 import {
   MarketsTabName,
   type FavoriteInstance,
   type SortType,
 } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { MarketsListWidget } from "../marketsList";
 import { RwaIconTab } from "../rwaTab";
@@ -111,6 +113,18 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
     ];
   };
 
+  const renderCommunityList = (selected: string) => {
+    return (
+      <MarketTabPanel
+        type={MarketsTabName.All}
+        getColumns={getColumns}
+        dataFilter={createCommunityBrokerFilter(selected)}
+        initialSort={tabSort[MarketsTabName.Community]}
+        onSort={onTabSort(MarketsTabName.Community)}
+      />
+    );
+  };
+
   return (
     <Box
       className={cn(
@@ -165,6 +179,26 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
               />
             );
           })()}
+        </TabPanel>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-community-trigger",
+            content: "oui-tabs-community-content",
+          }}
+          title={t("markets.community")}
+          value={MarketsTabName.Community}
+        >
+          <CommunityBrokerTabs
+            storageKey="orderly_submenu_markets_community_sel_sub_tab"
+            classNames={{
+              tabsList: "oui-px-1 oui-pt-1 oui-pb-2",
+              tabsContent: "oui-h-full",
+              scrollIndicator: "oui-mx-1",
+            }}
+            className={cn("oui-subMenuMarkets-community-tabs", cls)}
+            showScrollIndicator
+            renderPanel={renderCommunityList}
+          />
         </TabPanel>
         <TabPanel
           classNames={{

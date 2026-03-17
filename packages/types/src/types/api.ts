@@ -10,6 +10,15 @@ export enum AnnouncementType {
 }
 
 export declare namespace API {
+  /**
+   * Symbol trading status returned by public symbol APIs.
+   */
+  export type SymbolTradingStatus =
+    | "POST_ONLY"
+    | "ACTIVE"
+    | "REDUCE_ONLY"
+    | "DELISTING";
+
   // /v1/public/auto_convert_threshold
   export interface ConvertThreshold {
     ltv_threshold: number;
@@ -63,6 +72,8 @@ export declare namespace API {
     display_symbol_name?: string;
     /** Permissionless listing: broker id; null for non-community-listed symbols */
     broker_id?: string | null;
+    /** Trading status: POST_ONLY / ACTIVE / REDUCE_ONLY / DELISTING */
+    status?: SymbolTradingStatus;
   }
 
   export interface MarketInfoExt extends MarketInfo {
@@ -114,7 +125,9 @@ export declare namespace API {
     /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
     display_symbol_name?: string;
     /** Permissionless listing: broker id; null for non-community-listed symbols */
-    broker_id?: string | null;
+    broker_id?: string;
+    /** Trading status: POST_ONLY / ACTIVE / REDUCE_ONLY / DELISTING */
+    status?: SymbolTradingStatus;
   }
 
   export interface TokenItem {

@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useTpslPriceChecker } from "@orderly.network/hooks";
+import { useBadgeBySymbol, useTpslPriceChecker } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
@@ -37,7 +37,7 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
     <Text.formatted
       intensity={80}
       rule="symbol"
-      formatString="base-type"
+      formatString="base"
       size="sm"
       // @ts-ignore
       prefix={
@@ -45,6 +45,7 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
           {isBuy ? t("common.buy") : t("common.sell")}
         </Badge>
       }
+      suffix={<BrokerIdBadge symbol={item.symbol} />}
       onClick={() => {
         props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
       }}
@@ -52,6 +53,19 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
     >
       {item.symbol}
     </Text.formatted>
+  );
+};
+
+const BrokerIdBadge: FC<{ symbol: string }> = (props) => {
+  const { brokerId, brokerName } = useBadgeBySymbol(props.symbol);
+
+  const badge = brokerName ?? brokerId;
+  if (!badge) return null;
+
+  return (
+    <Badge color="neutral" size="xs" className="oui-ml-1">
+      {badge}
+    </Badge>
   );
 };
 

@@ -16,8 +16,11 @@ export const useMarginModeSwitchScript = (
   const { isMobile } = useScreen();
   const { t } = useTranslation();
 
-  const { marginMode: currentMarginMode, update } =
-    useMarginModeBySymbol(symbol);
+  const {
+    marginMode: currentMarginMode,
+    update,
+    isPermissionlessListing,
+  } = useMarginModeBySymbol(symbol);
 
   const [selectedMarginMode, setSelectedMarginMode] =
     useState<MarginMode>(currentMarginMode);
@@ -68,6 +71,7 @@ export const useMarginModeSwitchScript = (
     applyMarginMode,
     close,
     onSelect,
+    isPermissionlessListing,
   };
 };
 

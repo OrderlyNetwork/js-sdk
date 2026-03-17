@@ -6,7 +6,6 @@ import { FavoritesIcon2, UnFavoritesIcon2 } from "../../icons";
 import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { RwaDotTooltip } from "../rwaDotTooltip";
 import { SymbolDisplay } from "../symbolDisplay";
 
 export function getSymbolColumn(
@@ -46,10 +45,9 @@ export function getSymbolColumn(
           <Flex direction="column" itemAlign="start" gapY={1}>
             <Flex gapX={1} itemAlign="center">
               <TokenIcon symbol={value} className="oui-size-[18px]" />
-              <SymbolDisplay formatString="base" size="2xs">
+              <SymbolDisplay formatString="base" size="2xs" record={record}>
                 {value}
               </SymbolDisplay>
-              <RwaDotTooltip record={record} />
             </Flex>
             <Badge size="xs" color="primary">
               {record.leverage}x
@@ -137,7 +135,7 @@ export function get24hPercentageColumn() {
 
 export function get24hVolOIColumn() {
   return {
-    title: i18n.t("markets.column.24hVolOI"),
+    title: i18n.t("markets.column.24hVolOI" as any),
     dataIndex: "24h_amount",
     align: "right",
     className: "oui-h-[36px]",

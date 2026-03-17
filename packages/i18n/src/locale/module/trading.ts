@@ -116,6 +116,8 @@ export const trading = {
   "trading.rwa.tooltip.checkDetailRules": "Check detail rules",
   "trading.rwa.countdown.title":
     "US markets are closing soon, volatility may be lower.",
+  "trading.symbolDelisting":
+    "{{symbol}} has entered forced deleveraging mode (insufficient liquidity depth / insufficient IF balance). Your position on this symbol only allows closing operations.",
   "trading.rwa.outsideMarketHours.notify":
     "This market is currently outside regular trading hours. You can still place a trade, but please be aware of reduced liquidity and potential risks.",
   "trading.rwa.mWeb.outsideMarketHours.desc":

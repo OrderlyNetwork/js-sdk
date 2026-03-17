@@ -4,6 +4,7 @@ import {
   MarketsType,
   useMarginModes,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { MarginMode } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
 import { formatSymbol } from "@orderly.network/utils";
@@ -15,12 +16,14 @@ export type MarginModeSettingsScriptOptions = {
 export type MarginModeSettingsItem = {
   key: string;
   symbol: string;
+  brokerId?: string | null;
 };
 
 export const useMarginModeSettingsScript = (
   options: MarginModeSettingsScriptOptions,
 ) => {
   const { isMobile } = useScreen();
+  const { t } = useTranslation();
 
   // Fetch markets data using the same API as markets list
   const [markets] = useMarkets(MarketsType.ALL);
@@ -33,9 +36,20 @@ export const useMarginModeSettingsScript = (
 
     return markets.map((market) => ({
       key: market.symbol, // Original symbol: "PERP_BTC_USDC"
-      symbol: formatSymbol(market.symbol, "base-type"), // Formatted: "BTC-PERP"
+      symbol: formatSymbol(market.symbol, "base"), // Formatted: "BTC-PERP"
+      brokerId: market.broker_id,
     }));
   }, [markets]);
+
+  const brokerLockedKeys = useMemo(() => {
+    const locked = new Set<string>();
+    for (const item of items) {
+      if (item.brokerId) {
+        locked.add(item.key);
+      }
+    }
+    return locked;
+  }, [items]);
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(
@@ -63,12 +77,17 @@ export const useMarginModeSettingsScript = (
   const itemMarginModes = useMemo(() => {
     const result: Record<string, MarginMode> = {};
     for (const item of items) {
+      // Permissionless listing (broker_id exists) can ONLY be ISOLATED.
+      if (brokerLockedKeys.has(item.key)) {
+        result[item.key] = MarginMode.ISOLATED;
+        continue;
+      }
       const marginMode = marginModes[item.key];
       // Default to CROSS if not found in API response
       result[item.key] = marginMode ?? MarginMode.CROSS;
     }
     return result;
-  }, [items, marginModes]);
+  }, [brokerLockedKeys, items, marginModes]);
 
   const filteredItems = useMemo(() => {
     const keyword = searchKeyword.trim().toLowerCase();
@@ -118,17 +137,21 @@ export const useMarginModeSettingsScript = (
     setSearchKeyword(keyword);
   }, []);
 
-  const onToggleItem = useCallback((key: string) => {
-    setSelectedKeys((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) {
-        next.delete(key);
-      } else {
-        next.add(key);
-      }
-      return next;
-    });
-  }, []);
+  const onToggleItem = useCallback(
+    (key: string) => {
+      if (brokerLockedKeys.has(key)) return;
+      setSelectedKeys((prev) => {
+        const next = new Set(prev);
+        if (next.has(key)) {
+          next.delete(key);
+        } else {
+          next.add(key);
+        }
+        return next;
+      });
+    },
+    [brokerLockedKeys],
+  );
 
   const onToggleSelectAll = useCallback(() => {
     setSelectedKeys((prev) => {
@@ -141,38 +164,47 @@ export const useMarginModeSettingsScript = (
       }
 
       for (const item of filteredItems) {
+        if (brokerLockedKeys.has(item.key)) continue;
         next.add(item.key);
       }
       return next;
     });
-  }, [filteredItems, isSelectAll]);
+  }, [brokerLockedKeys, filteredItems, isSelectAll]);
 
   const onSetMarginMode = useCallback(
     async (mode: MarginMode) => {
       if (selectedKeys.size === 0) return;
 
+      const editableSymbolList = Array.from(selectedKeys).filter(
+        (key) => !brokerLockedKeys.has(key),
+      );
+      if (editableSymbolList.length === 0) {
+        toast.error(t("marginMode.noEditableSymbolsSelected"));
+        return;
+      }
+
       setIsOperationLoading(true);
       try {
         // Build request payload
         const payload = {
-          symbol_list: Array.from(selectedKeys),
+          symbol_list: editableSymbolList,
           default_margin_mode: mode,
         };
 
         // Call API to update margin modes and refresh data
         await updateMarginMode(payload);
-        toast.success("Updated successfully");
+        toast.success(t("marginMode.updatedSuccessfully"));
       } catch (error) {
         toast.error(
           error instanceof Error
             ? error.message
-            : "Failed to update margin mode",
+            : t("marginMode.failedToUpdateMarginMode"),
         );
       } finally {
         setIsOperationLoading(false);
       }
     },
-    [selectedKeys, updateMarginMode],
+    [brokerLockedKeys, selectedKeys, updateMarginMode],
   );
 
   const isLoading =
