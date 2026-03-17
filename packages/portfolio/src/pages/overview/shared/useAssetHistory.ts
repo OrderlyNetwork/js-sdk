@@ -137,7 +137,7 @@ export const useAssetsHistoryData = (
   const [userStatistics] = useUserStatistics();
 
   const todayVolume = useMemo(
-    () => userStatistics?.perp_trading_volume_last_24_hours ?? 0,
+    () => userStatistics?.perp_trading_volume_today ?? 0,
     [userStatistics],
   );
 
