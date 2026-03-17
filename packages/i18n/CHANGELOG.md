@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.10.3-internal-20260317-hotfix-iso.0
+
+### Patch Changes
+
+- publish
+
 ## 2.10.2
 
 ### Patch Changes
