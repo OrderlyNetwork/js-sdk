@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { OrderlyPluginProvider } from "../pluginContext";
-import { ExtensionSlot } from "../slot";
 import { OrderlyPluginRegistry } from "../pluginRegistry";
+import { ExtensionSlot } from "../slot";
 import { ExtensionPositionEnum } from "../types";
 
 describe("ExtensionSlot", () => {
@@ -14,7 +14,7 @@ describe("ExtensionSlot", () => {
     render(
       <OrderlyPluginProvider plugins={[]}>
         <ExtensionSlot position={ExtensionPositionEnum.DepositForm} />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByText(/depositForm/)).toBeTruthy();
     expect(screen.getByText("Not found!")).toBeTruthy();
@@ -28,7 +28,7 @@ describe("ExtensionSlot", () => {
           position={ExtensionPositionEnum.WithdrawForm}
           defaultWidget={Default}
         />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByTestId("default-widget").textContent).toBe("Default");
   });
@@ -54,7 +54,7 @@ describe("ExtensionSlot", () => {
     render(
       <OrderlyPluginProvider plugins={plugins}>
         <ExtensionSlot position={ExtensionPositionEnum.DepositForm} />
-      </OrderlyPluginProvider>
+      </OrderlyPluginProvider>,
     );
     expect(screen.getByTestId("intercepted")).toBeTruthy();
     expect(screen.getByText("intercepted")).toBeTruthy();

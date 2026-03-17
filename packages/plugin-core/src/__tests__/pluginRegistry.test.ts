@@ -1,7 +1,4 @@
-import {
-  OrderlyPluginRegistry,
-  createOrderlySDK,
-} from "../pluginRegistry";
+import { OrderlyPluginRegistry, createOrderlySDK } from "../pluginRegistry";
 import type { OrderlyPlugin, OrderlySDK } from "../types";
 
 describe("OrderlyPluginRegistry", () => {

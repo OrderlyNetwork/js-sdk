@@ -4,28 +4,28 @@ import { ExtensionPositionEnum } from "../types";
 describe("positionToPath", () => {
   it("returns mapped path for ExtensionPositionEnum values", () => {
     expect(positionToPath(ExtensionPositionEnum.DepositForm)).toBe(
-      "Deposit.DepositForm"
+      "Deposit.DepositForm",
     );
     expect(positionToPath(ExtensionPositionEnum.WithdrawForm)).toBe(
-      "Deposit.WithdrawForm"
+      "Deposit.WithdrawForm",
     );
     expect(positionToPath(ExtensionPositionEnum.AccountMenu)).toBe(
-      "Account.AccountMenu"
+      "Account.AccountMenu",
     );
     expect(positionToPath(ExtensionPositionEnum.MobileAccountMenu)).toBe(
-      "Account.MobileAccountMenu"
+      "Account.MobileAccountMenu",
     );
     expect(positionToPath(ExtensionPositionEnum.MainMenus)).toBe(
-      "Layout.MainMenus"
+      "Layout.MainMenus",
     );
     expect(positionToPath(ExtensionPositionEnum.EmptyDataIdentifier)).toBe(
-      "Table.EmptyDataIdentifier"
+      "Table.EmptyDataIdentifier",
     );
   });
 
   it("returns string as-is when it contains a dot (path string)", () => {
     expect(positionToPath("Custom.Section.Component")).toBe(
-      "Custom.Section.Component"
+      "Custom.Section.Component",
     );
   });
 

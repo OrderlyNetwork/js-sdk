@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import useSWR from "swr";
 import type { SWRHook, SWRResponse } from "swr";
+import { usePluginScope } from "@orderly.network/plugin-core";
 import { SDKError } from "@orderly.network/types";
 import { useConfig } from "./useConfig";
-import { usePluginScope } from "@orderly.network/plugin-core";
 import { fetcher, useQueryOptions } from "./utils/fetcher";
 
 /** Header name for plugin ID attribution (API tracing, rate limiting) */
@@ -36,7 +36,7 @@ export const useQuery = <T>(
       }
       return fetcher(fullUrl, { ...init, headers }, { formatter });
     },
-    [apiBaseUrl, pluginScope?.pluginId, formatter]
+    [apiBaseUrl, pluginScope?.pluginId, formatter],
   );
 
   return useSWR<T>(query, fetcherFn, swrOptions);

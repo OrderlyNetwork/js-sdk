@@ -54,18 +54,18 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
           <OrderlyPluginProvider plugins={plugins ?? []}>
             <ExecutionReportListener />
             <AppStateProvider
-            onChainChanged={onChainChanged}
-            defaultChain={defaultChain}
-            restrictedInfo={props.restrictedInfo}
-            onRouteChange={props.onRouteChange}
-            widgetConfigs={widgetConfigs}
-          >
-            <UILocaleProvider locale={uiLocale}>
-              <TooltipProvider delayDuration={300}>
-                <ModalProvider>{props.children}</ModalProvider>
-              </TooltipProvider>
-            </UILocaleProvider>
-          </AppStateProvider>
+              onChainChanged={onChainChanged}
+              defaultChain={defaultChain}
+              restrictedInfo={props.restrictedInfo}
+              onRouteChange={props.onRouteChange}
+              widgetConfigs={widgetConfigs}
+            >
+              <UILocaleProvider locale={uiLocale}>
+                <TooltipProvider delayDuration={300}>
+                  <ModalProvider>{props.children}</ModalProvider>
+                </TooltipProvider>
+              </UILocaleProvider>
+            </AppStateProvider>
           </OrderlyPluginProvider>
           <Toaster />
         </OrderlyConfigProvider>
