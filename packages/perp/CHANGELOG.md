@@ -1,5 +1,51 @@
 # @orderly.network/futures
 
+## 4.11.0
+
+### Minor Changes
+
+- d8edbeb: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [d8edbeb]
+- Updated dependencies
+  - @orderly.network/types@2.11.0
+  - @orderly.network/utils@2.11.0
+
+## 4.11.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.11.0-alpha.0
+  - @orderly.network/utils@2.11.0-alpha.0
+
+## 4.10.2
+
+### Patch Changes
+
+- publish
+- 95b95a6: publish
+- Updated dependencies
+- Updated dependencies [95b95a6]
+  - @orderly.network/types@2.10.2
+  - @orderly.network/utils@2.10.2
+
+## 4.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.10.2-alpha.0
+  - @orderly.network/utils@2.10.2-alpha.0
+
 ## 4.10.1
 
 ### Patch Changes
