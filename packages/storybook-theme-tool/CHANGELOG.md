@@ -1,5 +1,18 @@
 # storybook-theme-tool
 
+## 2.11.0
+
+### Minor Changes
+
+- d8edbeb: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [d8edbeb]
+- Updated dependencies
+  - @orderly.network/ui@2.11.0
+
 ## 2.11.0-alpha.0
 
 ### Minor Changes

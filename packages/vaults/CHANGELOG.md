@@ -1,5 +1,25 @@
 # @orderly.network/vaults
 
+## 2.11.0
+
+### Minor Changes
+
+- d8edbeb: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [d8edbeb]
+- Updated dependencies
+  - @orderly.network/react-app@2.11.0
+  - @orderly.network/hooks@2.11.0
+  - @orderly.network/i18n@2.11.0
+  - @orderly.network/types@2.11.0
+  - @orderly.network/ui@2.11.0
+  - @orderly.network/ui-connector@2.11.0
+  - @orderly.network/ui-transfer@2.11.0
+  - @orderly.network/utils@2.11.0
+
 ## 2.11.0-alpha.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # @orderly.network/types
 
+## 2.11.0
+
+### Minor Changes
+
+- d8edbeb: publish
+- publish
+
 ## 2.11.0-alpha.0
 
 ### Minor Changes
