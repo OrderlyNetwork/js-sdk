@@ -1,5 +1,20 @@
 # @orderly.network/ui-leverage
 
+## 2.11.1
+
+### Patch Changes
+
+- publish
+- 2bb6924: publish
+- Updated dependencies
+- Updated dependencies [2bb6924]
+  - @orderly.network/hooks@2.11.1
+  - @orderly.network/i18n@2.11.1
+  - @orderly.network/perp@4.11.1
+  - @orderly.network/types@2.11.1
+  - @orderly.network/ui@2.11.1
+  - @orderly.network/utils@2.11.1
+
 ## 2.11.1-alpha.0
 
 ### Patch Changes
