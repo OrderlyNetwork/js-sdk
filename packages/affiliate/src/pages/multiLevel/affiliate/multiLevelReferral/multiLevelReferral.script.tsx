@@ -14,7 +14,8 @@ export const useMultiLevelReferralScript = () => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Create,
       maxRebateRate,
-      directBonusRebateRate: 10, // Hardcoded value before API is ready
+      // because there is no multi level code, the /v1/referral/multi_level/rebate_info interface will throw an error, so here set to 0, and hide the extra bonus display when creating multi level code
+      directBonusRebateRate: 0,
       onSuccess: () => {
         multiLevelRebateInfoMutate();
       },
