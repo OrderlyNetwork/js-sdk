@@ -86,7 +86,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             className="oui-break-all"
             onCopy={props.onCopyApiSecretKey}
           >
-            {props.generateKey?.screctKey}
+            {props.generateKey?.secretKey}
           </Text.formatted>{" "}
         </Statistic>
         <Statistic label={t("portfolio.apiKey.ip")}>
