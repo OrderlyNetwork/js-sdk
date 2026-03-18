@@ -31,7 +31,6 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
         }),
         get24hVolOIColumn(),
         getLastAnd24hPercentageColumn(favorite, isFavoriteList),
-        getMarkIndexColumn(),
       ] as Column[];
     },
     [],
