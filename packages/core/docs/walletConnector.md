@@ -1,28 +1,37 @@
-# walletConnector
+# walletConnector.ts
 
-> Location: `packages/core/src/walletConnector.ts`
+## walletConnector.ts Responsibility
 
-## Overview
+Defines the `WalletConnector` interface (connect()) and two minimal implementations: `BaseConnector` (connect resolves immediately) and `Blocknative` (connect resolves immediately). Used as a placeholder or extension point for wallet connection flow.
 
-Minimal connector interface and stub implementations for wallet connection flow.
+## walletConnector.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| WalletConnector | interface | Contract | connect(): Promise<void> |
+| BaseConnector | class | Impl | connect() => Promise.resolve() |
+| Blocknative | class | Impl | connect() => Promise.resolve() |
 
-### WalletConnector (interface)
+## WalletConnector Responsibility
 
-- **connect(): Promise\<void\>**
+Abstracts “connect” as a single async step. Implementations can trigger wallet UI or SDK connect; current impls are no-op.
 
-### BaseConnector (class)
+## WalletConnector Methods
 
-Implements `WalletConnector`; `connect()` resolves immediately.
+| Method | Description |
+|--------|-------------|
+| connect() | Returns Promise<void>; when to show UI or perform connect is implementation-defined |
 
-### Blocknative (class)
+## walletConnector.ts Dependencies and Call Relationships
 
-Implements `WalletConnector`; `connect()` resolves immediately.
+- **Upstream**: None.
+- **Downstream**: Not referenced in core/src; likely used by app or wallet UI layer.
 
-## Usage Example
+## walletConnector.ts Example
 
-```ts
-const connector = new BaseConnector();
+```typescript
+import { WalletConnector, BaseConnector, Blocknative } from "@orderly.network/core";
+
+const connector: WalletConnector = new BaseConnector();
 await connector.connect();
 ```

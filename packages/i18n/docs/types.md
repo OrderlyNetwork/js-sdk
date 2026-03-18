@@ -1,40 +1,46 @@
-# types
+# types.ts
 
-## Overview
+## types.ts responsibility
 
-Type definitions for locale codes, locale messages, and i18next resource shape. Extends i18next’s `CustomTypeOptions` so the `t` function gets key autocomplete from `LocaleMessages`.
+Defines locale-related TypeScript types and augments the i18next module so that `t()` has typed keys and resources. Provides `LocaleCode`, `LocaleMessages`, and `Resources` for multi-locale bundles.
 
-## Exports
+## types.ts exports
 
-### `LocaleCode`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| LocaleCode | type | Locale identifier | `keyof typeof LocaleEnum \| (string & {})` |
+| LocaleMessages | interface | Base + extend keys for t() | Extends EnType and ExtendLocaleMessages |
+| Resources | type | Per-locale partial messages | `{ [key in LocaleCode]?: Partial<LocaleMessages & T> }` |
+| CustomTypeOptions | module augmentation | i18next resources type | In declare module "i18next" |
 
-`keyof typeof LocaleEnum | (string & {})` – supported locale codes or extended string for custom locales.
+## LocaleCode
 
-### `LocaleMessages`
+- **Input**: Not applicable (type only).
+- **Output**: String type representing a locale code (e.g. en, zh, ja).
 
-Interface extending the default English message type (`EnType`) and `Record<"extend.${string}", string>` for extensible keys. Other packages can extend this interface for additional keys.
+## LocaleMessages
 
-### `Resources<T>`
+- **Input**: Inferred from `en` in locale/en.ts; extended by `Record<extend.${string}, string>`.
+- **Output**: Interface used as the resources type for the default namespace so `t("common.confirm")` is type-checked.
 
-```ts
-{
-  [key in LocaleCode]?: Partial<LocaleMessages & T>;
-}
-```
+## Resources
 
-Maps locale codes to optional partial message objects. Used by `LocaleProvider`’s `resources` prop.
+- **Input**: Generic `T` for extra keys; keys are LocaleCode.
+- **Output**: Object type for per-locale message bundles (e.g. for LocaleProvider `resources` prop).
 
-### Module augmentation
+## types.ts dependency and augmentation
 
-Declares `i18next` module with `CustomTypeOptions.resources[defaultNS]: LocaleMessages` so `t(...)` keys are typed from `LocaleMessages`.
+- **Upstream**: constant (LocaleEnum), locale/en (EnType).
+- **Augmentation**: `declare module "i18next"` sets `CustomTypeOptions.resources` to `{ [defaultNS]: LocaleMessages }`.
 
-## Usage example
+## types.ts Example
 
 ```typescript
 import type { LocaleCode, LocaleMessages, Resources } from "@orderly.network/i18n";
 
-const resources: Resources = {
-  en: { "common.cancel": "Cancel" },
-  zh: { "common.cancel": "取消" },
+const code: LocaleCode = "en";
+const bundles: Resources = {
+  en: { "common.confirm": "Confirm" },
+  zh: { "common.confirm": "确认" },
 };
 ```

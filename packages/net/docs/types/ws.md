@@ -1,50 +1,59 @@
-# types/ws.ts
+# ws.ts (types)
 
-## Overview
+## ws.ts 的职责
 
-Defines types and interfaces for WebSocket message observation (subscribe/unsubscribe), sending messages, and pluggable message handlers.
+定义 WebSocket 层使用的类型与接口：订阅/取消订阅消息结构、发送函数类型、以及可插拔的 MessageHandler 接口，供 WS 与 handler 模块使用。
 
-## Exports
+## ws.ts 对外导出内容
 
-### `MessageObserveTopic`
+| 名称 | 类型 | 角色 | 说明 |
+|------|------|------|------|
+| MessageObserveTopic | type | 订阅/取消订阅消息体 | event + topic |
+| MessageObserveParams | type | 订阅参数（string 或 MessageObserveTopic） | 用于 subscribe 入参 |
+| SendFunc | type | 发送函数 | (message: any) => void |
+| MessageHandler | interface | 消息处理器 | handle(message, webSocket) |
 
-Topic payload for subscribe/unsubscribe.
+## MessageObserveTopic 字段说明
 
-| Property | Type | Description |
-| -------- | ---- | ----------- |
-| `event` | `"subscribe" \| "unsubscribe"` | Action type |
-| `topic` | `string` | Topic identifier |
+| 字段名 | 类型 | 必需 | 说明 |
+|--------|------|------|------|
+| event | "subscribe" \| "unsubscribe" | 是 | 订阅或取消订阅 |
+| topic | string | 是 | 主题标识 |
 
-### `MessageObserveParams`
+## MessageHandler 的职责
 
-Either a topic string or a full observe payload.
+抽象 WebSocket 消息处理器，由具体 handler（如 PingHandler）实现，WS 收到消息后根据 `message.event` 查找并调用对应 handler。
 
-- **Type**: `string \| MessageObserveTopic`
+## MessageHandler 参数或属性说明
 
-### `SendFunc`
+| 名称 | 类型 | 必需 | 说明 |
+|------|------|------|------|
+| handle | (message: any, webSocket: WebSocket) => void | 是 | 处理单条消息，可向 webSocket 回写 |
 
-Function type for sending a message over the WebSocket.
+## MessageHandler 依赖与调用关系
 
-- **Type**: `(message: any) => void`
+- 上游调用方：`ws/ws.ts` 的 onMessage 中通过 `messageHandlers.get(message.event)` 调用
+- 下游实现：`ws/handler/baseHandler.ts`、`ws/handler/ping.ts` 等
 
-### `MessageHandler`
-
-Interface for custom message handlers (used by the handler registry).
-
-| Property | Type | Description |
-| -------- | ---- | ----------- |
-| `handle` | `(message: any, webSocket: WebSocket) => void` | Process a message and optionally use the socket |
-
-## Usage example
+## MessageHandler Example
 
 ```typescript
-import type { MessageHandler, MessageObserveTopic } from "@orderly.network/net";
+import type { MessageHandler } from "@orderly.network/net";
 
-const topic: MessageObserveTopic = { event: "subscribe", topic: "ticker" };
-
-const handler: MessageHandler = {
+const MyHandler: MessageHandler = {
   handle(message: any, webSocket: WebSocket) {
-    console.log(message);
+    if (message.event === "my_event") {
+      webSocket.send(JSON.stringify({ ack: message.id }));
+    }
   },
 };
+```
+
+## MessageObserveTopic / MessageObserveParams Example
+
+```typescript
+import type { MessageObserveTopic, MessageObserveParams } from "@orderly.network/net";
+
+const sub: MessageObserveTopic = { event: "subscribe", topic: "orderbook" };
+const params: MessageObserveParams = "orderbook"; // or sub
 ```

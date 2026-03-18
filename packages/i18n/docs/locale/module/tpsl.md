@@ -1,15 +1,28 @@
-# tpsl
+# tpsl.ts
 
-## Overview
+## tpsl.ts responsibility
 
-Take profit / stop loss: TP/SL labels, mode (full/partial), prices and triggers, PnL/offset, add/cancel all, drag to set; order/trigger prices; position TP/SL, entire position, est. PnL, confirm texts; advanced (ROI template, submit, total est. TP/SL PnL, risk reward ratio); validation errors and warnings (e.g. close to liq. price, cross liq. price); agreement text.
+Provides TP/SL copy: mode (full/partial), TP/SL price and trigger, PnL and offset, add/cancel all, drag to set, order/trigger prices, position TP/SL and entire position, est. PnL, take profit/stop loss, cancel confirm, advanced settings, TP/SL order confirm, position type tips, advanced ROI text, total est. TP/SL PnL, risk reward ratio, and validation messages (required, min/max, price vs order price, close to liq. price, cross liq. price).
 
-## Exports
+## tpsl.ts exports
 
-### `tpsl`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| tpsl | object | Key-value map | Keys under "tpsl.*" |
+| TPSL | type | typeof tpsl | Type export |
 
-Object of keys under `tpsl.*`: e.g. `tpsl.tpPrice`, `tpsl.positionType.full.tips`, `tpsl.validate.tpTriggerPrice.error.required`, `tpsl.agreement`.
+## tpsl.ts key groups (sample)
 
-### `TPSL` (type)
+| Theme | Examples |
+|-------|----------|
+| Labels | tpsl.tp, tpsl.sl, tpsl.tpPrice, tpsl.slTriggerPrice |
+| Position type | tpsl.positionType.full.tips, tpsl.positionType.partial.tips |
+| Validation | tpsl.validate.tpOrderPrice.error.required, tpsl.validate.slTriggerPrice.warning.closeToLiqPrice |
 
-`typeof tpsl`.
+## tpsl.ts Example
+
+```typescript
+t("tpsl.takeProfit");
+t("tpsl.positionType.full.tips");
+t("tpsl.validate.tpTriggerPrice.error.required");
+```

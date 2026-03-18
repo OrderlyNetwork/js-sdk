@@ -1,15 +1,29 @@
-# orderEntry
+# orderEntry.ts
 
-## Overview
+## orderEntry.ts responsibility
 
-Order entry form: buy/sell labels, order types (Limit, Market, Stop limit/market, Post only, IOC, FOK, Scaled, Trailing stop), size/price/skew/trailing, quantity distribution, BBO, est. liq. price, confirm/disable confirmation, hidden/keep visible, max buy/sell, TP/SL (mark price, trigger description), form validation errors, slippage, scaled order toasts, reduce-only reminder.
+Provides order entry copy: buy/long and sell/short, reduce only, order types (limit, market, stop limit, stop market, post-only, IOC, FOK, scaled, trailing stop), order size and initial margin, scaled order fields (start/end price, skew, total orders/quantity, trailing rate/value), quantity distribution types and descriptions, BBO options, order confirm and hidden order tooltip, max buy/sell, TP/SL (mark price) and tips, est. ROI/PnL, form validation errors (quantity, price, trigger, TP/SL, total, margin, slippage), margin mode (cross/isolated), and reminders (reduce-only, max qty).
 
-## Exports
+## orderEntry.ts exports
 
-### `orderEntry`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| orderEntry | object | Key-value map | Keys under "orderEntry.*", "marginMode.*" |
+| OrderEntry | type | typeof orderEntry | Type export |
 
-Object of keys under `orderEntry.*`: e.g. `orderEntry.orderType.limit`, `orderEntry.quantityDistribution`, `orderEntry.orderQuantity.error.required`, `orderEntry.confirmScaledOrder.orderPrice.warning`.
+## orderEntry.ts key groups (sample)
 
-### `OrderEntry` (type)
+| Theme | Examples |
+|-------|----------|
+| Order types | orderEntry.orderType.limit, orderEntry.orderType.trailingStop |
+| Scaled | orderEntry.startPrice, orderEntry.skew, orderEntry.totalOrders |
+| Validation | orderEntry.orderQuantity.error.min, orderEntry.triggerPrice.error.required |
+| Margin mode | marginMode.cross, marginMode.isolatedMarginDescription |
 
-`typeof orderEntry`.
+## orderEntry.ts Example
+
+```typescript
+t("orderEntry.buyLong");
+t("orderEntry.orderType.postOnly.tooltip");
+t("orderEntry.orderQuantity.error.required");
+```

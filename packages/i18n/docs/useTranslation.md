@@ -1,35 +1,34 @@
-# useTranslation
+# useTranslation.ts
 
-## Overview
+## useTranslation.ts responsibility
 
-Wrapper around `react-i18next`’s `useTranslation`. Uses the i18n instance from `I18nContext` when present (e.g. under `I18nextProvider`), otherwise falls back to the package’s default i18n instance. Subscribes to `bindI18nStore: "added"` so components re-render when new language resources are added.
+Re-exports a useTranslation hook that uses the package i18n instance (or the one from I18nContext when provided). Subscribes to the store with bindI18nStore: "added" so components re-render when new language resources are loaded.
 
-## Exports
+## useTranslation.ts exports
 
-### `useTranslation`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| useTranslation | function | Hook | useTranslation(ns?, options?) from react-i18next with package i18n |
 
-```ts
-function useTranslation<
-  Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
->(ns?: Ns, options?: UseTranslationOptions<KPrefix>)
-```
+## useTranslation parameters
 
-Same signature as react-i18next’s `useTranslation`, with:
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| ns | FlatNamespace \| $Tuple<FlatNamespace> \| undefined | no | Namespace(s) |
+| options | UseTranslationOptions | no | Override options; i18n from context or package default, bindI18nStore: "added" |
 
-- `i18n`: from `I18nContext` if available, else default i18n
-- `bindI18nStore: "added"` so translations update when resources are loaded
-- Rest of `options` passed through
+## useTranslation dependency and flow
 
-Returns the same return type as react-i18next (e.g. `{ t, i18n, ready }`).
+- **Upstream**: react-i18next (I18nContext, useTranslation as _useTranslation), i18n.ts.
+- **Flow**: Reads I18nContext; uses context?.i18n or package i18n; calls _useTranslation with bindI18nStore: "added" so added resources trigger re-render.
 
-## Usage example
+## useTranslation Example
 
 ```typescript
 import { useTranslation } from "@orderly.network/i18n";
 
-function MyComponent() {
-  const { t } = useTranslation();
-  return <span>{t("common.cancel")}</span>;
+function ConfirmButton() {
+  const { t, i18n } = useTranslation();
+  return <button>{t("common.confirm")}</button>;
 }
 ```

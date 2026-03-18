@@ -1,12 +1,30 @@
-# configStore
+# configStore Directory Index
 
-## Overview
+## Directory Description
 
-Configuration storage for the core package: key types and key-value store interface plus default implementation using API URLs and chain namespace.
+`configStore` defines the configuration storage interface and default implementation: ConfigKey type, ConfigStore (get/set/getOr/clear), DefaultConfigStore backed by a Map, and API_URLS for mainnet/testnet (apiBaseUrl, publicWsUrl, privateWsUrl, operatorUrl).
 
-## Files
+## Directory Responsibility and Boundary
 
-| File | Language | Summary |
-| ---- | -------- | ------- |
-| [configStore.ts](./configStore.md) | TypeScript | `ConfigKey` union and `ConfigStore` interface (`get`, `getOr`, `set`, `clear`). |
-| [defaultConfigStore.ts](./defaultConfigStore.md) | TypeScript | `DefaultConfigStore` implementation, `API_URLS`, `URLS` type. |
+- **Responsible for**: Config key type, get/set/getOr/clear contract, default URL mapping by networkId.
+- **Not responsible for**: Environment variable parsing, runtime config fetching, business logic.
+
+## File List
+
+| File | Language | Summary | Entry symbols | Link |
+|------|----------|--------|---------------|------|
+| configStore.ts | TS | ConfigStore interface and ConfigKey type | ConfigStore, ConfigKey | [configStore.md](./configStore.md) |
+| defaultConfigStore.ts | TS | Map-based default impl and API_URLS | DefaultConfigStore, API_URLS, URLS | [defaultConfigStore.md](./defaultConfigStore.md) |
+
+## Key Entities
+
+| Entity | File | Responsibility | Dependency |
+|--------|------|----------------|------------|
+| ConfigStore | configStore.ts | Config read/write contract | None |
+| ConfigKey | configStore.ts | Union of allowed config keys | None |
+| DefaultConfigStore | defaultConfigStore.ts | Init URLs and broker from init; implements ConfigStore | ConfigStore, API_URLS |
+| API_URLS | defaultConfigStore.ts | mainnet/testnet URL sets | None |
+
+## Subdirectories
+
+None.

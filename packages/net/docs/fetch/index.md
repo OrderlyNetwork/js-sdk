@@ -1,79 +1,23 @@
 # fetch
 
-## Overview
+## 目录职责与边界
 
-HTTP client helpers built on `fetch`: `request` (internal), `get`, `post`, `put`, `del`, and `mutate`. Handles JSON request/response, default headers (e.g. `Content-Type`), and throws `ApiError` on 400 responses with message/code from the body.
+- **负责**：基于 `fetch` 的 HTTP 请求封装（get/post/del/put/mutate）、统一 header 与错误转换（含 ApiError）。
+- **不负责**：WebSocket、业务 API 路径、认证 token 注入（由调用方通过 options 传入）。
 
-## Exports
+## 本目录文件列表
 
-### `request`
+| 文件名 | 语言 | 简介 | 入口符号 | 链接 |
+|--------|------|------|----------|------|
+| index.ts | TypeScript | 请求核心与 get/post/del/put/mutate 导出 | request, get, post, del, put, mutate | [index.ts.md](index.ts.md) |
 
-Internal function that performs a single HTTP request.
+## 关键实体表
 
-- **Signature**: `async (url: string, options: RequestInit) => Promise<any>`
-- **Behavior**: Validates URL scheme (must start with `http`), merges headers via `_createHeaders`, parses JSON response. On non-ok response, throws `ApiError` for status 400 (with `errorMsg.message` and `errorMsg.code`), otherwise throws `Error`.
-
-### `get`
-
-GET request with optional response formatter and standard success/data handling.
-
-| Parameter | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| `url` | `string` | Yes | Request URL |
-| `options` | `RequestInit` | No | Fetch options |
-| `formatter` | `(data: any) => R` | No | Transform `res.data` before return |
-
-- **Returns**: `Promise<R>`. If `res.success` is true, returns formatter result or `res.data.rows` if array, else `res.data`; otherwise throws.
-
-### `post`
-
-POST request with JSON body.
-
-| Parameter | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| `url` | `string` | Yes | Request URL |
-| `data` | `any` | Yes | Body (JSON.stringify'd) |
-| `options` | `Omit<RequestInit, "method">` | No | Other fetch options |
-
-- **Returns**: `Promise<any>` — parsed JSON response.
-
-### `put`
-
-PUT request with JSON body. Same parameter shape as `post` (url, data, options).
-
-- **Returns**: `Promise<any>` — parsed JSON response.
-
-### `del`
-
-DELETE request.
-
-| Parameter | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| `url` | `string` | Yes | Request URL |
-| `options` | `Omit<RequestInit, "method">` | No | Other fetch options |
-
-- **Returns**: `Promise<any>` — parsed JSON response.
-
-### `mutate`
-
-Generic request with full `RequestInit` (method and body are caller-defined).
-
-- **Signature**: `async (url: string, init: RequestInit) => Promise<any>`
-- **Returns**: Parsed JSON response.
-
-## Usage example
-
-```typescript
-import { get, post, put, del, mutate, ApiError } from "@orderly.network/net";
-
-const rows = await get("/api/v1/orders", undefined, (data) => data.rows);
-await post("/api/v1/order", { symbol_id: "PERP_ETH", side: "BUY", order_type: "MARKET", order_quantity: 1 });
-await put("/api/v1/order/123", { order_quantity: 2 });
-await del("/api/v1/order/123");
-
-try {
-  await post("/api/...", data);
-} catch (e) {
-  if (e instanceof ApiError) console.log(e.code, e.message);
-}
-```
+| 实体名 | 文件 | 职责 | 依赖/上下游 |
+|--------|------|------|-------------|
+| request | index.ts | 内部通用请求，处理 URL、headers、JSON、错误 | 被 get/post/del/put/mutate 调用 |
+| get | index.ts | GET 请求，支持 formatter、rows 兼容 | 包入口导出 |
+| post | index.ts | POST 请求，body 为 JSON | 包入口导出 |
+| del | index.ts | DELETE 请求 | 包入口导出 |
+| put | index.ts | PUT 请求，body 为 JSON | 包入口导出 |
+| mutate | index.ts | 通用 RequestInit 请求 | 包入口导出 |

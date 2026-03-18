@@ -1,52 +1,63 @@
-# types
+# types.ts
 
-## Overview
+## types.ts responsibility
 
-Defines the configuration and wallet provider interfaces used by the default Solana adapter. Depends on `@solana/wallet-adapter-base` and `@solana/web3.js`.
+Defines TypeScript interfaces for configuring the Solana wallet adapter: adapter options and the Solana wallet provider contract (connection, sign, send) used by the Orderly Solana adapter.
 
-## Exports
+## types.ts exports
 
-### Interfaces
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| SolanaAdapterOption | interface | Config | Options passed when activating/updating the adapter |
+| SolanaWalletProvider | interface | Provider | Solana wallet capabilities required by the adapter |
 
-#### SolanaAdapterOption
+## SolanaAdapterOption responsibility
 
-Options passed when activating or updating the Solana adapter.
+Holds the provider instance, wallet address, and chain info used to configure the default Solana wallet adapter.
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `provider` | `SolanaWalletProvider` | Wallet provider with connection and signing methods |
-| `address` | `string` | User's Solana address (base58) |
-| `chain` | `{ id: number }` | Chain descriptor (e.g. chain id) |
+## SolanaAdapterOption properties
 
-#### SolanaWalletProvider
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| provider | SolanaWalletProvider | Yes | Solana wallet provider (connection, sign, send) |
+| address | string | Yes | Wallet public key / address (e.g. base58) |
+| chain | { id: number } | Yes | Chain identifier (chain id) |
 
-Interface for the underlying Solana wallet (e.g. Phantom, Ledger). Used to obtain connection, public key, and signing methods.
+## SolanaWalletProvider responsibility
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `connection?` | `Connection` | Optional Solana RPC connection |
-| `rpcUrl?` | `string` | Optional RPC URL to create a connection |
-| `publicKey?` | `PublicKey` | Optional current wallet public key |
-| `network` | `WalletAdapterNetwork` | Devnet / Mainnet etc. |
-| `signMessage` | `(message: Uint8Array) => Promise<Uint8Array>` | Sign raw bytes (e.g. for off-chain auth) |
-| `signTransaction` | `SignerWalletAdapterProps["signTransaction"]` | Sign a Solana transaction |
-| `sendTransaction` | `WalletAdapterProps["sendTransaction"]` | Send a signed transaction |
+Describes the Solana wallet interface the adapter expects: optional connection/RPC, public key, network, and required sign/send methods.
 
-## Usage Example
+## SolanaWalletProvider properties
 
-```ts
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| connection | Connection | No | Pre-built Solana Connection |
+| rpcUrl | string | No | RPC URL to create Connection if connection not set |
+| publicKey | PublicKey | No | Wallet public key |
+| network | WalletAdapterNetwork | Yes | Solana network (e.g. Mainnet, Devnet) |
+| signMessage | (message: Uint8Array) => Promise<Uint8Array> | Yes | Sign raw bytes (e.g. for off-chain messages) |
+| signTransaction | SignerWalletAdapterProps["signTransaction"] | Yes | Sign a Solana transaction |
+| sendTransaction | WalletAdapterProps["sendTransaction"] | Yes | Send a signed transaction |
+
+## types.ts dependency and usage
+
+- **Upstream**: `@solana/wallet-adapter-base`, `@solana/web3.js`.
+- **Downstream**: `walletAdapter.ts` uses these types for config and provider.
+
+## types.ts Example
+
+```typescript
 import type { SolanaAdapterOption, SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
-
-const provider: SolanaWalletProvider = {
-  network: WalletAdapterNetwork.Devnet,
-  signMessage: async (msg) => wallet.signMessage(msg),
-  signTransaction: wallet.signTransaction.bind(wallet),
-  sendTransaction: wallet.sendTransaction.bind(wallet),
-};
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 const option: SolanaAdapterOption = {
-  provider,
-  address: "Base58Address...",
+  provider: {
+    network: WalletAdapterNetwork.Devnet,
+    signMessage: async (msg) => wallet.signMessage(msg),
+    signTransaction: async (tx) => wallet.signTransaction(tx),
+    sendTransaction: async (tx, conn) => conn.sendTransaction(tx),
+  },
+  address: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
   chain: { id: 101 },
 };
 ```

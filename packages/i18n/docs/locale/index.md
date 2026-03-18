@@ -1,24 +1,23 @@
-# locale
+# locale — Directory Index
 
-## Overview
+## Directory responsibility
 
-Contains the default English locale messages and modular message namespaces. The root `en` object is assembled in `en.ts` from all modules under `module/`.
+The `locale` directory holds the default English translation bundle and per-domain locale modules. It defines the shape of `LocaleMessages` (via `en`) and is the single source for the default namespace used by the i18n instance.
+
+## Key entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| `en` | en.ts | Merged English bundle; re-exported from package index |
+| Module objects | module/*.ts | Domain-specific key-value objects (common, trading, orders, etc.) |
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [en](./en.md) | TypeScript | Default English locale; merges all module messages |
-| [module](./module/index.md) | — | Subdirectory of per-feature message modules |
+| File | Language | Summary | Entry |
+|------|----------|---------|--------|
+| [en.ts](en.md) | TS | Aggregates all module objects into default English bundle | en |
+| [module/](module/index.md) | — | Subdirectory of locale modules | common, ui, trading, … |
 
-## Usage
+## Subdirectory
 
-Import the default English messages:
-
-```typescript
-import { en } from "@orderly.network/i18n";
-// or from source
-import { en } from "./locale/en";
-```
-
-Other locales are typically loaded at runtime via `Backend` and `LocaleProvider` (e.g. from URLs).
+- [module/](module/index.md) — Locale modules (common, markets, portfolio, trading, orders, positions, orderEntry, tpsl, share, leverage, scaffold, tradingRewards, tradingView, connector, transfer, affiliate, ui, tradingLeaderboard, tradingPoints, widget, vaults, notification, chart).

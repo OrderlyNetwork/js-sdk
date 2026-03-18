@@ -1,79 +1,96 @@
-# walletAdapter
+# walletAdapter.ts
 
-## Overview
+## walletAdapter.ts responsibility
 
-Implements the Solana wallet adapter for Orderly: `DefaultSolanaWalletAdapter` extends `BaseWalletAdapter<SolanaAdapterOption>` with `ChainNamespace.solana`. Handles lifecycle (active/deactivate/update), message signing (standard and Ledger via memo instruction), generation of register/add key/withdraw/internal transfer/settle/DEX request messages, balance/call/sendTransaction (including vault deposit), and deposit fee via `callOnChain`.
+Implements the Orderly Solana wallet adapter by extending `BaseWalletAdapter`. It handles Solana connection setup, message signing (including Ledger path), balance queries (native SOL and SPL), and vault deposit transactions. It generates and signs all Orderly message types (register account, add orderly key, withdraw, settle, internal transfer, dex request) for the Solana chain.
 
-## Exports
+## walletAdapter.ts exports
 
-### Class: DefaultSolanaWalletAdapter
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| DefaultSolanaWalletAdapter | class | Adapter | Solana implementation of BaseWalletAdapter |
+| DefaultSolanaWalletAdapter (export) | class | Same | Named export of the class |
 
-Extends `BaseWalletAdapter<SolanaAdapterOption>` from `@orderly.network/core`.
+## DefaultSolanaWalletAdapter responsibility
 
-#### Properties
+Bridges a Solana wallet (via SolanaWalletProvider) to Orderly: provides address, chainId, connection, signMessage, getBalance, getBalances, getBalanceByAddress, call, sendTransaction, callOnChain, estimateGasFee, and pollTransactionReceiptWithBackoff. Builds and signs Orderly messages for Solana (chainType "SOL") and executes vault deposits via the helper deposit flow.
+
+## DefaultSolanaWalletAdapter input and output
+
+- **Input**: Config via `SolanaAdapterOption` (provider, address, chain) in `active()` / `update()`. Various inputs for message generation (RegisterAccountInputs, WithdrawInputs, etc.) and for contract calls (address, method, params, payload).
+- **Output**: Address string, chainId number, Connection instance, signature strings, balance bigints, transaction results from sendTransaction / deposit.
+
+## DefaultSolanaWalletAdapter main properties and methods
 
 | Name | Type | Description |
-| ---- | ---- | ----------- |
-| `chainNamespace` | `ChainNamespace` | `ChainNamespace.solana` |
-| `address` | `string` | Current wallet address (getter) |
-| `chainId` | `number` | Current chain id (getter/setter) |
-| `connection` | `Connection` | Solana connection (from provider.rpcUrl, clusterApiUrl, or API proxy with orderly key signing) |
+|------|------|-------------|
+| chainNamespace | ChainNamespace | Set to `ChainNamespace.solana` |
+| address | getter | Wallet address (string) |
+| chainId | getter/setter | Chain id (number) |
+| connection | getter | Solana Connection (from provider.rpcUrl, network, or API proxy) |
+| active(config) | method | Applies config (address, chainId, provider) |
+| deactivate() | method | Lifecycle hook (log only) |
+| update(config) | method | Re-applies config |
+| generateSecretKey() | method | Returns new random secret key as base58 string (44 chars) |
+| signMessage(message) | method | Signs Uint8Array; Ledger uses memo instruction path |
+| generateRegisterAccountMessage(inputs) | method | Returns signed Message (chainType "SOL") |
+| generateWithdrawMessage(inputs) | method | Returns signed Message with SignatureDomain |
+| generateInternalTransferMessage(inputs) | method | Returns signed Message with SignatureDomain |
+| generateAddOrderlyKeyMessage(inputs) | method | Returns signed Message |
+| generateSettleMessage(inputs) | method | Returns signed Message with SignatureDomain |
+| generateDexRequestMessage(inputs) | method | Returns signed Message with domain |
+| getBalance() | method | Native SOL balance (lamports) as bigint |
+| getBalances(addresses) | method | Balances for token addresses (SOL + SPL) in same order |
+| getBalanceByAddress(address) | method | SPL token balance for token mint address |
+| call(address, method, params, options) | method | balanceOf → getBalanceByAddress; allowance → MaxUint256 |
+| sendTransaction(contractAddress, method, payload, options) | method | deposit → helper deposit() |
+| callOnChain(chain, address, method, params, options) | method | getDepositFee → getDepositQuoteFee |
+| estimateGasFee(...) | method | Returns 0n |
+| pollTransactionReceiptWithBackoff(...) | method | Resolves with { status: 1 } |
 
-#### Lifecycle
+## DefaultSolanaWalletAdapter dependency and call relationship
 
-| Method | Parameters | Description |
-| ------ | ---------- | ----------- |
-| `active` | `(config: SolanaAdapterOption)` | Sets address, chainId, provider from config |
-| `deactivate` | `()` | No-op (logs lifecycle) |
-| `update` | `(config: SolanaAdapterOption)` | Same as setConfig + lifecycle log |
+- **Upstream**: Configured by wallet connector with `SolanaAdapterOption`; called by core for signing and sending.
+- **Downstream**: `@orderly.network/core` (BaseWalletAdapter, message types, Account, SimpleDI), `@orderly.network/types` (API, MaxUint256, isNativeTokenChecker), `./helper` (message builders, deposit, getDepositQuoteFee, checkIsLedgerWallet), `./solana.util` (getTokenAccounts), `./types`.
 
-#### Key & signing
+## DefaultSolanaWalletAdapter execution flow (sign and deposit)
 
-| Method | Parameters | Returns | Description |
-| ------ | ---------- | ------- | ----------- |
-| `generateSecretKey` | `()` | `string` | New Ed25519 secret key (bs58, 44 chars) |
-| `uint8ArrayToHexString` | `(uint8Array: Uint8Array)` | `string` | Hex string of bytes |
-| `signMessage` | `(message: Uint8Array)` | `Promise<string>` | Signs with provider or Ledger (memo-based); returns "0x" + hex |
+1. **Connection**: Resolve Connection from config (provider.connection, provider.rpcUrl, or Devnet clusterApiUrl, or API proxy with Orderly key signing).
+2. **Sign message**: If Ledger (checkIsLedgerWallet), build memo-based transaction and sign via provider.signTransaction; else sign raw bytes via provider.signMessage.
+3. **Message generation**: Each generate* method uses helper to build [message, toSignatureMessage], then signMessage(toSignatureMessage), then return { message: { ...message, chainType: "SOL" }, signatured, domain? }.
+4. **Deposit**: sendTransaction(..., method: "deposit") delegates to helper deposit() with vault address, user address, connection, provider.sendTransaction, and payload.data[0] as depositData.
 
-#### Message generation (Orderly)
+## DefaultSolanaWalletAdapter errors and boundaries
 
-Each returns a `Message` (and where applicable `domain`) with `chainType: "SOL"` and `signatured` from `signMessage`.
+| Scenario | Condition | Behavior | Handling |
+|----------|-----------|----------|----------|
+| Ledger sign failure | Unsupported signature from signTransaction | Throws "Unsupported signature" | Caller must handle |
+| getDepositQuoteFee failure | AccountNotFound in simulate | Throws "Account gas is insufficient." | Caller must handle |
+| Other RPC/simulate errors | feeRes.value.err | Throws with error info | Caller must handle |
 
-| Method | Inputs | Returns |
-| ------ | ------ | ------- |
-| `generateRegisterAccountMessage` | `RegisterAccountInputs` | `Promise<Message>` |
-| `generateAddOrderlyKeyMessage` | `AddOrderlyKeyInputs` | `Promise<Message>` |
-| `generateWithdrawMessage` | `WithdrawInputs` | `Promise<Message & { domain }>` |
-| `generateInternalTransferMessage` | `InternalTransferInputs` | `Promise<Message & { domain }>` |
-| `generateSettleMessage` | `SettleInputs` | `Promise<Message & { domain }>` |
-| `generateDexRequestMessage` | `DexRequestInputs` | `Promise<Message & { domain }>` |
+## DefaultSolanaWalletAdapter extension and modification points
 
-#### Chain interaction
+- **Connection source**: Change logic in `connection` getter to add more RPC sources or middleware.
+- **Ledger signing**: Adjust memo/compute budget instructions in `signMessage` for Ledger.
+- **New contract methods**: Extend `call`, `sendTransaction`, `callOnChain` for new method names and parameters.
 
-| Method | Description |
-| ------ | ----------- |
-| `getBalance` | Returns SOL balance (lamports) as bigint |
-| `call` | Supports `balanceOf` (SPL token balance) and `allowance` (MaxUint256); else 0n |
-| `sendTransaction` | For method `"deposit"`, calls `deposit()` with vault address, user, connection, depositData, and provider.sendTransaction |
-| `callOnChain` | For method `"getDepositFee"`, returns `getDepositQuoteFee(...)`; else 0 |
-| `pollTransactionReceiptWithBackoff` | Returns `Promise.resolve({ status: 1 })` (no-op) |
+## DefaultSolanaWalletAdapter Example
 
-## Usage Example
-
-```ts
+```typescript
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
-import type { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
+import type { SolanaAdapterOption } from "@orderly.network/default-solana-adapter";
 
 const adapter = new DefaultSolanaWalletAdapter();
-adapter.active({
-  provider: walletProvider as SolanaWalletProvider,
-  address: publicKey.toBase58(),
+const option: SolanaAdapterOption = {
+  provider: { /* SolanaWalletProvider */ },
+  address: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
   chain: { id: 101 },
-});
-
+};
+adapter.active(option);
+const balance = await adapter.getBalance();
 const msg = await adapter.generateRegisterAccountMessage({
   brokerId: "broker",
-  registrationNonce: 1n,
+  registrationNonce: 1,
   timestamp: Date.now(),
 });
 ```

@@ -1,20 +1,20 @@
-# services
+# services — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Order creators (limit, market, stop, bracket, TPSL, scaled, etc.), order merge handlers, painter (poster/layout), data center, amplitude tracker.
+Back-end and business logic services: order creator (all order types, validators, builders), order merge handlers, painter (poster/canvas), amplitude tracker, data center service. Used by hooks to submit orders, merge order updates, draw posters, and track events.
 
 ## Subdirectories
 
-| Directory | Description |
-|-----------|-------------|
-| [orderCreator](./orderCreator/index.md) | Order creator implementations and factory |
-| [orderMerge](./orderMerge/index.md) | Order merge handlers (regular, algo) |
-| [painter](./painter/index.md) | Poster painting and layout config |
+| Directory | Description | Index |
+|-----------|-------------|--------|
+| [orderCreator](orderCreator/index.md) | Order creation: creators, validators, builders, factory | [orderCreator/index.md](orderCreator/index.md) |
+| [orderMerge](orderMerge/index.md) | Order merge handlers (regular, algo) | [orderMerge/index.md](orderMerge/index.md) |
+| [painter](painter/index.md) | Canvas painter for poster/layout | [painter/index.md](painter/index.md) |
 
-## Root-level files
+## Top-Level Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [dataCenter](./dataCenter.md) | TypeScript | Data center service |
-| [amplitudeTracker](./amplitudeTracker.md) | TypeScript | Amplitude tracking |
+| File | Language | Summary | Link |
+|------|----------|---------|------|
+| dataCenter.ts | TS | Data center service | [dataCenter.md](dataCenter.md) |
+| amplitudeTracker.ts | TS | Amplitude analytics | [amplitudeTracker.md](amplitudeTracker.md) |
