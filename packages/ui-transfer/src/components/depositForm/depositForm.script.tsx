@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useConfig,
@@ -244,6 +244,10 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const warningMessage = validationMessage || swapErrorMessage;
 
+  const [activeSubTab, setActiveSubTab] = useState<
+    "web3" | "exclusive_deposit"
+  >("web3");
+
   return {
     sourceToken,
     targetToken,
@@ -301,5 +305,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     showSourceDepositCap,
     showTargetDepositCap,
     quantityNotional,
+
+    activeSubTab,
+    setActiveSubTab,
   };
 };

@@ -17,6 +17,13 @@ export const transfer = {
   "transfer.deposit.requested": "Deposit requested",
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
+  "transfer.exclusiveDeposit.warning":
+    "Only send USDC on Arbitrum to this address. Sending other tokens, using other chains, or amounts below the minimum deposit will result in permanent loss of funds.",
+  "transfer.exclusiveDeposit.minDeposit": "Min. deposit",
+  "transfer.exclusiveDeposit.estimatedTime": "Estimated time",
+  "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
+  "transfer.exclusiveDeposit.transferPending":
+    "Transfer pending: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable":
     "Fee data is currently unavailable. Please try again later.",
   "transfer.deposit.notEnoughGas":
@@ -24,6 +31,8 @@ export const transfer = {
   "transfer.deposit.exceedCap": "Amount exceeds user deposit cap",
   "transfer.deposit.closeToMaxLimit":
     "Deposit amount too close to maximum limit. To ensure your transaction succeeds, please reduce the amount",
+  "transfer.deposit.tab.connectedWallet": "From connected wallet",
+  "transfer.deposit.tab.exchangeOrOtherWallet": "From exchange / other wallet",
 
   "transfer.deposit.estGasFee": "Est. gas fee",
   "transfer.deposit.estGasFee.tooltip":

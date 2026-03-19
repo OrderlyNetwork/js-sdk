@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, textVariants } from "@orderly.network/ui";
+import { Box, Flex, textVariants, Tabs, TabPanel } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
 import { AvailableQuantity } from "../availableQuantity";
@@ -9,6 +9,7 @@ import { ChainSelect } from "../chainSelect";
 import { CollateralContribution } from "../collateralContribution";
 import { CollateralRatioWidget } from "../collateralRatio";
 import { ExchangeDivider } from "../exchangeDivider";
+import { ExclusiveDeposit } from "../exclusiveDeposit";
 import { Fee } from "../fee";
 import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
@@ -69,6 +70,8 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     showTargetDepositCap,
     slippageValidate,
     quantityNotional,
+    activeSubTab,
+    setActiveSubTab,
   } = props;
 
   const { t } = useTranslation();
@@ -128,97 +131,123 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
 
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
-      <Box className="oui-mb-6 lg:oui-mb-8">
-        <Web3Wallet />
-        <Box mt={3} mb={1}>
-          <ChainSelect
-            chains={chains}
-            value={currentChain!}
-            onValueChange={onChainChange}
-            wrongNetwork={wrongNetwork}
-            loading={settingChain}
-            disabled={!props.isLoggedIn}
-          />
-          <QuantityInput
-            data-testId="oui-testid-deposit-dialog-quantity-input"
-            classNames={{
-              root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
-            }}
-            value={quantity}
-            onValueChange={onQuantityChange}
-            token={sourceToken}
-            tokens={sourceTokens}
-            onTokenChange={onSourceTokenChange}
-            status={inputStatus}
-            hintMessage={hintMessage}
-            // when show deposit cap, hide select caret
-            tokenShowCaret={!showSourceDepositCap && sourceTokens?.length > 1}
-            tokenValueFormatter={
-              showSourceDepositCap ? tokenValueFormatter : undefined
-            }
-            disabled={!props.isLoggedIn}
-            balancesRevalidating={batchBalancesRevalidating}
-            showBalance
-          />
-        </Box>
+      <Tabs
+        value={activeSubTab}
+        onValueChange={(value) =>
+          setActiveSubTab(value as "web3" | "exclusive_deposit")
+        }
+        variant="contained"
+        classNames={{
+          tabsList: "oui-w-fit",
+        }}
+      >
+        <TabPanel
+          title={t("transfer.deposit.tab.connectedWallet")}
+          value="web3"
+        >
+          <Box className="oui-mt-3">
+            <Web3Wallet />
+            <Box mt={3} mb={1}>
+              <ChainSelect
+                chains={chains}
+                value={currentChain!}
+                onValueChange={onChainChange}
+                wrongNetwork={wrongNetwork}
+                loading={settingChain}
+                disabled={!props.isLoggedIn}
+              />
+              <QuantityInput
+                data-testId="oui-testid-deposit-dialog-quantity-input"
+                classNames={{
+                  root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
+                }}
+                value={quantity}
+                onValueChange={onQuantityChange}
+                token={sourceToken}
+                tokens={sourceTokens}
+                onTokenChange={onSourceTokenChange}
+                status={inputStatus}
+                hintMessage={hintMessage}
+                // when show deposit cap, hide select caret
+                tokenShowCaret={
+                  !showSourceDepositCap && sourceTokens?.length > 1
+                }
+                tokenValueFormatter={
+                  showSourceDepositCap ? tokenValueFormatter : undefined
+                }
+                disabled={!props.isLoggedIn}
+                balancesRevalidating={batchBalancesRevalidating}
+                showBalance
+              />
+            </Box>
 
-        <AvailableQuantity
-          token={sourceToken}
-          quantity={quantity}
-          maxQuantity={maxQuantity}
-          notional={quantityNotional}
-          loading={balanceRevalidating}
-          onClick={() => {
-            onQuantityChange(maxDepositAmount);
-          }}
-        />
+            <AvailableQuantity
+              token={sourceToken}
+              quantity={quantity}
+              maxQuantity={maxQuantity}
+              notional={quantityNotional}
+              loading={balanceRevalidating}
+              onClick={() => {
+                onQuantityChange(maxDepositAmount);
+              }}
+            />
 
-        {/* Yield-bearing collateral reminder */}
-        <YieldBearingReminder
-          symbol={targetToken?.symbol}
-          className="oui-mt-3"
-        />
+            {/* Yield-bearing collateral reminder */}
+            <YieldBearingReminder
+              symbol={targetToken?.symbol}
+              className="oui-mt-3"
+            />
 
-        <ExchangeDivider />
+            <ExchangeDivider />
 
-        <BrokerWallet />
+            <BrokerWallet />
 
-        <QuantityInput
-          classNames={{
-            root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
-          }}
-          token={targetToken}
-          tokens={targetTokens}
-          onTokenChange={onTargetTokenChange}
-          value={targetQuantity}
-          loading={targetQuantityLoading}
-          disabled={!props.isLoggedIn}
-          readOnly
-          status={targetInputStatus}
-          hintMessage={targetHintMessage}
-          // when show deposit cap, hide select caret
-          tokenShowCaret={!showTargetDepositCap && targetTokens?.length > 1}
-          tokenValueFormatter={
-            showTargetDepositCap ? tokenValueFormatter : undefined
-          }
-        />
-        {renderContent()}
-      </Box>
+            <QuantityInput
+              classNames={{
+                root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
+              }}
+              token={targetToken}
+              tokens={targetTokens}
+              onTokenChange={onTargetTokenChange}
+              value={targetQuantity}
+              loading={targetQuantityLoading}
+              disabled={!props.isLoggedIn}
+              readOnly
+              status={targetInputStatus}
+              hintMessage={targetHintMessage}
+              // when show deposit cap, hide select caret
+              tokenShowCaret={!showTargetDepositCap && targetTokens?.length > 1}
+              tokenValueFormatter={
+                showTargetDepositCap ? tokenValueFormatter : undefined
+              }
+            />
+            {renderContent()}
+          </Box>
 
-      <Notice message={warningMessage} wrongNetwork={wrongNetwork} />
+          <Box className="oui-mb-6 lg:oui-mb-8">
+            <Notice message={warningMessage} wrongNetwork={wrongNetwork} />
+          </Box>
 
-      <Flex justify="center">
-        <ActionButton
-          actionType={actionType}
-          symbol={sourceToken?.symbol}
-          disabled={disabled}
-          loading={loading}
-          onDeposit={onDeposit}
-          onApprove={onApprove}
-          onApproveAndDeposit={onApproveAndDeposit}
-          networkId={networkId}
-        />
-      </Flex>
+          <Flex justify="center">
+            <ActionButton
+              actionType={actionType}
+              symbol={sourceToken?.symbol}
+              disabled={disabled}
+              loading={loading}
+              onDeposit={onDeposit}
+              onApprove={onApprove}
+              onApproveAndDeposit={onApproveAndDeposit}
+              networkId={networkId}
+            />
+          </Flex>
+        </TabPanel>
+        <TabPanel
+          title={t("transfer.deposit.tab.exchangeOrOtherWallet")}
+          value="exclusive_deposit"
+        >
+          <ExclusiveDeposit active={activeSubTab === "exclusive_deposit"} />
+        </TabPanel>
+      </Tabs>
     </Box>
   );
 };
