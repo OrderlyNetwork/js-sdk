@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useMemo } from "react";
 import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -36,7 +36,7 @@ export const usePositionHistoryColumn = (props: {
           title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
-          width: 200,
+          width: 220,
           onSort: (r1: any, r2: any) => {
             return r1.symbol?.localeCompare(r2.symbol || "");
           },
@@ -266,6 +266,20 @@ export const SymbolInfo = (props: {
             </Badge>
           </div>
         </Tooltip>,
+      );
+    }
+
+    if (record.margin_mode != null) {
+      list.push(
+        <Badge
+          key={`margin-mode-${record.margin_mode}`}
+          color="neutral"
+          size="xs"
+        >
+          {record.margin_mode === MarginMode.ISOLATED
+            ? t("marginMode.isolated")
+            : t("marginMode.cross")}
+        </Badge>,
       );
     }
 

@@ -143,7 +143,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 154,
+            width: 166,
             onSymbolChange: onSymbolChange,
           }),
           // type({ width: 124 }),
