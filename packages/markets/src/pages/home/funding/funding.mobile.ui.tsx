@@ -34,6 +34,10 @@ export const MobileFunding: FC<FundingScriptReturn> = (props) => {
         onValueChange={props.onTabChange as (value: string) => void}
       >
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-funding-overview-trigger",
+            content: "oui-tabs-funding-overview-content",
+          }}
           title={t("common.overview")}
           value="overview"
           testid="oui-testid-funding-overview-tab"
@@ -44,6 +48,10 @@ export const MobileFunding: FC<FundingScriptReturn> = (props) => {
           </>
         </TabPanel>
         <TabPanel
+          classNames={{
+            trigger: "oui-tabs-funding-comparison-trigger",
+            content: "oui-tabs-funding-comparison-content",
+          }}
           title={t("markets.funding.comparison")}
           value="comparison"
           testid="oui-testid-funding-comparison-tab"

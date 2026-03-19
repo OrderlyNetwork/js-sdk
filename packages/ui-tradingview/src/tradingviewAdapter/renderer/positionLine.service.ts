@@ -2,7 +2,6 @@ import { i18n } from "@orderly.network/i18n";
 import { Decimal, commify } from "@orderly.network/utils";
 import {
   IChartingLibraryWidget,
-  IOrderLineAdapter,
   IPositionLineAdapter,
 } from "../charting_library";
 import useBroker from "../hooks/useBroker";
@@ -41,23 +40,40 @@ export class PositionLineService {
       this.currentSymbol = positions[0].symbol;
     }
 
-    positions.forEach((position, idx) => this.drawPositionLine(position, idx));
+    const needDrawMarginMode = positions.length > 1;
+
+    positions.forEach((position, idx) =>
+      this.drawPositionLine(position, idx, needDrawMarginMode),
+    );
     this.lastPositions = positions;
   }
 
   getBasePositionLine() {
-    return this.instance
+    const colorConfig = this.broker.colorConfig;
+    let line = this.instance
       .activeChart()
       .createPositionLine()
       .setTooltip(i18n.t("positions.closePosition"))
-      .setQuantityBackgroundColor(this.broker.colorConfig.chartBG!)
-      .setCloseButtonBackgroundColor(this.broker.colorConfig.chartBG!)
-      .setBodyTextColor(this.broker.colorConfig.textColor!)
-      .setQuantityTextColor(this.broker.colorConfig.qtyTextColor!)
-      .setBodyFont(this.broker.colorConfig.font!)
-      .setQuantityFont(this.broker.colorConfig.font!)
       .setLineLength(100)
       .setLineStyle(1);
+
+    if (colorConfig.chartBG) {
+      line = line
+        .setQuantityBackgroundColor(colorConfig.chartBG)
+        .setCloseButtonBackgroundColor(colorConfig.chartBG);
+    }
+    if (colorConfig.textColor) {
+      line = line.setBodyTextColor(colorConfig.textColor);
+    }
+    if (colorConfig.qtyTextColor) {
+      line = line.setQuantityTextColor(colorConfig.qtyTextColor);
+    }
+    if (colorConfig.font) {
+      line = line
+        .setBodyFont(colorConfig.font)
+        .setQuantityFont(colorConfig.font);
+    }
+    return line;
   }
 
   static getPositionQuantity(balance: number) {
@@ -83,21 +99,23 @@ export class PositionLineService {
     });
   }
 
-  drawPositionLine(position: ChartPosition, idx: number) {
+  drawPositionLine(
+    position: ChartPosition,
+    idx: number,
+    needDrawMarginMode: boolean = false,
+  ) {
     const colorConfig = this.broker.colorConfig;
-    const isPositiveUnrealPnl = position.unrealPnl >= 0;
     const isPositiveBalance = position.balance >= 0;
-
-    let pnlColor = colorConfig.pnlZoreColor;
     const pnlDecimal = new Decimal(position.unrealPnl);
+
+    let pnlColor: string | undefined;
     if (pnlDecimal.greaterThan(0)) {
       pnlColor = colorConfig.upColor;
     } else if (pnlDecimal.lessThan(0)) {
       pnlColor = colorConfig.downColor;
+    } else {
+      pnlColor = colorConfig.pnlZoreColor;
     }
-    const borderColor = isPositiveUnrealPnl
-      ? colorConfig.pnlUpColor
-      : colorConfig.pnlDownColor;
     const sideColor = isPositiveBalance
       ? colorConfig.upColor
       : colorConfig.downColor;
@@ -105,8 +123,20 @@ export class PositionLineService {
 
     this.positionLines[idx] =
       this.positionLines[idx] ?? this.getBasePositionLine();
-    this.positionLines[idx]
-      .setQuantity(PositionLineService.getPositionQuantity(position.balance))
+
+    let text = PositionLineService.getPositionPnL(
+      position.unrealPnl,
+      position.unrealPnlDecimal,
+    );
+
+    const quantity = PositionLineService.getPositionQuantity(position.balance);
+
+    if (needDrawMarginMode) {
+      text += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
+    }
+
+    const line = this.positionLines[idx]
+      .setQuantity(quantity)
       .setPrice(price)
       .setCloseButtonIconColor(colorConfig.closeIcon!)
       .setCloseButtonBorderColor(sideColor!)
@@ -115,12 +145,22 @@ export class PositionLineService {
       .setBodyBorderColor(pnlColor!)
       .setLineColor(sideColor!)
       .setQuantityBorderColor(sideColor!)
-      .setText(
-        PositionLineService.getPositionPnL(
-          position.unrealPnl,
-          position.unrealPnlDecimal,
-        ),
-      );
+      .setText(text);
+
+    if (colorConfig.closeIcon) {
+      line.setCloseButtonIconColor(colorConfig.closeIcon);
+    }
+
+    if (sideColor) {
+      line
+        .setCloseButtonBorderColor(sideColor)
+        .setQuantityTextColor(sideColor)
+        .setLineColor(sideColor)
+        .setQuantityBorderColor(sideColor);
+    }
+    if (pnlColor) {
+      line.setBodyBackgroundColor(pnlColor).setBodyBorderColor(pnlColor);
+    }
 
     if (this.broker.mode !== ChartMode.MOBILE) {
       this.positionLines[idx].onClose(null, () => {

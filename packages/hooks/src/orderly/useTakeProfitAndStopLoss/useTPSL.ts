@@ -4,6 +4,7 @@ import { omit } from "ramda";
 import {
   API,
   AlgoOrderEntity,
+  MarginMode,
   OrderSide,
   OrderType,
   OrderlyOrder,
@@ -177,6 +178,11 @@ export const useTaskProfitAndStopLossInternal = (
     //   ? checkIsEnableTpSL(options?.defaultOrder).sl_enable
     //   : options?.tpslEnable?.sl_enable,
     position_type: options?.positionType,
+    // Use defaultOrder.margin_mode when editing; otherwise position.margin_mode; default CROSS for backward compatibility
+    margin_mode:
+      options?.defaultOrder?.margin_mode ??
+      position?.margin_mode ??
+      MarginMode.CROSS,
   });
 
   const symbolInfo = useSymbolsInfo()[position.symbol!]();

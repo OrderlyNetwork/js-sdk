@@ -16,13 +16,16 @@ export const ScaledOrderInput = (props: ScaledOrderInputProps) => {
   const showSkewInput = values.distribution_type === DistributionType.CUSTOM;
 
   return (
-    <div className="oui-space-y-1">
+    <div className="oui-orderEntry-scaledOrderInput oui-space-y-1">
       <ScaledPriceInput
         start_price={values.start_price}
         end_price={values.end_price}
       />
 
-      <Grid cols={2} className="oui-group oui-space-x-1">
+      <Grid
+        cols={2}
+        className="oui-scaledOrderInput-qtyAndOrders oui-group oui-space-x-1"
+      >
         <ScaledQuantityInput
           order_quantity={values.order_quantity}
           total={values.total}

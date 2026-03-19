@@ -5,6 +5,7 @@ import { i18n, useTranslation } from "@orderly.network/i18n";
 import {
   BBOOrderType,
   API,
+  MarginMode,
   OrderSide,
   OrderType,
   PositionType,
@@ -36,9 +37,19 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   const { symbolInfo, order, onConfirm, onCancel } = props;
   const { quote, quote_dp, base_dp } = symbolInfo;
   const { side, order_type, order_type_ext, level, symbol } = order;
+  const orderMarginMode = (order as { margin_mode?: MarginMode }).margin_mode;
   const { t } = useTranslation();
   const [{ rows: positions }] = usePositionStream(symbol);
-  const position = positions?.[0];
+  const position = useMemo(
+    () =>
+      orderMarginMode != null
+        ? positions?.find(
+            (row) =>
+              row.symbol === symbol && row.margin_mode === orderMarginMode,
+          )
+        : positions?.[0],
+    [positions, symbol, orderMarginMode],
+  );
   const positionQty = position?.position_qty;
 
   const [_, setNeedConfirm] = useLocalStorage("orderly_order_confirm", true);
@@ -204,11 +215,22 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   };
 
   const header = (
-    <Flex justify={"between"}>
-      <Text.formatted rule={"symbol"} showIcon>
+    <Flex
+      justify={"between"}
+      className="oui-orderEntry-orderConfirmDialog-header"
+    >
+      <Text.formatted
+        rule={"symbol"}
+        showIcon
+        className="oui-orderConfirmDialog-symbol"
+      >
         {order.symbol}
       </Text.formatted>
-      <Flex justify={"end"} gapX={1}>
+      <Flex
+        justify={"end"}
+        gapX={1}
+        className="oui-orderConfirmDialog-header-tags"
+      >
         <OrderTypeTag type={order_type} />
         {side === OrderSide.BUY ? (
           <Badge color={"buy"} size={"sm"}>
@@ -319,10 +341,16 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   );
 
   const orderConfirmCheckbox = (
-    <Flex gapX={1} pt={4} pb={5}>
+    <Flex
+      gapX={1}
+      pt={4}
+      pb={5}
+      className="oui-orderEntry-orderConfirmDialog-disableConfirm"
+    >
       <Checkbox
         id="orderConfirm"
         color={"white"}
+        className="oui-orderConfirmDialog-disableConfirm-checkbox"
         onCheckedChange={(checked) => {
           setNeedConfirm(!!!checked);
         }}
@@ -340,11 +368,24 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   );
 
   const buttons = (
-    <Grid cols={2} gapX={3}>
-      <Button color={"secondary"} size={"md"} onClick={() => onCancel()}>
+    <Grid
+      cols={2}
+      gapX={3}
+      className="oui-orderEntry-orderConfirmDialog-actions"
+    >
+      <Button
+        color={"secondary"}
+        size={"md"}
+        className="oui-cancel-btn"
+        onClick={() => onCancel()}
+      >
         {t("common.cancel")}
       </Button>
-      <Button size={"md"} onClick={() => onConfirm()}>
+      <Button
+        size={"md"}
+        className="oui-confirm-btn"
+        onClick={() => onConfirm()}
+      >
         {t("common.confirm")}
       </Button>
     </Grid>
@@ -359,7 +400,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
         className={textVariants({
           size: "sm",
           intensity: 54,
-          className: "oui-space-y-1",
+          className: "oui-orderEntry-orderConfirmDialog-content oui-space-y-1",
         })}
       >
         {quantityItem}

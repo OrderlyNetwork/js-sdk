@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMaxQty, utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide } from "@orderly.network/types";
+import { API, MarginMode, OrderSide } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import {
   cn,
@@ -173,6 +173,11 @@ export const QuantityCell = (props: {
     if (order?.tag !== undefined) {
       // @ts-ignore
       params["order_tag"] = order.tag;
+    }
+
+    // include original margin_mode so backend receives it when editing
+    if (order.margin_mode !== undefined) {
+      params.margin_mode = order.margin_mode;
     }
 
     let future;
@@ -385,7 +390,10 @@ const EditState: FC<{
     order,
   } = props;
 
-  const maxBuyQty = useMaxQty(symbol, order.side, order.reduce_only);
+  const maxBuyQty = useMaxQty(symbol, order.side, {
+    reduceOnly: order.reduce_only,
+    marginMode: order.margin_mode ?? MarginMode.CROSS,
+  });
 
   const maxQty = useMemo(() => {
     if (reduce_only) {

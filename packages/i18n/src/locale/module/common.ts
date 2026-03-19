@@ -1,5 +1,6 @@
 export const common = {
   "common.cancel": "Cancel",
+  "common.close": "Close",
   "common.confirm": "Confirm",
   "common.ok": "OK",
   "common.yes": "Yes",
@@ -52,8 +53,6 @@ export const common = {
   "common.notional": "Notional",
   "common.fee": "Fee",
   "common.fees": "Fees",
-  "common.effectiveFee": "Effective Fees",
-
   "common.orderPrice": "Order price",
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",

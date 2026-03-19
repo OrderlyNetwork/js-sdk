@@ -19,9 +19,18 @@ import {
 } from "./interface";
 import { OrderValidation } from "./orderValidation";
 
+/**
+ * Creator for scaled orders
+ * Uses Template Method pattern from BaseOrderCreator
+ */
 export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
   orderType = OrderType.SCALED;
-  create(values: OrderEntity, config: ValuesDepConfig) {
+
+  /**
+   * Builds the scaled order
+   * Implements template method hook
+   */
+  protected buildOrder(values: OrderEntity, config: ValuesDepConfig) {
     const orders = calcScaledOrderBatchBody(values, config.symbol);
     const { total_orders, distribution_type, skew } = values;
 
@@ -41,6 +50,7 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
         "reduce_only",
         "side",
         "order_type",
+        "margin_mode",
         "orders",
         "total_orders",
         "distribution_type",
@@ -50,10 +60,14 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
     );
   }
 
-  async validate(
+  /**
+   * Runs validations for scaled order
+   * Implements template method hook
+   */
+  protected runValidations(
     values: OrderlyOrder,
     config: ValuesDepConfig,
-  ): Promise<OrderValidationResult> {
+  ): OrderValidationResult {
     const { maxQty, askAndBid, markPrice, symbol } = config;
     const { base_dp, quote_dp } = config.symbol;
     const { order_quantity, total, total_orders, distribution_type, skew } =

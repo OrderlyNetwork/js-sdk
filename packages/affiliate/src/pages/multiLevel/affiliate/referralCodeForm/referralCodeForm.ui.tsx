@@ -79,7 +79,13 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   }, [t, type, isEditingRefereeRebateRate, isReview, props.accountId]);
 
   const titleView = (
-    <Flex width={"100%"} direction="column" itemAlign="start" gap={3}>
+    <Flex
+      width={"100%"}
+      direction="column"
+      itemAlign="start"
+      gap={3}
+      className="oui-referralCodeForm-header"
+    >
       <Text size="base" intensity={98}>
         {title}
       </Text>
@@ -160,6 +166,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
         fullWidth
         onClick={props.close}
         size="md"
+        className="oui-referralCodeForm-cancel-btn"
       >
         {t("common.cancel")}
       </Button>
@@ -169,6 +176,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
         disabled={props.buttonDisabled || props.isMutating}
         loading={props.isMutating}
         size="md"
+        className="oui-referralCodeForm-confirm-btn"
       >
         {buttonText}
       </Button>
@@ -217,7 +225,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       direction="column"
       itemAlign="start"
       gap={6}
-      className="oui-font-semibold"
+      className="oui-affiliate-referralCodeForm oui-font-semibold"
     >
       {titleView}
       {descriptionView}
@@ -229,6 +237,10 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 const NoCommissionCard = (props: { directBonusRebateRate?: number }) => {
   const { t } = useTranslation();
   const amount = props.directBonusRebateRate;
+
+  if (!amount || amount <= 0) {
+    return null;
+  }
 
   return (
     <Flex

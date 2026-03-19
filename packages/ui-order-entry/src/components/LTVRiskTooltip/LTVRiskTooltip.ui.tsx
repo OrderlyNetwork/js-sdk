@@ -1,5 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation, type LocaleMessages } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import { Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
 import { removeTrailingZeros } from "@orderly.network/utils";
 import type { LTVTooltipScriptReturn } from "./LTVRiskTooltip.script";
@@ -25,9 +26,15 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
     holdingData = [],
     currentLtv,
     onConvert,
+    marginMode,
   } = props;
   return (
-    <Flex gap={1} className="oui-w-72 oui-max-w-72" direction="column">
+    <Flex
+      gap={1}
+      className="oui-orderEntry-ltvRiskTooltip oui-w-72 oui-max-w-72"
+      direction="column"
+      itemAlign="start"
+    >
       <Flex width={"100%"} justify="between" itemAlign="center">
         <Text intensity={36} size="xs">
           {t("common.assets")}
@@ -72,6 +79,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
           {currentLtv}%
         </Text>
       </Flex>
+
       <Text className="oui-py-2" intensity={54} size="2xs">
         {t("transfer.LTV.tooltip", {
           threshold: isThresholdLoading ? "-" : ltv_threshold,
@@ -83,6 +91,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
         size={"md"}
         variant={"outlined"}
         color={"secondary"}
+        className="oui-ltvRiskTooltip-convert-btn"
         onClick={onConvert}
       >
         {t("transfer.convert.convertAssets")}

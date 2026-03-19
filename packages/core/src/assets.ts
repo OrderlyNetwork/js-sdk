@@ -4,6 +4,7 @@ import {
   ApiError,
   ChainNamespace,
   MaxUint256,
+  isNativeTokenChecker,
 } from "@orderly.network/types";
 import { Account } from "./account";
 import { ConfigStore } from "./configStore/configStore";
@@ -338,7 +339,11 @@ export class Assets {
     };
 
     if (this.isSolana()) {
-      depositData["tokenAddress"] = tokenAddress;
+      const isNativeSol =
+        token === "SOL" || !tokenAddress || isNativeTokenChecker(tokenAddress);
+      depositData["tokenAddress"] = isNativeSol
+        ? contractInfo.solanaUSDCAddress
+        : tokenAddress;
     }
 
     const userAddress = this.account.stateValue.address;

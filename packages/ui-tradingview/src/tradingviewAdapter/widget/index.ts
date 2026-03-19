@@ -54,6 +54,7 @@ export interface WidgetOptions {
   studiesOverrides?: Overrides;
   theme?: ThemeName;
   loadingScreen?: LoadingScreenOptions;
+  toolbarBg?: string;
   interval: ResolutionString;
   locale: string;
   timezone?: string;
@@ -259,6 +260,7 @@ export class Widget {
       locale: options.locale as LanguageCode,
       theme: options.theme,
       loading_screen: options.loadingScreen,
+      toolbar_bg: options.toolbarBg,
       overrides: options.overrides,
       container: options.container,
       favorites: {

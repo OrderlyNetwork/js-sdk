@@ -1,6 +1,7 @@
 export enum PathEnum {
   Root = "/",
   Perp = "/perp",
+  Rwa = "/rwa",
   Swap = "/swap",
 
   Portfolio = "/portfolio",

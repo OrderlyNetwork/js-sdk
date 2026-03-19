@@ -1,6 +1,6 @@
 import { propOr } from "ramda";
 import { account, positions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
 import { CalculatorCtx, CalculatorScope } from "../../types";
@@ -253,22 +253,49 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       totalUnrealizedROI_index = 0;
 
     if (portfolio) {
-      const { totalValue, totalCollateral } = portfolio;
+      const { totalValue, totalCollateral: crossMarginCollateral } = portfolio;
 
       rows = rows.map((item) => {
         const info = symbolsInfo[item.symbol];
-        const est_liq_price = positions.liqPrice({
-          symbol: item.symbol,
-          markPrice: item.mark_price,
-          totalCollateral: totalCollateral.toNumber(),
-          positionQty: item.position_qty,
-          positions: rows,
-          MMR: item.mmr,
-          baseMMR: info?.["base_mmr"],
-          baseIMR: info?.["base_imr"],
-          IMRFactor: accountInfo.imr_factor[item.symbol] as number,
-          costPosition: item.cost_position,
-        });
+        // NOTE: Calculate totalCollateral based on marginMode.
+        // If margin mode is ISOLATED, use isolated margin plus unsettlementPnL;
+        // otherwise (CROSS margin), use account total collateral value.
+        const totalCollateral =
+          item.margin_mode === MarginMode.ISOLATED
+            ? new Decimal(item.margin ?? 0)
+                .add(item.unsettlement_pnl ?? 0)
+                .toNumber()
+            : crossMarginCollateral.toNumber();
+
+        let est_liq_price;
+        if (item.margin_mode === MarginMode.ISOLATED) {
+          est_liq_price = positions.liquidationPriceIsolated({
+            isolatedPositionMargin: item.margin ?? 0,
+            costPosition: item.cost_position ?? 0,
+            positionQty: item.position_qty ?? 0,
+            sumUnitaryFunding:
+              fundingRates?.[item.symbol]?.["sum_unitary_funding"] ?? 0,
+            lastSumUnitaryFunding: item.last_sum_unitary_funding ?? 0,
+            baseMMR: info?.["base_mmr"] ?? 0,
+            baseIMR: info?.["base_imr"] ?? 0,
+            IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+            referencePrice: item.mark_price,
+            leverage: item.leverage ?? 0,
+          });
+        } else {
+          est_liq_price = positions.liqPrice({
+            symbol: item.symbol,
+            markPrice: item.mark_price,
+            totalCollateral: totalCollateral,
+            positionQty: item.position_qty,
+            positions: rows,
+            MMR: item.mmr,
+            baseMMR: info?.["base_mmr"],
+            baseIMR: info?.["base_imr"],
+            IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+            costPosition: item.cost_position,
+          });
+        }
         return {
           ...item,
           est_liq_price,

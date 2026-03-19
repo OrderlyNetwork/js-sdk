@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 import { i18n } from "@orderly.network/i18n";
-import { Text, Column, Flex, TokenIcon, Badge } from "@orderly.network/ui";
+import { Text, Column, Flex, TokenIcon, Badge, cn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { FavoritesIcon2, UnFavoritesIcon2 } from "../../icons";
+import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 import { RwaDotTooltip } from "../rwaDotTooltip";
@@ -30,9 +31,9 @@ export function getSymbolColumn(
               className="oui-mr-1 oui-cursor-pointer"
             >
               {record.isFavorite ? (
-                <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+                <FavoritesIcon2 className="oui-size-3" />
               ) : (
-                <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                <UnFavoritesIcon2 className="oui-size-3" />
               )}
             </Flex>
           </FavoritesDropdownMenuWidget>
@@ -42,14 +43,18 @@ export function getSymbolColumn(
       return (
         <Flex gapX={1}>
           {favoritesIcon}
-          <TokenIcon symbol={value} className="oui-size-[18px]" />
-          <SymbolDisplay formatString="base" size="2xs">
-            {value}
-          </SymbolDisplay>
-          <RwaDotTooltip record={record} />
-          <Badge size="xs" color="primary">
-            {record.leverage}x
-          </Badge>
+          <Flex direction="column" itemAlign="start" gapY={1}>
+            <Flex gapX={1} itemAlign="center">
+              <TokenIcon symbol={value} className="oui-size-[18px]" />
+              <SymbolDisplay formatString="base" size="2xs">
+                {value}
+              </SymbolDisplay>
+              <RwaDotTooltip record={record} />
+            </Flex>
+            <Badge size="xs" color="primary">
+              {record.leverage}x
+            </Badge>
+          </Flex>
         </Flex>
       );
     },
@@ -60,6 +65,40 @@ export function getLastColumn() {
   return {
     title: i18n.t("markets.column.last"),
     dataIndex: "24h_close",
+    align: "right",
+    onSort: true,
+    width: 100,
+    render: (value, record) => {
+      return (
+        <Text.numeral dp={record.quote_dp || 2} size="2xs">
+          {value}
+        </Text.numeral>
+      );
+    },
+  } as Column<any>;
+}
+
+export function getMarkColumn() {
+  return {
+    title: i18n.t("markets.column.mark"),
+    dataIndex: "mark_price",
+    align: "right",
+    onSort: true,
+    width: 100,
+    render: (value, record) => {
+      return (
+        <Text.numeral dp={record.quote_dp || 2} size="2xs">
+          {value}
+        </Text.numeral>
+      );
+    },
+  } as Column<any>;
+}
+
+export function getIndexColumn() {
+  return {
+    title: i18n.t("markets.column.index"),
+    dataIndex: "index_price",
     align: "right",
     onSort: true,
     width: 100,
@@ -93,5 +132,159 @@ export function get24hPercentageColumn() {
         </Text.numeral>
       );
     },
+  } as Column<any>;
+}
+
+export function get24hVolOIColumn() {
+  return {
+    title: i18n.t("markets.column.24hVolOI"),
+    dataIndex: "24h_amount",
+    align: "right",
+    className: "oui-h-[36px]",
+    width: 100,
+    multiSort: {
+      fields: [
+        {
+          sortKey: "24h_amount",
+          label: i18n.t("markets.column.24hVol"),
+        },
+        {
+          sortKey: "openInterest",
+          label: i18n.t("markets.column.OI"),
+        },
+      ],
+    },
+    render: (value, record) => (
+      <Flex direction="column" itemAlign="end" gapY={1}>
+        <Text.numeral rule="human" dp={2} rm={Decimal.ROUND_DOWN}>
+          {value}
+        </Text.numeral>
+        <Text.numeral
+          rule="human"
+          dp={2}
+          rm={Decimal.ROUND_DOWN}
+          size="2xs"
+          intensity={54}
+        >
+          {record.openInterest}
+        </Text.numeral>
+      </Flex>
+    ),
+  } as Column<any>;
+}
+
+export function getLastAnd24hPercentageColumn(
+  favorite: FavoriteInstance,
+  isFavoriteList = false,
+) {
+  return {
+    title: i18n.t("markets.column.last&24hPercentage"),
+    dataIndex: "change",
+    align: "right",
+    onSort: true,
+    className: "oui-h-[36px]",
+    width: 100,
+    render: (value, record) => {
+      const onDelSymbol: React.MouseEventHandler = (e) => {
+        favorite.updateSymbolFavoriteState(
+          record,
+          favorite.selectedFavoriteTab,
+          true,
+        );
+        e.stopPropagation();
+      };
+
+      const iconCls =
+        "oui-w-4 oui-h-4 oui-text-base-contrast-54 hover:oui-text-base-contrast";
+
+      const actions = (
+        <div
+          className={cn(
+            "oui-absolute oui-right-0 oui-top-[6.5px]",
+            "oui-hidden group-hover:oui-block",
+          )}
+        >
+          <Flex
+            className={cn(
+              "oui-inline-flex",
+              "oui-bg-primary-darken oui-py-[6px]",
+            )}
+            r="base"
+            width={52}
+            justify="center"
+            itemAlign="end"
+            gapX={2}
+          >
+            <TopIcon
+              className={iconCls}
+              onClick={(e) => {
+                e.stopPropagation();
+                favorite.pinToTop(record);
+              }}
+            />
+            <DeleteIcon className={iconCls} onClick={onDelSymbol} />
+          </Flex>
+        </div>
+      );
+
+      return (
+        <div className="oui-relative">
+          {isFavoriteList && actions}
+
+          <Flex
+            direction="column"
+            justify="end"
+            itemAlign="end"
+            gapY={1}
+            className={cn(isFavoriteList && "group-hover:oui-invisible")}
+          >
+            <Text.numeral dp={record.quote_dp || 2} size="2xs">
+              {record["24h_close"]}
+            </Text.numeral>
+            <Text.numeral
+              rule="percentages"
+              coloring
+              rm={Decimal.ROUND_DOWN}
+              showIdentifier
+              size="2xs"
+            >
+              {value}
+            </Text.numeral>
+          </Flex>
+        </div>
+      );
+    },
+  } as Column<any>;
+}
+
+export function getMarkIndexColumn() {
+  return {
+    title: i18n.t("markets.column.mark&Index"),
+    dataIndex: "mark_price",
+    align: "right",
+    className: "oui-h-[36px]",
+    width: 100,
+    multiSort: {
+      fields: [
+        {
+          sortKey: "mark_price",
+          label: i18n.t("markets.column.mark"),
+        },
+        {
+          sortKey: "index_price",
+          label: i18n.t("markets.column.index"),
+        },
+      ],
+    },
+    render: (value, record) => (
+      <Flex direction="column" itemAlign="end" gapY={1}>
+        <Text.numeral dp={record.quote_dp || 2} size="2xs">
+          {value}
+        </Text.numeral>
+        <Text.numeral dp={record.quote_dp || 2} size="2xs" intensity={54}>
+          {record.index_price}
+        </Text.numeral>
+      </Flex>
+    ),
   } as Column<any>;
 }

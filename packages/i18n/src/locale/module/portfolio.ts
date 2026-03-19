@@ -18,6 +18,8 @@ export const portfolio = {
     "Trading volume over the selected period.",
   "portfolio.overview.performance.dailyPnl": "Daily PnL",
   "portfolio.overview.performance.cumulativePnl": "Cumulative PnL",
+  "portfolio.overview.performance.dailyVolume": "Daily Volume",
+  "portfolio.overview.performance.cumulativeVolume": "Cumulative Volume",
 
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Transfer history",
@@ -62,9 +64,6 @@ export const portfolio = {
   "portfolio.feeTier.column.or": "or",
   "portfolio.feeTier.column.maker": "Maker / RWA Maker",
   "portfolio.feeTier.column.taker": "Taker / RWA Taker",
-  "portfolio.feeTier.effectiveFee.tooltip":
-    "Effective fee rate after applying your referee rebate.",
-  "portfolio.feeTier.effectiveFee.tooltipLink": "Check rebate history",
   "portfolio.apiKey.accountId.copied": "Account id copied",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Secret key",
@@ -125,6 +124,7 @@ export const portfolio = {
   "portfolio.setting.soundAlerts": "Sound notification",
   "portfolio.setting.soundAlerts.description":
     "Play a notification sound when an order is filled or canceled.",
+  "portfolio.setting.theme": "Theme",
 };
 
 export type Portfolio = typeof portfolio;

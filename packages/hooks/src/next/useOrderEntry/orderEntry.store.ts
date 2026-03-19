@@ -1,12 +1,13 @@
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 import {
+  MarginMode,
   OrderlyOrder,
   OrderSide,
   OrderType,
   RequireKeys,
 } from "@orderly.network/types";
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
 
 export type FullOrderState = OrderlyOrder;
 
@@ -23,10 +24,19 @@ type OrderEntryState = {
 };
 
 type OrderEntryActions = {
+  /** Initializes order state (e.g. when switching symbol). Resets computed values and errors. */
+  initOrder: (
+    symbol: string,
+    options?: {
+      side?: OrderSide;
+      order_type?: OrderType;
+      margin_mode?: MarginMode;
+    },
+  ) => void;
   updateOrder: (order: Partial<FullOrderState>) => void;
   updateOrderByKey: <K extends keyof FullOrderState>(
     key: K,
-    value: FullOrderState[K]
+    value: FullOrderState[K],
   ) => void;
   restoreOrder: (order?: Partial<FullOrderState>) => void;
   updateOrderComputed: (data: {
@@ -62,6 +72,27 @@ export const useOrderStore = create<
     estLiquidationPrice: null,
     errors: {},
     actions: {
+      initOrder: (
+        symbol: string,
+        options?: {
+          side?: OrderSide;
+          order_type?: OrderType;
+          margin_mode?: MarginMode;
+        },
+      ) => {
+        set((state) => {
+          state.entry = {
+            ...initialOrderState,
+            symbol,
+            side: options?.side ?? OrderSide.BUY,
+            order_type: options?.order_type ?? OrderType.LIMIT,
+            margin_mode: options?.margin_mode ?? MarginMode.CROSS,
+          } as OrderEntryStateEntity;
+          state.estLeverage = null;
+          state.estLiquidationPrice = null;
+          state.errors = {};
+        });
+      },
       hasTP_SL: () => {
         const order = get().entry;
         return (
@@ -78,7 +109,7 @@ export const useOrderStore = create<
             state.estLeverage = data.estLeverage;
             state.estLiquidationPrice = data.estLiquidationPrice;
           },
-          false
+          false,
           // "updateOrderComputed"
         );
       },
@@ -91,19 +122,19 @@ export const useOrderStore = create<
               ...order,
             };
           },
-          false
+          false,
           // "updateOrder"
         );
       },
       updateOrderByKey: <K extends keyof FullOrderState>(
         key: K,
-        value: FullOrderState[K]
+        value: FullOrderState[K],
       ) => {
         set(
           (state) => {
             state.entry[key] = value;
           },
-          false
+          false,
           // "updateOrderByKey"
         );
       },
@@ -112,11 +143,11 @@ export const useOrderStore = create<
           (state) => {
             state.entry = order as OrderEntryStateEntity;
           },
-          false
+          false,
           // "restoreOrder"
         );
       },
-      resetOrder: (order?: Partial<FullOrderState>) => {
+      resetOrder: (_order?: Partial<FullOrderState>) => {
         set(
           (state) => {
             state.entry.order_price = "";
@@ -132,13 +163,10 @@ export const useOrderStore = create<
             state.entry.sl_offset = "";
             state.entry.sl_offset_percentage = "";
           },
-          true
+          true,
           // "resetOrder"
         );
       },
     },
-  }))
+  })),
 );
-
-export const useOrderEntryFromStore = () =>
-  useOrderStore((state) => state.entry);

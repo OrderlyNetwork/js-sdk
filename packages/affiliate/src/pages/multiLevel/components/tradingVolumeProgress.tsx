@@ -55,11 +55,20 @@ export const TradingVolumeProgress: FC<TradingVolumeProgressProps> = (
   };
 
   return (
-    <Flex width="100%" direction="column" gap={4} className={classNames?.root}>
+    <Flex
+      width="100%"
+      direction="column"
+      gap={4}
+      className={cn("oui-tradingVolumeProgress", classNames?.root)}
+    >
       <Text
         size="sm"
         intensity={54}
-        className={cn("oui-text-center", classNames?.description)}
+        className={cn(
+          "oui-tradingVolumeProgress-description",
+          "oui-text-center",
+          classNames?.description,
+        )}
       >
         {t("affiliate.newReferralProgram.tradeUnlock.description", {
           volume: formatRequiredVolume,
@@ -94,14 +103,22 @@ export const TradingVolumeProgress: FC<TradingVolumeProgressProps> = (
               width: `${progressPercentage}%`,
             }}
             className={cn(
-              "oui-h-full oui-rounded-l-full oui-bg-primary-light",
+              "oui-tradingVolumeProgress-bar oui-h-full oui-rounded-l-full oui-bg-primary-light",
               progressPercentage === 100 && "oui-rounded-r-full",
             )}
           />
         </div>
       </Flex>
 
-      <Button size="md" onClick={gotoTrade} {...props.buttonProps}>
+      <Button
+        size="md"
+        onClick={gotoTrade}
+        className={cn(
+          "oui-tradingVolumeProgress-cta-btn",
+          props.buttonProps?.className,
+        )}
+        {...props.buttonProps}
+      >
         {t("affiliate.newReferralProgram.tradeUnlock")}
       </Button>
     </Flex>

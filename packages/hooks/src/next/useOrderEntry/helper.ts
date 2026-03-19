@@ -2,6 +2,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import {
   AlgoOrderRootType,
   API,
+  MarginMode,
   OrderlyOrder,
   OrderSide,
   OrderType,
@@ -133,8 +134,10 @@ export const calcEstLiqPrice = (
     symbol: string;
     totalCollateral: number;
     markPrice: number;
-    positions: any;
+    positions: API.PositionTPSLExt[] | null;
     symbolInfo: API.SymbolExt;
+    sumUnitaryFunding: number;
+    symbolLeverage?: number;
   },
 ) => {
   const { symbolInfo } = inputs;
@@ -152,6 +155,8 @@ export const calcEstLiqPrice = (
     totalCollateral,
     futures_taker_fee_rate,
     positions,
+    symbolLeverage,
+    sumUnitaryFunding,
   } = inputs;
 
   const orderFee = orderUtils.orderFee({
@@ -160,20 +165,61 @@ export const calcEstLiqPrice = (
     futuresTakeFeeRate: Number(futures_taker_fee_rate) / 10000,
   });
 
-  const liqPrice = orderUtils.estLiqPrice({
-    markPrice,
-    baseIMR: symbolInfo.base_imr,
-    baseMMR: symbolInfo.base_mmr,
-    totalCollateral,
-    positions: positions == null ? [] : positions,
-    IMR_Factor: imr_factor,
-    orderFee,
-    newOrder: {
-      qty: quantity,
-      price,
-      symbol,
-    },
-  });
+  let liqPrice = 0;
+
+  if (order.margin_mode === MarginMode.CROSS) {
+    liqPrice = orderUtils.estLiqPrice({
+      markPrice,
+      baseIMR: symbolInfo.base_imr,
+      baseMMR: symbolInfo.base_mmr,
+      totalCollateral,
+      positions: positions == null ? [] : positions,
+      IMR_Factor: imr_factor,
+      orderFee,
+      newOrder: {
+        qty: quantity,
+        price,
+        symbol,
+      },
+    });
+  } else {
+    let isolatedPositionMargin = 0,
+      costPosition = 0,
+      positionQty = 0,
+      lastSumUnitaryFunding = 0,
+      leverage = symbolLeverage ?? 1;
+
+    if (positions) {
+      const position = positions.find(
+        (p) => p.symbol === symbol && p.margin_mode === MarginMode.ISOLATED,
+      );
+      if (position) {
+        isolatedPositionMargin = position.margin ?? 0;
+        costPosition = position.cost_position ?? 0;
+        positionQty = position.position_qty ?? 0;
+        lastSumUnitaryFunding = position.last_sum_unitary_funding ?? 0;
+        leverage = position.leverage ? Number(position.leverage) : 1;
+      }
+    }
+
+    liqPrice = orderUtils.estLiqPriceIsolated({
+      isolatedPositionMargin,
+      costPosition,
+      positionQty,
+      sumUnitaryFunding,
+      lastSumUnitaryFunding,
+      markPrice,
+      baseIMR: symbolInfo.base_imr,
+      baseMMR: symbolInfo.base_mmr,
+      IMR_Factor: imr_factor,
+      leverage,
+      newOrder: {
+        symbol,
+        qty: quantity,
+        price,
+      },
+    });
+  }
 
   if (liqPrice <= 0) return null;
 

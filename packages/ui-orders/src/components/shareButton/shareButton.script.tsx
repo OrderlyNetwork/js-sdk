@@ -18,7 +18,7 @@ export const useShareButtonScript = (props: {
   const refCode = useMemo(() => {
     return getFirstRefCode()?.code;
   }, [getFirstRefCode]);
-  const leverage = useLeverageBySymbol(order.symbol);
+  const leverage = useLeverageBySymbol(order.symbol, order.margin_mode);
 
   const showModal = () => {
     modal.show(props.modalId, {

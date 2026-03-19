@@ -30,7 +30,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
     props.status < AccountStatusEnum.EnableTrading;
 
   return (
-    <div className="oui-bg-base-9 oui-border-t oui-border-line-4">
+    <div className="oui-bottomNavBar oui-bg-base-9 oui-border-t oui-border-line-4">
       <Flex
         height={64}
         gap={1}

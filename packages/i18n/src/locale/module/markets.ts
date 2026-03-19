@@ -26,7 +26,7 @@ export const markets = {
   "markets.favorites.addFavorites": "Add favorites",
 
   "markets.column.market": "Market",
-  "markets.column.24hChange": "24h change",
+  "markets.column.24hChange": "24h%",
   "markets.column.24hVolume": "24h volume",
   // TODO: use markets.column.market and common.volume
   "markets.column.market&Volume": "Market / Volume",
@@ -37,6 +37,9 @@ export const markets = {
   "markets.column.24hVol": "24h Vol",
   "markets.column.OI": "OI",
   "markets.column.last&24hPercentage": "Last/24h%",
+  "markets.column.mark": "Mark",
+  "markets.column.index": "Index",
+  "markets.column.mark&Index": "Mark / Index",
 
   "markets.funding.comparison": "Comparison",
   "markets.funding.column.estFunding": "Est. funding",

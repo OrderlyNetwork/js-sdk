@@ -26,6 +26,7 @@ This command automatically scans code directories and generates structured Markd
 Path to the code directory to scan. Relative and absolute paths are supported.
 
 **Examples**:
+
 - `packages/orderly_types/lib/api`
 - `packages/orderly_utils/rust/src/api`
 - `apps/woofi_pro/lib/components`
@@ -42,6 +43,7 @@ Path to the code directory to scan. Relative and absolute paths are supported.
 ## 📁 Document structure mapping
 
 Input directory structure:
+
 ```
 lib/
   account/
@@ -53,6 +55,7 @@ lib/
 ```
 
 Output documentation structure (a sibling `docs/` directory is created):
+
 ```
 docs/
   index.md                    # Root index
@@ -149,11 +152,13 @@ Based on the analyzed code and language type:
 ### Index files (`index.md`)
 
 **Root index** (`docs/index.md`):
+
 - Directory overview
 - Links to all subdirectories
 - List of top-level files
 
 **Directory index** (`docs/{directory}/index.md`):
+
 - Directory description
 - List of all files in that directory (filename, language tag, description, link)
 - Links to subdirectories (if any)
@@ -180,8 +185,8 @@ Class description...
 #### Fields
 
 | Field | Type | Required | JSON key | Description |
-|-------|------|----------|----------|-------------|
-| ... | ... | ... | ... | ... |
+| ----- | ---- | -------- | -------- | ----------- |
+| ...   | ...  | ...      | ...      | ...         |
 
 #### Usage example
 
@@ -208,8 +213,8 @@ Struct description...
 #### Fields
 
 | Field | Type | JSON key | Description |
-|-------|------|----------|-------------|
-| ... | ... | ... | ... |
+| ----- | ---- | -------- | ----------- |
+| ...   | ...  | ...      | ...         |
 
 #### Methods
 
@@ -240,8 +245,8 @@ Description...
 #### Parameters/Properties
 
 | Name | Type | Required | Description |
-|------|------|----------|-------------|
-| ... | ... | ... | ... |
+| ---- | ---- | -------- | ----------- |
+| ...  | ...  | ...      | ...         |
 
 #### Usage example
 
@@ -262,8 +267,8 @@ Component description...
 ## Props
 
 | Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| ... | ... | ... | ... | ... |
+| ---- | ---- | -------- | ------- | ----------- |
+| ...  | ...  | ...      | ...     | ...         |
 
 ## Usage example
 
@@ -404,6 +409,7 @@ When the second parameter is `update`:
 Execute the documentation generation task.
 
 **Parameter summary**:
+
 - First parameter (required): `path` – code directory path
 - Second parameter (optional): operation mode
   - `sync` (default): Regenerate all documentation from the codebase
@@ -446,6 +452,7 @@ Execute the documentation generation task.
    - Use the `write` tool to write all documentation files
 
 **Important**:
+
 - Correctly infer language type and generate docs that match the language
 - Index files must include file list, short descriptions, and links
 - Detailed docs must include full type descriptions, field tables, and usage examples

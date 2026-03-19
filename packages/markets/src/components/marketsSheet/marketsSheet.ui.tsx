@@ -29,7 +29,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         onSort={onTabSort(type)}
         getColumns={getMarketsSheetColumns}
         tableClassNames={{
-          root: "!oui-bg-base-8",
+          root: cn("oui-marketsSheet-list", "!oui-bg-base-8"),
           scroll: cn(
             "oui-pb-[env(safe-area-inset-bottom,_20px)]",
             isFavorites
@@ -49,12 +49,17 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   };
 
   return (
-    <Box height="100%" className={cn("oui-font-semibold", className)}>
-      <Box px={3} mt={3} mb={2}>
+    <Box
+      height="100%"
+      className={cn("oui-markets-marketsSheet", "oui-font-semibold", className)}
+    >
+      <Box className="oui-marketsSheet-header" px={3} mt={3} mb={2}>
         <Text size="base" intensity={80}>
           {t("common.markets")}
         </Text>
-        <SearchInput classNames={{ root: "oui-mt-4" }} />
+        <SearchInput
+          classNames={{ root: cn("oui-marketsSheet-search-input", "oui-mt-4") }}
+        />
       </Box>
 
       <Tabs
@@ -67,17 +72,38 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           tabsContent: "oui-h-full",
           scrollIndicator: "oui-mx-3",
         }}
-        className="oui-h-[calc(100%_-_92px)]"
+        className={cn("oui-marketsSheet-tabs", "oui-h-[calc(100%_-_92px)]")}
         showScrollIndicator
       >
-        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-favorites-trigger",
+            content: "oui-tabs-favorites-content",
+          }}
+          title={<FavoritesIcon />}
+          value={MarketsTabName.Favorites}
+        >
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
 
-        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-all-trigger",
+            content: "oui-tabs-all-content",
+          }}
+          title={t("common.all")}
+          value={MarketsTabName.All}
+        >
           {renderTab(MarketsTabName.All)}
         </TabPanel>
-        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-rwa-trigger",
+            content: "oui-tabs-rwa-content",
+          }}
+          title={<RwaTab />}
+          value={MarketsTabName.Rwa}
+        >
           {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
       </Tabs>

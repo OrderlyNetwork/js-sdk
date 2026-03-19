@@ -323,7 +323,9 @@ const PricePoolProgress: FC<PricePoolProgressProps> = ({
                   "oui-absolute",
                   " oui-rounded-full",
                   isMobile ? "oui-size-[4px]" : "oui-size-[6px]",
-                  isReached ? "oui-bg-white/[0.8]" : "oui-bg-[#00A9DE]",
+                  isReached
+                    ? "oui-bg-base-contrast-80"
+                    : "oui-bg-[rgb(var(--oui-gradient-brand-start))]",
                 )}
                 style={{ left }}
               />
@@ -370,7 +372,7 @@ const Dot = () => {
     >
       <path
         d="M12 0.749939C18.2132 0.749939 23.25 5.78674 23.25 11.9999C23.25 18.2131 18.2132 23.2499 12 23.2499C5.7868 23.2499 0.75 18.2131 0.75 11.9999C0.75 5.78674 5.7868 0.749939 12 0.749939Z"
-        fill="#161B22"
+        fill="rgb(var(--oui-color-base-10))"
       />
       <path
         d="M12 0.749939C18.2132 0.749939 23.25 5.78674 23.25 11.9999C23.25 18.2131 18.2132 23.2499 12 23.2499C5.7868 23.2499 0.75 18.2131 0.75 11.9999C0.75 5.78674 5.7868 0.749939 12 0.749939Z"
@@ -390,8 +392,8 @@ const Dot = () => {
           y2="11.9999"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#59B0FE" />
-          <stop offset="1" stopColor="#26FEFE" />
+          <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_31433_10290"
@@ -401,8 +403,8 @@ const Dot = () => {
           y2="11.9999"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#59B0FE" />
-          <stop offset="1" stopColor="#26FEFE" />
+          <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
         </linearGradient>
       </defs>
     </svg>

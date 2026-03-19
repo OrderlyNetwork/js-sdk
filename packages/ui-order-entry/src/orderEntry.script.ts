@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
+  useMarginModeBySymbol,
   useMarginRatio,
   useMemoizedFn,
   useOrderEntry,
@@ -16,6 +17,7 @@ import {
   OrderSide,
   OrderType,
   PositionType,
+  ORDER_ENTRY_EST_LIQ_PRICE_CHANGE,
 } from "@orderly.network/types";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
@@ -30,10 +32,14 @@ export type OrderEntryScriptInputs = {
 };
 
 export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
+export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
+const ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS = 3 * 1000;
+
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
+  /** Active user window for treating estLiqPrice as coming from an actively edited order. */
   const { symbol } = inputs;
   const [localOrderType, setLocalOrderType] = useLocalStorage(
     "orderly-order-entry-order-type",
@@ -46,18 +52,31 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const { notification } = useOrderlyContext();
 
+  const orderFilledConfig = notification?.orderFilled;
+  const defaultSoundValue =
+    orderFilledConfig?.defaultSoundValue ??
+    orderFilledConfig?.soundOptions?.[0]?.value;
+
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
     ORDERLY_ORDER_SOUND_ALERT_KEY,
-    notification?.orderFilled?.defaultOpen ?? false,
+    orderFilledConfig?.defaultOpen ?? false,
   );
 
+  const [initialSoundValue] = useLocalStorage<string | null>(
+    ORDERLY_ORDER_SOUND_OPTION_KEY,
+    defaultSoundValue ?? null,
+  );
+  void initialSoundValue;
+
   const canTrade = useCanTrade();
+  const { marginMode } = useMarginModeBySymbol(symbol);
 
   const {
     formattedOrder,
     setValue,
     setValues: setOrderValues,
     symbolInfo,
+    symbolLeverage,
     ...state
   } = useOrderEntry(symbol, {
     initialOrder: {
@@ -65,6 +84,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type: localOrderType,
       position_type: PositionType.PARTIAL,
       side: localOrderSide,
+      margin_mode: marginMode,
     },
   });
 
@@ -78,6 +98,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const activatedPriceInputRef = useRef<HTMLInputElement | null>(null);
+  /** Tracks last time the user interacted with core order inputs (used to gate estLiqPrice emission). */
+  const lastUserActiveTimeRef = useRef<number>(Date.now());
 
   const { bboStatus, bboType, setBBOType, onBBOChange, toggleBBO } =
     useBBOState({
@@ -107,30 +129,30 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setOrderValues({
       tp_trigger_price: "",
       sl_trigger_price: "",
-      position_type: PositionType.FULL,
+      position_type: PositionType.PARTIAL,
     });
   };
 
   const enableTP_SL = () => {
     setOrderValues({
       order_type_ext: undefined,
-      position_type: PositionType.FULL,
+      position_type: PositionType.PARTIAL,
     });
   };
 
   const setOrderValue = useMemoizedFn(
     (
-      key: any,
-      value: any,
+      key: keyof typeof formattedOrder | string,
+      value: unknown,
       options?: {
         shouldUpdateLastChangedField?: boolean;
       },
     ) => {
       if (key === "order_type") {
-        setLocalOrderType(value);
+        setLocalOrderType(value as OrderType);
       }
       if (key === "side") {
-        setLocalOrderSide(value);
+        setLocalOrderSide(value as OrderSide);
       }
 
       if (
@@ -140,42 +162,47 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       ) {
         // cancelTP_SL();
 
-        const data = {
+        const data: Record<string, unknown> = {
           tp_trigger_price: "",
           sl_trigger_price: "",
           [key]: value,
         };
 
         if (key === "order_type") {
-          data["order_type_ext" as any] = "";
+          (data as Record<string, unknown>)["order_type_ext"] = "";
         }
 
-        setOrderValues(data);
+        setOrderValues(data as Partial<typeof formattedOrder>);
 
         return;
       }
 
       if (key === "order_type" && value !== OrderType.LIMIT) {
-        const data = {
+        const data: Record<string, unknown> = {
           level: undefined,
           order_type_ext: undefined,
           [key]: value,
         };
 
-        setOrderValues(data);
+        setOrderValues(data as Partial<typeof formattedOrder>);
 
         return;
       }
 
       if (key === "order_type" && value === OrderType.SCALED) {
-        setOrderValues({
+        const data: Record<string, unknown> = {
           distribution_type: DistributionType.FLAT,
           [key]: value,
-        });
+        };
+        setOrderValues(data as Partial<typeof formattedOrder>);
         return;
       }
 
-      setValue(key, value, options);
+      setValue(
+        key as keyof typeof formattedOrder,
+        value as (typeof formattedOrder)[keyof typeof formattedOrder],
+        options,
+      );
     },
   );
 
@@ -371,6 +398,35 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   }, [tpslSwitch]);
 
+  /** Track user activity via core order fields (price, quantity, side) to drive estLiqPrice active window. */
+  useEffect(() => {
+    lastUserActiveTimeRef.current = Date.now();
+  }, [
+    formattedOrder.order_price,
+    formattedOrder.order_quantity,
+    formattedOrder.side,
+  ]);
+
+  /**
+   * Broadcast estimated liquidation price for TradingView chart liquidation line (avoids parent state / callback loops).
+   * Includes a user-activity flag so downstream consumers can decide whether to treat this estLiqPrice as active.
+   */
+  useEffect(() => {
+    const lastActive = lastUserActiveTimeRef.current;
+    const now = Date.now();
+    const isUserActive =
+      now - lastActive <= ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS;
+
+    ee.emit(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, {
+      symbol,
+      estLiqPrice: state.estLiqPrice ?? null,
+      isUserActive,
+    });
+  }, [ee, symbol, state.estLiqPrice]);
+  useEffect(() => {
+    setOrderValue("margin_mode", marginMode);
+  }, [marginMode]);
+
   return {
     ...state,
     slPriceError: slPriceError ?? undefined,
@@ -380,7 +436,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     formattedOrder,
     setOrderValue,
     setOrderValues,
+    // account-level leverage (for other consumers)
     currentLeverage,
+    // symbol-level leverage & margin mode for this order entry
+    symbolLeverage,
+    marginMode,
 
     // cancelTP_SL,
     // enableTP_SL,

@@ -25,7 +25,7 @@ export const useMarketsListFullScript = (
   const { type = "all" } = options;
   const [loading, setLoading] = useState(true);
   const { setPage, pagination } = usePagination({
-    pageSize: 10,
+    pageSize: 100,
   });
 
   const [data, favorite] = useMarkets(MarketsTypeMap[type]);

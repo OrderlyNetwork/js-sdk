@@ -32,8 +32,8 @@ export const EsOrderlyIcon = (props: BaseIconProps) => {
           y2="21.2774"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="white" />
-          <stop offset="1" stopColor="#EDE9F4" />
+          <stop stopColor="rgb(var(--oui-color-base-foreground))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-quaternary))" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_862_2449"
@@ -43,11 +43,15 @@ export const EsOrderlyIcon = (props: BaseIconProps) => {
           y2="16.5531"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#C750FF" />
-          <stop offset="1" stopColor="#5800E8" />
+          <stop stopColor="rgb(var(--oui-gradient-secondary-start))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-secondary-end))" />
         </linearGradient>
         <clipPath id="clip0_862_2449">
-          <rect width="20" height="20" fill="white" />
+          <rect
+            width="20"
+            height="20"
+            fill="rgb(var(--oui-color-base-foreground))"
+          />
         </clipPath>
       </defs>
     </svg>

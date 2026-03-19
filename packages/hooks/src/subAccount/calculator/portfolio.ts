@@ -1,14 +1,16 @@
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, MarginMode } from "@orderly.network/types";
+import { Decimal, zero } from "@orderly.network/utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
+import { createGetter } from "../../utils/createGetter";
 import { parseHolding } from "../../utils/parseHolding";
 
 export type Portfolio = {
   holding?: API.Holding[];
   totalCollateral: Decimal;
   freeCollateral: Decimal;
+  freeCollateralUSDCOnly: Decimal;
   totalValue: Decimal | null;
   availableBalance: number;
   unsettledPnL: number;
@@ -46,7 +48,17 @@ export function formatPortfolio(inputs: {
     return null;
   }
 
-  const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
+  const totallCrossUnsettledPnL = positions.rows.reduce(
+    (sum, pos) =>
+      pos.margin_mode === MarginMode.ISOLATED
+        ? sum
+        : sum + (pos.unsettled_pnl ?? 0),
+    0,
+  );
+  const totalUnsettlementPnL = positions.rows.reduce(
+    (sum, pos) => sum + (pos.unsettled_pnl ?? 0),
+    0,
+  );
   const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
   const [USDC_holding, nonUSDC] = parseHolding(
@@ -60,32 +72,61 @@ export function formatPortfolio(inputs: {
   const totalCollateral = account.totalCollateral({
     USDCHolding: USDC_holding,
     nonUSDCHolding: nonUSDC,
-    unsettlementPnL: unsettledPnL,
+    unsettlementPnL: totallCrossUnsettledPnL,
+    usdcBalancePendingShortQty: usdc?.pending_short ?? 0,
+    usdcBalanceIsolatedOrderFrozen: usdc?.isolated_order_frozen ?? 0,
   });
 
+  const sumIsolatedMargin = positions.rows.reduce<Decimal>((acc, curr) => {
+    if (curr.margin_mode !== MarginMode.ISOLATED) {
+      return acc;
+    }
+    return acc.add(curr.margin ?? 0);
+  }, zero);
+
   const totalValue = account.totalValue({
-    totalUnsettlementPnL: unsettledPnL,
+    totalUnsettlementPnL: totalUnsettlementPnL,
     USDCHolding: USDC_holding,
     nonUSDCHolding: nonUSDC,
+    totalIsolatedPositionMargin: sumIsolatedMargin.toNumber(),
   });
 
   const totalUnrealizedROI = account.totalUnrealizedROI({
     totalUnrealizedPnL: unrealizedPnL,
     totalValue: totalValue.toNumber(),
   });
+  const maxLeverageBySymbol = positions.rows.reduce<Record<string, number>>(
+    (acc, position) => {
+      if (
+        position.margin_mode !== MarginMode.ISOLATED &&
+        position.leverage &&
+        !acc[position.symbol]
+      ) {
+        acc[position.symbol] = position.leverage;
+      }
+      return acc;
+    },
+    {},
+  );
 
+  // TODO: Pass actual orders data for accurate initial margin calculation
   const totalInitialMarginWithOrders = account.totalInitialMarginWithQty({
     positions: positions.rows,
+    orders: [],
     markPrices,
     IMR_Factors: accountInfo.imr_factor,
-    // Not used
-    maxLeverage: accountInfo.max_leverage,
-    symbolInfo: symbolsInfo,
+    maxLeverageBySymbol,
+    symbolInfo: createGetter({ ...symbolsInfo }),
   });
 
   const freeCollateral = account.freeCollateral({
     totalCollateral,
     totalInitialMarginWithOrders,
+  });
+
+  const freeCollateralUSDCOnly = account.freeCollateralUSDCOnly({
+    freeCollateral,
+    nonUSDCHolding: nonUSDC,
   });
 
   const availableBalance = account.availableBalance({
@@ -99,7 +140,8 @@ export function formatPortfolio(inputs: {
     totalUnrealizedROI,
     freeCollateral,
     availableBalance,
-    unsettledPnL,
+    unsettledPnL: totalUnsettlementPnL,
     holding,
+    freeCollateralUSDCOnly,
   };
 }

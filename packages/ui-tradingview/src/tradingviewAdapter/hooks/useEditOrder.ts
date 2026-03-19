@@ -82,6 +82,7 @@ export default function useEditOrder(onToast: any) {
         side: order.side,
         visible_quantity: 0,
         reduce_only: order.reduce_only,
+        margin_mode: order.margin_mode,
       };
       if (
         new Decimal(order.visible_quantity ?? order.visible ?? 0).eq(

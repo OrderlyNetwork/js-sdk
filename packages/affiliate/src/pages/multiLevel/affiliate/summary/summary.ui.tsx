@@ -17,7 +17,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
       gap={6}
       direction={"column"}
       intensity={900}
-      className="oui-border oui-border-line-6"
+      className="oui-affiliate-summary oui-border oui-border-line-6"
     >
       <Flex direction={"row"} justify={"between"} width={"100%"}>
         <Text className="oui-text-lg">{t("affiliate.summary")}</Text>
