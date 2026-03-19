@@ -7,7 +7,7 @@ import {
   useOrderlyContext,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { NetworkId } from "@orderly.network/types";
+import { ChainNamespace, NetworkId } from "@orderly.network/types";
 import { useAuthGuard } from "@orderly.network/ui-connector";
 import { useActionType } from "./hooks/useActionType";
 import { useChainSelect } from "./hooks/useChainSelect";
@@ -248,6 +248,9 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     "web3" | "exclusive_deposit"
   >("web3");
 
+  const showExclusiveDeposit =
+    account.walletAdapter?.chainNamespace !== ChainNamespace.solana;
+
   return {
     sourceToken,
     targetToken,
@@ -308,5 +311,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
     activeSubTab,
     setActiveSubTab,
+    showExclusiveDeposit,
   };
 };

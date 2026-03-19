@@ -72,6 +72,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     quantityNotional,
     activeSubTab,
     setActiveSubTab,
+    showExclusiveDeposit,
   } = props;
 
   const { t } = useTranslation();
@@ -241,12 +242,14 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             />
           </Flex>
         </TabPanel>
-        <TabPanel
-          title={t("transfer.deposit.tab.exchangeOrOtherWallet")}
-          value="exclusive_deposit"
-        >
-          <ExclusiveDeposit active={activeSubTab === "exclusive_deposit"} />
-        </TabPanel>
+        {showExclusiveDeposit && (
+          <TabPanel
+            title={t("transfer.deposit.tab.exchangeOrOtherWallet")}
+            value="exclusive_deposit"
+          >
+            <ExclusiveDeposit active={activeSubTab === "exclusive_deposit"} />
+          </TabPanel>
+        )}
       </Tabs>
     </Box>
   );
