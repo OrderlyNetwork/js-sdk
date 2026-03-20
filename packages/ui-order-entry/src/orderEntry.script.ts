@@ -209,6 +209,21 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     },
   );
 
+  const manualSetOrderValue = useMemoizedFn(
+    (
+      key: keyof typeof formattedOrder | string,
+      value: unknown,
+      options?: {
+        shouldUpdateLastChangedField?: boolean;
+      },
+    ) => {
+      // Manually triggered updates should mark the user as active for estLiqPrice window calculations.
+      lastUserActiveTimeRef.current = Date.now();
+      console.log("manualSetOrderValue----", key, value, options);
+      setOrderValue(key, value, options);
+    },
+  );
+
   const onTPSLSwitchChanged = (state: boolean) => {
     setTpslSwitch(state);
     if (state) {
@@ -420,31 +435,40 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   }, [tpslSwitch]);
 
-  /** Track user activity via core order fields (price, quantity, side) to drive estLiqPrice active window. */
-  useEffect(() => {
-    lastUserActiveTimeRef.current = Date.now();
-  }, [
-    formattedOrder.order_price,
-    formattedOrder.order_quantity,
-    formattedOrder.side,
-  ]);
-
   /**
    * Broadcast estimated liquidation price for TradingView chart liquidation line (avoids parent state / callback loops).
    * Includes a user-activity flag so downstream consumers can decide whether to treat this estLiqPrice as active.
    */
   useEffect(() => {
+    let estLiqPrice = state.estLiqPrice;
+    if (
+      estLiqPrice == null ||
+      formattedOrder.side == null ||
+      state.markPrice == null
+    ) {
+      estLiqPrice = null;
+    } else if (
+      (formattedOrder.side === OrderSide.BUY &&
+        estLiqPrice > state.markPrice) ||
+      (formattedOrder.side === OrderSide.SELL && estLiqPrice < state.markPrice)
+    ) {
+      estLiqPrice = null;
+    }
+
     const lastActive = lastUserActiveTimeRef.current;
     const now = Date.now();
     const isUserActive =
       now - lastActive <= ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS;
 
+    console.log("isUserActive", isUserActive, now, lastActive);
+
     ee.emit(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, {
       symbol,
-      estLiqPrice: state.estLiqPrice ?? null,
+      estLiqPrice,
       isUserActive,
     });
-  }, [ee, symbol, state.estLiqPrice]);
+  }, [ee, symbol, state.estLiqPrice, state.markPrice, formattedOrder.side]);
+
   useEffect(() => {
     setOrderValue("margin_mode", marginMode);
   }, [marginMode]);
@@ -457,6 +481,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     level: formattedOrder.level as OrderLevel,
     formattedOrder,
     setOrderValue,
+    manualSetOrderValue,
     setOrderValues,
     // account-level leverage (for other consumers)
     currentLeverage,

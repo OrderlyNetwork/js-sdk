@@ -1,70 +1,56 @@
-# utils
+# utils.ts
 
-## Overview
+## utils.ts responsibility
 
-Utilities for mapping browser language to locale codes and for locale-prefixed paths: parse browser language, strip or read locale prefix from pathname, and build localized paths with optional search params.
+Provides locale and path helpers: parse browser language to LocaleCode, remove locale prefix from pathname, get locale segment from pathname, and generate a path with locale prefix and optional search params.
 
-## Exports
+## utils.ts exports
 
-### `parseI18nLang(lang, localeCodes?, defaultLang?)`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| parseI18nLang | function | Normalize locale | (lang, localeCodes?, defaultLang?) => LocaleCode |
+| removeLangPrefix | function | Strip locale from path | (pathname, localeCodes?) => string |
+| getLocalePathFromPathname | function | Get locale segment | (pathname, localeCodes?) => string \| null |
+| generatePath | function | Path with locale + search | (params) => string |
 
-Maps a browser language string (e.g. `en-US`, `zh-CN`) to a supported locale code.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `lang` | `string` | Yes | Browser language (e.g. `navigator.language`) |
-| `localeCodes` | `LocaleCode[]` | No | Allowed codes; default `Object.values(LocaleEnum)` |
-| `defaultLang` | `LocaleCode` | No | Fallback; default `LocaleEnum.en` |
-
-Returns the matching `LocaleCode` or `defaultLang`. Uses the first two-letter match if full `lang` is not in `localeCodes`.
-
-**Examples:** `parseI18nLang('en-US')` → `'en'`, `parseI18nLang('zh-CN')` → `'zh'`, `parseI18nLang('ja')` → `'ja'`.
-
-### `removeLangPrefix(pathname, localeCodes?)`
-
-Removes a leading locale segment from `pathname` if it matches a known locale.
+## parseI18nLang parameters and behavior
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `pathname` | `string` | Yes | Pathname (e.g. `/en/perp/PERP_ETH_USDC`) |
-| `localeCodes` | `string[]` | No | Default `Object.values(LocaleEnum)` |
+| lang | string | yes | Browser language (e.g. en-US, zh-CN) |
+| localeCodes | LocaleCode[] | no | Allowed codes; default Object.values(LocaleEnum) |
+| defaultLang | LocaleCode | no | Fallback; default LocaleEnum.en |
 
-**Examples:** `removeLangPrefix('/en/perp/PERP_ETH_USDC')` → `'/perp/PERP_ETH_USDC'`, `removeLangPrefix('/markets')` → `'/markets'`.
+- Extracts 2-letter prefix with regex; if full lang in localeCodes returns it; else if prefix in localeCodes returns prefix; else returns defaultLang.
 
-### `getLocalePathFromPathname(pathname, localeCodes?)`
+## removeLangPrefix / getLocalePathFromPathname
 
-Returns the first path segment if it is a supported locale, else `null`.
+- **getLocalePathFromPathname**: pathname.split("/")[1]; if that segment is in localeCodes return it, else null.
+- **removeLangPrefix**: If getLocalePathFromPathname returns a segment, remove `/${segment}` from pathname (only when followed by /); else return pathname unchanged.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `pathname` | `string` | Yes | Pathname |
-| `localeCodes` | `string[]` | No | Default `Object.values(LocaleEnum)` |
+## generatePath parameters
 
-**Examples:** `getLocalePathFromPathname('/en/markets')` → `'en'`, `getLocalePathFromPathname('/markets')` → `null`.
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| path | string | yes | Base pathname |
+| locale | string | no | Locale prefix; default i18n.language or parseI18nLang |
+| search | string | no | Query string; default window.location.search |
 
-### `generatePath(params)`
+- If path already has valid locale prefix (from getLocalePathFromPathname), return path + search.
+- Else prepend `/${locale}` to path and append search.
 
-Builds a path with locale prefix and optional search. If `path` already has a valid locale prefix, it is left as-is and only `search` is appended. Otherwise the locale (from `params.locale` or current i18n language) is prepended.
+## utils.ts dependency
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `params.path` | `string` | Yes | Base path (e.g. `/markets`, `/perp/PERP_ETH_USDC`) |
-| `params.locale` | `string` | No | Locale prefix; default from `i18n.language` |
-| `params.search` | `string` | No | Query string; default `window.location.search` |
+- **Upstream**: constant (LocaleEnum), types (LocaleCode), i18n (for generatePath and parseI18nLang fallback).
+- **Downstream**: provider (parseI18nLang in initLanguage).
 
-**Examples:** `generatePath({ path: '/markets' })` → `'/en/markets?tab=spot'` (if search present); `generatePath({ path: '/en/markets', search: '?tab=futures' })` → `'/en/markets?tab=futures'`.
-
-## Usage example
+## utils.ts Example
 
 ```typescript
-import {
-  parseI18nLang,
-  removeLangPrefix,
-  getLocalePathFromPathname,
-  generatePath,
-} from "@orderly.network/i18n";
+import { parseI18nLang, removeLangPrefix, getLocalePathFromPathname, generatePath } from "@orderly.network/i18n";
 
-const code = parseI18nLang(navigator.language);
-const pathWithoutLocale = removeLangPrefix(location.pathname);
-const pathWithLocale = generatePath({ path: "/markets", locale: "zh" });
+parseI18nLang("en-US"); // "en"
+removeLangPrefix("/en/perp/PERP_ETH_USDC"); // "/perp/PERP_ETH_USDC"
+getLocalePathFromPathname("/en/markets"); // "en"
+generatePath({ path: "/markets", locale: "zh" }); // "/zh/markets" + search
 ```

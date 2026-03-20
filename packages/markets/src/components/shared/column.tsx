@@ -11,6 +11,9 @@ import { SymbolDisplay } from "../symbolDisplay";
 export function getSymbolColumn(
   favorite: FavoriteInstance,
   isFavoriteList = false,
+  options?: {
+    stackLeverageInSecondRow?: boolean;
+  },
 ) {
   return {
     title: i18n.t("common.symbol"),
@@ -39,19 +42,28 @@ export function getSymbolColumn(
         );
       }
 
+      const stackLeverageInSecondRow = options?.stackLeverageInSecondRow;
+
       return (
-        <Flex gapX={1}>
+        <Flex gapX={1} itemAlign="center">
           {favoritesIcon}
-          <Flex direction="column" itemAlign="start" gapY={1}>
+          <Flex
+            direction={stackLeverageInSecondRow ? "column" : "row"}
+            itemAlign={stackLeverageInSecondRow ? "start" : "center"}
+            gapY={stackLeverageInSecondRow ? 1 : undefined}
+            gapX={stackLeverageInSecondRow ? undefined : 1}
+          >
             <Flex gapX={1} itemAlign="center">
               <TokenIcon symbol={value} className="oui-size-[18px]" />
               <SymbolDisplay formatString="base" size="2xs" record={record}>
                 {value}
               </SymbolDisplay>
             </Flex>
-            <Badge size="xs" color="primary">
-              {record.leverage}x
-            </Badge>
+            {typeof record.leverage === "number" && (
+              <Badge size="xs" color="primary">
+                {record.leverage}x
+              </Badge>
+            )}
           </Flex>
         </Flex>
       );

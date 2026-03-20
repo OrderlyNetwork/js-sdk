@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.14.1
+
+### Patch Changes
+
+- publish
+- 2bb6924: publish
+
+## 0.14.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.14.0
 
 ### Minor Changes

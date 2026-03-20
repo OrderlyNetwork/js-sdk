@@ -1,4 +1,5 @@
 import { path } from "ramda";
+import { MarginMode } from "@orderly.network/types";
 import { commify } from "@orderly.network/utils";
 import { BasePaint, DrawOptions, layoutInfo } from "./basePaint";
 import { qrPaint } from "./qrPaint";
@@ -15,6 +16,10 @@ export class DataPaint extends BasePaint {
   private BROKER_BADGE_HEIGHT = 18;
   private BROKER_BADGE_PADDING_X = 8;
   private BROKER_BADGE_RADIUS = 4;
+
+  private formatMarginMode(marginMode: MarginMode) {
+    return marginMode === MarginMode.ISOLATED ? "Isolated" : "Cross";
+  }
 
   async draw(options: DrawOptions) {
     const needDrawDetails =
@@ -201,8 +206,7 @@ export class DataPaint extends BasePaint {
       }
 
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
-      const marginModeText =
-        marginMode.charAt(0).toUpperCase() + marginMode.slice(1);
+      const marginModeText = this.formatMarginMode(marginMode);
       prevElementBoundingBox = this._drawText(marginModeText, {
         color: layout.color,
         left: left,

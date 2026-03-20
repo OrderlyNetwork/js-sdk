@@ -1,15 +1,29 @@
-# connector
+# connector.ts
 
-## Overview
+## connector.ts responsibility
 
-Wallet and network: testnet/mainnet, connect/disconnect, create account, enable trading, Ledger (create account, enable trading, sign message failed), wrong network, remember me, referral code placeholder/errors, toasts (wallet connected, network switched, switch chain failed), trade/setUp tooltips, Privy (login, email/Google/Twitter/Telegram, add/create wallet, terms, PWA steps), and supported chain tips.
+Provides wallet and onboarding copy: testnet/mainnet, connect/disconnect wallet, create account, enable trading, switch network, wrong network tooltip, expired session, remember me, referral code placeholder and validation, error messages (something went wrong, user rejected), wallet connected/network switched, trade/setUp tooltips (connect, create account, enable trading), Ledger sign message failed, and Privy login, email, Google, Twitter, Telegram, wallet add/create, terms of use, supported chains, no wallet, PWA add-to-home instructions.
 
-## Exports
+## connector.ts exports
 
-### `connector`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| connector | object | Key-value map | Keys under "connector.*" |
+| Connector | type | typeof connector | Type export |
 
-Object of keys under `connector.*`: e.g. `connector.connectWallet`, `connector.createAccount.description`, `connector.privy.termsOfUse`, `connector.privy.pwa.addToHomeScreen`.
+## connector.ts key groups (sample)
 
-### `Connector` (type)
+| Theme | Examples |
+|-------|----------|
+| Connect | connector.connectWallet, connector.createAccount.description |
+| Trading | connector.enableTrading, connector.trade.connectWallet.tooltip |
+| Network | connector.wrongNetwork.tooltip, connector.switchChain.failed |
+| Privy | connector.privy.loginIn, connector.privy.addEvmWallet |
 
-`typeof connector`.
+## connector.ts Example
+
+```typescript
+t("connector.connectWallet");
+t("connector.wrongNetwork.tooltip");
+t("connector.privy.termsOfUse");
+```

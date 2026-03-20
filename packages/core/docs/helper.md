@@ -1,78 +1,79 @@
-# helper
+# helper.ts
 
-> Location: `packages/core/src/helper.ts`
+## helper.ts Responsibility
 
-## Overview
+Provides signer factories (getMockSigner, getDefaultSigner) and EIP-712 message builders for Orderly: generateRegisterAccountMessage, generateAddOrderlyKeyMessage, generateSettleMessage, generateDexRequestMessage. Uses keyStore, signer, utils (getTimestamp, SignatureDomain) and types from @orderly.network/types (definedTypes, DEFAUL_ORDERLY_KEY_SCOPE).
 
-Helper functions for signers and EIP-712 message generation: mock/default signer factories and typed data builders for register account, add orderly key, settle PnL, and dex request.
+## helper.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| getMockSigner | function | Factory | Returns BaseSigner with MockKeyStore(secretKey) |
+| getDefaultSigner | function | Factory | Returns BaseSigner with LocalStorageStore("") (browser only) |
+| getVerifyingContract | function | Util | Returns fixed verify contract address |
+| getDomain | function | Util | Returns SignatureDomain for chainId (optionally on-chain verifyingContract) |
+| generateRegisterAccountMessage | function | Message | Registration EIP-712 message and toSignatureMessage |
+| generateAddOrderlyKeyMessage | function | Message | AddOrderlyKey EIP-712 message and toSignatureMessage |
+| generateSettleMessage | function | Message | SettlePnl EIP-712 message and toSignatureMessage |
+| generateDexRequestMessage | function | Message | DexRequest EIP-712 message and toSignatureMessage |
 
-### getMockSigner(secretKey?)
+## generateRegisterAccountMessage Input and Output
 
-Returns a `BaseSigner` using `MockKeyStore` with optional secret key (default fixed key). For testing.
+- **Input**: { chainId, registrationNonce, brokerId, timestamp? }
+- **Output**: [message, toSignatureMessage] as const (message: brokerId, chainId, timestamp, registrationNonce; toSignatureMessage: domain, message, primaryType "Registration", types).
 
-### getDefaultSigner()
+## generateAddOrderlyKeyMessage Input and Output
 
-Returns a `BaseSigner` using `LocalStorageStore`. Browser only; throws if not in browser.
+- **Input**: { publicKey, chainId, brokerId, primaryType, expiration?, timestamp?, scope?, tag?, subAccountId? }
+- **Output**: [message, toSignatureMessage] (primaryType from inputs; message includes orderlyKey, scope, expiration, optional tag/subAccountId).
 
-### getVerifyingContract()
+## generateSettleMessage Input and Output
 
-Returns default verify contract address string.
+- **Input**: { chainId, brokerId, settlePnlNonce, domain }
+- **Output**: [message, toSignatureMessage] (primaryType "SettlePnl").
 
-### getDomain(chainId, onChainDomain?)
+## generateDexRequestMessage Input and Output
 
-Returns EIP-712 domain: `{ name, version, chainId, verifyingContract }`.
+- **Input**: { chainId, payloadType, nonce, receiver, amount, vaultId, token, dexBrokerId, domain, timestamp? }
+- **Output**: [message, toSignatureMessage] (primaryType "DexRequest").
 
-### generateRegisterAccountMessage(inputs)
+## helper.ts Dependencies and Call Relationships
 
-Builds register-account message and typed data for signing.
+- **Upstream**: keyStore (MockKeyStore, LocalStorageStore), signer (BaseSigner), utils (getTimestamp, SignatureDomain), @orderly.network/types (definedTypes, DEFAUL_ORDERLY_KEY_SCOPE).
+- **Downstream**: Account and wallet adapters use these for signing flows; getMockSigner/getDefaultSigner for tests or default signer.
 
-| Input | Type | Description |
-| ----- | ---- | ----------- |
-| chainId | number | Chain ID. |
-| registrationNonce | number | Nonce from API. |
-| brokerId | string | Broker ID. |
-| timestamp? | number | Defaults to getTimestamp(). |
+## helper.ts Errors and Boundaries
 
-Returns `[message, toSignatureMessage]` (tuple).
+| Scenario | Condition | Behavior | Handling |
+|----------|-----------|----------|----------|
+| getDefaultSigner in non-browser | typeof window === "undefined" | throw "the default signer only supports browsers." | Use only in browser or provide keyStore |
 
-### generateAddOrderlyKeyMessage(inputs)
+## helper.ts Example
 
-Builds add-orderly-key message and typed data.
-
-| Input | Type | Description |
-| ----- | ---- | ----------- |
-| publicKey | string | Orderly public key. |
-| chainId | number | Chain ID. |
-| primaryType | keyof typeof definedTypes | EIP-712 primary type. |
-| brokerId | string | Broker ID. |
-| expiration? | number | Default 365. |
-| timestamp? | number | Default getTimestamp(). |
-| scope?, tag?, subAccountId? | optional | Key scope/tag/sub-account. |
-
-Returns `[message, toSignatureMessage]` (tuple).
-
-### generateSettleMessage(inputs)
-
-Builds settle PnL message and typed data. Inputs: `chainId`, `brokerId`, `settlePnlNonce`, `domain`.
-
-### generateDexRequestMessage(inputs)
-
-Builds dex request message and typed data. Inputs: `chainId`, `payloadType`, `nonce`, `receiver`, `amount`, `vaultId`, `token`, `dexBrokerId`, `domain`, `timestamp?`.
-
-## Usage Example
-
-```ts
+```typescript
 import {
   getMockSigner,
+  getDefaultSigner,
+  getDomain,
   generateRegisterAccountMessage,
   generateAddOrderlyKeyMessage,
+  generateSettleMessage,
+  generateDexRequestMessage,
 } from "@orderly.network/core";
-const signer = getMockSigner();
-const [msg, toSign] = generateRegisterAccountMessage({
+
+const signer = getMockSigner(); // or getDefaultSigner()
+const [regMsg, regToSign] = generateRegisterAccountMessage({
   chainId: 421614,
   registrationNonce: 1,
   brokerId: "orderly",
+});
+// Sign regToSign with wallet, then send to /v1/register_account
+
+const [addKeyMsg, addKeyToSign] = generateAddOrderlyKeyMessage({
+  publicKey: "ed25519:...",
+  chainId: 421614,
+  brokerId: "orderly",
+  primaryType: "AddOrderlyKey",
+  expiration: 365,
 });
 ```

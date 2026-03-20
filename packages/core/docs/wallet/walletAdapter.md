@@ -1,45 +1,74 @@
-# walletAdapter
+# walletAdapter.ts
 
-> Location: `packages/core/src/wallet/walletAdapter.ts`
+## walletAdapter.ts Responsibility
 
-## Overview
+Defines the main wallet adapter contract for Orderly: `WalletAdapter` interface (chainNamespace, chainId, address, lifecycle active/update/deactivate, generateSecretKey, EIP-712 message generators for register/withdraw/internalTransfer/settle/addOrderlyKey/dexRequest, call/sendTransaction/estimateGasFee/callOnChain, getBalance/getBalances, parseUnits/formatUnits, pollTransactionReceiptWithBackoff, on/off). Also exports input types: RegisterAccountInputs, WithdrawInputs, InternalTransferInputs, SettleInputs, AddOrderlyKeyInputs, DexRequestInputs, Message.
 
-Main wallet adapter interface for core: chain namespace, address, chainId, lifecycle (active/update/deactivate), message generation for register, withdraw, internal transfer, settle, addOrderlyKey, dexRequest, and contract call/send/balance/parseUnits/formatUnits. Used by `Account` and `WalletAdapterManager`.
+## walletAdapter.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| ChainType | type | "EVM" \| "SOL" | Chain type |
+| Message | type | { message, signatured } | Signed message shape |
+| RegisterAccountInputs | type | Input | registrationNonce, brokerId, timestamp |
+| WithdrawInputs | type | Input | brokerId, receiver, token, amount, nonce, timestamp, verifyContract? |
+| InternalTransferInputs | type | Input | receiver, token, amount, nonce, verifyContract? |
+| SettleInputs | type | Input | brokerId, settlePnlNonce, timestamp, verifyContract? |
+| AddOrderlyKeyInputs | type | Input | publicKey, brokerId, expiration, timestamp, scope?, tag?, subAccountId? |
+| DexRequestInputs | type | Input | payloadType, nonce, receiver, amount, vaultId, token, dexBrokerId, timestamp, domain |
+| WalletAdapter | interface | Contract | Full adapter API |
 
-### ChainType
+## WalletAdapter Responsibility
 
-`"EVM" | "SOL"`.
+Single interface for EVM and Solana (and other) wallets: lifecycle, EIP-712 message generation for Orderly flows, contract call/sendTransaction, balance and units. Account and Assets use the active adapter from WalletAdapterManager.
 
-### Message (type)
+## WalletAdapter Key Members
 
-`{ message: { chainType, ... }; signatured: string }`.
+| Member | Type | Description |
+|--------|------|-------------|
+| chainNamespace | ChainNamespace | EVM / SOL |
+| chainId | number (get/set) | Current chain ID |
+| address | string (get/set) | Wallet address |
+| active(config) | void | Activate with config |
+| update(config) | void | Update config |
+| deactivate() | void | Tear down |
+| generateSecretKey() | string | New Ed25519 secret key (base58) |
+| generateRegisterAccountMessage(inputs) | Promise<Message> | Registration EIP-712 |
+| generateWithdrawMessage(inputs) | Promise<Message & { domain }> | Withdraw EIP-712 |
+| generateInternalTransferMessage(inputs) | Promise<Message & { domain }> | Internal transfer EIP-712 |
+| generateSettleMessage(inputs) | Promise<Message & { domain }> | Settle EIP-712 |
+| generateAddOrderlyKeyMessage(inputs) | Promise<Message> | Add Orderly Key EIP-712 |
+| generateDexRequestMessage(inputs) | Promise<Message & { domain }> | DEX request EIP-712 |
+| call(address, method, params, options?) | Promise<any> | Contract read |
+| sendTransaction(contractAddress, method, payload, options) | Promise<any> | Contract write |
+| estimateGasFee?(...) | Promise<bigint> | Gas estimate (optional) |
+| callOnChain(chain, address, method, params, options) | Promise<any> | Read on another chain |
+| getBalance() | Promise<bigint> | Native balance |
+| getBalances(addresses) | Promise<any> | Token balances |
+| pollTransactionReceiptWithBackoff(txHash, ...) | Promise<any> | Wait for receipt |
+| parseUnits, formatUnits | functions | Amount encoding |
+| on, off | event | Event subscription |
 
-### Input types
+## walletAdapter.ts Dependencies and Call Relationships
 
-- **RegisterAccountInputs** – registrationNonce, brokerId, timestamp.
-- **WithdrawInputs** – brokerId, receiver, token, amount, nonce, timestamp, verifyContract?.
-- **InternalTransferInputs** – receiver, token, amount, nonce, verifyContract?.
-- **SettleInputs** – brokerId, settlePnlNonce, timestamp, verifyContract?.
-- **AddOrderlyKeyInputs** – publicKey, brokerId, expiration, timestamp, scope?, tag?, subAccountId?.
-- **DexRequestInputs** – payloadType, nonce, receiver, amount, vaultId, token, dexBrokerId, timestamp, domain.
+- **Upstream**: @orderly.network/types (API, ChainNamespace), ../utils (SignatureDomain).
+- **Downstream**: baseWalletAdapter.ts implements; Account/Assets use adapter for signing and contract calls.
 
-### WalletAdapter\<Config\> (interface)
+## walletAdapter.ts Example
 
-- **chainNamespace**, **chainId** (get/set), **address** (get/set).
-- **active(config)**, **update(config)**, **deactivate()**.
-- **generateSecretKey(): string**.
-- **generateRegisterAccountMessage(inputs)**, **generateWithdrawMessage(inputs)**, **generateInternalTransferMessage(inputs)**, **generateSettleMessage(inputs)**, **generateAddOrderlyKeyMessage(inputs)**, **generateDexRequestMessage(inputs)**.
-- **call**, **sendTransaction**, **callOnChain**, **getBalance**, **parseUnits**, **formatUnits**, **pollTransactionReceiptWithBackoff**, **on**, **off**.
+```typescript
+import type {
+  WalletAdapter,
+  RegisterAccountInputs,
+  WithdrawInputs,
+  Message,
+} from "@orderly.network/core";
 
-## Usage Example
-
-```ts
-// Implemented by EVM/Solana adapters; used via WalletAdapterManager.
-const msg = await walletAdapter.generateRegisterAccountMessage({
-  registrationNonce,
-  brokerId,
-  timestamp,
+const adapter: WalletAdapter = evmWalletAdapter;
+const msg: Message = await adapter.generateRegisterAccountMessage({
+  registrationNonce: 1,
+  brokerId: "orderly",
+  timestamp: Date.now(),
 });
+await adapter.call(tokenAddress, "balanceOf", [userAddress], { abi });
 ```

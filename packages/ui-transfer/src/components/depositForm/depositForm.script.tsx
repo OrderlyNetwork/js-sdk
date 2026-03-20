@@ -133,7 +133,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   } = useDepositFormQuantities({
     sourceToken,
     targetToken,
-    balance,
+    balance: balance || "0",
     quantity,
     needSwap,
     swapQuantity,

@@ -1,18 +1,22 @@
-# version
+# version.ts
 
-## Overview
+## version.ts responsibility
 
-Package version string. Also sets `window.__ORDERLY_VERSION__["@orderly.network/i18n"]` in browser environments for runtime version reporting.
+Exposes the package version string and attaches it to window.__ORDERLY_VERSION__["@orderly.network/i18n"] when running in a browser. Used for diagnostics and version reporting.
 
-## Exports
+## version.ts exports
 
-### Default export
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| default | string | Version | "2.10.2" |
 
-String version (e.g. `"2.9.1"`).
+## version.ts side effect
 
-## Usage example
+- If typeof window !== "undefined": window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {}; window.__ORDERLY_VERSION__["@orderly.network/i18n"] = "2.10.2".
+
+## version.ts Example
 
 ```typescript
-import version from "@orderly.network/i18n/src/version";
-// or use window.__ORDERLY_VERSION__["@orderly.network/i18n"]
+import version from "@orderly.network/i18n/version";
+console.log(version); // "2.10.2"
 ```

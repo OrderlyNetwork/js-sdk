@@ -1,17 +1,36 @@
-# pages/setting
+# setting – directory index
 
-## Overview
+## Directory responsibility
 
-Setting page: widget, desktop/mobile UI, script, and page component.
+Settings page: theme, sound, and other user preferences. Exposes SettingWidget and SettingPage.
+
+## Key entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| SettingWidget | setting.widget.tsx | Widget container |
+| SettingPage | setting.page.tsx | Page component |
+| setting.ui | setting.ui.tsx | Main UI (shared) |
+| setting.ui.desktop | setting.ui.desktop.tsx | Desktop UI |
+| setting.ui.mobile | setting.ui.mobile.tsx | Mobile UI |
+| setting.script | setting.script.tsx | Script/state |
+| themeSettingCard | components/themeSettingCard.tsx | Theme setting card |
+| soundRadioButton | components/soundRadioButton.tsx | Sound toggle |
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [index.ts](index.md) | TS | Module exports. |
-| [setting.page.tsx](setting.page.md) | TSX | Setting page. |
-| [setting.widget.tsx](setting.widget.md) | TSX | Setting widget. |
-| [setting.ui.tsx](setting.ui.md) | TSX | Setting UI (wrapper). |
-| [setting.ui.desktop.tsx](setting.ui.desktop.md) | TSX | Desktop setting UI. |
-| [setting.ui.mobile.tsx](setting.ui.mobile.md) | TSX | Mobile setting UI. |
-| [setting.script.tsx](setting.script.md) | TSX | Setting script. |
+| File | Language | Link |
+|------|----------|------|
+| index.ts | TypeScript | [index.md](index.md) |
+| setting.widget.tsx | TSX | [setting.widget.md](setting.widget.md) |
+| setting.page.tsx | TSX | [setting.page.md](setting.page.md) |
+| setting.ui.tsx | TSX | [setting.ui.md](setting.ui.md) |
+| setting.ui.desktop.tsx | TSX | [setting.ui.desktop.md](setting.ui.desktop.md) |
+| setting.ui.mobile.tsx | TSX | [setting.ui.mobile.md](setting.ui.mobile.md) |
+| setting.script.tsx | TSX | [setting.script.md](setting.script.md) |
+| components/themeSettingCard.tsx | TSX | [components/themeSettingCard.md](components/themeSettingCard.md) |
+| components/soundRadioButton.tsx | TSX | [components/soundRadioButton.md](components/soundRadioButton.md) |
+
+## Subdirectories
+
+[components](components/index.md) – Theme and sound components.

@@ -64,7 +64,7 @@ export const useOrderColumn = (props: {
       case TabType.all:
         return [
           instrument({
-            width: 172,
+            width: 174,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -296,7 +296,7 @@ function instrument(option?: {
       const showGray = grayCell(record);
 
       return (
-        <Flex gap={2}>
+        <Flex gap={2} className="oui-py-1">
           <div
             className={cn(
               "oui-h-[34px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
@@ -305,14 +305,14 @@ function instrument(option?: {
                 : "oui-bg-trade-loss",
             )}
           />
-          <Flex direction="column" itemAlign={"start"}>
+          <Flex direction="column" itemAlign={"start"} gap={1}>
             <OrderSymbolCell
               symbol={value}
               onSymbolChange={option?.onSymbolChange}
             />
 
             {option?.showType && (
-              <Flex direction={"row"} gap={1}>
+              <Flex direction={"row"} gap={1} wrap="wrap">
                 {parseBadgesFor(record)?.map((e, index) => (
                   <Badge
                     key={index}

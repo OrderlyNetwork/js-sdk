@@ -218,7 +218,9 @@ export const useDeposit = (options: DepositOptions) => {
       .then((result: any) => {
         updateAllowanceWhenTxSuccess(result.hash);
         // when deposit request success, update balance
-        setBalance((value) => new Decimal(value).sub(quantity).toString());
+        setBalance((value) =>
+          value ? new Decimal(value).sub(quantity).toString() : "0",
+        );
 
         track(TrackerEventName.depositSuccess, {
           wallet: state?.connectWallet?.name,
@@ -280,18 +282,18 @@ function useBalance(options: {
   status: AccountStatusEnum;
 }) {
   const { srcToken, address, decimals, account, status } = options;
-  const [balance, setBalance] = useState("0");
+  const [balance, setBalance] = useState<string | null>(null);
 
   const fetchBalance = useCallback(
     async (address: string, decimals?: number) => {
       try {
         if (isNativeTokenChecker(address)) {
-          return account.assetsManager.getNativeBalance({
+          return await account.assetsManager.getNativeBalance({
             decimals,
           });
         }
 
-        return account.assetsManager.getBalance(address, {
+        return await account.assetsManager.getBalance(address, {
           decimals,
         });
       } catch (err: any) {
@@ -354,23 +356,18 @@ function useBalance(options: {
     },
   );
 
+  // sync balance from SWR data; reset to null (loading) when address changes
   useEffect(() => {
     if (swrBalance !== undefined) {
       setBalance(swrBalance || "0");
+    } else {
+      setBalance(null);
     }
-  }, [swrBalance]);
-
-  // reset balance when address or decimals change
-  // useEffect(() => {
-  //   if (!tokenAddress) {
-  //     setBalance("0");
-  //     return;
-  //   }
-  // }, [tokenAddress, decimals]);
+  }, [swrBalance, address]);
 
   return {
     balance,
-    balanceRevalidating,
+    balanceRevalidating: balanceRevalidating || balance === null,
     setBalance,
     fetchBalance,
     fetchBalances,

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useMemo } from "react";
 import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -270,6 +270,20 @@ export const SymbolInfo = (props: {
       );
     }
 
+    if (record.margin_mode != null) {
+      list.push(
+        <Badge
+          key={`margin-mode-${record.margin_mode}`}
+          color="neutral"
+          size="xs"
+        >
+          {record.margin_mode === MarginMode.ISOLATED
+            ? t("marginMode.isolated")
+            : t("marginMode.cross")}
+        </Badge>,
+      );
+    }
+
     list.push(
       <LeverageBadge
         key={`leverage-${record.symbol}`}
@@ -282,7 +296,7 @@ export const SymbolInfo = (props: {
   }, [record, t]);
 
   return (
-    <Flex gap={2} height={48}>
+    <Flex gap={2} className="oui-py-1">
       <Box
         width={4}
         height={38}
@@ -292,7 +306,7 @@ export const SymbolInfo = (props: {
         )}
       />
 
-      <Flex direction={"column"} itemAlign={"start"}>
+      <Flex direction={"column"} itemAlign={"start"} gap={1}>
         <PositionSymbolCell
           symbol={record.symbol}
           onSymbolChange={onSymbolChange}

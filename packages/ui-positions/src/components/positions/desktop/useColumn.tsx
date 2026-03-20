@@ -64,7 +64,7 @@ export const useColumn = (config: ColumnConfig) => {
           // return r2.symbol.localeCompare(r1.symbol);
         },
         render: (value: string, record) => (
-          <Flex gap={2}>
+          <Flex gap={2} className="oui-py-1">
             <Box
               width={4}
               height={24}
@@ -76,18 +76,20 @@ export const useColumn = (config: ColumnConfig) => {
               )}
             />
             <Flex direction="column" itemAlign="start" gap={1}>
-              <PositionSymbolCell
-                symbol={value}
-                onSymbolChange={onSymbolChange}
-              />
-              <Flex gap={1}>
+              <Flex gap={1} itemAlign="center">
+                <PositionSymbolCell
+                  symbol={value}
+                  onSymbolChange={onSymbolChange}
+                />
+                <RwaStatusTag symbol={value} />
+              </Flex>
+              <Flex gap={1} wrap="wrap">
                 <LeverageBadge
                   symbol={value}
                   leverage={record.leverage}
                   modalId={SymbolLeverageDialogId}
                   marginMode={record.margin_mode as any}
                 />
-                <RwaStatusTag symbol={value} />
               </Flex>
             </Flex>
           </Flex>

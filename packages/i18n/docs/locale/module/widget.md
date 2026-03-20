@@ -1,15 +1,20 @@
-# widget
+# widget.ts
 
-## Overview
+## widget.ts responsibility
 
-Misc widget copy: asset history status (pending, confirm, processing, completed, failed, pending rebalance); link device (QR, scan, success, tooltips); settle PnL (warning, description, unsettled tooltip, settlement status/error); language switcher; announcement types; maintenance dialog/tips; restricted access; sub-account modal (switch, create, edit, nickname); funding (fee, rate, payment type); error boundary; DMM maker/taker.
+Provides widget-level copy: asset history status (pending, confirm, processing, completed, failed, pending rebalance), link device (QR code loading/link mobile/success/copy URL, scan QR, tooltip, connected description), settle (settle PnL, warning, description, unsettled tooltip, settlement requested/completed/failed, error), language switcher (language, tooltip, AI translation tips), announcement types (listing, maintenance, delisting), maintenance dialog and tips, restricted info (description, access restricted, agree), sub-account modal (switch account, main/sub accounts, current, no account, create max/title/description/nickname/success/failed, edit title/nickname/success/failed), funding (funding fee, rate, annual rate, payment type paid/received), left nav feedback, error boundary (title, description, refresh), DMM maker/taker.
 
-## Exports
+## widget.ts exports
 
-### `widget`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| widget | object | Key-value map | Keys under "assetHistory.*", "linkDevice.*", "settle.*", "languageSwitcher.*", "announcement.*", "maintenance.*", "restrictedInfo.*", "subAccount.*", "funding.*", "leftNav.*", "errorBoundary.*", "dmm.*" |
+| Widget | type | typeof widget | Type export |
 
-Object of keys under various prefixes: `assetHistory.status.*`, `linkDevice.*`, `settle.*`, `languageSwitcher.*`, `announcement.type.*`, `maintenance.*`, `restrictedInfo.*`, `subAccount.modal.*`, `funding.*`, `errorBoundary.*`, `dmm.*`.
+## widget.ts Example
 
-### Type
-
-Export follows `typeof widget` pattern (no separate type name in file).
+```typescript
+t("settle.settlePnl");
+t("languageSwitcher.language");
+t("subAccount.modal.create.title");
+```

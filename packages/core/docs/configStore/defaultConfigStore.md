@@ -1,37 +1,56 @@
-# defaultConfigStore
+# defaultConfigStore.ts
 
-> Location: `packages/core/src/configStore/defaultConfigStore.ts`
+## defaultConfigStore.ts Responsibility
 
-## Overview
+Implements `ConfigStore` with a Map. Constructor accepts partial config (env, networkId, brokerId, brokerName, chainNamespace) and fills in URLs from `API_URLS[networkId]`. get(key) for object values (e.g. operatorUrl) may return value[chainNamespace]. Exports `API_URLS` and `URLS` type.
 
-Default implementation of `ConfigStore` with mainnet/testnet API URLs and operator URLs per chain namespace. Uses a Map and supports chain-namespace–scoped values for keys like `operatorUrl`.
+## defaultConfigStore.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| URLS | type | Shape | apiBaseUrl, publicWsUrl, privateWsUrl, operatorUrl (Record ChainNamespace → string) |
+| API_URLS | constant | URLs | mainnet and testnet URL sets |
+| DefaultConfigStore | class | Impl | Map-based ConfigStore |
 
-### URLS (type)
+## DefaultConfigStore Responsibility
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| apiBaseUrl | string | REST API base. |
-| publicWsUrl | string | Public WebSocket. |
-| privateWsUrl | string | Private WebSocket. |
-| operatorUrl | Record\<ChainNamespaceType, string\> | Operator URL per chain. |
+Provides the default configuration for Orderly: mainnet/testnet API and WS URLs, operator URLs per chain namespace, and broker/env/networkId/chainNamespace. Used by Account and rest of core.
 
-### API_URLS (constant)
+## DefaultConfigStore Constructor Input
 
-Record\<NetworkId, URLS\> for `mainnet` and `testnet` (orderly.org and testnet endpoints).
+| Key | Default | Description |
+|-----|---------|-------------|
+| env | "prod" | Environment |
+| networkId | "mainnet" | mainnet \| testnet |
+| brokerId | "orderly" | Broker ID |
+| brokerName | "Orderly" | Broker name |
+| chainNamespace | ChainNamespace.evm | EVM \| SOL |
 
-### DefaultConfigStore (class)
+## DefaultConfigStore Methods
 
-Implements `ConfigStore`. Constructor: `(init: Partial\<Record\<ConfigKey, any\>\>)`. Defaults: env "prod", networkId "mainnet", brokerId "orderly", brokerName "Orderly", chainNamespace EVM. `get(key)` may return value for current chainNamespace when value is an object (e.g. operatorUrl). `clear()` throws.
+| Method | Description |
+|--------|-------------|
+| get<T>(key) | map.get(key); if value is object and not null, return value[get("chainNamespace")] for chain-specific keys |
+| getOr<T>(key, defaultValue) | map.get(key) ?? defaultValue |
+| set<T>(key, value) | map.set(key, value) |
+| clear() | throw "Method not implemented." |
 
-## Usage Example
+## API_URLS Shape
 
-```ts
+- mainnet: apiBaseUrl, publicWsUrl, privateWsUrl, operatorUrl (EVM, SOL).
+- testnet: same keys, testnet hostnames.
+
+## defaultConfigStore.ts Dependencies and Call Relationships
+
+- **Upstream**: configStore (ConfigKey, ConfigStore), @orderly.network/types (ChainNamespace, NetworkId).
+- **Downstream**: Account and app bootstrap use DefaultConfigStore; core uses get("apiBaseUrl"), get("brokerId"), get("networkId"), get("env"), get("chainNamespace").
+
+## defaultConfigStore.ts Example
+
+```typescript
 import { DefaultConfigStore, API_URLS } from "@orderly.network/core";
-const store = new DefaultConfigStore({
-  networkId: "testnet",
-  brokerId: "my_broker",
-});
-const url = store.get("apiBaseUrl");
+
+const config = new DefaultConfigStore({ networkId: "testnet", brokerId: "my_broker" });
+const apiBaseUrl = config.get<string>("apiBaseUrl");
+const operatorUrl = config.get("operatorUrl");
 ```

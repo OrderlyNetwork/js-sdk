@@ -1,6 +1,6 @@
 import { utils } from "@orderly.network/hooks";
 import { i18n } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
+import { MarginMode, OrderSide } from "@orderly.network/types";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -17,13 +17,42 @@ export const upperCaseFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 };
 
+export const normalizeMarginMode = (
+  value?: MarginMode | 1 | 0 | null,
+): MarginMode | undefined => {
+  if (value === 1 || value === MarginMode.ISOLATED) {
+    return MarginMode.ISOLATED;
+  }
+
+  if (value === 0 || value === MarginMode.CROSS) {
+    return MarginMode.CROSS;
+  }
+
+  return undefined;
+};
+
+const getMarginModeBadges = (record: any): string[] => {
+  const marginMode = normalizeMarginMode(record?.margin_mode);
+
+  if (marginMode === MarginMode.ISOLATED) {
+    return [i18n.t("marginMode.isolated")];
+  }
+
+  if (marginMode === MarginMode.CROSS) {
+    return [i18n.t("marginMode.cross")];
+  }
+
+  return [];
+};
+
 /**
  * order_type: LIMIT、MARKET、CLOSE_POSITION
  * algo_type: STOP、TPSL、positional_TPSL、BRACKET
  */
-export function parseBadgesFor(record: any): undefined | string[] {
+const getOrderTypeBadges = (record: any): string[] => {
   const orderType = record.type;
   const algoType = record.algo_type;
+
   if (typeof orderType !== "undefined") {
     const list: string[] = [];
 
@@ -116,7 +145,15 @@ export function parseBadgesFor(record: any): undefined | string[] {
     return list;
   }
 
-  return undefined;
+  return [];
+};
+
+export function parseBadgesFor(record: any): undefined | string[] {
+  const orderTypeBadges = getOrderTypeBadges(record);
+  const marginModeBadges = getMarginModeBadges(record);
+  const badges = [...orderTypeBadges, ...marginModeBadges];
+
+  return badges.length ? badges : undefined;
 }
 
 export function grayCell(record: any): boolean {

@@ -1,15 +1,20 @@
-# tradingView
+# tradingView.ts
 
-## Overview
+## tradingView.ts responsibility
 
-TradingView chart: time intervals (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, 1D, 3D, 1W, 1M, more), line types (bars, candles, hollow candles, line, area, baseline), display control (buy/sell, limit orders, stop orders), and no-script message (license apply steps).
+Provides TradingView chart copy: time intervals (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 12h, 1D, 3D, 1W, 1M, more), line types (bars, candles, hollow candles, line, area, baseline), display controls (buy/sell, limit orders, stop orders), and no-script messages for custom TradingView license setup.
 
-## Exports
+## tradingView.ts exports
 
-### `tradingView`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| tradingView | object | Key-value map | Keys under "tradingView.*" |
+| TradingView | type | typeof tradingView | Type export |
 
-Object of keys under `tradingView.*`: e.g. `tradingView.timeInterval.1m`, `tradingView.lineType.candles`, `tradingView.noScriptSrc.1`.
+## tradingView.ts Example
 
-### `TradingView` (type)
-
-`typeof tradingView`.
+```typescript
+t("tradingView.timeInterval.1h");
+t("tradingView.lineType.candles");
+t("tradingView.noScriptSrc");
+```

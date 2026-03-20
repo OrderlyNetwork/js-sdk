@@ -1,37 +1,60 @@
 # icons.tsx
 
-## Overview
+## icons.tsx Responsibilities
 
-React SVG icon components used across the markets package. All accept standard `SVGProps<SVGSVGElement>` (e.g. `className`, `width`, `height`). Most use `currentColor` for fill.
+Exports SVG icon components used by the markets UI: edit, trash, all markets, new listings, favorites (filled/outline), circle plus, search, move to top, Orderly logo, add/active add, expand/collapse, filter, triangle down, arrows, sort (neutral/asc/desc), delete. All accept standard SVG props and optional className.
 
-## Exports (components)
+## icons.tsx Exports (Components)
 
-| Component | Description |
-|-----------|-------------|
-| `EditIcon` | Pencil/edit icon (16×16) |
-| `TrashIcon` | Trash bin (16×16) |
-| `AllMarketsIcon` | Bar chart style “all markets” (12×12) |
-| `NewListingsIcon` | New listings / lightbulb style (12×12) |
-| `FavoritesIcon` / `UnFavoritesIcon` | Star filled / outline (20×21) |
-| `FavoritesIcon2` / `UnFavoritesIcon2` | Alternate star icons (12×13) |
-| `CirclePlusIcon` | Circle with plus (18×18) |
-| `SearchIcon` | Magnifier (14×14) |
-| `MoveToTopIcon` | Move to top arrow (20×21) |
-| `OrderlyIcon` | Orderly logo mark (12×13) |
-| `TopIcon` | Top/arrow up (16×17) |
-| `DeleteIcon` | X/delete (16×17) |
-| `AddIcon` / `ActiveAddIcon` | Plus; ActiveAddIcon uses brand gradient |
-| `ExpandIcon` / `CollapseIcon` | Expand/collapse arrows (16×16) |
-| `FilterIcon` | Filter (18×18) |
-| `TriangleDownIcon` | Chevron down (12×12) |
-| `ArrowLeftIcon` / `ArrowRightIcon` | Left/right arrows (16×16) |
-| `SortingIcon` / `AscendingIcon` / `DescendingIcon` | Table sort indicators (10×10) |
+| Name | Role | Description |
+|------|------|-------------|
+| EditIcon | FC<SVGProps<SVGSVGElement>> | Pencil/edit icon |
+| TrashIcon | FC | Trash/delete icon |
+| AllMarketsIcon | FC | Bar-chart style “all markets” icon |
+| NewListingsIcon | FC | New listings icon |
+| FavoritesIcon | FC | Filled star (favorite), orange tint |
+| UnFavoritesIcon | FC | Outline star (unfavorite), hover orange |
+| CirclePlusIcon | FC | Circle with plus |
+| SearchIcon | FC | Magnifier |
+| MoveToTopIcon | FC | Move to top arrow |
+| OrderlyIcon | FC | Orderly logo mark |
+| FavoritesIcon2 | FC | Smaller filled star |
+| UnFavoritesIcon2 | FC | Smaller outline star |
+| TopIcon | FC | Top/up arrow |
+| DeleteIcon | FC | X/delete |
+| AddIcon | FC | Plus |
+| ActiveAddIcon | FC | Plus with brand gradient |
+| ExpandIcon | FC | Expand arrows |
+| CollapseIcon | FC | Collapse arrows |
+| FilterIcon | FC | Filter funnel |
+| TriangleDownIcon | FC | Triangle down |
+| ArrowLeftIcon | FC | Left arrow |
+| ArrowRightIcon | FC | Right arrow |
+| SortingIcon | FC | Neutral sort (both arrows) |
+| AscendingIcon | FC | Ascending sort highlight |
+| DescendingIcon | FC | Descending sort highlight |
 
-## Usage example
+## Props (All Icon Components)
+
+All icon components accept `SVGProps<SVGSVGElement>` (e.g. width, height, className, fill). Some (e.g. FavoritesIcon, UnFavoritesIcon) apply fixed classNames for color.
+
+## Dependencies
+
+- **Upstream**: `react`, `@orderly.network/ui` (cn).
+- **Downstream**: Markets list, favorites, funding, and sheet components.
+
+## icons.tsx Example
 
 ```tsx
-import { SearchIcon, FavoritesIcon } from "@orderly.network/markets";
+import {
+  SearchIcon,
+  FavoritesIcon,
+  UnFavoritesIcon,
+  ExpandIcon,
+  CollapseIcon,
+} from "@orderly.network/markets";
 
-<SearchIcon className="w-4 h-4" />
+<SearchIcon className="oui-w-4 oui-h-4" />
 <FavoritesIcon />
+<ExpandIcon aria-label="Expand" />
 ```

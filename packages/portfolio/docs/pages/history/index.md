@@ -1,12 +1,18 @@
-# pages/history
+# history – directory index
 
-## Overview
+## Directory responsibility
 
-History page and entry for portfolio history route.
+History page for portfolio history. Exposes HistoryPage and HistoryWidget (same component).
+
+## Key entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| HistoryPage / HistoryWidget | history.page.tsx | Page/widget component |
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [module.md](module.md) | TSX | Module entry (index.tsx). |
-| [history.page.md](history.page.md) | TSX | History page component. |
+| File | Language | Link |
+|------|----------|------|
+| index.tsx | TSX | [index.md](index.md) |
+| history.page.tsx | TSX | [history.page.md](history.page.md) |

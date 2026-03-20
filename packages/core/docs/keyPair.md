@@ -1,36 +1,51 @@
-# keyPair
+# keyPair.ts
 
-> Location: `packages/core/src/keyPair.ts`
+## keyPair.ts Responsibility
 
-## Overview
+Defines the Orderly Ed25519 key pair interface (`OrderlyKeyPair`) and implementation `BaseOrderlyKeyPair`: sign data, get public key (ed25519:base58), and static `generateKey()` for creating a new key pair. Uses @noble/ed25519 and bs58.
 
-Ed25519 key pair for Orderly: interface `OrderlyKeyPair` and implementation `BaseOrderlyKeyPair` using `@noble/ed25519` and bs58. Used for API key signing and storage in keyStore.
+## keyPair.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| OrderlyKeyPair | interface | Contract | getPublicKey(), secretKey, sign(data) |
+| BaseOrderlyKeyPair | class | Impl | Ed25519 key pair with bs58 secretKey |
 
-### OrderlyKeyPair (interface)
+## OrderlyKeyPair Responsibility
+
+Represents an Orderly key pair used for API request signing (orderly-key header). Public key format is `ed25519:${base58PubKey}`; secret key is stored as base58 string.
+
+## OrderlyKeyPair Interface
 
 | Member | Type | Description |
-| ------ | ---- | ----------- |
-| getPublicKey() | () => Promise\<string\> | Public key as "ed25519:" + bs58. |
-| secretKey | string | bs58-encoded secret. |
-| sign(data) | (data: Uint8Array) => Promise\<Uint8Array\> | Sign bytes. |
+|--------|------|-------------|
+| getPublicKey() | () => Promise<string> | Returns "ed25519:" + base58 public key |
+| secretKey | string | Base58-encoded private key |
+| sign(data: Uint8Array) | (data) => Promise<Uint8Array> | Signs message, returns signature bytes |
 
-### BaseOrderlyKeyPair (class)
+## BaseOrderlyKeyPair Responsibility
 
-Implements `OrderlyKeyPair`.
+Implements OrderlyKeyPair: constructor(secretKey) decodes base58 to private key; sign uses ed.signAsync; getPublicKey returns ed25519:base58(publicKey). Static generateKey() creates random key via ed.utils.randomPrivateKey() and bs58encode until length 44.
 
-- **static generateKey(): OrderlyKeyPair** – New random key pair (44-char bs58 secret).
-- **constructor(secretKey: string)** – From existing secret (bs58).
-- **sign(message: Uint8Array): Promise\<Uint8Array\>**
-- **getPublicKey(): Promise\<string\>** – Returns `ed25519:` + bs58 public key.
-- **toString()** – Private key hex (internal).
+## keyPair.ts Dependencies and Call Relationships
 
-## Usage Example
+- **Upstream**: @noble/ed25519, bs58, buffer.
+- **Downstream**: keyStore (stores/returns OrderlyKeyPair), BaseSigner (signText uses keyPair.sign and getPublicKey).
 
-```ts
-import { BaseOrderlyKeyPair } from "@orderly.network/core";
+## keyPair.ts Extension and Modification Points
+
+- **Key format**: Changing secretKey or public key format requires alignment in keyStore and Signer.
+- **Algorithm**: Replacing Ed25519 would require a new interface and impl; Orderly API expects current format.
+
+## keyPair.ts Example
+
+```typescript
+import { BaseOrderlyKeyPair, OrderlyKeyPair } from "@orderly.network/core";
+
 const keyPair = BaseOrderlyKeyPair.generateKey();
-const pub = await keyPair.getPublicKey();
-const sig = await keyPair.sign(new TextEncoder().encode("message"));
+const pub = await keyPair.getPublicKey(); // "ed25519:..."
+const msg = new TextEncoder().encode("hello");
+const sig = await keyPair.sign(msg);
+
+const fromSecret = new BaseOrderlyKeyPair("base58SecretKey...");
 ```

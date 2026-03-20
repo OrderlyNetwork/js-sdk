@@ -1,34 +1,48 @@
-# @orderly.network/i18n
+# packages/i18n/src — Documentation Index
 
-## Overview
+## Module responsibility
 
-This package provides internationalization (i18n) for the Orderly ecosystem. It is built on `i18next` and `react-i18next`, with locale detection, backend loading, and React providers for language switching and translation.
+The `packages/i18n/src` directory provides internationalization (i18n) for Orderly applications: locale types, constants, React context and providers, i18next instance, backend loading, and path/locale utilities. It does not implement UI components; it exposes types, hooks, and providers for consuming apps.
+
+## Key entities
+
+| Entity | Type | Responsibility | Entry |
+|--------|------|----------------|--------|
+| LocaleCode | type | Locale identifier (e.g. en, zh, ja) | types.ts |
+| LocaleMessages | interface | Base + extend translation keys for t() | types.ts |
+| LocaleEnum | enum | Supported locale codes | constant.ts |
+| LocaleContext / useLocaleContext | context + hook | Language list and change callbacks | context.ts |
+| I18nProvider | component | Thin wrapper over I18nextProvider | provider.tsx |
+| LocaleProvider | component | Wraps app with locale state, backend, resources | provider.tsx |
+| i18n | instance | i18next instance with detector and resources | i18n.ts |
+| useTranslation | hook | Translation hook bound to package i18n | useTranslation.ts |
+| useLocaleCode | hook | Current locale code, reactive to language change | useLocaleCode.ts |
+| Backend | class | Async load translation bundles by URL | backend.ts |
+| parseI18nLang / removeLangPrefix / generatePath | functions | Locale from browser, path without locale, path with locale | utils.ts |
 
 ## Directory structure
 
-| Directory / File | Description |
-|-----------------|-------------|
-| [locale](./locale/index.md) | Locale message modules (en and per-module namespaces) |
-| [backend](./backend.md) | Backend for loading translation resources from URLs |
-| [constant](./constant.md) | Locale enum, default languages, storage keys |
-| [context](./context.md) | Locale context and types for language switcher |
-| [i18n](./i18n.md) | i18next instance and configuration |
-| [provider](./provider.md) | I18nProvider and LocaleProvider components |
-| [types](./types.md) | LocaleMessages, Resources, LocaleCode types |
-| [useLocaleCode](./useLocaleCode.md) | Hook to subscribe to current locale code |
-| [useTranslation](./useTranslation.md) | Wrapper around react-i18next useTranslation |
-| [utils](./utils.md) | parseI18nLang, path helpers for locale-prefixed routes |
-| [version](./version.md) | Package version (exposed on window) |
+| Path | Description |
+|------|-------------|
+| [locale/](locale/index.md) | Locale message modules and English bundle |
+| (root) | Core types, constants, context, i18n instance, hooks, provider, backend, utils |
 
-## Top-level exports
+## Top-level files
 
-The package re-exports from `react-i18next` and `i18next`, and adds:
+| File | Language | Responsibility | Entry symbols |
+|------|----------|----------------|----------------|
+| [index.ts](index.ts.md) | TS | Re-exports public API | react-i18next, i18n, I18nProvider, LocaleProvider, useTranslation, useLocaleCode, context, types, constant, locale/en, utils |
+| [types.ts](types.md) | TS | Locale types and i18next augmentation | LocaleCode, LocaleMessages, Resources |
+| [constant.ts](constant.md) | TS | Locale enum, default languages, NS, storage keys | LocaleEnum, defaultLanguages, defaultLng, defaultNS |
+| [context.ts](context.md) | TS | Locale React context and hook | Language, LocaleContextState, LocaleContext, useLocaleContext |
+| [i18n.ts](i18n.md) | TS | i18next instance and resources | resources, i18n |
+| [useTranslation.ts](useTranslation.md) | TS | useTranslation hook | useTranslation |
+| [useLocaleCode.ts](useLocaleCode.md) | TS | useLocaleCode hook | useLocaleCode |
+| [provider.tsx](provider.md) | TSX | I18nProvider and LocaleProvider | I18nProvider, LocaleProvider, I18nProviderProps, LocaleProviderProps |
+| [utils.ts](utils.md) | TS | Locale and path helpers | parseI18nLang, removeLangPrefix, getLocalePathFromPathname, generatePath |
+| [backend.ts](backend.md) | TS | Backend for loading remote bundles | Backend, BackendOptions |
+| [version.ts](version.md) | TS | Package version | default export |
 
-- `i18n`, `createInstance` – i18n instance and factory
-- `I18nProvider`, `LocaleProvider` – React providers
-- `useTranslation`, `useLocaleCode` – hooks
-- `LocaleContext`, `useLocaleContext` – context for language switcher
-- Types: `LocaleCode`, `LocaleMessages`, `Resources`, `Language`, `LocaleProviderProps`, etc.
-- Constants: `LocaleEnum`, `defaultLanguages`, `defaultNS`, `i18nLocalStorageKey`, `i18nCookieKey`
-- Utilities: `parseI18nLang`, `removeLangPrefix`, `getLocalePathFromPathname`, `generatePath`
-- English locale: `en` object from `./locale/en`
+## Search keywords
+
+i18n, locale, language, translation, react-i18next, i18next, LocaleProvider, useTranslation, useLocaleCode, LocaleCode, LocaleMessages, Backend, parseI18nLang, generatePath, language switcher
