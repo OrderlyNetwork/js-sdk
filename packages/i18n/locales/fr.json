@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Dépôt min.",
   "transfer.exclusiveDeposit.estimatedTime": "Temps estimé",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending": "Transfert en attente : {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Dépôt en attente : {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Les données de frais ne sont actuellement pas disponibles. Veuillez réessayer plus tard.",
   "transfer.deposit.notEnoughGas": "Pas assez de gas. Ajoutez des {{token}} à votre portefeuille pour continuer.",
   "transfer.deposit.exceedCap": "Le montant dépasse le plafond de dépôt de l'utilisateur",

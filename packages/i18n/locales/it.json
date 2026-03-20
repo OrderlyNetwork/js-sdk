@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Deposito min.",
   "transfer.exclusiveDeposit.estimatedTime": "Tempo stimato",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending": "Trasferimento in sospeso: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Deposito in sospeso: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "I dati sulle commissioni non sono attualmente disponibili. Riprova più tardi.",
   "transfer.deposit.notEnoughGas": "Gas insufficiente. Aggiungi {{token}} al tuo portafoglio per continuare.",
   "transfer.deposit.exceedCap": "L'importo supera il limite di deposito dell'utente",

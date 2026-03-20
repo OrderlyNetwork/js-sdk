@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Nạp tối thiểu",
   "transfer.exclusiveDeposit.estimatedTime": "Thời gian ước tính",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 phút",
-  "transfer.exclusiveDeposit.transferPending": "Chuyển đang chờ xử lý: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Nạp tiền đang chờ xử lý: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Dữ liệu phí hiện không khả dụng. Vui lòng thử lại sau.",
   "transfer.deposit.notEnoughGas": "Không đủ gas. Thêm một số {{token}} vào ví của bạn để tiếp tục.",
   "transfer.deposit.exceedCap": "Số tiền vượt quá giới hạn nạp tiền của người dùng",

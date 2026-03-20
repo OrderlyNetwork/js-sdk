@@ -19,8 +19,7 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [selectedToken, setSelectedToken] = useState("");
 
-  const { networkOptions, tokenOptions, arbiscanBaseUrl } =
-    useExclusiveDepositOptions();
+  const { networkOptions, tokenOptions } = useExclusiveDepositOptions();
 
   const confirmed = !!selectedNetwork && !!selectedToken;
 
@@ -44,7 +43,7 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
     active,
     confirmed,
     chainId: selectedChainId,
-    arbiscanBaseUrl,
+    explorerBaseUrl: selectedNetworkOption?.explorerUrl ?? "",
   });
 
   const networkName = selectedNetworkOption?.label ?? "";

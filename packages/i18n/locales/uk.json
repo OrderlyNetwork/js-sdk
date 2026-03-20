@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Мін. депозит",
   "transfer.exclusiveDeposit.estimatedTime": "Оціночний час",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 хв",
-  "transfer.exclusiveDeposit.transferPending": "Переказ в очікуванні: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Депозит в очікуванні: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Дані про комісію наразі недоступні. Будь ласка, спробуйте пізніше.",
   "transfer.deposit.notEnoughGas": "Недостатньо газу. Додайте {{token}} до свого гаманця, щоб продовжити.",
   "transfer.deposit.exceedCap": "Сума перевищує ліміт депозиту користувача",

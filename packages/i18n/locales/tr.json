@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Min. yatırma",
   "transfer.exclusiveDeposit.estimatedTime": "Tahmini süre",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 dk",
-  "transfer.exclusiveDeposit.transferPending": "Transfer beklemede: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Mevduat beklemede: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Ücret verileri şu anda mevcut değil. Lütfen daha sonra tekrar deneyin.",
   "transfer.deposit.notEnoughGas": "Yeterli gas yok. Devam etmek için cüzdanınıza {{token}} ekleyin.",
   "transfer.deposit.exceedCap": "Miktar kullanıcı yatırma limitini aşıyor",

@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Мин. депозит",
   "transfer.exclusiveDeposit.estimatedTime": "Оценка времени",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 мин",
-  "transfer.exclusiveDeposit.transferPending": "Перевод в ожидании: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Депозит в ожидании: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Данные о комиссии в настоящее время недоступны. Пожалуйста, попробуйте позже.",
   "transfer.deposit.notEnoughGas": "Недостаточно газа. Добавьте {{token}} в свой кошелек, чтобы продолжить.",
   "transfer.deposit.exceedCap": "Сумма превышает лимит депозита пользователя",

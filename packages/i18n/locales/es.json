@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Depósito mín.",
   "transfer.exclusiveDeposit.estimatedTime": "Tiempo estimado",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending": "Transferencia pendiente: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Depósito pendiente: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Los datos de tarifas no están disponibles actualmente. Por favor, inténtelo de nuevo más tarde.",
   "transfer.deposit.notEnoughGas": "Gas insuficiente. Agrega {{token}} a tu billetera para continuar.",
   "transfer.deposit.exceedCap": "El monto excede el límite de depósito del usuario",

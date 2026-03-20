@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "最低入金額",
   "transfer.exclusiveDeposit.estimatedTime": "推定時間",
   "transfer.exclusiveDeposit.estimatedTime.default": "約 5 分",
-  "transfer.exclusiveDeposit.transferPending": "送金処理中：{{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "入金処理中：{{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "手数料データは現在利用できません。後でもう一度お試しください。",
   "transfer.deposit.notEnoughGas": "ガス不足です。続行するには、ウォレットに{{token}}を追加してください。",
   "transfer.deposit.exceedCap": "金額がユーザーの入金上限を超えています",

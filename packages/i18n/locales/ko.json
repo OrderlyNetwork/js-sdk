@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "최소 입금",
   "transfer.exclusiveDeposit.estimatedTime": "예상 시간",
   "transfer.exclusiveDeposit.estimatedTime.default": "약 5분",
-  "transfer.exclusiveDeposit.transferPending": "전송 처리 중: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "입금 처리 중: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "수수료 데이터를 현재 사용할 수 없습니다. 나중에 다시 시도해 주세요.",
   "transfer.deposit.notEnoughGas": "가스가 부족합니다. 계속하려면 지갑에 {{token}}을(를) 추가하세요.",
   "transfer.deposit.exceedCap": "금액이 사용자 입금 한도를 초과합니다",

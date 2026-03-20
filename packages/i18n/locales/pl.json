@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Min. wpłata",
   "transfer.exclusiveDeposit.estimatedTime": "Szacowany czas",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending": "Przelew w toku: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Wpłata w toku: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Dane o opłatach są obecnie niedostępne. Spróbuj ponownie później.",
   "transfer.deposit.notEnoughGas": "Za mało gazu. Dodaj {{token}} do swojego portfela, aby kontynuować.",
   "transfer.deposit.exceedCap": "Kwota przekracza limit wpłaty użytkownika",

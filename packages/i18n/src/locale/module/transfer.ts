@@ -26,8 +26,8 @@ export const transfer = {
   "transfer.exclusiveDeposit.minDeposit": "Min. deposit",
   "transfer.exclusiveDeposit.estimatedTime": "Estimated time",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending":
-    "Transfer pending: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending":
+    "Deposit pending: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable":
     "Fee data is currently unavailable. Please try again later.",
   "transfer.deposit.notEnoughGas":

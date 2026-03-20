@@ -17,7 +17,7 @@ export const DepositStatusBlock: FC<DepositStatusBlockProps> = ({
 }) => {
   const { t: t0 } = useTranslation();
   const t = t0 as any;
-  const label = t("transfer.exclusiveDeposit.transferPending", {
+  const label = t("transfer.exclusiveDeposit.depositPending", {
     amount,
     symbol,
   });

@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "最低充值",
   "transfer.exclusiveDeposit.estimatedTime": "预计时间",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 分钟",
-  "transfer.exclusiveDeposit.transferPending": "转账处理中：{{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "充值处理中：{{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "费用数据当前不可用。请稍后再试。",
   "transfer.deposit.notEnoughGas": "Gas 不足。请在您的钱包中添加一些 {{token}} 以继续。",
   "transfer.deposit.exceedCap": "金额超过用户存款上限",

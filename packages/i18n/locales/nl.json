@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Min. storting",
   "transfer.exclusiveDeposit.estimatedTime": "Geschatte tijd",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending": "Overboeking in behandeling: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Storting in behandeling: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Kostengegevens zijn momenteel niet beschikbaar. Probeer het later opnieuw.",
   "transfer.deposit.notEnoughGas": "Niet genoeg gas. Voeg {{token}} toe aan je portemonnee om door te gaan.",
   "transfer.deposit.exceedCap": "Het bedrag overschrijdt de stortingslimiet van de gebruiker",

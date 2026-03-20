@@ -45,11 +45,11 @@ export const useExclusiveDeposit = (options: {
   active?: boolean;
   confirmed?: boolean;
   chainId?: number;
-  arbiscanBaseUrl: string;
+  explorerBaseUrl: string;
 }): ExclusiveDepositState => {
   const active = options.active ?? true;
   const confirmed = options.confirmed ?? true;
-  const { chainId, arbiscanBaseUrl } = options;
+  const { chainId, explorerBaseUrl } = options;
 
   const { t: t0 } = useTranslation();
   const t = t0 as any;
@@ -97,7 +97,7 @@ export const useExclusiveDeposit = (options: {
     const count = events.length;
 
     const url = latest?.tx_id
-      ? buildExplorerUrl(arbiscanBaseUrl, latest.tx_id)
+      ? buildExplorerUrl(explorerBaseUrl, latest.tx_id)
       : undefined;
 
     return {
@@ -105,7 +105,7 @@ export const useExclusiveDeposit = (options: {
       pendingCount: count,
       explorerUrl: url,
     };
-  }, [arbiscanBaseUrl, eventsData]);
+  }, [explorerBaseUrl, eventsData]);
 
   return {
     address: addressData?.receiver_address,

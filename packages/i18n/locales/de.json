@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Mindesteinzahlung",
   "transfer.exclusiveDeposit.estimatedTime": "Geschätzte Zeit",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 Min.",
-  "transfer.exclusiveDeposit.transferPending": "Überweisung ausstehend: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Einzahlung ausstehend: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Gebührendaten sind derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.",
   "transfer.deposit.notEnoughGas": "Nicht genug Gas. Fügen Sie {{token}} zu Ihrer Wallet hinzu, um fortzufahren.",
   "transfer.deposit.exceedCap": "Der Betrag überschreitet die Einzahlungsobergrenze des Benutzers",

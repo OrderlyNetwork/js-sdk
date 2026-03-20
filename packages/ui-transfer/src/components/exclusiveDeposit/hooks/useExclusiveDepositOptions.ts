@@ -6,6 +6,7 @@ export type ExclusiveDepositNetwork = {
   label: string;
   value: string;
   chainId: number;
+  explorerUrl: string;
 };
 
 export type ExclusiveDepositToken = {
@@ -37,10 +38,12 @@ export const useExclusiveDepositOptions = () => {
     return supportedChainIds.map((chainId) => {
       const chain = findByChainId(chainId);
       const name = chain?.network_infos?.name ?? `Chain ${chainId}`;
+      const explorerUrl = chain?.network_infos?.explorer_base_url ?? "";
       return {
         label: name,
         value: String(chainId),
         chainId,
+        explorerUrl,
       };
     });
   }, [supportedChainIds, findByChainId]);
@@ -52,8 +55,5 @@ export const useExclusiveDepositOptions = () => {
     }));
   }, []);
 
-  const arbiscanBaseUrl =
-    env === "prod" ? "https://arbiscan.io" : "https://sepolia.arbiscan.io";
-
-  return { networkOptions, tokenOptions, arbiscanBaseUrl };
+  return { networkOptions, tokenOptions };
 };

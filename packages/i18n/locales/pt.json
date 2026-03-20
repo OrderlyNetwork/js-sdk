@@ -822,7 +822,7 @@
   "transfer.exclusiveDeposit.minDeposit": "Depósito mín.",
   "transfer.exclusiveDeposit.estimatedTime": "Tempo estimado",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",
-  "transfer.exclusiveDeposit.transferPending": "Transferência pendente: {{amount}} {{symbol}}",
+  "transfer.exclusiveDeposit.depositPending": "Depósito pendente: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable": "Os dados de taxas não estão disponíveis no momento. Por favor, tente novamente mais tarde.",
   "transfer.deposit.notEnoughGas": "Gas insuficiente. Adicione {{token}} à sua carteira para continuar.",
   "transfer.deposit.exceedCap": "O valor excede o limite de depósito do usuário",
