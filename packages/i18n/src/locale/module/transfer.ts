@@ -18,7 +18,11 @@ export const transfer = {
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
   "transfer.exclusiveDeposit.warning":
-    "Only send USDC on Arbitrum to this address. Sending other tokens, using other chains, or amounts below the minimum deposit will result in permanent loss of funds.",
+    "Only send {{token}} on {{network}} to this address. Sending other tokens, using other chains, or amounts below the minimum deposit will result in permanent loss of funds.",
+  "transfer.exclusiveDeposit.selectFirst":
+    "Select your network and token first",
+  "transfer.exclusiveDeposit.selectNetwork": "Select network",
+  "transfer.exclusiveDeposit.selectToken": "Select token",
   "transfer.exclusiveDeposit.minDeposit": "Min. deposit",
   "transfer.exclusiveDeposit.estimatedTime": "Estimated time",
   "transfer.exclusiveDeposit.estimatedTime.default": "~ 5 min",

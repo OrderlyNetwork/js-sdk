@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useConfig, usePrivateQuery } from "@orderly.network/hooks";
+import { usePrivateQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 
 type ReceiverAddressResponse = {
@@ -41,20 +41,25 @@ const buildExplorerUrl = (baseUrl: string, txId: string) => {
   return `${url}/tx/${txId}`;
 };
 
-export const useExclusiveDeposit = (options?: {
+export const useExclusiveDeposit = (options: {
   active?: boolean;
+  confirmed?: boolean;
+  chainId?: number;
+  arbiscanBaseUrl: string;
 }): ExclusiveDepositState => {
-  const active = options?.active ?? true;
+  const active = options.active ?? true;
+  const confirmed = options.confirmed ?? true;
+  const { chainId, arbiscanBaseUrl } = options;
 
   const { t: t0 } = useTranslation();
   const t = t0 as any;
-  const env = useConfig("env");
-  const receiverChainId = env === "prod" ? 42161 : 421614;
-  const arbiscanBaseUrl =
-    env === "prod" ? "https://arbiscan.io" : "https://sepolia.arbiscan.io";
 
-  const receiverAddressKey = `/v1/client/asset/receiver_address?chain_id=${receiverChainId}`;
-  const receiverEventsKey = active ? "/v1/client/asset/receiver_events" : null;
+  const receiverAddressKey =
+    confirmed && chainId
+      ? `/v1/client/asset/receiver_address?chain_id=${chainId}`
+      : null;
+  const receiverEventsKey =
+    active && confirmed ? "/v1/client/asset/receiver_events" : null;
 
   const {
     data: addressData,
