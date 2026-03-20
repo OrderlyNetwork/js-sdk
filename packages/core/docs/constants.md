@@ -1,35 +1,58 @@
-# constants
+# constants.ts
 
-> Location: `packages/core/src/constants.ts`
+## constants.ts Responsibility
 
-## Overview
+Exports contract addresses (USDC, vault, verify) for multiple networks (Arbitrum testnet, mainnet, Solana dev/qa/staging/mainnet, Story testnet, Monad testnet, Abstract, BSC testnet/mainnet) and the `EVENT_NAMES` object used by the Account event emitter.
 
-Contract addresses for USDC, vault, and verify contracts across mainnet/testnet and chains (Arbitrum, Solana, Story, Monad, Abstract, BSC). Also defines `EVENT_NAMES` for app events.
+## constants.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| nativeUSDCAddress | string | Contract | EVM USDC address (native) |
+| stagingUSDCAddressOnArbitrumTestnet | string | Contract | Staging Arbitrum testnet USDC |
+| stagingVaultAddressOnArbitrumTestnet | string | Contract | Staging Arbitrum testnet vault |
+| stagingVerifyAddressOnArbitrumTestnet | string | Contract | Staging Arbitrum testnet verify |
+| mainnetUSDCAddress | string | Contract | Mainnet USDC |
+| mainnetVaultAddress | string | Contract | Mainnet vault |
+| mainnetVerifyAddress | string | Contract | Mainnet verify |
+| solanaMainnetVaultAddress, solanaStagingVualtAddress, solanaDevVaultAddress, solanaQaVaultAddress | string | Contract | Solana vaults |
+| solanaUSDCAddress, solanaMainnetUSDCAddress | string | Contract | Solana USDC |
+| EVENT_NAMES | object | Events | statusChanged, validateStart, validateEnd, switchAccount, subAccountCreated, subAccountUpdated |
+| stagingStoryTestnetVaultAddress, stagingMonadTestnetVaultAddress, MonadTestnetUSDCAddress, qaMonadTestnetVaultAddress | string | Contract | Story/Monad testnet |
+| qaArbitrumTestnetVaultAddress | string | Contract | QA Arbitrum testnet vault |
+| AbstractMainnetUSDCAddress, AbstractTestnetUSDCAddress, AbstractDevVaultAddress, AbstractQaVaultAddress, stagingAbstractTestnetVaultAddress, abstractMainnetVaultAddress | string | Contract | Abstract |
+| bscTestnetDevVaultAddress, bscTestnetQaVaultAddress, bscTestnetStagingVaultAddress, bscTestnetUSDCAddress | string | Contract | BSC testnet |
+| bscMainnetVaultAddress, bscMainnetUSDCAddress | string | Contract | BSC mainnet |
 
-### Address constants (string)
+## EVENT_NAMES Fields
 
-- **nativeUSDCAddress**, **stagingUSDCAddressOnArbitrumTestnet**, **stagingVaultAddressOnArbitrumTestnet**, **stagingVerifyAddressOnArbitrumTestnet**
-- **mainnetUSDCAddress**, **mainnetVaultAddress**, **mainnetVerifyAddress**
-- **solanaMainnetVaultAddress**, **solanaStagingVualtAddress**, **solanaDevVaultAddress**, **solanaQaVaultAddress**, **solanaUSDCAddress**, **solanaMainnetUSDCAddress**
-- **stagingStoryTestnetVaultAddress**, **stagingMonadTestnetVaultAddress**, **MonadTestnetUSDCAddress**, **qaMonadTestnetVaultAddress**, **qaArbitrumTestnetVaultAddress**
-- **AbstractMainnetUSDCAddress**, **AbstractTestnetUSDCAddress**, **AbstractDevVaultAddress**, **AbstractQaVaultAddress**, **stagingAbstractTestnetVaultAddress**, **abstractMainnetVaultAddress**
-- **bscTestnetDevVaultAddress**, **bscTestnetQaVaultAddress**, **bscTestnetStagingVaultAddress**, **bscTestnetUSDCAddress**, **bscMainnetVaultAddress**, **bscMainnetUSDCAddress**
+| Key | Value | Usage |
+|-----|-------|--------|
+| statusChanged | "change:status" | Account state updated |
+| validateStart | "validate:start" | Validation started |
+| validateEnd | "validate:end" | Validation finished |
+| switchAccount | "switch:account" | User switched address |
+| subAccountCreated | "account:sub:created" | Sub-account created |
+| subAccountUpdated | "account:sub:updated" | Sub-account updated |
 
-### EVENT_NAMES (object)
+## constants.ts Dependencies and Call Relationships
 
-| Key | Value |
-| --- | ----- |
-| statusChanged | "change:status" |
-| validateStart | "validate:start" |
-| validateEnd | "validate:end" |
-| switchAccount | "switch:account" |
-| subAccountCreated | "account:sub:created" |
-| subAccountUpdated | "account:sub:updated" |
+- **Upstream**: None (no imports from other core src files).
+- **Downstream**: contract.ts (and possibly wallet/abis) use these addresses; Account and others use EVENT_NAMES.
 
-## Usage Example
+## constants.ts Extension and Modification Points
 
-```ts
-import { mainnetVaultAddress, EVENT_NAMES } from "@orderly.network/core";
+- **New network**: Add new address constants and wire them in contract.ts (getContractInfoByEnv / getContractInfoByChainId).
+- **New events**: Add keys to EVENT_NAMES and emit in Account where appropriate.
+
+## constants.ts Example
+
+```typescript
+import { EVENT_NAMES, mainnetUSDCAddress, mainnetVaultAddress } from "@orderly.network/core";
+
+account.on(EVENT_NAMES.statusChanged, (state) => { /* ... */ });
+account.on(EVENT_NAMES.validateStart, () => { /* ... */ });
+
+const usdc = mainnetUSDCAddress;
+const vault = mainnetVaultAddress;
 ```

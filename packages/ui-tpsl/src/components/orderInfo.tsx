@@ -5,14 +5,7 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { MarginMode, OrderlyOrder } from "@orderly.network/types";
-import {
-  cn,
-  Flex,
-  Grid,
-  Text,
-  TokenIcon,
-  capitalizeFirstLetter,
-} from "@orderly.network/ui";
+import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
 
 type Props = {
   order: Partial<OrderlyOrder>;
@@ -34,6 +27,12 @@ export const OrderInfo = (props: Props) => {
   const { symbol } = order;
   const markPrice = useMarkPrice(symbol!);
   const indexPrice = useIndexPrice(symbol!);
+  const marginModeLabel =
+    props.marginMode === MarginMode.ISOLATED
+      ? t("marginMode.isolated")
+      : props.marginMode === MarginMode.CROSS
+        ? t("marginMode.cross")
+        : undefined;
 
   const leverage = useLeverageBySymbol(
     symbolLeverage ? undefined : symbol,
@@ -68,12 +67,12 @@ export const OrderInfo = (props: Props) => {
             {symbol}
           </Text.formatted>
         </Flex>
-        {props.marginMode && (
+        {marginModeLabel && (
           <Text
             size="2xs"
             className="oui-h-[18px] oui-rounded oui-bg-base-7 oui-px-2 oui-font-semibold oui-text-base-contrast-36"
           >
-            {capitalizeFirstLetter(props.marginMode)}
+            {marginModeLabel}
           </Text>
         )}
         <Text

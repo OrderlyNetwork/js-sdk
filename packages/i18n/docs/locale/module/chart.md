@@ -1,15 +1,18 @@
-# chart
+# chart.ts
 
-## Overview
+## chart.ts responsibility
 
-Chart-related string: single key for "Now" (e.g. time axis).
+Provides chart-related copy: single key for "Now" label.
 
-## Exports
+## chart.ts exports
 
-### `chart`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| chart | object | Key-value map | chart.now |
+| Chart | type | typeof chart | Type export |
 
-Object with key `chart.now`.
+## chart.ts Example
 
-### `Chart` (type)
-
-`typeof chart`.
+```typescript
+t("chart.now");
+```

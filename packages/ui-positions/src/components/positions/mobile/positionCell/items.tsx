@@ -20,6 +20,7 @@ import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../../constants";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { RwaStatusTag } from "../../../rwaStatus/rwaStatus";
 import { AdjustMarginSheetId } from "../../adjustMargin";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
@@ -32,30 +33,33 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
   const isBuy = item.position_qty > 0;
   const { t } = useTranslation();
   return (
-    <Text.formatted
-      rule="symbol"
-      formatString="base-type"
-      size="2xs"
-      suffix={
-        <div className="oui-flex oui-items-center oui-gap-1">
-          <Badge color={isBuy ? "success" : "danger"} size="xs">
-            {isBuy ? t("common.long") : t("common.short")}
-          </Badge>
-          <LeverageBadge
-            symbol={item.symbol}
-            leverage={item.leverage}
-            modalId={SymbolLeverageSheetId}
-            marginMode={item.margin_mode}
-          />
-        </div>
-      }
-      showIcon
-      onClick={() => {
-        props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
-      }}
-    >
-      {item.symbol}
-    </Text.formatted>
+    <Flex direction="column" itemAlign="start" gap={1}>
+      <Flex gap={1} itemAlign="center">
+        <Text.formatted
+          rule="symbol"
+          formatString="base-type"
+          size="2xs"
+          showIcon
+          onClick={() => {
+            props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
+          }}
+        >
+          {item.symbol}
+        </Text.formatted>
+        <RwaStatusTag symbol={item.symbol} />
+      </Flex>
+      <Flex gap={1} itemAlign="center" wrap="wrap">
+        <Badge color={isBuy ? "success" : "danger"} size="xs">
+          {isBuy ? t("common.long") : t("common.short")}
+        </Badge>
+        <LeverageBadge
+          symbol={item.symbol}
+          leverage={item.leverage}
+          modalId={SymbolLeverageSheetId}
+          marginMode={item.margin_mode}
+        />
+      </Flex>
+    </Flex>
   );
 };
 

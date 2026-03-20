@@ -1,29 +1,41 @@
-# additionalInfoRepository
+# additionalInfoRepository.ts
 
-> Location: `packages/core/src/additionalInfoRepository.ts`
+## additionalInfoRepository.ts Responsibility
 
-## Overview
+Thin wrapper around a `Repository` that exposes the same address-scoped API (save, getAll, get, clear, remove) for wallet “additional info” (e.g. active sub-account id, AGW address). Used by Account to persist and read per-address metadata.
 
-Thin wrapper around a `Repository` for saving and reading wallet additional info (e.g. wallet name, AGW address) keyed by wallet address.
+## additionalInfoRepository.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| AdditionalInfoRepository | class | Wrapper | Delegates to Repository for save/getAll/get/clear/remove |
 
-### AdditionalInfoRepository (class)
+## AdditionalInfoRepository Responsibility
 
-Constructor: `(repository: Repository)`.
+Provides a named abstraction for wallet additional info storage so Account and other code can save/get/clear without depending on Repository directly.
+
+## AdditionalInfoRepository Methods
 
 | Method | Description |
-| ------ | ----------- |
-| save(address, data) | Merge data for address. |
-| getAll(address) | Get all data for address. |
-| get(address, key) | Get one key. |
-| clear(address) | Remove all data for address. |
-| remove(address, key) | Remove one key. |
+|--------|-------------|
+| save(address, data) | repository.save(address, data) |
+| getAll(address) | repository.getAll(address) |
+| get(address, key) | repository.get(address, key) |
+| clear(address) | repository.clear(address) |
+| remove(address, key) | repository.remove(address, key) |
 
-## Usage Example
+## additionalInfoRepository.ts Dependencies and Call Relationships
 
-```ts
-const repo = new AdditionalInfoRepository(new LocalStorageRepository("wallet_extra"));
-repo.save("0x...", { AGWAddress: "0x..." });
-const info = repo.getAll("0x...");
+- **Upstream**: repository.ts (Repository interface).
+- **Downstream**: account.ts constructs it with LocalStorageRepository(Account.additionalInfoRepositoryName); uses save (setAddress, switchAccount), get (ACTIVE_SUB_ACCOUNT_ID_KEY), getAll (getAdditionalInfo), clear (disconnect).
+
+## additionalInfoRepository.ts Example
+
+```typescript
+import { AdditionalInfoRepository, LocalStorageRepository } from "@orderly.network/core";
+
+const repo = new LocalStorageRepository("orderly_walletAdditionalInfo");
+const additionalInfo = new AdditionalInfoRepository(repo);
+additionalInfo.save("0x...", { ACTIVE_SUB_ACCOUNT_ID_KEY: "0" });
+const active = additionalInfo.get("0x...", "ACTIVE_SUB_ACCOUNT_ID_KEY");
 ```

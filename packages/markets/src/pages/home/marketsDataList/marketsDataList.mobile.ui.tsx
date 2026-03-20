@@ -26,10 +26,11 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
   const getColumns = useCallback(
     (favorite: FavoriteInstance, isFavoriteList = false) => {
       return [
-        getSymbolColumn(favorite, isFavoriteList),
+        getSymbolColumn(favorite, isFavoriteList, {
+          stackLeverageInSecondRow: true,
+        }),
         get24hVolOIColumn(),
         getLastAnd24hPercentageColumn(favorite, isFavoriteList),
-        getMarkIndexColumn(),
       ] as Column[];
     },
     [],

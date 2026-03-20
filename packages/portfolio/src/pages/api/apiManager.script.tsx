@@ -12,7 +12,7 @@ import { toast, usePagination } from "@orderly.network/ui";
 
 export type GenerateKeyInfo = {
   key: string;
-  screctKey: string;
+  secretKey: string;
   ip?: string;
   permissions?: string;
 };
@@ -91,7 +91,7 @@ export const useApiManagerScript = (props?: {
         hideCreateDialog();
         setGenerateKey({
           key: key,
-          screctKey: secretKey,
+          secretKey,
           ip: ip,
           permissions: scope
             ?.split(",")

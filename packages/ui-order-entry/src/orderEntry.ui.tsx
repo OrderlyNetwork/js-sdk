@@ -59,6 +59,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     side,
     formattedOrder,
     setOrderValue,
+    manualSetOrderValue,
     setOrderValues,
     symbolInfo,
     maxQty,
@@ -134,11 +135,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       return;
     }
     if (slippage) {
-      setOrderValue("slippage", Number(slippage));
+      manualSetOrderValue("slippage", Number(slippage));
     } else {
-      setOrderValue("slippage", undefined);
+      manualSetOrderValue("slippage", undefined);
     }
-  }, [slippage, disableFeatures]);
+  }, [slippage, disableFeatures, manualSetOrderValue]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -244,13 +245,13 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   }, [maxQty, symbolInfo.base_dp]);
 
   const onMaxQtyConfirm = useCallback(() => {
-    setOrderValue("order_quantity", formattedMaxQty);
+    manualSetOrderValue("order_quantity", formattedMaxQty);
     // submit order when order_quantity updated
     requestAnimationFrame(() => {
       onSubmit();
     });
     setMaxQtyConfirmOpen(false);
-  }, [setOrderValue, formattedMaxQty]);
+  }, [manualSetOrderValue, formattedMaxQty, onSubmit]);
 
   const validateSubmit = async () => {
     // show a prompt reminding the user. If the user confirms, automatically disable Reduce Only and proceed with the action.
@@ -260,7 +261,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         content: t("orderEntry.reduceOnly.reminder.content"),
         okLabel: t("orderEntry.placeOrderNow"),
         onOk: async () => {
-          setOrderValue("reduce_only", false);
+          manualSetOrderValue("reduce_only", false);
           // submit order when reduce only updated
           requestAnimationFrame(() => {
             props.resetMetaState();
@@ -300,7 +301,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const onSubmitAdvancedTPSL = (order: OrderlyOrder) => {
     if (order.side !== formattedOrder.side) {
-      setOrderValue("side", order.side);
+      manualSetOrderValue("side", order.side);
     }
     setOrderValues({
       position_type: order.position_type,
@@ -360,7 +361,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setNeedConfirm,
     hidden,
     setHidden,
-    onValueChange: setOrderValue,
+    onValueChange: manualSetOrderValue,
     orderTypeExtra: formattedOrder["order_type_ext"],
     showExtra:
       formattedOrder["order_type"] === OrderType.LIMIT && !props.tpslSwitch,
@@ -379,6 +380,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       onBlur={props.onBlur}
       getErrorMsg={getErrorMsg}
       setOrderValue={setOrderValue}
+      manualSetOrderValue={manualSetOrderValue}
       setOrderValues={setOrderValues}
       currentFocusInput={currentFocusInput.current}
       priceInputRef={props.priceInputRef}
@@ -407,7 +409,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           canTrade={props.canTrade}
           side={side}
           order_type={formattedOrder.order_type!}
-          setOrderValue={setOrderValue}
+          setOrderValue={manualSetOrderValue}
           symbolLeverage={props.symbolLeverage}
           marginMode={props.marginMode}
         />
@@ -504,10 +506,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 ? { ...errors, ...props.slPriceError }
                 : null
             }
-            setOrderValue={setOrderValue}
+            setOrderValue={manualSetOrderValue}
             reduceOnlyChecked={formattedOrder.reduce_only ?? false}
             onReduceOnlyChange={(checked) => {
-              setOrderValue("reduce_only", checked);
+              manualSetOrderValue("reduce_only", checked);
             }}
             values={{
               position_type:
@@ -543,7 +545,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             <ReduceOnlySwitch
               checked={formattedOrder.reduce_only ?? false}
               onCheckedChange={(checked) => {
-                setOrderValue("reduce_only", checked);
+                manualSetOrderValue("reduce_only", checked);
               }}
             />
             {!showSoundSection && extraButton}
@@ -627,7 +629,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       >
         {showTPSLAdvanced && (
           <TPSLAdvancedWidget
-            setOrderValue={setOrderValue}
+            setOrderValue={manualSetOrderValue}
             order={formattedOrder as OrderlyOrder}
             onSubmit={onSubmitAdvancedTPSL}
             onClose={() => {

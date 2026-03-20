@@ -1,15 +1,28 @@
-# portfolio
+# portfolio.ts
 
-## Overview
+## portfolio.ts responsibility
 
-Portfolio: fee tier, API keys, settings; overview (available to withdraw, performance ROI/PnL/volume, distribution, transfer history, vaults, convert history); fee tier table and effective fee tooltip; API key create/edit/delete, permissions, IP restriction; system upgrade and sound alerts.
+Provides portfolio copy: fee tier, API keys, settings, overview (available to withdraw, portfolio value, performance ROI/PnL/volume, distribution, transfer history, vaults), fee tier table and headers, API key create/edit/delete dialogs and columns, IP restriction, created/deleted/updated messages, and settings (system upgrade, cancel open orders, sound alerts, theme).
 
-## Exports
+## portfolio.ts exports
 
-### `portfolio`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| portfolio | object | Key-value map | Keys under "portfolio.*" |
+| Portfolio | type | typeof portfolio | Type export |
 
-Object of keys under `portfolio.*`: e.g. `portfolio.overview.performance.roi`, `portfolio.apiKey.create.dialog.title`, `portfolio.setting.soundAlerts`.
+## portfolio.ts key groups (sample)
 
-### `Portfolio` (type)
+| Theme | Examples |
+|-------|----------|
+| Overview | portfolio.overview.availableWithdraw, portfolio.overview.performance.pnl |
+| API keys | portfolio.apiKey.create.dialog.title, portfolio.apiKey.column.apiKey |
+| Settings | portfolio.setting.systemUpgrade, portfolio.setting.soundAlerts |
 
-`typeof portfolio`.
+## portfolio.ts Example
+
+```typescript
+t("portfolio.feeTier");
+t("portfolio.apiKey.created.warning");
+t("portfolio.setting.theme");
+```

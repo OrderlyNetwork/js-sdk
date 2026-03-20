@@ -1,35 +1,44 @@
 # ws/handler/handler.ts
 
-## Overview
+## handler.ts 的职责
 
-Defines the set of known WebSocket message event types and the default handler registry used by `WS` to dispatch incoming messages (e.g. server ping → pong response).
+定义 WebSocket 通用消息类型（MessageType）并维护 messageHandlers 映射表，将 event 名与 MessageHandler 实例关联，供 WS 在 onMessage 中按 message.event 分发。
 
-## Exports
+## handler.ts 对外导出内容
 
-### `MessageType`
+| 名称 | 类型 | 角色 | 说明 |
+|------|------|------|------|
+| MessageType | type | 事件名字面量联合 | "ping" \| "pong" \| "subscribe" \| ... |
+| messageHandlers | Map\<MessageType, MessageHandler\> | 事件到处理器的映射 | 当前注册 "ping" -> PingHandler |
 
-Union type of event names:
+## MessageType 取值
 
-- `"ping"` \| `"pong"` \| `"subscribe"` \| `"unsubscribe"` \| `"authenticate"` \| `"message"` \| `"error"` \| `"auth"` \| `"close"`
+| 取值 | 说明 |
+|------|------|
+| "ping" | 心跳 ping，由 PingHandler 回 pong |
+| "pong" | 心跳 pong |
+| "subscribe" \| "unsubscribe" | 订阅/取消订阅 |
+| "authenticate" \| "auth" | 鉴权相关 |
+| "message" \| "error" \| "close" | 通用消息/错误/关闭 |
 
-### `messageHandlers`
+## messageHandlers 的职责
 
-- **Type**: `Map<MessageType, MessageHandler>`
-- **Entries**: `["ping", new PingHandler()]` — other events can be added by registering handlers that implement `MessageHandler`.
+作为 WS 与具体 Handler 的桥梁：WS 收到消息后执行 `messageHandlers.get(message.event)?.handle(message, socket)`，实现可扩展的 event 处理。
 
-When `WS` receives a message, it looks up `messageHandlers.get(message.event)` and, if present, calls `handler.handle(message, socket)`.
+## messageHandlers 依赖与调用关系
 
-## Usage example
+- 上游调用方：ws/ws.ts 的 onMessage
+- 下游依赖：../../types/ws（MessageHandler）、./ping（PingHandler）
+
+## messageHandlers 的扩展或修改入口
+
+- 新增 event 处理：实现 MessageHandler，并执行 `messageHandlers.set("event_name", new MyHandler())`（当前在数组字面量中写死，扩展需修改本文件）。
+
+## handler Example
 
 ```typescript
-import { messageHandlers } from "./handler";
-import type { MessageHandler } from "../../types/ws";
+import { messageHandlers } from "@orderly.network/net/src/ws/handler/handler";
 
-// Custom handler (conceptually)
-const myHandler: MessageHandler = {
-  handle(message: any, webSocket: WebSocket) {
-    // ...
-  },
-};
-// messageHandlers.set("custom", myHandler);
+const handler = messageHandlers.get("ping");
+if (handler) handler.handle({ event: "ping" }, socket);
 ```

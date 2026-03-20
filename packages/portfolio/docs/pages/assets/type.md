@@ -1,25 +1,64 @@
 # type.ts (assets)
 
-## Overview
+## type.ts responsibility
 
-Types and constants for asset conversion and visibility.
+Defines types for the assets/convert feature: converted assets map, convert transaction, convert record, and related enums/constants. Used by convert page and API response typing.
 
-## Exports
+## type.ts exports
 
-### Interfaces
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| ConvertedAssets | interface | Map | `[asset: string]: number` |
+| ConvertTransaction | interface | Transaction row | venue, converted_asset, received_asset, qty, haircut, chain_id?, tx_id?, result? |
+| ConvertRecord | interface | Convert record | convert_id, converted_asset, received_asset, received_qty, type, status, created_time, updated_time, details |
+| ConvertType | type | Literal | "auto" \| "manual" |
+| ConvertStatus | type | Literal | "completed" \| "pending" \| "failed" \| "cancelled" |
+| VenueType | type | Literal | "on_chain" \| "internal_fund" |
+| ORDERLY_ASSETS_VISIBLE_KEY | constant | Storage key | "orderly_assets_visible" |
 
-| Name | Description |
-|------|-------------|
-| `ConvertedAssets` | `{ [asset: string]: number }` |
-| `ConvertTransaction` | transaction_id, venue, converted_asset, received_asset, converted_qty, received_qty, haircut, chain_id?, tx_id?, result? |
-| `ConvertRecord` | convert_id, converted_asset, received_asset, received_qty, type, status, created_time, updated_time, details |
+## ConvertTransaction fields
 
-### Types
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| transaction_id | number | Yes | Id |
+| venue | "on_chain" \| "internal_fund" | Yes | Source |
+| converted_asset | string | Yes | Asset converted from |
+| received_asset | string | Yes | Asset received |
+| converted_qty | number | Yes | Amount converted |
+| received_qty | number | Yes | Amount received |
+| haircut | number | Yes | Haircut applied |
+| chain_id | number | No | For on_chain |
+| tx_id | string | No | For on_chain |
+| result | string | No | Result |
 
-- `ConvertType` — `"auto" \| "manual"`
-- `ConvertStatus` — `"completed" \| "pending" \| "failed" \| "cancelled"`
-- `VenueType` — `"on_chain" \| "internal_fund"`
+## ConvertRecord fields
 
-### Constants
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| convert_id | number | Yes | Record id |
+| converted_asset | ConvertedAssets | Yes | Map of converted amounts |
+| received_asset | string | Yes | Received asset |
+| received_qty | number | Yes | Received quantity |
+| type | "auto" \| "manual" | Yes | Convert type |
+| status | ConvertStatus | Yes | Status |
+| created_time | number | Yes | Timestamp |
+| updated_time | number | Yes | Timestamp |
+| details | ConvertTransaction[] | Yes | Transaction list |
 
-- `ORDERLY_ASSETS_VISIBLE_KEY` — localStorage key for visible assets.
+## type.ts Example
+
+```typescript
+import type { ConvertRecord, ConvertTransaction, ConvertStatus } from "./type";
+
+const record: ConvertRecord = {
+  convert_id: 1,
+  converted_asset: { USDC: 100 },
+  received_asset: "USDC",
+  received_qty: 99,
+  type: "manual",
+  status: "completed",
+  created_time: Date.now(),
+  updated_time: Date.now(),
+  details: [],
+};
+```

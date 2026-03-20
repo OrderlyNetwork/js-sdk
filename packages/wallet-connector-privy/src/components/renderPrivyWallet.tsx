@@ -154,36 +154,39 @@ export function RenderPrivyWallet() {
     walletChainTypeConfig,
     connectorWalletType,
   } = useWalletConnectorPrivy();
-  const { walletEVM, walletSOL, linkedAccount } = usePrivyWallet();
-  const { namespace, switchWallet, disconnect } = useWallet();
+  const {
+    walletEVM,
+    walletSOL,
+    allWalletsEVM,
+    allWalletsSOL,
+    linkedAccount,
+    selectWallet,
+  } = usePrivyWallet();
+  const { switchWallet, disconnect } = useWallet();
   const { storageChain } = useStorageChain();
   const [walletList, setWalletList] = useState<ConnectWallet[]>([]);
   const [addWallet, setAddWallet] = useState<React.ReactNode[]>([]);
   const [loading, setLoading] = useState(true);
 
   const isActive = useCallback(
-    (walletType: WalletType) => {
+    (walletType: WalletType, address: string) => {
       if (storageChain?.namespace === ChainNamespace.evm) {
         if (walletType === WalletType.EVM) {
-          return !AbstractChains.has(storageChain?.chainId);
+          if (AbstractChains.has(storageChain?.chainId)) return false;
+          return walletEVM?.accounts[0]?.address === address;
         }
         return false;
       }
       if (storageChain?.namespace === ChainNamespace.solana) {
-        return walletType === WalletType.SOL;
+        if (walletType === WalletType.SOL) {
+          return walletSOL?.accounts[0]?.address === address;
+        }
+        return false;
       }
       return false;
     },
-    [storageChain],
+    [storageChain, walletEVM, walletSOL],
   );
-
-  const isHaveEvmWallet = useMemo(() => {
-    return walletEVM && walletEVM.accounts.length;
-  }, [walletEVM]);
-
-  const isHaveSolWallet = useMemo(() => {
-    return walletSOL && walletSOL.accounts.length;
-  }, [walletSOL]);
 
   const renderWarning = useCallback(() => {
     let showWarning = false;
@@ -230,14 +233,23 @@ export function RenderPrivyWallet() {
       <div className="oui-mt-5 oui-flex oui-flex-col oui-gap-5">
         {walletList.map((wallet) => (
           <WalletCard
-            key={wallet.type}
+            key={wallet.address}
             type={wallet.type}
             address={wallet.address}
-            isActive={isActive(wallet.type)}
+            isActive={isActive(wallet.type, wallet.address)}
             isPrivy={true}
             isMulti={walletList.length > 1}
             onActiveChange={() => {
-              switchWallet(wallet.type);
+              const walletNamespace =
+                wallet.type === WalletType.EVM
+                  ? ChainNamespace.evm
+                  : ChainNamespace.solana;
+              // Always select the specific clicked wallet first
+              selectWallet(walletNamespace, wallet.address);
+              if (storageChain?.namespace !== walletNamespace) {
+                // Also switch chain namespace if crossing types
+                switchWallet(wallet.type);
+              }
             }}
           />
         ))}
@@ -251,7 +263,16 @@ export function RenderPrivyWallet() {
         ))}
       </div>
     );
-  }, [walletList, addWallet, isActive, switchWallet, t, loading]);
+  }, [
+    walletList,
+    addWallet,
+    isActive,
+    switchWallet,
+    selectWallet,
+    storageChain,
+    t,
+    loading,
+  ]);
 
   useEffect(() => {
     new Promise((resolve) =>
@@ -263,24 +284,28 @@ export function RenderPrivyWallet() {
   }, []);
 
   useEffect(() => {
-    const tempWalletList = [];
-    const tempAddWallet = [];
+    const tempWalletList: ConnectWallet[] = [];
+    const tempAddWallet: React.ReactNode[] = [];
     if (!connectorWalletType.disableWagmi && walletChainTypeConfig.hasEvm) {
-      if (isHaveEvmWallet) {
-        tempWalletList.push({
-          type: WalletType.EVM,
-          address: walletEVM!.accounts[0].address,
-        });
+      if (allWalletsEVM.length > 0) {
+        for (const w of allWalletsEVM) {
+          tempWalletList.push({
+            type: WalletType.EVM,
+            address: w.accounts[0].address,
+          });
+        }
       } else {
         tempAddWallet.push(<CreateEVMWallet />);
       }
     }
     if (!connectorWalletType.disableSolana && walletChainTypeConfig.hasSol) {
-      if (isHaveSolWallet) {
-        tempWalletList.push({
-          type: WalletType.SOL,
-          address: walletSOL!.accounts[0].address,
-        });
+      if (allWalletsSOL.length > 0) {
+        for (const w of allWalletsSOL) {
+          tempWalletList.push({
+            type: WalletType.SOL,
+            address: w.accounts[0].address,
+          });
+        }
       } else {
         tempAddWallet.push(<CreateSOLWallet />);
       }
@@ -290,10 +315,8 @@ export function RenderPrivyWallet() {
   }, [
     connectorWalletType,
     walletChainTypeConfig,
-    walletEVM,
-    walletSOL,
-    isHaveEvmWallet,
-    isHaveSolWallet,
+    allWalletsEVM,
+    allWalletsSOL,
   ]);
 
   useEffect(() => {
@@ -307,7 +330,7 @@ export function RenderPrivyWallet() {
   }, [targetWalletType, setTargetWalletType]);
 
   return (
-    <div>
+    <div className="oui-flex oui-max-h-[70vh] oui-flex-col oui-overflow-y-auto oui-custom-scrollbar">
       <div className="oui-flex oui-items-center oui-justify-between">
         {linkedAccount && (
           <div className="oui-flex oui-items-center oui-justify-start oui-gap-2 oui-text-base-contrast">

@@ -1,21 +1,52 @@
-# Affiliate Package
+# Affiliate Package Documentation Index
 
-## Overview
+## Directory Overview
 
-The `@orderly.network/affiliate` package provides the referral/affiliate UI and logic for the Orderly Network: dashboard, referral codes, commission and referees, trader rebates, and home/landing flows.
+`packages/affiliate/src` is the Orderly Affiliate and Trader front-end module. It provides referral links, rebates, multi-level referral, dashboard, and landing pages.
 
-## Top-level entries
+## Module Responsibility Summary
 
-| Item | Type | Description |
-|------|------|-------------|
-| [src](src/index.md) | Directory | Main source: layout, provider, utils, components, pages |
-| [tsup.config.ts](tsup.config.md) | Config | tsup build configuration |
+| Responsibility | Description |
+|----------------|-------------|
+| Referral context and state | `ReferralProvider` exposes referral info, identity (isAffiliate / isTrader), tab, and data refresh |
+| Multi-level referral | Volume prerequisite, rebate rates, statistics, and referral code management |
+| Pages and layout | Dashboard, Home, Affiliate, Trader, MultiLevel pages and shared layout |
+| Data and API | Hooks for referral and multi-level referral APIs and SWR pagination |
 
-## Directory structure
+## Key Entities
 
-- **src/** – Entry (`index.ts`, `install.tsx`), version, layout, provider, utils, components, pages
-- **src/layout/** – Affiliate layout (scaffold, sidebar, layout builder)
-- **src/provider/** – Referral context and `ReferralProvider`
-- **src/utils/** – Types, date/format helpers, SWR key generator, decimal, chart utils, mock data
-- **src/components/** – Icons and small UI (affiliate, trader, edit, pin, etc.)
-- **src/pages/** – home, dashboard, affiliate, trader pages and sub-routes
+| Entity | Type | Responsibility | Entry |
+|--------|------|----------------|-------|
+| ReferralProvider | React Provider | Global referral state and API data | `provider/provider.tsx` |
+| ReferralContext | Context | Referral context type and `useReferralContext` | `provider/context.ts` |
+| AffiliateLayoutWidget | Component | Affiliate module layout | `layout/layout.widget.tsx` |
+| useReferralCode | Hook | Create/edit referral code, update rebate rate | `hooks/useReferralCode.ts` |
+| useMultiLevelReferralData | Hook | Multi-level eligibility and rebate info | `hooks/useMultiLevelReferralData.ts` |
+| StatisticsTimeRange | enum | Time range for statistics (1d / 7d / 30d / All) | `types.ts` |
+| ReferralCodeFormType | enum | Form type (Create / Edit / Reset) | `types.ts` |
+
+## Subdirectories and Top-Level Files
+
+### Subdirectories
+
+| Directory | Description | Index |
+|-----------|-------------|--------|
+| [components](components/index.md) | Shared UI (AutoHideText, EditCode, PinButton, etc.) | [components/index.md](components/index.md) |
+| [hooks](hooks/index.md) | Referral and multi-level referral API/data hooks | [hooks/index.md](hooks/index.md) |
+| [icons](icons/index.md) | Icon components | [icons/index.md](icons/index.md) |
+| [layout](layout/index.md) | Layout and sidebar context | [layout/index.md](layout/index.md) |
+| [pages](pages/index.md) | Pages: dashboard, home, affiliate, trader, multiLevel | [pages/index.md](pages/index.md) |
+| [provider](provider/index.md) | ReferralProvider and ReferralContext | [provider/index.md](provider/index.md) |
+| [utils](utils/index.md) | Utils, types, SWR, chart helpers | [utils/index.md](utils/index.md) |
+
+### Top-Level Code Files
+
+| File | Language | Responsibility | Entry symbols | Link |
+|------|----------|-----------------|---------------|------|
+| index.ts | TypeScript | Package entry: re-exports Dashboard, multiLevel, provider, layout | Dashboard, layout, provider | [entry.md](entry.md) |
+| types.ts | TypeScript | Statistics time range, referral code form enums | StatisticsTimeRange, ReferralCodeFormType, ReferralCodeFormField | [types.md](types.md) |
+| version.ts | TypeScript | Package version and global `__ORDERLY_VERSION__` | default export | [version.md](version.md) |
+
+## Search Keywords
+
+affiliate, referral, referrer, referee, rebate, multi-level, dashboard, trader, referral code, referral link, commission, volume prerequisite, chart config, overwrite

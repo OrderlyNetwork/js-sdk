@@ -1,15 +1,30 @@
-# positions
+# positions.ts
 
-## Overview
+## positions.ts responsibility
 
-Copy for positions: close position, funding fee, liquidation, position history, close all, limit/market close, history columns (closed, net PnL, time opened/closed), liquidation table and tooltips, and reverse position (market close long/short, reverse to long/short, errors).
+Provides position-related copy: close position, funding fee title/tooltip, liquidation, position history, close all (options: all / profit / loss), column labels (liq. price, unreal PnL, margin), limit/market close descriptions and errors, history status and type (closed, ADL, liquidated), liquidation table columns and tooltips, reverse position flow, and adjust margin labels.
 
-## Exports
+## positions.ts exports
 
-### `positions`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| positions | object | Key-value map | Keys under "positions.*" |
+| Positions | type | typeof positions | Type export |
 
-Object of keys under `positions.*`: e.g. `positions.closePosition`, `positions.column.liqPrice`, `positions.limitClose.description`, `positions.reverse.title`, `positions.Liquidation.tooltip.liquidation`.
+## positions.ts key groups (sample)
 
-### `Positions` (type)
+| Theme | Examples |
+|-------|----------|
+| Close | positions.closePosition, positions.closeAll, positions.limitClose.description |
+| Columns | positions.column.liqPrice, positions.column.unrealPnl.tooltip |
+| History | positions.history.status.closed, positions.history.type.liquidated |
+| Reverse | positions.reverse.title, positions.reverse.reverseToLong |
+| Adjust margin | positions.adjustMargin.title, positions.adjustMargin.add |
 
-`typeof positions`.
+## positions.ts Example
+
+```typescript
+t("positions.closePosition");
+t("positions.reverse.description");
+t("positions.adjustMargin.success");
+```

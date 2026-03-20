@@ -74,7 +74,7 @@ export const affiliate = {
   "affiliate.base": "Affiliate",
   "affiliate.directBonus": "Direct bonus",
   "affiliate.commission.30d": "30d commission",
-  "affiliate.commission.column.activeUsers": "Referral active users",
+  "affiliate.commission.column.activeUsers": "New traders",
 
   "affiliate.myReferees": "My referees",
   "affiliate.referees": "Referees",

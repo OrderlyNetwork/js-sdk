@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { differenceInDays, setDate, setHours, subDays } from "date-fns";
-import {
-  useAccount,
-  usePrivateQuery,
-  useSymbolsInfo,
-} from "@orderly.network/hooks";
+import { differenceInDays, subDays } from "date-fns";
+import { useAccount, usePrivateQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum, MarginMode } from "@orderly.network/types";
@@ -36,6 +32,20 @@ export enum PositionHistoryStatus {
   partial_closed = "partial_closed",
 }
 
+const normalizeMarginMode = (
+  value?: API.PositionHistory["margin_mode"] | null,
+): MarginMode | undefined => {
+  if (value === 1 || value === MarginMode.ISOLATED) {
+    return MarginMode.ISOLATED;
+  }
+
+  if (value === 0 || value === MarginMode.CROSS) {
+    return MarginMode.CROSS;
+  }
+
+  return undefined;
+};
+
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
   const {
     onSymbolChange,
@@ -65,31 +75,25 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
       : "/v1/position_history?limit=1000",
     {
       formatter(data) {
-        return (data.rows ?? null)?.map(
-          (item: API.PositionHistory): PositionHistoryExt => {
-            if (
-              item.realized_pnl != null &&
-              item.accumulated_funding_fee != null &&
-              item.trading_fee != null
-            ) {
-              const netPnL =
-                item.realized_pnl -
-                item.accumulated_funding_fee -
-                item.trading_fee;
-              return {
-                ...item,
-                // convert margin_mode to MarginMode
-                margin_mode:
-                  item.margin_mode === 1 ||
-                  item.margin_mode === MarginMode.ISOLATED
-                    ? MarginMode.ISOLATED
-                    : MarginMode.CROSS,
-                netPnL: netPnL,
-              };
-            }
-            return item;
-          },
-        );
+        return (data.rows ?? null)?.map((item: API.PositionHistory) => {
+          const result: PositionHistoryExt = {
+            ...item,
+            margin_mode: normalizeMarginMode(item.margin_mode),
+          };
+
+          if (
+            item.realized_pnl != null &&
+            item.accumulated_funding_fee != null &&
+            item.trading_fee != null
+          ) {
+            result.netPnL =
+              item.realized_pnl -
+              item.accumulated_funding_fee -
+              item.trading_fee;
+          }
+
+          return result;
+        });
       },
       revalidateOnFocus: true,
     },

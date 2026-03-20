@@ -1,15 +1,20 @@
-# share
+# share.ts
 
-## Overview
+## share.ts responsibility
 
-Share PnL: share button, long/short labels, display format (ROI & PnL, ROI, PnL), optional info (open/close price, open/close time, message placeholder and max length), image copied, copy failed message.
+Provides PnL share copy: share PnL, long/short labels, PnL display format (ROI & PnL, ROI, PnL), optional info to share (open/close price and time, message placeholder and max length), and copy image success/failed messages.
 
-## Exports
+## share.ts exports
 
-### `share`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| share | object | Key-value map | Keys under "share.pnl.*" |
+| Share | type | typeof share | Type export |
 
-Object of keys under `share.pnl.*`: e.g. `share.pnl.sharePnl`, `share.pnl.displayFormat.roi&Pnl`, `share.pnl.optionalInfo.message.placeholder`.
+## share.ts Example
 
-### `Share` (type)
-
-`typeof share`.
+```typescript
+t("share.pnl.sharePnl");
+t("share.pnl.displayFormat.roi&Pnl");
+t("share.pnl.optionalInfo.message.placeholder");
+```

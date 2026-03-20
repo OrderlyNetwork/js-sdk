@@ -36,7 +36,7 @@ export type PerformanceUIProps = {
 const formatForChart = (value: number | null | undefined, dp: number = 2) => {
   if (value == null) return 0;
   const decimal = new Decimal(value);
-  return Number(decimal.toFixed(dp, Decimal.ROUND_DOWN));
+  return Number(decimal.toFixed(dp, Decimal.ROUND_HALF_UP));
 };
 
 export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {

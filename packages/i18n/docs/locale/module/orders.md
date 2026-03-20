@@ -1,15 +1,29 @@
-# orders
+# orders.ts
 
-## Overview
+## orders.ts responsibility
 
-Order history and actions: status (pending, filled, partial filled, canceled, rejected, incomplete, completed), toast titles (opened, filled, canceled, rejected, replaced, scaled sub-order, trailing activated), columns (fill/quantity, order time, hidden), edit order confirm texts, cancel order/cancel all (pending, TP/SL, for symbol), validation messages (price, quantity), renew, download tooltip.
+Provides order-related copy: order history, order status (pending, filled, canceled, rejected, etc.), toast titles for status changes, column labels (fill/quantity, order time, hidden), edit/cancel order dialogs and confirmations, cancel all (pending / TP-SL / by symbol), validation messages for price and quantity, and download tooltip.
 
-## Exports
+## orders.ts exports
 
-### `orders`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| orders | object | Key-value map | Keys under "orders.*", "order.edit.confirm.*" |
+| Orders | type | typeof orders | Type export |
 
-Object of keys under `orders.*` and `order.edit.confirm.*`: e.g. `orders.status.filled`, `orders.cancelAll.description`, `order.edit.confirm.quantity`.
+## orders.ts key groups (sample)
 
-### `Orders` (type)
+| Theme | Examples |
+|-------|----------|
+| Status | orders.status.pending, orders.status.filled, orders.status.canceled |
+| Toasts | orders.status.opened.toast.title, orders.status.filled.toast.title |
+| Actions | orders.editOrder, orders.cancelOrder, orders.cancelAll |
+| Validation | orders.price.greaterThan, orders.quantity.lessThan |
 
-`typeof orders`.
+## orders.ts Example
+
+```typescript
+t("orders.orderHistory");
+t("orders.status.pending");
+t("orders.cancelOrder.description");
+```

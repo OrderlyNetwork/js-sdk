@@ -1,15 +1,20 @@
-# leverage
+# leverage.ts
 
-## Overview
+## leverage.ts responsibility
 
-Leverage: max/current leverage labels, adjust leverage, tips (max position at leverage, max available leverage, margin not enough, over max position), confirm dialog (content, disable confirmation), and actual position leverage tip.
+Provides leverage copy: max account leverage, account/current/max leverage, updated, adjusted leverage, tooltips (max position at leverage, max available leverage, over required margin, over max position leverage), confirm dialog content, disable confirmation, and actual position leverage tip.
 
-## Exports
+## leverage.ts exports
 
-### `leverage`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| leverage | object | Key-value map | Keys under "leverage.*" |
+| Leverage | type | typeof leverage | Type export |
 
-Object of keys under `leverage.*`: e.g. `leverage.maxAccountLeverage`, `leverage.confirm.content`, `leverage.maxPositionLeverage.tips`.
+## leverage.ts Example
 
-### `Leverage` (type)
-
-`typeof leverage`.
+```typescript
+t("leverage.accountLeverage");
+t("leverage.confirm.content");
+t("leverage.maxAvailableLeverage.tips");
+```

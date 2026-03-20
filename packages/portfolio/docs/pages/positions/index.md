@@ -1,11 +1,17 @@
-# pages/positions
+# positions – directory index
 
-## Overview
+## Directory responsibility
 
-Positions page for portfolio.
+Positions page (re-exported from page). Exposed as PositionsModule from package root.
+
+## Key entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| PositionsPage (or equivalent) | page.tsx | Positions page component |
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [page.tsx](page.md) | TSX | Positions page component. |
+| File | Language | Link |
+|------|----------|------|
+| page.tsx | TSX | [page.md](page.md) |

@@ -1,79 +1,73 @@
-# orderly
+# orderly — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Orderly trading and market hooks: orderbook, symbols, markets, mark/index prices, funding, positions, orders, wallet subscriptions, TPSL, calculator, statistics, maintenance.
+Orderly domain hooks and services: order book stream, symbols info, markets, mark/index prices, leverage, margin modes, funding, positions, orders, deposit/withdraw, transfer, chains, wallet/balance subscriptions, TPSL, statistics, calculator, and related stores. This is the main data layer for trading and account features.
 
 ## Subdirectories
 
-| Directory | Description |
-|-----------|-------------|
-| [calculator](./calculator/index.md) | Calculator service, portfolio, positions, orders, asset calculator |
-| [internal](./internal/index.md) | Internal WS observer |
-| [statistics](./statistics/index.md) | Daily stats, funding fee, distribution, transfer, vaults history |
-| [useMarket](./useMarket/index.md) | Market store and market list/map |
-| [useMarkPrice](./useMarkPrice/index.md) | Mark price store |
-| [useIndexPrice](./useIndexPrice/index.md) | Index price store |
-| [useOrderStream](./useOrderStream/index.md) | Order stream and sub-account algo order stream |
-| [usePositionStream](./usePositionStream/index.md) | Position stream and store |
-| [useTakeProfitAndStopLoss](./useTakeProfitAndStopLoss/index.md) | TPSL hook and utils |
-| [useTokensInfo](./useTokensInfo/index.md) | Tokens info store |
-| [wsTopic](./wsTopic/index.md) | Wallet and balance topic hooks |
+| Directory | Description | Index |
+|-----------|-------------|--------|
+| [calculator](calculator/index.md) | Portfolio/order/position calculator, scheduler | [calculator/index.md](calculator/index.md) |
+| [statistics](statistics/index.md) | Asset/funding/transfer/vault history, user stats | [statistics/index.md](statistics/index.md) |
+| [useIndexPrice](useIndexPrice/index.md) | Index price store | [useIndexPrice/index.md](useIndexPrice/index.md) |
+| [useMarkPrice](useMarkPrice/index.md) | Mark price store | [useMarkPrice/index.md](useMarkPrice/index.md) |
+| [useMarket](useMarket/index.md) | Market list/map store | [useMarket/index.md](useMarket/index.md) |
+| [useOrderStream](useOrderStream/index.md) | Order stream, sub-account algo order stream | [useOrderStream/index.md](useOrderStream/index.md) |
+| [usePositionStream](usePositionStream/index.md) | Position stream and store | [usePositionStream/index.md](usePositionStream/index.md) |
+| [useTakeProfitAndStopLoss](useTakeProfitAndStopLoss/index.md) | TPSL order hook and utils | [useTakeProfitAndStopLoss/index.md](useTakeProfitAndStopLoss/index.md) |
+| [useTokensInfo](useTokensInfo/index.md) | Tokens info store | [useTokensInfo/index.md](useTokensInfo/index.md) |
+| [usePortfolio](usePortfolio/index.md) | Portfolio store | [usePortfolio/index.md](usePortfolio/index.md) |
+| [wsTopic](wsTopic/index.md) | Wallet/balance topic hooks | [wsTopic/index.md](wsTopic/index.md) |
+| [internal](internal/index.md) | Internal WS observer | [internal/index.md](internal/index.md) |
 
-## Root-level files
+## Top-Level Files (orderly/)
 
-| File | Language | Description |
-|------|----------|-------------|
-| [orderlyHooks](./orderlyHooks.md) | TypeScript | Barrel export of all orderly hooks |
-| [appStore](./appStore.md) | TypeScript | App store (portfolio, funding rate by symbol) |
-| [useAccountInfo](./useAccountInfo.md) | TypeScript | Account info hook |
-| [useBalanceSubscription](./useBalanceSubscription.md) | TypeScript | Balance subscription |
-| [useChain](./useChain.md) | TypeScript | Chain hook |
-| [useChainInfo](./useChainInfo.md) | TypeScript | Chain info hook |
-| [useChains](./useChains.md) | TypeScript | Chains and storage chain |
-| [useCollateral](./useCollateral.md) | TypeScript | Collateral hook |
-| [useComputedLTV](./useComputedLTV.md) | TypeScript | Computed LTV |
-| [useConvert](./useConvert.md) | TypeScript | Convert hook |
-| [useDeposit](./useDeposit.md) | TypeScript | Deposit hook |
-| [useFundingDetails](./useFundingDetails.md) | TypeScript | Funding details |
-| [useFundingRate](./useFundingRate.md) | TypeScript | Funding rate by symbol |
-| [useFundingRateHistory](./useFundingRateHistory.md) | TypeScript | Funding rate history |
-| [useFundingRates](./useFundingRates.md) | TypeScript | All funding rates |
-| [useHoldingStream](./useHoldingStream.md) | TypeScript | Holding stream |
-| [useIndexPrice](./useIndexPrice.md) | TypeScript | Index price by symbol |
-| [useIndexPricesStream](./useIndexPricesStream.md) | TypeScript | Index prices stream |
-| [useInternalTransfer](./useInternalTransfer.md) | TypeScript | Internal transfer |
-| [useLeverage](./useLeverage.md) | TypeScript | Leverage hook |
-| [useLeverageBySymbol](./useLeverageBySymbol.md) | TypeScript | Leverage by symbol |
-| [useMaintenanceStatus](./useMaintenanceStatus.md) | TypeScript | Maintenance status |
-| [useMarginRatio](./useMarginRatio.md) | TypeScript | Margin ratio |
-| [useMarkPrice](./useMarkPrice.md) | TypeScript | Mark price by symbol |
-| [useMarkPricesStream](./useMarkPricesStream.md) | TypeScript | Mark prices stream |
-| [useMarket](./useMarket.md) | TypeScript | Single market |
-| [useMarketTradeStream](./useMarketTradeStream.md) | TypeScript | Market trade stream |
-| [useMarkets](./useMarkets.md) | TypeScript | Markets list and store |
-| [useMarketsStream](./useMarketsStream.md) | TypeScript | Markets stream |
-| [useMaxLeverage](./useMaxLeverage.md) | TypeScript | Max leverage |
-| [useMaxQty](./useMaxQty.md) | TypeScript | Max quantity |
-| [useMaxWithdrawal](./useMaxWithdrawal.md) | TypeScript | Max withdrawal |
-| [useOdosQuote](./useOdosQuote.md) | TypeScript | Odos quote |
-| [useOpenInterest](./useOpenInterest.md) | TypeScript | Open interest |
-| [useOrderbookStream](./useOrderbookStream.md) | TypeScript | Orderbook stream |
-| [usePortfolio](./usePortfolio.md) | TypeScript | (via appStore) |
-| [usePrivateDataObserver](./usePrivateDataObserver.md) | TypeScript | Private data observer |
-| [usePublicDataObserver](./usePublicDataObserver.md) | TypeScript | Public data observer |
-| [useRwaSymbolsInfo](./useRwaSymbolsInfo.md) | TypeScript | RWA symbols info |
-| [useSettleSubscription](./useSettleSubscription.md) | TypeScript | Settle subscription |
-| [useStorageChain](./useStorageChain.md) | TSX | Storage chain |
-| [useStorageLedgerAddress](./useStorageLedgerAddress.md) | TypeScript | Storage ledger address |
-| [useSymbolInfo](./useSymbolInfo.md) | TypeScript | Symbol info |
-| [useSymbolLeverage](./useSymbolLeverage.md) | TypeScript | Symbol leverage |
-| [useSymbolPriceRange](./useSymbolPriceRange.md) | TypeScript | Symbol price range |
-| [useSymbolsInfo](./useSymbolsInfo.md) | TypeScript | Symbols info |
-| [useSymbolsInfoStore](./useSymbolsInfo.md) | TypeScript | (same module) |
-| [useTickerStream](./useTickerStream.md) | TypeScript | Ticker stream for symbol |
-| [useTokensInfo](./useTokensInfo.md) | TypeScript | (see useTokensInfo dir) |
-| [useTransfer](./useTransfer.md) | TypeScript | Transfer hook |
-| [useWalletSubscription](./useWalletSubscription.md) | TypeScript | Wallet subscription |
-| [useWithdraw](./useWithdraw.md) | TypeScript | Withdraw hook |
-| [orderbook.service](./orderbook.service.md) | TypeScript | Orderbook service |
+| File | Language | Summary | Link |
+|------|----------|---------|------|
+| orderlyHooks.ts | TS | Re-exports all orderly hooks | [orderlyHooks.md](orderlyHooks.md) |
+| appStore.ts | TS | App store | [appStore.md](appStore.md) |
+| useOrderbookStream.ts | TS | Order book WebSocket stream | [useOrderbookStream.md](useOrderbookStream.md) |
+| useSymbolsInfo.ts | TS | Symbols info hook | [useSymbolsInfo.md](useSymbolsInfo.md) |
+| useSymbolInfo.ts | TS | Single symbol info | [useSymbolInfo.md](useSymbolInfo.md) |
+| useAccountInfo.ts | TS | Account info hook | [useAccountInfo.md](useAccountInfo.md) |
+| useMarketsStream.ts | TS | Markets stream | [useMarketsStream.md](useMarketsStream.md) |
+| useMarket.ts | TS | Single market hook | [useMarket.md](useMarket.md) |
+| useMarkets.ts | TS | Markets list/store | [useMarkets.md](useMarkets.md) |
+| useMarkPricesStream.ts | TS | Mark prices stream | [useMarkPricesStream.md](useMarkPricesStream.md) |
+| useIndexPricesStream.ts | TS | Index prices stream | [useIndexPricesStream.md](useIndexPricesStream.md) |
+| useMarkPrice.ts | TS | Mark price hook | [useMarkPrice.md](useMarkPrice.md) |
+| useIndexPrice.ts | TS | Index price hook | [useIndexPrice.md](useIndexPrice.md) |
+| useLeverage.ts | TS | Leverage hook | [useLeverage.md](useLeverage.md) |
+| useMarginModes.ts | TS | Margin modes hook | [useMarginModes.md](useMarginModes.md) |
+| useFundingRate.ts | TS | Funding rate hook | [useFundingRate.md](useFundingRate.md) |
+| useFundingDetails.ts | TS | Funding details hook | [useFundingDetails.md](useFundingDetails.md) |
+| useFundingRates.ts | TS | Funding rates hook | [useFundingRates.md](useFundingRates.md) |
+| useFundingRateHistory.ts | TS | Funding rate history | [useFundingRateHistory.md](useFundingRateHistory.md) |
+| usePositionStream (dir) | — | Position stream | see [usePositionStream/index.md](usePositionStream/index.md) |
+| useOrderStream (dir) | — | Order stream | see [useOrderStream/index.md](useOrderStream/index.md) |
+| useDeposit.ts | TS | Deposit hook | [useDeposit.md](useDeposit.md) |
+| useWithdraw.ts | TS | Withdraw hook | [useWithdraw.md](useWithdraw.md) |
+| useTransfer.ts | TS | Transfer hook | [useTransfer.md](useTransfer.md) |
+| useMaxWithdrawal.ts | TS | Max withdrawal hook | [useMaxWithdrawal.md](useMaxWithdrawal.md) |
+| useChains.ts | TS | Chains hook | [useChains.md](useChains.md) |
+| useChain.ts | TS | Single chain hook | [useChain.md](useChain.md) |
+| useChainInfo.ts | TS | Chain info hook | [useChainInfo.md](useChainInfo.md) |
+| useStorageChain.tsx | TSX | Storage chain hook | [useStorageChain.md](useStorageChain.md) |
+| useCollateral.ts | TS | Collateral hook | [useCollateral.md](useCollateral.md) |
+| useMaxQty.ts | TS | Max quantity hook | [useMaxQty.md](useMaxQty.md) |
+| useMarginRatio.ts | TS | Margin ratio hook | [useMarginRatio.md](useMarginRatio.md) |
+| useMaintenanceStatus.ts | TS | Maintenance status hook | [useMaintenanceStatus.md](useMaintenanceStatus.md) |
+| (others) | TS/TSX | See subdirs and file list | (linked in subdir indexes) |
+
+## Key Entities
+
+| Entity | Responsibility |
+|--------|----------------|
+| useOrderbookStream | Order book depth stream |
+| usePositionStream | Positions stream and store |
+| useOrderStream | Orders stream |
+| useMarkPrice / useIndexPrice | Mark/index price by symbol |
+| useDeposit / useWithdraw / useTransfer | Deposit, withdraw, transfer |
+| useChains / useChain | Chain list and current chain |
+| useLeverage / useMarginModes | Leverage and margin mode |
