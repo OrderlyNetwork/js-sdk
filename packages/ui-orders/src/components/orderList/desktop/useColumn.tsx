@@ -63,7 +63,7 @@ export const useOrderColumn = (props: {
       case TabType.all:
         return [
           instrument({
-            width: 130,
+            width: 174,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -125,7 +125,7 @@ export const useOrderColumn = (props: {
       case TabType.tp_sl:
         return [
           instrument({
-            width: 176,
+            width: 196,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
