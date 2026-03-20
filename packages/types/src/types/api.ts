@@ -125,7 +125,7 @@ export declare namespace API {
     /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
     display_symbol_name?: string;
     /** Permissionless listing: broker id; null for non-community-listed symbols */
-    broker_id?: string;
+    broker_id?: string | null;
     /** Trading status: POST_ONLY / ACTIVE / REDUCE_ONLY / DELISTING */
     status?: SymbolTradingStatus;
   }

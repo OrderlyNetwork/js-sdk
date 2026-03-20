@@ -393,12 +393,12 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
         onScroll={onScoll}
       />
       {/* Part 3: RWA countdown */}
-      {(showCountdown || true) && (
+      {showCountdown && (
         <RwaCountdown
           closeCountdown={closeCountdown}
           isRwa={isRwa}
           open={open}
-          closeTimeInterval={300}
+          closeTimeInterval={closeTimeInterval}
         />
       )}
     </Flex>
