@@ -11,7 +11,6 @@ import {
 import { cn } from "@orderly.network/ui";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
-import { useIsRwaRoute } from "../../orderlyConfig/hooks/useIsRwaRoute";
 import { useSymbolList } from "../../orderlyConfig/hooks/useSymbolList";
 import { notification } from "../../orderlyConfig/notification";
 import { themes } from "../../orderlyConfig/themes";
@@ -19,16 +18,17 @@ import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
-export type OrderlyAppRootProviderProps = ConfigStoreOptions;
+export type OrderlyAppRootProviderProps = ConfigStoreOptions & {
+  isRwaRoute: boolean;
+};
 
 export const OrderlyAppRootProvider: FC<
   PropsWithChildren<OrderlyAppRootProviderProps>
 > = (props) => {
-  const { children, ...rest } = props;
+  const { children, isRwaRoute, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
-  const symbolList = useSymbolList();
-  const isRwaRoute = useIsRwaRoute();
+  const symbolList = useSymbolList(isRwaRoute);
 
   return (
     <div className={cn(isRwaRoute && "oui-rwa-route")}>
