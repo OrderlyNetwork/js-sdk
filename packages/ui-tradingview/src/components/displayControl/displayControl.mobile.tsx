@@ -108,7 +108,7 @@ export const MobileDisplayControl: React.FC<IProps> = (props) => {
                       "oui-flex oui-h-6 oui-w-full oui-items-center oui-justify-between",
                       "oui-rounded oui-px-2 oui-text-2xs",
                       item.id && "oui-bg-base-5",
-                      props.displayControlState[item.id]
+                      (props.displayControlState[item.id] ?? true)
                         ? "oui-text-base-contrast"
                         : "oui-text-base-contrast-36",
                     )}
@@ -126,7 +126,7 @@ export const MobileDisplayControl: React.FC<IProps> = (props) => {
                     {item.id && (
                       <>
                         <div>{item.label}</div>
-                        {props.displayControlState[item.id] ? (
+                        {(props.displayControlState[item.id] ?? true) ? (
                           <SelectedIcon className="oui-size-3" />
                         ) : (
                           <UnSelectIcon className="oui-size-3" />
