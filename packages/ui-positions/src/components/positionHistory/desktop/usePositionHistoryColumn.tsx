@@ -37,7 +37,7 @@ export const usePositionHistoryColumn = (props: {
           title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
-          width: 260,
+          width: 320,
           onSort: (r1: any, r2: any) => {
             return r1.symbol?.localeCompare(r2.symbol || "");
           },

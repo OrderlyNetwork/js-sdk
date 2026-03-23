@@ -40,7 +40,7 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
       <Flex gap={1} itemAlign="center">
         <Text.formatted
           rule="symbol"
-          formatString="base-type"
+          formatString="base"
           size="2xs"
           showIcon
           onClick={() => {

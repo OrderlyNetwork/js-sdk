@@ -242,7 +242,7 @@ When components need to be used in UI (especially component names obtained from 
     size="base"
     weight="semibold"
     rule="symbol"
-    formatString="base-type"
+    formatString="base"
     showIcon
   >
     {symbol}

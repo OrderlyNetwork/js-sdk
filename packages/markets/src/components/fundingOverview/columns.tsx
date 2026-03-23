@@ -47,7 +47,7 @@ export const useFundingOverviewColumns = (
         title: t("markets.column.market"),
         dataIndex: "symbol",
         onSort: true,
-        width: 135,
+        width: 180,
         className: isMobile ? "oui-pl-0" : undefined,
         render: (value, record) => {
           if (isMobile) {
