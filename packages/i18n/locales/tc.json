@@ -737,6 +737,7 @@
   "tradingView.displayControl.buySell": "买入/卖出",
   "tradingView.displayControl.limitOrders": "限價訂單",
   "tradingView.displayControl.stopOrders": "止損訂單",
+  "tradingView.displayControl.liquidationPrice": "清算價格",
   "tradingView.noScriptSrc": "由於TradingView的政策，您需要申請自己的許可證。",
   "tradingView.noScriptSrc.1": "1. 請在<0>這裡</0>申請您的TradingView高級圖表許可證",
   "tradingView.noScriptSrc.2": "2. 按照<0>orderly.network</0>上的說明進行設置。",

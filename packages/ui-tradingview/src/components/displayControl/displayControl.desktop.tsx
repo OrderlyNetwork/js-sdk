@@ -53,6 +53,10 @@ export const DesktopDisplayControl: React.FC<IProps> = (props) => {
         label: t("orderEntry.orderType.trailingStop"),
         id: "trailingStop",
       },
+      {
+        label: t("tradingView.displayControl.liquidationPrice"),
+        id: "liquidationPrice",
+      },
     ];
   }, [t]);
 

@@ -57,8 +57,10 @@ export const MobileDisplayControl: React.FC<IProps> = (props) => {
           label: t("orderEntry.orderType.trailingStop"),
           id: "trailingStop",
         },
-        // placeholder
-        {} as DisplayControl,
+        {
+          label: t("tradingView.displayControl.liquidationPrice"),
+          id: "liquidationPrice",
+        },
       ],
     ];
   }, [t]);

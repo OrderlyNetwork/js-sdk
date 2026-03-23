@@ -135,11 +135,15 @@ export default function useCreateRenderer(
         : null;
 
     // Rendering rule:
-    // - When effectiveEstimatedLiqPrice exists: render estimated liq. price line.
-    // - When no estimated but positionLiqPrice exists: render position liq. price line.
+    // - When effectiveEstimatedLiqPrice exists: render estimated liq. price line (always, regardless of liquidationPrice setting).
+    // - When no estimated but positionLiqPrice exists: render position liq. price line ONLY if liquidationPrice setting is enabled.
     // - When neither exists: remove line.
+    const showPositionLiqPrice =
+      positionLiqPrice != null &&
+      displayControlSetting?.liquidationPrice !== false;
+
     renderer.renderLiquidationLine({
-      positionLiqPrice,
+      positionLiqPrice: showPositionLiqPrice ? positionLiqPrice : null,
       estimatedLiqPrice: effectiveEstimatedLiqPrice,
     });
   }, [
@@ -148,6 +152,7 @@ export default function useCreateRenderer(
     symbol,
     estimatedLiqPrice,
     displayControlSetting?.position,
+    displayControlSetting?.liquidationPrice,
   ]);
 
   useEffect(() => {
