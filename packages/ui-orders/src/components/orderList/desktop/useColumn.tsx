@@ -64,7 +64,7 @@ export const useOrderColumn = (props: {
       case TabType.all:
         return [
           instrument({
-            width: 174,
+            width: 200,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -102,7 +102,7 @@ export const useOrderColumn = (props: {
       case TabType.pending:
         return [
           instrument({
-            width: 172,
+            width: 200,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -126,7 +126,7 @@ export const useOrderColumn = (props: {
       case TabType.tp_sl:
         return [
           instrument({
-            width: 176,
+            width: 200,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -144,7 +144,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 172,
+            width: 200,
             onSymbolChange: onSymbolChange,
           }),
           // type({ width: 124 }),
@@ -179,7 +179,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 172,
+            width: 200,
             onSymbolChange: onSymbolChange,
             enableSort: false,
           }),
@@ -203,7 +203,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 172,
+            width: 200,
             onSymbolChange: onSymbolChange,
           }),
           // side({ width: 124 }),
@@ -226,7 +226,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 172,
+            width: 200,
             onSymbolChange: onSymbolChange,
           }),
           // side({ width: 124 }),

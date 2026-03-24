@@ -37,7 +37,7 @@ export const usePositionHistoryColumn = (props: {
           title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
-          width: 320,
+          width: 250,
           onSort: (r1: any, r2: any) => {
             return r1.symbol?.localeCompare(r2.symbol || "");
           },
@@ -311,7 +311,9 @@ export const SymbolInfo = (props: {
           symbol={record.symbol}
           onSymbolChange={onSymbolChange}
         />
-        <Flex gap={1}>{tags}</Flex>
+        <Flex gap={1} wrap="wrap">
+          {tags}
+        </Flex>
       </Flex>
     </Flex>
   );
