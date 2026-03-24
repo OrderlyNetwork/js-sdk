@@ -1,5 +1,23 @@
 # @orderly.network/ui-scaffold
 
+## 2.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+- Updated dependencies
+- Updated dependencies [1c40427]
+  - @orderly.network/react-app@2.11.2
+  - @orderly.network/hooks@2.11.2
+  - @orderly.network/i18n@2.11.2
+  - @orderly.network/types@2.11.2
+  - @orderly.network/ui@2.11.2
+  - @orderly.network/ui-chain-selector@2.11.2
+  - @orderly.network/ui-connector@2.11.2
+  - @orderly.network/ui-notification@2.11.2
+  - @orderly.network/utils@2.11.2
+
 ## 2.11.2-alpha.0
 
 ### Patch Changes

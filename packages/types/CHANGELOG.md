@@ -1,5 +1,12 @@
 # @orderly.network/types
 
+## 2.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+
 ## 2.11.2-alpha.0
 
 ### Patch Changes

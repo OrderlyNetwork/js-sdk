@@ -1,5 +1,16 @@
 # @orderly.network/futures
 
+## 4.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+- Updated dependencies
+- Updated dependencies [1c40427]
+  - @orderly.network/types@2.11.2
+  - @orderly.network/utils@2.11.2
+
 ## 4.11.2-alpha.0
 
 ### Patch Changes

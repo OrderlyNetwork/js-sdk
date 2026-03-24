@@ -1,5 +1,46 @@
 # storybook
 
+## 1.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+- Updated dependencies
+- Updated dependencies [1c40427]
+  - @orderly.network/affiliate@2.11.2
+  - @orderly.network/react-app@2.11.2
+  - @orderly.network/chart@2.11.2
+  - @orderly.network/core@2.11.2
+  - @orderly.network/default-evm-adapter@2.11.2
+  - @orderly.network/default-solana-adapter@2.11.2
+  - @orderly.network/hooks@2.11.2
+  - @orderly.network/i18n@2.11.2
+  - @orderly.network/markets@2.11.2
+  - @orderly.network/portfolio@2.11.2
+  - @orderly.network/trading@2.11.2
+  - @orderly.network/trading-leaderboard@2.11.2
+  - @orderly.network/trading-points@1.3.2
+  - @orderly.network/trading-rewards@2.11.2
+  - @orderly.network/types@2.11.2
+  - @orderly.network/ui@2.11.2
+  - @orderly.network/ui-chain-selector@2.11.2
+  - @orderly.network/ui-connector@2.11.2
+  - @orderly.network/ui-leverage@2.11.2
+  - @orderly.network/ui-notification@2.11.2
+  - @orderly.network/ui-order-entry@2.11.2
+  - @orderly.network/ui-orders@2.11.2
+  - @orderly.network/ui-positions@2.11.2
+  - @orderly.network/ui-scaffold@2.11.2
+  - @orderly.network/ui-share@2.11.2
+  - @orderly.network/ui-tpsl@2.11.2
+  - @orderly.network/ui-tradingview@2.11.2
+  - @orderly.network/ui-transfer@2.11.2
+  - @orderly.network/utils@2.11.2
+  - @orderly.network/vaults@2.11.2
+  - @orderly.network/wallet-connector@2.11.2
+  - @orderly.network/wallet-connector-privy@2.11.2
+
 ## 1.11.2-alpha.0
 
 ### Patch Changes
