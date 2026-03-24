@@ -1,5 +1,20 @@
 # @orderly.network/ui-tpsl
 
+## 2.11.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.11.2-alpha.0
+  - @orderly.network/hooks@2.11.2-alpha.0
+  - @orderly.network/i18n@2.11.2-alpha.0
+  - @orderly.network/perp@4.11.2-alpha.0
+  - @orderly.network/types@2.11.2-alpha.0
+  - @orderly.network/ui@2.11.2-alpha.0
+  - @orderly.network/ui-connector@2.11.2-alpha.0
+  - @orderly.network/utils@2.11.2-alpha.0
+
 ## 2.11.1
 
 ### Patch Changes
