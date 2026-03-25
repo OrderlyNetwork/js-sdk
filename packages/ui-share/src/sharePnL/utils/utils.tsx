@@ -187,7 +187,7 @@ interface SymbolResult {
 
 function processSymbol(symbol: string): SymbolResult {
   const tokens = symbol.split("_");
-  if (tokens.length !== 3) {
+  if (tokens.length < 3) {
     return {
       symbol: symbol,
       currency: "USDC",

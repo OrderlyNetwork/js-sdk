@@ -1,7 +1,7 @@
 import {
   ComputedAlgoOrder,
   useLocalStorage,
-  utils,
+  useSymbolWithBroker,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide, PositionType } from "@orderly.network/types";
@@ -15,7 +15,6 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { transSymbolformString } from "@orderly.network/utils";
 import { SymbolBadge } from "../components/symbolBadge";
 
 export type PositionTPSLConfirmProps = {
@@ -135,11 +134,12 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
   const isPositionTPSL = _isPositionTPSL;
 
+  const displaySymbol = useSymbolWithBroker(symbol);
   return (
     <>
       {isEditing && (
         <Text as="div" size="2xs" intensity={80} className="oui-mb-3">
-          {t("tpsl.agreement", { symbol: transSymbolformString(symbol) })}
+          {t("tpsl.agreement", { symbol: displaySymbol })}
         </Text>
       )}
 
