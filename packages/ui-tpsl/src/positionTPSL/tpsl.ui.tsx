@@ -95,7 +95,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
       <Box className="oui-px-0.5">
         <TPSLQuantity
           maxQty={props.maxQty}
-          quantity={(props.orderQuantity ?? props.maxQty) as number}
+          quantity={props.orderQuantity ?? props.maxQty}
           baseTick={symbolInfo("base_tick")}
           base_dp={symbolInfo("base_dp")}
           onQuantityChange={props.setQuantity}
