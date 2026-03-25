@@ -8,6 +8,7 @@ import { MarketsListFull } from "./marketsListFull.ui";
 export type MarketsListFullWidgetProps = {
   type?: MarketsListFullType;
   initialSort?: SortType;
+  dataFilter?: (data: any[]) => any[];
 };
 
 export const MarketsListFullWidget: React.FC<MarketsListFullWidgetProps> = (

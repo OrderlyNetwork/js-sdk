@@ -1,5 +1,4 @@
 import { PropsWithChildren } from "react";
-import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseIcon,
@@ -12,12 +11,19 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
-import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
+import { useMarketsContext } from "../marketsProvider";
 import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import {
+  isBuiltInMarketTab,
+  tabKey,
+  resolveTabTitle,
+  useBuiltInTitles,
+  useCustomTabDataFilters,
+} from "../shared/tabUtils";
 import { useDropDownMarketsColumns } from "./column";
 import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 
@@ -55,9 +61,8 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 ) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { t } = useTranslation();
-
   const getColumns = useDropDownMarketsColumns();
+  const builtInTitles = useBuiltInTitles();
 
   const search = (
     <Flex className="oui-dropDownMarkets-search" mx={3} gapX={3} pt={3} pb={2}>
@@ -78,31 +83,8 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   const cls = "oui-h-[calc(100%_-_36px)]";
 
   const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
-
-  const renderTab = (type: MarketsTabName) => {
-    return (
-      <div className={cls}>
-        <MarketsListWidget
-          type={type}
-          initialSort={tabSort[type]}
-          onSort={onTabSort(type)}
-          getColumns={getColumns}
-          tableClassNames={{
-            root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
-            scroll: "oui-pb-5 oui-px-1",
-          }}
-          rowClassName="!oui-h-[34px]"
-          {...getFavoritesProps(type)}
-          emptyView={renderEmptyView({
-            type,
-            onClick: () => {
-              onTabChange(MarketsTabName.All);
-            },
-          })}
-        />
-      </div>
-    );
-  };
+  const { tabs } = useMarketsContext();
+  const tabDataFilters = useCustomTabDataFilters(tabs);
 
   return (
     <Box
@@ -121,61 +103,66 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         value={activeTab}
         onValueChange={onTabChange}
         classNames={{
-          tabsList: "oui-my-[6px] oui-px-3",
+          tabsListContainer: "oui-px-3",
+          tabsList: "oui-my-[6px]",
           tabsContent: "oui-h-full",
+          scrollIndicator: "oui-mx-0",
         }}
         className={cn("oui-dropDownMarkets-tabs", cls)}
+        showScrollIndicator
       >
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-favorites-trigger",
-            content: "oui-tabs-favorites-content",
-          }}
-          title={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
-          {renderTab(MarketsTabName.Favorites)}
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-all-trigger",
-            content: "oui-tabs-all-content",
-          }}
-          title={t("common.all")}
-          value={MarketsTabName.All}
-        >
-          {renderTab(MarketsTabName.All)}
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-rwa-trigger",
-            content: "oui-tabs-rwa-content",
-          }}
-          title={<RwaTab />}
-          value={MarketsTabName.Rwa}
-        >
-          {renderTab(MarketsTabName.Rwa)}
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-newListings-trigger",
-            content: "oui-tabs-newListings-content",
-          }}
-          title={t("markets.newListings")}
-          value={MarketsTabName.NewListing}
-        >
-          {renderTab(MarketsTabName.NewListing)}
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-recent-trigger",
-            content: "oui-tabs-recent-content",
-          }}
-          title={t("markets.recent")}
-          value={MarketsTabName.Recent}
-        >
-          {renderTab(MarketsTabName.Recent)}
-        </TabPanel>
+        {tabs?.map((tab, index) => {
+          const key = tabKey(tab, index);
+          return (
+            <TabPanel
+              key={key}
+              classNames={{
+                trigger: `oui-tabs-${key}-trigger`,
+                content: `oui-tabs-${key}-content`,
+              }}
+              title={resolveTabTitle(tab, builtInTitles, <RwaTab />)}
+              value={key}
+            >
+              {isBuiltInMarketTab(tab) ? (
+                <div className={cls}>
+                  <MarketsListWidget
+                    type={tab.type as MarketsTabName}
+                    initialSort={tabSort[tab.type]}
+                    onSort={onTabSort(tab.type as MarketsTabName)}
+                    getColumns={getColumns}
+                    tableClassNames={{
+                      root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
+                      scroll: "oui-pb-5 oui-px-1",
+                    }}
+                    rowClassName="!oui-h-[34px]"
+                    {...getFavoritesProps(tab.type as MarketsTabName)}
+                    emptyView={renderEmptyView({
+                      type: tab.type as MarketsTabName,
+                      onClick: () => {
+                        onTabChange(MarketsTabName.All);
+                      },
+                    })}
+                  />
+                </div>
+              ) : (
+                <div className={cls}>
+                  <MarketsListWidget
+                    type={MarketsTabName.All}
+                    dataFilter={tabDataFilters[key]}
+                    initialSort={tabSort[key]}
+                    onSort={onTabSort(key as MarketsTabName)}
+                    getColumns={getColumns}
+                    tableClassNames={{
+                      root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
+                      scroll: "oui-pb-5 oui-px-1",
+                    }}
+                    rowClassName="!oui-h-[34px]"
+                  />
+                </div>
+              )}
+            </TabPanel>
+          );
+        })}
       </Tabs>
     </Box>
   );
