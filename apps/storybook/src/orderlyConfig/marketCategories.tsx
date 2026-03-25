@@ -1,4 +1,5 @@
 import type { MarketCategoryConfig } from "@orderly.network/hooks";
+import { i18n } from "@orderly.network/i18n";
 import { ARBIcon, StakeIcon } from "../components/icons";
 
 const TAB_ICON_SIZE = 14;
@@ -91,9 +92,9 @@ export const marketTabs: MarketCategoryConfig = (
 ) => {
   const memeTab = {
     id: "meme",
-    name: "Meme",
+    name: i18n.t("extend.meme"),
     icon: <StakeIcon size={TAB_ICON_SIZE} />,
-    suffix: "Hot",
+    suffix: i18n.t("extend.hot"),
     match: createSymbolMatch(MEME_SYMBOLS),
   };
   const l1l2Tab = {

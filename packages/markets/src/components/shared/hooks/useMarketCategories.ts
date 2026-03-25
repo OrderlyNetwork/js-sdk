@@ -4,6 +4,7 @@ import {
   type MarketCategoryComponentKey,
   type MarketTabConfig,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   builtInTabs,
   componentDefaultTabs,
@@ -19,10 +20,11 @@ export function useMarketCategories(
   componentKey: MarketCategoryComponentKey,
 ): MarketTabConfig[] {
   const marketTabs = useMarketCategoriesConfig();
+  const { i18n } = useTranslation();
 
   return useMemo(() => {
     const original = componentDefaultTabs[componentKey];
     if (!marketTabs) return original;
     return marketTabs(original, { componentKey, builtIn: builtInTabs });
-  }, [marketTabs, componentKey]);
+  }, [marketTabs, componentKey, i18n.language]);
 }
