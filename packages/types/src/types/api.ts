@@ -331,8 +331,8 @@ export declare namespace API {
     notional: number;
     unrealPnlROI: number;
     unrealPnlROI_index?: number;
-    unsettledCrossPnL_total?: number;
-    unsettledIsolatedPnL_total?: number;
+    total_unsettled_cross_pnl?: number;
+    total_unsettled_isolated_pnl?: number;
   }
 
   export interface Position {

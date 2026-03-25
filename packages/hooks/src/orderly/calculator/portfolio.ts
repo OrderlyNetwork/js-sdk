@@ -131,7 +131,9 @@ class PortfolioCalculator extends BaseCalculator<any> {
     // );
 
     const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
-    const unsettledCrossPnL = pathOr(0, ["unsettledCrossPnL_total"])(positions);
+    const unsettledCrossPnL = pathOr(0, ["total_unsettled_cross_pnl"])(
+      positions,
+    );
     const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
     const [USDC_holding, nonUSDC] = parseHolding(

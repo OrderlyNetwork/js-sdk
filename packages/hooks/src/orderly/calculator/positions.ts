@@ -147,8 +147,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       unrealPnL_total_index = zero,
       notional_total = zero,
       unsettlementPnL_total = zero,
-      unsettledIsolatedPnL_total = zero,
-      unsettledCrossPnL_total = zero;
+      totalUnsettledIsolatedPnl = zero,
+      totalUnsettledCrossPnl = zero;
 
     let rows = data.rows.map((item) => {
       const info = symbolsInfo[item.symbol];
@@ -225,12 +225,12 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
 
       if (item.margin_mode === MarginMode.CROSS) {
-        unsettledCrossPnL_total = unsettledCrossPnL_total.add(unsettlementPnL);
+        totalUnsettledCrossPnl = totalUnsettledCrossPnl.add(unsettlementPnL);
       }
 
       if (item.margin_mode === MarginMode.ISOLATED) {
-        unsettledIsolatedPnL_total =
-          unsettledIsolatedPnL_total.add(unsettlementPnL);
+        totalUnsettledIsolatedPnl =
+          totalUnsettledIsolatedPnl.add(unsettlementPnL);
       }
 
       const fundingFee = new Decimal(sum_unitary_funding)
@@ -254,6 +254,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
         unrealized_pnl_index: unrealPnl_index,
         unrealized_pnl_ROI: unrealPnlROI,
         unrealized_pnl_ROI_index: unrealPnlROI_index,
+        unsettled_pnl: unsettlementPnL,
       };
     });
 
@@ -337,8 +338,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       total_unsettled_pnl: unsettlementPnL,
       unrealPnlROI: totalUnrealizedROI,
       unrealPnlROI_index: totalUnrealizedROI_index,
-      unsettledCrossPnL_total: unsettledCrossPnL_total.toNumber(),
-      unsettledIsolatedPnL_total: unsettledIsolatedPnL_total.toNumber(),
+      total_unsettled_cross_pnl: totalUnsettledCrossPnl.toNumber(),
+      total_unsettled_isolated_pnl: totalUnsettledIsolatedPnl.toNumber(),
       rows,
     };
   }
