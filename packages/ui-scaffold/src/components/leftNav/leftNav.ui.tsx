@@ -16,6 +16,7 @@ import {
   Divider,
 } from "@orderly.network/ui";
 import { MainLogo } from "../main/mainLogo";
+import { DefaultTradingViewTncLink } from "../scaffold/scaffold.ui";
 import { SubAccountWidget } from "../subAccount";
 import {
   CommunityDiscord,
@@ -172,13 +173,8 @@ const LeftNavSheet: FC<LeftNavUIProps> = (props) => {
                 </div>
               )}
             </div>
-            {props.feedbackUrl && (
-              <div
-                className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
-                onClick={() => openExternalLink(props.feedbackUrl as string)}
-              >
-                {t("leftNav.feedback")}
-              </div>
+            {props.customFooter ?? (
+              <DefaultTradingViewTncLink className="oui-text-center" />
             )}
           </div>
         </div>
