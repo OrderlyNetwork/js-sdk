@@ -1,11 +1,18 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
-import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
+import { useMarketsContext } from "../marketsProvider";
 import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import {
+  isBuiltInMarketTab,
+  tabKey,
+  resolveTabTitle,
+  useBuiltInTitles,
+  useCustomTabDataFilters,
+} from "../shared/tabUtils";
 import { getMarketsSheetColumns } from "./column";
 import { MarketsSheetScriptReturn } from "./marketsSheet.script";
 
@@ -19,34 +26,9 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   const { t } = useTranslation();
 
   const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
-
-  const renderTab = (type: MarketsTabName) => {
-    const isFavorites = type === MarketsTabName.Favorites;
-    return (
-      <MarketsListWidget
-        type={type}
-        initialSort={tabSort[type]}
-        onSort={onTabSort(type)}
-        getColumns={getMarketsSheetColumns}
-        tableClassNames={{
-          root: cn("oui-marketsSheet-list", "!oui-bg-base-8"),
-          scroll: cn(
-            "oui-pb-[env(safe-area-inset-bottom,_20px)]",
-            isFavorites
-              ? "oui-h-[calc(100%_-_70px)]"
-              : "oui-h-[calc(100%_-_40px)]",
-          ),
-        }}
-        emptyView={renderEmptyView({
-          type,
-          onClick: () => {
-            props.onTabChange(MarketsTabName.All);
-          },
-        })}
-        {...getFavoritesProps(type)}
-      />
-    );
-  };
+  const { tabs } = useMarketsContext();
+  const builtInTitles = useBuiltInTitles();
+  const tabDataFilters = useCustomTabDataFilters(tabs);
 
   return (
     <Box
@@ -75,37 +57,62 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         className={cn("oui-marketsSheet-tabs", "oui-h-[calc(100%_-_92px)]")}
         showScrollIndicator
       >
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-favorites-trigger",
-            content: "oui-tabs-favorites-content",
-          }}
-          title={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
-          {renderTab(MarketsTabName.Favorites)}
-        </TabPanel>
-
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-all-trigger",
-            content: "oui-tabs-all-content",
-          }}
-          title={t("common.all")}
-          value={MarketsTabName.All}
-        >
-          {renderTab(MarketsTabName.All)}
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-rwa-trigger",
-            content: "oui-tabs-rwa-content",
-          }}
-          title={<RwaTab />}
-          value={MarketsTabName.Rwa}
-        >
-          {renderTab(MarketsTabName.Rwa)}
-        </TabPanel>
+        {tabs?.map((tab, index) => {
+          const key = tabKey(tab, index);
+          const isBuiltIn = isBuiltInMarketTab(tab);
+          const isFavorites = isBuiltIn && tab.type === "favorites";
+          return (
+            <TabPanel
+              key={key}
+              classNames={{
+                trigger: `oui-tabs-${key}-trigger`,
+                content: `oui-tabs-${key}-content`,
+              }}
+              title={resolveTabTitle(tab, builtInTitles, <RwaTab />)}
+              value={key}
+            >
+              {isBuiltIn ? (
+                <MarketsListWidget
+                  type={tab.type as MarketsTabName}
+                  initialSort={tabSort[tab.type]}
+                  onSort={onTabSort(tab.type as MarketsTabName)}
+                  getColumns={getMarketsSheetColumns}
+                  tableClassNames={{
+                    root: cn("oui-marketsSheet-list", "!oui-bg-base-8"),
+                    scroll: cn(
+                      "oui-pb-[env(safe-area-inset-bottom,_20px)]",
+                      isFavorites
+                        ? "oui-h-[calc(100%_-_70px)]"
+                        : "oui-h-[calc(100%_-_40px)]",
+                    ),
+                  }}
+                  emptyView={renderEmptyView({
+                    type: tab.type as MarketsTabName,
+                    onClick: () => {
+                      props.onTabChange(MarketsTabName.All);
+                    },
+                  })}
+                  {...getFavoritesProps(tab.type as MarketsTabName)}
+                />
+              ) : (
+                <MarketsListWidget
+                  type={MarketsTabName.All}
+                  dataFilter={(data) => tabDataFilters[key]?.(data) ?? data}
+                  initialSort={tabSort[key]}
+                  onSort={onTabSort(key as MarketsTabName)}
+                  getColumns={getMarketsSheetColumns}
+                  tableClassNames={{
+                    root: cn("oui-marketsSheet-list", "!oui-bg-base-8"),
+                    scroll: cn(
+                      "oui-pb-[env(safe-area-inset-bottom,_20px)]",
+                      "oui-h-[calc(100%_-_40px)]",
+                    ),
+                  }}
+                />
+              )}
+            </TabPanel>
+          );
+        })}
       </Tabs>
     </Box>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
+import { useMarketCategories } from "../shared/hooks/useMarketCategories";
 import { useHorizontalMarketsScript } from "./horizontalMarkets.script";
 import type { MarketType } from "./horizontalMarkets.script";
 import type { HorizontalMarketsProps } from "./horizontalMarkets.ui";
@@ -54,8 +55,10 @@ export const HorizontalMarketsWidget: React.FC<HorizontalMarketsWidgetProps> = (
     ...providerProps
   } = props;
 
+  const tabs = useMarketCategories("horizontalMarkets");
+
   return (
-    <MarketsProvider {...providerProps}>
+    <MarketsProvider {...providerProps} tabs={tabs}>
       <HorizontalMarketsInner
         symbols={symbols}
         maxItems={maxItems}

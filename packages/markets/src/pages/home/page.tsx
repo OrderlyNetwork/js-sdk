@@ -7,6 +7,7 @@ import {
   MarketsProvider,
   type MarketsProviderProps,
 } from "../../components/marketsProvider";
+import { useMarketCategories } from "../../components/shared/hooks/useMarketCategories";
 import { MarketsPageTab } from "../../type";
 
 const LazyMarketsHeaderWidget = React.lazy(() =>
@@ -37,6 +38,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
   const [activeTab, setActiveTab] = useState<MarketsPageTab>(
     MarketsPageTab.Markets,
   );
+  const tabs = useMarketCategories("marketsDataList");
 
   return (
     <MarketsProvider
@@ -44,6 +46,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
       onSymbolChange={props.onSymbolChange}
       navProps={props.navProps}
       comparisonProps={props.comparisonProps}
+      tabs={tabs}
     >
       <div
         id="oui-markets-home-page"

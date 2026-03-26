@@ -1,5 +1,8 @@
 import React, { createContext, useContext } from "react";
-import { RestrictedInfoReturns } from "@orderly.network/hooks";
+import {
+  RestrictedInfoReturns,
+  type MarketCategoryConfig,
+} from "@orderly.network/hooks";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
 export type RouteOption = {
@@ -24,6 +27,11 @@ export type WidgetConfigs = {
      */
     enableWithdrawToExternalWallet?: boolean;
   };
+  /**
+   * Custom market tab configuration.
+   * Function receives the default built-in tabs and context, returns the final tab sequence.
+   */
+  marketTabs?: MarketCategoryConfig;
 };
 
 export type AppContextState = {
