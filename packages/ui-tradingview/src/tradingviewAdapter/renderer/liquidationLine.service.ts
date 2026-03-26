@@ -9,6 +9,8 @@ type LiquidationMarginMode = "ISOLATED" | "CROSS";
 interface PositionLiqLineItem {
   price: number;
   marginMode?: LiquidationMarginMode;
+  /** Optional leverage shown after margin mode (e.g. `CROSS 10x`). */
+  leverage?: number | null;
 }
 
 /** Params for rendering liquidation price lines (position list + optional estimated). */
@@ -160,7 +162,12 @@ export class LiquidationLineService {
       if (!line) continue;
       line.setLineStyle(0);
       line.setPrice(items[i].price);
-      this.updateLineLabel(line, false, items[i].marginMode);
+      this.updateLineLabel(
+        line,
+        false,
+        items[i].marginMode,
+        items[i].leverage,
+      );
     }
 
     // Remove stale extra lines when position count decreases.
@@ -184,11 +191,15 @@ export class LiquidationLineService {
     this.positionLines = [];
   }
 
-  /** Ensure line tooltip/text reflect its source (estimated vs position + margin mode). */
+  /**
+   * Ensure line tooltip/text reflect its source (estimated vs position + margin mode).
+   * When showing margin mode, we also append leverage (if available) right after it.
+   */
   private updateLineLabel(
     line: IOrderLineAdapter,
     isEstimated: boolean,
     marginMode?: LiquidationMarginMode,
+    leverage?: number | null,
   ): void {
     const key = isEstimated
       ? "orderEntry.estLiqPrice"
@@ -198,7 +209,10 @@ export class LiquidationLineService {
       const marginModeLabel = i18n.t(
         marginMode === "ISOLATED" ? "marginMode.isolated" : "marginMode.cross",
       );
-      label += ` (${marginModeLabel})`;
+      const leverageLabel =
+        leverage != null && Number.isFinite(leverage) ? ` ${leverage}x` : "";
+      // Keep formatting consistent with `PositionLineService`: margin mode first, then leverage.
+      label += ` (${marginModeLabel}${leverageLabel})`;
     }
     line.setTooltip(label).setText(label);
   }

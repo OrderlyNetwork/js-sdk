@@ -124,6 +124,7 @@ export default function useCreateRenderer(
       .filter((p) => p.symbol === symbol)
       .flatMap((p) => {
         const price = (p as { est_liq_price?: number | null }).est_liq_price;
+        const leverage = (p as { leverage?: number | null }).leverage;
         if (price == null || !Number.isFinite(price)) {
           return [];
         }
@@ -132,6 +133,7 @@ export default function useCreateRenderer(
             price,
             marginMode: (p as { margin_mode?: "ISOLATED" | "CROSS" })
               .margin_mode,
+            leverage: leverage ?? undefined,
           },
         ];
       });
