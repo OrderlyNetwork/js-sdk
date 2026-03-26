@@ -33,11 +33,8 @@ export default function useCreateRenderer(
 
   const positions = useMemo(() => {
     if (!rows?.length) return [];
-    return rows.filter(
-      (item) =>
-        item.symbol === symbol &&
-        (marginMode == null || item.margin_mode === marginMode),
-    );
+    // return rows;
+    return rows.filter((item) => item.symbol === symbol);
   }, [rows, symbol, marginMode]);
   const [pendingOrders] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
@@ -91,6 +88,7 @@ export default function useCreateRenderer(
         symbol: item.symbol,
         open: item.average_open_price,
         balance: item.position_qty,
+        leverage: item.leverage,
         closablePosition: 9999,
         // @ts-ignore
         unrealPnl: item.unrealized_pnl ?? 0,
@@ -119,15 +117,24 @@ export default function useCreateRenderer(
     };
   }, [ee, symbol]);
 
-  /** Drive liquidation line from position liq. price + estimated liq. price (from event). */
+  /** Drive liquidation lines from position liq. prices + estimated liq. price (from event). */
   useEffect(() => {
     if (!renderer || !displayControlSetting?.position) return;
-    const symbolPosition = (positions ?? []).find((p) => p.symbol === symbol);
-    const positionLiqPrice =
-      symbolPosition != null
-        ? ((symbolPosition as { est_liq_price?: number | null })
-            .est_liq_price ?? null)
-        : null;
+    const positionLiqItems = (positions ?? [])
+      .filter((p) => p.symbol === symbol)
+      .flatMap((p) => {
+        const price = (p as { est_liq_price?: number | null }).est_liq_price;
+        if (price == null || !Number.isFinite(price)) {
+          return [];
+        }
+        return [
+          {
+            price,
+            marginMode: (p as { margin_mode?: "ISOLATED" | "CROSS" })
+              .margin_mode,
+          },
+        ];
+      });
 
     const effectiveEstimatedLiqPrice =
       estimatedLiqPrice != null && Number.isFinite(estimatedLiqPrice)
@@ -136,14 +143,13 @@ export default function useCreateRenderer(
 
     // Rendering rule:
     // - When effectiveEstimatedLiqPrice exists: render estimated liq. price line (always, regardless of liquidationPrice setting).
-    // - When no estimated but positionLiqPrice exists: render position liq. price line ONLY if liquidationPrice setting is enabled.
+    // - When no estimated but positionLiqItems exists: render all position liq. price lines ONLY if liquidationPrice setting is enabled.
     // - When neither exists: remove line.
-    const showPositionLiqPrice =
-      positionLiqPrice != null &&
-      displayControlSetting?.liquidationPrice !== false;
+    const showPositionLiqItems =
+      displayControlSetting?.liquidationPrice !== false ? positionLiqItems : [];
 
     renderer.renderLiquidationLine({
-      positionLiqPrice: showPositionLiqPrice ? positionLiqPrice : null,
+      positionLiqItems: showPositionLiqItems,
       estimatedLiqPrice: effectiveEstimatedLiqPrice,
     });
   }, [
