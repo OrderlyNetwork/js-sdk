@@ -359,7 +359,7 @@ export function getWatchPackages() {
   });
 
   // console.log("packages", packages);
-  console.log("getWatchPackages watchs", watchs);
+  // console.log("getWatchPackages watchs", watchs);
   // console.log("getWatchPackages unwatchs", unwatchs);
 
   return {
