@@ -215,7 +215,7 @@ export const usePositionStream = (
       total_unreal_pnl: total_unreal_pnl_index,
       unrealPnlROI: unrealPnlROI_index,
     };
-  }, [calcMode]);
+  }, [calcMode, formattedPositions]);
 
   /**
    * Process and transform position rows through multiple stages:
