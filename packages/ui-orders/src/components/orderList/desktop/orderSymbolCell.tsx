@@ -9,12 +9,13 @@ export interface OrderSymbolCellProps {
 
 export const OrderSymbolCell = (props: OrderSymbolCellProps) => {
   const { symbol, onSymbolChange } = props;
-  const { brokerId, brokerName } = useBadgeBySymbol(symbol);
+  const { brokerId, brokerName, brokerNameRaw } = useBadgeBySymbol(symbol);
 
   return (
     <Text.symbolBadge
       className="oui-cursor-pointer"
       badge={brokerName ?? brokerId ?? undefined}
+      fullName={brokerNameRaw}
       onClick={(e) => {
         onSymbolChange?.({ symbol } as API.Symbol);
         e.stopPropagation();

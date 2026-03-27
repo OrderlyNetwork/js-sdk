@@ -12,13 +12,14 @@ export const PositionSymbolCell = (
     SymbolBadgeTextProps & { formatString?: string },
 ) => {
   const { symbol, onSymbolChange, className, formatString, ...rest } = props;
-  const { brokerId, brokerName } = useBadgeBySymbol(symbol);
+  const { brokerId, brokerName, brokerNameRaw } = useBadgeBySymbol(symbol);
 
   return (
     <Text.symbolBadge
       {...rest}
       className={cn(className, "oui-cursor-pointer")}
       badge={brokerName ?? brokerId ?? undefined}
+      fullName={brokerNameRaw}
       onClick={(e) => {
         onSymbolChange?.({ symbol } as API.Symbol);
         e.stopPropagation();

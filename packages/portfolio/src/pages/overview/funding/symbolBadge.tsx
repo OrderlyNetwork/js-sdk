@@ -3,7 +3,9 @@ import { useBadgeBySymbol } from "@orderly.network/hooks";
 import { SymbolBadge as UISymbolBadge } from "@orderly.network/ui";
 
 export const SymbolBadge: FC<{ symbol: string }> = (props) => {
-  const { brokerId, brokerName } = useBadgeBySymbol(props.symbol);
+  const { brokerId, brokerName, brokerNameRaw } = useBadgeBySymbol(
+    props.symbol,
+  );
   const badge = brokerName ?? brokerId ?? undefined;
-  return <UISymbolBadge badge={badge} />;
+  return <UISymbolBadge badge={badge} fullName={brokerNameRaw} />;
 };

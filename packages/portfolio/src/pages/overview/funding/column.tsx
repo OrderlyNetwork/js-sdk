@@ -5,11 +5,14 @@ import { API } from "@orderly.network/types";
 import { Flex, Text, type Column } from "@orderly.network/ui";
 
 const SymbolBadge = (props: { symbol: string }) => {
-  const { brokerId, brokerName } = useBadgeBySymbol(props.symbol);
+  const { brokerId, brokerName, brokerNameRaw } = useBadgeBySymbol(
+    props.symbol,
+  );
 
   return (
     <Text.symbolBadge
       badge={brokerName ?? brokerId ?? undefined}
+      fullName={brokerNameRaw}
       className="oui-cursor-pointer"
       showIcon
     >

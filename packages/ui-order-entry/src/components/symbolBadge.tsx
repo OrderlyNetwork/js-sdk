@@ -9,7 +9,9 @@ export type SymbolBadgeProps = {
 };
 
 export const SymbolBadge: FC<SymbolBadgeProps> = (props) => {
-  const { brokerId, brokerName } = useBadgeBySymbol(props.symbol);
+  const { brokerId, brokerName, brokerNameRaw } = useBadgeBySymbol(
+    props.symbol,
+  );
   const badge = brokerName ?? brokerId ?? undefined;
-  return <UISymbolBadge badge={badge} />;
+  return <UISymbolBadge badge={badge} fullName={brokerNameRaw} />;
 };
