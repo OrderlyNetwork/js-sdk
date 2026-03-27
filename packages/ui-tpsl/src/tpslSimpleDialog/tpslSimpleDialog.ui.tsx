@@ -121,7 +121,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
     <Box className="oui-w-full oui-px-0.5">
       <TPSLQuantity
         maxQty={props.maxQty}
-        quantity={Number(props.orderQuantity ?? props.maxQty)}
+        quantity={props.orderQuantity ?? props.maxQty}
         baseTick={props.symbolInfo("base_tick")}
         base_dp={props.symbolInfo("base_dp")}
         base={props.symbolInfo("base")}

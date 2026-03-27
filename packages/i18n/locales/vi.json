@@ -737,6 +737,7 @@
   "tradingView.displayControl.buySell": "Mua/Bán",
   "tradingView.displayControl.limitOrders": "Lệnh giới hạn",
   "tradingView.displayControl.stopOrders": "Lệnh dừng",
+  "tradingView.displayControl.liquidationPrice": "Giá thanh lý",
   "tradingView.noScriptSrc": "Do chính sách của TradingView, bạn sẽ cần đăng ký giấy phép riêng.",
   "tradingView.noScriptSrc.1": "1. Vui lòng đăng ký giấy phép TradingView Advanced Chart <0>tại đây</0>",
   "tradingView.noScriptSrc.2": "2. Làm theo hướng dẫn trên <0>orderly.network</0> để thiết lập.",

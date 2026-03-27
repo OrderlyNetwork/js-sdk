@@ -737,6 +737,7 @@
   "tradingView.displayControl.buySell": "Покупка/Продажа",
   "tradingView.displayControl.limitOrders": "Лимитные ордера",
   "tradingView.displayControl.stopOrders": "Стоп-ордера",
+  "tradingView.displayControl.liquidationPrice": "Цена ликвидации",
   "tradingView.noScriptSrc": "Из-за политики TradingView вам нужно будет получить собственную лицензию.",
   "tradingView.noScriptSrc.1": "1. Пожалуйста, подайте заявку на лицензию TradingView Advanced Chart <0>здесь</0>",
   "tradingView.noScriptSrc.2": "2. Следуйте инструкциям на <0>orderly.network</0> для настройки.",

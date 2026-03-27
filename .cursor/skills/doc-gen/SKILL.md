@@ -45,7 +45,8 @@ This skill is used to **create, update, and manage code documentation** inside a
    - 4.2 Index document conventions
    - 4.3 Detail document conventions (by language)
 5. Usage examples
-6. Recommendations and caveats
+6. Feature introduce / TASK-scoped docs (subAgent)
+7. Recommendations and caveats
 
 ---
 
@@ -417,7 +418,27 @@ function Example() {
 
 ---
 
-## VI. Recommendations & Caveats
+## VI. Feature introduce docs & one-TASK-per-subAgent
+
+Use this when the user (or a **Cursor plan**) targets `**/docs/featureIntroduce/**` or any doc set keyed by stable **`TASK-*` IDs** (96 tasks: six order types × margin × side × `NONE`/`TP_ONLY`/`SL_ONLY`/`TP_AND_SL`). **LIMIT/MARKET** implement opening bracket TP/SL in hooks; **STOP\_\*, SCALED, TRAILING_STOP** share the same TP/SL column for matrix parity but `canSetTPSLPrice` blocks bracket fields — see generated **step 9** in those docs.
+
+### Orchestrator (main agent)
+
+- Keep an explicit queue of **one Task ID per unit of work**.
+- For **each** `TASK-...`, spawn a **Cursor `Task` subagent** with a single-task brief: Task ID, margin / side / TP·SL variant (or `NA`), target file path, required YAML frontmatter rules for that file, links to relevant Creators / `useOrderEntry` / `ui-order-entry`.
+- Merge the subagent’s Markdown into the right `order-*.md` or matrix file; verify anchors, cross-links, and full coverage of the planned task list.
+
+### Subagent (one invocation = one `TASK-*`)
+
+- Output **only** that task’s section (e.g. under `## TASK-MARKET-CROSS-SELL-NONE`): scenario summary table, payload fields, numbered UI steps, selector quick reference.
+- Do **not** draft other Task IDs in the same turn.
+- Body text in **English** unless the user overrides; keep identifiers, paths, and `data-testid` strings verbatim from source.
+
+This complements the default code-scan workflow (Sections III–V): featureIntroduce work is **task-scoped narrative docs**, not file-per-export API docs.
+
+---
+
+## VII. Recommendations & Caveats
 
 - `sync` mode **rebuilds docs from scratch** based on current code—best for:
   - Initial generation
