@@ -55,7 +55,7 @@ type SymbolText = {
   iconSize?: SizeType;
 };
 
-const DEFAULT_SYMBOL_FORMAT = "base-quote";
+const DEFAULT_SYMBOL_FORMAT = "base";
 const DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 export type FormattedTextProps = TextProps &

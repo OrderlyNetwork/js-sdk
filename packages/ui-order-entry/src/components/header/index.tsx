@@ -17,6 +17,10 @@ type OrderEntryHeaderProps = {
   setOrderValue: (key: keyof OrderlyOrder, value: unknown) => void;
   symbolLeverage?: number;
   marginMode?: MarginMode;
+  /** When true, Market order type is disabled (e.g. symbol in POST_ONLY mode). */
+  marketOrderDisabled?: boolean;
+  /** Tooltip when hovering over the disabled Market button. */
+  marketOrderDisabledTooltip?: string;
 };
 
 export function OrderEntryHeader(props: OrderEntryHeaderProps) {
@@ -42,6 +46,8 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
           onChange={(type) => {
             setOrderValue("order_type", type);
           }}
+          marketOrderDisabled={props.marketOrderDisabled}
+          marketOrderDisabledTooltip={props.marketOrderDisabledTooltip}
         />
       </div>
       <div

@@ -2,6 +2,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide } from "@orderly.network/types";
 import { Badge, Flex, Text } from "@orderly.network/ui";
 import { parseBadgesFor } from "../../../../../utils/util";
+import { SymbolBadge } from "../../../../symbolBadge";
 
 type EditSheetHeaderProps = {
   item: API.AlgoOrderExt;
@@ -13,7 +14,13 @@ export const EditSheetHeader = (props: EditSheetHeaderProps) => {
 
   return (
     <Flex width={"100%"} justify={"between"}>
-      <Text.formatted rule={"symbol"} showIcon intensity={80}>
+      <Text.formatted
+        rule={"symbol"}
+        formatString="base"
+        showIcon
+        intensity={80}
+        suffix={<SymbolBadge symbol={item.symbol} />}
+      >
         {item.symbol}
       </Text.formatted>
       <Flex direction={"row"} gap={1}>

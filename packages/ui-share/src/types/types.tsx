@@ -42,6 +42,7 @@ export type SharePnLParams = {
   refCode?: string;
   refSlogan?: string;
   refLink?: string;
+  brokerName?: string;
 };
 
 export type SharePnLOptions = {

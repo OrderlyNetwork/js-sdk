@@ -11,6 +11,7 @@ import type {
  */
 export const builtInTabs: Record<MarketBuiltInTabType, BuiltInMarketTab> = {
   favorites: { type: "favorites" },
+  community: { type: "community" },
   all: { type: "all" },
   rwa: { type: "rwa" },
   newListing: { type: "newListing" },
@@ -24,9 +25,15 @@ export const componentDefaultTabs: Record<
   MarketCategoryComponentKey,
   MarketTabConfig[]
 > = {
-  marketsSheet: [{ type: "favorites" }, { type: "all" }, { type: "rwa" }],
+  marketsSheet: [
+    { type: "favorites" },
+    { type: "community" },
+    { type: "all" },
+    { type: "rwa" },
+  ],
   expandMarkets: [
     { type: "favorites" },
+    { type: "community" },
     { type: "all" },
     { type: "rwa" },
     { type: "newListing" },
@@ -34,6 +41,7 @@ export const componentDefaultTabs: Record<
   ],
   dropDownMarkets: [
     { type: "favorites" },
+    { type: "community" },
     { type: "all" },
     { type: "rwa" },
     { type: "newListing" },
@@ -41,6 +49,7 @@ export const componentDefaultTabs: Record<
   ],
   subMenuMarkets: [
     { type: "favorites" },
+    { type: "community" },
     { type: "all" },
     { type: "rwa" },
     { type: "newListing" },
@@ -48,6 +57,7 @@ export const componentDefaultTabs: Record<
   ],
   marketsDataList: [
     { type: "favorites" },
+    { type: "community" },
     { type: "all" },
     { type: "rwa" },
     { type: "newListing" },

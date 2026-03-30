@@ -35,6 +35,13 @@ export enum MarketsTabName {
   All = "all",
   Rwa = "rwa",
   NewListing = "newListing",
+  Community = "community",
+}
+
+export enum CommunitySubTabName {
+  All = "all",
+  MyListings = "myListings",
+  OtherListings = "otherListings",
 }
 
 export enum FundingTabName {

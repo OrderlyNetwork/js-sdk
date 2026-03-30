@@ -86,7 +86,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
         <SymbolToken {...props} />
         <PositionHistoryType {...props} />
       </Flex>
-      <Flex direction={"column"} itemAlign={"end"} className="oui-flex-1">
+      <Flex direction={"column"} itemAlign={"end"}>
         <Text size="2xs" intensity={36}>
           {t("positions.history.column.netPnl")}
         </Text>

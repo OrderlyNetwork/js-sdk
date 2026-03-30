@@ -19,6 +19,8 @@ export const orderEntry = {
   "orderEntry.orderType.fok": "FOK",
   "orderEntry.orderType.fok.tooltip":
     "Executes immediately in full, or is canceled entirely.",
+  "orderEntry.orderType.symbolPostOnly.tooltip":
+    "This symbol is in POST_ONLY mode. Only limit orders are accepted until the order book is ready.",
   "orderEntry.orderType.scaledOrder": "Scaled",
   "orderEntry.orderType.trailingStop": "Trailing stop",
   "orderEntry.orderSize": "Order size",
@@ -127,10 +129,14 @@ export const orderEntry = {
   "marginMode.current": "Current",
   "marginMode.marginModeSettings": "Margin mode settings",
   "marginMode.updatedSuccessfully": "Updated successfully",
+  "marginMode.noEditableSymbolsSelected": "No editable symbols selected",
+  "marginMode.failedToUpdateMarginMode": "Failed to update margin mode",
   "marginMode.perpetualFutures": "Perpetual futures",
   "marginMode.searchPlaceholder": "Search",
   "marginMode.selectAll": "Select all",
   "marginMode.setAs": "Set as",
+  "marginMode.disabledSymbolTooltip":
+    "This symbol is independently operated by a third party. Isolated Margin is enforced to prevent risk from affecting your other positions.",
 
   "orderEntry.startPrice.error.required": "Start price is required",
   "orderEntry.startPrice.error.min":
@@ -182,6 +188,16 @@ export const orderEntry = {
   "orderEntry.placeOrderNow": "Place order now",
   "orderEntry.maxQty.reminder.content":
     "Order qty reduced to max available: {{maxQty}}",
+
+  "orderEntry.permissionlessNotice.title": "Community-Listed Market Notice",
+  "orderEntry.permissionlessNotice.content1":
+    "This market was listed by a third-party deployer through the permissionless listing system.",
+  "orderEntry.permissionlessNotice.content2":
+    "It is not created, reviewed, or endorsed by Orderly. Such markets may involve low liquidity, high volatility, incomplete information, or increased liquidation risk.",
+  "orderEntry.permissionlessNotice.content3":
+    "Please review the deployer's documentation and trade at your own risk.",
+  "orderEntry.permissionlessNotice.checkbox":
+    "I understand this is a community-listed market and accept the risks.",
 };
 
 export type OrderEntry = typeof orderEntry;

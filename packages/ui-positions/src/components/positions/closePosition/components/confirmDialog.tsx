@@ -12,6 +12,7 @@ import {
   Box,
 } from "@orderly.network/ui";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
+import { SymbolBadge } from "../../desktop/symbolBadge";
 
 export const ConfirmHeader: FC<{
   onClose?: () => void;
@@ -208,9 +209,10 @@ export const LimitConfirmDialog: FC<{
       <Flex gap={2} mb={4} mt={5} justify={"between"}>
         <Text.formatted
           rule="symbol"
-          formatString="base-type"
+          formatString="base"
           size="base"
           showIcon
+          suffix={<SymbolBadge symbol={order.symbol} />}
         >
           {order.symbol}
         </Text.formatted>

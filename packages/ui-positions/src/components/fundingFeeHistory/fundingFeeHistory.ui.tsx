@@ -16,6 +16,7 @@ import {
   modal,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { SymbolBadge } from "../positions/desktop/symbolBadge";
 import { EndReachedBox } from "./endReachedBox";
 
 type FundingFeeHistory = {
@@ -105,8 +106,10 @@ export const FundingFeeHistoryUI: FC<{
             </span>
             <Text.formatted
               rule="symbol"
+              formatString="base"
               className="oui-font-semibold"
               intensity={98}
+              suffix={<SymbolBadge symbol={symbol} />}
             >
               {symbol}
             </Text.formatted>
@@ -208,7 +211,11 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         dataIndex: "created_time",
         width: 120,
         render: (value: string) => {
-          return <Text.formatted rule="date">{value}</Text.formatted>;
+          return (
+            <Text.formatted rule="date" suffix={<SymbolBadge symbol={value} />}>
+              {value}
+            </Text.formatted>
+          );
         },
       },
       {

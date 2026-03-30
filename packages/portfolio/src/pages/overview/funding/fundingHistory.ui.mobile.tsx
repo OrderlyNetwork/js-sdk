@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { DataFilter, Flex, ListView, Text, Badge } from "@orderly.network/ui";
+import { SymbolBadge } from "./symbolBadge";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
@@ -42,13 +43,21 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
         <Flex direction="row" justify="between" width="100%" height="20px">
           <Text.formatted
             rule="symbol"
+            formatString="base"
             className="oui-text-base-contrast oui-mr-1 oui-text-sm"
+            suffix={
+              <Flex direction="row" gap={1}>
+                {" "}
+                <Badge color="neutral" size="xs">
+                  {switchPaymentType(item.payment_type)}
+                </Badge>
+                <SymbolBadge symbol={item.symbol} />
+              </Flex>
+            }
           >
             {item.symbol}
           </Text.formatted>
-          <Badge color="neutral" size="xs">
-            {switchPaymentType(item.payment_type)}
-          </Badge>
+
           <Text.formatted
             rule="date"
             className="oui-text-base-contrast-36 oui-text-2xs oui-ml-auto"

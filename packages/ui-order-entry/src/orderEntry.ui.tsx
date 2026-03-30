@@ -39,6 +39,10 @@ import { AssetInfo } from "./components/assetInfo";
 import { Available } from "./components/available";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import { MaxQtyConfirm } from "./components/dialog/maxQtyConfirm";
+import {
+  permissionlessMarketNoticeDesktopDialogId,
+  permissionlessMarketNoticeDialogId,
+} from "./components/dialog/permissionlessMarketNotice.ui";
 import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
 import { OrderEntryHeader } from "./components/header";
 import { OrderEntryProvider } from "./components/orderEntryProvider";
@@ -77,8 +81,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     soundAlert,
     setSoundAlert,
     currentFocusInput,
+    walletAddress,
+    isPermissionlessListing,
+    symbol,
   } = props;
   const [maxQtyConfirmOpen, setMaxQtyConfirmOpen] = useState(false);
+
+  const [permissionlessAcknowledgedKeys, setPermissionlessAcknowledgedKeys] =
+    useLocalStorage<string[]>("orderly-permissionless-market-notice", []);
 
   const { t } = useTranslation();
 
@@ -181,25 +191,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       .then(
         // validate success, it return the order
         // TODO: get order from other function
-        (order: any) => {
-          // scaled order is always need confirm
-          if (isScaledOrder) {
-            return modal.show(scaledOrderConfirmDialogId, {
-              order,
-              symbolInfo,
-              size: isMobile ? "sm" : "md",
-            });
-          }
-
-          if (needConfirm) {
-            return modal.show(orderConfirmDialogId, {
-              order: formattedOrder,
-              symbolInfo,
-            });
-          }
-
-          return true;
-        },
+        (order: any) => order,
         // should catch validate error first, then submit
         (errors: OrderValidationResult) => {
           // slippage error message is not show input tooltip, so we need to manually show it by toast
@@ -213,6 +205,49 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           return Promise.reject();
         },
       )
+      .then((order: any) => {
+        const shouldShowPermissionlessNotice =
+          isPermissionlessListing &&
+          walletAddress &&
+          !(permissionlessAcknowledgedKeys ?? []).includes(
+            `${walletAddress}_${symbol}`,
+          );
+
+        if (shouldShowPermissionlessNotice) {
+          return modal
+            .show(
+              isMobile
+                ? permissionlessMarketNoticeDialogId
+                : permissionlessMarketNoticeDesktopDialogId,
+            )
+            .then(() => {
+              setPermissionlessAcknowledgedKeys([
+                ...(Array.isArray(permissionlessAcknowledgedKeys)
+                  ? permissionlessAcknowledgedKeys
+                  : []),
+                `${walletAddress}_${symbol}`,
+              ]);
+              return order;
+            });
+        }
+        return Promise.resolve(order);
+      })
+      .then((order: any) => {
+        if (isScaledOrder) {
+          return modal.show(scaledOrderConfirmDialogId, {
+            order,
+            symbolInfo,
+            size: isMobile ? "sm" : "md",
+          });
+        }
+        if (needConfirm) {
+          return modal.show(orderConfirmDialogId, {
+            order: formattedOrder,
+            symbolInfo,
+          });
+        }
+        return true;
+      })
       .then(() => {
         // validate success, submit order
         return submit({ resetOnSuccess: false }).then((result: any) => {
@@ -412,6 +447,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           setOrderValue={manualSetOrderValue}
           symbolLeverage={props.symbolLeverage}
           marginMode={props.marginMode}
+          marketOrderDisabled={props.isSymbolPostOnly}
+          marketOrderDisabledTooltip={t(
+            "orderEntry.orderType.symbolPostOnly.tooltip",
+          )}
         />
 
         <Available

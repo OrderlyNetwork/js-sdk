@@ -16,5 +16,5 @@ export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
   withdraw: {
     enableWithdrawToExternalWallet: true,
   },
-  marketTabs,
+  // marketTabs,
 };

@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, TabPanel, Tabs } from "@orderly.network/ui";
+import { CommunityBrokerTabs } from "../../../components/communityBrokerTabs";
 import { FavoritesEmpty } from "../../../components/favoritesEmpty";
 import type { MarketsListFullType } from "../../../components/marketsListFull/marketsListFull.script";
 import { useMarketsContext } from "../../../components/marketsProvider";
@@ -13,6 +14,7 @@ import {
   resolveTabTriggerIcon,
   useCustomTabDataFilters,
 } from "../../../components/shared/tabUtils";
+import { createCommunityBrokerFilter } from "../../../hooks/useCommunityTabs";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
 import { MarketsTabName, SortType } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";
@@ -61,6 +63,12 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         title: <FavoritesIcon />,
         value: "favorites",
         testid: "oui-testid-markets-favorites-tab",
+        initialSort: DEFAULT_SORT,
+      },
+      community: {
+        title: t("markets.community"),
+        value: "community",
+        testid: "oui-testid-markets-community-tab",
         initialSort: DEFAULT_SORT,
       },
       all: {
@@ -155,6 +163,26 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
                           />
                         )
                       }
+                    />
+                  ) : tab.type === "community" ? (
+                    <CommunityBrokerTabs
+                      storageKey="orderly_markets_datalist_community_sel_sub_tab"
+                      size="md"
+                      classNames={{
+                        tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+                        tabsContent: "oui-h-full",
+                      }}
+                      className="oui-marketsDataList-community-tabs"
+                      showScrollIndicator
+                      renderPanel={(selected) => (
+                        <React.Suspense fallback={null}>
+                          <LazyMarketsListFullWidget
+                            type="all"
+                            initialSort={meta.initialSort}
+                            dataFilter={createCommunityBrokerFilter(selected)}
+                          />
+                        </React.Suspense>
+                      )}
                     />
                   ) : (
                     <LazyMarketsListFullWidget

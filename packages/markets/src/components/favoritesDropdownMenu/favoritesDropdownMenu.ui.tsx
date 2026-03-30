@@ -19,6 +19,7 @@ import {
   CloseCircleFillIcon,
   Tooltip,
 } from "@orderly.network/ui";
+import { SymbolBadge } from "../symbolBadge";
 import type { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
 
 export type FavoritesDropdownMenuProps =
@@ -148,9 +149,10 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         {t("markets.favorites.dropdown.title")}
         <Text.formatted
           rule="symbol"
-          formatString="base-type"
+          formatString="base"
           size="base"
           showIcon
+          suffix={<SymbolBadge symbol={symbol} />}
         >
           {symbol}
         </Text.formatted>

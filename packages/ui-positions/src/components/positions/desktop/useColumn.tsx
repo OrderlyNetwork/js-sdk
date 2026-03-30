@@ -27,6 +27,7 @@ import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
 import { NumeralWithCtx } from "./numeralWithCtx";
 import { PartialTPSL } from "./partialTPSL";
+import { PositionSymbolCell } from "./positionSymbolCell";
 import { ReversePositionButton } from "./reversePotisionButton";
 import { ShareButtonWidget } from "./shareButton";
 import { TriggerPrice } from "./triggerPrice";
@@ -54,7 +55,7 @@ export const useColumn = (config: ColumnConfig) => {
         title: t("common.symbol"),
         dataIndex: "symbol",
         fixed: "left",
-        width: 176,
+        width: 200,
         onSort: (r1, r2) => {
           return r1.symbol?.localeCompare(r2.symbol || "");
           // if (sortOrder === "asc") {
@@ -66,9 +67,9 @@ export const useColumn = (config: ColumnConfig) => {
           <Flex gap={2} className="oui-py-1">
             <Box
               width={4}
-              height={20}
+              height={24}
               className={cn(
-                "oui-h-[38px] oui-rounded-[1px]",
+                "oui-h-[42px] oui-rounded-[1px]",
                 record.position_qty > 0
                   ? "oui-bg-trade-profit"
                   : "oui-bg-trade-loss",
@@ -76,18 +77,10 @@ export const useColumn = (config: ColumnConfig) => {
             />
             <Flex direction="column" itemAlign="start" gap={1}>
               <Flex gap={1} itemAlign="center">
-                <Text.formatted
-                  // rule={"symbol"}
-                  formatString="base-type"
-                  className="oui-cursor-pointer"
-                  onClick={(e) => {
-                    onSymbolChange?.({ symbol: value } as API.Symbol);
-                    e.stopPropagation();
-                    e.preventDefault();
-                  }}
-                >
-                  {`${value.split("_")[1]}-PERP`}
-                </Text.formatted>
+                <PositionSymbolCell
+                  symbol={value}
+                  onSymbolChange={onSymbolChange}
+                />
                 <RwaStatusTag symbol={value} />
               </Flex>
               <Flex gap={1} wrap="wrap">

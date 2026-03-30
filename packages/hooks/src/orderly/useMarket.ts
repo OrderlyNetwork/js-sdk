@@ -11,6 +11,7 @@ export enum MarketsType {
   RECENT,
   ALL,
   NEW_LISTING,
+  COMMUNITY,
 }
 
 export interface FavoriteTab {
@@ -267,7 +268,7 @@ export const useMarket = (type: MarketsType) => {
     // filter
     const keys = localData.map((item) => item.name);
     const filter =
-      type == MarketsType.ALL
+      type == MarketsType.ALL || type == MarketsType.COMMUNITY
         ? marketsList
         : marketsList?.filter((item) => keys.includes(item.symbol));
 

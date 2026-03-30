@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { SymbolBadge } from "../../positions/desktop/symbolBadge";
 import { PositionHistorySide } from "../positionHistory.script";
 import { PositionHistoryCellState } from "./positionHistoryCell.script";
 
@@ -23,7 +24,7 @@ export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
     <Text.formatted
       intensity={80}
       rule="symbol"
-      formatString="base-type"
+      formatString="base"
       size="sm"
       // @ts-ignore
       prefix={
@@ -31,6 +32,7 @@ export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
           {isBuy ? t("common.buy") : t("common.sell")}
         </Badge>
       }
+      suffix={<SymbolBadge symbol={symbol} />}
       onClick={() => {
         props.onSymbolChange?.({ symbol: symbol } as API.Symbol);
       }}

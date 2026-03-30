@@ -18,6 +18,7 @@ export type MarketCategoryComponentKey =
 
 export type MarketBuiltInTabType =
   | "favorites"
+  | "community"
   | "all"
   | "rwa"
   | "newListing"

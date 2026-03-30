@@ -162,12 +162,7 @@ export class LiquidationLineService {
       if (!line) continue;
       line.setLineStyle(0);
       line.setPrice(items[i].price);
-      this.updateLineLabel(
-        line,
-        false,
-        items[i].marginMode,
-        items[i].leverage,
-      );
+      this.updateLineLabel(line, false, items[i].marginMode, items[i].leverage);
     }
 
     // Remove stale extra lines when position count decreases.

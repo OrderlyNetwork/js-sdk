@@ -8,6 +8,11 @@ import {
   NumTypeCollateral,
 } from "./numType";
 import { Numeral } from "./numeral";
+import {
+  SymbolBadgeText,
+  SymbolBadge,
+  type SymbolBadgeTextProps,
+} from "./symbolBadge";
 import { Text as BaseText, textVariants } from "./text";
 import type { TextProps } from "./text";
 
@@ -18,6 +23,7 @@ export { parseNumber, formatAddress } from "./utils";
 
 export type TextType = typeof BaseText & {
   formatted: typeof FormattedText;
+  symbolBadge: typeof SymbolBadgeText;
   numeral: typeof Numeral;
   gradient: typeof GradientText;
   roi: typeof NumTypeRoi;
@@ -29,6 +35,7 @@ export type TextType = typeof BaseText & {
 
 const Text = BaseText as TextType;
 Text.formatted = FormattedText;
+Text.symbolBadge = SymbolBadgeText;
 Text.numeral = Numeral;
 Text.gradient = GradientText;
 Text.roi = NumTypeRoi;
@@ -37,5 +44,5 @@ Text.notional = NumTypeNotional;
 Text.assetValue = NumTypeAssetValue;
 Text.collateral = NumTypeCollateral;
 
-export { Text, textVariants, gradientTextVariants, GradientText };
-export type { TextProps, FormattedTextProps };
+export { Text, textVariants, gradientTextVariants, GradientText, SymbolBadge };
+export type { TextProps, FormattedTextProps, SymbolBadgeTextProps };
