@@ -79,4 +79,5 @@ export interface DisplayControlSettingInterface {
   tpsl: boolean;
   positionTpsl: boolean;
   trailingStop: boolean;
+  liquidationPrice: boolean;
 }

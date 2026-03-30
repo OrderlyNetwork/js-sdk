@@ -193,17 +193,28 @@ const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
       dataIndex: "orderly_key",
       width: 150,
       render: (value) => {
+        const fullKey = typeof value === "string" ? value : `${value ?? ""}`;
+        const displayKey = formatKey(fullKey);
         return (
-          <Text.formatted
-            rule={""}
-            copyable
-            copyIconSize={16}
-            onCopy={() => {
-              props.onCopyApiKey?.(value);
-            }}
-          >
-            {formatKey(value)}
-          </Text.formatted>
+          <Flex gap={1} itemAlign={"center"}>
+            <div className="oui-overflow-hidden oui-overflow-ellipsis">
+              <Text.formatted rule={""}>{displayKey}</Text.formatted>
+            </div>
+            {!!fullKey && (
+              <Box width={16} height={16} className="oui-cursor-pointer">
+                <CopyIcon
+                  color="white"
+                  opacity={0.54}
+                  size={16}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(fullKey);
+                    props.onCopyApiKey?.(fullKey);
+                  }}
+                />
+              </Box>
+            )}
+          </Flex>
         );
       },
     },

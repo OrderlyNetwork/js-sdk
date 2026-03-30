@@ -1,33 +1,45 @@
-# default-solana-adapter
+# default-solana-adapter Package Documentation
 
-> Location: `packages/default-solana-adapter/src`
+## Package overview
 
-## Overview
+The `default-solana-adapter` package provides a Solana wallet adapter implementation for the Orderly Network. It bridges Solana wallets (including Ledger) with Orderly's core wallet interface for registration, signing, deposits, withdrawals, internal transfers, and DEX requests on Solana.
 
-This package provides the **default Solana wallet adapter** for Orderly Network. It implements `BaseWalletAdapter` from `@orderly.network/core` for the Solana chain namespace, handling account registration, key management, message signing (including Ledger), deposits via LayerZero vault, and integration with the Solana vault IDL.
+## Module responsibilities
 
-## Subdirectories
+| Responsibility | Description |
+|----------------|-------------|
+| Wallet adapter | Implements `BaseWalletAdapter` for Solana: address, chainId, connection, signMessage, balance, sendTransaction |
+| Message generation | Builds and signs Orderly messages (register, add key, withdraw, settle, internal transfer, dex request) for Solana |
+| Deposit / fee | Solana vault deposit (SOL and SPL) and deposit quote fee via LayerZero/OApp |
+| PDA / RPC helpers | Solana PDAs (vault, broker, token, OApp, peer, etc.) and RPC utilities (token accounts, lookup tables) |
 
-| Directory | Description |
-| --------- | ----------- |
-| [idl](./idl/index.md) | Solana vault Anchor IDL type definitions and program interface |
+## Key entities
+
+| Entity | Type | Role | Entry |
+|--------|------|------|--------|
+| DefaultSolanaWalletAdapter | class | Solana wallet adapter for Orderly | `walletAdapter.ts` |
+| SolanaWalletProvider | interface | Provider contract for Solana wallet (connection, sign, send) | `types.ts` |
+| SolanaAdapterOption | interface | Adapter config: provider, address, chain | `types.ts` |
+| helper functions | functions | Message builders and deposit/quote fee | `helper.ts` |
+| solana.util | module | PDA and connection utilities | `solana.util.ts` |
+| constant | module | Program IDs, seeds, peer addresses, lookup tables | `constant.ts` |
+
+## Directory structure
+
+- [idl/](idl/index.md) — Solana vault IDL type definitions
 
 ## Top-level files
 
-| File | Language | Description | Link |
-| ---- | -------- | ----------- | ---- |
-| `index.ts` | TypeScript | Package entry; re-exports version, adapter, and types | See [Entry point](#entry-point-indexts) below |
-| `types.ts` | TypeScript | Adapter option and wallet provider interfaces | [types.md](./types.md) |
-| `constant.ts` | TypeScript | Program IDs, seeds, peer addresses, lookup tables | [constant.md](./constant.md) |
-| `version.ts` | TypeScript | Package version and global `__ORDERLY_VERSION__` | [version.md](./version.md) |
-| `helper.ts` | TypeScript | Message builders and deposit/quote fee helpers | [helper.md](./helper.md) |
-| `solana.util.ts` | TypeScript | PDA and lookup table utilities for Solana/LayerZero | [solana.util.md](./solana.util.md) |
-| `walletAdapter.ts` | TypeScript | `DefaultSolanaWalletAdapter` implementation | [walletAdapter.md](./walletAdapter.md) |
+| File | Language | Responsibility | Entry symbol | Link |
+|------|-----------|-----------------|--------------|------|
+| index.ts | TypeScript | Package exports | version, DefaultSolanaWalletAdapter, SolanaWalletProvider | [index.ts.md](index.ts.md) |
+| types.ts | TypeScript | Adapter and provider types | SolanaAdapterOption, SolanaWalletProvider | [types.md](types.md) |
+| walletAdapter.ts | TypeScript | Solana wallet adapter implementation | DefaultSolanaWalletAdapter | [walletAdapter.md](walletAdapter.md) |
+| constant.ts | TypeScript | Program IDs, seeds, peer/lookup addresses | ENDPOINT_PROGRAM_ID, VAULT_AUTHORITY_SEED, etc. | [constant.md](constant.md) |
+| helper.ts | TypeScript | Message encoding and deposit/fee logic | addOrderlyKeyMessage, deposit, getDepositQuoteFee, checkIsLedgerWallet | [helper.md](helper.md) |
+| solana.util.ts | TypeScript | PDA and lookup table helpers | getTokenAccounts, getVaultAuthorityPda, getLookupTableAddress | [solana.util.md](solana.util.md) |
+| version.ts | TypeScript | Package version | default export string | [version.md](version.md) |
 
-## Entry point (index.ts)
+## Search keywords
 
-Public exports:
-
-- `version` (default from `./version`) — package version string
-- `DefaultSolanaWalletAdapter` — Solana wallet adapter class
-- `SolanaWalletProvider` (type) — wallet provider interface
+Solana, wallet adapter, Orderly, BaseWalletAdapter, SolanaWalletProvider, deposit, withdraw, register account, add orderly key, settle, internal transfer, dex request, Ledger, LayerZero, OApp, vault, PDA.

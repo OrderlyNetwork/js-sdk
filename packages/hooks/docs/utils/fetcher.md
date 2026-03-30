@@ -1,31 +1,41 @@
-# fetcher
+# fetcher.ts — Fetcher and useQueryOptions
 
-## Overview
+## fetcher.ts Responsibility
 
-HTTP fetcher used by SWR-based hooks. Wraps `@orderly.network/net` `get` with optional response formatter. Also exports `useQueryOptions` type and `noCacheConfig` for SWR.
+Provides the default SWR fetcher and related types: `fetcher` (uses `get` from `@orderly.network/net` with optional formatter), `useQueryOptions` type (SWR config + formatter), and `noCacheConfig` (dedupingInterval 0, revalidate on mount and if stale). Used by `useQuery` and other SWR-based hooks for public API requests.
 
-## Exports
+## fetcher.ts Exports
 
-### `fetcher(url, init?, queryOptions?)`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| fetcher | function | Fetcher | (url, init?, queryOptions?) => get(url, init, queryOptions?.formatter). |
+| useQueryOptions | type | Config type | SWRConfiguration & { formatter?: (data: any) => T }. |
+| noCacheConfig | object | SWR config | { dedupingInterval: 0, revalidateOnMount: true, revalidateIfStale: true }. |
 
-Calls `get(url, init, queryOptions?.formatter)`.
+## fetcher Function Signature and Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `url` | `string` | Full URL |
-| `init` | `RequestInit` | Fetch init (optional) |
-| `queryOptions` | `useQueryOptions<any>` | Optional formatter and SWR config |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| url | string | Yes | Request URL. |
+| init | RequestInit | No | Fetch init (default {}). |
+| queryOptions | useQueryOptions<any> | No | SWR options; formatter transforms response. |
 
-### `useQueryOptions<T>`
+- **Output**: Promise from `get(url, init, queryOptions?.formatter)`.
 
-`SWRConfiguration & { formatter?: (data: any) => T }`.
+## fetcher Dependencies
 
-### `noCacheConfig`
+- **Upstream**: `get` from `@orderly.network/net`, SWRConfiguration from `swr`.
+- **Downstream**: useQuery and other hooks that pass this fetcher to SWR.
 
-`SWRConfiguration` with `dedupingInterval: 0`, `revalidateOnMount: true`, `revalidateIfStale: true`.
-
-## Usage example
+## fetcher Example
 
 ```ts
-import { fetcher, noCacheConfig, type useQueryOptions } from "@orderly.network/hooks";
+import { fetcher, noCacheConfig, useQueryOptions } from "@orderly.network/hooks";
+
+const options: useQueryOptions<{ list: Item[] }> = {
+  ...noCacheConfig,
+  formatter: (data) => ({ list: data?.data?.list ?? [] }),
+};
+
+const { data } = useSWR("/v1/public/stats", fetcher, options);
 ```

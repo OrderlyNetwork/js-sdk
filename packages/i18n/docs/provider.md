@@ -1,56 +1,56 @@
-# provider
+# provider.tsx
 
-## Overview
+## provider.tsx responsibility
 
-React providers for i18n and locale: `I18nProvider` wraps `I18nextProvider` with optional props; `LocaleProvider` wires resources, backend loading, language detection, and locale context (languages list, onLanguageBeforeChanged, onLanguageChanged, popup options) for the language switcher.
+Provides two React providers: I18nProvider (pass-through to I18nextProvider) and LocaleProvider. LocaleProvider wires locale/resources/backend, manages language list, runs backend load on init and before language change, and supplies LocaleContext (languages, onLanguageBeforeChanged, onLanguageChanged, popup).
 
-## Exports
+## provider.tsx exports
 
-### `I18nProviderProps`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| I18nProvider | component | Wrapper | FC<I18nProviderProps>, forwards to I18nextProvider |
+| LocaleProvider | component | Full locale setup | Children, locale/resources, backend, supportedLanguages, callbacks, LocaleContext |
+| I18nProviderProps | type | Props | Partial<I18nextProviderProps> |
+| LocaleProviderProps | type | Props | children, locale?, resource?, resources?, supportedLanguages?, onLocaleChange?, convertDetectedLanguage?, backend?, plus Partial<LocaleContextState> |
 
-`Partial<I18nextProviderProps>` – optional props passed to `I18nextProvider`.
+## LocaleProviderProps fields
 
-### `I18nProvider`
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| children | ReactNode | yes | App tree |
+| locale | LocaleCode | no | Initial/controlled locale |
+| resource | Record<string, string> | no | Single locale bundle |
+| resources | Resources | no | Per-locale bundles |
+| supportedLanguages | LocaleCode[] | no | Filter defaultLanguages |
+| onLocaleChange | (locale: LocaleCode) => void | no | Deprecated; use onLanguageChanged |
+| convertDetectedLanguage | (lang: string) => LocaleCode | no | Map detected language |
+| backend | BackendOptions | no | loadPath for remote bundles |
+| languages | Language[] | no | Custom language list (LocaleContextState) |
+| onLanguageBeforeChanged | (lang) => Promise<void> | no | Called before change; backend loads here |
+| onLanguageChanged | (lang) => Promise<void> | no | Called after change |
+| popup | PopupProps | no | Language switcher popup options |
 
-Functional component that renders `I18nextProvider` with given props and `children`. Use when you only need to pass a custom i18n instance or props.
+## LocaleProvider execution flow
 
-### `LocaleProviderProps`
+1. If resources: addResourceBundle for each locale/ns.
+2. If resource + locale: addResourceBundle(locale, defaultNS, resource).
+3. If locale prop and !== i18n.language: changeLanguage(locale).
+4. Derive languages from props.languages or supportedLanguages (filter defaultLanguages).
+5. On mount: initLanguage — convertDetectedLanguage or parseI18nLang(i18n.language), backend.loadLanguage, then changeLanguage if needed.
+6. languageBeforeChangedHandle: onLanguageBeforeChanged + backend.loadLanguage.
+7. languageChangedHandle: onLanguageChanged + onLocaleChange.
+8. Provide LocaleContext and I18nextProvider with i18n and defaultNS.
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `children` | `ReactNode` | Yes | Tree to wrap |
-| `locale` | `LocaleCode` | No | Initial/controlled language |
-| `resource` | `Record<string, string>` | No | Single locale messages (use with `locale`) |
-| `resources` | `Resources` | No | Per-locale messages; overrides `resource`/`locale` for initial data |
-| `supportedLanguages` | `LocaleCode[]` | No | Subset of languages for the switcher (from default list) |
-| `onLocaleChange` | `(locale: LocaleCode) => void` | No | Deprecated; use `onLanguageChanged` |
-| `onLanguageChanged` | `(locale: LocaleCode) => void \| Promise<void>` | No | Called after language change |
-| `onLanguageBeforeChanged` | `(locale: LocaleCode) => Promise<void>` | No | Called before change; backend loads language in this callback |
-| `convertDetectedLanguage` | `(lang: string) => LocaleCode` | No | Map detected language to a supported code |
-| `backend` | `BackendOptions` | No | Used to create internal `Backend` for loading languages |
-| `languages` | `Language[]` | No | Custom language list for context |
-| `popup` | `PopupProps` | No | Language switcher popup options |
-
-### `LocaleProvider`
-
-- Merges `resource`/`locale` or `resources` into i18n on mount/update.
-- When `locale` is set, calls `i18n.changeLanguage(locale)`.
-- Builds `languages` from `supportedLanguages` or `props.languages`.
-- On init, uses `convertDetectedLanguage` or `parseI18nLang` to resolve language, loads it via `Backend`, then calls `i18n.changeLanguage` if needed.
-- Provides `LocaleContext` with `languages`, `onLanguageBeforeChanged` (loads language via backend), `onLanguageChanged`, and `popup`.
-- Renders `I18nextProvider` with the shared i18n instance and `defaultNS`.
-
-## Usage example
+## provider.tsx Example
 
 ```tsx
-import { LocaleProvider, I18nProvider } from "@orderly.network/i18n";
+import { LocaleProvider, LocaleEnum } from "@orderly.network/i18n";
 
 <LocaleProvider
+  supportedLanguages={[LocaleEnum.en, LocaleEnum.zh]}
   backend={{
-    loadPath: (lng, ns) => `https://cdn.example.com/locales/${lng}/${ns}.json`,
+    loadPath: (lang, ns) => `https://cdn.example.com/locales/${lang}.json`,
   }}
-  supportedLanguages={["en", "zh", "ja"]}
-  onLanguageChanged={(lng) => console.log(lng)}
 >
   <App />
 </LocaleProvider>

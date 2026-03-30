@@ -1,45 +1,101 @@
-# helper
+# helper.ts
 
-## Overview
+## helper.ts Responsibility
 
-Helper module that builds EIP-712 typed data structures for Orderly operations. Each function accepts inputs (including `chainId` and `domain`) and returns a tuple `[message, toSignatureMessage]` for use with `signTypedData`. Used by `DefaultEVMWalletAdapter` for registration, add key, withdraw, internal transfer, settle, and DEX request.
+Builds EIP-712 typed data (message + full struct for signing) for Orderly EVM flows: registration, add orderly key, withdraw, internal transfer, settle PnL, and DEX request. Each function returns a tuple `[message, toSignatureMessage]` for the adapter to sign via `Web3Provider.signTypedData`.
 
-## Exports
+## helper.ts Exports
 
-### Functions
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| withdrawMessage | function | EIP-712 builder | Withdraw message and toSignatureMessage |
+| internalTransferMessage | function | EIP-712 builder | Internal transfer message and toSignatureMessage |
+| addOrderlyKeyMessage | function | EIP-712 builder | AddOrderlyKey message and toSignatureMessage |
+| registerAccountMessage | function | EIP-712 builder | Registration message and toSignatureMessage |
+| settleMessage | function | EIP-712 builder | SettlePnl message and toSignatureMessage |
+| dexRequestMessage | function | EIP-712 builder | DexRequest message and toSignatureMessage |
 
-| Function                   | Input type (extended with `domain`, `chainId`) | Returns | Description |
-| -------------------------- | ---------------------------------------------- | ------- | ----------- |
-| `withdrawMessage`          | `WithdrawInputs`                               | `Promise<[message, toSignatureMessage]>` | Withdraw primary type and types. |
-| `internalTransferMessage`  | `InternalTransferInputs`                      | Same    | InternalTransfer. |
-| `addOrderlyKeyMessage`     | `AddOrderlyKeyInputs`                          | Same    | AddOrderlyKey (scope, expiration, optional tag/subAccountId). |
-| `registerAccountMessage`   | `RegisterAccountInputs`                       | Same    | Registration (brokerId, chainId, timestamp, registrationNonce). |
-| `settleMessage`            | `SettleInputs`                                 | Same    | SettlePnl. |
-| `dexRequestMessage`        | `DexRequestInputs`                             | Same    | DexRequest. |
+## Common Input Shape
 
-Each returned `toSignatureMessage` has shape: `{ domain, message, primaryType, types }` for EIP-712 signing.
+All functions accept an object that extends the core input type with:
 
-## Dependencies
+- **domain**: `SignatureDomain` (EIP-712 domain)
+- **chainId**: `number`
 
-- `@orderly.network/core`: *Inputs, SignatureDomain
-- `@orderly.network/types`: DEFAUL_ORDERLY_KEY_SCOPE, definedTypes (EIP712Domain and per primaryType)
+Other fields come from `@orderly.network/core` input types (e.g. `RegisterAccountInputs`, `WithdrawInputs`).
 
-## Usage Example
+## Common Output
 
-```ts
+Each function returns `Promise<[message, toSignatureMessage]>` where:
+
+- **message**: Plain object for the primary type (e.g. brokerId, chainId, timestamp, nonces).
+- **toSignatureMessage**: Object with `domain`, `message`, `primaryType`, `types` for EIP-712 signing.
+
+## withdrawMessage
+
+- **Input**: `WithdrawInputs & { domain: SignatureDomain; chainId: number }`.
+- **Output**: `[message, toSignatureMessage]` for primary type `"Withdraw"`. Message includes brokerId, chainId, receiver, token, amount, timestamp, withdrawNonce.
+
+## internalTransferMessage
+
+- **Input**: `InternalTransferInputs & { domain: SignatureDomain; chainId: number }`.
+- **Output**: `[message, toSignatureMessage]` for primary type `"InternalTransfer"`. Message includes chainId, receiver, token, amount, transferNonce.
+
+## addOrderlyKeyMessage
+
+- **Input**: `AddOrderlyKeyInputs & { domain: SignatureDomain; chainId: number }`.
+- **Output**: `[message, toSignatureMessage]` for primary type `"AddOrderlyKey"`. Message includes brokerId, orderlyKey (publicKey), scope, chainId, timestamp, expiration, optional tag and subAccountId.
+
+## registerAccountMessage
+
+- **Input**: `RegisterAccountInputs & { domain: SignatureDomain; chainId: number }`.
+- **Output**: `[message, toSignatureMessage]` for primary type `"Registration"`. Message includes brokerId, chainId, timestamp, registrationNonce.
+
+## settleMessage
+
+- **Input**: `SettleInputs & { domain: SignatureDomain; chainId: number }`.
+- **Output**: `[message, toSignatureMessage]` for primary type `"SettlePnl"`. Message includes brokerId, chainId, timestamp, settleNonce (from settlePnlNonce).
+
+## dexRequestMessage
+
+- **Input**: `DexRequestInputs & { domain: SignatureDomain; chainId: number }`.
+- **Output**: `[message, toSignatureMessage]` for primary type `"DexRequest"`. Message includes payloadType, nonce, receiver, amount, vaultId, token, dexBrokerId.
+
+## helper.ts Dependencies
+
+- **Upstream**: `@orderly.network/core` (input types, SignatureDomain), `@orderly.network/types` (DEFAUL_ORDERLY_KEY_SCOPE, definedTypes for EIP-712).
+- **Downstream**: `DefaultEVMWalletAdapter` in `walletAdapter.ts` (calls these to build messages then signs via web3Provider).
+
+## helper.ts Execution Flow
+
+1. Destructure inputs (domain, chainId, and operation-specific fields).
+2. Set primaryType and build typeDefinition from `definedTypes.EIP712Domain` and `definedTypes[primaryType]`.
+3. Build message object for the primary type.
+4. Build toSignatureMessage with domain, message, primaryType, types.
+5. Return `[message, toSignatureMessage]` as const.
+
+## helper.ts Example
+
+```typescript
 import {
   registerAccountMessage,
   addOrderlyKeyMessage,
-  withdrawMessage,
 } from "./helper";
+import type { SignatureDomain } from "@orderly.network/core";
 
-const domain = { name: "Orderly", version: "1", chainId: 421614, verifyingContract: "0x..." };
-const [msg, toSign] = await registerAccountMessage({
-  brokerId,
+const domain: SignatureDomain = {
+  name: "Orderly",
+  version: "1",
   chainId: 421614,
-  timestamp: Date.now(),
-  registrationNonce,
+  verifyingContract: "0x...",
+};
+
+const [regMessage, regToSign] = await registerAccountMessage({
+  chainId: 421614,
   domain,
+  registrationNonce: 1,
+  brokerId: "broker",
+  timestamp: Date.now(),
 });
-// Use toSign with provider.signTypedData(address, JSON.stringify(toSign))
+// Use regToSign with signTypedData(address, JSON.stringify(regToSign)).
 ```

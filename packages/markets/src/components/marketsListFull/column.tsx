@@ -95,34 +95,6 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: t("markets.column.mark"),
-        dataIndex: "mark_price",
-        width: 100,
-        align: "right",
-        onSort: true,
-        render: (value, record) => {
-          return (
-            <Text.numeral dp={record.quote_dp || 2} currency="$">
-              {value}
-            </Text.numeral>
-          );
-        },
-      },
-      {
-        title: t("markets.column.index"),
-        dataIndex: "index_price",
-        width: 100,
-        align: "right",
-        onSort: true,
-        render: (value, record) => {
-          return (
-            <Text.numeral dp={record.quote_dp || 2} currency="$">
-              {value}
-            </Text.numeral>
-          );
-        },
-      },
-      {
         title: t("markets.column.24hChange"),
         dataIndex: "change",
         width: 100,

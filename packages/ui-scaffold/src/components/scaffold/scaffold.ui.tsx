@@ -1,6 +1,6 @@
 import React from "react";
 import { isValidElement } from "react";
-import { Box, cn, Grid } from "@orderly.network/ui";
+import { Box, cn, Grid, Text } from "@orderly.network/ui";
 import { FooterWidget } from "../footer";
 import { MainNavWidget } from "../main/mainNav.widget";
 import { NotificationWidget } from "../notification/notification.widget";
@@ -8,6 +8,25 @@ import { RestrictedInfoWidget } from "../restrictedInfo";
 import { SideNavbarWidget } from "../sidebar";
 import type { ScaffoldScriptReturn } from "./scaffold.script";
 import type { ScaffoldProps } from "./scaffold.widget";
+
+export const DefaultTradingViewTncLink = ({
+  className,
+}: {
+  className?: string;
+}) => {
+  return (
+    <a
+      href="https://www.tradingview.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className ?? ""}
+    >
+      <Text intensity={54} size="2xs">
+        Charts powered by TradingView
+      </Text>
+    </a>
+  );
+};
 
 export type DesktopScaffoldProps = React.PropsWithChildren<
   ScaffoldProps & ScaffoldScriptReturn
@@ -33,6 +52,14 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
     footerProps,
     children,
   } = props;
+
+  const trailing =
+    typeof footerProps?.trailing !== "undefined" ? (
+      footerProps?.trailing
+    ) : (
+      <DefaultTradingViewTncLink />
+    );
+
   return (
     <div
       style={{
@@ -107,7 +134,7 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
             }}
           >
             <div className={cn(classNames?.leftSidebar)}>
-              {isValidElement<any>(leftSidebar) ? (
+              {isValidElement<React.ReactElement>(leftSidebar) ? (
                 leftSidebar
               ) : (
                 <SideNavbarWidget {...leftSideProps} />
@@ -134,7 +161,7 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
           classNames?.footer,
         )}
       >
-        {footer || <FooterWidget {...footerProps} />}
+        {footer || <FooterWidget {...footerProps} trailing={trailing} />}
       </Box>
       <NotificationWidget />
     </div>

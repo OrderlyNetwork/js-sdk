@@ -137,7 +137,7 @@ export const useAssetsHistoryData = (
   const [userStatistics] = useUserStatistics();
 
   const todayVolume = useMemo(
-    () => userStatistics?.perp_trading_volume_last_24_hours ?? 0,
+    () => userStatistics?.perp_trading_volume_today ?? 0,
     [userStatistics],
   );
 
@@ -361,6 +361,7 @@ export const useAssetsHistoryData = (
       ...lastItem,
       date: getUTCStr(today),
       perp_volume: todayVol,
+      base_account_value: lastItem?.account_value ?? 0,
       account_value:
         totalValue !== null ? totalValue : (lastItem?.account_value ?? 0),
       pnl:
@@ -449,6 +450,39 @@ export const useAssetsHistoryData = (
     todayVolume,
   ]);
 
+  const todayPerformance = useMemo(() => {
+    if (!Array.isArray(calculatedData) || calculatedData.length === 0) {
+      return null;
+    }
+
+    const todayRow = calculatedData[
+      calculatedData.length - 1
+    ] as API.DailyRow & {
+      base_account_value?: number;
+      __isCalculated?: boolean;
+    };
+
+    if (!todayRow.__isCalculated) {
+      return null;
+    }
+
+    const baseAccountValue =
+      typeof todayRow.base_account_value === "number"
+        ? todayRow.base_account_value
+        : (todayRow.account_value ?? 0);
+
+    let roi = zero;
+    if (baseAccountValue) {
+      roi = new Decimal(todayRow.pnl).div(baseAccountValue);
+    }
+
+    return {
+      pnl: todayRow.pnl,
+      roi: roi.toNumber(),
+      vol: todayRow.perp_volume ?? 0,
+    };
+  }, [calculatedData]);
+
   const aggregateValue = useMemo(() => {
     let vol = zero;
     let pnl = zero;
@@ -499,6 +533,7 @@ export const useAssetsHistoryData = (
     aggregateValue,
     createFakeData,
     volumeUpdateDate: data?.[data.length - 1]?.date ?? "",
+    todayPerformance,
   } as const;
 };
 

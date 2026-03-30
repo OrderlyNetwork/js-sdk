@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, cn, Flex, Marquee } from "@orderly.network/ui";
+import { useMarketsContext } from "../marketsProvider";
 import type { HorizontalMarketsScriptReturn } from "./horizontalMarkets.script";
 import { MarketItem } from "./marketItem.ui";
 import { MarketTypeFilter } from "./marketTypeFilter.ui";
@@ -21,6 +22,7 @@ export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
     className,
     dropdownPos,
   } = props;
+  const { tabs } = useMarketsContext();
 
   // Memoize the render function to prevent unnecessary re-renders
   const renderMarketItem = React.useCallback(
@@ -83,6 +85,7 @@ export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
           selectedMarketType={selectedMarketType}
           onMarketTypeChange={onMarketTypeChange}
           position={dropdownPos}
+          tabs={tabs}
         />
 
         {/* Markets List */}

@@ -1,25 +1,42 @@
-# web3Adapter
+# web3Adapter.ts
 
-> Location: `packages/core/src/wallet/web3Adapter.ts`
+## web3Adapter.ts Responsibility
 
-## Overview
+Provides `Web3WalletAdapter` implementing legacy `IWalletAdapter` using the Web3 library: constructor accepts WalletAdapterOptions, sets chainId from options.chain.id (parsed as hex), implements getBalance and deposit (sendTransaction); sendTransaction, call, on, off throw "Method not implemented." Addresses getter throws. Used as a placeholder or for Web3-based integration.
 
-Minimal Web3-based wallet adapter implementing `IWalletAdapter`: uses Web3 instance from provider; chainId from options; getBalance and deposit/signTypedData implemented; sendTransaction, call, on, off throw "Method not implemented."
+## web3Adapter.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| Web3WalletAdapter | class | Impl | IWalletAdapter with Web3 |
 
-### Web3WalletAdapter (class)
+## Web3WalletAdapter Responsibility
 
-Constructor: `(options: WalletAdapterOptions)` – creates Web3 from provider, parses chain.id.
+Minimal Web3-backed adapter: getBalance via web3.eth.getBalance, deposit via web3.eth.sendTransaction({ from, to, value }). Other IWalletAdapter methods are not implemented.
 
-- **get chainId**, **get addresses** (throws).
-- **getBalance(address)**, **deposit(from, to, amount)** – web3.eth.
-- **signTypedData(address, data)** – web3.eth.signTypedData.
-- **sendTransaction**, **call**, **on**, **off** – throw.
+## Web3WalletAdapter Members
 
-## Usage Example
+| Member | Implementation |
+|--------|----------------|
+| constructor(options) | new Web3(options.provider); chainId = parseInt(options.chain.id, 16) |
+| get chainId() | return _chainId |
+| get addresses() | throw not implemented |
+| getBalance(address) | web3.eth.getBalance(address) |
+| deposit(from, to, amount) | web3.eth.sendTransaction({ from, to, value: amount }) |
+| sendTransaction, call, on, off | throw "Method not implemented." |
+| signTypedData | web3.eth.signTypedData(address, data) |
+| send | no-op (empty) |
 
-```ts
-// Alternative to EtherAdapter when using web3.js.
-const adapter = new Web3WalletAdapter({ provider, address: "0x...", chain: { id: 421614 } });
+## web3Adapter.ts Dependencies and Call Relationships
+
+- **Upstream**: ethers (TransactionRequest, TransactionResponse), ./adapter (IWalletAdapter, WalletAdapterOptions), Web3.
+- **Downstream**: Optional use by apps that rely on Web3 instead of ethers.
+
+## web3Adapter.ts Example
+
+```typescript
+import { Web3WalletAdapter } from "@orderly.network/core/wallet/web3Adapter";
+
+const adapter = new Web3WalletAdapter({ provider, address: "0x...", chain: { id: 0x66eee } });
+const balance = await adapter.getBalance("0x...");
 ```

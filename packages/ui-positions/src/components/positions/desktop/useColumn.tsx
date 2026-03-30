@@ -54,7 +54,7 @@ export const useColumn = (config: ColumnConfig) => {
         title: t("common.symbol"),
         dataIndex: "symbol",
         fixed: "left",
-        width: 200,
+        width: 176,
         onSort: (r1, r2) => {
           return r1.symbol?.localeCompare(r2.symbol || "");
           // if (sortOrder === "asc") {
@@ -63,7 +63,7 @@ export const useColumn = (config: ColumnConfig) => {
           // return r2.symbol.localeCompare(r1.symbol);
         },
         render: (value: string, record) => (
-          <Flex gap={2}>
+          <Flex gap={2} className="oui-py-1">
             <Box
               width={4}
               height={20}
@@ -74,27 +74,29 @@ export const useColumn = (config: ColumnConfig) => {
                   : "oui-bg-trade-loss",
               )}
             />
-            <Flex direction="column" itemAlign="start">
-              <Text.formatted
-                // rule={"symbol"}
-                formatString="base-type"
-                className="oui-cursor-pointer"
-                onClick={(e) => {
-                  onSymbolChange?.({ symbol: value } as API.Symbol);
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
-                {`${value.split("_")[1]}-PERP`}
-              </Text.formatted>
-              <Flex gap={1}>
+            <Flex direction="column" itemAlign="start" gap={1}>
+              <Flex gap={1} itemAlign="center">
+                <Text.formatted
+                  // rule={"symbol"}
+                  formatString="base-type"
+                  className="oui-cursor-pointer"
+                  onClick={(e) => {
+                    onSymbolChange?.({ symbol: value } as API.Symbol);
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }}
+                >
+                  {`${value.split("_")[1]}-PERP`}
+                </Text.formatted>
+                <RwaStatusTag symbol={value} />
+              </Flex>
+              <Flex gap={1} wrap="wrap">
                 <LeverageBadge
                   symbol={value}
                   leverage={record.leverage}
                   modalId={SymbolLeverageDialogId}
                   marginMode={record.margin_mode as any}
                 />
-                <RwaStatusTag symbol={value} />
               </Flex>
             </Flex>
           </Flex>

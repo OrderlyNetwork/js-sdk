@@ -1,23 +1,41 @@
-# layout.widget.tsx
+# PortfolioLayoutWidget
 
-## Overview
+## PortfolioLayoutWidget responsibility
 
-Top-level layout widget: uses `useScreen()` to switch between desktop `PortfolioLayout` and mobile `PortfolioLayoutMobile`. Composes `usePortfolioLayoutScript` and passes state and props to the active layout.
+Root layout component for the portfolio section. Uses `useScreen` to switch between desktop (`PortfolioLayout`) and mobile (`PortfolioLayoutMobile`), and wires `usePortfolioLayoutScript` state (including optional `leftSideProps?.current`) into the chosen layout.
 
-## Exports
+## PortfolioLayoutWidget input and output
 
-### Types
+- **Input**: Props: `PortfolioLayoutWidgetProps` (= `PortfolioLayoutProps`), including `leftSideProps?.current`, `children`, and other scaffold props.
+- **Output**: Renders either `PortfolioLayoutMobile` or `PortfolioLayout` with script state and props spread.
 
-- **`PortfolioLayoutWidgetProps`** — Alias of `PortfolioLayoutProps`
+## PortfolioLayoutWidget Props
 
-### Components
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| (inherited from PortfolioLayoutProps) | ScaffoldProps & { hideSideBar?, items? } | No | - | Same as PortfolioLayout (routerAdapter, leftSideProps, classNames, children, etc.) |
+| leftSideProps?.current | string | No | - | Override current path for sidebar highlight |
 
-- **`PortfolioLayoutWidget`** — Renders PortfolioLayout (desktop) or PortfolioLayoutMobile (mobile).
+## PortfolioLayoutWidget dependency and rendering
 
-## Usage example
+- **Upstream**: usePortfolioLayoutScript (layout.script), PortfolioLayout (layout.ui), PortfolioLayoutMobile (layout.ui.mobile), useScreen (@orderly.network/ui).
+- **Downstream**: Host app mounts this as the portfolio shell; sidebar items and routing come from script and routerAdapter.
+
+## PortfolioLayoutWidget rendering flow
+
+1. usePortfolioLayoutScript({ current: props.leftSideProps?.current }) → state (items, current, etc.).
+2. useScreen() → isMobile.
+3. If isMobile: render PortfolioLayoutMobile with state and props; else render PortfolioLayout with state and props.
+
+## PortfolioLayoutWidget Example
 
 ```tsx
-<PortfolioLayoutWidget leftSideProps={{ current: "/portfolio" }} routerAdapter={adapter}>
+import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
+
+<PortfolioLayoutWidget
+  routerAdapter={routerAdapter}
+  leftSideProps={{ current: "/portfolio/assets" }}
+>
   {children}
 </PortfolioLayoutWidget>
 ```

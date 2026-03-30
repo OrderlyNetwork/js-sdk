@@ -4,6 +4,7 @@ import {
   useRestrictedInfo,
   useTrackingInstance,
 } from "@orderly.network/hooks";
+import { MarketCategoriesConfigProvider } from "@orderly.network/hooks";
 import { useAssetconvertEvent } from "../hooks/useAssetconvertEvent";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
 import { useLinkDevice } from "../hooks/useLinkDevice";
@@ -84,7 +85,9 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
 
   return (
     <AppStateContext.Provider value={memoizedValue}>
-      {props.children}
+      <MarketCategoriesConfigProvider value={props.widgetConfigs?.marketTabs}>
+        {props.children}
+      </MarketCategoriesConfigProvider>
     </AppStateContext.Provider>
   );
 };

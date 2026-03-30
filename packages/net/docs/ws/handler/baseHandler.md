@@ -1,27 +1,37 @@
 # ws/handler/baseHandler.ts
 
-## Overview
+## baseHandler.ts 的职责
 
-Abstract base class implementing `MessageHandler`. Default `handle` throws; subclasses override it to process specific event types.
+提供 MessageHandler 的默认实现基类，handle 方法默认抛出 "Method not implemented."，供具体 handler（如 PingHandler）继承并重写 handle。
 
-## Exports
+## baseHandler.ts 对外导出内容
 
-### `BaseHandler` (default export)
+| 名称 | 类型 | 角色 | 说明 |
+|------|------|------|------|
+| default | class BaseHandler | 基类 | implements MessageHandler，handle 未实现 |
 
-Class implementing `MessageHandler`.
+## BaseHandler 的职责
 
-| Method | Signature | Description |
-| ------ | --------- | ----------- |
-| `handle` | `(message: any, webSocket: WebSocket) => void` | Default implementation throws "Method not implemented."; override in subclasses |
+统一 MessageHandler 接口实现入口，子类只需实现 handle(message, webSocket)。
 
-## Usage example
+## BaseHandler 依赖与调用关系
+
+- 上游调用方：无（不被直接调用，由子类实例注册到 messageHandlers）
+- 下游依赖：../../types/ws（MessageHandler）
+
+## BaseHandler 的扩展或修改入口
+
+- 新增 handler：新建类 extends BaseHandler，重写 handle，并在 handler.ts 中注册到 messageHandlers。
+
+## BaseHandler Example
 
 ```typescript
-import BaseHandler from "./baseHandler";
+import BaseHandler from "@orderly.network/net/src/ws/handler/baseHandler";
+import { MessageHandler } from "@orderly.network/net/src/types/ws";
 
-class MyHandler extends BaseHandler {
+class MyHandler extends BaseHandler implements MessageHandler {
   handle(message: any, webSocket: WebSocket) {
-    // handle message
+    // custom logic
   }
 }
 ```

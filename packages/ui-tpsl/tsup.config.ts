@@ -13,8 +13,8 @@ export default defineConfig((options) => ({
   tsconfig: "tsconfig.build.json",
   external: ["react", "react-dom"],
   esbuildOptions(esOptions, context) {
-    if (!options.watch) {
-      esOptions.drop = ["console", "debugger"];
-    }
+    // if (!options.watch) {
+    //   esOptions.drop = ["console", "debugger"];
+    // }
   },
 }));

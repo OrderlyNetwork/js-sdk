@@ -164,25 +164,25 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         // }
 
         if (mode === PnLMode.PERCENTAGE) {
-          // value = new Decimal(
-          //   value.replace(
-          //     new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
-          //     ""
-          //   )
-          // )
-          //   .mul(100)
-          //   .toString();
-
-          // return `${todpIfNeed(value, 2)}${percentageSuffix.current}`;
-          return `${new Decimal(
-            value.replace(
+          // // Order/API store offset% as a fraction (e.g. 0.1111); UI shows percent ×100 (11.11).
+          // // Order/API store offset% as a fraction (e.g. 0.1111); UI shows percent ×100 (11.11).
+          let normalized = value
+            .replace(
               new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
               "",
-            ),
-          )
-            .mul(100)
-            .todp(2, 4)
-            .toString()}${percentageSuffix.current}`;
+            )
+            .replace(/,/g, "");
+          // Incomplete decimals like "0.01." are invalid for Decimal; strip a lone trailing dot.
+          normalized = normalized.replace(/\.$/, "");
+          if (
+            isNaN(Number(normalized)) ||
+            normalized === "" ||
+            normalized === "-"
+          ) {
+            return value;
+          }
+          return `${new Decimal(normalized).mul(100).todp(2, 4).toString()}${percentageSuffix.current}`;
+
           // return (Number(value) * 100).toFixed(2);
         } else if (mode === PnLMode.OFFSET) {
           value = todpIfNeed(value, dp);
@@ -208,6 +208,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
               percentageSuffix.current = endStr[0];
             } else {
               percentageSuffix.current = "";
+            }
+            if (isNaN(Number(value))) {
+              return value;
             }
             value = new Decimal(value).div(100).toString();
             value = `${value}${percentageSuffix.current}`;

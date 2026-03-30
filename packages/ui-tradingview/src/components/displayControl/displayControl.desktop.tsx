@@ -53,6 +53,10 @@ export const DesktopDisplayControl: React.FC<IProps> = (props) => {
         label: t("orderEntry.orderType.trailingStop"),
         id: "trailingStop",
       },
+      {
+        label: t("tradingView.displayControl.liquidationPrice"),
+        id: "liquidationPrice",
+      },
     ];
   }, [t]);
 
@@ -105,7 +109,7 @@ export const DesktopDisplayControl: React.FC<IProps> = (props) => {
                   <Text
                     className={cn(
                       "oui-text-sm oui-text-base-contrast-80",
-                      !displayControlState[item.id] &&
+                      !(displayControlState[item.id] ?? true) &&
                         "oui-text-base-contrast-36",
                     )}
                   >
@@ -113,7 +117,7 @@ export const DesktopDisplayControl: React.FC<IProps> = (props) => {
                   </Text>
                   <Switch
                     className="oui-h-4 oui-w-8"
-                    checked={displayControlState[item.id]}
+                    checked={displayControlState[item.id] ?? true}
                     onCheckedChange={(checked) => {
                       changeDisplayControlState({
                         ...displayControlState,

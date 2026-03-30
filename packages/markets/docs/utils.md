@@ -1,41 +1,62 @@
 # utils.ts
 
-## Overview
+## utils.ts Responsibilities
 
-Utility functions and hooks for sorting, paging, symbol search, and window dimensions. Used by markets lists and tables.
+Provides list pagination, sorting, search-by-symbol, and window size utilities used by markets lists and tables. Supports numeric, date, and string comparison for sorting; symbol and displayName for search.
 
-## Exports
+## utils.ts Exports
 
-### Functions
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| getPagedData | function | Pagination | Returns one page of a list by pageSize and pageIndex |
+| sortList | function | Sort | Sorts list by SortType (sortKey, sortOrder) |
+| useSort | hook | Sort state | Manages sort state and getSortedList |
+| searchBySymbol | function | Search | Filters and ranks list by symbol/displayName |
+| useSize | hook | Window size | Returns current window width and height |
 
-| Function | Description |
-|----------|-------------|
-| `getPagedData(list, pageSize, pageIndex)` | Returns the slice of `list` for the given page (1-based index). |
-| `sortList(list, sort?)` | Sorts `list` by `sort.sortKey` and `sort.sortOrder` (asc/desc); uses smart comparison (numbers, dates, strings). |
-| `searchBySymbol(list, searchValue?, formatString?)` | Filters and ranks list by symbol/displayName match: exact match first, then starts-with, then other; each group sorted alphabetically. |
+## getPagedData
 
-### Hooks
+- **Input**: `list: any[]`, `pageSize: number`, `pageIndex: number` (1-based).
+- **Output**: `any[]` — the slice of `list` for that page. Returns `[]` if page is out of range.
 
-| Hook | Description |
-|------|-------------|
-| `useSort(initialSort?, onSortChange?)` | Returns `{ sort, onSort, getSortedList }` for table sort state and applying sort to a list. |
-| `useSize()` | Returns `{ width, height }` of the window, updated on resize. |
+## sortList
 
-## Parameters
+- **Input**: `list: any[]`, `sort?: SortType` (sortKey, sortOrder from `type.ts`).
+- **Output**: New array sorted by `sortKey`; respects `sortOrder` (asc/desc). Uses internal `compareValues` (numbers, dates, strings).
 
-- **getPagedData**: `list` (array), `pageSize` (number), `pageIndex` (1-based number).
-- **sortList**: `list` (array), optional `sort` (`SortType`).
-- **searchBySymbol**: `list` (array of items with `symbol` and optional `displayName`), `searchValue` (string), optional `formatString` for `formatSymbol`.
-- **useSort**: optional `initialSort`, optional `onSortChange(sort?)`.
+## useSort
 
-## Usage example
+- **Input**: `initialSort?: SortType`, `onSortChange?: (sort?: SortType) => void`.
+- **Output**: `{ sort, onSort, getSortedList }`. `onSort` accepts `TableSort` from UI; `getSortedList(list)` returns sorted list.
+
+## searchBySymbol
+
+- **Input**: `list: T[]` (items with `symbol` and optional `displayName`), `searchValue?: string`, `formatString?: string` (for `formatSymbol`).
+- **Output**: `T[]` — filtered and ordered: exact match first, then starts-with, then other matches; each group sorted by symbol/displayName.
+
+## useSize
+
+- **Input**: None.
+- **Output**: `{ width, height }` — current `window.innerWidth` and `window.innerHeight`; updates on resize.
+
+## Dependencies
+
+- **Upstream**: `react`, `@orderly.network/ui` (TableSort), `@orderly.network/utils` (formatSymbol), `./type` (SortType).
+- **Downstream**: List/table components that need pagination, sort, or search.
+
+## utils.ts Example
 
 ```typescript
-import { getPagedData, sortList, searchBySymbol, useSort, useSize } from "@orderly.network/markets";
+import { getPagedData, sortList, useSort, searchBySymbol, useSize } from "@orderly.network/markets";
 
-const page = getPagedData(allRows, 20, 1);
-const sorted = sortList(rows, { sortKey: "volume", sortOrder: "desc" });
-const filtered = searchBySymbol(markets, "PERP", "PERP_");
-const { sort, onSort, getSortedList } = useSort(undefined, (s) => setSort(s));
-const { width, height } = useSize();
+const page = getPagedData(allItems, 20, 1);
+const sorted = sortList(items, { sortKey: "symbol", sortOrder: "asc" });
+const filtered = searchBySymbol(markets, "PERP");
+
+function MyList() {
+  const { sort, onSort, getSortedList } = useSort();
+  const { width, height } = useSize();
+  const data = getSortedList(filteredList);
+  return /* ... */;
+}
 ```

@@ -1,351 +1,62 @@
-# Button Reference
+# button.tsx
 
-> Location: `packages/ui/src/button/button.tsx`, `packages/ui/src/button/base.tsx`, `packages/ui/src/button/throttledButton.tsx`, `packages/ui/src/button/index.ts`
+## button.tsx 的职责
 
-## Overview
+Provides the main `Button` component and `buttonVariants` (tailwind-variants) for Orderly UI. Button supports variant (text, outlined, contained, gradient), size (xs–xl), color (primary, secondary, success, buy, sell, danger, warning, gray, light), fullWidth, shadow, and angle for gradient. Renders via BaseButton with compound variant styles.
 
-The Button family standardizes call-to-action elements across the UI kit. It exposes a `tailwind-variants` matrix for size, color, variant, and shadow combinations, plus utility components for advanced behavior:
+## button.tsx 对外导出内容
 
-- `BaseButton`: low-level primitive with focus/disabled handling, loading state, and icon support.
-- `Button`: themed button with variant/color props built on `BaseButton`.
-- `ThrottledButton`: prevents repeated clicks by introducing a cool-down period.
+| Name           | Type      | Role                  | Description                                                |
+| -------------- | --------- | --------------------- | ---------------------------------------------------------- |
+| Button         | component | Main button component | ForwardRef button with ButtonProps                         |
+| buttonVariants | function  | tv() variants         | Style variants for button                                  |
+| ButtonProps    | type      | Props type            | Extends BaseButtonProps and VariantProps of buttonVariants |
 
-## Source Structure
+## Button 的输入与输出
 
-| File                  | Description                                                                                       |
-| --------------------- | ------------------------------------------------------------------------------------------------- |
-| `base.tsx`            | Implements `BaseButton`, handling `asChild`, loading state, icon rendering, and focus management. |
-| `button.tsx`          | Declares `buttonVariants`, exports `Button`, `buttonVariants`, and `ButtonProps`.                 |
-| `throttledButton.tsx` | Wraps `Button` with throttling logic using `useRef` and `useCallback`.                            |
-| `index.ts`            | Re-exports `Button`, `ThrottledButton`, `buttonVariants`, and `ButtonProps`.                      |
+- **Input**: Props (children, variant, size, color, fullWidth, shadow, angle, className, style, and rest button attributes).
+- **Output**: Rendered `<button>` (via BaseButton) with variant-based classes and optional angle style.
 
-## Exports & Types
+## Button Props
 
-### `Button`
+| Prop      | Type                                                                                                   | Required | Default     | Description                                |
+| --------- | ------------------------------------------------------------------------------------------------------ | -------- | ----------- | ------------------------------------------ |
+| variant   | "text" \| "outlined" \| "contained" \| "gradient"                                                      | No       | "contained" | Visual variant                             |
+| size      | "xs" \| "sm" \| "md" \| "lg" \| "xl"                                                                   | No       | "lg"        | Button size (height/padding)               |
+| color     | "primary" \| "secondary" \| "success" \| "buy" \| "sell" \| "danger" \| "warning" \| "gray" \| "light" | No       | "primary"   | Color theme                                |
+| fullWidth | boolean                                                                                                | No       | false       | Stretch to full width                      |
+| shadow    | VariantProps<shadowVariants>                                                                           | No       | —           | Shadow variant from layout/shadow          |
+| angle     | number                                                                                                 | No       | —           | Gradient angle (passed to parseAngleProps) |
+| className | string                                                                                                 | No       | —           | Additional class names                     |
+| style     | React.CSSProperties                                                                                    | No       | —           | Inline styles (merged with angle style)    |
+| ...rest   | ButtonHTMLAttributes                                                                                   | —        | —           | Native button props                        |
 
-```typescript
-const Button: React.ForwardRefExoticComponent<
-  ButtonProps & React.RefAttributes<HTMLButtonElement>
->
-```
+## Button 依赖与调用关系
 
-Main button component with variant, color, size, and shadow props.
+- **Upstream**: BaseButton (./base), buttonVariants (tv + shadowVariants from layout/shadow), parseAngleProps (helpers/parse-props), SizeType (helpers/sizeType).
+- **Downstream**: Applications; IconButton and other button-like components may reuse BaseButton.
 
-### `BaseButton`
+## Button 的渲染与状态流程
 
-```typescript
-const BaseButton: React.ForwardRefExoticComponent<
-  BaseButtonProps & React.RefAttributes<HTMLButtonElement>
->
-```
+1. Props (variant, size, color, fullWidth, shadow, angle, style, …) are received.
+2. parseAngleProps({ angle }) produces optional angle-related style.
+3. buttonVariants({ variant, size, color, className, fullWidth, shadow }) produces class string.
+4. BaseButton renders with combined className, size, ref, style (style + angleStyle), and rest props.
 
-Low-level button primitive with loading state, icon support, and `asChild` capability. Not exported directly but used by `Button`.
+## Button 的错误与边界
 
-### `ThrottledButton`
+| Scenario              | Condition     | Behavior                           | Handling                       |
+| --------------------- | ------------- | ---------------------------------- | ------------------------------ |
+| Disabled              | disabled=true | Cursor and colors from base styles | Handled in buttonVariants base |
+| Unknown variant/color | —             | defaultVariants apply              | Safe fallback                  |
 
-```typescript
-const ThrottledButton: React.ForwardRefExoticComponent<
-  ButtonProps & { throttleDuration?: number } & React.RefAttributes<HTMLButtonElement>
->
-```
-
-Button wrapper that throttles click events to prevent rapid repeated clicks.
-
-### `buttonVariants`
-
-```typescript
-const buttonVariants: ReturnType<typeof tv>
-```
-
-Tailwind variants function for button styling. Can be reused in custom button-like components.
-
-### `ButtonProps`
-
-```typescript
-interface ButtonProps
-  extends Omit<BaseButtonProps, "size">,
-    VariantProps<typeof buttonVariants> {
-  angle?: number;
-  "data-testid"?: string;
-}
-```
-
-Extends `BaseButtonProps` with button-specific variant props.
-
-### `BaseButtonProps`
-
-```typescript
-interface BaseButtonProps
-  extends ComponentPropsWithout<"button", RemovedProps> {
-  loading?: boolean;
-  leading?: React.ReactNode;
-  trailing?: React.ReactNode;
-  asChild?: boolean;
-  size: SizeType;
-  icon?: React.ReactElement;
-  as?: "button" | "a";
-}
-```
-
-## Props & Behavior
-
-### Button Props
-
-#### `variant`
-
-```typescript
-variant?: "text" | "outlined" | "contained" | "gradient"
-```
-
-Button style variant. Default: `"contained"`.
-
-#### `color`
-
-```typescript
-color?: "primary" | "secondary" | "success" | "buy" | "danger" | "sell" | "warning" | "gray" | "light"
-```
-
-Button color theme. Default: `"primary"`.
-
-#### `size`
-
-```typescript
-size?: "xs" | "sm" | "md" | "lg" | "xl"
-```
-
-Button size. Heights: `xs` (24px), `sm` (28px), `md` (32px), `lg` (40px), `xl` (54px). Default: `"lg"`.
-
-#### `shadow`
-
-```typescript
-shadow?: VariantProps<typeof shadowVariants>["shadow"]
-```
-
-Shadow elevation level. Inherits from `layout/shadow.tsx`.
-
-#### `fullWidth`
-
-```typescript
-fullWidth?: boolean
-```
-
-Stretch button to full width of container.
-
-#### `angle`
-
-```typescript
-angle?: number
-```
-
-Gradient angle in degrees (used with `variant="gradient"`).
-
-### BaseButton Props (inherited by Button)
-
-#### `loading`
-
-```typescript
-loading?: boolean
-```
-
-Show loading spinner and disable button. When `true`, button is disabled and shows a `Spinner` instead of content.
-
-#### `leading`
-
-```typescript
-leading?: React.ReactNode
-```
-
-Content to display before button text (e.g., icons).
-
-#### `trailing`
-
-```typescript
-trailing?: React.ReactNode
-```
-
-Content to display after button text (e.g., icons).
-
-#### `icon`
-
-```typescript
-icon?: React.ReactElement
-```
-
-Icon element. Automatically sized based on `size` prop and hidden when `loading` is `true`.
-
-#### `asChild`
-
-```typescript
-asChild?: boolean
-```
-
-Use Radix `Slot` to merge props with child element (useful for Next.js `Link`).
-
-#### `as`
-
-```typescript
-as?: "button" | "a"
-```
-
-HTML element type. Default: `"button"`.
-
-#### `disabled`
-
-```typescript
-disabled?: boolean
-```
-
-Disable button. When `loading` is `true`, button is automatically disabled.
-
-### ThrottledButton Props
-
-#### `throttleDuration`
-
-```typescript
-throttleDuration?: number
-```
-
-Throttle duration in milliseconds. Default: `700`.
-
-Inherits all `ButtonProps`.
-
-## Usage Examples
-
-### Basic Buttons
+## Button Example
 
 ```tsx
 import { Button } from "@orderly.network/ui";
 
-<Button variant="contained" color="primary" size="lg">
-  Primary Button
-</Button>
-
-<Button variant="outlined" color="secondary" size="md">
-  Outlined Button
-</Button>
-
-<Button variant="text" color="danger" size="sm">
-  Text Button
-</Button>
+<Button variant="contained" color="primary" size="lg">Submit</Button>
+<Button variant="outlined" color="danger" size="sm">Cancel</Button>
+<Button variant="text" color="primary">Link style</Button>
+<Button variant="gradient" fullWidth>Gradient CTA</Button>
 ```
-
-### Button with Loading State
-
-```tsx
-import { Button } from "@orderly.network/ui";
-
-<Button
-  variant="contained"
-  color="primary"
-  loading={isSubmitting}
-  onClick={handleSubmit}
->
-  Submit Order
-</Button>;
-```
-
-### Button with Icons
-
-```tsx
-import { Button } from "@orderly.network/ui";
-import { PlusIcon, ArrowRightIcon } from "@orderly.network/ui";
-
-<Button
-  variant="contained"
-  color="primary"
-  leading={<PlusIcon />}
->
-  Add Item
-</Button>
-
-<Button
-  variant="outlined"
-  trailing={<ArrowRightIcon />}
->
-  Continue
-</Button>
-
-<Button
-  icon={<PlusIcon />}
-  size="sm"
->
-  Add
-</Button>
-```
-
-### Gradient Button
-
-```tsx
-import { Button } from "@orderly.network/ui";
-
-<Button variant="gradient" color="primary" angle={90} size="xl">
-  Gradient Button
-</Button>;
-```
-
-### Full Width Button
-
-```tsx
-import { Button } from "@orderly.network/ui";
-
-<Button variant="contained" color="primary" fullWidth>
-  Full Width Button
-</Button>;
-```
-
-### Throttled Button
-
-```tsx
-import { ThrottledButton } from "@orderly.network/ui";
-
-<ThrottledButton
-  throttleDuration={1000}
-  variant="contained"
-  color="danger"
-  onClick={handleDelete}
->
-  Delete
-</ThrottledButton>;
-```
-
-### Button as Link
-
-```tsx
-import { Button } from "@orderly.network/ui";
-
-<Button asChild variant="text" color="primary">
-  <a href="/markets">View Markets</a>
-</Button>;
-```
-
-### Color Variants
-
-```tsx
-import { Button } from "@orderly.network/ui";
-
-<Button variant="contained" color="buy">Buy</Button>
-<Button variant="contained" color="sell">Sell</Button>
-<Button variant="contained" color="success">Success</Button>
-<Button variant="contained" color="danger">Danger</Button>
-<Button variant="contained" color="warning">Warning</Button>
-```
-
-## Implementation Notes
-
-- `buttonVariants` composes `shadowVariants` and custom compound variants to keep icon/text contrast balanced
-- `BaseButton` ensures `type="button"` by default, preventing accidental form submissions
-- When `loading` is `true`, `BaseButton` renders an invisible copy of the content with a `Spinner` overlay for layout stability
-- Icon size is automatically calculated based on button size: `xs/sm` → 12px, `md` → 14px, `lg` → 16px, `xl` → 18px
-- `ThrottledButton` uses `useRef` to track last click time and `useCallback` for the throttled handler
-- Throttling prevents clicks within the `throttleDuration` window by checking time elapsed since last click
-- Compound variants in `buttonVariants` ensure proper color combinations for each variant type
-
-## Integration Tips
-
-1. Use `ThrottledButton` for API-heavy actions (cancel order, submit transaction) to avoid double submissions.
-2. Use `loading` prop instead of manually managing disabled state and spinners—it handles both automatically.
-3. Use `leading`/`trailing` for icons that should be visible during loading, or `icon` for standalone icon buttons.
-4. Use `asChild` with Next.js `Link` or router links to avoid extra wrapper elements.
-5. Use `buttonVariants` in custom components (e.g., `CommandItem`, `MenuItem`) to ensure visual parity.
-6. When theming, extend `color` or `shadow` variants in `button.tsx` to propagate changes across the UI.
-7. For gradient buttons, adjust `angle` to match design requirements (0° = left to right, 90° = top to bottom).

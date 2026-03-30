@@ -8,7 +8,12 @@ export type LeftNavProps = {
   telegramUrl?: string;
   discordUrl?: string;
   duneUrl?: string;
+  /**
+   * @deprecated Deprecated. This prop will no longer affect the rendered UI
+   * in the leftNav drawer footer. Use `customFooter` instead.
+   */
   feedbackUrl?: string;
+  customFooter?: ReactNode;
   customLeftNav?: ReactNode;
 };
 

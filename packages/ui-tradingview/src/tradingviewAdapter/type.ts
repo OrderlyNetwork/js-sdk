@@ -90,6 +90,7 @@ export type ChartPosition = {
   symbol: string;
   open: number;
   balance: number;
+  leverage?: number;
   closablePosition: number;
   unrealPnl: number;
   interest: number;

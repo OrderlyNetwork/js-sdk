@@ -1,46 +1,57 @@
-# types
+# types.ts
 
-## Overview
+## types.ts Responsibility
 
-Defines configuration types for the default EVM adapter: options passed when activating or updating the adapter, and a factory type for creating a wallet adapter with a given Web3 provider.
+Defines configuration and factory types for the default EVM adapter: `EVMAdapterOptions` (options passed when activating the adapter) and `getWalletAdapterFunc` (function type that returns a Web3Provider from those options).
 
-## Exports
+## types.ts Exports
 
-### `EVMAdapterOptions`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| EVMAdapterOptions | interface | Adapter config | provider, address, chain, contractManager |
+| getWalletAdapterFunc | type | Factory | `(options: EVMAdapterOptions) => Web3Provider` |
 
-Options required to activate or update the EVM wallet adapter.
+## EVMAdapterOptions Responsibility
 
-| Field            | Type                | Required | Description |
-| ---------------- | ------------------- | -------- | ----------- |
-| `provider`       | `Eip1193Provider`   | Yes      | EIP-1193 compatible provider (e.g. `window.ethereum`). |
-| `address`        | `string`            | Yes      | Connected wallet address. |
-| `chain`          | `{ id: number }`    | Yes      | Current chain id. |
-| `contractManager`| `IContract`         | Yes      | Contract manager from `@orderly.network/core` for verification contract address. |
+Describes the inputs required to activate or update the EVM wallet adapter: an EIP-1193 provider, the current address and chain, and a contract manager implementing `IContract`.
 
-### `getWalletAdapterFunc`
+## EVMAdapterOptions Input and Output
 
-Type of a function that creates a Web3 provider–backed adapter from these options.
+- **Input**: Used as the argument to `active(config)` and `update(config)` on `DefaultEVMWalletAdapter`.
+- **Output**: Not applicable (configuration type).
 
-```ts
-type getWalletAdapterFunc = (options: EVMAdapterOptions) => Web3Provider;
-```
+## EVMAdapterOptions Fields
 
-## Dependencies
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| provider | Eip1193Provider | Yes | EIP-1193 provider (e.g. from wallet injection) |
+| address | string | Yes | Current wallet address |
+| chain | { id: number } | Yes | Current chain id |
+| contractManager | IContract | Yes | Contract manager for verification contract address and chain calls |
 
-- `Eip1193Provider` and `Web3Provider` from `./provider/web3Provider.interface`
-- `IContract` from `@orderly.network/core`
+## EVMAdapterOptions Dependencies
 
-## Usage Example
+- **Eip1193Provider**: From `./provider/web3Provider.interface.ts` (object with `request({ method, params })`).
+- **Web3Provider**: From same file; `getWalletAdapterFunc` returns it.
+- **IContract**: From `@orderly.network/core`.
 
-```ts
+## getWalletAdapterFunc Description
+
+Type alias for a function that takes `EVMAdapterOptions` and returns a `Web3Provider`. Used when the adapter is created from options (e.g. a factory that wraps the injected provider into a Web3Provider implementation).
+
+## types.ts Example
+
+```typescript
 import type { EVMAdapterOptions, getWalletAdapterFunc } from "@orderly.network/default-evm-adapter";
+import type { IContract } from "@orderly.network/core";
 
 const options: EVMAdapterOptions = {
   provider: window.ethereum,
   address: "0x...",
   chain: { id: 421614 },
-  contractManager,
+  contractManager: myContractManager as IContract,
 };
 
-const getAdapter: getWalletAdapterFunc = (opts) => new MyWeb3Provider(opts);
+const getAdapter: getWalletAdapterFunc = (opts) => myWeb3ProviderImplementation(opts);
+const web3Provider = getAdapter(options);
 ```

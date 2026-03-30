@@ -1,4 +1,4 @@
-import { OrderSide } from "@orderly.network/types";
+import { MarginMode } from "@orderly.network/types";
 import { PosterPainter } from "./painter";
 
 export type posterDataSource = {
@@ -10,7 +10,7 @@ export type posterDataSource = {
     symbol: string;
     // side: OrderSide;
     side: "LONG" | "SHORT";
-    marginMode?: "isolated" | "cross";
+    marginMode?: MarginMode;
     /**
      * The leverage of the position
      */

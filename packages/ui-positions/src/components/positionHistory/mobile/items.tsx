@@ -1,6 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import {
   Badge,
   capitalizeFirstLetter,
@@ -143,8 +143,18 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
       );
     }
 
+    if (record.margin_mode != null) {
+      list.push(
+        <Badge key={`margin-${record.margin_mode}`} color="neutral" size="xs">
+          {record.margin_mode === MarginMode.ISOLATED
+            ? t("marginMode.isolated")
+            : t("marginMode.cross")}
+        </Badge>,
+      );
+    }
+
     return list;
-  }, [record]);
+  }, [record, t]);
 
   return <Flex gap={1}>{tags}</Flex>;
 };

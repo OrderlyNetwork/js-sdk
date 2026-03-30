@@ -18,7 +18,8 @@ Types for the left navigation: props and menu item shape (with optional icon, tr
 | telegramUrl | `string` | No | Telegram link |
 | discordUrl | `string` | No | Discord link |
 | duneUrl | `string` | No | Dune link |
-| feedbackUrl | `string` | No | Feedback link |
+| feedbackUrl | `string` | No | Feedback link (deprecated; does not control leftNav footer UI) |
+| customFooter | `ReactNode` | No | Slot for TradingView T&C custom content in leftNav drawer bottom (mweb). If not provided, default `Charts powered by TradingView` link will be rendered. |
 | customLeftNav | `ReactNode` | No | Custom left nav content |
 
 ### `LeftNavItem`
