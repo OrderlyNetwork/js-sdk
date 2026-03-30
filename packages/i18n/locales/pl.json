@@ -749,6 +749,7 @@
   "tradingView.displayControl.buySell": "Kupno/Sprzedaż",
   "tradingView.displayControl.limitOrders": "Zlecenia limitowe",
   "tradingView.displayControl.stopOrders": "Zlecenia stop",
+  "tradingView.displayControl.liquidationPrice": "Cena likwidacji",
   "tradingView.noScriptSrc": "Zgodnie z polityką TradingView, musisz złożyć wniosek o własną licencję.",
   "tradingView.noScriptSrc.1": "1. Proszę złożyć wniosek o licencję TradingView Advanced Chart <0>tutaj</0>",
   "tradingView.noScriptSrc.2": "2. Postępuj zgodnie z instrukcjami na <0>orderly.network</0>, aby skonfigurować.",

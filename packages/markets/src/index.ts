@@ -29,3 +29,14 @@ export * from "./type";
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";
 export { SymbolDisplay } from "./components/symbolDisplay";
+
+export type {
+  BuiltInMarketTab,
+  CustomMarketTab,
+  MarketBuiltInTabType,
+  MarketTabConfig,
+  MarketCategoryConfig,
+  MarketCategoryComponentKey,
+  MarketCategoryContext,
+} from "./type";
+export { builtInTabs } from "./registry/builtInTabRegistry";

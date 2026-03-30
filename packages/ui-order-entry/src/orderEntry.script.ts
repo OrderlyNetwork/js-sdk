@@ -460,8 +460,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     const isUserActive =
       now - lastActive <= ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS;
 
-    console.log("isUserActive", isUserActive, now, lastActive);
-
     ee.emit(ORDER_ENTRY_EST_LIQ_PRICE_CHANGE, {
       symbol,
       estLiqPrice,

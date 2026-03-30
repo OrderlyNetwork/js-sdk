@@ -146,7 +146,7 @@ const sidebarMenus = [
       telegramUrl: "https://t.me/yourgroup",
       discordUrl: "https://discord.gg/yourserver",
       duneUrl: "https://dune.com/youranalytics",
-      feedbackUrl: "https://feedback.yoursite.com"
+      // customFooter: <ReactNode>, // optional. If not provided, default will be rendered.
     },
     // Custom layout for main navigation
     customRender: (components) => {
@@ -208,7 +208,8 @@ const sidebarMenus = [
   - `telegramUrl`: Telegram community link
   - `discordUrl`: Discord community link
   - `duneUrl`: Dune Analytics link
-  - `feedbackUrl`: Feedback form link (optional - if not provided, feedback section will not be displayed)
+  - `feedbackUrl`: Feedback form link (deprecated; does not control the leftNav drawer footer UI)
+  - `customFooter`: Slot for TradingView T&C custom content in the leftNav drawer bottom (mweb). If not provided, default `Charts powered by TradingView` link will be rendered.
   - `customLeftNav`: Custom component to replace the default leftNav trigger
 
 #### LeftNavItem Properties
@@ -268,7 +269,7 @@ Each menu item in the `menus` array supports:
       telegramUrl: "https://t.me/yourgroup",
       discordUrl: "https://discord.gg/yourserver",
       duneUrl: "https://dune.com/youranalytics",
-      feedbackUrl: "https://feedback.yoursite.com"
+      // customFooter: <ReactNode>, // optional. If not provided, default will be rendered.
     }
   }}
 >
@@ -286,7 +287,7 @@ Each menu item in the `menus` array supports:
   3. Sub-account selector (if user is logged in with trading enabled)
   4. Menu items list (scrollable if needed)
   5. Social media links at the bottom
-  6. Feedback link at the very bottom (only if `feedbackUrl` is provided)
+  6. TradingView T&C at the very bottom (defaults to `Charts powered by TradingView`, customizable via `customFooter`)
 - **Auto-close**: The drawer automatically closes when a menu item is selected
 - **Navigation Behavior**:
   - Items with `target` property will open in new window/tab using `window.open()`
@@ -362,7 +363,7 @@ const bottomMenus = [
   - `telegramUrl`: Telegram link
   - `twitterUrl`: Twitter link
   - `discordUrl`: Discord link
-  - `trailing`: Content on the right side of the footer
+  - `trailing`: Content on the right side of the footer. If not provided, a default `Charts powered by TradingView` link will be rendered.
 
 ```typescript
 <Scaffold
@@ -518,7 +519,7 @@ const App = () => {
           twitterUrl: "https://twitter.com/yourhandle",
           telegramUrl: "https://t.me/yourgroup",
           discordUrl: "https://discord.gg/yourserver",
-          feedbackUrl: "https://feedback.yoursite.com"
+          // customFooter: <ReactNode>
         }
       }}
       bottomNavProps={{

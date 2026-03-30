@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, RwaIcon, TabPanel, Tabs } from "@orderly.network/ui";
+import { Box, TabPanel, Tabs } from "@orderly.network/ui";
 import { CommunityBrokerTabs } from "../../../components/communityBrokerTabs";
 import { FavoritesEmpty } from "../../../components/favoritesEmpty";
+import type { MarketsListFullType } from "../../../components/marketsListFull/marketsListFull.script";
+import { useMarketsContext } from "../../../components/marketsProvider";
 import { RwaIconTab } from "../../../components/rwaTab";
+import {
+  composeTabTitle,
+  isBuiltInMarketTab,
+  tabKey,
+  resolveTabTitle,
+  resolveTabTriggerIcon,
+  useCustomTabDataFilters,
+} from "../../../components/shared/tabUtils";
 import { createCommunityBrokerFilter } from "../../../hooks/useCommunityTabs";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
-import { MarketsTabName } from "../../../type";
+import { MarketsTabName, SortType } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";
 
 const LazySearchInput = React.lazy(() =>
@@ -27,11 +37,66 @@ const LazyMarketsListFullWidget = React.lazy(() =>
   }),
 );
 
+type BuiltInTabMeta = {
+  title: React.ReactNode;
+  icon?: React.ReactElement;
+  value: string;
+  testid?: string;
+  /** list widget type — undefined means special handling (favorites) */
+  listType?: MarketsListFullType;
+  initialSort: SortType;
+};
+
+const DEFAULT_SORT: SortType = { sortKey: "24h_amount", sortOrder: "desc" };
+
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   const { searchValue, activeTab, onTabChange } = props;
   const { t } = useTranslation();
+  const { tabs } = useMarketsContext();
+  const tabDataFilters = useCustomTabDataFilters(tabs);
+
+  const builtInMeta = useMemo<Record<string, BuiltInTabMeta>>(
+    () => ({
+      favorites: {
+        title: <FavoritesIcon />,
+        value: "favorites",
+        testid: "oui-testid-markets-favorites-tab",
+        initialSort: DEFAULT_SORT,
+      },
+      community: {
+        title: t("markets.community"),
+        value: "community",
+        testid: "oui-testid-markets-community-tab",
+        initialSort: DEFAULT_SORT,
+      },
+      all: {
+        title: t("markets.allMarkets"),
+        icon: <AllMarketsIcon />,
+        value: "all",
+        testid: "oui-testid-markets-all-tab",
+        listType: "all",
+        initialSort: DEFAULT_SORT,
+      },
+      rwa: {
+        title: <RwaIconTab />,
+        value: "rwa",
+        testid: "oui-testid-markets-rwa-tab",
+        listType: "rwa",
+        initialSort: DEFAULT_SORT,
+      },
+      newListing: {
+        title: t("markets.newListings"),
+        icon: <NewListingsIcon />,
+        value: "new",
+        testid: "oui-testid-markets-newListing-tab",
+        listType: "new",
+        initialSort: { sortKey: "created_time", sortOrder: "desc" },
+      },
+    }),
+    [t],
+  );
 
   return (
     <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
@@ -48,109 +113,112 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         classNames={{
           tabsList: "oui-tabs-markets-list",
           tabsContent: "oui-tabs-markets-content",
+          scrollIndicator: "oui-mr-3",
         }}
         className="oui-markets-list-tabs"
+        showScrollIndicator
       >
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-favorites-trigger",
-            content: "oui-tabs-favorites-content",
-          }}
-          title={<FavoritesIcon />}
-          value="favorites"
-          testid="oui-testid-markets-favorites-tab"
-        >
-          <React.Suspense fallback={null}>
-            <LazyFavoritesListFullWidget
-              emptyView={
-                !searchValue && (
-                  <FavoritesEmpty
-                    onClick={() => onTabChange(MarketsTabName.All)}
-                  />
-                )
-              }
-            />
-          </React.Suspense>
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-community-trigger",
-            content: "oui-tabs-community-content",
-          }}
-          title={t("markets.community")}
-          value="community"
-          testid="oui-testid-markets-community-tab"
-        >
-          <CommunityBrokerTabs
-            storageKey="orderly_markets_datalist_community_sel_sub_tab"
-            size="md"
-            classNames={{
-              tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
-              tabsContent: "oui-h-full",
-            }}
-            className="oui-marketsDataList-community-tabs"
-            showScrollIndicator
-            renderPanel={(selected) => (
+        {tabs?.map((tab, index) => {
+          const key = tabKey(tab, index);
+          const isBuiltIn = isBuiltInMarketTab(tab);
+
+          // Built-in tab
+          const meta = isBuiltIn ? builtInMeta[tab.type] : undefined;
+          if (isBuiltIn && meta) {
+            const title =
+              tab.type === "favorites"
+                ? composeTabTitle(tab.name, {
+                    icon: resolveTabTriggerIcon(tab, <FavoritesIcon />),
+                    suffix: tab.suffix,
+                  })
+                : tab.type === "rwa"
+                  ? resolveTabTitle(tab, {}, <RwaIconTab />)
+                  : composeTabTitle(tab.name ?? meta.title, {
+                      suffix: tab.suffix,
+                    });
+
+            return (
+              <TabPanel
+                key={key}
+                classNames={{
+                  trigger: `oui-tabs-${meta.value}-trigger`,
+                  content: `oui-tabs-${meta.value}-content`,
+                }}
+                title={title}
+                icon={
+                  tab.type === "favorites" || tab.type === "rwa"
+                    ? undefined
+                    : resolveTabTriggerIcon(tab, meta.icon)
+                }
+                value={meta.value}
+                testid={meta.testid}
+              >
+                <React.Suspense fallback={null}>
+                  {tab.type === "favorites" ? (
+                    <LazyFavoritesListFullWidget
+                      emptyView={
+                        !searchValue && (
+                          <FavoritesEmpty
+                            onClick={() => onTabChange(MarketsTabName.All)}
+                          />
+                        )
+                      }
+                    />
+                  ) : tab.type === "community" ? (
+                    <CommunityBrokerTabs
+                      storageKey="orderly_markets_datalist_community_sel_sub_tab"
+                      size="md"
+                      classNames={{
+                        tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+                        tabsContent: "oui-h-full",
+                      }}
+                      className="oui-marketsDataList-community-tabs"
+                      showScrollIndicator
+                      renderPanel={(selected) => (
+                        <React.Suspense fallback={null}>
+                          <LazyMarketsListFullWidget
+                            type="all"
+                            initialSort={meta.initialSort}
+                            dataFilter={createCommunityBrokerFilter(selected)}
+                          />
+                        </React.Suspense>
+                      )}
+                    />
+                  ) : (
+                    <LazyMarketsListFullWidget
+                      type={meta.listType!}
+                      initialSort={meta.initialSort}
+                    />
+                  )}
+                </React.Suspense>
+              </TabPanel>
+            );
+          }
+
+          // Custom category
+          return (
+            <TabPanel
+              key={key}
+              classNames={{
+                trigger: `oui-tabs-${key}-trigger`,
+                content: `oui-tabs-${key}-content`,
+              }}
+              title={composeTabTitle(tab.name ?? key, {
+                icon: resolveTabTriggerIcon(tab),
+                suffix: tab.suffix,
+              })}
+              value={key}
+            >
               <React.Suspense fallback={null}>
                 <LazyMarketsListFullWidget
                   type="all"
-                  initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
-                  dataFilter={createCommunityBrokerFilter(selected)}
+                  initialSort={DEFAULT_SORT}
+                  dataFilter={tabDataFilters[key]}
                 />
               </React.Suspense>
-            )}
-          />
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-all-trigger",
-            content: "oui-tabs-all-content",
-          }}
-          title={t("markets.allMarkets")}
-          icon={<AllMarketsIcon />}
-          value="all"
-          testid="oui-testid-markets-all-tab"
-        >
-          <React.Suspense fallback={null}>
-            <LazyMarketsListFullWidget
-              type="all"
-              initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
-            />
-          </React.Suspense>
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-rwa-trigger",
-            content: "oui-tabs-rwa-content",
-          }}
-          title={<RwaIconTab />}
-          value="rwa"
-          testid="oui-testid-markets-rwa-tab"
-        >
-          <React.Suspense fallback={null}>
-            <LazyMarketsListFullWidget
-              type="rwa"
-              initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
-            />
-          </React.Suspense>
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-newListings-trigger",
-            content: "oui-tabs-newListings-content",
-          }}
-          title={t("markets.newListings")}
-          icon={<NewListingsIcon />}
-          value="new"
-          testid="oui-testid-markets-newListings-tab"
-        >
-          <React.Suspense fallback={null}>
-            <LazyMarketsListFullWidget
-              type="new"
-              initialSort={{ sortKey: "created_time", sortOrder: "desc" }}
-            />
-          </React.Suspense>
-        </TabPanel>
+            </TabPanel>
+          );
+        })}
       </Tabs>
     </Box>
   );

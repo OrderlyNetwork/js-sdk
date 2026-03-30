@@ -48,17 +48,8 @@ export function formatPortfolio(inputs: {
     return null;
   }
 
-  const totallCrossUnsettledPnL = positions.rows.reduce(
-    (sum, pos) =>
-      pos.margin_mode === MarginMode.ISOLATED
-        ? sum
-        : sum + (pos.unsettled_pnl ?? 0),
-    0,
-  );
-  const totalUnsettlementPnL = positions.rows.reduce(
-    (sum, pos) => sum + (pos.unsettled_pnl ?? 0),
-    0,
-  );
+  const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
+  const unsettledCrossPnL = pathOr(0, ["total_unsettled_cross_pnl"])(positions);
   const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
   const [USDC_holding, nonUSDC] = parseHolding(
@@ -72,7 +63,7 @@ export function formatPortfolio(inputs: {
   const totalCollateral = account.totalCollateral({
     USDCHolding: USDC_holding,
     nonUSDCHolding: nonUSDC,
-    unsettlementPnL: totallCrossUnsettledPnL,
+    unsettlementPnL: unsettledCrossPnL,
     usdcBalancePendingShortQty: usdc?.pending_short ?? 0,
     usdcBalanceIsolatedOrderFrozen: usdc?.isolated_order_frozen ?? 0,
   });
@@ -85,7 +76,7 @@ export function formatPortfolio(inputs: {
   }, zero);
 
   const totalValue = account.totalValue({
-    totalUnsettlementPnL: totalUnsettlementPnL,
+    totalUnsettlementPnL: unsettledPnL,
     USDCHolding: USDC_holding,
     nonUSDCHolding: nonUSDC,
     totalIsolatedPositionMargin: sumIsolatedMargin.toNumber(),
@@ -140,7 +131,7 @@ export function formatPortfolio(inputs: {
     totalUnrealizedROI,
     freeCollateral,
     availableBalance,
-    unsettledPnL: totalUnsettlementPnL,
+    unsettledPnL,
     holding,
     freeCollateralUSDCOnly,
   };

@@ -1,6 +1,6 @@
 import { propOr } from "ramda";
 import { account, positions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import { zero } from "@orderly.network/utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 
@@ -17,7 +17,9 @@ export function formatPositions(
   let unrealPnL_total = zero,
     unrealPnL_total_index = zero,
     notional_total = zero,
-    unsettlementPnL_total = zero;
+    unsettlementPnL_total = zero,
+    totalUnsettledIsolatedPnl = zero,
+    totalUnsettledCrossPnl = zero;
 
   const rows = data.rows.map((item) => {
     const info = symbolsInfo[item.symbol];
@@ -91,6 +93,15 @@ export function formatPositions(
     notional_total = notional_total.add(notional);
     unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
 
+    if (item.margin_mode === MarginMode.CROSS) {
+      totalUnsettledCrossPnl = totalUnsettledCrossPnl.add(unsettlementPnL);
+    }
+
+    if (item.margin_mode === MarginMode.ISOLATED) {
+      totalUnsettledIsolatedPnl =
+        totalUnsettledIsolatedPnl.add(unsettlementPnL);
+    }
+
     return {
       ...item,
       mm: positions.maintenanceMargin({
@@ -105,6 +116,7 @@ export function formatPositions(
       unrealized_pnl_index: unrealPnl_index,
       unrealized_pnl_ROI: unrealPnlROI,
       unrealized_pnl_ROI_index: unrealPnlROI_index,
+      unsettled_pnl: unsettlementPnL,
     };
   });
 
@@ -122,6 +134,8 @@ export function formatPositions(
 
     unsettledPnL: unsettlementPnL,
     total_unsettled_pnl: unsettlementPnL,
+    total_unsettled_cross_pnl: totalUnsettledCrossPnl.toNumber(),
+    total_unsettled_isolated_pnl: totalUnsettledIsolatedPnl.toNumber(),
     rows,
   };
 }

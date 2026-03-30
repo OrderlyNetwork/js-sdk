@@ -35,10 +35,9 @@ export const useMarketsListFullScript = (
   const { onSort, getSortedList, sort } = useSort(options.initialSort);
 
   const dataSource = useMemo(() => {
-    const searchList = searchBySymbol(data, searchValue, "base-type");
-    const filteredList =
-      typeof dataFilter === "function" ? dataFilter(searchList) : searchList;
-    return getSortedList(filteredList);
+    const filtered = typeof dataFilter === "function" ? dataFilter(data) : data;
+    const searchList = searchBySymbol(filtered, searchValue, "base-type");
+    return getSortedList(searchList);
   }, [data, dataFilter, getSortedList, searchValue]);
 
   useEffect(() => {

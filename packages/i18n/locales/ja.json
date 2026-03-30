@@ -749,6 +749,7 @@
   "tradingView.displayControl.buySell": "買い/売り",
   "tradingView.displayControl.limitOrders": "リミット注文",
   "tradingView.displayControl.stopOrders": "ストップ注文",
+  "tradingView.displayControl.liquidationPrice": "清算価格",
   "tradingView.noScriptSrc": "TradingViewのポリシーにより、独自のライセンスを申請する必要があります。",
   "tradingView.noScriptSrc.1": "1. TradingView Advanced Chartライセンスを<0>こちら</0>から申請してください",
   "tradingView.noScriptSrc.2": "2. <0>orderly.network</0>の指示に従って設定してください。",

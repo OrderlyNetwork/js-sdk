@@ -749,6 +749,7 @@
   "tradingView.displayControl.buySell": "Beli/Jual",
   "tradingView.displayControl.limitOrders": "Pesanan limit",
   "tradingView.displayControl.stopOrders": "Pesanan stop",
+  "tradingView.displayControl.liquidationPrice": "Harga likuidasi",
   "tradingView.noScriptSrc": "Karena kebijakan TradingView, Anda perlu mengajukan lisensi sendiri.",
   "tradingView.noScriptSrc.1": "1. Silakan ajukan lisensi TradingView Advanced Chart Anda <0>di sini</0>",
   "tradingView.noScriptSrc.2": "2. Ikuti petunjuk di <0>orderly.network</0> untuk menyiapkan.",

@@ -749,6 +749,7 @@
   "tradingView.displayControl.buySell": "Buy/Sell",
   "tradingView.displayControl.limitOrders": "Limit orders",
   "tradingView.displayControl.stopOrders": "Stop orders",
+  "tradingView.displayControl.liquidationPrice": "Liquidation Price",
   "tradingView.noScriptSrc": "Due to TradingView's policy, you will need to apply for your own license.",
   "tradingView.noScriptSrc.1": "1. Please apply for your TradingView Advanced Chart license <0>here</0>",
   "tradingView.noScriptSrc.2": "2. Follow the instructions on <0>orderly.network</0> to set up.",

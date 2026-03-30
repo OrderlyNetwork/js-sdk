@@ -749,6 +749,7 @@
   "tradingView.displayControl.buySell": "Al/Sat",
   "tradingView.displayControl.limitOrders": "Limit emirler",
   "tradingView.displayControl.stopOrders": "Stop emirler",
+  "tradingView.displayControl.liquidationPrice": "Fiyatı tasfiye",
   "tradingView.noScriptSrc": "TradingView politikası nedeniyle, kendi lisansınızı almanız gerekecektir.",
   "tradingView.noScriptSrc.1": "1. Lütfen TradingView Gelişmiş Grafik lisansınızı <0>buradan</0> alın",
   "tradingView.noScriptSrc.2": "2. Kurulum için <0>orderly.network</0> üzerindeki talimatları takip edin.",
