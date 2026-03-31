@@ -7,23 +7,6 @@ export function capitalizeString(str: string): string {
   return capitalizedStr;
 }
 
-/// "PERP_ETH_USDC" => "ETH_PERP"
-export function transSymbolformString(input: string): string {
-  const parts = input.split("_");
-  if (parts.length !== 3) {
-    throw new Error("Invalid string format");
-  }
-
-  const [first, second, third] = parts;
-
-  if (!first.startsWith("PERP")) {
-    throw new Error("Invalid string format");
-  }
-
-  const result = `${second}-${first}`;
-  return result;
-}
-
 export function camelCaseToUnderscoreCase(str: string): string {
   return str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
 }

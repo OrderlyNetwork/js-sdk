@@ -4,7 +4,15 @@ import { MobileSharePnLContent } from "./mobile/content";
 import { SharePnLState } from "./sharePnL.script";
 
 export const DesktopSharePnL: FC<SharePnLState> = (props) => {
-  const { entity, baseDp, quoteDp, referralInfo, shareOptions, hide } = props;
+  const {
+    entity,
+    baseDp,
+    quoteDp,
+    referralInfo,
+    shareOptions,
+    hide,
+    brokerName,
+  } = props;
 
   if (!shareOptions || !entity) {
     return null;
@@ -17,12 +25,21 @@ export const DesktopSharePnL: FC<SharePnLState> = (props) => {
       quoteDp={quoteDp}
       referral={referralInfo}
       shareOptions={shareOptions}
+      brokerName={brokerName}
     />
   );
 };
 
 export const MobileSharePnL: FC<SharePnLState> = (props) => {
-  const { entity, baseDp, quoteDp, referralInfo, shareOptions, hide } = props;
+  const {
+    entity,
+    baseDp,
+    quoteDp,
+    referralInfo,
+    shareOptions,
+    hide,
+    brokerName,
+  } = props;
   if (!shareOptions || !entity) {
     return null;
   }
@@ -34,6 +51,7 @@ export const MobileSharePnL: FC<SharePnLState> = (props) => {
       quoteDp={quoteDp}
       referral={referralInfo}
       shareOptions={shareOptions}
+      brokerName={brokerName}
     />
   );
 };

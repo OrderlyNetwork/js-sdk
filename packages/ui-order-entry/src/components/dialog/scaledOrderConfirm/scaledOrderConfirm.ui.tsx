@@ -12,6 +12,7 @@ import {
   Tooltip,
   Text,
 } from "@orderly.network/ui";
+import { SymbolBadge } from "../../symbolBadge";
 import {
   ScaledOrderConfirmScriptOptions,
   ScaledOrderConfirmScriptReturns,
@@ -51,7 +52,7 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
             <Flex gap={2}>
               <div
                 className={cn(
-                  "oui-h-[38px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
+                  "oui-h-[42px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
                   record.side === OrderSide.BUY
                     ? "oui-bg-trade-profit"
                     : "oui-bg-trade-loss",
@@ -60,18 +61,17 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
               <Flex direction="column" itemAlign="start">
                 <Flex gapX={1}>
                   <TokenIcon symbol={value} className="oui-size-3" />
-                  <Text.formatted
-                    rule="symbol"
-                    size="xs"
-                    formatString="base-type"
-                  >
+                  <Text.formatted rule="symbol" size="xs" formatString="base">
                     {value}
                   </Text.formatted>
                 </Flex>
 
-                <Badge color="neutral" size="xs">
-                  {t("orderEntry.orderType.limit")}
-                </Badge>
+                <Flex gap={1}>
+                  <SymbolBadge symbol={value} />
+                  <Badge color="neutral" size="xs">
+                    {t("orderEntry.orderType.limit")}
+                  </Badge>
+                </Flex>
               </Flex>
             </Flex>
           );

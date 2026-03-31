@@ -8,6 +8,7 @@ import {
   LeverageSlider,
   LeverageFooter,
 } from "../leverage.ui";
+import { SymbolBadge } from "../symbolBadge";
 import { SymbolLeverageScriptReturns } from "./symbolLeverage.script";
 
 export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
@@ -19,10 +20,11 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
         <TokenIcon symbol={props.symbol} className="oui-size-5" />
         <Text.formatted
           rule="symbol"
-          formatString="base-type"
+          formatString="base"
           size={props.isMobile ? "xs" : "base"}
           weight="semibold"
           intensity={98}
+          suffix={<SymbolBadge symbol={props.symbol} />}
         >
           {props.symbol}
         </Text.formatted>

@@ -11,7 +11,9 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { MarketsTabName } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
 import { RwaTab } from "../rwaTab";
@@ -86,6 +88,80 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   const { tabs } = useMarketsContext();
   const tabDataFilters = useCustomTabDataFilters(tabs);
 
+  const renderBuiltInContent = (tabType: MarketsTabName) => {
+    return (
+      <div className={cls}>
+        <MarketsListWidget
+          type={tabType}
+          initialSort={tabSort[tabType]}
+          onSort={onTabSort(tabType)}
+          getColumns={getColumns}
+          tableClassNames={{
+            root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
+            scroll: "oui-pb-5 oui-px-1",
+          }}
+          rowClassName="!oui-h-[34px]"
+          {...getFavoritesProps(tabType)}
+          emptyView={renderEmptyView({
+            type: tabType,
+            onClick: () => {
+              onTabChange(MarketsTabName.All);
+            },
+          })}
+        />
+      </div>
+    );
+  };
+
+  const renderCommunityContent = () => {
+    return (
+      <CommunityBrokerTabs
+        storageKey="orderly_dropdown_markets_community_sel_sub_tab"
+        classNames={{
+          tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+          tabsContent: "oui-h-full",
+        }}
+        className={cn("oui-dropDownMarkets-community-tabs", cls)}
+        showScrollIndicator
+        renderPanel={(selected) => (
+          <div className={cls}>
+            <MarketsListWidget
+              type={MarketsTabName.All}
+              initialSort={tabSort[MarketsTabName.Community]}
+              onSort={onTabSort(MarketsTabName.Community)}
+              getColumns={getColumns}
+              tableClassNames={{
+                root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
+              dataFilter={createCommunityBrokerFilter(selected)}
+            />
+          </div>
+        )}
+      />
+    );
+  };
+
+  const renderCustomContent = (key: string) => {
+    return (
+      <div className={cls}>
+        <MarketsListWidget
+          type={MarketsTabName.All}
+          dataFilter={(data) => tabDataFilters[key]?.(data) ?? data}
+          initialSort={tabSort[key]}
+          onSort={onTabSort(key as MarketsTabName)}
+          getColumns={getColumns}
+          tableClassNames={{
+            root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
+            scroll: "oui-pb-5 oui-px-1",
+          }}
+          rowClassName="!oui-h-[34px]"
+        />
+      </div>
+    );
+  };
+
   return (
     <Box
       className={cn(
@@ -113,6 +189,10 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       >
         {tabs?.map((tab, index) => {
           const key = tabKey(tab, index);
+          const isBuiltIn = isBuiltInMarketTab(tab);
+          const isCommunity =
+            isBuiltIn && tab.type === MarketsTabName.Community;
+
           return (
             <TabPanel
               key={key}
@@ -123,43 +203,11 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               title={resolveTabTitle(tab, builtInTitles, <RwaTab />)}
               value={key}
             >
-              {isBuiltInMarketTab(tab) ? (
-                <div className={cls}>
-                  <MarketsListWidget
-                    type={tab.type as MarketsTabName}
-                    initialSort={tabSort[tab.type]}
-                    onSort={onTabSort(tab.type as MarketsTabName)}
-                    getColumns={getColumns}
-                    tableClassNames={{
-                      root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
-                      scroll: "oui-pb-5 oui-px-1",
-                    }}
-                    rowClassName="!oui-h-[34px]"
-                    {...getFavoritesProps(tab.type as MarketsTabName)}
-                    emptyView={renderEmptyView({
-                      type: tab.type as MarketsTabName,
-                      onClick: () => {
-                        onTabChange(MarketsTabName.All);
-                      },
-                    })}
-                  />
-                </div>
-              ) : (
-                <div className={cls}>
-                  <MarketsListWidget
-                    type={MarketsTabName.All}
-                    dataFilter={tabDataFilters[key]}
-                    initialSort={tabSort[key]}
-                    onSort={onTabSort(key as MarketsTabName)}
-                    getColumns={getColumns}
-                    tableClassNames={{
-                      root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
-                      scroll: "oui-pb-5 oui-px-1",
-                    }}
-                    rowClassName="!oui-h-[34px]"
-                  />
-                </div>
-              )}
+              {isCommunity
+                ? renderCommunityContent()
+                : isBuiltIn
+                  ? renderBuiltInContent(tab.type as MarketsTabName)
+                  : renderCustomContent(key)}
             </TabPanel>
           );
         })}

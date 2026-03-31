@@ -9,6 +9,7 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
+import { SymbolBadge } from "../positions/desktop/symbolBadge";
 import { OrderInfoCard } from "./OrderInfoCard.ui";
 import type { ReversePositionState } from "./reversePosition.script";
 
@@ -99,9 +100,10 @@ export const ReversePosition: FC<ReversePositionProps> = (props) => {
             size="base"
             weight="semibold"
             rule="symbol"
-            formatString="base-type"
+            formatString="base"
             intensity={98}
             showIcon
+            suffix={<SymbolBadge symbol={symbol} />}
           >
             {symbol}
           </Text.formatted>

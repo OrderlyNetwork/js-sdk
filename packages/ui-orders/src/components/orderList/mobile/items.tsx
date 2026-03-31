@@ -25,6 +25,7 @@ import {
   upperCaseFirstLetter,
 } from "../../../utils/util";
 import { ShareButtonWidget } from "../../shareButton";
+import { SymbolBadge } from "../../symbolBadge";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderCellState } from "./orderCell.script";
 
@@ -37,7 +38,7 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
     <Text.formatted
       intensity={80}
       rule="symbol"
-      formatString="base-type"
+      formatString="base"
       size="sm"
       // @ts-ignore
       prefix={
@@ -45,6 +46,7 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
           {isBuy ? t("common.buy") : t("common.sell")}
         </Badge>
       }
+      suffix={<SymbolBadge symbol={item.symbol} />}
       onClick={() => {
         props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
       }}

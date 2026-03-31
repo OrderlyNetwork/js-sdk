@@ -1,7 +1,7 @@
 import {
   ComputedAlgoOrder,
   useLocalStorage,
-  utils,
+  useSymbolWithBroker,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide, PositionType } from "@orderly.network/types";
@@ -15,7 +15,7 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { transSymbolformString } from "@orderly.network/utils";
+import { SymbolBadge } from "../components/symbolBadge";
 
 export type PositionTPSLConfirmProps = {
   symbol: string;
@@ -134,27 +134,31 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
   const isPositionTPSL = _isPositionTPSL;
 
+  const displaySymbol = useSymbolWithBroker(symbol);
   return (
     <>
       {isEditing && (
         <Text as="div" size="2xs" intensity={80} className="oui-mb-3">
-          {t("tpsl.agreement", { symbol: transSymbolformString(symbol) })}
+          {t("tpsl.agreement", { symbol: displaySymbol })}
         </Text>
       )}
 
       <Flex pb={4}>
-        <Box grow>
-          <Text.formatted
-            rule={"symbol"}
-            formatString="base-type"
-            size="base"
-            showIcon
-            as="div"
-            intensity={80}
-          >
-            {symbol}
-          </Text.formatted>
-        </Box>
+        <Flex direction="column" itemAlign="start" gap={1} grow>
+          <Box grow>
+            <Text.formatted
+              rule={"symbol"}
+              formatString="base"
+              size="base"
+              showIcon
+              as="div"
+              intensity={80}
+            >
+              {symbol}
+            </Text.formatted>
+          </Box>
+          <SymbolBadge symbol={symbol} />
+        </Flex>
         <Flex gap={1}>
           {isPositionTPSL && (
             <Badge size="xs" color={"primary"}>

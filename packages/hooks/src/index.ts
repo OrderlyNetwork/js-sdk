@@ -98,6 +98,12 @@ export * as swr from "swr";
 export * from "use-debounce";
 
 export { useMediaQuery } from "./useMediaQuery";
+export {
+  formatSymbolWithBroker,
+  useBadgeBySymbol,
+  useSymbolWithBroker,
+  type UseBadgeBySymbolReturn,
+} from "./useBadgeBySymbol";
 
 export { usePoster } from "./usePoster";
 export { DefaultLayoutConfig } from "./services/painter/layout.config";

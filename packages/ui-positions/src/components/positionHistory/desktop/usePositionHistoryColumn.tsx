@@ -17,6 +17,7 @@ import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import { commifyOptional, formatNum } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { PositionSymbolCell } from "../../positions/desktop/positionSymbolCell";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import { PositionHistoryExt } from "../positionHistory.script";
 
@@ -36,7 +37,7 @@ export const usePositionHistoryColumn = (props: {
           title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
-          width: 210,
+          width: 250,
           onSort: (r1: any, r2: any) => {
             return r1.symbol?.localeCompare(r2.symbol || "");
           },
@@ -306,18 +307,10 @@ export const SymbolInfo = (props: {
       />
 
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
-        <Text.formatted
-          // rule={"symbol"}
-          formatString="base-type"
-          className="oui-cursor-pointer"
-          onClick={(e) => {
-            onSymbolChange?.({ symbol: record.symbol } as API.Symbol);
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-        >
-          {`${record.symbol.split("_")[1]}-PERP`}
-        </Text.formatted>
+        <PositionSymbolCell
+          symbol={record.symbol}
+          onSymbolChange={onSymbolChange}
+        />
         <Flex gap={1} wrap="wrap">
           {tags}
         </Flex>

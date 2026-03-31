@@ -13,6 +13,9 @@ export class DataPaint extends BasePaint {
   private transformTop = 0;
 
   private QRCODE_SIZE = 56;
+  private BROKER_BADGE_HEIGHT = 18;
+  private BROKER_BADGE_PADDING_X = 8;
+  private BROKER_BADGE_RADIUS = 4;
 
   private formatMarginMode(marginMode: MarginMode) {
     return marginMode === MarginMode.ISOLATED ? "Isolated" : "Cross";
@@ -135,6 +138,57 @@ export class DataPaint extends BasePaint {
         fontSize: this._ratio(fontSize),
         fontFamily: options.fontFamily,
       });
+
+      const brokerName = options.data?.position.brokerName?.trim();
+      if (brokerName) {
+        left += (prevElementBoundingBox.width ?? 0) + this._ratio(10);
+
+        const badgeHeight = this._ratio(this.BROKER_BADGE_HEIGHT);
+        const badgePaddingX = this._ratio(this.BROKER_BADGE_PADDING_X);
+        const badgeRadius = this._ratio(this.BROKER_BADGE_RADIUS);
+
+        const badgeFontSize = this._ratio(12);
+        const badgeFontWeight = 600;
+
+        // Measure text with badge font settings
+        const textMetrics = this._drawText(
+          brokerName,
+          {
+            left: 0,
+            top: 0,
+            fontSize: badgeFontSize,
+            fontWeight: badgeFontWeight,
+            fontFamily: options.fontFamily,
+          },
+          true,
+        );
+
+        const badgeWidth = (textMetrics.width ?? 0) + badgePaddingX * 2;
+        const badgeTop = this._ratio(top) - badgeHeight / 2;
+
+        this._fillRoundedRect(
+          left,
+          badgeTop,
+          badgeWidth,
+          badgeHeight,
+          badgeRadius,
+          "rgba(255,255,255,0.06)",
+        );
+        this._drawText(brokerName, {
+          color: "rgba(255,255,255,0.36)",
+          left: left + badgePaddingX,
+          top: badgeTop + badgeHeight / 2,
+          fontSize: badgeFontSize,
+          fontWeight: badgeFontWeight,
+          fontFamily: options.fontFamily,
+          textBaseline: "middle",
+        });
+
+        prevElementBoundingBox = {
+          ...(prevElementBoundingBox as any),
+          width: badgeWidth,
+        } as TextMetrics;
+      }
     }
 
     const marginMode = options.data?.position.marginMode;
@@ -186,6 +240,28 @@ export class DataPaint extends BasePaint {
         },
       );
     }
+  }
+
+  private _fillRoundedRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number,
+    color: string,
+  ) {
+    const r = Math.min(radius, width / 2, height / 2);
+    this.ctx.save();
+    this.ctx.fillStyle = color;
+    this.ctx.beginPath();
+    this.ctx.moveTo(x + r, y);
+    this.ctx.arcTo(x + width, y, x + width, y + height, r);
+    this.ctx.arcTo(x + width, y + height, x, y + height, r);
+    this.ctx.arcTo(x, y + height, x, y, r);
+    this.ctx.arcTo(x, y, x + width, y, r);
+    this.ctx.closePath();
+    this.ctx.fill();
+    this.ctx.restore();
   }
 
   private drawUnrealizedPnL(options: DrawOptions, offsetTop: number = 0) {

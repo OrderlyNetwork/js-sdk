@@ -25,6 +25,7 @@ import {
 } from "@orderly.network/ui";
 import { Decimal, getBBOType } from "@orderly.network/utils";
 import { isBBOOrder } from "../../utils";
+import { SymbolBadge } from "../symbolBadge";
 
 type OrderConfirmDialogProps = {
   order: OrderlyOrder;
@@ -219,13 +220,17 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
       justify={"between"}
       className="oui-orderEntry-orderConfirmDialog-header"
     >
-      <Text.formatted
-        rule={"symbol"}
-        showIcon
-        className="oui-orderConfirmDialog-symbol"
-      >
-        {order.symbol}
-      </Text.formatted>
+      <Flex gap={2} direction="column" itemAlign="start">
+        <Text.formatted
+          rule={"symbol"}
+          formatString="base"
+          showIcon
+          className="oui-orderConfirmDialog-symbol"
+        >
+          {order.symbol}
+        </Text.formatted>
+        <SymbolBadge symbol={order.symbol} />
+      </Flex>
       <Flex
         justify={"end"}
         gapX={1}

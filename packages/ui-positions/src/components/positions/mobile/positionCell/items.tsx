@@ -24,9 +24,12 @@ import { RwaStatusTag } from "../../../rwaStatus/rwaStatus";
 import { AdjustMarginSheetId } from "../../adjustMargin";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
+import { PositionSymbolCell } from "../../desktop/positionSymbolCell";
 import { ShareButtonWidget } from "../../desktop/shareButton";
+import { SymbolBadge } from "../../desktop/symbolBadge";
 import { UnrealizedPnLPopoverCard } from "../../desktop/unrealPnLHover";
 import { PositionCellState } from "./positionCell.script";
+import { PositionTags } from "./positionTags";
 
 export const SymbolToken: FC<PositionCellState> = (props) => {
   const { item } = props;
@@ -37,12 +40,13 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
       <Flex gap={1} itemAlign="center">
         <Text.formatted
           rule="symbol"
-          formatString="base-type"
+          formatString="base"
           size="2xs"
           showIcon
           onClick={() => {
             props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
           }}
+          suffix={<SymbolBadge symbol={item.symbol} />}
         >
           {item.symbol}
         </Text.formatted>

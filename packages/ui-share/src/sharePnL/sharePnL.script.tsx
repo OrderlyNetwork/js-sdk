@@ -8,6 +8,7 @@ export const useSharePnLScript = (props: {
 }) => {
   const { pnl, hide } = props;
   const entity = pnl?.entity;
+  const brokerName = pnl?.brokerName;
   const symbolInfo = useSymbolsInfo();
   const { getFirstRefCode } = useReferralInfo();
   const referralInfo = useMemo((): ReferralType | undefined => {
@@ -41,6 +42,7 @@ export const useSharePnLScript = (props: {
     quoteDp: quote_dp,
     referralInfo,
     shareOptions: pnl as SharePnLOptions,
+    brokerName,
     hide,
   };
 };

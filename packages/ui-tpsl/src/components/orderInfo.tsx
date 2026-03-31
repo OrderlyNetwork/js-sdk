@@ -5,7 +5,15 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { MarginMode, OrderlyOrder } from "@orderly.network/types";
-import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
+import {
+  cn,
+  Flex,
+  Grid,
+  Text,
+  TokenIcon,
+  capitalizeFirstLetter,
+} from "@orderly.network/ui";
+import { SymbolBadge } from "./symbolBadge";
 
 type Props = {
   order: Partial<OrderlyOrder>;
@@ -59,10 +67,11 @@ export const OrderInfo = (props: Props) => {
           <Text.formatted
             className="oui-whitespace-nowrap oui-break-normal"
             rule="symbol"
-            formatString="base-type"
+            formatString="base"
             size="sm"
             weight="semibold"
             intensity={98}
+            suffix={<SymbolBadge symbol={symbol ?? ""} />}
           >
             {symbol}
           </Text.formatted>

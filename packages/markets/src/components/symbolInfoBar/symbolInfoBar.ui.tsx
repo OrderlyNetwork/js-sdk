@@ -3,6 +3,7 @@ import { Flex, Text, cn, Divider, Badge, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { TriangleDownIcon } from "../../icons";
 import { MarketsProviderProps } from "../marketsProvider";
+import { SymbolBadge } from "../symbolBadge";
 import { SymbolDisplay } from "../symbolDisplay";
 import { RwaTooltip } from "../symbolInfoBarFull/rwaTooltip";
 import { UseSymbolInfoBarScriptReturn } from "./symbolInfoBar.script";
@@ -33,7 +34,7 @@ export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
       className="oui-h-5 oui-cursor-pointer oui-gap-x-[6px]"
       onClick={onSymbol}
     >
-      <SymbolDisplay formatString="base" size="sm">
+      <SymbolDisplay formatString="base" size="sm" showBadge={false}>
         {symbol}
       </SymbolDisplay>
       <TriangleDownIcon className="oui-size-[14px] oui-text-base-contrast-54" />
@@ -42,28 +43,33 @@ export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
 
   return (
     <Flex
+      intensity={900}
+      mx={1}
+      px={3}
+      py={2}
       className={cn(
         "oui-symbol-info-bar-mobile",
-        "oui-h-full oui-font-semibold",
+        "oui-h-full oui-font-semibold oui-rounded-xl",
         props.className,
       )}
     >
       <Flex gapX={3} className="oui-h-full oui-flex-1 oui-overflow-hidden">
         <Flex gapX={3}>
           <TokenIcon symbol={symbol} size="xs" />
-          <Flex direction="column" itemAlign="start">
+          <Flex direction="column" itemAlign="start" gap={1}>
             {symbolView}
             <Flex gap={1}>
               <Badge size="xs" color="primary">
                 {leverage}x
               </Badge>
-              <RwaTooltip
-                isRwa={isRwa}
-                open={open}
-                closeTimeInterval={closeTimeInterval}
-                openTimeInterval={openTimeInterval}
-              />
+              <SymbolBadge symbol={symbol} />
             </Flex>
+            <RwaTooltip
+              isRwa={isRwa}
+              open={open}
+              closeTimeInterval={closeTimeInterval}
+              openTimeInterval={openTimeInterval}
+            />
           </Flex>
         </Flex>
 

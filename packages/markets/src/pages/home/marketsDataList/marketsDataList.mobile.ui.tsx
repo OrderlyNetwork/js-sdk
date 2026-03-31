@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Column, TabPanel, Tabs } from "@orderly.network/ui";
+import { CommunityBrokerTabs } from "../../../components/communityBrokerTabs";
 import { MarketsListWidget } from "../../../components/marketsList";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { RwaIconTab } from "../../../components/rwaTab";
@@ -19,6 +20,7 @@ import {
   resolveTabTriggerIcon,
   useCustomTabDataFilters,
 } from "../../../components/shared/tabUtils";
+import { createCommunityBrokerFilter } from "../../../hooks/useCommunityTabs";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
 import { FavoriteInstance, MarketsTabName } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";
@@ -29,7 +31,7 @@ type BuiltInTabMeta = {
   title: React.ReactNode;
   icon?: React.ReactElement;
   value: string;
-  tabName: MarketsTabName;
+  tabName?: MarketsTabName;
 };
 
 export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
@@ -61,6 +63,10 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
         title: <FavoritesIcon />,
         value: "favorites",
         tabName: MarketsTabName.Favorites,
+      },
+      community: {
+        title: t("markets.community"),
+        value: "community",
       },
       all: {
         title: t("markets.allMarkets"),
@@ -106,6 +112,19 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
     );
   };
 
+  const renderCommunityList = (selected: string) => {
+    return (
+      <MarketsListWidget
+        type={MarketsTabName.All}
+        initialSort={tabSort[MarketsTabName.Community]}
+        onSort={onTabSort(MarketsTabName.Community)}
+        getColumns={getColumns}
+        rowClassName="!oui-h-[34px]"
+        dataFilter={createCommunityBrokerFilter(selected)}
+      />
+    );
+  };
+
   return (
     <Box id="oui-markets-list" intensity={900} py={3} mt={2} r="2xl">
       <Tabs
@@ -148,7 +167,29 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
                 }
                 value={meta.value}
               >
-                {renderTab(meta.tabName)}
+                {tab.type === "community" ? (
+                  <>
+                    <SearchInput
+                      classNames={{
+                        root: cn("oui-mx-3 oui-mb-4 oui-mt-5", "oui-mb-2"),
+                      }}
+                    />
+                    <CommunityBrokerTabs
+                      storageKey="orderly_mobile_markets_datalist_community_sel_sub_tab"
+                      size="md"
+                      classNames={{
+                        tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+                        tabsContent: "oui-h-full",
+                        scrollIndicator: "oui-mx-3",
+                      }}
+                      className="oui-mobileMarketsDataList-community-tabs"
+                      showScrollIndicator
+                      renderPanel={renderCommunityList}
+                    />
+                  </>
+                ) : (
+                  renderTab(meta.tabName!)
+                )}
               </TabPanel>
             );
           }

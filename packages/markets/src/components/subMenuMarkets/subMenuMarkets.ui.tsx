@@ -9,11 +9,13 @@ import {
   Badge,
   EmptyDataState,
 } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import {
   MarketsTabName,
   type FavoriteInstance,
   type SortType,
 } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
@@ -119,6 +121,79 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
     ];
   };
 
+  const renderBuiltInContent = (tabType: MarketsTabName) => {
+    if (tabType === MarketsTabName.Favorites) {
+      const favProps = getFavoritesProps(MarketsTabName.Favorites) as {
+        dataFilter?: any;
+      };
+
+      return (
+        <MarketTabPanel
+          type={MarketsTabName.Favorites}
+          getColumns={getColumns}
+          dataFilter={favProps?.dataFilter}
+          renderHeader={(favorite) => (
+            <Box className="oui-px-1 oui-my-1">
+              <FavoritesTabWidget favorite={favorite} size="sm" />
+            </Box>
+          )}
+          initialSort={tabSort[MarketsTabName.Favorites]}
+          onSort={onTabSort(MarketsTabName.Favorites)}
+          emptyView={<EmptyDataState />}
+        />
+      );
+    }
+
+    return (
+      <MarketTabPanel
+        type={tabType}
+        getColumns={getColumns}
+        initialSort={tabSort[tabType]}
+        onSort={onTabSort(tabType)}
+      />
+    );
+  };
+
+  const renderCommunityContent = () => {
+    return (
+      <CommunityBrokerTabs
+        storageKey="orderly_submenu_markets_community_sel_sub_tab"
+        classNames={{
+          tabsList: "oui-px-1 oui-pt-1 oui-pb-2",
+          tabsContent: "oui-h-full",
+          scrollIndicator: "oui-mx-1",
+        }}
+        className={cn("oui-subMenuMarkets-community-tabs", cls)}
+        showScrollIndicator
+        renderPanel={(selected) => (
+          <MarketTabPanel
+            type={MarketsTabName.All}
+            getColumns={getColumns}
+            dataFilter={createCommunityBrokerFilter(selected)}
+            initialSort={tabSort[MarketsTabName.Community]}
+            onSort={onTabSort(MarketsTabName.Community)}
+          />
+        )}
+      />
+    );
+  };
+
+  const renderCustomContent = (key: string) => {
+    return (
+      <div className={cls}>
+        <MarketsListWidget
+          type={MarketsTabName.All}
+          getColumns={getColumns}
+          tableClassNames={TABLE_CLASSNAMES}
+          rowClassName={LIST_ROW_COMPACT}
+          dataFilter={(data: any[]) => tabDataFilters[key]?.(data) ?? data}
+          initialSort={tabSort[key as MarketsTabName]}
+          onSort={onTabSort(key as MarketsTabName)}
+        />
+      </div>
+    );
+  };
+
   return (
     <Box
       className={cn(
@@ -147,6 +222,10 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
       >
         {tabs?.map((tab, index) => {
           const key = tabKey(tab, index);
+          const isBuiltIn = isBuiltInMarketTab(tab);
+          const isCommunity =
+            isBuiltIn && tab.type === MarketsTabName.Community;
+
           return (
             <TabPanel
               key={key}
@@ -157,51 +236,11 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
               title={resolveTabTitle(tab, builtInTitles, <RwaIconTab />)}
               value={key}
             >
-              {isBuiltInMarketTab(tab) && tab.type === "favorites" ? (
-                (() => {
-                  const favProps = getFavoritesProps(
-                    MarketsTabName.Favorites,
-                  ) as {
-                    dataFilter?: any;
-                  };
-                  return (
-                    <MarketTabPanel
-                      type={MarketsTabName.Favorites}
-                      getColumns={getColumns}
-                      dataFilter={favProps?.dataFilter}
-                      renderHeader={(favorite) => (
-                        <Box className="oui-px-1 oui-my-1">
-                          <FavoritesTabWidget favorite={favorite} size="sm" />
-                        </Box>
-                      )}
-                      initialSort={tabSort[MarketsTabName.Favorites]}
-                      onSort={onTabSort(MarketsTabName.Favorites)}
-                      emptyView={<EmptyDataState />}
-                    />
-                  );
-                })()
-              ) : isBuiltInMarketTab(tab) ? (
-                <MarketTabPanel
-                  type={tab.type as MarketsTabName}
-                  getColumns={getColumns}
-                  initialSort={tabSort[tab.type as MarketsTabName]}
-                  onSort={onTabSort(tab.type as MarketsTabName)}
-                />
-              ) : (
-                <div className={cls}>
-                  <MarketsListWidget
-                    type={MarketsTabName.All}
-                    getColumns={getColumns}
-                    tableClassNames={TABLE_CLASSNAMES}
-                    rowClassName={LIST_ROW_COMPACT}
-                    dataFilter={(data: any[]) =>
-                      tabDataFilters[key]?.(data) ?? data
-                    }
-                    initialSort={tabSort[key as MarketsTabName]}
-                    onSort={onTabSort(key as MarketsTabName)}
-                  />
-                </div>
-              )}
+              {isCommunity
+                ? renderCommunityContent()
+                : isBuiltIn
+                  ? renderBuiltInContent(tab.type as MarketsTabName)
+                  : renderCustomContent(key)}
             </TabPanel>
           );
         })}

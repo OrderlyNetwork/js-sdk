@@ -2,6 +2,7 @@ export const markets = {
   "markets.favorites": "Favorites",
   "markets.recent": "Recent",
   "markets.newListings": "New listings",
+  "markets.community": "Community",
   "markets.allMarkets": "All markets",
   "markets.openInterest": "Open interest",
   "markets.openInterest.tooltip": "Total size of positions per side.",
@@ -66,6 +67,9 @@ export const markets = {
   "markets.symbolInfoBar.predFundingRate": "Est. funding rate",
   "markets.symbolInfoBar.predFundingRate.tooltip":
     "Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions.",
+
+  "markets.symbolInfoBar.riskNotice.content":
+    "{{symbolWithBroker}} is a permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk.",
 };
 
 export type Markets = typeof markets;

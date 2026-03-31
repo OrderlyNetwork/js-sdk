@@ -7,6 +7,8 @@ import {
   useAudioPlayer,
   useLocalStorage,
   useOrderlyContext,
+  useAllBrokers,
+  formatSymbolWithBroker,
 } from "@orderly.network/hooks";
 import { OrderStatus } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -22,10 +24,16 @@ export const useExecutionReport = () => {
   const symbolsInfoRef = useRef({});
 
   const { notification } = useOrderlyContext();
+  const [brokers] = useAllBrokers();
+  const brokersRef = useRef<Record<string, string> | undefined>(undefined);
 
   useEffect(() => {
     symbolsInfoRef.current = symbolsInfo;
   }, [symbolsInfo]);
+
+  useEffect(() => {
+    brokersRef.current = brokers;
+  }, [brokers]);
 
   const orderFilledConfig = notification?.orderFilled;
   const soundOptions = orderFilledConfig?.soundOptions;
@@ -59,9 +67,15 @@ export const useExecutionReport = () => {
 
   const handler = useDebouncedCallback((data: any) => {
     const showToast = (data: any) => {
+      const displaySymbol = formatSymbolWithBroker(
+        data.symbol,
+        symbolsInfoRef.current,
+        brokersRef.current,
+      );
       const { title, msg, status } = getOrderExecutionReportMsg(
         data,
         symbolsInfoRef.current,
+        displaySymbol,
       );
       const isFilled =
         status === OrderStatus.FILLED || status === OrderStatus.PARTIAL_FILLED;

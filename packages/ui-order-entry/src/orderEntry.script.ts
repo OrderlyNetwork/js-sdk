@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import {
+  useAccount,
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
@@ -69,7 +70,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   void initialSoundValue;
 
   const canTrade = useCanTrade();
-  const { marginMode } = useMarginModeBySymbol(symbol);
+  const { state: accountState } = useAccount();
+  const { marginMode, isPermissionlessListing } = useMarginModeBySymbol(symbol);
+  const walletAddress = accountState?.address;
 
   const {
     formattedOrder,
@@ -368,6 +371,25 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   }, [formattedOrder.order_type, formattedOrder.distribution_type]);
 
+  const isSymbolPostOnly =
+    (symbolInfo as { status?: string } | undefined)?.status === "POST_ONLY";
+
+  // check if the symbol is in POST_ONLY mode,
+  // and fix order type to limit if the order type is market or stop market
+  useEffect(() => {
+    if (
+      isSymbolPostOnly &&
+      (formattedOrder.order_type === OrderType.MARKET ||
+        formattedOrder.order_type === OrderType.STOP_MARKET)
+    ) {
+      setLocalOrderType(OrderType.LIMIT);
+      setOrderValues({
+        order_type: OrderType.LIMIT,
+        order_type_ext: undefined,
+      });
+    }
+  }, [isSymbolPostOnly, formattedOrder.order_type, setOrderValues]);
+
   const currentLtv = useComputedLTV();
   const askAndBid = useAskAndBid();
 
@@ -493,5 +515,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     soundAlert,
     setSoundAlert,
     currentFocusInput,
+    walletAddress,
+    isPermissionlessListing,
+    isSymbolPostOnly,
   };
 };

@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { MarketsTabName } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { useMarketsContext } from "../marketsProvider";
 import { RwaTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
@@ -66,6 +68,36 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
     );
   };
 
+  const renderCommunityContent = () => {
+    return (
+      <CommunityBrokerTabs
+        storageKey="orderly_expand_markets_community_sel_sub_tab"
+        classNames={{
+          tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+          tabsContent: "oui-h-full",
+        }}
+        className={cn("oui-expandMarkets-community-tabs", cls)}
+        showScrollIndicator
+        renderPanel={(selected) => (
+          <div className={cls}>
+            <React.Suspense fallback={null}>
+              <LazyMarketsListWidget
+                type={MarketsTabName.All}
+                initialSort={tabSort[MarketsTabName.Community]}
+                onSort={onTabSort(MarketsTabName.Community)}
+                tableClassNames={{
+                  root: "oui-expandMarkets-list",
+                  scroll: cn("oui-px-1", "oui-pb-2"),
+                }}
+                dataFilter={createCommunityBrokerFilter(selected)}
+              />
+            </React.Suspense>
+          </div>
+        )}
+      />
+    );
+  };
+
   const renderCustomContent = (key: string) => {
     return (
       <div className={cls}>
@@ -115,6 +147,10 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       >
         {tabs?.map((tab, index) => {
           const key = tabKey(tab, index);
+          const isBuiltIn = isBuiltInMarketTab(tab);
+          const isCommunity =
+            isBuiltIn && tab.type === MarketsTabName.Community;
+
           return (
             <TabPanel
               key={key}
@@ -125,9 +161,11 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
               title={resolveTabTitle(tab, builtInTitles, <RwaTab />)}
               value={key}
             >
-              {isBuiltInMarketTab(tab)
-                ? renderBuiltInContent(tab.type)
-                : renderCustomContent(key)}
+              {isCommunity
+                ? renderCommunityContent()
+                : isBuiltIn
+                  ? renderBuiltInContent(tab.type)
+                  : renderCustomContent(key)}
             </TabPanel>
           );
         })}
