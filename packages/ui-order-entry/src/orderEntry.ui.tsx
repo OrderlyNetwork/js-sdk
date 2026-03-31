@@ -65,6 +65,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setOrderValue,
     manualSetOrderValue,
     setOrderValues,
+    setOrderValuesRaw,
     symbolInfo,
     maxQty,
     freeCollateral,
@@ -338,7 +339,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     if (order.side !== formattedOrder.side) {
       manualSetOrderValue("side", order.side);
     }
-    setOrderValues({
+    setOrderValuesRaw({
       position_type: order.position_type,
       tp_order_type: order.tp_order_type,
       tp_pnl: order.tp_pnl,
