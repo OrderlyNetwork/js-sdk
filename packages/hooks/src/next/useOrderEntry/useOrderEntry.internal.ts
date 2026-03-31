@@ -210,6 +210,34 @@ const useOrderEntryNextInternal = (
     return newValues;
   };
 
+  /**
+   * Raw merge setter for externally computed TPSL bundles.
+   *
+   * IMPORTANT: This intentionally skips `calculate()` to avoid overwriting user/advanced computed
+   * fields (e.g. `sl_trigger_price`) via chained recomputation from other derived inputs.
+   */
+  const setValuesRaw = (values: Partial<FullOrderState>) => {
+    if (!symbolInfo) {
+      orderEntryActions.updateOrder(values);
+      // Raw merge path still updates store, but derived calculations are skipped when `symbolInfo` is missing.
+      console.warn(
+        "[ORDERLY]:symbolInfo missing; skipping derived order calculations",
+      );
+      return;
+    }
+
+    /** Read current entry from store to avoid stale closure. */
+    const currentEntry = useOrderStore.getState().entry;
+    const newValues: Partial<FullOrderState> = {
+      ...currentEntry,
+      ...values,
+    };
+
+    orderEntryActions.updateOrder(newValues);
+
+    return newValues;
+  };
+
   const onMarkPriceUpdated = useCallback(
     (markPrice: number, baseOn: string[] = []) => {
       if (!options.symbolInfo) return;
@@ -302,6 +330,7 @@ const useOrderEntryNextInternal = (
     formattedOrder: orderEntity,
     setValue,
     setValues,
+    setValuesRaw,
     submit: submitOrder,
     reset: resetOrder,
     generateOrder,

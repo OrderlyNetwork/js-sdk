@@ -75,6 +75,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     formattedOrder,
     setValue,
     setValues: setOrderValues,
+    setValuesRaw: setOrderValuesRaw,
     symbolInfo,
     symbolLeverage,
     ...state
@@ -459,6 +460,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setOrderValue,
     manualSetOrderValue,
     setOrderValues,
+    setOrderValuesRaw,
     // account-level leverage (for other consumers)
     currentLeverage,
     // symbol-level leverage & margin mode for this order entry
