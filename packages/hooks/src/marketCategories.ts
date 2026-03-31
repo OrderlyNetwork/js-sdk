@@ -7,6 +7,7 @@ import {
   ReactNode,
 } from "react";
 import { API } from "@orderly.network/types";
+import type { RwaSymbolsInfo } from "./orderly/useRwaSymbolsInfo";
 
 export type MarketCategoryComponentKey =
   | "marketsSheet"
@@ -28,6 +29,12 @@ type MarketTabBase = {
   name?: string;
   icon?: ReactNode | string;
   suffix?: ReactNode | string;
+  isVisible?: (
+    symbolList: API.MarketInfoExt[],
+    ctx: {
+      rwaSymbolsInfo?: RwaSymbolsInfo;
+    },
+  ) => boolean;
 };
 
 export type BuiltInMarketTab = MarketTabBase & {

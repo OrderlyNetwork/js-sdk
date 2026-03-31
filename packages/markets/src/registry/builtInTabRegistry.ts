@@ -11,7 +11,12 @@ import type {
  */
 export const builtInTabs: Record<MarketBuiltInTabType, BuiltInMarketTab> = {
   favorites: { type: "favorites" },
-  community: { type: "community" },
+  community: {
+    type: "community",
+    isVisible: (symbolList) => {
+      return symbolList.some((m) => Boolean(m?.broker_id));
+    },
+  },
   all: { type: "all" },
   rwa: { type: "rwa" },
   newListing: { type: "newListing" },
@@ -29,13 +34,13 @@ export const componentDefaultTabs: Record<
     { type: "favorites" },
     { type: "all" },
     { type: "rwa" },
-    { type: "community" },
+    { ...builtInTabs.community },
   ],
   expandMarkets: [
     { type: "favorites" },
     { type: "all" },
     { type: "rwa" },
-    { type: "community" },
+    { ...builtInTabs.community },
     { type: "newListing" },
     { type: "recent" },
   ],
@@ -43,7 +48,7 @@ export const componentDefaultTabs: Record<
     { type: "favorites" },
     { type: "all" },
     { type: "rwa" },
-    { type: "community" },
+    { ...builtInTabs.community },
     { type: "newListing" },
     { type: "recent" },
   ],
@@ -51,7 +56,7 @@ export const componentDefaultTabs: Record<
     { type: "favorites" },
     { type: "all" },
     { type: "rwa" },
-    { type: "community" },
+    { ...builtInTabs.community },
     { type: "newListing" },
     { type: "recent" },
   ],
@@ -59,7 +64,7 @@ export const componentDefaultTabs: Record<
     { type: "favorites" },
     { type: "all" },
     { type: "rwa" },
-    { type: "community" },
+    { ...builtInTabs.community },
     { type: "newListing" },
   ],
   horizontalMarkets: [
