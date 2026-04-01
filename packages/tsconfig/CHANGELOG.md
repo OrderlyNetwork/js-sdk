@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.15.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
 ## 0.15.0-alpha.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # @orderly.network/types
 
+## 2.12.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
 ## 2.12.0-alpha.0
 
 ### Minor Changes

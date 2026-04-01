@@ -1,5 +1,23 @@
 # @orderly.network/markets
 
+## 2.12.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [1053a3d]
+- Updated dependencies
+  - @orderly.network/hooks@2.12.0
+  - @orderly.network/i18n@2.12.0
+  - @orderly.network/types@2.12.0
+  - @orderly.network/ui@2.12.0
+  - @orderly.network/ui-scaffold@2.12.0
+  - @orderly.network/utils@2.12.0
+
 ## 2.12.0-alpha.0
 
 ### Minor Changes

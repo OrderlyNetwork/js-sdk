@@ -1,5 +1,19 @@
 # @orderly.network/futures
 
+## 4.12.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [1053a3d]
+- Updated dependencies
+  - @orderly.network/types@2.12.0
+  - @orderly.network/utils@2.12.0
+
 ## 4.12.0-alpha.0
 
 ### Minor Changes
