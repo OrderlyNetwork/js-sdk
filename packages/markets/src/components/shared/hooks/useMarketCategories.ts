@@ -3,6 +3,8 @@ import {
   useMarketCategoriesConfig,
   type MarketCategoryComponentKey,
   type MarketTabConfig,
+  useMarketList,
+  useRwaSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -21,10 +23,17 @@ export function useMarketCategories(
 ): MarketTabConfig[] {
   const marketTabs = useMarketCategoriesConfig();
   const { i18n } = useTranslation();
+  const symbolList = useMarketList();
+  const rwaSymbolsInfo = useRwaSymbolsInfo();
 
   return useMemo(() => {
     const original = componentDefaultTabs[componentKey];
-    if (!marketTabs) return original;
-    return marketTabs(original, { componentKey, builtIn: builtInTabs });
-  }, [marketTabs, componentKey, i18n.language]);
+    const resolved = marketTabs
+      ? marketTabs(original, { componentKey, builtIn: builtInTabs })
+      : original;
+
+    return resolved.filter(
+      (tab) => tab.isVisible?.(symbolList, { rwaSymbolsInfo }) ?? true,
+    );
+  }, [marketTabs, componentKey, i18n.language, symbolList, rwaSymbolsInfo]);
 }

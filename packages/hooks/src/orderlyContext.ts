@@ -5,14 +5,9 @@ import type {
   OrderlyKeyStore,
   WalletAdapter,
 } from "@orderly.network/core";
-import type {
-  API,
-  Chain,
-  NetworkId,
-  OrderlyOrder,
-} from "@orderly.network/types";
+import type { API, NetworkId, OrderlyOrder } from "@orderly.network/types";
 import type { Chains } from "./orderly/useChains";
-import { RwaSymbolsInfo } from "./orderly/useRwaSymbolsInfo";
+import type { RwaSymbolsInfo } from "./orderly/useRwaSymbolsInfo";
 
 export type FilteredChains = {
   mainnet?: { id: number }[];
