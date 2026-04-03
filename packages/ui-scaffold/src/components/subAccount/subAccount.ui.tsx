@@ -91,7 +91,7 @@ export function SubAccountUI(
       return noSubAccount;
     }
     return (
-      <ScrollArea className="oui-custom-scrollbar oui-max-h-[200px] oui-w-full oui-overflow-y-auto">
+      <ScrollArea className="oui-custom-scrollbar oui-max-h-[205px] oui-w-full oui-overflow-y-auto">
         <Flex direction="column" gap={2} itemAlign="start" width="100%">
           {props.subAccounts.map((subAccount) => (
             <AccountItem
