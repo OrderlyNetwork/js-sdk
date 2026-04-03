@@ -60,8 +60,7 @@ storybook-static/
 specs/
 .tmp.*
 .qoder/
-.specflow/
 .agents
 .specflow
+.specflow/
 skills-lock.json
-.specflow
