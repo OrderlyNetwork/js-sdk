@@ -22,7 +22,7 @@ export type PopupProps = {
   style?: React.CSSProperties;
 };
 
-export type LocaleContextState = {
+export type LanguageContextState = {
   /**
    * custom languages
    */
@@ -41,12 +41,12 @@ export type LocaleContextState = {
   popup?: PopupProps;
 };
 
-export const LocaleContext = createContext<LocaleContextState>({
+export const LanguageContext = createContext<LanguageContextState>({
   languages: [],
   onLanguageBeforeChanged: () => Promise.resolve(),
   onLanguageChanged: () => Promise.resolve(),
 });
 
-export const useLocaleContext = () => {
-  return useContext(LocaleContext);
+export const useLanguageContext = () => {
+  return useContext(LanguageContext);
 };

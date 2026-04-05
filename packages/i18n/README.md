@@ -22,15 +22,14 @@ Internationalization and CLI tools for Orderly SDK. Based on i18next ecosystem.
 
 ## Package exports
 
-| Export                             | Description                                                                      |
-| ---------------------------------- | -------------------------------------------------------------------------------- |
-| `@orderly.network/i18n`            | Main entry: `LocaleProvider`, hooks, types                                       |
-| `@orderly.network/i18n/locales/`\* | Built-in locale JSON files                                                       |
-| `@orderly.network/i18n/constant`   | Constants (e.g. `LocaleEnum`)                                                    |
-| `@orderly.network/i18n/utils`      | Utility functions                                                                |
-| `@orderly.network/i18n/external`   | External integration helpers: `ExternalLocaleProvider`, `preloadDefaultResource` |
+| Export                             | Description                                                                                     |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `@orderly.network/i18n`            | Main entry: `LocaleProvider`, `ExternalLocaleProvider`, `registerDefaultResource`, hooks, types |
+| `@orderly.network/i18n/locales/`\* | Built-in locale JSON files                                                                      |
+| `@orderly.network/i18n/constant`   | Constants (e.g. `LocaleEnum`)                                                                   |
+| `@orderly.network/i18n/utils`      | Utility functions                                                                               |
 
-**Hooks:** `useTranslation` and `useLocaleCode` are exported from the main entry; use them as with react-i18next and the locale context (see type definitions or `docs/` for details).
+**Hooks:** `useTranslation`, `useLocaleCode`, and `useRegisterExternalResources` are exported from the main entry; use them as with react-i18next and the locale context (see type definitions or `docs/` for details).
 
 ## Integration Guide
 
@@ -97,7 +96,7 @@ You can localize both the SDK UI and your own custom components.
 
 ### 4. Integrate External Resources
 
-In more advanced setups, your translations may live outside of this package (for example, in another bundle, a backend service, or a host application). For these cases, use the external integration helpers.
+In more advanced setups, your translations may live outside of this package (for example, in another bundle, a backend service, or a host application). For these cases, use `ExternalLocaleProvider` or `useRegisterExternalResources` from the main package.
 
 #### ExternalLocaleProvider
 
@@ -109,11 +108,12 @@ In more advanced setups, your translations may live outside of this package (for
 Async example (resources fetched from a host app or backend):
 
 ```tsx
-import { LocaleProvider, LocaleCode, Resources } from "@orderly.network/i18n";
 import {
-  ExternalLocaleProvider,
   AsyncResources,
-} from "@orderly.network/i18n/external";
+  ExternalLocaleProvider,
+  LocaleCode,
+  LocaleProvider,
+} from "@orderly.network/i18n";
 
 const loadExternalMessages: AsyncResources = async (
   lang: LocaleCode,
@@ -138,8 +138,11 @@ export function App() {
 Sync example (host app provides a static map of messages):
 
 ```tsx
-import { LocaleProvider, Resources } from "@orderly.network/i18n";
-import { ExternalLocaleProvider } from "@orderly.network/i18n/external";
+import {
+  ExternalLocaleProvider,
+  LocaleProvider,
+  Resources,
+} from "@orderly.network/i18n";
 
 const externalResources: Resources = {
   en: {
@@ -163,15 +166,41 @@ export function App() {
 
 `ExternalLocaleProvider` renders no UI; it only manages i18n side effects and simply returns its children.
 
-#### Preload default resources
+The same registration logic is available as a hook if you prefer not to add an extra wrapper component:
 
-`preloadDefaultResource` is a small helper that pre-registers the default language bundle before your React tree renders, which helps avoid a brief flash of raw translation keys:
+```tsx
+import {
+  LocaleProvider,
+  useRegisterExternalResources,
+  type AsyncResources,
+  type LocaleCode,
+} from "@orderly.network/i18n";
+
+const loadExternalMessages: AsyncResources = async (
+  lang: LocaleCode,
+  ns: string,
+) => {
+  const res = await fetch(`/i18n/${lang}/${ns}.json`);
+  return (await res.json()) as Record<string, string>;
+};
+
+function HostI18nBridge() {
+  useRegisterExternalResources(loadExternalMessages);
+  return null;
+}
+
+// Inside <LocaleProvider>: render <HostI18nBridge /> (or call the hook in an existing child).
+```
+
+#### Register default resources
+
+`registerDefaultResource` registers the default language bundle before your React tree renders, which helps avoid a brief flash of raw translation keys:
 
 ```ts
-import { preloadDefaultResource } from "@orderly.network/i18n/external";
+import { registerDefaultResource } from "@orderly.network/i18n";
 
 // typically run once during app bootstrap
-preloadDefaultResource({
+registerDefaultResource({
   "extend.app.loading": "Loading...",
   "extend.app.title": "Orderly App",
 });

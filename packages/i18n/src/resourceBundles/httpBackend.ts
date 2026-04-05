@@ -1,5 +1,5 @@
-import i18n from "./i18n";
-import { LocaleCode } from "./types";
+import i18n from "../i18n";
+import { LocaleCode } from "../types";
 
 export type BackendOptions = {
   loadPath: (lang: LocaleCode, ns: string) => string | string[] | undefined;

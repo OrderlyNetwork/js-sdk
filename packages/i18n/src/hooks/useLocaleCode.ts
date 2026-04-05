@@ -4,13 +4,13 @@ import { LocaleCode } from "../types";
 import { parseI18nLang } from "../utils";
 
 export function useLocaleCode() {
-  const [loacaleCode, setLoacaleCode] = useState<LocaleCode>(
+  const [localeCode, setLocaleCode] = useState<LocaleCode>(
     parseI18nLang(i18n.language),
   );
 
   useEffect(() => {
     const handleLanguageChange = (lng: LocaleCode) => {
-      setLoacaleCode(lng);
+      setLocaleCode(lng);
     };
 
     i18n.on("languageChanged", handleLanguageChange);
@@ -20,5 +20,5 @@ export function useLocaleCode() {
     };
   }, [i18n]);
 
-  return loacaleCode;
+  return localeCode;
 }

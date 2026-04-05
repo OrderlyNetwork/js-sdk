@@ -1,4 +1,4 @@
-import { Language } from "./provider/context";
+import { Language } from "./provider/languageContext";
 
 export enum LocaleEnum {
   /** English */
