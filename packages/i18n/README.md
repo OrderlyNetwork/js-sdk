@@ -1,6 +1,36 @@
 # @orderly.network/i18n
 
-Internationalization and cli tools for Orderly SDK. Based on i18next ecosystem.
+Internationalization and CLI tools for Orderly SDK. Based on i18next ecosystem.
+
+**Quick start:** Install the package, wrap your app root with `LocaleProvider`, and you get English by default. For multiple locales or custom keys, see the sections below.
+
+## Table of Contents
+
+- [Integration Guide](#integration-guide)
+  - [Wrap Your App with LocaleProvider](#1-wrap-your-app-with-localeprovider)
+  - [Provide Locale Data](#2-provide-locale-data)
+  - [Extending Locale Files](#3-extending-locale-files)
+  - [Integrate External Resources](#4-integrate-external-resources)
+- [Package exports](#package-exports)
+- [Example](#example)
+  - [Async load locale files](#async-load-locale-files)
+  - [Sync load locale data](#sync-load-locale-data)
+  - [Add custom languages](#add-custom-languages)
+- [CLI](#cli)
+  - [Usage](#usage)
+  - [Commands](#commands)
+
+## Package exports
+
+| Export                             | Description                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------- |
+| `@orderly.network/i18n`            | Main entry: `LocaleProvider`, hooks, types                                       |
+| `@orderly.network/i18n/locales/`\* | Built-in locale JSON files                                                       |
+| `@orderly.network/i18n/constant`   | Constants (e.g. `LocaleEnum`)                                                    |
+| `@orderly.network/i18n/utils`      | Utility functions                                                                |
+| `@orderly.network/i18n/external`   | External integration helpers: `ExternalLocaleProvider`, `preloadDefaultResource` |
+
+**Hooks:** `useTranslation` and `useLocaleCode` are exported from the main entry; use them as with react-i18next and the locale context (see type definitions or `docs/` for details).
 
 ## Integration Guide
 
@@ -26,26 +56,27 @@ import { LocaleProvider } from "@orderly.network/i18n";
 
 #### Supported Locales
 
-We currently support **16 locales**
+We currently support **17 locales**
 
-| Locale Code | Language   |
-| ----------- | ---------- |
-| `en`        | English    |
-| `zh`        | Chinese    |
-| `ja`        | Japanese   |
-| `es`        | Spanish    |
-| `ko`        | Korean     |
-| `vi`        | Vietnamese |
-| `de`        | German     |
-| `fr`        | French     |
-| `ru`        | Russian    |
-| `id`        | Indonesian |
-| `tr`        | Turkish    |
-| `it`        | Italian    |
-| `pt`        | Portuguese |
-| `uk`        | Ukrainian  |
-| `pl`        | Polish     |
-| `nl`        | Dutch      |
+| Locale Code | Language            |
+| ----------- | ------------------- |
+| `en`        | English             |
+| `zh`        | Chinese             |
+| `tc`        | Traditional Chinese |
+| `ja`        | Japanese            |
+| `es`        | Spanish             |
+| `ko`        | Korean              |
+| `vi`        | Vietnamese          |
+| `de`        | German              |
+| `fr`        | French              |
+| `ru`        | Russian             |
+| `id`        | Indonesian          |
+| `tr`        | Turkish             |
+| `it`        | Italian             |
+| `pt`        | Portuguese          |
+| `uk`        | Ukrainian           |
+| `pl`        | Polish              |
+| `nl`        | Dutch               |
 
 #### CSV for Easy Translation
 
@@ -64,9 +95,93 @@ You can localize both the SDK UI and your own custom components.
 }
 ```
 
+### 4. Integrate External Resources
+
+In more advanced setups, your translations may live outside of this package (for example, in another bundle, a backend service, or a host application). For these cases, use the external integration helpers.
+
+#### ExternalLocaleProvider
+
+`ExternalLocaleProvider` lets you register translation resources that come from an external source. It supports both **async** and **sync** resource injection:
+
+- **Async mode**: pass a function `(lang, ns) => Promise<Record<string, string>>`. It will be called whenever the locale changes, and the returned messages will replace the in-memory bundle for that locale/namespace.
+- **Sync mode**: pass a static `Resources` map, similar to `LocaleProvider.resources`, and all bundles will be registered on mount.
+
+Async example (resources fetched from a host app or backend):
+
+```tsx
+import { LocaleProvider, LocaleCode, Resources } from "@orderly.network/i18n";
+import {
+  ExternalLocaleProvider,
+  AsyncResources,
+} from "@orderly.network/i18n/external";
+
+const loadExternalMessages: AsyncResources = async (
+  lang: LocaleCode,
+  ns: string,
+) => {
+  // fetch translations from your host app, CDN, or backend
+  const res = await fetch(`/i18n/${lang}/${ns}.json`);
+  return (await res.json()) as Record<string, string>;
+};
+
+export function App() {
+  return (
+    <LocaleProvider>
+      <ExternalLocaleProvider resources={loadExternalMessages}>
+        <YourApp />
+      </ExternalLocaleProvider>
+    </LocaleProvider>
+  );
+}
+```
+
+Sync example (host app provides a static map of messages):
+
+```tsx
+import { LocaleProvider, Resources } from "@orderly.network/i18n";
+import { ExternalLocaleProvider } from "@orderly.network/i18n/external";
+
+const externalResources: Resources = {
+  en: {
+    "extend.host.title": "Host app title",
+  },
+  zh: {
+    "extend.host.title": "宿主应用标题",
+  },
+};
+
+export function App() {
+  return (
+    <LocaleProvider>
+      <ExternalLocaleProvider resources={externalResources}>
+        <YourApp />
+      </ExternalLocaleProvider>
+    </LocaleProvider>
+  );
+}
+```
+
+`ExternalLocaleProvider` renders no UI; it only manages i18n side effects and simply returns its children.
+
+#### Preload default resources
+
+`preloadDefaultResource` is a small helper that pre-registers the default language bundle before your React tree renders, which helps avoid a brief flash of raw translation keys:
+
+```ts
+import { preloadDefaultResource } from "@orderly.network/i18n/external";
+
+// typically run once during app bootstrap
+preloadDefaultResource({
+  "extend.app.loading": "Loading...",
+  "extend.app.title": "Orderly App",
+});
+```
+
+It uses a deep merge with overwrite semantics, so subsequent calls will keep the in-memory bundle in sync with your external source of truth.
+
 ## Example
 
-Here's a complete example of how to set up the i18n integration:
+You can load locale data in three ways: **async** via `backend.loadPath` (e.g. from your `public/locales`), **sync** by passing preloaded `resources`, or **custom** by defining a `languages` list and per-locale resources.
 
 ### Async load locale files
 
@@ -108,7 +223,9 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 };
 ```
 
-### Sync Load locale data
+### Sync load locale data
+
+Use this when you bundle locale JSON (e.g. import from `@orderly.network/i18n/locales/*`) and do not need async loading.
 
 ```typescript
 import { FC, ReactNode } from "react";
@@ -160,7 +277,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   const onLanguageChanged = (locale: LocaleCode) => {};
 
   return (
-    <LocaleProvider resources={resources} onLanguageChanged={onLocaleChange}>
+    <LocaleProvider resources={resources} onLanguageChanged={onLanguageChanged}>
       <WalletConnectorProvider>
         <OrderlyAppProvider
           brokerId="orderly"
@@ -177,7 +294,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
 ### Add custom languages
 
-We also support adding more custom languages
+You can restrict the language list and provide only the locales you need via `languages` and `resources`.
 
 ```typescript
 import { FC, ReactNode } from "react";
@@ -239,15 +356,15 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
 ## CLI
 
-## Usage
-
-The package provides a CLI tool for managing Internationalization files.
+### Usage
 
 ```bash
 npx @orderly.network/i18n <command> [options]
 ```
 
-## Commands
+The CLI manages locale files: CSV/JSON conversion, diff, merge, and key filtering. Commands are listed below.
+
+### Commands
 
 ### csv2json
 
@@ -265,7 +382,7 @@ npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locales
 
 ### json2csv
 
-Convert multiple locale JSON files to a single locale CSV file.
+Convert multiple locale JSON files from any directory into a single locale CSV file (generic JSON → CSV).
 
 ```bash
 npx @orderly.network/i18n json2csv <inputDir> <output>
@@ -291,9 +408,23 @@ Example:
 npx @orderly.network/i18n diffcsv ./dist/locale1.csv ./dist/locale2.csv
 ```
 
+### generateCsv
+
+Generate a locale CSV file from locale JSON files. Typically used for the package’s own `locales` directory (e.g. when building or releasing).
+
+```bash
+npx @orderly.network/i18n generateCsv <inputDir> <output>
+```
+
+Example:
+
+```bash
+npx @orderly.network/i18n generateCsv ./locales ./dist/locale.csv
+```
+
 ### fillJson
 
-Fill values from an input locale JSON file and generate a new locale JSON file.
+Build a new locale JSON with the same keys as the built-in English set, filling values from the input file (missing keys become empty). Useful for filling missing keys in a locale from another language or template.
 
 ```bash
 npx @orderly.network/i18n fillJson <input> <output>
@@ -307,7 +438,7 @@ npx @orderly.network/i18n fillJson ./src/locale/zh.json ./dist/locale/zh.json
 
 ### separateJson
 
-Separate JSON files into default and extend key values based on a specified key.
+Split each locale JSON by key prefix: keys starting with `separateKey.` go into an `extend/` subdirectory under `outputDir`, the rest stay at the root of `outputDir`.
 
 ```bash
 npx @orderly.network/i18n separateJson <inputDir> <outputDir> <separateKey>
@@ -321,7 +452,7 @@ npx @orderly.network/i18n separateJson ./locales ./dist/locales extend
 
 ### mergeJson
 
-Merge default and extend JSON files back into one file.
+Merge default and extend JSON files from a single input directory into one file per locale. The input directory must contain both the main locale JSON files and an `extend/` subdirectory with matching locale files; merged output is written to `outputDir`.
 
 ```bash
 npx @orderly.network/i18n mergeJson <inputDir> <outputDir>
@@ -330,5 +461,33 @@ npx @orderly.network/i18n mergeJson <inputDir> <outputDir>
 Example:
 
 ```bash
-npx @orderly.network/i18n mergeJson ./dist/locales1 ./dist/locales2
+npx @orderly.network/i18n mergeJson ./locales ./dist/locales
+```
+
+### filterKeys
+
+Filter locale JSON keys by prefix: keep only keys matching the prefix, or remove keys matching the prefix. Operates on `packages/i18n/locales` by default (or a custom directory via `--locales-dir`). You must specify exactly one of `--keep` or `--remove`.
+
+```bash
+npx @orderly.network/i18n filterKeys (--keep | -k | --remove | -r) --prefix <prefix> [--locales-dir <dir>]
+```
+
+Options:
+
+- `--keep`, `-k` — Keep only keys that start with the given prefix.
+- `--remove`, `-r` — Remove keys that start with the given prefix.
+- `--prefix <prefix>` — (Required) Key prefix to match (e.g. `trading.` or `trading`).
+- `--locales-dir <dir>` — Directory containing locale JSON files (default: `packages/i18n/locales`).
+
+Examples:
+
+```bash
+# Keep only keys with prefix "trading."
+npx @orderly.network/i18n filterKeys --keep --prefix trading.
+
+# Remove keys with prefix "trading." (short form)
+npx @orderly.network/i18n filterKeys -r --prefix trading.
+
+# Use a custom locales directory
+npx @orderly.network/i18n filterKeys -k --prefix extend. --locales-dir ./my-locales
 ```

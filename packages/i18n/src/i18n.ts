@@ -1,6 +1,6 @@
 // import i18n from "i18next";
 // import { initReactI18next } from "react-i18next";
-import { createInstance } from "i18next";
+import { createInstance, InitOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import {
   defaultLng,
@@ -37,16 +37,22 @@ const languageDetector = new LanguageDetector(null, {
 //     },
 //   });
 
+export function createI18nInstance(options?: InitOptions) {
+  return createInstance({
+    // lng: defaultLng,
+    fallbackLng: defaultLng,
+    // debug: true,
+    interpolation: {
+      escapeValue: false,
+    },
+    ...options,
+  }).use(languageDetector);
+}
+
 // https://react.i18next.com/latest/i18nextprovider#when-to-use
-const i18n = createInstance({
-  // lng: defaultLng,
-  fallbackLng: defaultLng,
-  // debug: true,
-  interpolation: {
-    escapeValue: false,
-  },
+const i18n = createI18nInstance({
   resources,
-}).use(languageDetector);
+});
 
 i18n.init();
 
