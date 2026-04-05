@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import i18n from "./i18n";
-import { LocaleCode } from "./types";
-import { parseI18nLang } from "./utils";
+import i18n from "../i18n";
+import { LocaleCode } from "../types";
+import { parseI18nLang } from "../utils";
 
 export function useLocaleCode() {
   const [loacaleCode, setLoacaleCode] = useState<LocaleCode>(

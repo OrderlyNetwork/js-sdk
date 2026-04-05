@@ -6,23 +6,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
-import { Backend, BackendOptions } from "./backend";
-import { defaultLanguages, defaultNS } from "./constant";
+import { I18nextProvider } from "react-i18next";
+import { Backend, BackendOptions } from "../backend";
+import { defaultLanguages, defaultNS } from "../constant";
+import i18n from "../i18n";
+import { LocaleCode, Resources } from "../types";
+import { parseI18nLang } from "../utils";
 import { Language, LocaleContext, LocaleContextState } from "./context";
-import i18n from "./i18n";
-import { LocaleCode, Resources } from "./types";
-import { parseI18nLang } from "./utils";
-
-export type I18nProviderProps = Partial<I18nextProviderProps>;
-
-export const I18nProvider: React.FC<I18nProviderProps> = (props) => {
-  const { children, ...rest } = props;
-  return (
-    // @ts-ignore
-    <I18nextProvider {...rest}>{children}</I18nextProvider>
-  );
-};
 
 export type LocaleProviderProps = {
   children: ReactNode;

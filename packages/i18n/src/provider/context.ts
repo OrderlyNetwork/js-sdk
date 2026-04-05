@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { LocaleCode } from "./types";
+import { LocaleCode } from "../types";
 
 export type Language = {
   localCode: LocaleCode;

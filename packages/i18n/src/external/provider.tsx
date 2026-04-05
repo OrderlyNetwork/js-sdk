@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren, useEffect } from "react";
 import { defaultNS } from "../constant";
+import { useLocaleCode } from "../hooks/useLocaleCode";
 import i18n from "../i18n";
 import { LocaleCode, Resources } from "../types";
-import { useLocaleCode } from "../useLocaleCode";
 
 /**
  * Async loader contract for pulling translation resources from an external system.
