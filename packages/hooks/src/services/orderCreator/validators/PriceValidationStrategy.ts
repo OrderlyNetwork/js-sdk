@@ -10,14 +10,11 @@ import { IValidationStrategy } from "./IValidationStrategy";
  * Strategy for validating order prices
  * Handles price validation for limit orders and stop-limit orders
  */
-export class PriceValidationStrategy
-  implements
-    IValidationStrategy<{
-      order_price?: number | string;
-      side: OrderSide;
-      order_type?: string;
-    }>
-{
+export class PriceValidationStrategy implements IValidationStrategy<{
+  order_price?: number | string;
+  side: OrderSide;
+  order_type?: string;
+}> {
   /**
    * Validates order price against symbol constraints and price range
    * @param values - Object containing order_price, side, and order_type
@@ -40,6 +37,9 @@ export class PriceValidationStrategy
 
     const price = new Decimal(order_price);
     const { symbol } = config;
+    if (!symbol) {
+      return;
+    }
     const { quote_max, quote_min, quote_dp, price_range, price_scope } = symbol;
 
     // Calculate price range based on side and mark price
@@ -93,12 +93,9 @@ export class PriceValidationStrategy
 /**
  * Strategy for validating trigger prices in stop orders
  */
-export class TriggerPriceValidationStrategy
-  implements
-    IValidationStrategy<{
-      trigger_price?: number | string;
-    }>
-{
+export class TriggerPriceValidationStrategy implements IValidationStrategy<{
+  trigger_price?: number | string;
+}> {
   /**
    * Validates trigger price against symbol constraints
    * @param values - Object containing trigger_price
@@ -111,6 +108,9 @@ export class TriggerPriceValidationStrategy
   ): OrderValidationItem | undefined {
     const { trigger_price } = values;
     const { symbol } = config;
+    if (!symbol) {
+      return;
+    }
     const { quote_max, quote_min } = symbol;
 
     if (!trigger_price) {
