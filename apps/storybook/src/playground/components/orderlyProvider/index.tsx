@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
+import { LocaleCode, removeLangPrefix } from "@orderly.network/i18n";
+import { LocaleProvider } from "../../../components/orderlyProvider/localeProvider";
 import { OrderlyAppRootProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
 import { RouteProvider } from "../../../components/orderlyProvider/rounteProvider";
 import { WalletConnectorProvider } from "../../../components/orderlyProvider/walletConnectorProvider";
@@ -7,18 +9,21 @@ import { useIsRwaRoute } from "../../../orderlyConfig/hooks/useIsRwaRoute";
 import { useEnvFormUrl } from "../../hooks/useEnvFormUrl";
 import { useNav } from "../../hooks/useNav";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import { LocaleProvider } from "./localeProvider";
+
+const onLanguageChanged = async (lang: LocaleCode) => {
+  const path = removeLangPrefix(window.location.pathname);
+  window.history.replaceState({}, "", `/${lang}${path}`);
+};
 
 export const OrderlyProvider: React.FC = () => {
   const { onRouteChange } = useNav();
   usePageTitle();
-  const { networkId, brokerId, brokerName, env, usePrivy, asyncLoadLocale } =
-    useEnvFormUrl();
+  const { networkId, brokerId, brokerName, env, usePrivy } = useEnvFormUrl();
   const isRwaRoute = useIsRwaRoute();
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
-      <LocaleProvider asyncLoadLocale={asyncLoadLocale}>
+      <LocaleProvider onLanguageChanged={onLanguageChanged}>
         <WalletConnectorProvider usePrivy={usePrivy} networkId={networkId}>
           <OrderlyAppRootProvider
             networkId={networkId}
