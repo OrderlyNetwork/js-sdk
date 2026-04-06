@@ -40,7 +40,8 @@
   "files": [
     "bin",
     "dist",
-    "scripts"
+    "scripts",
+    "docs/guide"
   ],
   "publishConfig": {
     "access": "public"
