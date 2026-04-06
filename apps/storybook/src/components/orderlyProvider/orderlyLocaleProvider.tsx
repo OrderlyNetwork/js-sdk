@@ -1,7 +1,7 @@
 import type { FC, PropsWithChildren } from "react";
 import {
-  LocaleProvider as I18nLocaleProvider,
-  LocaleProviderProps as I18nLocaleProviderProps,
+  LocaleProvider,
+  LocaleProviderProps,
   LocaleEnum,
   importLocaleJsonModule,
   type AsyncResources,
@@ -22,17 +22,19 @@ export const resources: AsyncResources = async (lang, _ns) => {
   return { ...base, ...extend };
 };
 
-export type LocaleProviderProps = PropsWithChildren<
-  Pick<I18nLocaleProviderProps, "onLanguageChanged">
+export type OrderlyLocaleProviderProps = PropsWithChildren<
+  Pick<LocaleProviderProps, "onLanguageChanged">
 >;
 
-export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
+export const OrderlyLocaleProvider: FC<OrderlyLocaleProviderProps> = (
+  props,
+) => {
   return (
-    <I18nLocaleProvider
+    <LocaleProvider
       onLanguageChanged={props.onLanguageChanged}
       resources={resources}
     >
       {props.children}
-    </I18nLocaleProvider>
+    </LocaleProvider>
   );
 };

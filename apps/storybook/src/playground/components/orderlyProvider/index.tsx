@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
 import { LocaleCode, removeLangPrefix } from "@orderly.network/i18n";
-import { LocaleProvider } from "../../../components/orderlyProvider/localeProvider";
 import { OrderlyAppRootProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
+import { OrderlyLocaleProvider } from "../../../components/orderlyProvider/orderlyLocaleProvider";
 import { RouteProvider } from "../../../components/orderlyProvider/rounteProvider";
 import { WalletConnectorProvider } from "../../../components/orderlyProvider/walletConnectorProvider";
 import { useIsRwaRoute } from "../../../orderlyConfig/hooks/useIsRwaRoute";
@@ -23,7 +23,7 @@ export const OrderlyProvider: React.FC = () => {
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
-      <LocaleProvider onLanguageChanged={onLanguageChanged}>
+      <OrderlyLocaleProvider onLanguageChanged={onLanguageChanged}>
         <WalletConnectorProvider usePrivy={usePrivy} networkId={networkId}>
           <OrderlyAppRootProvider
             networkId={networkId}
@@ -37,7 +37,7 @@ export const OrderlyProvider: React.FC = () => {
             <Outlet />
           </OrderlyAppRootProvider>
         </WalletConnectorProvider>
-      </LocaleProvider>
+      </OrderlyLocaleProvider>
     </RouteProvider>
   );
 };
