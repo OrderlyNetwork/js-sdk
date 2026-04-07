@@ -92,7 +92,7 @@ export const getTpslEstPnl = (tpslOrder: OrderInterface, position: any) => {
   const sideFlag = tpslOrder.side === SideType.SELL ? 1 : -1;
 
   // Use mark price for PnL calculation when available, fallback to entry price
-  const priceRef = position.markPrice ?? position.open;
+  const priceRef = position.open;
   const estPnl = new Decimal(tpslOrder.trigger_price)
     .minus(priceRef)
     .times(quantity)

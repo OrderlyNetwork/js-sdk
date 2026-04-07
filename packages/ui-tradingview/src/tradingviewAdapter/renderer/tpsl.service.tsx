@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
 import { i18n, useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { MarginMode } from "@orderly.network/types";
 import {
   Box,
   cn,
@@ -124,6 +125,8 @@ export class TPSLService {
     const positionSide = getPositionSide(this.currentPosition!.balance ?? 0);
     const type = determineTpslType(params.price, markPrice, positionSide);
 
+    const marginMode = this.currentPosition?.marginMode ?? MarginMode.CROSS;
+
     modal
       .show("TPSLSimpleDialogId", {
         title:
@@ -132,6 +135,7 @@ export class TPSLService {
             : i18n.t("tpsl.SLOrderConfirm"),
         triggerPrice: params.price,
         type: type,
+        marginMode,
         symbol: this.currentPosition!.symbol,
         onComplete: () => {
           this.clearTPSLElements();
@@ -172,7 +176,13 @@ export class TPSLService {
     triggerPrice: number;
     qty: number;
   }) {
-    console.log("showAdvancedTPSLDialog", type, triggerPrice);
+    // console.log("showAdvancedTPSLDialog", type, triggerPrice, qty);
+    const onCloseHandler = () => {
+      this.clearTPSLElements();
+      this.chart.setScrollEnabled(true);
+      this.chart.setZoomEnabled(true);
+      this.interactiveMode = MouseInteractiveMode.NONE;
+    };
     modal
       .show("TPSLDialogId", {
         withTriggerPrice: true,
@@ -180,12 +190,10 @@ export class TPSLService {
         triggerPrice,
         symbol: this.currentPosition?.symbol,
         qty,
-        onComplete: () => {
-          this.clearTPSLElements();
-          this.chart.setScrollEnabled(true);
-          this.chart.setZoomEnabled(true);
-          this.interactiveMode = MouseInteractiveMode.NONE;
-        },
+        position: this.currentPosition,
+
+        onComplete: onCloseHandler,
+        onCancel: onCloseHandler,
       })
       .then(
         () => {
@@ -195,12 +203,7 @@ export class TPSLService {
           console.log("show advanced tpsl dialog error", err);
         },
       )
-      .finally(() => {
-        this.clearTPSLElements();
-        this.chart.setScrollEnabled(true);
-        this.chart.setZoomEnabled(true);
-        this.interactiveMode = MouseInteractiveMode.NONE;
-      });
+      .finally(onCloseHandler);
   }
 
   updatePositions(positions: ChartPosition[] | null) {
@@ -427,14 +430,9 @@ export class TPSLService {
       return null;
     }
 
-    // this.lastPositions.forEach((position) => {
-    // console.log(position);
-    // });
     const { price, time } = params;
     let intersectantPosition: ChartPosition | null = null;
 
-    // console.log('params', params);
-    // console.log('xxx lastPositions', this.lastPositions, this.threshold, price);
     for (const position of this.lastPositions) {
       if (position) {
         if (Math.abs(position.open - price) < this.threshold) {
