@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "Bu pazar şu anda düzenli işlem saatlerinin dışında. Yine de bir işlem yapabilirsiniz, ancak azalan likidite ve potansiyel risklerin farkında olun.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Düzenli işlem saatleri yakında kapanacak - 7/24 işlem devam ediyor; fiyat daha yavaş olabilir ve likidite daha düşük olabilir.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Düzenli işlem saatleri yakında başlayacak - hazır olun.",
+  "tradingPoints.points": "Puanlar",
   "chart.now": "Şimdi",
   "positions.closePosition": "Pozisyonu Kapat",
   "positions.fundingFee.title": "Fonlama ücreti",

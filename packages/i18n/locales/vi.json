@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "Thị trường này hiện đang nằm ngoài giờ giao dịch thường xuyên. Bạn vẫn có thể thực hiện giao dịch, nhưng hãy lưu ý về tính thanh khoản giảm và các rủi ro tiềm ẩn.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Giờ giao dịch thường xuyên sắp đóng cửa - giao dịch 24/7 tiếp tục; giá có thể chậm hơn và tính thanh khoản có thể thấp hơn.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Giờ giao dịch thường xuyên sắp bắt đầu - hãy chuẩn bị sẵn sàng.",
+  "tradingPoints.points": "Điểm",
   "chart.now": "Bây giờ",
   "positions.closePosition": "Đóng vị thế",
   "positions.fundingFee.title": "Phí tài trợ",

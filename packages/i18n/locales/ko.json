@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "이 시장은 현재 정규 거래 시간 외에 있습니다. 여전히 거래를 할 수 있지만, 유동성 감소와 잠재적 위험을 인지하시기 바랍니다.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "정규 거래 시간이 곧 종료됩니다 - 24/7 거래는 계속됩니다; 가격이 느려질 수 있고 유동성이 낮아질 수 있습니다.",
   "trading.rwa.mWeb.insideMarketHours.desc": "정규 거래 시간이 곧 시작됩니다 - 준비하세요.",
+  "tradingPoints.points": "포인트",
   "chart.now": "지금",
   "positions.closePosition": "포지션 종료",
   "positions.fundingFee.title": "펀딩 수수료",
