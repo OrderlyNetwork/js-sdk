@@ -45,15 +45,14 @@ export function registerLayoutSplitPlugin(
       orderlyVersion: ">=1.0.0",
       interceptors: [
         createInterceptor("Trading.Layout.Desktop", (Original, props) => {
-          const desktopProps = props;
           return (
             <SplitPresetProvider
               presets={resolvedPresets}
               classNames={options?.classNames}
               gap={options?.gap ?? 2}
-              showIndicator={desktopProps.showPositionIcon ?? false}
+              showIndicator={props.showPositionIcon ?? false}
             >
-              <SplitInlinedLayout Original={Original} props={desktopProps} />
+              <SplitInlinedLayout Original={Original} props={props} />
             </SplitPresetProvider>
           );
         }),
