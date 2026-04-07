@@ -1,5 +1,5 @@
+/// <reference types="@orderly.network/trading-next" />
 import React from "react";
-import "@orderly.network/trading";
 import type { OrderlySDK } from "@orderly.network/ui";
 import { createInterceptor } from "@orderly.network/ui";
 import { GridDesktopInjector } from "./components/GridDesktopInjector";

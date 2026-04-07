@@ -85,14 +85,13 @@ function useDropAnimationConfig() {
 export function SplitTradingDesktopChrome(
   props: SplitTradingDesktopChromeProps,
 ): React.ReactElement {
+  // max2XL: trading script breakpoint (max-width 1279px); split chrome used to read isSM from a local stub.
   const {
     children,
-    isSM,
+    max2XL,
     tradingViewFullScreen,
-    showPositionIcon,
     sortableItems,
     setSortableItems,
-    symbol,
     className,
   } = props;
 
@@ -145,7 +144,7 @@ export function SplitTradingDesktopChrome(
           items={sortableItems ?? []}
           strategy={verticalListSortingStrategy}
         >
-          {isSM ? (
+          {max2XL ? (
             <Box height="100%" className={className}>
               {children}
             </Box>
@@ -174,10 +173,16 @@ export function SplitTradingDesktopChrome(
           )}
         </SortableContext>
         <DragOverlay dropAnimation={dropAnimationConfig}>
+          {/* DragOverlay children must be ReactNode (not a render prop in @dnd-kit/core v6). */}
+          {activeId ? (
+            <div className="oui-pointer-events-none oui-opacity-80">
+              id: {activeId}
+            </div>
+          ) : null}
           {/* <OrderEntryDragOverlayContent
             activeId={activeId}
-            showPositionIcon={showPositionIcon}
-            symbol={symbol}
+            showPositionIcon={props.showPositionIcon}
+            symbol={props.symbol}
             disableFeatures={props.disableFeatures}
             navigateToPortfolio={props.navigateToPortfolio}
             isFirstTimeDeposit={props.isFirstTimeDeposit}

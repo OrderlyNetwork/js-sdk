@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { cn, Text, Tooltip } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { BasicSymbolInfo } from "../../../types/types";
 import { MarkPriceView } from "../../base/orderBook/markPrice";
@@ -57,31 +57,23 @@ const Spread: FC<{
   const { t } = useTranslation();
 
   const spread = useMemo(() => {
-    if (!bids?.length || !asks?.length) {
+    if (bids.length === 0 && asks.length === 0) {
       return 0;
     }
+    const bid1 = Number.isNaN(bids[0][0]) ? 0 : bids[0][0];
+    const index = asks.reverse().findIndex((item) => !Number.isNaN(item[0]));
 
-    const rawBid = bids[0]?.[0];
-    const bid1 = Number.isNaN(Number(rawBid)) ? 0 : Number(rawBid);
-
-    let ask1 = 0;
-    for (let i = asks.length - 1; i >= 0; i--) {
-      const price = asks[i]?.[0];
-      if (!Number.isNaN(Number(price))) {
-        ask1 = Number(price);
-        break;
-      }
+    let ask1 = 0.0;
+    if (index !== -1) {
+      ask1 = Number.isNaN(asks[index][0]) ? 0 : asks[index][0];
     }
-
-    if (!bid1 || !ask1) {
-      return 0;
-    }
-
     const dValue = new Decimal(ask1)
       .sub(bid1)
       .div(new Decimal(ask1).add(bid1).div(2));
-
-    return Math.ceil(dValue.toNumber() * 1_000_000 + 0.1) / 10_000;
+    // 0.00006416604461251195
+    // 0.000065
+    // 0.0065
+    return Math.ceil(dValue.toNumber() * 1000000 + 0.1) / 10000;
   }, [asks, bids]);
 
   return (

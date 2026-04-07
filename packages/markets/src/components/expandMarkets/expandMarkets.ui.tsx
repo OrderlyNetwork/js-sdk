@@ -21,7 +21,7 @@ const LazyMarketsListWidget = React.lazy(() =>
 
 export type ExpandMarketsProps = ExpandMarketsScriptReturn;
 
-const cls = "oui-h-[calc(100%_-_36px)]";
+const cls = "oui-h-[calc(100%_-_52px)]";
 
 export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
@@ -96,7 +96,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         <TabPanel
           classNames={{
             trigger: "oui-tabs-all-trigger",
-            content: "oui-tabs-all-content",
+            content: "oui-tabs-all-content oui-h-[calc(100%_-_44px)]",
           }}
           title={t("common.all")}
           value={MarketsTabName.All}

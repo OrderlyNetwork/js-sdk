@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { registerLayoutSplitPlugin } from "@orderly.network/layout-split";
-import { TradingPage } from "@orderly.network/trading";
+import { TradingPage } from "@orderly.network/trading-next";
 import { OrderlyPluginProvider } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";

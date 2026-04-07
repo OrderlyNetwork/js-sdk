@@ -12,7 +12,7 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import type { MarketLayoutPosition } from "../../../pages/trading/trading.constants";
+import type { MarketLayoutPosition } from "../../../pages/trading/trading.script";
 
 export type LayoutPosition = "left" | "right";
 

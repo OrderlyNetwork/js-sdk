@@ -12,7 +12,9 @@
         ".next/**",
         "!.next/cache/**",
         "dist/**",
-        "storybook-static/**"
+        "storybook-static/**",
+        "generated/**",
+        "bundled/**"
       ]
     },
     "lint": {},

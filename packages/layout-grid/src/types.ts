@@ -1,9 +1,10 @@
 import type { LayoutItem, CompactType } from "react-grid-layout";
 import type { LayoutModel } from "@orderly.network/layout-core";
 
+export type BreakpointKey = "lg" | "md" | "sm" | "xs";
 export interface GridConfig {
-  breakpoints?: { lg: number; md: number; sm: number; xs: number; xxs: number };
-  cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
+  breakpoints?: { lg: number; md: number; sm: number; xs: number };
+  cols?: { lg: number; md: number; sm: number; xs: number };
   rowHeight?: number;
   margin?: [number, number];
   containerPadding?: [number, number];
@@ -22,12 +23,21 @@ export interface LayoutGridPluginOptions {
   };
 }
 
-export type GridLayoutBreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";
-
 export type GridLayoutItemSpec = Omit<LayoutItem, "i"> & {
   panelId: string;
   className?: string;
   style?: React.CSSProperties;
+  /** When true, item height follows content (measured via ResizeObserver and pushed to layout). */
+  autoHeight?: boolean;
+  /**
+   * Whether this grid item is collapsible.
+   *
+   * For collapsible items, `w` is treated as the expanded width
+   * and `minW` is treated as the collapsed width. The actual
+   * collapsed / expanded state is derived from the current layout
+   * width at render time (e.g. when dragged down to `minW`).
+   */
+  collapsible?: boolean;
 };
 
 export interface GridLayoutRule {
@@ -35,7 +45,6 @@ export interface GridLayoutRule {
   md?: GridLayoutItemSpec[];
   sm?: GridLayoutItemSpec[];
   xs?: GridLayoutItemSpec[];
-  xxs?: GridLayoutItemSpec[];
 }
 
 export interface GridLayoutPreset {
@@ -49,6 +58,17 @@ export interface GridLayoutItem extends LayoutItem {
   panelId: string;
   className?: string;
   style?: React.CSSProperties;
+  /** When true, item height follows content (measured via ResizeObserver and pushed to layout). */
+  autoHeight?: boolean;
+  /**
+   * Whether this grid item is collapsible.
+   *
+   * For collapsible items, `w` is treated as the expanded width
+   * and `minW` is treated as the collapsed width. The actual
+   * collapsed / expanded state is derived from the current layout
+   * width at render time (e.g. when dragged down to `minW`).
+   */
+  collapsible?: boolean;
 }
 
 export interface GridLayoutModel extends LayoutModel {
@@ -57,10 +77,9 @@ export interface GridLayoutModel extends LayoutModel {
     md?: GridLayoutItem[];
     sm?: GridLayoutItem[];
     xs?: GridLayoutItem[];
-    xxs?: GridLayoutItem[];
   };
-  breakpoints?: { lg: number; md: number; sm: number; xs: number; xxs: number };
-  cols?: { lg: number; md: number; sm: number; xs: number; xxs: number };
+  breakpoints?: { lg: number; md: number; sm: number; xs: number };
+  cols?: { lg: number; md: number; sm: number; xs: number };
   compactType?: "vertical" | "horizontal" | null;
   isDraggable?: boolean;
   isResizable?: boolean;

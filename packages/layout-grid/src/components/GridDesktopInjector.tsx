@@ -4,10 +4,8 @@ import type { DesktopLayoutInitialOptions } from "@orderly.network/trading-next"
 import { gridStrategy } from "../gridStrategy";
 import type { GridLayoutModel, LayoutGridPluginOptions } from "../types";
 import { getDefaultGridPresets } from "../utils/defaultPresets";
-import {
-  mergeGridConfig,
-  createDefaultGetInitialLayout,
-} from "../utils/gridPluginConfig";
+import { mergeGridConfig } from "../utils/gridLayoutUtils";
+import { createDefaultGetInitialLayout } from "../utils/gridPluginConfig";
 
 export interface GridDesktopInjectorProps {
   Original: React.ComponentType<Record<string, unknown>>;

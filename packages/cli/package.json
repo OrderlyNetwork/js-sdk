@@ -1,0 +1,29 @@
+{
+  "name": "@orderly.network/cli",
+  "version": "0.0.1",
+  "description": "Orderly CLI - Create DEX, plugins, and modules",
+  "main": "bin/cli.js",
+  "bin": {
+    "orderly": "bin/cli.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "degit": "^2.8.4",
+    "enquirer": "^2.4.1",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.0",
+    "handlebars": "^4.7.9",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.0",
+    "tsconfig": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

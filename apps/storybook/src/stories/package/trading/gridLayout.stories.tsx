@@ -8,7 +8,7 @@ import {
   createTradingGridLayout,
   gridStrategy,
 } from "@orderly.network/layout-grid";
-import { TradingPage } from "@orderly.network/trading";
+import { TradingPage } from "@orderly.network/trading-next";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";

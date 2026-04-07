@@ -9,11 +9,10 @@ import {
   type CompactType,
 } from "react-grid-layout";
 import type { LayoutRendererProps } from "@orderly.network/layout-core";
-import { cn } from "@orderly.network/ui";
-import type { GridLayoutModel, GridLayoutItem } from "./types";
+import { cn, Flex, Text } from "@orderly.network/ui";
+import type { GridLayoutModel, GridLayoutItem, BreakpointKey } from "./types";
 import { DEFAULT_BREAKPOINTS, DEFAULT_COLS } from "./utils/gridLayoutUtils";
 
-type BreakpointKey = "lg" | "md" | "sm" | "xs" | "xxs";
 type ResponsiveLayouts = Partial<Record<string, Layout>>;
 
 /** GridLayoutItem[] -> react-grid-layout Layout */
@@ -50,8 +49,7 @@ function toReactGridLayouts(
 export function GridRenderer(
   props: LayoutRendererProps<GridLayoutModel>,
 ): React.ReactElement {
-  const { layout, panels, onLayoutChange, onLayoutPersist, className, style } =
-    props;
+  const { layout, panels, onLayoutChange, className, style } = props;
   const { width, containerRef, mounted } = useContainerWidth();
 
   const layoutsRef = useRef(layout.layouts);
@@ -89,12 +87,7 @@ export function GridRenderer(
     [layout, onLayoutChange],
   );
 
-  const {
-    layout: currentLayout,
-    cols,
-    breakpoint,
-    setLayoutForBreakpoint,
-  } = useResponsiveLayout({
+  const { layout: currentLayout, cols } = useResponsiveLayout({
     width,
     breakpoints: layout.breakpoints || DEFAULT_BREAKPOINTS,
     cols: layout.cols || DEFAULT_COLS,
@@ -135,20 +128,81 @@ export function GridRenderer(
           console.warn(`Panel ${panelId} not found in registry`);
           return null;
         }
+
+        /** Resolve title from panel registration props (if any). */
+        const title = panelWrapper?.props?.title as
+          | string
+          | React.ReactNode
+          | undefined;
+
+        /** Determine whether this item should participate in collapse logic. */
+        const isCollapsible = config.collapsible === true;
+
+        /**
+         * Derive collapsed state from current layout width.
+         *
+         * - For collapsible items, `w` is the expanded width and `minW` is the
+         *   collapsed width.
+         * - When the user drags the item so that its current width is at or
+         *   below `minW`, we treat it as collapsed.
+         */
+        const layoutItem = currentLayout?.find(
+          (item) => item.i === config.i,
+        ) as LayoutItem | undefined;
+
+        let collapsed = false;
+        // console.log(">>>>>>>>>layoutItem", layoutItem);
+        if (
+          isCollapsible &&
+          layoutItem &&
+          typeof config.minW === "number" &&
+          Number.isFinite(config.minW)
+        ) {
+          collapsed = layoutItem.w <= config.minW;
+        }
+
+        /** Body height adjusts when a title header is present. */
+        const bodyClassName =
+          typeof title !== "undefined" && title !== null
+            ? "oui-h-[calc(100%_-_44px)]"
+            : "oui-h-full";
+
         return (
           <div
             key={panelId}
             className={cn(
-              "oui-layout-grid-item oui-relative oui-size-full oui-overflow-hidden oui-rounded-2xl oui-bg-base-9",
+              "oui-layout-grid-item oui-relative oui-size-full oui-overflow-hidden oui-rounded oui-bg-base-9",
               config.className,
             )}
             style={config.style}
           >
-            {panel}
+            {title && (
+              <Flex
+                className="oui-text-base-contrast-36"
+                justify="between"
+                width="100%"
+                px={3}
+                pt={3}
+                pb={2}
+              >
+                <Text size="base" intensity={80}>
+                  {title}
+                </Text>
+              </Flex>
+            )}
+
+            <div className={cn("oui-collapsible-content", bodyClassName)}>
+              {React.isValidElement(panel)
+                ? React.cloneElement(panel, {
+                    /** Pass collapsed state down so panel can adjust its own UI. */
+                    collapsed,
+                  })
+                : panel}
+            </div>
           </div>
         );
       }),
-    [layoutItems, panels],
+    [currentLayout, layoutItems, panels],
   );
 
   if (panels.size === 0) {
@@ -174,7 +228,7 @@ export function GridRenderer(
   return (
     <div
       ref={containerRef as React.RefObject<HTMLDivElement>}
-      className={cn("oui-grid-layout-container oui-p-2", className)}
+      className={cn("oui-grid-layout-container oui-p-1", className)}
       style={style}
     >
       <GridLayout
@@ -183,7 +237,7 @@ export function GridRenderer(
         gridConfig={{
           cols: cols,
           rowHeight: layout.rowHeight ?? 30,
-          margin: layout.margin || [8, 8],
+          margin: layout.margin || [4, 4],
           containerPadding: layout.containerPadding || [0, 0],
         }}
         compactor={getCompactor(

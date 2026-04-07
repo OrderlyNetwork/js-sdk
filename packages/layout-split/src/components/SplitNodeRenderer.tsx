@@ -29,14 +29,7 @@ export function SplitNodeRenderer({
     isPanelCollapsible,
   } = useSplitLayoutConfig();
 
-  // console.log("node", node);
-
   if (node.type === "panel") {
-    // Check if panel is collapsed - don't render if collapsed
-    // if (node.id && isPanelCollapsed(node.id)) {
-    //   return null;
-    // }
-
     const panelWrapper = panels.get(node.id);
     const panel = panelWrapper?.node;
     if (!panel) {

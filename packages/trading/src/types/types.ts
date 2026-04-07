@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 import { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
@@ -152,22 +151,9 @@ type BaseTradingPageProps = {
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
 };
 
-/**
- * Options passed to getInitialLayout for desktop trading layout.
- * Trading only passes non-layout fields (e.g. variant); layout-related state is owned by layout plugins.
- */
-export type DesktopLayoutInitialOptions = {
-  /** Viewport/screen size variant; layout plugins may use for breakpoint behaviour */
-  variant?: "default" | "max2XL";
-};
-
 export type TradingPageProps = BaseTradingPageProps & {
   sharePnLConfig?: SharePnLConfig;
   referral?: ReferralProps;
   tradingRewards?: TradingRewardsProps;
   bottomSheetLeading?: React.ReactNode | string;
-  /** Layout strategy for desktop trading UI; must be provided by the consumer (e.g. split or grid) */
-  layoutStrategy?: LayoutStrategy;
-  /** Optional factory for initial layout; called with desktop options. If omitted, strategy.defaultLayout(panelIds) is used. */
-  getInitialLayout?: (options: DesktopLayoutInitialOptions) => LayoutModel;
 };

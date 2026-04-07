@@ -47,6 +47,7 @@ apps/ai-docs
 
 apps/docs/_doc_meta_
 
+
 hooks-example/
 
 .vscode
@@ -61,8 +62,8 @@ storybook-static/
 specs/
 .tmp.*
 .qoder/
-.specflow/
 .agents
 .specflow
 skills-lock.json
 sdk-docs/bundled
+*.sqlite
