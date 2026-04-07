@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "Este mercado se encuentra actualmente fuera del horario de negociación regular. Aún puede realizar una operación, pero tenga en cuenta la liquidez reducida y los riesgos potenciales.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "El horario de negociación regular está a punto de cerrar - la negociación 24/7 continúa; el precio puede ser más lento y la liquidez puede ser menor.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Las horas regulares de trading están a punto de comenzar - prepárate.",
+  "tradingPoints.points": "Puntos",
   "chart.now": "Ahora",
   "positions.closePosition": "Cerrar posición",
   "positions.fundingFee.title": "Tarifa de financiación",

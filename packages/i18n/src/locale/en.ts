@@ -4,6 +4,7 @@ import { common } from "./module/common";
 import { connector } from "./module/connector";
 import { leverage } from "./module/leverage";
 import { markets } from "./module/markets";
+import { navigation } from "./module/navigation";
 import { notification } from "./module/notification";
 import { orderEntry } from "./module/orderEntry";
 import { orders } from "./module/orders";
@@ -44,4 +45,5 @@ export const en = {
   ...widget,
   ...vaults,
   ...notification,
+  ...navigation,
 };

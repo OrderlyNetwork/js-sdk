@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "此市場目前處於常規交易时间之外。您仍然可以進行交易，但請注意流動性降低和潛在風險。",
   "trading.rwa.mWeb.outsideMarketHours.desc": "常規交易时间即將關閉 - 24/7交易繼續進行；價格可能较慢，流動性可能较低。",
   "trading.rwa.mWeb.insideMarketHours.desc": "常規交易时间即將開始 - 請做好準備。",
+  "tradingPoints.points": "積分",
   "chart.now": "现在",
   "positions.closePosition": "關閉持倉",
   "positions.fundingFee.title": "資金費用",

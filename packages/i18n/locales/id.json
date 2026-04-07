@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "Pasar ini saat ini berada di luar jam perdagangan reguler. Anda masih dapat melakukan perdagangan, tetapi harap perhatikan likuiditas yang berkurang dan risiko potensial.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Jam perdagangan reguler akan segera ditutup - perdagangan 24/7 berlanjut; harga mungkin lebih lambat dan likuiditas mungkin lebih rendah.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Jam perdagangan reguler akan segera dimulai - bersiaplah.",
+  "tradingPoints.points": "Poin",
   "chart.now": "Sekarang",
   "positions.closePosition": "Tutup Posisi",
   "positions.fundingFee.title": "Biaya pendanaan",

@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "此市场目前处于常规交易时间之外。您仍然可以进行交易，但请注意流动性降低和潜在风险。",
   "trading.rwa.mWeb.outsideMarketHours.desc": "常规交易时间即将关闭 - 24/7交易继续进行；价格可能较慢，流动性可能较低。",
   "trading.rwa.mWeb.insideMarketHours.desc": "常规交易时间即将开始 - 请做好准备。",
+  "tradingPoints.points": "积分",
   "chart.now": "现在",
   "positions.closePosition": "关闭持仓",
   "positions.fundingFee.title": "资金费用",

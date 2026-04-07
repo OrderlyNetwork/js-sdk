@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "この市場は現在通常の取引時間外です。取引は可能ですが、流動性の低下と潜在的なリスクにご注意ください。",
   "trading.rwa.mWeb.outsideMarketHours.desc": "通常の取引時間はまもなく終了します - 24時間取引は継続されますが、価格の動きが遅くなり、流動性が低下する可能性があります。",
   "trading.rwa.mWeb.insideMarketHours.desc": "通常の取引時間がまもなく開始されます - 準備してください。",
+  "tradingPoints.points": "ポイント",
   "chart.now": "現在",
   "positions.closePosition": "ポジションをクローズ",
   "positions.fundingFee.title": "資金手数料",

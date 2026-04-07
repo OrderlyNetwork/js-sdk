@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "This market is currently outside regular trading hours. You can still place a trade, but please be aware of reduced liquidity and potential risks.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Regular trading hours are about to close - 24/7 trading continues; price may slow and liquidity may be lower.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Regular trading hours are about to open - get ready.",
+  "tradingPoints.points": "Points",
   "chart.now": "Now",
   "positions.closePosition": "Close Position",
   "positions.fundingFee.title": "Funding Fee",

@@ -357,6 +357,7 @@
   "trading.rwa.outsideMarketHours.notify": "Deze markt bevindt zich momenteel buiten de reguliere handelstijden. U kunt nog steeds een handel plaatsen, maar houd rekening met verminderde liquiditeit en potentiële risico's.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "De reguliere handelstijden gaan binnenkort sluiten - 24/7 handel gaat door; de prijs kan langzamer worden en de liquiditeit kan lager zijn.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Reguliere handelstijden beginnen binnenkort - wees voorbereid.",
+  "tradingPoints.points": "Punten",
   "chart.now": "Nu",
   "positions.closePosition": "Positie sluiten",
   "positions.fundingFee.title": "Financieringskosten",
