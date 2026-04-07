@@ -115,7 +115,7 @@ const SymbolInfoBarDesktop: React.FC<SymbolInfoBarDesktopProps> = ({
   <Flex
     intensity={900}
     r="2xl"
-    mt={1}
+    // mt={1}
     px={3}
     className={cn(
       "oui-symbol-info-bar-desktop",

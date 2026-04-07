@@ -25,6 +25,7 @@ import {
   useGetRwaSymbolOpenStatus,
   useLocalStorage,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
@@ -34,10 +35,19 @@ import {
   OrderEntrySortKeys,
   TradingviewFullscreenKey,
 } from "@orderly.network/types";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import {
+  Box,
+  Button,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  cn,
+  Flex,
+  Text,
+} from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
+import { CollapseIcon, ExpandIcon } from "../../components/base/icons";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
@@ -157,6 +167,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
   const { brokerName } = useBadgeBySymbol(props.symbol);
+  const { t } = useTranslation();
 
   const symbolInfoBarHeight = useMemo(() => {
     let height = 56;
@@ -337,12 +348,52 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const marketsWidget = (
     <SideMarketsWidget
-      resizeable={resizeable}
+      resizeable={resizeable as any}
       panelSize={panelSize}
       onPanelSizeChange={onPanelSizeChange as any}
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     />
+  );
+
+  const toggleButtoncls = cn(
+    "oui-text-base-contrast-36",
+    resizeable
+      ? "oui-cursor-pointer hover:oui-text-base-contrast-80"
+      : "oui-cursor-not-allowed",
+  );
+
+  const marketsHeader = (
+    <Flex
+      className={
+        panelSize === "small"
+          ? "oui-absolute oui-end-[-20px] oui-z-50"
+          : "oui-relative"
+      }
+      justify={panelSize === "large" ? "between" : "center"}
+      width="100%"
+      px={3}
+    >
+      {panelSize === "large" && (
+        <Text size="base" intensity={80}>
+          {t("common.markets")}
+        </Text>
+      )}
+      {panelSize === "large" && (
+        <div
+          onClick={resizeable ? () => onPanelSizeChange?.("middle") : undefined}
+        >
+          <CollapseIcon className={toggleButtoncls} />
+        </div>
+      )}
+      {(panelSize === "middle" || panelSize === "small") && (
+        <div
+          onClick={resizeable ? () => onPanelSizeChange?.("large") : undefined}
+        >
+          <ExpandIcon className={toggleButtoncls} />
+        </div>
+      )}
+    </Flex>
   );
 
   const marketsView = (
@@ -356,7 +407,28 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       className="oui-trading-markets-container oui-transition-all oui-duration-150"
       onTransitionEnd={() => setAnimating(false)}
     >
-      {!animating && marketLayout === "left" && marketsWidget}
+      <Flex
+        id="oui-side-markets"
+        className="oui-relative oui-font-semibold"
+        direction="column"
+        gapY={5}
+        height="100%"
+        width="100%"
+      >
+        {marketsHeader}
+
+        {!animating && marketLayout === "left" && (
+          <Box
+            width="100%"
+            className={cn(
+              panelSize === "large" && "oui-h-[calc(100%_-_56px)]",
+              panelSize === "middle" && "oui-h-[calc(100%_-_52px)]",
+            )}
+          >
+            {marketsWidget}
+          </Box>
+        )}
+      </Flex>
     </Box>
   );
 

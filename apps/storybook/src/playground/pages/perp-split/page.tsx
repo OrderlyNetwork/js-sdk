@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { generatePath } from "@orderly.network/i18n";
 import { registerLayoutSplitPlugin } from "@orderly.network/layout-split";
-import { TradingPage, TradingPageProps } from "@orderly.network/trading";
+import { TradingPage, TradingPageProps } from "@orderly.network/trading-next";
 import { API } from "@orderly.network/types";
 import { OrderlyPluginProvider } from "@orderly.network/ui";
 import { tradingPageConfig } from "../../../orderlyConfig";
@@ -38,12 +38,14 @@ export default function PerpPage() {
 
   return (
     <BaseLayout>
-      <TradingPage
-        symbol={symbol}
-        onSymbolChange={onSymbolChange}
-        tradingViewConfig={tradingPageConfig.tradingViewConfig}
-        sharePnLConfig={tradingPageConfig.sharePnLConfig}
-      />
+      <OrderlyPluginProvider plugins={[registerLayoutSplitPlugin()]}>
+        <TradingPage
+          symbol={symbol}
+          onSymbolChange={onSymbolChange}
+          tradingViewConfig={tradingPageConfig.tradingViewConfig}
+          sharePnLConfig={tradingPageConfig.sharePnLConfig}
+        />
+      </OrderlyPluginProvider>
     </BaseLayout>
   );
 }
