@@ -1,38 +1,48 @@
-# etherAdapter
+# etherAdapter.ts
 
-> Location: `packages/core/src/wallet/etherAdapter.ts`
+## etherAdapter.ts Responsibility
 
-## Overview
+Implements the legacy `IWalletAdapter` using ethers `BrowserProvider`: call, callOnChain, sendTransaction, getBalance, signTypedData, pollTransactionReceiptWithBackoff, parseUnits/formatUnits, chainId/addresses. Uses ethers-decode-error for error parsing. **@deprecated** in favor of the new WalletAdapter-based EVM adapter.
 
-EVM wallet adapter using ethers.js `BrowserProvider`: implements legacy `IWalletAdapter` (call, sendTransaction, getBalance, signTypedData, pollTransactionReceiptWithBackoff, callOnChain). Used for EVM chains with provider + address + chainId.
+## etherAdapter.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| EtherAdapterOptions | interface | Config | provider, wallet.name?, chain.id |
+| EtherAdapter | class | Impl | IWalletAdapter with ethers |
 
-### EtherAdapterOptions (type)
+## EtherAdapter Responsibility
 
-`{ provider: any; wallet?: { name?: string }; chain: { id: number } }`.
+Provides EVM wallet operations for Orderly when using the legacy adapter path: contract reads (call/callOnChain), sendTransaction (encodeFunctionData + sendTransaction), getBalance, signTypedData (eth_signTypedData_v4), and polling for transaction receipt.
 
-### EtherAdapter (class)
+## EtherAdapter Constructor and Key Methods
 
-Implements `IWalletAdapter`. Constructor: `(options: WalletAdapterOptions)` (address, chain.id, provider). Uses `BrowserProvider` and ethers Contract for call/sendTransaction. Decodes errors with ethers-decode-error.
+| Method | Description |
+|--------|-------------|
+| constructor(options: WalletAdapterOptions) | Creates BrowserProvider(options.provider, "any"); stores chainId and address |
+| call(address, method, params, options) | Gets signer, Contract(abi), contract[method](...params); on error parses with errorDecoder |
+| callOnChain(chain, address, method, params, options) | Uses JsonRpcProvider(chain.public_rpc_url), no signer |
+| sendTransaction(contractAddress, method, payload, options) | Encodes function data, sends tx via signer.sendTransaction(tx) |
+| getBalance(userAddress) | provider.getBalance(userAddress) |
+| signTypedData(address, data) | provider.send("eth_signTypedData_v4", [address, data]) |
+| pollTransactionReceiptWithBackoff(txHash, baseInterval, maxInterval, maxRetries) | Exponential backoff until receipt or max retries |
 
-- **call**, **callOnChain** – Contract method call; parseError on failure.
-- **sendTransaction** – encodeFunctionData + signer.sendTransaction.
-- **getBalance(userAddress)**, **parseUnits**, **formatUnits**.
-- **signTypedData(address, data)** – eth_signTypedData_v4.
-- **pollTransactionReceiptWithBackoff(txHash, baseInterval?, maxInterval?, maxRetries?)**.
-- **get chainId / set chainId**, **get addresses**.
-- **on**, **off** – Provider event pass-through.
-- **getContract(address, abi)** – Returns ethers Contract.
+## etherAdapter.ts Dependencies and Call Relationships
 
-## Usage Example
+- **Upstream**: ethers (BrowserProvider, Contract, JsonRpcProvider), ethers-decode-error (ErrorDecoder), ./adapter (IWalletAdapter, WalletAdapterOptions), @orderly.network/types (API).
+- **Downstream**: Apps that still use legacy IWalletAdapter for EVM.
 
-```ts
-import { EtherAdapter } from "@orderly.network/core";
-const adapter = new EtherAdapter({
-  provider: window.ethereum,
-  address: "0x...",
-  chain: { id: 421614 },
-});
+## etherAdapter.ts Errors and Boundaries
+
+- call/sendTransaction/callOnChain: decode raw error via errorDecoder and rethrow DecodedError.
+- pollTransactionReceiptWithBackoff: throws "Transaction did not complete after maximum retries." if no receipt.
+
+## etherAdapter.ts Example
+
+```typescript
+import { EtherAdapter } from "@orderly.network/core/wallet/etherAdapter";
+
+const adapter = new EtherAdapter({ provider, address: "0x...", chain: { id: 421614 } });
 const balance = await adapter.getBalance("0x...");
+const sig = await adapter.signTypedData(address, typedData);
 ```

@@ -1,76 +1,52 @@
-# constant
+# constant.ts
 
-## Overview
+## constant.ts responsibility
 
-Centralizes Solana and LayerZero-related program IDs, PDA seeds, peer addresses (bytes32), destination EIDs, and lookup table / OApp program IDs for dev, QA, staging, and mainnet.
+Exports Solana program IDs (Endpoint, SendLib, Executor, PriceFeed, DVN, etc.), PDA seeds (VaultAuthority, Broker, Token, SolVault), and environment-specific peer addresses and lookup table addresses for dev, QA, staging, and mainnet. Used by helper and solana.util for vault and LayerZero/OApp PDAs and routing.
 
-## Exports
+## constant.ts exports (selected)
 
-### Program IDs (PublicKey)
+| Name | Type | Description |
+|------|------|-------------|
+| ENDPOINT_PROGRAM_ID | PublicKey | Endpoint program |
+| SEND_LIB_PROGRAM_ID | PublicKey | Send library program |
+| EXECUTOR_PROGRAM_ID | PublicKey | Executor program |
+| PRICE_FEED_PROGRAM_ID | PublicKey | Price feed program |
+| RECEIVE_LIB_PROGRAM_ID | PublicKey | Same as SEND_LIB_PROGRAM_ID |
+| TREASURY_PROGRAM_ID | PublicKey | Same as SEND_LIB_PROGRAM_ID |
+| DVN_PROGRAM_ID | PublicKey | DVN program |
+| VAULT_AUTHORITY_SEED | string | "VaultAuthority" |
+| BROKER_SEED | string | "Broker" |
+| TOKEN_SEED | string | "Token" |
+| SOL_VAULT_SEED | string | "SolVault" |
+| DEV_PEER_ADDRESS | Uint8Array | Dev peer (bytes32) |
+| QA_PEER_ADDRESS | Uint8Array | QA peer |
+| STAGING_PEER_ADDRESS | Uint8Array | Staging peer |
+| MAINNET_PEER_ADDRESS | Uint8Array | Mainnet peer |
+| DEV_DST_EID | number | 40200 |
+| MAIN_DST_EID | number | 30213 |
+| DEV_LOOKUP_TABLE_ADDRESS | PublicKey | Dev address lookup table |
+| QA_LOOKUP_TABLE_ADDRESS | PublicKey | QA lookup table |
+| STAGING_LOOKUP_TABLE_ADDRESS | PublicKey | Staging lookup table |
+| MAINNET_LOOKUP_TABLE_ADDRESS | PublicKey | Mainnet lookup table |
+| DEV_OAPP_PROGRAM_ID | PublicKey | Dev OApp program |
+| QA_OAPP_PROGRAM_ID | PublicKey | QA OApp program |
+| STAGING_OAPP_PROGRAM_ID | PublicKey | Staging OApp program |
+| MAINNET_OAPP_PROGRAM_ID | PublicKey | Mainnet OApp program |
 
-| Name | Description |
-| ---- | ----------- |
-| `ENDPOINT_PROGRAM_ID` | LayerZero endpoint program |
-| `SEND_LIB_PROGRAM_ID` | Send library program |
-| `EXECUTOR_PROGRAM_ID` | Executor program |
-| `PRICE_FEED_PROGRAM_ID` | Price feed program |
-| `RECEIVE_LIB_PROGRAM_ID` | Alias of `SEND_LIB_PROGRAM_ID` |
-| `TREASURY_PROGRAM_ID` | Alias of `SEND_LIB_PROGRAM_ID` |
-| `DVN_PROGRAM_ID` | DVN program |
+## constant.ts dependency and usage
 
-### PDA Seeds (string)
+- **Upstream**: `@layerzerolabs/lz-v2-utilities` (addressToBytes32), `@solana/web3.js` (PublicKey).
+- **Downstream**: `helper.ts`, `solana.util.ts` use these for PDAs and network selection.
 
-| Name | Description |
-| ---- | ----------- |
-| `VAULT_AUTHORITY_SEED` | "VaultAuthority" |
-| `BROKER_SEED` | "Broker" |
-| `TOKEN_SEED` | "Token" |
-| `SOL_VAULT_SEED` | "SolVault" |
+## constant.ts Example
 
-### Peer Addresses (bytes32, from `addressToBytes32`)
-
-| Name | Environment |
-| ---- | ----------- |
-| `DEV_PEER_ADDRESS` | Dev |
-| `QA_PEER_ADDRESS` | QA |
-| `STAGING_PEER_ADDRESS` | Staging |
-| `MAINNET_PEER_ADDRESS` | Mainnet |
-
-### Destination EIDs (number)
-
-| Name | Value / use |
-| ---- | ----------- |
-| `DEV_DST_EID` | 40200 |
-| `MAIN_DST_EID` | 30213 |
-
-### Lookup Table Addresses (PublicKey)
-
-| Name | Environment |
-| ---- | ----------- |
-| `DEV_LOOKUP_TABLE_ADDRESS` | Dev |
-| `QA_LOOKUP_TABLE_ADDRESS` | QA |
-| `STAGING_LOOKUP_TABLE_ADDRESS` | Staging |
-| `MAINNET_LOOKUP_TABLE_ADDRESS` | Mainnet |
-
-### OApp Program IDs (PublicKey)
-
-| Name | Environment |
-| ---- | ----------- |
-| `DEV_OAPP_PROGRAM_ID` | Dev |
-| `QA_OAPP_PROGRAM_ID` | QA |
-| `STAGING_OAPP_PROGRAM_ID` | Staging |
-| `MAINNET_OAPP_PROGRAM_ID` | Mainnet |
-
-## Usage Example
-
-```ts
+```typescript
 import {
-  ENDPOINT_PROGRAM_ID,
   VAULT_AUTHORITY_SEED,
   MAINNET_PEER_ADDRESS,
-  getVaultAuthorityPda,
-} from "./constant";
-
-const vaultProgramId = new PublicKey("...");
-const vaultAuthority = getVaultAuthorityPda(vaultProgramId);
+  MAINNET_LOOKUP_TABLE_ADDRESS,
+  MAIN_DST_EID,
+} from "@orderly.network/default-solana-adapter/src/constant";
+// Use with PublicKey.findProgramAddressSync([Buffer.from(VAULT_AUTHORITY_SEED, "utf8")], programId)
 ```

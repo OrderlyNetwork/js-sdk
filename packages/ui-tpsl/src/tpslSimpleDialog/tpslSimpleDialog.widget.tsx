@@ -13,6 +13,7 @@ export const TPSLSimpleDialogWidget: React.FC<{
 }> = (props) => {
   const { close, onComplete, showAdvancedTPSLDialog } = props;
   const state = useTPSLSimpleDialog(props);
+  console.log("------>>>>>TPSLSimpleDialogWidget", state);
   return (
     <TPSLSimpleDialogUI
       {...state}

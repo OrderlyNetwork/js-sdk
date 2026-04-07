@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Text, Divider, Badge } from "@orderly.network/ui";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { SymbolBadge } from "../../positions/desktop/symbolBadge";
 import { LiquidationCellState } from "./liquidationCell.script";
 
 export const LiquidationCell: FC<
@@ -39,9 +40,14 @@ export const Header: FC<LiquidationCellState> = (props) => {
           <Flex direction={"column"} gap={1} itemAlign={"start"}>
             <Text.formatted
               rule={"symbol"}
-              formatString="base-quote"
+              formatString="base"
               size="xs"
               intensity={80}
+              suffix={
+                <SymbolBadge
+                  symbol={props.item.positions_by_perp?.[0]?.symbol || ""}
+                />
+              }
             >
               {props.item.positions_by_perp?.[0]?.symbol || ""}
             </Text.formatted>

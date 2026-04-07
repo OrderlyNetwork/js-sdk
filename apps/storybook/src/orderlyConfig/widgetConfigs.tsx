@@ -1,5 +1,6 @@
 import React from "react";
 import type { OrderlyAppProviderProps } from "@orderly.network/react-app";
+import { marketTabs } from "./marketCategories.tsx";
 
 export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
   scanQRCode: {
@@ -15,4 +16,5 @@ export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
   withdraw: {
     enableWithdrawToExternalWallet: true,
   },
+  // marketTabs,
 };

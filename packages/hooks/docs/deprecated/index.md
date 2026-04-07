@@ -1,11 +1,11 @@
-# deprecated
+# deprecated — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Deprecated hooks kept for backward compatibility.
+Deprecated order entry hook. Replaced by `next/useOrderEntry`. Kept for backward compatibility.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [useOrderEntry](./useOrderEntry.md) | TypeScript | Legacy order entry hook (use next/useOrderEntry instead) |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| useOrderEntry.ts | TS | Deprecated order entry hook | useOrderEntry_deprecated, UseOrderEntryMetaState, OrderParams | [useOrderEntry.md](useOrderEntry.md) |

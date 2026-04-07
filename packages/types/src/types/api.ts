@@ -10,6 +10,15 @@ export enum AnnouncementType {
 }
 
 export declare namespace API {
+  /**
+   * Symbol trading status returned by public symbol APIs.
+   */
+  export type SymbolTradingStatus =
+    | "POST_ONLY"
+    | "ACTIVE"
+    | "REDUCE_ONLY"
+    | "DELISTING";
+
   // /v1/public/auto_convert_threshold
   export interface ConvertThreshold {
     ltv_threshold: number;
@@ -59,6 +68,12 @@ export declare namespace API {
     "24h_volumn": number;
     "24h_volume": number;
     "24h_amount": number;
+    /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
+    display_symbol_name?: string;
+    /** Permissionless listing: broker id; null for non-community-listed symbols */
+    broker_id?: string | null;
+    /** Trading status: POST_ONLY / ACTIVE / REDUCE_ONLY / DELISTING */
+    status?: SymbolTradingStatus;
   }
 
   export interface MarketInfoExt extends MarketInfo {
@@ -107,6 +122,12 @@ export declare namespace API {
     imr_factor: number;
     base_mmr: number;
     base_imr: number;
+    /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
+    display_symbol_name?: string;
+    /** Permissionless listing: broker id; null for non-community-listed symbols */
+    broker_id?: string | null;
+    /** Trading status: POST_ONLY / ACTIVE / REDUCE_ONLY / DELISTING */
+    status?: SymbolTradingStatus;
   }
 
   export interface TokenItem {
@@ -276,6 +297,10 @@ export declare namespace API {
     base_imr: number;
     imr_factor: number;
     deviation_factor: number;
+    /** Permissionless listing: display name e.g. PERP_BTC_USDC, without broker_id suffix */
+    display_symbol_name?: string;
+    /** Permissionless listing: broker id; null for non-community-listed symbols */
+    broker_id?: string | null;
   }
 
   export interface FundingHistory {
@@ -331,6 +356,8 @@ export declare namespace API {
     notional: number;
     unrealPnlROI: number;
     unrealPnlROI_index?: number;
+    total_unsettled_cross_pnl?: number;
+    total_unsettled_isolated_pnl?: number;
   }
 
   export interface Position {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { ChainNamespace } from "@orderly.network/types";
 import {
   ChainIcon,
   Checkbox,
@@ -16,7 +17,6 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { useWallet } from "../hooks/useWallet";
-import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { WalletConnectType, WalletType } from "../types";
 import { PrivyConnectorImagePath } from "../util";
@@ -185,8 +185,11 @@ function PrivyWalletHandleOption({
           <DropdownMenuItem
             className="oui-cursor-pointer oui-px-2 oui-py-1 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast"
             onClick={() => {
-              console.log("export wallet");
-              exportWallet(type);
+              const ns =
+                type === WalletType.EVM
+                  ? ChainNamespace.evm
+                  : ChainNamespace.solana;
+              exportWallet(ns, address);
             }}
           >
             <div>{t("common.export")}</div>

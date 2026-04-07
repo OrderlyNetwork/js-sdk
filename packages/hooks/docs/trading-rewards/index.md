@@ -1,22 +1,21 @@
-# trading-rewards
+# trading-rewards — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Trading rewards: brokers, wallet history, epoch info, claimed state, account reward history, env and types.
+Trading rewards program: epoch info, brokers, current epoch estimate, account/wallet rewards history, claimed state, trading rewards status (component), and env type. Used by apps that show trading rewards or claim flow.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [index](./index.md) | TypeScript | Trading rewards exports |
-| [types](./types.md) | TypeScript | Reward types |
-| [useAllBrokers](./useAllBrokers.md) | TypeScript | All brokers |
-| [useWalletRewardsHistory](./useWalletRewardsHistory.md) | TypeScript | Wallet rewards history |
-| [useTradingRwardsStatus](./useTradingRwardsStatus.md) | TSX | Trading rewards status |
-| [useGetEnv](./useGetEnv.md) | TypeScript | Get env for rewards |
-| [useGetClaimed](./useGetClaimed.md) | TypeScript | Get claimed state |
-| [useEpochInfo](./useEpochInfo.md) | TypeScript | Epoch info |
-| [useCurEpochEstimate](./useCurEpochEstimate.md) | TypeScript | Current epoch estimate |
-| [useAccountRewardHistory](./useAccountRewardHistory.md) | TypeScript | Account reward history |
-| [utils](./utils.md) | TypeScript | Rewards utilities |
-| [abis/contrast](./abis/contrast.md) | TypeScript | Contract ABIs (if applicable) |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| index.ts | TS | Re-exports trading-rewards module | useEpochInfo, useAllBrokers, useCurEpochEstimate, useAccountRewardsHistory, useGetClaimed, useWalletRewardsHistory, useTradingRewardsStatus, useGetEnv, types | [index.md](index.md) |
+| types.ts | TS | Trading rewards types | TWType, etc. | [types.md](types.md) |
+| useEpochInfo.ts | TS | Epoch info hook | useEpochInfo, EpochInfoType, EpochInfoItem | [useEpochInfo.md](useEpochInfo.md) |
+| useAllBrokers.ts | TS | All brokers hook | useAllBrokers, Brokers | [useAllBrokers.md](useAllBrokers.md) |
+| useCurEpochEstimate.ts | TS | Current epoch estimate hook | useCurEpochEstimate, CurrentEpochEstimate | [useCurEpochEstimate.md](useCurEpochEstimate.md) |
+| useAccountRewardHistory.ts | TS | Account reward history hook | useAccountRewardsHistory, AccountRewardsHistoryRow, AccountRewardsHistory | [useAccountRewardHistory.md](useAccountRewardHistory.md) |
+| useGetClaimed.ts | TS | Get claimed hook | useGetClaimed, DistributionId | [useGetClaimed.md](useGetClaimed.md) |
+| useWalletRewardsHistory.ts | TS | Wallet rewards history hook | useWalletRewardsHistory, WalletRewards, WalletRewardsItem, WalletRewardsHistoryReturns | [useWalletRewardsHistory.md](useWalletRewardsHistory.md) |
+| useTradingRwardsStatus.tsx | TSX | Trading rewards status component | useTradingRewardsStatus, EpochStatus, StatusInfo | [useTradingRwardsStatus.md](useTradingRwardsStatus.md) |
+| useGetEnv.ts | TS | Get env hook | useGetEnv, ENVType | [useGetEnv.md](useGetEnv.md) |
+| utils.ts | TS | Trading rewards utils | (utils) | [utils.md](utils.md) |

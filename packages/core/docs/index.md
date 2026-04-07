@@ -1,39 +1,67 @@
-# @orderly.network/core
+# packages/core/src Documentation Index
 
-> Location: `packages/core/src`
+## Directory Overview
 
-## Overview
+`packages/core/src` is the source root of the Orderly frontend core SDK. It provides account, wallet, signing, configuration, assets, and contract capabilities. It does not contain UI or page-level business logic.
 
-Core package for Orderly Network: account management, key storage, signing, wallet adapters (EVM/Solana), config store, and contract addresses. Used by SDK and apps for connection, registration, orderly keys, sub-accounts, and asset operations.
+## Module Responsibility Summary
+
+| Module | Responsibility | Boundary |
+|--------|----------------|----------|
+| Account (account) | Login state, sub-accounts, Orderly Key, register/validate | Does not implement on-chain contract call details |
+| Wallet (wallet) | Multi-chain wallet adapters, EIP-712 signing, contract call/sendTransaction | Does not handle UI connect flow |
+| Signer / Keys (signer, keyStore, keyPair) | Orderly message signing, key storage, Ed25519 key pair | Does not perform wallet-native sign |
+| Config (configStore) | API/WS URLs, brokerId, networkId, env | Read/write config only; no business parsing |
+| Assets (assets) | Balance, approve, deposit, withdraw, internal transfer | Depends on Account and Contract |
+| Contract (contract) | Vault, USDC, verify addresses and ABI by env/networkId | Does not execute on-chain calls |
+
+## Key Entities Table
+
+| Entity | Type | Responsibility | Entry |
+|--------|------|----------------|-------|
+| Account | class | Account state, login, sub-accounts, Orderly Key, settle | `account.ts` |
+| AccountState | interface | Account state fields (status, accountId, subAccounts, etc.) | `account.ts` |
+| WalletAdapter | interface | Wallet adapter contract (EVM/Solana, etc.) | `wallet/walletAdapter.ts` |
+| WalletAdapterManager | class | Switch current WalletAdapter by chainNamespace | `walletAdapterManager.ts` |
+| ConfigStore | interface | Config read/write (get/set/getOr) | `configStore/configStore.ts` |
+| OrderlyKeyStore | interface | Orderly Key get/set, accountId, address | `keyStore.ts` |
+| Signer | interface | Sign MessageFactor; produce orderly-key/timestamp/signature | `signer.ts` |
+| IContract | interface | Contract info by env (getContractInfoByEnv) | `contract.ts` |
+| Assets | class | Balance, approve, deposit, withdraw, internalTransfer | `assets.ts` |
+| SimpleDI | class | Global DI container (register/get) | `di/simpleDI.ts` |
 
 ## Subdirectories
 
-| Directory | Description |
-| --------- | ----------- |
-| [configStore](./configStore/index.md) | Config key types and config store implementations (e.g. `DefaultConfigStore`). |
-| [di](./di/index.md) | Simple dependency injection (`SimpleDI`, `Container`). |
-| [wallet](./wallet/index.md) | Wallet adapter interfaces and implementations (EVM ethers adapter, base adapter). |
+| Directory | Description | Index |
+|-----------|-------------|-------|
+| [di](./di/index.md) | Dependency injection (SimpleDI, Container) | [di/index.md](./di/index.md) |
+| [configStore](./configStore/index.md) | Config storage (ConfigStore, DefaultConfigStore, API_URLS) | [configStore/index.md](./configStore/index.md) |
+| [wallet](./wallet/index.md) | Wallet adapters (WalletAdapter, BaseWalletAdapter, EtherAdapter, etc.) | [wallet/index.md](./wallet/index.md) |
 
-## Top-level files
+## Top-Level Files List
 
-| File | Language | Description |
-| ---- | -------- | ----------- |
-| [package (index.ts)](./package.md) | TypeScript | Main package exports (keyStore, signer, keyPair, helper, contract, Account, configStore, wallet, utils). |
-| [account.ts](./account.md) | TypeScript | `Account` class and `AccountState`: connect/setAddress, createAccount, createOrderlyKey, sub-accounts, settle, events. |
-| [assets.ts](./assets.md) | TypeScript | `Assets` class: deposit, withdraw, approve, getBalance, internalTransfer, convert. |
-| [app.ts](./app.md) | TypeScript | `App` class (minimal state/prepare handling). |
-| [constants.ts](./constants.md) | TypeScript | Contract addresses (USDC, vault, verify) and `EVENT_NAMES` for app events. |
-| [contract.ts](./contract.md) | TypeScript | `IContract`, `BaseContract`, `OrderlyContracts`, `getContractInfoByChainId`. |
-| [helper.ts](./helper.md) | TypeScript | `getMockSigner`, `getDefaultSigner`, `generateRegisterAccountMessage`, `generateAddOrderlyKeyMessage`, `generateSettleMessage`, `generateDexRequestMessage`. |
-| [keyPair.ts](./keyPair.md) | TypeScript | `OrderlyKeyPair`, `BaseOrderlyKeyPair`: Ed25519 key pair, sign, getPublicKey. |
-| [keyStore.ts](./keyStore.md) | TypeScript | `OrderlyKeyStore`, `BaseKeyStore`, `LocalStorageStore`, `MockKeyStore`. |
-| [repository.ts](./repository.md) | TypeScript | `Repository` interface and `LocalStorageRepository`. |
-| [signer.ts](./signer.md) | TypeScript | `Signer`, `BaseSigner`, `MessageFactor`, `SignedMessagePayload`. |
-| [subAccount.ts](./subAccount.md) | TypeScript | `SubAccount` type (id, description, holding). |
-| [types.ts](./types.md) | TypeScript | `Ed25519Keypair` interface. |
-| [utils.ts](./utils.md) | TypeScript | `SignatureDomain`, `getTimestamp`, `parseAccountId`, `parseBrokerHash`, `base64url`, etc. |
-| [version.ts](./version.md) | TypeScript | Package version and `__ORDERLY_VERSION__` on `window`. |
-| [walletAdapterManager.ts](./walletAdapterManager.md) | TypeScript | `WalletAdapterManager`: switch wallet by chain namespace, expose current adapter. |
-| [walletConnector.ts](./walletConnector.md) | TypeScript | `WalletConnector` interface and stub implementations. |
-| [additionalInfoRepository.ts](./additionalInfoRepository.md) | TypeScript | `AdditionalInfoRepository`: save/get/clear wallet additional info by address. |
-| [_wallet.ts](./_wallet.md) | TypeScript | `WalletClient`, `BaseWalletClient`, `SimpleWallet` (legacy wallet client). |
+| File | Language | Responsibility | Entry symbols | Link |
+|------|----------|----------------|---------------|------|
+| index.ts | TS | Package entry; re-exports | see file | [entry.md](./entry.md) |
+| account.ts | TS | Account, sub-accounts, Orderly Key, settle | Account, AccountState | [account.md](./account.md) |
+| app.ts | TS | App-level state (prepare list) | App | [app.md](./app.md) |
+| assets.ts | TS | Assets: balance, approve, deposit, withdraw, internalTransfer | Assets | [assets.md](./assets.md) |
+| constants.ts | TS | Contract address constants, EVENT_NAMES | constants | [constants.md](./constants.md) |
+| contract.ts | TS | Contract info and chainId resolution | IContract, BaseContract, getContractInfoByChainId | [contract.md](./contract.md) |
+| helper.ts | TS | Signing message builders (register, addOrderlyKey, settle, dexRequest) | getMockSigner, getDefaultSigner, generate*Message | [helper.md](./helper.md) |
+| keyStore.ts | TS | Key storage abstraction and LocalStorage/Mock impl | OrderlyKeyStore, BaseKeyStore, LocalStorageStore, MockKeyStore | [keyStore.md](./keyStore.md) |
+| keyPair.ts | TS | Ed25519 key pair (sign, getPublicKey) | OrderlyKeyPair, BaseOrderlyKeyPair | [keyPair.md](./keyPair.md) |
+| signer.ts | TS | Message-factor signing (Orderly API headers) | Signer, BaseSigner, MessageFactor, SignedMessagePayload | [signer.md](./signer.md) |
+| types.ts | TS | Shared types (e.g. Ed25519Keypair) | Ed25519Keypair | [types.md](./types.md) |
+| utils.ts | TS | Hash, base64url, parseAccountId, getTimestamp, etc. | parseAccountId, parseBrokerHash, SignatureDomain, getTimestamp | [utils.md](./utils.md) |
+| version.ts | TS | Package version | default export | [version.md](./version.md) |
+| subAccount.ts | TS | Sub-account type definition | SubAccount | [subAccount.md](./subAccount.md) |
+| repository.ts | TS | Address-keyed key-value store abstraction and LocalStorage impl | Repository, LocalStorageRepository | [repository.md](./repository.md) |
+| additionalInfoRepository.ts | TS | Wallet additional info storage wrapper | AdditionalInfoRepository | [additionalInfoRepository.md](./additionalInfoRepository.md) |
+| walletAdapterManager.ts | TS | Multi-wallet adapter management and switching | WalletAdapterManager | [walletAdapterManager.md](./walletAdapterManager.md) |
+| walletConnector.ts | TS | Wallet connector interface and placeholder impl | WalletConnector, BaseConnector, Blocknative | [walletConnector.md](./walletConnector.md) |
+| _wallet.ts | TS | Legacy WalletClient abstraction (deprecated) | WalletClient, BaseWalletClient, SimpleWallet | [_wallet.md](./_wallet.md) |
+
+## Search Keywords
+
+Orderly, core, account, wallet, signer, keyStore, keyPair, configStore, assets, contract, deposit, withdraw, orderly key, sub account, EIP-712, SignatureDomain, brokerId, networkId, apiBaseUrl, EVM, Solana, ChainNamespace.

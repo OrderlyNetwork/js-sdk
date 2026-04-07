@@ -4,7 +4,7 @@ import { Flex, Statistic } from "@orderly.network/ui";
 
 export interface InfosProps {
   currentMargin: number;
-  liquidationPrice: number;
+  liquidationPrice: number | null;
   effectiveLeverage: number;
 }
 

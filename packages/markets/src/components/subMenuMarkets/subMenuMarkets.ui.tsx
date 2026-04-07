@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   cn,
@@ -10,16 +9,25 @@ import {
   Badge,
   EmptyDataState,
 } from "@orderly.network/ui";
-import { FavoritesIcon } from "../../icons";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import {
   MarketsTabName,
   type FavoriteInstance,
   type SortType,
 } from "../../type";
+import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { MarketsListWidget } from "../marketsList";
+import { useMarketsContext } from "../marketsProvider";
 import { RwaIconTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import {
+  isBuiltInMarketTab,
+  tabKey,
+  resolveTabTitle,
+  useBuiltInTitles,
+  useCustomTabDataFilters,
+} from "../shared/tabUtils";
 import { SymbolDisplay } from "../symbolDisplay";
 
 const LIST_ROW_COMPACT = "oui-h-auto";
@@ -80,8 +88,10 @@ const MarketTabPanel: React.FC<MarketTabPanelProps> = ({
 
 export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
   const { activeTab, onTabChange, className, tabSort, onTabSort } = props;
-  const { t } = useTranslation();
   const { getFavoritesProps } = useFavoritesProps();
+  const builtInTitles = useBuiltInTitles();
+  const { tabs } = useMarketsContext();
+  const tabDataFilters = useCustomTabDataFilters(tabs);
 
   const getColumns = (
     _favorite: FavoriteInstance,
@@ -111,6 +121,79 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
     ];
   };
 
+  const renderBuiltInContent = (tabType: MarketsTabName) => {
+    if (tabType === MarketsTabName.Favorites) {
+      const favProps = getFavoritesProps(MarketsTabName.Favorites) as {
+        dataFilter?: any;
+      };
+
+      return (
+        <MarketTabPanel
+          type={MarketsTabName.Favorites}
+          getColumns={getColumns}
+          dataFilter={favProps?.dataFilter}
+          renderHeader={(favorite) => (
+            <Box className="oui-px-1 oui-my-1">
+              <FavoritesTabWidget favorite={favorite} size="sm" />
+            </Box>
+          )}
+          initialSort={tabSort[MarketsTabName.Favorites]}
+          onSort={onTabSort(MarketsTabName.Favorites)}
+          emptyView={<EmptyDataState />}
+        />
+      );
+    }
+
+    return (
+      <MarketTabPanel
+        type={tabType}
+        getColumns={getColumns}
+        initialSort={tabSort[tabType]}
+        onSort={onTabSort(tabType)}
+      />
+    );
+  };
+
+  const renderCommunityContent = () => {
+    return (
+      <CommunityBrokerTabs
+        storageKey="orderly_submenu_markets_community_sel_sub_tab"
+        classNames={{
+          tabsList: "oui-px-1 oui-pt-1 oui-pb-2",
+          tabsContent: "oui-h-full",
+          scrollIndicator: "oui-mx-1",
+        }}
+        className={cn("oui-subMenuMarkets-community-tabs", cls)}
+        showScrollIndicator
+        renderPanel={(selected) => (
+          <MarketTabPanel
+            type={MarketsTabName.All}
+            getColumns={getColumns}
+            dataFilter={createCommunityBrokerFilter(selected)}
+            initialSort={tabSort[MarketsTabName.Community]}
+            onSort={onTabSort(MarketsTabName.Community)}
+          />
+        )}
+      />
+    );
+  };
+
+  const renderCustomContent = (key: string) => {
+    return (
+      <div className={cls}>
+        <MarketsListWidget
+          type={MarketsTabName.All}
+          getColumns={getColumns}
+          tableClassNames={TABLE_CLASSNAMES}
+          rowClassName={LIST_ROW_COMPACT}
+          dataFilter={(data: any[]) => tabDataFilters[key]?.(data) ?? data}
+          initialSort={tabSort[key as MarketsTabName]}
+          onSort={onTabSort(key as MarketsTabName)}
+        />
+      </div>
+    );
+  };
+
   return (
     <Box
       className={cn(
@@ -137,95 +220,30 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
         className={cn(cls, "oui-subMenuMarkets-tabs oui-my-1.5")}
         showScrollIndicator
       >
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-favorites-trigger",
-            content: "oui-tabs-favorites-content",
-          }}
-          title={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
-          {(() => {
-            const favProps = getFavoritesProps(MarketsTabName.Favorites) as {
-              dataFilter?: any;
-            };
-            return (
-              <MarketTabPanel
-                type={MarketsTabName.Favorites}
-                getColumns={getColumns}
-                dataFilter={favProps?.dataFilter}
-                renderHeader={(favorite) => (
-                  <Box className="oui-px-1 oui-my-1">
-                    <FavoritesTabWidget favorite={favorite} size="sm" />
-                  </Box>
-                )}
-                initialSort={tabSort[MarketsTabName.Favorites]}
-                onSort={onTabSort(MarketsTabName.Favorites)}
-                emptyView={<EmptyDataState />}
-              />
-            );
-          })()}
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-all-trigger",
-            content: "oui-tabs-all-content",
-          }}
-          title={t("common.all")}
-          value={MarketsTabName.All}
-        >
-          <MarketTabPanel
-            type={MarketsTabName.All}
-            getColumns={getColumns}
-            initialSort={tabSort[MarketsTabName.All]}
-            onSort={onTabSort(MarketsTabName.All)}
-          />
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-rwa-trigger",
-            content: "oui-tabs-rwa-content",
-          }}
-          title={<RwaIconTab />}
-          value={MarketsTabName.Rwa}
-        >
-          <MarketTabPanel
-            type={MarketsTabName.Rwa}
-            getColumns={getColumns}
-            initialSort={tabSort[MarketsTabName.Rwa]}
-            onSort={onTabSort(MarketsTabName.Rwa)}
-          />
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-newListings-trigger",
-            content: "oui-tabs-newListings-content",
-          }}
-          title={t("markets.newListings")}
-          value={MarketsTabName.NewListing}
-        >
-          <MarketTabPanel
-            type={MarketsTabName.NewListing}
-            getColumns={getColumns}
-            initialSort={tabSort[MarketsTabName.NewListing]}
-            onSort={onTabSort(MarketsTabName.NewListing)}
-          />
-        </TabPanel>
-        <TabPanel
-          classNames={{
-            trigger: "oui-tabs-recent-trigger",
-            content: "oui-tabs-recent-content",
-          }}
-          title={t("markets.recent")}
-          value={MarketsTabName.Recent}
-        >
-          <MarketTabPanel
-            type={MarketsTabName.Recent}
-            getColumns={getColumns}
-            initialSort={tabSort[MarketsTabName.Recent]}
-            onSort={onTabSort(MarketsTabName.Recent)}
-          />
-        </TabPanel>
+        {tabs?.map((tab, index) => {
+          const key = tabKey(tab, index);
+          const isBuiltIn = isBuiltInMarketTab(tab);
+          const isCommunity =
+            isBuiltIn && tab.type === MarketsTabName.Community;
+
+          return (
+            <TabPanel
+              key={key}
+              classNames={{
+                trigger: `oui-tabs-${key}-trigger`,
+                content: `oui-tabs-${key}-content`,
+              }}
+              title={resolveTabTitle(tab, builtInTitles, <RwaIconTab />)}
+              value={key}
+            >
+              {isCommunity
+                ? renderCommunityContent()
+                : isBuiltIn
+                  ? renderBuiltInContent(tab.type as MarketsTabName)
+                  : renderCustomContent(key)}
+            </TabPanel>
+          );
+        })}
       </Tabs>
     </Box>
   );

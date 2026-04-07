@@ -1,15 +1,29 @@
-# ui
+# ui.ts
 
-## Overview
+## ui.ts responsibility
 
-Generic UI copy: empty state description, message center tooltip, pagination (more pages, rows per page), and date picker label.
+Provides UI-specific copy: empty state description, message center tooltip, pagination labels, and date picker label. Used by shared UI components (tables, pickers, message center).
 
-## Exports
+## ui.ts exports
 
-### `ui`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| ui | object | Key-value map | Keys under "ui.*" |
+| UI | type | typeof ui | Type export |
 
-Object with keys: `ui.empty.description`, `ui.messageCenter.tooltip`, `ui.pagination.morePages`, `ui.pagination.rowsPerPage`, `ui.picker.selectDate`.
+## ui.ts keys
 
-### `UI` (type)
+| Key | Purpose |
+|-----|---------|
+| ui.empty.description | No results found |
+| ui.messageCenter.tooltip | Check recent announcements |
+| ui.pagination.morePages | More pages |
+| ui.pagination.rowsPerPage | Rows per page |
+| ui.picker.selectDate | Select Date |
 
-`typeof ui`.
+## ui.ts Example
+
+```typescript
+t("ui.empty.description");
+t("ui.pagination.rowsPerPage");
+```

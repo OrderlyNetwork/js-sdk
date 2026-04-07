@@ -19,7 +19,7 @@ import {
   findTPSLOrderPriceFromOrder,
   findTPSLFromOrder,
 } from "@orderly.network/hooks";
-import { API, OrderType } from "@orderly.network/types";
+import { API, MarginMode, OrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { useSymbolContext } from "../provider/symbolContext";
@@ -36,7 +36,10 @@ export type TPSLOrderRowContextState = {
   onCancelOrder: (order: API.AlgoOrderExt) => Promise<void>;
   onUpdateOrder: (order: API.AlgoOrderExt, params: any) => Promise<void>;
 
-  getRelatedPosition: (symbol: string) => API.PositionTPSLExt | undefined;
+  getRelatedPosition: (
+    symbol: string,
+    marginMode?: MarginMode,
+  ) => API.PositionTPSLExt | undefined;
 
   position?: API.PositionTPSLExt;
 };
@@ -86,10 +89,13 @@ export const TPSLOrderRowProvider: FC<
   );
 
   const getRelatedPosition = useMemoizedFn(
-    (symbol: string): API.PositionTPSLExt => {
+    (symbol: string, marginMode?: MarginMode): API.PositionTPSLExt => {
       const positions = config.cache.get(positionKey);
       return positions?.data?.rows?.find(
-        (p: API.PositionTPSLExt) => p.symbol === symbol,
+        (p: API.PositionTPSLExt) =>
+          p.symbol === symbol &&
+          (p.margin_mode ?? MarginMode.CROSS) ===
+            (marginMode ?? MarginMode.CROSS),
       );
     },
   );
@@ -109,12 +115,12 @@ export const TPSLOrderRowProvider: FC<
 
   useEffect(() => {
     if ("algo_type" in order || ((order as any)?.reduce_only ?? false)) {
-      const position = getRelatedPosition(order.symbol);
+      const position = getRelatedPosition(order.symbol, order.margin_mode);
       if (position) {
         setPosition(position);
       }
     }
-  }, [order.symbol]);
+  }, [getRelatedPosition, order.margin_mode, order.symbol]);
 
   const memoizedValue = useMemo<TPSLOrderRowContextState>(() => {
     return {

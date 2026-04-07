@@ -25,6 +25,7 @@ export const DesktopSharePnLContent: FC<{
   quoteDp?: number;
   referral?: ReferralType;
   shareOptions: SharePnLOptions;
+  brokerName?: string;
 }> = (props) => {
   const { shareOptions } = props;
   const { t } = useTranslation();
@@ -74,6 +75,7 @@ export const DesktopSharePnLContent: FC<{
     props.baseDp,
     props.quoteDp,
     props.referral,
+    props.brokerName,
   );
 
   const onCopy = () => {

@@ -22,7 +22,7 @@ export type MarketsListFullType = keyof typeof MarketsTypeMap;
 export const useMarketsListFullScript = (
   options: UseMarketsListFullScriptOptions,
 ) => {
-  const { type = "all" } = options;
+  const { type = "all", dataFilter } = options;
   const [loading, setLoading] = useState(true);
   const { setPage, pagination } = usePagination({
     pageSize: 100,
@@ -35,9 +35,10 @@ export const useMarketsListFullScript = (
   const { onSort, getSortedList, sort } = useSort(options.initialSort);
 
   const dataSource = useMemo(() => {
-    const searchList = searchBySymbol(data, searchValue, "base-type");
+    const filtered = typeof dataFilter === "function" ? dataFilter(data) : data;
+    const searchList = searchBySymbol(filtered, searchValue, "base-type");
     return getSortedList(searchList);
-  }, [data, getSortedList, searchValue]);
+  }, [data, dataFilter, getSortedList, searchValue]);
 
   useEffect(() => {
     setLoading(false);

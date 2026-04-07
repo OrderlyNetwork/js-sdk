@@ -33,6 +33,7 @@ export const MobileSharePnLContent: FC<{
   quoteDp?: number;
   referral?: ReferralType;
   shareOptions: SharePnLOptions;
+  brokerName?: string;
 }> = (props) => {
   const { shareOptions } = props;
   const { t } = useTranslation();
@@ -80,6 +81,7 @@ export const MobileSharePnLContent: FC<{
     props.baseDp,
     props.quoteDp,
     props.referral,
+    props.brokerName,
   );
   // console.log("pster data", posterData, props.entity);
 

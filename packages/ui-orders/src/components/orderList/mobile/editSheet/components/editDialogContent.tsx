@@ -4,6 +4,7 @@ import { OrderSide } from "@orderly.network/types";
 import { Badge, Checkbox, Divider, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { parseBadgesFor } from "../../../../../utils/util";
+import { SymbolBadge } from "../../../../symbolBadge";
 import { EditSheetState } from "../editSheet.script";
 
 export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
@@ -27,14 +28,17 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
         intensity={80}
       >{`You agree to edit your ${props.base}-PERP order.`}</Text>
       <Flex gap={2} mb={3} mt={2} justify={"between"}>
-        <Text.formatted
-          rule="symbol"
-          formatString="base-type"
-          size="base"
-          showIcon
-        >
-          {item.symbol}
-        </Text.formatted>
+        <Flex direction="column" itemAlign="start" gap={1} grow>
+          <Text.formatted
+            rule="symbol"
+            formatString="base"
+            size="base"
+            showIcon
+          >
+            {item.symbol}
+          </Text.formatted>
+          <SymbolBadge symbol={item.symbol} />
+        </Flex>
         <Flex direction={"row"} gap={1}>
           {parseBadgesFor(item)?.map((e, index) => (
             <Badge

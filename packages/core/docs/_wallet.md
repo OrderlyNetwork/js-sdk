@@ -1,33 +1,39 @@
-# _wallet
+# _wallet.ts
 
-> Location: `packages/core/src/_wallet.ts`
+## _wallet.ts Responsibility
 
-## Overview
+Defines a legacy wallet client abstraction: `WalletClient` interface (address, getBalance, deposit, connect) and `BaseWalletClient` / `SimpleWallet` with stub or unimplemented methods. Deprecated in favor of the wallet adapter pattern in `wallet/`.
 
-Legacy wallet client abstraction: `WalletClient` interface and `BaseWalletClient` / `SimpleWallet` with stub implementations. Pre-dates the wallet adapter layer in `wallet/`.
+## _wallet.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| WalletClient | interface | Contract | address, getBalance, deposit, connect |
+| BaseWalletClient | abstract class | Base | address getter; abstract getBalance, deposit, connect |
+| SimpleWallet | class | Impl | Extends BaseWalletClient; all methods throw "Method not implemented." |
 
-### WalletClient (interface)
+## WalletClient Responsibility
+
+Legacy interface for a wallet that has an address and can return balance, perform deposit, and connect. Not used by current Account/Assets flow which uses WalletAdapter.
+
+## WalletClient Members
 
 | Member | Type | Description |
-| ------ | ---- | ----------- |
-| address | string (getter) | Wallet address. |
-| getBalance | () => Promise\<any\> | Balance. |
-| deposit | () => Promise\<any\> | Deposit. |
-| connect | () => Promise\<any\> | Connect. |
+|--------|------|-------------|
+| address | getter string | Wallet address |
+| getBalance() | () => Promise<any> | Balance |
+| deposit() | () => Promise<any> | Deposit action |
+| connect() | () => Promise<any> | Connect action |
 
-### BaseWalletClient (abstract class)
+## _wallet.ts Dependencies and Call Relationships
 
-Constructor: `(address: string)`. Implements `address` getter; abstract getBalance, deposit, connect.
+- **Upstream**: None.
+- **Downstream**: Not used in current core/src; deprecated. New code should use wallet/walletAdapter and WalletAdapterManager.
 
-### SimpleWallet (class)
+## _wallet.ts Example
 
-Extends `BaseWalletClient`. All methods throw "Method not implemented."
-
-## Usage Example
-
-```ts
-// Legacy; prefer wallet adapters from wallet/.
-const client = new SimpleWallet("0x...");
+```typescript
+// Deprecated; use WalletAdapter from wallet/ instead.
+import { WalletClient, SimpleWallet } from "@orderly.network/core";
+const client: WalletClient = new SimpleWallet("0x...");
 ```

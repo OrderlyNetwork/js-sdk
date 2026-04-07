@@ -64,21 +64,7 @@ const usePositionMargin = (
     return new Decimal(currentPosition.notional);
   }, [currentPosition]);
 
-  const unSettledPnl = useMemo(() => {
-    if (!currentPosition || !notional || !fundingRates) return null;
-    const fundingRate = fundingRates[currentPosition.symbol];
-    // mark_price * position_qty - cost_position - position_qty * (sum_unitary_funding - last_sum_unitary_funding )
-    // notional = mark_price * position_qty
-    return notional
-      .sub(new Decimal(currentPosition.cost_position))
-      .sub(
-        new Decimal(currentPosition.position_qty).mul(
-          new Decimal(fundingRate.sum_unitary_funding ?? 0).sub(
-            new Decimal(currentPosition.last_sum_unitary_funding),
-          ),
-        ),
-      );
-  }, [notional, currentPosition, fundingRates]);
+  const unSettledPnl = currentPosition?.unsettled_pnl;
 
   const imr = useMemo(() => {
     if (!currentPosition || !symbolsInfo?.[symbol] || !notional) {
@@ -117,13 +103,13 @@ const usePositionMargin = (
     }
     const positionNotional = notional;
     const imrValue = imr;
-    const unsettledPnlValue = unSettledPnl ?? new Decimal(0);
+    const unsettledPnlValue = unSettledPnl ?? 0;
 
     return account.maxReduce({
       isolatedPositionMargin: isolatedMargin,
       positionNotional: positionNotional.toNumber(),
       imr: imrValue.toNumber(),
-      positionUnsettledPnL: unsettledPnlValue.toNumber(),
+      positionUnsettledPnL: unsettledPnlValue,
     });
   }, [
     total_cross_unsettled_pnl,
@@ -196,18 +182,22 @@ const usePositionMargin = (
     const totalCollateral = new Decimal(finalMargin)
       .add(currentPosition.unsettled_pnl ?? 0)
       .toNumber();
-    const liqPrice = positionsLib.liqPrice({
-      markPrice,
-      symbol,
-      totalCollateral,
-      positionQty: currentPosition.position_qty,
-      positions: otherPositions,
-      MMR: currentPositionMMR,
+
+    const sumUnitaryFunding = fundingRates?.[symbol]?.sum_unitary_funding ?? 0;
+
+    const liqPrice = positionsLib.liquidationPriceIsolated({
+      isolatedPositionMargin: finalMargin,
+      costPosition: currentPosition.cost_position ?? 0,
+      positionQty: currentPosition.position_qty ?? 0,
+      sumUnitaryFunding: sumUnitaryFunding,
+      lastSumUnitaryFunding: currentPosition.last_sum_unitary_funding ?? 0,
       baseMMR: currentSymbolInfo.base_mmr ?? 0,
       baseIMR: currentSymbolInfo.base_imr ?? 0,
       IMRFactor: currentPositionIMRFactor,
-      costPosition: currentPosition.cost_position ?? 0,
+      referencePrice: markPrice,
+      leverage: currentPosition.leverage ?? 0,
     });
+
     return liqPrice;
   }, [
     totalUnsettlementPnl,

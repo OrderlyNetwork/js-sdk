@@ -1,46 +1,34 @@
-# home
+# pages/home — Directory Index
 
-## Overview
+## Directory Responsibilities
 
-Markets home page and its sections: header (with symbol/search), data list (full and mobile), and funding (overview/comparison). Uses lazy-loaded widgets and responsive tabs.
+The `home` folder contains the markets home page: tabbed layout (Markets / Funding), markets header widget, markets data list widget, and funding widget. Desktop and mobile layouts are handled inside the page and respective widgets.
+
+## Key Entities
+
+| Entity | File | Role |
+|--------|------|------|
+| MarketsHomePage | page.tsx | Root page component; wraps with MarketsProvider; renders Tabs (Markets / Funding) and lazy-loads header, data list, funding |
+| MarketsHeaderWidget | marketsHeader | Header with search and navigation |
+| MarketsDataListWidget | marketsDataList | Main markets table/list |
+| FundingWidget | funding | Funding overview/comparison content |
 
 ## Files
 
-| File | Language | Description | Link |
-|------|----------|-------------|------|
-| `page.tsx` | React/TSX | `MarketsHomePage` – top-level page with Markets/Funding tabs, desktop/mobile layout | [page.md](./page.md) |
-| `marketsHeader/marketsHeader.widget.tsx` | React/TSX | Header widget (lazy) | - |
-| `marketsHeader/marketsHeader.ui.tsx` | React/TSX | Header UI | - |
-| `marketsHeader/marketsHeader.script.tsx` | TypeScript | Header script | - |
-| `marketsHeader/marketsHeader.mobile.ui.tsx` | React/TSX | Mobile header UI | - |
-| `marketsDataList/marketsDataList.widget.tsx` | React/TSX | Data list widget (lazy) | - |
-| `marketsDataList/marketsDataList.ui.tsx` | React/TSX | Data list UI | - |
-| `marketsDataList/marketsDataList.script.ts` | TypeScript | Data list script | - |
-| `marketsDataList/marketsDataList.mobile.ui.tsx` | React/TSX | Mobile data list UI | - |
-| `funding/funding.widget.tsx` | React/TSX | Funding tab widget (lazy) | - |
-| `funding/funding.ui.tsx` | React/TSX | Funding UI | - |
-| `funding/funding.script.tsx` | TypeScript | Funding script | - |
-| `funding/funding.mobile.ui.tsx` | React/TSX | Mobile funding UI | - |
-
-## Page props (MarketsHomePageProps)
-
-Extends `MarketsProviderProps` plus:
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `className` | string | Optional class for the page container |
-
-`MarketsProvider` receives: `symbol`, `onSymbolChange`, `navProps`, `comparisonProps`.
-
-## Usage example
-
-```tsx
-import { MarketsHomePage } from "@orderly.network/markets";
-
-<MarketsHomePage
-  symbol={symbol}
-  onSymbolChange={setSymbol}
-  navProps={{ leftNav: {...}, routerAdapter }}
-  comparisonProps={{ exchangesName: "Orderly", exchangesIconSrc: "..." }}
-/>
-```
+| File | Language | Responsibility | Link |
+|------|----------|----------------|------|
+| page.tsx | TSX | MarketsHomePage, MarketsDesktopContent, MarketsMobileContent | [page.md](page.md) |
+| marketsHeader.ui.tsx | TSX | MarketsHeader presentational | — |
+| marketsHeader.script.tsx | TSX | useMarketsHeaderScript | — |
+| marketsHeader.widget.tsx | TSX | MarketsHeaderWidget | — |
+| marketsHeader/index.ts | TS | Re-exports | — |
+| marketsDataList.ui.tsx | TSX | MarketsDataList presentational | — |
+| marketsDataList.script.ts | TS | useMarketsDataListScript | — |
+| marketsDataList.widget.tsx | TSX | MarketsDataListWidget | — |
+| marketsDataList.mobile.ui.tsx | TSX | Mobile data list UI | — |
+| marketsDataList/index.ts | TS | Re-exports | — |
+| funding.ui.tsx | TSX | Funding presentational | — |
+| funding.script.tsx | TSX | useFundingScript | — |
+| funding.widget.tsx | TSX | FundingWidget | — |
+| funding.mobile.ui.tsx | TSX | Mobile funding UI | — |
+| funding/index.ts | TS | Re-exports | — |

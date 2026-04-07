@@ -1,74 +1,97 @@
-# account
+# account.ts
 
-> Location: `packages/core/src/account.ts`
+## account.ts Responsibility
 
-## Overview
+Provides the `Account` class and `AccountState` interface for Orderly: wallet connection, account validation, Orderly Key lifecycle, sub-accounts, and settle. Emits status events and drives assets/contract usage.
 
-`Account` manages wallet connection, validation, orderly key lifecycle, sub-accounts, and event emission. It uses `ConfigStore`, `OrderlyKeyStore`, wallet adapters, contract manager, and `Assets`. State is exposed via `stateValue` and events (`EVENT_NAMES`).
+## account.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| AccountState | interface | State shape | Account status, ids, address, sub-accounts |
+| Account | class | Core entity | Account lifecycle, login, keys, sub-accounts, settle |
 
-### AccountState
+## AccountState Responsibility
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| status | AccountStatusEnum | Connection/signing state. |
-| validating | boolean | Whether account is being validated. |
-| accountId | string \| undefined | Active account ID (root or sub). |
-| mainAccountId | string \| undefined | Root account ID. |
-| subAccountId | string \| undefined | Sub-account ID when active. |
-| userId | string \| undefined | User ID from backend. |
-| address | string \| undefined | Wallet address. |
-| chainNamespace | ChainNamespace \| undefined | EVM vs Solana. |
-| isNew | boolean \| undefined | Newly registered account. |
-| connectWallet | { name, chainId } \| undefined | Connected wallet info. |
-| subAccounts | SubAccount[] \| undefined | List of sub-accounts. |
+Describes the current account state: connection status, account/sub-account ids, address, chain, and sub-account list.
 
-### Account (class)
+## AccountState Fields
 
-Main account manager. Constructor: `(configStore, keyStore, walletAdapters, options?)` where `options.contracts` is optional `IContract`.
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| status | AccountStatusEnum | Yes | NotConnected / Connected / NotSignedIn / SignedIn / DisabledTrading / EnableTrading / EnableTradingWithoutConnected |
+| validating | boolean | Yes | Whether account is being validated |
+| accountId | string | No | Active account ID (root or sub) |
+| mainAccountId | string | No | Root account ID |
+| subAccountId | string | No | Active sub-account ID |
+| userId | string | No | User ID from backend |
+| address | string | No | Wallet address |
+| chainNamespace | ChainNamespace | No | EVM / Solana |
+| isNew | boolean | No | Newly registered account |
+| connectWallet | { name, chainId } | No | Connected wallet info |
+| subAccounts | SubAccount[] | No | List of sub-accounts with holding |
 
-#### Main methods
+## Account Responsibility
 
-- **setAddress(address, wallet, options?)** – Set wallet address and wallet context; validates account and orderly key; returns `AccountStatusEnum`.
-- **createAccount()** – Register new account (EIP-712 register message).
-- **createOrderlyKey(expiration?, options?)** – Create and store orderly key; enables trading.
-- **createSubAccount(description?)** – Create sub-account.
-- **updateSubAccount({ subAccountId, description? })** – Update sub-account description.
-- **switchAccount(accountId)** – Switch active account (main or sub).
-- **getSubAccounts()** – Fetch sub-accounts with holdings.
-- **refreshSubAccountBalances()** – Refresh sub-account balances and emit state.
-- **createApiKey(expiration, options?)** / **createSubAccountApiKey(expiration, options)** – Create API key (main or sub).
-- **importOrderlyKey(options)** – Import orderly key by secret/address/chainNamespace.
-- **checkOrderlyKey(address, orderlyKey, accountId)** – Verify and set key for EnableTradingWithoutConnected.
-- **settle(options?)** – Settle main account PnL (on-chain message).
-- **settleSubAccount(options?)** – Settle sub-account PnL.
-- **destroyOrderlyKey()** – Remove orderly key; status → DisabledTrading.
-- **disconnect()** – Clear address and keys; status → NotConnected.
-- **switchChainId(chainId)** – Update chain id in state and adapter.
-- **generateDexRequest(inputs)** – Build DexRequest message for DEX operations.
-- **getAdditionalInfo()** – Wallet additional info from repository.
-- **restoreSubAccount()** – Restore sub-account list and active sub from storage; emit state.
+Manages Orderly account lifecycle: set address/wallet, check existence, register, create/switch Orderly Key, sub-accounts, and settle. Uses ConfigStore, OrderlyKeyStore, WalletAdapterManager, IContract, and Assets.
 
-#### Getters
+## Account Input and Output
 
-- **stateValue** – Current `AccountState`.
-- **accountId**, **mainAccountId**, **subAccountId**, **isSubAccount**, **accountIdHashStr**, **address**, **chainId**, **apiBaseUrl**
-- **signer** – `Signer` (uses keyStore).
-- **walletAdapter** – Current wallet adapter from manager.
-- **on**, **once**, **off** – EventEmitter-style API for `EVENT_NAMES`.
+- **Input**: ConfigStore, OrderlyKeyStore, WalletAdapter[], optional IContract. Later: setAddress(address, wallet), createAccount(), createOrderlyKey(), etc.
+- **Output**: State via stateValue/getters; events via on/once/off; async results (e.g. AccountStatusEnum, createAccount response).
 
-## Usage Example
+## Account Dependencies and Call Relationships
 
-```ts
-const account = new Account(
-  configStore,
-  keyStore,
-  [evmWalletAdapter, solanaWalletAdapter],
-  { contracts: customContract }
-);
-account.on(EVENT_NAMES.statusChanged, (state: AccountState) => { /* ... */ });
-await account.setAddress(address, wallet);
-await account.createAccount();
-await account.createOrderlyKey(365);
+- **Upstream**: App or provider constructs Account with configStore, keyStore, wallet adapters.
+- **Downstream**: ConfigStore, OrderlyKeyStore, WalletAdapterManager, IContract, Assets, Signer (BaseSigner + keyStore), API (fetch via apiBaseUrl).
+- **Related**: SubAccount, AccountState, EVENT_NAMES, WalletAdapter.
+
+## Account Execution and State Flow
+
+1. Constructor: init BaseContract or custom IContract, Assets, WalletAdapterManager, AdditionalInfoRepository; bind statusChanged to update internal state.
+2. setAddress(address, wallet): validate inputs; optionally emit switchAccount; persist address in keyStore; save additionalInfo; emit statusChanged (Connected); switchWallet on WalletAdapterManager; emit validateStart; _checkAccount (exist, orderly key, sub-accounts); emit validateEnd and statusChanged.
+3. _checkAccount: _checkAccountExist → set accountId/mainAccountId or NotSignedIn; get orderlyKey from keyStore; _checkOrderlyKeyState → if ACTIVE and not expired, _restoreSubAccount and EnableTrading else DisabledTrading/cleanKey.
+4. createAccount: _getRegisterationNonce → walletAdapter.generateRegisterAccountMessage → POST /v1/register_account → setAccountId, emit statusChanged (DisabledTrading, isNew).
+5. createOrderlyKey: generateApiKey (generateSecretKey, BaseOrderlyKeyPair, generateAddOrderlyKeyMessage, POST /v1/orderly_key) → keyStore.setKey, emit EnableTrading.
+6. settle: _getSettleNonce → walletAdapter.generateSettleMessage → signData → POST /v1/settle_pnl.
+
+## Account Errors and Boundaries
+
+| Scenario | Condition | Behavior | Handling |
+|----------|-----------|----------|----------|
+| Missing address/wallet/chainId | setAddress | throw SDKError | Caller must pass valid args |
+| Orderly key missing or inactive | _checkAccount | status DisabledTrading | Create/import Orderly Key |
+| Orderly key expired | _checkOrderlyKeyState | cleanKey, DisabledTrading | Re-create key |
+| API failure | _simpleFetch | res.success false, throw or return status | Caller handles errors |
+| mainAccountId undefined | createSubAccount, updateSubAccount, etc. | throw Error | Ensure signed-in main account |
+
+## Account Extension and Modification Points
+
+- **State shape**: Extend `AccountState` and all places that build/assign `nextState`.
+- **Validation**: _checkAccount, _checkOrderlyKeyState, validateOrderlyKeyScope (deprecated).
+- **API base**: _simpleFetch uses configStore apiBaseUrl; change URL or add interceptors there.
+- **Events**: EVENT_NAMES and _ee; add new events or listeners where state changes.
+
+## Account Example
+
+```typescript
+import { Account, AccountState, DefaultConfigStore, LocalStorageStore, EVENT_NAMES } from "@orderly.network/core";
+
+const configStore = new DefaultConfigStore({ networkId: "testnet" });
+const keyStore = new LocalStorageStore("testnet");
+const account = new Account(configStore, keyStore, [evmAdapter, solanaAdapter]);
+
+account.on(EVENT_NAMES.statusChanged, (state: AccountState) => {
+  console.log(state.status, state.accountId);
+});
+
+await account.setAddress("0x...", {
+  provider,
+  chain: { id: 421614, namespace: "EVM" },
+  wallet: { name: "MetaMask" },
+});
+// After validation: state.status may be EnableTrading
+
+await account.createOrderlyKey(365, { scope: "..." });
+await account.settle();
 ```

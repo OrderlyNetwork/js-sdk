@@ -1,5 +1,70 @@
 # @orderly.network/net
 
+## 2.12.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
+## 2.12.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 2.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+
+## 2.11.2-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 2.11.1
+
+### Patch Changes
+
+- publish
+- 2bb6924: publish
+
+## 2.11.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 2.11.0
+
+### Minor Changes
+
+- d8edbeb: publish
+- publish
+
+## 2.11.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 2.10.2
+
+### Patch Changes
+
+- publish
+- 95b95a6: publish
+
+## 2.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.10.1
 
 ### Patch Changes

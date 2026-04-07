@@ -3,6 +3,7 @@ import { usePrivateQuery } from "../../usePrivateQuery";
 
 type UserStatistics = {
   perp_trading_volume_last_24_hours?: number;
+  perp_trading_volume_today?: number;
 };
 
 export const useUserStatistics = () => {
