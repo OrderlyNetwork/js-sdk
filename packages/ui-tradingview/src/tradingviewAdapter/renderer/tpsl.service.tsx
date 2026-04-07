@@ -25,6 +25,7 @@ import type {
 } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import type { ChartPosition } from "../type";
+import { determineTpslType, getPositionSide } from "./tpsl.util";
 
 const DEFAULT_THRESHOLD = 10;
 
@@ -118,16 +119,19 @@ export class TPSLService {
   }
 
   private showTPSLDialog(params: { price: number }) {
-    const pnl = new Decimal(params.price)
-      .minus(this.currentPosition!.open)
-      .mul(this.currentPosition?.balance ?? 0);
+    const markPrice =
+      this.currentPosition?.markPrice ?? this.currentPosition!.open;
+    const positionSide = getPositionSide(this.currentPosition!.balance ?? 0);
+    const type = determineTpslType(params.price, markPrice, positionSide);
+
     modal
       .show("TPSLSimpleDialogId", {
-        title: pnl.gt(0)
-          ? i18n.t("tpsl.TPOrderConfirm")
-          : i18n.t("tpsl.SLOrderConfirm"),
+        title:
+          type === "tp"
+            ? i18n.t("tpsl.TPOrderConfirm")
+            : i18n.t("tpsl.SLOrderConfirm"),
         triggerPrice: params.price,
-        type: pnl.gt(0) ? "tp" : "sl",
+        type: type,
         symbol: this.currentPosition!.symbol,
         onComplete: () => {
           this.clearTPSLElements();
@@ -137,7 +141,7 @@ export class TPSLService {
         },
         showAdvancedTPSLDialog: (options: { qty: number }) => {
           this.showAdvancedTPSLDialog({
-            type: pnl.gt(0) ? "tp" : "sl",
+            type: type,
             triggerPrice: params.price,
             qty: options.qty,
           });
@@ -248,19 +252,25 @@ export class TPSLService {
 
   private drawTPSL(params: { price: number }) {
     const { price } = params;
+    const markPrice =
+      this.currentPosition?.markPrice ?? this.currentPosition!.open;
+    const positionSide = getPositionSide(this.currentPosition!.balance ?? 0);
+    const type = determineTpslType(price, markPrice, positionSide);
+
     const pnl = new Decimal(price)
-      .minus(this.currentPosition!.open)
+      .minus(markPrice)
       .mul(this.currentPosition?.balance ?? 0);
 
     const { tpslOrderLine, verticalLine } = this.ensureTPSLElements({
       price,
       pnl,
     });
-    const direction = pnl.gt(0) ? i18n.t("tpsl.tp") : i18n.t("tpsl.sl");
+    const direction = type === "tp" ? i18n.t("tpsl.tp") : i18n.t("tpsl.sl");
 
-    const color = pnl.gt(0)
-      ? this.broker.colorConfig.upColor
-      : this.broker.colorConfig.downColor;
+    const color =
+      type === "tp"
+        ? this.broker.colorConfig.upColor
+        : this.broker.colorConfig.downColor;
     tpslOrderLine
       ?.setText(`${direction} ${pnl.toDecimalPlaces(2).toNumber()}`)
       .setBodyTextColor(color!)

@@ -356,7 +356,7 @@ const useOrderEntryNextInternal = (
 
       actions.updateOrder(newValues);
     },
-    [calculate, options.symbolInfo, symbolLeverage],
+    [calculate, options.symbolInfo, symbolLeverage, orderEntity],
   );
 
   const validate = (

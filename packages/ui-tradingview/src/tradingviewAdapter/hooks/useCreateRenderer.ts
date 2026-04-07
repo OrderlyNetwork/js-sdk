@@ -96,6 +96,7 @@ export default function useCreateRenderer(
         unrealPnlDecimal: 2,
         basePriceDecimal: 4,
         marginMode: item.margin_mode,
+        markPrice: item.mark_price,
       };
     });
     renderer?.renderPositions(positionList);
