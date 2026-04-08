@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/wallet-connector-privy"] =
-    "2.12.0";
+    "2.12.1-internal-plugin.0";
 }
 
-export default "2.12.0";
+export default "2.12.1-internal-plugin.0";

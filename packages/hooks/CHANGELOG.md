@@ -1,5 +1,21 @@
 # @orderly.network/hooks
 
+## 2.12.1-internal-plugin.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.12.1-internal-plugin.0
+  - @orderly.network/default-evm-adapter@2.12.1-internal-plugin.0
+  - @orderly.network/default-solana-adapter@2.12.1-internal-plugin.0
+  - @orderly.network/net@2.12.1-internal-plugin.0
+  - @orderly.network/perp@4.12.1-internal-plugin.0
+  - @orderly.network/plugin-core@2.8.14-internal-plugin.0
+  - @orderly.network/types@2.12.1-internal-plugin.0
+  - @orderly.network/utils@2.12.1-internal-plugin.0
+  - @orderly.network/web3-provider-ethers@2.12.1-internal-plugin.0
+
 ## 2.12.0
 
 ### Minor Changes

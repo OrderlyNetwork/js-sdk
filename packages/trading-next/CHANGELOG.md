@@ -1,5 +1,33 @@
 # @orderly.network/trading
 
+## 2.10.2-internal-plugin.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.12.1-internal-plugin.0
+  - @orderly.network/core@2.12.1-internal-plugin.0
+  - @orderly.network/hooks@2.12.1-internal-plugin.0
+  - @orderly.network/i18n@2.12.1-internal-plugin.0
+  - @orderly.network/layout-core@1.0.1-internal-plugin.0
+  - @orderly.network/markets@2.12.1-internal-plugin.0
+  - @orderly.network/plugin-core@2.8.14-internal-plugin.0
+  - @orderly.network/portfolio@2.12.1-internal-plugin.0
+  - @orderly.network/types@2.12.1-internal-plugin.0
+  - @orderly.network/ui@2.12.1-internal-plugin.0
+  - @orderly.network/ui-chain-selector@2.12.1-internal-plugin.0
+  - @orderly.network/ui-connector@2.12.1-internal-plugin.0
+  - @orderly.network/ui-leverage@2.12.1-internal-plugin.0
+  - @orderly.network/ui-order-entry@2.12.1-internal-plugin.0
+  - @orderly.network/ui-orders@2.12.1-internal-plugin.0
+  - @orderly.network/ui-positions@2.12.1-internal-plugin.0
+  - @orderly.network/ui-scaffold@2.12.1-internal-plugin.0
+  - @orderly.network/ui-share@2.12.1-internal-plugin.0
+  - @orderly.network/ui-tradingview@2.12.1-internal-plugin.0
+  - @orderly.network/ui-transfer@2.12.1-internal-plugin.0
+  - @orderly.network/utils@2.12.1-internal-plugin.0
+
 ## 2.10.1
 
 ### Patch Changes

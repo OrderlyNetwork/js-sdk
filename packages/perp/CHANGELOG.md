@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.12.1-internal-plugin.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.12.1-internal-plugin.0
+  - @orderly.network/utils@2.12.1-internal-plugin.0
+
 ## 4.12.0
 
 ### Minor Changes
