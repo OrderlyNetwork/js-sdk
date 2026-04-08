@@ -15,9 +15,6 @@ const INTERCEPTOR_TARGETS = [
 // Module types supported
 const MODULE_TYPES = ["page", "component", "hook", "utils", "module"];
 
-// DEX templates
-const DEX_TEMPLATES = ["basic", "advanced"];
-
 const MARKETPLACE_API_BASE_URL =
   process.env.ORDERLY_API_URL || "http://localhost:3030";
 const MARKETPLACE_WEB_BASE_URL =
@@ -33,7 +30,6 @@ const MARKETPLACE_WEB_LOGIN_URL = `${MARKETPLACE_WEB_BASE_URL}/cli/login`;
 module.exports = {
   INTERCEPTOR_TARGETS,
   MODULE_TYPES,
-  DEX_TEMPLATES,
   MARKETPLACE_API_BASE_URL,
   MARKETPLACE_API_PLUGINS_URL,
   MARKETPLACE_API_MY_PLUGINS_URL,

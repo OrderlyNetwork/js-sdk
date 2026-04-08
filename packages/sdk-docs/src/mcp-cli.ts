@@ -5,6 +5,7 @@ import { z } from "zod";
 import { loadBundle } from "./bundle.js";
 import { errResult } from "./envelope.js";
 import { createAiDocsFacade, type AiDocsFacade } from "./facade.js";
+import { parseInstallArgs, runInstallCommand } from "./install/install.command.js";
 
 let facade: AiDocsFacade | null = null;
 let loadError: string | null = null;
@@ -297,7 +298,24 @@ server.registerTool(
   },
 );
 
+/**
+ * Run MCP install flow when user executes:
+ * `orderly-sdk-docs-mcp install ...`
+ */
+async function maybeRunInstallCommand(): Promise<boolean> {
+  const argv = process.argv.slice(2);
+  if (argv[0] !== "install") return false;
+  const options = parseInstallArgs(argv.slice(1));
+  const report = runInstallCommand(options);
+  if (!report.ok) {
+    process.exitCode = 1;
+  }
+  return true;
+}
+
 async function main() {
+  const handledInstall = await maybeRunInstallCommand();
+  if (handledInstall) return;
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
