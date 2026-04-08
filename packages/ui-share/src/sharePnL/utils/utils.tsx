@@ -44,6 +44,7 @@ export function getPnLPosterData(
   baseDp?: number,
   quoteDp?: number,
   referral?: ReferralType,
+  brokerName?: string,
 ) {
   const { t } = useTranslation();
   const { symbol, currency } = processSymbol(position.symbol);
@@ -53,6 +54,11 @@ export function getPnLPosterData(
     side: position.side,
     marginMode: position.marginMode,
   };
+
+  const normalizedBrokerName = brokerName?.trim();
+  if (normalizedBrokerName) {
+    positionData["brokerName"] = normalizedBrokerName;
+  }
 
   switch (pnlType) {
     case "pnl": {
@@ -181,19 +187,18 @@ interface SymbolResult {
 
 function processSymbol(symbol: string): SymbolResult {
   const tokens = symbol.split("_");
-  if (tokens.length !== 3) {
+  if (tokens.length < 3) {
     return {
       symbol: symbol,
       currency: "USDC",
     };
   }
 
-  const [symbol1, symbol2, symbol3] = tokens;
-  const formattedString = `${symbol2}-${symbol1}`;
+  const [, base, quote] = tokens;
 
   return {
-    symbol: formattedString,
-    currency: symbol3 || "USDC",
+    symbol: base,
+    currency: quote || "USDC",
   };
 }
 

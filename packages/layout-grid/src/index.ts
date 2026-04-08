@@ -9,7 +9,7 @@ export type {
   GridLayoutItem,
   GridLayoutRule,
   GridLayoutItemSpec,
-  GridLayoutBreakpointKey,
+  // GridLayoutBreakpointKey,
   GridLayoutPreset,
   GridConfig,
 } from "./types";

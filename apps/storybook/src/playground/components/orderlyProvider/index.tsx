@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router";
 import { OrderlyAppRootProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
 import { RouteProvider } from "../../../components/orderlyProvider/rounteProvider";
 import { WalletConnectorProvider } from "../../../components/orderlyProvider/walletConnectorProvider";
+import { useIsRwaRoute } from "../../../orderlyConfig/hooks/useIsRwaRoute";
 import { useEnvFormUrl } from "../../hooks/useEnvFormUrl";
 import { useNav } from "../../hooks/useNav";
 import { usePageTitle } from "../../hooks/usePageTitle";
@@ -13,6 +14,7 @@ export const OrderlyProvider: React.FC = () => {
   usePageTitle();
   const { networkId, brokerId, brokerName, env, usePrivy, asyncLoadLocale } =
     useEnvFormUrl();
+  const isRwaRoute = useIsRwaRoute();
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
@@ -23,6 +25,7 @@ export const OrderlyProvider: React.FC = () => {
             brokerId={brokerId}
             brokerName={brokerName}
             env={env}
+            isRwaRoute={isRwaRoute}
           >
             <ScrollToTop />
             {/* because the portfolio layout is used in route layout, we need to render the outlet */}

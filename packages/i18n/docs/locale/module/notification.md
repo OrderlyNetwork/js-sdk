@@ -1,15 +1,20 @@
-# notification
+# notification.ts
 
-## Overview
+## notification.ts responsibility
 
-Announcement center: campaign, delisting, general, join now, listing, vote, maintenance (with duration templates), recently updated, title/center title; notification list (close all, delisting/general/maintenance titles, empty).
+Provides announcement and notification copy: campaign, delisting, general, join now, listing, vote, maintenance, maintenance duration (hours/minutes), recently updated, title, center title, close all (with total), delisting/general/maintenance titles, empty announcements.
 
-## Exports
+## notification.ts exports
 
-### `notification`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| notification | object | Key-value map | Keys under "notification.*" |
+| Notification | type | typeof notification | Type export |
 
-Object of keys under `notification.*`: e.g. `notification.campaign`, `notification.maintenanceDuration.hours`, `notification.closeAll`, `notification.empty`.
+## notification.ts Example
 
-### `Notification` (type)
-
-`typeof notification`.
+```typescript
+t("notification.title");
+t("notification.maintenanceDuration.hours");
+t("notification.empty");
+```

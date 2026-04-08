@@ -1,11 +1,19 @@
-# provider
+# provider Directory Index
 
-## Overview
+## Directory Responsibility and Boundary
 
-Defines the Web3 / EIP-1193 abstractions used by the default EVM adapter: the minimal provider type and the full Web3 provider interface (units, signing, RPC, transaction polling).
+- **Responsibility**: Defines the Web3 provider contract used by the default EVM adapter. The adapter delegates all chain RPC, signing, and transaction polling to this interface.
+- **Not responsible for**: Concrete provider implementations (e.g. MetaMask, WalletConnect); those live in consumers or other packages.
 
-## Files
+## Files in This Directory
 
-| File | Language   | Description |
-| ---- | ---------- | ----------- |
-| [web3Provider.interface](./web3Provider.interface.md) | TypeScript | `Eip1193Provider` type and `Web3Provider` interface. |
+| File | Language | Summary | Entry symbols | Link |
+|------|----------|---------|---------------|------|
+| web3Provider.interface.ts | TypeScript | Web3Provider interface and Eip1193Provider type for EVM RPC and EIP-712 signing | Web3Provider, Eip1193Provider | [web3Provider.interface.md](web3Provider.interface.md) |
+
+## Key Entities
+
+| Entity | File | Responsibility | Dependency |
+|--------|------|----------------|------------|
+| Web3Provider | web3Provider.interface.ts | Interface for signTypedData, call, sendTransaction, getBalance, pollTransactionReceiptWithBackoff, etc. | Used by DefaultEVMWalletAdapter |
+| Eip1193Provider | web3Provider.interface.ts | Type for injected provider with `request({ method, params })` | Set on Web3Provider.provider by adapter |

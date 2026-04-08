@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { MarginMode } from "@orderly.network/types";
+import { useBadgeBySymbol } from "../useBadgeBySymbol";
 import { useMutation } from "../useMutation";
 import { usePrivateQuery } from "../usePrivateQuery";
 
@@ -84,17 +85,31 @@ export const useMarginModeBySymbol = (
   const { marginModes, isLoading, error, refresh, updateMarginMode } =
     useMarginModes();
 
-  const marginMode =
-    fallback === null ? marginModes[symbol] : (marginModes[symbol] ?? fallback);
+  // Permissionless-listing is determined by the API-returned `broker_id`.
+  // `brokerName` is for display only (from a separate broker mapping cache)
+  // and must not be used for permission/trading constraint enforcement.
+  const { brokerId } = useBadgeBySymbol(symbol);
+
+  const marginMode = useMemo(() => {
+    // If brokerId exists, it means permissionless-listing.
+    // Permissionless-listing symbols can ONLY be ISOLATED.
+    if (brokerId) return MarginMode.ISOLATED;
+
+    return fallback === null
+      ? marginModes[symbol]
+      : (marginModes[symbol] ?? fallback);
+  }, [brokerId, fallback, marginModes, symbol]);
 
   const update = useCallback(
     async (mode: MarginMode) => {
+      // Enforce permissionless-listing symbols to be ISOLATED.
+      if (brokerId) mode = MarginMode.ISOLATED;
       return updateMarginMode({
         symbol_list: [symbol],
         default_margin_mode: mode,
       });
     },
-    [symbol, updateMarginMode],
+    [brokerId, symbol, updateMarginMode],
   );
 
   return {
@@ -103,5 +118,6 @@ export const useMarginModeBySymbol = (
     error,
     refresh,
     update,
+    isPermissionlessListing: !!brokerId,
   };
 };

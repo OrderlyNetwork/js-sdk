@@ -1,65 +1,58 @@
-# utils
+# utils.ts
 
-> Location: `packages/core/src/utils.ts`
+## utils.ts Responsibility
 
-## Overview
+Provides hashing, encoding, and time utilities for Orderly: parseBrokerHash, parseAccountId, parseTokenHash (keccak256/solidityPackedKeccak256), base64url, getTimestamp (with optional __ORDERLY_timestamp_offset), formatByUnits, isHex, isHexString, getGlobalObject. Re-exports parseUnits from ethers.
 
-Utility functions and types: EIP-712 domain, hashing (broker, account id, token), base64url, timestamp, units formatting, and global object.
+## utils.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| SignatureDomain | type | EIP-712 | { name, version, chainId, verifyingContract } |
+| base64url | function | Encoding | Replaces +/ with -/_ in base64 string |
+| parseBrokerHash | function | Hash | calculateStringHash(brokerId) for broker id |
+| parseAccountId | function | Hash | keccak256(encode(["address","bytes32"], [userAddress, parseBrokerHash(brokerId)])) |
+| parseTokenHash | function | Hash | calculateStringHash(tokenSymbol) |
+| calculateStringHash | function | Hash | solidityPackedKeccak256(["string"], [input]) |
+| formatByUnits | function | Format | formatUnits(amount, unit) |
+| isHex | function | Check | true if string is hex chars |
+| isHexString | function | Check | string starts with "0x" and isHex |
+| getGlobalObject | function | Env | globalThis \|\| self \|\| window \|\| global |
+| getTimestamp | function | Time | Date.now() or Date.now() + __ORDERLY_timestamp_offset |
+| parseUnits | re-export | ethers | From ethers |
 
-### SignatureDomain (type)
+## SignatureDomain Fields
 
-`{ name: string; version: string; chainId: number; verifyingContract: string }`
+| Field | Type | Description |
+|-------|------|-------------|
+| name | string | EIP-712 domain name (e.g. "Orderly") |
+| version | string | Domain version |
+| chainId | number | Chain ID |
+| verifyingContract | string | Contract address for verification |
 
-### base64url(aStr: string): string
+## getTimestamp Behavior
 
-Replaces `+` with `-` and `/` with `_` for URL-safe base64.
+If running in browser and getGlobalObject() has numeric `__ORDERLY_timestamp_offset`, returns Date.now() + that offset; otherwise returns Date.now(). Used to align client time with server for signing.
 
-### parseBrokerHash(brokerId: string)
+## utils.ts Dependencies and Call Relationships
 
-Returns keccak256 hash of broker id (bytes32).
+- **Upstream**: ethers (keccak256, AbiCoder, solidityPackedKeccak256, parseUnits, formatUnits).
+- **Downstream**: Account (parseAccountId for accountIdHashStr; getTimestamp), Assets (parseBrokerHash, parseTokenHash, getTimestamp), helper (getTimestamp, SignatureDomain), signer (base64url, getTimestamp).
 
-### parseAccountId(userAddress: string, brokerId: string)
+## utils.ts Example
 
-Returns keccak256(abi.encode(address, parseBrokerHash(brokerId))).
+```typescript
+import {
+  parseAccountId,
+  parseBrokerHash,
+  getTimestamp,
+  base64url,
+  SignatureDomain,
+  parseUnits,
+} from "@orderly.network/core";
 
-### parseTokenHash(tokenSymbol: string)
-
-Returns keccak256 hash of token symbol.
-
-### calculateStringHash(input: string)
-
-solidityPackedKeccak256(["string"], [input]).
-
-### formatByUnits(amount, unit?)
-
-Formats BigNumberish with ethers formatUnits (default unit "ether").
-
-### isHex(value: string): boolean
-
-True if string is hex characters only.
-
-### isHexString(value: string): boolean
-
-True if string starts with "0x" and is hex.
-
-### getGlobalObject()
-
-Returns globalThis, self, window, or global (throws if none).
-
-### getTimestamp(): number
-
-Returns Date.now() plus optional `__ORDERLY_timestamp_offset` from global (for testing).
-
-### parseUnits
-
-Re-exported from ethers.
-
-## Usage Example
-
-```ts
-import * as utils from "@orderly.network/core";
-const ts = utils.getTimestamp();
-const accountIdHash = utils.parseAccountId(address, brokerId);
+const accountIdHash = parseAccountId("0x...", "orderly");
+const brokerHash = parseBrokerHash("orderly");
+const ts = getTimestamp();
+const domain: SignatureDomain = { name: "Orderly", version: "1", chainId: 421614, verifyingContract: "0x..." };
 ```

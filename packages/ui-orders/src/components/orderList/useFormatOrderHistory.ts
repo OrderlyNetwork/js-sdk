@@ -3,7 +3,7 @@ import { API, AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 
 export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
   const formattedData = useMemo(() => {
-    const _data: API.AlgoOrder[] = [];
+    const _data: API.AlgoOrderExt[] = [];
 
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
@@ -21,8 +21,11 @@ export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
             if (!e.is_activated || !e.trigger_price) {
               continue;
             }
-            (e as any).parent_algo_type = element.algo_type;
-            _data.push(e);
+            _data.push({
+              ...e,
+              parent_algo_type: element.algo_type,
+              margin_mode: e.margin_mode ?? element.margin_mode,
+            } as API.AlgoOrderExt);
           }
         } else {
           // if order is filled then show only the filled order
@@ -33,8 +36,11 @@ export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
               (e.algo_status === OrderStatus.FILLED ||
                 e.algo_status === OrderStatus.PARTIAL_FILLED)
             ) {
-              (e as any).parent_algo_type = element.algo_type;
-              _data.push(e);
+              _data.push({
+                ...e,
+                parent_algo_type: element.algo_type,
+                margin_mode: e.margin_mode ?? element.margin_mode,
+              } as API.AlgoOrderExt);
             }
           }
         }

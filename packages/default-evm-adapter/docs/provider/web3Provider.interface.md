@@ -1,55 +1,96 @@
-# web3Provider.interface
+# web3Provider.interface.ts
 
-## Overview
+## web3Provider.interface.ts Responsibility
 
-Defines the EIP-1193–style provider type and the Web3 provider interface used by `DefaultEVMWalletAdapter` for parsing units, signing typed data, sending RPC and transactions, and polling transaction receipts.
+Defines the Web3 provider contract for the default EVM adapter: `Eip1193Provider` (injected wallet-style provider) and `Web3Provider` (full interface for signing, RPC calls, sending transactions, and polling receipts). Implementations are supplied by consumers; this package only declares the interface.
 
-## Exports
+## web3Provider.interface.ts Exports
 
-### Type: `Eip1193Provider`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| Eip1193Provider | type | Injected provider | Object with `request({ method, params })` |
+| Web3Provider | interface | EVM provider contract | All methods used by DefaultEVMWalletAdapter |
 
-Minimal provider compatible with EIP-1193 (e.g. MetaMask).
+## Eip1193Provider Responsibility
+
+Represents an EIP-1193 compatible provider (e.g. `window.ethereum`). The adapter can assign it to `Web3Provider.provider` so the Web3Provider implementation can forward requests to the wallet.
+
+## Eip1193Provider Shape
 
 | Property | Type | Description |
-| -------- | ---- | ----------- |
-| `request` | `(args: { method: string; params?: any[] }) => Promise<any>` | Generic RPC request. |
+|----------|------|-------------|
+| request | (args: { method: string; params?: any[] }) => Promise\<any\> | Standard EIP-1193 request |
 
-### Interface: `Web3Provider`
+## Web3Provider Responsibility
 
-Full interface expected by the default EVM adapter.
+Interface that the default EVM adapter uses for all chain and signing operations: setter for the underlying EIP-1193 provider, unit parsing/formatting, EIP-712 signing, read call, send transaction, cross-chain call, receipt polling, balance and gas estimation.
 
-#### Setter
+## Web3Provider Input and Output
 
-| Property     | Type                | Description |
-| ------------ | ------------------- | ----------- |
-| `provider`   | `Eip1193Provider`   | Set the underlying EIP-1193 provider. |
+- **Input**: Setter `provider` receives Eip1193Provider; methods receive addresses, method names, params, payloads, options (abi), and optional polling/gas params.
+- **Output**: Promises resolving to signing result (string), read result (any), tx result (any), bigint (balance, gas), or receipt (pollTransactionReceiptWithBackoff).
 
-#### Methods
+## Web3Provider Properties and Methods
 
-| Method | Parameters | Returns | Description |
-| ------ | ---------- | ------- | ----------- |
-| `parseUnits` | `amount: string`, `decimals: number` | `string` | Parse human-readable amount to units. |
-| `formatUnits` | `amount: string`, `decimals: number` | `string` | Format units to human-readable. |
-| `signTypedData` | `address: string`, `toSignatureMessage: any` | `Promise<string>` | EIP-712 sign typed data. |
-| `send` | `method: string`, `params: Array<any> \| Record<string, any>` | `Promise<any>` | Generic RPC send. |
-| `call` | `address`, `method`, `params`, `options?` (abi) | `Promise<any>` | Contract read. |
-| `sendTransaction` | `contractAddress`, `method`, `payload` (from, to?, data, value?), `options` (abi) | `Promise<any>` | Send contract transaction. |
-| `callOnChain` | `chain: API.NetworkInfos`, `address`, `method`, `params`, `options` (abi) | `Promise<any>` | Contract read on another chain. |
-| `getBalance` | `userAddress: string` | `Promise<bigint>` | Native balance. |
-| `pollTransactionReceiptWithBackoff` | `txHash`, `baseInterval?`, `maxInterval?`, `maxRetries?` | `Promise<any>` | Poll receipt with backoff. |
+| Member | Type | Description |
+|--------|------|-------------|
+| set provider(provider) | Eip1193Provider | Set underlying EIP-1193 provider |
+| parseUnits(amount, decimals) | (amount: string, decimals: number) => string | Parse human amount to units |
+| formatUnits(amount, decimals) | (amount: string, decimals: number) => string | Format units to human amount |
+| signTypedData(address, toSignatureMessage) | Promise\<string\> | EIP-712 sign; returns signature |
+| send(method, params) | Promise\<any\> | Generic RPC send |
+| call(address, method, params, options?) | Promise\<any\> | Contract read (options.abi) |
+| sendTransaction(contractAddress, method, payload, options) | Promise\<any\> | Send contract transaction; payload: from, to?, data, value? |
+| callOnChain(chain, address, method, params, options) | Promise\<any\> | Contract read on given chain |
+| pollTransactionReceiptWithBackoff(txHash, baseInterval?, maxInterval?, maxRetries?) | Promise\<any\> | Poll until receipt or retries exhausted |
+| getBalance(userAddress) | Promise\<bigint\> | Native balance |
+| getBalances(addresses) | Promise\<any\> | Balances for multiple addresses |
+| estimateGasFee(contractAddress, method, payload, options) | Promise\<bigint\> | Estimate gas for payload |
 
-## Dependencies
+## Web3Provider Dependencies and Callers
 
-- `@orderly.network/types`: `API.NetworkInfos`
+- **Upstream**: `@orderly.network/types` (API.NetworkInfos for callOnChain).
+- **Downstream**: `DefaultEVMWalletAdapter` (uses every method); `types.ts` (getWalletAdapterFunc return type and EVMAdapterOptions do not reference Web3Provider directly but adapter expects it).
 
-## Usage Example
+## Web3Provider Execution Flow (Typical)
 
-```ts
+1. Consumer creates an implementation of Web3Provider (e.g. wrapping window.ethereum).
+2. Adapter is constructed with that Web3Provider.
+3. On active(config), adapter may set web3Provider.provider = config.provider.
+4. Adapter calls signTypedData for message flows; call/sendTransaction/callOnChain for contract interaction; getBalance/getBalances/estimateGasFee for balance and gas; pollTransactionReceiptWithBackoff after sendTransaction when needed.
+
+## Web3Provider Errors and Boundaries
+
+Not inferable from code: error codes and retry behavior are implementation-defined. Interface does not specify thrown errors; implementers should document their own error and timeout behavior.
+
+## Web3Provider Extension and Modification Points
+
+- New methods would require interface change here and implementation in all Web3Provider implementations; adapter would need to call them if required.
+- Payload and options shapes (e.g. abi, value) are part of the contract; changing them is a breaking change for the adapter and all implementations.
+
+## Web3Provider Example
+
+```typescript
 import type { Web3Provider, Eip1193Provider } from "@orderly.network/default-evm-adapter";
 
 const eip1193: Eip1193Provider = window.ethereum;
-// Implement or use a class that satisfies Web3Provider
-const web3: Web3Provider = new MyWeb3Provider(eip1193);
-const sig = await web3.signTypedData(address, toSignatureMessage);
-const balance = await web3.getBalance(address);
+
+class MyWeb3Provider implements Web3Provider {
+  set provider(p: Eip1193Provider) {
+    this._provider = p;
+  }
+  parseUnits(amount: string, decimals: number) {
+    return /* ... */;
+  }
+  formatUnits(amount: string, decimals: number) {
+    return /* ... */;
+  }
+  async signTypedData(address: string, toSignatureMessage: any) {
+    return this._provider.request({
+      method: "eth_signTypedData_v4",
+      params: [address, toSignatureMessage],
+    });
+  }
+  // ... implement call, sendTransaction, getBalance, etc.
+}
 ```

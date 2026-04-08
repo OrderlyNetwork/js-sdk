@@ -114,6 +114,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         tpsl: true,
         positionTpsl: true,
         trailingStop: true,
+        liquidationPrice: true,
       };
     });
 

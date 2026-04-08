@@ -1,11 +1,11 @@
-# next/positions
+# next/positions — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Position-related next hooks.
+Position close flow: `usePositionClose` hook for closing positions. Used by trading UI to close or reduce positions.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [usePositionClose](./usePositionClose.md) | TypeScript | Position close hook |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| usePositionClose.ts | TS | Hook to close position | usePositionClose | [usePositionClose.md](usePositionClose.md) |

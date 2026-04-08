@@ -1,20 +1,46 @@
-# default-evm-adapter
+# default-evm-adapter Package Documentation Index
 
-## Overview
+## Directory Overview
 
-Default EVM wallet adapter package for Orderly Network. Provides a concrete implementation of `BaseWalletAdapter` for EVM chains: wallet connection, EIP-712 typed data signing (registration, add key, withdraw, internal transfer, settle, DEX request), balance and contract calls via a pluggable Web3 provider.
+`packages/default-evm-adapter/src` is the default EVM wallet adapter for Orderly. It implements `BaseWalletAdapter` for EVM chains: account registration, orderly key management, withdraw, internal transfer, settle, and DEX request message generation with EIP-712 signing via a pluggable Web3 provider.
 
-## Subdirectories
+## Module Responsibility Summary
 
-| Directory   | Description                                      |
-| ----------- | ------------------------------------------------ |
-| [provider](./provider/index.md) | Web3 provider interface and EIP-1193 types. |
+| Responsibility | Description |
+|----------------|-------------|
+| EVM wallet adapter | `DefaultEVMWalletAdapter` extends `BaseWalletAdapter`, uses `Web3Provider` for signing and RPC |
+| EIP-712 message building | Helper functions build typed data for Registration, AddOrderlyKey, Withdraw, InternalTransfer, SettlePnl, DexRequest |
+| Version and entry | Package version exposed as default export and on `window.__ORDERLY_VERSION__`; entry re-exports adapter and types |
+| Provider abstraction | `Web3Provider` interface and `Eip1193Provider` type define the contract for EVM RPC and signing |
 
-## Top-level files
+## Key Entities
 
-| File                 | Language   | Description |
-| -------------------- | ---------- | ----------- |
-| [types](./types.md)  | TypeScript | `EVMAdapterOptions` and `getWalletAdapterFunc` for adapter configuration. |
-| [walletAdapter](./walletAdapter.md) | TypeScript | `DefaultEVMWalletAdapter` class implementing EVM signing and RPC. |
-| [helper](./helper.md) | TypeScript | EIP-712 message builders for registration, add key, withdraw, internal transfer, settle, DEX request. |
-| [version](./version.md) | TypeScript | Package version string and optional `window.__ORDERLY_VERSION__` registration. |
+| Entity | Type | Responsibility | Entry |
+|--------|------|----------------|-------|
+| DefaultEVMWalletAdapter | class | EVM wallet adapter: active/update/deactivate, message generation, call/sendTransaction, getDomain | `walletAdapter.ts` |
+| Web3Provider | interface | Contract for EVM provider: signTypedData, call, sendTransaction, getBalance, pollTransactionReceiptWithBackoff, etc. | `provider/web3Provider.interface.ts` |
+| EVMAdapterOptions | interface | Adapter config: provider, address, chain, contractManager | `types.ts` |
+| Eip1193Provider | type | EIP-1193 `request` method for wallet injection | `provider/web3Provider.interface.ts` |
+| helper message functions | functions | registerAccountMessage, addOrderlyKeyMessage, withdrawMessage, internalTransferMessage, settleMessage, dexRequestMessage | `helper.ts` |
+
+## Subdirectories and Top-Level Files
+
+### Subdirectories
+
+| Directory | Description | Index |
+|-----------|-------------|--------|
+| [provider](provider/index.md) | Web3 provider interface and EIP-1193 type | [provider/index.md](provider/index.md) |
+
+### Top-Level Code Files
+
+| File | Language | Responsibility | Entry symbols | Link |
+|------|----------|-----------------|---------------|------|
+| index.ts | TypeScript | Package entry: re-exports version, DefaultEVMWalletAdapter, Web3Provider | version, DefaultEVMWalletAdapter, Web3Provider | [entry.md](entry.md) |
+| version.ts | TypeScript | Package version string and global `__ORDERLY_VERSION__` | default export | [version.md](version.md) |
+| walletAdapter.ts | TypeScript | DefaultEVMWalletAdapter class | DefaultEVMWalletAdapter | [walletAdapter.md](walletAdapter.md) |
+| helper.ts | TypeScript | EIP-712 message builders for registration, addKey, withdraw, internalTransfer, settle, dexRequest | withdrawMessage, internalTransferMessage, addOrderlyKeyMessage, registerAccountMessage, settleMessage, dexRequestMessage | [helper.md](helper.md) |
+| types.ts | TypeScript | EVM adapter options and getWalletAdapterFunc type | EVMAdapterOptions, getWalletAdapterFunc | [types.md](types.md) |
+
+## Search Keywords
+
+EVM, wallet adapter, Web3Provider, EIP-712, signTypedData, register account, add orderly key, withdraw, internal transfer, settle, dex request, contract manager, chain namespace, default evm adapter

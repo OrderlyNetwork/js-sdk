@@ -1,35 +1,52 @@
-# errors/apiError.ts
+# apiError.ts
 
-## Overview
+## apiError.ts 的职责
 
-Custom error class for API failures. Extends `Error` and adds a numeric `code` property, typically set from the API response body (e.g. on 400 responses).
+定义 API 请求失败时的错误类型，继承 `Error`，增加 `code` 字段，便于调用方区分 HTTP 或业务错误码。
 
-## Exports
+## apiError.ts 对外导出内容
 
-### `ApiError`
+| 名称 | 类型 | 角色 | 说明 |
+|------|------|------|------|
+| ApiError | class | 错误类 | 构造函数 (message, code)；name 为 "ApiError" |
 
-Class extending `Error`.
+## ApiError 的职责
 
-| Member | Type | Description |
-| ------ | ---- | ----------- |
-| `name` | `string` | `"ApiError"` |
-| `message` | `string` | Error message (from constructor) |
-| `code` | `number` | API error code (readonly, from constructor) |
+封装服务端返回的错误信息与错误码，供 `fetch` 模块在 `response.ok === false` 时抛出（如 400 时抛出 ApiError）。
 
-#### Constructor
+## ApiError 的输入与输出
 
-- **Signature**: `new ApiError(message: string, code: number)`
+- 输入：`message: string`，`code: number`
+- 输出：实例，`name === "ApiError"`，可读属性 `message`，只读 `code`
 
-## Usage example
+## ApiError 参数或属性说明
+
+| 名称 | 类型 | 必需 | 说明 |
+|------|------|------|------|
+| message | string | 是 | 错误信息（同 Error.message） |
+| code | number | 是 | 错误码（如 HTTP 或业务 code），只读 |
+
+## ApiError 依赖与调用关系
+
+- 上游调用方：`fetch/index.ts` 在 400 响应时 `throw new ApiError(...)`
+- 下游依赖：无（仅继承 Error）
+
+## ApiError 的错误与边界
+
+| 场景 | 条件 | 表现 | 处理方式 |
+|------|------|------|----------|
+| 非 400 错误 | fetch 中 status !== 400 | 抛出普通 Error，非 ApiError | 调用方可根据 `e instanceof ApiError` 区分 |
+
+## ApiError Example
 
 ```typescript
 import { ApiError } from "@orderly.network/net";
 
 try {
-  await post("/api/...", data);
+  await get("/api/v1/...");
 } catch (e) {
   if (e instanceof ApiError) {
-    console.error(e.message, e.code);
+    console.log(e.message, e.code);
   }
 }
 ```

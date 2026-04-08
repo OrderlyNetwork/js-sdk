@@ -12,67 +12,34 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import { useSplitPresetContext } from "../SplitPresetContext";
 import {
   MarketLeftIcon,
   MarketTopIcon,
   MarketBottomIcon,
   MarketHideIcon,
 } from "./icons";
-import { LayoutIcon } from "./icons/LayoutIcon";
 import { OrderEntryIcon } from "./icons/OrderEntryIcon";
 
 type LayoutPosition = "left" | "right";
 
-// Local copy of market layout positions so this component has no dependency on the trading package.
+// Local copy of market layout positions
 type MarketLayoutPosition = "left" | "top" | "bottom" | "hide";
-
-/**
- * Maps preset ids defined in DEFAULT_SPLIT_PRESETS to a (layout, markets) pair.
- * This keeps the UI state in sync with the underlying split layout presets.
- */
-const PRESET_ID_TO_STATE: Record<
-  string,
-  { layout: LayoutPosition; markets: MarketLayoutPosition }
-> = {
-  "advanced-right_markets-left": { layout: "right", markets: "left" },
-  "advanced-right_markets-top": { layout: "right", markets: "top" },
-  "advanced-right_markets-bottom": { layout: "right", markets: "bottom" },
-  "advanced-right_markets-hide": { layout: "right", markets: "hide" },
-  "advanced-left_markets-left": { layout: "left", markets: "left" },
-  "advanced-left_markets-top": { layout: "left", markets: "top" },
-  "advanced-left_markets-bottom": { layout: "left", markets: "bottom" },
-  "advanced-left_markets-hide": { layout: "left", markets: "hide" },
-};
-
-/**
- * Inverse map from (layout, markets) pair back to preset id.
- * Key format: `${layout}_${markets}`.
- */
-const STATE_TO_PRESET_ID: Record<string, string> = Object.entries(
-  PRESET_ID_TO_STATE,
-).reduce<Record<string, string>>((acc, [id, state]) => {
-  acc[`${state.layout}_${state.markets}`] = id;
-  return acc;
-}, {});
 
 interface LayoutSwitchButtonProps {
   layout: LayoutPosition;
   markets: MarketLayoutPosition;
-  onChange: (next: {
-    layout: LayoutPosition;
-    markets: MarketLayoutPosition;
-  }) => void;
+  onLayoutChange: (layout: LayoutPosition) => void;
+  onMarketChange: (markets: MarketLayoutPosition) => void;
 }
 
 /**
  * Dropdown UI for switching between advanced left/right and markets left/top/bottom/hide.
- * This component is purely presentational; it delegates state changes via the onChange callback.
  */
 const LayoutSwitchButton: React.FC<LayoutSwitchButtonProps> = ({
   layout,
   markets,
-  onChange,
+  onLayoutChange,
+  onMarketChange,
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
@@ -84,7 +51,7 @@ const LayoutSwitchButton: React.FC<LayoutSwitchButtonProps> = ({
       direction="column"
       gapY={2}
       onClick={() => {
-        onChange({ layout: position, markets });
+        onLayoutChange(position);
         setOpen(false);
       }}
       className="oui-group"
@@ -143,7 +110,7 @@ const LayoutSwitchButton: React.FC<LayoutSwitchButtonProps> = ({
         direction="column"
         gapY={2}
         onClick={() => {
-          onChange({ layout, markets: position });
+          onMarketChange(position);
           setOpen(false);
         }}
         onMouseEnter={() => setHoveredMarket(position)}
@@ -259,34 +226,33 @@ const LayoutSwitchButton: React.FC<LayoutSwitchButtonProps> = ({
 };
 
 /**
- * Symbol bar trailing control that bridges the layout switch UI and split layout presets.
- * Reads the selected preset from context and updates it when the user chooses a new combination.
+ * Symbol bar trailing control for layout switching.
+ * Note: In the fixed layout approach, this component needs to be connected to
+ * the layout state management (e.g., via context or props).
+ * This is a simplified version that shows the UI but requires external state management.
  */
-export const SymbolBarLayoutSwitcher: React.FC = () => {
-  const ctx = useSplitPresetContext();
-
-  if (!ctx) return null;
-
-  const currentState =
-    PRESET_ID_TO_STATE[ctx.selectedPresetId] ??
-    PRESET_ID_TO_STATE["advanced-right_markets-left"];
-
-  const handleChange = (next: {
-    layout: LayoutPosition;
-    markets: MarketLayoutPosition;
-  }) => {
-    const key = `${next.layout}_${next.markets}`;
-    const presetId = STATE_TO_PRESET_ID[key];
-    if (presetId && presetId !== ctx.selectedPresetId) {
-      ctx.setSelectedPresetId(presetId);
-    }
-  };
+export const SymbolBarLayoutSwitcher: React.FC<{
+  layout?: LayoutPosition;
+  marketLayout?: MarketLayoutPosition;
+  onLayoutChange?: (layout: LayoutPosition) => void;
+  onMarketLayoutChange?: (markets: MarketLayoutPosition) => void;
+}> = ({
+  layout = "right",
+  marketLayout = "left",
+  onLayoutChange,
+  onMarketLayoutChange,
+}) => {
+  if (!onLayoutChange || !onMarketLayoutChange) {
+    // When no callbacks provided, don't render
+    return <></>;
+  }
 
   return (
     <LayoutSwitchButton
-      layout={currentState.layout}
-      markets={currentState.markets}
-      onChange={handleChange}
+      layout={layout}
+      markets={marketLayout}
+      onLayoutChange={onLayoutChange}
+      onMarketChange={onMarketLayoutChange}
     />
   );
 };

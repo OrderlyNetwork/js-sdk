@@ -10,6 +10,9 @@
       ],
       "@orderly.network/layout-core": [
         "../layout-core/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
       ]
     }
   }

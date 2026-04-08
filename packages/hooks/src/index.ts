@@ -1,5 +1,18 @@
 // import "./utils/dev";
 
+export {
+  MarketCategoriesConfigProvider,
+  useMarketCategoriesConfig,
+  type BuiltInMarketTab,
+  type CustomMarketTab,
+  type MarketBuiltInTabType,
+  type MarketTabConfig,
+  type MarketCategoryConfig,
+  type MarketCategoryComponentKey,
+  type MarketCategoryContext,
+  type MarketCategoriesConfigProviderProps,
+} from "./marketCategories";
+
 export { default as version } from "./version";
 export { fetcher, noCacheConfig, type useQueryOptions } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
@@ -85,6 +98,12 @@ export * as swr from "swr";
 export * from "use-debounce";
 
 export { useMediaQuery } from "./useMediaQuery";
+export {
+  formatSymbolWithBroker,
+  useBadgeBySymbol,
+  useSymbolWithBroker,
+  type UseBadgeBySymbolReturn,
+} from "./useBadgeBySymbol";
 
 export { usePoster } from "./usePoster";
 export { DefaultLayoutConfig } from "./services/painter/layout.config";

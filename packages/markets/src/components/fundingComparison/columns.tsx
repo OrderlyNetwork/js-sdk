@@ -28,7 +28,7 @@ export const useFundingColumns = () => {
       {
         title: t("markets.column.market"),
         dataIndex: "symbol",
-        width: 150,
+        width: 220,
         onSort: true,
         className: isMobile ? "oui-pl-0" : undefined,
         render: (value, record) => {

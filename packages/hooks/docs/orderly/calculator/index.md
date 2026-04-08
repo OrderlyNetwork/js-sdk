@@ -1,22 +1,21 @@
-# orderly/calculator
+# orderly/calculator — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Calculator service, sharded scheduler, portfolio, positions, orders, asset calculator, market, order entry, base calculator, mark/index price calculators.
+Calculator service and helpers: portfolio, positions, orders, order entry, market, index price, mark price, sharded scheduler, calculator context. Used for PnL, margin, and order entry calculations.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [calculatorService](./calculatorService.md) | TypeScript | Calculator service |
-| [calculatorContext](./calculatorContext.md) | TypeScript | Calculator context |
-| [shardedScheduler](./shardedScheduler.md) | TypeScript | Sharded scheduler |
-| [portfolio](./portfolio.md) | TypeScript | Portfolio calculator |
-| [positions](./positions.md) | TypeScript | Positions calculator |
-| [orders](./orders.md) | TypeScript | Orders calculator |
-| [assetCalculator](./assetCalculator.md) | TypeScript | Asset calculator |
-| [market](./market.md) | TypeScript | Market calculator |
-| [orderEntry](./orderEntry.md) | TypeScript | Order entry calculator |
-| [markPrice](./markPrice.md) | TypeScript | Mark price calculator |
-| [indexPrice](./indexPrice.md) | TypeScript | Index price calculator |
-| [baseCalculator](./baseCalculator.md) | TypeScript | Base calculator |
+| File | Language | Summary | Link |
+|------|----------|---------|------|
+| calculatorService.ts | TS | Calculator service | [calculatorService.md](calculatorService.md) |
+| calculatorContext.ts | TS | Calculator context | [calculatorContext.md](calculatorContext.md) |
+| portfolio.ts | TS | Portfolio calculations | [portfolio.md](portfolio.md) |
+| positions.ts | TS | Position calculations | [positions.md](positions.md) |
+| orders.ts | TS | Order calculations | [orders.md](orders.md) |
+| orderEntry.ts | TS | Order entry calculations | [orderEntry.md](orderEntry.md) |
+| market.ts | TS | Market calculations | [market.md](market.md) |
+| indexPrice.ts | TS | Index price calculations | [indexPrice.md](indexPrice.md) |
+| markPrice.ts | TS | Mark price calculations | [markPrice.md](markPrice.md) |
+| baseCalculator.ts | TS | Base calculator | [baseCalculator.md](baseCalculator.md) |
+| shardedScheduler.ts | TS | Sharded scheduler | [shardedScheduler.md](shardedScheduler.md) |

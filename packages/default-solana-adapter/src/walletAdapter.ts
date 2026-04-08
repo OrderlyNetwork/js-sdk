@@ -1,5 +1,5 @@
 import * as ed from "@noble/ed25519";
-import { getAccount, getMultipleAccounts } from "@solana/spl-token";
+import { getAccount } from "@solana/spl-token";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   clusterApiUrl,
@@ -385,12 +385,24 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
         getTokenAccounts(tokenPublicKey, userPublicKey),
       );
 
-      const tokenAmount = await getMultipleAccounts(
-        connection,
-        userTokenAccounts,
-        "confirmed",
+      // Fetch each token account individually to handle missing accounts gracefully
+      splTokenBalances = await Promise.all(
+        userTokenAccounts.map(async (account) => {
+          try {
+            const tokenAccount = await getAccount(
+              connection,
+              account,
+              "confirmed",
+            );
+            return tokenAccount.amount;
+          } catch (err: any) {
+            if (err?.name === "TokenAccountNotFoundError") {
+              return 0n;
+            }
+            throw err;
+          }
+        }),
       );
-      splTokenBalances = tokenAmount.map((item) => item.amount);
     }
 
     // Combine results in original order

@@ -1,23 +1,10 @@
 import type React from "react";
-import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 
 /**
- * Desktop layout props for split layout.
- * This is a local type definition to avoid circular dependency with @orderly.network/trading.
- * Contains the properties used by split layout components.
+ * Same props as `Trading.Layout.Desktop` in @orderly.network/trading-next so interceptors
+ * and `<Original />` stay assignable (structural duplicates break on `ComponentType` variance).
  */
-export interface DesktopLayoutProps {
-  className?: string;
-  isSM?: boolean;
-  tradingViewFullScreen?: boolean;
-  showPositionIcon?: boolean;
-  sortableItems?: string[];
-  setSortableItems?: (items: string[]) => void;
-  symbol?: string;
-  layoutStrategy?: LayoutStrategy;
-  storageKey?: string;
-  [key: string]: unknown;
-}
+export type { DesktopLayoutProps } from "@orderly.network/trading-next";
 
 /** Breakpoint keys for responsive split layout (viewport-based). */
 export type SplitLayoutBreakpointKey = "lg" | "md" | "sm" | "xs";
@@ -45,13 +32,12 @@ export interface SplitLayoutChildConstraints {
 
 /**
  * Split layout node: single panel, split container, or sort container.
- * Used for both runtime rendering and preset rules.
- * Panel identifier is kept as `id` (same as rule) with no conversion.
+ * Panel identifier is kept as `id` with no conversion.
  */
 export type SplitLayoutNode =
   | ({
       type: "panel";
-      /** Panel ID; same key as in rule (no id→panelId conversion). */
+      /** Panel ID */
       id: string;
       /** Optional class name applied to the outer panel wrapper. */
       className?: string;
@@ -61,10 +47,8 @@ export type SplitLayoutNode =
   | ({
       type: "split";
       orientation: "horizontal" | "vertical";
-      /** Children; each has size/minSize/maxSize/disabled. sizes derived from children. */
+      /** Children; each has size/minSize/maxSize/disabled. */
       children: SplitLayoutNode[];
-      /** @deprecated Legacy: sizes on split. Migrated to children[].size on read. */
-      sizes?: string[];
       /** Size of this split when used as a child (e.g. "30%", "auto"). Used by parent SplitLayout for ResizablePanel. */
       size?: string;
       /** Optional class name applied to the ResizablePanelGroup wrapper. */
@@ -86,29 +70,6 @@ export type SplitLayoutNode =
       style?: React.CSSProperties;
     } & Partial<SplitLayoutChildConstraints>);
 
-/**
- * Rule tree node: same structure as SplitLayoutNode, used for preset rules.
- * Runtime layout keeps the same `id` (no conversion).
- */
-export type SplitLayoutRuleNode = SplitLayoutNode;
-
-/**
- * Layout rule: one tree per breakpoint; missing breakpoints fall back to default.
- */
-export interface SplitLayoutRule {
-  lg?: SplitLayoutRuleNode;
-  md?: SplitLayoutRuleNode;
-  sm?: SplitLayoutRuleNode;
-  xs?: SplitLayoutRuleNode;
-}
-
-/** One named preset for user selection (like grid). */
-export interface SplitLayoutPreset {
-  id: string;
-  name: string;
-  rule: SplitLayoutRule;
-}
-
 /** Breakpoint width map (min width for each key). */
 export interface SplitLayoutBreakpoints {
   lg: number;
@@ -117,12 +78,18 @@ export interface SplitLayoutBreakpoints {
   xs: number;
 }
 
+/** Plugin classNames applied to panel group, panel, and handle. */
+export type SplitLayoutClassNames = {
+  panelGroup?: string;
+  panel?: string;
+  handle?: string;
+};
+
 /**
- * Split layout model (responsive only).
- * layouts: one tree per breakpoint; renderer picks by current viewport width.
- * Aligned with GridLayoutModel.layouts naming.
+ * Split layout model for backward compatibility.
+ * In the fixed layout approach, this is less relevant but kept for plugin API compatibility.
  */
-export interface SplitLayoutModel extends LayoutModel {
+export interface SplitLayoutModel {
   layouts: {
     lg: SplitLayoutNode;
     md: SplitLayoutNode;

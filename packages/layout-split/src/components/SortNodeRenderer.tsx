@@ -1,23 +1,7 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import React, { useCallback } from "react";
+import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
+import { DragDropProvider } from "@dnd-kit/react";
+import { useSortable, isSortable } from "@dnd-kit/react/sortable";
 import { cn } from "@orderly.network/ui";
 import { useSplitLayoutConfig } from "../SplitLayoutConfigContext";
 import { useSplitPresetContext } from "../SplitPresetContext";
@@ -30,17 +14,9 @@ import { SplitNodeRenderer } from "./SplitNodeRenderer";
 
 const DEFAULT_SHOW_INDICATOR = true;
 
-/** Props for sortable child wrapper (needs sort context props for nested sort/split). */
-interface SortableSortChildProps {
-  id: string;
-  child: SplitLayoutNode;
-  path: number[];
-  rootNode: SplitLayoutNode;
-  /** When true, show drag handle on panel children; from SplitSortIndicatorContext. */
-  showIndicator: boolean;
-}
-
-/** Drag handle icon (matches SortablePanel). */
+/**
+ * Drag handle icon used for sortable panels.
+ */
 function IndicatorIcon(
   props: React.SVGProps<SVGSVGElement>,
 ): React.ReactElement {
@@ -60,9 +36,17 @@ function IndicatorIcon(
   );
 }
 
+interface SortableSortChildProps {
+  id: string;
+  child: SplitLayoutNode;
+  path: number[];
+  rootNode: SplitLayoutNode;
+  showIndicator: boolean;
+  index: number;
+}
+
 /**
- * Wraps a panel in a sortable drag handle for use inside a sort container.
- * Single wrapper div only: panel className is applied once by SplitNodeRenderer, not here.
+ * Wraps a split layout child in a sortable wrapper using the new dnd-kit React API.
  */
 function SortableSortChild({
   id,
@@ -70,77 +54,26 @@ function SortableSortChild({
   showIndicator,
   path,
   rootNode,
+  index,
 }: SortableSortChildProps): React.ReactElement {
-  const nodeRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = React.useState<{
-    width: number;
-    height: number;
-  } | null>(null);
-
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
-
-  useEffect(() => {
-    if (isDragging && nodeRef.current && !dimensions) {
-      const rect = nodeRef.current.getBoundingClientRect();
-      setDimensions({ width: rect.width, height: rect.height });
-    } else if (!isDragging && dimensions) {
-      setDimensions(null);
-    }
-  }, [isDragging, dimensions]);
-
-  const combinedRef = (node: HTMLDivElement | null) => {
-    setNodeRef(node);
-    (nodeRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-  };
-
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  const { ref, handleRef, isDragging } = useSortable({
+    id,
+    index,
+  });
 
   const showHandle = showIndicator && child.type === "panel";
 
-  /** Placeholder: minimal styling, no panel className (avoid duplication). */
-  if (isDragging && dimensions) {
-    return (
-      <div
-        className="oui-relative oui-rounded-2xl"
-        style={{
-          ...style,
-          width: dimensions.width,
-          height: dimensions.height,
-          minWidth: dimensions.width,
-          minHeight: dimensions.height,
-          maxWidth: dimensions.width,
-          maxHeight: dimensions.height,
-          border: "1px solid rgb(var(--oui-color-primary))",
-          backgroundImage: `repeating-linear-gradient(135deg, rgb(var(--oui-color-base-6)) 0px, rgb(var(--oui-color-base-6)) 4px, transparent 4px, transparent 8px)`,
-        }}
-      />
-    );
-  }
-
   return (
     <div
-      ref={combinedRef}
-      style={style}
+      ref={ref}
       className={cn("oui-relative", isDragging && "oui-opacity-50")}
     >
       {showHandle && (
         <button
-          {...attributes}
-          {...listeners}
           className="oui-absolute oui-right-0 oui-top-4 oui-cursor-move oui-py-1"
           style={{ touchAction: "none" }}
-          ref={setActivatorNodeRef}
+          // Connect drag handle explicitly so dragging from the handle starts the sortable interaction.
+          ref={handleRef}
         >
           <IndicatorIcon
             className={cn(
@@ -165,7 +98,7 @@ export interface SortNodeRendererProps {
 }
 
 /**
- * Renders a sort container: vertical or horizontal list of sortable panels.
+ * Renders a sort container using the latest dnd-kit React API.
  */
 export function SortNodeRenderer({
   node,
@@ -183,18 +116,26 @@ export function SortNodeRenderer({
   const isVertical = orientation === "vertical";
 
   const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
-      const oldIndex = items.indexOf(active.id as string);
-      const newIndex = items.indexOf(over.id as string);
-      if (oldIndex === -1 || newIndex === -1) return;
+    (event: unknown) => {
+      const anyEvent = event as {
+        operation?: { source: unknown };
+        canceled?: boolean;
+      };
 
-      const newOrder = arrayMove(
-        children as SplitLayoutNode[],
-        oldIndex,
-        newIndex,
-      ) as SplitLayoutNode[];
+      if (!anyEvent.operation || anyEvent.canceled) return;
+
+      const { source } = anyEvent.operation as {
+        source: unknown;
+      };
+
+      if (!isSortable(source)) return;
+
+      const { initialIndex, index } = source;
+      if (initialIndex === index) return;
+
+      const newOrder = [...(children as SplitLayoutNode[])];
+      const [removed] = newOrder.splice(initialIndex, 1);
+      newOrder.splice(index, 0, removed);
 
       const updatedRoot = updateOrderAtPath(rootNode, path, newOrder);
 
@@ -206,52 +147,38 @@ export function SortNodeRenderer({
         },
       });
     },
-    [children, items, path, rootNode, breakpoint, layout, onLayoutChange],
+    [children, path, rootNode, breakpoint, layout, onLayoutChange],
   );
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  const strategy = isVertical
-    ? verticalListSortingStrategy
-    : horizontalListSortingStrategy;
 
   return (
     <div>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
+      <DragDropProvider
         onDragEnd={handleDragEnd}
-        modifiers={isVertical ? [restrictToVerticalAxis] : []}
+        modifiers={(defaults) => [...defaults, RestrictToVerticalAxis]}
       >
-        <SortableContext items={items} strategy={strategy}>
-          <div
-            className={cn(
-              isVertical
-                ? "oui-flex oui-w-full oui-flex-col oui-gap-2"
-                : "oui-flex oui-w-full oui-flex-row oui-gap-2",
-              node.className,
-              classNames?.panel,
-            )}
-            style={node.style}
-          >
-            {children.map((child: SplitLayoutNode, index: number) => (
-              <SortableSortChild
-                key={getSortableIdForChild(child, path, index)}
-                id={getSortableIdForChild(child, path, index)}
-                child={child}
-                showIndicator={showIndicator}
-                path={[...path, index]}
-                rootNode={rootNode}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+        <div
+          className={cn(
+            isVertical
+              ? "oui-flex oui-w-full oui-flex-col oui-gap-2"
+              : "oui-flex oui-w-full oui-flex-row oui-gap-2",
+            node.className,
+            classNames?.panel,
+          )}
+          style={node.style}
+        >
+          {children.map((child: SplitLayoutNode, index: number) => (
+            <SortableSortChild
+              key={items[index]}
+              id={items[index]}
+              child={child}
+              showIndicator={showIndicator}
+              path={[...path, index]}
+              rootNode={rootNode}
+              index={index}
+            />
+          ))}
+        </div>
+      </DragDropProvider>
     </div>
   );
 }

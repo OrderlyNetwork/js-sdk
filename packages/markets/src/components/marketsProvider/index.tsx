@@ -9,12 +9,14 @@ import {
 } from "react";
 import type { API, RouterAdapter } from "@orderly.network/types";
 import { LeftNavProps } from "@orderly.network/ui-scaffold";
+import type { MarketTabConfig } from "../../type";
 
 type MarketsContextState = {
   symbol?: string;
   searchValue?: string;
   onSearchValueChange?: (searchValue: string) => void;
   clearSearchValue?: () => void;
+  tabs?: MarketTabConfig[];
 } & MarketsProviderProps;
 
 export const MarketsContext = createContext<MarketsContextState>({});
@@ -43,12 +45,13 @@ export type MarketsProviderProps = {
      */
     exchangesIconSrc?: string;
   };
+  tabs?: MarketTabConfig[];
 };
 
 export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (
   props,
 ) => {
-  const { symbol, comparisonProps, children, onSymbolChange } = props;
+  const { symbol, comparisonProps, children, onSymbolChange, tabs } = props;
   const [searchValue, setSearchValue] = useState("");
 
   const clearSearchValue = useCallback(() => {
@@ -63,8 +66,16 @@ export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (
       symbol: symbol,
       onSymbolChange: onSymbolChange,
       comparisonProps: comparisonProps,
+      tabs: tabs,
     };
-  }, [searchValue, symbol, onSymbolChange, setSearchValue, comparisonProps]);
+  }, [
+    searchValue,
+    symbol,
+    onSymbolChange,
+    setSearchValue,
+    comparisonProps,
+    tabs,
+  ]);
 
   return (
     <MarketsContext.Provider value={memoizedValue}>

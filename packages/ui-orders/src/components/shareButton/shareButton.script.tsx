@@ -1,5 +1,9 @@
 import { useMemo } from "react";
-import { useReferralInfo, useLeverageBySymbol } from "@orderly.network/hooks";
+import {
+  useBadgeBySymbol,
+  useReferralInfo,
+  useLeverageBySymbol,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
@@ -15,6 +19,7 @@ export const useShareButtonScript = (props: {
   const { sharePnLConfig, order, iconSize } = props;
   const { t } = useTranslation();
   const { getFirstRefCode } = useReferralInfo();
+  const { brokerNameRaw } = useBadgeBySymbol(order.symbol);
   const refCode = useMemo(() => {
     return getFirstRefCode()?.code;
   }, [getFirstRefCode]);
@@ -37,6 +42,7 @@ export const useShareButtonScript = (props: {
         refCode,
         leverage,
         ...sharePnLConfig,
+        brokerName: sharePnLConfig?.brokerName ?? brokerNameRaw,
       },
     });
   };

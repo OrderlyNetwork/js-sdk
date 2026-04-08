@@ -1,26 +1,43 @@
-# context.tsx
+# context.tsx (Layout context)
 
-## Overview
+## context.tsx responsibility
 
-React context for layout: sidebar open state and optional router adapter. Used by layout UI and script.
+Provides a React context for layout-level state: sidebar open state (`sideOpen`, `onSideOpenChange`) and optional `routerAdapter`. Exports `LayoutProvider` and `useLayoutContext` for consuming components.
 
-## Exports
+## context.tsx exports
 
-### Context value type
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| useLayoutContext | function | Hook | Returns LayoutContextValue from context |
+| LayoutProvider | component | Provider | Provides sideOpen, onSideOpenChange, routerAdapter to children |
 
-- `sideOpen: boolean`
-- `onSideOpenChange: (open: boolean) => void`
-- `routerAdapter?: RouterAdapter`
+## LayoutContextValue (type)
 
-### API
+| Property | Type | Description |
+|----------|------|-------------|
+| sideOpen | boolean | Whether sidebar is open |
+| onSideOpenChange | (open: boolean) => void | Setter for sideOpen |
+| routerAdapter | RouterAdapter \| undefined | Optional router adapter from @orderly.network/types |
 
-- **`useLayoutContext()`** — Returns current layout context value.
-- **`LayoutProvider`** — Provider component. Props: `routerAdapter?`, `children`.
+## LayoutProvider Props
 
-## Usage example
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| routerAdapter | RouterAdapter | No | Passed through context |
+| children | ReactNode | Yes | Tree under provider |
+
+## context.tsx dependency and usage
+
+- **Upstream**: React (createContext, useContext, useState, useMemo); RouterAdapter from @orderly.network/types.
+- **Downstream**: Any layout child that needs sidebar toggle or routerAdapter without prop drilling.
+
+## context.tsx Example
 
 ```tsx
 <LayoutProvider routerAdapter={adapter}>
-  <PortfolioLayoutWidget />
+  <App />
 </LayoutProvider>
+
+// In child:
+const { sideOpen, onSideOpenChange, routerAdapter } = useLayoutContext();
 ```

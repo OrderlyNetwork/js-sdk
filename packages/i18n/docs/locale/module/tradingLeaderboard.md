@@ -1,15 +1,20 @@
-# tradingLeaderboard
+# tradingLeaderboard.ts
 
-## Overview
+## tradingLeaderboard.ts responsibility
 
-Leaderboard and campaigns: leaderboard, campaigns (ongoing, past, future), learn more, trade now, join now, trading volume, rank, estimated rewards, last update, tickets/prize pool, participants, battle start/end countdown, reward distribution, arena, general leaderboard, max tickets, terms/rules, tooltips (PnL, realized PnL, trading volume).
+Provides leaderboard and campaign copy: leaderboard, campaigns (ongoing, past, future), learn more, trade now, join now, trading volume, rank, estimated rewards, last update, estimated tickets earned, ticket prize pool, view rules, prize pool, participants, battle starts/ends in, reward distribution, battle has ended, trade for more tickets, earn tickets, arena, general leaderboard, max tickets achieved, terms and conditions, rules, PnL and realized PnL and trading volume tooltips.
 
-## Exports
+## tradingLeaderboard.ts exports
 
-### `tradingLeaderboard`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| tradingLeaderboard | object | Key-value map | Keys under "tradingLeaderboard.*" |
+| TradingLeaderboard | type | typeof tradingLeaderboard | Type export |
 
-Object of keys under `tradingLeaderboard.*`: e.g. `tradingLeaderboard.earnTickets`, `tradingLeaderboard.pnl.tooltip`, `tradingLeaderboard.battleStartsIn`.
+## tradingLeaderboard.ts Example
 
-### `TradingLeaderboard` (type)
-
-`typeof tradingLeaderboard`.
+```typescript
+t("tradingLeaderboard.campaigns");
+t("tradingLeaderboard.earnTickets");
+t("tradingLeaderboard.pnl.tooltip");
+```

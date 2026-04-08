@@ -12,7 +12,8 @@ export type TPSLQuantityProps = {
   base_dp: number;
   base: string;
   onQuantityChange?: (value: number | string) => void;
-  quantity: number;
+  /** Raw form state while editing may be string (e.g. "", "0."). */
+  quantity: number | string;
   isEditing?: boolean;
   errorMsg?: string;
 };
@@ -94,10 +95,10 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
             tooltip={errorMsg}
             color={errorMsg ? "danger" : undefined}
             formatters={[
+              inputFormatter.decimalPointFormatter,
               inputFormatter.dpFormatter(props.base_dp),
               inputFormatter.numberFormatter,
               inputFormatter.currencyFormatter,
-              inputFormatter.decimalPointFormatter,
             ]}
             onValueChange={(value) => {
               props.onQuantityChange?.(value);

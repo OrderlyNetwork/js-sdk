@@ -238,6 +238,10 @@ const NoCommissionCard = (props: { directBonusRebateRate?: number }) => {
   const { t } = useTranslation();
   const amount = props.directBonusRebateRate;
 
+  if (!amount || amount <= 0) {
+    return null;
+  }
+
   return (
     <Flex
       direction="column"

@@ -1,69 +1,50 @@
-# solana_vault
+# solana_vault.ts (IDL)
 
-## Overview
+## solana_vault.ts responsibility
 
-TypeScript definition of the **Solana Vault** Anchor program IDL. Exports the `SolanaVault` type and the `IDL` object used with `@coral-xyz/anchor` `Program` for deposit, depositSol, oappQuote, and other vault/OApp instructions. Includes LayerZero OApp config, peer, enforced options, and receive/send types.
+Defines the Anchor IDL type `SolanaVault` for the Solana vault program. It describes instructions (e.g. setVault, deposit, depositSol, oappQuote), their accounts and args, and related types. This file is consumed by helper.ts as `IDL` and `SolanaVault` for `Program<SolanaVault>` to build deposit and quote instructions.
 
-## Exports
+## solana_vault.ts exports
 
-### SolanaVault (type)
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| SolanaVault | type | IDL | Full IDL shape: version, name, instructions, accounts, types, events, errors |
 
-Full IDL shape: `version`, `name`, `instructions`, `accounts`, `types`, `events`, `errors`.
+## SolanaVault structure (summary)
 
-### IDL (constant)
+- **version**: "0.1.0"
+- **name**: "solana_vault"
+- **instructions**: Array of instruction definitions; each has name, accounts (name, isMut, isSigner), args (name, type), and optional returns.
+- **accounts**: Account struct definitions (name, type with fields).
+- **types**: Custom types (e.g. SetVaultParams, DepositParams, OAppSendParams, MessagingReceipt) used in instructions.
+- **events / errors**: Optional; not inferable from high-level summary.
 
-The concrete IDL object of type `SolanaVault` (version `"0.1.0"`, name `"solana_vault"`).
+Key instructions used by this package:
 
-### Instructions (summary)
+| Instruction | Purpose |
+|-------------|---------|
+| setVault | Admin set vault params |
+| deposit | SPL token deposit into vault with OApp send |
+| depositSol | Native SOL deposit into vault with OApp send |
+| oappQuote | Quote native fee for OApp send (used by getDepositQuoteFee) |
 
-| Name | Purpose |
-| ---- | ------- |
-| `setVault` | Admin sets vault params (owner, depositNonce, orderDelivery, inboundNonce, dstEid, solChainId) |
-| `deposit` | User deposits SPL token; uses DepositParams + OAppSendParams |
-| `depositSol` | User deposits SOL; uses solVault, DepositParams, OAppSendParams |
-| `initOapp` | Initialize OApp config and account list |
-| `setAccountList` | Admin sets account list params |
-| `setManagerRole` | Owner sets manager role |
-| `setBroker` | Broker manager sets allowed broker |
-| `setWithdrawBroker` | Broker manager sets withdraw broker |
-| `setToken` | Token manager sets allowed token |
-| `setWithdrawToken` | Token manager sets withdraw token |
-| `setOrderDelivery` | Owner sets order delivery and nonce |
-| `oappQuote` | Quote deposit fee (returns MessagingFee: nativeFee, lzTokenFee) |
-| `lzReceive` | Process incoming LayerZero message (withdraw path) |
-| `lzReceiveTypes` | Resolve receive types (accounts) |
-| `setRateLimit` | Admin sets peer rate limit |
-| `setDelegate` | Admin sets delegate |
-| `transferAdmin` | Transfer OApp admin |
-| `setPeer` | Admin sets peer for dstEid |
-| `setEnforcedOptions` | Admin sets enforced options for dstEid |
+## solana_vault.ts dependency and usage
 
-### Accounts (IDL account types)
+- **Upstream**: None (hand-authored or generated IDL).
+- **Downstream**: helper.ts imports IDL and SolanaVault for Program and method calls (deposit, depositSol, oappQuote).
 
-- `enforcedOptions`, `oAppConfig`, `oAppLzReceiveTypesAccounts`, `accountList`, `peer`, `allowedBroker`, `allowedToken`, `managerRole`, `vaultAuthority`, `withdrawBroker`, `withdrawToken`
+## solana_vault.ts Example
 
-### Types (IDL types)
-
-Include `DepositParams`, `OAppSendParams`, `MessagingFee`, `VaultDepositParams`, `VaultWithdrawParams`, `OAppLzReceiveParams`, `SetVaultParams`, `SetBrokerParams`, `SetTokenParams`, and others for each instruction’s args and state.
-
-### Errors (program errors)
-
-| Code | Name | Message |
-| ---- | ---- | ------- |
-| 6000 | InsufficientFunds | Deposited funds are insufficient for withdrawal |
-| 6001 | UserInfoBelongsToAnotherUser | User info pda belongs to another user |
-| 6002 | BrokerNotAllowed | Broker is not allowed |
-| 6003 | TokenNotAllowed | Token is not allowed |
-| 6004 | InvalidAccountId | AccountId is invalid |
-| 6005 | InvalidVaultOwner | Vault owner is not the same as the payer |
-| 6006 | ManagerRoleNotAllowed | Manager role is not allowed |
-
-## Usage Example
-
-```ts
+```typescript
 import { Program } from "@coral-xyz/anchor";
-import { IDL as VaultIDL, type SolanaVault } from "./idl/solana_vault";
+import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
 
-const program = new Program<SolanaVault>(VaultIDL, vaultProgramId, { connection });
-const fee = await program.methods.oappQuote(depositParams).accounts({ ... }).remainingAccounts([...]).instruction();
+const programId = new PublicKey("...");
+const program = new Program<SolanaVault>(VaultIDL, programId, { connection });
+
+const ix = await program.methods
+  .deposit(depositParams, sendParam)
+  .accounts({ /* ... */ })
+  .remainingAccounts([/* ... */])
+  .instruction();
 ```

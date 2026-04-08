@@ -22,6 +22,7 @@ export {
   Cell,
   Area,
   AreaChart,
+  ResponsiveContainer,
 } from "recharts";
 // export { Legend } from "./common/legend";
 // export { Tooltip } from "./common/tooltip";

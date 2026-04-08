@@ -5,7 +5,6 @@ import {
 import type {
   SplitLayoutNode,
   SplitLayoutModel,
-  SplitLayoutRule,
   SplitLayoutBreakpointKey,
 } from "../types";
 
@@ -50,41 +49,6 @@ export function updateOrderAtPath(
 }
 
 /**
- * Builds runtime SplitLayoutNode for one breakpoint from a rule.
- * Falls back to md when the breakpoint has no rule tree.
- */
-export function buildSplitLayoutFromRule(
-  rule: SplitLayoutRule,
-  breakpointKey: SplitLayoutBreakpointKey,
-): SplitLayoutNode {
-  const tree = rule[breakpointKey] ?? rule.md;
-  if (!tree) {
-    throw new Error(
-      `Split layout rule must define at least 'md'; missing for ${breakpointKey}`,
-    );
-  }
-  return tree as SplitLayoutNode;
-}
-
-/**
- * Builds full responsive SplitLayoutModel from a rule (all breakpoints).
- * Missing rule entries for a breakpoint use the lg tree.
- */
-export function createDefaultSplitLayoutFromRule(
-  rule: SplitLayoutRule,
-): SplitLayoutModel {
-  const layouts = {} as SplitLayoutModel["layouts"];
-  for (const bp of SPLIT_BREAKPOINT_ORDER) {
-    layouts[bp] = buildSplitLayoutFromRule(rule, bp);
-  }
-
-  return {
-    layouts,
-    breakpoints: DEFAULT_SPLIT_BREAKPOINTS,
-  };
-}
-
-/**
  * Creates default split layout for given panel IDs (strategy.defaultLayout).
  * This is a fallback when getInitialLayout is not provided.
  * Same simple horizontal tree for all breakpoints.
@@ -124,6 +88,81 @@ export function createDefaultSplitLayout(panelIds: string[]): SplitLayoutModel {
     layouts,
     breakpoints: DEFAULT_SPLIT_BREAKPOINTS,
   };
+}
+
+/**
+ * Rule-based layout types for preset rules.
+ */
+interface SplitLayoutRule {
+  lg?: SplitLayoutNode;
+  md?: SplitLayoutNode;
+  sm?: SplitLayoutNode;
+  xs?: SplitLayoutNode;
+}
+
+/**
+ * Builds runtime SplitLayoutNode for one breakpoint from a rule.
+ * Falls back to md when the breakpoint has no rule tree.
+ */
+export function buildSplitLayoutFromRule(
+  rule: SplitLayoutRule,
+  breakpointKey: SplitLayoutBreakpointKey,
+): SplitLayoutNode {
+  const tree = rule[breakpointKey] ?? rule.md;
+  if (!tree) {
+    throw new Error(
+      `Split layout rule must define at least 'md'; missing for ${breakpointKey}`,
+    );
+  }
+  return tree as SplitLayoutNode;
+}
+
+/**
+ * Builds full responsive SplitLayoutModel from a rule (all breakpoints).
+ * Missing rule entries for a breakpoint use the lg tree.
+ */
+export function createDefaultSplitLayoutFromRule(
+  rule: SplitLayoutRule,
+): SplitLayoutModel {
+  const layouts = {} as SplitLayoutModel["layouts"];
+  for (const bp of SPLIT_BREAKPOINT_ORDER) {
+    layouts[bp] = buildSplitLayoutFromRule(rule, bp);
+  }
+
+  return {
+    layouts,
+    breakpoints: DEFAULT_SPLIT_BREAKPOINTS,
+  };
+}
+
+/**
+ * Creates a default trading split layout.
+ * Uses the first built-in preset rule for structure.
+ */
+export function createTradingSplitLayout(): SplitLayoutModel {
+  const presets = getDefaultSplitPresets();
+  const preset = presets[0];
+  if (!preset) throw new Error("Split layout: no default presets");
+  return createDefaultSplitLayoutFromRule(preset.rule);
+}
+
+/**
+ * Trading split layout preset.
+ */
+export interface SplitLayoutPreset {
+  id: string;
+  name: string;
+  rule: SplitLayoutRule;
+}
+
+/**
+ * Default split layout presets for trading.
+ * These are the built-in presets that define the trading layout structure.
+ */
+export function getDefaultSplitPresets(): SplitLayoutPreset[] {
+  // These presets are loaded dynamically to avoid circular dependencies
+  // In production, this would come from the trading package
+  return [];
 }
 
 /** Checks that value is a valid orientation. */

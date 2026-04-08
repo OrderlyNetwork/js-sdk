@@ -1,29 +1,48 @@
-# simpleDI
+# simpleDI.ts
 
-> Location: `packages/core/src/di/simpleDI.ts`
+## simpleDI.ts Responsibility
 
-## Overview
+Exposes a static DI facade that creates and holds a single `Container` on `getGlobalObject()[__ORDERLY_CONTAINER__]`. Provides register, registerByName, get, getOr, getAll for app-wide service registration and resolution.
 
-Static facade for a global `Container` stored on global object under `__ORDERLY_CONTAINER__`. Provides register, get, getOr, and getAll for app-wide service resolution.
+## simpleDI.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| SimpleDI | class | Facade | Static methods: register, registerByName, get, getOr, getAll |
+| default | SimpleDI | Export | Default export |
 
-### SimpleDI (class)
+## SimpleDI Responsibility
 
-Static methods only (constructor private).
+Single entry point for DI: lazily creates one Container and stores it on the global object so the same container is used across the app (e.g. for Account, wallet adapters).
+
+## SimpleDI Methods
 
 | Method | Description |
-| ------ | ----------- |
-| register(...serviceClasses) | Register classes (instantiated and added by name). |
-| registerByName(name, serviceClass) | Register by name. |
-| get\<T\>(name: string): T | Get service by name. |
-| getOr\<T\>(name, instance): T | Get or register instance and return it. |
-| getAll() | All registered services. |
+|--------|-------------|
+| register(...serviceClasses) | Delegates to container.register; instantiates classes and adds by constructor name |
+| registerByName(name, serviceClass) | Registers one service by name (instantiates if function) |
+| get<T>(name) | Returns service by name; throws or returns undefined if missing |
+| getOr<T>(name, instance) | If get(name) is falsy, registerByName(name, instance); returns instance |
+| getAll() | Returns copy of all registered services |
 
-## Usage Example
+## SimpleDI Execution Flow
 
-```ts
-import { SimpleDI } from "@orderly.network/core";
+1. getContainer(): If container not set, create new Container and assign to getGlobalObject()[SimpleDI.KEY]; return container.
+2. register/registerByName: getContainer().register(...) or registerByName(...).
+3. get/getOr/getAll: getContainer().get/getOr/getAll.
+
+## simpleDI.ts Dependencies and Call Relationships
+
+- **Upstream**: utils (getGlobalObject), container.ts (Container).
+- **Downstream**: Account or app bootstrap registers services; BaseWalletAdapter (signMessageByOrderlyKey) uses SimpleDI.get<Account>("account").
+
+## simpleDI.ts Example
+
+```typescript
+import SimpleDI from "@orderly.network/core";
+
 SimpleDI.register(Account, ConfigStore);
+SimpleDI.registerByName("account", accountInstance);
 const account = SimpleDI.get<Account>("account");
+const config = SimpleDI.getOr("config", defaultConfig);
 ```

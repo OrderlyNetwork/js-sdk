@@ -1,15 +1,20 @@
-# tradingPoints
+# tradingPoints.ts
 
-## Overview
+## tradingPoints.ts responsibility
 
-Points program: points, countdown (starts in, days/hours/minutes/seconds), learn more, stage points/ranking, referral code/link, current points, ranking, my points, this week/last week, trade/PNL/referral points with tooltips, copy link, FAQ (what are points, allocation, distribution, PnL, referral).
+Provides points program copy: points, starts in, time units (days, hours, minutes, seconds), learn more, stage points and stage ranking, referral code and link, current points, ranking, my points, this week/last week, all, trade points and tooltip, PnL points and tooltip, referral points and tooltip, copy link, FAQ (what are points, allocation criteria, distribution, PnL calculation, referral how it works).
 
-## Exports
+## tradingPoints.ts exports
 
-### `tradingPoints`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| tradingPoints | object | Key-value map | Keys under "tradingPoints.*" |
+| TradingPoints | type | typeof tradingPoints | Type export |
 
-Object of keys under `tradingPoints.*`: e.g. `tradingPoints.tradePointsTooltip`, `tradingPoints.faq.whatArePoints.question`, `tradingPoints.referralPointsTooltip`.
+## tradingPoints.ts Example
 
-### `TradingPoints` (type)
-
-`typeof tradingPoints`.
+```typescript
+t("tradingPoints.points");
+t("tradingPoints.tradePointsTooltip");
+t("tradingPoints.faq.whatArePoints.question");
+```

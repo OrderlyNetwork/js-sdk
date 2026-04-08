@@ -1,26 +1,48 @@
 # useAccountsData.ts
 
-## Overview
+## useAccountsData.ts responsibility
 
-Transforms raw account and collateral data into a display structure: main account (when applicable) plus sub-accounts, each with `children` (holdings) and `account_id`. Uses `useAccount`, `useCollateral`, and i18n.
+Transforms raw account and collateral data into a display-oriented list: each account has `account_id` and `children` (holdings with `account_id` attached). Main account is included at the top when user is main account. Used by assets and overview to render account-grouped holdings.
 
-## Exports
+## useAccountsData.ts exports
 
-### Types
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| AccountWithChildren | interface | Data shape | account_id, id?, description?, children (holdings with account_id) |
+| useAccountsData | hook | Data transformer | Returns AccountWithChildren[] from useAccount + useCollateral |
 
-- **`AccountWithChildren`**  
-  - `account_id: string`  
-  - `id?`, `description?`  
-  - `children: Array<API.Holding & { account_id: string }>`
+## AccountWithChildren fields
 
-### Hooks
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| account_id | string | Yes | Account id |
+| id | string | No | Same as account_id (from sub account id) |
+| description | string | No | e.g. "Main account" from i18n |
+| children | Array<API.Holding & { account_id: string }> | Yes | Holdings for this account; empty uses single USDC 0 holding |
 
-- **`useAccountsData()`**  
-  Returns `AccountWithChildren[]` (main account first if main, then sub-accounts with normalized `children`).
+## useAccountsData input and output
 
-## Usage example
+- **Input**: None (reads from useAccount and useCollateral).
+- **Output**: `AccountWithChildren[]`. Main account first (if isMainAccount), then sub-accounts; each sub's `holding` array is mapped to `children` with `account_id` set.
 
-```ts
+## useAccountsData dependency and call relationship
+
+- **Upstream**: `useAccount`, `useCollateral` from `@orderly.network/hooks`; `useTranslation` from `@orderly.network/i18n`; `API.Holding` from `@orderly.network/types`.
+- **Downstream**: useAssetTotalValue, assets/overview components that display accounts and holdings.
+
+## useAccountsData implementation notes
+
+- Uses `produce` (immer) on `subAccounts` to build draft; adds main account with `t("common.mainAccount")` and main account holdings from `holding`.
+- Removes original `holding` from sub account objects to avoid confusion.
+
+## useAccountsData Example
+
+```typescript
 const accounts = useAccountsData();
-// accounts[0].children → holdings for main/sub account
+// accounts[0].account_id, accounts[0].description, accounts[0].children (holdings)
+accounts.forEach((acc) => {
+  acc.children.forEach((h) => {
+    // h.token, h.holding, h.frozen, h.account_id
+  });
+});
 ```

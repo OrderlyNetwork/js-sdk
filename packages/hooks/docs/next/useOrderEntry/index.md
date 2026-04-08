@@ -1,17 +1,16 @@
-# next/useOrderEntry
+# next/useOrderEntry — Directory Index
 
-## Overview
+## Directory Responsibility
 
-Next-generation order entry: useOrderEntry hook, order store, order entity, validation types.
+Order entry hook and related store/entity: `useOrderEntry` (main hook), `useOrderStore`, `useOrderEntity`, and order validation types. Used by trading UIs to build and submit orders.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [index](./index.md) | TypeScript | Exports useOrderEntry, useOrderStore, useOrderEntity, validation types |
-| [useOrderEntry](./useOrderEntry.md) | TypeScript | Main order entry hook |
-| [useOrderStore](./useOrderStore.md) | TypeScript | (orderEntry.store) Order entry store |
-| [useOrderEntity](./useOrderEntity.md) | TypeScript | Order entity hook |
-| [orderEntry.store](./orderEntry.store.md) | TypeScript | Order entry store implementation |
-| [helper](./helper.md) | TypeScript | Order entry helpers |
-| [useOrderEntry.internal](./useOrderEntry.internal.md) | TypeScript | Internal order entry logic |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| index.ts | TS | Re-exports order entry | useOrderEntry, useOrderStore, useOrderEntity, OrderValidationItem, OrderValidationResult | [index.md](index.md) |
+| useOrderEntry.ts | TS | Main order entry hook | useOrderEntry, OrderEntryReturn | [useOrderEntry.md](useOrderEntry.md) |
+| orderEntry.store.ts | TS | Order entry Zustand store | useOrderStore | [orderEntry.store.md](orderEntry.store.md) |
+| useOrderEntity.ts | TS | Order entity helper | useOrderEntity | [useOrderEntity.md](useOrderEntity.md) |
+| useOrderEntry.internal.ts | TS | Internal order entry logic | (internal) | [useOrderEntry.internal.md](useOrderEntry.internal.md) |
+| helper.ts | TS | Order entry helpers | (internal) | [helper.md](helper.md) |

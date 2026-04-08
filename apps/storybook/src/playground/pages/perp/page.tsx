@@ -38,14 +38,12 @@ export default function PerpPage() {
 
   return (
     <BaseLayout>
-      <OrderlyPluginProvider plugins={[registerLayoutSplitPlugin()]}>
-        <TradingPage
-          symbol={symbol}
-          onSymbolChange={onSymbolChange}
-          tradingViewConfig={tradingPageConfig.tradingViewConfig}
-          sharePnLConfig={tradingPageConfig.sharePnLConfig}
-        />
-      </OrderlyPluginProvider>
+      <TradingPage
+        symbol={symbol}
+        onSymbolChange={onSymbolChange}
+        tradingViewConfig={tradingPageConfig.tradingViewConfig}
+        sharePnLConfig={tradingPageConfig.sharePnLConfig}
+      />
     </BaseLayout>
   );
 }

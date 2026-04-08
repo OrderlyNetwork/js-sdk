@@ -1,25 +1,25 @@
-# version
+# version.ts
 
-## Overview
+## version.ts responsibility
 
-Exposes the package version string and registers it on `window.__ORDERLY_VERSION__` in browser environments so the app can report which version of `@orderly.network/default-solana-adapter` is loaded.
+Exports the package version string and, in browser environments, attaches it to `window.__ORDERLY_VERSION__["@orderly.network/default-solana-adapter"]` for runtime version inspection.
 
-## Exports
+## version.ts exports
 
-### Default export
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| default | string | Version | Package version, e.g. "2.10.2" |
 
-- **Type:** `string`
-- **Value:** `"2.9.1"` (matches `package.json` version)
+## version.ts execution flow
 
-When running in a browser, the module also sets:
+1. If `typeof window !== "undefined"`, set or extend `window.__ORDERLY_VERSION__` and assign the version under key `"@orderly.network/default-solana-adapter"`.
+2. Export the same version string as default.
 
-- `window.__ORDERLY_VERSION__["@orderly.network/default-solana-adapter"] = "2.9.1"`
+## version.ts Example
 
-## Usage Example
-
-```ts
-import version from "@orderly.network/default-solana-adapter";
-
-console.log(version); // "2.9.1"
-// In browser: window.__ORDERLY_VERSION__["@orderly.network/default-solana-adapter"] === "2.9.1"
+```typescript
+import version from "@orderly.network/default-solana-adapter/version";
+// or from package entry
+console.log(version); // "2.10.2"
+// In browser: window.__ORDERLY_VERSION__["@orderly.network/default-solana-adapter"] === "2.10.2"
 ```

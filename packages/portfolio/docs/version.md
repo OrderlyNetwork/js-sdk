@@ -1,27 +1,32 @@
 # version.ts
 
-## Overview
+## version.ts responsibility
 
-Exposes the package version on `window.__ORDERLY_VERSION__["@orderly.network/portfolio"]` and as default export for build-time or runtime use.
+Exposes the portfolio package version and attaches it to `window.__ORDERLY_VERSION__["@orderly.network/portfolio"]` for runtime version reporting.
 
-## Exports
+## version.ts exports
 
-- **Default export**: string version (e.g. `"2.9.1"`).
+| Name | Type | Role | Description |
+|------|------|------|--------------|
+| default | string | Version string | `"2.10.2"` |
+| (side effect) | - | Global | Sets `window.__ORDERLY_VERSION__["@orderly.network/portfolio"]` when in browser |
 
-## Global augmentation
+## Version value and global
 
-Extends `Window` with:
+- **Default export**: `"2.10.2"`.
+- **Global**: On `typeof window !== "undefined"`, assigns `window.__ORDERLY_VERSION__["@orderly.network/portfolio"]` (initializes `__ORDERLY_VERSION__` if missing).
 
-```ts
-interface Window {
-  __ORDERLY_VERSION__?: { [key: string]: string };
-}
-```
+## version.ts dependency and usage
 
-## Usage example
+- **Dependency**: None (no imports).
+- **Usage**: Host app or tooling can read version from `window.__ORDERLY_VERSION__?.["@orderly.network/portfolio"]` or from the default export.
 
-```ts
+## version.ts Example
+
+```typescript
 import version from "@orderly.network/portfolio/version";
-// or
-// window.__ORDERLY_VERSION__?.["@orderly.network/portfolio"]
+// version === "2.10.2"
+
+// In browser:
+// window.__ORDERLY_VERSION__["@orderly.network/portfolio"] === "2.10.2"
 ```

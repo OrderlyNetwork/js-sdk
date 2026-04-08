@@ -1,15 +1,20 @@
-# vaults
+# vaults.ts
 
-## Overview
+## vaults.ts responsibility
 
-Vaults: header (title, description), introduction (TVL, depositors), list (pool name, my deposits, all-time PnL, operate), card (title, description, TVL, APY, status, deposit/withdraw), deposit (est. shares, lockup, latest deposit), withdraw (est. price, est. receiving, dialog, process steps), and operation errors (switch account, min deposit/withdrawal).
+Provides vault copy: available on, header title and description, introduction (TVL, depositors), all vaults, list (pool name, my deposits, all-time pnl, operate), card (Orderly title/description, TVL, 30D APY, all-time return/tooltip, my deposits/earnings, account balance, more/less, launching soon, view more, status active/closing/closed), deposit (est. shares, shares, lockup duration, latest deposit), withdraw (est. price per share, est. receiving amount, latest withdraw, dialog title/withdrawal amount/estimated receiving/note, initiate withdrawal, process steps, up to 6 hours), operation errors (switch account, min deposit, min withdrawal).
 
-## Exports
+## vaults.ts exports
 
-### `vaults`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| vaults | object | Key-value map | Keys under "vaults.*" |
+| Vaults | type | typeof vaults | Type export |
 
-Object of keys under `vaults.*`: e.g. `vaults.header.title`, `vaults.card.orderly.description`, `vaults.withdraw.dialog.title`, `vaults.operation.error.minDeposit`.
+## vaults.ts Example
 
-### `Vaults` (type)
-
-`typeof vaults`.
+```typescript
+t("vaults.header.title");
+t("vaults.card.apy");
+t("vaults.withdraw.dialog.title");
+```

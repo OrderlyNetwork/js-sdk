@@ -132,7 +132,17 @@ export class PositionLineService {
     const quantity = PositionLineService.getPositionQuantity(position.balance);
 
     if (needDrawMarginMode) {
-      text += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
+      // Reuse existing i18n keys for margin mode and append leverage when available.
+      const marginModeLabel = i18n.t(
+        position.marginMode === "ISOLATED"
+          ? "marginMode.isolated"
+          : "marginMode.cross",
+      );
+      const leverageLabel =
+        position.leverage != null && Number.isFinite(position.leverage)
+          ? ` ${position.leverage}x`
+          : "";
+      text += ` (${marginModeLabel}${leverageLabel})`;
     }
 
     const line = this.positionLines[idx]

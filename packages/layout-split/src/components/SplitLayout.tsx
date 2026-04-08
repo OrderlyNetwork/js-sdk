@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useCallback, useMemo } from "react";
 import { cn } from "@orderly.network/ui";
-import type { SplitLayoutClassNames } from "../SplitPresetContext";
+import type { SplitLayoutClassNames } from "../types";
 import {
   ResizablePanelGroup,
   ResizablePanel,

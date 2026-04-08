@@ -42,7 +42,7 @@ export class Renderer {
     this.tpslService.updatePositions(positions);
   }
 
-  /** Update the single liquidation price line (position + optional estimated from Order Entry). */
+  /** Update liquidation price lines (positions + optional estimated from Order Entry). */
   renderLiquidationLine(params: LiquidationLineRenderParams): void {
     this.liquidationLineService.renderLiquidationLine(params);
   }

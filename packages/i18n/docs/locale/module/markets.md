@@ -1,15 +1,29 @@
-# markets
+# markets.ts
 
-## Overview
+## markets.ts responsibility
 
-Markets list and symbol info: favorites, recent, new listings, open interest, search placeholder, data list columns (8h funding, move to top), favorites dropdown/tabs, funding comparison columns, and symbol info bar (last price, Mark, Index, 24h volume, est. funding rate) with tooltips.
+Provides markets list copy: favorites, recent, new listings, all markets, open interest, top gainers/losers, search placeholder, favorites dropdown and tabs, column labels (market, 24h change/volume, last, mark, index, OI), funding comparison columns, and symbol info bar tooltips (last price, mark, index, volume, pred funding rate).
 
-## Exports
+## markets.ts exports
 
-### `markets`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| markets | object | Key-value map | Keys under "markets.*" |
+| Markets | type | typeof markets | Type export |
 
-Object of keys under `markets.*`: e.g. `markets.favorites`, `markets.column.market&Volume`, `markets.funding.column.estFunding`, `markets.symbolInfoBar.Mark.tooltip`.
+## markets.ts key groups (sample)
 
-### `Markets` (type)
+| Theme | Examples |
+|-------|----------|
+| Lists | markets.favorites, markets.recent, markets.allMarkets |
+| Columns | markets.column.market, markets.column.24hChange |
+| Funding | markets.funding.column.estFunding, markets.funding.column.lastFunding |
+| Symbol bar | markets.symbolInfoBar.lastPrice.tooltip, markets.symbolInfoBar.Mark.tooltip |
 
-`typeof markets`.
+## markets.ts Example
+
+```typescript
+t("markets.search.placeholder");
+t("markets.column.market&Volume");
+t("markets.symbolInfoBar.predFundingRate.tooltip");
+```

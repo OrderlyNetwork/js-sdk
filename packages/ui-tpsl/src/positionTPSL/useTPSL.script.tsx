@@ -149,6 +149,7 @@ export const useTPSLBuilder = (
     slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   const setQuantity = (value: number | string) => {
+    console.log("------>>>>>setQuantity", value);
     setValue("quantity", value);
   };
 

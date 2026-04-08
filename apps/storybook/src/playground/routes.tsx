@@ -54,6 +54,7 @@ const LeaderboardPage = lazyImportPage(
 const MarketsPage = lazyImportPage(() => import("./pages/markets/page"));
 const PerpPage = lazyImportPage(() => import("./pages/perp/page"));
 const PerpGridPage = lazyImportPage(() => import("./pages/perp-grid/page"));
+const PerpSplitPage = lazyImportPage(() => import("./pages/perp-split/page"));
 const APIKeyPage = lazyImportPage(
   () => import("./pages/portfolio/api-key/page"),
 );
@@ -143,6 +144,19 @@ const AppRoute: React.FC = () => {
         {
           path: ":symbol",
           element: <PerpGridPage />,
+        },
+      ],
+    },
+    {
+      path: "perp-split",
+      children: [
+        {
+          index: true,
+          element: <Navigate to={getSymbol()} />,
+        },
+        {
+          path: ":symbol",
+          element: <PerpSplitPage />,
         },
       ],
     },

@@ -4,8 +4,7 @@
  */
 import React, { createContext, useContext, useMemo } from "react";
 import type { PanelRegistry } from "@orderly.network/layout-core";
-import type { SplitLayoutClassNames } from "./SplitPresetContext";
-import type { SplitLayoutModel } from "./types";
+import type { SplitLayoutClassNames, SplitLayoutModel } from "./types";
 
 export interface SplitLayoutConfigValue {
   /** Registry of panel components (id -> React.ReactNode). */

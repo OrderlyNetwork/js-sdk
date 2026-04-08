@@ -1,16 +1,15 @@
-# middleware
+# middleware — Directory Index
 
-## Overview
+## Directory Responsibility
 
-SWR and app-level middleware: timestamp waiting, IndexedDB persistence, local time correction, signature.
+SWR and app-level middleware: timestamp waiting (sync server time), IndexedDB persistence, signature injection, local time correction. Used to adapt SWR and private requests.
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [index](./index.md) | TypeScript | Middleware exports (if any) |
-| [timestampWaitingMiddleware](./timestampWaitingMiddleware.md) | TypeScript | Waits for timestamp offset before SWR requests |
-| [persistIndexedDB](./persistIndexedDB.md) | TypeScript | IndexedDB persistence middleware |
-| [localTimeCorrectionMiddleware](./localTimeCorrectionMiddleware.md) | TypeScript | Local time correction for requests |
-| [indexedDBManager](./indexedDBManager.md) | TypeScript | IndexedDB manager and app DB initialization |
-| [signatureMiddleware](./signatureMiddleware.md) | TypeScript | Request signature middleware |
+| File | Language | Summary | Entry symbol(s) | Link |
+|------|----------|---------|------------------|------|
+| timestampWaitingMiddleware.ts | TS | SWR middleware to wait for server timestamp | timestampWaitingMiddleware, resetTimestampOffsetState | [timestampWaitingMiddleware.md](timestampWaitingMiddleware.md) |
+| persistIndexedDB.ts | TS | Persist SWR cache to IndexedDB | persistIndexedDB | [persistIndexedDB.md](persistIndexedDB.md) |
+| indexedDBManager.ts | TS | IndexedDB manager and app DB init | indexedDBManager, initializeAppDatabase | [indexedDBManager.md](indexedDBManager.md) |
+| signatureMiddleware.ts | TS | Middleware for request signing | (internal) | [signatureMiddleware.md](signatureMiddleware.md) |
+| localTimeCorrectionMiddleware.ts | TS | Local time correction | (internal) | [localTimeCorrectionMiddleware.md](localTimeCorrectionMiddleware.md) |

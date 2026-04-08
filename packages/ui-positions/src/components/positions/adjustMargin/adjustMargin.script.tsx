@@ -21,7 +21,7 @@ export interface AdjustMarginState {
   sliderValue: number;
   maxAmount: number;
   currentMargin: number;
-  liquidationPrice: number;
+  liquidationPrice: number | null;
   effectiveLeverage: number;
   isLoading: boolean;
   isAdd: boolean;
@@ -172,7 +172,7 @@ export const useAdjustMarginScript = (
     sliderValue,
     maxAmount: maxAmount ?? 0,
     currentMargin: currentMargin,
-    liquidationPrice: liquidationPrice ?? 0,
+    liquidationPrice,
     effectiveLeverage: effectiveLeverage ?? 0,
     isLoading,
     isAdd,

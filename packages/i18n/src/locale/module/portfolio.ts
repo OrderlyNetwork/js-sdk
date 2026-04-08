@@ -21,6 +21,9 @@ export const portfolio = {
   "portfolio.overview.performance.dailyVolume": "Daily Volume",
   "portfolio.overview.performance.cumulativeVolume": "Cumulative Volume",
 
+  "portfolio.overview.todaysPnl": "Today's PnL",
+  "portfolio.overview.todaysVol": "Today's Vol",
+
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Transfer history",
   "portfolio.overview.vaults": "Vaults",
