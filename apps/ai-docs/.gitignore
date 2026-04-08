@@ -1,0 +1,4 @@
+# Transient / local-only (tech §2, §7)
+generated/qmd/
+generated/cache/
+generated

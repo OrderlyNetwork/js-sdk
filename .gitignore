@@ -43,7 +43,7 @@ dev-tool
 !apps/docs
 !apps/docs/**/*
 apps/docs/dist
-apps/ai-docs
+apps/ai-docs/generated
 
 apps/docs/_doc_meta_
 
