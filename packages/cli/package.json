@@ -1,10 +1,10 @@
 {
-  "name": "@orderly.network/cli",
+  "name": "@orderly.network/devkit",
   "version": "0.0.1",
-  "description": "Orderly CLI - Create DEX, plugins, and modules",
-  "main": "bin/cli.js",
+  "description": "CLI toolkit for scaffolding and building DEXs, plugins, and modules with Orderly",
+  "main": "",
   "bin": {
-    "orderly": "bin/cli.js"
+    "orderly-devkit": "bin/cli.js"
   },
   "scripts": {
     "clean": "rimraf dist"
@@ -23,7 +23,6 @@
     "tsconfig": "workspace:*"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
+    "access": "public"
   }
 }
