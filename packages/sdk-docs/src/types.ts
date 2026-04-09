@@ -51,4 +51,13 @@ export type NarrativeHit = {
   text: string;
   kind?: string;
   score: number;
+  /**
+   * Optional narrative metadata (typically from markdown frontmatter).
+   * Helps callers reason about retrieval intent/domain alignment.
+   */
+  domain?: string;
+  docType?: string;
+  packageName?: string;
+  intentTags?: string[];
+  lang?: string;
 };

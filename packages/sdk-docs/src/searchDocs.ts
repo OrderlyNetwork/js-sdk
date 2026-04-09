@@ -1,5 +1,6 @@
 import type { LoadedBundle } from "./bundle.js";
 import { errResult, okResult } from "./envelope.js";
+import type { PackageSurfaceData } from "./exactLookup.js";
 import type { NarrativeRetrieval } from "./narrative/narrativeRetrieval.js";
 import type { Citation, DocsResult, NarrativeHit } from "./types.js";
 
@@ -16,10 +17,63 @@ export type SearchDocsData = {
   matchedEntityId?: string;
   /** When the first whitespace-delimited token maps to exactly one keyword-index entry. */
   keywordSingletonId?: string;
+  /** Query variants used by retrieval (English-only normalization in current phase). */
+  queryVariants?: string[];
+  /** Inferred package candidates from user intent. */
+  inferredPackages?: string[];
+  /** Lightweight package surface hints for likely next exact lookup calls. */
+  packageSurfaceHints?: Array<{
+    packageName: string;
+    exportsPreview: string[];
+    componentIdsPreview: string[];
+  }>;
 };
 
 function looksLikeEntityId(q: string): boolean {
   return /^[a-z][a-z0-9_]*\.[A-Za-z0-9_.]+$/.test(q);
+}
+
+function normalizeEnglishQuery(q: string): string {
+  // Keep this conservative to avoid semantic drift; primary quality gains come from metadata/ranking.
+  return q
+    .toLowerCase()
+    .replace(/[?.,!;:()[\]{}"']/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function inferPackagesFromQuery(query: string): string[] {
+  const q = ` ${normalizeEnglishQuery(query)} `;
+  const out = new Set<string>();
+  // Intent mapping for layout/plugin retrieval guidance.
+  if (q.includes(" layout ")) out.add("@orderly.network/layout-core");
+  if (
+    q.includes(" plugin ") ||
+    q.includes(" interceptor ") ||
+    q.includes(" injectable ")
+  ) {
+    out.add("@orderly.network/plugin-core");
+  }
+  return [...out];
+}
+
+function buildPackageSurfaceHints(
+  bundle: LoadedBundle,
+  inferredPackages: string[],
+): SearchDocsData["packageSurfaceHints"] {
+  return inferredPackages
+    .map((name) => {
+      const row = bundle.packageIndex[name] as PackageSurfaceData | undefined;
+      if (!row || !Array.isArray(row.exports)) return null;
+      return {
+        packageName: name,
+        exportsPreview: row.exports.slice(0, 8),
+        componentIdsPreview: Array.isArray(row.componentIds)
+          ? row.componentIds.slice(0, 8)
+          : [],
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
 }
 
 /**
@@ -42,7 +96,20 @@ export async function searchDocs(
   }
 
   const k = Math.min(50, Math.max(1, input.k ?? 8));
-  const baseQ = { query, k, kinds: input.kinds, packages: input.packages };
+  const normalizedQuery = normalizeEnglishQuery(query);
+  const queryVariants = [...new Set([query, normalizedQuery].filter(Boolean))];
+  const inferredPackages = inferPackagesFromQuery(query);
+  const effectivePackages =
+    input.packages && input.packages.length > 0
+      ? input.packages
+      : inferredPackages;
+  const baseQ = {
+    query,
+    k,
+    kinds: input.kinds,
+    packages: effectivePackages,
+    queryVariants,
+  };
 
   let matchedEntityId: string | undefined;
   if (looksLikeEntityId(query) && bundle.idIndex[query]) {
@@ -73,6 +140,16 @@ export async function searchDocs(
       narrativeHits,
       ...(matchedEntityId !== undefined ? { matchedEntityId } : {}),
       ...(keywordSingletonId !== undefined ? { keywordSingletonId } : {}),
+      ...(queryVariants.length > 0 ? { queryVariants } : {}),
+      ...(inferredPackages.length > 0 ? { inferredPackages } : {}),
+      ...(inferredPackages.length > 0
+        ? {
+            packageSurfaceHints: buildPackageSurfaceHints(
+              bundle,
+              inferredPackages,
+            ),
+          }
+        : {}),
     },
     "narrative",
     citations,

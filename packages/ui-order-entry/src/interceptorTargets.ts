@@ -10,9 +10,11 @@ import type {
   OrderEntrySubmitSectionProps,
   OrderEntryTypeTabsProps,
 } from "./components/orderEntry.injectabled";
+import type { OrderEntryProps } from "./orderEntry.ui";
 
 declare module "@orderly.network/plugin-core" {
   interface InterceptorTargetPropsMap {
+    OrderEntry: OrderEntryProps;
     "Trading.OrderEntry.Available": OrderEntryAvailableProps;
     "Trading.OrderEntry.BuySellSwitch": OrderEntryBuySellSwitchProps;
     "Trading.OrderEntry.QuantitySlider": OrderEntryQuantitySliderProps;

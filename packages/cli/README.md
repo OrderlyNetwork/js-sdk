@@ -69,10 +69,10 @@ Run `orderly-devkit <command> --help` for options on any command.
 
 Scaffold new artifacts (interactive).
 
-| Subcommand | Description |
-| ---------- | ----------- |
+| Subcommand      | Description                                                                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `create plugin` | Clone and render the official plugin template (`OrderlyNetwork/orderly-plugin-template`), prompts for name, plugin id, interceptor target, etc., and can generate `.orderly-manifest.json`. |
-| `create module` | Guided flow for module type (`page`, `component`, `hook`, `utils`, `module`). **File generation is not implemented yet**—it only collects choices and prints a summary. |
+| `create module` | Guided flow for module type (`page`, `component`, `hook`, `utils`, `module`). **File generation is not implemented yet**—it only collects choices and prints a summary.                     |
 
 ```bash
 orderly-devkit create plugin
@@ -131,11 +131,11 @@ orderly-devkit mcp install --dry-run
 orderly-devkit mcp install --force
 ```
 
-| Option | Description |
-| ------ | ----------- |
+| Option     | Description                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------- |
 | `--client` | `claude`, `codex`, `cursor`, `opencode`, `all`, or comma-separated list (default: `all`). |
-| `--scope` | `user` or `project` (default: `user`). |
-| `--name` | MCP server id in config (default: `orderly-sdk-docs`). |
+| `--scope`  | `user` or `project` (default: `user`).                                                    |
+| `--name`   | MCP server id in config (default: `orderly-sdk-docs`).                                    |
 
 ### `skills install`
 
@@ -151,17 +151,17 @@ orderly-devkit skills install other/repo --skill my-skill -y
 orderly-devkit skills install -- --some-upstream-skills-flag
 ```
 
-| Option | Description |
-| ------ | ----------- |
-| `[source]` | GitHub `owner/repo`, URL, or local path (default: official repo). |
-| `--list` | List skills in the source without installing. |
-| `--skill` / `-s` | Repeatable; install only named skills (replaces default four when set). |
-| `--all` | Forward `--all` to the skills CLI. |
-| `--global` / `-g` | Global install for the skills CLI. |
-| `--agent` / `-a` | Target agent(s), e.g. `-a cursor`. |
-| `--copy` | Copy files instead of symlinks. |
-| `--yes` / `-y` | With `--list` only: pass `-y` through. |
-| `--` | Everything after `--` is forwarded to the upstream `skills` CLI. |
+| Option            | Description                                                             |
+| ----------------- | ----------------------------------------------------------------------- |
+| `[source]`        | GitHub `owner/repo`, URL, or local path (default: official repo).       |
+| `--list`          | List skills in the source without installing.                           |
+| `--skill` / `-s`  | Repeatable; install only named skills (replaces default four when set). |
+| `--all`           | Forward `--all` to the skills CLI.                                      |
+| `--global` / `-g` | Global install for the skills CLI.                                      |
+| `--agent` / `-a`  | Target agent(s), e.g. `-a cursor`.                                      |
+| `--copy`          | Copy files instead of symlinks.                                         |
+| `--yes` / `-y`    | With `--list` only: pass `-y` through.                                  |
+| `--`              | Everything after `--` is forwarded to the upstream `skills` CLI.        |
 
 ## Troubleshooting
 

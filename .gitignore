@@ -67,3 +67,4 @@ specs/
 skills-lock.json
 sdk-docs/bundled
 *.sqlite
+.mcp.json

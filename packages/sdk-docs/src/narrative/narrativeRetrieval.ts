@@ -8,6 +8,7 @@ export type NarrativeQuery = {
   k: number;
   kinds?: string[];
   packages?: string[];
+  queryVariants?: string[];
 };
 
 export interface NarrativeRetrieval {

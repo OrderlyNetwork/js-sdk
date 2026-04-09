@@ -121,6 +121,49 @@ export type PackageSurfaceData = {
 };
 
 /**
+ * Maps common user shorthand to canonical Orderly package names.
+ */
+const PACKAGE_ALIASES: Record<string, string> = {
+  layout: "@orderly.network/layout-core",
+  "layout-core": "@orderly.network/layout-core",
+  plugin: "@orderly.network/plugin-core",
+  "plugin-core": "@orderly.network/plugin-core",
+  ui: "@orderly.network/ui",
+};
+
+function normalizePkgName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+function resolvePackageName(
+  bundle: LoadedBundle,
+  packageName: string,
+): { resolved?: string; didYouMean?: string[] } {
+  const raw = packageName.trim();
+  if (!raw) return {};
+  if (bundle.packageIndex[raw]) return { resolved: raw };
+  const normalized = normalizePkgName(raw);
+  const aliasHit = PACKAGE_ALIASES[normalized];
+  if (aliasHit && bundle.packageIndex[aliasHit]) {
+    return { resolved: aliasHit };
+  }
+
+  const all = Object.keys(bundle.packageIndex);
+  const ranked = all
+    .map((k) => ({
+      key: k,
+      score:
+        (k.toLowerCase().includes(normalized) ? 3 : 0) +
+        (normalized.includes(k.toLowerCase()) ? 2 : 0),
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map((x) => x.key);
+  return { didYouMean: ranked.length ? ranked : undefined };
+}
+
+/**
  * Returns the indexed export surface for an npm package name (e.g. `@orderly.network/ui`).
  */
 export function getPackageSurface(
@@ -137,17 +180,21 @@ export function getPackageSurface(
       bundle,
     );
   }
-  const row = bundle.packageIndex[name] as PackageSurfaceData | undefined;
+  const { resolved, didYouMean } = resolvePackageName(bundle, name);
+  const lookupName = resolved ?? name;
+  const row = bundle.packageIndex[lookupName] as PackageSurfaceData | undefined;
   if (!row || !Array.isArray(row.exports)) {
     return errResult(
       "NOT_FOUND",
       `No package index entry for "${name}".`,
-      undefined,
+      didYouMean?.length
+        ? `Did you mean: ${didYouMean.join(", ")}`
+        : "Use the full package name such as @orderly.network/layout-core.",
       bundle,
     );
   }
   const data: PackageSurfaceData = {
-    packageName: name,
+    packageName: lookupName,
     exports: row.exports,
     componentIds: Array.isArray(row.componentIds) ? row.componentIds : [],
   };

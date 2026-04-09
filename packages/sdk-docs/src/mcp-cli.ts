@@ -5,7 +5,10 @@ import { z } from "zod";
 import { loadBundle } from "./bundle.js";
 import { errResult } from "./envelope.js";
 import { createAiDocsFacade, type AiDocsFacade } from "./facade.js";
-import { parseInstallArgs, runInstallCommand } from "./install/install.command.js";
+import {
+  parseInstallArgs,
+  runInstallCommand,
+} from "./install/install.command.js";
 
 let facade: AiDocsFacade | null = null;
 let loadError: string | null = null;
@@ -74,7 +77,7 @@ server.registerTool(
   "orderly_docs_search",
   {
     description:
-      "Search Orderly SDK documentation (narrative markdown, recipes, workflows). Returns a DocsResult with ranked narrativeHits; when present, matchedEntityId or keywordSingletonId point to a concrete symbol or type—call orderly_docs_get_component or orderly_docs_get_type next. Optional filters: k (max hits), kinds, packages.",
+      "Search Orderly SDK documentation (narrative markdown, recipes, workflows). Returns a DocsResult with ranked narrativeHits; when present, matchedEntityId or keywordSingletonId point to a concrete symbol or type—call orderly_docs_get_component or orderly_docs_get_type next. Response may also include queryVariants, inferredPackages, and packageSurfaceHints to guide follow-up exact lookups. Optional filters: k (max hits), kinds, packages.",
     inputSchema: {
       query: z.string().min(1).describe("Free-text search query"),
       k: z.number().int().min(1).max(50).optional().describe("Max hits (1–50)"),

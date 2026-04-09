@@ -26,7 +26,8 @@
     "lint:fix-error": "eslint --fix --fix-type problem",
     "lint:error": "eslint --quiet",
     "lint:inspect": "npx @eslint/config-inspector",
-    "trigger:pipeline": "node ./scripts/triggerPipeline.js"
+    "trigger:pipeline": "node ./scripts/triggerPipeline.js",
+    "rebuild:better-sqlite3": "pnpm rebuild better-sqlite3 --pending -r"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
@@ -66,7 +67,10 @@
     "overrides": {
       "@orderly.network/plugin-core": "workspace:*",
       "tailwindcss": "^3.4.4"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
   },
   "packageManager": "pnpm@10.26.2",
   "lint-staged": {

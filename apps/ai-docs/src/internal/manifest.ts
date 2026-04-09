@@ -23,6 +23,7 @@ export const ManifestSchema = z.object({
     .object({
       collectionId: z.string().optional(),
       indexPath: z.string().optional(),
+      docMetaIndexPath: z.string().optional(),
       embeddingModelId: z.string().nullable().optional(),
       lastIndexBuildAt: z.string().nullable().optional(),
     })

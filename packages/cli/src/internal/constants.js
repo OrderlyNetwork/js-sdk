@@ -20,9 +20,11 @@ const INTERCEPTOR_TARGETS = [
 const MODULE_TYPES = ["page", "component", "hook", "utils", "module"];
 
 const MARKETPLACE_API_BASE_URL =
-  process.env.ORDERLY_API_URL || "http://localhost:3030";
+  process.env.ORDERLY_API_URL ||
+  "https://orderly-plugin-marketplace-server.vercel.app";
 const MARKETPLACE_WEB_BASE_URL =
-  process.env.ORDERLY_WEB_URL || "http://localhost:3000";
+  process.env.ORDERLY_WEB_URL ||
+  "https://orderly-plugin-marketplace.vercel.app";
 
 const MARKETPLACE_API_PLUGINS_URL = `${MARKETPLACE_API_BASE_URL}/plugins`;
 const MARKETPLACE_API_MY_PLUGINS_URL = `${MARKETPLACE_API_BASE_URL}/my-plugins`;
