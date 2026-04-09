@@ -1,10 +1,18 @@
 import { useMemo, useState } from "react";
+import { useCheckReferralCode } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useReferralCode } from "../../../../hooks/useReferralCode";
 import { ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
+
+/** Matches ReferralCodeInput formatters: uppercase A–Z and digits only. */
+function formatReferralCodeInput(raw: string): string {
+  return String(raw)
+    .replace(/[a-z]/g, (c) => c.toUpperCase())
+    .replace(/[^A-Z0-9]/g, "");
+}
 
 export const useReferralCodeFormScript = (
   options: ReferralCodeFormWidgetProps,
@@ -13,8 +21,23 @@ export const useReferralCodeFormScript = (
     options;
   const { t } = useTranslation();
 
+  const isBind = type === ReferralCodeFormType.Bind;
+
   const [newCode, setNewCode] = useState<string>(referralCode || "");
+  /** Input value for Bind mode only; kept separate from `newCode` (Edit). */
+  const [bindCodeInput, setBindCodeInput] = useState("");
   const [isReview, setIsReview] = useState(false);
+  const [skipBinding, setSkipBinding] = useState(false);
+
+  const formattedBindCode = useMemo(
+    () => formatReferralCodeInput(bindCodeInput),
+    [bindCodeInput],
+  );
+
+  const { isExist: isBindCodeExist, isLoading: isBindCodeChecking } =
+    useCheckReferralCode(
+      isBind && formattedBindCode.length >= 4 ? formattedBindCode : undefined,
+    );
 
   const maxRebatePercentage = useMemo(() => {
     return new Decimal(maxRebateRate).mul(100).toNumber();
@@ -32,7 +55,15 @@ export const useReferralCodeFormScript = (
     },
   );
 
+  // Used by the Bind -> Create flow:
+  // after a successful bind step (including skipping), we immediately proceed to Create mode.
+  // This ensures the Create form starts from the same default rebate split as a fresh Create entry.
+  const applyCreateDefaults = () => {
+    setReferrerRebatePercentage(Math.ceil(maxRebatePercentage / 2));
+  };
+
   const {
+    bindReferralCode,
     createReferralCode,
     editReferralCode,
     updateRebateRate,
@@ -45,7 +76,7 @@ export const useReferralCodeFormScript = (
       0,
       new Decimal(maxRebatePercentage).sub(referrerRebatePercentage).toNumber(),
     );
-  }, [referrerRebatePercentage]);
+  }, [maxRebatePercentage, referrerRebatePercentage]);
 
   const codeChanged = useMemo(() => {
     return newCode !== referralCode;
@@ -58,18 +89,26 @@ export const useReferralCodeFormScript = (
     );
   }, [referrerRebatePercentage, referrerRebateRate, newCode]);
 
-  const handleError = (err: any) => {
-    console.error("handleError", err);
-    toast.error(err?.message || t("common.somethingWentWrong"));
+  const getErrorMessage = (err: unknown): string | undefined => {
+    if (typeof err === "object" && err !== null && "message" in err) {
+      const msg = (err as { message?: unknown }).message;
+      return typeof msg === "string" ? msg : undefined;
+    }
+    return undefined;
   };
 
-  const handleResult = (res: any) => {
+  const handleError = (err: unknown) => {
+    console.error("handleError", err);
+    toast.error(getErrorMessage(err) || t("common.somethingWentWrong"));
+  };
+
+  const handleResult = (res: { success?: boolean; message?: string }) => {
     if (res.success) {
       options.onSuccess?.();
       toast.success(t("affiliate.confirmChanges.success"));
       options.close?.();
     } else {
-      toast.error(res.message);
+      toast.error(res.message || t("common.somethingWentWrong"));
     }
   };
 
@@ -135,8 +174,42 @@ export const useReferralCodeFormScript = (
     }
   };
 
+  const onBind = async () => {
+    if (skipBinding) {
+      // Intentionally not calling `options.close()` here:
+      // after the bind step (including skipping), the outer `onSuccess` handler will
+      // immediately open the Create modal, so we keep the flow seamless.
+      options.onSuccess?.();
+      applyCreateDefaults();
+      return;
+    }
+
+    if (
+      formattedBindCode.length < 4 ||
+      formattedBindCode.length > 10 ||
+      isBindCodeChecking ||
+      !isBindCodeExist
+    ) {
+      return;
+    }
+
+    try {
+      await bindReferralCode({ referral_code: formattedBindCode });
+      toast.success(t("affiliate.referralCode.bound"));
+      // Intentionally not calling `options.close()` here:
+      // onSuccess will drive the next step (entering Create mode) immediately.
+      options.onSuccess?.();
+      applyCreateDefaults();
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
   const onClick = () => {
     switch (type) {
+      case ReferralCodeFormType.Bind:
+        onBind();
+        break;
       case ReferralCodeFormType.Create:
         onCreate();
         break;
@@ -154,9 +227,16 @@ export const useReferralCodeFormScript = (
   };
 
   const buttonDisabled =
-    type === ReferralCodeFormType.Edit && !codeChanged && !rateChanged;
+    (type === ReferralCodeFormType.Edit && !codeChanged && !rateChanged) ||
+    (isBind &&
+      !skipBinding &&
+      (formattedBindCode.length < 4 ||
+        formattedBindCode.length > 10 ||
+        isBindCodeChecking ||
+        !isBindCodeExist));
 
   return {
+    type,
     onClick,
     maxRebatePercentage,
     referrerRebatePercentage,
@@ -165,9 +245,16 @@ export const useReferralCodeFormScript = (
     isMutating,
     newCode,
     setNewCode,
+    bindCodeInput,
+    setBindCodeInput,
+    formattedBindCode,
     isReview,
     buttonDisabled,
     onReset,
+    skipBinding,
+    setSkipBinding,
+    isBindCodeExist,
+    isBindCodeChecking,
   };
 };
 

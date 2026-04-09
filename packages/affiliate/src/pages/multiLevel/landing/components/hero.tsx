@@ -19,12 +19,14 @@ export const Hero = () => {
   const {
     isMultiLevelReferralUnlocked,
     isMultiLevelEnabled,
+    isTrader,
     multiLevelRebateInfo,
     multiLevelRebateInfoMutate,
     maxRebateRate,
+    mutate,
   } = useReferralContext();
 
-  const onCreateReferralCode = () => {
+  const showCreateReferralCodeModal = () => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Create,
       maxRebateRate,
@@ -33,6 +35,23 @@ export const Hero = () => {
         multiLevelRebateInfoMutate();
       },
     });
+  };
+
+  const onCreateReferralCode = () => {
+    // if not bound to any codes, show the bind modal
+    if (!isTrader) {
+      modal.show(ReferralCodeFormDialogId, {
+        type: ReferralCodeFormType.Bind,
+        maxRebateRate: maxRebateRate,
+        onSuccess: () => {
+          mutate();
+          showCreateReferralCodeModal();
+        },
+      });
+      return;
+    }
+
+    showCreateReferralCodeModal();
   };
 
   const description = useMemo(() => {
