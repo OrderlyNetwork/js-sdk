@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-transfer",
-  "version": "2.11.1",
+  "version": "2.12.0",
   "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,6 +28,7 @@
     "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/perp": "workspace:*",
+    "@akamfoad/qr": "^0.4.0",
     "@layerzerolabs/scan-client": "^0.0.6",
     "@solana/web3.js": "^1.95.3",
     "ethers": "^6.16.0",

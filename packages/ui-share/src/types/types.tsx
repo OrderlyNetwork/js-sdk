@@ -1,3 +1,5 @@
+import { MarginMode } from "@orderly.network/types";
+
 export type layoutInfo = {
   width?: number;
   height?: number;
@@ -40,6 +42,7 @@ export type SharePnLParams = {
   refCode?: string;
   refSlogan?: string;
   refLink?: string;
+  brokerName?: string;
 };
 
 export type SharePnLOptions = {
@@ -93,7 +96,7 @@ export type ShareOptions =
 export type ShareEntity = {
   symbol: string;
   side: "LONG" | "SHORT";
-  marginMode?: "isolated" | "cross";
+  marginMode?: MarginMode;
   pnl?: number;
   roi?: number;
   openPrice?: number;

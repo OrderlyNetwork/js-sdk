@@ -1,16 +1,18 @@
-# version
+# version.ts
 
-## Overview
+## version.ts Responsibility
 
-Package version string. Sets `window.__ORDERLY_VERSION__["@orderly.network/hooks"]` in browser for debugging.
+Exports the package version string. Used for debugging or display.
 
-## Exports
+## version Exports
 
-- **default**: `"2.9.1"` (version string)
+| Name | Type | Description |
+|------|------|-------------|
+| version | string | Package version (e.g. "2.10.2"). |
 
-## Usage example
+## version Example
 
 ```ts
-import version from "@orderly.network/hooks";
-console.log(version); // "2.9.1"
+import { version } from "@orderly.network/hooks";
+console.log("hooks version:", version);
 ```

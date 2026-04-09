@@ -1,20 +1,24 @@
-# en
+# en.ts
 
-## Overview
+## en.ts responsibility
 
-Default English locale object. Built by merging all message modules from `locale/module/` (common, markets, portfolio, trading, chart, positions, orders, tpsl, share, orderEntry, leverage, scaffold, tradingRewards, tradingView, connector, transfer, affiliate, ui, tradingLeaderboard, tradingPoints, widget, vaults, notification). Used as the initial `resources[defaultLng][defaultNS]` and as the type source for `LocaleMessages`.
+Aggregates all locale modules (common, markets, portfolio, trading, chart, positions, orders, tpsl, share, orderEntry, leverage, scaffold, tradingRewards, tradingView, connector, transfer, affiliate, ui, tradingLeaderboard, tradingPoints, widget, vaults, notification) into a single `en` object. This object is the default English bundle and defines the base shape of LocaleMessages for the default namespace.
 
-## Exports
+## en.ts exports
 
-### `en`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| en | object | Default bundle | Merged key-value map from all module/*.ts |
 
-A flat object of translation keys to English strings, e.g. `"common.cancel": "Cancel"`, `"markets.favorites": "Favorites"`. Keys follow the pattern `module.subkey` or `module.subkey.nested`.
+## en.ts dependency
 
-## Usage example
+- **Upstream**: All locale/module/*.ts.
+- **Downstream**: types (EnType), i18n.ts (resources), package index (re-export).
+
+## en.ts Example
 
 ```typescript
 import { en } from "@orderly.network/i18n";
 
-// Used internally by i18n and LocaleProvider; or for type derivation
-const cancelText = en["common.cancel"];
+const confirmLabel = en["common.confirm"]; // "Confirm"
 ```

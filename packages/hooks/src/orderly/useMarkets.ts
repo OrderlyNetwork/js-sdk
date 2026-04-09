@@ -14,6 +14,7 @@ export enum MarketsType {
   ALL,
   RWA,
   NEW_LISTING,
+  COMMUNITY,
 }
 
 export interface FavoriteTab {
@@ -75,6 +76,10 @@ export type MarketsKey = keyof MarketsData;
 export type MarketsItem = {
   symbol: string;
   displayName?: string;
+  /** Permissionless listing: display name without broker_id suffix */
+  display_symbol_name?: string;
+  /** Permissionless listing: broker id; null for non-community-listed symbols */
+  broker_id?: string | null;
   index_price: number;
   mark_price: number;
   sum_unitary_funding: number;
@@ -342,6 +347,8 @@ const addFieldToMarkets = (
 
     return {
       ...item,
+      broker_id: item.broker_id,
+      display_symbol_name: item.display_symbol_name,
       quote_dp: info("quote_dp"),
       created_time: info("created_time"),
       displayName: info("displayName"),
@@ -376,7 +383,7 @@ const filterMarkets = (params: {
   const { markets, favorites, recent, newListing, type } = params;
   let curData: MarketsItem[] = [];
 
-  if (type === MarketsType.ALL) {
+  if (type === MarketsType.ALL || type === MarketsType.COMMUNITY) {
     curData = markets;
   } else if (type === MarketsType.RWA) {
     curData = markets.filter((item) => item.isRwa);

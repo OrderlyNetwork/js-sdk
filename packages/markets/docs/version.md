@@ -1,18 +1,35 @@
 # version.ts
 
-## Overview
+## version.ts Responsibilities
 
-Registers the package version on `window.__ORDERLY_VERSION__["@orderly.network/markets"]` for runtime version reporting. Only runs in browser environments.
+Sets the package version string and registers it on `window.__ORDERLY_VERSION__["@orderly.network/markets"]` in browser environments. Used for runtime version reporting.
 
-## Exports
+## version.ts Exports
 
-| Name | Description |
-|------|-------------|
-| `default` | String version (e.g. `"2.9.1"`) |
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| default | string | Version | Package version "2.10.2" |
 
-## Usage example
+## Input/Output
+
+- **Input**: None.
+- **Output**: Default export is the version string. Side effect: when `window` is defined, sets `window.__ORDERLY_VERSION__["@orderly.network/markets"]` to the same version.
+
+## Global Augmentation
+
+- **Type**: Extends `Window` with `__ORDERLY_VERSION__?: { [key: string]: string }`.
+- **Runtime**: Object is created if missing; then the markets package key is set.
+
+## Dependencies
+
+- **Upstream**: None.
+- **Downstream**: Apps or tooling that read `window.__ORDERLY_VERSION__` for diagnostics.
+
+## version.ts Example
 
 ```typescript
 import version from "@orderly.network/markets/version";
-// or via window.__ORDERLY_VERSION__["@orderly.network/markets"]
+// or from package entry if re-exported
+console.log(version); // "2.10.2"
+// In browser: window.__ORDERLY_VERSION__["@orderly.network/markets"] === "2.10.2"
 ```

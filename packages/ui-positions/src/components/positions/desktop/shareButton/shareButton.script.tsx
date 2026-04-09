@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import {
+  useBadgeBySymbol,
   useReferralInfo,
   useLeverageBySymbol,
   useSymbolsInfo,
@@ -24,6 +25,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
   const { position, sharePnLConfig, iconSize } = props;
   const { getFirstRefCode } = useReferralInfo();
   const symbolsInfo = useSymbolsInfo();
+  const { brokerNameRaw } = useBadgeBySymbol(position.symbol);
 
   const refCode = useMemo(() => {
     return getFirstRefCode()?.code;
@@ -129,6 +131,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
         },
         refCode,
         ...sharePnLConfig,
+        brokerName: sharePnLConfig?.brokerName ?? brokerNameRaw,
       },
     });
   };

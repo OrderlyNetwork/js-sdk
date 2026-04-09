@@ -21,8 +21,12 @@ export const QuantitySlider = memo((props: QuantitySliderProps) => {
 
   const [sliderValue, setSliderValue] = useState<number>(0);
 
-  const { setOrderValue, symbolInfo, lastQuantityInputType } =
-    useOrderEntryContext();
+  const {
+    setOrderValue,
+    manualSetOrderValue,
+    symbolInfo,
+    lastQuantityInputType,
+  } = useOrderEntryContext();
 
   const { base_dp, base_tick } = symbolInfo;
 
@@ -38,34 +42,48 @@ export const QuantitySlider = memo((props: QuantitySliderProps) => {
       ? t("orderEntry.maxBuy")
       : t("orderEntry.maxSell");
   }, [side, t]);
-
+  /**
+   * @description Handle slider value change from user interaction.
+   * Marks quantity updates as manual so that upstream consumers can
+   * distinguish between automatic recalculations and deliberate user input.
+   * @param value New slider percentage value (0 - 100).
+   */
   const onSliderValueChange = (value: number) => {
     lastQuantityInputType.current = InputType.QUANTITY_SLIDER;
     setSliderValue(value);
+    // user-initiated slider changes should be treated as manual updates
+    sliderToQuantity(value, true);
   };
 
-  const sliderToQuantity = (value: number) => {
+  const sliderToQuantity = (value: number, isManual: boolean = false) => {
     const newQty = new Decimal(value)
       .div(SLIDER_MAX)
       .mul(maxQty)
       .toFixed(base_dp, Decimal.ROUND_DOWN);
-    setOrderValue("order_quantity", utils.formatNumber(newQty, base_tick));
+    if (isManual) {
+      manualSetOrderValue?.(
+        "order_quantity",
+        utils.formatNumber(newQty, base_tick),
+      );
+    } else {
+      setOrderValue("order_quantity", utils.formatNumber(newQty, base_tick));
+    }
   };
 
   const onMax = () => {
     onSliderValueChange(SLIDER_MAX);
     // when previous slider value is max, quantity will not update by useEffect, so must set quantity manually to maxQty
     if (sliderValue === SLIDER_MAX) {
-      sliderToQuantity(SLIDER_MAX);
+      sliderToQuantity(SLIDER_MAX, true);
     }
   };
 
-  // update quantity when slider value and maxQty changes
+  // update quantity when maxQty changes and slider was the last manual input
   useEffect(() => {
     if (lastQuantityInputType.current === InputType.QUANTITY_SLIDER) {
       sliderToQuantity(sliderValue);
     }
-  }, [sliderValue, maxQty]);
+  }, [maxQty]);
 
   useEffect(() => {
     const quantityToSlider = () => {

@@ -1,44 +1,67 @@
-# keyStore
+# keyStore.ts
 
-> Location: `packages/core/src/keyStore.ts`
+## keyStore.ts Responsibility
 
-## Overview
+Defines the Orderly key storage abstraction (`OrderlyKeyStore`) and implementations: `BaseKeyStore` (abstract), `LocalStorageStore` (browser localStorage keyed by networkId and address), and `MockKeyStore` (in-memory with fixed secret key for tests).
 
-Storage for orderly keys and account metadata per address: interface `OrderlyKeyStore`, abstract `BaseKeyStore`, `LocalStorageStore` (browser), and `MockKeyStore` (testing).
+## keyStore.ts Exports
 
-## Exports
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| OrderlyKeyStore | interface | Contract | getOrderlyKey, getAccountId, setAccountId, getAddress, setAddress, removeAddress, generateKey, cleanKey, cleanAllKey, setKey |
+| BaseKeyStore | abstract class | Base | Implements OrderlyKeyStore with keyPrefix `orderly_${networkId}_` |
+| LocalStorageStore | class | Impl | Persists orderlyKey, accountId, address in localStorage |
+| MockKeyStore | class | Impl | Returns same BaseOrderlyKeyPair from fixed secretKey; no persistence |
 
-### OrderlyKeyStore (interface)
+## OrderlyKeyStore Responsibility
+
+Stores and retrieves the current wallet address, account ID per address, and Orderly Key (as OrderlyKeyPair) per address. Used by Signer and Account.
+
+## OrderlyKeyStore Methods
 
 | Method | Description |
-| ------ | ----------- |
-| getOrderlyKey(address?) | Get orderly key for address or default. |
-| getAccountId(address) | Get stored account ID. |
-| setAccountId(address, accountId) | Store account ID. |
-| getAddress() / setAddress(address) / removeAddress() | Current wallet address. |
-| generateKey() | Create new OrderlyKeyPair. |
-| setKey(orderlyKey, secretKey) | Store key for address (second arg is OrderlyKeyPair). |
-| cleanKey(address, key) | Remove one key (e.g. "orderlyKey"). |
-| cleanAllKey(address) | Remove all keys for address. |
+|--------|-------------|
+| getOrderlyKey(address?) | Returns OrderlyKeyPair for address or default address; null if none |
+| getAccountId(address) | Returns account ID for address |
+| setAccountId(address, accountId) | Saves account ID for address |
+| getAddress() | Returns current/default address |
+| setAddress(address) | Sets current address |
+| removeAddress() | Clears current address |
+| generateKey() | Creates new OrderlyKeyPair |
+| setKey(orderlyKey, secretKey) | Stores OrderlyKeyPair for address (second param is OrderlyKeyPair) |
+| cleanKey(address, key) | Removes one key (e.g. "orderlyKey") for address |
+| cleanAllKey(address) | Removes all data for address |
 
-### BaseKeyStore (abstract class)
+## LocalStorageStore Storage Shape
 
-Constructor: `(networkId?: string)` (default "testnet"). Defines key prefix `orderly_${networkId}_`. All methods abstract except keyPrefix.
+- Key prefix: `orderly_${networkId}_`.
+- Address key: `${keyPrefix}address` (current address).
+- Per-address data: `${keyPrefix}${address}` as JSON with keys: orderlyKey (secretKey string), accountId.
 
-### LocalStorageStore (class)
+## keyStore.ts Dependencies and Call Relationships
 
-Extends `BaseKeyStore`. Persists keys and accountId in localStorage under key prefix + address.
+- **Upstream**: keyPair (BaseOrderlyKeyPair, OrderlyKeyPair).
+- **Downstream**: Account, BaseSigner; getDefaultSigner/getMockSigner in helper.
 
-### MockKeyStore (class)
+## keyStore.ts Extension and Modification Points
 
-Implements `OrderlyKeyStore`. Constructor: `(secretKey: string)`. Always returns same key from getOrderlyKey/generateKey; other methods no-op. For tests.
+- **New backend**: Implement OrderlyKeyStore (e.g. secure storage, server-backed) and pass to Account/Signer.
+- **Key schema**: Change keyPrefix or per-address JSON shape in LocalStorageStore; keep OrderlyKeyStore interface stable.
 
-## Usage Example
+## keyStore.ts Example
 
-```ts
-import { LocalStorageStore, MockKeyStore } from "@orderly.network/core";
-const keyStore = new LocalStorageStore("mainnet");
-keyStore.setAddress("0x...");
-keyStore.setKey("0x...", keyPair);
+```typescript
+import { LocalStorageStore, MockKeyStore, BaseOrderlyKeyPair } from "@orderly.network/core";
+
+const keyStore = new LocalStorageStore("testnet");
+keyStore.setAddress("0x123...");
+keyStore.setAccountId("0x123...", "account_id_1");
+const kp = keyStore.generateKey();
+keyStore.setKey("0x123...", kp);
 const key = keyStore.getOrderlyKey();
+const accountId = keyStore.getAccountId("0x123...");
+
+// Test
+const mockStore = new MockKeyStore("base58SecretKey...");
+const signer = new BaseSigner(mockStore);
 ```

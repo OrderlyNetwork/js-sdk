@@ -28,6 +28,7 @@ export const tradingView = {
   "tradingView.displayControl.buySell": "Buy/Sell",
   "tradingView.displayControl.limitOrders": "Limit orders",
   "tradingView.displayControl.stopOrders": "Stop orders",
+  "tradingView.displayControl.liquidationPrice": "Liquidation Price",
 
   "tradingView.noScriptSrc":
     "Due to TradingView's policy, you will need to apply for your own license.",

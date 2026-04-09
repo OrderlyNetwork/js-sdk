@@ -37,6 +37,7 @@ import { PriceCell } from "./components/priceCell";
 import { QuantityCell } from "./components/quantityCell";
 import { TrailingCallbackCell } from "./components/trailingCallbackCell";
 import { TriggerPriceCell } from "./components/triggerPriceCell";
+import { OrderSymbolCell } from "./orderSymbolCell";
 import { Renew } from "./renew";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
@@ -63,7 +64,7 @@ export const useOrderColumn = (props: {
       case TabType.all:
         return [
           instrument({
-            width: 130,
+            width: 200,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -101,7 +102,7 @@ export const useOrderColumn = (props: {
       case TabType.pending:
         return [
           instrument({
-            width: 172,
+            width: 200,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -125,7 +126,7 @@ export const useOrderColumn = (props: {
       case TabType.tp_sl:
         return [
           instrument({
-            width: 176,
+            width: 200,
             showType: true,
             onSymbolChange: onSymbolChange,
             enableSort: false,
@@ -143,7 +144,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 154,
+            width: 200,
             onSymbolChange: onSymbolChange,
           }),
           // type({ width: 124 }),
@@ -178,7 +179,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 154,
+            width: 200,
             onSymbolChange: onSymbolChange,
             enableSort: false,
           }),
@@ -202,7 +203,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 154,
+            width: 200,
             onSymbolChange: onSymbolChange,
           }),
           // side({ width: 124 }),
@@ -225,7 +226,7 @@ export const useOrderColumn = (props: {
         return [
           instrument({
             showType: true,
-            width: 154,
+            width: 200,
             onSymbolChange: onSymbolChange,
           }),
           // side({ width: 124 }),
@@ -295,31 +296,23 @@ function instrument(option?: {
       const showGray = grayCell(record);
 
       return (
-        <Flex gap={2}>
+        <Flex gap={2} className="oui-py-1">
           <div
             className={cn(
-              "oui-h-7 oui-w-1 oui-shrink-0 oui-rounded-[1px]",
+              "oui-h-[34px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
               record.side === OrderSide.BUY
                 ? "oui-bg-trade-profit"
                 : "oui-bg-trade-loss",
             )}
           />
-          <Flex direction="column" itemAlign={"start"}>
-            <Text.formatted
-              // rule={"symbol"}
-              size="xs"
-              className="oui-cursor-pointer oui-text-xs"
-              onClick={(e) => {
-                option?.onSymbolChange?.({ symbol: value } as API.Symbol);
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-            >
-              {`${value.split("_")[1]}-PERP`}
-            </Text.formatted>
+          <Flex direction="column" itemAlign={"start"} gap={1}>
+            <OrderSymbolCell
+              symbol={value}
+              onSymbolChange={option?.onSymbolChange}
+            />
 
             {option?.showType && (
-              <Flex direction={"row"} gap={1}>
+              <Flex direction={"row"} gap={1} wrap="wrap">
                 {parseBadgesFor(record)?.map((e, index) => (
                   <Badge
                     key={index}

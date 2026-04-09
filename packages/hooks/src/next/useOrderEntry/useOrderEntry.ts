@@ -24,11 +24,13 @@ import {
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
 import { useOrderlyContext } from "../../orderlyContext";
+import { useSymbolStore } from "../../provider/store/symbolStore";
 import {
   OrderValidationItem,
   OrderValidationResult,
 } from "../../services/orderCreator/interface";
 import { useMemoizedFn } from "../../shared/useMemoizedFn";
+import { useConfig } from "../../useConfig";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
@@ -107,6 +109,12 @@ export type OrderEntryReturn = {
     },
   ) => void;
   setValues: (values: Partial<FullOrderState>) => void;
+  /**
+   * Raw merge setter for externally computed bundles (e.g. Advanced TPSL).
+   *
+   * Unlike `setValues`, this intentionally skips `calculate()` to avoid overwriting computed TPSL fields.
+   */
+  setValuesRaw: (values: Partial<FullOrderState>) => void;
   symbolInfo: API.SymbolExt;
   /**
    * Meta state including validation and submission status.
@@ -181,6 +189,8 @@ const useOrderEntry = (
   }
   const ee = useEventEmitter();
   const { track } = useTrack();
+  const apiBaseUrl = useConfig("apiBaseUrl");
+  const fetchSymbols = useSymbolStore((state) => state.fetchData);
 
   const [meta, setMeta] = useState<{
     dirty: { [K in keyof OrderlyOrder]?: boolean };
@@ -225,6 +235,7 @@ const useOrderEntry = (
     formattedOrder,
     setValue: setValueInternal,
     setValues: setValuesInternal,
+    setValuesRaw: setValuesRawInternal,
     validate,
     generateOrder,
     reset,
@@ -517,6 +528,26 @@ const useOrderEntry = (
     }
 
     const newValues = setValuesInternal(values, prepareData());
+
+    if (newValues) {
+      interactiveValidate(newValues);
+    }
+  };
+
+  const setValuesRaw = (values: Partial<FullOrderState>) => {
+    if (
+      !Object.keys(values).every((key) =>
+        canSetTPSLPrice(
+          key as keyof FullOrderState,
+          values[key as keyof FullOrderState],
+          formattedOrder.order_type,
+        ),
+      )
+    ) {
+      return;
+    }
+
+    const newValues = setValuesRawInternal(values);
     if (newValues) {
       interactiveValidate(newValues);
     }
@@ -596,7 +627,7 @@ const useOrderEntry = (
       markPrice,
       totalCollateral,
       futures_taker_fee_rate: accountInfo.futures_taker_fee_rate,
-      imr_factor: accountInfo.imr_factor[symbol],
+      imr_factor: accountInfo.imr_factor?.[symbol] ?? 0,
       symbol,
       positions,
       symbolInfo,
@@ -715,6 +746,16 @@ const useOrderEntry = (
 
     const result = await doCreateOrder(params);
 
+    // If placing a Market/Stop Market order fails, refresh symbol info once
+    // to check whether the symbol has switched to POST_ONLY.
+    if (
+      !result.success &&
+      (order.order_type === OrderType.MARKET ||
+        order.order_type === OrderType.STOP_MARKET)
+    ) {
+      void fetchSymbols(apiBaseUrl);
+    }
+
     if (result.success) {
       let trackParams: any = {
         side: order.side,
@@ -791,6 +832,7 @@ const useOrderEntry = (
         : freeCollateral,
     setValue: useMemoizedFn(setValue),
     setValues: useMemoizedFn(setValues),
+    setValuesRaw: useMemoizedFn(setValuesRaw),
     symbolInfo: symbolInfo || EMPTY_OBJECT,
     metaState: meta,
     isMutating,

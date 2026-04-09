@@ -1,4 +1,5 @@
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
+import { useMarketCategories } from "../shared/hooks/useMarketCategories";
 import {
   useExpandMarketsScript,
   ExpandMarketsScriptOptions,
@@ -15,11 +16,13 @@ export const ExpandMarketsWidget: React.FC<ExpandMarketsWidgetProps> = (
     activeTab: props.activeTab,
     onTabChange: props.onTabChange,
   });
+  const tabs = useMarketCategories("expandMarkets");
 
   return (
     <MarketsProvider
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
+      tabs={tabs}
     >
       <ExpandMarkets {...state} />
     </MarketsProvider>

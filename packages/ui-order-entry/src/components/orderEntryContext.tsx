@@ -20,6 +20,7 @@ export type OrderEntryContextState = {
     customValue?: string,
   ) => string;
   setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
+  manualSetOrderValue?: (key: keyof OrderlyOrder, value: any) => void;
   setOrderValues: (values: Partial<OrderlyOrder>) => void;
   currentFocusInput: InputType;
   // refs

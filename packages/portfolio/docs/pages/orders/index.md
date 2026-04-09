@@ -1,11 +1,17 @@
-# pages/orders
+# orders – directory index
 
-## Overview
+## Directory responsibility
 
-Orders page for portfolio (order list / management).
+Orders page (re-exported from page). Exposed as OrdersModule from package root.
+
+## Key entities
+
+| Entity | File | Responsibility |
+|--------|------|----------------|
+| OrdersPage (or equivalent) | page.tsx | Orders page component |
 
 ## Files
 
-| File | Language | Description |
-|------|----------|-------------|
-| [page.tsx](page.md) | TSX | Orders page component. |
+| File | Language | Link |
+|------|----------|------|
+| page.tsx | TSX | [page.md](page.md) |

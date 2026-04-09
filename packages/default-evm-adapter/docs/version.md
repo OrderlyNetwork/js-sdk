@@ -1,23 +1,37 @@
-# version
+# version.ts
 
-## Overview
+## version.ts Responsibility
 
-Exports the package version string and optionally registers it on `window.__ORDERLY_VERSION__` for runtime version reporting when running in a browser.
+Exposes the default-evm-adapter package version as a string and registers it on the global `window.__ORDERLY_VERSION__` object in browser environments so other Orderly packages can detect the installed adapter version.
 
-## Exports
+## version.ts Exports
 
-| Export     | Type     | Description |
-| ---------- | -------- | ----------- |
-| `default`  | `string` | Package version (e.g. `"2.9.1"`). |
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| default | string | Version | Package version string (e.g. `"2.10.2"`) |
 
-## Behavior
+## version.ts Input and Output
 
-- In a browser environment (`typeof window !== "undefined"`), sets `window.__ORDERLY_VERSION__["@orderly.network/default-evm-adapter"]` to the same version string, creating `__ORDERLY_VERSION__` if it does not exist.
-- Does not mutate `window` in Node or other non-browser environments.
+- **Input**: None.
+- **Output**: Default export is the version string; side effect in browser: `window.__ORDERLY_VERSION__["@orderly.network/default-evm-adapter"]` is set.
 
-## Usage Example
+## version.ts Global Augmentation
 
-```ts
-import version from "@orderly.network/default-evm-adapter/version";
-console.log(version); // "2.9.1"
+- **Global**: Extends `Window` with optional `__ORDERLY_VERSION__?: { [key: string]: string }`.
+- **Side effect**: When `typeof window !== "undefined"`, assigns the current version to `window.__ORDERLY_VERSION__["@orderly.network/default-evm-adapter"]`.
+
+## version.ts Dependencies and Callers
+
+- **Upstream**: None.
+- **Downstream**: Package entry (`index.ts`) and any code that reads `window.__ORDERLY_VERSION__`.
+
+## version.ts Example
+
+```typescript
+import version from "@orderly.network/default-evm-adapter";
+
+console.log(version); // "2.10.2"
+
+// In browser, after import:
+// window.__ORDERLY_VERSION__["@orderly.network/default-evm-adapter"] === "2.10.2"
 ```

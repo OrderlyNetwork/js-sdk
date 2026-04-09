@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   useMarkets,
   MarketsType,
@@ -13,8 +13,18 @@ import { MarketsTabName } from "../../type";
 import { sortList } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
 import { useTabSort } from "../shared/hooks/useTabSort";
+import {
+  getCustomTabDataFilter,
+  isCustomMarketTab,
+  tabKey,
+} from "../shared/tabUtils";
 
-export type MarketType = "all" | "recent" | "newListing" | "favorites";
+export type MarketType =
+  | "all"
+  | "recent"
+  | "newListing"
+  | "favorites"
+  | (string & {});
 
 export type HorizontalMarketsScriptOptions = {
   symbols?: string[];
@@ -34,27 +44,59 @@ export const useHorizontalMarketsScript = (
     maxItems: optionMaxItems,
     defaultMarketType,
   } = options || {};
-  const { symbol: currentSymbol, onSymbolChange } = useMarketsContext();
+  const { symbol: currentSymbol, onSymbolChange, tabs } = useMarketsContext();
   const [selectedMarketType, setSelectedMarketType] =
     useLocalStorage<MarketType>(
       SIDE_MARKETS_SEL_TAB_KEY,
       (defaultMarketType || "all") as MarketType,
     );
+  const availableMarketTypes = useMemo<MarketType[]>(
+    () =>
+      tabs?.map((tab, index) => tabKey(tab, index) as MarketType) ?? ["all"],
+    [tabs],
+  );
 
-  const MarketsTypeMap: Record<MarketType, MarketsType> = {
+  const MarketsTypeMap: Record<string, MarketsType> = {
     all: MarketsType.ALL,
     recent: MarketsType.RECENT,
     newListing: MarketsType.NEW_LISTING,
     favorites: MarketsType.FAVORITES,
   };
 
-  // Pull markets from the shared store (same as SideMarkets)
-  const marketTypeKey = (selectedMarketType as MarketType) || "all";
+  // For custom categories, fetch all markets and filter by tab match rule.
+  const isCustomCategory =
+    typeof selectedMarketType === "string" &&
+    !MarketsTypeMap[selectedMarketType];
+  const marketTypeKey = isCustomCategory
+    ? "all"
+    : (selectedMarketType as string) || "all";
   const [markets, favorite] = useMarkets(
     MarketsTypeMap[marketTypeKey] || MarketsType.ALL,
   );
+
+  useEffect(() => {
+    if (!availableMarketTypes.includes(selectedMarketType)) {
+      setSelectedMarketType(availableMarketTypes[0] ?? "all");
+    }
+  }, [availableMarketTypes, selectedMarketType, setSelectedMarketType]);
+
+  // Resolve the filter for the active custom category.
+  const customCategoryFilter = useMemo(() => {
+    if (!isCustomCategory || !tabs) return null;
+    const customTabs = tabs.filter(isCustomMarketTab);
+    const tab = customTabs.find(
+      (item, index) => tabKey(item, index) === selectedMarketType,
+    );
+    return tab ? (getCustomTabDataFilter(tab) ?? null) : null;
+  }, [isCustomCategory, tabs, selectedMarketType]);
+
   // Apply the same ordering rules as SideMarkets
   const filteredMarkets = useMemo(() => {
+    // Custom category: apply the matched tab predicate to all markets.
+    if (isCustomCategory && customCategoryFilter) {
+      return customCategoryFilter(markets);
+    }
+
     if (selectedMarketType === "favorites") {
       const { favorites, selectedFavoriteTab } = favorite;
       const symbolsInTab = favorites
@@ -86,6 +128,8 @@ export const useHorizontalMarketsScript = (
     favorite.selectedFavoriteTab,
     favorite.recent,
     selectedMarketType,
+    isCustomCategory,
+    customCategoryFilter,
   ]);
 
   // Read the tabSort from the same storage used by side markets and apply it

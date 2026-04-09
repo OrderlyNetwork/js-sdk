@@ -1,5 +1,31 @@
 # @orderly.network/i18n
 
+## 2.12.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
+## 2.12.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 2.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+
+## 2.11.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.11.1
 
 ### Patch Changes

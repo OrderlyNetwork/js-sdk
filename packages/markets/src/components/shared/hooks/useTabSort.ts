@@ -8,10 +8,10 @@ export function useTabSort(options: { storageKey: string }) {
       sortKey: "24h_amount",
       sortOrder: "desc",
     },
-  } as Record<MarketsTabName, SortType>);
+  } as Record<string, SortType>);
 
   const onTabSort = useCallback(
-    (type: MarketsTabName) => (sort?: SortType) => {
+    (type: MarketsTabName | string) => (sort?: SortType) => {
       setTabSort({ ...tabSort, [type]: sort });
     },
     [tabSort],

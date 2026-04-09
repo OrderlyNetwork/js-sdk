@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Text, TokenIcon } from "@orderly.network/ui";
+import { SymbolBadge } from "../../desktop/symbolBadge";
 
 export interface SymbolInfoProps {
   symbol: string;
@@ -11,10 +12,11 @@ export const SymbolInfo: FC<SymbolInfoProps> = ({ symbol }) => {
       <TokenIcon symbol={symbol} className="oui-size-5" />
       <Text.formatted
         rule="symbol"
-        formatString="base-type"
+        formatString="base"
         size="base"
         weight="semibold"
         intensity={98}
+        suffix={<SymbolBadge symbol={symbol} />}
       >
         {symbol}
       </Text.formatted>

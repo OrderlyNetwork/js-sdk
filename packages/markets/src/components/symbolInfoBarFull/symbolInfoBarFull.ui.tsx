@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useFundingRate } from "@orderly.network/hooks";
+import { useBadgeBySymbol, useFundingRate } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   TokenIcon,
@@ -10,6 +10,7 @@ import {
   NewsFillIcon,
   Box,
   Tooltip,
+  WarningIcon,
 } from "@orderly.network/ui";
 import { CloseIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -21,6 +22,7 @@ import {
 } from "../../icons";
 import { FundingRateHintWidget } from "../fundingRateHint";
 import type { MarketsProviderProps } from "../marketsProvider";
+import { SymbolBadge } from "../symbolBadge";
 import { SymbolDisplay } from "../symbolDisplay";
 import { RwaTooltip } from "./rwaTooltip";
 import type { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.script";
@@ -41,6 +43,111 @@ const LazyDataItem = React.lazy(() =>
   import("./dataItem.ui").then((mod) => {
     return { default: mod.DataItem };
   }),
+);
+
+const RISK_NOTICE_LEARN_MORE_URL = "https://orderly.network";
+
+/** Part 1: Community-listed risk notice banner */
+export const SymbolInfoBarRiskNotice: React.FC<{
+  className?: string;
+  visible: boolean;
+  symbolWithBroker: string;
+  brokerName: string;
+  /** When true, height follows content instead of fixed 46px (e.g. for mobile) */
+  autoHeight?: boolean;
+}> = ({ className, visible, symbolWithBroker, brokerName, autoHeight }) => {
+  const { t } = useTranslation();
+  if (!visible) return null;
+  return (
+    <a
+      href={RISK_NOTICE_LEARN_MORE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(
+        "oui-symbol-info-bar-risk-notice oui-w-full oui-bg-warning-darken/10 oui-rounded-none oui-text-warning-darken hover:oui-cursor-pointer oui-block",
+        className,
+      )}
+    >
+      <Flex
+        itemAlign="center"
+        gap={2}
+        className={
+          autoHeight ? "oui-min-h-0 oui-py-2 oui-px-2" : "oui-h-[46px] oui-px-3"
+        }
+      >
+        <WarningIcon className="oui-shrink-0 oui-size-4 oui-text-warning-darken" />
+        <Text size="xs" className="oui-text-warning-darken oui-flex-1">
+          {t("markets.symbolInfoBar.riskNotice.content", {
+            symbolWithBroker,
+            brokerName,
+          })}{" "}
+          <span className="oui-underline">{t("common.learnMore")}</span>
+        </Text>
+      </Flex>
+    </a>
+  );
+};
+
+/** Part 2: Desktop info bar (favorites, symbol, last price, scrollable data area) */
+type SymbolInfoBarDesktopProps = {
+  className?: string;
+  trailing?: ReactNode;
+  leftSection: ReactNode;
+  priceSection: ReactNode;
+  scrollableContent: ReactNode;
+  containerRef: React.LegacyRef<HTMLDivElement>;
+  leadingVisible: boolean;
+  tailingVisible: boolean;
+  onScroll: (direction: string) => void;
+};
+
+const SymbolInfoBarDesktop: React.FC<SymbolInfoBarDesktopProps> = ({
+  className,
+  trailing,
+  leftSection,
+  priceSection,
+  scrollableContent,
+  containerRef,
+  leadingVisible,
+  tailingVisible,
+  onScroll,
+}) => (
+  <Flex
+    intensity={900}
+    r="2xl"
+    mt={1}
+    px={3}
+    className={cn(
+      "oui-symbol-info-bar-desktop",
+      "oui-font-semibold",
+      "oui-flex-1 oui-w-full",
+      "oui-py-2",
+      className,
+    )}
+    style={{
+      transform: "translateZ(0)",
+      willChange: "transform",
+    }}
+  >
+    <Flex gapX={6} className="oui-h-full oui-flex-1 oui-overflow-hidden">
+      <Flex gapX={1} className="oui-flex-none oui-shrink-0">
+        {leftSection}
+      </Flex>
+      <Divider className="oui-h-[26px]" direction="vertical" intensity={8} />
+      {priceSection}
+      <div className="oui-relative oui-h-full oui-overflow-hidden">
+        <div
+          ref={containerRef}
+          className="oui-hide-scrollbar oui-h-full oui-overflow-x-auto"
+        >
+          {scrollableContent}
+        </div>
+        <ScrollIndicator leading onClick={onScroll} visible={leadingVisible} />
+        <ScrollIndicator tailing onClick={onScroll} visible={tailingVisible} />
+      </div>
+    </Flex>
+    {trailing}
+  </Flex>
 );
 
 export type Layout = "left" | "right";
@@ -82,6 +189,14 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
   } = props;
 
   const { t } = useTranslation();
+  const { brokerId, brokerName, brokerNameRaw, displayName } =
+    useBadgeBySymbol(symbol);
+  const isCommunityListed = Boolean(brokerId ?? brokerName);
+  const baseFromSymbol = symbol?.split("_")[1] ?? symbol;
+  const symbolWithBroker =
+    brokerName != null
+      ? `${baseFromSymbol}-${brokerNameRaw}`
+      : (displayName ?? symbol);
 
   const favoriteIcon = (
     <React.Suspense fallback={null}>
@@ -115,26 +230,32 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
           symbol={props.symbol}
           onSymbolChange={props.onSymbolChange}
         >
-          <Flex gapX={1} className="oui-cursor-pointer">
-            <TokenIcon symbol={symbol} className="oui-size-4" />
-            <SymbolDisplay
-              formatString="base"
-              size="xs"
-              className="oui-text-base-contrast"
-            >
-              {symbol}
-            </SymbolDisplay>
-            <TriangleDownIcon className="oui-text-base-contrast-54" />
+          <Flex direction="column" gap={1}>
+            <Flex gapX={1} className="oui-cursor-pointer">
+              <TokenIcon symbol={symbol} className="oui-size-4" />
+              <SymbolDisplay
+                formatString="base"
+                size="xs"
+                className="oui-text-base-contrast"
+                showBadge={false}
+              >
+                {symbol}
+              </SymbolDisplay>
+              <TriangleDownIcon className="oui-text-base-contrast-54" />
+            </Flex>
           </Flex>
         </LazyDropDownMarketsWidget>
-        {isRwa && (
-          <RwaTooltip
-            isRwa={isRwa}
-            open={open}
-            closeTimeInterval={closeTimeInterval}
-            openTimeInterval={openTimeInterval}
-          />
-        )}
+        <Flex gap={1}>
+          <SymbolBadge symbol={symbol} />
+          {isRwa && (
+            <RwaTooltip
+              isRwa={isRwa}
+              open={open}
+              closeTimeInterval={closeTimeInterval}
+              openTimeInterval={openTimeInterval}
+            />
+          )}
+        </Flex>
       </Flex>
     </React.Suspense>
   );
@@ -168,129 +289,110 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
     </>
   );
 
-  return (
-    <Flex direction="column" className="oui-h-full oui-w-full">
-      <Flex
-        className={cn(
-          "oui-symbol-info-bar-desktop",
-          "oui-font-semibold",
-          "oui-flex-1 oui-w-full",
-          props.className,
-        )}
-        // fix Safari text opacity transition bug
-        style={{
-          transform: "translateZ(0)",
-          willChange: "transform",
-        }}
-      >
-        <Flex gapX={6} className="oui-h-full oui-flex-1 oui-overflow-hidden">
-          <Flex gapX={1}>
-            {favoriteIcon}
-            {symbolView}
-          </Flex>
-          <Divider
-            className="oui-h-[26px]"
-            direction="vertical"
-            intensity={8}
-          />
-          <Tooltip
-            content={t("markets.symbolInfoBar.lastPrice.tooltip")}
-            className="oui-max-w-[240px]"
-          >
-            <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-inline-block">
-              {price}
-            </span>
-          </Tooltip>
-          <div className="oui-relative oui-h-full oui-overflow-hidden">
-            <div
-              ref={containerRef}
-              className="oui-hide-scrollbar oui-h-full oui-overflow-x-auto"
-            >
-              <Flex gapX={8} height="100%">
-                <div ref={leadingElementRef}>
-                  <React.Suspense fallback={null}>
-                    <LazyDataItem
-                      label={t("markets.column.24hChange")}
-                      value={change}
-                    />
-                  </React.Suspense>
-                </div>
-                <React.Suspense fallback={null}>
-                  <LazyDataItem
-                    label={t("markets.symbolInfoBar.Mark")}
-                    value={
-                      <Text.numeral
-                        dp={quotoDp}
-                        data-testid="oui-testid-tokenInfo-markPrice-value"
-                      >
-                        {data?.["mark_price"]}
-                      </Text.numeral>
-                    }
-                    hint={t("markets.symbolInfoBar.Mark.tooltip")}
-                  />
-                </React.Suspense>
-                <React.Suspense fallback={null}>
-                  <LazyDataItem
-                    label={t("markets.symbolInfoBar.Index")}
-                    value={
-                      <Text.numeral dp={quotoDp}>
-                        {data?.["index_price"]}
-                      </Text.numeral>
-                    }
-                    hint={t("markets.symbolInfoBar.Index.tooltip")}
-                  />
-                </React.Suspense>
-                <React.Suspense fallback={null}>
-                  <LazyDataItem
-                    label={t("markets.symbolInfoBar.24hVolume")}
-                    value={
-                      <Text.numeral rule="human" dp={2}>
-                        {data?.["24h_amount"]}
-                      </Text.numeral>
-                    }
-                    hint={t("markets.symbolInfoBar.24hVolume.tooltip")}
-                  />
-                </React.Suspense>
-                <React.Suspense fallback={null}>
-                  <LazyDataItem
-                    label={t("markets.symbolInfoBar.predFundingRate")}
-                    value={<FundingRate symbol={symbol} />}
-                    hint={<FundingRateHintWidget symbol={symbol} />}
-                  />
-                </React.Suspense>
+  const leftSection = (
+    <>
+      {favoriteIcon}
+      {symbolView}
+    </>
+  );
 
-                <div ref={tailingElementRef}>
-                  <React.Suspense fallback={null}>
-                    <LazyDataItem
-                      label={t("markets.openInterest")}
-                      value={
-                        <>
-                          <Text.numeral rule="human" dp={2}>
-                            {openInterest}
-                          </Text.numeral>
-                          <Text intensity={36}>{` USDC`}</Text>
-                        </>
-                      }
-                      hint={t("markets.openInterest.tooltip")}
-                    />
-                  </React.Suspense>
-                </div>
-              </Flex>
-            </div>
-            <ScrollIndicator
-              leading
-              onClick={onScoll}
-              visible={leadingVisible}
-            />
-            <ScrollIndicator
-              tailing
-              onClick={onScoll}
-              visible={tailingVisible}
-            />
-          </div>
-        </Flex>
-        {props.trailing}
-      </Flex>
+  const priceSection = (
+    <Tooltip
+      content={t("markets.symbolInfoBar.lastPrice.tooltip")}
+      className="oui-max-w-[240px]"
+    >
+      <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-inline-block">
+        {price}
+      </span>
+    </Tooltip>
+  );
+
+  const scrollableContent = (
+    <Flex gapX={8} height="100%">
+      <div ref={leadingElementRef}>
+        <React.Suspense fallback={null}>
+          <LazyDataItem label={t("markets.column.24hChange")} value={change} />
+        </React.Suspense>
+      </div>
+      <React.Suspense fallback={null}>
+        <LazyDataItem
+          label={t("markets.symbolInfoBar.Mark")}
+          value={
+            <Text.numeral
+              dp={quotoDp}
+              data-testid="oui-testid-tokenInfo-markPrice-value"
+            >
+              {data?.["mark_price"]}
+            </Text.numeral>
+          }
+          hint={t("markets.symbolInfoBar.Mark.tooltip")}
+        />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <LazyDataItem
+          label={t("markets.symbolInfoBar.Index")}
+          value={
+            <Text.numeral dp={quotoDp}>{data?.["index_price"]}</Text.numeral>
+          }
+          hint={t("markets.symbolInfoBar.Index.tooltip")}
+        />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <LazyDataItem
+          label={t("markets.symbolInfoBar.24hVolume")}
+          value={
+            <Text.numeral rule="human" dp={2}>
+              {data?.["24h_amount"]}
+            </Text.numeral>
+          }
+          hint={t("markets.symbolInfoBar.24hVolume.tooltip")}
+        />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <LazyDataItem
+          label={t("markets.symbolInfoBar.predFundingRate")}
+          value={<FundingRate symbol={symbol} />}
+          hint={<FundingRateHintWidget symbol={symbol} />}
+        />
+      </React.Suspense>
+      <div ref={tailingElementRef}>
+        <React.Suspense fallback={null}>
+          <LazyDataItem
+            label={t("markets.openInterest")}
+            value={
+              <>
+                <Text.numeral rule="human" dp={2}>
+                  {openInterest}
+                </Text.numeral>
+                <Text intensity={36}>{` USDC`}</Text>
+              </>
+            }
+            hint={t("markets.openInterest.tooltip")}
+          />
+        </React.Suspense>
+      </div>
+    </Flex>
+  );
+
+  return (
+    <Flex direction="column" className="oui-h-full oui-w-full" gapY={1}>
+      <SymbolInfoBarRiskNotice
+        visible={isCommunityListed}
+        symbolWithBroker={symbolWithBroker}
+        brokerName={brokerNameRaw ?? brokerName ?? ""}
+      />
+      <SymbolInfoBarDesktop
+        className={props.className}
+        trailing={props.trailing}
+        leftSection={leftSection}
+        priceSection={priceSection}
+        scrollableContent={scrollableContent}
+        containerRef={containerRef}
+        leadingVisible={leadingVisible}
+        tailingVisible={tailingVisible}
+        onScroll={onScoll}
+      />
+      {/* Part 3: RWA countdown */}
       {showCountdown && (
         <RwaCountdown
           closeCountdown={closeCountdown}

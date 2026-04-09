@@ -1,54 +1,46 @@
-# context
+# context.ts
 
-## Overview
+## context.ts responsibility
 
-React context for the language switcher: supported languages list, callbacks for before/after language change, and popup options (modal, dropdown, sheet). Consumed by `LocaleProvider` and UI that switches locale.
+Provides React context for locale configuration: supported languages list, callbacks for before/after language change, and optional popup options for the language switcher UI. Consumed by LocaleProvider (which sets the value) and by switcher components via useLocaleContext.
 
-## Exports
+## context.ts exports
 
-### `Language`
+| Name | Type | Role | Description |
+|------|------|------|-------------|
+| Language | type | Language option | { localCode: LocaleCode; displayName: string } |
+| PopupMode | type | Popup display mode | "modal" \| "dropdown" \| "sheet" |
+| PopupProps | type | Popup config | mode?, className?, style? |
+| LocaleContextState | type | Context value | languages, onLanguageBeforeChanged, onLanguageChanged, popup? |
+| LocaleContext | context | React context | createContext<LocaleContextState> |
+| useLocaleContext | function | Hook | useContext(LocaleContext) |
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `localCode` | `LocaleCode` | Locale code (e.g. `en`, `zh`) |
-| `displayName` | `string` | Display name (e.g. "English", "中文") |
+## LocaleContextState fields
 
-### `PopupMode`
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| languages | Language[] | yes | List of selectable languages |
+| onLanguageBeforeChanged | (lang: LocaleCode) => Promise<void> | yes | Called before switching; used to load resources |
+| onLanguageChanged | (lang: LocaleCode) => Promise<void> | yes | Called after language change |
+| popup | PopupProps | no | Options for language switcher popup |
 
-`"modal" | "dropdown" | "sheet"` – how the language switcher popup is shown.
+## context.ts dependency
 
-### `PopupProps`
+- **Upstream**: types (LocaleCode).
+- **Downstream**: constant (Language[]), provider.tsx.
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `mode` | `PopupMode` | No | Default `"modal"` |
-| `className` | `string` | No | Popup class name |
-| `style` | `React.CSSProperties` | No | Popup style |
-
-### `LocaleContextState`
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `languages` | `Language[]` | Custom/supported languages for the switcher |
-| `onLanguageBeforeChanged` | `(lang: LocaleCode) => Promise<void>` | Called before language change (e.g. load resources) |
-| `onLanguageChanged` | `(lang: LocaleCode) => Promise<void>` | Called after language change |
-| `popup` | `PopupProps \| undefined` | Options for the language switcher popup |
-
-### `LocaleContext`
-
-`React.createContext<LocaleContextState>` – default value has empty `languages` and no-op promises for the callbacks.
-
-### `useLocaleContext()`
-
-Returns `useContext(LocaleContext)`.
-
-## Usage example
+## context.ts Example
 
 ```typescript
-import { useLocaleContext, type Language } from "@orderly.network/i18n";
+import { useLocaleContext } from "@orderly.network/i18n";
 
 function LanguageSwitcher() {
   const { languages, onLanguageBeforeChanged, onLanguageChanged } = useLocaleContext();
-  // Render list of languages and call callbacks on select
+  const handleChange = async (lang) => {
+    await onLanguageBeforeChanged(lang);
+    await i18n.changeLanguage(lang);
+    await onLanguageChanged(lang);
+  };
+  return (/* render languages and call handleChange */);
 }
 ```

@@ -2,25 +2,37 @@ import { i18n } from "@orderly.network/i18n";
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 
-/** Params for rendering the single shared liquidation price line (position vs estimated). */
+/** Supported position margin mode labels for liquidation lines. */
+type LiquidationMarginMode = "ISOLATED" | "CROSS";
+
+/** Position liquidation line item (price + margin mode). */
+interface PositionLiqLineItem {
+  price: number;
+  marginMode?: LiquidationMarginMode;
+  /** Optional leverage shown after margin mode (e.g. `CROSS 10x`). */
+  leverage?: number | null;
+}
+
+/** Params for rendering liquidation price lines (position list + optional estimated). */
 export interface LiquidationLineRenderParams {
-  /** Position liquidation price (from current symbol position); null when no position. */
-  positionLiqPrice: number | null;
+  /** Position liquidation line items (same symbol, may contain cross + isolated). */
+  positionLiqItems: PositionLiqLineItem[];
   /** Order Entry estimated liquidation price; null when invalid or "--". */
   estimatedLiqPrice: number | null;
 }
 
 /**
- * Maintains a single horizontal liquidation price line on the chart.
- * Shows estimated liq. price when valid; otherwise position liq. price. No internal fallback timer
- * so the line stays in sync with OrderEntry (hook controls when to clear estimated).
+ * Maintains liquidation lines on the chart.
+ * Estimated liq. price keeps higher priority: when estimated is valid, only estimated line is shown.
+ * When estimated is unavailable, all valid position liq. prices are rendered as multiple lines.
  */
 export class LiquidationLineService {
   private instance: IChartingLibraryWidget;
   private broker: ReturnType<typeof useBroker>;
-  private line: IOrderLineAdapter | null = null;
-  /** Tracks whether the current line source is estimated liq. price (vs position liq. price). */
-  private isUsingEstimatedPrice: boolean = false;
+  /** Single temporary line driven by Order Entry estimated liquidation price. */
+  private estimatedLine: IOrderLineAdapter | null = null;
+  /** Persistent lines driven by current positions (can be multiple, e.g. cross + isolated). */
+  private positionLines: IOrderLineAdapter[] = [];
 
   constructor(
     instance: IChartingLibraryWidget,
@@ -31,42 +43,43 @@ export class LiquidationLineService {
   }
 
   /**
-   * Render or update the liquidation line. Call when position or estimated liq. price changes.
+   * Render or update liquidation lines. Call when position or estimated liq. price changes.
    */
   renderLiquidationLine(params: LiquidationLineRenderParams): void {
-    const { positionLiqPrice, estimatedLiqPrice } = params;
+    const { positionLiqItems, estimatedLiqPrice } = params;
 
     const hasValidEst =
       estimatedLiqPrice != null && Number.isFinite(estimatedLiqPrice);
-    const hasValidPosition =
-      positionLiqPrice != null && Number.isFinite(positionLiqPrice);
+    const validPositionItems = (positionLiqItems ?? []).filter(
+      (item): item is PositionLiqLineItem =>
+        item != null && item.price != null && Number.isFinite(item.price),
+    );
 
     if (hasValidEst) {
-      this.isUsingEstimatedPrice = true;
-      this.setLinePrice(estimatedLiqPrice!);
-      this.line?.setLineStyle(1);
+      this.removePositionLines();
+      this.setEstimatedLinePrice(estimatedLiqPrice!);
+      this.estimatedLine?.setLineStyle(1);
       return;
     }
 
-    if (hasValidPosition) {
-      this.isUsingEstimatedPrice = false;
-      this.setLinePrice(positionLiqPrice!);
-      this.line?.setLineStyle(0);
+    this.removeEstimatedLine();
+
+    if (validPositionItems.length > 0) {
+      this.renderPositionLines(validPositionItems);
       return;
     }
 
-    this.removeLine();
+    this.removePositionLines();
   }
 
-  /** Remove the line (e.g. on destroy). */
+  /** Remove all liquidation lines (e.g. on destroy). */
   remove(): void {
-    this.removeLine();
+    this.removeEstimatedLine();
+    this.removePositionLines();
   }
 
-  private getOrCreateLine(): IOrderLineAdapter | null {
-    if (this.line != null) {
-      return this.line;
-    }
+  /** Build a TradingView order line and apply shared style. */
+  private createBaseLine(): IOrderLineAdapter | null {
     try {
       const activeChart = this.instance.activeChart();
       if (!activeChart) return null;
@@ -79,59 +92,123 @@ export class LiquidationLineService {
       const lineColor = colorConfig.liqLineColor ?? colorConfig.textColor;
       if (!lineColor) return null;
 
-      this.line = orderLine
+      let line = orderLine
         .setCancellable(false)
         .setLineLength(100)
         .setEditable(false)
         .setExtendLeft(true)
         .setQuantity("")
-        .setLineStyle(1)
+        .setLineStyle(0)
         .setLineColor(lineColor)
         .setBodyBorderColor(lineColor);
 
-      this.updateLineLabel();
-
       if (colorConfig.chartBG) {
-        this.line = this.line
+        line = line
           .setBodyBackgroundColor(colorConfig.chartBG)
           .setQuantityBackgroundColor(colorConfig.chartBG);
       }
       if (colorConfig.textColor) {
-        this.line = this.line.setBodyTextColor(colorConfig.textColor);
+        line = line.setBodyTextColor(colorConfig.textColor);
       }
       if (colorConfig.font) {
-        this.line = this.line
+        line = line
           .setBodyFont(colorConfig.font)
           .setQuantityFont(colorConfig.font);
       }
-      return this.line;
+      return line;
     } catch {
       return null;
     }
   }
 
-  private setLinePrice(price: number): void {
-    const line = this.getOrCreateLine();
+  /** Get or create the single estimated liquidation line. */
+  private getOrCreateEstimatedLine(): IOrderLineAdapter | null {
+    if (this.estimatedLine != null) {
+      return this.estimatedLine;
+    }
+    const line = this.createBaseLine();
     if (line) {
-      line.setPrice(price);
-      this.updateLineLabel();
+      this.estimatedLine = line;
+      this.updateLineLabel(line, true);
+    }
+    return line;
+  }
+
+  /** Get or create one position liquidation line by index. */
+  private getOrCreatePositionLine(index: number): IOrderLineAdapter | null {
+    if (this.positionLines[index] != null) {
+      return this.positionLines[index];
+    }
+    const line = this.createBaseLine();
+    if (line) {
+      this.positionLines[index] = line;
+      this.updateLineLabel(line, false);
+    }
+    return line;
+  }
+
+  /** Update estimated line price and metadata. */
+  private setEstimatedLinePrice(price: number): void {
+    const line = this.getOrCreateEstimatedLine();
+    if (!line) return;
+    line.setPrice(price);
+    this.updateLineLabel(line, true);
+  }
+
+  /** Sync position lines to input items (create/update/remove extra lines). */
+  private renderPositionLines(items: PositionLiqLineItem[]): void {
+    for (let i = 0; i < items.length; i += 1) {
+      const line = this.getOrCreatePositionLine(i);
+      if (!line) continue;
+      line.setLineStyle(0);
+      line.setPrice(items[i].price);
+      this.updateLineLabel(line, false, items[i].marginMode, items[i].leverage);
+    }
+
+    // Remove stale extra lines when position count decreases.
+    for (let i = items.length; i < this.positionLines.length; i += 1) {
+      this.positionLines[i]?.remove();
+    }
+    this.positionLines = this.positionLines.slice(0, items.length);
+  }
+
+  /** Remove the estimated line if it exists. */
+  private removeEstimatedLine(): void {
+    if (this.estimatedLine) {
+      this.estimatedLine.remove();
+      this.estimatedLine = null;
     }
   }
 
-  private removeLine(): void {
-    if (this.line) {
-      this.line.remove();
-      this.line = null;
-    }
+  /** Remove all position lines if they exist. */
+  private removePositionLines(): void {
+    this.positionLines.forEach((line) => line.remove());
+    this.positionLines = [];
   }
 
-  /** Ensure tooltip/text reflect whether we are showing estimated or position liq. price. */
-  private updateLineLabel(): void {
-    if (!this.line) return;
-    const key = this.isUsingEstimatedPrice
+  /**
+   * Ensure line tooltip/text reflect its source (estimated vs position + margin mode).
+   * When showing margin mode, we also append leverage (if available) right after it.
+   */
+  private updateLineLabel(
+    line: IOrderLineAdapter,
+    isEstimated: boolean,
+    marginMode?: LiquidationMarginMode,
+    leverage?: number | null,
+  ): void {
+    const key = isEstimated
       ? "orderEntry.estLiqPrice"
       : "positions.column.liqPrice";
-    const label = i18n.t(key);
-    this.line.setTooltip(label).setText(label);
+    let label = i18n.t(key);
+    if (!isEstimated && marginMode) {
+      const marginModeLabel = i18n.t(
+        marginMode === "ISOLATED" ? "marginMode.isolated" : "marginMode.cross",
+      );
+      const leverageLabel =
+        leverage != null && Number.isFinite(leverage) ? ` ${leverage}x` : "";
+      // Keep formatting consistent with `PositionLineService`: margin mode first, then leverage.
+      label += ` (${marginModeLabel}${leverageLabel})`;
+    }
+    line.setTooltip(label).setText(label);
   }
 }

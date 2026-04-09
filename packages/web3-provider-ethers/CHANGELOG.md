@@ -1,5 +1,51 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.12.0
+
+### Minor Changes
+
+- 1053a3d: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [1053a3d]
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.12.0
+  - @orderly.network/types@2.12.0
+
+## 2.12.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.12.0-alpha.0
+  - @orderly.network/types@2.12.0-alpha.0
+
+## 2.11.2
+
+### Patch Changes
+
+- publish
+- 1c40427: publish
+- Updated dependencies
+- Updated dependencies [1c40427]
+  - @orderly.network/default-evm-adapter@2.11.2
+  - @orderly.network/types@2.11.2
+
+## 2.11.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.11.2-alpha.0
+  - @orderly.network/types@2.11.2-alpha.0
+
 ## 2.11.1
 
 ### Patch Changes

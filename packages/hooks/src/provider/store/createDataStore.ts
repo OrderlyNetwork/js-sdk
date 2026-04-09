@@ -105,16 +105,12 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
               const url = `${dynamicBaseUrl || baseUrl || ""}${endpoint}${brokerIdQuery}`;
 
               const data = await fetcher(url, {}, { formatter });
-              const dataWithBrokerId = data.map((item: T) => ({
-                ...item,
-                broker_id: options?.brokerId,
-              }));
               set({
-                data: dataWithBrokerId,
+                data: data,
                 loading: false,
                 error: null,
               });
-              return dataWithBrokerId;
+              return data;
             } catch (error) {
               set({ error: error as Error, loading: false });
               return null;

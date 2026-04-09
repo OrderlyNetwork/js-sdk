@@ -281,7 +281,6 @@ const getLeftNavMenus = (): LeftNavProps => {
     twitterUrl: "https://twitter.com/OrderlyNetwork",
     telegramUrl: "https://t.me/orderlynetwork",
     discordUrl: "https://discord.com/invite/orderlynetwork",
-    feedbackUrl: "https://orderly.network/feedback",
   };
 };
 

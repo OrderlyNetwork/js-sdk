@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useMemo } from "react";
 import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -17,6 +17,7 @@ import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import { commifyOptional, formatNum } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { PositionSymbolCell } from "../../positions/desktop/positionSymbolCell";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import { PositionHistoryExt } from "../positionHistory.script";
 
@@ -36,7 +37,7 @@ export const usePositionHistoryColumn = (props: {
           title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
-          width: 200,
+          width: 250,
           onSort: (r1: any, r2: any) => {
             return r1.symbol?.localeCompare(r2.symbol || "");
           },
@@ -269,6 +270,20 @@ export const SymbolInfo = (props: {
       );
     }
 
+    if (record.margin_mode != null) {
+      list.push(
+        <Badge
+          key={`margin-mode-${record.margin_mode}`}
+          color="neutral"
+          size="xs"
+        >
+          {record.margin_mode === MarginMode.ISOLATED
+            ? t("marginMode.isolated")
+            : t("marginMode.cross")}
+        </Badge>,
+      );
+    }
+
     list.push(
       <LeverageBadge
         key={`leverage-${record.symbol}`}
@@ -281,7 +296,7 @@ export const SymbolInfo = (props: {
   }, [record, t]);
 
   return (
-    <Flex gap={2} height={48}>
+    <Flex gap={2} className="oui-py-1">
       <Box
         width={4}
         height={38}
@@ -291,20 +306,14 @@ export const SymbolInfo = (props: {
         )}
       />
 
-      <Flex direction={"column"} itemAlign={"start"}>
-        <Text.formatted
-          // rule={"symbol"}
-          formatString="base-type"
-          className="oui-cursor-pointer"
-          onClick={(e) => {
-            onSymbolChange?.({ symbol: record.symbol } as API.Symbol);
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-        >
-          {`${record.symbol.split("_")[1]}-PERP`}
-        </Text.formatted>
-        <Flex gap={1}>{tags}</Flex>
+      <Flex direction={"column"} itemAlign={"start"} gap={1}>
+        <PositionSymbolCell
+          symbol={record.symbol}
+          onSymbolChange={onSymbolChange}
+        />
+        <Flex gap={1} wrap="wrap">
+          {tags}
+        </Flex>
       </Flex>
     </Flex>
   );

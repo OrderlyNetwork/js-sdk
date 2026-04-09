@@ -60,20 +60,31 @@ const Spread: FC<{
     if (bids.length === 0 && asks.length === 0) {
       return 0;
     }
-    const bid1 = Number.isNaN(bids[0][0]) ? 0 : bids[0][0];
-    const index = asks.reverse().findIndex((item) => !Number.isNaN(item[0]));
+    const bidRaw = bids[0]?.[0];
+    const bid1 =
+      bidRaw === undefined || Number.isNaN(bidRaw)
+        ? new Decimal(0)
+        : new Decimal(bidRaw);
 
-    let ask1 = 0.0;
+    const asksReversed = [...asks].reverse();
+    const index = asksReversed.findIndex((item) => !Number.isNaN(item[0]));
+    let ask1 = new Decimal(0);
     if (index !== -1) {
-      ask1 = Number.isNaN(asks[index][0]) ? 0 : asks[index][0];
+      const askRaw = asksReversed[index][0];
+      ask1 = Number.isNaN(askRaw) ? new Decimal(0) : new Decimal(askRaw);
     }
-    const dValue = new Decimal(ask1)
-      .sub(bid1)
-      .div(new Decimal(ask1).add(bid1).div(2));
-    // 0.00006416604461251195
-    // 0.000065
-    // 0.0065
-    return Math.ceil(dValue.toNumber() * 1000000 + 0.1) / 10000;
+
+    const mid = ask1.add(bid1).div(2);
+    if (mid.isZero()) {
+      return 0;
+    }
+    const dValue = ask1.sub(bid1).div(mid);
+    return dValue
+      .mul(1_000_000)
+      .add(0.1)
+      .toDecimalPlaces(0, Decimal.ROUND_CEIL)
+      .div(10_000)
+      .toNumber();
   }, [asks, bids]);
 
   return (

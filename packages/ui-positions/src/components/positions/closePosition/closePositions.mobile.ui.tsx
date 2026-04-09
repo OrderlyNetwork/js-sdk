@@ -13,6 +13,7 @@ import {
   Text,
   ThrottledButton,
 } from "@orderly.network/ui";
+import { SymbolBadge } from "../desktop/symbolBadge";
 import { ClosePositionScriptReturn } from "./closePosition.script";
 import {
   LimitConfirmDialog,
@@ -63,7 +64,12 @@ export const MobileClosePosition: FC<ClosePositionScriptReturn> = (props) => {
 
   const header = (
     <Flex width={"100%"} justify={"between"}>
-      <Text.formatted rule={"symbol"} showIcon>
+      <Text.formatted
+        rule={"symbol"}
+        formatString="base"
+        showIcon
+        suffix={<SymbolBadge symbol={position.symbol} />}
+      >
         {position.symbol}
       </Text.formatted>
       <Flex gap={1}>
