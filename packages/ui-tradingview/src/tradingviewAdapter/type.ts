@@ -100,6 +100,8 @@ export type ChartPosition = {
   /** Liquidation price from position (est_liq_price); used for chart liquidation line and 3s fallback. */
   est_liq_price?: number | null;
   marginMode?: MarginMode;
+  /** Current mark price for TPSL type determination (target vs. mark). */
+  markPrice?: number;
 };
 
 export enum SideType {

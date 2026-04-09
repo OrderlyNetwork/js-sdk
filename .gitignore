@@ -36,7 +36,6 @@ yarn-error.log*
 dist/
 lib/
 esm/
-docs/
 
 dev-tool
 
@@ -60,8 +59,6 @@ storybook-static/
 specs/
 .tmp.*
 .qoder/
-.specflow/
 .agents
 .specflow
 skills-lock.json
-.specflow

@@ -1,4 +1,5 @@
 import React from "react";
+import { MarginMode } from "@orderly.network/types";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
 import { TPSLSimpleDialogUI } from "./tpslSimpleDialog.ui";
@@ -9,11 +10,12 @@ export const TPSLSimpleDialogWidget: React.FC<{
   symbol: string;
   close?: () => void;
   onComplete?: () => void;
+  marginMode?: MarginMode;
   showAdvancedTPSLDialog?: () => void;
 }> = (props) => {
   const { close, onComplete, showAdvancedTPSLDialog } = props;
   const state = useTPSLSimpleDialog(props);
-  console.log("------>>>>>TPSLSimpleDialogWidget", state);
+
   return (
     <TPSLSimpleDialogUI
       {...state}

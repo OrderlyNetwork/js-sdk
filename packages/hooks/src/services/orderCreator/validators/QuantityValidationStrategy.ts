@@ -8,14 +8,11 @@ import { IValidationStrategy } from "./IValidationStrategy";
  * Strategy for validating order quantities
  * Handles quantity validation including min/max checks
  */
-export class QuantityValidationStrategy
-  implements
-    IValidationStrategy<{
-      order_quantity?: number | string;
-      total?: number | string;
-      order_price?: number | string;
-    }>
-{
+export class QuantityValidationStrategy implements IValidationStrategy<{
+  order_quantity?: number | string;
+  total?: number | string;
+  order_price?: number | string;
+}> {
   /**
    * Validates order quantity against symbol constraints
    * Also handles conversion from total to quantity if needed
@@ -33,6 +30,9 @@ export class QuantityValidationStrategy
   ): OrderValidationItem | undefined {
     let { order_quantity, total, order_price } = values;
     const { maxQty, symbol } = config;
+    if (!symbol) {
+      return;
+    }
     const { base_min, base_dp, quote_dp } = symbol;
 
     // Calculate order_quantity from total if not provided

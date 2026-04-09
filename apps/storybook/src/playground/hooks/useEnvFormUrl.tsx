@@ -7,7 +7,6 @@ export type SearchParams = {
   brokerName?: string;
   env?: string;
   usePrivy?: boolean;
-  asyncLoadLocale?: boolean;
 };
 
 export function useEnvFormUrl() {
@@ -19,7 +18,6 @@ export function useEnvFormUrl() {
     const brokerId = searchParams.get("brokerId") || undefined;
     const brokerName = searchParams.get("brokerName") || undefined;
     const usePrivy = searchParams.get("usePrivy") || undefined;
-    const asyncLoadLocale = searchParams.get("asyncLoadLocale") || undefined;
 
     return {
       env,
@@ -28,8 +26,6 @@ export function useEnvFormUrl() {
       brokerName,
       // default true
       usePrivy: usePrivy !== "false",
-      // default false
-      asyncLoadLocale: asyncLoadLocale === "true",
     };
   }, [searchParams]);
 }

@@ -1,0 +1,4 @@
+include:
+  - project: "orderlynetwork/orderly-fe/js-sdks/common-ci"
+    ref: main
+    file: "/npm-release.yaml"

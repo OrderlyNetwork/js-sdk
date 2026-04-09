@@ -2,13 +2,14 @@
 
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
-// const { generateCsv } = require("../script/generateCsv");
-const { json2csv } = require("../script/json2csv");
-const { csv2json } = require("../script/csv2json");
-const { diffCsv } = require("../script/diffCsv");
-const { fillJson } = require("../script/fillJson");
-const { separateJson } = require("../script/separateJson");
-const { mergeJson } = require("../script/mergeJson");
+const { generateCsv } = require("../scripts/generateCsv");
+const { json2csv } = require("../scripts/json2csv");
+const { csv2json } = require("../scripts/csv2json");
+const { diffCsv } = require("../scripts/diffCsv");
+const { fillJson } = require("../scripts/fillJson");
+const { separateJson } = require("../scripts/separateJson");
+const { mergeJson } = require("../scripts/mergeJson");
+const { filterLocaleKeys } = require("../scripts/filterLocaleKeys");
 main();
 
 async function main() {
@@ -23,6 +24,10 @@ async function main() {
     inputDir,
     outputDir,
     separateKey,
+    keep,
+    remove,
+    prefix,
+    localesDir,
   } = argv;
 
   const command = _[0];
@@ -38,9 +43,9 @@ async function main() {
     case "diffcsv":
       await diffCsv(oldFile, newFile);
       break;
-    // case "generateCsv":
-    //   await generateCsv(output);
-    //   break;
+    case "generateCsv":
+      await generateCsv(inputDir, output);
+      break;
     case "fillJson":
       await fillJson(input, output);
       break;
@@ -49,6 +54,9 @@ async function main() {
       break;
     case "mergeJson":
       await mergeJson(inputDir, outputDir);
+      break;
+    case "filterKeys":
+      filterLocaleKeys(remove ? "remove" : "keep", prefix, localesDir);
       break;
     default:
       console.log("Invalid command");
@@ -87,9 +95,9 @@ function getArgv() {
       },
       (argv) => {
         console.log(
-          `Converting ${argv.input} to locale JSON files, output directory: ${argv.outputDir}`
+          `Converting ${argv.input} to locale JSON files, output directory: ${argv.outputDir}`,
         );
-      }
+      },
     )
 
     // json2csv command
@@ -112,9 +120,9 @@ function getArgv() {
       },
       (argv) => {
         console.log(
-          `Converting locale JSON files: ${argv.inputDir} to locale CSV: ${argv.output}`
+          `Converting locale JSON files: ${argv.inputDir} to locale CSV: ${argv.output}`,
         );
-      }
+      },
     )
 
     // diffcsv command
@@ -136,27 +144,32 @@ function getArgv() {
       },
       (argv) => {
         console.log(
-          `Comparing locale CSV files: ${argv.oldFile} and ${argv.newFile}`
+          `Comparing locale CSV files: ${argv.oldFile} and ${argv.newFile}`,
         );
-      }
+      },
     )
 
     // generateCsv command
-    // .command(
-    //   "generateCsv <output>",
-    //   "Generate a locale CSV file",
-    //   (yargs) => {
-    //     return yargs.positional("output", {
-    //       describe: "Output path for the locale CSV file",
-    //       type: "string",
-    //       // Required
-    //       demandOption: true,
-    //     });
-    //   },
-    //   (argv) => {
-    //     console.log(`Generating locale CSV file at: ${argv.output}`);
-    //   }
-    // )
+    .command(
+      "generateCsv <inputDir> <output>",
+      "Generate a locale CSV file from locale JSON files",
+      (yargs) => {
+        return yargs
+          .positional("inputDir", {
+            describe: "Input directory for locale JSON files",
+            type: "string",
+            demandOption: true,
+          })
+          .positional("output", {
+            describe: "Output path for the locale CSV file",
+            type: "string",
+            demandOption: true,
+          });
+      },
+      (argv) => {
+        console.log(`Generating locale CSV file at: ${argv.output}`);
+      },
+    )
 
     // fillJson command
     .command(
@@ -177,9 +190,9 @@ function getArgv() {
       },
       (argv) => {
         console.log(
-          `Filling values from the input locale JSON file: ${argv.input} and generating a new locale JSON file: ${argv.output}`
+          `Filling values from the input locale JSON file: ${argv.input} and generating a new locale JSON file: ${argv.output}`,
         );
-      }
+      },
     )
 
     // separateJson command
@@ -206,9 +219,9 @@ function getArgv() {
       },
       (argv) => {
         console.log(
-          `Separating json files into multiple files: ${argv.inputDir} to ${argv.outputDir} with key: ${argv.key}`
+          `Separating json files into multiple files: ${argv.inputDir} to ${argv.outputDir} with key: ${argv.key}`,
         );
-      }
+      },
     )
 
     // mergeJson command
@@ -231,9 +244,51 @@ function getArgv() {
       },
       (argv) => {
         console.log(
-          `Merging JSON files from ${argv.inputDir} to ${argv.outputDir}`
+          `Merging JSON files from ${argv.inputDir} to ${argv.outputDir}`,
         );
-      }
+      },
+    )
+
+    // filterKeys command (filterLocaleKeys script)
+    .command(
+      "filterKeys [options]",
+      "Filter locale JSON keys by prefix: keep or remove keys matching the prefix (operates on packages/i18n/locales by default)",
+      (yargs) => {
+        return yargs
+          .option("keep", {
+            alias: "k",
+            type: "boolean",
+            describe: "Keep only keys that start with the given prefix",
+          })
+          .option("remove", {
+            alias: "r",
+            type: "boolean",
+            describe: "Remove keys that start with the given prefix",
+          })
+          .option("prefix", {
+            type: "string",
+            demandOption: true,
+            describe: "Key prefix to match (e.g. trading. or trading)",
+          })
+          .option("locales-dir", {
+            type: "string",
+            describe:
+              "Directory containing locale JSON files (default: packages/i18n/locales)",
+          })
+          .check((argv) => {
+            if (argv.keep === argv.remove) {
+              throw new Error(
+                "Please specify exactly one of --keep|-k or --remove|-r",
+              );
+            }
+            return true;
+          });
+      },
+      (argv) => {
+        console.log(
+          `Filtering locale keys: ${argv.remove ? "removing" : "keeping"} keys with prefix "${argv.prefix}"`,
+        );
+      },
     );
 
   return argv.argv;

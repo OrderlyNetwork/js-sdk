@@ -47,7 +47,6 @@ import {
   appendOrderMetadata,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
-import { useOrderStore } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
@@ -219,10 +218,9 @@ const useOrderEntry = (
   const symbolConfig = useSymbolsInfo();
   const accountInfo = useAccountInfo();
   const positions = usePositions();
-  const entry = useOrderStore((s) => s.entry);
+  // formattedOrder will be available from useOrderEntryNextInternal below
   const effectiveMarginMode =
     (options as OrderEntryParameters[1])?.initialOrder?.margin_mode ??
-    entry?.margin_mode ??
     MarginMode.CROSS;
   const symbolLeverage = useLeverageBySymbol(symbol, effectiveMarginMode);
 

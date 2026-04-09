@@ -1,6 +1,12 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { compose, head } from "ramda";
-import { type API, OrderlyOrder, OrderType } from "@orderly.network/types";
+import {
+  type API,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+  MarginMode,
+} from "@orderly.network/types";
 import { priceToROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import {
@@ -8,7 +14,20 @@ import {
   getCalculateHandler,
 } from "../../utils/orderEntryHelper";
 import { hasTPSL } from "./helper";
-import { type FullOrderState, useOrderStore } from "./orderEntry.store";
+import { type FullOrderState } from "./orderEntry.store";
+
+const initialOrderState = {
+  order_price: "",
+  order_quantity: "",
+  trigger_price: "",
+  tp_trigger_price: "",
+  sl_trigger_price: "",
+  total: "",
+  symbol: "",
+  side: OrderSide.BUY,
+  order_type: OrderType.LIMIT,
+  margin_mode: MarginMode.CROSS,
+};
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -24,17 +43,78 @@ const useOrderEntryNextInternal = (
 ) => {
   const { symbolInfo, symbolLeverage } = options;
 
-  const orderEntity = useOrderStore((state) => state.entry);
-  const orderEntryActions = useOrderStore((state) => state.actions);
+  // Use local state instead of global zustand store to avoid state pollution
+  // between different instances (e.g., OrderEntry form and TPSL edit modal)
+  const [orderEntity, setOrderEntity] = useState<FullOrderState>(
+    () =>
+      ({
+        ...initialOrderState,
+        ...options.initialOrder,
+        symbol,
+      }) as FullOrderState,
+  );
 
-  // Initialize order when symbol changes (global store: single form at a time).
-  // When initialOrder is provided (e.g. from Advanced TPSL popup), apply it fully after init
-  // so quantity, price, TP/SL etc. are not left empty and main form / popup stay in sync.
+  // Local actions that work with local state
+  const actions = useMemo(
+    () => ({
+      initOrder: (
+        sym: string,
+        opts?: {
+          side?: OrderSide;
+          order_type?: OrderType;
+          margin_mode?: MarginMode;
+        },
+      ) => {
+        setOrderEntity({
+          ...initialOrderState,
+          symbol: sym,
+          side: opts?.side ?? OrderSide.BUY,
+          order_type: opts?.order_type ?? OrderType.LIMIT,
+          margin_mode: opts?.margin_mode ?? MarginMode.CROSS,
+        } as FullOrderState);
+      },
+      updateOrder: (order: Partial<FullOrderState>) => {
+        setOrderEntity((prev) => ({ ...prev, ...order }));
+      },
+      updateOrderByKey: <K extends keyof FullOrderState>(
+        key: K,
+        value: FullOrderState[K],
+      ) => {
+        setOrderEntity((prev) => ({ ...prev, [key]: value }));
+      },
+      resetOrder: (_order?: Partial<FullOrderState>) => {
+        setOrderEntity((prev) => ({
+          ...prev,
+          order_price: "",
+          order_quantity: "",
+          trigger_price: "",
+          total: "",
+          tp_trigger_price: "",
+          tp_pnl: "",
+          tp_offset: "",
+          tp_offset_percentage: "",
+          sl_trigger_price: "",
+          sl_pnl: "",
+          sl_offset: "",
+          sl_offset_percentage: "",
+        }));
+      },
+      hasTP_SL: () => {
+        const order = orderEntity;
+        return (
+          typeof order.tp_trigger_price !== "undefined" ||
+          typeof order.sl_trigger_price !== "undefined"
+        );
+      },
+    }),
+    [orderEntity],
+  );
+
+  // Initialize order when symbol changes
   useEffect(() => {
-    console.log("---------", symbol, options.initialOrder);
-    orderEntryActions.initOrder(symbol, options.initialOrder);
+    actions.initOrder(symbol, options.initialOrder);
     if (options.initialOrder) {
-      orderEntryActions.updateOrder(options.initialOrder);
+      actions.updateOrder(options.initialOrder);
     }
   }, [symbol]);
 
@@ -73,13 +153,13 @@ const useOrderEntryNextInternal = (
     },
   ) => {
     if (!symbolInfo) {
-      orderEntryActions.updateOrderByKey(key, value);
+      actions.updateOrderByKey(key, value);
       console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
       return;
     }
 
-    /** Read current entry from store to avoid using stale closure. */
-    const currentEntry = useOrderStore.getState().entry;
+    /** Use local state directly to avoid stale closure. */
+    const currentEntry = orderEntity;
     const { markPrice } = additional ?? { markPrice: 0 };
 
     let newValues = calculate(
@@ -122,7 +202,7 @@ const useOrderEntryNextInternal = (
       newValues.sl_ROI = sl_ROI;
     }
 
-    orderEntryActions.updateOrder(newValues);
+    actions.updateOrder(newValues);
 
     return newValues;
   };
@@ -184,14 +264,13 @@ const useOrderEntryNextInternal = (
     },
   ) => {
     if (!symbolInfo) {
-      orderEntryActions.updateOrder(values);
+      actions.updateOrder(values);
       console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
       return;
     }
 
-    /** Read current entry from store to avoid using stale closure. */
-    const currentEntry = useOrderStore.getState().entry;
-    let newValues: Partial<FullOrderState> = { ...currentEntry };
+    /** Use local state directly to avoid stale closure. */
+    let newValues: Partial<FullOrderState> = { ...orderEntity };
 
     Object.keys(values).forEach((key) => {
       newValues = calculate(
@@ -201,11 +280,9 @@ const useOrderEntryNextInternal = (
         additional?.markPrice ?? 0,
         symbolInfo!,
       );
-
-      // orderEntryActions.updateOrder(newValues);
     });
 
-    orderEntryActions.updateOrder(newValues);
+    actions.updateOrder(newValues);
 
     return newValues;
   };
@@ -218,7 +295,7 @@ const useOrderEntryNextInternal = (
    */
   const setValuesRaw = (values: Partial<FullOrderState>) => {
     if (!symbolInfo) {
-      orderEntryActions.updateOrder(values);
+      actions.updateOrder(values);
       // Raw merge path still updates store, but derived calculations are skipped when `symbolInfo` is missing.
       console.warn(
         "[ORDERLY]:symbolInfo missing; skipping derived order calculations",
@@ -226,14 +303,13 @@ const useOrderEntryNextInternal = (
       return;
     }
 
-    /** Read current entry from store to avoid stale closure. */
-    const currentEntry = useOrderStore.getState().entry;
+    /** Use local state directly to avoid stale closure. */
     const newValues: Partial<FullOrderState> = {
-      ...currentEntry,
+      ...orderEntity,
       ...values,
     };
 
-    orderEntryActions.updateOrder(newValues);
+    actions.updateOrder(newValues);
 
     return newValues;
   };
@@ -241,13 +317,12 @@ const useOrderEntryNextInternal = (
   const onMarkPriceUpdated = useCallback(
     (markPrice: number, baseOn: string[] = []) => {
       if (!options.symbolInfo) return;
-      /** Read current entry from store to avoid using stale closure. */
-      const currentEntry = useOrderStore.getState().entry;
-      let newValues: Partial<FullOrderState> = { ...currentEntry };
+      /** Use local state directly to avoid stale closure. */
+      let newValues: Partial<FullOrderState> = { ...orderEntity };
 
       if (baseOn.length === 0) {
         newValues = calculate(
-          { ...currentEntry },
+          { ...orderEntity },
           "order_price",
           markPrice,
           markPrice,
@@ -258,7 +333,7 @@ const useOrderEntryNextInternal = (
           newValues = calculate(
             { ...newValues },
             key as keyof FullOrderState,
-            currentEntry[key as keyof FullOrderState],
+            orderEntity[key as keyof FullOrderState],
             markPrice,
             options.symbolInfo!,
           );
@@ -279,9 +354,9 @@ const useOrderEntryNextInternal = (
         }
       }
 
-      orderEntryActions.updateOrder(newValues);
+      actions.updateOrder(newValues);
     },
-    [calculate, options.symbolInfo, orderEntryActions],
+    [calculate, options.symbolInfo, symbolLeverage, orderEntity],
   );
 
   const validate = (
@@ -323,7 +398,7 @@ const useOrderEntryNextInternal = (
   }, [orderEntity]);
 
   const resetOrder = (order?: Partial<OrderlyOrder>) => {
-    orderEntryActions.resetOrder(order);
+    actions.resetOrder(order);
   };
 
   return {

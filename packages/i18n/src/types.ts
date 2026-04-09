@@ -15,6 +15,12 @@ export type Resources<T extends {} = {}> = {
   [key in LocaleCode]?: Partial<LocaleMessages & T>;
 };
 
+/** Async loader for a single locale/namespace message table (see `useRegisterExternalResources`, ExternalLocaleProvider, LocaleProvider `resources`). */
+export type AsyncResources = (
+  lang: LocaleCode,
+  ns: string,
+) => Promise<Record<string, string>>;
+
 // https://www.i18next.com/overview/typescript#create-a-declaration-file
 // Enhance the input parameter intelliSense for the t function.
 declare module "i18next" {
