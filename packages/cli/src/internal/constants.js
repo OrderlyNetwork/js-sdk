@@ -2,6 +2,11 @@
 const INTERCEPTOR_TARGETS = [
   "Trading.Layout.Desktop",
   "Trading.Layout.Mobile",
+  "Trading.OrderEntry.TypeTabs",
+  "Trading.OrderEntry.BuySellSwitch",
+  "Trading.OrderEntry.Available",
+  "Trading.OrderEntry.QuantitySlider",
+  "Trading.OrderEntry.SubmitSection",
   "OrderBook.Desktop.Asks",
   "OrderBook.Desktop.Bids",
   "Deposit.DepositForm",
@@ -9,7 +14,6 @@ const INTERCEPTOR_TARGETS = [
   "Account.AccountMenu",
   "Layout.MainMenus",
   "Table.EmptyDataIdentifier",
-  "OrderEntry",
 ];
 
 // Module types supported
@@ -27,6 +31,17 @@ const CLI_CALLBACK_PORT = 9876;
 const CLI_LOGIN_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
 const MARKETPLACE_WEB_LOGIN_URL = `${MARKETPLACE_WEB_BASE_URL}/cli/login`;
 
+/** GitHub shorthand for https://github.com/OrderlyNetwork/orderly-skills (Vercel skills CLI). */
+const ORDERLY_SKILLS_REPO = "OrderlyNetwork/orderly-skills";
+
+/** Default skill IDs from orderly-skills README (install all four non-interactively). */
+const ORDERLY_PLUGIN_SKILL_NAMES = [
+  "orderly-plugin-create",
+  "orderly-plugin-write",
+  "orderly-plugin-add",
+  "orderly-plugin-submit",
+];
+
 module.exports = {
   INTERCEPTOR_TARGETS,
   MODULE_TYPES,
@@ -36,4 +51,6 @@ module.exports = {
   CLI_CALLBACK_PORT,
   CLI_LOGIN_TIMEOUT_MS,
   MARKETPLACE_WEB_LOGIN_URL,
+  ORDERLY_SKILLS_REPO,
+  ORDERLY_PLUGIN_SKILL_NAMES,
 };

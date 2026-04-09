@@ -34,7 +34,8 @@ const VALID_TAGS = [
 const NPM_NAME_REGEX =
   /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
 const GITHUB_URL_REGEX = /^https:\/\/github\.com\/[\w-]+\/[\w-]+$/;
-const PLUGIN_ID_REGEX = /^[a-zA-Z][a-zA-Z0-9]*$/;
+// pluginId: first char letter, then letters, digits, or hyphens
+const PLUGIN_ID_REGEX = /^[a-zA-Z][a-zA-Z0-9-]*$/;
 const MAX_TAGS = 5;
 const MAX_COVER_IMAGES = 10;
 const MAX_USAGE_PROMPT_LENGTH = 8192;
@@ -71,7 +72,7 @@ function validateSubmission({
 
   if (pluginId && !PLUGIN_ID_REGEX.test(pluginId)) {
     errors.push(
-      `pluginId must start with a letter and contain only letters/numbers, got: ${pluginId}`,
+      `pluginId must start with a letter and contain only letters, digits, or hyphens, got: ${pluginId}`,
     );
   }
 

@@ -1,5 +1,4 @@
 const path = require("path");
-const { spawn } = require("child_process");
 const {
   heading,
   info,
@@ -14,10 +13,7 @@ const {
   getToken,
   authenticatedFetch,
 } = require("../internal/auth");
-const {
-  MARKETPLACE_API_PLUGINS_URL,
-  MARKETPLACE_WEB_BASE_URL,
-} = require("../internal/constants");
+const { MARKETPLACE_API_PLUGINS_URL } = require("../internal/constants");
 const { resolvePluginManifest } = require("../internal/manifest");
 
 // Keep the same tag whitelist as submit to ensure local validation stays consistent.
@@ -113,31 +109,6 @@ function buildUpdatePayload(manifest) {
   return payload;
 }
 
-/**
- * Open a URL in the default browser across major desktop platforms.
- * @param {string} url
- * @returns {Promise<void>}
- */
-function openBrowser(url) {
-  return new Promise((resolve, reject) => {
-    const platform = process.platform;
-    const command =
-      platform === "darwin"
-        ? "open"
-        : platform === "win32"
-          ? "cmd"
-          : "xdg-open";
-    const args = platform === "win32" ? ["/c", "start", "", url] : [url];
-    const child = spawn(command, args, { stdio: "ignore", detached: true });
-
-    child.on("error", reject);
-    child.on("spawn", () => {
-      child.unref();
-      resolve();
-    });
-  });
-}
-
 module.exports = {
   command: "update",
   describe: "Update plugin metadata in Orderly Marketplace",
@@ -150,12 +121,6 @@ module.exports = {
           "string; path to the plugin directory (must contain .orderly-manifest.json with a pluginId, or package.json-derived metadata). If omitted, you will be prompted",
         demandOption: false,
       })
-      .option("ui", {
-        type: "boolean",
-        describe:
-          "boolean; open the marketplace plugin management page in your browser after a successful update. Skips local manifest checks, but requires ORDERLY_WEB_URL to be set",
-        default: false,
-      })
       .option("dry-run", {
         alias: "d",
         type: "boolean",
@@ -166,10 +131,6 @@ module.exports = {
       .example(
         "orderly update --path ./my-plugin --dry-run",
         "Validate the update payload from a local plugin folder",
-      )
-      .example(
-        "orderly update --path ./my-plugin --ui",
-        "Update using local metadata, then open marketplace management in browser",
       );
   },
   handler: async (argv) => {
@@ -187,30 +148,6 @@ module.exports = {
       error("Authentication token not found.");
       info("Please run 'orderly login' again.");
       process.exitCode = 1;
-      return;
-    }
-
-    // `--ui` acts as a quick shortcut to open marketplace plugin management.
-    // It intentionally skips local manifest checks so users can open UI from any directory.
-    if (argv.ui) {
-      const webBaseUrl = String(MARKETPLACE_WEB_BASE_URL || "").trim();
-      if (!webBaseUrl) {
-        error("ORDERLY_WEB_URL is required to use --ui.");
-        info("Set ORDERLY_WEB_URL first, for example:");
-        info(
-          "  ORDERLY_WEB_URL=https://marketplace.orderly.network orderly update --ui",
-        );
-        process.exitCode = 1;
-        return;
-      }
-      const manageUrl = `${webBaseUrl}/plugins`;
-      info(`Opening management page: ${manageUrl}`);
-      try {
-        await openBrowser(manageUrl);
-      } catch (openError) {
-        warn(`Failed to open browser automatically: ${openError.message}`);
-        info(`Please open manually: ${manageUrl}`);
-      }
       return;
     }
 
