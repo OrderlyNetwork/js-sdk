@@ -31,7 +31,10 @@ export type SymbolsInfo = ReturnType<typeof useSymbolsInfo>;
 export const useSymbolsInfo = () => {
   const symbolsInfo = useAppStore((state) => state.symbolsInfo);
 
-  return useMemo(() => createGetter({ ...symbolsInfo }), [symbolsInfo]);
+  return useMemo(
+    () => createGetter(symbolsInfo ? { ...symbolsInfo } : symbolsInfo),
+    [symbolsInfo],
+  );
 };
 
 export const useSymbolsInfoStore = () => {

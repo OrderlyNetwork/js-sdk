@@ -2,8 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 import { useTrack } from "@orderly.network/hooks";
 import {
   i18n,
-  LocaleContextState,
-  useLocaleContext,
+  LanguageContextState,
+  useLanguageContext,
 } from "@orderly.network/i18n";
 import { TrackerEventName } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
@@ -13,7 +13,7 @@ export type LanguageSwitcherScriptReturn = ReturnType<
 >;
 
 export type LanguageSwitcherScriptOptions = Pick<
-  LocaleContextState,
+  LanguageContextState,
   "popup"
 > & { open?: boolean; onOpenChange?: (open: boolean) => void };
 
@@ -24,7 +24,7 @@ export const useLanguageSwitcherScript = (
   const [loading, setLoading] = useState(false);
   const [selectedLang, setSelectedLang] = useState(i18n.language);
   const { languages, onLanguageBeforeChanged, onLanguageChanged, popup } =
-    useLocaleContext();
+    useLanguageContext();
 
   const { track, setIdentify } = useTrack();
 

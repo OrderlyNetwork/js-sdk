@@ -17,6 +17,7 @@ import {
   PositionType,
   SDKError,
 } from "@orderly.network/types";
+import { MarginMode } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { PositionTPSLConfirm } from "../positionTPSL";
 
@@ -24,12 +25,13 @@ export type TPSLBuilderOptions = {
   type: "tp" | "sl";
   triggerPrice?: number;
   symbol: string;
+  marginMode?: MarginMode;
 };
 
 export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
-  const { type, triggerPrice, symbol } = options;
+  const { type, triggerPrice, symbol, marginMode } = options;
   const symbolInfo = useSymbolsInfo();
-  const { marginMode } = useMarginModeBySymbol(symbol ?? "");
+  // const { marginMode } = useMarginModeBySymbol(symbol ?? "");
   const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
   const position = positions?.find((item) => item.margin_mode === marginMode);
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);

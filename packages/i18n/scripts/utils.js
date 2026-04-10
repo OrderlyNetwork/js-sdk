@@ -32,30 +32,37 @@ function validateI18nValue(value) {
   // 2. check if placeholder format is correct (allow `{{variable}}`)
   // allow `{{variable}}` or `{{ variable }}`
   const interpolationRegex = /{{\s*[\w.-]+\s*}}/g;
-  // check if `{{` is not closed or `}}` is not opened
-  const invalidInterpolationRegex =
-    /{{[^{}]*$|^[^{}]*}}|[^{]{{|}}[^}]}|^{|}$|{[^{}]*}|}/;
-
+  const strippedInterpolation = value.replace(interpolationRegex, "");
   if (
-    value.match(invalidInterpolationRegex) &&
-    !value.match(interpolationRegex)
+    strippedInterpolation.includes("{{") ||
+    strippedInterpolation.includes("}}")
   ) {
     return { valid: false, error: i18nValidErrors.interpolation };
   }
+  // mistaken single-brace placeholders like `{user.name}` (should be `{{user.name}}`)
+  if (/\{\s*[\w.-]+\s*\}/.test(strippedInterpolation)) {
+    return { valid: false, error: i18nValidErrors.interpolation };
+  }
+  // `{` without a closing `}` on the same line segment (typo vs `{{`)
+  if (/\{[^}]*$/.test(strippedInterpolation)) {
+    return { valid: false, error: i18nValidErrors.interpolation };
+  }
 
-  // 3. check if HTML tags are correctly closed
-  const tagRegex = /<\/?([a-zA-Z0-9]+)(\s*\/?)>/g;
+  // 3. check if HTML tags are correctly closed (supports attributes, e.g. <script async src="...">)
+  const tagRegex = /<(\/?)\s*([a-zA-Z0-9][\w-]*)[^>]*>/g;
   let stack = [];
   let match;
 
   while ((match = tagRegex.exec(value)) !== null) {
-    let [, tagName, selfClosing] = match;
+    const [, slashPrefix, tagName] = match;
+    const fullTag = match[0];
+    const isClosing = slashPrefix === "/";
+    const isSelfClosing = !isClosing && /\/\s*>$/.test(fullTag.trim());
 
-    if (selfClosing === "/") {
-      // self-closing tag, no need to push to stack
+    if (isSelfClosing) {
       continue;
-    } else if (match[0].startsWith("</")) {
-      // closing tag, check if stack top matches
+    }
+    if (isClosing) {
       if (stack.length === 0 || stack.pop() !== tagName) {
         return {
           valid: false,
@@ -63,7 +70,6 @@ function validateI18nValue(value) {
         };
       }
     } else {
-      // opening tag, push to stack
       stack.push(tagName);
     }
   }

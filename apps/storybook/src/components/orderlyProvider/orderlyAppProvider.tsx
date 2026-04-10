@@ -22,7 +22,7 @@ import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
 export type OrderlyAppRootProviderProps = ConfigStoreOptions & {
-  isRwaRoute: boolean;
+  isRwaRoute?: boolean;
 };
 
 export const OrderlyAppRootProvider: FC<
