@@ -1,15 +1,22 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useMultiLevelStatistics } from "../../../../hooks/useReferralApi";
+import { useReferralContext } from "../../../../provider";
 import { StatisticsTimeRange } from "../../../../types";
 
 export type SummaryReturns = ReturnType<typeof useSummaryScript>;
 
 export const useSummaryScript = () => {
   const { t } = useTranslation();
+  const { referralInfo } = useReferralContext();
   const [period, setPeriod] = useState(StatisticsTimeRange.All);
 
   const { data } = useMultiLevelStatistics(period);
+
+  const referredByCode = useMemo(() => {
+    const code = referralInfo?.referee_info?.referer_code?.trim();
+    return code || undefined;
+  }, [referralInfo]);
 
   const periodTypes: { label: string; value: StatisticsTimeRange }[] = [
     { label: t("common.all"), value: StatisticsTimeRange.All },
@@ -56,5 +63,6 @@ export const useSummaryScript = () => {
     periodTypes,
     onPeriodChange,
     statistics,
+    referredByCode,
   };
 };

@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Questo mercato si trova attualmente al di fuori degli orari di negoziazione regolari. Puoi ancora effettuare una negoziazione, ma tieni presente la liquidità ridotta e i rischi potenziali.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Gli orari di negoziazione regolari stanno per chiudere - la negoziazione 24/7 continua; il prezzo potrebbe essere più lento e la liquidità potrebbe essere inferiore.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Gli orari di trading regolari stanno per iniziare - preparati.",
-  "tradingPoints.points": "Punti",
   "chart.now": "Ora",
   "positions.closePosition": "Chiudi posizione",
   "positions.fundingFee.title": "Commissione di finanziamento",
@@ -958,6 +957,10 @@
   "affiliate.referralCode.label": "Inserisci codice referral",
   "affiliate.referralCode.bound": "Codice referral collegato",
   "affiliate.referralCode.notExist": "Questo codice referral non esiste.",
+  "affiliate.referralCode.bind.modal.title": "Sei stato segnalato da qualcuno?",
+  "affiliate.referralCode.bind.modal.description": "Se un affiliato ha condiviso con te il proprio codice referral, inseriscilo qui sotto per collegare il tuo account e ricevere i vantaggi affiliati.",
+  "affiliate.referralCode.bind.input.placeholder": "Inserisci il codice del referente",
+  "affiliate.referralCode.bind.skip": "No, non sono stato segnalato da nessuno",
   "affiliate.process.title": "Come Funziona",
   "affiliate.process.step1.title": "Trading $10,000+ o candidati",
   "affiliate.process.step1.description": "Sblocca automaticamente un codice di referral ($0 di $10,000 completato - solo account principale), o richiedi una tariffa più alta tramite il modulo.",
@@ -1019,6 +1022,7 @@
   "affiliate.direct": "Da referral diretti",
   "affiliate.directInclBonus": "Incl. {{amount}} bonus extra",
   "affiliate.indirect": "Da referral indiretti",
+  "affiliate.referredBy": "Segnalato da {{name}}",
   "affiliate.referrals": "Riferimenti",
   "affiliate.referralCode.edit.modal.title": "Configura le tue impostazioni di referral",
   "affiliate.referralCode.create": "Crea codici di referral",
@@ -1252,5 +1256,6 @@
   "notification.delistingTitle": "Avviso delisting token",
   "notification.generalTitle": "Aggiornamento generale",
   "notification.maintenanceTitle": "Manutenzione sistema",
-  "notification.empty": "Nessun annuncio"
+  "notification.empty": "Nessun annuncio",
+  "tradingPoints.points": "Punti"
 }

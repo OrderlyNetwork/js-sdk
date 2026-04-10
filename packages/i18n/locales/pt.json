@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Este mercado está atualmente fora do horário regular de negociação. Você ainda pode fazer uma negociação, mas esteja ciente da liquidez reduzida e dos riscos potenciais.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "O horário regular de negociação está prestes a fechar - a negociação 24/7 continua; o preço pode ser mais lento e a liquidez pode ser menor.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Os horários regulares de negociação estão prestes a começar - prepare-se.",
-  "tradingPoints.points": "Pontos",
   "chart.now": "Agora",
   "positions.closePosition": "Fechar Posição",
   "positions.fundingFee.title": "Taxa de financiamento",
@@ -958,6 +957,10 @@
   "affiliate.referralCode.label": "Digite o código de indicação",
   "affiliate.referralCode.bound": "Código de indicação vinculado",
   "affiliate.referralCode.notExist": "Este código de indicação não existe.",
+  "affiliate.referralCode.bind.modal.title": "Você foi indicado por alguém?",
+  "affiliate.referralCode.bind.modal.description": "Se um afiliado compartilhou o código de indicação com você, insira-o abaixo para vincular sua conta e receber benefícios de afiliado.",
+  "affiliate.referralCode.bind.input.placeholder": "Digite o código de quem indicou você",
+  "affiliate.referralCode.bind.skip": "Não, ninguém me indicou",
   "affiliate.process.title": "Como Funciona",
   "affiliate.process.step1.title": "Negocie $10,000+ ou candidate-se",
   "affiliate.process.step1.description": "Desbloqueie um código de referência automaticamente ($0 de $10,000 concluído - apenas conta principal), ou solicite uma taxa mais alta através do formulário.",
@@ -1019,6 +1022,7 @@
   "affiliate.direct": "De indicados diretos",
   "affiliate.directInclBonus": "Incl. {{amount}} de bônus extra",
   "affiliate.indirect": "De indicados indiretos",
+  "affiliate.referredBy": "Indicado por {{name}}",
   "affiliate.referrals": "Indicações",
   "affiliate.referralCode.edit.modal.title": "Configurar suas configurações de indicação",
   "affiliate.referralCode.create": "Criar códigos de indicação",
@@ -1252,5 +1256,6 @@
   "notification.delistingTitle": "Aviso de deslistamento de token",
   "notification.generalTitle": "Atualização geral",
   "notification.maintenanceTitle": "Manutenção do sistema",
-  "notification.empty": "Sem anúncios"
+  "notification.empty": "Sem anúncios",
+  "tradingPoints.points": "Pontos"
 }

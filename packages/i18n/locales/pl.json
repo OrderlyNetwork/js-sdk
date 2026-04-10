@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Ten rynek znajduje się obecnie poza regularnymi godzinami handlowymi. Nadal możesz zawrzeć transakcję, ale miej na uwadze zmniejszoną płynność i potencjalne ryzyko.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Regularne godziny handlowe wkrótce się zamkną - handel 24/7 trwa; cena może być wolniejsza, a płynność może być niższa.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Regularne godziny handlu wkrótce się rozpoczną - bądź gotowy.",
-  "tradingPoints.points": "Punkty",
   "chart.now": "Teraz",
   "positions.closePosition": "Zamknij pozycję",
   "positions.fundingFee.title": "Opłata finansowa",
@@ -958,6 +957,10 @@
   "affiliate.referralCode.label": "Wprowadź kod polecający",
   "affiliate.referralCode.bound": "Kod polecający powiązany",
   "affiliate.referralCode.notExist": "Ten kod polecający nie istnieje.",
+  "affiliate.referralCode.bind.modal.title": "Czy ktoś Cię polecił?",
+  "affiliate.referralCode.bind.modal.description": "Jeśli afiliant udostępnił Ci swój kod polecający, wpisz go poniżej, aby powiązać konto i otrzymać korzyści partnerskie.",
+  "affiliate.referralCode.bind.input.placeholder": "Wpisz kod osoby polecającej",
+  "affiliate.referralCode.bind.skip": "Nie, nikt mnie nie polecił",
   "affiliate.process.title": "Jak To Działa",
   "affiliate.process.step1.title": "Handluj $10,000+ lub aplikuj",
   "affiliate.process.step1.description": "Odblokuj kod polecający automatycznie ($0 z $10,000 ukończone - tylko konto główne), lub złóż wniosek o wyższą stawkę przez formularz.",
@@ -1019,6 +1022,7 @@
   "affiliate.direct": "Z poleconych bezpośrednich",
   "affiliate.directInclBonus": "W tym {{amount}} bonus dodatkowy",
   "affiliate.indirect": "Z poleconych pośrednich",
+  "affiliate.referredBy": "Polecony przez {{name}}",
   "affiliate.referrals": "Polecenia",
   "affiliate.referralCode.edit.modal.title": "Skonfiguruj ustawienia polecającego",
   "affiliate.referralCode.create": "Utwórz kody polecające",
@@ -1252,5 +1256,6 @@
   "notification.delistingTitle": "Powiadomienie o delistingu tokena",
   "notification.generalTitle": "Aktualizacja ogólna",
   "notification.maintenanceTitle": "Konserwacja systemu",
-  "notification.empty": "Brak ogłoszeń"
+  "notification.empty": "Brak ogłoszeń",
+  "tradingPoints.points": "Punkty"
 }
