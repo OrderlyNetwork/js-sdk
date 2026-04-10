@@ -12,12 +12,16 @@ export enum PnLMode {
   PnL = "PnL",
   OFFSET = "Offset",
   PERCENTAGE = "Offset%",
+  OFFSET_FROM_MARK = "OffsetFromMark",
+  PERCENTAGE_FROM_MARK = "PercentageFromMark",
 }
 
 export type PNL_Values = {
   PnL: string | undefined;
   Offset: string | undefined;
   "Offset%": string | undefined;
+  OffsetFromMark: string | undefined;
+  PercentageFromMark: string | undefined;
 };
 
 export type BuilderProps = {
@@ -45,6 +49,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         return `${type.toLowerCase()}_offset`;
       case PnLMode.PERCENTAGE:
         return `${type.toLowerCase()}_offset_percentage`;
+      case PnLMode.OFFSET_FROM_MARK:
+        return `${type.toLowerCase()}_offset_from_mark`;
+      case PnLMode.PERCENTAGE_FROM_MARK:
+        return `${type.toLowerCase()}_offset_percentage_from_mark`;
       default:
         return `${type.toLowerCase()}_pnl`;
     }
@@ -57,19 +65,29 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const modes = useMemo<MenuItem[]>(() => {
     return [
       {
-        label: t("tpsl.pnl"),
+        label: t("tpsl.pnlEntry"),
         value: PnLMode.PnL,
         testId: `${PnLMode.PnL}_menu_item`,
       },
       {
-        label: t("tpsl.offset"),
+        label: t("tpsl.offsetEntry"),
         value: PnLMode.OFFSET,
-        testId: `${PnLMode.OFFSET}_mneu_item`,
+        testId: `${PnLMode.OFFSET}_menu_item`,
       },
       {
-        label: `${t("tpsl.offset")}%`,
+        label: t("tpsl.offsetPercentEntry"),
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
+      },
+      {
+        label: t("tpsl.offsetMark"),
+        value: PnLMode.OFFSET_FROM_MARK,
+        testId: `${PnLMode.OFFSET_FROM_MARK}_menu_item`,
+      },
+      {
+        label: t("tpsl.offsetPercentMark"),
+        value: PnLMode.PERCENTAGE_FROM_MARK,
+        testId: `${PnLMode.PERCENTAGE_FROM_MARK}_menu_item`,
       },
     ];
   }, [t]);
@@ -104,7 +122,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         //   return commify(value);
         // }
 
-        if (mode === PnLMode.PERCENTAGE) {
+        if (
+          mode === PnLMode.PERCENTAGE ||
+          mode === PnLMode.PERCENTAGE_FROM_MARK
+        ) {
           try {
             // fix value is invalid decimal string, like "-"
             return `${new Decimal(
@@ -119,7 +140,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           } catch {
             return "";
           }
-        } else if (mode === PnLMode.OFFSET) {
+        } else if (
+          mode === PnLMode.OFFSET ||
+          mode === PnLMode.OFFSET_FROM_MARK
+        ) {
           value = todpIfNeed(value, dp);
         } else {
           // value = new Decimal(value).todp(2).toString();
@@ -132,7 +156,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           return "0";
         }
 
-        if (mode === PnLMode.PERCENTAGE) {
+        if (
+          mode === PnLMode.PERCENTAGE ||
+          mode === PnLMode.PERCENTAGE_FROM_MARK
+        ) {
           // console.log("value", value);
           if (value !== "") {
             // percentageSuffix.current = value.endsWith(".") ? "." : "";

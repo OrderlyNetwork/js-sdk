@@ -27,7 +27,9 @@ export const PNLInput = (props: PNLInputProps) => {
 
   const [prefix, setPrefix] = useState<string>(mode);
   const [placeholder, setPlaceholder] = useState<string>(
-    mode === PnLMode.PERCENTAGE ? "%" : quote,
+    mode === PnLMode.PERCENTAGE || mode === PnLMode.PERCENTAGE_FROM_MARK
+      ? "%"
+      : quote,
   );
 
   const color = useMemo(() => {
@@ -42,7 +44,11 @@ export const PNLInput = (props: PNLInputProps) => {
   useEffect(() => {
     const label = modes.find((item) => item.value === mode)?.label;
     setPrefix(label!);
-    setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+    setPlaceholder(
+      mode === PnLMode.PERCENTAGE || mode === PnLMode.PERCENTAGE_FROM_MARK
+        ? "%"
+        : quote,
+    );
   }, [mode, modes]);
 
   return (
@@ -75,21 +81,27 @@ export const PNLInput = (props: PNLInputProps) => {
         props.setFocus(true);
       }}
       onBlur={() => {
-        setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+        setPlaceholder(
+          mode === PnLMode.PERCENTAGE || mode === PnLMode.PERCENTAGE_FROM_MARK
+            ? "%"
+            : quote,
+        );
         props.setFocus(false);
       }}
       // value={props.value}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value && (
-            <Text
-              size={"2xs"}
-              color="inherit"
-              className={cn("oui-ml-[2px]", color)}
-            >
-              %
-            </Text>
-          )}
+          {(mode === PnLMode.PERCENTAGE ||
+            mode === PnLMode.PERCENTAGE_FROM_MARK) &&
+            !!value && (
+              <Text
+                size={"2xs"}
+                color="inherit"
+                className={cn("oui-ml-[2px]", color)}
+              >
+                %
+              </Text>
+            )}
           <PNLMenus
             mode={mode}
             modes={modes}
