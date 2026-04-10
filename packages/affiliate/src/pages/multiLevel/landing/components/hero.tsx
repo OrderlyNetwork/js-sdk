@@ -10,6 +10,15 @@ import { ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormDialogId } from "../../affiliate/referralCodeForm/modal";
 import { TradingVolumeProgress } from "../../components/tradingVolumeProgress";
 
+/** SWR mutate may resolve to various shapes — only treat numeric max_rebate_rate as valid. */
+function parseMaxRebateRateFromSettled(
+  result: PromiseSettledResult<unknown>,
+): number | undefined {
+  if (result.status !== "fulfilled") return undefined;
+  const num = (result.value as { max_rebate_rate?: unknown })?.max_rebate_rate;
+  return typeof num === "number" ? num : undefined;
+}
+
 export const Hero = () => {
   const { t } = useTranslation();
   const { state } = useAccount();
@@ -23,13 +32,14 @@ export const Hero = () => {
     multiLevelRebateInfo,
     multiLevelRebateInfoMutate,
     maxRebateRate,
+    maxRebateRateMutate,
     mutate,
   } = useReferralContext();
 
-  const showCreateReferralCodeModal = () => {
+  const showCreateReferralCodeModal = (maxRateOverride?: number) => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Create,
-      maxRebateRate,
+      maxRebateRate: maxRateOverride ?? maxRebateRate ?? 0,
       directBonusRebateRate: 0,
       onSuccess: () => {
         multiLevelRebateInfoMutate();
@@ -43,9 +53,17 @@ export const Hero = () => {
       modal.show(ReferralCodeFormDialogId, {
         type: ReferralCodeFormType.Bind,
         maxRebateRate: maxRebateRate,
-        onSuccess: () => {
-          mutate();
-          showCreateReferralCodeModal();
+        onSuccess: async () => {
+          const results = await Promise.allSettled([
+            maxRebateRateMutate(),
+            multiLevelRebateInfoMutate(),
+            mutate(),
+          ]);
+
+          const latestMaxRebateRate =
+            parseMaxRebateRateFromSettled(results[0]) ?? maxRebateRate;
+
+          showCreateReferralCodeModal(latestMaxRebateRate);
         },
       });
       return;

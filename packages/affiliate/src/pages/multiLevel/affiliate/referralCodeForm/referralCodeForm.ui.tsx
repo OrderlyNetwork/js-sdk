@@ -233,8 +233,8 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       <Button
         fullWidth
         onClick={props.onClick}
-        disabled={props.buttonDisabled || props.isMutating}
-        loading={props.isMutating}
+        disabled={props.buttonDisabled || props.confirmButtonLoading}
+        loading={props.confirmButtonLoading}
         size="md"
         className="oui-referralCodeForm-confirm-btn"
       >

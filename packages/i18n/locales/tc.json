@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "此市場目前處於常規交易时间之外。您仍然可以進行交易，但請注意流動性降低和潛在風險。",
   "trading.rwa.mWeb.outsideMarketHours.desc": "常規交易时间即將關閉 - 24/7交易繼續進行；價格可能较慢，流動性可能较低。",
   "trading.rwa.mWeb.insideMarketHours.desc": "常規交易时间即將開始 - 請做好準備。",
-  "tradingPoints.points": "積分",
   "chart.now": "现在",
   "positions.closePosition": "關閉持倉",
   "positions.fundingFee.title": "資金費用",
@@ -1023,6 +1022,7 @@
   "affiliate.direct": "來自直邀下級",
   "affiliate.directInclBonus": "含 {{amount}} 額外分成",
   "affiliate.indirect": "來自間接下級",
+  "affiliate.referredBy": "由 {{name}} 推薦",
   "affiliate.referrals": "推薦",
   "affiliate.referralCode.edit.modal.title": "配置您的推薦設定",
   "affiliate.referralCode.create": "建立推薦碼",
@@ -1256,5 +1256,6 @@
   "notification.delistingTitle": "代幣下架通知",
   "notification.generalTitle": "一般更新",
   "notification.maintenanceTitle": "系統維護",
-  "notification.empty": "暫無公告"
+  "notification.empty": "暫無公告",
+  "tradingPoints.points": "積分"
 }

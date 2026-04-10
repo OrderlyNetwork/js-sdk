@@ -28,6 +28,8 @@ export const useReferralCodeFormScript = (
   const [bindCodeInput, setBindCodeInput] = useState("");
   const [isReview, setIsReview] = useState(false);
   const [skipBinding, setSkipBinding] = useState(false);
+  /** Keeps confirm loading until async `onSuccess` (e.g. SWR refetch) completes in Bind flow. */
+  const [isAwaitingPostSuccess, setIsAwaitingPostSuccess] = useState(false);
 
   const formattedBindCode = useMemo(
     () => formatReferralCodeInput(bindCodeInput),
@@ -60,6 +62,16 @@ export const useReferralCodeFormScript = (
   // This ensures the Create form starts from the same default rebate split as a fresh Create entry.
   const applyCreateDefaults = () => {
     setReferrerRebatePercentage(Math.ceil(maxRebatePercentage / 2));
+  };
+
+  const runBindOnSuccessThenApplyDefaults = async () => {
+    setIsAwaitingPostSuccess(true);
+    try {
+      await Promise.resolve(options.onSuccess?.());
+    } finally {
+      setIsAwaitingPostSuccess(false);
+    }
+    applyCreateDefaults();
   };
 
   const {
@@ -178,9 +190,8 @@ export const useReferralCodeFormScript = (
     if (skipBinding) {
       // Intentionally not calling `options.close()` here:
       // after the bind step (including skipping), the outer `onSuccess` handler will
-      // immediately open the Create modal, so we keep the flow seamless.
-      options.onSuccess?.();
-      applyCreateDefaults();
+      // open the Create modal after data refresh, so we keep the flow seamless.
+      await runBindOnSuccessThenApplyDefaults();
       return;
     }
 
@@ -197,9 +208,8 @@ export const useReferralCodeFormScript = (
       await bindReferralCode({ referral_code: formattedBindCode });
       toast.success(t("affiliate.referralCode.bound"));
       // Intentionally not calling `options.close()` here:
-      // onSuccess will drive the next step (entering Create mode) immediately.
-      options.onSuccess?.();
-      applyCreateDefaults();
+      // onSuccess refetches then opens Create modal.
+      await runBindOnSuccessThenApplyDefaults();
     } catch (err) {
       handleError(err);
     }
@@ -235,6 +245,8 @@ export const useReferralCodeFormScript = (
         isBindCodeChecking ||
         !isBindCodeExist));
 
+  const confirmButtonLoading = isMutating || isAwaitingPostSuccess;
+
   return {
     type,
     onClick,
@@ -242,7 +254,7 @@ export const useReferralCodeFormScript = (
     referrerRebatePercentage,
     setReferrerRebatePercentage,
     refereeRebatePercentage,
-    isMutating,
+    confirmButtonLoading,
     newCode,
     setNewCode,
     bindCodeInput,

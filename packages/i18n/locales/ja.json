@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "この市場は現在通常の取引時間外です。取引は可能ですが、流動性の低下と潜在的なリスクにご注意ください。",
   "trading.rwa.mWeb.outsideMarketHours.desc": "通常の取引時間はまもなく終了します - 24時間取引は継続されますが、価格の動きが遅くなり、流動性が低下する可能性があります。",
   "trading.rwa.mWeb.insideMarketHours.desc": "通常の取引時間がまもなく開始されます - 準備してください。",
-  "tradingPoints.points": "ポイント",
   "chart.now": "現在",
   "positions.closePosition": "ポジションをクローズ",
   "positions.fundingFee.title": "資金手数料",
@@ -1023,6 +1022,7 @@
   "affiliate.direct": "直接紹介の下部から",
   "affiliate.directInclBonus": "{{amount}} 追加分成含む",
   "affiliate.indirect": "間接紹介の下部から",
+  "affiliate.referredBy": "{{name}} からの紹介",
   "affiliate.referrals": "紹介",
   "affiliate.referralCode.edit.modal.title": "紹介設定を構成",
   "affiliate.referralCode.create": "紹介コードを作成",
@@ -1256,5 +1256,6 @@
   "notification.delistingTitle": "トークン上場廃止のお知らせ",
   "notification.generalTitle": "一般アップデート",
   "notification.maintenanceTitle": "システムメンテナンス",
-  "notification.empty": "お知らせはありません"
+  "notification.empty": "お知らせはありません",
+  "tradingPoints.points": "ポイント"
 }

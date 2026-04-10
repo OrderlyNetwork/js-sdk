@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Цей ринок зараз знаходиться поза звичайними торговими годинами. Ви все ще можете здійснити угоду, але будьте обережні зі зниженою ліквідністю та потенційними ризиками.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "Звичайні торгові години незабаром закриються - торгівля 24/7 продовжується; ціна може бути повільнішою, а ліквідність може бути нижчою.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Звичайні торгові години незабаром розпочнуться - будьте готові.",
-  "tradingPoints.points": "Бали",
   "chart.now": "Зараз",
   "positions.closePosition": "Закрити позицію",
   "positions.fundingFee.title": "Комісія за фінансування",
@@ -1023,6 +1022,7 @@
   "affiliate.direct": "Від прямих рефералів",
   "affiliate.directInclBonus": "Вкл. {{amount}} дод. бонус",
   "affiliate.indirect": "Від непрямих рефералів",
+  "affiliate.referredBy": "Запрошено користувачем {{name}}",
   "affiliate.referrals": "Реферали",
   "affiliate.referralCode.edit.modal.title": "Налаштуйте параметри реферальної програми",
   "affiliate.referralCode.create": "Створити реферальні коди",
@@ -1256,5 +1256,6 @@
   "notification.delistingTitle": "Повідомлення про делістинг токена",
   "notification.generalTitle": "Загальне оновлення",
   "notification.maintenanceTitle": "Обслуговування системи",
-  "notification.empty": "Немає оголошень"
+  "notification.empty": "Немає оголошень",
+  "tradingPoints.points": "Бали"
 }

@@ -118,6 +118,7 @@ export const affiliate = {
   "affiliate.direct": "Direct",
   "affiliate.directInclBonus": "Incl. {{amount}} bonus",
   "affiliate.indirect": "Indirect",
+  "affiliate.referredBy": "Referred by {{name}}",
   "affiliate.referrals": "Referrals",
   "affiliate.referralCode.edit.modal.title": "Configure your referral settings",
   "affiliate.referralCode.create": "Create referral code",

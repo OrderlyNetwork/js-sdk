@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Deze markt bevindt zich momenteel buiten de reguliere handelstijden. U kunt nog steeds een handel plaatsen, maar houd rekening met verminderde liquiditeit en potentiële risico's.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "De reguliere handelstijden gaan binnenkort sluiten - 24/7 handel gaat door; de prijs kan langzamer worden en de liquiditeit kan lager zijn.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Reguliere handelstijden beginnen binnenkort - wees voorbereid.",
-  "tradingPoints.points": "Punten",
   "chart.now": "Nu",
   "positions.closePosition": "Positie sluiten",
   "positions.fundingFee.title": "Financieringskosten",
@@ -1023,6 +1022,7 @@
   "affiliate.direct": "Van directe verwijzingen",
   "affiliate.directInclBonus": "Incl. {{amount}} extra bonus",
   "affiliate.indirect": "Van indirecte verwijzingen",
+  "affiliate.referredBy": "Doorverwezen door {{name}}",
   "affiliate.referrals": "Verwijzingen",
   "affiliate.referralCode.edit.modal.title": "Configureer uw verwijzingsinstellingen",
   "affiliate.referralCode.create": "Verwijzingscodes maken",
@@ -1256,5 +1256,6 @@
   "notification.delistingTitle": "Token Delisting Kennisgeving",
   "notification.generalTitle": "Algemene update",
   "notification.maintenanceTitle": "Systeemonderhoud",
-  "notification.empty": "Geen aankondigingen"
+  "notification.empty": "Geen aankondigingen",
+  "tradingPoints.points": "Punten"
 }

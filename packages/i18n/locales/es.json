@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Este mercado se encuentra actualmente fuera del horario de negociación regular. Aún puede realizar una operación, pero tenga en cuenta la liquidez reducida y los riesgos potenciales.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "El horario de negociación regular está a punto de cerrar - la negociación 24/7 continúa; el precio puede ser más lento y la liquidez puede ser menor.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Las horas regulares de trading están a punto de comenzar - prepárate.",
-  "tradingPoints.points": "Puntos",
   "chart.now": "Ahora",
   "positions.closePosition": "Cerrar posición",
   "positions.fundingFee.title": "Tarifa de financiación",
@@ -1023,6 +1022,7 @@
   "affiliate.direct": "De referidos directos",
   "affiliate.directInclBonus": "Incl. {{amount}} de bono extra",
   "affiliate.indirect": "De referidos indirectos",
+  "affiliate.referredBy": "Referido por {{name}}",
   "affiliate.referrals": "Referencias",
   "affiliate.referralCode.edit.modal.title": "Configurar tu configuración de referidos",
   "affiliate.referralCode.create": "Crear códigos de referido",
@@ -1256,5 +1256,6 @@
   "notification.delistingTitle": "Aviso de delistado de token",
   "notification.generalTitle": "Actualización general",
   "notification.maintenanceTitle": "Mantenimiento del sistema",
-  "notification.empty": "No hay anuncios"
+  "notification.empty": "No hay anuncios",
+  "tradingPoints.points": "Puntos"
 }
