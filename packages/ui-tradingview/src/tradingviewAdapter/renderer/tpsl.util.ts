@@ -1,6 +1,12 @@
-import { Decimal } from "@orderly.network/utils";
-import { AlgoType, OrderInterface, OrderType, SideType } from "../type";
 import { i18n } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
+import {
+  AlgoType,
+  OrderInterface,
+  OrderType,
+  PositionSide,
+  SideType,
+} from "../type";
 
 export const EST_TPSL_PNL_DECIMAL = 2;
 
@@ -42,7 +48,7 @@ export const isActivatedQuantityTpsl = (order: OrderInterface) =>
 
 export const getTpslTag = (
   order: OrderInterface,
-  quantityTpslNoMap: Map<number, number>
+  quantityTpslNoMap: Map<number, number>,
 ) => {
   const algoType = order.algo_type;
   // @ts-ignore
@@ -81,22 +87,55 @@ export const getTpslEstPnl = (tpslOrder: OrderInterface, position: any) => {
   const quantity = Math.abs(
     tpslOrder.type === OrderType.CLOSE_POSITION
       ? position.balance
-      : tpslOrder.quantity
+      : tpslOrder.quantity,
   );
   const sideFlag = tpslOrder.side === SideType.SELL ? 1 : -1;
 
-  const openPrice = position.open.toString();
+  // Use mark price for PnL calculation when available, fallback to entry price
+  const priceRef = position.open;
   const estPnl = new Decimal(tpslOrder.trigger_price)
-    .minus(openPrice ?? 0)
+    .minus(priceRef)
     .times(quantity)
     .times(sideFlag)
     .toString();
 
-  return { estPnl, quantity, openPrice };
+  return { estPnl, quantity, openPrice: priceRef };
 };
 
 export const formatPnl = (pnl: number | string | undefined) => {
   return pnl !== undefined && pnl !== ""
     ? new Decimal(pnl).todp(EST_TPSL_PNL_DECIMAL, Decimal.ROUND_FLOOR)
     : textDash;
+};
+
+/**
+ * Derives position side from balance.
+ * Positive/zero balance → LONG, Negative balance → SHORT
+ */
+export const getPositionSide = (balance: number): PositionSide => {
+  return balance >= 0 ? PositionSide.LONG : PositionSide.SHORT;
+};
+
+/**
+ * Determines TPSL order type based on target price, mark price, and position side.
+ *
+ * @param targetPrice - User-dragged TPSL trigger price
+ * @param markPrice - Current mark price (fallback to entry price if unavailable)
+ * @param positionSide - LONG or SHORT (derived from position.balance sign)
+ * @returns "tp" for take-profit, "sl" for stop-loss
+ *
+ * Logic:
+ *   Long:  target > mark → TP,  target < mark → SL
+ *   Short: target < mark → TP,  target > mark → SL
+ */
+export const determineTpslType = (
+  targetPrice: number,
+  markPrice: number,
+  positionSide: PositionSide,
+): "tp" | "sl" => {
+  if (positionSide === PositionSide.LONG) {
+    return targetPrice > markPrice ? "tp" : "sl";
+  }
+  // Short
+  return targetPrice < markPrice ? "tp" : "sl";
 };

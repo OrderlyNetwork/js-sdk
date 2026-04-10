@@ -82,11 +82,10 @@ export const useTPSLBuilder = (
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { marginMode: symbolMarginMode } = useMarginModeBySymbol(symbol);
   const [{ rows: positions }] = usePositionStream();
-  const mainAccountPosition = positions.find(
-    (item) =>
-      item.symbol === symbol &&
-      item.margin_mode === (options.position?.margin_mode ?? symbolMarginMode),
-  );
+  const mainAccountPosition = positions.find((item) => {
+    const marginMode = options.position?.margin_mode ?? symbolMarginMode;
+    return item.symbol === symbol && item.margin_mode === marginMode;
+  });
 
   const isSubAccount =
     options.position?.account_id &&
@@ -149,7 +148,6 @@ export const useTPSLBuilder = (
     slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   const setQuantity = (value: number | string) => {
-    console.log("------>>>>>setQuantity", value);
     setValue("quantity", value);
   };
 

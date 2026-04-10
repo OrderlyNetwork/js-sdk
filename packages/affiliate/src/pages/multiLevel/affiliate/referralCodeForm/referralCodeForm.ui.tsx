@@ -3,6 +3,7 @@ import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   inputFormatter,
   Slider,
@@ -18,12 +19,13 @@ import { ReferralCodeFormReturns } from "./referralCodeForm.script";
 import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
 
 export type ReferralCodeFormProps = ReferralCodeFormReturns &
-  ReferralCodeFormWidgetProps;
+  Omit<ReferralCodeFormWidgetProps, "type">;
 
 export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   const { type, isReview } = props;
   const { t } = useTranslation();
 
+  const isBind = type === ReferralCodeFormType.Bind;
   const isReset = type === ReferralCodeFormType.Reset;
   const hasBoundReferee = !!props.directInvites && props.directInvites > 0;
 
@@ -33,6 +35,20 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
   const { title, description, buttonText } = useMemo(() => {
     switch (type) {
+      case ReferralCodeFormType.Bind:
+        return {
+          title: t("affiliate.referralCode.bind.modal.title"),
+          description: (
+            <Text
+              size="2xs"
+              intensity={54}
+              className="oui-leading-[18px] oui-text-warning-darken"
+            >
+              {t("affiliate.referralCode.bind.modal.description")}
+            </Text>
+          ),
+          buttonText: t("common.confirm"),
+        };
       case ReferralCodeFormType.Create:
         return {
           title: t("affiliate.referralCode.create.modal.title"),
@@ -95,13 +111,57 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
   const descriptionView = <WarningBox>{description}</WarningBox>;
 
+  const bindCodeInvalid =
+    isBind &&
+    !props.skipBinding &&
+    props.formattedBindCode.length >= 4 &&
+    !props.isBindCodeChecking &&
+    props.isBindCodeExist === false;
+
+  const bindReferralCodeInput = (
+    <ReferralCodeInput
+      value={props.bindCodeInput}
+      onChange={props.setBindCodeInput}
+      autoFocus
+      disabled={props.skipBinding}
+      placeholder={t("affiliate.referralCode.bind.input.placeholder")}
+      helpText={
+        bindCodeInvalid ? t("affiliate.referralCode.notExist") : undefined
+      }
+      color={bindCodeInvalid ? "danger" : undefined}
+    />
+  );
+
   const referralCodeInput = (
     <ReferralCodeInput
       value={props.newCode}
       onChange={props.setNewCode}
       autoFocus={props.focusField === ReferralCodeFormField.ReferralCode}
       disabled={isReview || hasBoundReferee}
+      label={t("affiliate.referralCode.editCodeModal.label")}
     />
+  );
+
+  const bindCheckbox = isBind && (
+    <Flex className="oui-gap-[6px]">
+      <Checkbox
+        color="white"
+        id="oui-checkbox-skipReferralBinding"
+        checked={props.skipBinding}
+        onCheckedChange={(checked: boolean) => {
+          props.setSkipBinding(checked);
+          if (checked) {
+            props.setBindCodeInput("");
+          }
+        }}
+      />
+      <label
+        htmlFor="oui-checkbox-skipReferralBinding"
+        className="oui-text-2xs oui-font-normal oui-text-base-contrast-54"
+      >
+        {t("affiliate.referralCode.bind.skip")}
+      </label>
+    </Flex>
   );
 
   const commissionConfiguration = (
@@ -173,8 +233,8 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       <Button
         fullWidth
         onClick={props.onClick}
-        disabled={props.buttonDisabled || props.isMutating}
-        loading={props.isMutating}
+        disabled={props.buttonDisabled || props.confirmButtonLoading}
+        loading={props.confirmButtonLoading}
         size="md"
         className="oui-referralCodeForm-confirm-btn"
       >
@@ -185,6 +245,14 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
   const renderContent = () => {
     switch (type) {
+      case ReferralCodeFormType.Bind:
+        return (
+          <Flex width={"100%"} direction="column" itemAlign="start" gap={4}>
+            {bindReferralCodeInput}
+            {bindCheckbox}
+            {buttons}
+          </Flex>
+        );
       case ReferralCodeFormType.Create:
         return (
           <Flex width={"100%"} direction="column" itemAlign="start" gap={2}>
@@ -257,7 +325,7 @@ const NoCommissionCard = (props: { directBonusRebateRate?: number }) => {
           <Text size="2xs" intensity={54}>
             {t("affiliate.noCommissionCard.title")}
           </Text>
-          <Text size="lg" className="oui-text-primary-light oui-font-semibold">
+          <Text size="lg" className="oui-font-semibold oui-text-primary-light">
             + {amount}%
           </Text>
         </Flex>
@@ -340,7 +408,7 @@ const RebateRateSlider = (props: RebateRateSliderProps) => {
             <Flex gap={2} mt={2} width={"100%"}>
               <GiftIcon
                 size={16}
-                className="oui-text-base-contrast oui-mt-[1px]"
+                className="oui-mt-px oui-text-base-contrast"
               />
               <Text
                 size="base"
@@ -367,18 +435,21 @@ type ReferralCodeInputProps = {
   onChange: (value: string) => void;
   autoFocus: boolean;
   disabled: boolean;
+  label?: string;
+  placeholder?: string;
+  helpText?: string;
+  color?: "danger";
 };
 
 const ReferralCodeInput = (props: ReferralCodeInputProps) => {
-  const { t } = useTranslation();
-
   const hasSetCursorToEnd = useRef(false);
 
   return (
     <TextField
       type="text"
       fullWidth
-      label={t("affiliate.referralCode.editCodeModal.label")}
+      label={props.label ?? ""}
+      placeholder={props.placeholder}
       value={props.value}
       onChange={(e) => {
         props.onChange(e.target.value);
@@ -406,6 +477,8 @@ const ReferralCodeInput = (props: ReferralCodeInputProps) => {
         label: "oui-text-base-contrast-54 oui-text-xs",
         input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
       }}
+      helpText={props.helpText}
+      color={props.color}
       maxLength={10}
       minLength={4}
       autoComplete="off"

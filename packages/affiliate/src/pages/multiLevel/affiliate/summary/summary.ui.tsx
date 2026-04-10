@@ -38,6 +38,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
         value={statistics.total_rebate}
         direct={statistics.direct_rebate + statistics.direct_bonus_rebate}
         indirect={statistics.indirect_rebate}
+        referredByCode={props.referredByCode}
         classNames={{
           root: "!oui-py-12",
           value: "oui-text-trade-profit",
@@ -87,6 +88,7 @@ type SummaryItemProps = {
   prefix?: string;
   rule?: "human";
   dp?: number;
+  referredByCode?: string;
 };
 
 const SummaryItem: FC<SummaryItemProps> = (props) => {
@@ -109,7 +111,7 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
       <Text>{props.label}</Text>
       <Text.numeral
         rule={rule}
-        dp={props.dp}
+        dp={dp}
         size="3xl"
         prefix={props.prefix}
         placeholder="--"
@@ -124,7 +126,7 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
           <Text>{t("affiliate.direct")}:</Text>
           <Text.numeral
             rule={rule}
-            dp={props.dp}
+            dp={dp}
             prefix={props.prefix}
             intensity={54}
             className={props.classNames?.direct}
@@ -137,7 +139,7 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
           <Text>{t("affiliate.indirect")}:</Text>
           <Text.numeral
             rule={rule}
-            dp={props.dp}
+            dp={dp}
             prefix={props.prefix}
             intensity={54}
             className={props.classNames?.indirect}
@@ -146,6 +148,15 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
           </Text.numeral>
         </Flex>
       </Flex>
+
+      {props.referredByCode ? (
+        <Text
+          intensity={54}
+          className="oui-affiliate-summary-referred-by oui-mt-5 oui-text-base-contrast-54"
+        >
+          {t("affiliate.referredBy", { name: props.referredByCode })}
+        </Text>
+      ) : null}
     </Flex>
   );
 };

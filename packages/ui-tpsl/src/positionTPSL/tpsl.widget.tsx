@@ -12,6 +12,7 @@ export type TPSLWidgetProps = {
 export const TPSLWidget: React.FC<TPSLWidgetProps> = (props) => {
   const { onCancel, onComplete, ...rest } = props;
   const state = useTPSLBuilder(rest);
+
   return (
     <TPSL
       {...state}

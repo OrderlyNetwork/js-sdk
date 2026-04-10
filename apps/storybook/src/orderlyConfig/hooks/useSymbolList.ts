@@ -5,7 +5,7 @@ type SymbolListType = NonNullable<
   NonNullable<OrderlyAppProviderProps["dataAdapter"]>["symbolList"]
 >;
 
-export const useSymbolList = (isRwaRoute: boolean) => {
+export const useSymbolList = (isRwaRoute?: boolean) => {
   return useCallback<SymbolListType>(
     (original, { rwaSymbolsInfo }) => {
       if (isRwaRoute) {

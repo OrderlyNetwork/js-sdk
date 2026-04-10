@@ -78,6 +78,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
     maxRebateRate,
+    maxRebateRateMutate,
     isLoading: isMultiLevelLoading,
   } = useMultiLevelReferralData();
 
@@ -132,10 +133,12 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   }, [isAffiliate, isTrader]);
 
   const memoMutate = useMemoizedFn(() => {
-    volumeStatisticsMutate();
-    dailyVolumeMutate();
-    referralInfoMutate();
-    generateCodeMutate();
+    return Promise.allSettled([
+      volumeStatisticsMutate(),
+      dailyVolumeMutate(),
+      referralInfoMutate(),
+      generateCodeMutate(),
+    ]);
   });
 
   useEffect(() => {
@@ -180,8 +183,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       generateCode,
       showHome,
       referralInfo: data,
-      isAffiliate: isAffiliate,
-      isTrader: isTrader,
+      isAffiliate,
+      isTrader,
       tab,
       becomeAnAffiliateUrl,
       learnAffiliateUrl,
@@ -207,6 +210,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       isMultiLevelReferralUnlocked,
       multiLevelRebateInfoMutate,
       maxRebateRate,
+      maxRebateRateMutate,
     };
   }, [
     becomeAnAffiliateUrl,
@@ -238,6 +242,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     multiLevelRebateInfoMutate,
     maxRebateRate,
     isMultiLevelLoading,
+    maxRebateRateMutate,
   ]);
 
   return (

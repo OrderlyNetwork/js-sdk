@@ -13,9 +13,6 @@ import {
   modal,
   useLongPress,
 } from "@orderly.network/ui";
-import firstBadge from "../../../../img/first_badge.png";
-import secondBadge from "../../../../img/second_badge.png";
-import thirdBadge from "../../../../img/third_badge.png";
 import { getCurrentAddressRowKey } from "./util";
 
 export type RankingColumnFields =
@@ -49,13 +46,16 @@ export const useRankingColumns = (
           if (!isYou) {
             if (value === 1) {
               rankIcon = <FirstRankIcon />;
-              badgeImg = firstBadge;
+              badgeImg =
+                "https://oss.orderly.network/static/sdk/leaderboard/first_badge.png";
             } else if (value === 2) {
               rankIcon = <SecondRankIcon />;
-              badgeImg = secondBadge;
+              badgeImg =
+                "https://oss.orderly.network/static/sdk/leaderboard/second_badge.png";
             } else if (value === 3) {
               rankIcon = <ThirdRankIcon />;
-              badgeImg = thirdBadge;
+              badgeImg =
+                "https://oss.orderly.network/static/sdk/leaderboard/third_badge.png";
             }
           }
 

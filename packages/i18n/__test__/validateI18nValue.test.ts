@@ -1,4 +1,4 @@
-import { validateI18nValue, i18nValidErrors } from "../script/utils";
+import { validateI18nValue, i18nValidErrors } from "../scripts/utils";
 
 describe("validateI18nValue", () => {
   it("should return error for non-string input", () => {
@@ -59,13 +59,14 @@ describe("validateI18nValue", () => {
       error: i18nValidErrors.interpolation,
     });
 
+    // Lone `}` is allowed (e.g. embedded JS); invalid `}}` / `{{` are caught above.
     expect(validateI18nValue("Invalid name}")).toEqual({
-      valid: false,
-      error: i18nValidErrors.interpolation,
+      valid: true,
+      error: null,
     });
     expect(validateI18nValue("Invalid name }")).toEqual({
-      valid: false,
-      error: i18nValidErrors.interpolation,
+      valid: true,
+      error: null,
     });
     expect(validateI18nValue("{Invalid name")).toEqual({
       valid: false,
@@ -123,8 +124,8 @@ describe("validateI18nValue", () => {
     });
     expect(
       validateI18nValue(
-        "<div><span>{{name}}</span> <strong>{{age}}</strong></div>"
-      )
+        "<div><span>{{name}}</span> <strong>{{age}}</strong></div>",
+      ),
     ).toEqual({
       valid: true,
       error: null,
