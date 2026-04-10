@@ -10,8 +10,11 @@ export const useMultiLevelReferralData = () => {
   const { data: volumePrerequisite, isLoading: volumePrerequisiteLoading } =
     useVolumePrerequisite();
 
-  const { data: maxRebateRateRes, isLoading: maxRebateRateLoading } =
-    useMaxRebateRate();
+  const {
+    data: maxRebateRateRes,
+    mutate: maxRebateRateMutate,
+    isLoading: maxRebateRateLoading,
+  } = useMaxRebateRate();
 
   const {
     data: multiLevelRebateInfoRes,
@@ -58,6 +61,7 @@ export const useMultiLevelReferralData = () => {
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
+    maxRebateRateMutate,
     isLoading,
   };
 };

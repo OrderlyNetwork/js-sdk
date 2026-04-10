@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "Este mercado se encuentra actualmente fuera del horario de negociación regular. Aún puede realizar una operación, pero tenga en cuenta la liquidez reducida y los riesgos potenciales.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "El horario de negociación regular está a punto de cerrar - la negociación 24/7 continúa; el precio puede ser más lento y la liquidez puede ser menor.",
   "trading.rwa.mWeb.insideMarketHours.desc": "Las horas regulares de trading están a punto de comenzar - prepárate.",
-  "tradingPoints.points": "Puntos",
   "chart.now": "Ahora",
   "positions.closePosition": "Cerrar posición",
   "positions.fundingFee.title": "Tarifa de financiación",
@@ -958,6 +957,10 @@
   "affiliate.referralCode.label": "Ingresar código de referido",
   "affiliate.referralCode.bound": "Código de referido vinculado",
   "affiliate.referralCode.notExist": "Este código de referido no existe.",
+  "affiliate.referralCode.bind.modal.title": "¿Te recomendó alguien?",
+  "affiliate.referralCode.bind.modal.description": "Si un afiliado compartió contigo su código de referido, introdúcelo abajo para vincular tu cuenta y recibir beneficios de afiliado.",
+  "affiliate.referralCode.bind.input.placeholder": "Introduce el código del referente",
+  "affiliate.referralCode.bind.skip": "No, nadie me recomendó",
   "affiliate.process.title": "Cómo Funciona",
   "affiliate.process.step1.title": "Opera $10,000+ o solicita",
   "affiliate.process.step1.description": "Desbloquea un código de referencia automáticamente ($0 de $10,000 completado - solo cuenta principal), o aplica por una tasa más alta mediante el formulario.",
@@ -1019,6 +1022,7 @@
   "affiliate.direct": "De referidos directos",
   "affiliate.directInclBonus": "Incl. {{amount}} de bono extra",
   "affiliate.indirect": "De referidos indirectos",
+  "affiliate.referredBy": "Referido por {{name}}",
   "affiliate.referrals": "Referencias",
   "affiliate.referralCode.edit.modal.title": "Configurar tu configuración de referidos",
   "affiliate.referralCode.create": "Crear códigos de referido",
@@ -1252,5 +1256,6 @@
   "notification.delistingTitle": "Aviso de delistado de token",
   "notification.generalTitle": "Actualización general",
   "notification.maintenanceTitle": "Mantenimiento del sistema",
-  "notification.empty": "No hay anuncios"
+  "notification.empty": "No hay anuncios",
+  "tradingPoints.points": "Puntos"
 }

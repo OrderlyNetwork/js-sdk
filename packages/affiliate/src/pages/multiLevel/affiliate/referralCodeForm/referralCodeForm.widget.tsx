@@ -5,7 +5,7 @@ import { ReferralCodeForm } from "./referralCodeForm.ui";
 export type ReferralCodeFormWidgetProps = {
   type: ReferralCodeFormType;
   close?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: () => void | Promise<void>;
   referralCode?: string;
   maxRebateRate: number;
   referrerRebateRate?: number;

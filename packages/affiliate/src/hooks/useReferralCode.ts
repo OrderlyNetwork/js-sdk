@@ -1,6 +1,9 @@
 import { useMutation } from "@orderly.network/hooks";
 
 export const useReferralCode = () => {
+  const [doBindReferralCode, { isMutating: isBindMutating }] =
+    useMutation("/v1/referral/bind");
+
   const [doCreateReferralCode, { isMutating: isCreateMutating }] = useMutation(
     "/v1/referral/multi_level/claim_code",
   );
@@ -19,6 +22,10 @@ export const useReferralCode = () => {
     referee_rebate_rate: number;
   }) => {
     return doCreateReferralCode(params);
+  };
+
+  const bindReferralCode = async (params: { referral_code: string }) => {
+    return doBindReferralCode(params);
   };
 
   const editReferralCode = async (params: {
@@ -40,12 +47,14 @@ export const useReferralCode = () => {
   };
 
   const isMutating =
+    isBindMutating ||
     isCreateMutating ||
     isEditMutating ||
     isUpdateRebateRateMutating ||
     isResetRebateRateMutating;
 
   return {
+    bindReferralCode,
     createReferralCode,
     editReferralCode,
     updateRebateRate,
