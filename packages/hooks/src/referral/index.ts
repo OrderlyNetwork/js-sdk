@@ -8,5 +8,4 @@ export { useRefereeRebateSummary } from "./useRefereeRebateSummary";
 export { useCheckReferralCode } from "./useCheckReferralCode";
 export { useGetReferralCode } from "./useGetReferralCode";
 export { useReferralInfo } from "./useReferralInfo";
-export type { CheckReferralCodeReturns } from "./useCheckReferralCode";
 export * from "./api";

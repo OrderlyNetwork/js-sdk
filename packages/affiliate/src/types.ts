@@ -6,6 +6,7 @@ export enum StatisticsTimeRange {
 }
 
 export enum ReferralCodeFormType {
+  Bind = "bind",
   Create = "create",
   Edit = "edit",
   Reset = "reset",

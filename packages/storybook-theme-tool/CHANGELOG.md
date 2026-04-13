@@ -1,5 +1,23 @@
 # storybook-theme-tool
 
+## 2.12.1
+
+### Patch Changes
+
+- publish
+- 75b87bc: publish
+- Updated dependencies
+- Updated dependencies [75b87bc]
+  - @orderly.network/ui@2.12.1
+
+## 2.12.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/ui@2.12.1-alpha.0
+
 ## 2.12.0
 
 ### Minor Changes

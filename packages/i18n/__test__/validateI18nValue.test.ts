@@ -59,13 +59,14 @@ describe("validateI18nValue", () => {
       error: i18nValidErrors.interpolation,
     });
 
+    // Lone `}` is allowed (e.g. embedded JS); invalid `}}` / `{{` are caught above.
     expect(validateI18nValue("Invalid name}")).toEqual({
-      valid: false,
-      error: i18nValidErrors.interpolation,
+      valid: true,
+      error: null,
     });
     expect(validateI18nValue("Invalid name }")).toEqual({
-      valid: false,
-      error: i18nValidErrors.interpolation,
+      valid: true,
+      error: null,
     });
     expect(validateI18nValue("{Invalid name")).toEqual({
       valid: false,

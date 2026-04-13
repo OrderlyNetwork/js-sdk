@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.12.0",
+  "version": "1.12.1",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",
@@ -14,8 +14,7 @@
     "loadEnv": "pnpm dotenv -e .env.local -e .env --",
     "storybook:tradingPage": "storybook dev -p 6006 --initial-path=/story/package-trading-tradingpage--page",
     "build-storybook": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4500 storybook build",
-    "build-storybook:test": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 storybook build --test",
-    "copyLocales": "node ./scripts/copyLocales.js"
+    "build-storybook:test": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 storybook build --test"
   },
   "dependencies": {
     "@orderly.network/affiliate": "workspace:*",
@@ -34,7 +33,6 @@
     "@orderly.network/trading-next": "workspace:*",
     "@orderly.network/trading": "workspace:*",
     "@orderly.network/trading-leaderboard": "workspace:*",
-    "@orderly.network/trading-points": "workspace:*",
     "@orderly.network/trading-rewards": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
@@ -100,7 +98,6 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "eslint-plugin-storybook": "^10.1.10",
-    "fs-extra": "^11.2.0",
     "globals": "^16.3.0",
     "playwright": "^1.57.0",
     "postcss": "^8.4.38",
