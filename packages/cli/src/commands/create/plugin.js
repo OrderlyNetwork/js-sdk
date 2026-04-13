@@ -17,6 +17,9 @@ const {
 } = require("../../shared");
 const { INTERCEPTOR_TARGETS } = require("../../internal/constants");
 const { generateManifest } = require("../../internal/manifest");
+const {
+  maybePrintOrderlyDevEnvironmentHints,
+} = require("../../internal/orderlySdkDocsMcpDetect");
 const path = require("path");
 
 const TEMPLATE_REPO = "OrderlyNetwork/orderly-plugin-template";
@@ -256,6 +259,7 @@ module.exports = {
       info(`Next steps:`);
       info(`  cd ${targetDir}`);
       info(`  npm run dev  # or your setup command`);
+      maybePrintOrderlyDevEnvironmentHints(resolvedDir);
     } catch (err) {
       error(`Failed to create plugin: ${err.message}`);
       if (err.stack) {

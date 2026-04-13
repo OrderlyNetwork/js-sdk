@@ -44,6 +44,9 @@ const ORDERLY_PLUGIN_SKILL_NAMES = [
   "orderly-plugin-submit",
 ];
 
+/** Default MCP server key in mcpServers (matches @orderly.network/sdk-docs install --name default). */
+const DEFAULT_ORDERLY_SDK_DOCS_MCP_NAME = "orderly-sdk-docs";
+
 module.exports = {
   INTERCEPTOR_TARGETS,
   MODULE_TYPES,
@@ -55,4 +58,5 @@ module.exports = {
   MARKETPLACE_WEB_LOGIN_URL,
   ORDERLY_SKILLS_REPO,
   ORDERLY_PLUGIN_SKILL_NAMES,
+  DEFAULT_ORDERLY_SDK_DOCS_MCP_NAME,
 };

@@ -16,6 +16,9 @@ const {
 } = require("../internal/auth");
 const { MARKETPLACE_API_PLUGINS_URL } = require("../internal/constants");
 const { resolvePluginManifest, getRepoUrl } = require("../internal/manifest");
+const {
+  maybePrintOrderlyDevEnvironmentHints,
+} = require("../internal/orderlySdkDocsMcpDetect");
 
 // Valid tags from the API
 const VALID_TAGS = [
@@ -281,6 +284,7 @@ module.exports = {
         info(`Plugin ID: ${responseData.id || "N/A"}`);
         info(`NPM Name: ${responseData.npmName || manifest.npmName}`);
         info(`Status: ${responseData.status || "under_review"}`);
+        maybePrintOrderlyDevEnvironmentHints(resolvedPath);
       } else if (response.status === 400) {
         error(
           `Validation error: ${responseData.message || responseData.error || "Invalid request"}`,
