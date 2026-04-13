@@ -11,4 +11,6 @@ export const DEFAULT_SYMBOL_DEPTHS: Record<PropertyKey, number[]> = {
 export const DEFAULT_SYMBOL_DISPLAY_NAMES: Record<string, string> = {
   PERP_XAU_USDC: "XAU (Gold) ",
   PERP_XAG_USDC: "XAG (Silver)",
+  PERP_CL_USDC: "CL (WTI Crude Oil)",
+  PERP_BZ_USDC: "BZ (Brent Crude Oil)",
 };
