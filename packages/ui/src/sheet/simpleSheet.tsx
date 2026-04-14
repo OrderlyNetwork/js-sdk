@@ -1,9 +1,14 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
+import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { Sheet, SheetContent, SheetHeader } from ".";
 import { Divider } from "../divider";
 import { SheetBody, SheetContentProps, SheetTitle } from "./sheet";
 
 export interface SimpleSheetProps {
+  /**
+   * Visible header title. When omitted, a screen-reader-only default is still
+   * rendered so Radix `Dialog.Content` meets accessibility requirements.
+   */
   title?: ReactNode | (() => ReactNode);
   leading?: React.ReactNode;
   open?: boolean;
@@ -38,13 +43,17 @@ export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
         closeable={closable}
         {...contentProps}
       >
-        {title && (
+        {title ? (
           <>
             <SheetHeader leading={props.leading}>
               <SheetTitle>{title}</SheetTitle>
             </SheetHeader>
             <Divider />
           </>
+        ) : (
+          <SheetPrimitive.Title className="oui-sr-only">
+            Sheet
+          </SheetPrimitive.Title>
         )}
         <SheetBody className={classNames?.body}>{props.children}</SheetBody>
       </SheetContent>

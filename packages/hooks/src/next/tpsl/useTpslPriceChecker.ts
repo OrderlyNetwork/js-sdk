@@ -219,6 +219,13 @@ export const useTpslPriceChecker = (
         return null;
       }
     }
+    // Reject non-positive / non-finite liq so we never compare SL against a bogus anchor.
+    if (
+      typeof liqPrice === "number" &&
+      (!Number.isFinite(liqPrice) || liqPrice <= 0)
+    ) {
+      return null;
+    }
 
     // Convert prices to Decimal for precise calculation
     let slPriceDecimal: Decimal;

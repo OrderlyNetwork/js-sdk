@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Divider } from "../divider";
 import {
   Dialog,
@@ -19,6 +20,10 @@ type SimpleDialogProps = {
   onOpenChange?: (open: boolean) => void;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   closable?: boolean;
+  /**
+   * Visible header title. When omitted, a screen-reader-only default is still
+   * rendered so Radix `Dialog.Content` meets accessibility requirements.
+   */
   title?: ReactNode | (() => ReactNode);
   description?: ReactNode;
   classNames?: {
@@ -51,13 +56,17 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         overlyClassName={props.classNames?.overlay}
         {...props.contentProps}
       >
-        {title && (
+        {title ? (
           <>
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
             <Divider />
           </>
+        ) : (
+          <DialogPrimitive.Title className="oui-sr-only">
+            Dialog
+          </DialogPrimitive.Title>
         )}
         <DialogBody className={props.classNames?.body}>
           {props.children}

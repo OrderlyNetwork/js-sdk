@@ -154,24 +154,28 @@ const SheetFooter = ({
 );
 SheetFooter.displayName = "SheetFooter";
 
+/**
+ * Visible sheet title. Must render Radix `Dialog.Title` so `DialogContent` is
+ * announced correctly to assistive tech (see Radix dialog a11y requirements).
+ */
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title> & {
     leading?: React.ReactNode;
   }
->(({ className, leading, ...props }, ref) => (
-  <div
-    className="oui-sheet-header oui-grid oui-grid-cols-[40px_1fr_40px] oui-items-center"
-    ref={ref}
-  >
+>(({ className, leading, children, ...props }, ref) => (
+  <div className="oui-sheet-header oui-grid oui-grid-cols-[40px_1fr_40px] oui-items-center">
     <div>{leading}</div>
-    <div
+    <SheetPrimitive.Title
+      ref={ref}
       className={cnBase(
         "oui-flex oui-flex-col oui-space-y-2 oui-text-center oui-text-lg oui-text-base-contrast",
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </SheetPrimitive.Title>
   </div>
 ));
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
