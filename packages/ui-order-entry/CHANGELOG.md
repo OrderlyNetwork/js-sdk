@@ -1,5 +1,25 @@
 # @orderly.network/ui-order-entry
 
+## 2.12.2
+
+### Patch Changes
+
+- publish
+- 06007f7: publish
+- Updated dependencies
+- Updated dependencies [06007f7]
+  - @orderly.network/react-app@2.12.2
+  - @orderly.network/hooks@2.12.2
+  - @orderly.network/i18n@2.12.2
+  - @orderly.network/perp@4.12.2
+  - @orderly.network/types@2.12.2
+  - @orderly.network/ui@2.12.2
+  - @orderly.network/ui-connector@2.12.2
+  - @orderly.network/ui-leverage@2.12.2
+  - @orderly.network/ui-scaffold@2.12.2
+  - @orderly.network/ui-tpsl@2.12.2
+  - @orderly.network/utils@2.12.2
+
 ## 2.12.2-alpha.0
 
 ### Patch Changes
