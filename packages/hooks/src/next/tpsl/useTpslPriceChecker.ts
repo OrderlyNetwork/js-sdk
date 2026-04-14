@@ -10,6 +10,12 @@ type TpslPriceParams = {
   slPrice?: string;
   liqPrice: number | null;
   side?: OrderSide;
+  /**
+   * Mark price for the symbol. When set with `side`, liq values that `useGetEstLiqPrice` would
+   * hide (invalid vs mark — e.g. long est. liq above mark) are ignored here too so SL checks do
+   * not run against a number the UI does not show as “Est. liq. price”.
+   */
+  markPrice?: number | null;
   /** Current position qty (signed: positive=Long, negative=Short). If missing, treated as is_reducing=true, skip liq check. */
   currentPosition?: number;
   /** Order quantity (non-negative, sign derived from side). If missing or 0, treated as is_reducing=true, skip liq check. */
@@ -90,6 +96,7 @@ export const useTpslPriceChecker = (
     slPrice,
     liqPrice,
     side,
+    markPrice,
     currentPosition,
     orderQuantity,
   } = params;
@@ -203,6 +210,16 @@ export const useTpslPriceChecker = (
       return null;
     }
 
+    // Align with `useGetEstLiqPrice`: do not validate SL against liq the UI hides as invalid.
+    if (markPrice != null && Number.isFinite(markPrice) && markPrice > 0) {
+      if (side === OrderSide.BUY && liqPrice > markPrice) {
+        return null;
+      }
+      if (side === OrderSide.SELL && liqPrice < markPrice) {
+        return null;
+      }
+    }
+
     // Convert prices to Decimal for precise calculation
     let slPriceDecimal: Decimal;
     let liqPriceDecimal: Decimal;
@@ -249,6 +266,7 @@ export const useTpslPriceChecker = (
     slPrice,
     liqPrice,
     side,
+    markPrice,
     warning_threshold,
     currentPosition,
     orderQuantity,
