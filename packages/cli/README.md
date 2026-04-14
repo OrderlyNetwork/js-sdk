@@ -1,16 +1,14 @@
 # @orderly.network/devkit
 
-CLI toolkit for scaffolding Orderly plugins and modules, authenticating with Orderly Marketplace, submitting and managing plugins, and installing MCP / agent skill integrations.
-
-The executable name is **`orderly-devkit`**. (Some inline help examples may say `orderly`; you can `alias orderly=orderly-devkit` if you prefer a shorter command.)
+CLI toolkit for scaffolding plugins and modules, authenticating with Marketplace, submitting and managing plugins, and installing MCP / agent skill integrations.
 
 ## Requirements
 
-- **Node.js** v20.19.0 or newer (aligned with the Orderly Web monorepo).
+- **Node.js** v20.19.0 or newer.
 
 ## Installation
 
-### From npm (recommended when published)
+### From npm
 
 ```bash
 pnpm add -g @orderly.network/devkit
@@ -32,26 +30,12 @@ pnpm dlx @orderly.network/devkit --help
 npx @orderly.network/devkit --help
 ```
 
-### From this monorepo (development)
-
-After `pnpm install` at the repository root:
-
-```bash
-pnpm --filter @orderly.network/devkit exec orderly-devkit --help
-```
-
-Or from `packages/cli`:
-
-```bash
-node bin/cli.js --help
-```
-
 ## Authentication
 
-Login uses GitHub OAuth in the browser and a short-lived local callback server against the **official Orderly Marketplace** endpoints (URLs are fixed in the published CLI).
+Login uses GitHub OAuth in the browser and a short-lived local callback server.
 
 - **Credentials file:** `~/.orderly/auth.json` (created automatically).
-- The CLI opens the marketplace **CLI login** page with port and CSRF state query parameters for the OAuth callback.
+- The CLI opens the marketplace login page and completes OAuth callback automatically.
 
 ```bash
 orderly-devkit login              # open browser, complete GitHub auth
@@ -69,10 +53,10 @@ Run `orderly-devkit <command> --help` for options on any command.
 
 Scaffold new artifacts (interactive).
 
-| Subcommand      | Description                                                                                                                                                                                 |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `create plugin` | Clone and render the official plugin template (`OrderlyNetwork/orderly-plugin-template`), prompts for name, plugin id, interceptor target, etc., and can generate `.orderly-manifest.json`. |
-| `create module` | Guided flow for module type (`page`, `component`, `hook`, `utils`, `module`). **File generation is not implemented yet**—it only collects choices and prints a summary.                     |
+| Subcommand      | Description                                                                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create plugin` | Clone and render the plugin template (`OrderlyNetwork/orderly-plugin-template`), prompt for name/plugin id/interceptor target, and optionally generate `.orderly-manifest.json`. |
+| `create module` | Guided flow for module type (`page`, `component`, `hook`, `utils`, `module`). **File generation is not implemented yet**—it only collects choices and prints a summary.          |
 
 ```bash
 orderly-devkit create plugin
@@ -82,11 +66,11 @@ orderly-devkit create module --name my-module
 
 ### Marketplace: `submit`, `list`, `update`, `view`
 
-These commands use the **official Orderly Marketplace API**. You must be logged in (`orderly-devkit login`).
+These commands use the Marketplace API. You must be logged in (`orderly-devkit login`).
 
 **`submit`** — register a new plugin from a local directory.
 
-- Resolves metadata from `package.json` and/or `.orderly-manifest.json` (see `resolvePluginManifest` in the codebase).
+- Resolves metadata from `package.json` and/or `.orderly-manifest.json`.
 - `repoUrl` should be a GitHub URL (`https://github.com/<owner>/<repo>`); it can be filled from `git remote` when missing.
 - **Tags** must be from the allowed set: `UI`, `Indicator`, `Order Entry`, `Trading`, `Chart`, `Portfolio`, `Analytics`, `Tool`, `Widget` (max 5).
 
@@ -121,7 +105,7 @@ orderly-devkit view <plugin-id>
 
 ### `mcp install`
 
-Installs the **Orderly SDK Docs** MCP server entry for Claude, Codex, Cursor, OpenCode, etc. Implementation delegates to `@orderly.network/sdk-docs` via `npx`.
+Install the **Orderly SDK Docs** MCP server entry for Claude, Codex, Cursor, OpenCode, etc.
 
 ```bash
 orderly-devkit mcp install
@@ -139,7 +123,7 @@ orderly-devkit mcp install --force
 
 ### `skills install`
 
-Installs Orderly **agent skills** for plugin workflows (create, write, add, submit) by running `npx -y skills add …` against the official skills repo by default (`OrderlyNetwork/orderly-skills`).
+Install Orderly **agent skills** for plugin workflows (create, write, add, submit) with `npx -y skills add …`.
 
 Default behavior installs four skills non-interactively: `orderly-plugin-create`, `orderly-plugin-write`, `orderly-plugin-add`, `orderly-plugin-submit`.
 
@@ -153,7 +137,7 @@ orderly-devkit skills install -- --some-upstream-skills-flag
 
 | Option            | Description                                                             |
 | ----------------- | ----------------------------------------------------------------------- |
-| `[source]`        | GitHub `owner/repo`, URL, or local path (default: official repo).       |
+| `[source]`        | GitHub `owner/repo`, URL, or local path (default source is built in).   |
 | `--list`          | List skills in the source without installing.                           |
 | `--skill` / `-s`  | Repeatable; install only named skills (replaces default four when set). |
 | `--all`           | Forward `--all` to the skills CLI.                                      |

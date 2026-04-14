@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rimraf dist"
   },
+  "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
     "degit": "^2.8.4",
