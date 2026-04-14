@@ -357,7 +357,6 @@
   "trading.rwa.outsideMarketHours.notify": "이 시장은 현재 정규 거래 시간 외에 있습니다. 여전히 거래를 할 수 있지만, 유동성 감소와 잠재적 위험을 인지하시기 바랍니다.",
   "trading.rwa.mWeb.outsideMarketHours.desc": "정규 거래 시간이 곧 종료됩니다 - 24/7 거래는 계속됩니다; 가격이 느려질 수 있고 유동성이 낮아질 수 있습니다.",
   "trading.rwa.mWeb.insideMarketHours.desc": "정규 거래 시간이 곧 시작됩니다 - 준비하세요.",
-  "tradingPoints.points": "포인트",
   "chart.now": "지금",
   "positions.closePosition": "포지션 종료",
   "positions.fundingFee.title": "펀딩 수수료",
@@ -958,6 +957,10 @@
   "affiliate.referralCode.label": "추천 코드 입력",
   "affiliate.referralCode.bound": "추천 코드 연결됨",
   "affiliate.referralCode.notExist": "이 추천 코드는 존재하지 않습니다.",
+  "affiliate.referralCode.bind.modal.title": "누군가의 추천을 받으셨나요?",
+  "affiliate.referralCode.bind.modal.description": "어필리에이트가 추천 코드를 공유했다면 아래에 입력하여 계정을 연결하고 어필리에이트 혜택을 받으세요.",
+  "affiliate.referralCode.bind.input.placeholder": "추천인 코드를 입력하세요",
+  "affiliate.referralCode.bind.skip": "아니요, 누구의 추천도 받지 않았습니다",
   "affiliate.process.title": "작동 방식",
   "affiliate.process.step1.title": "$10,000+ 거래 또는 신청",
   "affiliate.process.step1.description": "추천 코드를 자동으로 잠금 해제 ($0 / $10,000 완료 - 메인 계정만), 또는 양식을 통해 더 높은 요율을 신청하세요.",
@@ -1019,6 +1022,7 @@
   "affiliate.direct": "직접 추천 하위에서",
   "affiliate.directInclBonus": "{{amount}} 추가 분배 포함",
   "affiliate.indirect": "간접 추천 하위에서",
+  "affiliate.referredBy": "{{name}}님의 추천",
   "affiliate.referrals": "추천",
   "affiliate.referralCode.edit.modal.title": "추천 설정 구성",
   "affiliate.referralCode.create": "추천 코드 생성",
@@ -1252,5 +1256,6 @@
   "notification.delistingTitle": "토큰 상장 폐지 공지",
   "notification.generalTitle": "일반 업데이트",
   "notification.maintenanceTitle": "시스템 점검",
-  "notification.empty": "공지사항이 없습니다"
+  "notification.empty": "공지사항이 없습니다",
+  "tradingPoints.points": "포인트"
 }

@@ -1,19 +1,10 @@
-import { useMemo } from "react";
 import { useQuery } from "../useQuery";
 
-export type CheckReferralCodeReturns = {
-  isExist?: boolean;
-  error: any;
-  isLoading: boolean;
-};
-
-export const useCheckReferralCode = (
-  code?: string
-): CheckReferralCodeReturns => {
+export const useCheckReferralCode = (code?: string) => {
   const { data, error, isLoading } = useQuery<{ exist?: boolean }>(
     typeof code === "undefined" || code?.length === 0
       ? null
-      : `/v1/public/referral/verify_ref_code?referral_code=${code}`
+      : `/v1/public/referral/verify_ref_code?referral_code=${code}`,
   );
 
   if (typeof code === "undefined") {

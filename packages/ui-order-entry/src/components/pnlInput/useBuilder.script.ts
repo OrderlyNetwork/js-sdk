@@ -29,6 +29,24 @@ type PNL_Keys =
   | "sl_offset_percentage"
   | "sl_pnl";
 
+/**
+ * SL PnL is stored as a signed loss (negative) for `pnlToPrice`; users may type the magnitude
+ * without `-`. The formatter still prefixes `-` on display while focused so the field reads as
+ * a loss without requiring the user to type a minus.
+ *
+ * @param raw Raw input string (may include commas or a trailing decimal point while typing)
+ * @returns String safe to pass to `onChange` for `sl_pnl`
+ */
+function normalizeSlPnlForStore(raw: string): string {
+  const v = `${raw}`.replace(/,/g, "").trim();
+  if (v === "" || v === "-") return v;
+  const withoutTrailingDot = v.replace(/\.$/, "");
+  const num = Number(withoutTrailingDot);
+  if (!isNaN(num) && num === 0) return "0";
+  if (v.startsWith("-")) return v;
+  return `-${v}`;
+}
+
 export type BuilderProps = {
   type: "TP" | "SL";
 
@@ -41,7 +59,8 @@ export type BuilderProps = {
 export const usePNLInputBuilder = (props: BuilderProps) => {
   const { type, values, quote_dp } = props;
   const { t } = useTranslation();
-  const [focus, setFocus] = useState(true);
+  /** `PNLInput` calls `setFocus(true)` on focus; state is unused but keeps the prop contract. */
+  const [, setFocus] = useState(true);
   // const [mode, setMode] = useLocalStorage<PnLMode>(
   //   "TP/SL_Mode",
   //   PnLMode.PERCENTAGE
@@ -60,7 +79,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       default:
         return `${type.toLowerCase()}_pnl` as PNL_Keys;
     }
-  }, [mode]);
+  }, [mode, type]);
 
   const [innerValue, setInnerValue] = useState<string>(
     values[mode as keyof PNL_Values],
@@ -120,7 +139,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     //   setInnerValue(value);
     // }
     setInnerValue(value);
-    props.onChange(key, value);
+    const outgoing = key === "sl_pnl" ? normalizeSlPnlForStore(value) : value;
+    props.onChange(key, outgoing);
   };
 
   const onFocus = () => {
@@ -136,7 +156,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     // setTips(undefined);
     setTipVisible(false);
     setIsFocused(false);
-    props.onChange(key, innerValue);
+    const outgoing =
+      key === "sl_pnl" ? normalizeSlPnlForStore(innerValue) : innerValue;
+    props.onChange(key, outgoing);
   };
 
   const formatter = (options: {
@@ -152,10 +174,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       ) => {
         value = `${value}`; // convert to string
 
-        if (focus) {
-          if (type === "SL" && mode === PnLMode.PnL) {
-            value = value.startsWith("-") ? value : "-" + value;
-          }
+        // SL loss is shown with a leading minus even when the user only types the magnitude (no
+        // reliance on `focus` so blur / controlled sync still reads as a loss).
+        if (type === "SL" && mode === PnLMode.PnL) {
+          value = value.startsWith("-") ? value : "-" + value;
         }
 
         if (value === "" || value === "-") return "";
@@ -215,7 +237,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             value = new Decimal(value).div(100).toString();
             value = `${value}${percentageSuffix.current}`;
           }
-        } else if (mode === PnLMode.PnL && type === "SL" && focus) {
+        } else if (mode === PnLMode.PnL && type === "SL") {
           value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);
