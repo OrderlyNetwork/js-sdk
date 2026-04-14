@@ -76,6 +76,9 @@ export const OrderTypeSelect = (props: {
     };
   }, [t]);
 
+  // Must run on every render; do not place after `if (!isMobile) return` or hook order breaks when isMobile toggles.
+  const mobileOptions = useMemo(() => allOptions, [allOptions]);
+
   if (!isMobile) {
     const baseButtonClassName =
       "oui-flex oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1 oui-rounded oui-px-3 oui-py-0.5 oui-text-xs oui-font-semibold oui-h-8";
@@ -192,8 +195,6 @@ export const OrderTypeSelect = (props: {
       </div>
     );
   }
-
-  const mobileOptions = useMemo(() => allOptions, [allOptions]);
 
   const handleMobileValueChange = (value: OrderType) => {
     if (
