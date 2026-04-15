@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { useTranslation } from "@orderly.network/i18n";
 import { Divider } from "../divider";
 import {
   Dialog,
@@ -41,6 +42,7 @@ type SimpleDialogProps = {
  * Simplified dialog component.
  */
 const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
+  const { t } = useTranslation();
   const title = typeof props.title === "function" ? props.title() : props.title;
 
   return (
@@ -65,7 +67,7 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
           </>
         ) : (
           <DialogPrimitive.Title className="oui-sr-only">
-            Dialog
+            {t("ui.dialog.srOnly.title")}
           </DialogPrimitive.Title>
         )}
         <DialogBody className={props.classNames?.body}>

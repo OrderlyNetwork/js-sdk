@@ -126,7 +126,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
-        label: `${t("tpsl.offset")}%`,
+        label: t("tpsl.offsetPercent"),
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
       },
@@ -148,13 +148,12 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const modeLabelMap = useMemo(() => {
     return {
       [PnLMode.PnL]: t("tpsl.pnl"),
-      [PnLMode.OFFSET]: t("tpsl.offset"),
-      [PnLMode.PERCENTAGE]: `${t("tpsl.offset")}%`,
+      [PnLMode.OFFSET]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE]: `${t("tpsl.offsetHolder")}`,
       // Extend locale keys; not yet in LocaleMessages typings
-      // @ts-expect-error — tpsl.offsetMark
-      [PnLMode.OFFSET_FROM_MARK]: t("tpsl.offsetMark"),
-      // @ts-expect-error — tpsl.offsetPercentMark
-      [PnLMode.PERCENTAGE_FROM_MARK]: t("tpsl.offsetPercentMark"),
+
+      [PnLMode.OFFSET_FROM_MARK]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE_FROM_MARK]: t("tpsl.offsetHolder"),
     };
   }, [t]);
 

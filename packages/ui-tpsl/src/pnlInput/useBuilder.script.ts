@@ -65,17 +65,17 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const modes = useMemo<MenuItem[]>(() => {
     return [
       {
-        label: t("tpsl.pnlEntry"),
+        label: t("tpsl.pnl"),
         value: PnLMode.PnL,
         testId: `${PnLMode.PnL}_menu_item`,
       },
       {
-        label: t("tpsl.offsetEntry"),
+        label: t("tpsl.offset"),
         value: PnLMode.OFFSET,
         testId: `${PnLMode.OFFSET}_menu_item`,
       },
       {
-        label: t("tpsl.offsetPercentEntry"),
+        label: t("tpsl.offsetPercent"),
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
       },
@@ -90,6 +90,20 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         testId: `${PnLMode.PERCENTAGE_FROM_MARK}_menu_item`,
       },
     ];
+  }, [t]);
+
+  /**
+   * Use dedicated short labels for input prefix so it can diverge
+   * from dropdown menu labels without coupling the two UIs.
+   */
+  const modeLabelMap = useMemo<Record<PnLMode, string>>(() => {
+    return {
+      [PnLMode.PnL]: t("tpsl.pnl"),
+      [PnLMode.OFFSET]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE]: t("tpsl.offsetHolder"),
+      [PnLMode.OFFSET_FROM_MARK]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE_FROM_MARK]: t("tpsl.offsetHolder"),
+    };
   }, [t]);
 
   const percentageSuffix = useRef<string>("");
@@ -255,6 +269,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   return {
     mode,
     modes,
+    modeLabelMap,
     type: props.type,
     formatter,
     onModeChange: (mode: PnLMode) => {
