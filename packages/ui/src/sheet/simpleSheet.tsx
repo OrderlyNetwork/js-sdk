@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { useTranslation } from "@orderly.network/i18n";
 import { Sheet, SheetContent, SheetHeader } from ".";
 import { Divider } from "../divider";
 import { SheetBody, SheetContentProps, SheetTitle } from "./sheet";
@@ -25,7 +24,6 @@ export interface SimpleSheetProps {
 }
 
 export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
-  const { t } = useTranslation();
   const {
     open,
     onOpenChange,
@@ -54,7 +52,7 @@ export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
           </>
         ) : (
           <SheetPrimitive.Title className="oui-sr-only">
-            {t("ui.sheet.srOnly.title")}
+            sheet title
           </SheetPrimitive.Title>
         )}
         <SheetBody className={classNames?.body}>{props.children}</SheetBody>
