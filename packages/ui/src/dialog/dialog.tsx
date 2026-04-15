@@ -10,7 +10,7 @@ const dialogVariants = tv({
       "oui-fixed",
       "oui-inset-0",
       "oui-z-50",
-      "oui-bg-black/60",
+      "oui-bg-black/50",
       "oui-backdrop-blur-sm",
       "data-[state=open]:oui-animate-in",
       "data-[state=closed]:oui-animate-out",
