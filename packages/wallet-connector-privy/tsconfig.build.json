@@ -14,7 +14,7 @@
     "**/*.stories.tsx",
   ],
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "sourceMap": true,
     "module": "esnext",
     "outDir": "dist",

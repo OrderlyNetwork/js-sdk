@@ -11,7 +11,9 @@ export const tpsl = {
   "tpsl.tpTrigger": "TP trigger",
   "tpsl.slTrigger": "SL trigger",
   "tpsl.pnl": "PnL",
-  "tpsl.offset": "Offset",
+  "tpsl.offsetHolder": "Offset",
+  "tpsl.offset": "Offset (From entry)",
+  "tpsl.offsetPercent": "Offset% (From entry)",
   "tpsl.add": "Add",
   "tpsl.cancelAll": "Cancel all",
   "tpsl.dragToSet": "Drag to set TP/SL",
@@ -79,6 +81,9 @@ export const tpsl = {
   "tpsl.tpslDetail.estPnl.tooltip":
     "The actual value may differ based on the actual trading price. This value is only for reference.",
   "tpsl.agreement": "You agree to edit your {{symbol}} order.",
+
+  "tpsl.offsetMark": "Offset (From mark)",
+  "tpsl.offsetPercentMark": "Offset% (From mark)",
 };
 
 export type TPSL = typeof tpsl;

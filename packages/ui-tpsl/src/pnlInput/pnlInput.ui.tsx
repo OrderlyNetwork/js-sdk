@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useMemo, useState } from "react";
 import {
   CaretDownIcon,
   cn,
@@ -10,12 +9,16 @@ import {
 import { inputFormatter, Text } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 
-export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
+export type PNLInputProps = PNLInputState & {
+  testId?: string;
+  quote: string;
+};
 
 export const PNLInput = (props: PNLInputProps) => {
   const {
     mode,
     modes,
+    modeLabelMap,
     onModeChange,
     onValueChange,
     quote,
@@ -23,12 +26,8 @@ export const PNLInput = (props: PNLInputProps) => {
     value,
     pnl,
   } = props;
-  const { t } = useTranslation();
 
-  const [prefix, setPrefix] = useState<string>(mode);
-  const [placeholder, setPlaceholder] = useState<string>(
-    mode === PnLMode.PERCENTAGE ? "%" : quote,
-  );
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const color = useMemo(() => {
     const num = Number(pnl);
@@ -39,15 +38,18 @@ export const PNLInput = (props: PNLInputProps) => {
     if (num < 0) return "oui-text-trade-loss";
   }, [pnl]);
 
-  useEffect(() => {
-    const label = modes.find((item) => item.value === mode)?.label;
-    setPrefix(label!);
-    setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
-  }, [mode, modes]);
+  /** Use dedicated map so input prefix is decoupled from dropdown labels. */
+  const prefixLabel = String(modeLabelMap[mode] ?? mode ?? "");
+  /** Keep placeholder behavior while avoiding effect-driven state sync. */
+  const placeholder = isInputFocused
+    ? ""
+    : mode === PnLMode.PERCENTAGE || mode === PnLMode.PERCENTAGE_FROM_MARK
+      ? "%"
+      : quote;
 
   return (
     <Input
-      prefix={prefix}
+      prefix={prefixLabel}
       size={{
         initial: "lg",
         lg: "md",
@@ -71,25 +73,27 @@ export const PNLInput = (props: PNLInputProps) => {
         root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}
       onFocus={() => {
-        setPlaceholder("");
+        setIsInputFocused(true);
         props.setFocus(true);
       }}
       onBlur={() => {
-        setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+        setIsInputFocused(false);
         props.setFocus(false);
       }}
       // value={props.value}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value && (
-            <Text
-              size={"2xs"}
-              color="inherit"
-              className={cn("oui-ml-[2px]", color)}
-            >
-              %
-            </Text>
-          )}
+          {(mode === PnLMode.PERCENTAGE ||
+            mode === PnLMode.PERCENTAGE_FROM_MARK) &&
+            !!value && (
+              <Text
+                size={"2xs"}
+                color="inherit"
+                className={cn("oui-ml-[2px]", color)}
+              >
+                %
+              </Text>
+            )}
           <PNLMenus
             mode={mode}
             modes={modes}
@@ -112,7 +116,7 @@ const PNLMenus = (props: {
       menu={props.modes}
       align={"end"}
       size={"xs"}
-      className={"oui-min-w-[80px]"}
+      className={"oui-min-w-[120px]"}
       onSelect={(item) => props.onModeChange(item as MenuItem)}
     >
       <button className={"oui-p-2"}>

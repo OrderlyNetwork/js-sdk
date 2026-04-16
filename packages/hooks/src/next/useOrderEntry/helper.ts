@@ -54,6 +54,10 @@ export const tpslFields = [
   "sl_offset",
   "tp_offset_percentage",
   "sl_offset_percentage",
+  "tp_offset_from_mark",
+  "sl_offset_from_mark",
+  "tp_offset_percentage_from_mark",
+  "sl_offset_percentage_from_mark",
 ] as (keyof OrderlyOrder)[];
 
 export const isBracketOrder = (order: Partial<OrderlyOrder>): boolean => {

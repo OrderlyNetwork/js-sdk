@@ -2,7 +2,6 @@ import { PointSystemPage } from "@orderly.network/trading-points";
 import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
-import "@orderly.network/trading-points/dist/styles.css";
 
 export default function PointSystem() {
   const { onRouteChange } = useRouteContext();

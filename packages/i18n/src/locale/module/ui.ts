@@ -4,6 +4,8 @@ export const ui = {
   "ui.pagination.morePages": "More pages",
   "ui.pagination.rowsPerPage": "Rows per page",
   "ui.picker.selectDate": "Select Date",
+  "ui.dialog.srOnly.title": "Dialog",
+  "ui.sheet.srOnly.title": "Sheet",
 };
 
 export type UI = typeof ui;

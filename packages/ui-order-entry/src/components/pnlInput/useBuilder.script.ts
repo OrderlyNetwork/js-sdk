@@ -12,21 +12,29 @@ export enum PnLMode {
   PnL = "PnL",
   OFFSET = "Offset",
   PERCENTAGE = "Offset%",
+  OFFSET_FROM_MARK = "OffsetFromMark",
+  PERCENTAGE_FROM_MARK = "PercentageFromMark",
 }
 
 export type PNL_Values = {
   PnL: string;
   Offset: string;
   "Offset%": string;
+  OffsetFromMark: string;
+  PercentageFromMark: string;
   ROI: string;
 };
 
 type PNL_Keys =
   | "tp_offset"
   | "tp_offset_percentage"
+  | "tp_offset_from_mark"
+  | "tp_offset_percentage_from_mark"
   | "tp_pnl"
   | "sl_offset"
   | "sl_offset_percentage"
+  | "sl_offset_from_mark"
+  | "sl_offset_percentage_from_mark"
   | "sl_pnl";
 
 /**
@@ -76,6 +84,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         return `${type.toLowerCase()}_offset` as PNL_Keys;
       case PnLMode.PERCENTAGE:
         return `${type.toLowerCase()}_offset_percentage` as PNL_Keys;
+      case PnLMode.OFFSET_FROM_MARK:
+        return `${type.toLowerCase()}_offset_from_mark` as PNL_Keys;
+      case PnLMode.PERCENTAGE_FROM_MARK:
+        return `${type.toLowerCase()}_offset_percentage_from_mark` as PNL_Keys;
       default:
         return `${type.toLowerCase()}_pnl` as PNL_Keys;
     }
@@ -114,9 +126,21 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
-        label: `${t("tpsl.offset")}%`,
+        label: t("tpsl.offsetPercent"),
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
+      },
+      {
+        // @ts-ignore
+        label: t("tpsl.offsetMark"),
+        value: PnLMode.OFFSET_FROM_MARK,
+        testId: `${PnLMode.OFFSET_FROM_MARK}_menu_item`,
+      },
+      {
+        // @ts-ignore
+        label: t("tpsl.offsetPercentMark"),
+        value: PnLMode.PERCENTAGE_FROM_MARK,
+        testId: `${PnLMode.PERCENTAGE_FROM_MARK}_menu_item`,
       },
     ];
   }, [t]);
@@ -124,8 +148,12 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const modeLabelMap = useMemo(() => {
     return {
       [PnLMode.PnL]: t("tpsl.pnl"),
-      [PnLMode.OFFSET]: t("tpsl.offset"),
-      [PnLMode.PERCENTAGE]: `${t("tpsl.offset")}%`,
+      [PnLMode.OFFSET]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE]: `${t("tpsl.offsetHolder")}`,
+      // Extend locale keys; not yet in LocaleMessages typings
+
+      [PnLMode.OFFSET_FROM_MARK]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE_FROM_MARK]: t("tpsl.offsetHolder"),
     };
   }, [t]);
 
@@ -185,8 +213,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         //   return commify(value);
         // }
 
-        if (mode === PnLMode.PERCENTAGE) {
-          // // Order/API store offset% as a fraction (e.g. 0.1111); UI shows percent ×100 (11.11).
+        if (
+          mode === PnLMode.PERCENTAGE ||
+          mode === PnLMode.PERCENTAGE_FROM_MARK
+        ) {
           // // Order/API store offset% as a fraction (e.g. 0.1111); UI shows percent ×100 (11.11).
           let normalized = value
             .replace(
@@ -204,9 +234,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             return value;
           }
           return `${new Decimal(normalized).mul(100).todp(2, 4).toString()}${percentageSuffix.current}`;
-
-          // return (Number(value) * 100).toFixed(2);
-        } else if (mode === PnLMode.OFFSET) {
+        } else if (
+          mode === PnLMode.OFFSET ||
+          mode === PnLMode.OFFSET_FROM_MARK
+        ) {
           value = todpIfNeed(value, dp);
         } else {
           // value = new Decimal(value).todp(2).toString();
@@ -219,11 +250,11 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           return "0";
         }
 
-        // console.log("onSendBefore", value);
-
-        if (mode === PnLMode.PERCENTAGE) {
+        if (
+          mode === PnLMode.PERCENTAGE ||
+          mode === PnLMode.PERCENTAGE_FROM_MARK
+        ) {
           if (value !== "") {
-            // percentageSuffix.current = value.endsWith(".") ? "." : "";
             value = todpIfNeed(value, 2);
             const endStr = value.match(/\.0{0,2}$/);
             if (!!endStr) {

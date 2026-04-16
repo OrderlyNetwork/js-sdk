@@ -462,7 +462,7 @@ const TPSLInputRow: React.FC<{
           input: props.testIds?.second,
           dropDown: props.testIds?.dropDown,
         }}
-        onChange={props.onChange}
+        onChange={props.onChange as any}
         quote={"USDC"}
         quote_dp={2}
         type={props.type}
@@ -470,6 +470,8 @@ const TPSLInputRow: React.FC<{
           PnL: props.values.PnL,
           Offset: props.values.Offset,
           "Offset%": props.values["Offset%"],
+          OffsetFromMark: props.values.OffsetFromMark,
+          PercentageFromMark: props.values.PercentageFromMark,
           ROI: props.values.ROI,
         }}
       />

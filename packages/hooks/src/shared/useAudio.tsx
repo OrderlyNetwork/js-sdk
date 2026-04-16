@@ -40,6 +40,24 @@ export const useAudioPlayer = (
     el.volume = Math.max(0, Math.min(1, volume));
   }, [volume]);
 
+  // Reset audio element when tab becomes visible to prevent
+  // accumulated sound replays from queued play() calls in non-Chrome browsers
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        const el = getOrderFilledAudio();
+        el.pause();
+        el.removeAttribute("src");
+        el.load();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   const play = useCallback(() => {
     const currentSrc = srcRef.current;
     const currentEnabled = enabledRef.current;

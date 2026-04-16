@@ -52,15 +52,26 @@ export interface ConnectProps {
   walletAdapter?: WalletAdapter;
 }
 
+type PrivyAppearanceConfig = NonNullable<PrivyClientConfig["appearance"]>;
+
+/** Appearance subset for InitPrivy; accentColor widened for CSS vars / rgb(). */
+export type InitPrivyAppearance = Omit<
+  PrivyAppearanceConfig,
+  "walletChainType" | "walletList" | "accentColor"
+> & {
+  accentColor?: string;
+};
+
+/** Pass-through Privy client config; chains are owned by the SDK. */
+export type InitPrivyClientConfig = Partial<
+  Omit<PrivyClientConfig, "supportedChains" | "defaultChain" | "appearance">
+> & {
+  appearance?: InitPrivyAppearance;
+};
+
 export interface InitPrivy {
   appid: string;
-  config?: {
-    appearance: Omit<
-      PrivyClientConfig["appearance"],
-      "walletChainType" | "walletList"
-    >;
-    loginMethods?: PrivyClientConfig["loginMethods"];
-  };
+  config?: InitPrivyClientConfig;
 }
 
 export interface InitWagmi {

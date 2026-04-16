@@ -9,8 +9,13 @@ export class CalculatorContext implements CalculatorCtx {
   symbolsInfo?: Record<string, API.SymbolExt>;
   fundingRates?: Record<string, API.FundingRate>;
   // holding: API.Holding[];
-  // portfolio
-  portfolio?: Portfolio;
+  // portfolio — dynamic getter to always read the latest output from PortfolioCalculator
+  get portfolio(): Portfolio | undefined {
+    return (
+      this.output["portfolio"] ||
+      (useAppStore.getState().portfolio as Portfolio)
+    );
+  }
   markPrices?: Record<string, number> | null;
   // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
@@ -62,9 +67,6 @@ export class CalculatorContext implements CalculatorCtx {
       scope === CalculatorScope.MARK_PRICE
         ? data
         : this.output[MarketCalculatorName];
-    this.portfolio =
-      this.output["portfolio"] ||
-      (useAppStore.getState().portfolio as Portfolio);
     return this;
   }
 
@@ -92,7 +94,6 @@ export class CalculatorContext implements CalculatorCtx {
   clearCache() {
     this.output = {};
     this.accountInfo = undefined;
-    this.portfolio = undefined;
   }
 
   deleteByName(name: string) {
