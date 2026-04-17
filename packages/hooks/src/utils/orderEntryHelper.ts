@@ -304,6 +304,12 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
 function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
+  /** Mark-based offset modes must derive from mark price even when main order is LIMIT. */
+  // const useMarkPriceBase =
+  //   input === "tp_offset_from_mark" ||
+  //   input === "sl_offset_from_mark" ||
+  //   input === "tp_offset_percentage_from_mark" ||
+  //   input === "sl_offset_percentage_from_mark";
 
   const price =
     values.order_type === OrderType.MARKET ||
@@ -327,6 +333,7 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
           ? Number(values.order_quantity)
           : Number(values.order_quantity) * -1,
       orderSide: values.side!,
+      markPrice,
       // values: newValues,
       values,
     },
@@ -372,6 +379,10 @@ export const getCalculateHandler = (
     case "sl_offset":
     case "tp_offset_percentage":
     case "sl_offset_percentage":
+    case "tp_offset_from_mark":
+    case "sl_offset_from_mark":
+    case "tp_offset_percentage_from_mark":
+    case "sl_offset_percentage_from_mark":
     case "tp_order_price":
     case "tp_order_type":
     case "sl_order_type":

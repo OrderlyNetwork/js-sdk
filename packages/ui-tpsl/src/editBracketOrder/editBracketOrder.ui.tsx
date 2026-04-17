@@ -55,6 +55,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     PnL: string;
     Offset: string;
     "Offset%": string;
+    OffsetFromMark: string;
+    PercentageFromMark: string;
     ROI: string;
     order_price: string;
     order_type: OrderType;
@@ -66,6 +68,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     PnL: formattedOrder.tp_pnl ?? "",
     Offset: formattedOrder.tp_offset ?? "",
     "Offset%": formattedOrder.tp_offset_percentage ?? "",
+    OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
+    PercentageFromMark: formattedOrder.tp_offset_percentage_from_mark ?? "",
     ROI: formattedOrder.tp_ROI ?? "",
   });
 
@@ -75,6 +79,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     PnL: string;
     Offset: string;
     "Offset%": string;
+    OffsetFromMark: string;
+    PercentageFromMark: string;
     ROI: string;
     order_price: string;
     order_type: OrderType;
@@ -86,6 +92,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     PnL: formattedOrder.sl_pnl ?? "",
     Offset: formattedOrder.sl_offset ?? "",
     "Offset%": formattedOrder.sl_offset_percentage ?? "",
+    OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
+    PercentageFromMark: formattedOrder.sl_offset_percentage_from_mark ?? "",
     ROI: formattedOrder.sl_ROI ?? "",
   });
 
@@ -100,6 +108,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
       PnL: formattedOrder.tp_pnl ?? "",
       Offset: formattedOrder.tp_offset ?? "",
       "Offset%": formattedOrder.tp_offset_percentage ?? "",
+      OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
+      PercentageFromMark: formattedOrder.tp_offset_percentage_from_mark ?? "",
       ROI: formattedOrder.tp_ROI ?? "",
     }));
   }, [formattedOrder]);
@@ -114,6 +124,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
       PnL: formattedOrder.sl_pnl ?? "",
       Offset: formattedOrder.sl_offset ?? "",
       "Offset%": formattedOrder.sl_offset_percentage ?? "",
+      OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
+      PercentageFromMark: formattedOrder.sl_offset_percentage_from_mark ?? "",
       ROI: formattedOrder.sl_ROI ?? "",
     }));
   }, [formattedOrder]);

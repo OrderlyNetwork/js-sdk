@@ -24,6 +24,10 @@ export type Props = {
     PnL: string | undefined;
     Offset: string | undefined;
     "Offset%": string | undefined;
+    /** Mark-price based offset (USDC), maps to `tp_offset_from_mark` / `sl_offset_from_mark` on order. */
+    OffsetFromMark: string | undefined;
+    /** Mark-price based offset (%), maps to `tp_offset_percentage_from_mark` / `sl_offset_percentage_from_mark`. */
+    PercentageFromMark: string | undefined;
     ROI?: string | undefined;
     order_price: string | undefined;
     order_type: OrderType;

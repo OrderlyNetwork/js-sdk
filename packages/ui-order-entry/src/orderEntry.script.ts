@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   useAccount,
   useComputedLTV,
@@ -416,10 +416,38 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type_ext: formattedOrder.order_type_ext,
     });
 
+  /**
+   * Same rules as est-liq broadcast: when estimate is missing or inconsistent with
+   * mark/side, treat as no liq for SL validation. Otherwise SL vs liq checks can fire
+   * while the UI shows no usable est. liq. price.
+   */
+  const effectiveEstLiqPriceForSlCheck = useMemo(() => {
+    const estLiqPrice = state.estLiqPrice;
+    if (
+      estLiqPrice == null ||
+      formattedOrder.side == null ||
+      state.markPrice == null
+    ) {
+      return null;
+    }
+    if (
+      (formattedOrder.side === OrderSide.BUY &&
+        estLiqPrice > state.markPrice) ||
+      (formattedOrder.side === OrderSide.SELL && estLiqPrice < state.markPrice)
+    ) {
+      return null;
+    }
+    if (!Number.isFinite(estLiqPrice) || estLiqPrice <= 0) {
+      return null;
+    }
+    return estLiqPrice;
+  }, [state.estLiqPrice, state.markPrice, formattedOrder.side]);
+
   const slPriceError = useTpslPriceChecker({
     slPrice: formattedOrder.sl_trigger_price,
-    liqPrice: state.estLiqPrice,
+    liqPrice: effectiveEstLiqPriceForSlCheck,
     side: formattedOrder.side,
+    markPrice: state.markPrice,
     currentPosition: state.currentPosition,
     orderQuantity: Number(formattedOrder.order_quantity),
   });
@@ -441,20 +469,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
    * Includes a user-activity flag so downstream consumers can decide whether to treat this estLiqPrice as active.
    */
   useEffect(() => {
-    let estLiqPrice = state.estLiqPrice;
-    if (
-      estLiqPrice == null ||
-      formattedOrder.side == null ||
-      state.markPrice == null
-    ) {
-      estLiqPrice = null;
-    } else if (
-      (formattedOrder.side === OrderSide.BUY &&
-        estLiqPrice > state.markPrice) ||
-      (formattedOrder.side === OrderSide.SELL && estLiqPrice < state.markPrice)
-    ) {
-      estLiqPrice = null;
-    }
+    const estLiqPrice = effectiveEstLiqPriceForSlCheck;
 
     const lastActive = lastUserActiveTimeRef.current;
     const now = Date.now();
@@ -466,7 +481,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       estLiqPrice,
       isUserActive,
     });
-  }, [ee, symbol, state.estLiqPrice, state.markPrice, formattedOrder.side]);
+  }, [ee, symbol, effectiveEstLiqPriceForSlCheck]);
 
   useEffect(() => {
     setOrderValue("margin_mode", marginMode);

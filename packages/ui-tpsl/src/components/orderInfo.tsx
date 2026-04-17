@@ -15,6 +15,8 @@ import {
 } from "@orderly.network/ui";
 import { SymbolBadge } from "./symbolBadge";
 
+export const LIQ_DISTANCE_THRESHOLD = 10;
+
 type Props = {
   order: Partial<OrderlyOrder>;
   baseDP?: number;
@@ -48,6 +50,17 @@ export const OrderInfo = (props: Props) => {
   );
 
   const currentLeverage = symbolLeverage || leverage;
+  /** Use the numeric mark price value for arithmetic and comparisons. */
+  const markPriceValue = markPrice?.data;
+
+  const estLiqPrice: string | number =
+    props.estLiqPrice === 0 ||
+    !markPriceValue ||
+    markPriceValue === 0 ||
+    Math.abs((props.estLiqPrice ?? 0) - markPriceValue) / markPriceValue >=
+      LIQ_DISTANCE_THRESHOLD
+      ? "--"
+      : (props.estLiqPrice ?? "--");
 
   return (
     <Flex
@@ -149,7 +162,7 @@ export const OrderInfo = (props: Props) => {
             size="2xs"
             dp={props.quoteDP ?? 2}
           >
-            {props.estLiqPrice ?? "--"}
+            {estLiqPrice}
           </Text.numeral>
         </Flex>
       </Grid>

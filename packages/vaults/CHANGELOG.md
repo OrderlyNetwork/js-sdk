@@ -1,5 +1,37 @@
 # @orderly.network/vaults
 
+## 2.12.2
+
+### Patch Changes
+
+- publish
+- 06007f7: publish
+- Updated dependencies
+- Updated dependencies [06007f7]
+  - @orderly.network/react-app@2.12.2
+  - @orderly.network/hooks@2.12.2
+  - @orderly.network/i18n@2.12.2
+  - @orderly.network/types@2.12.2
+  - @orderly.network/ui@2.12.2
+  - @orderly.network/ui-connector@2.12.2
+  - @orderly.network/ui-transfer@2.12.2
+  - @orderly.network/utils@2.12.2
+
+## 2.12.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.12.2-alpha.0
+  - @orderly.network/hooks@2.12.2-alpha.0
+  - @orderly.network/i18n@2.12.2-alpha.0
+  - @orderly.network/types@2.12.2-alpha.0
+  - @orderly.network/ui@2.12.2-alpha.0
+  - @orderly.network/ui-connector@2.12.2-alpha.0
+  - @orderly.network/ui-transfer@2.12.2-alpha.0
+  - @orderly.network/utils@2.12.2-alpha.0
+
 ## 2.12.1
 
 ### Patch Changes

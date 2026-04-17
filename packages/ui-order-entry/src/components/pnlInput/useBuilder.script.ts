@@ -12,22 +12,48 @@ export enum PnLMode {
   PnL = "PnL",
   OFFSET = "Offset",
   PERCENTAGE = "Offset%",
+  OFFSET_FROM_MARK = "OffsetFromMark",
+  PERCENTAGE_FROM_MARK = "PercentageFromMark",
 }
 
 export type PNL_Values = {
   PnL: string;
   Offset: string;
   "Offset%": string;
+  OffsetFromMark: string;
+  PercentageFromMark: string;
   ROI: string;
 };
 
 type PNL_Keys =
   | "tp_offset"
   | "tp_offset_percentage"
+  | "tp_offset_from_mark"
+  | "tp_offset_percentage_from_mark"
   | "tp_pnl"
   | "sl_offset"
   | "sl_offset_percentage"
+  | "sl_offset_from_mark"
+  | "sl_offset_percentage_from_mark"
   | "sl_pnl";
+
+/**
+ * SL PnL is stored as a signed loss (negative) for `pnlToPrice`; users may type the magnitude
+ * without `-`. The formatter still prefixes `-` on display while focused so the field reads as
+ * a loss without requiring the user to type a minus.
+ *
+ * @param raw Raw input string (may include commas or a trailing decimal point while typing)
+ * @returns String safe to pass to `onChange` for `sl_pnl`
+ */
+function normalizeSlPnlForStore(raw: string): string {
+  const v = `${raw}`.replace(/,/g, "").trim();
+  if (v === "" || v === "-") return v;
+  const withoutTrailingDot = v.replace(/\.$/, "");
+  const num = Number(withoutTrailingDot);
+  if (!isNaN(num) && num === 0) return "0";
+  if (v.startsWith("-")) return v;
+  return `-${v}`;
+}
 
 export type BuilderProps = {
   type: "TP" | "SL";
@@ -41,7 +67,8 @@ export type BuilderProps = {
 export const usePNLInputBuilder = (props: BuilderProps) => {
   const { type, values, quote_dp } = props;
   const { t } = useTranslation();
-  const [focus, setFocus] = useState(true);
+  /** `PNLInput` calls `setFocus(true)` on focus; state is unused but keeps the prop contract. */
+  const [, setFocus] = useState(true);
   // const [mode, setMode] = useLocalStorage<PnLMode>(
   //   "TP/SL_Mode",
   //   PnLMode.PERCENTAGE
@@ -57,10 +84,14 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         return `${type.toLowerCase()}_offset` as PNL_Keys;
       case PnLMode.PERCENTAGE:
         return `${type.toLowerCase()}_offset_percentage` as PNL_Keys;
+      case PnLMode.OFFSET_FROM_MARK:
+        return `${type.toLowerCase()}_offset_from_mark` as PNL_Keys;
+      case PnLMode.PERCENTAGE_FROM_MARK:
+        return `${type.toLowerCase()}_offset_percentage_from_mark` as PNL_Keys;
       default:
         return `${type.toLowerCase()}_pnl` as PNL_Keys;
     }
-  }, [mode]);
+  }, [mode, type]);
 
   const [innerValue, setInnerValue] = useState<string>(
     values[mode as keyof PNL_Values],
@@ -95,9 +126,21 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
-        label: `${t("tpsl.offset")}%`,
+        label: t("tpsl.offsetPercent"),
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
+      },
+      {
+        // @ts-ignore
+        label: t("tpsl.offsetMark"),
+        value: PnLMode.OFFSET_FROM_MARK,
+        testId: `${PnLMode.OFFSET_FROM_MARK}_menu_item`,
+      },
+      {
+        // @ts-ignore
+        label: t("tpsl.offsetPercentMark"),
+        value: PnLMode.PERCENTAGE_FROM_MARK,
+        testId: `${PnLMode.PERCENTAGE_FROM_MARK}_menu_item`,
       },
     ];
   }, [t]);
@@ -105,8 +148,12 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const modeLabelMap = useMemo(() => {
     return {
       [PnLMode.PnL]: t("tpsl.pnl"),
-      [PnLMode.OFFSET]: t("tpsl.offset"),
-      [PnLMode.PERCENTAGE]: `${t("tpsl.offset")}%`,
+      [PnLMode.OFFSET]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE]: `${t("tpsl.offsetHolder")}`,
+      // Extend locale keys; not yet in LocaleMessages typings
+
+      [PnLMode.OFFSET_FROM_MARK]: t("tpsl.offsetHolder"),
+      [PnLMode.PERCENTAGE_FROM_MARK]: t("tpsl.offsetHolder"),
     };
   }, [t]);
 
@@ -120,7 +167,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     //   setInnerValue(value);
     // }
     setInnerValue(value);
-    props.onChange(key, value);
+    const outgoing = key === "sl_pnl" ? normalizeSlPnlForStore(value) : value;
+    props.onChange(key, outgoing);
   };
 
   const onFocus = () => {
@@ -136,7 +184,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     // setTips(undefined);
     setTipVisible(false);
     setIsFocused(false);
-    props.onChange(key, innerValue);
+    const outgoing =
+      key === "sl_pnl" ? normalizeSlPnlForStore(innerValue) : innerValue;
+    props.onChange(key, outgoing);
   };
 
   const formatter = (options: {
@@ -152,10 +202,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       ) => {
         value = `${value}`; // convert to string
 
-        if (focus) {
-          if (type === "SL" && mode === PnLMode.PnL) {
-            value = value.startsWith("-") ? value : "-" + value;
-          }
+        // SL loss is shown with a leading minus even when the user only types the magnitude (no
+        // reliance on `focus` so blur / controlled sync still reads as a loss).
+        if (type === "SL" && mode === PnLMode.PnL) {
+          value = value.startsWith("-") ? value : "-" + value;
         }
 
         if (value === "" || value === "-") return "";
@@ -163,8 +213,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         //   return commify(value);
         // }
 
-        if (mode === PnLMode.PERCENTAGE) {
-          // // Order/API store offset% as a fraction (e.g. 0.1111); UI shows percent ×100 (11.11).
+        if (
+          mode === PnLMode.PERCENTAGE ||
+          mode === PnLMode.PERCENTAGE_FROM_MARK
+        ) {
           // // Order/API store offset% as a fraction (e.g. 0.1111); UI shows percent ×100 (11.11).
           let normalized = value
             .replace(
@@ -182,9 +234,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             return value;
           }
           return `${new Decimal(normalized).mul(100).todp(2, 4).toString()}${percentageSuffix.current}`;
-
-          // return (Number(value) * 100).toFixed(2);
-        } else if (mode === PnLMode.OFFSET) {
+        } else if (
+          mode === PnLMode.OFFSET ||
+          mode === PnLMode.OFFSET_FROM_MARK
+        ) {
           value = todpIfNeed(value, dp);
         } else {
           // value = new Decimal(value).todp(2).toString();
@@ -197,11 +250,11 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           return "0";
         }
 
-        // console.log("onSendBefore", value);
-
-        if (mode === PnLMode.PERCENTAGE) {
+        if (
+          mode === PnLMode.PERCENTAGE ||
+          mode === PnLMode.PERCENTAGE_FROM_MARK
+        ) {
           if (value !== "") {
-            // percentageSuffix.current = value.endsWith(".") ? "." : "";
             value = todpIfNeed(value, 2);
             const endStr = value.match(/\.0{0,2}$/);
             if (!!endStr) {
@@ -215,7 +268,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             value = new Decimal(value).div(100).toString();
             value = `${value}${percentageSuffix.current}`;
           }
-        } else if (mode === PnLMode.PnL && type === "SL" && focus) {
+        } else if (mode === PnLMode.PnL && type === "SL") {
           value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);

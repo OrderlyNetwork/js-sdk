@@ -37,25 +37,38 @@ export const PNLInput = (props: PNLInputProps) => {
   } = props;
 
   const [prefix, setPrefix] = useState<string>(mode);
+  const isPercentageMode =
+    mode === PnLMode.PERCENTAGE || mode === PnLMode.PERCENTAGE_FROM_MARK;
 
   const [placeholder, setPlaceholder] = useState<string>(
-    mode === PnLMode.PERCENTAGE ? "%" : quote,
+    isPercentageMode ? "%" : quote,
   );
 
   useEffect(() => {
     setPrefix(mode);
-    setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
-  }, [mode]);
+    setPlaceholder(isPercentageMode ? "%" : quote);
+  }, [mode, isPercentageMode, quote]);
 
   useEffect(() => {
     setPrefix(!!value ? "" : mode);
   }, [value]);
 
-  const id = useMemo(() => `${type.toLowerCase()}_${mode.toLowerCase()}`, []);
+  const id = useMemo(
+    () => `${type.toLowerCase()}_${mode.toLowerCase()}`,
+    [type, mode],
+  );
+
+  /** Resolve label for prefix state; `prefix` can be "" while focused. */
+  const prefixLabel =
+    prefix === ""
+      ? ""
+      : String(
+          (modeLabelMap as Record<string, string>)[prefix] ?? prefix ?? "",
+        );
 
   return (
     <Input.tooltip
-      prefix={modeLabelMap[prefix as keyof typeof modeLabelMap] || prefix}
+      prefix={prefixLabel}
       size={"md"}
       placeholder={placeholder}
       id={id}
@@ -92,12 +105,12 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       onBlur={() => {
         setPrefix(!!value ? "" : mode);
-        setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+        setPlaceholder(isPercentageMode ? "%" : quote);
         onBlur();
       }}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value && (
+          {isPercentageMode && !!value && (
             <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
               %
             </Text>

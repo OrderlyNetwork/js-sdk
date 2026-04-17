@@ -93,10 +93,14 @@ const useOrderEntryNextInternal = (
           tp_pnl: "",
           tp_offset: "",
           tp_offset_percentage: "",
+          tp_offset_from_mark: "",
+          tp_offset_percentage_from_mark: "",
           sl_trigger_price: "",
           sl_pnl: "",
           sl_offset: "",
           sl_offset_percentage: "",
+          sl_offset_from_mark: "",
+          sl_offset_percentage_from_mark: "",
         }));
       },
       hasTP_SL: () => {
@@ -232,6 +236,54 @@ const useOrderEntryNextInternal = (
           symbolInfo,
         );
       }
+      if (
+        newValues.tp_offset_from_mark !== undefined &&
+        newValues.tp_offset_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "tp_offset_from_mark",
+          newValues.tp_offset_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
+      if (
+        newValues.tp_offset_percentage_from_mark !== undefined &&
+        newValues.tp_offset_percentage_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "tp_offset_percentage_from_mark",
+          newValues.tp_offset_percentage_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
+      if (
+        newValues.sl_offset_from_mark !== undefined &&
+        newValues.sl_offset_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "sl_offset_from_mark",
+          newValues.sl_offset_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
+      if (
+        newValues.sl_offset_percentage_from_mark !== undefined &&
+        newValues.sl_offset_percentage_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "sl_offset_percentage_from_mark",
+          newValues.sl_offset_percentage_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
     } else {
       if (typeof newValues.tp_trigger_price !== "undefined") {
         newValues = calculate(
@@ -248,6 +300,56 @@ const useOrderEntryNextInternal = (
           newValues,
           "sl_trigger_price",
           newValues.sl_trigger_price,
+          markPrice,
+          symbolInfo,
+        );
+      }
+
+      // Re-derive trigger from mark-based offsets when qty changes (same as trigger recompute path).
+      if (
+        newValues.tp_offset_from_mark !== undefined &&
+        newValues.tp_offset_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "tp_offset_from_mark",
+          newValues.tp_offset_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
+      if (
+        newValues.tp_offset_percentage_from_mark !== undefined &&
+        newValues.tp_offset_percentage_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "tp_offset_percentage_from_mark",
+          newValues.tp_offset_percentage_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
+      if (
+        newValues.sl_offset_from_mark !== undefined &&
+        newValues.sl_offset_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "sl_offset_from_mark",
+          newValues.sl_offset_from_mark!,
+          markPrice,
+          symbolInfo,
+        );
+      }
+      if (
+        newValues.sl_offset_percentage_from_mark !== undefined &&
+        newValues.sl_offset_percentage_from_mark !== ""
+      ) {
+        newValues = calculate(
+          newValues,
+          "sl_offset_percentage_from_mark",
+          newValues.sl_offset_percentage_from_mark!,
           markPrice,
           symbolInfo,
         );

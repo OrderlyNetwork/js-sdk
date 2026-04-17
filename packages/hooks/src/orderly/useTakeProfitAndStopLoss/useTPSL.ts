@@ -265,6 +265,7 @@ export const useTaskProfitAndStopLossInternal = (
               ? Number(prev.quantity)!
               : -Number(prev.quantity)!,
           orderSide: side,
+          markPrice: markPrice ?? position.average_open_price!, // use mark price as the default value
           values: prev as Partial<OrderlyOrder>,
         },
         {
