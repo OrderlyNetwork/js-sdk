@@ -10,6 +10,7 @@ import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
 import { OrderlyIcon } from "../trading/icons";
+
 // import { registerOrderbookStripedFlashPlugin } from "./orderbookStripedFlashPlugin";
 
 const meta: Meta<typeof OrderBookWidget> = {

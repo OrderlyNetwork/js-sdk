@@ -51,7 +51,13 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         overrides={props.overrides}
       >
         <OrderlyConfigProvider {...configProps}>
-          <OrderlyPluginProvider plugins={plugins ?? []} pluginState={{ config: { appIcons, brokerName: props.brokerName! }, networkId: configProps.networkId! }}>
+          <OrderlyPluginProvider
+            plugins={plugins ?? []}
+            pluginState={{
+              config: { appIcons, brokerName: props.brokerName! },
+              networkId: configProps.networkId!,
+            }}
+          >
             <ExecutionReportListener />
             <AppStateProvider
               onChainChanged={onChainChanged}

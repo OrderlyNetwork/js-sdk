@@ -1,6 +1,6 @@
 import { ElementType, ReactElement, ReactNode } from "react";
-import type { PluginEventsAPI } from "./apis/events";
 import { NetworkId } from "@orderly.network/types";
+import type { PluginEventsAPI } from "./apis/events";
 
 /* ========== New Plugin System (path-based interceptor) ========== */
 
@@ -98,11 +98,11 @@ export type AppLogos = Partial<{
 }>;
 
 export interface ApplicationState {
-  config:{
+  config: {
     appIcons?: AppLogos;
     brokerName: string;
-  dateFormatting?: string;
-  }
+    dateFormatting?: string;
+  };
   networkId: NetworkId;
 }
 
