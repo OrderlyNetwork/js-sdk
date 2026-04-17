@@ -12,6 +12,7 @@ import { createEventsFacade, NOOP_EVENTS } from "./apis/events";
 import { getRegisteredInjectableTargets } from "./injectableTargetRegistry";
 import { OrderlyPluginRegistry } from "./pluginRegistry";
 import type {
+  ApplicationState,
   InterceptorTargetDescriptor,
   OrderlyPlugin,
   OrderlyPluginAPI,
@@ -103,7 +104,7 @@ export const useInterceptorTargets = (): InterceptorTargetDescriptor[] => {
 export interface OrderlyPluginProviderProps extends PropsWithChildren {
   plugins: (OrderlyPlugin | PluginRegistrationFn)[];
   /** Optional state passed to plugin registration fns (e.g. AppState) */
-  pluginState?: unknown;
+  pluginState?: ApplicationState;
 }
 
 export const OrderlyPluginProvider: FC<OrderlyPluginProviderProps> = ({
@@ -112,6 +113,7 @@ export const OrderlyPluginProvider: FC<OrderlyPluginProviderProps> = ({
   children,
 }) => {
   const pluginsRef = useRef<OrderlyPlugin[]>([]);
+
   const resolvedPlugins = useMemo(() => {
     const collected: OrderlyPlugin[] = [];
     const sdk = {

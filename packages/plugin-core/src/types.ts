@@ -1,5 +1,6 @@
 import { ElementType, ReactElement, ReactNode } from "react";
 import type { PluginEventsAPI } from "./apis/events";
+import { NetworkId } from "@orderly.network/types";
 
 /* ========== New Plugin System (path-based interceptor) ========== */
 
@@ -81,8 +82,32 @@ export interface OrderlySDK {
   registerPlugin: (descriptor: OrderlyPlugin) => void;
 }
 
+type Logo = {
+  // the logo image url
+  img?: string;
+  // also can use React component
+  component?: ReactNode;
+  className?: string;
+};
+
+export type AppLogos = Partial<{
+  // logo for top navigation bar
+  main: Logo;
+  // logo for popover/dialog header
+  secondary: Logo;
+}>;
+
+export interface ApplicationState {
+  config:{
+    appIcons?: AppLogos;
+    brokerName: string;
+  dateFormatting?: string;
+  }
+  networkId: NetworkId;
+}
+
 /** Plugin registration function: (SDK, state?) => void; calls SDK.registerPlugin internally */
-export type PluginRegistrationFn<TState = unknown> = (
+export type PluginRegistrationFn<TState = ApplicationState> = (
   SDK: OrderlySDK,
   state?: TState,
 ) => void;

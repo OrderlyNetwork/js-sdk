@@ -42,6 +42,7 @@ export {
   type KnownInterceptorTarget,
   type Extension,
   type ExtensionBuilder,
+  type ApplicationState,
 } from "./types";
 
 export { createEventsFacade, type PluginEventsAPI } from "./apis/events";

@@ -10,7 +10,7 @@ import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
 import { OrderlyIcon } from "../trading/icons";
-import { registerOrderbookStripedFlashPlugin } from "./orderbookStripedFlashPlugin";
+// import { registerOrderbookStripedFlashPlugin } from "./orderbookStripedFlashPlugin";
 
 const meta: Meta<typeof OrderBookWidget> = {
   title: "Package/plugin/Trading",
@@ -19,7 +19,7 @@ const meta: Meta<typeof OrderBookWidget> = {
     (Story) => (
       <BaseLayout>
         <OrderlyPluginProvider
-          plugins={[registerOrderbookStripedFlashPlugin()]}
+        // plugins={[registerOrderbookStripedFlashPlugin()]}
         >
           <Story />
         </OrderlyPluginProvider>
