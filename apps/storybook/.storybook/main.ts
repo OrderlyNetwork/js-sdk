@@ -136,9 +136,22 @@ const config: StorybookConfig = {
           ignored: getWatchIgnores(),
         },
       },
+      resolve: {
+        /**
+         * Monorepo + prebundled workspace deps must share one React instance,
+         * or plugin-core useContext hits a null dispatcher.
+         */
+        dedupe: ["react", "react-dom"],
+      },
       // Optimize dependencies to handle missing peer dependencies
       optimizeDeps: {
         exclude: ["@project-serum/sol-wallet-adapter"],
+        include: [
+          "react",
+          "react/jsx-runtime",
+          "react-dom",
+          "react-dom/client",
+        ],
       },
       build: {
         rollupOptions: {

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useMemo } from "react";
 import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
@@ -7,8 +7,10 @@ import {
   OrderlyThemeProvider,
   Toaster,
   TooltipProvider,
+  type OrderlyPlugin,
+  type OrderlyThemeProviderProps,
+  type PluginRegistrationFn,
 } from "@orderly.network/ui";
-import { OrderlyThemeProviderProps } from "@orderly.network/ui";
 import { useBootstrap } from "../hooks/useBootstrap";
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { useUILocale } from "../hooks/useUILocale";
@@ -19,6 +21,12 @@ import { AppStateProvider, AppStateProviderProps } from "./appStateProvider";
 export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
+
+/**
+ * Reused when `plugins` is omitted so `OrderlyPluginProvider` does not receive a new
+ * empty array reference on every render (which would rerun plugin resolution and setup).
+ */
+const EMPTY_PLUGINS: (OrderlyPlugin | PluginRegistrationFn)[] = [];
 
 // Cannot be called outside of Provider because useExecutionReport requires useOrderlyContext.
 const ExecutionReportListener: React.FC = () => {
@@ -43,6 +51,20 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
 
   const uiLocale = useUILocale();
 
+  /**
+   * Keep referential identity stable while inputs are unchanged so `OrderlyPluginProvider`
+   * memo/effects (plugin list, `setup`, context) are not invalidated every parent render.
+   */
+  const pluginState = useMemo(
+    () => ({
+      config: { appIcons, brokerName: props.brokerName! },
+      networkId: configProps.networkId!,
+    }),
+    [appIcons, props.brokerName, configProps.networkId],
+  );
+
+  const pluginsList = plugins ?? EMPTY_PLUGINS;
+
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
       <OrderlyThemeProvider
@@ -52,11 +74,8 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
       >
         <OrderlyConfigProvider {...configProps}>
           <OrderlyPluginProvider
-            plugins={plugins ?? []}
-            pluginState={{
-              config: { appIcons, brokerName: props.brokerName! },
-              networkId: configProps.networkId!,
-            }}
+            plugins={pluginsList}
+            pluginState={pluginState}
           >
             <ExecutionReportListener />
             <AppStateProvider

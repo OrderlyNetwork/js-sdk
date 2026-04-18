@@ -50,6 +50,7 @@
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/vaults": "workspace:*",
+    "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/wallet-connector": "workspace:*",
     "@orderly.network/wallet-connector-privy": "workspace:*",
     "@project-serum/sol-wallet-adapter": "^0.2.6",
