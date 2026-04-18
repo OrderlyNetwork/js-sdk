@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "分配給下級代理自主設定收益權限，邀請連結中的全部下級交易者都將持續貢獻收益給您。",
   "affiliate.newReferralProgram.tradeUnlock": "交易解鎖",
   "affiliate.newReferralProgram.tradeUnlock.description": "交易金額達到 {{volume}} USDC 即可解鎖邀請好友和賺取返傭的權限。",
+  "affiliate.newReferralProgram.wereYouReferred": "是否有推薦人邀請您？",
+  "affiliate.newReferralProgram.referredBy": "您由 {{code}} 推薦。",
   "affiliate.commissionConfiguration": "返傭配置",
   "affiliate.totalCommissionAvailable": "總可用返傭",
   "affiliate.configure": "配置",

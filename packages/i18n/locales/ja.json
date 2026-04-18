@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "サブアフィリエイトに収益をカスタマイズする力を与えながら、成長するネットワーク内のすべてのトレーダーから終わりのない受動的収入の流れを解き放ちます。",
   "affiliate.newReferralProgram.tradeUnlock": "取引でアンロック",
   "affiliate.newReferralProgram.tradeUnlock.description": "{{volume}} USDCの取引量を取引して、友達を招待して手数料を獲得する能力をアンロックします。",
+  "affiliate.newReferralProgram.wereYouReferred": "紹介者はいますか？",
+  "affiliate.newReferralProgram.referredBy": "{{code}} からの紹介です。",
   "affiliate.commissionConfiguration": "手数料構成",
   "affiliate.totalCommissionAvailable": "利用可能な総手数料",
   "affiliate.configure": "構成",
