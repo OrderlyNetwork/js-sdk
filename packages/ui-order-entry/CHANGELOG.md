@@ -1,5 +1,25 @@
 # @orderly.network/ui-order-entry
 
+## 2.12.3
+
+### Patch Changes
+
+- publish
+- 528e3f4: publish
+- Updated dependencies
+- Updated dependencies [528e3f4]
+  - @orderly.network/react-app@2.12.3
+  - @orderly.network/hooks@2.12.3
+  - @orderly.network/i18n@2.12.3
+  - @orderly.network/perp@4.12.3
+  - @orderly.network/types@2.12.3
+  - @orderly.network/ui@2.12.3
+  - @orderly.network/ui-connector@2.12.3
+  - @orderly.network/ui-leverage@2.12.3
+  - @orderly.network/ui-scaffold@2.12.3
+  - @orderly.network/ui-tpsl@2.12.3
+  - @orderly.network/utils@2.12.3
+
 ## 2.12.3-alpha.0
 
 ### Patch Changes

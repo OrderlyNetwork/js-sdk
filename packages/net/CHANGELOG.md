@@ -1,5 +1,12 @@
 # @orderly.network/net
 
+## 2.12.3
+
+### Patch Changes
+
+- publish
+- 528e3f4: publish
+
 ## 2.12.3-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @orderly.network/wallet-connector
 
+## 2.12.3
+
+### Patch Changes
+
+- publish
+- 528e3f4: publish
+- Updated dependencies
+- Updated dependencies [528e3f4]
+  - @orderly.network/core@2.12.3
+  - @orderly.network/hooks@2.12.3
+  - @orderly.network/types@2.12.3
+  - @orderly.network/ui@2.12.3
+  - @orderly.network/utils@2.12.3
+
 ## 2.12.3-alpha.0
 
 ### Patch Changes
