@@ -28,7 +28,6 @@ import {
   LedgerWalletKey,
 } from "@orderly.network/types";
 import {
-  DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,
   EXECUTOR_PROGRAM_ID,
   PRICE_FEED_PROGRAM_ID,
@@ -37,11 +36,12 @@ import {
 } from "./constant";
 import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
 import {
+  appendThreeDvnDepositRemainingAccounts,
+  appendThreeDvnQuoteRemainingAccounts,
   getBrokerPDA,
   getDefaultSendConfigPda,
   getDefaultSendLibConfigPda,
   getDstEID,
-  getDvnConfigPda,
   getEndorcedOptionsPda,
   getEndpointSettingPda,
   getEventAuthorityPda,
@@ -424,7 +424,6 @@ export async function getDepositQuoteFee({
   const defaultSendConfigPDA = getDefaultSendConfigPda(DST_EID);
   const executorConfigPDA = getExecutorConfigPda();
   const priceFeedPDA = getPriceFeedPda();
-  const dvnConfigPDA = getDvnConfigPda();
 
   const messageLibPDA = getMessageLibPda(SEND_LIB_PROGRAM_ID);
   const messageLibInfoPDA = getMessageLibInfoPda(messageLibPDA);
@@ -513,26 +512,7 @@ export async function getDepositQuoteFee({
         isWritable: false,
         isSigner: false,
       },
-      {
-        pubkey: DVN_PROGRAM_ID,
-        isWritable: false,
-        isSigner: false,
-      },
-      {
-        pubkey: dvnConfigPDA,
-        isWritable: false,
-        isSigner: false,
-      },
-      {
-        pubkey: PRICE_FEED_PROGRAM_ID,
-        isWritable: false,
-        isSigner: false,
-      },
-      {
-        pubkey: priceFeedPDA,
-        isWritable: false,
-        isSigner: false,
-      },
+      ...appendThreeDvnQuoteRemainingAccounts(priceFeedPDA),
     ])
     .instruction();
 
@@ -547,10 +527,13 @@ export async function getDepositQuoteFee({
     console.log("-- lookup table account error");
     throw new Error("-- lookup table account error");
   }
+  const ixQuoteComputeBudget = ComputeBudgetProgram.setComputeUnitLimit({
+    units: 600_000,
+  });
   const feeMsg = new TransactionMessage({
     payerKey: userPublicKey,
     recentBlockhash: lastBlockHash.blockhash,
-    instructions: [quoteFee],
+    instructions: [ixQuoteComputeBudget, quoteFee],
   }).compileToV0Message([lookupTableAccount]);
 
   const feeTx = new VersionedTransaction(feeMsg);
@@ -678,7 +661,6 @@ export async function deposit({
   const ulnEventAuthorityPDA = getUlnEventAuthorityPda();
   const executorConfigPDA = getExecutorConfigPda();
   const priceFeedPDA = getPriceFeedPda();
-  const dvnConfigPDA = getDvnConfigPda();
 
   const vaultDepositParams = getDepositParams(userAddress, depositData);
 
@@ -808,28 +790,7 @@ export async function deposit({
       // 17
       pubkey: priceFeedPDA,
     },
-    {
-      isSigner: false,
-      isWritable: false,
-      pubkey: DVN_PROGRAM_ID,
-    },
-    {
-      isSigner: false,
-      isWritable: true,
-      // 18
-      pubkey: dvnConfigPDA,
-    },
-    {
-      isSigner: false,
-      isWritable: false,
-      pubkey: PRICE_FEED_PROGRAM_ID,
-    },
-    {
-      isSigner: false,
-      isWritable: false,
-      // 17
-      pubkey: priceFeedPDA,
-    },
+    ...appendThreeDvnDepositRemainingAccounts(priceFeedPDA),
   ];
 
   const fee = await getDepositQuoteFee({
@@ -896,7 +857,7 @@ export async function deposit({
   }
 
   const ixAddComputeBudget = ComputeBudgetProgram.setComputeUnitLimit({
-    units: 400_000,
+    units: 800_000,
   });
 
   const lastBlockHash = await connection.getLatestBlockhash();

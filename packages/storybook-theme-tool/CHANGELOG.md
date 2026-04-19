@@ -1,5 +1,23 @@
 # storybook-theme-tool
 
+## 2.12.3
+
+### Patch Changes
+
+- publish
+- 528e3f4: publish
+- Updated dependencies
+- Updated dependencies [528e3f4]
+  - @orderly.network/ui@2.12.3
+
+## 2.12.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/ui@2.12.3-alpha.0
+
 ## 2.12.2
 
 ### Patch Changes

@@ -1,5 +1,25 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.12.3
+
+### Patch Changes
+
+- publish
+- 528e3f4: publish
+- Updated dependencies
+- Updated dependencies [528e3f4]
+  - @orderly.network/default-evm-adapter@2.12.3
+  - @orderly.network/types@2.12.3
+
+## 2.12.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.12.3-alpha.0
+  - @orderly.network/types@2.12.3-alpha.0
+
 ## 2.12.2
 
 ### Patch Changes
