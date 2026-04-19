@@ -22,10 +22,6 @@ export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
 
-/**
- * Reused when `plugins` is omitted so `OrderlyPluginProvider` does not receive a new
- * empty array reference on every render (which would rerun plugin resolution and setup).
- */
 const EMPTY_PLUGINS: (OrderlyPlugin | PluginRegistrationFn)[] = [];
 
 // Cannot be called outside of Provider because useExecutionReport requires useOrderlyContext.
