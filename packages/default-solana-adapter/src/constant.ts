@@ -18,6 +18,24 @@ export const TREASURY_PROGRAM_ID = SEND_LIB_PROGRAM_ID;
 export const DVN_PROGRAM_ID = new PublicKey(
   "HtEYV4xB4wvsj5fgTkcfuChYpvGYzgzwvNhgDZQNh7wW",
 );
+/** Same program as `DVN_PROGRAM_ID`; aligns with solana-vault ULN 3-DVN scripts. */
+export const LZ_DVN_PROGRAM_ID = DVN_PROGRAM_ID;
+export const CANARY_DVN_PROGRAM_ID = new PublicKey(
+  "5KAALa8AEEKnW6p6AacdnqNDmGMpfhwR7AEyWs1gUvsT",
+);
+export const NEVERMIND_DVN_PROGRAM_ID = new PublicKey(
+  "4fs6aL12L18K5giDy9Dgxgrb3aNRYiuRV2a7JPPj3e7F",
+);
+/** LZ DVN config PDA; must match `getDvnConfigPda()` derivation in solana.util. */
+export const LZ_DVN_PDA = new PublicKey(
+  "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+);
+export const CANARY_DVN_PDA = new PublicKey(
+  "7jMeX5mzXnSSKYd8DxBDP4xMnkNFZZZm5W28FWUTbwU3",
+);
+export const NEVERMIND_DVN_PDA = new PublicKey(
+  "GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab",
+);
 export const VAULT_AUTHORITY_SEED = "VaultAuthority";
 export const BROKER_SEED = "Broker";
 export const TOKEN_SEED = "Token";
