@@ -345,6 +345,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       tp_pnl: order.tp_pnl,
       tp_offset: order.tp_offset,
       tp_offset_percentage: order.tp_offset_percentage,
+      tp_offset_from_mark: order.tp_offset_from_mark,
+      tp_offset_percentage_from_mark: order.tp_offset_percentage_from_mark,
       tp_ROI: order.tp_ROI,
       tp_trigger_price: order.tp_trigger_price,
       tp_order_price: order.tp_order_price,
@@ -354,6 +356,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       sl_pnl: order.sl_pnl,
       sl_offset: order.sl_offset,
       sl_offset_percentage: order.sl_offset_percentage,
+      sl_offset_from_mark: order.sl_offset_from_mark,
+      sl_offset_percentage_from_mark: order.sl_offset_percentage_from_mark,
       sl_ROI: order.sl_ROI,
     });
     setShowTPSLAdvanced(false);
@@ -371,6 +375,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       sl_order_type: OrderType.MARKET,
       tp_pnl: undefined,
       sl_pnl: undefined,
+      tp_offset: undefined,
+      tp_offset_percentage: undefined,
+      tp_offset_from_mark: undefined,
+      tp_offset_percentage_from_mark: undefined,
+      sl_offset: undefined,
+      sl_offset_percentage: undefined,
+      sl_offset_from_mark: undefined,
+      sl_offset_percentage_from_mark: undefined,
       position_type: PositionType.FULL,
     });
   };
@@ -559,6 +571,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 PnL: formattedOrder.tp_pnl ?? "",
                 Offset: formattedOrder.tp_offset ?? "",
                 "Offset%": formattedOrder.tp_offset_percentage ?? "",
+                OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
+                PercentageFromMark:
+                  formattedOrder.tp_offset_percentage_from_mark ?? "",
                 ROI: formattedOrder.tp_ROI ?? "",
               },
               sl: {
@@ -566,6 +581,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 PnL: formattedOrder.sl_pnl ?? "",
                 Offset: formattedOrder.sl_offset ?? "",
                 "Offset%": formattedOrder.sl_offset_percentage ?? "",
+                OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
+                PercentageFromMark:
+                  formattedOrder.sl_offset_percentage_from_mark ?? "",
                 ROI: formattedOrder.sl_ROI ?? "",
               },
             }}

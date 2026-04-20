@@ -2,41 +2,43 @@
 
 ## solana.util.ts responsibility
 
-Provides Solana PDA derivation and RPC helpers used by the vault and LayerZero/OApp flow: token accounts, vault authority, broker/token PDAs, OApp config, peer, enforced options, send lib/config, endpoint/nonce/event/ULN/executor/price feed/DVN PDAs, destination EID, lookup table address and account fetch.
+Provides Solana PDA derivation and RPC helpers used by the vault and LayerZero/OApp flow: token accounts, vault authority, broker/token PDAs, OApp config, peer, enforced options, send lib/config, endpoint/nonce/event/ULN/executor/price feed/DVN PDAs, destination EID, lookup table address and account fetch. For ULN 3-DVN send, `appendThreeDvnQuoteRemainingAccounts` / `appendThreeDvnDepositRemainingAccounts` build the CPI tail (three DVN groups, each with price-feed pair) aligned with solana-vault `utils.ts`. Address lookup tables used for v0 txs must include Canary and Nevermind program and PDA addresses (extend via solana-vault `extend_lookuptable_dvn.ts` on each network).
 
 ## solana.util.ts exports
 
-| Name | Type | Role | Description |
-|------|------|------|--------------|
-| getTokenAccounts | function | ATA | Associated token account for (token, owner) |
-| getVaultAuthorityPda | function | PDA | Vault authority PDA for program |
-| getSolVaultPda | function | PDA | Sol vault PDA for program |
-| getBrokerPDA | function | PDA | Broker PDA (programId, brokerHash) |
-| getTokenPDA | function | PDA | Token PDA (programId, tokenHash) |
-| getOAppConfigPda | function | PDA | OApp config PDA |
-| getLzReceiveTypesPda | function | PDA | LZ receive types PDA |
-| getPeerPda | function | PDA | Peer PDA (programId, oappConfigPda, dstEid) |
-| getEndorcedOptionsPda | function | PDA | Enforced options PDA |
-| getSendLibPda | function | PDA | Send lib PDA |
-| getSendLibConfigPda | function | PDA | Send lib config PDA (oappConfigPda, dstEid) |
-| getDefaultSendLibConfigPda | function | PDA | Default send lib config PDA (dstEid) |
-| getSendLibInfoPda | function | PDA | Send lib info PDA |
-| getEndpointSettingPda | function | PDA | Endpoint setting PDA |
-| getPeerAddress | function | Resolver | Peer bytes by OApp program id (dev/qa/staging/mainnet) |
-| getNoncePda | function | PDA | Nonce PDA (programId, oappConfigPda, dstEid) |
-| getEventAuthorityPda | function | PDA | Event authority PDA (endpoint) |
-| getUlnSettingPda | function | PDA | ULN setting PDA |
-| getSendConfigPda | function | PDA | Send config PDA (oappConfigPda, dstEid) |
-| getDefaultSendConfigPda | function | PDA | Default send config PDA (dstEid) |
-| getUlnEventAuthorityPda | function | PDA | ULN event authority PDA |
-| getExecutorConfigPda | function | PDA | Executor config PDA |
-| getPriceFeedPda | function | PDA | Price feed PDA |
-| getDvnConfigPda | function | PDA | DVN config PDA |
-| getDstEID | function | Resolver | MAIN_DST_EID or DEV_DST_EID by OApp program id |
-| getLookupTableAddress | function | Resolver | Lookup table PublicKey by OApp program id (dev/qa/staging/mainnet) |
-| getMessageLibPda | function | PDA | Message lib PDA (optional programId) |
-| getMessageLibInfoPda | function | PDA | Message lib info PDA (msgLibPda, optional programId) |
-| getLookupTableAccount | function | async RPC | Fetches address lookup table account from connection |
+| Name                                   | Type     | Role         | Description                                                        |
+| -------------------------------------- | -------- | ------------ | ------------------------------------------------------------------ |
+| getTokenAccounts                       | function | ATA          | Associated token account for (token, owner)                        |
+| getVaultAuthorityPda                   | function | PDA          | Vault authority PDA for program                                    |
+| getSolVaultPda                         | function | PDA          | Sol vault PDA for program                                          |
+| getBrokerPDA                           | function | PDA          | Broker PDA (programId, brokerHash)                                 |
+| getTokenPDA                            | function | PDA          | Token PDA (programId, tokenHash)                                   |
+| getOAppConfigPda                       | function | PDA          | OApp config PDA                                                    |
+| getLzReceiveTypesPda                   | function | PDA          | LZ receive types PDA                                               |
+| getPeerPda                             | function | PDA          | Peer PDA (programId, oappConfigPda, dstEid)                        |
+| getEndorcedOptionsPda                  | function | PDA          | Enforced options PDA                                               |
+| getSendLibPda                          | function | PDA          | Send lib PDA                                                       |
+| getSendLibConfigPda                    | function | PDA          | Send lib config PDA (oappConfigPda, dstEid)                        |
+| getDefaultSendLibConfigPda             | function | PDA          | Default send lib config PDA (dstEid)                               |
+| getSendLibInfoPda                      | function | PDA          | Send lib info PDA                                                  |
+| getEndpointSettingPda                  | function | PDA          | Endpoint setting PDA                                               |
+| getPeerAddress                         | function | Resolver     | Peer bytes by OApp program id (dev/qa/staging/mainnet)             |
+| getNoncePda                            | function | PDA          | Nonce PDA (programId, oappConfigPda, dstEid)                       |
+| getEventAuthorityPda                   | function | PDA          | Event authority PDA (endpoint)                                     |
+| getUlnSettingPda                       | function | PDA          | ULN setting PDA                                                    |
+| getSendConfigPda                       | function | PDA          | Send config PDA (oappConfigPda, dstEid)                            |
+| getDefaultSendConfigPda                | function | PDA          | Default send config PDA (dstEid)                                   |
+| getUlnEventAuthorityPda                | function | PDA          | ULN event authority PDA                                            |
+| getExecutorConfigPda                   | function | PDA          | Executor config PDA                                                |
+| getPriceFeedPda                        | function | PDA          | Price feed PDA                                                     |
+| getDvnConfigPda                        | function | PDA          | LZ DVN config PDA; asserts derivation matches `LZ_DVN_PDA`         |
+| appendThreeDvnQuoteRemainingAccounts   | function | CPI accounts | Tail for `oappQuote` after executor + first price-feed pair        |
+| appendThreeDvnDepositRemainingAccounts | function | CPI accounts | Tail for `deposit` / `depositSol` (DVN PDAs writable)              |
+| getDstEID                              | function | Resolver     | MAIN_DST_EID or DEV_DST_EID by OApp program id                     |
+| getLookupTableAddress                  | function | Resolver     | Lookup table PublicKey by OApp program id (dev/qa/staging/mainnet) |
+| getMessageLibPda                       | function | PDA          | Message lib PDA (optional programId)                               |
+| getMessageLibInfoPda                   | function | PDA          | Message lib info PDA (msgLibPda, optional programId)               |
+| getLookupTableAccount                  | function | async RPC    | Fetches address lookup table account from connection               |
 
 ## getTokenAccounts parameters and return
 
@@ -65,6 +67,7 @@ Each compares OAPP_PROGRAM_ID (or OAPP_PROGRAM_ID) to DEV/QA/STAGING/MAINNET_OAP
 ## solana.util.ts Example
 
 ```typescript
+import { PublicKey } from "@solana/web3.js";
 import {
   getTokenAccounts,
   getVaultAuthorityPda,
@@ -72,7 +75,6 @@ import {
   getLookupTableAddress,
   getLookupTableAccount,
 } from "./solana.util";
-import { PublicKey } from "@solana/web3.js";
 
 const programId = new PublicKey("...");
 const vaultAuthority = getVaultAuthorityPda(programId);

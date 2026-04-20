@@ -7,9 +7,11 @@ const useEstLiqPriceBySymbol = (
   marginMode: MarginMode,
 ): number | undefined => {
   const [data] = usePositionStream(symbol);
+
   const position = data?.rows?.find(
     (row) => row.symbol === symbol && row.margin_mode === marginMode,
   );
+
   return useMemo(() => {
     return position?.est_liq_price ?? undefined;
   }, [position]);

@@ -1,5 +1,45 @@
 # @orderly.network/futures
 
+## 4.12.3
+
+### Patch Changes
+
+- publish
+- 528e3f4: publish
+- Updated dependencies
+- Updated dependencies [528e3f4]
+  - @orderly.network/types@2.12.3
+  - @orderly.network/utils@2.12.3
+
+## 4.12.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.12.3-alpha.0
+  - @orderly.network/utils@2.12.3-alpha.0
+
+## 4.12.2
+
+### Patch Changes
+
+- publish
+- 06007f7: publish
+- Updated dependencies
+- Updated dependencies [06007f7]
+  - @orderly.network/types@2.12.2
+  - @orderly.network/utils@2.12.2
+
+## 4.12.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.12.2-alpha.0
+  - @orderly.network/utils@2.12.2-alpha.0
+
 ## 4.12.1
 
 ### Patch Changes

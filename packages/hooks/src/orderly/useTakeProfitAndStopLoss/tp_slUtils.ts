@@ -12,13 +12,17 @@ import {
 export type UpdateOrderKey =
   | "tp_trigger_price"
   | "tp_offset_percentage"
+  | "tp_offset_percentage_from_mark"
   | "tp_pnl"
   | "tp_offset"
+  | "tp_offset_from_mark"
   | "quantity"
   | "sl_trigger_price"
   | "sl_offset_percentage"
+  | "sl_offset_percentage_from_mark"
   | "sl_pnl"
-  | "sl_offset";
+  | "sl_offset"
+  | "sl_offset_from_mark";
 
 /**
  * offset -> TP/SL price
@@ -379,6 +383,7 @@ export function tpslCalculateHelper(
     entryPrice: number | string;
     qty: number | string;
     orderSide: OrderSide;
+    markPrice: number | string;
     values: Partial<OrderlyOrder>;
   },
   options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {},
@@ -395,6 +400,10 @@ export function tpslCalculateHelper(
     key !== "sl_offset" &&
     key !== "tp_offset_percentage" &&
     key !== "sl_offset_percentage" &&
+    key !== "tp_offset_from_mark" &&
+    key !== "sl_offset_from_mark" &&
+    key !== "tp_offset_percentage_from_mark" &&
+    key !== "sl_offset_percentage_from_mark" &&
     key !== "tp_order_price" &&
     key !== "sl_order_price" &&
     key !== "tp_order_type" &&
@@ -413,6 +422,7 @@ export function tpslCalculateHelper(
   const keyPrefix = key.slice(0, 3);
 
   const qty = Number(key === "quantity" ? inputs.value : inputs.qty);
+  const markPrice = inputs.markPrice ?? inputs.entryPrice;
 
   // console.log("key", key, inputs.value, inputs.values, inputs.qty);
 
@@ -435,6 +445,8 @@ export function tpslCalculateHelper(
   let trigger_price,
     offset,
     offset_percentage,
+    offset_from_mark,
+    offset_percentage_from_mark,
     pnl,
     order_price,
     tpsl_order_type =
@@ -457,6 +469,8 @@ export function tpslCalculateHelper(
             [`${keyPrefix}trigger_price`]: trigger_price,
             [`${keyPrefix}offset`]: "",
             [`${keyPrefix}offset_percentage`]: "",
+            [`${keyPrefix}offset_from_mark`]: "",
+            [`${keyPrefix}offset_percentage_from_mark`]: "",
             [`${keyPrefix}pnl`]: "",
             [`${keyPrefix}ROI`]: "",
           };
@@ -468,34 +482,6 @@ export function tpslCalculateHelper(
 
       break;
     }
-
-    // case "tp_enable":
-    // case "sl_enable": {
-    //   return {
-    //     [`${keyPrefix}enable`]: inputs.value,
-    //     [`${keyPrefix}order_type`]: OrderType.MARKET,
-    //     [`${keyPrefix}trigger_price`]: "",
-    //     [`${keyPrefix}order_price`]: "",
-    //     [`${keyPrefix}offset`]: "",
-    //     [`${keyPrefix}offset_percentage`]: "",
-    //     [`${keyPrefix}pnl`]: "",
-    //     [`${keyPrefix}ROI`]: "",
-    //   };
-    // }
-
-    // case 'tp_pnl':{
-    //   if (inputs.values.tp_order_type !== OrderType.MARKET) {
-    //     pnl = inputs.value;
-    //     trigger_price = pnlToPrice({
-    //     qty,
-    //     pnl: Number(inputs.value),
-    //     entryPrice,
-    //     orderSide: inputs.orderSide,
-    //     orderType,
-    //     })
-
-    //   }
-    // }
 
     case "tp_pnl":
     case "sl_pnl": {
@@ -538,6 +524,7 @@ export function tpslCalculateHelper(
               ? AlgoOrderType.TAKE_PROFIT
               : AlgoOrderType.STOP_LOSS,
         });
+
         trigger_price =
           inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
           order_price;
@@ -549,6 +536,41 @@ export function tpslCalculateHelper(
           orderSide: inputs.orderSide,
           orderType:
             key === "tp_offset"
+              ? AlgoOrderType.TAKE_PROFIT
+              : AlgoOrderType.STOP_LOSS,
+        });
+      }
+      break;
+    }
+
+    case "tp_offset_from_mark":
+    case "sl_offset_from_mark": {
+      offset_from_mark = inputs.value;
+      if (!checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+        order_price = offsetToPrice({
+          qty,
+          offset: Number(inputs.value),
+          entryPrice: markPrice as number,
+
+          orderSide: inputs.orderSide,
+          orderType:
+            key === "tp_offset_from_mark"
+              ? AlgoOrderType.TAKE_PROFIT
+              : AlgoOrderType.STOP_LOSS,
+        });
+        // order_price = new Decimal(markPrice).add(Number(inputs.value)).toNumber();
+        trigger_price =
+          inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
+          order_price;
+      } else {
+        trigger_price = offsetToPrice({
+          qty,
+          offset: Number(inputs.value),
+          // entryPrice,
+          entryPrice: markPrice as number,
+          orderSide: inputs.orderSide,
+          orderType:
+            key === "tp_offset_from_mark"
               ? AlgoOrderType.TAKE_PROFIT
               : AlgoOrderType.STOP_LOSS,
         });
@@ -608,12 +630,42 @@ export function tpslCalculateHelper(
       }
       break;
     }
+
+    case "tp_offset_percentage_from_mark":
+    case "sl_offset_percentage_from_mark": {
+      offset_percentage_from_mark = inputs.value;
+      /** Base price for % is mark, not the main order's limit entry price. */
+      const markBase = Number(markPrice);
+      if (!checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+        order_price = offsetPercentageToPrice({
+          qty,
+          percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),
+          entryPrice: markBase,
+          orderSide: inputs.orderSide,
+          orderType,
+        });
+        trigger_price =
+          inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
+          order_price;
+      } else {
+        trigger_price = offsetPercentageToPrice({
+          qty,
+          percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),
+          entryPrice: markBase,
+          orderSide: inputs.orderSide,
+          orderType,
+        });
+      }
+      break;
+    }
   }
   if (!trigger_price && checkTPSLOrderTypeIsMarket(key, inputs.values)) {
     return {
       [`${keyPrefix}trigger_price`]: "",
       [`${keyPrefix}offset`]: "",
       [`${keyPrefix}offset_percentage`]: "",
+      [`${keyPrefix}offset_from_mark`]: "",
+      [`${keyPrefix}offset_percentage_from_mark`]: "",
       [`${keyPrefix}pnl`]: "",
       [`${keyPrefix}ROI`]: "",
       [key]: inputs.value,
@@ -680,6 +732,16 @@ export function tpslCalculateHelper(
 
     [`${keyPrefix}offset`]: offset ?? "",
     [`${keyPrefix}offset_percentage`]: offset_percentage ?? "",
+    [`${keyPrefix}offset_from_mark`]:
+      offset_from_mark ??
+      inputs.values[`${keyPrefix}offset_from_mark` as keyof OrderlyOrder] ??
+      "",
+    [`${keyPrefix}offset_percentage_from_mark`]:
+      offset_percentage_from_mark ??
+      inputs.values[
+        `${keyPrefix}offset_percentage_from_mark` as keyof OrderlyOrder
+      ] ??
+      "",
     [`${keyPrefix}pnl`]: pnl ?? "",
     // [`${keyPrefix}ROI`]: calcROI({
     //   pnl: Number(pnl ?? 0),

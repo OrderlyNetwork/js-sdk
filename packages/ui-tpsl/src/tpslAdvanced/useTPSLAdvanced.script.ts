@@ -60,9 +60,13 @@ export const useTPSLAdvanced = (props: Props) => {
       sl_pnl: order.sl_pnl,
       sl_offset: order.sl_offset,
       sl_offset_percentage: order.sl_offset_percentage,
+      sl_offset_from_mark: order.sl_offset_from_mark,
+      sl_offset_percentage_from_mark: order.sl_offset_percentage_from_mark,
       tp_pnl: order.tp_pnl,
       tp_offset: order.tp_offset,
       tp_offset_percentage: order.tp_offset_percentage,
+      tp_offset_from_mark: order.tp_offset_from_mark,
+      tp_offset_percentage_from_mark: order.tp_offset_percentage_from_mark,
       margin_mode: order.margin_mode,
     },
   });
@@ -71,6 +75,9 @@ export const useTPSLAdvanced = (props: Props) => {
     slPrice: formattedOrder.sl_trigger_price,
     liqPrice: state.estLiqPrice,
     side: formattedOrder.side,
+    markPrice: state.markPrice,
+    currentPosition: state.currentPosition,
+    orderQuantity: Number(formattedOrder.order_quantity),
   });
 
   const onSubmit = () => {

@@ -97,6 +97,113 @@ describe("positions formula", () => {
     });
   });
 
+  describe("liqPrice stability", () => {
+    it("should produce stable liqPrice for single LONG position with fixed MMR when totalCollateral includes markPrice-dependent PnL", () => {
+      // DEX-2906: When totalCollateral = USDC + qty * markPrice - costPosition,
+      // the markPrice terms cancel in the formula and liqPrice should be invariant.
+      const positionQty = 2.4099;
+      const avgOpenPrice = 2074.25;
+      const costPosition = positionQty * avgOpenPrice; // ~4998.70
+      const usdcHolding = 1000;
+      const baseMMR = 0.006;
+      const baseIMR = 0.01;
+      const imrFactor = 1.724e-7;
+
+      // Calculate totalCollateral at two different mark prices
+      const markPrice1 = 2241.17;
+      const markPrice2 = 2245.0;
+
+      const totalCollateral1 =
+        usdcHolding + positionQty * markPrice1 - costPosition;
+      const totalCollateral2 =
+        usdcHolding + positionQty * markPrice2 - costPosition;
+
+      const liqPrice1 = positions.liqPrice({
+        markPrice: markPrice1,
+        symbol: "PERP_ETH_USDC",
+        totalCollateral: totalCollateral1,
+        positionQty,
+        positions: [], // single position, no other positions
+        MMR: baseMMR,
+        baseMMR,
+        baseIMR,
+        IMRFactor: imrFactor,
+        costPosition,
+      });
+
+      const liqPrice2 = positions.liqPrice({
+        markPrice: markPrice2,
+        symbol: "PERP_ETH_USDC",
+        totalCollateral: totalCollateral2,
+        positionQty,
+        positions: [],
+        MMR: baseMMR,
+        baseMMR,
+        baseIMR,
+        IMRFactor: imrFactor,
+        costPosition,
+      });
+
+      expect(liqPrice1).not.toBeNull();
+      expect(liqPrice2).not.toBeNull();
+
+      // liqPrice should be virtually identical (< 0.01 difference)
+      // when totalCollateral correctly includes markPrice-dependent PnL
+      const diff = Math.abs(liqPrice2! - liqPrice1!);
+      expect(diff).toBeLessThan(0.01);
+    });
+
+    it("should produce stable liqPrice for single SHORT position with fixed MMR", () => {
+      const positionQty = -2.4099;
+      const avgOpenPrice = 2074.25;
+      const costPosition = positionQty * avgOpenPrice; // negative for short
+      const usdcHolding = 1000;
+      const baseMMR = 0.006;
+      const baseIMR = 0.01;
+      const imrFactor = 1.724e-7;
+
+      const markPrice1 = 2241.17;
+      const markPrice2 = 2245.0;
+
+      const totalCollateral1 =
+        usdcHolding + positionQty * markPrice1 - costPosition;
+      const totalCollateral2 =
+        usdcHolding + positionQty * markPrice2 - costPosition;
+
+      const liqPrice1 = positions.liqPrice({
+        markPrice: markPrice1,
+        symbol: "PERP_ETH_USDC",
+        totalCollateral: totalCollateral1,
+        positionQty,
+        positions: [],
+        MMR: baseMMR,
+        baseMMR,
+        baseIMR,
+        IMRFactor: imrFactor,
+        costPosition,
+      });
+
+      const liqPrice2 = positions.liqPrice({
+        markPrice: markPrice2,
+        symbol: "PERP_ETH_USDC",
+        totalCollateral: totalCollateral2,
+        positionQty,
+        positions: [],
+        MMR: baseMMR,
+        baseMMR,
+        baseIMR,
+        IMRFactor: imrFactor,
+        costPosition,
+      });
+
+      expect(liqPrice1).not.toBeNull();
+      expect(liqPrice2).not.toBeNull();
+
+      const diff = Math.abs(liqPrice2! - liqPrice1!);
+      expect(diff).toBeLessThan(0.01);
+    });
+  });
+
   describe("MMR", () => {
     it("should calculate the MMR correctly: BTC", () => {
       // BTC

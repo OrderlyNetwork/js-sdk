@@ -22,13 +22,19 @@ import {
   DEV_LOOKUP_TABLE_ADDRESS,
   DEV_OAPP_PROGRAM_ID,
   DEV_PEER_ADDRESS,
+  CANARY_DVN_PDA,
+  CANARY_DVN_PROGRAM_ID,
   DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,
   EXECUTOR_PROGRAM_ID,
   MAIN_DST_EID,
   MAINNET_LOOKUP_TABLE_ADDRESS,
   MAINNET_OAPP_PROGRAM_ID,
+  LZ_DVN_PDA,
+  LZ_DVN_PROGRAM_ID,
   MAINNET_PEER_ADDRESS,
+  NEVERMIND_DVN_PDA,
+  NEVERMIND_DVN_PROGRAM_ID,
   PRICE_FEED_PROGRAM_ID,
   QA_LOOKUP_TABLE_ADDRESS,
   QA_OAPP_PROGRAM_ID,
@@ -280,10 +286,128 @@ export function getPriceFeedPda(): PublicKey {
 }
 
 export function getDvnConfigPda(): PublicKey {
-  return PublicKey.findProgramAddressSync(
+  const derived = PublicKey.findProgramAddressSync(
     [Buffer.from(DVN_CONFIG_SEED, "utf8")],
     DVN_PROGRAM_ID,
   )[0];
+  if (!derived.equals(LZ_DVN_PDA)) {
+    throw new Error(
+      `LZ DVN PDA mismatch: derived ${derived.toBase58()} !== constant ${LZ_DVN_PDA.toBase58()}`,
+    );
+  }
+  return derived;
+}
+
+type LzSendRemainingAccount = {
+  pubkey: PublicKey;
+  isWritable: boolean;
+  isSigner: boolean;
+};
+
+/** Remaining accounts tail for `oappQuote` after executor + first price-feed pair (3 required DVNs × 4 accounts each). */
+export function appendThreeDvnQuoteRemainingAccounts(
+  priceFeedPda: PublicKey,
+): LzSendRemainingAccount[] {
+  const priceFeedPair = (): LzSendRemainingAccount[] => [
+    {
+      pubkey: PRICE_FEED_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: priceFeedPda,
+      isWritable: false,
+      isSigner: false,
+    },
+  ];
+  return [
+    {
+      pubkey: LZ_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: LZ_DVN_PDA,
+      isWritable: false,
+      isSigner: false,
+    },
+    ...priceFeedPair(),
+    {
+      pubkey: CANARY_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: CANARY_DVN_PDA,
+      isWritable: false,
+      isSigner: false,
+    },
+    ...priceFeedPair(),
+    {
+      pubkey: NEVERMIND_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: NEVERMIND_DVN_PDA,
+      isWritable: false,
+      isSigner: false,
+    },
+    ...priceFeedPair(),
+  ];
+}
+
+/** Remaining accounts tail for `deposit` / `depositSol` after executor + first price-feed pair (3 required DVNs). */
+export function appendThreeDvnDepositRemainingAccounts(
+  priceFeedPda: PublicKey,
+): LzSendRemainingAccount[] {
+  const priceFeedPair = (): LzSendRemainingAccount[] => [
+    {
+      pubkey: PRICE_FEED_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: priceFeedPda,
+      isWritable: false,
+      isSigner: false,
+    },
+  ];
+  return [
+    {
+      pubkey: LZ_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: LZ_DVN_PDA,
+      isWritable: true,
+      isSigner: false,
+    },
+    ...priceFeedPair(),
+    {
+      pubkey: CANARY_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: CANARY_DVN_PDA,
+      isWritable: true,
+      isSigner: false,
+    },
+    ...priceFeedPair(),
+    {
+      pubkey: NEVERMIND_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: NEVERMIND_DVN_PDA,
+      isWritable: true,
+      isSigner: false,
+    },
+    ...priceFeedPair(),
+  ];
 }
 
 export function getDstEID(OAPP_PROGRAM_ID: PublicKey) {
@@ -294,6 +418,11 @@ export function getDstEID(OAPP_PROGRAM_ID: PublicKey) {
   return DEV_DST_EID;
 }
 
+/**
+ * v0 txs reference this ALT. For 3-DVN send paths, ops must extend the LUT with
+ * CANARY_DVN_PROGRAM_ID, CANARY_DVN_PDA, NEVERMIND_DVN_PROGRAM_ID, NEVERMIND_DVN_PDA
+ * (see solana-vault `extend_lookuptable_dvn.ts`) so all CPI accounts resolve.
+ */
 export function getLookupTableAddress(OAPP_PROGRAM_ID: PublicKey): PublicKey {
   if (OAPP_PROGRAM_ID.toBase58() === DEV_OAPP_PROGRAM_ID.toBase58()) {
     console.log(
