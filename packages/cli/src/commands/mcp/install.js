@@ -1,13 +1,22 @@
 const { spawnSync } = require("child_process");
+const chalk = require("chalk");
 
 /**
  * Forward MCP install to sdk-docs so install ownership stays centralized.
+ * Uses the package default bin (single-bin layout). If multiple bins are
+ * added later, switch to an explicit command or `npm exec --package=... -- <cmd>`.
  */
 function forwardToSdkDocs(argv) {
-  // Always delegate to the published package so this command works
-  // consistently outside this monorepo layout.
+  console.log(
+    chalk.cyan("orderly-devkit:") +
+      " Installing Orderly SDK Docs MCP config via npx…",
+  );
+  console.log(
+    chalk.dim("First run may download @orderly.network/sdk-docs; please wait."),
+  );
+
   const command = "npx";
-  const args = ["-y", "@orderly.network/sdk-docs", "orderly-sdk-docs-mcp", "install"];
+  const args = ["-y", "@orderly.network/sdk-docs", "install"];
 
   if (argv.client) args.push("--client", String(argv.client));
   if (argv.scope) args.push("--scope", String(argv.scope));

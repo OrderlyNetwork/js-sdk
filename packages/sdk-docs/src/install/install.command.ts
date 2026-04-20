@@ -33,10 +33,10 @@ export function parseInstallArgs(argv: string[]): InstallOptions {
   const clients =
     clientArg === "all"
       ? ALL_CLIENTS
-      : clientArg
+      : (clientArg
           .split(",")
           .map((x) => x.trim())
-          .filter(Boolean) as InstallClient[];
+          .filter(Boolean) as InstallClient[]);
 
   for (const c of clients) {
     if (!ALL_CLIENTS.includes(c)) {
@@ -56,14 +56,22 @@ export function parseInstallArgs(argv: string[]): InstallOptions {
 /**
  * Execute config installation for all requested clients.
  */
-export function runInstallCommand(options: InstallOptions, cwd = process.cwd()): InstallReport {
+export function runInstallCommand(
+  options: InstallOptions,
+  cwd = process.cwd(),
+): InstallReport {
   const entry = buildServerEntry({ name: options.name });
   const results: InstallResult[] = [];
   const errors: string[] = [];
 
+  const phasePrefix = options.dryRun ? "[dry-run]" : "[install]";
   for (const client of options.clients) {
     const adapter = clientAdapters[client];
     const configPath = adapter.resolvePath(options.scope, cwd);
+
+    console.log(
+      `${phasePrefix} merging ${client} (${options.scope} scope) -> ${configPath}`,
+    );
 
     try {
       const rawConfig = readJsonConfig(configPath);

@@ -302,12 +302,24 @@ server.registerTool(
 );
 
 /**
+ * Some launchers pass the bin name as the first argv token before `install`.
+ * Strip that single known prefix so we never fall through to MCP stdio mode.
+ */
+function normalizeInstallArgv(argv: string[]): string[] {
+  if (argv[0] === "orderly-sdk-docs-mcp" && argv[1] === "install") {
+    return argv.slice(1);
+  }
+  return argv;
+}
+
+/**
  * Run MCP install flow when user executes:
  * `orderly-sdk-docs-mcp install ...`
  */
 async function maybeRunInstallCommand(): Promise<boolean> {
-  const argv = process.argv.slice(2);
+  const argv = normalizeInstallArgv(process.argv.slice(2));
   if (argv[0] !== "install") return false;
+  console.log("Starting MCP config installation...");
   const options = parseInstallArgs(argv.slice(1));
   const report = runInstallCommand(options);
   if (!report.ok) {
