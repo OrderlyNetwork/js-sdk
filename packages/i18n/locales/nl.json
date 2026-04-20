@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Geef uw sub-affiliates de macht om hun inkomsten aan te passen, terwijl u een eindeloze stroom van passief inkomen ontgrendelt van elke trader in uw groeiende netwerk.",
   "affiliate.newReferralProgram.tradeUnlock": "Handelen om te ontgrendelen",
   "affiliate.newReferralProgram.tradeUnlock.description": "Handel {{volume}} USDC volume om de mogelijkheid te ontgrendelen om vrienden uit te nodigen en commissies te verdienen.",
+  "affiliate.newReferralProgram.wereYouReferred": "Ben je door iemand doorverwezen?",
+  "affiliate.newReferralProgram.referredBy": "Je bent doorverwezen door {{code}}.",
   "affiliate.commissionConfiguration": "Commissieconfiguratie",
   "affiliate.totalCommissionAvailable": "Totale beschikbare commissie",
   "affiliate.configure": "Configureren",

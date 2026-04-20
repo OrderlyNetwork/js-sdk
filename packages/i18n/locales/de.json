@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Geben Sie Ihren Unter-Affiliates die Macht, ihre Einnahmen anzupassen, während Sie einen endlosen Strom passiver Einnahmen von jedem Trader in Ihrem wachsenden Netzwerk freischalten.",
   "affiliate.newReferralProgram.tradeUnlock": "Handeln zum Freischalten",
   "affiliate.newReferralProgram.tradeUnlock.description": "Handeln Sie {{volume}} USDC Volumen, um die Fähigkeit freizuschalten, Freunde einzuladen und Provisionen zu verdienen.",
+  "affiliate.newReferralProgram.wereYouReferred": "Wurden Sie von jemandem empfohlen?",
+  "affiliate.newReferralProgram.referredBy": "Sie wurden von {{code}} empfohlen.",
   "affiliate.commissionConfiguration": "Provisionseinstellung",
   "affiliate.totalCommissionAvailable": "Gesamtverfügbare Provision",
   "affiliate.configure": "Konfigurieren",

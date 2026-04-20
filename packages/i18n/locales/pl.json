@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Daj swoim sub-afiliatom możliwość dostosowania swoich zarobków, jednocześnie odblokowując niekończący się strumień pasywnego dochodu od każdego tradera w Twojej rosnącej sieci.",
   "affiliate.newReferralProgram.tradeUnlock": "Handluj, aby odblokować",
   "affiliate.newReferralProgram.tradeUnlock.description": "Handluj wolumenem {{volume}} USDC, aby odblokować możliwość zapraszania przyjaciół i zarabiania prowizji.",
+  "affiliate.newReferralProgram.wereYouReferred": "Czy ktoś Cię polecił?",
+  "affiliate.newReferralProgram.referredBy": "Zostałeś polecony przez {{code}}.",
   "affiliate.commissionConfiguration": "Konfiguracja prowizji",
   "affiliate.totalCommissionAvailable": "Całkowita dostępna prowizja",
   "affiliate.configure": "Skonfiguruj",

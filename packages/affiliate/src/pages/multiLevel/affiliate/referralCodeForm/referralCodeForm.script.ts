@@ -1,18 +1,10 @@
 import { useMemo, useState } from "react";
-import { useCheckReferralCode } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useReferralCode } from "../../../../hooks/useReferralCode";
 import { ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
-
-/** Matches ReferralCodeInput formatters: uppercase A–Z and digits only. */
-function formatReferralCodeInput(raw: string): string {
-  return String(raw)
-    .replace(/[a-z]/g, (c) => c.toUpperCase())
-    .replace(/[^A-Z0-9]/g, "");
-}
 
 export const useReferralCodeFormScript = (
   options: ReferralCodeFormWidgetProps,
@@ -21,25 +13,8 @@ export const useReferralCodeFormScript = (
     options;
   const { t } = useTranslation();
 
-  const isBind = type === ReferralCodeFormType.Bind;
-
   const [newCode, setNewCode] = useState<string>(referralCode || "");
-  /** Input value for Bind mode only; kept separate from `newCode` (Edit). */
-  const [bindCodeInput, setBindCodeInput] = useState("");
   const [isReview, setIsReview] = useState(false);
-  const [skipBinding, setSkipBinding] = useState(false);
-  /** Keeps confirm loading until async `onSuccess` (e.g. SWR refetch) completes in Bind flow. */
-  const [isAwaitingPostSuccess, setIsAwaitingPostSuccess] = useState(false);
-
-  const formattedBindCode = useMemo(
-    () => formatReferralCodeInput(bindCodeInput),
-    [bindCodeInput],
-  );
-
-  const { isExist: isBindCodeExist, isLoading: isBindCodeChecking } =
-    useCheckReferralCode(
-      isBind && formattedBindCode.length >= 4 ? formattedBindCode : undefined,
-    );
 
   const maxRebatePercentage = useMemo(() => {
     return new Decimal(maxRebateRate).mul(100).toNumber();
@@ -57,25 +32,7 @@ export const useReferralCodeFormScript = (
     },
   );
 
-  // Used by the Bind -> Create flow:
-  // after a successful bind step (including skipping), we immediately proceed to Create mode.
-  // This ensures the Create form starts from the same default rebate split as a fresh Create entry.
-  const applyCreateDefaults = () => {
-    setReferrerRebatePercentage(Math.ceil(maxRebatePercentage / 2));
-  };
-
-  const runBindOnSuccessThenApplyDefaults = async () => {
-    setIsAwaitingPostSuccess(true);
-    try {
-      await Promise.resolve(options.onSuccess?.());
-    } finally {
-      setIsAwaitingPostSuccess(false);
-    }
-    applyCreateDefaults();
-  };
-
   const {
-    bindReferralCode,
     createReferralCode,
     editReferralCode,
     updateRebateRate,
@@ -186,40 +143,8 @@ export const useReferralCodeFormScript = (
     }
   };
 
-  const onBind = async () => {
-    if (skipBinding) {
-      // Intentionally not calling `options.close()` here:
-      // after the bind step (including skipping), the outer `onSuccess` handler will
-      // open the Create modal after data refresh, so we keep the flow seamless.
-      await runBindOnSuccessThenApplyDefaults();
-      return;
-    }
-
-    if (
-      formattedBindCode.length < 4 ||
-      formattedBindCode.length > 10 ||
-      isBindCodeChecking ||
-      !isBindCodeExist
-    ) {
-      return;
-    }
-
-    try {
-      await bindReferralCode({ referral_code: formattedBindCode });
-      toast.success(t("affiliate.referralCode.bound"));
-      // Intentionally not calling `options.close()` here:
-      // onSuccess refetches then opens Create modal.
-      await runBindOnSuccessThenApplyDefaults();
-    } catch (err) {
-      handleError(err);
-    }
-  };
-
   const onClick = () => {
     switch (type) {
-      case ReferralCodeFormType.Bind:
-        onBind();
-        break;
       case ReferralCodeFormType.Create:
         onCreate();
         break;
@@ -237,15 +162,9 @@ export const useReferralCodeFormScript = (
   };
 
   const buttonDisabled =
-    (type === ReferralCodeFormType.Edit && !codeChanged && !rateChanged) ||
-    (isBind &&
-      !skipBinding &&
-      (formattedBindCode.length < 4 ||
-        formattedBindCode.length > 10 ||
-        isBindCodeChecking ||
-        !isBindCodeExist));
+    type === ReferralCodeFormType.Edit && !codeChanged && !rateChanged;
 
-  const confirmButtonLoading = isMutating || isAwaitingPostSuccess;
+  const confirmButtonLoading = isMutating;
 
   return {
     type,
@@ -257,16 +176,9 @@ export const useReferralCodeFormScript = (
     confirmButtonLoading,
     newCode,
     setNewCode,
-    bindCodeInput,
-    setBindCodeInput,
-    formattedBindCode,
     isReview,
     buttonDisabled,
     onReset,
-    skipBinding,
-    setSkipBinding,
-    isBindCodeExist,
-    isBindCodeChecking,
   };
 };
 

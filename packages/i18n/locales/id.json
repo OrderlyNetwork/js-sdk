@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Berikan sub-afiliasi Anda kekuatan untuk menyesuaikan pendapatan mereka, sementara Anda membuka aliran pendapatan pasif yang tak ada habisnya dari setiap trader di jaringan yang berkembang Anda.",
   "affiliate.newReferralProgram.tradeUnlock": "Trading untuk membuka",
   "affiliate.newReferralProgram.tradeUnlock.description": "Trading {{volume}} USDC volume untuk membuka kemampuan mengundang teman dan mendapatkan komisi.",
+  "affiliate.newReferralProgram.wereYouReferred": "Apakah Anda dirujuk oleh seseorang?",
+  "affiliate.newReferralProgram.referredBy": "Anda dirujuk oleh {{code}}.",
   "affiliate.commissionConfiguration": "Konfigurasi komisi",
   "affiliate.totalCommissionAvailable": "Total komisi yang tersedia",
   "affiliate.configure": "Konfigurasi",
