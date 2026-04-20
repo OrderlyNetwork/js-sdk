@@ -164,6 +164,9 @@ export const affiliate = {
   "affiliate.newReferralProgram.tradeUnlock": "Trade to unlock",
   "affiliate.newReferralProgram.tradeUnlock.description":
     "Trade {{volume}} USDC volume to unlock the ability to invite friends and earn commissions.",
+  "affiliate.newReferralProgram.wereYouReferred":
+    "Were you referred by someone?",
+  "affiliate.newReferralProgram.referredBy": "You were referred by {{code}}.",
 
   "affiliate.commissionConfiguration": "Commission configuration",
   "affiliate.totalCommissionAvailable": "Total commission available",

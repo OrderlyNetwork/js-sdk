@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Donnez à vos sous-affiliés le pouvoir de personnaliser leurs gains, tout en débloquant un flux interminable de revenus passifs de chaque trader dans votre réseau en croissance.",
   "affiliate.newReferralProgram.tradeUnlock": "Trader pour débloquer",
   "affiliate.newReferralProgram.tradeUnlock.description": "Tradez {{volume}} USDC de volume pour débloquer la capacité d'inviter des amis et de gagner des commissions.",
+  "affiliate.newReferralProgram.wereYouReferred": "Avez-vous été parrainé par quelqu'un ?",
+  "affiliate.newReferralProgram.referredBy": "Vous avez été parrainé par {{code}}.",
   "affiliate.commissionConfiguration": "Configuration de la commission",
   "affiliate.totalCommissionAvailable": "Commission totale disponible",
   "affiliate.configure": "Configurer",

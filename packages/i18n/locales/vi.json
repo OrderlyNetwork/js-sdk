@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Trao quyền cho các đối tác phụ của bạn để tùy chỉnh thu nhập của họ, đồng thời mở khóa một dòng thu nhập thụ động vô tận từ mọi nhà giao dịch trong mạng đang phát triển của bạn.",
   "affiliate.newReferralProgram.tradeUnlock": "Giao dịch để mở khóa",
   "affiliate.newReferralProgram.tradeUnlock.description": "Giao dịch {{volume}} USDC khối lượng để mở khóa khả năng mời bạn bè và kiếm hoa hồng.",
+  "affiliate.newReferralProgram.wereYouReferred": "Bạn có được ai giới thiệu không?",
+  "affiliate.newReferralProgram.referredBy": "Bạn được giới thiệu bởi {{code}}.",
   "affiliate.commissionConfiguration": "Cấu hình hoa hồng",
   "affiliate.totalCommissionAvailable": "Tổng hoa hồng khả dụng",
   "affiliate.configure": "Cấu hình",
