@@ -1,5 +1,23 @@
 # @orderly.network/ui-orders
 
+## 2.12.4
+
+### Patch Changes
+
+- publish
+- 07c88a0: publish
+- Updated dependencies
+- Updated dependencies [07c88a0]
+  - @orderly.network/react-app@2.12.4
+  - @orderly.network/hooks@2.12.4
+  - @orderly.network/i18n@2.12.4
+  - @orderly.network/types@2.12.4
+  - @orderly.network/ui@2.12.4
+  - @orderly.network/ui-connector@2.12.4
+  - @orderly.network/ui-share@2.12.4
+  - @orderly.network/ui-tpsl@2.12.4
+  - @orderly.network/utils@2.12.4
+
 ## 2.12.4-alpha.0
 
 ### Patch Changes
