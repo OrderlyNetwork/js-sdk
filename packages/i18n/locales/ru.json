@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Дайте вашим суб-аффилиатам возможность настраивать свои доходы, одновременно разблокируя бесконечный поток пассивного дохода от каждого трейдера в вашей растущей сети.",
   "affiliate.newReferralProgram.tradeUnlock": "Торговать для разблокировки",
   "affiliate.newReferralProgram.tradeUnlock.description": "Торгуйте объемом {{volume}} USDC, чтобы разблокировать возможность приглашать друзей и зарабатывать комиссии.",
+  "affiliate.newReferralProgram.wereYouReferred": "Вас кто-то пригласил по реферальной программе?",
+  "affiliate.newReferralProgram.referredBy": "Вас пригласил пользователь {{code}}.",
   "affiliate.commissionConfiguration": "Настройка комиссии",
   "affiliate.totalCommissionAvailable": "Общая доступная комиссия",
   "affiliate.configure": "Настроить",

@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "Alt ortaklarınıza kazançlarını özelleştirme gücü verirken, büyüyen ağınızdaki her tüccardan sonsuz bir pasif gelir akışının kilidini açın.",
   "affiliate.newReferralProgram.tradeUnlock": "Açmak için işlem yapın",
   "affiliate.newReferralProgram.tradeUnlock.description": "Arkadaşları davet etme ve komisyon kazanma yeteneğini açmak için {{volume}} USDC hacmi işlem yapın.",
+  "affiliate.newReferralProgram.wereYouReferred": "Biri tarafından yönlendirildiniz mi?",
+  "affiliate.newReferralProgram.referredBy": "{{code}} tarafından yönlendirildiniz.",
   "affiliate.commissionConfiguration": "Komisyon yapılandırması",
   "affiliate.totalCommissionAvailable": "Toplam mevcut komisyon",
   "affiliate.configure": "Yapılandır",

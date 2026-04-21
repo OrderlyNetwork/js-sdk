@@ -1,22 +1,20 @@
-import { ReactNode, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
-  inputFormatter,
   Slider,
   Text,
-  TextField,
-  WarningIcon,
   Divider,
   formatAddress,
 } from "@orderly.network/ui";
 import { GiftIcon } from "../../../../icons/giftIcon";
 import { ReferralCodeFormField, ReferralCodeFormType } from "../../../../types";
+import { WarningBox } from "../../components/warningBox";
 import { ReferralCodeFormReturns } from "./referralCodeForm.script";
 import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
+import { ReferralCodeInput } from "./referralCodeInput";
 
 export type ReferralCodeFormProps = ReferralCodeFormReturns &
   Omit<ReferralCodeFormWidgetProps, "type">;
@@ -25,7 +23,6 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   const { type, isReview } = props;
   const { t } = useTranslation();
 
-  const isBind = type === ReferralCodeFormType.Bind;
   const isReset = type === ReferralCodeFormType.Reset;
   const hasBoundReferee = !!props.directInvites && props.directInvites > 0;
 
@@ -35,20 +32,6 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
   const { title, description, buttonText } = useMemo(() => {
     switch (type) {
-      case ReferralCodeFormType.Bind:
-        return {
-          title: t("affiliate.referralCode.bind.modal.title"),
-          description: (
-            <Text
-              size="2xs"
-              intensity={54}
-              className="oui-leading-[18px] oui-text-warning-darken"
-            >
-              {t("affiliate.referralCode.bind.modal.description")}
-            </Text>
-          ),
-          buttonText: t("common.confirm"),
-        };
       case ReferralCodeFormType.Create:
         return {
           title: t("affiliate.referralCode.create.modal.title"),
@@ -111,27 +94,6 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
   const descriptionView = <WarningBox>{description}</WarningBox>;
 
-  const bindCodeInvalid =
-    isBind &&
-    !props.skipBinding &&
-    props.formattedBindCode.length >= 4 &&
-    !props.isBindCodeChecking &&
-    props.isBindCodeExist === false;
-
-  const bindReferralCodeInput = (
-    <ReferralCodeInput
-      value={props.bindCodeInput}
-      onChange={props.setBindCodeInput}
-      autoFocus
-      disabled={props.skipBinding}
-      placeholder={t("affiliate.referralCode.bind.input.placeholder")}
-      helpText={
-        bindCodeInvalid ? t("affiliate.referralCode.notExist") : undefined
-      }
-      color={bindCodeInvalid ? "danger" : undefined}
-    />
-  );
-
   const referralCodeInput = (
     <ReferralCodeInput
       value={props.newCode}
@@ -140,28 +102,6 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       disabled={isReview || hasBoundReferee}
       label={t("affiliate.referralCode.editCodeModal.label")}
     />
-  );
-
-  const bindCheckbox = isBind && (
-    <Flex className="oui-gap-[6px]">
-      <Checkbox
-        color="white"
-        id="oui-checkbox-skipReferralBinding"
-        checked={props.skipBinding}
-        onCheckedChange={(checked: boolean) => {
-          props.setSkipBinding(checked);
-          if (checked) {
-            props.setBindCodeInput("");
-          }
-        }}
-      />
-      <label
-        htmlFor="oui-checkbox-skipReferralBinding"
-        className="oui-text-2xs oui-font-normal oui-text-base-contrast-54"
-      >
-        {t("affiliate.referralCode.bind.skip")}
-      </label>
-    </Flex>
   );
 
   const commissionConfiguration = (
@@ -245,14 +185,6 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
   const renderContent = () => {
     switch (type) {
-      case ReferralCodeFormType.Bind:
-        return (
-          <Flex width={"100%"} direction="column" itemAlign="start" gap={4}>
-            {bindReferralCodeInput}
-            {bindCheckbox}
-            {buttons}
-          </Flex>
-        );
       case ReferralCodeFormType.Create:
         return (
           <Flex width={"100%"} direction="column" itemAlign="start" gap={2}>
@@ -428,86 +360,4 @@ const RebateRateSlider = (props: RebateRateSliderProps) => {
       </div>
     </>
   );
-};
-
-type ReferralCodeInputProps = {
-  value: string;
-  onChange: (value: string) => void;
-  autoFocus: boolean;
-  disabled: boolean;
-  label?: string;
-  placeholder?: string;
-  helpText?: string;
-  color?: "danger";
-};
-
-const ReferralCodeInput = (props: ReferralCodeInputProps) => {
-  const hasSetCursorToEnd = useRef(false);
-
-  return (
-    <TextField
-      type="text"
-      fullWidth
-      label={props.label ?? ""}
-      placeholder={props.placeholder}
-      value={props.value}
-      onChange={(e) => {
-        props.onChange(e.target.value);
-      }}
-      onFocus={(e) => {
-        if (props.autoFocus && !hasSetCursorToEnd.current) {
-          hasSetCursorToEnd.current = true;
-          const input = e.target as HTMLInputElement;
-          const len = input.value.length;
-          requestAnimationFrame(() => {
-            input.setSelectionRange(len, len);
-          });
-        }
-      }}
-      formatters={[
-        inputFormatter.createRegexInputFormatter((value: string | number) => {
-          return String(value).replace(/[a-z]/g, (char: string) =>
-            char.toUpperCase(),
-          );
-        }),
-        inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
-      ]}
-      className="oui-w-full"
-      classNames={{
-        label: "oui-text-base-contrast-54 oui-text-xs",
-        input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
-      }}
-      helpText={props.helpText}
-      color={props.color}
-      maxLength={10}
-      minLength={4}
-      autoComplete="off"
-      disabled={props.disabled}
-      autoFocus={props.autoFocus}
-    />
-  );
-};
-
-const WarningBox = (props: { children: ReactNode }) => {
-  const { children } = props;
-
-  if (typeof children === "string") {
-    return (
-      <Flex
-        className="oui-bg-warning/10"
-        justify="start"
-        itemAlign="start"
-        gap={1}
-        r="lg"
-        p={3}
-      >
-        <WarningIcon className="oui-shrink-0 oui-text-warning" />
-        <Text size="2xs" intensity={54} className="oui-text-warning">
-          {children}
-        </Text>
-      </Flex>
-    );
-  }
-
-  return children;
 };

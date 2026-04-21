@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { useAccount, useCollateral, useGetEnv } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 import { modal, useScreen } from "@orderly.network/ui";
 import { VAULTS_WEBSITE_URLS } from "../../api/env";
 import { useSVApiUrl } from "../../hooks/useSVAPIUrl";
@@ -10,11 +9,9 @@ import {
   VaultDepositAndWithdrawWithDialogId,
   VaultDepositAndWithdrawWithSheetId,
 } from "../vault-operation/depositAndWithdraw";
-import { ORDERLY_ICON } from "./constants";
 import { getBrokerIconUrl } from "./constants";
 
 export const useVaultCardScript = (vault: VaultInfo) => {
-  const { t } = useTranslation();
   const vaultLpInfo = useVaultLpInfoById(vault.vault_id);
   const { fetchVaultLpInfo } = useVaultsStore();
   const env = useGetEnv();
@@ -75,9 +72,15 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     );
   }, [state.chainNamespace, state.accountId, state.mainAccountId]);
 
-  const isButtonsDisabled = useMemo(() => {
+  const isDepositDisabled = useMemo(() => {
     return vault.status !== "live";
   }, [vault.status]);
+
+  const isWithdrawDisabled = useMemo(() => {
+    // Withdraw should remain available even when vault is closing/closed.
+    // Any other gating (e.g. account type, available shares) is handled elsewhere.
+    return false;
+  }, []);
 
   const openDepositAndWithdraw = (activeTab: "deposit" | "withdraw") => {
     modal.show(
@@ -108,7 +111,8 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     availableBalance: memoizedAvailableBalance,
     openVaultWebsite,
     isWrongNetwork,
-    isButtonsDisabled,
+    isDepositDisabled,
+    isWithdrawDisabled,
   };
 };
 

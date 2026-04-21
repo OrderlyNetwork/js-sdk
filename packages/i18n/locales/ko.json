@@ -1055,6 +1055,8 @@
   "affiliate.newReferralProgram.description": "하위 제휴사가 수익을 사용자 지정할 수 있는 권한을 부여하면서 성장하는 네트워크의 모든 거래자로부터 끝없는 수동 수입 흐름을 잠금 해제합니다.",
   "affiliate.newReferralProgram.tradeUnlock": "거래로 잠금 해제",
   "affiliate.newReferralProgram.tradeUnlock.description": "{{volume}} USDC 거래량을 거래하여 친구를 초대하고 수수료를 획득하는 기능을 잠금 해제합니다.",
+  "affiliate.newReferralProgram.wereYouReferred": "누군가의 추천으로 가입하셨나요?",
+  "affiliate.newReferralProgram.referredBy": "{{code}}님의 추천으로 가입하셨습니다.",
   "affiliate.commissionConfiguration": "수수료 구성",
   "affiliate.totalCommissionAvailable": "사용 가능한 총 수수료",
   "affiliate.configure": "구성",
