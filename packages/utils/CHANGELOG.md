@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.12.4-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.12.4-alpha.0
+
 ## 2.12.3
 
 ### Patch Changes
