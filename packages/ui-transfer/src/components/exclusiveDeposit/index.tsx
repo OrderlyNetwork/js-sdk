@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, ChainIcon, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import { CopyAddress } from "./CopyAddress";
@@ -19,9 +19,23 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [selectedToken, setSelectedToken] = useState("");
 
-  const { networkOptions, tokenOptions } = useExclusiveDepositOptions();
+  const { networkOptions, tokenOptions, isSupported } =
+    useExclusiveDepositOptions({
+      selectedNetwork,
+    });
 
   const confirmed = !!selectedNetwork && !!selectedToken;
+
+  // Reset token when network changes and current token is unavailable
+  useEffect(() => {
+    if (
+      selectedToken &&
+      tokenOptions.length > 0 &&
+      !tokenOptions.some((t) => t.value === selectedToken)
+    ) {
+      setSelectedToken("");
+    }
+  }, [selectedNetwork, selectedToken, tokenOptions]);
 
   const selectedNetworkOption = selectedNetwork
     ? networkOptions.find((n) => n.value === selectedNetwork)
@@ -43,6 +57,7 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
     active,
     confirmed,
     chainId: selectedChainId,
+    token: selectedToken,
     explorerBaseUrl: selectedNetworkOption?.explorerUrl ?? "",
   });
 
