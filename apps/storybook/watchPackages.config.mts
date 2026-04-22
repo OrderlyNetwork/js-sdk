@@ -41,12 +41,12 @@ const base: Package[] = [
   {
     package: "@orderly.network/utils",
     path: "../../packages/utils/src",
-    watch: false,
+    watch: true,
   },
   {
     package: "@orderly.network/types",
     path: "../../packages/types/src",
-    watch: false,
+    watch: true,
   },
   {
     package: "@orderly.network/default-evm-adapter",
@@ -62,6 +62,11 @@ const base: Package[] = [
     package: "@orderly.network/web3-provider-ethers",
     path: "../../packages/web3-provider-ethers/src",
     watch: false,
+  },
+  {
+    package: "@orderly.network/plugin-core",
+    path: "../../packages/plugin-core/src",
+    watch: true,
   },
 ];
 
@@ -232,8 +237,32 @@ const i18n: Package[] = [
   },
 ];
 
+/** Layout packages: resolve to src in dev so exports (e.g. TRADING_PANEL_IDS) are available without relying on dist */
+const layout: Package[] = [
+  {
+    package: "@orderly.network/layout-core",
+    path: "../../packages/layout-core/src",
+    watch: true,
+  },
+  {
+    package: "@orderly.network/layout-split",
+    path: "../../packages/layout-split/src",
+    watch: true,
+    alwaysWatch: true,
+    includeCSS: true,
+  },
+  {
+    package: "@orderly.network/layout-grid",
+    path: "../../packages/layout-grid/src",
+    watch: true,
+    alwaysWatch: true,
+    includeCSS: true,
+  },
+];
+
 export const packages: Package[] = [
   ...base,
+  ...layout,
   ...ui,
   ...page,
   ...walletConnect,
@@ -359,7 +388,7 @@ export function getWatchPackages() {
   });
 
   // console.log("packages", packages);
-  // console.log("getWatchPackages watchs", watchs);
+  console.log("getWatchPackages watchs", watchs);
   // console.log("getWatchPackages unwatchs", unwatchs);
 
   return {

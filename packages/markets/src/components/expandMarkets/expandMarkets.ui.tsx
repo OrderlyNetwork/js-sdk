@@ -29,7 +29,7 @@ const LazyMarketsListWidget = React.lazy(() =>
 
 export type ExpandMarketsProps = ExpandMarketsScriptReturn;
 
-const cls = "oui-h-[calc(100%_-_36px)]";
+const cls = "oui-h-full";
 
 export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;

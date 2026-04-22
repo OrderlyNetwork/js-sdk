@@ -42,8 +42,10 @@ dev-tool
 !apps/docs
 !apps/docs/**/*
 apps/docs/dist
+apps/ai-docs/generated
 
 apps/docs/_doc_meta_
+
 
 hooks-example/
 
@@ -62,3 +64,6 @@ specs/
 .agents
 .specflow
 skills-lock.json
+sdk-docs/bundled
+*.sqlite
+.mcp.json

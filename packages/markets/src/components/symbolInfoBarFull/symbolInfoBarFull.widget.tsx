@@ -1,13 +1,11 @@
 import { FC } from "react";
 import { MarketsProviderProps } from "../marketsProvider";
+import { SymbolInfoBarFullInjectable } from "./symbolInfoBarFull.injectable";
 import {
   useSymbolInfoBarFullScript,
   UseSymbolInfoBarFullScriptOptions,
 } from "./symbolInfoBarFull.script";
-import {
-  SymbolInfoBarFull,
-  SymbolInfoBarFullProps,
-} from "./symbolInfoBarFull.ui";
+import { SymbolInfoBarFullProps } from "./symbolInfoBarFull.ui";
 
 export type SymbolInfoBarFullWidgetPros = UseSymbolInfoBarFullScriptOptions &
   Pick<SymbolInfoBarFullProps, "className" | "trailing"> &
@@ -22,5 +20,5 @@ export const SymbolInfoBarFullWidget: FC<SymbolInfoBarFullWidgetPros> = (
   const { symbol, ...rest } = props;
 
   const state = useSymbolInfoBarFullScript({ symbol });
-  return <SymbolInfoBarFull {...state} {...rest} />;
+  return <SymbolInfoBarFullInjectable {...state} {...rest} />;
 };

@@ -17,3 +17,28 @@ export const KlineDragIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     </g>
   </svg>
 );
+export const CollapseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M14.668.492a.85.85 0 0 0-.599.234l-3.567 3.568V2.159H8.835v4.167c0 .46.373.833.833.833h4.167V5.492H11.7l3.569-3.567a.86.86 0 0 0 0-1.199.85.85 0 0 0-.6-.234m-12.5 8.334v1.666h2.135L.736 14.06a.86.86 0 0 0 0 1.198.86.86 0 0 0 1.198 0l3.568-3.567v2.134h1.666V9.66a.834.834 0 0 0-.833-.833z" />
+  </svg>
+);
+
+export const ExpandIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M6.326 8.826a.84.84 0 0 0-.6.234L2.16 12.627v-2.135H.492v4.167c0 .46.373.833.834.833h4.166v-1.667H3.357l3.567-3.567a.857.857 0 0 0 0-1.198.84.84 0 0 0-.598-.234M10.502.492V2.16h2.135L9.07 5.726a.857.857 0 0 0 0 1.199.86.86 0 0 0 1.197 0l3.568-3.568v2.135h1.667V1.326a.834.834 0 0 0-.834-.834z" />
+  </svg>
+);

@@ -21,6 +21,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",

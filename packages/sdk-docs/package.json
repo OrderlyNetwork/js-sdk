@@ -1,0 +1,40 @@
+{
+  "name": "@orderly.network/sdk-docs",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Orderly SDK documentation runtime: MCP server, exact indexes, and narrative (QMD) retrieval",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "orderly-sdk-docs-mcp": "./dist/mcp-cli.js"
+  },
+  "files": [
+    "dist",
+    "bundled"
+  ],
+  "scripts": {
+    "sync:bundle": "node scripts/sync-bundled-generated.mjs",
+    "prepublishOnly": "pnpm run sync:bundle && pnpm run build",
+    "build": "pnpm run sync:bundle && tsup",
+    "dev": "tsup --watch",
+    "start:mcp": "node dist/mcp-cli.js",
+    "smoke": "pnpm run build && node scripts/smoke.mjs",
+    "exercise": "pnpm run build && node scripts/exercise-facade.mjs",
+    "search-nl": "pnpm run build && node scripts/search-nl.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@tobilu/qmd": "^2.0.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@orderly.network/ai-docs": "workspace:*",
+    "@types/node": "^22.12.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

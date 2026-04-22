@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
 import { cnBase } from "tailwind-variants";
 import { Box } from "../box";
-import { ExtensionPositionEnum, ExtensionSlot } from "../plugin";
 import { Spinner } from "../spinner/spinner";
+import { InjectableEmptyDataState } from "./emptyDataState";
 
 type TablePlaceholderProps = {
   visible?: boolean;
@@ -28,13 +28,7 @@ export const TablePlaceholder: FC<TablePlaceholderProps> = (props) => {
         className,
       )}
     >
-      {loading ? (
-        <Spinner />
-      ) : (
-        emptyView || (
-          <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
-        )
-      )}
+      {loading ? <Spinner /> : emptyView || <InjectableEmptyDataState />}
     </Box>
   );
 };
