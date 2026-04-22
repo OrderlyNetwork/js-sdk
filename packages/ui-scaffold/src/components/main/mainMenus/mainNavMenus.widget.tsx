@@ -1,26 +1,18 @@
 import { FC } from "react";
-import {
-  ExtensionPositionEnum,
-  ExtensionSlot,
-  installExtension,
-} from "@orderly.network/ui";
+import { injectable } from "@orderly.network/ui";
 import { MainNavMenus, type MainNavItemsProps } from "./mainNavMenus.ui";
+
+/** Default nav menus component - can be intercepted by plugins via Layout.MainMenus path */
+const InjectableMainNavMenus = injectable(MainNavMenus, "Layout.MainMenus");
 
 export const MainNavMenusWidget: FC<MainNavItemsProps> = (props) => {
   return <MainNavMenus {...props} />;
 };
 
-installExtension<MainNavItemsProps>({
-  name: "default-main-nav-menus",
-  scope: ["*"],
-  positions: [ExtensionPositionEnum.MainMenus],
-  __isInternal: true,
-})((props: MainNavItemsProps) => {
-  return <MainNavMenus {...props} />;
-});
-
+/**
+ * Extension slot for main nav menus. Uses injectable pattern - plugins can
+ * register interceptors for 'Layout.MainMenus' via OrderlyPluginProvider.
+ */
 export const MainNavMenusExtension: FC<MainNavItemsProps> = (props) => {
-  return (
-    <ExtensionSlot position={ExtensionPositionEnum.MainMenus} {...props} />
-  );
+  return <InjectableMainNavMenus {...props} />;
 };

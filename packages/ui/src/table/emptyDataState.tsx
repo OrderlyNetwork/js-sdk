@@ -1,14 +1,18 @@
-import { FC } from "react";
+import { type FC } from "react";
+import { injectable } from "@orderly.network/plugin-core";
 import { Box } from "../box";
 import { Flex } from "../flex";
-import { Text } from "../typography";
 import EmptyStateIcon from "../icon/emptyData";
-import { ExtensionPositionEnum, installExtension } from "../plugin";
 import { useLocale } from "../locale";
+import { Text } from "../typography";
 
-export const EmptyDataState: FC<{ title?: string; className?: string }> = (
-  props
-) => {
+/** Props for Table.EmptyDataIdentifier injectable; used by plugins for typed interceptor */
+export interface EmptyDataStateProps {
+  title?: string;
+  className?: string;
+}
+
+export const EmptyDataState: FC<EmptyDataStateProps> = (props) => {
   const [locale] = useLocale("empty");
 
   return (
@@ -28,7 +32,8 @@ export const EmptyDataState: FC<{ title?: string; className?: string }> = (
   );
 };
 
-installExtension<{ title?: string }>({
-  name: "emptyDataIdentifier",
-  positions: [ExtensionPositionEnum.EmptyDataIdentifier],
-})(EmptyDataState);
+/** Injectable default for Table.EmptyDataIdentifier slot - plugins can intercept via OrderlyPluginProvider */
+export const InjectableEmptyDataState = injectable(
+  EmptyDataState,
+  "Table.EmptyDataIdentifier",
+);

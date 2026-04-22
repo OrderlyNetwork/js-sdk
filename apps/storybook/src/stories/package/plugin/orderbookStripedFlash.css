@@ -1,0 +1,40 @@
+/**
+ * Styles for orderbook striped-rows + flash-on-change plugin.
+ * Scoped under .orderbook-plugin-striped to avoid affecting other lists.
+ * Flash animation ends at stripe color for even rows and transparent for odd rows
+ * so alternating row colors are preserved after the flash.
+ */
+
+/* Default: odd rows have no background (transparent) */
+/* Even rows get stripe background so it restores correctly after flash */
+.orderbook-plugin-striped .oui-order-book-list > *:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/** Flash animation for odd rows (no stripe): end at transparent */
+@keyframes orderbook-flash-to-transparent {
+  from {
+    background-color: rgba(255, 200, 100, 0.25);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+/** Flash animation for even rows (stripe): end at default stripe color */
+@keyframes orderbook-flash-to-stripe {
+  from {
+    background-color: rgba(255, 200, 100, 0.25);
+  }
+  to {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.orderbook-plugin-striped .oui-order-book-list > *.orderbook-row-flash--odd {
+  animation: orderbook-flash-to-transparent 0.4s ease;
+}
+
+.orderbook-plugin-striped .oui-order-book-list > *.orderbook-row-flash--even {
+  animation: orderbook-flash-to-stripe 0.4s ease;
+}

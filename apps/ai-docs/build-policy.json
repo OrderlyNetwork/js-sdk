@@ -1,0 +1,20 @@
+{
+  "$comment": "Closed decisions for tech doc \u00a711 \u2014 do not edit without ADR",
+  "generatedCommitPolicy": "commit_core_artifacts",
+  "committedArtifactGlobs": [
+    "generated/manifest.json",
+    "generated/build-stamp.json",
+    "generated/indexes/component-doc-index.json",
+    "generated/indexes/*.json",
+    "generated/json/**/*.json",
+    "generated/docs-md/**"
+  ],
+  "gitignoredGeneratedSubdirs": [
+    "qmd",
+    "cache"
+  ],
+  "qmdPackaging": "optional_run_qmd_index",
+  "qmdBinaryEnv": "QMD_BIN",
+  "apiVersion": "2026-04-02",
+  "semverFacade": "0.1.0"
+}

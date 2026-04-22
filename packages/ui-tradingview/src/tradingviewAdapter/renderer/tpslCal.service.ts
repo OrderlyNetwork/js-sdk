@@ -85,7 +85,7 @@ export class TpslCalService {
 
   recalculatePnl(
     positions: ChartPosition[] | null,
-    pendingOrders: OrderInterface[]
+    pendingOrders: OrderInterface[],
   ) {
     this.positions = positions;
 

@@ -1,0 +1,105 @@
+import { FC, useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { BasicSymbolInfo } from "../../../types/types";
+import { MarkPriceView } from "../../base/orderBook/markPrice";
+import { MiddlePriceView } from "../../base/orderBook/midPriceView";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
+
+interface DesktopMarkPriceProps {
+  markPrice: number;
+  lastPrice: number[];
+  asks: number[][];
+  bids: number[][];
+  symbolInfo: BasicSymbolInfo;
+}
+
+export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
+  const { markPrice = 0, lastPrice, asks, bids, symbolInfo } = props;
+  const { showTotal } = useOrderBookContext();
+
+  return (
+    <div className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer oui-py-[6px]">
+      <div
+        className={cn(
+          "oui-basis-7/12 oui-flex oui-flex-row oui-items-center oui-mr-2 oui-justify-between",
+          showTotal && "oui-basis-5/12",
+        )}
+      >
+        <MiddlePriceView
+          markPrice={markPrice}
+          lastPrice={lastPrice}
+          quote_dp={symbolInfo.quote_dp}
+          className="oui-text-base"
+        />
+        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
+      </div>
+      <div
+        className={cn(
+          "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
+          showTotal && "oui-basis-7/12",
+          "oui-pr-3",
+        )}
+      >
+        <Spread asks={asks} bids={bids} />
+      </div>
+    </div>
+  );
+};
+
+const Spread: FC<{
+  asks: number[][];
+  bids: number[][];
+}> = (props) => {
+  const { asks, bids } = props;
+
+  const { t } = useTranslation();
+
+  const spread = useMemo(() => {
+    if (!bids?.length || !asks?.length) {
+      return 0;
+    }
+
+    const rawBid = bids[0]?.[0];
+    const bid1 = Number.isNaN(Number(rawBid)) ? 0 : Number(rawBid);
+
+    let ask1 = 0;
+    for (let i = asks.length - 1; i >= 0; i--) {
+      const price = asks[i]?.[0];
+      if (!Number.isNaN(Number(price))) {
+        ask1 = Number(price);
+        break;
+      }
+    }
+
+    if (!bid1 || !ask1) {
+      return 0;
+    }
+
+    const dValue = new Decimal(ask1)
+      .sub(bid1)
+      .div(new Decimal(ask1).add(bid1).div(2));
+
+    return Math.ceil(dValue.toNumber() * 1_000_000 + 0.1) / 10_000;
+  }, [asks, bids]);
+
+  return (
+    <div>
+      <Tooltip
+        content={t("trading.orderBook.spreadRatio.tooltip")}
+        className="oui-max-w-[240px]"
+      >
+        <Text
+          size="2xs"
+          intensity={36}
+          className={
+            "oui-cursor-pointer oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-base-contrast-36"
+          }
+        >
+          {`${spread}%`}
+        </Text>
+      </Tooltip>
+    </div>
+  );
+};

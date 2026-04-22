@@ -11,6 +11,9 @@
       "@orderly.network/utils": [
         "../utils/src"
       ],
+      "@orderly.network/plugin-core": [
+        "../plugin-core/src"
+      ],
       "@orderly.network/ui-connector": [
         "../ui-connector/src"
       ],

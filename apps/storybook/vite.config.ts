@@ -84,11 +84,17 @@ export default defineConfig({
   },
   resolve: {
     alias: getAliasConfig(),
+    /**
+     * Workspace packages (e.g. @orderly.network/plugin-core) prebundled into
+     * `.vite/deps` must resolve `react` to the same instance as the app, or
+     * hooks like useContext see a null dispatcher (duplicate React).
+     */
+    dedupe: ["react", "react-dom"],
   },
-  // optimizeDeps: {
-  //   include: ["react", "react-dom"],
-  //   exclude: getOptimizeDepsConfig(),
-  // },
+  optimizeDeps: {
+    /** Pin React into the optimizer so deps graph shares one copy with plugin-core. */
+    include: ["react", "react/jsx-runtime", "react-dom", "react-dom/client"],
+  },
   build: {
     rollupOptions: {
       // https://cn.rollupjs.org/configuration-options/#maxparallelfileops

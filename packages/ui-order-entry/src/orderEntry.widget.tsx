@@ -1,9 +1,10 @@
 import React from "react";
+// import { OrderEntry } from "./orderEntry.ui";
+import { InjectableOrderEntry } from "./orderEntry.injectable";
 import {
   OrderEntryScriptInputs,
   useOrderEntryScript,
 } from "./orderEntry.script";
-import { OrderEntry } from "./orderEntry.ui";
 
 export const OrderEntryWidget: React.FC<
   OrderEntryScriptInputs & {
@@ -13,7 +14,7 @@ export const OrderEntryWidget: React.FC<
 > = (props) => {
   const state = useOrderEntryScript(props);
   return (
-    <OrderEntry
+    <InjectableOrderEntry
       {...state}
       containerRef={props.containerRef}
       disableFeatures={props.disableFeatures}

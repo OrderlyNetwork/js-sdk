@@ -63,6 +63,10 @@ export type OrderEntryReturn = {
   resetMetaState: () => void;
   formattedOrder: Partial<FullOrderState>;
   maxQty: number;
+  maxQtys: {
+    maxBuy: number;
+    maxSell: number;
+  };
   /**
    * The estimated liquidation price.
    */
@@ -258,7 +262,7 @@ const useOrderEntry = (
       ? getOrderReferencePriceFromOrder(formattedOrder, bestAskBid)
       : null;
 
-  const maxQtyValue = useMaxQty(symbol, formattedOrder.side, {
+  const maxBuyQtyValue = useMaxQty(symbol, OrderSide.BUY, {
     reduceOnly: formattedOrder.reduce_only,
     marginMode: effectiveMarginMode,
     currentOrderReferencePrice:
@@ -266,11 +270,40 @@ const useOrderEntry = (
         ? referencePriceFromOrder
         : undefined,
   });
-
-  // console.log("+++++++++++maxQtyValue++++++++++++++ ", maxQtyValue);
+  const maxSellQtyValue = useMaxQty(symbol, OrderSide.SELL, {
+    reduceOnly: formattedOrder.reduce_only,
+    marginMode: effectiveMarginMode,
+    currentOrderReferencePrice:
+      referencePriceFromOrder && referencePriceFromOrder > 0
+        ? referencePriceFromOrder
+        : undefined,
+  });
+  const maxQtyValue =
+    formattedOrder.side === OrderSide.BUY ? maxBuyQtyValue : maxSellQtyValue;
 
   // @ts-ignore
   const maxQty = options.maxQty ?? maxQtyValue;
+  const maxQtys = useMemo(
+    () => ({
+      maxBuy:
+        formattedOrder.side === OrderSide.BUY
+          ? // @ts-ignore
+            (options.maxQty ?? maxBuyQtyValue)
+          : maxBuyQtyValue,
+      maxSell:
+        formattedOrder.side === OrderSide.SELL
+          ? // @ts-ignore
+            (options.maxQty ?? maxSellQtyValue)
+          : maxSellQtyValue,
+    }),
+    [
+      formattedOrder.side,
+      maxBuyQtyValue,
+      maxSellQtyValue,
+      // @ts-ignore
+      options.maxQty,
+    ],
+  );
 
   const updateOrderPrice = () => {
     const order_type = formattedOrder.order_type;
@@ -812,6 +845,7 @@ const useOrderEntry = (
     resetMetaState,
     formattedOrder,
     maxQty,
+    maxQtys,
     estLiqPrice,
     estLiqPriceDistance,
     currentPosition,

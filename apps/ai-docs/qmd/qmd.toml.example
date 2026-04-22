@@ -1,0 +1,5 @@
+# Example QMD corpus root for Orderly AI docs (copy to generated/qmd/qmd.toml after tuning).
+# Real config is emitted by `pnpm --filter @orderly.network/ai-docs qmd:index`.
+#
+# root = "/absolute/path/to/apps/ai-docs"
+# exclude = ["generated/**", "node_modules/**"]
