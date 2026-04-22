@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, ChainIcon, Flex, Text, TokenIcon } from "@orderly.network/ui";
+import { Box, Flex, Text } from "@orderly.network/ui";
 import { CopyAddress } from "./CopyAddress";
 import { DepositStatusBlock } from "./DepositStatus";
 import { NetworkTokenSelect } from "./NetworkTokenSelect";
@@ -93,41 +93,18 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
       )}
 
       <Flex direction="column" gap={2} className="oui-mt-5 oui-w-full">
-        {confirmed ? (
-          <>
-            <Flex className="oui-w-full" justify="between" itemAlign="center">
-              <Text size="xs" intensity={36}>
-                {t("common.network")}
-              </Text>
-              <Flex gap={1} itemAlign="center">
-                <ChainIcon chainId={selectedChainId!} size="2xs" />
-                <Text size="xs" intensity={98}>
-                  {networkName}
-                </Text>
-              </Flex>
-            </Flex>
-            <Flex className="oui-w-full" justify="between" itemAlign="center">
-              <Text size="xs" intensity={36}>
-                {t("common.token")}
-              </Text>
-              <Flex gap={1} itemAlign="center">
-                <TokenIcon name={tokenName} size="2xs" />
-                <Text size="xs" intensity={98}>
-                  {tokenName}
-                </Text>
-              </Flex>
-            </Flex>
-          </>
-        ) : (
-          <NetworkTokenSelect
-            selectedNetwork={selectedNetwork}
-            selectedToken={selectedToken}
-            onNetworkChange={setSelectedNetwork}
-            onTokenChange={setSelectedToken}
-            networkOptions={networkOptions}
-            tokenOptions={tokenOptions}
-          />
-        )}
+        <NetworkTokenSelect
+          key={selectedNetwork}
+          selectedNetwork={selectedNetwork}
+          selectedToken={selectedToken}
+          onNetworkChange={(value) => {
+            setSelectedNetwork(value);
+            setSelectedToken("");
+          }}
+          onTokenChange={setSelectedToken}
+          networkOptions={networkOptions}
+          tokenOptions={tokenOptions}
+        />
 
         {/* Min. Deposit */}
         <Flex className="oui-w-full" justify="between">
