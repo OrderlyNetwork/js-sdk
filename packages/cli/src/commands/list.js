@@ -11,7 +11,10 @@ const {
   getToken,
   authenticatedFetch,
 } = require("../internal/auth");
-const { MARKETPLACE_API_MY_PLUGINS_URL } = require("../internal/constants");
+const {
+  MARKETPLACE_API_BASE_URL,
+  MARKETPLACE_API_MY_PLUGINS_URL,
+} = require("../internal/constants");
 
 /**
  * Convert unknown plugin payload into a list shape safely.
@@ -160,9 +163,13 @@ module.exports = {
       console.log(renderTable(rows));
       success(`\nTotal: ${plugins.length} plugin(s)`);
     } catch (e) {
-      error(`Request failed: ${e.message}`);
+      // Surface target endpoint to make network/runtime failures actionable.
+      const cause = e?.message || String(e);
+      error(
+        `Request failed while calling ${MARKETPLACE_API_MY_PLUGINS_URL}: ${cause}`,
+      );
       info(
-        "Please check that the API server is running at http://localhost:3030",
+        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
       );
       process.exitCode = 1;
     }

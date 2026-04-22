@@ -14,7 +14,10 @@ const {
   getToken,
   authenticatedFetch,
 } = require("../internal/auth");
-const { MARKETPLACE_API_PLUGINS_URL } = require("../internal/constants");
+const {
+  MARKETPLACE_API_BASE_URL,
+  MARKETPLACE_API_PLUGINS_URL,
+} = require("../internal/constants");
 const { resolvePluginManifest, getRepoUrl } = require("../internal/manifest");
 const {
   maybePrintOrderlyDevEnvironmentHints,
@@ -302,9 +305,13 @@ module.exports = {
         }
       }
     } catch (e) {
-      error(`Submission failed: ${e.message}`);
+      // Include endpoint context so publish users can diagnose non-local failures.
+      const cause = e?.message || String(e);
+      error(
+        `Submission failed while calling ${MARKETPLACE_API_PLUGINS_URL}: ${cause}`,
+      );
       info(
-        "\nPlease check that the API server is running at http://localhost:3030",
+        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
       );
     }
   },

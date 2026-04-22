@@ -13,7 +13,10 @@ const {
   getToken,
   authenticatedFetch,
 } = require("../internal/auth");
-const { MARKETPLACE_API_PLUGINS_URL } = require("../internal/constants");
+const {
+  MARKETPLACE_API_BASE_URL,
+  MARKETPLACE_API_PLUGINS_URL,
+} = require("../internal/constants");
 const { resolvePluginManifest } = require("../internal/manifest");
 
 // Keep the same tag whitelist as submit to ensure local validation stays consistent.
@@ -230,9 +233,11 @@ module.exports = {
       info(`Plugin ID: ${responseData?.id || pluginId}`);
       info(`Status: ${responseData?.status || "N/A"}`);
     } catch (requestError) {
-      error(`Request failed: ${requestError.message}`);
+      // Include request target and active base URL to avoid misleading local-only hints.
+      const cause = requestError?.message || String(requestError);
+      error(`Request failed while calling ${apiUrl}: ${cause}`);
       info(
-        "Please check that the API server is running at http://localhost:3030",
+        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
       );
       process.exitCode = 1;
     }

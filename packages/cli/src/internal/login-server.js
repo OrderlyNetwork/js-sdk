@@ -1,4 +1,5 @@
 const http = require("http");
+const { MARKETPLACE_WEB_BASE_URL } = require("./constants");
 
 const SUCCESS_HTML = `<!DOCTYPE html>
 <html>
@@ -25,7 +26,9 @@ const ERROR_HTML = (msg) => `<!DOCTYPE html>
 </html>`;
 
 function setCorsHeaders(res) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3030");
+  // Allow configured marketplace web origin and keep localhost fallback for local dev login pages.
+  const allowedOrigin = MARKETPLACE_WEB_BASE_URL || "http://localhost:3030";
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }

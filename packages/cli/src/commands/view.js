@@ -87,9 +87,11 @@ module.exports = {
       // Always print full payload to avoid losing fields in formatted output.
       console.log(JSON.stringify(responseData ?? {}, null, 2));
     } catch (e) {
-      error(`Request failed: ${e.message}`);
+      // Show the exact request target so operators can debug network/env issues quickly.
+      const cause = e?.message || String(e);
+      error(`Request failed while calling ${url}: ${cause}`);
       info(
-        "Please check that the API server is running at http://localhost:3030",
+        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
       );
       process.exitCode = 1;
     }
