@@ -44,3 +44,12 @@ export type ClientAdapter = {
     force: boolean,
   ): { merged: Record<string, unknown>; action: "updated" | "noop" };
 };
+
+export type ClientAdapterRegistry = {
+  /** Returns a registered adapter by client id, or undefined when missing. */
+  get(client: InstallClient): ClientAdapter | undefined;
+  /** Registers or replaces an adapter by its client id. */
+  register(adapter: ClientAdapter): void;
+  /** Returns all currently registered adapters in insertion order. */
+  list(): ClientAdapter[];
+};

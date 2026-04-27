@@ -1,9 +1,6 @@
 import path from "node:path";
-import type {
-  ClientAdapter,
-  InstallClient,
-  InstallScope,
-} from "./types.js";
+import { createClientAdapterRegistry } from "./adapterRegistry.js";
+import type { ClientAdapter, InstallClient, InstallScope } from "./types.js";
 import type { McpServerConfigEntry } from "./types_internal.js";
 
 /**
@@ -26,9 +23,12 @@ function mergeByMcpServers(
   if (!force && current && typeof current === "object") {
     const currentObject = current as Record<string, unknown>;
     const commandEqual = currentObject.command === entry.command;
-    const argsEqual = JSON.stringify(currentObject.args ?? []) === JSON.stringify(entry.args ?? []);
+    const argsEqual =
+      JSON.stringify(currentObject.args ?? []) ===
+      JSON.stringify(entry.args ?? []);
     const envEqual =
-      JSON.stringify(currentObject.env ?? {}) === JSON.stringify(entry.env ?? {});
+      JSON.stringify(currentObject.env ?? {}) ===
+      JSON.stringify(entry.env ?? {});
 
     if (commandEqual && argsEqual && envEqual) {
       return { merged: raw, action: "noop" };
@@ -84,13 +84,26 @@ function makeAdapter(
 
 const home = process.env.HOME || process.env.USERPROFILE || "";
 
-export const clientAdapters: Record<InstallClient, ClientAdapter> = {
-  claude: makeAdapter("claude", path.join(home, ".claude.json"), ".claude.json"),
-  codex: makeAdapter("codex", path.join(home, ".codex", "config.json"), ".codex/config.json"),
-  cursor: makeAdapter("cursor", path.join(home, ".cursor", "mcp.json"), ".cursor/mcp.json"),
-  opencode: makeAdapter(
+export const builtinClientAdapters: ClientAdapter[] = [
+  makeAdapter("claude", path.join(home, ".claude.json"), ".claude.json"),
+  makeAdapter(
+    "codex",
+    path.join(home, ".codex", "config.json"),
+    ".codex/config.json",
+  ),
+  makeAdapter(
+    "cursor",
+    path.join(home, ".cursor", "mcp.json"),
+    ".cursor/mcp.json",
+  ),
+  makeAdapter(
     "opencode",
     path.join(home, ".opencode", "config.json"),
     ".opencode/config.json",
   ),
-};
+];
+
+/** Default adapter registry used by install command callers. */
+export const defaultClientAdapterRegistry = createClientAdapterRegistry(
+  builtinClientAdapters,
+);

@@ -1,4 +1,4 @@
-import { clientAdapters } from "./clients.js";
+import { defaultClientAdapterRegistry } from "./clients.js";
 import { backupIfExists, readJsonConfig, writeJsonAtomic } from "./fs-write.js";
 import { printInstallReport } from "./report.js";
 import { buildServerEntry } from "./spec.js";
@@ -66,7 +66,11 @@ export function runInstallCommand(
 
   const phasePrefix = options.dryRun ? "[dry-run]" : "[install]";
   for (const client of options.clients) {
-    const adapter = clientAdapters[client];
+    const adapter = defaultClientAdapterRegistry.get(client);
+    if (!adapter) {
+      errors.push(`${client}: no adapter registered for this client`);
+      continue;
+    }
     const configPath = adapter.resolvePath(options.scope, cwd);
 
     console.log(

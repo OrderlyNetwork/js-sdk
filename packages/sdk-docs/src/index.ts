@@ -59,6 +59,12 @@ export {
   type AiDocsFacade,
   type AiDocsFacadeOptions,
 } from "./facade.js";
+export { createClientAdapterRegistry } from "./install/adapterRegistry.js";
+export {
+  builtinClientAdapters,
+  defaultClientAdapterRegistry,
+} from "./install/clients.js";
+export type { ClientAdapterRegistry } from "./install/types.js";
 export {
   buildGithubBlobUrl,
   buildGithubRawUrl,
