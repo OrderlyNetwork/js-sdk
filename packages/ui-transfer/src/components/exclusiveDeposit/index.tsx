@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, ChainIcon, Flex, Text, TokenIcon } from "@orderly.network/ui";
+import { Box, Flex, Text } from "@orderly.network/ui";
 import { CopyAddress } from "./CopyAddress";
 import { DepositStatusBlock } from "./DepositStatus";
 import { NetworkTokenSelect } from "./NetworkTokenSelect";
@@ -19,9 +19,23 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [selectedToken, setSelectedToken] = useState("");
 
-  const { networkOptions, tokenOptions } = useExclusiveDepositOptions();
+  const { networkOptions, tokenOptions, isSupported } =
+    useExclusiveDepositOptions({
+      selectedNetwork,
+    });
 
   const confirmed = !!selectedNetwork && !!selectedToken;
+
+  // Reset token when network changes and current token is unavailable
+  useEffect(() => {
+    if (
+      selectedToken &&
+      tokenOptions.length > 0 &&
+      !tokenOptions.some((t) => t.value === selectedToken)
+    ) {
+      setSelectedToken("");
+    }
+  }, [selectedNetwork, selectedToken, tokenOptions]);
 
   const selectedNetworkOption = selectedNetwork
     ? networkOptions.find((n) => n.value === selectedNetwork)
@@ -43,6 +57,7 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
     active,
     confirmed,
     chainId: selectedChainId,
+    token: selectedToken,
     explorerBaseUrl: selectedNetworkOption?.explorerUrl ?? "",
   });
 
@@ -78,41 +93,18 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
       )}
 
       <Flex direction="column" gap={2} className="oui-mt-5 oui-w-full">
-        {confirmed ? (
-          <>
-            <Flex className="oui-w-full" justify="between" itemAlign="center">
-              <Text size="xs" intensity={36}>
-                {t("common.network")}
-              </Text>
-              <Flex gap={1} itemAlign="center">
-                <ChainIcon chainId={selectedChainId!} size="2xs" />
-                <Text size="xs" intensity={98}>
-                  {networkName}
-                </Text>
-              </Flex>
-            </Flex>
-            <Flex className="oui-w-full" justify="between" itemAlign="center">
-              <Text size="xs" intensity={36}>
-                {t("common.token")}
-              </Text>
-              <Flex gap={1} itemAlign="center">
-                <TokenIcon name={tokenName} size="2xs" />
-                <Text size="xs" intensity={98}>
-                  {tokenName}
-                </Text>
-              </Flex>
-            </Flex>
-          </>
-        ) : (
-          <NetworkTokenSelect
-            selectedNetwork={selectedNetwork}
-            selectedToken={selectedToken}
-            onNetworkChange={setSelectedNetwork}
-            onTokenChange={setSelectedToken}
-            networkOptions={networkOptions}
-            tokenOptions={tokenOptions}
-          />
-        )}
+        <NetworkTokenSelect
+          key={selectedNetwork}
+          selectedNetwork={selectedNetwork}
+          selectedToken={selectedToken}
+          onNetworkChange={(value) => {
+            setSelectedNetwork(value);
+            setSelectedToken("");
+          }}
+          onTokenChange={setSelectedToken}
+          networkOptions={networkOptions}
+          tokenOptions={tokenOptions}
+        />
 
         {/* Min. Deposit */}
         <Flex className="oui-w-full" justify="between">

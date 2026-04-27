@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useChains, useConfig } from "@orderly.network/hooks";
+import { useTokensInfo } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 
 export type ExclusiveDepositNetwork = {
@@ -14,46 +15,96 @@ export type ExclusiveDepositToken = {
   value: string;
 };
 
-// Supported chain IDs for exclusive deposit per environment
-const SUPPORTED_CHAINS: Record<string, number[]> = {
-  prod: [42161],
-  testnet: [421614],
-};
-
-// Supported tokens for exclusive deposit
-const SUPPORTED_TOKENS = ["USDC"];
-
-export const useExclusiveDepositOptions = () => {
-  const env = useConfig("env");
+export const useExclusiveDepositOptions = (params?: {
+  selectedNetwork?: string;
+}) => {
   const networkId = useConfig("networkId") as NetworkId;
+  const tokensInfo = useTokensInfo();
+  const selectedNetwork = params?.selectedNetwork;
 
-  const [chains, { findByChainId }] = useChains(networkId, {
+  const [, { findByChainId }] = useChains(networkId, {
     pick: "network_infos",
   });
 
-  const supportedChainIds =
-    env === "prod" ? SUPPORTED_CHAINS.prod : SUPPORTED_CHAINS.testnet;
+  const combos = useMemo(() => {
+    if (!tokensInfo?.length) return [];
+
+    const result: {
+      chainId: number;
+      chainName: string;
+      explorerUrl: string;
+      tokenSymbol: string;
+    }[] = [];
+
+    for (const token of tokensInfo) {
+      for (const detail of token.chain_details ?? []) {
+        if (detail.exclusive_deposit_supported === true) {
+          const chainId = Number(detail.chain_id);
+          const chain = findByChainId(chainId);
+          result.push({
+            chainId,
+            chainName:
+              (chain as any)?.network_infos?.name ?? `Chain ${chainId}`,
+            explorerUrl: (chain as any)?.network_infos?.explorer_base_url ?? "",
+            tokenSymbol: token.token,
+          });
+        }
+      }
+    }
+
+    return result;
+  }, [tokensInfo, findByChainId]);
 
   const networkOptions = useMemo<ExclusiveDepositNetwork[]>(() => {
-    return supportedChainIds.map((chainId) => {
-      const chain = findByChainId(chainId);
-      const name = chain?.network_infos?.name ?? `Chain ${chainId}`;
-      const explorerUrl = chain?.network_infos?.explorer_base_url ?? "";
-      return {
-        label: name,
-        value: String(chainId),
-        chainId,
-        explorerUrl,
-      };
+    const seen = new Map<number, ExclusiveDepositNetwork>();
+
+    for (const combo of combos) {
+      if (!seen.has(combo.chainId)) {
+        seen.set(combo.chainId, {
+          label: combo.chainName,
+          value: String(combo.chainId),
+          chainId: combo.chainId,
+          explorerUrl: combo.explorerUrl,
+        });
+      }
+    }
+
+    const list = Array.from(seen.values());
+    // Arbitrum (42161) first for backward compatibility
+    list.sort((a, b) => {
+      if (a.chainId === 42161) return -1;
+      if (b.chainId === 42161) return 1;
+      return 0;
     });
-  }, [supportedChainIds, findByChainId]);
+
+    return list;
+  }, [combos]);
 
   const tokenOptions = useMemo<ExclusiveDepositToken[]>(() => {
-    return SUPPORTED_TOKENS.map((symbol) => ({
-      label: symbol,
-      value: symbol,
-    }));
-  }, []);
+    if (!selectedNetwork) return [];
 
-  return { networkOptions, tokenOptions };
+    const chainId = Number(selectedNetwork);
+    const seen = new Set<string>();
+    const result: ExclusiveDepositToken[] = [];
+
+    for (const combo of combos) {
+      if (combo.chainId === chainId && !seen.has(combo.tokenSymbol)) {
+        seen.add(combo.tokenSymbol);
+        result.push({ label: combo.tokenSymbol, value: combo.tokenSymbol });
+      }
+    }
+
+    // USDC first for backward compatibility
+    result.sort((a, b) => {
+      if (a.value === "USDC") return -1;
+      if (b.value === "USDC") return 1;
+      return 0;
+    });
+
+    return result;
+  }, [combos, selectedNetwork]);
+
+  const isSupported = combos.length > 0;
+
+  return { networkOptions, tokenOptions, isSupported };
 };

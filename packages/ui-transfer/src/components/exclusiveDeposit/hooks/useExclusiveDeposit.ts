@@ -45,18 +45,19 @@ export const useExclusiveDeposit = (options: {
   active?: boolean;
   confirmed?: boolean;
   chainId?: number;
+  token?: string;
   explorerBaseUrl: string;
 }): ExclusiveDepositState => {
   const active = options.active ?? true;
   const confirmed = options.confirmed ?? true;
-  const { chainId, explorerBaseUrl } = options;
+  const { chainId, token, explorerBaseUrl } = options;
 
   const { t: t0 } = useTranslation();
   const t = t0 as any;
 
   const receiverAddressKey =
-    confirmed && chainId
-      ? `/v1/client/asset/receiver_address?chain_id=${chainId}`
+    confirmed && chainId && token
+      ? `/v1/client/asset/receiver_address?chain_id=${chainId}&token=${token}`
       : null;
   const receiverEventsKey =
     active && confirmed ? "/v1/client/asset/receiver_events" : null;
