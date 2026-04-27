@@ -8,6 +8,7 @@ const MAX_RAW_BYTES = 2 * 1024 * 1024;
 
 const DEFAULT_OWNER = "OrderlyNetwork";
 const DEFAULT_REPO = "js-sdk";
+const DEFAULT_BRANCH = "main";
 const DEFAULT_CONTEXT_LINES = 15;
 
 export type FetchSdkSourceInput = {
@@ -52,12 +53,13 @@ function githubRepo(): string {
 }
 
 /**
- * Resolves ref: env override, else manifest git SHA (matches indexed snapshot).
+ * Resolves ref: env override, else main branch.
+ * Always defaults to "main" so GitHub raw URLs work without requiring a pushed commit.
  */
-function resolveRef(bundle: LoadedBundle): string {
+function resolveRef(_bundle: LoadedBundle): string {
   const fromEnv = process.env.ORDERLY_SDK_GITHUB_REF?.trim();
   if (fromEnv) return fromEnv;
-  return bundle.manifest.gitSha.trim();
+  return DEFAULT_BRANCH;
 }
 
 function normalizeRelPath(raw: string): string {
@@ -289,7 +291,7 @@ export async function fetchSdkSource(
       [
         `URL: ${rawUrl}`,
         refFromManifest
-          ? "Default ref is manifest.gitSha; if that commit only exists locally (not pushed to OrderlyNetwork/js-sdk), every path returns 404. Set ORDERLY_SDK_GITHUB_REF to a branch or tag on GitHub (e.g. main)."
+          ? `The manifest ref "${ref}" may be a local-only commit. Try setting ORDERLY_SDK_GITHUB_REF=main or re-run generate after pushing to origin.`
           : "Check that ref exists on GitHub and the path is correct for that revision.",
       ].join(" "),
       bundle,

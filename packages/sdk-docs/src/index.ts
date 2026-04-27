@@ -35,6 +35,7 @@ export { buildMetaOk, elapsedMs, errResult, okResult } from "./envelope.js";
 export { resolveEntityByArtifactKind } from "./entityResolve.js";
 export {
   getComponent,
+  getHook,
   getPackageSurface,
   getReleaseContext,
   getType,

@@ -77,7 +77,7 @@ server.registerTool(
   "orderly_docs_search",
   {
     description:
-      "Search Orderly SDK documentation (narrative markdown, recipes, workflows). Returns a DocsResult with ranked narrativeHits; when present, matchedEntityId or keywordSingletonId point to a concrete symbol or type—call orderly_docs_get_component or orderly_docs_get_type next. Response may also include queryVariants, inferredPackages, and packageSurfaceHints to guide follow-up exact lookups. Optional filters: k (max hits), kinds, packages.",
+      "Search Orderly SDK documentation (narrative markdown, recipes, workflows). Returns a DocsResult with ranked narrativeHits; when present, matchedEntityId or keywordSingletonId point to a concrete symbol — call orderly_docs_get_component, orderly_docs_get_type, or orderly_docs_get_hook next (check matchedEntityKind for the right tool). Response may also include queryVariants, inferredPackages, and packageSurfaceHints to guide follow-up exact lookups. Optional filters: k (max hits), kinds, packages.",
     inputSchema: {
       query: z.string().min(1).describe("Free-text search query"),
       k: z.number().int().min(1).max(50).optional().describe("Max hits (1–50)"),
@@ -157,6 +157,28 @@ server.registerTool(
     const g = guardFacade();
     if (!g.ok) return { content: [{ type: "text" as const, text: g.payload }] };
     const out = g.facade.getType(args.query);
+    return {
+      content: [{ type: "text" as const, text: JSON.stringify(out, null, 2) }],
+    };
+  },
+);
+
+server.registerTool(
+  "orderly_docs_get_hook",
+  {
+    description:
+      "Exact hook metadata (params, returns, jsDoc) by symbol name, @package/name:HookName, or hook.* entity id. Hooks (useMarkPrice, useOrderEntry, etc.) are the primary API for plugin developers. Returns DocsResult JSON.",
+    inputSchema: {
+      query: z
+        .string()
+        .min(1)
+        .describe("Symbol name, @package/name:HookName, or hook.* id"),
+    },
+  },
+  async (args) => {
+    const g = guardFacade();
+    if (!g.ok) return { content: [{ type: "text" as const, text: g.payload }] };
+    const out = g.facade.getHook(args.query);
     return {
       content: [{ type: "text" as const, text: JSON.stringify(out, null, 2) }],
     };

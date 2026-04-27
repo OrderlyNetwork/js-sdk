@@ -20,9 +20,8 @@ function isEnquirerReadlineCancelError(err) {
     return false;
   }
 
-  const error = /** @type {{ code?: string; stack?: string; message?: string }} */ (
-    err
-  );
+  const error =
+    /** @type {{ code?: string; stack?: string; message?: string }} */ (err);
   const stack = typeof error.stack === "string" ? error.stack : "";
   const message = typeof error.message === "string" ? error.message : "";
 
@@ -92,18 +91,22 @@ yargs(hideBin(process.argv))
   .alias("v", "version")
   .alias("h", "help")
   .showHelpOnFail(true)
+  .strictCommands()
   .demandCommand(1, "Please specify a command.")
   .command("create", "Create a new plugin or module", (yargs) => {
     return yargs.commandDir(path.join(commandsDir, "create"));
   })
   .commandDir(commandsDir)
-  .command({
-    command: "*",
-    handler(args) {
-      console.error(chalk.red(`Unknown command: ${args._[0]}`));
-      console.error(`Run '${chalk.cyan("orderly-devkit --help")}' for usage.`);
-      process.exit(1);
-    },
-  })
   .recommendCommands()
+  .fail((message, error, parser) => {
+    // Always show usage/help for missing or invalid command input.
+    parser.showHelp();
+    if (message) {
+      console.error(chalk.red(`\n${message}`));
+    }
+    if (error && !message) {
+      console.error(chalk.red(`\n${error.message}`));
+    }
+    process.exit(1);
+  })
   .parse();

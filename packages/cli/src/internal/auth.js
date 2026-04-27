@@ -7,6 +7,11 @@ const AUTH_DIR = path.join(
   ".orderly",
 );
 const AUTH_FILE = path.join(AUTH_DIR, "auth.json");
+const DEFAULT_HTTP_TIMEOUT_MS = 15000;
+const HTTP_TIMEOUT_MS = Number.parseInt(
+  process.env.ORDERLY_HTTP_TIMEOUT_MS || `${DEFAULT_HTTP_TIMEOUT_MS}`,
+  10,
+);
 
 function ensureAuthDir() {
   if (!fs.existsSync(AUTH_DIR)) {
@@ -64,18 +69,57 @@ function getRefreshToken() {
 }
 
 /**
- * Rotate CLI tokens using refresh token and persist new credentials.
+ * Build a deterministic timeout budget for CLI HTTP calls.
+ * @returns {number}
  */
-async function refreshCliToken() {
+function getHttpTimeoutMs() {
+  if (Number.isFinite(HTTP_TIMEOUT_MS) && HTTP_TIMEOUT_MS > 0) {
+    return HTTP_TIMEOUT_MS;
+  }
+  return DEFAULT_HTTP_TIMEOUT_MS;
+}
+
+/**
+ * Execute fetch with timeout so CLI does not wait forever on stalled network.
+ * @param {string} url
+ * @param {RequestInit} init
+ * @param {number} timeoutMs
+ * @returns {Promise<Response>}
+ */
+async function fetchWithTimeout(url, init, timeoutMs) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => {
+    controller.abort(`Request timed out after ${timeoutMs}ms`);
+  }, timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Rotate CLI tokens using refresh token and persist new credentials.
+ * @param {{ onAuthEvent?: (event: string, details?: Record<string, unknown>) => void }} options
+ */
+async function refreshCliToken(options = {}) {
+  const { onAuthEvent } = options;
   const auth = readAuth();
   const refreshToken = auth?.refreshToken;
   if (!refreshToken) {
+    onAuthEvent?.("refresh_missing");
     return null;
   }
 
   try {
-    const response = await fetch(
-      `${MARKETPLACE_API_BASE_URL}/auth/refresh-cli`,
+    const refreshUrl = `${MARKETPLACE_API_BASE_URL}/auth/refresh-cli`;
+    onAuthEvent?.("refresh_started", { url: refreshUrl });
+    const response = await fetchWithTimeout(
+      refreshUrl,
       {
         method: "POST",
         headers: {
@@ -84,14 +128,17 @@ async function refreshCliToken() {
         },
         body: JSON.stringify({ refreshToken }),
       },
+      getHttpTimeoutMs(),
     );
 
     if (!response.ok) {
+      onAuthEvent?.("refresh_failed", { status: response.status });
       return null;
     }
 
     const data = await response.json();
     if (!data?.accessToken || !data?.refreshToken) {
+      onAuthEvent?.("refresh_invalid_payload");
       return null;
     }
 
@@ -101,36 +148,53 @@ async function refreshCliToken() {
       refreshToken: data.refreshToken,
       refreshedAt: new Date().toISOString(),
     });
+    onAuthEvent?.("refresh_succeeded");
     return data.accessToken;
-  } catch {
+  } catch (e) {
+    onAuthEvent?.("refresh_error", {
+      message: e?.message || String(e),
+    });
     return null;
   }
 }
 
 /**
  * Send authenticated request and retry once after token refresh on 401.
+ * @param {{ onAuthEvent?: (event: string, details?: Record<string, unknown>) => void }} options
  */
-async function authenticatedFetch(url, init = {}) {
+async function authenticatedFetch(url, init = {}, options = {}) {
+  const { onAuthEvent } = options;
   const token = getToken();
+  const timeoutMs = getHttpTimeoutMs();
   if (!token) {
-    return fetch(url, init);
+    return fetchWithTimeout(url, init, timeoutMs);
   }
 
   const firstHeaders = new Headers(init.headers || {});
   firstHeaders.set("Authorization", `Bearer ${token}`);
-  let response = await fetch(url, { ...init, headers: firstHeaders });
+  let response = await fetchWithTimeout(
+    url,
+    { ...init, headers: firstHeaders },
+    timeoutMs,
+  );
   if (response.status !== 401) {
     return response;
   }
 
-  const nextToken = await refreshCliToken();
+  onAuthEvent?.("request_unauthorized", { status: response.status });
+  const nextToken = await refreshCliToken({ onAuthEvent });
   if (!nextToken) {
     return response;
   }
 
   const retryHeaders = new Headers(init.headers || {});
   retryHeaders.set("Authorization", `Bearer ${nextToken}`);
-  response = await fetch(url, { ...init, headers: retryHeaders });
+  onAuthEvent?.("request_retry_started");
+  response = await fetchWithTimeout(
+    url,
+    { ...init, headers: retryHeaders },
+    timeoutMs,
+  );
   return response;
 }
 

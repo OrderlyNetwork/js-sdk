@@ -2,6 +2,7 @@ import type { LoadedBundle } from "./bundle.js";
 import { getComponentDoc } from "./componentDoc.js";
 import {
   getComponent,
+  getHook,
   getPackageSurface,
   getReleaseContext,
   getType,
@@ -39,6 +40,7 @@ export type AiDocsFacadeOptions = {
 export type AiDocsFacade = {
   readonly bundle: LoadedBundle;
   getComponent: (query: string) => DocsResult<Record<string, unknown>>;
+  getHook: (query: string) => DocsResult<Record<string, unknown>>;
   getType: (query: string) => DocsResult<Record<string, unknown>>;
   getPackageSurface: (packageName: string) => DocsResult<PackageSurfaceData>;
   getReleaseContext: () => DocsResult<ReleaseContextData>;
@@ -66,6 +68,7 @@ export function createAiDocsFacade(
     bundle,
     getComponent: (query: string) =>
       getComponent(bundle, query, performance.now()),
+    getHook: (query: string) => getHook(bundle, query, performance.now()),
     getType: (query: string) => getType(bundle, query, performance.now()),
     getPackageSurface: (packageName: string) =>
       getPackageSurface(bundle, packageName, performance.now()),

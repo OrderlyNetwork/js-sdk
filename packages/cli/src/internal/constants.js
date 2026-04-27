@@ -28,6 +28,22 @@ const MARKETPLACE_WEB_BASE_URL =
 
 const MARKETPLACE_API_PLUGINS_URL = `${MARKETPLACE_API_BASE_URL}/plugins`;
 const MARKETPLACE_API_MY_PLUGINS_URL = `${MARKETPLACE_API_BASE_URL}/my-plugins`;
+/**
+ * Build plugin self-status endpoint for author-owned status updates.
+ * @param {string} pluginId
+ * @returns {string}
+ */
+function getMarketplaceApiPluginSelfStatusUrl(pluginId) {
+  return `${MARKETPLACE_API_PLUGINS_URL}/${encodeURIComponent(pluginId)}/self-status`;
+}
+/**
+ * Build plugin detail endpoint for plugin-level operations.
+ * @param {string} pluginId
+ * @returns {string}
+ */
+function getMarketplaceApiPluginUrl(pluginId) {
+  return `${MARKETPLACE_API_PLUGINS_URL}/${encodeURIComponent(pluginId)}`;
+}
 
 const CLI_CALLBACK_PORT = 9876;
 const CLI_LOGIN_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
@@ -53,6 +69,8 @@ module.exports = {
   MARKETPLACE_API_BASE_URL,
   MARKETPLACE_API_PLUGINS_URL,
   MARKETPLACE_API_MY_PLUGINS_URL,
+  getMarketplaceApiPluginUrl,
+  getMarketplaceApiPluginSelfStatusUrl,
   CLI_CALLBACK_PORT,
   CLI_LOGIN_TIMEOUT_MS,
   MARKETPLACE_WEB_LOGIN_URL,
