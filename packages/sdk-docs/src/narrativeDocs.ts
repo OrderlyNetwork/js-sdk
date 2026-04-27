@@ -27,9 +27,96 @@ function normalizeSlug(raw: string): string {
   return s;
 }
 
+/**
+ * Converts a slug-ish input to a comparison token for fuzzy matching.
+ * Keeps only alphanumeric chars so `plugin-create`, `plugin_create`,
+ * and `plugin create` are treated as equivalent.
+ */
+function normalizeLooseToken(raw: string): string {
+  return raw.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
 function markdownRoot(bundle: LoadedBundle): string {
   const mr = bundle.manifest.roots?.markdownRoot ?? "apps/ai-docs";
   return mr;
+}
+
+/**
+ * Lists markdown basenames from a folder under apps/ai-docs.
+ * Returns [] when repo root is unavailable, keeping callers resilient
+ * in bundled/non-monorepo runtimes.
+ */
+function listMarkdownBasenames(
+  bundle: LoadedBundle,
+  subdir: "workflows" | "recipes",
+): string[] {
+  try {
+    const root = resolveRepoRoot();
+    const absDir = path.join(root, markdownRoot(bundle), subdir);
+    if (!fs.existsSync(absDir) || !fs.statSync(absDir).isDirectory()) {
+      return [];
+    }
+    return fs
+      .readdirSync(absDir)
+      .filter((name) => name.toLowerCase().endsWith(".md"))
+      .map((name) => name.replace(/\.md$/i, ""));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Resolves a user input into a concrete markdown basename.
+ * Strategy:
+ * 1) exact basename match
+ * 2) normalized-token exact match (separator-insensitive)
+ * 3) unique partial-token match
+ */
+function resolveMarkdownSlug(
+  input: string,
+  available: string[],
+): { ok: true; slug: string } | { ok: false; message: string } {
+  if (available.includes(input)) {
+    return { ok: true, slug: input };
+  }
+  const inputToken = normalizeLooseToken(input);
+  if (!inputToken) {
+    return {
+      ok: false,
+      message: "Invalid input after normalization.",
+    };
+  }
+
+  const tokenMatches = available.filter(
+    (entry) => normalizeLooseToken(entry) === inputToken,
+  );
+  if (tokenMatches.length === 1) {
+    return { ok: true, slug: tokenMatches[0] };
+  }
+  if (tokenMatches.length > 1) {
+    return {
+      ok: false,
+      message: `Ambiguous input. Candidates: ${tokenMatches.join(", ")}`,
+    };
+  }
+
+  const partialMatches = available.filter((entry) => {
+    const token = normalizeLooseToken(entry);
+    return token.includes(inputToken) || inputToken.includes(token);
+  });
+  if (partialMatches.length === 1) {
+    return { ok: true, slug: partialMatches[0] };
+  }
+  if (partialMatches.length > 1) {
+    return {
+      ok: false,
+      message: `Ambiguous input. Candidates: ${partialMatches.join(", ")}`,
+    };
+  }
+  return {
+    ok: false,
+    message: "No matching document slug found.",
+  };
 }
 
 /**
@@ -98,9 +185,27 @@ export function getWorkflow(
       bundle,
     );
   }
-  const rel = path.join("workflows", `${s}.md`);
+  const available = listMarkdownBasenames(bundle, "workflows");
+  const resolved = resolveMarkdownSlug(s, available);
+  if (!resolved.ok) {
+    return errResult(
+      "INVALID_INPUT",
+      `Unable to resolve workflow slug "${slug}". ${resolved.message}`,
+      available.length
+        ? `Try one of: ${available.join(", ")}`
+        : "Run in monorepo context so workflow files can be discovered.",
+      bundle,
+    );
+  }
+  const rel = path.join("workflows", `${resolved.slug}.md`);
   const citationPath = path.join(markdownRoot(bundle), rel).replace(/\\/g, "/");
-  return readOrNotFound(bundle, rel, citationPath, started, `workflow:${s}`);
+  return readOrNotFound(
+    bundle,
+    rel,
+    citationPath,
+    started,
+    `workflow:${resolved.slug}`,
+  );
 }
 
 /**
@@ -120,9 +225,27 @@ export function getRecipe(
       bundle,
     );
   }
-  const rel = path.join("recipes", `${s}.md`);
+  const available = listMarkdownBasenames(bundle, "recipes");
+  const resolved = resolveMarkdownSlug(s, available);
+  if (!resolved.ok) {
+    return errResult(
+      "INVALID_INPUT",
+      `Unable to resolve recipe name "${name}". ${resolved.message}`,
+      available.length
+        ? `Try one of: ${available.join(", ")}`
+        : "Run in monorepo context so recipe files can be discovered.",
+      bundle,
+    );
+  }
+  const rel = path.join("recipes", `${resolved.slug}.md`);
   const citationPath = path.join(markdownRoot(bundle), rel).replace(/\\/g, "/");
-  return readOrNotFound(bundle, rel, citationPath, started, `recipe:${s}`);
+  return readOrNotFound(
+    bundle,
+    rel,
+    citationPath,
+    started,
+    `recipe:${resolved.slug}`,
+  );
 }
 
 /**
