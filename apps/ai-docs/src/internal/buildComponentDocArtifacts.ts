@@ -2,9 +2,9 @@
  * Curated component markdown under apps/ai-docs/components/ (frontmatter `id:`) plus generated
  * stubs under generated/docs-md/components/. Writes component-doc-index for facade routing.
  */
+import fg from "fast-glob";
 import fs from "node:fs";
 import path from "node:path";
-import fg from "fast-glob";
 import type { ComponentEntity } from "./entityTypes.js";
 import { AI_DOCS_ROOT, GENERATED_ROOT, relFromRepo } from "./paths.js";
 
@@ -59,15 +59,73 @@ async function discoverCuratedByEntityId(): Promise<Map<string, string>> {
 
 function propsTableMarkdown(entity: ComponentEntity): string {
   if (!entity.props.length) return "_No props extracted._\n";
+  const normalizeCell = (value: unknown): string => {
+    const trimmed = value == null ? "" : String(value).trim();
+    if (!trimmed) return "—";
+    return trimmed.replace(/\|/g, "\\|");
+  };
   const rows = entity.props.map(
     (p) =>
-      `| \`${p.name}\` | ${p.type.replace(/\|/g, "\\|")} | ${p.required ? "yes" : "no"} | ${(p.description ?? "").replace(/\|/g, "\\|")} |`,
+      `| \`${p.name}\` | ${normalizeCell(p.type)} | ${p.required ? "yes" : "no"} | ${normalizeCell(p.defaultValue)} | ${normalizeCell(p.description)} |`,
   );
-  return ["| Prop | Type | Required | Description |", "| --- | --- | --- | --- |", ...rows].join("\n") + "\n";
+  return (
+    [
+      "| Prop | Type | Required | Default | Description |",
+      "| --- | --- | --- | --- | --- |",
+      ...rows,
+    ].join("\n") + "\n"
+  );
+}
+
+/** Builds a deterministic one-line description fallback when no jsDoc is present. */
+function descriptionMarkdown(entity: ComponentEntity): string {
+  const docs = entity.jsDoc?.trim();
+  if (docs) return docs;
+  return `${entity.displayName ?? entity.name} is exported from \`${entity.package}\` and sourced at \`${entity.sourcePath}\`.`;
+}
+
+/** Adds rule-based guidance that stays stable across generation runs. */
+function usageNotesMarkdown(entity: ComponentEntity): string {
+  const optionalCount = entity.props.filter((p) => !p.required).length;
+  if (!entity.props.length) {
+    return "- This component currently exposes no extracted SDK props.\n";
+  }
+  if (optionalCount === entity.props.length) {
+    return "- All extracted props are optional; start from defaults and opt into behavior incrementally.\n";
+  }
+  return "- Provide all required props first, then layer optional behavior-oriented props as needed.\n";
+}
+
+/**
+ * Caveats help LLM users recognize extraction limits instead of misreading blank docs as complete docs.
+ */
+function caveatsMarkdown(entity: ComponentEntity): string | null {
+  const hasMissingDescriptions = entity.props.some(
+    (p) => !p.description?.trim(),
+  );
+  const hasMissingDefaults = entity.props.some(
+    (p) => !String(p.defaultValue ?? "").trim(),
+  );
+  if (!hasMissingDescriptions && !hasMissingDefaults) {
+    return null;
+  }
+  const caveats: string[] = [];
+  if (hasMissingDescriptions) {
+    caveats.push(
+      "- Some prop descriptions were not available from source comments.",
+    );
+  }
+  if (hasMissingDefaults) {
+    caveats.push(
+      "- Some default values could not be inferred statically from source.",
+    );
+  }
+  return caveats.join("\n") + "\n";
 }
 
 function renderGeneratedStub(entity: ComponentEntity): string {
   const pkgs = JSON.stringify([entity.package]);
+  const caveats = caveatsMarkdown(entity);
   return `---
 kind: component-doc
 id: ${entity.id}
@@ -81,16 +139,30 @@ packages: ${pkgs}
 
 > Auto-generated stub from \`components.json\`. Add or override with a curated file under \`apps/ai-docs/components/\` using the same \`id:\` in frontmatter.
 
+## Description
+
+${descriptionMarkdown(entity)}
+
 ## Props
 
 ${propsTableMarkdown(entity)}
+
+## Usage notes
+
+${usageNotesMarkdown(entity)}
+
+## Caveats
+
+${caveats ?? "_No caveats detected from static extraction._\n"}
 `;
 }
 
 /**
  * Writes `docs-md/components/*.md` and returns index payload + relative path for manifest.
  */
-export async function buildComponentDocArtifacts(components: ComponentEntity[]): Promise<{
+export async function buildComponentDocArtifacts(
+  components: ComponentEntity[],
+): Promise<{
   index: ComponentDocIndex;
   indexRelPath: string;
 }> {
@@ -114,7 +186,9 @@ export async function buildComponentDocArtifacts(components: ComponentEntity[]):
     }
 
     const slug = safeEntitySlug(entity.id);
-    const genRel = path.join("docs-md", "components", `${slug}.md`).replace(/\\/g, "/");
+    const genRel = path
+      .join("docs-md", "components", `${slug}.md`)
+      .replace(/\\/g, "/");
     const abs = path.join(GENERATED_ROOT, genRel);
     fs.writeFileSync(abs, renderGeneratedStub(entity), "utf8");
     index[entity.id] = {

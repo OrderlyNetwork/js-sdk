@@ -2,7 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import type { LoadedBundle } from "./bundle.js";
 import { readEntityJson } from "./bundle.js";
-import { resolveEntityByArtifactKind } from "./entityResolve.js";
+import {
+  resolveEntityByArtifactKind,
+  type SymbolIndexEntry,
+} from "./entityResolve.js";
 import { errResult, okResult } from "./envelope.js";
 import type { Citation, DocsResult } from "./types.js";
 
@@ -29,6 +32,70 @@ function entityCitation(
 }
 
 /**
+ * Converts an interceptor target path (e.g. `Trading.OrderEntry.SubmitSection`) into PascalCase candidates.
+ * This gives us stable fallback names to probe props types when component entities are absent.
+ */
+function interceptorTargetCandidates(query: string): {
+  componentName: string;
+  propsTypeCandidates: string[];
+} | null {
+  const trimmed = query.trim();
+  if (!trimmed.includes(".")) return null;
+  const rawParts = trimmed
+    .split(".")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (rawParts.length < 2) return null;
+
+  const parts = rawParts.map((part) =>
+    part
+      .replace(/[^A-Za-z0-9]+/g, " ")
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join(""),
+  );
+  const tailComponent = parts.slice(1).join("");
+  const leafComponent = parts[parts.length - 1] ?? "";
+  const componentName = tailComponent || leafComponent;
+  if (!componentName) return null;
+
+  const propsTypeCandidates = [
+    ...new Set([`${componentName}Props`, `${leafComponent}Props`]),
+  ];
+  return { componentName, propsTypeCandidates };
+}
+
+/**
+ * Resolves a likely props type from an interceptor target when no component entity exists in indexes.
+ */
+function resolveInterceptorPropsFallback(
+  bundle: LoadedBundle,
+  query: string,
+): {
+  typeEntityId: string;
+  typeEntry: SymbolIndexEntry;
+  componentName: string;
+  propsTypeName: string;
+} | null {
+  const candidates = interceptorTargetCandidates(query);
+  if (!candidates) return null;
+
+  for (const typeName of candidates.propsTypeCandidates) {
+    const resolvedType = resolveEntityByArtifactKind(bundle, typeName, "type");
+    if (resolvedType.ok) {
+      return {
+        typeEntityId: resolvedType.entityId,
+        typeEntry: resolvedType.entry,
+        componentName: candidates.componentName,
+        propsTypeName: typeName,
+      };
+    }
+  }
+  return null;
+}
+
+/**
  * Exact structured lookup for a React component record (props metadata, etc.).
  */
 export function getComponent(
@@ -38,6 +105,43 @@ export function getComponent(
 ): DocsResult<Record<string, unknown>> {
   const resolved = resolveEntityByArtifactKind(bundle, query, "component");
   if (!resolved.ok) {
+    if (resolved.code === "NOT_FOUND") {
+      const fallback = resolveInterceptorPropsFallback(bundle, query);
+      if (fallback) {
+        const typeRecord = findInShard(
+          bundle.generatedRoot,
+          fallback.typeEntry.jsonPath,
+          fallback.typeEntityId,
+        );
+        if (typeRecord) {
+          return okResult(
+            bundle,
+            {
+              id: `component.synthetic.${fallback.componentName}`,
+              name: fallback.componentName,
+              displayName: fallback.componentName,
+              artifactKind: "component",
+              resolutionLevel: "interceptor-props-fallback",
+              sourceKind: "type-fallback",
+              propsTypeId: fallback.typeEntityId,
+              propsTypeName: fallback.propsTypeName,
+              propsType: typeRecord,
+            } as Record<string, unknown>,
+            "exact",
+            [
+              entityCitation(
+                {
+                  sourcePath: fallback.typeEntry.sourcePath,
+                  entityId: fallback.typeEntityId,
+                },
+                "interceptor target fallback via type metadata",
+              ),
+            ],
+            started,
+          );
+        }
+      }
+    }
     return errResult(
       resolved.code,
       resolved.message,

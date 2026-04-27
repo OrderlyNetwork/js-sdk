@@ -104,7 +104,7 @@ server.registerTool(
   "orderly_docs_get_component",
   {
     description:
-      "Exact component metadata (props, etc.) by symbol, @package/name:Export, or component.* entity id. Returns DocsResult JSON.",
+      "Exact component metadata (props, etc.) by symbol, @package/name:Export, component.* entity id, or interceptor target path (e.g. Trading.OrderEntry.SubmitSection). For interceptor targets without a concrete component entity, returns a type-backed fallback with propsType metadata. Returns DocsResult JSON.",
     inputSchema: {
       query: z
         .string()

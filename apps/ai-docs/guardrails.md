@@ -23,7 +23,7 @@ Use `Decimal` from `@orderly.network/utils` for prices, sizes, and PnL — not r
 
 ## Doc versioning
 
-Prefer answers backed by `orderly_get_*` tools with citations over guessing API shapes. If `orderly_docs_health` reports stale indexes, regenerate `apps/ai-docs` or align `EXPECTED_GIT_SHA`.
+Prefer answers backed by `orderly_docs_*` tools with citations over guessing API shapes. If `orderly_docs_health` reports stale indexes, regenerate `apps/ai-docs` or align `EXPECTED_GIT_SHA`.
 
 ## Fallback policy
 

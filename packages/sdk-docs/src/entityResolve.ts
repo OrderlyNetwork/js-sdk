@@ -140,7 +140,7 @@ export function resolveEntityByArtifactKind(
     message: `No ${artifactKind} found for "${query}".`,
     hint:
       lastSegment && lastSegment !== query
-        ? `"${query}" looks like an interceptor target path. Try the component name "${lastSegment}" with orderly_docs_get_component.`
+        ? `"${query}" looks like an interceptor target path. Try orderly_docs_get_component with the full path first (supports interceptor fallback), or try "${lastSegment}" and related props types like "${lastSegment}Props".`
         : undefined,
   };
 }

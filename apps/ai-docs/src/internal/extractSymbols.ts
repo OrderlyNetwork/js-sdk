@@ -1,16 +1,30 @@
 import ts from "typescript";
-import type { FunctionEntity, HookEntity, ResolutionLevel, TypeEntity } from "./entityTypes.js";
-import { isPackageSourceFile, type PackageTarget, createPackageProgram } from "./packageProgram.js";
+import type {
+  FunctionEntity,
+  HookEntity,
+  ResolutionLevel,
+  TypeEntity,
+} from "./entityTypes.js";
+import {
+  isPackageSourceFile,
+  type PackageTarget,
+  createPackageProgram,
+} from "./packageProgram.js";
 import { relFromRepo } from "./paths.js";
 
-function resolveAliasedSymbol(checker: ts.TypeChecker, sym: ts.Symbol): ts.Symbol {
+function resolveAliasedSymbol(
+  checker: ts.TypeChecker,
+  sym: ts.Symbol,
+): ts.Symbol {
   if (sym.flags & ts.SymbolFlags.Alias) {
     return checker.getAliasedSymbol(sym);
   }
   return sym;
 }
 
-function jsDocCommentToText(comment: string | undefined | ts.JSDocComment): string {
+function jsDocCommentToText(
+  comment: string | undefined | ts.JSDocComment,
+): string {
   if (comment == null) return "";
   if (typeof comment === "string") return comment;
   if (Array.isArray(comment)) {
@@ -24,10 +38,39 @@ function getJsDoc(checker: ts.TypeChecker, node: ts.Node): string | undefined {
   if (!docs.length) return undefined;
   const text = docs
     .filter(ts.isJSDoc)
-    .map((d) => jsDocCommentToText(d.comment as Parameters<typeof jsDocCommentToText>[0]))
+    .map((d) =>
+      jsDocCommentToText(d.comment as Parameters<typeof jsDocCommentToText>[0]),
+    )
     .filter(Boolean)
     .join("\n");
   return text || undefined;
+}
+
+/** Extracts deprecated marker and message from JSDoc tags in declaration nodes. */
+function getDeprecationInfo(node: ts.Node | undefined): {
+  deprecated: boolean;
+  deprecationMessage?: string;
+} {
+  if (!node) return { deprecated: false };
+  const tags = ts.getJSDocTags(node);
+  const deprecatedTag = tags.find(
+    (tag) => tag.tagName.getText() === "deprecated",
+  );
+  if (!deprecatedTag) return { deprecated: false };
+  const msg = jsDocCommentToText(
+    deprecatedTag.comment as Parameters<typeof jsDocCommentToText>[0],
+  ).trim();
+  return {
+    deprecated: true,
+    deprecationMessage: msg || undefined,
+  };
+}
+
+/** Uses source-path conventions to provide a stable lightweight hook source classification. */
+function inferHookSourceTag(
+  sourcePath: string,
+): HookEntity["sourceTag"] | undefined {
+  return sourcePath.includes("/deprecated/") ? "deprecated" : undefined;
 }
 
 function describeParameters(
@@ -42,7 +85,11 @@ function describeParameters(
       name: param.getName(),
       type: checker.typeToString(checker.getTypeOfSymbolAtLocation(param, loc)),
       optional,
-      description: param.getDocumentationComment(checker).map((p) => p.text).join("\n") || undefined,
+      description:
+        param
+          .getDocumentationComment(checker)
+          .map((p) => p.text)
+          .join("\n") || undefined,
     };
   });
 }
@@ -59,7 +106,10 @@ function describeReturn(checker: ts.TypeChecker, sig: ts.Signature) {
  * True when a type string describes a React render tree (elements / nodes), including unions.
  * Used to avoid indexing real components as `function.*` (they belong in `component.*` from react-docgen).
  */
-function typeLooksLikeReactRenderTree(checker: ts.TypeChecker, t: ts.Type): boolean {
+function typeLooksLikeReactRenderTree(
+  checker: ts.TypeChecker,
+  t: ts.Type,
+): boolean {
   if (t.isUnion()) {
     return t.types.some((u) => typeLooksLikeReactRenderTree(checker, u));
   }
@@ -71,7 +121,12 @@ function typeLooksLikeReactRenderTree(checker: ts.TypeChecker, t: ts.Type): bool
   }
   const s = checker.typeToString(t);
   if (/\bJSX\.Element\b/.test(s)) return true;
-  if (/\bReact\.(ReactElement|ReactNode|ReactChild|ReactFragment|ReactPortal)\b/.test(s)) return true;
+  if (
+    /\bReact\.(ReactElement|ReactNode|ReactChild|ReactFragment|ReactPortal)\b/.test(
+      s,
+    )
+  )
+    return true;
   if (/\bReactElement\b/.test(s)) return true;
   if (/\bReactNode\b/.test(s)) return true;
   if (/\bReactPortal\b/.test(s)) return true;
@@ -94,7 +149,8 @@ function shouldExcludeCallableFromFunctionArtifacts(
 
   // Higher-order / factory returns — document as plain functions (e.g. createDialogComponent).
   if (/\bComponentType\s*</.test(head)) return false;
-  if (/\bFunctionComponent\s*</.test(head) || /\bFC\s*</.test(head)) return false;
+  if (/\bFunctionComponent\s*</.test(head) || /\bFC\s*</.test(head))
+    return false;
   if (/\bForwardRefExoticComponent\s*</.test(head)) return false;
   if (/\bMemoExoticComponent\s*</.test(head)) return false;
   if (/\bLazyExoticComponent\b/.test(head)) return false;
@@ -148,11 +204,16 @@ export function extractSymbolsFromProgram(
         : relFromRepo(sf.fileName);
 
       const symType = checker.getTypeOfSymbol(sym);
-      const callSigs = checker.getSignaturesOfType(symType, ts.SignatureKind.Call);
+      const callSigs = checker.getSignaturesOfType(
+        symType,
+        ts.SignatureKind.Call,
+      );
 
       if (name.startsWith("use") && callSigs.length) {
         const sig = callSigs[0]!;
         const node = sig.getDeclaration();
+        const deprecation = getDeprecationInfo(node);
+        const sourceTag = inferHookSourceTag(sourcePath);
         try {
           hooks.push({
             id: `hook.${name}`,
@@ -166,6 +227,9 @@ export function extractSymbolsFromProgram(
             params: describeParameters(checker, sig),
             returns: describeReturn(checker, sig),
             jsDoc: node ? getJsDoc(checker, node) : undefined,
+            deprecated: deprecation.deprecated || sourceTag === "deprecated",
+            deprecationMessage: deprecation.deprecationMessage,
+            sourceTag,
           });
         } catch {
           hooks.push({
@@ -180,6 +244,9 @@ export function extractSymbolsFromProgram(
             degradedReason: "UNSUPPORTED_TYPE",
             params: [],
             returns: { type: "unknown" },
+            deprecated: deprecation.deprecated || sourceTag === "deprecated",
+            deprecationMessage: deprecation.deprecationMessage,
+            sourceTag,
           });
         }
         continue;
@@ -197,7 +264,9 @@ export function extractSymbolsFromProgram(
           sourcePath,
           package: npmName,
           typeText: declNode
-            ? checker.typeToString(checker.getTypeAtLocation(declNode, declNode))
+            ? checker.typeToString(
+                checker.getTypeAtLocation(declNode, declNode),
+              )
             : undefined,
           jsDoc: declNode ? getJsDoc(checker, declNode) : undefined,
         });
@@ -215,7 +284,9 @@ export function extractSymbolsFromProgram(
           sourcePath,
           package: npmName,
           typeText: declNode
-            ? checker.typeToString(checker.getTypeAtLocation(declNode, declNode))
+            ? checker.typeToString(
+                checker.getTypeAtLocation(declNode, declNode),
+              )
             : undefined,
           jsDoc: declNode ? getJsDoc(checker, declNode) : undefined,
         });
@@ -280,8 +351,19 @@ export function extractSymbolsFromProgram(
   return { hooks, types, functions };
 }
 
-export function extractFromPackage(target: PackageTarget, gitSha: string, generatedAt: string) {
+export function extractFromPackage(
+  target: PackageTarget,
+  gitSha: string,
+  generatedAt: string,
+) {
   const { program, packageAbs } = createPackageProgram(target);
   const checker = program.getTypeChecker();
-  return extractSymbolsFromProgram(program, checker, packageAbs, target.name, gitSha, generatedAt);
+  return extractSymbolsFromProgram(
+    program,
+    checker,
+    packageAbs,
+    target.name,
+    gitSha,
+    generatedAt,
+  );
 }

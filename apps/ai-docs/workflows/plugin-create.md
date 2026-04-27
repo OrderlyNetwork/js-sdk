@@ -17,6 +17,12 @@ summary: Create a new Orderly plugin with recommended skills-first flow and mini
 
 Create a new Orderly plugin from scratch and make it runnable with a minimal integration path.
 
+## Inputs
+
+- Desired plugin type (Page / Widget / Layout).
+- Initial interception target and expected behavior.
+- Workspace destination/package naming constraints.
+
 ## Prerequisites
 
 1. Monorepo/workspace is ready and dependencies are installed.
@@ -52,6 +58,24 @@ Create a new Orderly plugin from scratch and make it runnable with a minimal int
   1. Fallback to nearest supported target to unblock delivery.
   2. If business requires exact anchor, fork SDK and add `injectable` in relevant package component.
   3. Keep a compatibility note so future upstream target support can replace the fork patch.
+
+## Next tool call
+
+- Use `orderly_docs_get_workflow` (`plugin-integration`) to continue from scaffold into host wiring.
+- Use `orderly_docs_search` with plugin/interceptor target keywords when target mapping is ambiguous.
+- Use `orderly_docs_get_guardrails` before shipping if plugin behavior touches signing/trading safety text.
+
+## Outputs
+
+- A buildable plugin package scaffold with a unique plugin ID.
+- One verified interception behavior on a stable target path.
+- A ready-to-integrate register function for host `plugins` wiring.
+
+## Fast path
+
+1. Scaffold a minimal plugin with a unique plugin ID.
+2. Implement one stable target interception and verify behavior.
+3. Continue with `orderly_docs_get_workflow` (`plugin-integration`) for host wiring.
 
 ## Related docs
 
