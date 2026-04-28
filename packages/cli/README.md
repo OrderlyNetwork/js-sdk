@@ -111,6 +111,7 @@ Install the **Orderly SDK Docs** MCP server entry for Claude, Codex, Cursor, Ope
 orderly-devkit mcp install
 orderly-devkit mcp install --client cursor --scope project
 orderly-devkit mcp install --client all --scope user
+orderly-devkit mcp install --sdk-docs-version 0.1.0
 orderly-devkit mcp install --dry-run
 orderly-devkit mcp install --force
 ```

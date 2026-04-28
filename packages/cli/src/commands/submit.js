@@ -8,6 +8,7 @@ const {
   success,
   warn,
   error,
+  getApiErrorInfo,
 } = require("../shared");
 const {
   isLoggedIn,
@@ -39,9 +40,68 @@ const NPM_NAME_REGEX =
 const GITHUB_URL_REGEX = /^https:\/\/github\.com\/[\w-]+\/[\w-]+$/;
 // pluginId: first char letter, then letters, digits, or hyphens
 const PLUGIN_ID_REGEX = /^[a-zA-Z][a-zA-Z0-9-]*$/;
+const UPLOADS_PATH_REGEX = /^\/uploads\/.+$/;
 const MAX_TAGS = 5;
 const MAX_COVER_IMAGES = 10;
 const MAX_USAGE_PROMPT_LENGTH = 8192;
+const SUBMIT_PROGRESS_TOTAL_STEPS = 7;
+
+/**
+ * Print a consistent progress message so users can track submit lifecycle.
+ * @param {number} step
+ * @param {string} message
+ */
+function printProgress(step, message) {
+  info(`[${step}/${SUBMIT_PROGRESS_TOTAL_STEPS}] ${message}`);
+}
+
+/**
+ * Render actionable submit failure hints while preserving server message.
+ * @param {number} status
+ * @param {string | null} errorCode
+ * @param {string} serverMessage
+ */
+function printSubmitFailure(status, errorCode, serverMessage) {
+  const normalizedCode = (errorCode || "").toUpperCase();
+  const normalizedMessage = serverMessage || `HTTP ${status}`;
+
+  // Keep conflict guidance explicit since duplicate plugin IDs are common.
+  if (status === 409 || normalizedCode === "CONFLICT") {
+    error(`Plugin registration conflict: ${normalizedMessage}`);
+    info(
+      "Try a different pluginId in your manifest, then rerun 'orderly submit'.",
+    );
+    return;
+  }
+
+  // Distinguish missing upstream resources from generic failures.
+  if (status === 404 || normalizedCode === "NOT_FOUND") {
+    error(`Resource not found: ${normalizedMessage}`);
+    info(
+      "Please verify npmName/repoUrl/pluginId in your manifest and try again.",
+    );
+    return;
+  }
+
+  // Bad request means user input can be fixed without retrying infrastructure.
+  if (status === 400 || normalizedCode === "BAD_REQUEST") {
+    error(`Invalid submission data: ${normalizedMessage}`);
+    info("Please correct your manifest fields and run submit again.");
+    return;
+  }
+
+  if (status === 401) {
+    error("Unauthorized. Please run 'orderly login' again.");
+    return;
+  }
+
+  if (status >= 500) {
+    error(`Marketplace server error (HTTP ${status}): ${normalizedMessage}`);
+    return;
+  }
+
+  error(`Submission failed (HTTP ${status}): ${normalizedMessage}`);
+}
 
 /**
  * Validate submission payload against backend schema rules.
@@ -73,7 +133,9 @@ function validateSubmission({
     );
   }
 
-  if (pluginId && !PLUGIN_ID_REGEX.test(pluginId)) {
+  if (!pluginId) {
+    errors.push("pluginId is required (set in manifest or pass interactively)");
+  } else if (!PLUGIN_ID_REGEX.test(pluginId)) {
     errors.push(
       `pluginId must start with a letter and contain only letters, digits, or hyphens, got: ${pluginId}`,
     );
@@ -87,6 +149,22 @@ function validateSubmission({
     errors.push(
       `Too many cover images (${coverImages.length}), maximum is ${MAX_COVER_IMAGES}`,
     );
+  }
+  if (coverImages && coverImages.length > 0) {
+    const invalidCoverImage = coverImages.find((image) => {
+      if (typeof image !== "string" || image.length === 0) {
+        return true;
+      }
+
+      // Keep parity with backend schema: each item must be a URL or /uploads/* path.
+      return !URL.canParse(image) && !UPLOADS_PATH_REGEX.test(image);
+    });
+
+    if (invalidCoverImage) {
+      errors.push(
+        `coverImages contains an invalid value: ${invalidCoverImage}. Each value must be an absolute URL or a path that starts with /uploads/`,
+      );
+    }
   }
 
   if (usagePrompt && usagePrompt.length > MAX_USAGE_PROMPT_LENGTH) {
@@ -142,6 +220,7 @@ module.exports = {
   handler: async (argv) => {
     heading("Submit to Orderly Marketplace");
     info("This command will submit your plugin to the marketplace.\n");
+    printProgress(1, "Checking authentication status...");
 
     // Check if user is logged in
     if (!isLoggedIn()) {
@@ -154,11 +233,12 @@ module.exports = {
     info(`Authenticated as: (token starts with ${token.substring(0, 8)}...)\n`);
 
     // Step 1: Path
+    printProgress(2, "Resolving plugin path...");
     const targetPath = argv.path || (await input("Path to plugin:", "./"));
     const resolvedPath = path.resolve(targetPath);
 
     // Step 2: Resolve metadata (.orderly-manifest.json optional; package.json + git is enough)
-    info(`\nReading plugin from ${resolvedPath}...`);
+    printProgress(3, `Reading plugin metadata from ${resolvedPath}...`);
 
     const manifest = resolvePluginManifest(resolvedPath);
     if (!manifest) {
@@ -176,6 +256,11 @@ module.exports = {
         info("Found repo URL from git remote, adding to manifest...");
         manifest.repoUrl = repoUrl;
       }
+    }
+
+    printProgress(4, "Preparing submission fields...");
+    if (!manifest.pluginId) {
+      manifest.pluginId = await input("Plugin ID (required):");
     }
 
     info(`Package: ${manifest.npmName}`);
@@ -206,6 +291,7 @@ module.exports = {
     const coverImages = manifest.coverImages || [];
 
     // Step 5: Validate all fields against backend schema
+    printProgress(5, "Validating submission payload...");
     const submission = validateSubmission({
       npmName: manifest.npmName,
       repoUrl: manifest.repoUrl,
@@ -244,19 +330,20 @@ module.exports = {
     }
 
     // Step 6: Submit to marketplace
-    info("\nSubmitting to Orderly Marketplace...");
+    printProgress(
+      6,
+      `Submitting request to Orderly Marketplace (${MARKETPLACE_API_PLUGINS_URL})...`,
+    );
 
     const payload = {
       npmName: manifest.npmName,
       repoUrl: manifest.repoUrl,
+      pluginId: manifest.pluginId,
       tags,
       coverImages,
     };
 
     // Add optional fields if present
-    if (manifest.pluginId) {
-      payload.pluginId = manifest.pluginId;
-    }
     if (storybookUrl) {
       payload.storybookUrl = storybookUrl;
     }
@@ -268,15 +355,72 @@ module.exports = {
     }
 
     try {
-      const response = await authenticatedFetch(MARKETPLACE_API_PLUGINS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await authenticatedFetch(
+        MARKETPLACE_API_PLUGINS_URL,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+        {
+          // Expose auth refresh lifecycle so users can see why step [6/7] is taking longer.
+          onAuthEvent: (event, details = {}) => {
+            if (event === "request_unauthorized") {
+              info(
+                "[6/7] Access token expired (HTTP 401), attempting token refresh...",
+              );
+              return;
+            }
 
+            if (event === "refresh_started") {
+              info(
+                `[6/7] Refreshing CLI token via ${details.url || "refresh endpoint"}...`,
+              );
+              return;
+            }
+
+            if (event === "refresh_succeeded") {
+              info("[6/7] Token refresh succeeded, retrying submit request...");
+              return;
+            }
+
+            if (event === "refresh_missing") {
+              warn(
+                "[6/7] No refresh token found. Please run 'orderly login' again if submit fails.",
+              );
+              return;
+            }
+
+            if (event === "refresh_failed") {
+              warn(
+                `[6/7] Token refresh failed (HTTP ${details.status || "unknown"}).`,
+              );
+              return;
+            }
+
+            if (event === "refresh_error") {
+              warn(
+                `[6/7] Token refresh request error: ${details.message || "unknown error"}`,
+              );
+              return;
+            }
+
+            if (event === "request_retry_started") {
+              info(
+                "[6/7] Sending retried submit request with refreshed token...",
+              );
+            }
+          },
+        },
+      );
+
+      printProgress(
+        7,
+        `Received server response (HTTP ${response.status}), processing...`,
+      );
       const responseData = await response.json().catch(() => ({}));
 
       if (response.status === 201) {
@@ -285,27 +429,29 @@ module.exports = {
         info(`NPM Name: ${responseData.npmName || manifest.npmName}`);
         info(`Status: ${responseData.status || "under_review"}`);
         maybePrintOrderlyDevEnvironmentHints(resolvedPath);
-      } else if (response.status === 400) {
-        error(
-          `Validation error: ${responseData.message || responseData.error || "Invalid request"}`,
+      } else {
+        const { code: errorCode, message: errorMessage } = getApiErrorInfo(
+          responseData,
+          response.status,
         );
+        printSubmitFailure(response.status, errorCode, errorMessage);
+
         if (responseData.details) {
           info("Details:");
           console.log(JSON.stringify(responseData.details, null, 2));
         }
-      } else if (response.status === 401) {
-        error("Unauthorized. Please run 'orderly login' again.");
-      } else {
-        error(`Submission failed: HTTP ${response.status}`);
-        if (responseData.message) {
-          info(`Server message: ${responseData.message}`);
+
+        if (errorCode) {
+          info(`Error code: ${errorCode}`);
         }
       }
     } catch (e) {
-      error(`Submission failed: ${e.message}`);
-      info(
-        "\nPlease check that the API server is running at http://localhost:3030",
+      // Include endpoint context so publish users can diagnose non-local failures.
+      const cause = e?.message || String(e);
+      error(
+        `Submission failed while calling ${MARKETPLACE_API_PLUGINS_URL}: ${cause}`,
       );
+      info("Please verify network connectivity and API availability.");
     }
   },
 };

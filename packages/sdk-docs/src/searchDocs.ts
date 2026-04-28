@@ -13,10 +13,14 @@ export type SearchDocsInput = {
 
 export type SearchDocsData = {
   narrativeHits: NarrativeHit[];
-  /** Set when the query equals a known id-index key (agent can call getComponent/getType next). */
+  /** Set when the query equals a known id-index key (agent can call getComponent/getType/getHook next). */
   matchedEntityId?: string;
+  /** The artifactKind of the matched entity (component, type, hook, function). */
+  matchedEntityKind?: string;
   /** When the first whitespace-delimited token maps to exactly one keyword-index entry. */
   keywordSingletonId?: string;
+  /** The artifactKind of the keyword singleton entity. */
+  keywordSingletonKind?: string;
   /** Query variants used by retrieval (English-only normalization in current phase). */
   queryVariants?: string[];
   /** Inferred package candidates from user intent. */
@@ -112,16 +116,22 @@ export async function searchDocs(
   };
 
   let matchedEntityId: string | undefined;
+  let matchedEntityKind: string | undefined;
   if (looksLikeEntityId(query) && bundle.idIndex[query]) {
     matchedEntityId = query;
+    const idMeta = bundle.idIndex[query] as { kind?: string } | undefined;
+    matchedEntityKind = idMeta?.kind;
   }
 
   let keywordSingletonId: string | undefined;
+  let keywordSingletonKind: string | undefined;
   const firstTok = query.toLowerCase().split(/\s+/)[0] ?? "";
   if (firstTok.length > 1) {
     const ids = bundle.keywordIndex[firstTok];
     if (ids?.length === 1) {
       keywordSingletonId = ids[0];
+      const idMeta = bundle.idIndex[ids[0]!] as { kind?: string } | undefined;
+      keywordSingletonKind = idMeta?.kind;
     }
   }
 
@@ -139,7 +149,9 @@ export async function searchDocs(
     {
       narrativeHits,
       ...(matchedEntityId !== undefined ? { matchedEntityId } : {}),
+      ...(matchedEntityKind !== undefined ? { matchedEntityKind } : {}),
       ...(keywordSingletonId !== undefined ? { keywordSingletonId } : {}),
+      ...(keywordSingletonKind !== undefined ? { keywordSingletonKind } : {}),
       ...(queryVariants.length > 0 ? { queryVariants } : {}),
       ...(inferredPackages.length > 0 ? { inferredPackages } : {}),
       ...(inferredPackages.length > 0

@@ -35,6 +35,7 @@ export { buildMetaOk, elapsedMs, errResult, okResult } from "./envelope.js";
 export { resolveEntityByArtifactKind } from "./entityResolve.js";
 export {
   getComponent,
+  getHook,
   getPackageSurface,
   getReleaseContext,
   getType,
@@ -58,6 +59,12 @@ export {
   type AiDocsFacade,
   type AiDocsFacadeOptions,
 } from "./facade.js";
+export { createClientAdapterRegistry } from "./install/adapterRegistry.js";
+export {
+  builtinClientAdapters,
+  defaultClientAdapterRegistry,
+} from "./install/clients.js";
+export type { ClientAdapterRegistry } from "./install/types.js";
 export {
   buildGithubBlobUrl,
   buildGithubRawUrl,

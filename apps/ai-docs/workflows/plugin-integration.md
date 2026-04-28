@@ -26,6 +26,12 @@ summary: Integrate an Orderly plugin into a host app (including layout plugin sp
 
 Integrate an Orderly plugin into a host app using a single, predictable process. This workflow applies to both regular plugins and layout plugins.
 
+## Inputs
+
+- Plugin package and exported register function.
+- Host app integration point (provider/app entry).
+- Target interception path and expected UI effect.
+
 ## Prerequisites
 
 1. Host app already mounts Orderly app/provider entry (for example `OrderlyAppProvider`).
@@ -68,6 +74,24 @@ Layout plugin uses the same integration shape (register function + provider `plu
   3. If exact anchor is required, fork SDK packages and add `injectable` at the target component (private fork path).
   4. Keep plugin logic target-agnostic where possible so you can switch to official target once upstream support lands.
   5. Track and document the gap (target name, business reason, impacted plugin behavior) for upstream request.
+
+## Next tool call
+
+- Use `orderly_docs_search` with exact target path (for example `Trading.Layout.Desktop`) to gather narrative hints and related entities.
+- If integration code needs source verification, use `orderly_docs_fetch_sdk_source` with the cited SDK path.
+- Use `orderly_docs_get_release_context` to include `gitSha` / `generatedAt` in escalation notes when reporting target support gaps.
+
+## Outputs
+
+- Plugin is registered in host `plugins` with deterministic ordering.
+- Target injection is visible and behavior is verified in UI.
+- Escalation-ready context exists for unsupported targets (`gitSha`, `generatedAt`, and gap notes).
+
+## Fast path
+
+1. Add plugin dependency and register function to host provider `plugins`.
+2. Verify target injection appears at the expected path.
+3. If target fails, capture context with `orderly_docs_get_release_context` and fallback target notes.
 
 ## Related docs
 

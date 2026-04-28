@@ -1,4 +1,4 @@
-import { clientAdapters } from "./clients.js";
+import { defaultClientAdapterRegistry } from "./clients.js";
 import { backupIfExists, readJsonConfig, writeJsonAtomic } from "./fs-write.js";
 import { printInstallReport } from "./report.js";
 import { buildServerEntry } from "./spec.js";
@@ -11,6 +11,29 @@ import type {
 } from "./types.js";
 
 const ALL_CLIENTS: InstallClient[] = ["claude", "codex", "cursor", "opencode"];
+
+/** Reject characters that break npx/npm package@version parsing or shell wrappers. */
+function assertSafeSdkDocsVersionSpecifier(raw: string): void {
+  if (!raw.trim()) {
+    throw new Error("Empty --sdk-docs-version");
+  }
+  // No whitespace, quotes, or backslashes — keeps npx argv and merged JSON stable.
+  if (/[\s'"\\]/.test(raw)) {
+    throw new Error(
+      `Invalid --sdk-docs-version: "${raw}" (no spaces, quotes, or backslashes)`,
+    );
+  }
+}
+
+const MCP_INSTALL_DEBUG =
+  process.env.ORDERLY_MCP_INSTALL_DEBUG === "1" ||
+  process.env.ORDERLY_MCP_INSTALL_DEBUG === "true";
+
+/** stderr-only when ORDERLY_MCP_INSTALL_DEBUG is set */
+function debugInstallRun(...args: unknown[]): void {
+  if (!MCP_INSTALL_DEBUG) return;
+  console.error("[sdk-docs runInstallCommand:debug]", ...args);
+}
 
 /**
  * Parse install options from argv list (excluding node/script path).
@@ -25,6 +48,7 @@ export function parseInstallArgs(argv: string[]): InstallOptions {
   const clientArg = getValue("--client") ?? "all";
   const scopeArg = (getValue("--scope") ?? "user") as InstallScope;
   const nameArg = getValue("--name") ?? "orderly-sdk-docs";
+  const sdkDocsVerRaw = getValue("--sdk-docs-version");
 
   if (scopeArg !== "user" && scopeArg !== "project") {
     throw new Error(`Invalid --scope: ${scopeArg}`);
@@ -44,12 +68,22 @@ export function parseInstallArgs(argv: string[]): InstallOptions {
     }
   }
 
+  let sdkDocsVersion: string | undefined;
+  if (sdkDocsVerRaw !== undefined) {
+    const trimmed = sdkDocsVerRaw.trim();
+    if (trimmed.length > 0) {
+      assertSafeSdkDocsVersionSpecifier(trimmed);
+      sdkDocsVersion = trimmed;
+    }
+  }
+
   return {
     clients,
     scope: scopeArg,
     dryRun: argv.includes("--dry-run"),
     force: argv.includes("--force"),
     name: nameArg,
+    sdkDocsVersion,
   };
 }
 
@@ -60,16 +94,33 @@ export function runInstallCommand(
   options: InstallOptions,
   cwd = process.cwd(),
 ): InstallReport {
-  const entry = buildServerEntry({ name: options.name });
+  debugInstallRun(
+    "cwd",
+    cwd,
+    "HOME",
+    process.env.HOME,
+    "USERPROFILE",
+    process.env.USERPROFILE,
+  );
+  debugInstallRun("options", options);
+
+  const entry = buildServerEntry({
+    name: options.name,
+    sdkDocsVersion: options.sdkDocsVersion,
+  });
   const results: InstallResult[] = [];
   const errors: string[] = [];
 
   const phasePrefix = options.dryRun ? "[dry-run]" : "[install]";
   for (const client of options.clients) {
-    const adapter = clientAdapters[client];
+    const adapter = defaultClientAdapterRegistry.get(client);
+    if (!adapter) {
+      errors.push(`${client}: no adapter registered for this client`);
+      continue;
+    }
     const configPath = adapter.resolvePath(options.scope, cwd);
 
-    console.log(
+    console.warn(
       `${phasePrefix} merging ${client} (${options.scope} scope) -> ${configPath}`,
     );
 

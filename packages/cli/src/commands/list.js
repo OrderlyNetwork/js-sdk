@@ -26,8 +26,28 @@ function normalizePlugins(data) {
     return data.data;
   }
 
+  if (Array.isArray(data?.plugins)) {
+    return data.plugins;
+  }
+
   if (Array.isArray(data?.items)) {
     return data.items;
+  }
+
+  if (Array.isArray(data?.results)) {
+    return data.results;
+  }
+
+  if (Array.isArray(data?.data?.items)) {
+    return data.data.items;
+  }
+
+  if (Array.isArray(data?.data?.plugins)) {
+    return data.data.plugins;
+  }
+
+  if (Array.isArray(data?.data?.results)) {
+    return data.data.results;
   }
 
   return [];
@@ -147,12 +167,16 @@ module.exports = {
       const plugins = normalizePlugins(responseData);
 
       if (argv.json) {
-        console.log(JSON.stringify(plugins, null, 2));
+        // Print real server payload for troubleshooting response shape mismatches.
+        console.log(JSON.stringify(responseData, null, 2));
         return;
       }
 
       if (plugins.length === 0) {
         info("You have not submitted any plugins yet.");
+        info(
+          "If Marketplace Web shows records, run `orderly whoami` to confirm account consistency and `orderly list --json` to inspect the raw API response.",
+        );
         return;
       }
 
@@ -160,10 +184,12 @@ module.exports = {
       console.log(renderTable(rows));
       success(`\nTotal: ${plugins.length} plugin(s)`);
     } catch (e) {
-      error(`Request failed: ${e.message}`);
-      info(
-        "Please check that the API server is running at http://localhost:3030",
+      // Surface target endpoint to make network/runtime failures actionable.
+      const cause = e?.message || String(e);
+      error(
+        `Request failed while calling ${MARKETPLACE_API_MY_PLUGINS_URL}: ${cause}`,
       );
+      info("Please verify network connectivity and API availability.");
       process.exitCode = 1;
     }
   },

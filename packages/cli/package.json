@@ -4,10 +4,18 @@
   "description": "CLI toolkit for scaffolding and building DEXs, plugins, and modules with Orderly",
   "main": "",
   "bin": {
-    "orderly-devkit": "bin/cli.js"
+    "orderly-devkit": "./bin/cli.js"
   },
+  "files": [
+    "bin",
+    "src"
+  ],
   "scripts": {
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "link-global": "pnpm link --global"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   },
   "license": "MIT",
   "dependencies": {

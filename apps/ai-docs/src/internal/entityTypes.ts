@@ -21,6 +21,12 @@ export type HookEntity = Provenance & {
   id: string;
   name: string;
   signatureText?: string;
+  /** Explicit deprecation signal for MCP consumers. */
+  deprecated?: boolean;
+  /** Optional deprecation guidance extracted from source tags/comments. */
+  deprecationMessage?: string;
+  /** Source classification derived from source path (e.g. deprecated). */
+  sourceTag?: "deprecated";
   params: Array<{
     name: string;
     type: string;

@@ -37,10 +37,58 @@ function countResolution(entities: { resolutionLevel?: string }[]) {
   let full = 0;
   let degraded = 0;
   for (const e of entities) {
-    if (e.resolutionLevel === "syntax-only" || e.resolutionLevel === "partial") degraded++;
+    if (e.resolutionLevel === "syntax-only" || e.resolutionLevel === "partial")
+      degraded++;
     else full++;
   }
   return { full, degraded };
+}
+
+/**
+ * Emits quality coverage stats so CI/validators can evaluate docs health without reparsing markdown.
+ */
+function buildQualityStats(
+  hooks: import("./internal/entityTypes.js").HookEntity[],
+  components: import("./internal/entityTypes.js").ComponentEntity[],
+) {
+  const hookWithJsDoc = hooks.filter((h) => h.jsDoc?.trim()).length;
+  const deprecatedTaggedHooks = hooks.filter((h) => h.deprecated).length;
+  const explicitlyDeprecatedHooks = hooks.filter(
+    (h) => h.sourceTag === "deprecated" || h.deprecationMessage?.trim(),
+  ).length;
+
+  const componentsWithDescription = components.filter((c) =>
+    c.jsDoc?.trim(),
+  ).length;
+  const totalProps = components.reduce((acc, c) => acc + c.props.length, 0);
+  const propsWithDescription = components.reduce(
+    (acc, c) => acc + c.props.filter((p) => p.description?.trim()).length,
+    0,
+  );
+
+  return {
+    components: {
+      total: components.length,
+      withDescription: componentsWithDescription,
+      descriptionCoverage: components.length
+        ? componentsWithDescription / components.length
+        : 1,
+      totalProps,
+      propsWithDescription,
+      propDescriptionCoverage: totalProps
+        ? propsWithDescription / totalProps
+        : 1,
+    },
+    hooks: {
+      total: hooks.length,
+      withJsDoc: hookWithJsDoc,
+      jsDocCoverage: hooks.length ? hookWithJsDoc / hooks.length : 1,
+      deprecatedTagged: deprecatedTaggedHooks,
+      deprecatedSignalCoverage: explicitlyDeprecatedHooks
+        ? deprecatedTaggedHooks / explicitlyDeprecatedHooks
+        : 1,
+    },
+  };
 }
 
 async function main() {
@@ -62,7 +110,9 @@ async function main() {
     /** Extra TSX files outside auto UI discovery (`packages/ui`, `packages/ui-*`) */
     componentSamples?: ComponentSample[];
   }>(path.join(AI_DOCS_ROOT, "allowlist.json"));
-  const policy = readJsonFile<{ apiVersion: string }>(path.join(AI_DOCS_ROOT, "build-policy.json"));
+  const policy = readJsonFile<{ apiVersion: string }>(
+    path.join(AI_DOCS_ROOT, "build-policy.json"),
+  );
 
   const exclude = new Set(allowlist.excludePackages ?? []);
   const discovered =
@@ -71,7 +121,10 @@ async function main() {
       : [];
   const packages = mergePackageTargets(discovered, allowlist.packages ?? []);
   const uiSamples = discoverUiComponentSamples(REPO_ROOT);
-  const componentSamples = mergeComponentSamples(uiSamples, allowlist.componentSamples ?? []);
+  const componentSamples = mergeComponentSamples(
+    uiSamples,
+    allowlist.componentSamples ?? [],
+  );
 
   const allHooks: import("./internal/entityTypes.js").HookEntity[] = [];
   const allTypes: import("./internal/entityTypes.js").TypeEntity[] = [];
@@ -81,7 +134,11 @@ async function main() {
   for (const pkg of packages) {
     process.stderr.write(`extract ${pkg.name}...\n`);
     try {
-      const { hooks, types, functions } = extractFromPackage(pkg, gitSha, generatedAt);
+      const { hooks, types, functions } = extractFromPackage(
+        pkg,
+        gitSha,
+        generatedAt,
+      );
       allHooks.push(...hooks);
       allTypes.push(...types);
       allFns.push(...functions);
@@ -95,7 +152,12 @@ async function main() {
   process.stderr.write(
     `components: ${componentSamples.length} UI package(s), ${componentSamples.reduce((n, s) => n + s.files.length, 0)} tsx file(s)\n`,
   );
-  const components = extractComponentSamples(componentSamples, gitSha, generatedAt, REPO_ROOT);
+  const components = extractComponentSamples(
+    componentSamples,
+    gitSha,
+    generatedAt,
+    REPO_ROOT,
+  );
 
   /** Repo-root–independent paths (relative to `apps/ai-docs/generated/`) for manifest + symbol index. */
   const hooksPath = "json/hooks.json";
@@ -139,6 +201,7 @@ async function main() {
 
   const flatEntities = [...allHooks, ...allTypes, ...allFns, ...components];
   const { full, degraded } = countResolution(flatEntities);
+  const qualityStats = buildQualityStats(allHooks, components);
 
   const manifest = {
     schemaVersion: "1",
@@ -169,6 +232,7 @@ async function main() {
       fullyResolved: full,
       degradedCount: degraded,
     },
+    qualityStats,
   };
 
   writeJsonUnderGenerated("manifest.json", manifest);

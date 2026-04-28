@@ -9,6 +9,8 @@ export type InstallOptions = {
   dryRun: boolean;
   force: boolean;
   name: string;
+  /** npm version / dist-tag for @orderly.network/sdk-docs (npx and merged MCP args). */
+  sdkDocsVersion?: string;
 };
 
 export type InstallClientTarget = {
@@ -32,6 +34,8 @@ export type InstallReport = {
 
 export type BuildEntryOptions = {
   name: string;
+  /** When set, MCP entry uses `@orderly.network/sdk-docs@<version>` for reproducible installs. */
+  sdkDocsVersion?: string;
 };
 
 export type ClientAdapter = {
@@ -43,4 +47,13 @@ export type ClientAdapter = {
     entry: McpServerConfigEntry,
     force: boolean,
   ): { merged: Record<string, unknown>; action: "updated" | "noop" };
+};
+
+export type ClientAdapterRegistry = {
+  /** Returns a registered adapter by client id, or undefined when missing. */
+  get(client: InstallClient): ClientAdapter | undefined;
+  /** Registers or replaces an adapter by its client id. */
+  register(adapter: ClientAdapter): void;
+  /** Returns all currently registered adapters in insertion order. */
+  list(): ClientAdapter[];
 };

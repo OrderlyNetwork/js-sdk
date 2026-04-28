@@ -135,7 +135,7 @@ module.exports = {
       if (displayName) {
         info(`Logged in as: ${displayName}`);
       }
-      info("Use 'orderly whoami' to verify your account.");
+      info("Use 'orderly-devkit whoami' to verify your account.");
     } catch (err) {
       if (!timedOut) {
         error(`Login failed: ${err.message}`);

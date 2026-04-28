@@ -87,10 +87,10 @@ module.exports = {
       // Always print full payload to avoid losing fields in formatted output.
       console.log(JSON.stringify(responseData ?? {}, null, 2));
     } catch (e) {
-      error(`Request failed: ${e.message}`);
-      info(
-        "Please check that the API server is running at http://localhost:3030",
-      );
+      // Show the exact request target so operators can debug network/env issues quickly.
+      const cause = e?.message || String(e);
+      error(`Request failed while calling ${url}: ${cause}`);
+      info("Please verify network connectivity and API availability.");
       process.exitCode = 1;
     }
   },

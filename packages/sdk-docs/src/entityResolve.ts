@@ -23,15 +23,28 @@ function findSymbolEntryByEntityId(
   return undefined;
 }
 
+function toolForKind(kind: string): string {
+  if (kind === "hook") return "orderly_docs_get_hook";
+  if (kind === "component") return "orderly_docs_get_component";
+  if (kind === "type") return "orderly_docs_get_type";
+  return `orderly_docs_get_type (kind: ${kind})`;
+}
+
 /**
  * Resolves a user query to a single component or type using id-index, then symbol-index (direct and `@pkg:Name` aliases).
  *
  * Contract: unqualified names that map to a non-target artifact (e.g. `Avatar` → function) return `INVALID_INPUT` with a hint to use `@scope/pkg:Avatar` or the `component.*` / `type.*` id.
  */
+const SHARD_PATHS: Record<string, string> = {
+  component: "json/components.json",
+  type: "json/types.json",
+  hook: "json/hooks.json",
+};
+
 export function resolveEntityByArtifactKind(
   bundle: LoadedBundle,
   raw: string,
-  artifactKind: "component" | "type",
+  artifactKind: "component" | "type" | "hook",
 ):
   | { ok: true; entityId: string; entry: SymbolIndexEntry }
   | {
@@ -49,7 +62,7 @@ export function resolveEntityByArtifactKind(
     };
   }
 
-  const wantKind = artifactKind === "component" ? "component" : "type";
+  const wantKind = artifactKind;
   const idMeta = bundle.idIndex[query] as IdIndexMeta | undefined;
   if (idMeta?.kind === wantKind) {
     let entry = findSymbolEntryByEntityId(bundle, query);
@@ -57,10 +70,7 @@ export function resolveEntityByArtifactKind(
       const synthetic: SymbolIndexEntry = {
         entityId: query,
         artifactKind,
-        jsonPath:
-          artifactKind === "component"
-            ? "json/components.json"
-            : "json/types.json",
+        jsonPath: SHARD_PATHS[artifactKind] ?? `json/${artifactKind}s.json`,
         sourcePath: idMeta.path ?? "",
         package: idMeta.package ?? "",
       };
@@ -80,7 +90,7 @@ export function resolveEntityByArtifactKind(
       ok: false,
       code: "INVALID_INPUT",
       message: `Entity id "${query}" is a ${idMeta.kind}, not a ${artifactKind}.`,
-      hint: `Use the API matching that kind (e.g. type vs component).`,
+      hint: `Use the matching tool: ${toolForKind(idMeta.kind)}.`,
     };
   }
 
@@ -93,10 +103,7 @@ export function resolveEntityByArtifactKind(
       ok: false,
       code: "INVALID_INPUT",
       message: `"${query}" resolves to ${direct.artifactKind} "${direct.entityId}", not ${artifactKind}.`,
-      hint:
-        artifactKind === "component"
-          ? "Use `@package/name:ExportName` for the component export, or a full `component.*` entity id from the id-index."
-          : "Use `@package/name:TypeName` or a full `type.*` entity id.",
+      hint: `Use ${toolForKind(direct.artifactKind)} instead.`,
     };
   }
 
@@ -125,9 +132,15 @@ export function resolveEntityByArtifactKind(
     };
   }
 
+  const lastSegment = query.includes(".") ? query.split(".").pop() : undefined;
+
   return {
     ok: false,
     code: "NOT_FOUND",
     message: `No ${artifactKind} found for "${query}".`,
+    hint:
+      lastSegment && lastSegment !== query
+        ? `"${query}" looks like an interceptor target path. Try orderly_docs_get_component with the full path first (supports interceptor fallback), or try "${lastSegment}" and related props types like "${lastSegment}Props".`
+        : undefined,
   };
 }

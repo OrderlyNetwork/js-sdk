@@ -99,6 +99,27 @@ function getErrorMessage(responseData, status) {
   return `HTTP ${status}`;
 }
 
+/**
+ * Extract a stable error code/message pair from backend payloads.
+ * Supports legacy `{ message }` and structured `{ error: { code, message } }`.
+ *
+ * @param {unknown} responseData
+ * @param {number} status
+ * @returns {{ code: string | null, message: string }}
+ */
+function getApiErrorInfo(responseData, status) {
+  const codeCandidate = responseData?.error?.code;
+  const normalizedCode =
+    typeof codeCandidate === "string" && codeCandidate.trim()
+      ? codeCandidate.trim()
+      : null;
+
+  return {
+    code: normalizedCode,
+    message: getErrorMessage(responseData, status),
+  };
+}
+
 module.exports = {
   log,
   info,
@@ -111,4 +132,5 @@ module.exports = {
   select,
   confirm,
   getErrorMessage,
+  getApiErrorInfo,
 };

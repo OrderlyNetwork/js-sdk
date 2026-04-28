@@ -230,10 +230,10 @@ module.exports = {
       info(`Plugin ID: ${responseData?.id || pluginId}`);
       info(`Status: ${responseData?.status || "N/A"}`);
     } catch (requestError) {
-      error(`Request failed: ${requestError.message}`);
-      info(
-        "Please check that the API server is running at http://localhost:3030",
-      );
+      // Include request target so operators can triage connectivity issues.
+      const cause = requestError?.message || String(requestError);
+      error(`Request failed while calling ${apiUrl}: ${cause}`);
+      info("Please verify network connectivity and API availability.");
       process.exitCode = 1;
     }
   },

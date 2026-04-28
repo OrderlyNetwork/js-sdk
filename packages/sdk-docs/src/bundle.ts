@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { z } from "zod";
 import { resolveAiDocsRepoRoot } from "./paths.js";
 
 /** Used to locate packaged `bundled/` when `loadBundle()` is called without an explicit repo root. */
@@ -36,6 +37,59 @@ export type Manifest = {
     degradedCount: number;
   };
 };
+
+const ManifestSchema = z
+  .object({
+    schemaVersion: z.string(),
+    gitSha: z.string(),
+    generatedAt: z.string(),
+    releaseVersion: z.string().nullable(),
+    artifactKinds: z.array(z.string()),
+    roots: z.object({
+      markdownRoot: z.string(),
+      generatedRoot: z.string(),
+    }),
+    indexPaths: z.object({
+      idIndex: z.string(),
+      symbolIndex: z.string(),
+      packageIndex: z.string(),
+      keywordIndex: z.string(),
+      componentDocIndex: z.string().optional(),
+      chunkIndex: z.string().optional(),
+    }),
+    qmd: z.record(z.string(), z.unknown()).optional(),
+    analysisStats: z.object({
+      totalSymbols: z.number(),
+      fullyResolved: z.number(),
+      degradedCount: z.number(),
+    }),
+  })
+  .passthrough();
+
+/** Runtime currently supports major schema version 1 generated artifacts. */
+const SUPPORTED_MANIFEST_SCHEMA_MAJOR = 1;
+
+/** Parses semantic or integer schema versions and returns major number when possible. */
+function parseManifestSchemaMajor(schemaVersion: string): number | null {
+  if (/^\d+$/.test(schemaVersion)) return Number(schemaVersion);
+  const semverMatch = /^(\d+)\./.exec(schemaVersion);
+  return semverMatch ? Number(semverMatch[1]) : null;
+}
+
+/** Enforces that generated artifact schema stays compatible with this runtime. */
+function assertManifestCompatibility(manifest: Manifest): void {
+  const major = parseManifestSchemaMajor(manifest.schemaVersion);
+  if (major === null) {
+    throw new Error(
+      `Unsupported manifest schemaVersion "${manifest.schemaVersion}" — expected major ${SUPPORTED_MANIFEST_SCHEMA_MAJOR}`,
+    );
+  }
+  if (major !== SUPPORTED_MANIFEST_SCHEMA_MAJOR) {
+    throw new Error(
+      `Incompatible manifest schema major ${major}; runtime supports ${SUPPORTED_MANIFEST_SCHEMA_MAJOR}. Regenerate artifacts with the matching ai-docs version.`,
+    );
+  }
+}
 
 export type LoadedBundle = {
   repoRoot: string;
@@ -115,9 +169,10 @@ export function loadBundle(repoRoot?: string): LoadedBundle {
     );
   }
 
-  const manifest = JSON.parse(
-    fs.readFileSync(manifestPath, "utf8"),
+  const manifest = ManifestSchema.parse(
+    JSON.parse(fs.readFileSync(manifestPath, "utf8")),
   ) as Manifest;
+  assertManifestCompatibility(manifest);
   const readIdx = (rel: string) =>
     JSON.parse(
       fs.readFileSync(
