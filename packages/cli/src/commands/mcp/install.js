@@ -3,8 +3,8 @@ const chalk = require("chalk");
 
 /**
  * Forward MCP install to sdk-docs so install ownership stays centralized.
- * Uses the package default bin (single-bin layout). If multiple bins are
- * added later, switch to an explicit command or `npm exec --package=... -- <cmd>`.
+ * Uses an explicit bin invocation to avoid npx argument parsing ambiguity
+ * across npm versions and caches.
  */
 function forwardToSdkDocs(argv) {
   console.log(
@@ -16,7 +16,12 @@ function forwardToSdkDocs(argv) {
   );
 
   const command = "npx";
-  const args = ["-y", "@orderly.network/sdk-docs", "install"];
+  const args = [
+    "-y",
+    "@orderly.network/sdk-docs",
+    "orderly-sdk-docs-mcp",
+    "install",
+  ];
 
   if (argv.client) args.push("--client", String(argv.client));
   if (argv.scope) args.push("--scope", String(argv.scope));
