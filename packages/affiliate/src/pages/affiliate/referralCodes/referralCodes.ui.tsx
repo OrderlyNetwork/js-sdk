@@ -1,5 +1,4 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
@@ -12,6 +11,7 @@ import {
   cn,
   Column,
   CopyIcon,
+  useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { EditCode } from "../../../components/editCodeBtn";
@@ -20,7 +20,7 @@ import { EditIcon } from "../../../icons/editIcon";
 import { ReferralCodesReturns, ReferralCodeType } from "./referralCodes.script";
 
 export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
-  const isTablet = useMediaQuery("(max-width: 767px)");
+  const { isMobile } = useScreen();
   return (
     <Flex
       r={"2xl"}
@@ -34,7 +34,7 @@ export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
 
       <div className="oui-flex oui-w-full oui-flex-col 2xl:oui-h-full">
         <Divider />
-        {isTablet ? <MobileLayout {...props} /> : <DesktopLayout {...props} />}
+        {isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />}
       </div>
     </Flex>
   );

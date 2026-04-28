@@ -1,13 +1,13 @@
 import { PropsWithoutRef, useEffect, useMemo, useState } from "react";
-import { selectVariants } from "./selectPrimitive";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cnBase, VariantProps } from "tailwind-variants";
-import { ChainIcon } from "../icon";
-import { Flex } from "../flex";
-import { tv } from "../utils/tv";
 import { Box } from "../box";
-import { Text } from "../typography";
+import { Flex } from "../flex";
+import { ChainIcon } from "../icon";
 import { Tabs, TabPanel } from "../tabs";
+import { Text } from "../typography";
+import { tv } from "../utils/tv";
+import { selectVariants } from "./selectPrimitive";
 
 const chainSelectVariants = tv({
   extend: selectVariants,
@@ -104,7 +104,7 @@ const RecommandChain = (props: {
         className={cnBase(
           "oui-border oui-border-line-12 oui-rounded-md hover:oui-border-primary-light",
           // props.selected && "oui-border-primary-light",
-          props.className
+          props.className,
         )}
       >
         <Flex justify="between">
@@ -147,7 +147,7 @@ const ChainSelect = (props: ChainSelectProps) => {
   });
 
   const [currentChain, setCurrentChain] = useState<number | undefined>(
-    props.value
+    props.value,
   );
 
   const [selectedTab, setSelectedTab] = useState(ChainSelectorType.Mainnet);
@@ -173,10 +173,10 @@ const ChainSelect = (props: ChainSelectProps) => {
   useEffect(() => {
     if (currentChain) {
       const isMainnet = props.chains.mainnet?.some(
-        (chain) => chain.id === currentChain
+        (chain) => chain.id === currentChain,
       );
       const isTestnet = props.chains.testnet?.some(
-        (chain) => chain.id === currentChain
+        (chain) => chain.id === currentChain,
       );
       if (isMainnet) {
         onTabChange(ChainSelectorType.Mainnet);
@@ -234,7 +234,7 @@ const ChainSelect = (props: ChainSelectProps) => {
             className: cnBase(
               "oui-bg-base-8 oui-w-[456px] oui-rounded-xl",
               "oui-border oui-border-line-6",
-              "oui-font-semibold"
+              "oui-font-semibold",
             ),
           })}
           sideOffset={4}
@@ -271,8 +271,8 @@ const ChainSelect = (props: ChainSelectProps) => {
 
                 <div
                   className={cnBase(
-                    "oui-grid oui-grid-cols-1 lg:oui-grid-cols-3",
-                    "oui-mt-3 oui-gap-1"
+                    "oui-grid oui-grid-cols-1 xl:oui-grid-cols-3",
+                    "oui-mt-3 oui-gap-1",
                   )}
                 >
                   {props.chains.mainnet?.map((chain) => {
@@ -293,8 +293,8 @@ const ChainSelect = (props: ChainSelectProps) => {
               >
                 <div
                   className={cnBase(
-                    "oui-grid oui-grid-cols-1 lg:oui-grid-cols-2",
-                    "oui-mt-3 oui-gap-1"
+                    "oui-grid oui-grid-cols-1 xl:oui-grid-cols-2",
+                    "oui-mt-3 oui-gap-1",
                   )}
                 >
                   {props.chains.testnet?.map((chain) => {

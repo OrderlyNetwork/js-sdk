@@ -1,7 +1,5 @@
 import React, { forwardRef } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
-import { Box, cn, Divider, Flex } from "@orderly.network/ui";
+import { Box, cn, Divider, Flex, useScreen } from "@orderly.network/ui";
 import { IndicatorsIcon, SettingIcon } from "../icons";
 import type { TradingviewUIPropsInterface } from "../type";
 import { NoTradingview } from "./noTradingview";
@@ -205,7 +203,7 @@ export const TradingviewUI = forwardRef<
     onFullScreenChange,
   } = props;
 
-  const isMobile = useMediaQuery(MEDIA_TABLET);
+  const { isMobile } = useScreen();
 
   return (
     <div

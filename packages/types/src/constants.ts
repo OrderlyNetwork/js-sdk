@@ -58,7 +58,8 @@ export const ARBITRUM_MAINNET_CHAINID = 42161;
 export const ETHEREUM_MAINNET_CHAINID = 1;
 export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
 
-export const MEDIA_TABLET = "(max-width: 768px)";
+/** @deprecated use useScreen hook instead */
+export const MEDIA_TABLET = "(max-width: 1023.98px)";
 
 /** deposit buffer factor */
 export const DEPOSIT_FEE_RATE = 1.05;

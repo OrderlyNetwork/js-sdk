@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { DateRange } from "../../../utils/types";
 import { format, subDays } from "date-fns";
 import {
   RefferalAPI,
-  useMediaQuery,
   useRefereeInfo,
   useReferralRebateSummary,
 } from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+import { PaginationMeta, usePagination, useScreen } from "@orderly.network/ui";
+import { DateRange } from "../../../utils/types";
 
 export type ListReturns<T> = {
   data: T;
@@ -41,10 +40,10 @@ const useCommissionDataScript = (): ListReturns<
     {
       from: subDays(new Date(), 90),
       to: subDays(new Date(), 1),
-    }
+    },
   );
 
-  const isLG = useMediaQuery("(max-width: 767px)");
+  const { isMobile } = useScreen();
 
   const { page, pageSize, setPage, parsePagination } = usePagination();
 
@@ -59,7 +58,7 @@ const useCommissionDataScript = (): ListReturns<
           ? format(commissionRange.to, "yyyy-MM-dd")
           : undefined,
       size: pageSize,
-      page: !isLG ? page : undefined,
+      page: !isMobile ? page : undefined,
     });
 
   useEffect(() => {
@@ -72,7 +71,7 @@ const useCommissionDataScript = (): ListReturns<
 
   const pagination = useMemo(
     () => parsePagination(meta),
-    [parsePagination, meta]
+    [parsePagination, meta],
   );
 
   useEffect(() => {
@@ -96,10 +95,10 @@ const useRefereesDataScript = (): ListReturns<
     {
       from: subDays(new Date(), 90),
       to: subDays(new Date(), 1),
-    }
+    },
   );
 
-  const isLG = useMediaQuery("(max-width: 767px)");
+  const { isMobile } = useScreen();
 
   const { page, pageSize, setPage, parsePagination } = usePagination();
 
@@ -114,7 +113,7 @@ const useRefereesDataScript = (): ListReturns<
           ? format(commissionRange.to, "yyyy-MM-dd")
           : undefined,
       size: pageSize,
-      page: !isLG ? page : undefined,
+      page: !isMobile ? page : undefined,
       sort: "descending_code_binding_time",
     });
 
@@ -128,7 +127,7 @@ const useRefereesDataScript = (): ListReturns<
 
   const pagination = useMemo(
     () => parsePagination(meta),
-    [parsePagination, meta]
+    [parsePagination, meta],
   );
 
   useEffect(() => {

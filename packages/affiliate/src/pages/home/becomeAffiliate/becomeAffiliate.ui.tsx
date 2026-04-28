@@ -51,13 +51,13 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       width={"100%"}
     >
       <Text>{t("affiliate.process.title")}</Text>
-      <Flex className="oui-flex oui-flex-col oui-gap-3 lg:oui-w-full lg:oui-flex-row lg:oui-items-stretch">
+      <Flex className="oui-flex oui-flex-col oui-gap-3 xl:oui-w-full xl:oui-flex-row xl:oui-items-stretch">
         <Item
           icon={<ApplyIcon />}
           title={applyText.title}
           content={applyText.desc}
         />
-        <div className="oui-shrink lg:oui-flex lg:-oui-rotate-90 lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
+        <div className="oui-shrink xl:oui-flex xl:-oui-rotate-90 xl:oui-flex-row xl:oui-items-center xl:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
@@ -65,7 +65,7 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
           title={t("affiliate.process.step2.title")}
           content={t("affiliate.process.step2.description")}
         />
-        <div className="oui-shrink lg:oui-flex lg:-oui-rotate-90 lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
+        <div className="oui-shrink xl:oui-flex xl:-oui-rotate-90 xl:oui-flex-row xl:oui-items-center xl:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
@@ -87,7 +87,7 @@ const Item: FC<{
     <Flex
       className={cn(
         "oui-flex oui-flex-row oui-gap-3",
-        "lg:oui-flex-1 lg:oui-flex-col lg:oui-gap-[6px]",
+        "xl:oui-flex-1 xl:oui-flex-col xl:oui-gap-[6px]",
       )}
       width={"100%"}
     >
@@ -96,13 +96,13 @@ const Item: FC<{
         className={cn(
           "oui-flex oui-flex-col oui-items-start oui-h-full oui-justify-between",
           // lg
-          "lg:oui-items-center lg:oui-justify-start",
+          "xl:oui-items-center xl:oui-justify-start",
         )}
       >
-        <Text className="oui-text-sm md:oui-text-base 2xl:oui-text-lg lg:oui-text-center">
+        <Text className="oui-text-sm md:oui-text-base 2xl:oui-text-lg xl:oui-text-center">
           {props.title}
         </Text>
-        <Text className="oui-text-2xs oui-text-base-contrast-36  lg:oui-text-center">
+        <Text className="oui-text-2xs oui-text-base-contrast-36  xl:oui-text-center">
           {props.content}
         </Text>
       </Flex>
@@ -118,7 +118,7 @@ const ApplyIcon = () => {
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="lg:oui-w-[64px] lg:oui-h-[64px] 2xl:oui-w-[80px] 2xl:oui-h-[80px]"
+      className="xl:oui-w-[64px] xl:oui-h-[64px] 2xl:oui-w-[80px] 2xl:oui-h-[80px]"
     >
       <path
         fillRule="evenodd"
@@ -167,7 +167,7 @@ const ShareIcon = () => {
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="lg:oui-w-[64px] lg:oui-h-[64px] 2xl:oui-w-[80px] 2xl:oui-h-[80px]"
+      className="xl:oui-w-[64px] xl:oui-h-[64px] 2xl:oui-w-[80px] 2xl:oui-h-[80px]"
     >
       <path
         d="M24 33a9 9 0 1 1-18 0 9 9 0 0 1 18 0"
@@ -199,7 +199,7 @@ const EarnIcon = () => {
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="lg:oui-w-[64px] lg:oui-h-[64px] 2xl:oui-w-[80px] 2xl:oui-h-[80px]"
+      className="xl:oui-w-[64px] xl:oui-h-[64px] 2xl:oui-w-[80px] 2xl:oui-h-[80px]"
     >
       <path
         fillRule="evenodd"
