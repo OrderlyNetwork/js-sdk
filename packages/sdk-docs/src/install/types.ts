@@ -9,6 +9,8 @@ export type InstallOptions = {
   dryRun: boolean;
   force: boolean;
   name: string;
+  /** npm version / dist-tag for @orderly.network/sdk-docs (npx and merged MCP args). */
+  sdkDocsVersion?: string;
 };
 
 export type InstallClientTarget = {
@@ -32,6 +34,8 @@ export type InstallReport = {
 
 export type BuildEntryOptions = {
   name: string;
+  /** When set, MCP entry uses `@orderly.network/sdk-docs@<version>` for reproducible installs. */
+  sdkDocsVersion?: string;
 };
 
 export type ClientAdapter = {

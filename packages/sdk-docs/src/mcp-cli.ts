@@ -47,15 +47,26 @@ const server = new McpServer({
 
 registerDocsTools(server, { guardFacade });
 
+const MCP_INSTALL_DEBUG =
+  process.env.ORDERLY_MCP_INSTALL_DEBUG === "1" ||
+  process.env.ORDERLY_MCP_INSTALL_DEBUG === "true";
+
+/** stderr-only diagnostics when ORDERLY_MCP_INSTALL_DEBUG is set */
+function debugInstall(...args: unknown[]): void {
+  if (!MCP_INSTALL_DEBUG) return;
+  console.error("[orderly-sdk-docs-mcp install:debug]", ...args);
+}
+
 /**
- * Some launchers pass the bin name as the first argv token before `install`.
- * Strip that single known prefix so we never fall through to MCP stdio mode.
+ * Resolve argv after `node …/mcp-cli.js …` so the install subcommand is argv[0].
+ * npx/npm often passes the shim path as the first token (e.g. `.bin/orderly-sdk-docs-mcp`),
+ * so checking only argv[0] === "install" misses install and we fall through to MCP stdio —
+ * the child never exits and orderly-devkit appears hung after spawning npx.
  */
-function normalizeInstallArgv(argv: string[]): string[] {
-  if (argv[0] === "orderly-sdk-docs-mcp" && argv[1] === "install") {
-    return argv.slice(1);
-  }
-  return argv;
+function argvStartingAtInstall(argv: string[]): string[] | null {
+  const idx = argv.indexOf("install");
+  if (idx === -1) return null;
+  return argv.slice(idx);
 }
 
 /**
@@ -63,9 +74,20 @@ function normalizeInstallArgv(argv: string[]): string[] {
  * `orderly-sdk-docs-mcp install ...`
  */
 async function maybeRunInstallCommand(): Promise<boolean> {
-  const argv = normalizeInstallArgv(process.argv.slice(2));
-  if (argv[0] !== "install") return false;
-  console.log("Starting MCP config installation...");
+  const sliced = process.argv.slice(2);
+  debugInstall("process.argv.slice(2)", sliced);
+
+  const argv = argvStartingAtInstall(sliced);
+  debugInstall("argvStartingAtInstall", argv);
+
+  if (!argv || argv[0] !== "install") {
+    debugInstall(
+      "not entering install branch (expected literal subcommand install)",
+    );
+    return false;
+  }
+
+  console.warn("Starting MCP config installation...");
   const options = parseInstallArgs(argv.slice(1));
   const report = runInstallCommand(options);
   if (!report.ok) {
