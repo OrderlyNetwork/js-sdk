@@ -2,3 +2,26 @@ include:
   - project: "orderlynetwork/orderly-fe/common-ci"
     ref: main
     file: "momorepo-release.yaml"
+  - project: "orderly-security/orderly-security-templates"
+    ref: main
+    file: "npm-security-baseline.yml"
+
+stages:
+  - scan
+  - check_tag
+  - build_docker
+  - deploy
+  - post-build-audit
+  - release
+
+variables:
+  APP_IMAGE_TAG: "orderly-network-registry.ap-northeast-1.cr.aliyuncs.com/orderly-network/storybook:${$CI_COMMIT_TAG}"
+  ENABLE_PUBLISH: "false"
+
+workflow:
+  rules:
+    # - if: '($CI_COMMIT_BRANCH =~ /^internal\// || $CI_COMMIT_BRANCH =~ /^pre-release/) && $CI_COMMIT_MESSAGE =~ /publish/'
+    - if: $CI_COMMIT_BRANCH == "cicd-erik"
+      variables:
+        ENABLE_PUBLISH: "true"
+    - when: always
