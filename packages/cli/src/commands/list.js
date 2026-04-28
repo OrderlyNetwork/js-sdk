@@ -11,10 +11,7 @@ const {
   getToken,
   authenticatedFetch,
 } = require("../internal/auth");
-const {
-  MARKETPLACE_API_BASE_URL,
-  MARKETPLACE_API_MY_PLUGINS_URL,
-} = require("../internal/constants");
+const { MARKETPLACE_API_MY_PLUGINS_URL } = require("../internal/constants");
 
 /**
  * Convert unknown plugin payload into a list shape safely.
@@ -192,9 +189,7 @@ module.exports = {
       error(
         `Request failed while calling ${MARKETPLACE_API_MY_PLUGINS_URL}: ${cause}`,
       );
-      info(
-        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
-      );
+      info("Please verify network connectivity and API availability.");
       process.exitCode = 1;
     }
   },

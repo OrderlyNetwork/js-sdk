@@ -14,7 +14,6 @@ const {
   authenticatedFetch,
 } = require("../internal/auth");
 const {
-  MARKETPLACE_API_BASE_URL,
   MARKETPLACE_API_MY_PLUGINS_URL,
   getMarketplaceApiPluginUrl,
 } = require("../internal/constants");
@@ -212,17 +211,13 @@ module.exports = {
       if (code) {
         info(`Error code: ${code}`);
       }
-      info(
-        `Please verify plugin ownership and API availability. Current API base: ${MARKETPLACE_API_BASE_URL}`,
-      );
+      info("Please verify plugin ownership and API availability.");
       process.exitCode = 1;
     } catch (e) {
       // Include endpoint context to help diagnose request/runtime failures.
       const cause = e?.message || String(e);
       error(`Request failed while calling marketplace APIs: ${cause}`);
-      info(
-        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
-      );
+      info("Please verify network connectivity and API availability.");
       process.exitCode = 1;
     }
   },

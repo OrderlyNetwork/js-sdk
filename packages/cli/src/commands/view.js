@@ -90,9 +90,7 @@ module.exports = {
       // Show the exact request target so operators can debug network/env issues quickly.
       const cause = e?.message || String(e);
       error(`Request failed while calling ${url}: ${cause}`);
-      info(
-        `Please verify network connectivity and API availability. You can override the API base URL with ORDERLY_API_URL (current: ${MARKETPLACE_API_BASE_URL}).`,
-      );
+      info("Please verify network connectivity and API availability.");
       process.exitCode = 1;
     }
   },
