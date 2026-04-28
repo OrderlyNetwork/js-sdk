@@ -1,5 +1,17 @@
 # @orderly.network/ui
 
+## 3.0.0-alpha.0
+
+### Major Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/plugin-core@3.0.0-alpha.0
+  - @orderly.network/utils@3.0.0-alpha.0
+
 ## 2.12.4
 
 ### Patch Changes

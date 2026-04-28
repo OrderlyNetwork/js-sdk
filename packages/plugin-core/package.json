@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/plugin-core",
-  "version": "2.12.3",
+  "version": "3.0.0-alpha.0",
   "description": "Orderly SDK plugin system - interceptors, registry, scope",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
