@@ -1,5 +1,18 @@
 # storybook-theme-tool
 
+## 3.0.0
+
+### Major Changes
+
+- publish
+- ec7a02a: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [ec7a02a]
+  - @orderly.network/ui@3.0.0
+
 ## 3.0.0-alpha.0
 
 ### Major Changes

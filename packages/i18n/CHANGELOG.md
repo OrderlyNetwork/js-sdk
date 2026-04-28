@@ -1,5 +1,12 @@
 # @orderly.network/i18n
 
+## 3.0.0
+
+### Major Changes
+
+- publish
+- ec7a02a: publish
+
 ## 3.0.0-alpha.0
 
 ### Major Changes
