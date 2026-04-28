@@ -13,6 +13,15 @@
       ],
       "@orderly.network/hooks": [
         "../hooks/src"
+      ],
+      "@orderly.network/markets": [
+        "../markets/src"
+      ],
+      "@orderly.network/trading-next": [
+        "../trading-next/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
       ]
     }
   }

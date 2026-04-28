@@ -4,6 +4,12 @@
     "paths": {
       "@orderly.network/layout-core": [
         "../layout-core/src"
+      ],
+      "@orderly.network/trading-next": [
+        "../trading-next/src"
+      ],
+      "@orderly.network/ui": [
+        "../ui/src"
       ]
     }
   }
