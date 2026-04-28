@@ -2,7 +2,7 @@ include:
   - project: "orderlynetwork/orderly-fe/common-ci"
     ref: main
     file: "momorepo-release.yaml"
-  - project: "orderly-security/orderly-security-templates"
+  - project: "orderlynetwork/orderly-security/orderly-security-templates"
     ref: main
     file: "npm-security-baseline.yml"
 
