@@ -26,3 +26,16 @@ workflow:
       variables:
         ENABLE_PUBLISH: "true"
     - when: always
+
+generate-sbom:
+  stage: scan
+  image:
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0"
+    entrypoint: [""]
+  script:
+    - syft . -o cyclonedx-json=bom.json
+  artifacts:
+    paths: [bom.json]
+  tags:
+    - dev
+    - build
