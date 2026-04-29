@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 3.0.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 3.0.0
 
 ### Major Changes

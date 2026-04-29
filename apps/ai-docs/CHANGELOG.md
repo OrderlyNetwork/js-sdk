@@ -1,5 +1,11 @@
 # @orderly.network/ai-docs
 
+## 1.0.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.0.0
 
 ### Major Changes

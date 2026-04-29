@@ -7,7 +7,8 @@ declare global {
 }
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/ui-notification"] = "3.0.0";
+  window.__ORDERLY_VERSION__["@orderly.network/ui-notification"] =
+    "3.0.1-alpha.0";
 }
 
-export default "3.0.0";
+export default "3.0.1-alpha.0";

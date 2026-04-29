@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ai-docs",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "private": true,
   "type": "module",
   "description": "Orderly AI documentation artifact generator (manifest, JSON shards, indexes, component MD, QMD index)",

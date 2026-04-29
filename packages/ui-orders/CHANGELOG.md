@@ -1,5 +1,21 @@
 # @orderly.network/ui-orders
 
+## 3.0.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@3.0.1-alpha.0
+  - @orderly.network/hooks@3.0.1-alpha.0
+  - @orderly.network/i18n@3.0.1-alpha.0
+  - @orderly.network/types@3.0.1-alpha.0
+  - @orderly.network/ui@3.0.1-alpha.0
+  - @orderly.network/ui-connector@3.0.1-alpha.0
+  - @orderly.network/ui-share@3.0.1-alpha.0
+  - @orderly.network/ui-tpsl@3.0.1-alpha.0
+  - @orderly.network/utils@3.0.1-alpha.0
+
 ## 3.0.0
 
 ### Major Changes
