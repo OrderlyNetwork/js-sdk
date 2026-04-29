@@ -34,9 +34,9 @@ generate-sbom:
     entrypoint: [""]
   script:
     # - syft . -o cyclonedx-json=bom.json
-    - sleep 1h
-  artifacts:
-    paths: [bom.json]
+    - echo "Hello World"
+  # artifacts:
+  #   paths: [bom.json]
   tags:
     - dev
     - build
