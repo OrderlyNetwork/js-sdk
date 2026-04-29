@@ -35,10 +35,10 @@ generate-sbom:
     name: anchore/syft:v1.43.0-debug
     entrypoint: [""]
   script:
-    # - syft . -o cyclonedx-json=bom.json
-    - echo "Hello World"
-  # artifacts:
-  #   paths: [bom.json]
+    - syft . -o cyclonedx-json=bom.json
+    # - echo "Hello World"
+  artifacts:
+    paths: [bom.json]
   tags:
     - dev
     - build
