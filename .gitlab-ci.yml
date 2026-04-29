@@ -33,7 +33,8 @@ generate-sbom:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
     entrypoint: [""]
   script:
-    - syft . -o cyclonedx-json=bom.json
+    # - syft . -o cyclonedx-json=bom.json
+    - sleep 1h
   artifacts:
     paths: [bom.json]
   tags:
