@@ -39,15 +39,28 @@ generate-sbom:
     entrypoint: [""]
 
   script:
-    - /syft/syft $CI_PROJECT_DIR -o cyclonedx-json=syft.cdx.json
+    - /syft/syft $CI_PROJECT_DIR -o cyclonedx-json=bom.json
     # - "scan dir:${CI_PROJECT_DIR} -o cyclonedx-json=bom.json"
     # - echo "Hello World"
   artifacts:
     paths:
-      - syft.cdx.json
+      - bom.json
     reports:
       cyclonedx:
-        - syft.cdx.json
+        - bom.json
+  tags:
+    - dev
+    - build
+  
+osv-audit:
+  stage: scan
+  image: 
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/google/osv-scanner:v2.3.5
+    entrypoint: [""]
+  needs: 
+    - generate-sbom
+  script:
+    - scan --sbom bom.json
   tags:
     - dev
     - build
