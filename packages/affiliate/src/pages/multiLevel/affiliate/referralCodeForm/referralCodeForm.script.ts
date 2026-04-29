@@ -84,7 +84,7 @@ export const useReferralCodeFormScript = (
   const onEdit = async () => {
     const editReferralCodeParams = {
       current_referral_code: referralCode!,
-      new_referral_code: newCode!,
+      new_referral_code: newCode!.toUpperCase().replace(/[^A-Z0-9]/g, ""),
     };
 
     const updateRebateRateParams = {
