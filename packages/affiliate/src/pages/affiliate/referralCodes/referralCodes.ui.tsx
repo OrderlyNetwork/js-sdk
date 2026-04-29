@@ -219,7 +219,7 @@ const MobileCell: FC<{
 const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   const { t } = useTranslation();
 
-  const moreColumn = useMediaQuery("(min-width: 1024px)");
+  const { isDesktop: moreColumn } = useScreen();
 
   const columns = useMemo(() => {
     const cols: Column[] = [
