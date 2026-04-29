@@ -26,20 +26,21 @@ stages:
 #       variables:
 #         ENABLE_PUBLISH: "true"
 #     - when: always
-     
+
 generate-sbom:
   stage: scan
   image:
-    # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0-debug
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
+    # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0-debug
     # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/curl:jq
     # name: anchore/syft:v1.43.0-debug
     # entrypoint: [""]
   script:
-    - syft . -o cyclonedx-json=bom.json
+    - "scan dir:${CI_PROJECT_DIR} -o cyclonedx-json=bom.json"
     # - echo "Hello World"
   artifacts:
-    paths: [bom.json]
+    paths: 
+      - bom.json
   tags:
     - dev
     - build
