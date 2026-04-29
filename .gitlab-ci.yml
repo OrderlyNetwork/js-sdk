@@ -33,7 +33,7 @@ generate-sbom:
     # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
     # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/curl:jq
     name: anchore/syft:v1.43.0-debug
-    entrypoint: [""]
+    # entrypoint: [""]
   script:
     - syft . -o cyclonedx-json=bom.json
     # - echo "Hello World"
