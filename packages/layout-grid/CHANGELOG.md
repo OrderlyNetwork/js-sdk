@@ -1,5 +1,17 @@
 # @orderly.network/layout-grid
 
+## 2.0.1
+
+### Patch Changes
+
+- 9a8c364: publish
+- publish
+- Updated dependencies [9a8c364]
+- Updated dependencies
+  - @orderly.network/layout-core@2.0.1
+  - @orderly.network/trading-next@3.0.1
+  - @orderly.network/ui@3.0.1
+
 ## 2.0.1-alpha.0
 
 ### Patch Changes

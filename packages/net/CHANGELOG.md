@@ -1,5 +1,12 @@
 # @orderly.network/net
 
+## 3.0.1
+
+### Patch Changes
+
+- 9a8c364: publish
+- publish
+
 ## 3.0.1-alpha.0
 
 ### Patch Changes
