@@ -30,7 +30,8 @@ stages:
 generate-sbom:
   stage: scan
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
+    # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/curl:jq
     entrypoint: [""]
   script:
     # - syft . -o cyclonedx-json=bom.json
