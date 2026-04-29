@@ -108,7 +108,7 @@ const DOCS_TOOLS: ToolDefinition[] = [
   {
     name: "orderly_docs_get_hook",
     description:
-      "Exact hook metadata (params, returns, jsDoc) by symbol name, @package/name:HookName, or hook.* entity id. Hooks (useMarkPrice, useOrderEntry, etc.) are the primary API for plugin developers. Returns DocsResult JSON.",
+      "Exact hook metadata (params, returns, jsDoc) by symbol name, @package/name:HookName, or hook.* entity id. Hooks (`useMarkPrice`, `useOrderEntry`, etc.) are the primary API for plugin developers. Hook `returns` types may be unions that are not valid React children until narrowed (e.g. `typeof x === 'number'` before rendering in JSX). Returns DocsResult JSON.",
     inputSchema: {
       query: z
         .string()
@@ -170,7 +170,7 @@ const DOCS_TOOLS: ToolDefinition[] = [
   {
     name: "orderly_docs_fetch_sdk_source",
     description:
-      "Fetch source file text from the public Orderly JS SDK GitHub repo (OrderlyNetwork/js-sdk). Default ref is manifest.gitSha (404 if that commit is not on GitHub — set ORDERLY_SDK_GITHUB_REF e.g. main). Repo-relative paths only (e.g. packages/ui/src/button/button.tsx). Optional line/endLine returns excerpt; data.text is always full file.",
+      "Fetch source file text from the public Orderly JS SDK GitHub repo (OrderlyNetwork/js-sdk). Default ref is branch `main` unless `ORDERLY_SDK_GITHUB_REF` is set. If that ref returns HTTP 404 (e.g. unpublished local SHA), the tool retries once on `main`. Repo-relative paths only (e.g. packages/ui/src/button/button.tsx). Optional line/endLine returns excerpt; data.text is always full file.",
     inputSchema: {
       relPath: z
         .string()

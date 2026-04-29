@@ -1,9 +1,4 @@
-const { heading, info, warn, error, getErrorMessage } = require("../shared");
-const {
-  isLoggedIn,
-  getToken,
-  authenticatedFetch,
-} = require("../internal/auth");
+const { heading, info, error, getErrorMessage } = require("../shared");
 const { MARKETPLACE_API_BASE_URL } = require("../internal/constants");
 
 module.exports = {
@@ -42,29 +37,13 @@ module.exports = {
       return;
     }
 
-    if (!isLoggedIn()) {
-      warn("You are not logged in.");
-      info("Please run 'orderly login' first to authenticate.");
-      process.exitCode = 1;
-      return;
-    }
-
-    const token = getToken();
-    if (!token) {
-      error("Authentication token not found.");
-      info("Please run 'orderly login' again.");
-      process.exitCode = 1;
-      return;
-    }
-
     const url = `${MARKETPLACE_API_BASE_URL}/plugins/${encodeURIComponent(pluginId)}`;
 
     try {
       // Use explicit Accept header for consistent JSON responses across API gateways.
       const headers = new Headers({ Accept: "application/json" });
-      headers.set("Authorization", `Bearer ${token}`);
 
-      const response = await authenticatedFetch(url, {
+      const response = await fetch(url, {
         method: "GET",
         headers,
       });

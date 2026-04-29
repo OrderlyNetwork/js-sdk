@@ -6,15 +6,22 @@ import type {
 } from "./types";
 
 /**
- * Helper to create a typed interceptor. When UI packages augment InterceptorTargetPropsMap,
- * props in the component callback are inferred from the target path.
- * @param target - Interceptor path (e.g. 'Deposit.DepositForm')
- * @param component - (Original, props, api) => ReactNode; props typed from target
- * @returns PluginInterceptor suitable for use in OrderlyPlugin.interceptors
+ * String-target overload: use when `@orderly.network/plugin-core` is the only dependency and
+ * `InterceptorTargetPropsMap` is empty (ambient augmentation from UI packages not loaded).
+ * Avoids DTS failures where keyof an empty map is `never`.
  */
+export function createInterceptor(
+  target: string,
+  component: PluginInterceptorComponent<Record<string, unknown>>,
+): PluginInterceptor<Record<string, unknown>>;
+/** Typed overload when workspace packages augment `InterceptorTargetPropsMap`. */
 export function createInterceptor<T extends KnownInterceptorTarget>(
   target: T,
   component: PluginInterceptorComponent<InterceptorTargetPropsMap[T]>,
-): PluginInterceptor<InterceptorTargetPropsMap[T]> {
-  return { target: target as string, component };
+): PluginInterceptor<InterceptorTargetPropsMap[T]>;
+export function createInterceptor(
+  target: string,
+  component: PluginInterceptorComponent<Record<string, unknown>>,
+): PluginInterceptor<Record<string, unknown>> {
+  return { target, component };
 }

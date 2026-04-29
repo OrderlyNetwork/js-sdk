@@ -53,10 +53,10 @@ function githubRepo(): string {
 }
 
 /**
- * Resolves ref: env override, else main branch.
- * Always defaults to "main" so GitHub raw URLs work without requiring a pushed commit.
+ * Prefers `ORDERLY_SDK_GITHUB_REF`; otherwise `main` so public raw URLs work without a
+ * published monorepo-local commit. (Manifest `gitSha` is not used here intentionally.)
  */
-function resolveRef(_bundle: LoadedBundle): string {
+function resolvePreferredRef(): string {
   const fromEnv = process.env.ORDERLY_SDK_GITHUB_REF?.trim();
   if (fromEnv) return fromEnv;
   return DEFAULT_BRANCH;
@@ -170,7 +170,7 @@ function computeExcerptRange(
 }
 
 /**
- * Fetches a source file from the public Orderly JS SDK GitHub repo at the manifest SHA (or env overrides).
+ * Fetches a source file from the public Orderly JS SDK GitHub repo (default ref: branch `main`).
  */
 export async function fetchSdkSource(
   bundle: LoadedBundle,
@@ -207,17 +207,13 @@ export async function fetchSdkSource(
 
   const owner = githubOwner();
   const repo = githubRepo();
-  const ref = resolveRef(bundle);
-  if (!ref) {
-    return errResult(
-      "INVALID_INPUT",
-      "No git ref: manifest.gitSha is empty and ORDERLY_SDK_GITHUB_REF is unset.",
-      undefined,
-      bundle,
-    );
-  }
+  let ref = resolvePreferredRef();
 
-  const rawUrl = buildGithubRawUrl(owner, repo, ref, relPath);
+  /**
+   * If `ORDERLY_SDK_GITHUB_REF` points at a SHA not on GitHub, retry once on `main`
+   * so local-only commits don't produce permanent 404s.
+   */
+  const tryRefs = ref === DEFAULT_BRANCH ? [ref] : [ref, DEFAULT_BRANCH];
 
   const wantsExcerpt = input.line !== undefined || input.endLine !== undefined;
   let fragment: { startLine: number; endLine: number } | undefined;
@@ -270,29 +266,37 @@ export async function fetchSdkSource(
     (headers as Record<string, string>).Authorization = `Bearer ${token}`;
   }
 
-  let res: Response;
-  try {
-    res = await fetch(rawUrl, { redirect: "follow", headers });
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    return errResult(
-      "BACKEND_UNAVAILABLE",
-      `Failed to reach GitHub: ${msg}`,
-      "Check network, proxy, or try again.",
-      bundle,
-    );
+  let res!: Response;
+  let rawUrl = "";
+  for (let i = 0; i < tryRefs.length; i++) {
+    const attemptRef = tryRefs[i]!;
+    ref = attemptRef;
+    rawUrl = buildGithubRawUrl(owner, repo, attemptRef, relPath);
+    try {
+      res = await fetch(rawUrl, { redirect: "follow", headers });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      return errResult(
+        "BACKEND_UNAVAILABLE",
+        `Failed to reach GitHub: ${msg}`,
+        "Check network, proxy, or try again.",
+        bundle,
+      );
+    }
+    if (res.status !== 404 || i === tryRefs.length - 1) break;
   }
 
   if (res.status === 404) {
-    const refFromManifest = !process.env.ORDERLY_SDK_GITHUB_REF?.trim();
+    const preferred = resolvePreferredRef();
     return errResult(
       "NOT_FOUND",
-      `GitHub raw content not found (HTTP 404) for ref "${ref}" and path "${relPath}".`,
+      `GitHub raw content not found (HTTP 404) for path "${relPath}".`,
       [
         `URL: ${rawUrl}`,
-        refFromManifest
-          ? `The manifest ref "${ref}" may be a local-only commit. Try setting ORDERLY_SDK_GITHUB_REF=main or re-run generate after pushing to origin.`
-          : "Check that ref exists on GitHub and the path is correct for that revision.",
+        `Tried ref(s): ${tryRefs.join(", ")}.`,
+        preferred !== DEFAULT_BRANCH
+          ? `If "${preferred}" is a local-only commit, set ORDERLY_SDK_GITHUB_REF=main or omit it.`
+          : "Confirm the file path exists on the public js-sdk repo at this ref.",
       ].join(" "),
       bundle,
     );
@@ -383,7 +387,7 @@ export async function fetchSdkSource(
     [
       {
         path: relPath,
-        why: "github raw + manifest ref",
+        why: "github raw + resolved ref",
         startLine: fragment?.startLine,
         endLine: fragment?.endLine,
       },
