@@ -30,17 +30,24 @@ stages:
 generate-sbom:
   stage: scan
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
+    # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0
     # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/anchore/syft:v1.43.0-debug
     # name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/curl:jq
     # name: anchore/syft:v1.43.0-debug
     # entrypoint: [""]
+    name: registry.gitlab.com/gitlab-ci-utils/container-images/syft:latest
+    entrypoint: [""]
+
   script:
-    - "scan dir:${CI_PROJECT_DIR} -o cyclonedx-json=bom.json"
+    - /syft/syft $CI_PROJECT_DIR -o cyclonedx-json=syft.cdx.json
+    # - "scan dir:${CI_PROJECT_DIR} -o cyclonedx-json=bom.json"
     # - echo "Hello World"
   artifacts:
-    paths: 
-      - bom.json
+    paths:
+      - syft.cdx.json
+    reports:
+      cyclonedx:
+        - syft.cdx.json
   tags:
     - dev
     - build
