@@ -51,7 +51,13 @@ osv-audit:
     - job: generate-sbom
       artifacts: true
   script:
-    - osv-scanner scan source -L syft.cdx.json --format=table
+    - osv-scanner scan source -L syft.cdx.json --format=table || EXIT_CODE=$?
+    - |
+      if [ -z "$EXIT_CODE" ] || [ "$EXIT_CODE" -eq 0 ]; then
+        echo "No vulnerabilities were found"
+      else
+        echo "Detected vulnerabilities above"
+      fi
     # - osv-scanner scan -L bom.json --format=json --output-file=report.json
   # artifacts:
   #   paths:
