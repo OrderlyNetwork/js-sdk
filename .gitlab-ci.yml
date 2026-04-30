@@ -51,7 +51,7 @@ osv-audit:
     - job: generate-sbom
       artifacts: true
   script:
-    - osv-scanner scan -L syft.cdx.json --format=json
+    - osv-scanner scan source -L syft.cdx.json --format=table
     # - osv-scanner scan -L bom.json --format=json --output-file=report.json
   # artifacts:
   #   paths:
