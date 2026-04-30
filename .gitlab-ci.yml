@@ -37,7 +37,7 @@ generate-sbom:
     paths:
       - bom.json
     reports:
-      sast: 
+      cyclonedx: 
         - bom.json
   tags:
     - dev
@@ -51,13 +51,13 @@ osv-audit:
     - job: generate-sbom
       artifacts: true
   script:
-    - osv-scanner scan -L bom.json --format=table --output-file=report.txt
+    - osv-scanner scan -L bom.json --format=json --output-file=report.json
   artifacts:
     paths:
-      - report.txt
+      - json.txt
     reports:
       sast:
-        - report.txt
+        - json.txt
   tags:
     - dev
     - build
