@@ -54,10 +54,10 @@ osv-audit:
     - osv-scanner scan -L bom.json --format=json --output-file=report.json
   artifacts:
     paths:
-      - json.txt
+      - report.json
     reports:
       sast:
-        - json.txt
+        - report.json
   tags:
     - dev
     - build
