@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/devkit",
-  "version": "1.0.2-alpha.0",
+  "version": "1.0.2",
   "description": "CLI toolkit for scaffolding and building DEXs, plugins, and modules with Orderly",
   "main": "",
   "bin": {

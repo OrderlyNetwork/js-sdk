@@ -1,5 +1,23 @@
 # @orderly.network/hooks
 
+## 3.0.2
+
+### Patch Changes
+
+- publish
+- bcee3d0: publish
+- Updated dependencies
+- Updated dependencies [bcee3d0]
+  - @orderly.network/core@3.0.2
+  - @orderly.network/default-evm-adapter@3.0.2
+  - @orderly.network/default-solana-adapter@3.0.2
+  - @orderly.network/net@3.0.2
+  - @orderly.network/perp@5.0.2
+  - @orderly.network/plugin-core@3.0.2
+  - @orderly.network/types@3.0.2
+  - @orderly.network/utils@3.0.2
+  - @orderly.network/web3-provider-ethers@3.0.2
+
 ## 3.0.2-alpha.0
 
 ### Patch Changes

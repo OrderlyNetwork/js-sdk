@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/sdk-docs",
-  "version": "1.0.2-alpha.0",
+  "version": "1.0.2",
   "type": "module",
   "description": "Orderly SDK documentation runtime: MCP server, exact indexes, and narrative (QMD) retrieval",
   "license": "MIT",

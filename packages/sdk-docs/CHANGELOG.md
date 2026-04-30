@@ -1,5 +1,12 @@
 # @orderly.network/sdk-docs
 
+## 1.0.2
+
+### Patch Changes
+
+- publish
+- bcee3d0: publish
+
 ## 1.0.2-alpha.0
 
 ### Patch Changes

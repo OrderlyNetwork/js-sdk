@@ -1,5 +1,12 @@
 # @orderly.network/layout-core
 
+## 2.0.2
+
+### Patch Changes
+
+- publish
+- bcee3d0: publish
+
 ## 2.0.2-alpha.0
 
 ### Patch Changes

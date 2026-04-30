@@ -1,5 +1,21 @@
 # @orderly.network/layout-split
 
+## 2.0.2
+
+### Patch Changes
+
+- publish
+- bcee3d0: publish
+- Updated dependencies
+- Updated dependencies [bcee3d0]
+  - @orderly.network/hooks@3.0.2
+  - @orderly.network/i18n@3.0.2
+  - @orderly.network/layout-core@2.0.2
+  - @orderly.network/markets@3.0.2
+  - @orderly.network/trading-next@3.0.2
+  - @orderly.network/types@3.0.2
+  - @orderly.network/ui@3.0.2
+
 ## 2.0.2-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # storybook-theme-tool
 
+## 3.0.2
+
+### Patch Changes
+
+- publish
+- bcee3d0: publish
+- Updated dependencies
+- Updated dependencies [bcee3d0]
+  - @orderly.network/ui@3.0.2
+
 ## 3.0.2-alpha.0
 
 ### Patch Changes
