@@ -1,13 +1,14 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Popover } from "../popover/popover";
-import { Calendar, CalendarProps } from "./date/calendar";
-import { selectVariants } from "../select/selectPrimitive";
+import { DateRange, DayPickerRangeProps } from "react-day-picker";
+import { format } from "date-fns";
+import type { SizeType } from "../helpers/sizeType";
 import { CalendarIcon } from "../icon/calendar";
 import { CaretDownIcon } from "../icon/caretDown";
-import type { SizeType } from "../helpers/sizeType";
-import { format } from "date-fns";
-import { DateRange, DayPickerRangeProps } from "react-day-picker";
 import { useLocale } from "../locale";
+import { Popover } from "../popover/popover";
+import { selectVariants } from "../select/selectPrimitive";
+import { Calendar, CalendarProps } from "./date/calendar";
+
 export type DateRangePickerProps = {
   onChange?: (date: DateRange) => void;
   // selected: Date;
@@ -37,13 +38,13 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
   const [locale] = useLocale("picker");
   const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | null>(
-    value || initialValue || null
+    value || initialValue || null,
   );
 
   const [isMobileView, setIsMobileView] = useState<boolean>(false);
 
   const update = useDebouncedCallback((width: number) => {
-    setIsMobileView(width <= 768);
+    setIsMobileView(width < 1024);
   }, 100);
 
   // Effect hook to listen to window resize events
@@ -52,7 +53,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
       update(window.innerWidth);
     };
 
-    setIsMobileView(window.innerWidth <= 768);
+    setIsMobileView(window.innerWidth < 1024);
     window.addEventListener("resize", handleResize);
 
     // Cleanup event listener on component unmount
@@ -169,14 +170,14 @@ function useDebouncedCallback(callback: any, delay: number) {
         callback(args);
       }, delay);
     },
-    [callback, delay]
+    [callback, delay],
   );
   return debouncedCallback;
 }
 
 function areDatesEqual(
   date1: { from: Date; to: Date },
-  date2: { from: Date; to: Date }
+  date2: { from: Date; to: Date },
 ): boolean {
   const extractDateParts = (date: Date) => ({
     year: date.getFullYear(),

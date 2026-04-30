@@ -65,8 +65,8 @@ export type OrderEntrySubmitSectionProps = {
   };
 };
 
-export const OrderEntryTypeTabsInjectabled = injectable<OrderEntryTypeTabsProps>(
-  (props: OrderEntryTypeTabsProps) => {
+export const OrderEntryTypeTabsInjectabled =
+  injectable<OrderEntryTypeTabsProps>((props: OrderEntryTypeTabsProps) => {
     return (
       <div className="oui-w-full">
         <OrderTypeSelect
@@ -79,9 +79,7 @@ export const OrderEntryTypeTabsInjectabled = injectable<OrderEntryTypeTabsProps>
         />
       </div>
     );
-  },
-  "Trading.OrderEntry.TypeTabs",
-);
+  }, "Trading.OrderEntry.TypeTabs");
 
 export const OrderEntryBuySellSwitchInjectabled =
   injectable<OrderEntryBuySellSwitchProps>(
@@ -91,7 +89,7 @@ export const OrderEntryBuySellSwitchInjectabled =
         <div
           className={cn(
             "oui-orderEntry-side",
-            "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
+            "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 xl:oui-flex xl:oui-gap-x-[6px]",
             "oui-grid-cols-2",
           )}
         >
@@ -135,8 +133,8 @@ export const OrderEntryBuySellSwitchInjectabled =
     "Trading.OrderEntry.BuySellSwitch",
   );
 
-export const OrderEntryAvailableInjectabled = injectable<OrderEntryAvailableProps>(
-  (props: OrderEntryAvailableProps) => {
+export const OrderEntryAvailableInjectabled =
+  injectable<OrderEntryAvailableProps>((props: OrderEntryAvailableProps) => {
     return (
       <Available
         currentLtv={props.currentLtv}
@@ -146,9 +144,7 @@ export const OrderEntryAvailableInjectabled = injectable<OrderEntryAvailableProp
         marginMode={props.marginMode}
       />
     );
-  },
-  "Trading.OrderEntry.Available",
-);
+  }, "Trading.OrderEntry.Available");
 
 export const OrderEntryQuantitySliderInjectabled =
   injectable<OrderEntryQuantitySliderProps>(

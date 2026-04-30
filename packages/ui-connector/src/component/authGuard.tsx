@@ -1,12 +1,8 @@
 import React, { ReactElement, useMemo } from "react";
-import { useAccount, useMediaQuery } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import {
-  AccountStatusEnum,
-  MEDIA_TABLET,
-  NetworkId,
-} from "@orderly.network/types";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import {
   Button,
   Either,
@@ -202,11 +198,10 @@ const DefaultFallback: React.FC<{
   const { connectWallet } = useAppContext();
   const { account } = useAccount();
   const { isMobile } = useScreen();
-  const matches = useMediaQuery(MEDIA_TABLET);
 
   const onConnectOrderly = () => {
     modal
-      .show(matches ? WalletConnectorSheetId : WalletConnectorModalId, {
+      .show(isMobile ? WalletConnectorSheetId : WalletConnectorModalId, {
         title: <ModalTitle />,
       })
       .then(

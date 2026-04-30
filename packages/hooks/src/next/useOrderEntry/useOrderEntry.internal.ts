@@ -29,6 +29,18 @@ const initialOrderState = {
   margin_mode: MarginMode.CROSS,
 };
 
+const normalizeInitialOrder = (
+  order?: Partial<FullOrderState>,
+): Omit<Partial<FullOrderState>, "symbol"> | undefined => {
+  if (!order) {
+    return undefined;
+  }
+
+  const rest = { ...order };
+  delete rest.symbol;
+  return rest;
+};
+
 const useOrderEntryNextInternal = (
   symbol: string,
   options: {
@@ -42,6 +54,7 @@ const useOrderEntryNextInternal = (
   } = {},
 ) => {
   const { symbolInfo, symbolLeverage } = options;
+  const initialOrder = normalizeInitialOrder(options.initialOrder);
 
   // Use local state instead of global zustand store to avoid state pollution
   // between different instances (e.g., OrderEntry form and TPSL edit modal)
@@ -49,7 +62,7 @@ const useOrderEntryNextInternal = (
     () =>
       ({
         ...initialOrderState,
-        ...options.initialOrder,
+        ...initialOrder,
         symbol,
       }) as FullOrderState,
   );
@@ -74,13 +87,17 @@ const useOrderEntryNextInternal = (
         } as FullOrderState);
       },
       updateOrder: (order: Partial<FullOrderState>) => {
-        setOrderEntity((prev) => ({ ...prev, ...order }));
+        setOrderEntity((prev) => ({ ...prev, ...order, symbol }));
       },
       updateOrderByKey: <K extends keyof FullOrderState>(
         key: K,
         value: FullOrderState[K],
       ) => {
-        setOrderEntity((prev) => ({ ...prev, [key]: value }));
+        setOrderEntity((prev) => ({
+          ...prev,
+          [key]: key === "symbol" ? symbol : value,
+          symbol,
+        }));
       },
       resetOrder: (_order?: Partial<FullOrderState>) => {
         setOrderEntity((prev) => ({
@@ -111,14 +128,17 @@ const useOrderEntryNextInternal = (
         );
       },
     }),
-    [orderEntity],
+    [orderEntity, symbol],
   );
 
   // Initialize order when symbol changes
   useEffect(() => {
-    actions.initOrder(symbol, options.initialOrder);
-    if (options.initialOrder) {
-      actions.updateOrder(options.initialOrder);
+    actions.initOrder(symbol, initialOrder);
+    if (initialOrder) {
+      actions.updateOrder({
+        ...initialOrder,
+        symbol,
+      });
     }
   }, [symbol]);
 
@@ -458,7 +478,7 @@ const useOrderEntryNextInternal = (
 
       actions.updateOrder(newValues);
     },
-    [calculate, options.symbolInfo, symbolLeverage, orderEntity],
+    [actions, calculate, options.symbolInfo, symbolLeverage, orderEntity],
   );
 
   const validate = (
@@ -486,10 +506,16 @@ const useOrderEntryNextInternal = (
       askAndBid?: number[];
     },
   ) => {
-    const order = creator.create(orderEntity, {
-      ...options,
-      symbol: symbolInfo!,
-    });
+    const order = creator.create(
+      {
+        ...orderEntity,
+        symbol,
+      },
+      {
+        ...options,
+        symbol: symbolInfo!,
+      },
+    );
 
     return order;
   };

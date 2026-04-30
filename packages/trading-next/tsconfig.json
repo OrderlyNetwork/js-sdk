@@ -64,6 +64,12 @@
       ],
       "@orderly.network/portfolio": [
         "../portfolio/src"
+      ],
+      "@orderly.network/layout-core": [
+        "../layout-core/src"
+      ],
+      "@orderly.network/plugin-core": [
+        "../plugin-core/src"
       ]
     }
   }

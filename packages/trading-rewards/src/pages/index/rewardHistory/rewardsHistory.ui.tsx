@@ -1,4 +1,6 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Box,
   Divider,
@@ -7,16 +9,14 @@ import {
   Text,
   DataTable,
   Column,
+  useScreen,
 } from "@orderly.network/ui";
+import { AuthGuardEmpty } from "@orderly.network/ui-connector";
+import { commifyOptional } from "@orderly.network/utils";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
-import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardEmpty } from "@orderly.network/ui-connector";
-import { AccountStatusEnum } from "@orderly.network/types";
 import { RewardsTooltip } from "../curEpoch/rewardsTooltip";
-import { useTranslation } from "@orderly.network/i18n";
+import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
 };
 
 const List: FC<RewardsHistoryReturns> = (props) => {
-  const isMobile = useMediaQuery("(max-width: 767px)");
+  const { isMobile } = useScreen();
 
   return isMobile ? (
     <ListView

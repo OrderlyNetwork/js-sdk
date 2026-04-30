@@ -4,7 +4,6 @@ import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
   OrderlyPluginProvider,
-  OrderlyThemeProvider,
   Toaster,
   TooltipProvider,
   type OrderlyPlugin,
@@ -17,6 +16,7 @@ import { useUILocale } from "../hooks/useUILocale";
 import { OrderlyAppConfig } from "../types";
 import { AppConfigProvider } from "./appConfigProvider";
 import { AppStateProvider, AppStateProviderProps } from "./appStateProvider";
+import { AppThemeProvider } from "./appThemeProvider";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
@@ -36,6 +36,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     components,
     appIcons,
     plugins,
+    themes,
     onChainChanged,
     defaultChain,
     widgetConfigs,
@@ -63,9 +64,10 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
 
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
-      <OrderlyThemeProvider
+      <AppThemeProvider
         // dateFormatting={dateFormatting}
         components={components}
+        themes={themes}
         overrides={props.overrides}
       >
         <OrderlyConfigProvider {...configProps}>
@@ -90,7 +92,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
           </OrderlyPluginProvider>
           <Toaster />
         </OrderlyConfigProvider>
-      </OrderlyThemeProvider>
+      </AppThemeProvider>
     </AppConfigProvider>
   );
 };

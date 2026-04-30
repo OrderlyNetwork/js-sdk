@@ -19,7 +19,7 @@ import {
   Button,
   Divider,
 } from "@orderly.network/ui";
-import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type {
@@ -237,7 +237,6 @@ export const AssetsDataTable: React.FC<
       <AuthGuardDataTable
         classNames={{
           root: "oui-rounded-xl oui-font-semibold",
-          scroll: "oui-h-[252px]",
         }}
         loading={props.canTrade}
         columns={[]}
@@ -247,7 +246,7 @@ export const AssetsDataTable: React.FC<
   }
 
   return (
-    <Flex width="100%" height="100%" direction={"column"} className={root}>
+    <Flex width="100%" direction={"column"} className={root}>
       <DataFilterSection
         {...pick(
           [
@@ -283,8 +282,10 @@ export const AssetsDataTable: React.FC<
               bordered
               className="oui-font-semibold"
               classNames={{
-                // root: "oui-bg-transparent",
-                // scroll: "oui-min-h-0",
+                scroll: cn(
+                  "oui-h-auto oui-min-h-0 oui-overflow-x-auto oui-overflow-y-visible",
+                  dataTableClassNames?.scroll,
+                ),
                 ...dataTableClassNames,
               }}
               columns={columns}
@@ -301,7 +302,7 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Card
-      className={"oui-bg-transparent oui-p-0 oui-border-none oui-shadow-none"}
+      className="oui-border-none oui-bg-transparent oui-p-0 oui-shadow-none"
       classNames={{ content: "!oui-pt-0" }}
     >
       <Tabs

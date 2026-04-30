@@ -1,5 +1,5 @@
 import { FC, ReactNode, useMemo } from "react";
-import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
+import { RefferalAPI } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   DatePicker,
@@ -12,6 +12,7 @@ import {
   Tabs,
   Text,
   cn,
+  useScreen,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { commifyOptional } from "@orderly.network/utils";
@@ -80,7 +81,7 @@ const MobileCellItem: FC<{
 
 const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
   const { t } = useTranslation();
-  const isLG = useMediaQuery("(max-width: 767px)");
+  const { isMobile } = useScreen();
 
   const columns = useMemo(() => {
     const cols: Column[] = [
@@ -132,7 +133,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
   }, [t]);
 
   const body = useMemo(() => {
-    if (isLG) {
+    if (isMobile) {
       return (
         <ListView<
           RefferalAPI.ReferralRebateSummary,
@@ -199,7 +200,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         }}
       />
     );
-  }, [isLG, props.commission]);
+  }, [isMobile, props.commission]);
 
   return (
     <Flex
@@ -220,7 +221,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
 const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const { t } = useTranslation();
 
-  const isLG = useMediaQuery("(max-width: 767px)");
+  const { isMobile } = useScreen();
 
   const columns = useMemo(() => {
     const cols: Column[] = [
@@ -276,7 +277,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   }, [t]);
 
   const body = useMemo(() => {
-    if (isLG) {
+    if (isMobile) {
       return (
         <ListView<RefferalAPI.RefereeInfoItem, RefferalAPI.RefereeInfoItem[]>
           className="oui-w-full oui-max-h-[200px]"
@@ -354,7 +355,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         }}
       />
     );
-  }, [isLG, props.referees]);
+  }, [isMobile, props.referees]);
 
   return (
     <Flex
