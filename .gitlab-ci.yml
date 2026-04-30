@@ -32,13 +32,13 @@ generate-sbom:
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/syft:v1.43.0
   script:
-    - syft ${CI_PROJECT_DIR} -o cyclonedx-json=bom.json
+    - syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
   artifacts:
     paths:
-      - bom.json
-    reports:
-      cyclonedx: 
-        - bom.json
+      - syft.cdx.json
+    # reports:
+    #   cyclonedx: 
+    #     - bom.json
   tags:
     - dev
     - build
@@ -51,13 +51,14 @@ osv-audit:
     - job: generate-sbom
       artifacts: true
   script:
-    - osv-scanner scan -L bom.json --format=json --output-file=report.json
-  artifacts:
-    paths:
-      - report.json
-    reports:
-      sast:
-        - report.json
+    - osv-scanner scan -L syft.cdx.json --format=json
+    # - osv-scanner scan -L bom.json --format=json --output-file=report.json
+  # artifacts:
+  #   paths:
+  #     - report.json
+  #   reports:
+  #     sast:
+  #       - report.json
   tags:
     - dev
     - build
