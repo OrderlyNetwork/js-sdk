@@ -797,6 +797,7 @@
   "connector.privy.google": "Google",
   "connector.privy.twitter": "X / Twitter",
   "connector.privy.telegram": "Telegram",
+  "connector.privy.discord": "Discord",
   "connector.privy.myWallet": "Мій гаманець",
   "connector.privy.addEvmWallet": "Додати EVM гаманець",
   "connector.privy.addSolanaWallet": "Додати Solana гаманець",

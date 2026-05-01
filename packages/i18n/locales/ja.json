@@ -797,6 +797,7 @@
   "connector.privy.google": "Google",
   "connector.privy.twitter": "X / Twitter",
   "connector.privy.telegram": "テレグラム",
+  "connector.privy.discord": "Discord",
   "connector.privy.myWallet": "マイウォレット",
   "connector.privy.addEvmWallet": "EVMウォレットを追加",
   "connector.privy.addSolanaWallet": "Solanaウォレットを追加",
