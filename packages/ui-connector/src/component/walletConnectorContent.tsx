@@ -473,7 +473,7 @@ const RememberMe = () => {
   const { t } = useTranslation();
 
   const showRememberHint = () => {
-    if (window.innerWidth > 768) {
+    if (window.innerWidth >= 1024) {
       return;
     }
     modal.alert({

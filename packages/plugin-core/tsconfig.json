@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    // "rootDir": "src",
+    "jsx": "react-jsx",
+    "paths": {
+      "@orderly.network/core": [
+        "../core/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ]
+    }
+  },
+  "include": ["src"]
+}

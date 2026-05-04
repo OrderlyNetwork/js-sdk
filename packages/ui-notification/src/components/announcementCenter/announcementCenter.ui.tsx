@@ -2,8 +2,7 @@ import { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { type API } from "@orderly.network/types";
 import {
-  ExtensionPositionEnum,
-  ExtensionSlot,
+  InjectableEmptyDataState,
   ScrollArea,
   Text,
 } from "@orderly.network/ui";
@@ -23,10 +22,7 @@ export const AnnouncementContent: FC<{
   if (!Array.isArray(dataSource) || dataSource.length === 0) {
     return (
       <div className="oui-flex oui-h-[160px] oui-items-center oui-justify-center">
-        <ExtensionSlot
-          position={ExtensionPositionEnum.EmptyDataIdentifier}
-          title={t("notification.empty")}
-        />
+        <InjectableEmptyDataState title={t("notification.empty")} />
       </div>
     );
   }

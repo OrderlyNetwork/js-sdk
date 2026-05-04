@@ -1,10 +1,5 @@
 import React, { FC, ReactNode, CSSProperties, useMemo } from "react";
-import {
-  cn,
-  ExtensionPositionEnum,
-  ExtensionSlot,
-  SortOrder,
-} from "@orderly.network/ui";
+import { cn, InjectableEmptyDataState, SortOrder } from "@orderly.network/ui";
 import { useSort } from "./useSort";
 
 export type Column = {
@@ -119,9 +114,7 @@ const DataTable: FC<TableProps> = (props) => {
             })
           : props.emptyView || (
               <div className="oui-w-full oui-h-full oui-flex oui-justify-center oui-items-center oui-mt-[-30px]">
-                <ExtensionSlot
-                  position={ExtensionPositionEnum.EmptyDataState}
-                />
+                <InjectableEmptyDataState />
               </div>
             )}
       </div>

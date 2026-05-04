@@ -45,6 +45,7 @@ export declare namespace API {
     chain_id: string;
     contract_address: string;
     decimals: number;
+    exclusive_deposit_supported?: boolean;
   }
 
   // ws market, api v1/public/futures

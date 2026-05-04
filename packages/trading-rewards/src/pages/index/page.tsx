@@ -71,7 +71,7 @@ export const HomePage: React.FC<{
               <LazyCurEpochWidget />
             </React.Suspense>
           </Box>
-          <Flex className="oui-flex oui-w-full oui-flex-col oui-gap-4 lg:oui-flex-row 2xl:oui-flex-1 2xl:oui-flex-col">
+          <Flex className="oui-flex oui-w-full oui-flex-col oui-gap-4 xl:oui-flex-row 2xl:oui-flex-1 2xl:oui-flex-col">
             <React.Suspense fallback={null}>
               <LazyAvailableToClaimWidget />
             </React.Suspense>

@@ -1,3 +1,8 @@
+/**
+ * Side-effect: augment InterceptorTargetPropsMap for typed interceptor props.
+ */
+import "./interceptorTargets";
+
 export { OrderEntry } from "./orderEntry.ui";
 export { useOrderEntryScript } from "./orderEntry.script";
 export { OrderEntryWidget } from "./orderEntry.widget";

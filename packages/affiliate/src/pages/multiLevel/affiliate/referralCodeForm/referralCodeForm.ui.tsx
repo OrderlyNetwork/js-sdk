@@ -343,7 +343,7 @@ const RebateRateSlider = (props: RebateRateSliderProps) => {
                 className="oui-mt-px oui-text-base-contrast"
               />
               <Text
-                size="base"
+                size="sm"
                 intensity={54}
                 as="span"
                 className="oui-inline-flex oui-items-center oui-gap-1 oui-tracking-[0.03em]"

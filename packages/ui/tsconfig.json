@@ -4,6 +4,9 @@
     "paths": {
       "@orderly.network/utils": [
         "../utils/src"
+      ],
+      "@orderly.network/plugin-core": [
+        "../plugin-core/src"
       ]
     },
   }

@@ -1,2 +1,2 @@
 export { AccountMenuWidget } from "./menu.widget";
-export { AccountMenu } from "./menu.ui";
+export { AccountMenu, type AccountMenuProps } from "./menu.ui";

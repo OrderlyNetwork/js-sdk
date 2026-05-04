@@ -1,0 +1,26 @@
+{
+  "name": "@orderly.network/ai-docs",
+  "version": "1.0.2",
+  "private": true,
+  "type": "module",
+  "description": "Orderly AI documentation artifact generator (manifest, JSON shards, indexes, component MD, QMD index)",
+  "scripts": {
+    "build": "pnpm run generate",
+    "generate": "tsx src/generate.ts",
+    "validate": "tsx src/validate.ts",
+    "qmd:index": "tsx src/qmd-index.ts",
+    "eval": "tsx src/eval.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/react": "^18.2.38",
+    "fast-glob": "^3.3.3",
+    "react-docgen-typescript": "^2.2.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "zod": "^3.24.1"
+  },
+  "dependencies": {
+    "@tobilu/qmd": "^2.0.1"
+  }
+}

@@ -1,6 +1,7 @@
 export enum PathEnum {
   Root = "/",
   Perp = "/perp",
+  PerpGrid = "/perp-grid",
   Rwa = "/rwa",
   Swap = "/swap",
 

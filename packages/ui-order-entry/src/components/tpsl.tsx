@@ -135,8 +135,8 @@ export const OrderTPSL = (props: {
       <div
         className={cn(
           "oui-orderEntry-tpsl-body",
-          "oui-max-h-0 oui-overflow-hidden oui-transition-all",
-          props.switchState && "oui-max-h-[120px]",
+          "oui-overflow-hidden oui-transition-all",
+          props.switchState ? "oui-max-h-[120px]" : "oui-max-h-0",
         )}
         onTransitionEnd={() => {
           console.log("transition end");

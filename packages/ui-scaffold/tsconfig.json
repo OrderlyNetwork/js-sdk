@@ -28,6 +28,9 @@
       ],
       "@orderly.network/ui-notification": [
         "../ui-notification/src"
+      ],
+      "@orderly.network/plugin-core": [
+        "../plugin-core/src"
       ]
     }
   }

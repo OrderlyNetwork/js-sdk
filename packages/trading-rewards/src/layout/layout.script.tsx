@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import type { SideBarProps } from "@orderly.network/ui-scaffold";
 import { useTranslation } from "@orderly.network/i18n";
+import { useScreen } from "@orderly.network/ui";
+import type { SideBarProps } from "@orderly.network/ui-scaffold";
 
 export enum TradingRewardsLeftSidebarPath {
   Trading = "/rewards/trading",
@@ -80,7 +80,7 @@ export const useTradingRewardsLayoutScript = (props: {
     ];
   }, [t]);
 
-  const hideSideBar = useMediaQuery("(max-width: 768px)");
+  const { isMobile: hideSideBar } = useScreen();
 
   return {
     items,

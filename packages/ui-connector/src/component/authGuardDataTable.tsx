@@ -4,8 +4,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
-  ExtensionPositionEnum,
-  ExtensionSlot,
+  InjectableEmptyDataState,
   DataTable,
   DataTableProps,
 } from "@orderly.network/ui";
@@ -107,7 +106,7 @@ const GuardView: React.FC<GuardViewProps> = (props) => {
           size: "md",
         }}
       >
-        <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
+        <InjectableEmptyDataState />
       </AuthGuard>
     </Flex>
   );

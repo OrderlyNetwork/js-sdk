@@ -1,0 +1,37 @@
+{
+  "name": "@orderly.network/devkit",
+  "version": "1.0.2",
+  "description": "CLI toolkit for scaffolding and building DEXs, plugins, and modules with Orderly",
+  "main": "",
+  "bin": {
+    "orderly-devkit": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "link-global": "pnpm link --global"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "degit": "^2.8.4",
+    "enquirer": "^2.4.1",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.0",
+    "handlebars": "^4.7.9",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.0",
+    "tsconfig": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

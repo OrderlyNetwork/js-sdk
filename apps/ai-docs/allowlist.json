@@ -1,0 +1,13 @@
+{
+  "discoverWorkspace": true,
+  "excludePackages": [],
+  "packages": [],
+  "componentSamples": [
+    {
+      "name": "@orderly.network/react-app",
+      "root": "packages/app",
+      "tsconfig": "tsconfig.json",
+      "files": ["src/provider/orderlyAppProvider.tsx"]
+    }
+  ]
+}
