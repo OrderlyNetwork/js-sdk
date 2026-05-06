@@ -23,7 +23,8 @@ stages:
 # === [必须] step 3：定义 variables ===
 variables:
   # 测试用，需要迁移到 gitlab cicd variable
-  SLACK_HOOK_URL: "https://hooks.slack.com/services/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"
+  # SLACK_HOOK_URL: "https://hooks.slack.com/services/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"
+  SLACK_HOOK_URL: "https://hooks.slack.com/services/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"
 
   # 服务名称
   SERVICE_NAME: "orderly-web"
