@@ -34,7 +34,7 @@ generate-sbom:
   script:
     - |
       syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
-      REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/syft.cdx.json
+      REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/syft.cdx.json
       echo "Report Link: ${REPORT_LINK}"
   artifacts:
     expire_in: 30 day
@@ -65,10 +65,10 @@ osv-audit:
         cat osv_summary.txt
       fi
 
-      REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_summary.txt
+      REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/file/osv_summary.txt
       echo "Report Summary Link: ${REPORT_SUMMARY_LINK}"
 
-      REPORT_DETAILS_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_details.json
+      REPORT_DETAILS_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/osv_details.json
       echo "Report Details Link: ${REPORT_DETAILS_LINK}"
   artifacts:
     expire_in: 30 day
@@ -77,7 +77,6 @@ osv-audit:
       - osv_details.json
     reports:
       sast:
-        - osv_summary.txt
         - osv_details.json
   tags:
     - dev
