@@ -57,6 +57,7 @@ osv-audit:
       artifacts: true
   script:
     - |
+      apk add curl
       curl -X POST -H 'Content-type: application/json' \
       --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to do security scan.\"}" \
       ${SLACK_HOOK_URL}
