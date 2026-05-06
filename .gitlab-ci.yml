@@ -52,6 +52,7 @@ osv-audit:
   stage: scan
   image: 
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/osv-scanner:v2.3.5
+    pull_policy: always
   needs: 
     - job: generate-sbom
       artifacts: true
