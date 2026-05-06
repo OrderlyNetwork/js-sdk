@@ -116,7 +116,7 @@ container-image-scan:
         echo "No vulnerabilities were found"
       else
         echo "Detected vulnerabilities"
-        cat osv_summary.json
+        cat trivy_summary.json
 
       REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/trivy_summary.json
       echo "Report Summary Link: ${REPORT_SUMMARY_LINK}"
@@ -134,7 +134,7 @@ container-image-scan:
       - trivy_summary.json
       - trivy_details.json
     reports:
-      sast:
+      container_scanning:
         - trivy_details.json
   allow_failure: true
   tags:
