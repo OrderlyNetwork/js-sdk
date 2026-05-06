@@ -18,19 +18,19 @@ variables:
   SLACK_HOOK_URL: "https://hooks.slack.com/services/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"
   SERVICE_NAME: "orderly-web"
   IMAGE_NAME: "storybook"
-  IMAGE_TAG: v2.12.4
-  # IMAGE_TAG: ${$CI_COMMIT_TAG}
-  IMAGE_FULL_NAME: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${IMAGE_TAG}"
+  # IMAGE_TAG: v2.12.4
+  IMAGE_TAG: ${$CI_COMMIT_TAG}
+  APP_IMAGE_TAG: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${IMAGE_TAG}"
   # APP_IMAGE_TAG: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${$CI_COMMIT_TAG}"
-#   ENABLE_PUBLISH: "false"
+  ENABLE_PUBLISH: "false"
 
-# workflow:
-#   rules:
-#     # - if: '($CI_COMMIT_BRANCH =~ /^internal\// || $CI_COMMIT_BRANCH =~ /^pre-release/) && $CI_COMMIT_MESSAGE =~ /publish/'
-#     - if: $CI_COMMIT_BRANCH == "cicd-erik"
-#       variables:
-#         ENABLE_PUBLISH: "true"
-#     - when: always
+workflow:
+  rules:
+    # - if: '($CI_COMMIT_BRANCH =~ /^internal\// || $CI_COMMIT_BRANCH =~ /^pre-release/) && $CI_COMMIT_MESSAGE =~ /publish/'
+    - if: $CI_COMMIT_BRANCH == "cicd-erik"
+      variables:
+        ENABLE_PUBLISH: "true"
+    - when: always
 
 generate-sbom:
   stage: scan
@@ -109,8 +109,8 @@ container-image-scan:
       --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to scan image <https://console.cloud.google.com/artifacts/docker/woo-orderly/asia-northeast1/orderly-network/${IMAGE_NAME}/${DIGEST}|${IMAGE_NAME}:${IMAGE_TAG}> for ${SERVICE_NAME}.\"}" \
       ${SLACK_HOOK_URL}
 
-      trivy image ${IMAGE_FULL_NAME} --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -o trivy_summary.json || EXIT_CODE=$?
-      trivy image ${IMAGE_FULL_NAME} --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -f json -o trivy_details.json || EXIT_CODE=$?
+      trivy image ${APP_IMAGE_TAG} --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -o trivy_summary.json || EXIT_CODE=$?
+      trivy image ${APP_IMAGE_TAG} --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -f json -o trivy_details.json || EXIT_CODE=$?
 
       if [ -z "$EXIT_CODE" ] || [ "$EXIT_CODE" -eq 0 ]; then
         echo "No vulnerabilities were found"
@@ -140,3 +140,5 @@ container-image-scan:
   tags:
     - dev
     - build
+  rules:
+    - if: $ENABLE_PUBLISH == "false"
