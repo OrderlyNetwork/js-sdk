@@ -10,8 +10,8 @@ stages:
   - scan
   - check_tag
   - build_docker
-  - deploy
   - post-build-audit
+  - deploy
   - release
 
 variables:
