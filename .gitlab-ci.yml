@@ -79,7 +79,6 @@ osv-audit:
       curl -X POST -H 'Content-type: application/json' \
       --data "{\"text\":\"👽 Detected vulnerabilities: <${REPORT_SUMMARY_LINK}|summary>, <${REPORT_DETAILS_LINK}|details> in <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline>\"}" \
       ${SLACK_HOOK_URL}
-
       fi
   artifacts:
     expire_in: 30 day
