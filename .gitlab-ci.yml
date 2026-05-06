@@ -32,13 +32,17 @@ generate-sbom:
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/syft:v1.43.0
   script:
-    - syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
+    - |
+      syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
+      REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/syft.cdx.json
+      echo "Report Link: ${REPORT_LINK}"
   artifacts:
+    expire_in: 30 day
     paths:
       - syft.cdx.json
-    # reports:
-    #   cyclonedx: 
-    #     - bom.json
+    reports:
+      cyclonedx: 
+        - syft.cdx.json
   tags:
     - dev
     - build
