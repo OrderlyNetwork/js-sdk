@@ -16,6 +16,7 @@ stages:
 
 variables:
   SLACK_HOOK_URL: "https://hooks.slack.com/services/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"
+  SERVICE_NAME: "orderly-web"
 #   IMAGE_NAME: "storybook"
 #   APP_IMAGE_TAG: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${$CI_COMMIT_TAG}"
 #   ENABLE_PUBLISH: "false"
@@ -59,7 +60,7 @@ osv-audit:
     - |
       apk add curl
       curl -X POST -H 'Content-type: application/json' \
-      --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to do security scan.\"}" \
+      --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to do security scan for ${SERVICE_NAME}.\"}" \
       ${SLACK_HOOK_URL}
 
       osv-scanner scan source -L syft.cdx.json --format=table --output-file=osv_summary.json || EXIT_CODE=$?
@@ -78,7 +79,7 @@ osv-audit:
       echo "Report Details Link: ${REPORT_DETAILS_LINK}"
 
       curl -X POST -H 'Content-type: application/json' \
-      --data "{\"text\":\"👽 Detected vulnerabilities: <${REPORT_SUMMARY_LINK}|summary>, <${REPORT_DETAILS_LINK}|details> in <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline>\"}" \
+      --data "{\"text\":\"👽 Detected vulnerabilities: <${REPORT_SUMMARY_LINK}|summary>, <${REPORT_DETAILS_LINK}|details> in <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> for ${SERVICE_NAME}\"}" \
       ${SLACK_HOOK_URL}
       fi
   artifacts:
