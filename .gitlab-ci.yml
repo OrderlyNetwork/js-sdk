@@ -17,8 +17,11 @@ stages:
 variables:
   SLACK_HOOK_URL: "https://hooks.slack.com/services/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"
   SERVICE_NAME: "orderly-web"
-#   IMAGE_NAME: "storybook"
-#   APP_IMAGE_TAG: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${$CI_COMMIT_TAG}"
+  IMAGE_NAME: "storybook"
+  IMAGE_TAG: v2.12.4
+  # IMAGE_TAG: ${$CI_COMMIT_TAG}
+  IMAGE_FULL_NAME: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${IMAGE_TAG}"
+  # APP_IMAGE_TAG: "asia-northeast1-docker.pkg.dev/woo-orderly/orderly-network/${IMAGE_NAME}:${$CI_COMMIT_TAG}"
 #   ENABLE_PUBLISH: "false"
 
 # workflow:
@@ -29,42 +32,85 @@ variables:
 #         ENABLE_PUBLISH: "true"
 #     - when: always
 
-generate-sbom:
-  stage: scan
-  image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/syft:v1.43.0
-  script:
-    - |
-      syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
-      REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/syft.cdx.json
-      echo "Report Link: ${REPORT_LINK}"
-  artifacts:
-    expire_in: 30 day
-    paths:
-      - syft.cdx.json
-    reports:
-      cyclonedx: 
-        - syft.cdx.json
-  tags:
-    - dev
-    - build
+# generate-sbom:
+#   stage: scan
+#   image:
+#     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/syft:v1.43.0
+#   script:
+#     - |
+#       syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
+#       REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/syft.cdx.json
+#       echo "Report Link: ${REPORT_LINK}"
+#   artifacts:
+#     expire_in: 30 day
+#     paths:
+#       - syft.cdx.json
+#     reports:
+#       cyclonedx: 
+#         - syft.cdx.json
+#   allow_failure: true
+#   tags:
+#     - dev
+#     - build
   
-osv-audit:
-  stage: scan
+# osv-audit:
+#   stage: scan
+#   image: 
+#     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/osv-scanner:v2.3.5
+#   needs: 
+#     - job: generate-sbom
+#       artifacts: true
+#   script:
+#     - |
+#       apk add curl
+#       curl -X POST -H 'Content-type: application/json' \
+#       --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to do security scan for ${SERVICE_NAME}.\"}" \
+#       ${SLACK_HOOK_URL}
+
+#       osv-scanner scan source -L syft.cdx.json --format=table --output-file=osv_summary.json || EXIT_CODE=$?
+#       osv-scanner scan source -L syft.cdx.json --format=json --output-file=osv_details.json || EXIT_CODE=$?
+
+#       if [ -z "$EXIT_CODE" ] || [ "$EXIT_CODE" -eq 0 ]; then
+#         echo "No vulnerabilities were found"
+#       else
+#         echo "Detected vulnerabilities"
+#         cat osv_summary.json
+
+#       REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_summary.json
+#       echo "Report Summary Link: ${REPORT_SUMMARY_LINK}"
+
+#       REPORT_DETAILS_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_details.json
+#       echo "Report Details Link: ${REPORT_DETAILS_LINK}"
+
+#       curl -X POST -H 'Content-type: application/json' \
+#       --data "{\"text\":\"👽 Detected vulnerabilities: <${REPORT_SUMMARY_LINK}|summary>, <${REPORT_DETAILS_LINK}|details> in <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> for ${SERVICE_NAME}\"}" \
+#       ${SLACK_HOOK_URL}
+#       fi
+#   artifacts:
+#     expire_in: 30 day
+#     paths:
+#       - osv_summary.json
+#       - osv_details.json
+#     reports:
+#       sast:
+#         - osv_details.json
+#   allow_failure: true
+#   tags:
+#     - dev
+#     - build
+
+container-image-scan:
+  stage: post-build-audit
   image: 
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/osv-scanner:v2.3.5
-  needs: 
-    - job: generate-sbom
-      artifacts: true
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-security/trivy:v0.70.0
   script:
     - |
-      apk add curl
       curl -X POST -H 'Content-type: application/json' \
-      --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to do security scan for ${SERVICE_NAME}.\"}" \
+      --data "{\"text\":\"🦊 <https://gitlab.com/${GITLAB_USER_LOGIN}|${GITLAB_USER_LOGIN}> trigger <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> to scan image <https://console.cloud.google.com/artifacts/docker/woo-orderly/asia-northeast1/orderly-network/${IMAGE_NAME}/${DIGEST}|${IMAGE_NAME}:${IMAGE_TAG}> for ${SERVICE_NAME}.\"}" \
       ${SLACK_HOOK_URL}
 
-      osv-scanner scan source -L syft.cdx.json --format=table --output-file=osv_summary.json || EXIT_CODE=$?
-      osv-scanner scan source -L syft.cdx.json --format=json --output-file=osv_details.json || EXIT_CODE=$?
+      trivy image ${IMAGE_FULL_NAME} --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -o trivy_summary.json || EXIT_CODE=$?
+      trivy image ${IMAGE_FULL_NAME} --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL -f json -o trivy_details.json || EXIT_CODE=$?
 
       if [ -z "$EXIT_CODE" ] || [ "$EXIT_CODE" -eq 0 ]; then
         echo "No vulnerabilities were found"
@@ -72,24 +118,25 @@ osv-audit:
         echo "Detected vulnerabilities"
         cat osv_summary.json
 
-      REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_summary.json
+      REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/trivy_summary.json
       echo "Report Summary Link: ${REPORT_SUMMARY_LINK}"
 
-      REPORT_DETAILS_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_details.json
+      REPORT_DETAILS_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/trivy_details.json
       echo "Report Details Link: ${REPORT_DETAILS_LINK}"
 
       curl -X POST -H 'Content-type: application/json' \
-      --data "{\"text\":\"👽 Detected vulnerabilities: <${REPORT_SUMMARY_LINK}|summary>, <${REPORT_DETAILS_LINK}|details> in <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> for ${SERVICE_NAME}\"}" \
+      --data "{\"text\":\"👽 Detected vulnerabilities for image <https://console.cloud.google.com/artifacts/docker/woo-orderly/asia-northeast1/orderly-network/${IMAGE_NAME}/${DIGEST}|${IMAGE_NAME}:${IMAGE_TAG}>: <${REPORT_SUMMARY_LINK}|summary>, <${REPORT_DETAILS_LINK}|details> in <${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}|pipeline> for ${SERVICE_NAME}\"}" \
       ${SLACK_HOOK_URL}
       fi
   artifacts:
     expire_in: 30 day
     paths:
-      - osv_summary.json
-      - osv_details.json
+      - trivy_summary.json
+      - trivy_details.json
     reports:
       sast:
-        - osv_details.json
+        - trivy_details.json
+  allow_failure: true
   tags:
     - dev
     - build
