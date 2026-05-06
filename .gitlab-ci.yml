@@ -34,7 +34,7 @@ generate-sbom:
   script:
     - |
       syft ${CI_PROJECT_DIR} -o cyclonedx-json=syft.cdx.json
-      REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/syft.cdx.json
+      REPORT_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/syft.cdx.json
       echo "Report Link: ${REPORT_LINK}"
   artifacts:
     expire_in: 30 day
@@ -55,20 +55,30 @@ osv-audit:
     - job: generate-sbom
       artifacts: true
   script:
-    - osv-scanner scan source -L syft.cdx.json --format=table || EXIT_CODE=$?
     - |
+      osv-scanner scan source -L syft.cdx.json --format=table --output-file=osv_summary.txt || EXIT_CODE=$?
+      osv-scanner scan source -L syft.cdx.json --format=json --output-file=osv_details.json || EXIT_CODE=$?
       if [ -z "$EXIT_CODE" ] || [ "$EXIT_CODE" -eq 0 ]; then
         echo "No vulnerabilities were found"
       else
-        echo "Detected vulnerabilities above"
+        echo "Detected vulnerabilities"
+        cat osv_summary.txt
       fi
-    # - osv-scanner scan -L bom.json --format=json --output-file=report.json
-  # artifacts:
-  #   paths:
-  #     - report.json
-  #   reports:
-  #     sast:
-  #       - report.json
+
+      REPORT_SUMMARY_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_summary.txt
+      echo "Report Summary Link: ${REPORT_SUMMARY_LINK}"
+
+      REPORT_DETAILS_LINK=${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/external_file/osv_details.json
+      echo "Report Details Link: ${REPORT_DETAILS_LINK}"
+  artifacts:
+    expire_in: 30 day
+    paths:
+      - osv_summary.txt
+      - osv_details.json
+    reports:
+      sast:
+        - osv_summary.txt
+        - osv_details.json
   tags:
     - dev
     - build
