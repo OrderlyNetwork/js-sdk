@@ -1,4 +1,16 @@
 include:
+  - project: "orderlynetwork/orderly-devops/orderly-common/common-ci"
+    ref: main
+    file: "/common-orderly-network-dev-v2.yaml"
+  - project: "orderlynetwork/orderly-devops/orderly-common/common-ci"
+    ref: main
+    file: "/common-orderly-network-prod-evm.yaml"
   - project: "orderlynetwork/orderly-fe/common-ci"
     ref: main
     file: "momorepo-release.yaml"
+
+variables: 
+  SERVICE_NAME: storybook
+  IMAGE_NAME: storybook
+  # GIT_SUBMODULE_STRATEGY: recursive
+  # GIT_SUBMODULE_FORCE_HTTPS: "true"
