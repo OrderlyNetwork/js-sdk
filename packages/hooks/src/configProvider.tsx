@@ -12,6 +12,7 @@ import {
 } from "@orderly.network/core";
 import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
+import { DefaultSuiWalletAdapter } from "@orderly.network/default-sui-adapter";
 import { NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
@@ -139,6 +140,7 @@ export const OrderlyConfigProvider: FC<
       walletAdapters || [
         new DefaultEVMWalletAdapter(new EthersProvider()),
         new DefaultSolanaWalletAdapter(),
+        new DefaultSuiWalletAdapter(),
       ]
     );
   }, [walletAdapters]);

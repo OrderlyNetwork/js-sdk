@@ -1,9 +1,14 @@
 import { createContext, useContext } from "react";
 import type { EIP1193Provider } from "@web3-onboard/common";
-import { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
+import type { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
+import type { SuiWalletProvider } from "@orderly.network/default-sui-adapter";
 import { ChainNamespace } from "@orderly.network/types";
 
-type WalletProvider = (EIP1193Provider | SolanaWalletProvider) & {
+type WalletProvider = (
+  | EIP1193Provider
+  | SolanaWalletProvider
+  | SuiWalletProvider
+) & {
   publicKey?: SolanaWalletProvider["publicKey"]; // For Solana providers
 };
 

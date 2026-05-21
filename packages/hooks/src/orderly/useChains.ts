@@ -12,6 +12,7 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
+  SUI_TESTNET_CHAINID,
   isNativeTokenChecker,
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
@@ -28,6 +29,7 @@ const TESTNET_WHITE_LIST = [
   MONAD_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
+  SUI_TESTNET_CHAINID,
 ];
 
 const TESTNET_WHITE_CHAINS = TESTNET_WHITE_LIST.map((id) => ({

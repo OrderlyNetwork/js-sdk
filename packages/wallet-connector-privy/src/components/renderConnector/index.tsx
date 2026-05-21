@@ -9,6 +9,7 @@ import { getChainType } from "../../util";
 import { AbstractConnectArea } from "./abstractConnector";
 import { PrivyConnectArea } from "./privyConnector";
 import { SOLConnectArea } from "./solanaConnector";
+import { SUIConnectArea } from "./suiConnector";
 import { EVMConnectArea } from "./wagmiConnector";
 
 export function RenderConnector() {
@@ -18,6 +19,8 @@ export function RenderConnector() {
     connectorWalletType,
     walletChainTypeConfig,
     targetWalletType,
+    suiInfo,
+    suiChainIds,
   } = useWalletConnectorPrivy();
   const { storageChain } = useStorageChain();
 
@@ -25,7 +28,11 @@ export function RenderConnector() {
     if (targetWalletType) return targetWalletType;
     if (!storageChain?.chainId) return undefined;
     try {
-      return getChainType(parseInt(storageChain.chainId as string));
+      const chainId = parseInt(storageChain.chainId as string);
+      if (suiInfo?.chainId === chainId || suiChainIds.has(chainId)) {
+        return WalletType.SUI;
+      }
+      return getChainType(chainId);
     } catch {
       return undefined;
     }
@@ -89,6 +96,25 @@ export function RenderConnector() {
       />
     );
   };
+  const renderSuiConnectArea = () => {
+    if (connectorWalletType.disableSui) {
+      return null;
+    }
+    if (!walletChainTypeConfig.hasSui) {
+      return null;
+    }
+
+    return (
+      <SUIConnectArea
+        connect={(suiWallet) =>
+          handleConnect({
+            walletType: WalletConnectType.SUI,
+            suiWallet,
+          })
+        }
+      />
+    );
+  };
   const renderAbstractConnectArea = () => {
     if (connectorWalletType.disableAGW) {
       return null;
@@ -105,11 +131,12 @@ export function RenderConnector() {
     );
   };
 
-  const walletOrder = ["evm", "sol", "abstract"] as const;
+  const walletOrder = ["evm", "sol", "sui", "abstract"] as const;
 
   const typeToKey: Record<WalletType, (typeof walletOrder)[number]> = {
     [WalletType.EVM]: "evm",
     [WalletType.SOL]: "sol",
+    [WalletType.SUI]: "sui",
     [WalletType.ABSTRACT]: "abstract",
   };
 
@@ -117,12 +144,13 @@ export function RenderConnector() {
     ? typeToKey[selectedWalletType]
     : undefined;
 
-  const orderedWalletKeys = prioritizedKey
-    ? ([
-        prioritizedKey,
-        ...walletOrder.filter((k) => k !== prioritizedKey),
-      ] as const)
-    : walletOrder;
+  const orderedWalletKeys =
+    prioritizedKey && prioritizedKey !== "sui"
+      ? ([
+          prioritizedKey,
+          ...walletOrder.filter((k) => k !== prioritizedKey),
+        ] as const)
+      : walletOrder;
 
   const renderByKey = (key: (typeof walletOrder)[number]) => {
     switch (key) {
@@ -130,6 +158,8 @@ export function RenderConnector() {
         return renderWagmiConnectArea();
       case "sol":
         return renderSolanaConnectArea();
+      case "sui":
+        return renderSuiConnectArea();
       case "abstract":
         return renderAbstractConnectArea();
       default:

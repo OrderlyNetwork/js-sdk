@@ -61,6 +61,8 @@ export const connector = {
   "connector.ledger.signMessageFailed": "Sign Message Failed",
   "connector.ledger.signMessageFailed.description":
     "Are you using Ledger Wallet?",
+  "connector.sui.walletConnectOnly":
+    "SUI wallet connection is available. Account creation and trading signatures are not supported yet.",
 
   "connector.privy.loginIn": "Login in",
   "connector.privy.logout": "Log out",
@@ -71,6 +73,7 @@ export const connector = {
   "connector.privy.myWallet": "My wallet",
   "connector.privy.addEvmWallet": "Add Evm wallet",
   "connector.privy.addSolanaWallet": "Add Solana wallet",
+  "connector.privy.addSuiWallet": "Add Sui wallet",
   "connector.privy.addAbstractWallet": "Add Abstract wallet",
   "connector.privy.createEvmWallet": "Create Evm wallet",
   "connector.privy.createSolanaWallet": "Create Solana wallet",
@@ -86,6 +89,8 @@ export const connector = {
     "Connect an EVM-compatible wallet to continue using the EVM network.",
   "connector.privy.addSolanaWallet.tips":
     "Connect an Solana-compatible wallet to continue using the Solana network.",
+  "connector.privy.addSuiWallet.tips":
+    "Connect a SUI-compatible wallet to continue using the SUI network.",
   "connector.privy.addAbstractWallet.tips":
     "Connect an Abstract-compatible wallet to continue using the Abstract network.",
   "connector.privy.pwa.title": "Prefer an app-like experience? Try the PWA",

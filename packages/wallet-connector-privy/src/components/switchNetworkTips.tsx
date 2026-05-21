@@ -5,6 +5,7 @@ import {
   AbstractChains,
   ChainNamespace,
   SolanaChains,
+  SuiChains,
 } from "@orderly.network/types";
 import {
   ExclamationFillIcon,
@@ -76,10 +77,15 @@ export const StorageChainNotCurrentWalletType = ({
     }
     let text = null;
     const isSolana = SolanaChains.has(parseInt(storageChain?.chainId));
+    const isSui =
+      storageChain.namespace === ChainNamespace.sui ||
+      SuiChains.has(parseInt(storageChain?.chainId));
     const isAbstract = AbstractChains.has(parseInt(storageChain?.chainId));
-    const isEvm = !isSolana && !isAbstract;
+    const isEvm = !isSolana && !isSui && !isAbstract;
 
     if (isSolana && currentWalletType.has(WalletType.SOL)) {
+      return null;
+    } else if (isSui && currentWalletType.has(WalletType.SUI)) {
       return null;
     } else if (isAbstract && currentWalletType.has(WalletType.ABSTRACT)) {
       return null;
@@ -93,6 +99,8 @@ export const StorageChainNotCurrentWalletType = ({
           return "Evm";
         } else if (item === WalletType.SOL) {
           return "Solana";
+        } else if (item === WalletType.SUI) {
+          return "Sui";
         } else if (item === WalletType.ABSTRACT) {
           return "Abstract";
         }

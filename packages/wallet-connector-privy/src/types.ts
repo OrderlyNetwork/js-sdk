@@ -13,6 +13,8 @@ import {
   ABSTRACT_MAINNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   ChainNamespace,
+  SUI_MAINNET_CHAINID,
+  SUI_TESTNET_CHAINID,
   SOLANA_MAINNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
 } from "@orderly.network/types";
@@ -35,12 +37,14 @@ export enum Network {
 export enum WalletType {
   EVM = "EVM",
   SOL = "SOL",
+  SUI = "SUI",
   ABSTRACT = "Abstract",
 }
 
 export enum WalletConnectType {
   EVM = "EVM",
   SOL = "SOL",
+  SUI = "SUI",
   PRIVY = "privy",
   ABSTRACT = "Abstract",
 }
@@ -50,6 +54,7 @@ export interface ConnectProps {
   extraType?: string;
   connector?: Connector;
   walletAdapter?: WalletAdapter;
+  suiWallet?: any;
 }
 
 type PrivyAppearanceConfig = NonNullable<PrivyClientConfig["appearance"]>;
@@ -86,6 +91,14 @@ export interface InitSolana {
   onError: (error: WalletError, adapter?: Adapter) => void;
 }
 
+export interface InitSui {
+  mainnetRpc?: string;
+  testnetRpc?: string;
+  mainnetChainId?: number;
+  testnetChainId?: number;
+  onError?: (error: Error) => void;
+}
+
 export interface InitAbstract {
   queryClient?: QueryClient;
 }
@@ -102,6 +115,11 @@ export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
   [WalletAdapterNetwork.Mainnet, SOLANA_MAINNET_CHAINID],
 ]);
 
+export const SuiChainsMap = new Map<Network, number>([
+  [Network.testnet, SUI_TESTNET_CHAINID],
+  [Network.mainnet, SUI_MAINNET_CHAINID],
+]);
+
 export const AbstractChainsMap = new Map<Network, number>([
   [Network.testnet, ABSTRACT_TESTNET_CHAINID],
   [Network.mainnet, ABSTRACT_MAINNET_CHAINID],
@@ -111,16 +129,19 @@ export interface ConnectorWalletType {
   disableWagmi?: boolean;
   disablePrivy?: boolean;
   disableSolana?: boolean;
+  disableSui?: boolean;
   disableAGW?: boolean;
 }
 export interface WalletChainTypeConfig {
   hasEvm: boolean;
   hasSol: boolean;
+  hasSui: boolean;
   hasAbstract: boolean;
 }
 export enum WalletChainTypeEnum {
   onlyEVM = "onlyEVM",
   onlySOL = "onlySOL",
+  onlySUI = "onlySUI",
   EVM_SOL = "EVM_SOL",
 }
 export type WalletChainType = WalletChainTypeEnum;

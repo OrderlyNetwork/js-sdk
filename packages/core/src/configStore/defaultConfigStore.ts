@@ -19,6 +19,7 @@ export const API_URLS: Record<NetworkId, URLS> = {
     operatorUrl: {
       EVM: "https://operator-evm.orderly.org",
       SOL: "https://operator-solana.orderly.org",
+      SUI: "https://operator-evm.orderly.org",
     },
   },
   testnet: {
@@ -28,6 +29,7 @@ export const API_URLS: Record<NetworkId, URLS> = {
     operatorUrl: {
       EVM: "https://testnet-operator-evm.orderly.org",
       SOL: "https://testnet-operator-sol.orderly.org",
+      SUI: "https://testnet-operator-evm.orderly.org",
     },
   },
 };

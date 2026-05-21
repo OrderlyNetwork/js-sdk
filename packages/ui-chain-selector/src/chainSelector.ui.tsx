@@ -1,3 +1,4 @@
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Flex,
@@ -8,9 +9,8 @@ import {
   cn,
   tv,
 } from "@orderly.network/ui";
-import { ChainType, TChainItem } from "./type";
 import { UseChainSelectorScriptReturn } from "./chainSelector.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { ChainType, TChainItem } from "./type";
 
 export type ChainSelectorProps = {
   isWrongNetwork?: boolean;
@@ -113,7 +113,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
           )}
 
           <Box r="2xl" className={cn(list(), mainnetList())}>
-            {props.chains.mainnet?.map((chain) => {
+            {props.chains.mainnet?.map((chain: TChainItem) => {
               const selected = props.selectChainId === chain.id;
               return (
                 <ChainItem
@@ -131,7 +131,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
         {props.showTestnet && (
           <TabPanel value={ChainType.Testnet} title={t("connector.testnet")}>
             <Box r="2xl" className={cn(list(), testnetList())}>
-              {props.chains.testnet?.map((chain) => {
+              {props.chains.testnet?.map((chain: TChainItem) => {
                 const selected = props.selectChainId === chain.id;
                 return (
                   <ChainItem

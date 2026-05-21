@@ -4,6 +4,7 @@ import { Chain } from "viem/chains";
 import {
   AbstractChains,
   SolanaChains,
+  SuiChains,
   defaultMainnetChains,
   defaultTestnetChains,
 } from "@orderly.network/types";
@@ -23,10 +24,15 @@ export function InitPrivyProvider({
   if (!privyConfig) {
     return children;
   }
-  const { network } = useWalletConnectorPrivy();
+  const { network, suiChainIds } = useWalletConnectorPrivy();
 
   const config = useMemo((): PrivyClientConfig => {
-    const chains = initChains;
+    const chains = initChains.filter(
+      (chain) =>
+        !SolanaChains.has(chain.id) &&
+        !SuiChains.has(chain.id) &&
+        !suiChainIds.has(chain.id),
+    );
     const preferredDefaultChainIds = (
       network === "mainnet" ? defaultMainnetChains : defaultTestnetChains
     ).map((c) => c.id);
@@ -108,7 +114,7 @@ export function InitPrivyProvider({
       defaultChain: defaultEvmChain,
       supportedChains: chains,
     };
-  }, [initChains, privyConfig, network]);
+  }, [initChains, privyConfig, network, suiChainIds]);
 
   if (!initChains.length) {
     console.warn("initChains is empty");

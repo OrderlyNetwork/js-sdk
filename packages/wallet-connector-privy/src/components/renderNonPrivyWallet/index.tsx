@@ -9,6 +9,7 @@ import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useAbstractWallet } from "../../providers/abstractWallet/abstractWalletProvider";
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
+import { useSuiWallet } from "../../providers/sui";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { WalletType } from "../../types";
 import { StorageChainNotCurrentWalletType } from "../switchNetworkTips";
@@ -16,6 +17,7 @@ import { WalletCard } from "../walletCard";
 import { AddAbstractWallet } from "./addAbstractWallet";
 import { AddEvmWallet } from "./addEvmWallet";
 import { AddSolanaWallet } from "./addSolanaWallet";
+import { AddSuiWallet } from "./addSuiWallet";
 
 interface ConnectWallet {
   type: WalletType;
@@ -32,6 +34,7 @@ export function RenderNonPrivyWallet() {
     useWagmiWallet();
   const { wallet: walletInSolana, isConnected: isConnectedSolana } =
     useSolanaWallet();
+  const { wallet: walletInSui, isConnected: isConnectedSui } = useSuiWallet();
   const { wallet: walletInAbstract, isConnected: isConnectedAbstract } =
     useAbstractWallet();
   const { namespace, switchWallet } = useWallet();
@@ -48,6 +51,9 @@ export function RenderNonPrivyWallet() {
     }
     if (namespace === ChainNamespace.solana) {
       return walletType === WalletType.SOL;
+    }
+    if (namespace === ChainNamespace.sui) {
+      return walletType === WalletType.SUI;
     }
     return false;
   };
@@ -83,6 +89,16 @@ export function RenderNonPrivyWallet() {
         tempAddWallet.push(WalletType.SOL);
       }
     }
+    if (!connectorWalletType.disableSui && walletChainTypeConfig.hasSui) {
+      if (isConnectedSui) {
+        tempWalletList.push({
+          type: WalletType.SUI,
+          address: walletInSui?.accounts[0].address,
+        });
+      } else {
+        tempAddWallet.push(WalletType.SUI);
+      }
+    }
     if (!connectorWalletType.disableAGW && walletChainTypeConfig.hasAbstract) {
       if (isConnectedAbstract) {
         tempWalletList.push({
@@ -98,9 +114,11 @@ export function RenderNonPrivyWallet() {
   }, [
     isConnectedEvm,
     isConnectedSolana,
+    isConnectedSui,
     isConnectedAbstract,
     walletInWagmi,
     walletInSolana,
+    walletInSui,
     walletInAbstract,
     walletChainTypeConfig,
     connectorWalletType,
@@ -146,6 +164,9 @@ function RenderAddWallet({ addWalletList }: { addWalletList: WalletType[] }) {
           }
           if (wallet === WalletType.SOL) {
             return <AddSolanaWallet key={index} />;
+          }
+          if (wallet === WalletType.SUI) {
+            return <AddSuiWallet key={index} />;
           }
           if (wallet === WalletType.ABSTRACT) {
             return <AddAbstractWallet key={index} />;

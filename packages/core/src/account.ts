@@ -297,6 +297,11 @@ export class Account {
         ),
       );
     }
+    if (this.walletAdapter?.chainNamespace === ChainNamespace.sui) {
+      throw new Error(
+        "SUI account id is not supported in wallet-connect phase",
+      );
+    }
     return parseAccountId(this.address, brokerId);
   }
 
