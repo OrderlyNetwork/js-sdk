@@ -1,4 +1,8 @@
-import { AbstractChains, SolanaChains } from "@orderly.network/types";
+import {
+  AbstractChains,
+  SolanaChains,
+  SuiChains,
+} from "@orderly.network/types";
 import { WalletType } from "./types";
 
 export const OrderlyOSS = "https://oss.orderly.network";
@@ -29,6 +33,9 @@ export const getChainType = (chainId: number): WalletType => {
   }
   if (SolanaChains.has(chainId)) {
     return WalletType.SOL;
+  }
+  if (SuiChains.has(chainId)) {
+    return WalletType.SUI;
   }
   return WalletType.EVM;
 };

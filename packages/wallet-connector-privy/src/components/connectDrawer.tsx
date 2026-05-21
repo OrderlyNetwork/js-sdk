@@ -17,6 +17,7 @@ import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
+import { useSuiWallet } from "../providers/sui";
 import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
 import { WalletConnectType, WalletType } from "../types";
 import { Drawer } from "./drawer";
@@ -49,6 +50,7 @@ export function ConnectDrawer(props: {
   const { isConnected: isConnectedPrivy } = usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
+  const { isConnected: isConnectedSui } = useSuiWallet();
   const { isConnected: isConnectedAbstract } = useAbstractWallet();
   const { termsOfUse } = useWalletConnectorPrivy();
   const [connectorKey] = useLocalStorage(ConnectorKey, "");
@@ -64,6 +66,9 @@ export function ConnectDrawer(props: {
       if (isConnectedSolana) {
         return true;
       }
+      if (isConnectedSui) {
+        return true;
+      }
       if (isConnectedAbstract) {
         return true;
       }
@@ -73,6 +78,7 @@ export function ConnectDrawer(props: {
     isConnectedPrivy,
     isConnectedEvm,
     isConnectedSolana,
+    isConnectedSui,
     isConnectedAbstract,
     connectorKey,
   ]);

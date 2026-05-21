@@ -713,7 +713,9 @@ export const defaultTestnetChains = [ArbitrumSepolia];
 export enum ChainNamespace {
   evm = "EVM",
   solana = "SOL",
+  sui = "SUI",
 }
 
 export const AbstractChains = new Set([2741, 11124]);
 export const SolanaChains = new Set([901901901, 900900900]);
+export const SuiChains = new Set([40378, 30378]);

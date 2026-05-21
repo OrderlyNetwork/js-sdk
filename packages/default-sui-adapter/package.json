@@ -1,0 +1,33 @@
+{
+  "name": "@orderly.network/default-sui-adapter",
+  "version": "3.0.4",
+  "description": "",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/types": "workspace:*"
+  },
+  "devDependencies": {
+    "tsconfig": "workspace:*",
+    "tsup": "^8.5.1",
+    "typescript": "^5.1.6"
+  },
+  "keywords": [
+    "Orderly",
+    "SUI",
+    "DEFI"
+  ]
+}

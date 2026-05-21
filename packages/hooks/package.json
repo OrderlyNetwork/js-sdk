@@ -37,6 +37,7 @@
     "@orderly.network/core": "workspace:*",
     "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/default-evm-adapter": "workspace:*",
+    "@orderly.network/default-sui-adapter": "workspace:*",
     "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "@orderly.network/perp": "workspace:*",

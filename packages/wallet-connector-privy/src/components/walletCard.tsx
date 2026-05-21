@@ -37,6 +37,7 @@ const getCardBgClassName = (type: WalletType = WalletType.EVM) => {
     [WalletType.EVM]: "oui-bg-[#283BEE]",
     [WalletType.ABSTRACT]: "oui-bg-[#00A858]",
     [WalletType.SOL]: "oui-bg-[#630EAD]",
+    [WalletType.SUI]: "oui-bg-[#1E7EDB]",
   };
   return cardBgColorMap[type];
 };
@@ -50,6 +51,7 @@ const getCardActiveClassName = (
     [WalletType.EVM]: "oui-border-[2px] oui-border-primary-light",
     [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-primary-light",
     [WalletType.SOL]: "oui-border-[2px] oui-border-link-light",
+    [WalletType.SUI]: "oui-border-[2px] oui-border-link-light",
   };
   return isActive && isMulti && cardActiveColorMap[type];
 };
@@ -144,6 +146,9 @@ function NonPrivyWalletHandleOption({
       case WalletType.SOL:
         walletConnectType = WalletConnectType.SOL;
         break;
+      case WalletType.SUI:
+        walletConnectType = WalletConnectType.SUI;
+        break;
       case WalletType.ABSTRACT:
         walletConnectType = WalletConnectType.ABSTRACT;
         break;
@@ -225,6 +230,18 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
         />
         <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
           Abstract
+        </div>
+      </div>
+    );
+  }
+  if (walletType === WalletType.SUI) {
+    return (
+      <div className="oui-flex oui-items-center oui-justify-start oui-gap-1">
+        <div className="oui-flex oui-size-4 oui-items-center oui-justify-center oui-rounded-full oui-bg-secondary/20 oui-text-[9px] oui-font-bold oui-text-secondary">
+          S
+        </div>
+        <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
+          Sui
         </div>
       </div>
     );

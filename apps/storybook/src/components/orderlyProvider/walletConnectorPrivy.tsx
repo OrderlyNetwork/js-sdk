@@ -129,6 +129,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
           }
         },
       }}
+      suiConfig={{}}
       abstractConfig={{}}
     >
       {props.children}

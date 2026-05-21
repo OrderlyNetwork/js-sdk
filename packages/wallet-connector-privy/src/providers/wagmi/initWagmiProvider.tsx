@@ -15,6 +15,7 @@ import {
   injected,
   WagmiProvider,
 } from "wagmi";
+import { SolanaChains, SuiChains } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { InitWagmi } from "../../types";
 
@@ -30,18 +31,26 @@ export function InitWagmiProvider({
   initChains,
   wagmiConfig,
 }: InitWagmiProps) {
-  const { connectorWalletType } = useWalletConnectorPrivy();
+  const { connectorWalletType, suiChainIds } = useWalletConnectorPrivy();
   if (connectorWalletType.disableWagmi) {
     return children;
   }
   const [queryClient] = useState(() => new QueryClient());
 
-  const [config] = useState(() =>
-    createConfig({
-      chains:
-        initChains && initChains.length
-          ? (initChains as unknown as [Chain, ...Chain[]])
-          : [mainnet],
+  const [config] = useState(() => {
+    const wagmiChains = initChains.filter(
+      (chain) =>
+        !SolanaChains.has(chain.id) &&
+        !SuiChains.has(chain.id) &&
+        !suiChainIds.has(chain.id),
+    );
+    const chains =
+      wagmiChains && wagmiChains.length
+        ? (wagmiChains as unknown as [Chain, ...Chain[]])
+        : [mainnet];
+
+    return createConfig({
+      chains,
       multiInjectedProviderDiscovery: true,
       storage: wagmiConfig.storage
         ? wagmiConfig.storage
@@ -52,11 +61,9 @@ export function InitWagmiProvider({
       connectors: wagmiConfig.connectors
         ? wagmiConfig.connectors
         : [injected()],
-      transports: Object.fromEntries(
-        initChains.map((chain) => [chain.id, http()]),
-      ),
-    }),
-  );
+      transports: Object.fromEntries(chains.map((chain) => [chain.id, http()])),
+    });
+  });
 
   return (
     <WagmiProvider config={config} initialState={initialState}>

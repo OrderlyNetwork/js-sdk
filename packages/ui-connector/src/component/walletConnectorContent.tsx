@@ -47,6 +47,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const ee = useEventEmitter();
   const { t } = useTranslation();
   const { disconnect, namespace } = useWalletConnector();
+  const isSuiWallet = namespace === ChainNamespace.sui;
 
   const { state: accountState, account } = useAccount();
   const [state, setState] = useState(initAccountState);
@@ -251,9 +252,22 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             signIn={onSignIn}
             enableTrading={onEnableTrading}
             loading={loading}
-            disabled={state >= AccountStatusEnum.EnableTrading}
+            disabled={state >= AccountStatusEnum.EnableTrading || isSuiWallet}
             showLedgerButton={showLedgerButton}
+            walletConnectOnly={isSuiWallet}
           />
+          {isSuiWallet && (
+            <Text
+              intensity={54}
+              size="2xs"
+              className="oui-mt-3 oui-block oui-text-center"
+            >
+              {t(
+                "connector.sui.walletConnectOnly",
+                "SUI wallet connection is available. Account creation and trading signatures are not supported yet.",
+              )}
+            </Text>
+          )}
         </Box>
       </Flex>
       {state > AccountStatusEnum.NotConnected && (
@@ -298,6 +312,7 @@ const ActionButton: FC<{
   loading: boolean;
   showLedgerButton?: boolean;
   disabled?: boolean;
+  walletConnectOnly?: boolean;
 }> = ({
   state,
   signIn,
@@ -305,8 +320,17 @@ const ActionButton: FC<{
   loading,
   disabled,
   showLedgerButton,
+  walletConnectOnly,
 }) => {
   const { t } = useTranslation();
+
+  if (walletConnectOnly) {
+    return (
+      <Button fullWidth disabled>
+        {t("connector.walletConnected")}
+      </Button>
+    );
+  }
 
   if (state <= AccountStatusEnum.NotSignedIn) {
     return (

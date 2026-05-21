@@ -17,6 +17,8 @@
   "dependencies": {
     "@abstract-foundation/agw-client": "^1.6.2",
     "@abstract-foundation/agw-react": "^1.6.4",
+    "@mysten/dapp-kit-react": "^2.0.3",
+    "@mysten/sui": "^2.17.0",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",

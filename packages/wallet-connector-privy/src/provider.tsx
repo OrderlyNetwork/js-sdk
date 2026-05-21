@@ -22,17 +22,20 @@ import {
   ArbitrumSepoliaChainInfo,
   SolanaChains,
   SolanaDevnetChainInfo,
+  SuiChains,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
 import { AbstractWallet } from "./providers/abstractWallet";
 import { PrivyWallet } from "./providers/privy";
 import { SolanaWallet } from "./providers/solana";
+import { SuiWallet } from "./providers/sui";
 import { WagmiWallet } from "./providers/wagmi";
 import {
   InitPrivy,
   InitWagmi,
   InitSolana,
+  InitSui,
   Network,
   WalletChainType,
   WalletChainTypeEnum,
@@ -43,6 +46,29 @@ import {
 } from "./types";
 
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
+
+const isSuiNetworkInfo = (chainInfo: any) => {
+  const currencySymbol = chainInfo?.currency_symbol?.toUpperCase?.();
+  const name = chainInfo?.name?.toLowerCase?.() || "";
+  const shortName = chainInfo?.shortName?.toLowerCase?.() || "";
+  return (
+    currencySymbol === "SUI" ||
+    name.includes("sui") ||
+    shortName.includes("sui")
+  );
+};
+
+const collectSuiChainIds = (...chainInfoGroups: any[][]) => {
+  const ids = new Set<number>();
+  chainInfoGroups.flat().forEach((chainInfo) => {
+    if (!isSuiNetworkInfo(chainInfo)) return;
+    const chainId = Number(chainInfo.chain_id);
+    if (Number.isFinite(chainId)) {
+      ids.add(chainId);
+    }
+  });
+  return ids;
+};
 
 const processChainInfo = (chainInfo: any) =>
   chainInfo.map((row: any) =>
@@ -86,6 +112,19 @@ interface WalletConnectorPrivyContextType {
       network: WalletAdapterNetwork | null;
     } | null,
   ) => void;
+  suiInfo: {
+    rpcUrl: string | null;
+    network: Network | null;
+    chainId: number | null;
+  } | null;
+  setSuiInfo: (
+    suiInfo: {
+      rpcUrl: string | null;
+      network: Network | null;
+      chainId: number | null;
+    } | null,
+  ) => void;
+  suiChainIds: Set<number>;
   termsOfUse: string;
   // TODO deprecated
   walletChainType: WalletChainType;
@@ -111,17 +150,22 @@ const WalletConnectorPrivyContext =
     setNetwork: () => {},
     solanaInfo: null,
     setSolanaInfo: () => {},
+    suiInfo: null,
+    setSuiInfo: () => {},
+    suiChainIds: new Set(),
     termsOfUse: "",
     walletChainType: WalletChainTypeEnum.EVM_SOL,
     walletChainTypeConfig: {
       hasEvm: true,
       hasSol: true,
+      hasSui: false,
       hasAbstract: false,
     },
     connectorWalletType: {
       disableWagmi: false,
       disablePrivy: false,
       disableSolana: false,
+      disableSui: false,
       disableAGW: false,
     },
     privyConfig: {
@@ -136,6 +180,7 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   privyConfig?: InitPrivy;
   wagmiConfig?: InitWagmi;
   solanaConfig?: InitSolana;
+  suiConfig?: InitSui;
   abstractConfig?: InitAbstract;
   network: Network;
   customChains?: Chains;
@@ -196,6 +241,21 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
   } | null>(null);
+  const [suiInfo, setSuiInfo] = useState<{
+    rpcUrl: string | null;
+    network: Network | null;
+    chainId: number | null;
+  } | null>(null);
+  const [suiChainIds, setSuiChainIds] = useState<Set<number>>(
+    () =>
+      new Set(
+        [
+          props.suiConfig?.mainnetChainId,
+          props.suiConfig?.testnetChainId,
+          ...Array.from(SuiChains),
+        ].filter((id): id is number => typeof id === "number"),
+      ),
+  );
 
   const connectorWalletType = useMemo(() => {
     const type: ConnectorWalletType = {
@@ -213,29 +273,43 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     if (!props.solanaConfig) {
       type.disableSolana = true;
     }
+    if (!props.suiConfig) {
+      type.disableSui = true;
+    }
     if (!props.abstractConfig) {
       type.disableAGW = true;
     }
     return type;
-  }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
+  }, [
+    props.privyConfig,
+    props.wagmiConfig,
+    props.solanaConfig,
+    props.suiConfig,
+  ]);
 
   const walletChainTypeConfig = useMemo(() => {
     const chainTypeObj: WalletChainTypeConfig = {
       hasEvm: false,
       hasSol: false,
+      hasSui: false,
       hasAbstract: false,
     };
     initChains.forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
+      } else if (SuiChains.has(chain.id) || suiChainIds.has(chain.id)) {
+        chainTypeObj.hasSui = true;
       } else if (AbstractChains.has(chain.id)) {
         chainTypeObj.hasAbstract = true;
       } else {
         chainTypeObj.hasEvm = true;
       }
     });
+    if (!connectorWalletType.disableSui && suiChainIds.size > 0) {
+      chainTypeObj.hasSui = true;
+    }
     return chainTypeObj;
-  }, [initChains]);
+  }, [connectorWalletType.disableSui, initChains, suiChainIds]);
 
   useEffect(() => {
     if (!mainnetChainsHydrated || !testChainsHydrated) return;
@@ -268,15 +342,29 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     const chainTypeObj: {
       hasEvm: boolean;
       hasSol: boolean;
+      hasSui: boolean;
       hasAbstract: boolean;
     } = {
       hasEvm: false,
       hasSol: false,
+      hasSui: false,
       hasAbstract: false,
     };
+    const nextSuiChainIds = new Set([
+      ...Array.from(suiChainIds),
+      ...Array.from(
+        collectSuiChainIds(
+          props.customChains!.testnet?.map((item) => item.network_infos) || [],
+          props.customChains!.mainnet?.map((item) => item.network_infos) || [],
+        ),
+      ),
+    ]);
+    setSuiChainIds(nextSuiChainIds);
     [...testChains, ...mainnetChains].forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
+      } else if (SuiChains.has(chain.id) || nextSuiChainIds.has(chain.id)) {
+        chainTypeObj.hasSui = true;
       } else if (AbstractChains.has(chain.id)) {
         chainTypeObj.hasAbstract = true;
       } else {
@@ -290,16 +378,19 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       setWalletChainType(WalletChainTypeEnum.onlyEVM);
     } else if (chainTypeObj.hasSol) {
       setWalletChainType(WalletChainTypeEnum.onlySOL);
+    } else if (chainTypeObj.hasSui) {
+      setWalletChainType(WalletChainTypeEnum.onlySUI);
     }
   };
   if (
     connectorWalletType.disablePrivy &&
     connectorWalletType.disableWagmi &&
     connectorWalletType.disableSolana &&
+    connectorWalletType.disableSui &&
     connectorWalletType.disableAGW
   ) {
     throw new Error(
-      "Privy, Wagmi, Solana, Abstract are all disabled. Please enable at least one of them.",
+      "Privy, Wagmi, Solana, Sui, Abstract are all disabled. Please enable at least one of them.",
     );
   }
 
@@ -321,6 +412,9 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       setNetwork,
       solanaInfo,
       setSolanaInfo,
+      suiInfo,
+      setSuiInfo,
+      suiChainIds,
       termsOfUse,
       walletChainType,
       connectorWalletType,
@@ -340,6 +434,9 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       setNetwork,
       solanaInfo,
       setSolanaInfo,
+      suiInfo,
+      setSuiInfo,
+      suiChainIds,
       termsOfUse,
       walletChainType,
       connectorWalletType,
@@ -380,6 +477,12 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       const mainnetChains = processChainInfo(mainnetChainsList);
 
       const chains = [...testChains, ...mainnetChains];
+      setSuiChainIds(
+        new Set([
+          ...Array.from(suiChainIds),
+          ...Array.from(collectSuiChainIds(testChainsList, mainnetChainsList)),
+        ]),
+      );
 
       setTestnetChains(testChains);
       setMainnetChains(mainnetChains);
@@ -416,9 +519,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
         <PrivyWallet privyConfig={props.privyConfig} initChains={initChains}>
           <WagmiWallet wagmiConfig={props.wagmiConfig} initChains={initChains}>
             <SolanaWallet solanaConfig={props.solanaConfig}>
-              <AbstractWallet>
-                <Main headerProps={props.headerProps}>{props.children}</Main>
-              </AbstractWallet>
+              <SuiWallet suiConfig={props.suiConfig}>
+                <AbstractWallet>
+                  <Main headerProps={props.headerProps}>{props.children}</Main>
+                </AbstractWallet>
+              </SuiWallet>
             </SolanaWallet>
           </WagmiWallet>
         </PrivyWallet>
