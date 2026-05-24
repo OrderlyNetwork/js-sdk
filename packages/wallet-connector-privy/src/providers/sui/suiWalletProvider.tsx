@@ -23,6 +23,7 @@ import { InitSui, Network, SuiChainsMap } from "../../types";
 type SuiNetworkName = "mainnet" | "testnet";
 
 interface SuiWalletProviderProps extends PropsWithChildren {
+  disabled: boolean;
   suiConfig?: InitSui;
 }
 
@@ -109,11 +110,10 @@ const isSupportedSuiWallet = (wallet: UiWallet, network: SuiNetworkName) => {
 
 export function SuiWalletProvider({
   children,
+  disabled,
   suiConfig,
 }: SuiWalletProviderProps) {
-  const { connectorWalletType } = useWalletConnectorPrivy();
-
-  if (connectorWalletType.disableSui || !suiConfig) {
+  if (disabled || !suiConfig) {
     return (
       <SuiWalletContext.Provider value={disabledSuiWalletValue}>
         {children}

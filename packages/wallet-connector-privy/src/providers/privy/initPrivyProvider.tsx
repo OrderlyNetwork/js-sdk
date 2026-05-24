@@ -12,7 +12,7 @@ import { useWalletConnectorPrivy } from "../../provider";
 import { InitPrivy } from "../../types";
 
 interface IProps extends PropsWithChildren {
-  privyConfig?: InitPrivy;
+  privyConfig: InitPrivy;
   initChains: Chain[];
 }
 
@@ -21,9 +21,6 @@ export function InitPrivyProvider({
   initChains,
   children,
 }: IProps) {
-  if (!privyConfig) {
-    return children;
-  }
   const { network, suiChainIds } = useWalletConnectorPrivy();
 
   const config = useMemo((): PrivyClientConfig => {
@@ -118,7 +115,7 @@ export function InitPrivyProvider({
 
   if (!initChains.length) {
     console.warn("initChains is empty");
-    return;
+    return null;
   }
 
   return (
