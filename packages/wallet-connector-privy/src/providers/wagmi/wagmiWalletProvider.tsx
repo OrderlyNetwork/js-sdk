@@ -14,7 +14,6 @@ import {
   useSwitchChain,
 } from "wagmi";
 import { ChainNamespace } from "@orderly.network/types";
-import { useWalletConnectorPrivy } from "../../provider";
 
 interface WagmiWalletContextValue {
   connectors: Connector[];
@@ -28,25 +27,40 @@ interface WagmiWalletContextValue {
 
 const WagmiWalletContext = createContext<WagmiWalletContextValue | null>(null);
 
-export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
+const disabledWagmiWalletValue: WagmiWalletContextValue = {
+  connectors: [],
+  connect: () => {},
+  wallet: undefined,
+  connectedChain: null,
+  setChain: () =>
+    Promise.reject(new Error("Wagmi wallet connector is disabled")),
+  disconnect: () => {},
+  isConnected: false,
+};
+
+export const WagmiWalletProvider: React.FC<{
+  children: React.ReactNode;
+  disabled: boolean;
+}> = ({ children, disabled }) => {
+  if (disabled) {
+    return (
+      <WagmiWalletContext.Provider value={disabledWagmiWalletValue}>
+        {children}
+      </WagmiWalletContext.Provider>
+    );
+  }
+
+  return <EnabledWagmiWalletProvider>{children}</EnabledWagmiWalletProvider>;
+};
+
+const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { connectorWalletType } = useWalletConnectorPrivy();
   const [wallet, setWallet] = useState<undefined | any>(undefined);
-  const { connect, connectors: wagmiConnectors } =
-    connectorWalletType.disableWagmi
-      ? { connect: () => Promise.resolve(), connectors: [] }
-      : useConnect();
-  const { disconnect } = connectorWalletType.disableWagmi
-    ? { disconnect: () => Promise.resolve() }
-    : useDisconnect();
-  const { connector, isConnected, address, chainId } =
-    connectorWalletType.disableWagmi
-      ? { connector: null, isConnected: false, address: null, chainId: null }
-      : useAccount();
-  const { switchChain } = connectorWalletType.disableWagmi
-    ? { switchChain: () => Promise.resolve() }
-    : useSwitchChain();
+  const { connect, connectors: wagmiConnectors } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { connector, isConnected, address, chainId } = useAccount();
+  const { switchChain } = useSwitchChain();
 
   const connectedChain = useMemo(() => {
     if (chainId) {

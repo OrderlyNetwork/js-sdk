@@ -285,6 +285,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     props.wagmiConfig,
     props.solanaConfig,
     props.suiConfig,
+    props.abstractConfig,
   ]);
 
   const walletChainTypeConfig = useMemo(() => {
@@ -520,7 +521,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
           <WagmiWallet wagmiConfig={props.wagmiConfig} initChains={initChains}>
             <SolanaWallet solanaConfig={props.solanaConfig}>
               <SuiWallet suiConfig={props.suiConfig}>
-                <AbstractWallet>
+                <AbstractWallet abstractConfig={props.abstractConfig}>
                   <Main headerProps={props.headerProps}>{props.children}</Main>
                 </AbstractWallet>
               </SuiWallet>

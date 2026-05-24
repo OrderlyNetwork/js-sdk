@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
-import { transformEIP1193Provider } from "@abstract-foundation/agw-client";
 import {
   useAbstractClient,
   useGlobalWalletSignerAccount,
   useLoginWithAbstract,
 } from "@abstract-foundation/agw-react";
-import { useAccount, useWalletClient } from "wagmi";
-import { ConnectedChain, WalletState } from "@orderly.network/hooks";
-import { ABSTRACT_CHAIN_ID_MAP, ChainNamespace } from "@orderly.network/types";
+import { useAccount } from "wagmi";
+import { ConnectedChain } from "@orderly.network/hooks";
+import { ChainNamespace } from "@orderly.network/types";
 import { windowGuard } from "@orderly.network/utils";
 import { useWalletConnectorPrivy } from "../../provider";
 import { AbstractChainsMap, IWalletState } from "../../types";
@@ -25,13 +24,39 @@ const AbstractWalletContext = createContext<AbstractWalletContextValue | null>(
   null,
 );
 
-export const AbstractWalletProvider = (props: PropsWithChildren) => {
+const disabledAbstractWalletValue: AbstractWalletContextValue = {
+  connect: () => {},
+  isConnected: false,
+  disconnect: () => {},
+  wallet: null,
+  connectedChain: undefined,
+};
+
+export const AbstractWalletProvider = (
+  props: PropsWithChildren<{ disabled: boolean }>,
+) => {
+  if (props.disabled) {
+    return (
+      <AbstractWalletContext.Provider value={disabledAbstractWalletValue}>
+        {props.children}
+      </AbstractWalletContext.Provider>
+    );
+  }
+
+  return (
+    <EnabledAbstractWalletProvider>
+      {props.children}
+    </EnabledAbstractWalletProvider>
+  );
+};
+
+const EnabledAbstractWalletProvider = (props: PropsWithChildren) => {
   const { network } = useWalletConnectorPrivy();
   const { login, logout } = useLoginWithAbstract();
   const [wallet, setWallet] = useState<IWalletState | null>(null);
-  const { data: client, isLoading: isClientLoading } = useAbstractClient();
+  const { data: client } = useAbstractClient();
   const { connector } = useAccount();
-  const { address, status } = useGlobalWalletSignerAccount();
+  const { address } = useGlobalWalletSignerAccount();
 
   const connect = () => {
     return login();
@@ -53,7 +78,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       id: AbstractChainsMap.get(network)!,
       namespace: ChainNamespace.evm,
     };
-  }, [client, connector]);
+  }, [client, connector, network]);
 
   const value = useMemo(
     () => ({
@@ -107,7 +132,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       console.log("-- abstract wallet tempWallet", tempWallet);
       setWallet(tempWallet);
     });
-  }, [client, connectedChain, connector, address, isClientLoading]);
+  }, [client, connectedChain, connector, address, network]);
 
   useEffect(() => {
     windowGuard(() => {
@@ -118,7 +143,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
         login();
       }
     });
-  }, []);
+  }, [login]);
   return (
     <AbstractWalletContext.Provider value={value}>
       {props.children}
