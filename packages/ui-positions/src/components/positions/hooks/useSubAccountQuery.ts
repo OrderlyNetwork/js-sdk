@@ -22,6 +22,7 @@ const signatureMiddleware = (
   account: ReturnType<typeof useAccountInstance>,
   accountId?: string | string[],
 ): Middleware => {
+  // TODO(hooks): Move this hook call into the parent hook and pass apiBaseUrl in.
   const apiBaseUrl = useConfig("apiBaseUrl");
   // @ts-ignore
   return (useSWRNext: SWRHook) => {

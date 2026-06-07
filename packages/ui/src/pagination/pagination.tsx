@@ -252,16 +252,16 @@ const PaginationItems = (props: Omit<PaginationProps, "onPageSizeChange">) => {
     page: currentPage,
   } = props;
 
-  if (totalPages <= 1) {
-    return null;
-  }
-
   const pageNumbers = useMemo(() => {
     if (typeof props.generatePageNumbers === "function") {
       return props.generatePageNumbers(currentPage, totalPages);
     }
     return generatePagination(currentPage, totalPages);
   }, [currentPage, totalPages, props.generatePageNumbers]);
+
+  if (totalPages <= 1) {
+    return null;
+  }
 
   return (
     <PaginationContent>
