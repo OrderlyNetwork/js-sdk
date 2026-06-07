@@ -26,7 +26,7 @@
     "@web3-onboard/core": "2.24.0",
     "@web3-onboard/injected-wallets": "^2.11.3",
     "@web3-onboard/react": "^2.11.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "@solana/spl-token": "0.4.8",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
