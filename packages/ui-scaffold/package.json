@@ -36,7 +36,7 @@
     "jsqr": "^1.4.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.14",
+    "@swc/cli": "^0.8.1",
     "@swc/core": "^1.4.12",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
