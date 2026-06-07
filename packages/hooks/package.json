@@ -57,7 +57,7 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@jest/globals": "^30.0.2",
-    "@swc/cli": "^0.3.14",
+    "@swc/cli": "^0.8.1",
     "@swc/core": "^1.4.12",
     "@swc/plugin-remove-console": "^1.5.121",
     "@testing-library/react": "^14.2.1",
