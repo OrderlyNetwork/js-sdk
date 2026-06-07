@@ -76,6 +76,7 @@ export const DesktopSharePnLContent: FC<{
     domain,
     pnlFormat,
     shareOption,
+    (key) => t(key),
     props.baseDp,
     props.quoteDp,
     props.referral,

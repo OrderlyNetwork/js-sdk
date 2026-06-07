@@ -18,10 +18,6 @@ export const MultiSortHeader: FC<MultiSortHeaderProps> = ({
 }) => {
   const { multiSort, title } = column;
 
-  if (!multiSort) {
-    return <span>{title}</span>;
-  }
-
   // Extract current sorting state
   const currentSorting = sorting?.[0]
     ? {
@@ -32,10 +28,14 @@ export const MultiSortHeader: FC<MultiSortHeaderProps> = ({
 
   const { handleFieldSort, getFieldSort } = useMultiSort({
     columnKey: column.dataIndex,
-    onSort: multiSort.onSort,
-    initialSort: multiSort.initialSort,
+    onSort: multiSort?.onSort,
+    initialSort: multiSort?.initialSort,
     currentSorting,
   });
+
+  if (!multiSort) {
+    return <span>{title}</span>;
+  }
 
   return (
     <div

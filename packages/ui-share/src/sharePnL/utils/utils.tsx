@@ -25,7 +25,6 @@
     }
 */
 // import { PnLDisplayFormat, ShareOptions } from "./type";
-import { useTranslation } from "@orderly.network/i18n";
 import { Decimal, formatNum } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 
@@ -41,12 +40,12 @@ export function getPnLPosterData(
   domain: string,
   pnlType: PnLDisplayFormat,
   options: Set<ShareOptions>,
+  t: (key: string) => string,
   baseDp?: number,
   quoteDp?: number,
   referral?: ReferralType,
   brokerName?: string,
 ) {
-  const { t } = useTranslation();
   const { symbol, currency } = processSymbol(position.symbol);
   const positionData: any = {
     symbol,

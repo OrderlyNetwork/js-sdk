@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { DialogFooter } from "./dialog";
 import { Button, ButtonProps, ThrottledButton } from "../button";
+import { DialogFooter } from "./dialog";
 
 export type DialogAction<T = any> = {
   label: string;
@@ -28,7 +28,7 @@ export type SimpleDialogFooterProps = {
 export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
   const { actions } = props;
   const [primaryLoading, setPrimaryLoading] = useState(
-    actions?.primary?.loading ?? false
+    actions?.primary?.loading ?? false,
   );
 
   useEffect(() => {
@@ -41,9 +41,11 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     };
   }, [actions?.primary?.loading]);
 
-  if (!actions) return null;
-
   const buttons = useMemo(() => {
+    if (!actions) {
+      return [];
+    }
+
     const buttons = [];
 
     if (actions.secondary && typeof actions.secondary.onClick === "function") {
@@ -63,7 +65,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           fullWidth={fullWidth}
         >
           {label}
-        </Button>
+        </Button>,
       );
     }
 
@@ -98,12 +100,14 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           color={color}
         >
           {label}
-        </ThrottledButton>
+        </ThrottledButton>,
       );
     }
 
     return buttons;
   }, [actions, primaryLoading]);
+
+  if (!actions) return null;
 
   return <DialogFooter className={props.className}>{buttons}</DialogFooter>;
 };
