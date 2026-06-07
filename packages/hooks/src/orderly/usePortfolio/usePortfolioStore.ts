@@ -41,12 +41,12 @@ const usePortfolioStore = create<
               });
             },
             false,
-            "updatePortfolio"
+            "updatePortfolio",
           );
         },
       },
-    }))
-  )
+    })),
+  ),
 );
 
 const useTotalCollateral = () =>
@@ -59,7 +59,8 @@ const useAvailableBalance = () =>
 const useUnsettledPnL = () => usePortfolioStore((state) => state.unsettledPnL);
 const useMaxLeverage = () => usePortfolioStore((state) => state.maxLeverage);
 
-const portfolioActions = () => usePortfolioStore((state) => state.actions);
+const usePortfolioActions = () => usePortfolioStore((state) => state.actions);
+const portfolioActions = usePortfolioActions;
 
 export {
   usePortfolioStore,
@@ -69,5 +70,6 @@ export {
   useAvailableBalance,
   useUnsettledPnL,
   useMaxLeverage,
+  usePortfolioActions,
   portfolioActions,
 };

@@ -14,10 +14,12 @@ export const withThemeBuilder = (StoryFn: any, context: any) => {
     });
   };
 
+  // TODO(hooks): Wrap this decorator body in a React component before using hooks.
   const emit = useChannel({
     [EVENTS.CHANGE]: themeChangeHandler,
   });
 
+  // TODO(hooks): Wrap this decorator body in a React component before using hooks.
   useEffect(() => {
     const root = document.documentElement;
 

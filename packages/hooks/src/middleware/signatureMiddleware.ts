@@ -4,6 +4,7 @@ import { getTimestamp } from "@orderly.network/utils";
 import { useConfig } from "../useConfig";
 
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
+  // TODO(hooks): Move this hook call into the hook that installs the middleware.
   const apiBaseUrl = useConfig("apiBaseUrl");
   return (key, fetcher, config) => {
     try {

@@ -67,6 +67,7 @@ export const MobileSharePnLContent: FC<{
   const enableRTLPoster = false;
   const direction: "ltr" | "rtl" = enableRTLPoster ? "rtl" : "ltr";
 
+  // TODO(hooks): Replace hook calls inside map with a stable ref collection.
   const posterRefs = shareOptions?.backgroundImages?.map(() =>
     useRef<PosterRef | null>(null),
   );
@@ -82,6 +83,7 @@ export const MobileSharePnLContent: FC<{
     domain,
     pnlFormat,
     shareOption,
+    (key) => t(key),
     props.baseDp,
     props.quoteDp,
     props.referral,

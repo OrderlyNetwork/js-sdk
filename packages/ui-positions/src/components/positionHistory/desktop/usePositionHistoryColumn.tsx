@@ -86,6 +86,7 @@ export const usePositionHistoryColumn = (props: {
               record.avg_open_price != null
                 ? Math.abs(record.avg_open_price)
                 : "--";
+            // TODO(hooks): Extract this render body into a cell component before using hooks.
             const { quote_dp } = useSymbolContext();
             return (
               <Text.numeral dp={quote_dp} padding={false}>
@@ -104,6 +105,7 @@ export const usePositionHistoryColumn = (props: {
               record.avg_close_price != null
                 ? Math.abs(record.avg_close_price)
                 : "--";
+            // TODO(hooks): Extract this render body into a cell component before using hooks.
             const { quote_dp } = useSymbolContext();
             return (
               <Text.numeral dp={quote_dp} padding={false}>

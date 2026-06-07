@@ -43,6 +43,7 @@ export function useSubAccountQuery<T>(
 }
 
 function signatureMiddleware(account: Account, accountId?: string): Middleware {
+  // TODO(hooks): Move this hook call into useSubAccountQuery and pass apiBaseUrl in.
   const apiBaseUrl = useConfig("apiBaseUrl");
 
   return (useSWRNext: SWRHook) => {
