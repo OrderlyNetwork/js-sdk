@@ -7,6 +7,7 @@ import { BaseButton, BaseButtonProps } from "./base";
 
 const buttonVariants = tv(
   {
+    extend: shadowVariants,
     base: [
       "oui-button",
       "oui-inline-flex",
@@ -20,7 +21,6 @@ const buttonVariants = tv(
       "disabled:hover:oui-bg-base-3",
     ],
     variants: {
-      ...shadowVariants.variants,
       variant: {
         text: "oui-bg-transparent",
         outlined: "oui-border",

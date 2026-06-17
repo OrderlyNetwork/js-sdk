@@ -10,10 +10,10 @@ import { visibleVariants } from "../layout/visible";
 import { tv } from "../utils/tv";
 
 const boxVariants = tv({
+  extend: shadowVariants,
   base: ["oui-box"],
   variants: {
     ...layoutVariants.variants,
-    ...shadowVariants.variants,
     ...decorationVariants.variants,
     ...positionVariants.variants,
     ...visibleVariants.variants,
@@ -41,7 +41,8 @@ const boxVariants = tv({
 type BoxElement = React.ElementRef<"div">;
 
 interface BoxProps
-  extends React.ButtonHTMLAttributes<HTMLDivElement | HTMLSpanElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLDivElement | HTMLSpanElement>,
     Omit<
       VariantProps<typeof boxVariants>,
       "__position" | "__size_width" | "__size_height"
