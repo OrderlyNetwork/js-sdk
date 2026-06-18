@@ -44,6 +44,7 @@ import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfi
 import { OrderEntryHeader } from "./components/header";
 import {
   OrderEntryAvailableInjectabled,
+  OrderEntryBodyInjectabled,
   OrderEntryQuantitySliderInjectabled,
   OrderEntrySubmitSectionInjectabled,
 } from "./components/orderEntry.injectabled";
@@ -88,6 +89,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     symbol,
   } = props;
   const [maxQtyConfirmOpen, setMaxQtyConfirmOpen] = useState(false);
+  const [selectedExtraId, setSelectedExtraId] = useState<string | null>(null);
 
   const [permissionlessAcknowledgedKeys, setPermissionlessAcknowledgedKeys] =
     useLocalStorage<string[]>("orderly-permissionless-market-notice", []);
@@ -465,193 +467,191 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           marketOrderDisabledTooltip={t(
             "orderEntry.orderType.symbolPostOnly.tooltip",
           )}
+          selectedExtraId={selectedExtraId}
+          onExtraSelect={setSelectedExtraId}
         />
 
-        <OrderEntryAvailableInjectabled
-          currentLtv={currentLtv}
-          canTrade={props.canTrade}
-          quote={symbolInfo?.quote}
-          freeCollateral={freeCollateral}
-          marginMode={props.marginMode}
-        />
-
-        <OrderInput
-          values={formattedOrder}
-          priceInputContainerWidth={props.priceInputContainerWidth}
-          fillMiddleValue={fillMiddleValue}
-          bbo={{
-            bboStatus,
-            bboType,
-            onBBOChange,
-            toggleBBO,
-          }}
-        />
-
-        <OrderEntryQuantitySliderInjectabled
-          canTrade={props.canTrade}
-          side={props.side}
-          order_quantity={formattedOrder.order_quantity}
-          maxQty={maxQty}
-        />
-
-        <OrderEntrySubmitSectionInjectabled
-          buttonLabel={buttonLabel}
+        <OrderEntryBodyInjectabled
+          symbol={props.symbol}
           side={side}
-          canTrade={props.canTrade}
-          isMutating={props.isMutating}
-          onSubmit={validateSubmit}
-          assetInfo={{
-            canTrade: props.canTrade,
-            quote: symbolInfo.quote,
-            estLiqPrice: props.estLiqPrice,
-            estLiqPriceDistance: props.estLiqPriceDistance,
-            estLeverage: props.estLeverage,
-            currentLeverage: props.currentLeverage,
-            slippage,
-            dp: symbolInfo.quote_dp,
-            setSlippage,
-            estSlippage: props.estSlippage,
-            orderType: formattedOrder.order_type!,
-            disableFeatures,
-            symbol: props.symbol,
-            side,
-          }}
-        />
+          selectedCustomTypeId={selectedExtraId}
+        >
+          <OrderEntryAvailableInjectabled
+            currentLtv={currentLtv}
+            canTrade={props.canTrade}
+            quote={symbolInfo?.quote}
+            freeCollateral={freeCollateral}
+            marginMode={props.marginMode}
+          />
 
-        <Divider className="oui-w-full" />
-
-        {/* TP SL switch and content */}
-        {hasAdvancedTPSLResult ? (
-          <AdvancedTPSLResult
-            order={formattedOrder}
-            symbolInfo={props.symbolInfo}
-            errors={validated ? errors : null}
-            onEdit={() => {
-              setShowTPSLAdvanced(true);
-            }}
-            onDelete={() => {
-              onDeleteAdvancedTPSL();
+          <OrderInput
+            values={formattedOrder}
+            priceInputContainerWidth={props.priceInputContainerWidth}
+            fillMiddleValue={fillMiddleValue}
+            bbo={{
+              bboStatus,
+              bboType,
+              onBBOChange,
+              toggleBBO,
             }}
           />
-        ) : (
-          <OrderTPSL
-            // onCancelTPSL={props.cancelTP_SL}
-            // onEnableTP_SL={props.enableTP_SL}
-            quote_dp={props.symbolInfo.quote_dp}
-            switchState={props.tpslSwitch}
-            onSwitchChanged={props.setTpslSwitch}
-            orderType={formattedOrder.order_type!}
-            errors={
-              validated || props.slPriceError !== undefined
-                ? { ...errors, ...props.slPriceError }
-                : null
-            }
-            setOrderValue={manualSetOrderValue}
-            reduceOnlyChecked={formattedOrder.reduce_only ?? false}
-            onReduceOnlyChange={(checked) => {
-              manualSetOrderValue("reduce_only", checked);
-            }}
-            values={{
-              position_type:
-                formattedOrder.position_type ?? PositionType.PARTIAL,
-              tp: {
-                trigger_price: formattedOrder.tp_trigger_price ?? "",
-                PnL: formattedOrder.tp_pnl ?? "",
-                Offset: formattedOrder.tp_offset ?? "",
-                "Offset%": formattedOrder.tp_offset_percentage ?? "",
-                OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
-                PercentageFromMark:
-                  formattedOrder.tp_offset_percentage_from_mark ?? "",
-                ROI: formattedOrder.tp_ROI ?? "",
-              },
-              sl: {
-                trigger_price: formattedOrder.sl_trigger_price ?? "",
-                PnL: formattedOrder.sl_pnl ?? "",
-                Offset: formattedOrder.sl_offset ?? "",
-                "Offset%": formattedOrder.sl_offset_percentage ?? "",
-                OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
-                PercentageFromMark:
-                  formattedOrder.sl_offset_percentage_from_mark ?? "",
-                ROI: formattedOrder.sl_ROI ?? "",
-              },
-            }}
-            showTPSLAdvanced={onShowTPSLAdvanced}
-            onChange={(key, value) => {
-              setOrderValue(key, value);
+
+          <OrderEntryQuantitySliderInjectabled
+            canTrade={props.canTrade}
+            side={props.side}
+            order_quantity={formattedOrder.order_quantity}
+            maxQty={maxQty}
+          />
+
+          <OrderEntrySubmitSectionInjectabled
+            buttonLabel={buttonLabel}
+            side={side}
+            canTrade={props.canTrade}
+            isMutating={props.isMutating}
+            onSubmit={validateSubmit}
+            assetInfo={{
+              canTrade: props.canTrade,
+              quote: symbolInfo.quote,
+              estLiqPrice: props.estLiqPrice,
+              estLiqPriceDistance: props.estLiqPriceDistance,
+              estLeverage: props.estLeverage,
+              currentLeverage: props.currentLeverage,
+              slippage,
+              dp: symbolInfo.quote_dp,
+              setSlippage,
+              estSlippage: props.estSlippage,
+              orderType: formattedOrder.order_type!,
+              disableFeatures,
+              symbol: props.symbol,
+              side,
             }}
           />
-        )}
 
-        {showReduceOnlySection && (
-          <Flex
-            justify={"between"}
-            itemAlign={"center"}
-            className={cn("oui-reduceOnly-container", "oui-mt-2")}
-          >
-            <ReduceOnlySwitch
-              checked={formattedOrder.reduce_only ?? false}
-              onCheckedChange={(checked) => {
-                manualSetOrderValue("reduce_only", checked);
+          <Divider className="oui-w-full" />
+
+          {/* TP SL switch and content */}
+          {hasAdvancedTPSLResult ? (
+            <AdvancedTPSLResult
+              order={formattedOrder}
+              symbolInfo={props.symbolInfo}
+              errors={validated ? errors : null}
+              onEdit={() => {
+                setShowTPSLAdvanced(true);
+              }}
+              onDelete={() => {
+                onDeleteAdvancedTPSL();
               }}
             />
-            {!showSoundSection && extraButton}
-          </Flex>
-        )}
-        {showSoundSection && (
-          <Flex
-            justify={"between"}
-            itemAlign={"center"}
-            className="oui-soundAlert-container"
-          >
-            <Flex itemAlign={"center"} gapX={1}>
-              <Switch
-                className={cn("oui-soundAlert-switch", "oui-h-[14px]")}
-                id={soundAlertId}
-                checked={soundAlert}
-                onCheckedChange={(checked) => setSoundAlert(checked)}
+          ) : (
+            <OrderTPSL
+              // onCancelTPSL={props.cancelTP_SL}
+              // onEnableTP_SL={props.enableTP_SL}
+              quote_dp={props.symbolInfo.quote_dp}
+              switchState={props.tpslSwitch}
+              onSwitchChanged={props.setTpslSwitch}
+              orderType={formattedOrder.order_type!}
+              errors={
+                validated || props.slPriceError !== undefined
+                  ? { ...errors, ...props.slPriceError }
+                  : null
+              }
+              setOrderValue={manualSetOrderValue}
+              reduceOnlyChecked={formattedOrder.reduce_only ?? false}
+              onReduceOnlyChange={(checked) => {
+                manualSetOrderValue("reduce_only", checked);
+              }}
+              values={{
+                position_type:
+                  formattedOrder.position_type ?? PositionType.PARTIAL,
+                tp: {
+                  trigger_price: formattedOrder.tp_trigger_price ?? "",
+                  PnL: formattedOrder.tp_pnl ?? "",
+                  Offset: formattedOrder.tp_offset ?? "",
+                  "Offset%": formattedOrder.tp_offset_percentage ?? "",
+                  OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
+                  PercentageFromMark:
+                    formattedOrder.tp_offset_percentage_from_mark ?? "",
+                  ROI: formattedOrder.tp_ROI ?? "",
+                },
+                sl: {
+                  trigger_price: formattedOrder.sl_trigger_price ?? "",
+                  PnL: formattedOrder.sl_pnl ?? "",
+                  Offset: formattedOrder.sl_offset ?? "",
+                  "Offset%": formattedOrder.sl_offset_percentage ?? "",
+                  OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
+                  PercentageFromMark:
+                    formattedOrder.sl_offset_percentage_from_mark ?? "",
+                  ROI: formattedOrder.sl_ROI ?? "",
+                },
+              }}
+              showTPSLAdvanced={onShowTPSLAdvanced}
+              onChange={(key, value) => {
+                setOrderValue(key, value);
+              }}
+            />
+          )}
+
+          {showReduceOnlySection && (
+            <Flex
+              justify={"between"}
+              itemAlign={"center"}
+              className={cn("oui-reduceOnly-container", "oui-mt-2")}
+            >
+              <ReduceOnlySwitch
+                checked={formattedOrder.reduce_only ?? false}
+                onCheckedChange={(checked) => {
+                  manualSetOrderValue("reduce_only", checked);
+                }}
               />
-              <label
-                htmlFor={soundAlertId}
-                className={cn("oui-soundAlert-label", "oui-text-xs")}
-              >
-                {t("portfolio.setting.soundAlerts")}
-              </label>
+              {!showSoundSection && extraButton}
             </Flex>
-            {extraButton}
-          </Flex>
-        )}
-        {!showSoundSection &&
-          isMobile &&
-          (formattedOrder.order_type == OrderType.LIMIT ||
-            formattedOrder.order_type == OrderType.MARKET) &&
-          !formattedOrder.reduce_only &&
-          !pinned && (
-            <Flex className="oui-w-full" justify={"end"}>
+          )}
+          {showSoundSection && (
+            <Flex
+              justify={"between"}
+              itemAlign={"center"}
+              className="oui-soundAlert-container"
+            >
+              <Flex itemAlign={"center"} gapX={1}>
+                <Switch
+                  className={cn("oui-soundAlert-switch", "oui-h-[14px]")}
+                  id={soundAlertId}
+                  checked={soundAlert}
+                  onCheckedChange={(checked) => setSoundAlert(checked)}
+                />
+                <label
+                  htmlFor={soundAlertId}
+                  className={cn("oui-soundAlert-label", "oui-text-xs")}
+                >
+                  {t("portfolio.setting.soundAlerts")}
+                </label>
+              </Flex>
               {extraButton}
             </Flex>
           )}
-        {/* Additional info （fok，ioc、post only， order confirm hidden） */}
-        {pinned && (
-          <Box
-            p={2}
-            r={"md"}
-            intensity={700}
-            position={"relative"}
-            className="oui-additional-container"
-          >
-            <AdditionalInfo {...additionalInfoProps} />
-            <PinButton
-              onClick={() => {
-                setPinned(false);
-              }}
-              className={cn(
-                "oui-additional-pin-btn",
-                "oui-group oui-absolute oui-end-2 oui-top-2",
-              )}
-              data-testid="oui-testid-orderEntry-pinned-button"
-            />
-          </Box>
-        )}
+          {/* Additional info （fok，ioc、post only， order confirm hidden） */}
+          {pinned && (
+            <Box
+              p={2}
+              r={"md"}
+              intensity={700}
+              position={"relative"}
+              className="oui-additional-container"
+            >
+              <AdditionalInfo {...additionalInfoProps} />
+              <PinButton
+                onClick={() => {
+                  setPinned(false);
+                }}
+                className={cn(
+                  "oui-additional-pin-btn",
+                  "oui-group oui-absolute oui-end-2 oui-top-2",
+                )}
+                data-testid="oui-testid-orderEntry-pinned-button"
+              />
+            </Box>
+          )}
+        </OrderEntryBodyInjectabled>
       </div>
 
       <SimpleSheet

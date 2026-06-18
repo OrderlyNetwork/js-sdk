@@ -4,19 +4,25 @@
  * createInterceptor("Trading.OrderEntry.*", (Original, props, api) => ...).
  */
 import type {
+  MobileTypeSelectProps,
   OrderEntryBuySellSwitchProps,
   OrderEntryAvailableProps,
+  OrderEntryBodyProps,
   OrderEntryQuantitySliderProps,
   OrderEntrySubmitSectionProps,
   OrderEntryTypeTabsProps,
+  OrderTypeAdvancedSelectProps,
 } from "./components/orderEntry.injectabled";
 import type { OrderEntryProps } from "./orderEntry.ui";
 
 declare module "@orderly.network/plugin-core" {
   interface InterceptorTargetPropsMap {
     OrderEntry: OrderEntryProps;
+    "Trading.OrderEntry.AdvancedSelect": OrderTypeAdvancedSelectProps;
     "Trading.OrderEntry.Available": OrderEntryAvailableProps;
+    "Trading.OrderEntry.Body": OrderEntryBodyProps;
     "Trading.OrderEntry.BuySellSwitch": OrderEntryBuySellSwitchProps;
+    "Trading.OrderEntry.MobileTypeSelect": MobileTypeSelectProps;
     "Trading.OrderEntry.QuantitySlider": OrderEntryQuantitySliderProps;
     "Trading.OrderEntry.SubmitSection": OrderEntrySubmitSectionProps;
     "Trading.OrderEntry.TypeTabs": OrderEntryTypeTabsProps;

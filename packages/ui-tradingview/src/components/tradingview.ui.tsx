@@ -4,7 +4,10 @@ import { IndicatorsIcon, SettingIcon } from "../icons";
 import type { TradingviewUIPropsInterface } from "../type";
 import { NoTradingview } from "./noTradingview";
 import TopBar from "./topBar";
-import { InjectableTradingviewDesktop } from "./tradingview.injectable";
+import {
+  InjectableChartOverlay,
+  InjectableTradingviewDesktop,
+} from "./tradingview.injectable";
 
 const LazyLineType = React.lazy(() => import("./lineType"));
 
@@ -250,6 +253,12 @@ export const TradingviewUI = forwardRef<
             )}
           </TopBar>
           <InjectableTradingviewDesktop {...props} />
+          {props.readyWidget && props.symbol && (
+            <InjectableChartOverlay
+              widget={props.readyWidget}
+              symbol={props.symbol}
+            />
+          )}
         </div>
       )}
     </div>

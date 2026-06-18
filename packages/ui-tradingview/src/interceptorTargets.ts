@@ -5,9 +5,11 @@
  */
 /// <reference types="@orderly.network/plugin-core" />
 import type { DesktopDisplayControlMenuListProps } from "./components/displayControl/common";
+import type { ChartOverlayProps } from "./components/tradingview.injectable";
 
 declare module "@orderly.network/plugin-core" {
   interface InterceptorTargetPropsMap {
     "TradingView.DisplayControl.DesktopMenuList": DesktopDisplayControlMenuListProps;
+    "Trading.Chart.Overlay": ChartOverlayProps;
   }
 }

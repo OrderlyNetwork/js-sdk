@@ -2,9 +2,11 @@ import { FC, useEffect } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast, useScreen } from "@orderly.network/ui";
-import { InjectableDesktopLayout } from "./trading.injectable";
+import {
+  InjectableDesktopLayout,
+  InjectableMobileLayout,
+} from "./trading.injectable";
 import type { TradingState } from "./trading.script";
-import { MobileLayout } from "./trading.ui.mobile";
 
 export const Trading: FC<TradingState> = (props) => {
   const { isMobile } = useScreen();
@@ -29,7 +31,7 @@ export const Trading: FC<TradingState> = (props) => {
   // }, [symbol, symbolsInfo, t]);
 
   if (isMobile) {
-    return <MobileLayout {...props} />;
+    return <InjectableMobileLayout {...props} />;
   }
 
   return (

@@ -1,10 +1,40 @@
+import type { ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { MarginMode, OrderSide, OrderType } from "@orderly.network/types";
-import { Button, cn, injectable, ThrottledButton } from "@orderly.network/ui";
+import {
+  Button,
+  cn,
+  injectable,
+  Select,
+  Text,
+  ThrottledButton,
+} from "@orderly.network/ui";
 import { AssetInfo } from "./assetInfo";
 import { Available } from "./available";
 import { OrderTypeSelect } from "./orderTypeSelect";
 import { QuantitySlider } from "./quantitySlider";
+
+/** One entry in the order-type dropdown. */
+export type OrderTypeOption = { value: string; label: string };
+
+/** Props for the Advanced order-type dropdown interceptor target. */
+export type OrderTypeAdvancedSelectProps = {
+  items: OrderTypeOption[];
+  /** Current selection: a real OrderType value, or a custom-type id. */
+  value: string;
+  placeholder: string;
+  disabled?: boolean;
+  onValueChange: (value: string) => void;
+};
+
+/** Props for the mobile order-type dropdown interceptor target. */
+export type MobileTypeSelectProps = {
+  items: OrderTypeOption[];
+  /** Current selection: a real OrderType value, or a custom-type id. */
+  value: string;
+  disabled?: boolean;
+  onValueChange: (value: string) => void;
+};
 
 /** Props exposed for plugin interceptors targeting OrderType tabs area. */
 export type OrderEntryTypeTabsProps = {
@@ -14,6 +44,9 @@ export type OrderEntryTypeTabsProps = {
   onChange: (type: OrderType) => void;
   marketOrderDisabled?: boolean;
   marketOrderDisabledTooltip?: string;
+  /** Active custom order-type id (null for a real OrderType). */
+  selectedExtraId?: string | null;
+  onExtraSelect?: (id: string | null) => void;
 };
 
 /** Props exposed for plugin interceptors targeting Buy/Sell switch area. */
@@ -21,6 +54,16 @@ export type OrderEntryBuySellSwitchProps = {
   side: OrderSide;
   canTrade: boolean;
   onSideChange: (side: OrderSide) => void;
+  /** Active custom order-type id; a plugin can intercept to hide Buy/Sell for its own type. */
+  selectedCustomTypeId?: string | null;
+};
+
+/** Props for the order-entry form-body interceptor target. */
+export type OrderEntryBodyProps = {
+  symbol: string;
+  side: OrderSide;
+  selectedCustomTypeId?: string | null;
+  children?: ReactNode;
 };
 
 /** Props exposed for plugin interceptors targeting Available balance row. */
@@ -65,6 +108,80 @@ export type OrderEntrySubmitSectionProps = {
   };
 };
 
+/** Default renderer for the Advanced order-type dropdown. */
+const OrderTypeAdvancedSelect = (props: OrderTypeAdvancedSelectProps) => (
+  <Select.options
+    testid="oui-testid-orderEntry-orderType-advanced-select"
+    currentValue={props.value}
+    value={props.value}
+    options={props.items}
+    onValueChange={(v: string) => props.onValueChange(v)}
+    placeholder={props.placeholder}
+    disabled={props.disabled}
+    contentProps={{ className: "oui-bg-base-8" }}
+    classNames={{
+      trigger: "oui-bg-base-7 oui-border-none oui-h-8 oui-rounded-md",
+    }}
+    valueFormatter={(value, option) => {
+      const item = props.items.find((i) => i.value === value);
+      return (
+        <Text size="xs" className="oui-text-base-contrast-80">
+          {item ? item.label : option.placeholder}
+        </Text>
+      );
+    }}
+    size="md"
+  />
+);
+
+export const OrderTypeAdvancedSelectInjectabled =
+  injectable<OrderTypeAdvancedSelectProps>(
+    OrderTypeAdvancedSelect,
+    "Trading.OrderEntry.AdvancedSelect",
+  );
+
+/** Default renderer for the mobile order-type dropdown. */
+const MobileTypeSelect = (props: MobileTypeSelectProps) => (
+  <Select.options
+    testid="oui-testid-orderEntry-orderType-button"
+    currentValue={props.value}
+    value={props.value}
+    options={props.items}
+    onValueChange={(v: string) => props.onValueChange(v)}
+    disabled={props.disabled}
+    contentProps={{
+      className: cn("oui-orderEntry-orderTypeSelect-content", "oui-bg-base-8"),
+    }}
+    classNames={{
+      trigger: cn(
+        "oui-orderEntry-orderTypeSelect-btn",
+        "oui-bg-base-7 oui-border-line-12 oui-h-8 oui-rounded-md",
+      ),
+    }}
+    valueFormatter={(value, option) => {
+      const item = props.items.find((i) => i.value === value);
+      return (
+        <Text size="xs" className="oui-text-base-contrast-80">
+          {item ? item.label : option.placeholder}
+        </Text>
+      );
+    }}
+    size="md"
+  />
+);
+
+export const OrderTypeMobileSelectInjectabled =
+  injectable<MobileTypeSelectProps>(
+    MobileTypeSelect,
+    "Trading.OrderEntry.MobileTypeSelect",
+  );
+
+/** Wraps the order-entry form body; default renders children unchanged. */
+export const OrderEntryBodyInjectabled = injectable<OrderEntryBodyProps>(
+  (props: OrderEntryBodyProps) => <>{props.children}</>,
+  "Trading.OrderEntry.Body",
+);
+
 export const OrderEntryTypeTabsInjectabled =
   injectable<OrderEntryTypeTabsProps>((props: OrderEntryTypeTabsProps) => {
     return (
@@ -76,6 +193,8 @@ export const OrderEntryTypeTabsInjectabled =
           onChange={props.onChange}
           marketOrderDisabled={props.marketOrderDisabled}
           marketOrderDisabledTooltip={props.marketOrderDisabledTooltip}
+          selectedExtraId={props.selectedExtraId}
+          onExtraSelect={props.onExtraSelect}
         />
       </div>
     );
