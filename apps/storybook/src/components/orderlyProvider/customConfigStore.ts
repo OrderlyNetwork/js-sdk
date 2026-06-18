@@ -2,26 +2,25 @@ import { ConfigKey, API_URLS, type URLS } from "@orderly.network/core";
 import { ExtendedConfigStore } from "@orderly.network/hooks";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
-
 const APIS: Record<ENV_NAME, URLS> = {
   prod: API_URLS.mainnet,
   staging: API_URLS.testnet,
   dev: {
-    apiBaseUrl: "https://dev-api-aliyun.orderly.org",
-    publicWsUrl: "wss://dev-ws-aliyun.orderly.org",
-    privateWsUrl: "wss://dev-ws-private-aliyun.orderly.org",
+    apiBaseUrl: "https://api.dev.orderly-i.network",
+    publicWsUrl: "wss://ws.dev.orderly-i.network",
+    privateWsUrl: "wss://ws-private.dev.orderly-i.network",
     operatorUrl: {
-      EVM: "https://dev-operator-aliyun.orderly.network",
-      SOL: "https://dev-sol-operator-aliyun.orderly.network",
+      EVM: "https://operator.dev.orderly-i.network",
+      SOL: "https://sol-operator.dev.orderly-i.network",
     },
   },
   qa: {
-    apiBaseUrl: "https://qa-api-aliyun.orderly.org",
-    publicWsUrl: "wss://qa-ws-aliyun.orderly.org",
-    privateWsUrl: "wss://qa-ws-private-aliyun.orderly.org",
+    apiBaseUrl: "https://api.qa.orderly-i.network",
+    publicWsUrl: "wss://ws.qa.orderly-i.network",
+    privateWsUrl: "wss://ws-private.qa.orderly-i.network",
     operatorUrl: {
-      EVM: "https://qa-operator-aliyun.orderly.network",
-      SOL: "https://qa-sol-operator-aliyun.orderly.network",
+      EVM: "https://operator.qa.orderly-i.network",
+      SOL: "https://sol-operator.qa.orderly-i.network",
     },
   },
 };
