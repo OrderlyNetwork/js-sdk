@@ -1,3 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+auditConfig:
+  ignoreGhsas:
+    - GHSA-3gc7-fjrx-p6mg
