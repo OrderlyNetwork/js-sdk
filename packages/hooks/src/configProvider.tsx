@@ -135,7 +135,7 @@ export const OrderlyConfigProvider: FC<
     return keyStore || new LocalStorageStore(networkId);
   }, [networkId, keyStore]);
 
-  const innerWalletAdapters = useMemo<WalletAdapter[]>(() => {
+  const innerWalletAdapters = useMemo(() => {
     return (
       walletAdapters || [
         new DefaultEVMWalletAdapter(new EthersProvider()),
@@ -143,7 +143,7 @@ export const OrderlyConfigProvider: FC<
         new DefaultSuiWalletAdapter(),
       ]
     );
-  }, [walletAdapters]);
+  }, [walletAdapters]) as WalletAdapter[];
 
   const defaultOrderbookTickSizes = useMemo(() => {
     return orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;

@@ -346,6 +346,13 @@ export class Assets {
         : tokenAddress;
     }
 
+    if (this.isSui()) {
+      if (!tokenAddress) {
+        throw new Error("[Assets]: SUI coin type is required for deposit");
+      }
+      depositData["tokenAddress"] = tokenAddress;
+    }
+
     const userAddress = this.account.stateValue.address;
 
     let contractMethod = "deposit";
@@ -436,6 +443,7 @@ export class Assets {
     chainId: number;
     token: string;
     amount: string | number;
+    fee?: string | number;
     /** orderly withdraw decimals, not chain decimals */
     decimals: number;
     receiver?: string;
@@ -448,7 +456,7 @@ export class Assets {
       throw new Error("account address is required");
     }
 
-    const { chainId, token, allowCrossChainWithdraw, decimals, receiver } =
+    const { chainId, token, allowCrossChainWithdraw, decimals, receiver, fee } =
       inputs;
     let { amount } = inputs;
     if (typeof amount === "number") {
@@ -481,6 +489,7 @@ export class Assets {
       token,
       brokerId: this.configStore.get("brokerId"),
       amount: this.account.walletAdapter.parseUnits(amount, decimals),
+      fee: this.account.walletAdapter.parseUnits(String(fee ?? 0), decimals),
       nonce,
       timestamp,
       // domain,
@@ -497,10 +506,19 @@ export class Assets {
     const { message, signatured, domain } =
       await this.account.walletAdapter.generateWithdrawMessage(messageData);
 
+    const userAddress =
+      this.account.walletAdapter.chainNamespace === ChainNamespace.sui
+        ? this.account.walletAdapter.getPublicKey?.()
+        : this.account.stateValue.address;
+
+    if (!userAddress) {
+      throw new Error("account address is required");
+    }
+
     const data = {
       signature: signatured,
       message,
-      userAddress: this.account.stateValue.address,
+      userAddress,
       verifyingContract: domain.verifyingContract,
     };
 
@@ -720,6 +738,10 @@ export class Assets {
 
   private isSolana() {
     return this.account.walletAdapter?.chainNamespace === ChainNamespace.solana;
+  }
+
+  private isSui() {
+    return this.account.walletAdapter?.chainNamespace === ChainNamespace.sui;
   }
 
   private isAbstract() {

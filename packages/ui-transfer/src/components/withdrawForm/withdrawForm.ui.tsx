@@ -64,7 +64,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
 
   const handleAddExternalWallet = (
     address: string,
-    network?: "EVM" | "SOL",
+    network?: "EVM" | "SOL" | "SUI",
   ) => {
     onAddExternalWallet?.(address, network);
   };

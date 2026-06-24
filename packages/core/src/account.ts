@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
+import { decode as bs58decode, encode as bs58encode } from "bs58";
 import { AbiCoder, keccak256 } from "ethers";
 import EventEmitter from "eventemitter3";
 import {
@@ -28,6 +29,62 @@ import {
 } from "./utils";
 import { WalletAdapter } from "./wallet/walletAdapter";
 import { WalletAdapterManager } from "./walletAdapterManager";
+
+const bytesToHex = (bytes: ArrayLike<number>) =>
+  Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("");
+
+const hexToBytes = (value: string) => {
+  const hex = value.startsWith("0x") ? value.slice(2) : value;
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let index = 0; index < hex.length; index += 2) {
+    bytes[index / 2] = Number.parseInt(hex.slice(index, index + 2), 16);
+  }
+  return bytes;
+};
+
+const normalizeSuiBase58PublicKey = (value?: string) => {
+  if (!value) {
+    return undefined;
+  }
+
+  const hex = value.startsWith("0x") ? value.slice(2) : value;
+  if (/^[0-9a-fA-F]{64}$/.test(hex)) {
+    return bs58encode(hexToBytes(hex));
+  }
+
+  try {
+    const rawBytes = bs58decode(value);
+    if (rawBytes.length === 32) {
+      return value;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+};
+
+const normalizeSuiRawPublicKey = (value?: string) => {
+  if (!value) {
+    return undefined;
+  }
+
+  const hex = value.startsWith("0x") ? value.slice(2) : value;
+  if (/^[0-9a-fA-F]{64}$/.test(hex)) {
+    return `0x${hex.toLowerCase()}`;
+  }
+
+  try {
+    const rawBytes = bs58decode(value);
+    if (rawBytes.length === 32) {
+      return `0x${bytesToHex(rawBytes)}`;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+};
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -298,8 +355,19 @@ export class Account {
       );
     }
     if (this.walletAdapter?.chainNamespace === ChainNamespace.sui) {
-      throw new Error(
-        "SUI account id is not supported in wallet-connect phase",
+      const publicKey = normalizeSuiRawPublicKey(
+        this.walletAdapter.getRawPublicKey?.() ??
+          this.walletAdapter.getPublicKey?.(),
+      );
+      if (!publicKey) {
+        throw new Error("SUI Ed25519 public key is required for account id");
+      }
+      const abicoder = AbiCoder.defaultAbiCoder();
+      return keccak256(
+        abicoder.encode(
+          ["bytes32", "bytes32"],
+          [publicKey, parseBrokerHash(brokerId)],
+        ),
       );
     }
     return parseAccountId(this.address, brokerId);
@@ -307,6 +375,36 @@ export class Account {
 
   get address(): string | undefined {
     return this.stateValue.address;
+  }
+
+  private getWalletIdentityAddress(
+    address?: string,
+    chainNamespace?: string,
+    publicKey?: string,
+  ): string {
+    const targetChainNamespace =
+      chainNamespace ||
+      this.walletAdapter?.chainNamespace ||
+      this.stateValue.chainNamespace;
+
+    if (targetChainNamespace === ChainNamespace.sui) {
+      const suiPublicKey = normalizeSuiBase58PublicKey(
+        publicKey ||
+          (this.walletAdapter?.chainNamespace === ChainNamespace.sui
+            ? this.walletAdapter.getPublicKey?.()
+            : undefined),
+      );
+      if (!suiPublicKey) {
+        throw new Error("SUI Ed25519 public key is required");
+      }
+      return suiPublicKey;
+    }
+
+    const identityAddress = address || this.address;
+    if (!identityAddress) {
+      throw new Error("account address is required");
+    }
+    return identityAddress;
   }
 
   get chainId(): number | string | undefined {
@@ -502,9 +600,10 @@ export class Account {
   private async _checkAccountExist(
     address: string,
     chainNamespace?: string,
+    publicKey?: string,
   ): Promise<{ account_id: string; user_id: string } | null> {
     // const brokerId = this.configStore.get("brokerId");
-    const res = await this._getAccountInfo(address, chainNamespace);
+    const res = await this._getAccountInfo(address, chainNamespace, publicKey);
 
     if (res.success) {
       return res.data;
@@ -571,7 +670,8 @@ export class Account {
       throw new Error("address is undefined");
     }
 
-    const { nonce, timestamp } = await this._getRegisterationNonce(address);
+    const userAddress = this.getWalletIdentityAddress(address);
+    const { nonce, timestamp } = await this._getRegisterationNonce(userAddress);
 
     // const [message, toSignatureMessage] = generateRegisterAccountMessage({
     //   registrationNonce: nonce,
@@ -597,7 +697,7 @@ export class Account {
       body: JSON.stringify({
         signature: signatured,
         message,
-        userAddress: address,
+        userAddress,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -1008,6 +1108,8 @@ export class Account {
         subAccountId: options?.subAccountId,
       });
 
+    const userAddress = this.getWalletIdentityAddress(address);
+
     // console.log("generateAPiKey", publicKey, address);
 
     const res = await this._simpleFetch("/v1/orderly_key", {
@@ -1015,7 +1117,7 @@ export class Account {
       body: JSON.stringify({
         signature: signatured,
         message,
-        userAddress: address,
+        userAddress,
       }),
       headers: {
         // TODO: remove this header
@@ -1031,11 +1133,16 @@ export class Account {
     secretKey: string;
     address: string;
     chainNamespace: ChainNamespace;
+    publicKey?: string;
   }) {
-    const { address, secretKey, chainNamespace } = options;
+    const { address, secretKey, chainNamespace, publicKey } = options;
     if (!address || !secretKey || !chainNamespace) return;
 
-    const accountInfo = await this._checkAccountExist(address, chainNamespace);
+    const accountInfo = await this._checkAccountExist(
+      address,
+      chainNamespace,
+      publicKey,
+    );
     const accountId = accountInfo?.account_id;
 
     if (!accountId) return;
@@ -1228,6 +1335,9 @@ export class Account {
       accountId: undefined,
       userId: undefined,
       address: undefined,
+      mainAccountId: undefined,
+      subAccountId: undefined,
+      subAccounts: undefined,
     };
     this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
@@ -1287,9 +1397,9 @@ export class Account {
     return this.walletAdapterManager.adapter;
   }
 
-  private async _getRegisterationNonce(address: string) {
+  private async _getRegisterationNonce(userAddress: string) {
     const res = await this._simpleFetch(
-      `/v1/registration_nonce?address=${encodeURIComponent(address)}`,
+      `/v1/registration_nonce?address=${encodeURIComponent(userAddress)}`,
       {
         headers: {
           "orderly-account-id": this.stateValue.accountId!,
@@ -1317,10 +1427,18 @@ export class Account {
     }
   }
 
-  private async _getAccountInfo(address?: string, chainNamespace?: string) {
+  private async _getAccountInfo(
+    address?: string,
+    chainNamespace?: string,
+    publicKey?: string,
+  ) {
     const brokerId = this.configStore.get("brokerId");
 
-    const addr = address || this.address;
+    const addr = this.getWalletIdentityAddress(
+      address,
+      chainNamespace,
+      publicKey,
+    );
     const chainType = chainNamespace || this.stateValue.chainNamespace;
 
     const res = await this._simpleFetch(

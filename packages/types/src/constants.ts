@@ -38,8 +38,8 @@ export enum NetworkStatusEnum {
 export const ARBITRUM_TESTNET_CHAINID = 421614;
 export const SOLANA_TESTNET_CHAINID = 901901901;
 export const SOLANA_MAINNET_CHAINID = 900900900;
-export const SUI_TESTNET_CHAINID = 40378;
-export const SUI_MAINNET_CHAINID = 30378;
+export const SUI_TESTNET_CHAINID = 904904904;
+export const SUI_MAINNET_CHAINID = 905905905;
 export const STORY_TESTNET_CHAINID = 1516;
 export const MONAD_TESTNET_CHAINID = 10143;
 export const ABSTRACT_TESTNET_CHAINID = 11124;
@@ -124,6 +124,27 @@ export const SolanaDevnetChainInfo = {
   vault_address: "9shwxWDUNhtwkHocsUAmrNAQfBH2DHh4njdAEdHZZkF2",
 };
 
+export const SuiTestnetChainInfo = {
+  chain_id: "904904904",
+  currency_decimal: 9,
+  currency_symbol: "SUI",
+  explorer_base_url: "https://suiscan.xyz/testnet",
+  name: "Sui-Testnet",
+  public_rpc_url: "https://fullnode.testnet.sui.io:443",
+  vault_address:
+    "0x2fad715610f1af18dde2121e2aa35f38bcf88d2e0338f1dbdbe20df5e1e02506",
+};
+
+export const SuiMainnetChainInfo = {
+  chain_id: "905905905",
+  currency_decimal: 9,
+  currency_symbol: "SUI",
+  explorer_base_url: "https://suiscan.xyz/mainnet",
+  name: "Sui-Mainnet",
+  public_rpc_url: "https://fullnode.mainnet.sui.io:443",
+  vault_address: "",
+};
+
 export const SolanaDevnetTokenInfo = {
   chain_id: "901901901",
   contract_address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
@@ -138,6 +159,26 @@ export const ArbitrumSepoliaTokenInfo = {
   decimals: 6,
   withdrawal_fee: 1,
   cross_chain_withdrawal_fee: 2,
+  display_name: "USDC",
+};
+
+export const SuiTestnetTokenInfo = {
+  chain_id: "904904904",
+  contract_address:
+    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+  decimals: 6,
+  withdrawal_fee: 1,
+  cross_chain_withdrawal_fee: 5,
+  display_name: "USDC",
+};
+
+export const SuiMainnetTokenInfo = {
+  chain_id: "905905905",
+  contract_address:
+    "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+  decimals: 6,
+  withdrawal_fee: 1,
+  cross_chain_withdrawal_fee: 1,
   display_name: "USDC",
 };
 

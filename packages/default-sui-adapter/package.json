@@ -17,8 +17,12 @@
     "access": "public"
   },
   "dependencies": {
+    "@layerzerolabs/lz-definitions": "^3.0.149",
+    "@layerzerolabs/lz-sui-sdk-v2": "^3.0.168",
+    "@mysten/sui": "^1.45.2",
     "@orderly.network/core": "workspace:*",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "bs58": "^5.0.0"
   },
   "devDependencies": {
     "tsconfig": "workspace:*",

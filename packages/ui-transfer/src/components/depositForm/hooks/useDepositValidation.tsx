@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, type ReactNode } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import { API, ChainNamespace } from "@orderly.network/types";
@@ -15,6 +15,7 @@ type Options = {
   maxQuantity: string;
   isNativeToken: boolean;
   depositFee: bigint;
+  depositFeeError?: unknown;
   depositFeeRevalidating: boolean;
   nativeBalanceRevalidating: boolean;
   dstGasFee: string;
@@ -35,6 +36,7 @@ export const useDepositValidation = (options: Options) => {
     maxQuantity,
     isNativeToken,
     depositFee,
+    depositFeeError,
     depositFeeRevalidating,
     nativeBalanceRevalidating,
     dstGasFee,
@@ -205,13 +207,34 @@ export const useDepositValidation = (options: Options) => {
     if (
       quantity &&
       Number(quantity) > 0 &&
-      depositFee === 0n &&
+      (depositFee === 0n || depositFeeError) &&
       !depositFeeRevalidating &&
       account.walletAdapter?.chainNamespace !== ChainNamespace.solana
     ) {
       return t("transfer.deposit.feeUnavailable");
     }
-  }, [t, quantity, depositFee, depositFeeRevalidating, account]);
+  }, [
+    t,
+    quantity,
+    depositFee,
+    depositFeeError,
+    depositFeeRevalidating,
+    account,
+  ]);
+
+  const suiPublicKeyMessage = useMemo(() => {
+    if (
+      quantity &&
+      Number(quantity) > 0 &&
+      account.walletAdapter?.chainNamespace === ChainNamespace.sui &&
+      !account.walletAdapter?.getPublicKey?.()
+    ) {
+      return t(
+        "transfer.deposit.suiPublicKeyRequired",
+        "This Sui wallet does not expose an Ed25519 public key. Please connect an Ed25519 Sui wallet to deposit.",
+      );
+    }
+  }, [t, quantity, account]);
 
   const { inputStatus, hintMessage } = useMemo<{
     inputStatus: InputStatus;
@@ -267,9 +290,10 @@ export const useDepositValidation = (options: Options) => {
     [t],
   );
 
-  const validationMessage =
+  const validationMessage: ReactNode =
     globalMaxQtyMessage ||
     gasFeeMessage ||
+    suiPublicKeyMessage ||
     feeWarningMessage ||
     insufficientGasMessage;
 
@@ -277,6 +301,7 @@ export const useDepositValidation = (options: Options) => {
     inputStatus === "error" ||
     // if exceed collateral cap, disable deposit button
     isExceedSourceTokenCap ||
+    !!suiPublicKeyMessage ||
     !!feeWarningMessage ||
     !!insufficientNativeTotal ||
     !!insufficientGasMessage;

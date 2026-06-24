@@ -15,12 +15,15 @@ import {
   ChainIcon,
 } from "@orderly.network/ui";
 import { CurrentChain } from "../depositForm/hooks";
-import { validateWalletAddress } from "./withdrawForm.script";
+import {
+  validateWalletAddress,
+  type WalletLookupNetwork,
+} from "./withdrawForm.script";
 
 interface AddWalletDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (address: string, network?: "EVM" | "SOL") => void;
+  onConfirm: (address: string, network?: WalletLookupNetwork) => void;
   chain: CurrentChain | null;
 }
 
@@ -35,8 +38,17 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
   const [isValidating, setIsValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<{
     valid: boolean;
-    network?: "EVM" | "SOL";
+    network?: WalletLookupNetwork;
   } | null>(null);
+
+  const requiredNetwork: WalletLookupNetwork | undefined =
+    chain?.namespace === ChainNamespace.solana
+      ? "SOL"
+      : chain?.namespace === ChainNamespace.sui
+        ? "SUI"
+        : chain?.namespace === ChainNamespace.evm
+          ? "EVM"
+          : undefined;
 
   const checkAddress = useDebouncedCallback((addr: string) => {
     if (!addr) {
@@ -44,7 +56,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
       setIsValidating(false);
       return;
     }
-    const result = validateWalletAddress(addr);
+    const result = validateWalletAddress(addr, requiredNetwork);
     setValidationResult(result);
     setIsValidating(false);
   }, 500);
@@ -71,19 +83,14 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
     if (!open) onClear();
   }, [open]);
 
-  const requiredNetwork: "EVM" | "SOL" | undefined =
-    chain?.namespace === ChainNamespace.solana
-      ? "SOL"
-      : chain?.namespace === ChainNamespace.evm
-        ? "EVM"
-        : undefined;
-
   const requiredNetworkLabel =
     requiredNetwork === "SOL"
       ? "Solana"
-      : requiredNetwork === "EVM"
-        ? "EVM"
-        : "";
+      : requiredNetwork === "SUI"
+        ? "Sui"
+        : requiredNetwork === "EVM"
+          ? "EVM"
+          : "";
 
   const hasValidation = !!validationResult;
   const isValid = !!validationResult?.valid;
@@ -102,7 +109,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
   const handleConfirm = () => {
     if (!address || isValidating || !isValid || isNetworkMismatch) return;
 
-    onConfirm(address, validationResult!.network === "SOL" ? "SOL" : "EVM");
+    onConfirm(address, validationResult!.network);
     onOpenChange(false);
   };
 
@@ -152,7 +159,11 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
                     : "oui-text-primary-light",
                 )}
               >
-                {validationResult!.network === "EVM" ? "EVM" : "Solana"}
+                {validationResult!.network === "EVM"
+                  ? "EVM"
+                  : validationResult!.network === "SOL"
+                    ? "Solana"
+                    : "Sui"}
               </Text>
             )}
             {showInlineInvalid && (

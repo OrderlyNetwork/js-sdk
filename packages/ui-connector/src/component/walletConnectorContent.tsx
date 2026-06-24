@@ -15,7 +15,6 @@ import {
 import {
   Box,
   Button,
-  capitalizeFirstLetter,
   Divider,
   Flex,
   inputFormatter,
@@ -41,13 +40,16 @@ export type WalletConnectContentProps = {
   showRefCodeInput: boolean;
 };
 
+const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY =
+  "connector.sui.unsupportedAccountType";
+const SUI_UNSUPPORTED_ACCOUNT_SCHEMES = new Set([0x02, 0x03, 0x05]);
+
 export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const { initAccountState = AccountStatusEnum.NotConnected } = props;
   const [remember, setRemember] = useState(true);
   const ee = useEventEmitter();
   const { t } = useTranslation();
-  const { disconnect, namespace } = useWalletConnector();
-  const isSuiWallet = namespace === ChainNamespace.sui;
+  const { disconnect, namespace, wallet } = useWalletConnector();
 
   const { state: accountState, account } = useAccount();
   const [state, setState] = useState(initAccountState);
@@ -110,6 +112,11 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   }, [namespace, account.address, ledgerWallet]);
 
   const onEnableTrading = () => {
+    if (shouldBlockSuiAccount(namespace, wallet)) {
+      toast.error(i18n.t(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY));
+      return Promise.resolve();
+    }
+
     setLoading(true);
     return props
       .enableTrading(remember)
@@ -136,9 +143,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           }
 
           if (
-            reject.message.indexOf(
+            getErrorMessage(reject).includes(
               "Signing off chain messages with Ledger is not yet supported",
-            ) !== -1
+            )
           ) {
             ee.emit("wallet:sign-message-with-ledger-error", {
               message: reject.message,
@@ -146,7 +153,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             });
             return;
           }
-          toast.error(paseErrorMsg(reject));
+          toast.error(paseErrorMsg(reject, namespace));
         },
       )
       .catch((e) => {
@@ -168,6 +175,11 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   };
 
   const onSignIn = () => {
+    if (shouldBlockSuiAccount(namespace, wallet)) {
+      toast.error(i18n.t(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY));
+      return Promise.resolve();
+    }
+
     setLoading(true);
     return props
       .signIn()
@@ -183,9 +195,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             return;
           }
           if (
-            reject.message.indexOf(
+            getErrorMessage(reject).includes(
               "Signing off chain messages with Ledger is not yet supported",
-            ) !== -1
+            )
           ) {
             ee.emit("wallet:sign-message-with-ledger-error", {
               message: reject.message,
@@ -194,7 +206,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             return;
           }
 
-          toast.error(paseErrorMsg(reject));
+          toast.error(paseErrorMsg(reject, namespace));
         },
       )
       .catch((e) => {
@@ -252,22 +264,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             signIn={onSignIn}
             enableTrading={onEnableTrading}
             loading={loading}
-            disabled={state >= AccountStatusEnum.EnableTrading || isSuiWallet}
+            disabled={state >= AccountStatusEnum.EnableTrading}
             showLedgerButton={showLedgerButton}
-            walletConnectOnly={isSuiWallet}
           />
-          {isSuiWallet && (
-            <Text
-              intensity={54}
-              size="2xs"
-              className="oui-mt-3 oui-block oui-text-center"
-            >
-              {t(
-                "connector.sui.walletConnectOnly",
-                "SUI wallet connection is available. Account creation and trading signatures are not supported yet.",
-              )}
-            </Text>
-          )}
         </Box>
       </Flex>
       {state > AccountStatusEnum.NotConnected && (
@@ -312,7 +311,6 @@ const ActionButton: FC<{
   loading: boolean;
   showLedgerButton?: boolean;
   disabled?: boolean;
-  walletConnectOnly?: boolean;
 }> = ({
   state,
   signIn,
@@ -320,17 +318,8 @@ const ActionButton: FC<{
   loading,
   disabled,
   showLedgerButton,
-  walletConnectOnly,
 }) => {
   const { t } = useTranslation();
-
-  if (walletConnectOnly) {
-    return (
-      <Button fullWidth disabled>
-        {t("connector.walletConnected")}
-      </Button>
-    );
-  }
 
   if (state <= AccountStatusEnum.NotSignedIn) {
     return (
@@ -529,25 +518,73 @@ const RememberMe = () => {
   );
 };
 
-function paseErrorMsg(reject: any): string {
-  console.log("wallet callback error", reject);
-  console.log("message *** ", "reject keys", Object.keys(reject));
-  Object.keys(reject).forEach((key) => {
-    console.log("key", key, "-", reject[key]);
-  });
-  let msg = i18n.t("connector.somethingWentWrong");
-
-  // if (typeof reject?.info?.error === "object" && "message" in reject?.info?.error) {
-  //   msg = reject?.info?.error?.message;
-  // }
-
-  // if (typeof reject?.shortMessage === 'string') {
-  //   msg = reject.shortMessage;
-  // }
-
-  if (reject.toString().includes("rejected")) {
-    msg = i18n.t("connector.userRejected");
+function getErrorMessage(reject: any): string {
+  if (typeof reject === "string") {
+    return reject;
   }
 
-  return capitalizeFirstLetter(msg) ?? msg;
+  if (reject instanceof Error) {
+    return reject.message;
+  }
+
+  const candidates = [
+    reject?.message,
+    reject?.shortMessage,
+    reject?.reason,
+    reject?.cause?.message,
+    reject?.error?.message,
+    reject?.info?.error?.message,
+    reject?.data?.message,
+  ];
+
+  const message = candidates.find(
+    (value) => typeof value === "string" && value.trim().length > 0,
+  );
+
+  if (message) {
+    return message;
+  }
+
+  return reject?.toString?.() ?? "";
+}
+
+function paseErrorMsg(reject: any, namespace?: ChainNamespace | null): string {
+  const errorMessage = getErrorMessage(reject);
+  const normalizedErrorMessage = errorMessage.toLowerCase();
+
+  if (errorMessage === SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY) {
+    return i18n.t(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY);
+  }
+
+  if (
+    namespace === ChainNamespace.sui &&
+    normalizedErrorMessage.includes("incorrect password")
+  ) {
+    return i18n.t(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY);
+  }
+
+  if (normalizedErrorMessage.includes("rejected")) {
+    return i18n.t("connector.userRejected");
+  }
+
+  return errorMessage || i18n.t("connector.somethingWentWrong");
+}
+
+function shouldBlockSuiAccount(namespace: ChainNamespace | null, wallet: any) {
+  if (namespace !== ChainNamespace.sui || !wallet) {
+    return false;
+  }
+
+  const provider = wallet as {
+    provider?: {
+      account?: { publicKeyScheme?: number };
+    };
+  };
+
+  const publicKeyScheme = provider.provider?.account?.publicKeyScheme;
+
+  return (
+    typeof publicKeyScheme === "number" &&
+    SUI_UNSUPPORTED_ACCOUNT_SCHEMES.has(publicKeyScheme)
+  );
 }

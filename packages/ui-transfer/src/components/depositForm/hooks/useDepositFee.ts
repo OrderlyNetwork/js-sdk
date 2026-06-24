@@ -16,9 +16,12 @@ export function useDepositFee(options: {
   const tokenInfo = useTokenInfo(nativeSymbol!);
 
   const feeProps = useMemo(() => {
-    // deposit fee is native token, so evm decimals is 18, solana is 9
+    // deposit fee is native token; Solana lamports and Sui MIST both use 9 decimals.
     const decimals =
-      account.walletAdapter?.chainNamespace === ChainNamespace.solana ? 9 : 18;
+      account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
+      account.walletAdapter?.chainNamespace === ChainNamespace.sui
+        ? 9
+        : 18;
 
     const dstGasFee = new Decimal(depositFee.toString())
       .div(new Decimal(10).pow(decimals))
@@ -34,7 +37,13 @@ export function useDepositFee(options: {
       feeAmount,
       dp: tokenInfo?.decimals || 8,
     };
-  }, [depositFee, tokenInfo]);
+  }, [
+    account.walletAdapter?.chainNamespace,
+    depositFee,
+    getIndexPrice,
+    nativeSymbol,
+    tokenInfo,
+  ]);
 
   return feeProps;
 }

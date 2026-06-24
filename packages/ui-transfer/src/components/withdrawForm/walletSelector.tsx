@@ -30,7 +30,7 @@ const AddIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
 export type WalletOption = {
   address: string;
   name?: string;
-  network?: "EVM" | "SOL";
+  network?: "EVM" | "SOL" | "SUI";
 };
 
 interface WalletMenuItemProps {
@@ -84,10 +84,11 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
   const dir = useDocumentDirection();
   const isRTL = dir === "rtl";
 
-  const currentNetwork = useMemo<"EVM" | "SOL" | undefined>(() => {
+  const currentNetwork = useMemo<"EVM" | "SOL" | "SUI" | undefined>(() => {
     if (!connectedWallet?.namespace) return undefined;
     const ns = connectedWallet.namespace.toLowerCase();
     if (ns.includes("sol")) return "SOL";
+    if (ns.includes("sui")) return "SUI";
     return "EVM";
   }, [connectedWallet?.namespace]);
 
@@ -119,9 +120,10 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
   const hasExternalWallets = filteredExternalWallets.length > 0;
   const showConnectedItem = !!connectedWallet && hasExternalWallets;
 
-  const getChainLabel = (network?: "EVM" | "SOL") => {
+  const getChainLabel = (network?: "EVM" | "SOL" | "SUI") => {
     if (!network) return "";
     if (network === "SOL") return "Solana";
+    if (network === "SUI") return "Sui";
     return "EVM";
   };
 

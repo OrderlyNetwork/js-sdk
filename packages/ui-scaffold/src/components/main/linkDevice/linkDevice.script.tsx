@@ -5,7 +5,7 @@ import {
   useEventEmitter,
   useTrack,
 } from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
+import { ChainNamespace, TrackerEventName } from "@orderly.network/types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 
@@ -113,17 +113,29 @@ export function useLinkDeviceScript() {
   useEffect(() => {
     if (confirm && secretKey) {
       const timestamp = Math.floor(Date.now() / 1000) + ExpireSeconds;
+      const isSui =
+        account.walletAdapter?.chainNamespace === ChainNamespace.sui;
+      const identity = isSui
+        ? account.walletAdapter?.getPublicKey?.()
+        : account.address;
+
+      if (!identity) {
+        console.error("Sui public key is required to link device.");
+        hideDialog();
+        return;
+      }
+
       const params = {
         k: secretKey,
         t: timestamp,
-        a: account.address,
+        a: identity,
         i: account.chainId,
         n: account.walletAdapter?.chainNamespace,
       };
       const url = createUrl(params);
       setUrl(url);
     }
-  }, [confirm, secretKey]);
+  }, [account, confirm, hideDialog, secretKey]);
 
   return {
     open,

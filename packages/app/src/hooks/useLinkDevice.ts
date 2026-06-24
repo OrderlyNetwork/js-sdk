@@ -1,4 +1,6 @@
 import { useCallback, useEffect } from "react";
+import { Ed25519PublicKey } from "@mysten/sui/keypairs/ed25519";
+import { decode as bs58decode, encode as bs58encode } from "bs58";
 import {
   parseJSON,
   useAccount,
@@ -14,7 +16,7 @@ type DecodedData = {
   k: string;
   /* timestamp */
   t: number;
-  /** address */
+  /** address for EVM/Solana, Ed25519 public key for Sui */
   a: string;
   /** chain id */
   i: number;
@@ -57,11 +59,12 @@ export function useLinkDevice() {
     const linkData = getLinkDeviceData();
     if (!linkData) return;
 
-    const { address, secretKey, chainId, chainNamespace } = linkData;
+    const { address, secretKey, chainId, chainNamespace, publicKey } = linkData;
     const isSuccess = await account.importOrderlyKey({
       address,
       secretKey,
       chainNamespace,
+      publicKey,
     });
     if (!isSuccess) return;
     setLinkDeviceStorage({
@@ -126,20 +129,72 @@ export function getLinkDeviceData() {
   if (!link) return;
 
   const {
-    a: address,
+    a: identity,
     k: secretKey,
     i: chainId,
     n: chainNamespace,
   } = decodeBase64(link) || {};
 
-  if (address && secretKey && chainId && chainNamespace) {
+  if (identity && secretKey && chainId && chainNamespace) {
+    const { address, publicKey } = parseLinkDeviceIdentity(
+      identity,
+      chainNamespace,
+    );
+    if (!address) return;
+
     return {
       address,
       secretKey,
       chainId,
       chainNamespace,
+      publicKey,
     };
   }
+}
+
+function parseLinkDeviceIdentity(
+  identity: string,
+  chainNamespace: ChainNamespace,
+) {
+  if (chainNamespace !== ChainNamespace.sui) {
+    return { address: identity, publicKey: undefined };
+  }
+
+  const rawPublicKey = decodeSuiPublicKeyBytes(identity);
+  if (!rawPublicKey) {
+    console.error("Invalid Sui public key in link device payload.");
+    return { address: undefined, publicKey: undefined };
+  }
+
+  const publicKey = bs58encode(rawPublicKey);
+  return {
+    address: new Ed25519PublicKey(rawPublicKey).toSuiAddress(),
+    publicKey,
+  };
+}
+
+function decodeSuiPublicKeyBytes(value: string) {
+  const normalized = value.startsWith("0x") ? value.slice(2) : value;
+  if (/^[0-9a-fA-F]{64}$/.test(normalized)) {
+    return hexToBytes(normalized);
+  }
+
+  try {
+    const decoded = bs58decode(value);
+    if (decoded.length === 32) {
+      return Uint8Array.from(decoded);
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+}
+
+function hexToBytes(value: string) {
+  return Uint8Array.from(
+    value.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
+  );
 }
 
 function decodeBase64(base64: string) {

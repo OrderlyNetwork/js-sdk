@@ -30,6 +30,8 @@ export const transfer = {
     "Deposit pending: {{amount}} {{symbol}}",
   "transfer.deposit.feeUnavailable":
     "Fee data is currently unavailable. Please try again later.",
+  "transfer.deposit.suiPublicKeyRequired":
+    "This Sui wallet does not expose an Ed25519 public key. Please connect an Ed25519 Sui wallet to deposit.",
   "transfer.deposit.notEnoughGas":
     "Not enough gas. Add some {{token}} to your wallet to continue.",
   "transfer.deposit.exceedCap": "Amount exceeds user deposit cap",

@@ -718,4 +718,4 @@ export enum ChainNamespace {
 
 export const AbstractChains = new Set([2741, 11124]);
 export const SolanaChains = new Set([901901901, 900900900]);
-export const SuiChains = new Set([40378, 30378]);
+export const SuiChains = new Set([904904904, 905905905]);

@@ -12,7 +12,7 @@ const APIS: Record<ENV_NAME, URLS> = {
     operatorUrl: {
       EVM: "https://operator.dev.orderly-i.network",
       SOL: "https://sol-operator.dev.orderly-i.network",
-      SUI: "https://operator.dev.orderly-i.network",
+      SUI: "https://sui-operator.dev.orderly-i.network",
     },
   },
   qa: {
@@ -22,7 +22,7 @@ const APIS: Record<ENV_NAME, URLS> = {
     operatorUrl: {
       EVM: "https://operator.qa.orderly-i.network",
       SOL: "https://sol-operator.qa.orderly-i.network",
-      SUI: "https://operator.qa.orderly-i.network",
+      SUI: "https://sui-operator.qa.orderly-i.network",
     },
   },
 };

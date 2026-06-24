@@ -63,6 +63,8 @@ export const connector = {
     "Are you using Ledger Wallet?",
   "connector.sui.walletConnectOnly":
     "SUI wallet connection is available. Account creation and trading signatures are not supported yet.",
+  "connector.sui.unsupportedAccountType":
+    "Current account type is not supported. Please use a mnemonic account.",
 
   "connector.privy.loginIn": "Login in",
   "connector.privy.logout": "Log out",

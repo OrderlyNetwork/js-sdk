@@ -81,6 +81,7 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
       chainId: number;
       token: string;
       amount: string;
+      fee?: string | number;
       allowCrossChainWithdraw: boolean;
       receiver?: string;
     }): Promise<any> => {

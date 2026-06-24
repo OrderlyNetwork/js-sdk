@@ -29,6 +29,7 @@ export type WithdrawInputs = {
   receiver: string;
   token: string;
   amount: string;
+  fee?: string;
   nonce: number;
   timestamp: number;
   // chainType: ChainType;
@@ -190,6 +191,12 @@ export interface WalletAdapter<Config = any> {
 
   getBalance(): Promise<bigint>;
   getBalances(addresses: string[]): Promise<any>;
+
+  /** Returns the API-facing public key. */
+  getPublicKey?(): string | undefined;
+
+  /** Returns the raw 32-byte public key used by account-id derivation and deposit flows. */
+  getRawPublicKey?(): string | undefined;
 
   pollTransactionReceiptWithBackoff(
     txHash: string,

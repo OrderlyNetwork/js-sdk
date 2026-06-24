@@ -8,7 +8,11 @@ import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { InputStatus } from "../../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../../utils";
-import { validateWalletAddress } from "../withdrawForm.script";
+import {
+  normalizeSuiLookupPublicKey,
+  validateWalletAddress,
+  type WalletLookupNetwork,
+} from "../withdrawForm.script";
 
 type InternalWithdrawOptions = {
   token: string;
@@ -17,6 +21,7 @@ type InternalWithdrawOptions = {
   setQuantity: (quantity: string) => void;
   close?: () => void;
   setLoading: (loading: boolean) => void;
+  lookupNetwork?: WalletLookupNetwork;
 };
 
 export type AccountInfo = {
@@ -25,7 +30,15 @@ export type AccountInfo = {
 };
 
 export function useWithdrawAccountId(options: InternalWithdrawOptions) {
-  const { token, quantity, setQuantity, close, setLoading, decimals } = options;
+  const {
+    token,
+    quantity,
+    setQuantity,
+    close,
+    setLoading,
+    decimals,
+    lookupNetwork,
+  } = options;
   const { t } = useTranslation();
   const [toAccountId, setToAccountId] = useState<string>("");
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
@@ -90,58 +103,70 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
     }
   }, [toAccountId]);
 
-  const walletLookup = async (
-    input: string,
-    network?: "EVM" | "SOL",
-  ): Promise<AccountInfo | null> => {
-    if (!network || !brokerId) return null;
+  const walletLookup = useCallback(
+    async (
+      input: string,
+      network?: WalletLookupNetwork,
+    ): Promise<AccountInfo | null> => {
+      if (!network || !brokerId) return null;
 
-    const chainType = network;
-    const res = await fetch(
-      `${apiBaseUrl}/v1/get_account?address=${encodeURIComponent(
-        input,
-      )}&broker_id=${encodeURIComponent(
-        brokerId,
-      )}&chain_type=${encodeURIComponent(chainType)}`,
-    );
-    const json = await res.json();
+      const lookupAddress =
+        network === "SUI" ? normalizeSuiLookupPublicKey(input) : input;
+      if (!lookupAddress) return null;
 
-    if (res.ok && json?.success && json?.data?.account_id) {
-      return {
-        accountId: json.data.account_id,
-        address: input,
-      };
-    }
-
-    return null;
-  };
-
-  const accountLookup = async (input: string): Promise<AccountInfo | null> => {
-    const res = await fetch(
-      `${apiBaseUrl}/v1/public/account?account_id=${encodeURIComponent(input)}`,
-    );
-    const json = await res.json();
-
-    if (
-      res.ok &&
-      json?.success &&
-      json?.data?.address &&
-      (!brokerId || json.data.broker_id === brokerId)
-    ) {
-      return {
-        accountId: input,
-        address: json.data.address,
-      };
-    }
-
-    if (res.ok && json?.success && brokerId) {
-      console.log(
-        "This account belongs to a different broker and cannot be used here.",
+      const chainType = network;
+      const res = await fetch(
+        `${apiBaseUrl}/v1/get_account?address=${encodeURIComponent(
+          lookupAddress,
+        )}&broker_id=${encodeURIComponent(
+          brokerId,
+        )}&chain_type=${encodeURIComponent(chainType)}`,
       );
-    }
+      const json = await res.json();
 
-    return null;
-  };
+      if (res.ok && json?.success && json?.data?.account_id) {
+        return {
+          accountId: json.data.account_id,
+          address: lookupAddress,
+        };
+      }
+
+      return null;
+    },
+    [apiBaseUrl, brokerId],
+  );
+
+  const accountLookup = useCallback(
+    async (input: string): Promise<AccountInfo | null> => {
+      const res = await fetch(
+        `${apiBaseUrl}/v1/public/account?account_id=${encodeURIComponent(
+          input,
+        )}`,
+      );
+      const json = await res.json();
+
+      if (
+        res.ok &&
+        json?.success &&
+        json?.data?.address &&
+        (!brokerId || json.data.broker_id === brokerId)
+      ) {
+        return {
+          accountId: input,
+          address: json.data.address,
+        };
+      }
+
+      if (res.ok && json?.success && brokerId) {
+        console.log(
+          "This account belongs to a different broker and cannot be used here.",
+        );
+      }
+
+      return null;
+    },
+    [apiBaseUrl, brokerId],
+  );
 
   const performLookup = useCallback(
     async (rawInput: string) => {
@@ -151,7 +176,7 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
         return;
       }
 
-      const { valid, network } = validateWalletAddress(input);
+      const { valid, network } = validateWalletAddress(input, lookupNetwork);
 
       try {
         let resolved: AccountInfo | null = null;
@@ -181,7 +206,7 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
         setHintMessage(t("transfer.withdraw.accountId.invalid"));
       }
     },
-    [brokerId, t],
+    [accountLookup, lookupNetwork, t, walletLookup],
   );
 
   const debouncedLookup = useDebouncedCallback((input: string) => {

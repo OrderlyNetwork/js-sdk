@@ -2,11 +2,16 @@ import {
   API,
   ArbitrumSepoliaChainInfo,
   SolanaDevnetChainInfo,
+  SuiTestnetChainInfo,
 } from "@orderly.network/types";
 import { ORDERLY_TEST_CHAIN_INFO } from "../../middleware/indexedDBManager";
 import { createDataStore } from "./createDataStore";
 
-const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
+const testnetChainFallback = [
+  ArbitrumSepoliaChainInfo,
+  SolanaDevnetChainInfo,
+  SuiTestnetChainInfo,
+];
 
 export const useTestnetChainsStore = createDataStore<API.Chain>({
   name: "orderly-test-chain-info",

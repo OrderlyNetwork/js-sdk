@@ -127,16 +127,18 @@ export const useDeposit = (options: DepositOptions) => {
     chainId: dst?.chainId,
   });
 
-  const { depositFee, depositFeeRevalidating } = useDepositFee({
-    quantity,
-    account,
-    targetChain,
-    decimals: options.decimals,
-    dstToken: options.dstToken,
-    vaultAddress,
-    isNativeToken,
-    dst,
-  });
+  const { depositFee, depositFeeRevalidating, depositFeeError } = useDepositFee(
+    {
+      quantity,
+      account,
+      targetChain,
+      decimals: options.decimals,
+      dstToken: options.dstToken,
+      vaultAddress,
+      isNativeToken,
+      dst,
+    },
+  );
 
   const resetApprove = useCallback(
     async (tokenAddress: string, decimal: number, vaultAddress: string) => {
@@ -257,6 +259,7 @@ export const useDeposit = (options: DepositOptions) => {
     allowance,
     /** deposit fee, unit: wei */
     depositFee,
+    depositFeeError,
     balanceRevalidating,
     allowanceRevalidating,
     depositFeeRevalidating,
@@ -393,6 +396,9 @@ function useAllowance(options: {
     chainId,
   } = options;
   const [allowance, setAllowance] = useState("0");
+  const isAllowanceFreeChain =
+    account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
+    account.walletAdapter?.chainNamespace === ChainNamespace.sui;
 
   const fetchAllowance = useCallback(
     async (options: {
@@ -401,14 +407,14 @@ function useAllowance(options: {
       vaultAddress?: string;
     }) => {
       const { address, decimals, vaultAddress } = options;
-      if (!address || !decimals || !vaultAddress) {
+      const shouldSkipAllowance =
+        isNativeTokenChecker(address) || isAllowanceFreeChain;
+
+      if (!address || !decimals || (!vaultAddress && !shouldSkipAllowance)) {
         return "0";
       }
-      // native token and solana don't need to get allowance, so return max uint256
-      if (
-        isNativeTokenChecker(address) ||
-        account.walletAdapter?.chainNamespace === ChainNamespace.solana
-      ) {
+      // Native token, Solana, and Sui don't need ERC20 allowance.
+      if (shouldSkipAllowance) {
         return account.walletAdapter?.formatUnits(MaxUint256, decimals!)!;
       }
 
@@ -421,22 +427,30 @@ function useAllowance(options: {
       console.info("allowance", address, allowance);
       return allowance;
     },
-    [account],
+    [account, isAllowanceFreeChain],
   );
 
   // create key for useSWR, return null when conditions are not met
   const key = useMemo(() => {
+    const shouldSkipAllowance =
+      isNativeTokenChecker(address) || isAllowanceFreeChain;
+
     if (
       !address ||
       !decimals ||
-      !vaultAddress ||
+      (!vaultAddress && !shouldSkipAllowance) ||
       status < AccountStatusEnum.Connected
     ) {
       return null;
     }
 
-    return ["allowance", address, vaultAddress, decimals];
-  }, [status, address, vaultAddress, decimals, account]);
+    return [
+      "allowance",
+      address,
+      shouldSkipAllowance ? (chainId ?? "skip") : vaultAddress,
+      decimals,
+    ];
+  }, [status, address, vaultAddress, decimals, chainId, isAllowanceFreeChain]);
 
   // get refresh interval based on chain namespace, solana is 10s, other is 3s
   const refreshInterval = useMemo(() => {
@@ -528,6 +542,8 @@ function useDepositFee(options: {
     isNativeToken,
     dst,
   } = options;
+  const isSuiDeposit =
+    account.walletAdapter?.chainNamespace === ChainNamespace.sui;
 
   const getDepositFee = useCallback(
     async (quantity: string) => {
@@ -543,6 +559,10 @@ function useDepositFee(options: {
         // TODO: when swap deposit, dstToken address is not same as src token address
         address: dst?.address,
       });
+
+      if (account.walletAdapter?.chainNamespace === ChainNamespace.sui) {
+        return depositFee;
+      }
 
       let estimatedGasFee = 0n;
 
@@ -587,7 +607,7 @@ function useDepositFee(options: {
     if (
       !dst?.address ||
       !decimals ||
-      !vaultAddress ||
+      (!vaultAddress && !isSuiDeposit) ||
       !dstToken ||
       !quantity ||
       !targetChain?.network_infos?.chain_id
@@ -598,13 +618,21 @@ function useDepositFee(options: {
     return [
       "depositFee",
       dst?.address,
-      vaultAddress,
+      isSuiDeposit ? targetChain.network_infos.chain_id : vaultAddress,
       dstToken,
       decimals,
       targetChain?.network_infos?.chain_id,
       quantity,
     ];
-  }, [quantity, targetChain, decimals, dstToken, dst, vaultAddress]);
+  }, [
+    quantity,
+    targetChain,
+    decimals,
+    dstToken,
+    dst,
+    vaultAddress,
+    isSuiDeposit,
+  ]);
 
   const fetcher = useCallback(async () => {
     const res = await getDepositFee(quantity);
@@ -613,6 +641,7 @@ function useDepositFee(options: {
 
   const {
     data,
+    error: depositFeeError,
     isValidating: depositFeeRevalidating,
     mutate: mutateDepositFee,
   } = useSWR(key, fetcher, {
@@ -621,15 +650,24 @@ function useDepositFee(options: {
 
   const depositFee = useMemo(() => {
     const fee = data ?? 0n;
+    if (isSuiDeposit) {
+      return fee;
+    }
+
     return BigInt(
       new Decimal(fee.toString())
         .mul(DEPOSIT_FEE_RATE)
         .toFixed(0, Decimal.ROUND_UP)
         .toString(),
     );
-  }, [data]);
+  }, [data, isSuiDeposit]);
 
-  return { depositFee, depositFeeRevalidating, mutateDepositFee };
+  return {
+    depositFee,
+    depositFeeError,
+    depositFeeRevalidating,
+    mutateDepositFee,
+  };
 }
 
 function useTargetChain(srcChainId?: number) {

@@ -2,6 +2,7 @@ import {
   API,
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
+  SuiTestnetTokenInfo,
   TesnetTokenFallback,
 } from "@orderly.network/types";
 import { ORDERLY_TEST_TOKEN } from "../../middleware/indexedDBManager";
@@ -10,6 +11,7 @@ import { createDataStore } from "./createDataStore";
 const testnetTokenFallback = TesnetTokenFallback([
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
+  SuiTestnetTokenInfo,
 ]);
 
 export const useTestTokenStore = createDataStore<API.Token>({

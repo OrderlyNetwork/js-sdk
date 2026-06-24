@@ -5,6 +5,9 @@ import { useTranslation } from "@orderly.network/i18n";
 import { LedgerWalletKey } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 
+const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY =
+  "connector.sui.unsupportedAccountType";
+
 export function useWalletConnectError() {
   const { t } = useTranslation();
   const ee = useEventEmitter();
@@ -12,7 +15,11 @@ export function useWalletConnectError() {
 
   useEffect(() => {
     const handleConnectError = (data: { message: string }) => {
-      toast.error(data.message);
+      toast.error(
+        data.message === SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY
+          ? t(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY)
+          : data.message,
+      );
     };
 
     const handleLedgerError = (data: {

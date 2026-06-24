@@ -20,6 +20,7 @@ import {
   AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
+  ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -39,19 +40,52 @@ import { useWithdrawFee } from "./hooks/useWithdrawFee";
 import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
 import { useWithdrawToken } from "./hooks/useWithdrawToken";
 
+export type WalletLookupNetwork = "EVM" | "SOL" | "SUI";
+
+const normalizeBase58PublicKey = (value: string) => {
+  try {
+    const pubKey = new PublicKey(value);
+    const bytes = pubKey.toBytes();
+    if (bytes.length === 32 && PublicKey.isOnCurve(bytes)) {
+      return pubKey.toBase58();
+    }
+  } catch {}
+
+  return undefined;
+};
+
+export const normalizeSuiLookupPublicKey = (value: string) =>
+  normalizeBase58PublicKey(value.trim());
+
 export const validateWalletAddress = (
   address: string,
-): { valid: boolean; network?: "EVM" | "SOL" } => {
+  preferredNetwork?: WalletLookupNetwork,
+): { valid: boolean; network?: WalletLookupNetwork } => {
+  if (preferredNetwork === "SUI") {
+    return normalizeSuiLookupPublicKey(address)
+      ? { valid: true, network: "SUI" }
+      : { valid: false };
+  }
+
+  if (preferredNetwork === "SOL") {
+    return normalizeBase58PublicKey(address)
+      ? { valid: true, network: "SOL" }
+      : { valid: false };
+  }
+
+  if (preferredNetwork === "EVM") {
+    return ethers.isAddress(address)
+      ? { valid: true, network: "EVM" }
+      : { valid: false };
+  }
+
   if (ethers.isAddress(address)) {
     return { valid: true, network: "EVM" };
   }
 
-  try {
-    const pubKey = new PublicKey(address);
-    if (PublicKey.isOnCurve(pubKey.toBytes())) {
-      return { valid: true, network: "SOL" };
-    }
-  } catch {}
+  if (normalizeBase58PublicKey(address)) {
+    return { valid: true, network: "SOL" };
+  }
 
   return { valid: false };
 };
@@ -191,7 +225,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   );
 
   const [externalWallets, setExternalWallets] = useLocalStorage<
-    { address: string; network?: "EVM" | "SOL" }[]
+    { address: string; network?: "EVM" | "SOL" | "SUI" }[]
   >("orderly_external_wallets", []);
 
   const [selectedWalletAddress, setSelectedWalletAddress] = useState<string>();
@@ -210,7 +244,10 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setSelectedWalletAddress(address);
   };
 
-  const onAddExternalWallet = (addr: string, network?: "EVM" | "SOL") => {
+  const onAddExternalWallet = (
+    addr: string,
+    network?: "EVM" | "SOL" | "SUI",
+  ) => {
     const normalizedAddr = addr.trim();
     if (!normalizedAddr) return;
 
@@ -280,6 +317,14 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setQuantity,
     close: options.close,
     setLoading,
+    lookupNetwork:
+      currentChain?.namespace === ChainNamespace.sui
+        ? "SUI"
+        : currentChain?.namespace === ChainNamespace.solana
+          ? "SOL"
+          : currentChain?.namespace === ChainNamespace.evm
+            ? "EVM"
+            : undefined,
   });
 
   const checkIsBridgeless = useMemo(() => {
@@ -366,6 +411,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       chainId: currentChain?.id!,
       allowCrossChainWithdraw: crossChainWithdraw,
       receiver: selectedWalletAddress,
+      fee,
     })
       .then((res) => {
         toast.success(t("transfer.withdraw.requested"));
