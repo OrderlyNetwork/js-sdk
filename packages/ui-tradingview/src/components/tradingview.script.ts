@@ -12,6 +12,7 @@ import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
 import { WS } from "@orderly.network/net";
 import {
   AccountStatusEnum,
+  MarginMode,
   OrderSide,
   OrderType,
   TradingviewFullscreenKey,
@@ -176,6 +177,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       order_type: OrderType.MARKET,
       side,
       reduce_only: true,
+      margin_mode:
+        data.marginMode ?? data.margin_mode ?? marginMode ?? MarginMode.CROSS,
     };
     setSide(side);
     modal.show("MarketCloseConfirmID", {
