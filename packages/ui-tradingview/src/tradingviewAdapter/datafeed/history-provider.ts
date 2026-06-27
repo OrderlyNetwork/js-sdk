@@ -48,6 +48,24 @@ export interface GetBarsResult {
   meta: HistoryMetadata;
 }
 
+export type SymbolCreatedTimeResolver = (
+  symbolInfo: LibrarySymbolInfo,
+) => number | undefined;
+
+interface BoundedKlineParams {
+  params: RequestParams;
+  clampedToCreateTime: boolean;
+}
+
+type KlineFallbackOutcome =
+  | {
+      status: "success";
+      result: GetBarsResult;
+    }
+  | {
+      status: "boundary" | "failed";
+    };
+
 const HISTORY_PATH = "tv/history";
 const KLINE_HISTORY_PATH = "v1/tv/kline_history";
 
@@ -72,8 +90,10 @@ export class HistoryProvider {
   private _datafeedUrl: string;
   private readonly _requester: IRequester;
   private readonly _limitedServerResponse?: LimitedResponseConfiguration;
+  private readonly _getSymbolCreatedTime?: SymbolCreatedTimeResolver;
 
   private readonly _klinePreference = new Map<string, boolean>();
+  private readonly _createTimeBoundaryCutoff = new Map<string, number>();
 
   /**
    * Static mapping table for resolution conversion
@@ -98,10 +118,12 @@ export class HistoryProvider {
     datafeedUrl: string,
     requester: IRequester,
     limitedServerResponse?: LimitedResponseConfiguration,
+    getSymbolCreatedTime?: SymbolCreatedTimeResolver,
   ) {
     this._datafeedUrl = datafeedUrl;
     this._requester = requester;
     this._limitedServerResponse = limitedServerResponse;
+    this._getSymbolCreatedTime = getSymbolCreatedTime;
   }
 
   /**
@@ -164,19 +186,43 @@ export class HistoryProvider {
           let result: GetBarsResult;
           let usedHistoryResult = false;
 
+          if (
+            this._shouldSkipRequestAtCreateTimeBoundary(
+              symbolInfo,
+              resolution,
+              requestParams,
+            )
+          ) {
+            resolve(this._createNoDataResult());
+            return;
+          }
+
           if (prefersKline) {
-            result = await this._requestKlineHistory(
-              this._buildKlineParams(requestParams, countBack),
+            const klineParams = this._buildBoundedKlineParams(
+              symbolInfo,
+              resolution,
+              requestParams,
+              countBack,
             );
+            result =
+              klineParams === null
+                ? this._createNoDataResult()
+                : await this._requestKlineHistory(klineParams.params);
           } else {
             const initialResponse = await this._requestHistory(requestParams);
             result = this._processHistoryResponse(initialResponse);
             usedHistoryResult = true;
 
-            const needsFallback = this._shouldFallbackToKline(
-              initialResponse,
-              countBack,
-            );
+            const reachedCreateTimeBoundary =
+              this._markCreateTimeBoundaryIfReached(
+                symbolInfo,
+                resolution,
+                result.bars,
+              );
+
+            const needsFallback =
+              !reachedCreateTimeBoundary &&
+              this._shouldFallbackToKline(initialResponse, countBack);
 
             if (needsFallback) {
               // Get the earliest time from history result to use as start time for kline request
@@ -188,30 +234,34 @@ export class HistoryProvider {
                   countBack - result.bars.length,
                 );
 
-                const mergedResult = await this._tryKlineFallbackWithMerge(
+                const fallbackOutcome = await this._tryKlineFallbackWithMerge(
+                  symbolInfo,
+                  resolution,
                   requestParams,
                   remainingCountBack,
                   earliestTime,
                   result,
                 );
-                if (mergedResult !== null) {
-                  result = mergedResult;
+                if (fallbackOutcome.status === "success") {
+                  result = fallbackOutcome.result;
                   usedHistoryResult = false;
                   this._klinePreference.set(preferenceKey, true);
-                } else {
+                } else if (fallbackOutcome.status === "failed") {
                   this._klinePreference.set(preferenceKey, false);
                 }
               } else {
                 // If no bars in history result, fallback to original behavior
-                const klineResult = await this._tryKlineFallback(
+                const fallbackOutcome = await this._tryKlineFallback(
+                  symbolInfo,
+                  resolution,
                   requestParams,
                   countBack,
                 );
-                if (klineResult !== null) {
-                  result = klineResult;
+                if (fallbackOutcome.status === "success") {
+                  result = fallbackOutcome.result;
                   usedHistoryResult = false;
                   this._klinePreference.set(preferenceKey, true);
-                } else {
+                } else if (fallbackOutcome.status === "failed") {
                   this._klinePreference.set(preferenceKey, false);
                 }
               }
@@ -219,6 +269,12 @@ export class HistoryProvider {
               this._klinePreference.set(preferenceKey, false);
             }
           }
+
+          this._markCreateTimeBoundaryIfReached(
+            symbolInfo,
+            resolution,
+            result.bars,
+          );
 
           if (usedHistoryResult && this._limitedServerResponse) {
             await this._processTruncatedResponse(result, { ...requestParams });
@@ -524,6 +580,19 @@ export class HistoryProvider {
     return params;
   }
 
+  private _buildBoundedKlineParams(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+    requestParams: RequestParams,
+    countBack: number,
+  ): BoundedKlineParams | null {
+    return this._applyCreateTimeBoundaryToKlineParams(
+      symbolInfo,
+      resolution,
+      this._buildKlineParams(requestParams, countBack),
+    );
+  }
+
   /**
    * Get the earliest time from bars array
    * @param bars - Array of bars
@@ -550,30 +619,52 @@ export class HistoryProvider {
    * @returns Merged result or null if kline request fails
    */
   private async _tryKlineFallbackWithMerge(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
     requestParams: RequestParams,
     countBack: number,
     earliestTime: number,
     historyResult: GetBarsResult,
-  ): Promise<GetBarsResult | null> {
+  ): Promise<KlineFallbackOutcome> {
     try {
+      if (
+        this._hasReachedCreateTimeBoundary(symbolInfo, resolution, earliestTime)
+      ) {
+        this._markCreateTimeBoundary(symbolInfo, resolution, earliestTime);
+        return { status: "boundary" };
+      }
+
       const klineParams: RequestParams = {
         ...requestParams,
         from: requestParams.from,
         to: earliestTime,
       };
 
+      const boundedKlineParams = this._buildBoundedKlineParams(
+        symbolInfo,
+        resolution,
+        klineParams,
+        countBack,
+      );
+      if (boundedKlineParams === null) {
+        return { status: "boundary" };
+      }
+
       const klineResult = await this._requestKlineHistory(
-        this._buildKlineParams(klineParams, countBack),
+        boundedKlineParams.params,
       );
 
       if (klineResult.bars.length === 0) {
-        return null;
+        return { status: "failed" };
       }
 
       // Merge history and kline data
-      return this._mergeBars(historyResult, klineResult);
+      return {
+        status: "success",
+        result: this._mergeBars(historyResult, klineResult),
+      };
     } catch {
-      return null;
+      return { status: "failed" };
     }
   }
 
@@ -665,16 +756,33 @@ export class HistoryProvider {
   }
 
   private async _tryKlineFallback(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
     requestParams: RequestParams,
     countBack: number,
-  ): Promise<GetBarsResult | null> {
+  ): Promise<KlineFallbackOutcome> {
     try {
-      const result = await this._requestKlineHistory(
-        this._buildKlineParams(requestParams, countBack),
+      const klineParams = this._buildBoundedKlineParams(
+        symbolInfo,
+        resolution,
+        requestParams,
+        countBack,
       );
-      return result.bars.length > 0 ? result : null;
+      if (klineParams === null) {
+        return { status: "boundary" };
+      }
+
+      const result = await this._requestKlineHistory(klineParams.params);
+      if (result.bars.length === 0) {
+        return { status: "failed" };
+      }
+
+      return {
+        status: "success",
+        result,
+      };
     } catch {
-      return null;
+      return { status: "failed" };
     }
   }
 
@@ -700,5 +808,173 @@ export class HistoryProvider {
     }
 
     return false;
+  }
+
+  private _applyCreateTimeBoundaryToKlineParams(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+    params: RequestParams,
+  ): BoundedKlineParams | null {
+    const createdTimeSeconds = this._getSymbolCreatedTimeSeconds(symbolInfo);
+    if (createdTimeSeconds === null) {
+      return {
+        params,
+        clampedToCreateTime: false,
+      };
+    }
+
+    const to = this._getNumericParam(params, "to");
+    if (to !== null && to <= createdTimeSeconds) {
+      this._markCreateTimeBoundary(symbolInfo, resolution, createdTimeSeconds);
+      return null;
+    }
+
+    const from = this._getNumericParam(params, "from");
+    if (from !== null && from < createdTimeSeconds) {
+      return {
+        params: {
+          ...params,
+          from: createdTimeSeconds,
+        },
+        clampedToCreateTime: true,
+      };
+    }
+
+    return {
+      params,
+      clampedToCreateTime: false,
+    };
+  }
+
+  private _shouldSkipRequestAtCreateTimeBoundary(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+    params: RequestParams,
+  ): boolean {
+    const createdTimeSeconds = this._getSymbolCreatedTimeSeconds(symbolInfo);
+    if (createdTimeSeconds === null) {
+      return false;
+    }
+
+    const to = this._getNumericParam(params, "to");
+    if (to === null) {
+      return false;
+    }
+
+    if (to <= createdTimeSeconds) {
+      return true;
+    }
+
+    const cutoff = this._createTimeBoundaryCutoff.get(
+      this._getPreferenceKey(symbolInfo, resolution),
+    );
+    return cutoff !== undefined && to <= cutoff;
+  }
+
+  private _markCreateTimeBoundaryIfReached(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+    bars: Bar[],
+  ): boolean {
+    const earliestTime = this._getEarliestTime(bars);
+    if (
+      earliestTime !== null &&
+      this._hasReachedCreateTimeBoundary(symbolInfo, resolution, earliestTime)
+    ) {
+      this._markCreateTimeBoundary(symbolInfo, resolution, earliestTime);
+      return true;
+    }
+
+    return false;
+  }
+
+  private _markCreateTimeBoundary(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+    cutoffSeconds: number,
+  ) {
+    const key = this._getPreferenceKey(symbolInfo, resolution);
+    const currentCutoff = this._createTimeBoundaryCutoff.get(key);
+
+    if (currentCutoff === undefined || cutoffSeconds > currentCutoff) {
+      this._createTimeBoundaryCutoff.set(key, cutoffSeconds);
+    }
+  }
+
+  private _hasReachedCreateTimeBoundary(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+    earliestTimeSeconds: number,
+  ): boolean {
+    const createdTimeSeconds = this._getSymbolCreatedTimeSeconds(symbolInfo);
+    if (createdTimeSeconds === null) {
+      return false;
+    }
+
+    return (
+      earliestTimeSeconds <=
+      createdTimeSeconds + this._resolutionToSeconds(resolution)
+    );
+  }
+
+  private _getSymbolCreatedTimeSeconds(
+    symbolInfo: LibrarySymbolInfo,
+  ): number | null {
+    const symbolInfoWithCreateTime = symbolInfo as LibrarySymbolInfo & {
+      created_time?: number;
+    };
+    const createdTime =
+      symbolInfoWithCreateTime.created_time ??
+      this._getSymbolCreatedTime?.(symbolInfo);
+
+    if (typeof createdTime !== "number" || !Number.isFinite(createdTime)) {
+      return null;
+    }
+
+    return Math.floor(createdTime / 1000);
+  }
+
+  private _getNumericParam(params: RequestParams, key: string): number | null {
+    const value = params[key];
+    if (Array.isArray(value)) {
+      return null;
+    }
+
+    const numberValue = Number(value);
+    return Number.isFinite(numberValue) ? numberValue : null;
+  }
+
+  private _resolutionToSeconds(resolution: string): number {
+    const match = resolution.match(/^(\d*)([DWMY])?$/);
+    if (!match) {
+      return 60;
+    }
+
+    const amount = match[1] ? parseInt(match[1], 10) : 1;
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return 60;
+    }
+
+    switch (match[2]) {
+      case "D":
+        return amount * 86400;
+      case "W":
+        return amount * 7 * 86400;
+      case "M":
+        return amount * 30 * 86400;
+      case "Y":
+        return amount * 365 * 86400;
+      default:
+        return amount * 60;
+    }
+  }
+
+  private _createNoDataResult(): GetBarsResult {
+    return {
+      bars: [],
+      meta: {
+        noData: true,
+      },
+    };
   }
 }

@@ -17,6 +17,7 @@ import {
   GetBarsResult,
   HistoryProvider,
   PeriodParamsWithOptionalCountback,
+  SymbolCreatedTimeResolver,
 } from "./history-provider";
 import { Requester } from "./requester";
 import { SymbolsStorage } from "./symbol-storage";
@@ -33,9 +34,12 @@ export interface ResolveSymbolResponse extends LibrarySymbolInfo {
 }
 
 // it is hack to let's TypeScript make code flow analysis
-export interface UdfSearchSymbolsResponse
-  extends Array<SearchSymbolResultItem> {
+export interface UdfSearchSymbolsResponse extends Array<SearchSymbolResultItem> {
   s?: undefined;
+}
+
+export interface DatafeedOptions {
+  getSymbolCreatedTime?: SymbolCreatedTimeResolver;
 }
 
 export const enum Constants {
@@ -57,10 +61,15 @@ export abstract class AbstractDatafeed {
 
   private _historyCursor: number | null = null;
 
-  constructor(datafeedURL: string) {
+  constructor(datafeedURL: string, options?: DatafeedOptions) {
     this._datafeedURL = datafeedURL;
     this._requester = new Requester();
-    this._historyProvider = new HistoryProvider(datafeedURL, this._requester);
+    this._historyProvider = new HistoryProvider(
+      datafeedURL,
+      this._requester,
+      undefined,
+      options?.getSymbolCreatedTime,
+    );
 
     this._configurationReadyPromise = this._requestConfiguration().then(
       (configuration: UdfCompatibleConfiguration | null) => {
