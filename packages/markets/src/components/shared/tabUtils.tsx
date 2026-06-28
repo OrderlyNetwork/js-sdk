@@ -115,6 +115,7 @@ export function resolveTabTriggerIcon(
 export const BUILT_IN_TITLE_MAP: Record<string, string> = {
   community: "markets.community",
   all: "common.all",
+  crypto: "markets.crypto",
   preTge: "markets.preTge",
   newListing: "markets.newListings",
   recent: "markets.recent",

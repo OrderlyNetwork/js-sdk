@@ -22,6 +22,7 @@ export type MarketBuiltInTabType =
   | "favorites"
   | "community"
   | "all"
+  | "crypto"
   | "rwa"
   | "preTge"
   | "newListing"

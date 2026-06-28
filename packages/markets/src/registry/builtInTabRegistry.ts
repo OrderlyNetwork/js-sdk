@@ -18,6 +18,7 @@ export const builtInTabs: Record<MarketBuiltInTabType, BuiltInMarketTab> = {
     },
   },
   all: { type: "all" },
+  crypto: { type: "crypto" },
   rwa: { type: "rwa" },
   preTge: {
     type: "preTge",
@@ -41,6 +42,7 @@ export const componentDefaultTabs: Record<
   marketsSheet: [
     { type: "favorites" },
     { type: "all" },
+    { ...builtInTabs.crypto },
     { type: "rwa" },
     { ...builtInTabs.community },
     { ...builtInTabs.preTge },
@@ -48,6 +50,7 @@ export const componentDefaultTabs: Record<
   expandMarkets: [
     { type: "favorites" },
     { type: "all" },
+    { ...builtInTabs.crypto },
     { type: "rwa" },
     { ...builtInTabs.community },
     { type: "newListing" },
@@ -57,6 +60,7 @@ export const componentDefaultTabs: Record<
   dropDownMarkets: [
     { type: "favorites" },
     { type: "all" },
+    { ...builtInTabs.crypto },
     { type: "rwa" },
     { ...builtInTabs.community },
     { type: "newListing" },
@@ -66,6 +70,7 @@ export const componentDefaultTabs: Record<
   subMenuMarkets: [
     { type: "favorites" },
     { type: "all" },
+    { ...builtInTabs.crypto },
     { type: "rwa" },
     { ...builtInTabs.community },
     { type: "newListing" },
@@ -75,6 +80,7 @@ export const componentDefaultTabs: Record<
   marketsDataList: [
     { type: "favorites" },
     { type: "all" },
+    { ...builtInTabs.crypto },
     { type: "rwa" },
     { ...builtInTabs.community },
     { type: "newListing" },
@@ -82,8 +88,8 @@ export const componentDefaultTabs: Record<
   ],
   horizontalMarkets: [
     { type: "all" },
-    { type: "recent" },
     { type: "newListing" },
+    { type: "recent" },
     { type: "favorites" },
   ],
 };

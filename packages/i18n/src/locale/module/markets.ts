@@ -3,6 +3,7 @@ export const markets = {
   "markets.recent": "Recent",
   "markets.newListings": "New listings",
   "markets.community": "Community",
+  "markets.crypto": "Crypto",
   "markets.tradFi": "TradFi",
   "markets.preTge": "Pre-launch",
   "markets.allMarkets": "All markets",

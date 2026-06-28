@@ -77,6 +77,11 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
         value: "all",
         tabName: MarketsTabName.All,
       },
+      crypto: {
+        title: t("markets.crypto"),
+        value: "crypto",
+        tabName: MarketsTabName.Crypto,
+      },
       rwa: {
         title: <RwaIconTab />,
         value: "rwa",
