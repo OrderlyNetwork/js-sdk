@@ -5,7 +5,11 @@ import "./interceptorTargets";
 
 export { TradingviewWidget } from "./components/tradingview.widget";
 export { TradingviewUI } from "./components/tradingview.ui";
-export { InjectableTradingviewDesktop } from "./components/tradingview.injectable";
+export {
+  InjectableTradingviewDesktop,
+  InjectableChartOverlay,
+} from "./components/tradingview.injectable";
+export type { ChartOverlayProps } from "./components/tradingview.injectable";
 export { useTradingviewScript } from "./components/tradingview.script";
 /**
  * Export display-control interceptor target + props for plugin consumers.
