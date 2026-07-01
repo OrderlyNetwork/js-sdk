@@ -39,7 +39,7 @@ export const Ethereum = {
       decimals: 18,
       fix: 8,
     },
-    rpcUrls: ["https://mainnet.infura.io/v3/9155d40884554acdb17699a18a1fe348"],
+    rpcUrls: ["https://ethereum-rpc.publicnode.com"],
     blockExplorerUrls: ["https://etherscan.io/"],
   },
   minGasBalance: 0.002,
