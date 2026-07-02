@@ -1251,6 +1251,7 @@ export class Account {
 
     const nonce = await this._getSettleNonce(options?.accountId);
     const address = this.stateValue.address;
+    const userAddress = this.getWalletIdentityAddress(address);
 
     // const domain = this.getDomain(true);
 
@@ -1272,7 +1273,7 @@ export class Account {
     const data = {
       signature: signatured,
       message,
-      userAddress: address,
+      userAddress,
       verifyingContract: domain.verifyingContract,
     };
 
