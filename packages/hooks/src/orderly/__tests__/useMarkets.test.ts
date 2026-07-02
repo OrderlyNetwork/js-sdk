@@ -61,6 +61,13 @@ describe("filterMarkets", () => {
     expect(filter(MarketsType.ALL, [normal, preTge])).toEqual([normal, preTge]);
   });
 
+  it("returns non-RWA markets for CRYPTO type", () => {
+    expect(filter(MarketsType.CRYPTO, [normal, preTge, rwa])).toEqual([
+      normal,
+      preTge,
+    ]);
+  });
+
   it("does not include non-RWA Pre-TGE markets in RWA", () => {
     expect(filter(MarketsType.RWA, [preTge, rwa])).toEqual([rwa]);
   });

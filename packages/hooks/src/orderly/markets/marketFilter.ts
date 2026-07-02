@@ -13,6 +13,8 @@ export const filterMarkets = (params: {
 
   if (type === MarketsType.ALL || type === MarketsType.COMMUNITY) {
     curData = markets;
+  } else if (type === MarketsType.CRYPTO) {
+    curData = markets.filter((item) => !item.isRwa);
   } else if (type === MarketsType.RWA) {
     curData = markets.filter((item) => item.isRwa);
   } else if (type === MarketsType.PRE_TGE) {

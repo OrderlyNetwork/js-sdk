@@ -97,6 +97,9 @@ export const useTPSLBuilder = (
     symbol,
     position?.margin_mode ?? options.position?.margin_mode ?? MarginMode.CROSS,
   );
+  const effectivePositionType = triggerPrice
+    ? PositionType.PARTIAL
+    : positionType;
 
   useEffect(() => {
     if (!position) {
@@ -129,7 +132,7 @@ export const useTPSLBuilder = (
     },
     {
       defaultOrder: order,
-      positionType: triggerPrice ? PositionType.PARTIAL : positionType,
+      positionType: effectivePositionType,
       // tpslEnable: {
       //   tp_enable: !withTriggerPrice ? true : type === "tp",
       //   sl_enable: !withTriggerPrice ? true : type === "sl",
@@ -166,6 +169,25 @@ export const useTPSLBuilder = (
     () => Math.abs(Number(position?.position_qty)),
     [position?.position_qty],
   );
+
+  useEffect(() => {
+    if (!position || !Number.isFinite(maxQty)) {
+      return;
+    }
+
+    const quantity = Number(tpslOrder.quantity);
+
+    if (effectivePositionType === PositionType.FULL) {
+      if (quantity !== maxQty) {
+        setValue("quantity", maxQty);
+      }
+      return;
+    }
+
+    if (quantity > maxQty) {
+      setValue("quantity", maxQty);
+    }
+  }, [effectivePositionType, maxQty, position, setValue, tpslOrder.quantity]);
 
   const dirty = useMemo(() => {
     const quantity =
@@ -327,7 +349,7 @@ export const useTPSLBuilder = (
         },
         content: (
           <PositionTPSLConfirm
-            isPositionTPSL={positionType === PositionType.FULL}
+            isPositionTPSL={effectivePositionType === PositionType.FULL}
             isEditing={isEditing}
             symbol={order.symbol!}
             qty={Number(order.quantity)}

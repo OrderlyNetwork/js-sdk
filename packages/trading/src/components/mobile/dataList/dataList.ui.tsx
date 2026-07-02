@@ -21,6 +21,7 @@ import {
   MobilePositionsWidget,
 } from "@orderly.network/ui-positions";
 import { formatSymbol } from "@orderly.network/utils";
+import { InjectableDataListMobileTabs } from "./dataList.injectable";
 import {
   type DataListState,
   DataListTabSubType,
@@ -263,6 +264,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
           </TabPanel>
         );
       })}
+      <InjectableDataListMobileTabs items={[]} />
     </Tabs>
   );
 };

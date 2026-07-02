@@ -11,6 +11,7 @@ export type MarketsListScriiptReturn = ReturnType<typeof useMarketsListScript>;
 
 const MarketsTypeMap = {
   [MarketsTabName.All]: MarketsType.ALL,
+  [MarketsTabName.Crypto]: MarketsType.CRYPTO,
   [MarketsTabName.Community]: MarketsType.COMMUNITY,
   [MarketsTabName.Rwa]: MarketsType.RWA,
   [MarketsTabName.PreTge]: MarketsType.PRE_TGE,

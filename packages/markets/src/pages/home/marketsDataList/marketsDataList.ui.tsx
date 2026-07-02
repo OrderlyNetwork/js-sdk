@@ -80,6 +80,13 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         listType: "all",
         initialSort: DEFAULT_SORT,
       },
+      crypto: {
+        title: t("markets.crypto"),
+        value: "crypto",
+        testid: "oui-testid-markets-crypto-tab",
+        listType: "crypto",
+        initialSort: DEFAULT_SORT,
+      },
       rwa: {
         title: <RwaIconTab />,
         value: "rwa",

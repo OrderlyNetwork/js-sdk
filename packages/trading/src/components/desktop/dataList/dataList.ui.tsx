@@ -19,6 +19,7 @@ import {
   PositionHistoryWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
+import { InjectableDataListDesktopTabs } from "./dataList.injectable";
 import { DataListState, DataListTabType } from "./dataList.script";
 
 const LazySettingWidget = React.lazy(() =>
@@ -250,6 +251,10 @@ export const DataList: React.FC<DataListState> = (props) => {
           </TabPanel>
         );
       })}
+      {/* Plugin-appendable tabs. Empty by default; a plugin intercepts
+          `Trading.DataList.Desktop.Tabs` and appends `{ id, title, content }`
+          entries, which self-register into the Tabs context above. */}
+      <InjectableDataListDesktopTabs items={[]} />
     </Tabs>
   );
 };

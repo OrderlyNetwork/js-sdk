@@ -10,7 +10,7 @@ import {
   ResolutionString,
   SubscribeBarsCallback,
 } from "../type";
-import { AbstractDatafeed } from "./abstract-datafeed";
+import { AbstractDatafeed, DatafeedOptions } from "./abstract-datafeed";
 import { MultiBroadcastEventBus } from "./eventBus";
 import { WebsocketService } from "./websocket.service";
 
@@ -29,9 +29,9 @@ export class Datafeed extends AbstractDatafeed {
   private tickersMap: Map<string, any> = new Map();
   private eventBus: MultiBroadcastEventBus = new MultiBroadcastEventBus();
 
-  constructor(apiUrl: string, ws: any) {
+  constructor(apiUrl: string, ws: any, options?: DatafeedOptions) {
     const datafeedURL = `${apiUrl}`;
-    super(datafeedURL);
+    super(datafeedURL, options);
 
     this._subscribeQuoteMap = new Map();
     this._prefixId = getAutoIncrementId();

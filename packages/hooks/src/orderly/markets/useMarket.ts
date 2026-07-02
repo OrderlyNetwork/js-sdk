@@ -4,6 +4,7 @@ import { Decimal } from "@orderly.network/utils";
 import { OrderlyContext } from "../../orderlyContext";
 import { useFundingRates } from "../useFundingRates";
 import { useMarketsStream } from "../useMarketsStream";
+import { useRwaSymbolsInfo } from "../useRwaSymbolsInfo";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 import { MarketsType } from "./marketTypes";
 
@@ -63,6 +64,7 @@ export const useMarket = (type: MarketsType) => {
   const { configStore } = useContext(OrderlyContext);
 
   const symbolsInfo = useSymbolsInfo();
+  const rwaSymbolsInfo = useRwaSymbolsInfo();
   const fundingRates = useFundingRates();
   const { data: futures } = useMarketsStream();
 
@@ -234,6 +236,9 @@ export const useMarket = (type: MarketsType) => {
       const { open_interest = 0, index_price = 0 } = item;
 
       const info = symbolsInfo[item.symbol];
+      const rwaInfo = !rwaSymbolsInfo.isNil
+        ? rwaSymbolsInfo[item.symbol]()
+        : null;
       const rate = fundingRates[item.symbol];
       const est_funding_rate = rate("est_funding_rate");
       const funding_period = info("funding_period");
@@ -248,6 +253,7 @@ export const useMarket = (type: MarketsType) => {
         "8h_funding": get8hFunding(est_funding_rate, funding_period),
         quote_dp: info("quote_dp"),
         created_time: info("created_time"),
+        isRwa: !!rwaInfo,
         isPreTge: Boolean(item.is_pretge ?? info("is_pretge")),
         openInterest: new Decimal(open_interest || 0)
           .mul(index_price || 0)
@@ -255,7 +261,7 @@ export const useMarket = (type: MarketsType) => {
       };
     });
     return list || [];
-  }, [symbolsInfo, futures, fundingRates]);
+  }, [symbolsInfo, futures, fundingRates, rwaSymbolsInfo]);
 
   const getData = (type: MarketsType) => {
     // get data
@@ -263,12 +269,16 @@ export const useMarket = (type: MarketsType) => {
       type === MarketsType.FAVORITES ? [...favorites] : [...recent];
     // filter
     const keys = localData.map((item) => item.name);
-    const filter =
-      type == MarketsType.ALL || type == MarketsType.COMMUNITY
-        ? marketsList
-        : type == MarketsType.PRE_TGE
-          ? marketsList?.filter((item) => item.isPreTge)
-          : marketsList?.filter((item) => keys.includes(item.symbol));
+    let filter = marketsList;
+    if (type == MarketsType.CRYPTO) {
+      filter = marketsList?.filter((item) => !item.isRwa);
+    } else if (type == MarketsType.RWA) {
+      filter = marketsList?.filter((item) => item.isRwa);
+    } else if (type == MarketsType.PRE_TGE) {
+      filter = marketsList?.filter((item) => item.isPreTge);
+    } else if (type != MarketsType.ALL && type != MarketsType.COMMUNITY) {
+      filter = marketsList?.filter((item) => keys.includes(item.symbol));
+    }
 
     const favoritesData = [...favorites];
     const favoriteKeys = favoritesData.map((item) => item.name);

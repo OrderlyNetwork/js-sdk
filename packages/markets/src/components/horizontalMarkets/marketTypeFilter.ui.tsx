@@ -54,6 +54,7 @@ export const MarketTypeFilter: React.FC<MarketTypeFilterProps> = (props) => {
   const titleOverrides = React.useMemo<Record<string, string>>(
     () => ({
       all: t("markets.allMarkets"),
+      crypto: t("markets.crypto"),
       newListing: t("markets.newListings"),
       recent: t("markets.recent"),
       rwa: t("markets.tradFi"),
