@@ -3,7 +3,7 @@ import { SDK } from "@layerzerolabs/lz-sui-sdk-v2";
 // Keep this package on @mysten/sui v1 while the LayerZero Sui SDK depends on v1.
 // TODO: Upgrade this adapter to @mysten/sui v2 once LayerZero supports v2 transactions.
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
-import { Transaction, coinWithBalance } from "@mysten/sui/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { fromBase64 } from "@mysten/sui/utils";
 import { decode as bs58decode, encode as bs58encode } from "bs58";
 import {
@@ -90,6 +90,12 @@ type SuiDepositData = {
   tokenHash: string;
   tokenAmount: string;
   tokenAddress?: string;
+};
+
+type SuiSelectedDepositCoins = {
+  primaryCoinId: string;
+  mergeCoinIds: string[];
+  totalBalance: bigint;
 };
 
 type SuiSignatureMessage = Record<string, string | number | bigint | undefined>;
@@ -261,6 +267,20 @@ export const buildSuiWithdrawText = (message: SuiSignatureMessage) =>
     "",
   ].join("\n");
 
+export const buildSuiSettlePnlText = (
+  domain: SignatureDomain,
+  message: SuiSignatureMessage,
+) =>
+  [
+    "Orderly SettlePnl v1",
+    ...buildDomainLines(domain),
+    `brokerId:${String(message.brokerId)}`,
+    `chainId:${bigintString(message.chainId)}`,
+    `settleNonce:${bigintString(message.settleNonce)}`,
+    `timestamp:${bigintString(message.timestamp)}`,
+    "",
+  ].join("\n");
+
 const readU64LE = (bytes: Uint8Array, offset = 0) => {
   let value = BigInt(0);
   for (let i = 0; i < 8; i += 1) {
@@ -269,8 +289,116 @@ const readU64LE = (bytes: Uint8Array, offset = 0) => {
   return value;
 };
 
+const createBcsReader = (bytes: Uint8Array) => {
+  let offset = 0;
+
+  const ensure = (length: number) => {
+    if (offset + length > bytes.length) {
+      throw new Error("Invalid SUI BCS return value");
+    }
+  };
+
+  const readU8 = () => {
+    ensure(1);
+    const value = bytes[offset];
+    offset += 1;
+    return value;
+  };
+
+  const readU32 = () => {
+    ensure(4);
+    const value =
+      bytes[offset] |
+      (bytes[offset + 1] << 8) |
+      (bytes[offset + 2] << 16) |
+      (bytes[offset + 3] << 24);
+    offset += 4;
+    return value >>> 0;
+  };
+
+  const readU64 = () => {
+    ensure(8);
+    const value = readU64LE(bytes, offset);
+    offset += 8;
+    return value;
+  };
+
+  const readUleb = () => {
+    let value = 0;
+    let shift = 0;
+    while (true) {
+      const byte = readU8();
+      value |= (byte & 0x7f) << shift;
+      if ((byte & 0x80) === 0) {
+        return value;
+      }
+      shift += 7;
+      if (shift > 28) {
+        throw new Error("Invalid SUI BCS vector length");
+      }
+    }
+  };
+
+  const skip = (length: number) => {
+    ensure(length);
+    offset += length;
+  };
+
+  const skipVector = () => {
+    const length = readUleb();
+    skip(length);
+  };
+
+  return {
+    readU8,
+    readU32,
+    readU64,
+    readUleb,
+    skip,
+    skipAddress: () => skip(32),
+    skipVector,
+  };
+};
+
 const toReturnBytes = (value: string | number[]) =>
   typeof value === "string" ? fromBase64(value) : Uint8Array.from(value);
+
+const readMessageLibSendCallNativeFee = (bytes: Uint8Array) => {
+  const reader = createBcsReader(bytes);
+
+  // call::Call fields: id, caller, callee, one_way.
+  reader.skipAddress();
+  reader.skipAddress();
+  reader.skipAddress();
+  reader.readU8();
+
+  // message_lib_send::SendParam { base: message_lib_quote::QuoteParam }.
+  // QuoteParam.packet: outbound_packet::OutboundPacket.
+  reader.readU64(); // nonce
+  reader.readU32(); // src_eid
+  reader.skipAddress(); // sender
+  reader.readU32(); // dst_eid
+  reader.skipVector(); // receiver Bytes32
+  reader.skipVector(); // guid Bytes32
+  reader.skipVector(); // message
+  reader.skipVector(); // options
+  reader.readU8(); // pay_in_zro
+
+  reader.readU8(); // mutable_param
+
+  // call.result is Move Option<T>, encoded as vector<T> with length 0 or 1.
+  const resultLength = reader.readUleb();
+  if (resultLength === 0) {
+    return undefined;
+  }
+  if (resultLength !== 1) {
+    throw new Error("Invalid SUI Call result option");
+  }
+
+  // message_lib_send::SendResult { encoded_packet, fee }.
+  reader.skipVector();
+  return reader.readU64();
+};
 
 const lzType3ExecutorLzReceiveOptions = (executionGas: bigint) => {
   if (executionGas <= BigInt(0)) {
@@ -290,20 +418,40 @@ const extractNativeFeeFromDevInspect = (inspectResult: any) => {
   for (const result of inspectResult?.results ?? []) {
     for (const returnValue of result?.returnValues ?? []) {
       const type = String(returnValue?.[1] ?? "");
-      if (!type.includes("messaging_fee::MessagingFee")) {
-        continue;
+      const bytes = toReturnBytes(returnValue[0]);
+      if (type.includes("messaging_fee::MessagingFee")) {
+        if (bytes.length < 8) {
+          continue;
+        }
+        return readU64LE(bytes);
       }
 
-      const bytes = toReturnBytes(returnValue[0]);
-      if (bytes.length < 8) {
-        continue;
+      if (
+        type.includes("message_lib_send::SendParam") &&
+        type.includes("message_lib_send::SendResult")
+      ) {
+        const nativeFee = readMessageLibSendCallNativeFee(bytes);
+        if (typeof nativeFee !== "undefined") {
+          return nativeFee;
+        }
       }
-      return readU64LE(bytes);
     }
   }
 
   throw new Error("Failed to quote Sui LayerZero fee");
 };
+
+const summarizeSuiMoveCalls = (moveCalls: any[] = []) =>
+  moveCalls.map((moveCall, index) => ({
+    index,
+    package: moveCall?.function?.package,
+    module: moveCall?.function?.module_name,
+    function: moveCall?.function?.name,
+    typeArguments: moveCall?.type_arguments,
+    argumentsCount: moveCall?.arguments?.length ?? 0,
+    resultIdsCount: moveCall?.result_ids?.length ?? 0,
+    isBuilderCall: moveCall?.is_builder_call,
+  }));
 
 const readSuiBalance = (balance: any) =>
   BigInt(
@@ -335,6 +483,8 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   private _address!: string;
   private _chainId!: number;
   private _provider!: SuiWalletProvider;
+  private _client?: SuiClient;
+  private _clientKey?: string;
 
   get address(): string {
     return this._address;
@@ -376,9 +526,16 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   private get client() {
     const network = resolveSuiNetwork(this.provider.network, this.chainId);
     const rpcUrl = this.provider.rpcUrl ?? getFullnodeUrl(network ?? "testnet");
-    return new SuiClient({
-      url: rpcUrl,
-    });
+    // Reuse a cached client for the same RPC endpoint so that repeated balance
+    // queries, fee quotes, and receipt polling don't keep opening new HTTP
+    // connection pools. The cache key is derived from the resolved network and
+    // rpc url; if either changes (e.g. network switch) a fresh client is built.
+    const clientKey = `${network ?? "testnet"}:${rpcUrl}`;
+    if (!this._client || this._clientKey !== clientKey) {
+      this._client = new SuiClient({ url: rpcUrl });
+      this._clientKey = clientKey;
+    }
+    return this._client;
   }
 
   private get dAppKit() {
@@ -435,6 +592,20 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       stage: network === "mainnet" ? Stage.MAINNET : Stage.TESTNET,
     };
 
+    console.info("[SuiDepositFee] resolveDepositConfig", {
+      providerNetwork: this.provider.network,
+      resolvedNetwork: network,
+      chainId: this.chainId,
+      expectedChainId: config.chainId,
+      coinType,
+      hasUserConfig: Boolean(this.provider.depositConfig?.[network]),
+      vaultPackage: config.vaultPackage,
+      vaultConfig: config.vaultConfig,
+      oapp: config.oapp,
+      usdcType: config.usdcType,
+      executionGas: config.executionGas?.toString(),
+    });
+
     if (config.chainId !== this.chainId) {
       throw new Error(`SUI ${network} deposit chain id is not supported`);
     }
@@ -456,7 +627,68 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     return config as ResolvedSuiDepositConfig;
   }
 
-  private buildDepositTransaction(depositData: SuiDepositData, lzFee: bigint) {
+  private async selectDepositCoins(
+    coinType: string,
+    amount: bigint,
+  ): Promise<SuiSelectedDepositCoins> {
+    const selectedCoins: Array<{ coinObjectId: string; balance: bigint }> = [];
+    let totalBalance = BigInt(0);
+    let cursor: string | null | undefined;
+
+    do {
+      const page = await this.client.getCoins({
+        owner: this.address,
+        coinType,
+        cursor,
+      });
+
+      for (const coin of page.data ?? []) {
+        const balance = BigInt(coin.balance);
+        if (balance <= BigInt(0)) {
+          continue;
+        }
+        selectedCoins.push({
+          coinObjectId: coin.coinObjectId,
+          balance,
+        });
+        totalBalance += balance;
+        if (totalBalance >= amount) {
+          break;
+        }
+      }
+
+      cursor = page.hasNextPage ? page.nextCursor : null;
+    } while (totalBalance < amount && cursor);
+
+    if (totalBalance < amount) {
+      throw new Error(
+        `Insufficient SUI deposit coin balance. Required ${amount.toString()}, available ${totalBalance.toString()}`,
+      );
+    }
+
+    selectedCoins.sort((a, b) => Number(b.balance - a.balance));
+
+    const [primaryCoin, ...mergeCoins] = selectedCoins;
+    console.info("[SuiDepositFee] selectDepositCoins", {
+      sender: this.address,
+      coinType,
+      amount: amount.toString(),
+      totalBalance: totalBalance.toString(),
+      primaryCoinId: primaryCoin.coinObjectId,
+      mergeCoinIds: mergeCoins.map((coin) => coin.coinObjectId),
+    });
+
+    return {
+      primaryCoinId: primaryCoin.coinObjectId,
+      mergeCoinIds: mergeCoins.map((coin) => coin.coinObjectId),
+      totalBalance,
+    };
+  }
+
+  private async buildDepositTransaction(
+    depositData: SuiDepositData,
+    lzFee: bigint,
+  ) {
     const config = this.getDepositConfig(depositData.tokenAddress);
     const coinType = depositData.tokenAddress ?? config.usdcType;
 
@@ -473,14 +705,40 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       throw new Error("SUI LayerZero fee must not be negative");
     }
 
+    const depositCoins = await this.selectDepositCoins(coinType, amount);
+
+    console.info("[SuiDepositFee] buildDepositTransaction", {
+      sender: this.address,
+      coinType,
+      accountId,
+      brokerHash,
+      tokenHash,
+      publicKey,
+      amount: amount.toString(),
+      lzFee: lzFee.toString(),
+      primaryCoinId: depositCoins.primaryCoinId,
+      mergeCoinIds: depositCoins.mergeCoinIds,
+      totalCoinBalance: depositCoins.totalBalance.toString(),
+      vaultPackage: config.vaultPackage,
+      vaultConfig: config.vaultConfig,
+      oapp: config.oapp,
+      executionGas: config.executionGas.toString(),
+    });
+
     const tx = new Transaction();
     tx.setSender(this.address);
 
-    // @mysten/sui v1 uses coinWithBalance; switch to the v2 transaction API
-    // when the full Sui deposit path is upgraded together.
-    const depositCoin = coinWithBalance({ type: coinType, balance: amount })(
-      tx,
-    );
+    const primaryDepositCoin = tx.object(depositCoins.primaryCoinId);
+    if (depositCoins.mergeCoinIds.length > 0) {
+      tx.mergeCoins(
+        primaryDepositCoin,
+        depositCoins.mergeCoinIds.map((coinId) => tx.object(coinId)),
+      );
+    }
+    const [depositCoin] =
+      depositCoins.totalBalance === amount
+        ? [primaryDepositCoin]
+        : tx.splitCoins(primaryDepositCoin, [tx.pure.u64(amount)]);
     const [lzFeeCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(lzFee)]);
 
     const sendCall = tx.moveCall({
@@ -507,35 +765,110 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
 
   private async populateSuiDepositTransaction(tx: Transaction, sendCall: any) {
     const config = this.getDepositConfig();
+    console.info("[SuiDepositFee] populateSendTransaction:start", {
+      sender: this.address,
+      stage: config.stage,
+      network: config.network,
+    });
     const lz = new SDK({
       chain: Chain.SUI,
       stage: config.stage,
       client: this.client as any,
     });
-    await lz
-      .getEndpoint()
-      .populateSendTransaction(tx as any, sendCall, this.address);
+    try {
+      const moveCalls = await lz
+        .getEndpoint()
+        .populateSendTransaction(tx as any, sendCall, this.address);
+      console.info("[SuiDepositFee] populateSendTransaction:success", {
+        sender: this.address,
+        stage: config.stage,
+        network: config.network,
+        moveCalls: summarizeSuiMoveCalls(moveCalls as any[]),
+      });
+      return moveCalls;
+    } catch (error) {
+      console.error("[SuiDepositFee] populateSendTransaction:error", {
+        sender: this.address,
+        stage: config.stage,
+        network: config.network,
+        error,
+      });
+      throw error;
+    }
   }
 
   private async quoteSuiDepositFee(depositData: SuiDepositData) {
     const client = this.client;
-    const { tx, sendCall } = this.buildDepositTransaction(
-      depositData,
-      SUI_DEPOSIT_QUOTE_PROBE_FEE,
-    );
-    await this.populateSuiDepositTransaction(tx, sendCall);
-
-    const inspectResult = await client.devInspectTransactionBlock({
+    const config = this.getDepositConfig(depositData.tokenAddress);
+    console.info("[SuiDepositFee] quote:start", {
       sender: this.address,
-      transactionBlock: tx,
+      chainId: this.chainId,
+      providerNetwork: this.provider.network,
+      rpcUrl: this.provider.rpcUrl,
+      probeFee: SUI_DEPOSIT_QUOTE_PROBE_FEE.toString(),
+      depositData,
     });
-    if (inspectResult.error) {
-      throw new Error(
-        `Failed to quote Sui LayerZero fee: ${inspectResult.error}`,
-      );
-    }
 
-    return extractNativeFeeFromDevInspect(inspectResult);
+    try {
+      const { tx, sendCall } = await this.buildDepositTransaction(
+        depositData,
+        SUI_DEPOSIT_QUOTE_PROBE_FEE,
+      );
+      const moveCalls = await this.populateSuiDepositTransaction(tx, sendCall);
+
+      console.info("[SuiDepositFee] devInspect:start", {
+        sender: this.address,
+      });
+      const inspectResult = await client.devInspectTransactionBlock({
+        sender: this.address,
+        transactionBlock: tx,
+      });
+      console.info("[SuiDepositFee] devInspect:result", {
+        error: inspectResult.error,
+        effectsStatus: inspectResult.effects?.status,
+        resultsCount: inspectResult.results?.length ?? 0,
+        returnValueTypes:
+          inspectResult.results?.flatMap((result: any) =>
+            (result?.returnValues ?? []).map((returnValue: any) =>
+              String(returnValue?.[1] ?? ""),
+            ),
+          ) ?? [],
+      });
+
+      if (inspectResult.error) {
+        throw new Error(
+          `Failed to quote Sui LayerZero fee: ${inspectResult.error}`,
+        );
+      }
+
+      let nativeFee: bigint;
+      try {
+        nativeFee = extractNativeFeeFromDevInspect(inspectResult);
+      } catch (extractError) {
+        console.warn("[SuiDepositFee] quote:fallbackToProbeFee", {
+          sender: this.address,
+          chainId: this.chainId,
+          providerNetwork: this.provider.network,
+          reason: extractError,
+          probeFee: SUI_DEPOSIT_QUOTE_PROBE_FEE.toString(),
+          moveCalls: summarizeSuiMoveCalls(moveCalls as any[]),
+        });
+        nativeFee = SUI_DEPOSIT_QUOTE_PROBE_FEE;
+      }
+      console.info("[SuiDepositFee] quote:success", {
+        nativeFee: nativeFee.toString(),
+      });
+      return nativeFee;
+    } catch (error) {
+      console.error("[SuiDepositFee] quote:error", {
+        sender: this.address,
+        chainId: this.chainId,
+        providerNetwork: this.provider.network,
+        depositData,
+        error,
+      });
+      throw error;
+    }
   }
 
   active(config: SuiAdapterOption): void {
@@ -545,6 +878,14 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   deactivate(): void {
     this._address = "";
     this._chainId = 0;
+    // Drop the cached SuiClient so subsequent reconnects build a fresh one
+    // against the (possibly different) network instead of reusing a stale pool.
+    this._client = undefined;
+    this._clientKey = undefined;
+    // Clear the wallet provider so any post-deactivate call into `provider`,
+    // `getPublicKey()`, or signing methods is rejected by the `provider` getter
+    // guard instead of silently operating on the stale (disconnected) account.
+    this._provider = undefined!;
   }
 
   update(config: SuiAdapterOption): void {
@@ -623,12 +964,39 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     return unsupported("internal transfer");
   }
 
-  async generateSettleMessage(_inputs: SettleInputs): Promise<
+  async generateSettleMessage(inputs: SettleInputs): Promise<
     Message & {
       domain: SignatureDomain;
     }
   > {
-    return unsupported("settle");
+    if (!inputs.verifyContract) {
+      throw new Error("SUI settle verifying contract is required");
+    }
+
+    const domain = {
+      name: "Orderly",
+      version: "1",
+      chainId: this.chainId,
+      verifyingContract: inputs.verifyContract,
+    };
+    const message = {
+      brokerId: inputs.brokerId,
+      chainId: this.chainId,
+      settleNonce: inputs.settlePnlNonce,
+      timestamp: inputs.timestamp,
+      chainType: "SUI" as const,
+      signatureVersion: SUI_SIGNATURE_VERSION,
+    };
+
+    const signature = await this.signPersonalMessage(
+      buildSuiSettlePnlText(domain, message),
+    );
+
+    return {
+      message,
+      domain,
+      signatured: signature,
+    };
   }
 
   async generateAddOrderlyKeyMessage(
@@ -685,15 +1053,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   }
 
   async getBalanceByCoinType(coinType?: string): Promise<bigint> {
-    const client = this.provider.client;
-    if (typeof client?.getBalance !== "function") {
-      throw new Error(
-        "SUI balance query is not supported in wallet-connect phase",
-      );
-    }
-
-    const getBalance = client.getBalance.bind(client);
-    const balance = await getBalance({
+    const balance = await this.client.getBalance({
       owner: this.address,
       coinType,
     });
@@ -747,7 +1107,10 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       throw new Error("SUI deposit fee quote is required");
     }
 
-    const { tx, sendCall } = this.buildDepositTransaction(depositData, lzFee);
+    const { tx, sendCall } = await this.buildDepositTransaction(
+      depositData,
+      lzFee,
+    );
     await this.populateSuiDepositTransaction(tx, sendCall);
     const result = await this.dAppKit.signAndExecuteTransaction!({
       transaction: tx,
@@ -780,6 +1143,13 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     if (method !== "getDepositFee") {
       return unsupported(`call on chain:${method}`);
     }
+
+    console.info("[SuiDepositFee] callOnChain:getDepositFee", {
+      requestedChainId: chain.chain_id,
+      adapterChainId: this.chainId,
+      address: _address,
+      params,
+    });
 
     if (Number(chain.chain_id) !== this.chainId) {
       throw new Error("SUI deposit fee chain id mismatch");
@@ -849,6 +1219,12 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     throw lastError ?? new Error("SUI transaction receipt polling timed out");
   }
 
+  // SUI does not propagate account/chain changes through this adapter's event
+  // bus. Account switches are observed by the React wallet-connector layer
+  // (useSuiWallet) and pushed down via switchWallet -> adapter.update, so there
+  // is no underlying event source to forward here. These are intentionally
+  // no-ops instead of throwing so generic hooks that subscribe on every adapter
+  // do not break on the SUI path.
   on(_eventName: string, _listener: (...args: any[]) => void): void {}
 
   off(_eventName: string, _listener: (...args: any[]) => void): void {}

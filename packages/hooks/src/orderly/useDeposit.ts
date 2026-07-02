@@ -47,6 +47,8 @@ export type DST = {
 
 export type UseDepositReturn = ReturnType<typeof useDeposit>;
 
+const SUI_DEPOSIT_FEE_FALLBACK = 1_000_000_000n;
+
 export const useDeposit = (options: DepositOptions) => {
   const [quantity, setQuantity] = useState<string>("");
   const { account, state } = useAccount();
@@ -551,17 +553,77 @@ function useDepositFee(options: {
         return 0n;
       }
 
-      const depositFee = await account.assetsManager.getDepositFee({
+      const feeParams = {
         amount: quantity,
         chain: targetChain?.network_infos!,
         decimals: decimals!,
         token: dstToken,
         // TODO: when swap deposit, dstToken address is not same as src token address
         address: dst?.address,
+      };
+
+      console.info("[DepositFee] getDepositFee:start", {
+        chainNamespace: account.walletAdapter?.chainNamespace,
+        chainId: targetChain?.network_infos?.chain_id,
+        token: dstToken,
+        tokenAddress: dst?.address,
+        decimals,
+        quantity,
+      });
+
+      let depositFee: bigint;
+      try {
+        depositFee = await account.assetsManager.getDepositFee(feeParams);
+      } catch (error) {
+        if (account.walletAdapter?.chainNamespace === ChainNamespace.sui) {
+          console.warn("[DepositFee] getDepositFee:fallback", {
+            chainNamespace: account.walletAdapter?.chainNamespace,
+            chainId: targetChain?.network_infos?.chain_id,
+            token: dstToken,
+            tokenAddress: dst?.address,
+            decimals,
+            quantity,
+            fallbackFee: SUI_DEPOSIT_FEE_FALLBACK.toString(),
+            error,
+          });
+
+          return SUI_DEPOSIT_FEE_FALLBACK;
+        }
+
+        console.error("[DepositFee] getDepositFee:error", {
+          chainNamespace: account.walletAdapter?.chainNamespace,
+          chainId: targetChain?.network_infos?.chain_id,
+          token: dstToken,
+          tokenAddress: dst?.address,
+          decimals,
+          quantity,
+          error,
+        });
+
+        throw error;
+      }
+
+      console.info("[DepositFee] getDepositFee:success", {
+        chainNamespace: account.walletAdapter?.chainNamespace,
+        chainId: targetChain?.network_infos?.chain_id,
+        token: dstToken,
+        tokenAddress: dst?.address,
+        depositFee: depositFee.toString(),
       });
 
       if (account.walletAdapter?.chainNamespace === ChainNamespace.sui) {
-        return depositFee;
+        if (depositFee === 0n) {
+          console.warn("[DepositFee] getDepositFee:fallback", {
+            chainNamespace: account.walletAdapter?.chainNamespace,
+            chainId: targetChain?.network_infos?.chain_id,
+            token: dstToken,
+            tokenAddress: dst?.address,
+            depositFee: depositFee.toString(),
+            fallbackFee: SUI_DEPOSIT_FEE_FALLBACK.toString(),
+          });
+        }
+
+        return depositFee === 0n ? SUI_DEPOSIT_FEE_FALLBACK : depositFee;
       }
 
       let estimatedGasFee = 0n;

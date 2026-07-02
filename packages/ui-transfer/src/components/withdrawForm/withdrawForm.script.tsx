@@ -42,6 +42,8 @@ import { useWithdrawToken } from "./hooks/useWithdrawToken";
 
 export type WalletLookupNetwork = "EVM" | "SOL" | "SUI";
 
+const SUI_ADDRESS_LENGTH = 64;
+
 const normalizeBase58PublicKey = (value: string) => {
   try {
     const pubKey = new PublicKey(value);
@@ -57,12 +59,23 @@ const normalizeBase58PublicKey = (value: string) => {
 export const normalizeSuiLookupPublicKey = (value: string) =>
   normalizeBase58PublicKey(value.trim());
 
+export const normalizeSuiWalletAddress = (value: string) => {
+  const trimmed = value.trim().toLowerCase();
+  const hex = trimmed.startsWith("0x") ? trimmed.slice(2) : trimmed;
+
+  if (!hex || hex.length > SUI_ADDRESS_LENGTH || !/^[0-9a-f]+$/.test(hex)) {
+    return undefined;
+  }
+
+  return `0x${hex.padStart(SUI_ADDRESS_LENGTH, "0")}`;
+};
+
 export const validateWalletAddress = (
   address: string,
   preferredNetwork?: WalletLookupNetwork,
 ): { valid: boolean; network?: WalletLookupNetwork } => {
   if (preferredNetwork === "SUI") {
-    return normalizeSuiLookupPublicKey(address)
+    return normalizeSuiWalletAddress(address)
       ? { valid: true, network: "SUI" }
       : { valid: false };
   }
@@ -85,6 +98,10 @@ export const validateWalletAddress = (
 
   if (normalizeBase58PublicKey(address)) {
     return { valid: true, network: "SOL" };
+  }
+
+  if (normalizeSuiWalletAddress(address)) {
+    return { valid: true, network: "SUI" };
   }
 
   return { valid: false };
@@ -248,7 +265,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     addr: string,
     network?: "EVM" | "SOL" | "SUI",
   ) => {
-    const normalizedAddr = addr.trim();
+    const normalizedAddr =
+      network === "SUI" ? normalizeSuiWalletAddress(addr) : addr.trim();
     if (!normalizedAddr) return;
 
     const connectedAddress = address?.trim();
@@ -405,12 +423,25 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }
 
     setLoading(true);
+    let receiver = selectedWalletAddress;
+    if (
+      currentChain?.namespace === ChainNamespace.sui &&
+      selectedWalletAddress
+    ) {
+      receiver = normalizeSuiWalletAddress(selectedWalletAddress);
+      if (!receiver) {
+        setLoading(false);
+        toast.error(t("common.invalid"));
+        return;
+      }
+    }
+
     return withdraw({
       amount: quantity,
       token: sourceToken?.symbol!,
       chainId: currentChain?.id!,
       allowCrossChainWithdraw: crossChainWithdraw,
-      receiver: selectedWalletAddress,
+      receiver,
       fee,
     })
       .then((res) => {

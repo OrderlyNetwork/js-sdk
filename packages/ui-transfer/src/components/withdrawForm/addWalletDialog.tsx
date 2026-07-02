@@ -16,6 +16,7 @@ import {
 } from "@orderly.network/ui";
 import { CurrentChain } from "../depositForm/hooks";
 import {
+  normalizeSuiWalletAddress,
   validateWalletAddress,
   type WalletLookupNetwork,
 } from "./withdrawForm.script";
@@ -109,7 +110,14 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
   const handleConfirm = () => {
     if (!address || isValidating || !isValid || isNetworkMismatch) return;
 
-    onConfirm(address, validationResult!.network);
+    const normalizedAddress =
+      validationResult!.network === "SUI"
+        ? normalizeSuiWalletAddress(address)
+        : address.trim();
+
+    if (!normalizedAddress) return;
+
+    onConfirm(normalizedAddress, validationResult!.network);
     onOpenChange(false);
   };
 

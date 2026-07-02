@@ -59,6 +59,11 @@ const base: Package[] = [
     watch: false,
   },
   {
+    package: "@orderly.network/default-sui-adapter",
+    path: "../../packages/default-sui-adapter/src",
+    watch: false,
+  },
+  {
     package: "@orderly.network/web3-provider-ethers",
     path: "../../packages/web3-provider-ethers/src",
     watch: false,
