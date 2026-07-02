@@ -93,10 +93,8 @@ export interface InitSolana {
 
 export type SuiDepositConfig = {
   chainId?: number;
-  vaultPackage?: string;
   vaultConfig?: string;
   oapp?: string;
-  usdcType?: string;
   executionGas?: bigint;
 };
 

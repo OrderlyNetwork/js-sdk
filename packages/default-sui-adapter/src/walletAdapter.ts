@@ -37,16 +37,10 @@ const unsupported = (method: string): never => {
   throw new Error(`SUI ${method} is not supported in wallet-connect phase`);
 };
 
-const SUI_TESTNET_VAULT_PACKAGE =
-  "0x2fad715610f1af18dde2121e2aa35f38bcf88d2e0338f1dbdbe20df5e1e02506";
 const SUI_TESTNET_VAULT_CONFIG =
-  "0x3e7e1e31ba4e0f6bf44cd0c2001e6332c28e485da478d1d5c9077cb47125df56";
+  "0x8e778ec20d6a28c4256472d35a6363ce69a8dd6b2b882c535bd46016d96dc012";
 const SUI_TESTNET_OAPP =
-  "0xbc737a7a3b81a92b2a6f6c9502d0226c3786dc64f882ef4f85c4408027360649";
-const SUI_TESTNET_USDC_TYPE =
-  "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC";
-const SUI_MAINNET_USDC_TYPE =
-  "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC";
+  "0x7b04f0b2a60242bbcd5eec89846d1c9112499f59e0e54caed02fc573e12c1cf2";
 const SUI_DEPOSIT_EXECUTION_GAS = BigInt("100000000");
 // Dev-inspect overpay cap used only to let LayerZero build the simulated send PTB;
 // the UI and final transaction use the nativeFee parsed from that simulation.
@@ -64,6 +58,7 @@ const HASH_ORDERLY_NETWORK =
   "0x768a5991f3d52b299dee3ad82f4adaeaa9fb91ffcf7afbecbac40c39201773b4";
 
 type ResolvedSuiDepositConfig = Required<SuiDepositConfig> & {
+  vaultPackage: string;
   network: SuiNetworkName;
   stage: Stage;
 };
@@ -71,15 +66,12 @@ type ResolvedSuiDepositConfig = Required<SuiDepositConfig> & {
 const DEFAULT_SUI_DEPOSIT_CONFIGS: Record<SuiNetworkName, SuiDepositConfig> = {
   testnet: {
     chainId: SUI_TESTNET_CHAINID,
-    vaultPackage: SUI_TESTNET_VAULT_PACKAGE,
     vaultConfig: SUI_TESTNET_VAULT_CONFIG,
     oapp: SUI_TESTNET_OAPP,
-    usdcType: SUI_TESTNET_USDC_TYPE,
     executionGas: SUI_DEPOSIT_EXECUTION_GAS,
   },
   mainnet: {
     chainId: SUI_MAINNET_CHAINID,
-    usdcType: SUI_MAINNET_USDC_TYPE,
     executionGas: SUI_DEPOSIT_EXECUTION_GAS,
   },
 };
@@ -581,13 +573,18 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     return normalizeBytes32Hex(this.getRawPublicKey());
   }
 
-  private getDepositConfig(coinType?: string): ResolvedSuiDepositConfig {
+  private getDepositConfig(
+    coinType?: string,
+    vaultPackage?: string,
+  ): ResolvedSuiDepositConfig {
     const network = resolveSuiNetwork(this.provider.network, this.chainId);
     const defaultConfig = DEFAULT_SUI_DEPOSIT_CONFIGS[network] ?? {};
     const userConfig = this.provider.depositConfig?.[network] ?? {};
+    const chainVaultPackage = vaultPackage?.trim();
     const config = {
       ...defaultConfig,
       ...userConfig,
+      vaultPackage: chainVaultPackage,
       network,
       stage: network === "mainnet" ? Stage.MAINNET : Stage.TESTNET,
     };
@@ -598,11 +595,11 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       chainId: this.chainId,
       expectedChainId: config.chainId,
       coinType,
+      chainVaultPackage,
       hasUserConfig: Boolean(this.provider.depositConfig?.[network]),
       vaultPackage: config.vaultPackage,
       vaultConfig: config.vaultConfig,
       oapp: config.oapp,
-      usdcType: config.usdcType,
       executionGas: config.executionGas?.toString(),
     });
 
@@ -614,14 +611,9 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       !config.vaultPackage ||
       !config.vaultConfig ||
       !config.oapp ||
-      !config.usdcType ||
       !config.executionGas
     ) {
       throw new Error(`SUI ${network} deposit config is required`);
-    }
-
-    if ((coinType ?? config.usdcType) !== config.usdcType) {
-      throw new Error(`Only SUI ${network} USDC deposit is supported`);
     }
 
     return config as ResolvedSuiDepositConfig;
@@ -688,9 +680,17 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   private async buildDepositTransaction(
     depositData: SuiDepositData,
     lzFee: bigint,
+    vaultPackage?: string,
   ) {
-    const config = this.getDepositConfig(depositData.tokenAddress);
-    const coinType = depositData.tokenAddress ?? config.usdcType;
+    const config = this.getDepositConfig(
+      depositData.tokenAddress,
+      vaultPackage,
+    );
+    const coinType = depositData.tokenAddress?.trim();
+
+    if (!coinType) {
+      throw new Error("SUI deposit coin type is required");
+    }
 
     const publicKey = this.getSuiIdentityPublicKey();
     const accountId = normalizeBytes32Hex(depositData.accountId);
@@ -763,8 +763,12 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     return { tx, sendCall };
   }
 
-  private async populateSuiDepositTransaction(tx: Transaction, sendCall: any) {
-    const config = this.getDepositConfig();
+  private async populateSuiDepositTransaction(
+    tx: Transaction,
+    sendCall: any,
+    vaultPackage?: string,
+  ) {
+    const config = this.getDepositConfig(undefined, vaultPackage);
     console.info("[SuiDepositFee] populateSendTransaction:start", {
       sender: this.address,
       stage: config.stage,
@@ -797,14 +801,21 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     }
   }
 
-  private async quoteSuiDepositFee(depositData: SuiDepositData) {
+  private async quoteSuiDepositFee(
+    depositData: SuiDepositData,
+    vaultPackage?: string,
+  ) {
     const client = this.client;
-    const config = this.getDepositConfig(depositData.tokenAddress);
+    const config = this.getDepositConfig(
+      depositData.tokenAddress,
+      vaultPackage,
+    );
     console.info("[SuiDepositFee] quote:start", {
       sender: this.address,
       chainId: this.chainId,
       providerNetwork: this.provider.network,
       rpcUrl: this.provider.rpcUrl,
+      vaultPackage: config.vaultPackage,
       probeFee: SUI_DEPOSIT_QUOTE_PROBE_FEE.toString(),
       depositData,
     });
@@ -813,8 +824,13 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       const { tx, sendCall } = await this.buildDepositTransaction(
         depositData,
         SUI_DEPOSIT_QUOTE_PROBE_FEE,
+        vaultPackage,
       );
-      const moveCalls = await this.populateSuiDepositTransaction(tx, sendCall);
+      const moveCalls = await this.populateSuiDepositTransaction(
+        tx,
+        sendCall,
+        vaultPackage,
+      );
 
       console.info("[SuiDepositFee] devInspect:start", {
         sender: this.address,
@@ -1081,7 +1097,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   }
 
   async sendTransaction(
-    _contractAddress: string,
+    contractAddress: string,
     method: string,
     payload: {
       from: string;
@@ -1110,8 +1126,9 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     const { tx, sendCall } = await this.buildDepositTransaction(
       depositData,
       lzFee,
+      contractAddress,
     );
-    await this.populateSuiDepositTransaction(tx, sendCall);
+    await this.populateSuiDepositTransaction(tx, sendCall, contractAddress);
     const result = await this.dAppKit.signAndExecuteTransaction!({
       transaction: tx,
     });
@@ -1133,7 +1150,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
 
   async callOnChain(
     chain: API.NetworkInfos,
-    _address: string,
+    address: string,
     method: string,
     params: any[],
     _options: {
@@ -1147,7 +1164,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     console.info("[SuiDepositFee] callOnChain:getDepositFee", {
       requestedChainId: chain.chain_id,
       adapterChainId: this.chainId,
-      address: _address,
+      address,
       params,
     });
 
@@ -1160,7 +1177,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       throw new Error("SUI deposit data is required");
     }
 
-    return this.quoteSuiDepositFee(depositData);
+    return this.quoteSuiDepositFee(depositData, address);
   }
 
   async estimateGasFee(

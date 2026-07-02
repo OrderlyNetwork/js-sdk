@@ -2,10 +2,8 @@ export type SuiNetworkName = "mainnet" | "testnet";
 
 export type SuiDepositConfig = {
   chainId?: number;
-  vaultPackage?: string;
   vaultConfig?: string;
   oapp?: string;
-  usdcType?: string;
   executionGas?: bigint;
 };
 
