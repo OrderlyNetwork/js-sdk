@@ -21,14 +21,11 @@ export function InitPrivyProvider({
   initChains,
   children,
 }: IProps) {
-  const { network, suiChainIds } = useWalletConnectorPrivy();
+  const { network } = useWalletConnectorPrivy();
 
   const config = useMemo((): PrivyClientConfig => {
     const chains = initChains.filter(
-      (chain) =>
-        !SolanaChains.has(chain.id) &&
-        !SuiChains.has(chain.id) &&
-        !suiChainIds.has(chain.id),
+      (chain) => !SolanaChains.has(chain.id) && !SuiChains.has(chain.id),
     );
     const preferredDefaultChainIds = (
       network === "mainnet" ? defaultMainnetChains : defaultTestnetChains
@@ -111,7 +108,7 @@ export function InitPrivyProvider({
       defaultChain: defaultEvmChain,
       supportedChains: chains,
     };
-  }, [initChains, privyConfig, network, suiChainIds]);
+  }, [initChains, privyConfig, network]);
 
   if (!initChains.length) {
     console.warn("initChains is empty");

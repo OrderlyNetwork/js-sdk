@@ -101,8 +101,6 @@ export type SuiDepositConfig = {
 export interface InitSui {
   mainnetRpc?: string;
   testnetRpc?: string;
-  mainnetChainId?: number;
-  testnetChainId?: number;
   depositConfig?: Partial<Record<Network, SuiDepositConfig>>;
   onError?: (error: Error) => void;
 }

@@ -10,7 +10,7 @@ import { InputStatus } from "../../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../../utils";
 import {
   normalizeSuiLookupPublicKey,
-  validateWalletAddress,
+  validateAccountLookupIdentity,
   type WalletLookupNetwork,
 } from "../withdrawForm.script";
 
@@ -176,7 +176,10 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
         return;
       }
 
-      const { valid, network } = validateWalletAddress(input, lookupNetwork);
+      const { valid, network } = validateAccountLookupIdentity(
+        input,
+        lookupNetwork,
+      );
 
       try {
         let resolved: AccountInfo | null = null;

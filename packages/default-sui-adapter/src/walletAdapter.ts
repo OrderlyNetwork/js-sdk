@@ -49,7 +49,11 @@ const DEFAULT_RECEIPT_BASE_INTERVAL = 1_000;
 const DEFAULT_RECEIPT_MAX_INTERVAL = 10_000;
 const DEFAULT_RECEIPT_MAX_RETRIES = 30;
 const SUI_SIGNATURE_VERSION = "v2";
-const SUI_ALLOWED_SIGNATURE_FLAGS = new Set([0x00, 0x01]);
+const SUI_ED25519_SIGNATURE_FLAG = 0x00;
+// Only Ed25519 is supported today. Supporting Secp256k1 or other schemes
+// requires updating identity/accountId, deposit, link-device, and backend
+// verification flows together because they currently assume Ed25519 public keys.
+const SUI_ALLOWED_SIGNATURE_FLAGS = new Set([SUI_ED25519_SIGNATURE_FLAG]);
 const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
   "connector.sui.unsupportedAccountType";
 const OFF_CHAIN_VERIFYING_CONTRACT =
@@ -91,8 +95,36 @@ type SuiSelectedDepositCoins = {
 };
 
 type SuiSignatureMessage = Record<string, string | number | bigint | undefined>;
+type SuiDAppKitBridge = {
+  signAndExecuteTransaction?: (inputs: {
+    transaction: unknown;
+  }) => Promise<any>;
+  signPersonalMessage?: (inputs: {
+    message: Uint8Array;
+  }) => Promise<{ bytes?: string; signature: string }>;
+};
 
 const textEncoder = new TextEncoder();
+
+// Boundary between @mysten/sui v1 Transaction values required by LayerZero's
+// Sui SDK and the newer dApp Kit wallet connector. Keep these casts localized
+// until LayerZero supports v2 transactions and this adapter can move together.
+const asLayerZeroSuiClient = (client: SuiClient) => client as any;
+const asLayerZeroSuiTransaction = (transaction: Transaction) =>
+  transaction as any;
+
+const signAndExecuteSuiV1Transaction = (
+  dAppKit: SuiDAppKitBridge,
+  transaction: Transaction,
+) => {
+  if (typeof dAppKit.signAndExecuteTransaction !== "function") {
+    throw new Error("SUI wallet does not support signAndExecuteTransaction");
+  }
+
+  return dAppKit.signAndExecuteTransaction({
+    transaction,
+  });
+};
 
 const stripHexPrefix = (value: string) =>
   value.startsWith("0x") ? value.slice(2) : value;
@@ -531,16 +563,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   }
 
   private get dAppKit() {
-    const dAppKit = this.provider.dAppKit as
-      | {
-          signAndExecuteTransaction?: (inputs: {
-            transaction: Transaction;
-          }) => Promise<any>;
-          signPersonalMessage?: (inputs: {
-            message: Uint8Array;
-          }) => Promise<{ bytes?: string; signature: string }>;
-        }
-      | undefined;
+    const dAppKit = this.provider.dAppKit as SuiDAppKitBridge | undefined;
 
     if (typeof dAppKit?.signAndExecuteTransaction !== "function") {
       throw new Error("SUI wallet does not support signAndExecuteTransaction");
@@ -777,12 +800,16 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
     const lz = new SDK({
       chain: Chain.SUI,
       stage: config.stage,
-      client: this.client as any,
+      client: asLayerZeroSuiClient(this.client),
     });
     try {
       const moveCalls = await lz
         .getEndpoint()
-        .populateSendTransaction(tx as any, sendCall, this.address);
+        .populateSendTransaction(
+          asLayerZeroSuiTransaction(tx),
+          sendCall,
+          this.address,
+        );
       console.info("[SuiDepositFee] populateSendTransaction:success", {
         sender: this.address,
         stage: config.stage,
@@ -1069,7 +1096,12 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   }
 
   async getBalanceByCoinType(coinType?: string): Promise<bigint> {
-    const balance = await this.client.getBalance({
+    const providerClient = this.provider.client;
+    const getBalance =
+      typeof providerClient?.getBalance === "function"
+        ? providerClient.getBalance.bind(providerClient)
+        : this.client.getBalance.bind(this.client);
+    const balance = await getBalance({
       owner: this.address,
       coinType,
     });
@@ -1123,15 +1155,16 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       throw new Error("SUI deposit fee quote is required");
     }
 
+    // TODO: If Sui deposits fail from stale LayerZero quotes, consider adding
+    // a small buffer to the quoted fee instead of re-quoting on submit. Sui fee
+    // quotes are slow and can be flaky.
     const { tx, sendCall } = await this.buildDepositTransaction(
       depositData,
       lzFee,
       contractAddress,
     );
     await this.populateSuiDepositTransaction(tx, sendCall, contractAddress);
-    const result = await this.dAppKit.signAndExecuteTransaction!({
-      transaction: tx,
-    });
+    const result = await signAndExecuteSuiV1Transaction(this.dAppKit, tx);
 
     if (result?.FailedTransaction) {
       throw new Error(

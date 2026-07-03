@@ -28,7 +28,7 @@ import { getChainType } from "../util";
 export function useWallet() {
   const { track } = useTrack();
   const ee = useEventEmitter();
-  const { walletChainTypeConfig, initChains, network, suiInfo, suiChainIds } =
+  const { walletChainTypeConfig, initChains, network, suiInfo } =
     useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
   const {
@@ -77,11 +77,8 @@ export function useWallet() {
     useWalletConnectorPrivy();
 
   const isSuiChainId = useCallback(
-    (chainId: number) =>
-      SuiChains.has(chainId) ||
-      suiChainIds.has(chainId) ||
-      suiInfo?.chainId === chainId,
-    [suiChainIds, suiInfo?.chainId],
+    (chainId: number) => SuiChains.has(chainId) || suiInfo?.chainId === chainId,
+    [suiInfo?.chainId],
   );
 
   const getWalletTypeByChainId = useCallback(

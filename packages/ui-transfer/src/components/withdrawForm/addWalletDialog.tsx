@@ -16,8 +16,8 @@ import {
 } from "@orderly.network/ui";
 import { CurrentChain } from "../depositForm/hooks";
 import {
-  normalizeSuiWalletAddress,
-  validateWalletAddress,
+  normalizeSuiWithdrawAddress,
+  validateExternalWalletAddress,
   type WalletLookupNetwork,
 } from "./withdrawForm.script";
 
@@ -57,7 +57,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
       setIsValidating(false);
       return;
     }
-    const result = validateWalletAddress(addr, requiredNetwork);
+    const result = validateExternalWalletAddress(addr, requiredNetwork);
     setValidationResult(result);
     setIsValidating(false);
   }, 500);
@@ -112,7 +112,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
 
     const normalizedAddress =
       validationResult!.network === "SUI"
-        ? normalizeSuiWalletAddress(address)
+        ? normalizeSuiWithdrawAddress(address)
         : address.trim();
 
     if (!normalizedAddress) return;

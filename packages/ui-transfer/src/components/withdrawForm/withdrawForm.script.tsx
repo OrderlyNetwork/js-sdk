@@ -59,23 +59,21 @@ const normalizeBase58PublicKey = (value: string) => {
 export const normalizeSuiLookupPublicKey = (value: string) =>
   normalizeBase58PublicKey(value.trim());
 
-export const normalizeSuiWalletAddress = (value: string) => {
-  const trimmed = value.trim().toLowerCase();
-  const hex = trimmed.startsWith("0x") ? trimmed.slice(2) : trimmed;
-
-  if (!hex || hex.length > SUI_ADDRESS_LENGTH || !/^[0-9a-f]+$/.test(hex)) {
+export const normalizeSuiWithdrawAddress = (value: string) => {
+  const hex = value.trim().replace(/^0x/i, "").toLowerCase();
+  if (!/^[0-9a-f]+$/.test(hex) || hex.length > SUI_ADDRESS_LENGTH) {
     return undefined;
   }
 
   return `0x${hex.padStart(SUI_ADDRESS_LENGTH, "0")}`;
 };
 
-export const validateWalletAddress = (
+export const validateAccountLookupIdentity = (
   address: string,
   preferredNetwork?: WalletLookupNetwork,
 ): { valid: boolean; network?: WalletLookupNetwork } => {
   if (preferredNetwork === "SUI") {
-    return normalizeSuiWalletAddress(address)
+    return normalizeSuiLookupPublicKey(address)
       ? { valid: true, network: "SUI" }
       : { valid: false };
   }
@@ -100,11 +98,24 @@ export const validateWalletAddress = (
     return { valid: true, network: "SOL" };
   }
 
-  if (normalizeSuiWalletAddress(address)) {
+  if (normalizeSuiLookupPublicKey(address)) {
     return { valid: true, network: "SUI" };
   }
 
   return { valid: false };
+};
+
+export const validateExternalWalletAddress = (
+  address: string,
+  preferredNetwork?: WalletLookupNetwork,
+): { valid: boolean; network?: WalletLookupNetwork } => {
+  if (preferredNetwork === "SUI") {
+    return normalizeSuiWithdrawAddress(address)
+      ? { valid: true, network: "SUI" }
+      : { valid: false };
+  }
+
+  return validateAccountLookupIdentity(address, preferredNetwork);
 };
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
@@ -266,7 +277,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     network?: "EVM" | "SOL" | "SUI",
   ) => {
     const normalizedAddr =
-      network === "SUI" ? normalizeSuiWalletAddress(addr) : addr.trim();
+      network === "SUI" ? normalizeSuiWithdrawAddress(addr) : addr.trim();
     if (!normalizedAddr) return;
 
     const connectedAddress = address?.trim();
@@ -428,7 +439,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       currentChain?.namespace === ChainNamespace.sui &&
       selectedWalletAddress
     ) {
-      receiver = normalizeSuiWalletAddress(selectedWalletAddress);
+      receiver = normalizeSuiWithdrawAddress(selectedWalletAddress);
       if (!receiver) {
         setLoading(false);
         toast.error(t("common.invalid"));

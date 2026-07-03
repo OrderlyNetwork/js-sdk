@@ -32,7 +32,6 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
     setOpenConnectDrawer,
     setTargetWalletType,
     suiInfo,
-    suiChainIds,
   } = useWalletConnectorPrivy();
 
   const resolveWalletType = (chainId?: number | string) => {
@@ -46,11 +45,7 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
       return undefined;
     }
 
-    if (
-      SuiChains.has(nextChainId) ||
-      suiInfo?.chainId === nextChainId ||
-      suiChainIds.has(nextChainId)
-    ) {
+    if (SuiChains.has(nextChainId) || suiInfo?.chainId === nextChainId) {
       return WalletType.SUI;
     }
     if (SolanaChains.has(nextChainId)) {

@@ -9,7 +9,6 @@ import {
   WagmiProvider,
 } from "wagmi";
 import { SolanaChains, SuiChains } from "@orderly.network/types";
-import { useWalletConnectorPrivy } from "../../provider";
 import { InitWagmi } from "../../types";
 
 interface InitWagmiProps extends PropsWithChildren {
@@ -24,15 +23,11 @@ export function InitWagmiProvider({
   initChains,
   wagmiConfig,
 }: InitWagmiProps) {
-  const { suiChainIds } = useWalletConnectorPrivy();
   const [queryClient] = useState(() => new QueryClient());
 
   const [config] = useState(() => {
     const wagmiChains = initChains.filter(
-      (chain) =>
-        !SolanaChains.has(chain.id) &&
-        !SuiChains.has(chain.id) &&
-        !suiChainIds.has(chain.id),
+      (chain) => !SolanaChains.has(chain.id) && !SuiChains.has(chain.id),
     );
     const chains =
       wagmiChains && wagmiChains.length

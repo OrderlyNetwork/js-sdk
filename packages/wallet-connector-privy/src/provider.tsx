@@ -47,29 +47,6 @@ import {
 
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
-const isSuiNetworkInfo = (chainInfo: any) => {
-  const currencySymbol = chainInfo?.currency_symbol?.toUpperCase?.();
-  const name = chainInfo?.name?.toLowerCase?.() || "";
-  const shortName = chainInfo?.shortName?.toLowerCase?.() || "";
-  return (
-    currencySymbol === "SUI" ||
-    name.includes("sui") ||
-    shortName.includes("sui")
-  );
-};
-
-const collectSuiChainIds = (...chainInfoGroups: any[][]) => {
-  const ids = new Set<number>();
-  chainInfoGroups.flat().forEach((chainInfo) => {
-    if (!isSuiNetworkInfo(chainInfo)) return;
-    const chainId = Number(chainInfo.chain_id);
-    if (Number.isFinite(chainId)) {
-      ids.add(chainId);
-    }
-  });
-  return ids;
-};
-
 const processChainInfo = (chainInfo: any) =>
   chainInfo.map((row: any) =>
     defineChain({
@@ -124,7 +101,6 @@ interface WalletConnectorPrivyContextType {
       chainId: number | null;
     } | null,
   ) => void;
-  suiChainIds: Set<number>;
   termsOfUse: string;
   // TODO deprecated
   walletChainType: WalletChainType;
@@ -152,7 +128,6 @@ const WalletConnectorPrivyContext =
     setSolanaInfo: () => {},
     suiInfo: null,
     setSuiInfo: () => {},
-    suiChainIds: new Set(),
     termsOfUse: "",
     walletChainType: WalletChainTypeEnum.EVM_SOL,
     walletChainTypeConfig: {
@@ -246,16 +221,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     network: Network | null;
     chainId: number | null;
   } | null>(null);
-  const [suiChainIds, setSuiChainIds] = useState<Set<number>>(
-    () =>
-      new Set(
-        [
-          props.suiConfig?.mainnetChainId,
-          props.suiConfig?.testnetChainId,
-          ...Array.from(SuiChains),
-        ].filter((id): id is number => typeof id === "number"),
-      ),
-  );
 
   const connectorWalletType = useMemo(() => {
     const type: ConnectorWalletType = {
@@ -298,7 +263,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     initChains.forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
-      } else if (SuiChains.has(chain.id) || suiChainIds.has(chain.id)) {
+      } else if (SuiChains.has(chain.id)) {
         chainTypeObj.hasSui = true;
       } else if (AbstractChains.has(chain.id)) {
         chainTypeObj.hasAbstract = true;
@@ -306,11 +271,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
         chainTypeObj.hasEvm = true;
       }
     });
-    if (!connectorWalletType.disableSui && suiChainIds.size > 0) {
-      chainTypeObj.hasSui = true;
-    }
     return chainTypeObj;
-  }, [connectorWalletType.disableSui, initChains, suiChainIds]);
+  }, [initChains]);
 
   useEffect(() => {
     if (!mainnetChainsHydrated || !testChainsHydrated) return;
@@ -351,20 +313,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       hasSui: false,
       hasAbstract: false,
     };
-    const nextSuiChainIds = new Set([
-      ...Array.from(suiChainIds),
-      ...Array.from(
-        collectSuiChainIds(
-          props.customChains!.testnet?.map((item) => item.network_infos) || [],
-          props.customChains!.mainnet?.map((item) => item.network_infos) || [],
-        ),
-      ),
-    ]);
-    setSuiChainIds(nextSuiChainIds);
     [...testChains, ...mainnetChains].forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
-      } else if (SuiChains.has(chain.id) || nextSuiChainIds.has(chain.id)) {
+      } else if (SuiChains.has(chain.id)) {
         chainTypeObj.hasSui = true;
       } else if (AbstractChains.has(chain.id)) {
         chainTypeObj.hasAbstract = true;
@@ -415,7 +367,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       setSolanaInfo,
       suiInfo,
       setSuiInfo,
-      suiChainIds,
       termsOfUse,
       walletChainType,
       connectorWalletType,
@@ -437,7 +388,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       setSolanaInfo,
       suiInfo,
       setSuiInfo,
-      suiChainIds,
       termsOfUse,
       walletChainType,
       connectorWalletType,
@@ -478,12 +428,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       const mainnetChains = processChainInfo(mainnetChainsList);
 
       const chains = [...testChains, ...mainnetChains];
-      setSuiChainIds(
-        new Set([
-          ...Array.from(suiChainIds),
-          ...Array.from(collectSuiChainIds(testChainsList, mainnetChainsList)),
-        ]),
-      );
 
       setTestnetChains(testChains);
       setMainnetChains(mainnetChains);

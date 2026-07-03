@@ -20,7 +20,6 @@ export function RenderConnector() {
     walletChainTypeConfig,
     targetWalletType,
     suiInfo,
-    suiChainIds,
   } = useWalletConnectorPrivy();
   const { storageChain } = useStorageChain();
 
@@ -29,7 +28,7 @@ export function RenderConnector() {
     if (!storageChain?.chainId) return undefined;
     try {
       const chainId = parseInt(storageChain.chainId as string);
-      if (suiInfo?.chainId === chainId || suiChainIds.has(chainId)) {
+      if (suiInfo?.chainId === chainId) {
         return WalletType.SUI;
       }
       return getChainType(chainId);
@@ -144,13 +143,12 @@ export function RenderConnector() {
     ? typeToKey[selectedWalletType]
     : undefined;
 
-  const orderedWalletKeys =
-    prioritizedKey && prioritizedKey !== "sui"
-      ? ([
-          prioritizedKey,
-          ...walletOrder.filter((k) => k !== prioritizedKey),
-        ] as const)
-      : walletOrder;
+  const orderedWalletKeys = prioritizedKey
+    ? ([
+        prioritizedKey,
+        ...walletOrder.filter((k) => k !== prioritizedKey),
+      ] as const)
+    : walletOrder;
 
   const renderByKey = (key: (typeof walletOrder)[number]) => {
     switch (key) {

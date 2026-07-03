@@ -98,16 +98,19 @@ const DEFAULT_SUI_RPC: Record<SuiNetworkName, string> = {
 const getSuiWalletChain = (network: SuiNetworkName): `sui:${SuiNetworkName}` =>
   `sui:${network}`;
 
-// Sui wallets should expose these Wallet Standard features to support connect,
-// signing, and transaction flows used by the connector.
-const requiredSuiWalletFeatures = [
-  "sui:signPersonalMessage",
-  "sui:signAndExecuteTransaction",
-  "sui:signTransaction",
+// Keep this aligned with the dApp Kit actions that this connector calls.
+// dApp Kit supports both current and legacy transaction Wallet Standard feature
+// names, so accept either form instead of filtering compatible wallets out.
+const requiredSuiWalletFeatureGroups = [
+  ["sui:signPersonalMessage"],
+  ["sui:signAndExecuteTransaction", "sui:signAndExecuteTransactionBlock"],
 ] as const;
 
 const SUI_ED25519_SIGNATURE_FLAG = 0x00;
-const SUI_ALLOWED_SIGNATURE_FLAGS = new Set([SUI_ED25519_SIGNATURE_FLAG, 0x01]);
+// Only Ed25519 is supported today. Supporting Secp256k1 or other schemes
+// requires updating identity/accountId, deposit, link-device, and backend
+// verification flows together because they currently assume Ed25519 public keys.
+const SUI_ALLOWED_SIGNATURE_FLAGS = new Set([SUI_ED25519_SIGNATURE_FLAG]);
 const SUI_KNOWN_SIGNATURE_FLAGS = new Set([0x00, 0x01, 0x02, 0x03, 0x05]);
 const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
   "connector.sui.unsupportedAccountType";
@@ -384,8 +387,8 @@ const isSupportedSuiWallet = (wallet: UiWallet, network: SuiNetworkName) => {
     return false;
   }
 
-  return requiredSuiWalletFeatures.every((feature) =>
-    wallet.features.includes(feature),
+  return requiredSuiWalletFeatureGroups.every((featureGroup) =>
+    featureGroup.some((feature) => wallet.features.includes(feature)),
   );
 };
 
@@ -418,8 +421,8 @@ function InitSuiProvider({
       : (suiConfig.testnetRpc ?? DEFAULT_SUI_RPC.testnet);
   const chainId =
     suiNetwork === "mainnet"
-      ? (suiConfig.mainnetChainId ?? SuiChainsMap.get(Network.mainnet) ?? null)
-      : (suiConfig.testnetChainId ?? SuiChainsMap.get(Network.testnet) ?? null);
+      ? (SuiChainsMap.get(Network.mainnet) ?? null)
+      : (SuiChainsMap.get(Network.testnet) ?? null);
 
   const dAppKit = useMemo(
     () => createSuiDAppKit(suiNetwork, rpcUrl),
