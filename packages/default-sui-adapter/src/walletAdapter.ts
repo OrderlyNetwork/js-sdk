@@ -5,7 +5,7 @@ import { SDK } from "@layerzerolabs/lz-sui-sdk-v2";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { fromBase64 } from "@mysten/sui/utils";
-import { decode as bs58decode, encode as bs58encode } from "bs58";
+import { verifyPersonalMessageSignature } from "@mysten/sui/verify";
 import {
   AddOrderlyKeyInputs,
   BaseWalletAdapter,
@@ -16,6 +16,9 @@ import {
   SettleInputs,
   SignatureDomain,
   WithdrawInputs,
+  isSupportedSuiPublicKeyScheme,
+  normalizeSuiPublicKeyToBase58,
+  normalizeSuiPublicKeyToBytes32Hex,
 } from "@orderly.network/core";
 import {
   API,
@@ -104,9 +107,6 @@ const signAndExecuteSuiV1Transaction = (
 const stripHexPrefix = (value: string) =>
   value.startsWith("0x") ? value.slice(2) : value;
 
-const bytesToHex = (bytes: ArrayLike<number>) =>
-  Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("");
-
 const bytesFromHex = (hex: string) => Array.from(fromHex(stripHexPrefix(hex)));
 
 const fromHex = (hex: string) => {
@@ -132,50 +132,6 @@ const normalizeBytes32Hex = (value?: string) => {
   return `0x${hex}`;
 };
 
-const normalizeSuiBase58PublicKey = (value?: string) => {
-  if (!value) {
-    return undefined;
-  }
-
-  const hex = stripHexPrefix(value).toLowerCase();
-  if (/^[0-9a-f]{64}$/.test(hex)) {
-    return bs58encode(fromHex(hex));
-  }
-
-  try {
-    const rawBytes = bs58decode(value);
-    if (rawBytes.length === 32) {
-      return bs58encode(rawBytes);
-    }
-  } catch {
-    return undefined;
-  }
-
-  return undefined;
-};
-
-const normalizeSuiRawPublicKey = (value?: string) => {
-  if (!value) {
-    return undefined;
-  }
-
-  const hex = stripHexPrefix(value).toLowerCase();
-  if (/^[0-9a-f]{64}$/.test(hex)) {
-    return `0x${hex}`;
-  }
-
-  try {
-    const rawBytes = bs58decode(value);
-    if (rawBytes.length === 32) {
-      return `0x${bytesToHex(rawBytes)}`;
-    }
-  } catch {
-    return undefined;
-  }
-
-  return undefined;
-};
-
 const hex64 = (value: string) => {
   const hex = stripHexPrefix(value).toLowerCase();
   if (!/^[0-9a-f]*$/.test(hex) || hex.length > 64) {
@@ -199,10 +155,7 @@ const assertEd25519PersonalMessageSignature = (signature: string) => {
 };
 
 const assertEd25519WalletAccount = (scheme?: number) => {
-  if (
-    typeof scheme !== "undefined" &&
-    !SUI_ALLOWED_SIGNATURE_FLAGS.has(scheme)
-  ) {
+  if (!isSupportedSuiPublicKeyScheme(scheme)) {
     throw new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR);
   }
 };
@@ -511,13 +464,13 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   }
 
   getPublicKey(): string | undefined {
-    return normalizeSuiBase58PublicKey(
+    return normalizeSuiPublicKeyToBase58(
       this.provider.account?.publicKey ?? this.provider.account?.rawPublicKey,
     );
   }
 
   getRawPublicKey(): string | undefined {
-    return normalizeSuiRawPublicKey(
+    return normalizeSuiPublicKeyToBytes32Hex(
       this.provider.account?.rawPublicKey ?? this.provider.account?.publicKey,
     );
   }
@@ -554,15 +507,30 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
 
     assertEd25519WalletAccount(this.provider.account?.publicKeyScheme);
 
-    const result = await this.dAppKit.signPersonalMessage({
-      message: textEncoder.encode(text),
-    });
+    const message = textEncoder.encode(text);
+    const result = await this.dAppKit.signPersonalMessage({ message });
 
     if (!result?.signature) {
       throw new Error("SUI wallet did not return a personal-message signature");
     }
 
     assertEd25519PersonalMessageSignature(result.signature);
+    const verifiedPublicKey = await verifyPersonalMessageSignature(
+      message,
+      result.signature,
+      { address: this.address },
+    );
+    const verifiedBase58PublicKey =
+      normalizeSuiPublicKeyToBase58(verifiedPublicKey);
+    const accountBase58PublicKey = this.getPublicKey();
+
+    if (
+      verifiedBase58PublicKey &&
+      accountBase58PublicKey &&
+      verifiedBase58PublicKey !== accountBase58PublicKey
+    ) {
+      throw new Error("SUI signature public key does not match wallet account");
+    }
 
     return result.signature;
   }

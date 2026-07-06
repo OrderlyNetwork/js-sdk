@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { ethers } from "ethers";
+import { normalizeSuiPublicKeyToBase58 } from "@orderly.network/core";
 import {
   useAccount,
   useAssetsHistory,
@@ -41,6 +42,10 @@ import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
 import { useWithdrawToken } from "./hooks/useWithdrawToken";
 
 export type WalletLookupNetwork = "EVM" | "SOL" | "SUI";
+export type WalletLookupIdentity = {
+  address: string;
+  network: WalletLookupNetwork;
+};
 
 const SUI_ADDRESS_LENGTH = 64;
 
@@ -57,7 +62,7 @@ const normalizeBase58PublicKey = (value: string) => {
 };
 
 export const normalizeSuiLookupPublicKey = (value: string) =>
-  normalizeBase58PublicKey(value.trim());
+  normalizeSuiPublicKeyToBase58(value.trim());
 
 export const normalizeSuiWithdrawAddress = (value: string) => {
   const hex = value.trim().replace(/^0x/i, "").toLowerCase();
@@ -72,37 +77,54 @@ export const validateAccountLookupIdentity = (
   address: string,
   preferredNetwork?: WalletLookupNetwork,
 ): { valid: boolean; network?: WalletLookupNetwork } => {
+  const identities = getAccountLookupIdentities(address, preferredNetwork);
+  if (identities.length === 0) {
+    return { valid: false };
+  }
+  return {
+    valid: true,
+    network: identities.length === 1 ? identities[0].network : undefined,
+  };
+};
+
+export const getAccountLookupIdentities = (
+  address: string,
+  preferredNetwork?: WalletLookupNetwork,
+): WalletLookupIdentity[] => {
+  const trimmed = address.trim();
+
   if (preferredNetwork === "SUI") {
-    return normalizeSuiLookupPublicKey(address)
-      ? { valid: true, network: "SUI" }
-      : { valid: false };
+    const publicKey = normalizeSuiLookupPublicKey(trimmed);
+    return publicKey ? [{ address: publicKey, network: "SUI" }] : [];
   }
 
   if (preferredNetwork === "SOL") {
-    return normalizeBase58PublicKey(address)
-      ? { valid: true, network: "SOL" }
-      : { valid: false };
+    const publicKey = normalizeBase58PublicKey(trimmed);
+    return publicKey ? [{ address: publicKey, network: "SOL" }] : [];
   }
 
   if (preferredNetwork === "EVM") {
-    return ethers.isAddress(address)
-      ? { valid: true, network: "EVM" }
-      : { valid: false };
+    return ethers.isAddress(trimmed)
+      ? [{ address: trimmed, network: "EVM" }]
+      : [];
   }
 
-  if (ethers.isAddress(address)) {
-    return { valid: true, network: "EVM" };
+  if (ethers.isAddress(trimmed)) {
+    return [{ address: trimmed, network: "EVM" }];
   }
 
-  if (normalizeBase58PublicKey(address)) {
-    return { valid: true, network: "SOL" };
+  const identities: WalletLookupIdentity[] = [];
+  const suiPublicKey = normalizeSuiLookupPublicKey(trimmed);
+  if (suiPublicKey) {
+    identities.push({ address: suiPublicKey, network: "SUI" });
   }
 
-  if (normalizeSuiLookupPublicKey(address)) {
-    return { valid: true, network: "SUI" };
+  const solPublicKey = normalizeBase58PublicKey(trimmed);
+  if (solPublicKey) {
+    identities.push({ address: solPublicKey, network: "SOL" });
   }
 
-  return { valid: false };
+  return identities;
 };
 
 export const validateExternalWalletAddress = (

@@ -56,6 +56,7 @@ export type {
 export { BaseWalletAdapter } from "./wallet/baseWalletAdapter";
 export type { Ed25519Keypair } from "./types";
 export type { SignatureDomain } from "./utils";
+export * from "./suiPublicKey";
 
 export * from "./wallet";
 

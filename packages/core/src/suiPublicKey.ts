@@ -1,0 +1,120 @@
+import { decode as bs58decode, encode as bs58encode } from "bs58";
+
+export const SUI_ED25519_SIGNATURE_FLAG = 0x00;
+
+const stripHexPrefix = (value: string) =>
+  value.startsWith("0x") ? value.slice(2) : value;
+
+const bytesToHex = (bytes: ArrayLike<number>) =>
+  Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("");
+
+const bytesFromHex = (hex: string) => {
+  if (hex.length % 2 !== 0 || !/^[0-9a-fA-F]*$/.test(hex)) {
+    return undefined;
+  }
+
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let index = 0; index < bytes.length; index += 1) {
+    bytes[index] = Number.parseInt(hex.slice(index * 2, index * 2 + 2), 16);
+  }
+  return bytes;
+};
+
+const toUint8Array = (value: unknown): Uint8Array | undefined => {
+  if (value instanceof Uint8Array) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return Uint8Array.from(value);
+  }
+
+  if (typeof value === "object" && value !== null) {
+    const publicKey = value as {
+      toRawBytes?: () => Uint8Array;
+      toSuiBytes?: () => Uint8Array;
+      toBytes?: () => Uint8Array;
+    };
+    const bytes =
+      publicKey.toRawBytes?.() ??
+      publicKey.toSuiBytes?.() ??
+      publicKey.toBytes?.();
+
+    if (bytes) {
+      return bytes;
+    }
+
+    if (typeof (value as { length?: unknown }).length === "number") {
+      const arrayLike = value as ArrayLike<number>;
+      return Uint8Array.from(
+        { length: arrayLike.length },
+        (_, index) => arrayLike[index],
+      );
+    }
+  }
+};
+
+export type SuiEd25519PublicKey = {
+  publicKey: string;
+  rawPublicKey: string;
+  publicKeyScheme: typeof SUI_ED25519_SIGNATURE_FLAG;
+};
+
+export const isSupportedSuiPublicKeyScheme = (scheme?: number) =>
+  typeof scheme === "undefined" || scheme === SUI_ED25519_SIGNATURE_FLAG;
+
+export const normalizeSuiEd25519PublicKey = (
+  value?: unknown,
+): SuiEd25519PublicKey | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const valueBytes = toUint8Array(value);
+  if (valueBytes) {
+    const rawBytes =
+      valueBytes.length === 33 && valueBytes[0] === SUI_ED25519_SIGNATURE_FLAG
+        ? valueBytes.slice(1)
+        : valueBytes;
+
+    if (rawBytes.length === 32) {
+      return {
+        publicKey: bs58encode(rawBytes),
+        rawPublicKey: `0x${bytesToHex(rawBytes)}`,
+        publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
+      };
+    }
+
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  const hex = stripHexPrefix(trimmed);
+  if (/^[0-9a-fA-F]{64}$/.test(hex)) {
+    return normalizeSuiEd25519PublicKey(bytesFromHex(hex));
+  }
+
+  if (/^[0-9a-fA-F]{66}$/.test(hex)) {
+    const bytes = bytesFromHex(hex);
+    if (bytes?.[0] === SUI_ED25519_SIGNATURE_FLAG) {
+      return normalizeSuiEd25519PublicKey(bytes);
+    }
+    return undefined;
+  }
+
+  try {
+    return normalizeSuiEd25519PublicKey(bs58decode(trimmed));
+  } catch {
+    return undefined;
+  }
+};
+
+export const normalizeSuiPublicKeyToBase58 = (value?: unknown) =>
+  normalizeSuiEd25519PublicKey(value)?.publicKey;
+
+export const normalizeSuiPublicKeyToBytes32Hex = (value?: unknown) =>
+  normalizeSuiEd25519PublicKey(value)?.rawPublicKey;

@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-import { decode as bs58decode, encode as bs58encode } from "bs58";
 import { AbiCoder, keccak256 } from "ethers";
 import EventEmitter from "eventemitter3";
 import {
@@ -21,6 +20,10 @@ import { LocalStorageRepository } from "./repository";
 import { BaseSigner, MessageFactor, Signer } from "./signer";
 import { SubAccount } from "./subAccount";
 import {
+  normalizeSuiPublicKeyToBase58,
+  normalizeSuiPublicKeyToBytes32Hex,
+} from "./suiPublicKey";
+import {
   getTimestamp,
   isHex,
   parseAccountId,
@@ -29,62 +32,6 @@ import {
 } from "./utils";
 import { WalletAdapter } from "./wallet/walletAdapter";
 import { WalletAdapterManager } from "./walletAdapterManager";
-
-const bytesToHex = (bytes: ArrayLike<number>) =>
-  Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("");
-
-const hexToBytes = (value: string) => {
-  const hex = value.startsWith("0x") ? value.slice(2) : value;
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let index = 0; index < hex.length; index += 2) {
-    bytes[index / 2] = Number.parseInt(hex.slice(index, index + 2), 16);
-  }
-  return bytes;
-};
-
-const normalizeSuiBase58PublicKey = (value?: string) => {
-  if (!value) {
-    return undefined;
-  }
-
-  const hex = value.startsWith("0x") ? value.slice(2) : value;
-  if (/^[0-9a-fA-F]{64}$/.test(hex)) {
-    return bs58encode(hexToBytes(hex));
-  }
-
-  try {
-    const rawBytes = bs58decode(value);
-    if (rawBytes.length === 32) {
-      return value;
-    }
-  } catch {
-    return undefined;
-  }
-
-  return undefined;
-};
-
-const normalizeSuiRawPublicKey = (value?: string) => {
-  if (!value) {
-    return undefined;
-  }
-
-  const hex = value.startsWith("0x") ? value.slice(2) : value;
-  if (/^[0-9a-fA-F]{64}$/.test(hex)) {
-    return `0x${hex.toLowerCase()}`;
-  }
-
-  try {
-    const rawBytes = bs58decode(value);
-    if (rawBytes.length === 32) {
-      return `0x${bytesToHex(rawBytes)}`;
-    }
-  } catch {
-    return undefined;
-  }
-
-  return undefined;
-};
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -355,7 +302,7 @@ export class Account {
       );
     }
     if (this.walletAdapter?.chainNamespace === ChainNamespace.sui) {
-      const publicKey = normalizeSuiRawPublicKey(
+      const publicKey = normalizeSuiPublicKeyToBytes32Hex(
         this.walletAdapter.getRawPublicKey?.() ??
           this.walletAdapter.getPublicKey?.(),
       );
@@ -388,7 +335,7 @@ export class Account {
       this.stateValue.chainNamespace;
 
     if (targetChainNamespace === ChainNamespace.sui) {
-      const suiPublicKey = normalizeSuiBase58PublicKey(
+      const suiPublicKey = normalizeSuiPublicKeyToBase58(
         publicKey ||
           (this.walletAdapter?.chainNamespace === ChainNamespace.sui
             ? this.walletAdapter.getPublicKey?.()

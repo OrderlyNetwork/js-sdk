@@ -227,7 +227,10 @@ export const useDepositValidation = (options: Options) => {
       quantity &&
       Number(quantity) > 0 &&
       account.walletAdapter?.chainNamespace === ChainNamespace.sui &&
-      !account.walletAdapter?.getPublicKey?.()
+      !(
+        account.walletAdapter?.getRawPublicKey?.() ??
+        account.walletAdapter?.getPublicKey?.()
+      )
     ) {
       return t(
         "transfer.deposit.suiPublicKeyRequired",

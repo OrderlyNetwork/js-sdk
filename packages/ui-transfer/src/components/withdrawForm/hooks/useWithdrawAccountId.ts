@@ -9,9 +9,9 @@ import { toast } from "@orderly.network/ui";
 import { InputStatus } from "../../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../../utils";
 import {
-  normalizeSuiLookupPublicKey,
-  validateAccountLookupIdentity,
+  getAccountLookupIdentities,
   type WalletLookupNetwork,
+  type WalletLookupIdentity,
 } from "../withdrawForm.script";
 
 type InternalWithdrawOptions = {
@@ -104,20 +104,13 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
   }, [toAccountId]);
 
   const walletLookup = useCallback(
-    async (
-      input: string,
-      network?: WalletLookupNetwork,
-    ): Promise<AccountInfo | null> => {
-      if (!network || !brokerId) return null;
+    async (identity: WalletLookupIdentity): Promise<AccountInfo | null> => {
+      if (!brokerId) return null;
 
-      const lookupAddress =
-        network === "SUI" ? normalizeSuiLookupPublicKey(input) : input;
-      if (!lookupAddress) return null;
-
-      const chainType = network;
+      const chainType = identity.network;
       const res = await fetch(
         `${apiBaseUrl}/v1/get_account?address=${encodeURIComponent(
-          lookupAddress,
+          identity.address,
         )}&broker_id=${encodeURIComponent(
           brokerId,
         )}&chain_type=${encodeURIComponent(chainType)}`,
@@ -127,7 +120,7 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
       if (res.ok && json?.success && json?.data?.account_id) {
         return {
           accountId: json.data.account_id,
-          address: lookupAddress,
+          address: identity.address,
         };
       }
 
@@ -176,16 +169,18 @@ export function useWithdrawAccountId(options: InternalWithdrawOptions) {
         return;
       }
 
-      const { valid, network } = validateAccountLookupIdentity(
-        input,
-        lookupNetwork,
-      );
+      const identities = getAccountLookupIdentities(input, lookupNetwork);
 
       try {
         let resolved: AccountInfo | null = null;
 
-        if (valid) {
-          resolved = await walletLookup(input, network);
+        if (identities.length > 0) {
+          for (const identity of identities) {
+            resolved = await walletLookup(identity);
+            if (resolved) {
+              break;
+            }
+          }
         } else {
           resolved = await accountLookup(input);
         }
