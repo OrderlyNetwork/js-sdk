@@ -65,6 +65,7 @@ export const connector = {
     "SUI wallet connection is available. Account creation and trading signatures are not supported yet.",
   "connector.sui.unsupportedAccountType":
     "Current account type is not supported. Please use a mnemonic account.",
+  "connector.sui.installOrEnableWallet": "Install or enable a Sui wallet",
 
   "connector.privy.loginIn": "Login in",
   "connector.privy.logout": "Log out",

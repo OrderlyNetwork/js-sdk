@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Gebruikt u een Ledger Wallet?",
   "connector.sui.walletConnectOnly": "SUI-walletverbinding is beschikbaar. Accountaanmaak en handelshandtekeningen worden nog niet ondersteund.",
   "connector.sui.unsupportedAccountType": "Het huidige accounttype wordt niet ondersteund. Gebruik een mnemonic-account.",
+  "connector.sui.installOrEnableWallet": "Installeer of activeer een Sui-wallet",
   "connector.privy.loginIn": "Inloggen",
   "connector.privy.logout": "Uitloggen",
   "connector.privy.email": "E-mail",

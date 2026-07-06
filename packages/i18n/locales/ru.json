@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Вы используете Ledger Wallet?",
   "connector.sui.walletConnectOnly": "Подключение кошелька SUI доступно. Создание аккаунта и торговые подписи пока не поддерживаются.",
   "connector.sui.unsupportedAccountType": "Текущий тип аккаунта не поддерживается. Используйте аккаунт с мнемонической фразой.",
+  "connector.sui.installOrEnableWallet": "Установите или включите кошелёк Sui",
   "connector.privy.loginIn": "Войти",
   "connector.privy.logout": "Выйти",
   "connector.privy.email": "Email",

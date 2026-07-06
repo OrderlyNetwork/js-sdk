@@ -30,6 +30,10 @@ type DefaultDAppKit = React.ComponentProps<typeof DAppKitProvider>["dAppKit"];
 function createSuiDAppKit(suiNetwork: SuiNetworkName, rpcUrl: string) {
   return createDAppKit({
     networks: [suiNetwork],
+    // Only show Wallet Standard wallets injected by the browser extension.
+    // dApp Kit registers a hosted Slush web wallet by default, which opens an
+    // external Slush page even when the browser extension is disabled.
+    slushWalletConfig: null,
     createClient: (selectedNetwork: SuiNetworkName) =>
       new SuiGrpcClient({
         network: selectedNetwork,

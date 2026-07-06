@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "هل تستخدم محفظة Ledger؟",
   "connector.sui.walletConnectOnly": "اتصال محفظة SUI متاح. إنشاء الحساب وتوقيعات التداول غير مدعومة بعد.",
   "connector.sui.unsupportedAccountType": "نوع الحساب الحالي غير مدعوم. يُرجى استخدام حساب بعبارة استذكار.",
+  "connector.sui.installOrEnableWallet": "قم بتثبيت أو تمكين محفظة Sui",
   "connector.privy.loginIn": "تسجيل الدخول",
   "connector.privy.logout": "تسجيل الخروج",
   "connector.privy.email": "البريد الإلكتروني",

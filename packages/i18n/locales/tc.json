@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "您在使用Ledger錢包吗？",
   "connector.sui.walletConnectOnly": "可使用 SUI 錢包連線。暫不支援建立帳戶與交易簽名。",
   "connector.sui.unsupportedAccountType": "目前的帳戶類型暫不支援，請使用助記詞帳戶。",
+  "connector.sui.installOrEnableWallet": "請安裝或啟用 Sui 錢包",
   "connector.privy.loginIn": "登录",
   "connector.privy.logout": "登出",
   "connector.privy.email": "电子邮件",

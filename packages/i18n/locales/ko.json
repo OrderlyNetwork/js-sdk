@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Ledger 지갑을 사용하고 계신가요?",
   "connector.sui.walletConnectOnly": "SUI 지갑 연결을 사용할 수 있습니다. 계정 생성 및 거래 서명은 아직 지원되지 않습니다.",
   "connector.sui.unsupportedAccountType": "현재 계정 유형은 지원되지 않습니다. 니모닉 계정을 사용해 주세요.",
+  "connector.sui.installOrEnableWallet": "Sui 지갑을 설치하거나 활성화하세요",
   "connector.privy.loginIn": "로그인",
   "connector.privy.logout": "로그아웃",
   "connector.privy.email": "이메일",

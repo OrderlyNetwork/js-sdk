@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Apakah Anda menggunakan Ledger Wallet?",
   "connector.sui.walletConnectOnly": "Koneksi dompet SUI tersedia. Pembuatan akun dan tanda tangan trading belum didukung.",
   "connector.sui.unsupportedAccountType": "Jenis akun saat ini tidak didukung. Gunakan akun mnemonic.",
+  "connector.sui.installOrEnableWallet": "Instal atau aktifkan dompet Sui",
   "connector.privy.loginIn": "Masuk",
   "connector.privy.logout": "Keluar",
   "connector.privy.email": "Email",

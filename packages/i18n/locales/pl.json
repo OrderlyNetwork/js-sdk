@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Czy używasz portfela Ledger?",
   "connector.sui.walletConnectOnly": "Połączenie z portfelem SUI jest dostępne. Tworzenie konta i podpisy handlowe nie są jeszcze obsługiwane.",
   "connector.sui.unsupportedAccountType": "Bieżący typ konta nie jest obsługiwany. Użyj konta z frazą mnemoniczną.",
+  "connector.sui.installOrEnableWallet": "Zainstaluj lub włącz portfel Sui",
   "connector.privy.loginIn": "Zaloguj się",
   "connector.privy.logout": "Wyloguj się",
   "connector.privy.email": "Email",

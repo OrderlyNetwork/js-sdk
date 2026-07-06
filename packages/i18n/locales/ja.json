@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Ledgerウォレットを使用していますか？",
   "connector.sui.walletConnectOnly": "SUIウォレット接続を利用できます。アカウント作成と取引署名はまだサポートされていません。",
   "connector.sui.unsupportedAccountType": "現在のアカウントタイプはサポートされていません。ニーモニックアカウントを使用してください。",
+  "connector.sui.installOrEnableWallet": "Suiウォレットをインストールまたは有効化してください",
   "connector.privy.loginIn": "ログイン",
   "connector.privy.logout": "ログアウト",
   "connector.privy.email": "メール",

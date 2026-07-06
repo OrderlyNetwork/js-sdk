@@ -4,13 +4,35 @@ import { Connector } from "wagmi";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   ChainIcon,
-  cn,
   Popover,
   SimpleDialog,
   useScreen,
 } from "@orderly.network/ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { getWalletIcon } from "../util";
+
+const SLUSH_WALLET_ICON_URL =
+  "https://oss.orderly.network/static/wallet_icon/slush.png";
+
+function WalletIconImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="oui-flex oui-h-[18px] oui-w-[18px] oui-items-center oui-justify-center">
+      <img className="oui-h-[18px] oui-w-[18px]" src={src} alt={alt} />
+    </div>
+  );
+}
+
+function isSlushWalletName(name: string) {
+  return name.trim().toLowerCase() === "slush";
+}
+
+function getConnectorIcon(connector: Connector | WalletAdapter) {
+  if (isSlushWalletName(connector.name)) {
+    return SLUSH_WALLET_ICON_URL;
+  }
+
+  return connector.icon || getWalletIcon((connector as Connector).type);
+}
 
 export function RenderPrivyTypeIcon({
   type,
@@ -79,22 +101,13 @@ export function RenderWalletIcon({
 }: {
   connector: Connector | WalletAdapter;
 }) {
-  const icon = connector.icon
-    ? connector.icon
-    : getWalletIcon((connector as Connector).type);
   return (
-    <div className="oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
-      <img
-        className={cn(
-          connector.icon
-            ? "oui-w-[12px] oui-h-[12px]"
-            : "oui-w-[18px] oui-h-[18px]",
-        )}
-        src={icon}
-        alt={connector.name}
-      />
-    </div>
+    <WalletIconImage src={getConnectorIcon(connector)} alt={connector.name} />
   );
+}
+
+export function RenderSlushWalletIcon() {
+  return <WalletIconImage src={SLUSH_WALLET_ICON_URL} alt="Slush" />;
 }
 
 export function EVMChainPopover({ children }: { children: React.ReactNode }) {

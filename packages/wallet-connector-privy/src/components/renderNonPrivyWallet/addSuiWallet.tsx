@@ -4,13 +4,14 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   cn,
+  toast,
   Tooltip,
 } from "@orderly.network/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useSuiWallet } from "../../providers/sui";
 import { WalletConnectType, WalletType } from "../../types";
-import { RenderWalletIcon } from "../common";
+import { RenderSlushWalletIcon, RenderWalletIcon } from "../common";
 
 export function AddSuiWallet() {
   const { t } = useTranslation();
@@ -19,6 +20,10 @@ export function AddSuiWallet() {
   const [collapsed, setCollapsed] = useState(false);
   const { targetWalletType } = useWalletConnectorPrivy();
   const [open, setOpen] = useState(false);
+
+  const showUnavailableToast = () => {
+    toast.error(t("connector.sui.installOrEnableWallet"));
+  };
 
   useEffect(() => {
     let timer = 0;
@@ -43,10 +48,6 @@ export function AddSuiWallet() {
       window.clearTimeout(timeId);
     };
   }, [open]);
-
-  if (!wallets.length) {
-    return null;
-  }
 
   return (
     <div className="oui-rounded-[8px] oui-bg-base-10 oui-px-2 oui-py-[11px]">
@@ -89,6 +90,15 @@ export function AddSuiWallet() {
           collapsed ? "oui-mt-0 oui-max-h-0" : "oui-mt-3 oui-max-h-[400px]",
         )}
       >
+        {!wallets.length && (
+          <div
+            className="oui-flex oui-cursor-pointer oui-items-center oui-justify-start oui-gap-1 oui-bg-base-9 oui-px-2 oui-py-[11px]"
+            onClick={showUnavailableToast}
+          >
+            <RenderSlushWalletIcon />
+            <div className="oui-text-2xs oui-text-base-contrast">Slush</div>
+          </div>
+        )}
         {wallets.map((item) => (
           <div
             key={item.name}

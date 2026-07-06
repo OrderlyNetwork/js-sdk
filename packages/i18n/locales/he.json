@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "האם אתם משתמשים ב-Ledger?",
   "connector.sui.walletConnectOnly": "חיבור ארנק SUI זמין. יצירת חשבון וחתימות מסחר עדיין אינן נתמכות.",
   "connector.sui.unsupportedAccountType": "סוג החשבון הנוכחי אינו נתמך. יש להשתמש בחשבון עם ביטוי מנמוני.",
+  "connector.sui.installOrEnableWallet": "התקן או אפשר ארנק Sui",
   "connector.privy.loginIn": "התחברות",
   "connector.privy.logout": "התנתקות",
   "connector.privy.email": "אימייל",

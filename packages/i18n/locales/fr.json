@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Utilisez-vous Ledger Wallet ?",
   "connector.sui.walletConnectOnly": "La connexion au wallet SUI est disponible. La création de compte et les signatures de trading ne sont pas encore prises en charge.",
   "connector.sui.unsupportedAccountType": "Ce type de compte n’est pas pris en charge. Veuillez utiliser un compte avec phrase mnémonique.",
+  "connector.sui.installOrEnableWallet": "Installez ou activez un wallet Sui",
   "connector.privy.loginIn": "Connexion",
   "connector.privy.logout": "Déconnexion",
   "connector.privy.email": "Email",

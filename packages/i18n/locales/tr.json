@@ -797,6 +797,7 @@
   "connector.ledger.signMessageFailed.description": "Ledger Cüzdan mı kullanıyorsunuz?",
   "connector.sui.walletConnectOnly": "SUI cüzdan bağlantısı kullanılabilir. Hesap oluşturma ve işlem imzaları henüz desteklenmiyor.",
   "connector.sui.unsupportedAccountType": "Mevcut hesap türü desteklenmiyor. Lütfen anımsatıcı ifadeli bir hesap kullanın.",
+  "connector.sui.installOrEnableWallet": "Bir Sui cüzdanı yükleyin veya etkinleştirin",
   "connector.privy.loginIn": "Giriş yap",
   "connector.privy.logout": "Çıkış yap",
   "connector.privy.email": "E-posta",
