@@ -331,6 +331,8 @@ export class Assets {
       tokenHash: string;
       tokenAmount: string;
       tokenAddress?: string;
+      vaultConfig?: string;
+      oapp?: string;
     } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
@@ -350,7 +352,12 @@ export class Assets {
       if (!tokenAddress) {
         throw new Error("[Assets]: SUI coin type is required for deposit");
       }
+      if (!contractInfo.suiVaultConfig || !contractInfo.suiOApp) {
+        throw new Error("[Assets]: SUI deposit config is required");
+      }
       depositData["tokenAddress"] = tokenAddress;
+      depositData["vaultConfig"] = contractInfo.suiVaultConfig;
+      depositData["oapp"] = contractInfo.suiOApp;
     }
 
     const userAddress = this.account.stateValue.address;

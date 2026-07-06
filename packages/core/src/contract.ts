@@ -16,6 +16,8 @@ import {
   solanaQaVaultAddress,
   solanaStagingVualtAddress,
   solanaUSDCAddress,
+  devSuiOApp,
+  devSuiVaultConfig,
   stagingStoryTestnetVaultAddress,
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
@@ -71,6 +73,8 @@ export type OrderlyContracts = {
   bscVaultAddress?: string;
   /** @deprecated, will be removed in the future */
   bscUSDCAddress?: string;
+  suiVaultConfig?: string;
+  suiOApp?: string;
 };
 
 export interface IContract {
@@ -111,6 +115,8 @@ export class BaseContract implements IContract {
     const abstractUSDCAddress = AbstractTestnetUSDCAddress;
     let bscVaultAddress = bscTestnetStagingVaultAddress;
     let bscUSDCAddress = bscTestnetUSDCAddress;
+    let suiVaultConfig: string | undefined;
+    let suiOApp: string | undefined;
     let vaultAddress = stagingVaultAddressOnArbitrumTestnet;
     if (env === "qa") {
       solanaVaultAddress = solanaQaVaultAddress;
@@ -125,6 +131,8 @@ export class BaseContract implements IContract {
       abstractVaultAddress = AbstractDevVaultAddress;
       bscVaultAddress = bscTestnetDevVaultAddress;
       bscUSDCAddress = bscTestnetUSDCAddress;
+      suiVaultConfig = devSuiVaultConfig;
+      suiOApp = devSuiOApp;
       verifyContractAddress = "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e";
     }
 
@@ -144,6 +152,8 @@ export class BaseContract implements IContract {
       abstractVaultAddress: abstractVaultAddress,
       bscVaultAddress: bscVaultAddress,
       bscUSDCAddress: bscUSDCAddress,
+      suiVaultConfig: suiVaultConfig,
+      suiOApp: suiOApp,
     };
   }
 }

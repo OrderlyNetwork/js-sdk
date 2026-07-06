@@ -25,6 +25,15 @@ export const solanaUSDCAddress = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 export const solanaMainnetUSDCAddress =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
+// Sui dev vault config object used by LayerZero when building Orderly deposit
+// transactions.
+export const devSuiVaultConfig =
+  "0x8e778ec20d6a28c4256472d35a6363ce69a8dd6b2b882c535bd46016d96dc012";
+
+// Sui dev LayerZero OApp address for the Orderly deposit path.
+export const devSuiOApp =
+  "0x7b04f0b2a60242bbcd5eec89846d1c9112499f59e0e54caed02fc573e12c1cf2";
+
 export const EVENT_NAMES = {
   statusChanged: "change:status",
   validateStart: "validate:start",

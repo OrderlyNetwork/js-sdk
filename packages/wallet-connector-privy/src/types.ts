@@ -91,17 +91,9 @@ export interface InitSolana {
   onError: (error: WalletError, adapter?: Adapter) => void;
 }
 
-export type SuiDepositConfig = {
-  chainId?: number;
-  vaultConfig?: string;
-  oapp?: string;
-  executionGas?: bigint;
-};
-
 export interface InitSui {
   mainnetRpc?: string;
   testnetRpc?: string;
-  depositConfig?: Partial<Record<Network, SuiDepositConfig>>;
   onError?: (error: Error) => void;
 }
 

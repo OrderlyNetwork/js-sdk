@@ -453,7 +453,6 @@ function InitSuiProvider({
         suiNetwork={suiNetwork}
         rpcUrl={rpcUrl}
         chainId={chainId}
-        depositConfig={suiConfig.depositConfig}
         onError={suiConfig.onError}
       >
         {children}
@@ -469,7 +468,6 @@ function SuiWalletStateProvider({
   suiNetwork,
   rpcUrl,
   chainId,
-  depositConfig,
   onError,
 }: PropsWithChildren<{
   dAppKit: SuiDAppKit;
@@ -477,7 +475,6 @@ function SuiWalletStateProvider({
   suiNetwork: SuiNetworkName;
   rpcUrl: string;
   chainId: number | null;
-  depositConfig?: InitSui["depositConfig"];
   onError?: (error: Error) => void;
 }>) {
   const detectedWallets = useWallets();
@@ -599,7 +596,6 @@ function SuiWalletStateProvider({
           rawPublicKey,
           publicKeyScheme,
         },
-        depositConfig,
         dAppKit,
       },
       accounts: [
@@ -620,7 +616,6 @@ function SuiWalletStateProvider({
     connectedChain,
     connection.wallet,
     dAppKit,
-    depositConfig,
     rpcUrl,
     suiNetwork,
   ]);

@@ -1,12 +1,5 @@
 export type SuiNetworkName = "mainnet" | "testnet";
 
-export type SuiDepositConfig = {
-  chainId?: number;
-  vaultConfig?: string;
-  oapp?: string;
-  executionGas?: bigint;
-};
-
 type SuiBalanceValue = string | number | bigint;
 
 export type SuiBalanceResponse =
@@ -49,7 +42,6 @@ export interface SuiWalletProvider {
     rawPublicKey?: string;
     publicKeyScheme?: number;
   };
-  depositConfig?: Partial<Record<SuiNetworkName, SuiDepositConfig>>;
   dAppKit?: {
     signAndExecuteTransaction?: (inputs: {
       transaction: unknown;
