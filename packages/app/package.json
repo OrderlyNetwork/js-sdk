@@ -4,6 +4,7 @@
   "description": "Create React App with Orderly Network components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup && pnpm run build:css",
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
@@ -22,12 +23,12 @@
   },
   "dependencies": {
     "@mysten/sui": "^2.17.0",
+    "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "bs58": "^5.0.0",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

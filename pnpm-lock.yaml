@@ -508,6 +508,9 @@ importers:
       '@mysten/sui':
         specifier: ^2.17.0
         version: 2.17.0(typescript@5.8.3)
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../core
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -523,9 +526,6 @@ importers:
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
-      bs58:
-        specifier: ^5.0.0
-        version: 5.0.0
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -2470,6 +2470,9 @@ importers:
       '@date-fns/utc':
         specifier: 1.2.0
         version: 1.2.0
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../core
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -3039,9 +3042,6 @@ importers:
       '@wagmi/connectors':
         specifier: ^5.11.2
         version: 5.11.2(d2ced44db3a76e30dcea51227effabdf)
-      bs58:
-        specifier: ^5.0.0
-        version: 5.0.0
       lodash:
         specifier: ^4.18.1
         version: 4.18.1

@@ -18,7 +18,11 @@ import {
 import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { publicKeyFromSuiBytes } from "@mysten/sui/verify";
-import { decode as bs58decode, encode as bs58encode } from "bs58";
+import {
+  getSuiPublicKeyScheme as getCoreSuiPublicKeyScheme,
+  isSupportedSuiPublicKeyScheme,
+  normalizeSuiEd25519PublicKey,
+} from "@orderly.network/core";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { InitSui, Network, SuiChainsMap } from "../../types";
@@ -110,12 +114,6 @@ const requiredSuiWalletFeatureGroups = [
   ["sui:signAndExecuteTransaction", "sui:signAndExecuteTransactionBlock"],
 ] as const;
 
-const SUI_ED25519_SIGNATURE_FLAG = 0x00;
-// Only Ed25519 is supported today. Supporting Secp256k1 or other schemes
-// requires updating identity/accountId, deposit, link-device, and backend
-// verification flows together because they currently assume Ed25519 public keys.
-const SUI_ALLOWED_SIGNATURE_FLAGS = new Set([SUI_ED25519_SIGNATURE_FLAG]);
-const SUI_KNOWN_SIGNATURE_FLAGS = new Set([0x00, 0x01, 0x02, 0x03, 0x05]);
 const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
   "connector.sui.unsupportedAccountType";
 
@@ -127,45 +125,11 @@ const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
 // so keep it out of the Sui connector list until it is dApp Kit compatible.
 const unsupportedSuiWalletNames = new Set(["phantom"]);
 
-const bytesToHex = (bytes: ArrayLike<number>) =>
-  Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("");
-
-const hexToBytes = (value: string) => {
-  const hex = value.startsWith("0x") ? value.slice(2) : value;
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let index = 0; index < hex.length; index += 2) {
-    bytes[index / 2] = Number.parseInt(hex.slice(index, index + 2), 16);
-  }
-  return bytes;
-};
-
 const normalizeSuiAddressOption = (address?: string) => {
   try {
     return address ? normalizeSuiAddress(address) : undefined;
   } catch {
     return undefined;
-  }
-};
-
-const toUint8Array = (value: unknown): Uint8Array | undefined => {
-  if (value instanceof Uint8Array) {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return Uint8Array.from(value);
-  }
-
-  if (
-    typeof value === "object" &&
-    value !== null &&
-    typeof (value as { length?: unknown }).length === "number"
-  ) {
-    const bytes = value as ArrayLike<number>;
-    return Uint8Array.from(
-      { length: bytes.length },
-      (_, index) => bytes[index],
-    );
   }
 };
 
@@ -179,133 +143,34 @@ const normalizeSuiPublicKeyData = (
     return undefined;
   }
 
-  const valueBytes = toUint8Array(value);
-  if (valueBytes) {
-    if (valueBytes.length === 32) {
-      return {
-        publicKey: bs58encode(valueBytes),
-        rawPublicKey: `0x${bytesToHex(valueBytes)}`,
-        publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
-      };
-    }
-
-    if (valueBytes.length === 33) {
-      const rawBytes = valueBytes.slice(1);
-      return {
-        publicKey: bs58encode(rawBytes),
-        rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-        publicKeyScheme: valueBytes[0],
-      };
-    }
-
-    if (SUI_KNOWN_SIGNATURE_FLAGS.has(valueBytes[0])) {
-      const rawBytes = valueBytes.slice(1);
-      return {
-        publicKey: bs58encode(rawBytes),
-        rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-        publicKeyScheme: valueBytes[0],
-      };
-    }
+  const normalized = normalizeSuiEd25519PublicKey(value);
+  if (normalized) {
+    return {
+      publicKey: normalized.publicKey,
+      rawPublicKey: normalized.rawPublicKey,
+      publicKeyScheme: normalized.publicKeyScheme,
+    };
   }
 
   if (typeof value === "string") {
-    const hex = value.startsWith("0x") ? value.slice(2) : value;
-    if (/^[0-9a-fA-F]{64}$/.test(hex)) {
-      const rawBytes = hexToBytes(hex);
-      return {
-        publicKey: bs58encode(rawBytes),
-        rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-        publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
-      };
-    }
-
-    if (/^[0-9a-fA-F]{66}$/.test(hex)) {
-      const bytes = hexToBytes(hex);
-      const rawBytes = bytes.slice(1);
-      return {
-        publicKey: bs58encode(rawBytes),
-        rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-        publicKeyScheme: bytes[0],
-      };
-    }
-
-    if (/^[0-9a-fA-F]{68,}$/.test(hex)) {
-      const bytes = hexToBytes(hex);
-      if (SUI_KNOWN_SIGNATURE_FLAGS.has(bytes[0])) {
-        const rawBytes = bytes.slice(1);
-        return {
-          publicKey: bs58encode(rawBytes),
-          rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-          publicKeyScheme: bytes[0],
-        };
-      }
-    }
-
-    try {
-      const decoded = Uint8Array.from(bs58decode(value));
-      if (decoded.length === 32) {
-        return {
-          publicKey: bs58encode(decoded),
-          rawPublicKey: `0x${bytesToHex(decoded)}`,
-          publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
-        };
-      }
-    } catch {
-      // fall through to Sui-specific decoding
-    }
-
     try {
       const publicKey = publicKeyFromSuiBytes(value, {
         address: normalizeSuiAddressOption(address),
       });
-      const rawBytes = publicKey.toRawBytes();
       const suiBytes = publicKey.toSuiBytes?.();
-      return {
-        publicKey: bs58encode(rawBytes),
-        rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-        publicKeyScheme: suiBytes?.[0] ?? SUI_ED25519_SIGNATURE_FLAG,
-      };
+      if (!isSupportedSuiPublicKeyScheme(suiBytes?.[0])) {
+        return undefined;
+      }
+      const normalizedPublicKey = normalizeSuiEd25519PublicKey(publicKey);
+      return normalizedPublicKey
+        ? {
+            publicKey: normalizedPublicKey.publicKey,
+            rawPublicKey: normalizedPublicKey.rawPublicKey,
+            publicKeyScheme: normalizedPublicKey.publicKeyScheme,
+          }
+        : undefined;
     } catch {
       return undefined;
-    }
-  }
-
-  if (typeof value === "object") {
-    const publicKey = value as {
-      toRawBytes?: () => Uint8Array;
-      toSuiBytes?: () => Uint8Array;
-      toBytes?: () => Uint8Array;
-    };
-    const bytes =
-      publicKey.toRawBytes?.() ??
-      publicKey.toSuiBytes?.() ??
-      publicKey.toBytes?.();
-    if (bytes) {
-      if (bytes.length === 32) {
-        return {
-          publicKey: bs58encode(bytes),
-          rawPublicKey: `0x${bytesToHex(bytes)}`,
-          publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
-        };
-      }
-
-      if (bytes.length === 33) {
-        const rawBytes = bytes.slice(1);
-        return {
-          publicKey: bs58encode(rawBytes),
-          rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-          publicKeyScheme: bytes[0],
-        };
-      }
-
-      if (SUI_KNOWN_SIGNATURE_FLAGS.has(bytes[0])) {
-        const rawBytes = bytes.slice(1);
-        return {
-          publicKey: bs58encode(rawBytes),
-          rawPublicKey: `0x${bytesToHex(rawBytes)}`,
-          publicKeyScheme: bytes[0],
-        };
-      }
     }
   }
 
@@ -313,7 +178,20 @@ const normalizeSuiPublicKeyData = (
 };
 
 const getSuiPublicKeyScheme = (value: unknown): number | undefined => {
-  return normalizeSuiPublicKeyData(value)?.publicKeyScheme;
+  const scheme = getCoreSuiPublicKeyScheme(value);
+  if (typeof scheme !== "undefined") {
+    return scheme;
+  }
+
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  try {
+    return publicKeyFromSuiBytes(value).toSuiBytes?.()?.[0];
+  } catch {
+    return undefined;
+  }
 };
 
 const getSuiAccountPublicKeyValue = (account: unknown, wallet: any) => {
@@ -368,7 +246,7 @@ const isSupportedSuiAccountPublicKey = (value: unknown) => {
     return true;
   }
 
-  return SUI_ALLOWED_SIGNATURE_FLAGS.has(scheme);
+  return isSupportedSuiPublicKeyScheme(scheme);
 };
 
 const assertSupportedSuiAccount = (account?: {

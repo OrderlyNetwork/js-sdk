@@ -73,14 +73,7 @@ type SuiSelectedDepositCoins = {
 };
 
 type SuiSignatureMessage = Record<string, string | number | bigint | undefined>;
-type SuiDAppKitBridge = {
-  signAndExecuteTransaction?: (inputs: {
-    transaction: unknown;
-  }) => Promise<any>;
-  signPersonalMessage?: (inputs: {
-    message: Uint8Array;
-  }) => Promise<{ bytes?: string; signature: string }>;
-};
+type SuiDAppKitBridge = NonNullable<SuiWalletProvider["dAppKit"]>;
 
 const textEncoder = new TextEncoder();
 
@@ -102,6 +95,13 @@ const signAndExecuteSuiV1Transaction = (
   return dAppKit.signAndExecuteTransaction({
     transaction,
   });
+};
+
+const compareBigintDesc = (left: bigint, right: bigint) => {
+  if (left === right) {
+    return 0;
+  }
+  return left > right ? -1 : 1;
 };
 
 const stripHexPrefix = (value: string) =>
@@ -369,7 +369,11 @@ const lzType3ExecutorLzReceiveOptions = (executionGas: bigint) => {
 const extractNativeFeeFromDevInspect = (inspectResult: any) => {
   for (const result of inspectResult?.results ?? []) {
     for (const returnValue of result?.returnValues ?? []) {
-      const type = String(returnValue?.[1] ?? "");
+      if (!Array.isArray(returnValue) || returnValue.length < 2) {
+        continue;
+      }
+
+      const type = String(returnValue[1] ?? "");
       const bytes = toReturnBytes(returnValue[0]);
       if (type.includes("messaging_fee::MessagingFee")) {
         if (bytes.length < 8) {
@@ -493,22 +497,24 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
   private get dAppKit() {
     const dAppKit = this.provider.dAppKit as SuiDAppKitBridge | undefined;
 
-    if (typeof dAppKit?.signAndExecuteTransaction !== "function") {
-      throw new Error("SUI wallet does not support signAndExecuteTransaction");
+    if (!dAppKit) {
+      throw new Error("SUI wallet does not support dApp Kit signing");
     }
 
     return dAppKit;
   }
 
   private async signPersonalMessage(text: string) {
-    if (typeof this.dAppKit.signPersonalMessage !== "function") {
+    const dAppKit = this.dAppKit;
+
+    if (typeof dAppKit.signPersonalMessage !== "function") {
       throw new Error("SUI wallet does not support signPersonalMessage");
     }
 
     assertEd25519WalletAccount(this.provider.account?.publicKeyScheme);
 
     const message = textEncoder.encode(text);
-    const result = await this.dAppKit.signPersonalMessage({ message });
+    const result = await dAppKit.signPersonalMessage({ message });
 
     if (!result?.signature) {
       throw new Error("SUI wallet did not return a personal-message signature");
@@ -625,7 +631,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       );
     }
 
-    selectedCoins.sort((a, b) => Number(b.balance - a.balance));
+    selectedCoins.sort((a, b) => compareBigintDesc(a.balance, b.balance));
 
     const [primaryCoin, ...mergeCoins] = selectedCoins;
     console.info("[SuiDepositFee] selectDepositCoins", {

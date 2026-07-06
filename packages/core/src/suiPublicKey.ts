@@ -54,9 +54,66 @@ const toUint8Array = (value: unknown): Uint8Array | undefined => {
   }
 };
 
+const getObjectSuiBytes = (value: unknown) => {
+  if (typeof value !== "object" || value === null) {
+    return undefined;
+  }
+
+  return (value as { toSuiBytes?: () => Uint8Array }).toSuiBytes?.();
+};
+
+export const getSuiPublicKeyScheme = (value?: unknown): number | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const suiBytes = getObjectSuiBytes(value);
+  if (suiBytes?.length) {
+    return suiBytes[0];
+  }
+
+  const valueBytes = toUint8Array(value);
+  if (valueBytes) {
+    if (valueBytes.length === 32) {
+      return SUI_ED25519_SIGNATURE_FLAG;
+    }
+    if (valueBytes.length >= 33) {
+      return valueBytes[0];
+    }
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  const hex = stripHexPrefix(trimmed);
+  if (/^[0-9a-fA-F]{64}$/.test(hex)) {
+    return SUI_ED25519_SIGNATURE_FLAG;
+  }
+
+  if (/^[0-9a-fA-F]{66,}$/.test(hex)) {
+    return bytesFromHex(hex)?.[0];
+  }
+
+  try {
+    const decoded = bs58decode(trimmed);
+    if (decoded.length === 32) {
+      return SUI_ED25519_SIGNATURE_FLAG;
+    }
+    if (decoded.length >= 33) {
+      return decoded[0];
+    }
+  } catch {
+    return undefined;
+  }
+};
+
 export type SuiEd25519PublicKey = {
   publicKey: string;
   rawPublicKey: string;
+  rawPublicKeyBytes: Uint8Array;
   publicKeyScheme: typeof SUI_ED25519_SIGNATURE_FLAG;
 };
 
@@ -81,6 +138,7 @@ export const normalizeSuiEd25519PublicKey = (
       return {
         publicKey: bs58encode(rawBytes),
         rawPublicKey: `0x${bytesToHex(rawBytes)}`,
+        rawPublicKeyBytes: Uint8Array.from(rawBytes),
         publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
       };
     }
@@ -118,3 +176,6 @@ export const normalizeSuiPublicKeyToBase58 = (value?: unknown) =>
 
 export const normalizeSuiPublicKeyToBytes32Hex = (value?: unknown) =>
   normalizeSuiEd25519PublicKey(value)?.rawPublicKey;
+
+export const normalizeSuiPublicKeyToBytes = (value?: unknown) =>
+  normalizeSuiEd25519PublicKey(value)?.rawPublicKeyBytes;

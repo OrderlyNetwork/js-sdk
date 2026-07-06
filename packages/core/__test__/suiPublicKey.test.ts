@@ -1,8 +1,10 @@
 import { encode as bs58encode } from "bs58";
 import {
   SUI_ED25519_SIGNATURE_FLAG,
+  getSuiPublicKeyScheme,
   normalizeSuiEd25519PublicKey,
   normalizeSuiPublicKeyToBase58,
+  normalizeSuiPublicKeyToBytes,
   normalizeSuiPublicKeyToBytes32Hex,
 } from "../src";
 
@@ -24,6 +26,7 @@ describe("suiPublicKey", () => {
     expect(normalizeSuiEd25519PublicKey(suiBytes)).toEqual({
       publicKey: base58,
       rawPublicKey: rawHex,
+      rawPublicKeyBytes: rawBytes,
       publicKeyScheme: SUI_ED25519_SIGNATURE_FLAG,
     });
   });
@@ -32,5 +35,10 @@ describe("suiPublicKey", () => {
     const secp256k1LikeBytes = Uint8Array.from([0x01, ...rawBytes]);
 
     expect(normalizeSuiEd25519PublicKey(secp256k1LikeBytes)).toBeUndefined();
+    expect(getSuiPublicKeyScheme(secp256k1LikeBytes)).toBe(0x01);
+  });
+
+  test("returns raw public key bytes", () => {
+    expect(normalizeSuiPublicKeyToBytes(base58)).toEqual(rawBytes);
   });
 });

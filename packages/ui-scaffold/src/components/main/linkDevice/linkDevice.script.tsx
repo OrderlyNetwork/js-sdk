@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { normalizeSuiPublicKeyToBase58 } from "@orderly.network/core";
 import {
   useAccount,
   useChains,
@@ -116,7 +117,7 @@ export function useLinkDeviceScript() {
       const isSui =
         account.walletAdapter?.chainNamespace === ChainNamespace.sui;
       const identity = isSui
-        ? account.walletAdapter?.getPublicKey?.()
+        ? normalizeSuiPublicKeyToBase58(account.walletAdapter?.getPublicKey?.())
         : account.address;
 
       if (!identity) {

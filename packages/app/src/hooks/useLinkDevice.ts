@@ -1,6 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { Ed25519PublicKey } from "@mysten/sui/keypairs/ed25519";
-import { decode as bs58decode, encode as bs58encode } from "bs58";
+import {
+  normalizeSuiPublicKeyToBase58,
+  normalizeSuiPublicKeyToBytes,
+} from "@orderly.network/core";
 import {
   parseJSON,
   useAccount,
@@ -160,41 +163,17 @@ function parseLinkDeviceIdentity(
     return { address: identity, publicKey: undefined };
   }
 
-  const rawPublicKey = decodeSuiPublicKeyBytes(identity);
-  if (!rawPublicKey) {
+  const publicKey = normalizeSuiPublicKeyToBase58(identity);
+  const rawPublicKey = normalizeSuiPublicKeyToBytes(identity);
+  if (!publicKey || !rawPublicKey) {
     console.error("Invalid Sui public key in link device payload.");
     return { address: undefined, publicKey: undefined };
   }
 
-  const publicKey = bs58encode(rawPublicKey);
   return {
     address: new Ed25519PublicKey(rawPublicKey).toSuiAddress(),
     publicKey,
   };
-}
-
-function decodeSuiPublicKeyBytes(value: string) {
-  const normalized = value.startsWith("0x") ? value.slice(2) : value;
-  if (/^[0-9a-fA-F]{64}$/.test(normalized)) {
-    return hexToBytes(normalized);
-  }
-
-  try {
-    const decoded = bs58decode(value);
-    if (decoded.length === 32) {
-      return Uint8Array.from(decoded);
-    }
-  } catch {
-    return undefined;
-  }
-
-  return undefined;
-}
-
-function hexToBytes(value: string) {
-  return Uint8Array.from(
-    value.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
-  );
 }
 
 function decodeBase64(base64: string) {
