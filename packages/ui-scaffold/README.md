@@ -364,6 +364,7 @@ const bottomMenus = [
   - `twitterUrl`: Twitter link
   - `discordUrl`: Discord link
   - `trailing`: Content on the right side of the footer. If not provided, a default `Charts powered by TradingView` link will be rendered.
+  - `poweredBy`: Powered-by content. Hidden by default. Use `true` to show the default `Powered by Orderly`, or pass a custom ReactNode.
 
 ```typescript
 <Scaffold
@@ -371,7 +372,18 @@ const bottomMenus = [
     telegramUrl: "https://t.me/yourgroup",
     twitterUrl: "https://twitter.com/yourhandle",
     discordUrl: "https://discord.gg/yourserver",
-    trailing: <AdditionalFooterContent />
+    trailing: <AdditionalFooterContent />,
+    poweredBy: true
+  }}
+>
+  {children}
+</Scaffold>
+```
+
+```typescript
+<Scaffold
+  footerProps={{
+    poweredBy: <a href="https://example.com">Powered by My DEX</a>
   }}
 >
   {children}

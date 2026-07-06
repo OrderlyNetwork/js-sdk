@@ -45,3 +45,34 @@ export const CumstomizeUrls: Story = {
     );
   },
 };
+
+export const DefaultPoweredBy: Story = {
+  render: () => {
+    return (
+      <Scaffold
+        footerProps={{
+          poweredBy: true,
+        }}
+      ></Scaffold>
+    );
+  },
+};
+
+export const CustomPoweredBy: Story = {
+  render: () => {
+    return (
+      <Scaffold
+        footerProps={{
+          poweredBy: (
+            <a
+              onClick={() => window.open("https://orderly.network")}
+              style={{ fontSize: "12px", color: "blue", cursor: "pointer" }}
+            >
+              Powered by My DEX
+            </a>
+          ),
+        }}
+      ></Scaffold>
+    );
+  },
+};

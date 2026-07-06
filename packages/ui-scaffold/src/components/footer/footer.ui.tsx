@@ -30,6 +30,18 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
     window.open(url, "_blank");
   };
 
+  const poweredBy =
+    props.poweredBy === true ? (
+      <>
+        <Text intensity={54} size="2xs">
+          {t("scaffold.footer.poweredBy")}
+        </Text>
+        <OrderlyTextIcon />
+      </>
+    ) : (
+      props.poweredBy
+    );
+
   return (
     <Flex
       direction={"row"}
@@ -97,16 +109,15 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
           )}
         </Flex>
       </Flex>
-      <Flex
-        direction={"row"}
-        gap={1}
-        className="oui-scaffold-footer-powered-by"
-      >
-        <Text intensity={54} size="2xs">
-          {t("scaffold.footer.poweredBy")}
-        </Text>
-        <OrderlyTextIcon />
-      </Flex>
+      {poweredBy && (
+        <Flex
+          direction={"row"}
+          gap={1}
+          className="oui-scaffold-footer-powered-by"
+        >
+          {poweredBy}
+        </Flex>
+      )}
     </Flex>
   );
 };
