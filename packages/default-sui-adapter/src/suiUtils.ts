@@ -63,9 +63,9 @@ export const readU64LE = (bytes: Uint8Array, offset = 0) => {
 export const readSuiBalance = (balance: any) =>
   BigInt(
     balance?.totalBalance ??
-      balance?.balance?.addressBalance ??
-      balance?.balance?.coinBalance ??
       balance?.balance?.balance ??
+      balance?.balance?.coinBalance ??
+      balance?.balance?.addressBalance ??
       0,
   );
 
