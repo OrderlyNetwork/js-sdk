@@ -5,11 +5,15 @@ import { SDK } from "@layerzerolabs/lz-sui-sdk-v2";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_NETWORK_CONFIG } from "@orderly.network/types";
-import { extractNativeFeeFromDevInspect } from "./bcs";
+import {
+  extractNativeFeeFromDevInspect,
+  summarizeDevInspectReturnValues,
+} from "./bcs";
 import {
   SUI_DEPOSIT_EXECUTION_GAS,
   SUI_DEPOSIT_QUOTE_PROBE_FEE,
 } from "./constants";
+import { logSnapshot } from "./debug";
 import {
   ResolvedSuiDepositContext,
   SuiDAppKitBridge,
@@ -70,6 +74,51 @@ export const summarizeSuiMoveCalls = (moveCalls: any[] = []) =>
     isBuilderCall: moveCall?.is_builder_call,
   }));
 
+const summarizeDevInspectEvents = (events: any[] = []) =>
+  events.map((event, index) => ({
+    index,
+    type: event?.type,
+    packageId: event?.packageId,
+    transactionModule: event?.transactionModule,
+    sender: event?.sender,
+    parsedJson: event?.parsedJson,
+  }));
+
+const summarizeObjectChanges = (objectChanges: any[] = []) =>
+  objectChanges.map((change, index) => ({
+    index,
+    type: change?.type,
+    objectType: change?.objectType,
+    objectId: change?.objectId,
+    owner: change?.owner,
+    previousVersion: change?.previousVersion,
+    version: change?.version,
+  }));
+
+const summarizeBalanceChanges = (balanceChanges: any[] = []) =>
+  balanceChanges.map((change, index) => ({
+    index,
+    owner: change?.owner,
+    coinType: change?.coinType,
+    amount: change?.amount,
+  }));
+
+const summarizeDevInspectResult = (inspectResult: any) => ({
+  error: inspectResult.error,
+  effectsStatus: inspectResult.effects?.status,
+  gasUsed: inspectResult.effects?.gasUsed,
+  resultsCount: inspectResult.results?.length ?? 0,
+  returnValueTypes:
+    inspectResult.results?.flatMap((result: any) =>
+      (result?.returnValues ?? []).map((returnValue: any) =>
+        String(returnValue?.[1] ?? ""),
+      ),
+    ) ?? [],
+  events: summarizeDevInspectEvents(inspectResult.events),
+  objectChanges: summarizeObjectChanges(inspectResult.objectChanges),
+  balanceChanges: summarizeBalanceChanges(inspectResult.balanceChanges),
+});
+
 type SuiDepositServiceDeps = {
   getAddress: () => string;
   getChainId: () => number;
@@ -104,7 +153,7 @@ export class SuiDepositService {
       stage: network === "mainnet" ? Stage.MAINNET : Stage.TESTNET,
     };
 
-    console.info("[SuiDepositFee] resolveDepositContext", {
+    logSnapshot("info", "[SuiDepositFee] resolveDepositContext", {
       providerNetwork: provider.network,
       resolvedNetwork: network,
       chainId,
@@ -176,7 +225,7 @@ export class SuiDepositService {
     selectedCoins.sort((a, b) => compareBigintDesc(a.balance, b.balance));
 
     const [primaryCoin, ...mergeCoins] = selectedCoins;
-    console.info("[SuiDepositFee] selectDepositCoins", {
+    logSnapshot("info", "[SuiDepositFee] selectDepositCoins", {
       sender: address,
       coinType,
       amount: amount.toString(),
@@ -220,7 +269,7 @@ export class SuiDepositService {
 
     const depositCoins = await this.selectDepositCoins(coinType, amount);
 
-    console.info("[SuiDepositFee] buildDepositTransaction", {
+    logSnapshot("info", "[SuiDepositFee] buildDepositTransaction", {
       sender: address,
       coinType,
       accountId,
@@ -284,7 +333,7 @@ export class SuiDepositService {
   ) {
     const address = this.deps.getAddress();
     const config = this.resolveDepositContext(depositData, vaultPackage);
-    console.info("[SuiDepositFee] populateSendTransaction:start", {
+    logSnapshot("info", "[SuiDepositFee] populateSendTransaction:start", {
       sender: address,
       stage: config.stage,
       network: config.network,
@@ -302,7 +351,7 @@ export class SuiDepositService {
           sendCall,
           address,
         );
-      console.info("[SuiDepositFee] populateSendTransaction:success", {
+      logSnapshot("info", "[SuiDepositFee] populateSendTransaction:success", {
         sender: address,
         stage: config.stage,
         network: config.network,
@@ -310,7 +359,7 @@ export class SuiDepositService {
       });
       return moveCalls;
     } catch (error) {
-      console.error("[SuiDepositFee] populateSendTransaction:error", {
+      logSnapshot("error", "[SuiDepositFee] populateSendTransaction:error", {
         sender: address,
         stage: config.stage,
         network: config.network,
@@ -326,7 +375,7 @@ export class SuiDepositService {
     const chainId = this.deps.getChainId();
     const provider = this.deps.getProvider();
     const config = this.resolveDepositContext(depositData, vaultPackage);
-    console.info("[SuiDepositFee] quote:start", {
+    logSnapshot("info", "[SuiDepositFee] quote:start", {
       sender: address,
       chainId,
       providerNetwork: provider.network,
@@ -349,24 +398,18 @@ export class SuiDepositService {
         vaultPackage,
       );
 
-      console.info("[SuiDepositFee] devInspect:start", {
+      logSnapshot("info", "[SuiDepositFee] devInspect:start", {
         sender: address,
       });
       const inspectResult = await client.devInspectTransactionBlock({
         sender: address,
         transactionBlock: tx,
       });
-      console.info("[SuiDepositFee] devInspect:result", {
-        error: inspectResult.error,
-        effectsStatus: inspectResult.effects?.status,
-        resultsCount: inspectResult.results?.length ?? 0,
-        returnValueTypes:
-          inspectResult.results?.flatMap((result: any) =>
-            (result?.returnValues ?? []).map((returnValue: any) =>
-              String(returnValue?.[1] ?? ""),
-            ),
-          ) ?? [],
-      });
+      logSnapshot(
+        "info",
+        "[SuiDepositFee] devInspect:result",
+        summarizeDevInspectResult(inspectResult),
+      );
 
       if (inspectResult.error) {
         throw new Error(
@@ -378,22 +421,23 @@ export class SuiDepositService {
       try {
         nativeFee = extractNativeFeeFromDevInspect(inspectResult);
       } catch (extractError) {
-        console.warn("[SuiDepositFee] quote:fallbackToProbeFee", {
+        logSnapshot("error", "[SuiDepositFee] quote:parseNativeFee:error", {
           sender: address,
           chainId,
           providerNetwork: provider.network,
-          reason: extractError,
+          error: extractError,
           probeFee: SUI_DEPOSIT_QUOTE_PROBE_FEE.toString(),
+          returnValues: summarizeDevInspectReturnValues(inspectResult),
           moveCalls: summarizeSuiMoveCalls(moveCalls as any[]),
         });
-        nativeFee = SUI_DEPOSIT_QUOTE_PROBE_FEE;
+        throw extractError;
       }
-      console.info("[SuiDepositFee] quote:success", {
+      logSnapshot("info", "[SuiDepositFee] quote:success", {
         nativeFee: nativeFee.toString(),
       });
       return nativeFee;
     } catch (error) {
-      console.error("[SuiDepositFee] quote:error", {
+      logSnapshot("error", "[SuiDepositFee] quote:error", {
         sender: address,
         chainId,
         providerNetwork: provider.network,

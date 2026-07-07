@@ -47,7 +47,49 @@ export type DST = {
 
 export type UseDepositReturn = ReturnType<typeof useDeposit>;
 
-const SUI_DEPOSIT_FEE_FALLBACK = 1_000_000_000n;
+const stringifyLogSnapshot = (value: unknown) => {
+  const seen = new WeakSet<object>();
+  try {
+    return JSON.stringify(value, (_key, currentValue) => {
+      if (typeof currentValue === "bigint") {
+        return currentValue.toString();
+      }
+      if (currentValue instanceof Error) {
+        return {
+          name: currentValue.name,
+          message: currentValue.message,
+          stack: currentValue.stack,
+          cause: currentValue.cause,
+        };
+      }
+      if (typeof currentValue === "object" && currentValue !== null) {
+        if (seen.has(currentValue)) {
+          return "[Circular]";
+        }
+        seen.add(currentValue);
+      }
+      if (typeof currentValue === "undefined") {
+        return null;
+      }
+      return currentValue;
+    });
+  } catch (error) {
+    return JSON.stringify({
+      snapshotError: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
+const logDepositFeeSnapshot = (
+  level: "info" | "warn" | "error",
+  label: string,
+  value: unknown,
+) => {
+  void level;
+  void label;
+  void value;
+  // console[level](`${label} ${stringifyLogSnapshot(value)}`);
+};
 
 export const useDeposit = (options: DepositOptions) => {
   const [quantity, setQuantity] = useState<string>("");
@@ -562,7 +604,7 @@ function useDepositFee(options: {
         address: dst?.address,
       };
 
-      console.info("[DepositFee] getDepositFee:start", {
+      logDepositFeeSnapshot("info", "[DepositFee] getDepositFee:start", {
         chainNamespace: account.walletAdapter?.chainNamespace,
         chainId: targetChain?.network_infos?.chain_id,
         token: dstToken,
@@ -575,22 +617,7 @@ function useDepositFee(options: {
       try {
         depositFee = await account.assetsManager.getDepositFee(feeParams);
       } catch (error) {
-        if (account.walletAdapter?.chainNamespace === ChainNamespace.sui) {
-          console.warn("[DepositFee] getDepositFee:fallback", {
-            chainNamespace: account.walletAdapter?.chainNamespace,
-            chainId: targetChain?.network_infos?.chain_id,
-            token: dstToken,
-            tokenAddress: dst?.address,
-            decimals,
-            quantity,
-            fallbackFee: SUI_DEPOSIT_FEE_FALLBACK.toString(),
-            error,
-          });
-
-          return SUI_DEPOSIT_FEE_FALLBACK;
-        }
-
-        console.error("[DepositFee] getDepositFee:error", {
+        logDepositFeeSnapshot("error", "[DepositFee] getDepositFee:error", {
           chainNamespace: account.walletAdapter?.chainNamespace,
           chainId: targetChain?.network_infos?.chain_id,
           token: dstToken,
@@ -603,7 +630,7 @@ function useDepositFee(options: {
         throw error;
       }
 
-      console.info("[DepositFee] getDepositFee:success", {
+      logDepositFeeSnapshot("info", "[DepositFee] getDepositFee:success", {
         chainNamespace: account.walletAdapter?.chainNamespace,
         chainId: targetChain?.network_infos?.chain_id,
         token: dstToken,
@@ -612,18 +639,7 @@ function useDepositFee(options: {
       });
 
       if (account.walletAdapter?.chainNamespace === ChainNamespace.sui) {
-        if (depositFee === 0n) {
-          console.warn("[DepositFee] getDepositFee:fallback", {
-            chainNamespace: account.walletAdapter?.chainNamespace,
-            chainId: targetChain?.network_infos?.chain_id,
-            token: dstToken,
-            tokenAddress: dst?.address,
-            depositFee: depositFee.toString(),
-            fallbackFee: SUI_DEPOSIT_FEE_FALLBACK.toString(),
-          });
-        }
-
-        return depositFee === 0n ? SUI_DEPOSIT_FEE_FALLBACK : depositFee;
+        return depositFee;
       }
 
       let estimatedGasFee = 0n;

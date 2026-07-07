@@ -27,6 +27,7 @@ import {
   DEFAULT_RECEIPT_MAX_RETRIES,
   SUI_SIGNATURE_VERSION,
 } from "./constants";
+import { logSnapshot } from "./debug";
 import { SuiDepositService } from "./deposit";
 import { SuiDAppKitBridge, SuiDepositData } from "./internalTypes";
 import {
@@ -418,7 +419,7 @@ class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
       return unsupported(`call on chain:${method}`);
     }
 
-    console.info("[SuiDepositFee] callOnChain:getDepositFee", {
+    logSnapshot("info", "[SuiDepositFee] callOnChain:getDepositFee", {
       requestedChainId: chain.chain_id,
       adapterChainId: this.chainId,
       address,
