@@ -4,16 +4,11 @@ import type {
   WalletConnectorContextState,
   WalletState,
 } from "@orderly.network/hooks";
-import {
-  AbstractChains,
-  SolanaChains,
-  SuiChains,
-} from "@orderly.network/types";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWallet } from "./hooks/useWallet";
 import "./injectUsercenter";
 import { useWalletConnectorPrivy } from "./provider";
-import { WalletType } from "./types";
+import { getWalletTypeByChainId } from "./util";
 
 interface MainProps {
   headerProps?: {
@@ -27,12 +22,8 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
   const { wallet, connectedChain, setChain, namespace, onDisconnect } =
     useWallet();
 
-  const {
-    openConnectDrawer,
-    setOpenConnectDrawer,
-    setTargetWalletType,
-    suiInfo,
-  } = useWalletConnectorPrivy();
+  const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
+    useWalletConnectorPrivy();
 
   const resolveWalletType = (chainId?: number | string) => {
     if (typeof chainId === "undefined") {
@@ -45,16 +36,7 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
       return undefined;
     }
 
-    if (SuiChains.has(nextChainId) || suiInfo?.chainId === nextChainId) {
-      return WalletType.SUI;
-    }
-    if (SolanaChains.has(nextChainId)) {
-      return WalletType.SOL;
-    }
-    if (AbstractChains.has(nextChainId)) {
-      return WalletType.ABSTRACT;
-    }
-    return WalletType.EVM;
+    return getWalletTypeByChainId(nextChainId);
   };
 
   const connect = (options: any): Promise<WalletState[]> => {

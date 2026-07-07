@@ -5,10 +5,10 @@ import {
   useMutation,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
-import { modal, toast } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import { modal, toast } from "@orderly.network/ui";
+import { isTestnet } from "@orderly.network/utils";
 
 export function useFaucetScript() {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ export function useFaucetScript() {
   const operatorUrl = config.get<string>("operatorUrl");
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    `${operatorUrl}/v1/faucet/usdc`
+    `${operatorUrl}/v1/faucet/usdc`,
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -26,12 +26,19 @@ export function useFaucetScript() {
     if (!connectedChain || !connectedChain.id) {
       return false;
     }
+    if (
+      !operatorUrl ||
+      namespace === ChainNamespace.sui ||
+      connectedChain.namespace === ChainNamespace.sui
+    ) {
+      return false;
+    }
     return (
       (state.status === AccountStatusEnum.EnableTrading ||
         state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
       isTestnet(parseInt(connectedChain.id as string))
     );
-  }, [state, connectedChain]);
+  }, [state, connectedChain, namespace, operatorUrl]);
 
   const getFaucet = () => {
     if (loading) {
@@ -62,7 +69,7 @@ export function useFaucetScript() {
       },
       (error: Error) => {
         toast.error(error.message);
-      }
+      },
     );
   };
   return { getFaucet, showFaucet, loading };

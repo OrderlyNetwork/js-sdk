@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useStorageLedgerAddress } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { LedgerWalletKey } from "@orderly.network/types";
+import {
+  LedgerWalletKey,
+  SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY,
+} from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
-
-const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY =
-  "connector.sui.unsupportedAccountType";
 
 export function useWalletConnectError() {
   const { t } = useTranslation();

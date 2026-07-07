@@ -1,4 +1,5 @@
 import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { isSupportedSuiPublicKeyScheme } from "@orderly.network/core";
 import {
   useAccount,
   useEventEmitter,
@@ -11,6 +12,7 @@ import {
   AccountStatusEnum,
   ChainNamespace,
   LedgerWalletKey,
+  SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY,
 } from "@orderly.network/types";
 import {
   Box,
@@ -39,10 +41,6 @@ export type WalletConnectContentProps = {
   helpText?: string;
   showRefCodeInput: boolean;
 };
-
-const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY =
-  "connector.sui.unsupportedAccountType";
-const SUI_UNSUPPORTED_ACCOUNT_SCHEMES = new Set([0x02, 0x03, 0x05]);
 
 export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const { initAccountState = AccountStatusEnum.NotConnected } = props;
@@ -583,8 +581,5 @@ function shouldBlockSuiAccount(namespace: ChainNamespace | null, wallet: any) {
 
   const publicKeyScheme = provider.provider?.account?.publicKeyScheme;
 
-  return (
-    typeof publicKeyScheme === "number" &&
-    SUI_UNSUPPORTED_ACCOUNT_SCHEMES.has(publicKeyScheme)
-  );
+  return !isSupportedSuiPublicKeyScheme(publicKeyScheme);
 }

@@ -3,9 +3,10 @@ import { useStorageChain } from "@orderly.network/hooks";
 import { cn, Flex, ScrollArea } from "@orderly.network/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
+import { useSuiWallet } from "../../providers/sui";
 import { WalletConnectType, WalletType } from "../../types";
 import { ConnectProps } from "../../types";
-import { getChainType } from "../../util";
+import { getWalletTypeByChainId } from "../../util";
 import { AbstractConnectArea } from "./abstractConnector";
 import { PrivyConnectArea } from "./privyConnector";
 import { SOLConnectArea } from "./solanaConnector";
@@ -19,19 +20,16 @@ export function RenderConnector() {
     connectorWalletType,
     walletChainTypeConfig,
     targetWalletType,
-    suiInfo,
   } = useWalletConnectorPrivy();
   const { storageChain } = useStorageChain();
+  const { isConnected: isSuiConnected } = useSuiWallet();
 
   const selectedWalletType: WalletType | undefined = (() => {
     if (targetWalletType) return targetWalletType;
     if (!storageChain?.chainId) return undefined;
     try {
       const chainId = parseInt(storageChain.chainId as string);
-      if (suiInfo?.chainId === chainId) {
-        return WalletType.SUI;
-      }
-      return getChainType(chainId);
+      return getWalletTypeByChainId(chainId);
     } catch {
       return undefined;
     }
@@ -139,9 +137,13 @@ export function RenderConnector() {
     [WalletType.ABSTRACT]: "abstract",
   };
 
-  const prioritizedKey = selectedWalletType
-    ? typeToKey[selectedWalletType]
-    : undefined;
+  const shouldPrioritizeSelectedWallet =
+    selectedWalletType !== WalletType.SUI || isSuiConnected;
+
+  const prioritizedKey =
+    selectedWalletType && shouldPrioritizeSelectedWallet
+      ? typeToKey[selectedWalletType]
+      : undefined;
 
   const orderedWalletKeys = prioritizedKey
     ? ([

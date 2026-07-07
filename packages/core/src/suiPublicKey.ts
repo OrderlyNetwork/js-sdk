@@ -1,4 +1,5 @@
 import { decode as bs58decode, encode as bs58encode } from "bs58";
+import { SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY } from "@orderly.network/types";
 
 export const SUI_ED25519_SIGNATURE_FLAG = 0x00;
 
@@ -119,6 +120,19 @@ export type SuiEd25519PublicKey = {
 
 export const isSupportedSuiPublicKeyScheme = (scheme?: number) =>
   typeof scheme === "undefined" || scheme === SUI_ED25519_SIGNATURE_FLAG;
+
+export const assertSupportedSuiPublicKeyScheme = (scheme?: number) => {
+  if (!isSupportedSuiPublicKeyScheme(scheme)) {
+    throw new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY);
+  }
+};
+
+export const isSupportedSuiAccountPublicKey = (value?: unknown) =>
+  isSupportedSuiPublicKeyScheme(getSuiPublicKeyScheme(value));
+
+export const assertSupportedSuiAccountPublicKey = (value?: unknown) => {
+  assertSupportedSuiPublicKeyScheme(getSuiPublicKeyScheme(value));
+};
 
 export const normalizeSuiEd25519PublicKey = (
   value?: unknown,

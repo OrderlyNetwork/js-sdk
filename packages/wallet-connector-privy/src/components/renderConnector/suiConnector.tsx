@@ -1,4 +1,5 @@
 import React from "react";
+import type { UiWallet } from "@mysten/dapp-kit-react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, toast, useScreen } from "@orderly.network/ui";
 import { useSuiWallet } from "../../providers/sui";
@@ -7,7 +8,7 @@ import { RenderSlushWalletIcon, RenderWalletIcon } from "../common";
 export function SUIConnectArea({
   connect,
 }: {
-  connect: (wallet: any) => void;
+  connect: (wallet: UiWallet) => void;
 }) {
   const { t } = useTranslation();
   const { wallets } = useSuiWallet();

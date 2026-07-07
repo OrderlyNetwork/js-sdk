@@ -1,3 +1,5 @@
+import { SUI_NETWORK_CONFIG } from "./constants";
+
 export interface Chain {
   id: number;
   chainNameShort: string;
@@ -718,4 +720,51 @@ export enum ChainNamespace {
 
 export const AbstractChains = new Set([2741, 11124]);
 export const SolanaChains = new Set([901901901, 900900900]);
-export const SuiChains = new Set([904904904, 905905905]);
+export const SuiChains = new Set<number>([
+  SUI_NETWORK_CONFIG.testnet.chainId,
+  SUI_NETWORK_CONFIG.mainnet.chainId,
+]);
+
+const parseChainId = (chainId?: number | string) => {
+  if (typeof chainId === "number") {
+    return Number.isFinite(chainId) ? chainId : undefined;
+  }
+
+  const normalizedChainId = String(chainId ?? "").trim();
+  if (!normalizedChainId) {
+    return undefined;
+  }
+
+  const isHex = /^0x[0-9a-f]+$/i.test(normalizedChainId);
+  const isDecimal = /^[0-9]+$/.test(normalizedChainId);
+  if (!isHex && !isDecimal) {
+    return undefined;
+  }
+
+  const radix = isHex ? 16 : 10;
+  const parsedChainId = Number.parseInt(normalizedChainId, radix);
+
+  if (Number.isNaN(parsedChainId)) {
+    return undefined;
+  }
+
+  return parsedChainId;
+};
+
+export const getChainNamespaceByChainId = (chainId?: number | string) => {
+  const parsedChainId = parseChainId(chainId);
+
+  if (typeof parsedChainId === "undefined") {
+    return undefined;
+  }
+
+  if (SolanaChains.has(parsedChainId)) {
+    return ChainNamespace.solana;
+  }
+
+  if (SuiChains.has(parsedChainId)) {
+    return ChainNamespace.sui;
+  }
+
+  return ChainNamespace.evm;
+};

@@ -58,7 +58,7 @@ const unsupported = (method: string): never => {
 };
 
 class DefaultSuiWalletAdapter extends BaseWalletAdapter<SuiAdapterOption> {
-  chainNamespace: ChainNamespace = "SUI" as ChainNamespace;
+  chainNamespace: ChainNamespace = ChainNamespace.sui;
 
   private _address!: string;
   private _chainId!: number;

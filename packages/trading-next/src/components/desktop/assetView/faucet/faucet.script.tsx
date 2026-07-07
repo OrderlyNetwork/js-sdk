@@ -26,12 +26,19 @@ export function useFaucetScript() {
     if (!connectedChain || !connectedChain.id) {
       return false;
     }
+    if (
+      !operatorUrl ||
+      namespace === ChainNamespace.sui ||
+      connectedChain.namespace === ChainNamespace.sui
+    ) {
+      return false;
+    }
     return (
       (state.status === AccountStatusEnum.EnableTrading ||
         state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
       isTestnet(parseInt(connectedChain.id as string))
     );
-  }, [state, connectedChain]);
+  }, [state, connectedChain, namespace, operatorUrl]);
 
   const getFaucet = () => {
     if (loading) {

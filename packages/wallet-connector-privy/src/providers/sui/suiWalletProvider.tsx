@@ -16,16 +16,23 @@ import {
   type UiWallet,
 } from "@mysten/dapp-kit-react";
 import { SuiGrpcClient } from "@mysten/sui/grpc";
-import { normalizeSuiAddress } from "@mysten/sui/utils";
-import { publicKeyFromSuiBytes } from "@mysten/sui/verify";
 import {
-  getSuiPublicKeyScheme as getCoreSuiPublicKeyScheme,
-  isSupportedSuiPublicKeyScheme,
-  normalizeSuiEd25519PublicKey,
-} from "@orderly.network/core";
-import { ChainNamespace } from "@orderly.network/types";
+  ChainNamespace,
+  SUI_NETWORK_CONFIG,
+  SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY,
+} from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
-import { InitSui, Network, SuiChainsMap } from "../../types";
+import { InitSui, Network } from "../../types";
+import {
+  assertSupportedSuiAccount,
+  getSuiAccountPublicKey,
+  getSuiAccountPublicKeyData,
+  getSuiAccountPublicKeyScheme,
+  getSuiAccountRawPublicKey,
+  isSupportedSuiAccountPublicKey,
+  SuiWalletAccount,
+  SuiWalletProviderAccount,
+} from "./suiAccount";
 
 type SuiNetworkName = "mainnet" | "testnet";
 type SuiDAppKit = ReturnType<typeof createSuiDAppKit>;
@@ -56,17 +63,25 @@ interface SuiWalletChain {
   namespace: ChainNamespace;
 }
 
-interface SuiWalletAccount {
-  address: string;
-  label?: string;
-  publicKey?: string;
-  rawPublicKey?: string;
-  publicKeyScheme?: number;
+interface ConnectedSuiWallet {
+  label: string;
+  icon: string;
+  provider: {
+    rpcUrl: string;
+    network: SuiNetworkName;
+    client: SuiGrpcClient;
+    wallet: UiWallet;
+    account: SuiWalletProviderAccount;
+    dAppKit: SuiDAppKit;
+  };
+  accounts: SuiWalletAccount[];
+  chains: SuiWalletChain[];
+  chain: SuiWalletChain;
 }
 
 interface SuiWalletProviderValue {
   wallets: UiWallet[];
-  wallet: any;
+  wallet: ConnectedSuiWallet | null;
   connectedChain: SuiWalletChain | null;
   connect: (walletName: string) => Promise<void>;
   disconnect: () => Promise<void>;
@@ -75,8 +90,8 @@ interface SuiWalletProviderValue {
   network: Network;
   suiNetwork: SuiNetworkName;
   rpcUrl: string;
-  client: any;
-  dAppKit: SuiDAppKit;
+  client: SuiGrpcClient | null;
+  dAppKit: SuiDAppKit | null;
   account: SuiWalletAccount | null;
 }
 
@@ -94,13 +109,8 @@ const disabledSuiWalletValue: SuiWalletProviderValue = {
   suiNetwork: "testnet",
   rpcUrl: "",
   client: null,
-  dAppKit: null as any,
+  dAppKit: null,
   account: null,
-};
-
-const DEFAULT_SUI_RPC: Record<SuiNetworkName, string> = {
-  mainnet: "https://fullnode.mainnet.sui.io:443",
-  testnet: "https://fullnode.testnet.sui.io:443",
 };
 
 const getSuiWalletChain = (network: SuiNetworkName): `sui:${SuiNetworkName}` =>
@@ -114,9 +124,6 @@ const requiredSuiWalletFeatureGroups = [
   ["sui:signAndExecuteTransaction", "sui:signAndExecuteTransactionBlock"],
 ] as const;
 
-const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
-  "connector.sui.unsupportedAccountType";
-
 // Phantom can be registered by Wallet Standard and can advertise Sui signing
 // features, but advertising those methods does not guarantee compatibility with
 // Mysten dApp Kit's connect flow. dApp Kit calls `standard:connect` and expects
@@ -124,141 +131,6 @@ const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
 // integration can fail at that connect step with a generic "Unexpected error",
 // so keep it out of the Sui connector list until it is dApp Kit compatible.
 const unsupportedSuiWalletNames = new Set(["phantom"]);
-
-const normalizeSuiAddressOption = (address?: string) => {
-  try {
-    return address ? normalizeSuiAddress(address) : undefined;
-  } catch {
-    return undefined;
-  }
-};
-
-const normalizeSuiPublicKeyData = (
-  value: unknown,
-  address?: string,
-):
-  | { publicKey: string; rawPublicKey: string; publicKeyScheme: number }
-  | undefined => {
-  if (!value) {
-    return undefined;
-  }
-
-  const normalized = normalizeSuiEd25519PublicKey(value);
-  if (normalized) {
-    return {
-      publicKey: normalized.publicKey,
-      rawPublicKey: normalized.rawPublicKey,
-      publicKeyScheme: normalized.publicKeyScheme,
-    };
-  }
-
-  if (typeof value === "string") {
-    try {
-      const publicKey = publicKeyFromSuiBytes(value, {
-        address: normalizeSuiAddressOption(address),
-      });
-      const suiBytes = publicKey.toSuiBytes?.();
-      if (!isSupportedSuiPublicKeyScheme(suiBytes?.[0])) {
-        return undefined;
-      }
-      const normalizedPublicKey = normalizeSuiEd25519PublicKey(publicKey);
-      return normalizedPublicKey
-        ? {
-            publicKey: normalizedPublicKey.publicKey,
-            rawPublicKey: normalizedPublicKey.rawPublicKey,
-            publicKeyScheme: normalizedPublicKey.publicKeyScheme,
-          }
-        : undefined;
-    } catch {
-      return undefined;
-    }
-  }
-
-  return undefined;
-};
-
-const getSuiPublicKeyScheme = (value: unknown): number | undefined => {
-  const scheme = getCoreSuiPublicKeyScheme(value);
-  if (typeof scheme !== "undefined") {
-    return scheme;
-  }
-
-  if (typeof value !== "string") {
-    return undefined;
-  }
-
-  try {
-    return publicKeyFromSuiBytes(value).toSuiBytes?.()?.[0];
-  } catch {
-    return undefined;
-  }
-};
-
-const getSuiAccountPublicKeyValue = (account: unknown, wallet: any) => {
-  const currentAccount = account as {
-    address?: string;
-    publicKey?: unknown;
-    rawPublicKey?: unknown;
-  };
-  const walletAccount = wallet?.accounts?.find(
-    (item: { address?: string }) => item.address === currentAccount?.address,
-  ) as
-    | {
-        address?: string;
-        publicKey?: unknown;
-        rawPublicKey?: unknown;
-      }
-    | undefined;
-
-  return {
-    address: currentAccount?.address,
-    publicKeyValue:
-      currentAccount?.publicKey ??
-      walletAccount?.publicKey ??
-      currentAccount?.rawPublicKey ??
-      walletAccount?.rawPublicKey,
-  };
-};
-
-const getSuiAccountPublicKeyData = (account: unknown, wallet: any) => {
-  const { address, publicKeyValue } = getSuiAccountPublicKeyValue(
-    account,
-    wallet,
-  );
-
-  return normalizeSuiPublicKeyData(publicKeyValue, address);
-};
-
-const getSuiAccountPublicKey = (account: unknown, wallet: any) =>
-  getSuiAccountPublicKeyData(account, wallet)?.publicKey;
-
-const getSuiAccountRawPublicKey = (account: unknown, wallet: any) =>
-  getSuiAccountPublicKeyData(account, wallet)?.rawPublicKey;
-
-const getSuiAccountPublicKeyScheme = (account: unknown, wallet: any) => {
-  const { publicKeyValue } = getSuiAccountPublicKeyValue(account, wallet);
-  return getSuiPublicKeyScheme(publicKeyValue);
-};
-
-const isSupportedSuiAccountPublicKey = (value: unknown) => {
-  const scheme = getSuiPublicKeyScheme(value);
-  if (typeof scheme === "undefined") {
-    return true;
-  }
-
-  return isSupportedSuiPublicKeyScheme(scheme);
-};
-
-const assertSupportedSuiAccount = (account?: {
-  publicKey?: unknown;
-  rawPublicKey?: unknown;
-}) => {
-  if (
-    !isSupportedSuiAccountPublicKey(account?.publicKey ?? account?.rawPublicKey)
-  ) {
-    throw new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR);
-  }
-};
 
 const isSupportedSuiWallet = (wallet: UiWallet, network: SuiNetworkName) => {
   if (unsupportedSuiWalletNames.has(wallet.name.toLowerCase())) {
@@ -299,12 +171,12 @@ function InitSuiProvider({
     network === Network.mainnet ? "mainnet" : "testnet";
   const rpcUrl =
     suiNetwork === "mainnet"
-      ? (suiConfig.mainnetRpc ?? DEFAULT_SUI_RPC.mainnet)
-      : (suiConfig.testnetRpc ?? DEFAULT_SUI_RPC.testnet);
+      ? (suiConfig.mainnetRpc ?? SUI_NETWORK_CONFIG.mainnet.rpcUrl)
+      : (suiConfig.testnetRpc ?? SUI_NETWORK_CONFIG.testnet.rpcUrl);
   const chainId =
     suiNetwork === "mainnet"
-      ? (SuiChainsMap.get(Network.mainnet) ?? null)
-      : (SuiChainsMap.get(Network.testnet) ?? null);
+      ? SUI_NETWORK_CONFIG.mainnet.chainId
+      : SUI_NETWORK_CONFIG.testnet.chainId;
 
   const dAppKit = useMemo(
     () => createSuiDAppKit(suiNetwork, rpcUrl),
@@ -388,7 +260,9 @@ function SuiWalletStateProvider({
           )?.accounts?.[0] ?? wallet.accounts?.[0];
         assertSupportedSuiAccount(account);
       } catch (error) {
-        if ((error as Error).message === SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR) {
+        if (
+          (error as Error).message === SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY
+        ) {
           await dAppKit.disconnectWallet().catch(() => undefined);
         }
         onError?.(error as Error);
@@ -417,7 +291,7 @@ function SuiWalletStateProvider({
             .rawPublicKey,
       )
     ) {
-      const error = new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR);
+      const error = new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY);
       dAppKit.disconnectWallet().catch(() => undefined);
       onError?.(error);
     }
@@ -434,7 +308,7 @@ function SuiWalletStateProvider({
     };
   }, [account, chainId]);
 
-  const wallet = useMemo(() => {
+  const wallet = useMemo<ConnectedSuiWallet | null>(() => {
     if (!account || !connection.wallet || !connectedChain) {
       return null;
     }
@@ -460,6 +334,15 @@ function SuiWalletStateProvider({
       connection.wallet,
     );
 
+    const providerAccount: SuiWalletProviderAccount = {
+      ...(account as Record<string, unknown>),
+      address: account.address,
+      label: account.label,
+      publicKey,
+      rawPublicKey,
+      publicKeyScheme,
+    };
+
     return {
       label: connection.wallet.name,
       icon: connection.wallet.icon ?? "",
@@ -468,12 +351,7 @@ function SuiWalletStateProvider({
         network: suiNetwork,
         client,
         wallet: connection.wallet,
-        account: {
-          ...account,
-          publicKey,
-          rawPublicKey,
-          publicKeyScheme,
-        },
+        account: providerAccount,
         dAppKit,
       },
       accounts: [

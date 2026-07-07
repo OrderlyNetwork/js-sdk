@@ -2,14 +2,12 @@ import { type PropsWithChildren, useMemo } from "react";
 import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
 import { Chain } from "viem/chains";
 import {
-  AbstractChains,
-  SolanaChains,
-  SuiChains,
   defaultMainnetChains,
   defaultTestnetChains,
 } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
-import { InitPrivy } from "../../types";
+import { InitPrivy, WalletType } from "../../types";
+import { getWalletTypeByChainId } from "../../util";
 
 interface IProps extends PropsWithChildren {
   privyConfig: InitPrivy;
@@ -25,7 +23,10 @@ export function InitPrivyProvider({
 
   const config = useMemo((): PrivyClientConfig => {
     const chains = initChains.filter(
-      (chain) => !SolanaChains.has(chain.id) && !SuiChains.has(chain.id),
+      (chain) =>
+        ![WalletType.SOL, WalletType.SUI].includes(
+          getWalletTypeByChainId(chain.id),
+        ),
     );
     const preferredDefaultChainIds = (
       network === "mainnet" ? defaultMainnetChains : defaultTestnetChains
@@ -36,7 +37,7 @@ export function InitPrivyProvider({
       .find((c) => !!c);
 
     const firstEvmChain = chains.find(
-      (chain) => !SolanaChains.has(chain.id) && !AbstractChains.has(chain.id),
+      (chain) => getWalletTypeByChainId(chain.id) === WalletType.EVM,
     );
 
     const defaultEvmChain = preferredDefaultChain ?? firstEvmChain ?? chains[0];

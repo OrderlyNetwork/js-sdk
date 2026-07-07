@@ -4,10 +4,7 @@ import { SDK } from "@layerzerolabs/lz-sui-sdk-v2";
 // TODO: Upgrade this adapter to @mysten/sui v2 once LayerZero supports v2 transactions.
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import {
-  SUI_MAINNET_CHAINID,
-  SUI_TESTNET_CHAINID,
-} from "@orderly.network/types";
+import { SUI_NETWORK_CONFIG } from "@orderly.network/types";
 import { extractNativeFeeFromDevInspect } from "./bcs";
 import {
   SUI_DEPOSIT_EXECUTION_GAS,
@@ -94,7 +91,9 @@ export class SuiDepositService {
     const network = resolveSuiNetwork(provider.network, chainId);
     const chainVaultPackage = vaultPackage?.trim();
     const expectedChainId =
-      network === "mainnet" ? SUI_MAINNET_CHAINID : SUI_TESTNET_CHAINID;
+      network === "mainnet"
+        ? SUI_NETWORK_CONFIG.mainnet.chainId
+        : SUI_NETWORK_CONFIG.testnet.chainId;
     const config = {
       chainId: expectedChainId,
       vaultConfig: depositData.vaultConfig?.trim(),

@@ -6,7 +6,7 @@ import {
   useLocalStorage,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { ChainNamespace, NetworkId, SuiChains } from "@orderly.network/types";
+import { NetworkId, getChainNamespaceByChainId } from "@orderly.network/types";
 import { useOrderlyTheme } from "@orderly.network/ui";
 import { ChainType, TChainItem } from "./type";
 
@@ -108,10 +108,7 @@ export const useChainSelectorScript = (
       };
     }
 
-    setStorageChain(
-      chain.id,
-      SuiChains.has(chain.id) ? ChainNamespace.sui : undefined,
-    );
+    setStorageChain(chain.id, getChainNamespaceByChainId(chain.id));
 
     setCurrentChainId(chain.id);
     return {

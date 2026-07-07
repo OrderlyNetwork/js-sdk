@@ -1,7 +1,4 @@
-import {
-  SUI_MAINNET_CHAINID,
-  SUI_TESTNET_CHAINID,
-} from "@orderly.network/types";
+import { SUI_NETWORK_CONFIG } from "@orderly.network/types";
 import { SuiNetworkName } from "./types";
 
 export const compareBigintDesc = (left: bigint, right: bigint) => {
@@ -79,10 +76,10 @@ export const resolveSuiNetwork = (
   providerNetwork: SuiNetworkName,
   chainId: number,
 ): SuiNetworkName => {
-  if (chainId === SUI_MAINNET_CHAINID) {
+  if (chainId === SUI_NETWORK_CONFIG.mainnet.chainId) {
     return "mainnet";
   }
-  if (chainId === SUI_TESTNET_CHAINID) {
+  if (chainId === SUI_NETWORK_CONFIG.testnet.chainId) {
     return "testnet";
   }
   return providerNetwork;

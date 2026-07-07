@@ -17,12 +17,9 @@ import {
   useTestnetChainsStore,
 } from "@orderly.network/hooks";
 import {
-  AbstractChains,
   API,
   ArbitrumSepoliaChainInfo,
-  SolanaChains,
   SolanaDevnetChainInfo,
-  SuiChains,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
@@ -44,6 +41,7 @@ import {
   WalletChainTypeConfig,
   WalletType,
 } from "./types";
+import { getWalletTypeByChainId } from "./util";
 
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
@@ -261,14 +259,19 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       hasAbstract: false,
     };
     initChains.forEach((chain) => {
-      if (SolanaChains.has(chain.id)) {
-        chainTypeObj.hasSol = true;
-      } else if (SuiChains.has(chain.id)) {
-        chainTypeObj.hasSui = true;
-      } else if (AbstractChains.has(chain.id)) {
-        chainTypeObj.hasAbstract = true;
-      } else {
-        chainTypeObj.hasEvm = true;
+      switch (getWalletTypeByChainId(chain.id)) {
+        case WalletType.SOL:
+          chainTypeObj.hasSol = true;
+          break;
+        case WalletType.SUI:
+          chainTypeObj.hasSui = true;
+          break;
+        case WalletType.ABSTRACT:
+          chainTypeObj.hasAbstract = true;
+          break;
+        case WalletType.EVM:
+        default:
+          chainTypeObj.hasEvm = true;
       }
     });
     return chainTypeObj;
@@ -314,14 +317,19 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       hasAbstract: false,
     };
     [...testChains, ...mainnetChains].forEach((chain) => {
-      if (SolanaChains.has(chain.id)) {
-        chainTypeObj.hasSol = true;
-      } else if (SuiChains.has(chain.id)) {
-        chainTypeObj.hasSui = true;
-      } else if (AbstractChains.has(chain.id)) {
-        chainTypeObj.hasAbstract = true;
-      } else {
-        chainTypeObj.hasEvm = true;
+      switch (getWalletTypeByChainId(chain.id)) {
+        case WalletType.SOL:
+          chainTypeObj.hasSol = true;
+          break;
+        case WalletType.SUI:
+          chainTypeObj.hasSui = true;
+          break;
+        case WalletType.ABSTRACT:
+          chainTypeObj.hasAbstract = true;
+          break;
+        case WalletType.EVM:
+        default:
+          chainTypeObj.hasEvm = true;
       }
     });
     initRef.current = true;

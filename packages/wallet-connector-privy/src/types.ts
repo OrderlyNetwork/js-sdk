@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import type { UiWallet } from "@mysten/dapp-kit-react";
 import { PrivyClientConfig } from "@privy-io/react-auth";
 import {
   Adapter,
@@ -13,8 +14,7 @@ import {
   ABSTRACT_MAINNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   ChainNamespace,
-  SUI_MAINNET_CHAINID,
-  SUI_TESTNET_CHAINID,
+  SUI_NETWORK_CONFIG,
   SOLANA_MAINNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
 } from "@orderly.network/types";
@@ -54,7 +54,7 @@ export interface ConnectProps {
   extraType?: string;
   connector?: Connector;
   walletAdapter?: WalletAdapter;
-  suiWallet?: any;
+  suiWallet?: UiWallet;
 }
 
 type PrivyAppearanceConfig = NonNullable<PrivyClientConfig["appearance"]>;
@@ -114,8 +114,8 @@ export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
 ]);
 
 export const SuiChainsMap = new Map<Network, number>([
-  [Network.testnet, SUI_TESTNET_CHAINID],
-  [Network.mainnet, SUI_MAINNET_CHAINID],
+  [Network.testnet, SUI_NETWORK_CONFIG.testnet.chainId],
+  [Network.mainnet, SUI_NETWORK_CONFIG.mainnet.chainId],
 ]);
 
 export const AbstractChainsMap = new Map<Network, number>([

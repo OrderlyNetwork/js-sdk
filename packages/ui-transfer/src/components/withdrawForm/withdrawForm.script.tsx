@@ -1,7 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PublicKey } from "@solana/web3.js";
-import { ethers } from "ethers";
-import { normalizeSuiPublicKeyToBase58 } from "@orderly.network/core";
 import {
   useAccount,
   useAssetsHistory,
@@ -21,7 +18,6 @@ import {
   AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
-  ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -34,111 +30,18 @@ import {
 } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { CurrentChain } from "../../types";
+import {
+  getWalletLookupNetworkByNamespace,
+  normalizeExternalWalletAddress,
+  normalizeSuiWithdrawAddress,
+  type WalletLookupNetwork,
+} from "../../utils/walletIdentity";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useVaultBalance } from "./hooks/useVaultBalance";
 import { useWithdrawAccountId } from "./hooks/useWithdrawAccountId";
 import { useWithdrawFee } from "./hooks/useWithdrawFee";
 import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
 import { useWithdrawToken } from "./hooks/useWithdrawToken";
-
-export type WalletLookupNetwork = "EVM" | "SOL" | "SUI";
-export type WalletLookupIdentity = {
-  address: string;
-  network: WalletLookupNetwork;
-};
-
-const SUI_ADDRESS_LENGTH = 64;
-
-const normalizeBase58PublicKey = (value: string) => {
-  try {
-    const pubKey = new PublicKey(value);
-    const bytes = pubKey.toBytes();
-    if (bytes.length === 32 && PublicKey.isOnCurve(bytes)) {
-      return pubKey.toBase58();
-    }
-  } catch {}
-
-  return undefined;
-};
-
-export const normalizeSuiLookupPublicKey = (value: string) =>
-  normalizeSuiPublicKeyToBase58(value.trim());
-
-export const normalizeSuiWithdrawAddress = (value: string) => {
-  const hex = value.trim().replace(/^0x/i, "").toLowerCase();
-  if (!/^[0-9a-f]+$/.test(hex) || hex.length > SUI_ADDRESS_LENGTH) {
-    return undefined;
-  }
-
-  return `0x${hex.padStart(SUI_ADDRESS_LENGTH, "0")}`;
-};
-
-export const validateAccountLookupIdentity = (
-  address: string,
-  preferredNetwork?: WalletLookupNetwork,
-): { valid: boolean; network?: WalletLookupNetwork } => {
-  const identities = getAccountLookupIdentities(address, preferredNetwork);
-  if (identities.length === 0) {
-    return { valid: false };
-  }
-  return {
-    valid: true,
-    network: identities.length === 1 ? identities[0].network : undefined,
-  };
-};
-
-export const getAccountLookupIdentities = (
-  address: string,
-  preferredNetwork?: WalletLookupNetwork,
-): WalletLookupIdentity[] => {
-  const trimmed = address.trim();
-
-  if (preferredNetwork === "SUI") {
-    const publicKey = normalizeSuiLookupPublicKey(trimmed);
-    return publicKey ? [{ address: publicKey, network: "SUI" }] : [];
-  }
-
-  if (preferredNetwork === "SOL") {
-    const publicKey = normalizeBase58PublicKey(trimmed);
-    return publicKey ? [{ address: publicKey, network: "SOL" }] : [];
-  }
-
-  if (preferredNetwork === "EVM") {
-    return ethers.isAddress(trimmed)
-      ? [{ address: trimmed, network: "EVM" }]
-      : [];
-  }
-
-  if (ethers.isAddress(trimmed)) {
-    return [{ address: trimmed, network: "EVM" }];
-  }
-
-  const identities: WalletLookupIdentity[] = [];
-  const suiPublicKey = normalizeSuiLookupPublicKey(trimmed);
-  if (suiPublicKey) {
-    identities.push({ address: suiPublicKey, network: "SUI" });
-  }
-
-  const solPublicKey = normalizeBase58PublicKey(trimmed);
-  if (solPublicKey) {
-    identities.push({ address: solPublicKey, network: "SOL" });
-  }
-
-  return identities;
-};
-
-export const validateExternalWalletAddress = (
-  address: string,
-  preferredNetwork?: WalletLookupNetwork,
-): { valid: boolean; network?: WalletLookupNetwork } => {
-  if (preferredNetwork === "SUI") {
-    return normalizeSuiWithdrawAddress(address)
-      ? { valid: true, network: "SUI" }
-      : { valid: false };
-  }
-
-  return validateAccountLookupIdentity(address, preferredNetwork);
-};
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
@@ -294,12 +197,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setSelectedWalletAddress(address);
   };
 
-  const onAddExternalWallet = (
-    addr: string,
-    network?: "EVM" | "SOL" | "SUI",
-  ) => {
-    const normalizedAddr =
-      network === "SUI" ? normalizeSuiWithdrawAddress(addr) : addr.trim();
+  const onAddExternalWallet = (addr: string, network?: WalletLookupNetwork) => {
+    const normalizedAddr = normalizeExternalWalletAddress(addr, network);
     if (!normalizedAddr) return;
 
     const connectedAddress = address?.trim();
@@ -368,14 +267,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setQuantity,
     close: options.close,
     setLoading,
-    lookupNetwork:
-      currentChain?.namespace === ChainNamespace.sui
-        ? "SUI"
-        : currentChain?.namespace === ChainNamespace.solana
-          ? "SOL"
-          : currentChain?.namespace === ChainNamespace.evm
-            ? "EVM"
-            : undefined,
+    lookupNetwork: getWalletLookupNetworkByNamespace(currentChain?.namespace),
   });
 
   const checkIsBridgeless = useMemo(() => {
@@ -458,7 +350,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setLoading(true);
     let receiver = selectedWalletAddress;
     if (
-      currentChain?.namespace === ChainNamespace.sui &&
+      getWalletLookupNetworkByNamespace(currentChain?.namespace) === "SUI" &&
       selectedWalletAddress
     ) {
       receiver = normalizeSuiWithdrawAddress(selectedWalletAddress);

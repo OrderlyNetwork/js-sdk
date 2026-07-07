@@ -1,7 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { useDebouncedCallback } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
 import {
   Box,
   Button,
@@ -14,12 +13,14 @@ import {
   CloseRoundFillIcon,
   ChainIcon,
 } from "@orderly.network/ui";
-import { CurrentChain } from "../depositForm/hooks";
 import {
-  normalizeSuiWithdrawAddress,
+  getWalletLookupNetworkByNamespace,
+  getWalletLookupNetworkLabel,
+  normalizeExternalWalletAddress,
   validateExternalWalletAddress,
   type WalletLookupNetwork,
-} from "./withdrawForm.script";
+} from "../../utils/walletIdentity";
+import { CurrentChain } from "../depositForm/hooks";
 
 interface AddWalletDialogProps {
   open: boolean;
@@ -42,14 +43,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
     network?: WalletLookupNetwork;
   } | null>(null);
 
-  const requiredNetwork: WalletLookupNetwork | undefined =
-    chain?.namespace === ChainNamespace.solana
-      ? "SOL"
-      : chain?.namespace === ChainNamespace.sui
-        ? "SUI"
-        : chain?.namespace === ChainNamespace.evm
-          ? "EVM"
-          : undefined;
+  const requiredNetwork = getWalletLookupNetworkByNamespace(chain?.namespace);
 
   const checkAddress = useDebouncedCallback((addr: string) => {
     if (!addr) {
@@ -84,14 +78,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
     if (!open) onClear();
   }, [open]);
 
-  const requiredNetworkLabel =
-    requiredNetwork === "SOL"
-      ? "Solana"
-      : requiredNetwork === "SUI"
-        ? "Sui"
-        : requiredNetwork === "EVM"
-          ? "EVM"
-          : "";
+  const requiredNetworkLabel = getWalletLookupNetworkLabel(requiredNetwork);
 
   const hasValidation = !!validationResult;
   const isValid = !!validationResult?.valid;
@@ -110,10 +97,10 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
   const handleConfirm = () => {
     if (!address || isValidating || !isValid || isNetworkMismatch) return;
 
-    const normalizedAddress =
-      validationResult!.network === "SUI"
-        ? normalizeSuiWithdrawAddress(address)
-        : address.trim();
+    const normalizedAddress = normalizeExternalWalletAddress(
+      address,
+      validationResult!.network,
+    );
 
     if (!normalizedAddress) return;
 
@@ -167,11 +154,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
                     : "oui-text-primary-light",
                 )}
               >
-                {validationResult!.network === "EVM"
-                  ? "EVM"
-                  : validationResult!.network === "SOL"
-                    ? "Solana"
-                    : "Sui"}
+                {getWalletLookupNetworkLabel(validationResult!.network)}
               </Text>
             )}
             {showInlineInvalid && (

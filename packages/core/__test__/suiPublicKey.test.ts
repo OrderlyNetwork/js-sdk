@@ -1,6 +1,8 @@
 import { encode as bs58encode } from "bs58";
 import {
   SUI_ED25519_SIGNATURE_FLAG,
+  SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY,
+  assertSupportedSuiPublicKeyScheme,
   getSuiPublicKeyScheme,
   normalizeSuiEd25519PublicKey,
   normalizeSuiPublicKeyToBase58,
@@ -36,6 +38,9 @@ describe("suiPublicKey", () => {
 
     expect(normalizeSuiEd25519PublicKey(secp256k1LikeBytes)).toBeUndefined();
     expect(getSuiPublicKeyScheme(secp256k1LikeBytes)).toBe(0x01);
+    expect(() => assertSupportedSuiPublicKeyScheme(0x01)).toThrow(
+      SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY,
+    );
   });
 
   test("returns raw public key bytes", () => {

@@ -33,8 +33,12 @@ export const useAccountSheetScript = (
 
   const chainId =
     account.chainId || connectedChain?.id || linkDeviceStorage?.chainId;
+  const operatorUrl = config.get<string>("operatorUrl");
 
   const showGetTestUSDC = useMemo(() => {
+    if (!operatorUrl || namespace === ChainNamespace.sui) {
+      return false;
+    }
     if (chainId) {
       return (
         (state.status === AccountStatusEnum.EnableTrading ||
@@ -45,11 +49,9 @@ export const useAccountSheetScript = (
     }
 
     return false;
-  }, [state.status, chainId]);
+  }, [state.status, chainId, namespace, operatorUrl]);
 
   const chainName = useGetChains(chainId);
-
-  const operatorUrl = config.get<string>("operatorUrl");
 
   const onCopyAddress = () => {
     navigator.clipboard.writeText(address ?? "");

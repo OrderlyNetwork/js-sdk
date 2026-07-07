@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useEventEmitter,
   useLocalStorage,
@@ -10,8 +10,6 @@ import {
   AbstractChains,
   ChainNamespace,
   ConnectorKey,
-  SolanaChains,
-  SuiChains,
   defaultMainnetChains,
   defaultTestnetChains,
   TrackerEventName,
@@ -23,7 +21,7 @@ import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
 import { useSuiWallet } from "../providers/sui";
 import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
 import { ConnectProps, WalletConnectType, WalletType } from "../types";
-import { getChainType } from "../util";
+import { getWalletTypeByChainId } from "../util";
 
 export function useWallet() {
   const { track } = useTrack();
@@ -76,26 +74,12 @@ export function useWallet() {
   const { setOpenConnectDrawer, targetWalletType, setTargetWalletType } =
     useWalletConnectorPrivy();
 
-  const isSuiChainId = useCallback(
-    (chainId: number) => SuiChains.has(chainId) || suiInfo?.chainId === chainId,
-    [suiInfo?.chainId],
-  );
-
-  const getWalletTypeByChainId = useCallback(
-    (chainId: number) =>
-      isSuiChainId(chainId) ? WalletType.SUI : getChainType(chainId),
-    [isSuiChainId],
-  );
-
   const supportedEvmChainIds = useMemo(() => {
     const ids = initChains
       ?.map((c) => c.id)
-      .filter(
-        (id) =>
-          !SolanaChains.has(id) && !AbstractChains.has(id) && !isSuiChainId(id),
-      );
+      .filter((id) => getWalletTypeByChainId(id) === WalletType.EVM);
     return new Set<number>(ids ?? []);
-  }, [initChains, isSuiChainId]);
+  }, [initChains]);
 
   const preferredEvmChainId = useMemo(() => {
     const preferredOrder =
@@ -107,16 +91,12 @@ export function useWallet() {
 
   const defaultEvmChainId = useMemo(() => {
     for (const chain of initChains ?? []) {
-      if (
-        !SolanaChains.has(chain.id) &&
-        !AbstractChains.has(chain.id) &&
-        !isSuiChainId(chain.id)
-      ) {
+      if (getWalletTypeByChainId(chain.id) === WalletType.EVM) {
         return chain.id;
       }
     }
     return undefined;
-  }, [initChains, isSuiChainId]);
+  }, [initChains]);
 
   const fallbackEvmChainId = preferredEvmChainId ?? defaultEvmChainId;
 
@@ -148,7 +128,7 @@ export function useWallet() {
         connectSUI(params.suiWallet!.name)
           .then(() => {
             if (suiInfo?.chainId) {
-              setStorageChain(suiInfo.chainId, ChainNamespace.sui);
+              setStorageChain(suiInfo.chainId);
             }
           })
           .catch((err: Error) => {
@@ -263,7 +243,7 @@ export function useWallet() {
       }
       if (chainType === WalletType.SUI) {
         if (isConnectedSUI && walletSUI) {
-          setStorageChain(nextChainId, ChainNamespace.sui);
+          setStorageChain(nextChainId);
           return Promise.resolve(true);
         } else {
           setOpenConnectDrawer(true);
@@ -331,7 +311,7 @@ export function useWallet() {
           break;
         case WalletType.SUI:
           if (walletSUI) {
-            setStorageChain(walletSUI.chain.id, ChainNamespace.sui);
+            setStorageChain(walletSUI.chain.id);
             toWallet = walletSUI.accounts[0].address;
           }
           break;

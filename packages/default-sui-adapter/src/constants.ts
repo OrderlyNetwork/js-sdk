@@ -9,17 +9,6 @@ export const DEFAULT_RECEIPT_MAX_INTERVAL = 10_000;
 export const DEFAULT_RECEIPT_MAX_RETRIES = 30;
 
 export const SUI_SIGNATURE_VERSION = "v2";
-export const SUI_ED25519_SIGNATURE_FLAG = 0x00;
-
-// Only Ed25519 is supported today. Supporting Secp256k1 or other schemes
-// requires updating identity/accountId, deposit, link-device, and backend
-// verification flows together because they currently assume Ed25519 public keys.
-export const SUI_ALLOWED_SIGNATURE_FLAGS = new Set([
-  SUI_ED25519_SIGNATURE_FLAG,
-]);
-
-export const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR =
-  "connector.sui.unsupportedAccountType";
 
 export const OFF_CHAIN_VERIFYING_CONTRACT =
   "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC";

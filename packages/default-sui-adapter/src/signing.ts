@@ -2,14 +2,14 @@ import { fromBase64 } from "@mysten/sui/utils";
 import { verifyPersonalMessageSignature } from "@mysten/sui/verify";
 import {
   SignatureDomain,
+  assertSupportedSuiPublicKeyScheme,
   isSupportedSuiPublicKeyScheme,
   normalizeSuiPublicKeyToBase58,
 } from "@orderly.network/core";
+import { SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY } from "@orderly.network/types";
 import {
   HASH_ORDERLY_NETWORK,
   OFF_CHAIN_VERIFYING_CONTRACT,
-  SUI_ALLOWED_SIGNATURE_FLAGS,
-  SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR,
 } from "./constants";
 import { SuiDAppKitBridge, SuiSignatureMessage } from "./internalTypes";
 import { bigintString, hex64 } from "./suiUtils";
@@ -19,15 +19,17 @@ const textEncoder = new TextEncoder();
 
 export const assertEd25519PersonalMessageSignature = (signature: string) => {
   const bytes = fromBase64(signature);
-  if (!SUI_ALLOWED_SIGNATURE_FLAGS.has(bytes[0])) {
-    throw new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR);
+  const signatureFlag = bytes[0];
+  if (
+    typeof signatureFlag !== "number" ||
+    !isSupportedSuiPublicKeyScheme(signatureFlag)
+  ) {
+    throw new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY);
   }
 };
 
 export const assertEd25519WalletAccount = (scheme?: number) => {
-  if (!isSupportedSuiPublicKeyScheme(scheme)) {
-    throw new Error(SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR);
-  }
+  assertSupportedSuiPublicKeyScheme(scheme);
 };
 
 export const buildOffChainSuiDomain = (chainId: number): SignatureDomain => ({

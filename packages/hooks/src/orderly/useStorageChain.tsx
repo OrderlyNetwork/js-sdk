@@ -1,8 +1,7 @@
 import {
   ChainKey,
   ChainNamespace,
-  SolanaChains,
-  SuiChains,
+  getChainNamespaceByChainId,
 } from "@orderly.network/types";
 import { useLocalStorage } from "../useLocalStorage";
 
@@ -15,13 +14,10 @@ export function useStorageChain() {
     chainId: number,
     namespaceOverride?: ChainNamespace,
   ) => {
-    let namespace: ChainNamespace = namespaceOverride || ChainNamespace.evm;
-    if (!namespaceOverride && SolanaChains.has(chainId)) {
-      namespace = ChainNamespace.solana;
-    }
-    if (!namespaceOverride && SuiChains.has(chainId)) {
-      namespace = ChainNamespace.sui;
-    }
+    const namespace =
+      namespaceOverride ??
+      getChainNamespaceByChainId(chainId) ??
+      ChainNamespace.evm;
 
     setChain({
       chainId: chainId,

@@ -2,12 +2,6 @@ import React, { useMemo } from "react";
 import { useStorageChain } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
-  AbstractChains,
-  ChainNamespace,
-  SolanaChains,
-  SuiChains,
-} from "@orderly.network/types";
-import {
   ExclamationFillIcon,
   Flex,
   modal,
@@ -15,6 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { WalletType } from "../types";
+import { getWalletTypeByChainId } from "../util";
 import { ArrowRightIcon } from "./icons";
 
 export function SwitchNetworkTips({
@@ -76,20 +71,11 @@ export const StorageChainNotCurrentWalletType = ({
       return null;
     }
     let text = null;
-    const isSolana = SolanaChains.has(parseInt(storageChain?.chainId));
-    const isSui =
-      storageChain.namespace === ChainNamespace.sui ||
-      SuiChains.has(parseInt(storageChain?.chainId));
-    const isAbstract = AbstractChains.has(parseInt(storageChain?.chainId));
-    const isEvm = !isSolana && !isSui && !isAbstract;
+    const storageWalletType = getWalletTypeByChainId(
+      parseInt(storageChain?.chainId),
+    );
 
-    if (isSolana && currentWalletType.has(WalletType.SOL)) {
-      return null;
-    } else if (isSui && currentWalletType.has(WalletType.SUI)) {
-      return null;
-    } else if (isAbstract && currentWalletType.has(WalletType.ABSTRACT)) {
-      return null;
-    } else if (isEvm && currentWalletType.has(WalletType.EVM)) {
+    if (currentWalletType.has(storageWalletType)) {
       return null;
     }
 

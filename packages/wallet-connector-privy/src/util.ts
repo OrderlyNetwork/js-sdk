@@ -1,7 +1,7 @@
 import {
   AbstractChains,
-  SolanaChains,
-  SuiChains,
+  ChainNamespace,
+  getChainNamespaceByChainId,
 } from "@orderly.network/types";
 import { WalletType } from "./types";
 
@@ -27,15 +27,21 @@ export const getWalletIcon = (type: string): string | undefined => {
   return WALLET_ICONS[type.toLowerCase()];
 };
 
-export const getChainType = (chainId: number): WalletType => {
+export const getWalletTypeByChainId = (chainId: number): WalletType => {
   if (AbstractChains.has(chainId)) {
     return WalletType.ABSTRACT;
   }
-  if (SolanaChains.has(chainId)) {
-    return WalletType.SOL;
+
+  const namespace = getChainNamespaceByChainId(chainId);
+  switch (namespace) {
+    case ChainNamespace.solana:
+      return WalletType.SOL;
+    case ChainNamespace.sui:
+      return WalletType.SUI;
+    case ChainNamespace.evm:
+    default:
+      return WalletType.EVM;
   }
-  if (SuiChains.has(chainId)) {
-    return WalletType.SUI;
-  }
-  return WalletType.EVM;
 };
+
+export const getChainType = getWalletTypeByChainId;

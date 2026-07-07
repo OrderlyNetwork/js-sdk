@@ -13,6 +13,11 @@ import {
   CaretUpIcon,
   useDocumentDirection,
 } from "@orderly.network/ui";
+import {
+  getWalletLookupNetworkByNamespace,
+  getWalletLookupNetworkLabel,
+  type WalletLookupNetwork,
+} from "../../utils/walletIdentity";
 
 const AddIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
@@ -30,7 +35,7 @@ const AddIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
 export type WalletOption = {
   address: string;
   name?: string;
-  network?: "EVM" | "SOL" | "SUI";
+  network?: WalletLookupNetwork;
 };
 
 interface WalletMenuItemProps {
@@ -84,13 +89,10 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
   const dir = useDocumentDirection();
   const isRTL = dir === "rtl";
 
-  const currentNetwork = useMemo<"EVM" | "SOL" | "SUI" | undefined>(() => {
-    if (!connectedWallet?.namespace) return undefined;
-    const ns = connectedWallet.namespace.toLowerCase();
-    if (ns.includes("sol")) return "SOL";
-    if (ns.includes("sui")) return "SUI";
-    return "EVM";
-  }, [connectedWallet?.namespace]);
+  const currentNetwork = useMemo(
+    () => getWalletLookupNetworkByNamespace(connectedWallet?.namespace),
+    [connectedWallet?.namespace],
+  );
 
   const filteredExternalWallets = useMemo(() => {
     if (!currentNetwork) return externalWallets;
@@ -119,13 +121,6 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
 
   const hasExternalWallets = filteredExternalWallets.length > 0;
   const showConnectedItem = !!connectedWallet && hasExternalWallets;
-
-  const getChainLabel = (network?: "EVM" | "SOL" | "SUI") => {
-    if (!network) return "";
-    if (network === "SOL") return "Solana";
-    if (network === "SUI") return "Sui";
-    return "EVM";
-  };
 
   const handleSelectWallet = (address: string) => {
     onSelect(address);
@@ -157,7 +152,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
                 intensity={54}
                 className="oui-text-base-contrast-36 oui-leading-[15px]"
               >
-                {`(${getChainLabel(currentNetwork)}) ${connectedWallet.address}`}
+                {`(${getWalletLookupNetworkLabel(currentNetwork)}) ${connectedWallet.address}`}
               </Text>
             </Flex>
           </WalletMenuItem>
@@ -180,7 +175,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
                     intensity={54}
                     className="oui-text-base-contrast-36 oui-leading-[15px]"
                   >
-                    {`(${getChainLabel(wallet.network)}) ${wallet.address}`}
+                    {`(${getWalletLookupNetworkLabel(wallet.network)}) ${wallet.address}`}
                   </Text>
                 </Flex>
               </WalletMenuItem>
@@ -234,7 +229,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
               intensity={54}
               className="oui-text-base-contrast-36"
             >
-              {` (${getChainLabel(selectedWalletOpt?.network)})`}
+              {` (${getWalletLookupNetworkLabel(selectedWalletOpt?.network)})`}
             </Text>
             {isOpen ? (
               <CaretUpIcon size={12} className="oui-text-inherit" />

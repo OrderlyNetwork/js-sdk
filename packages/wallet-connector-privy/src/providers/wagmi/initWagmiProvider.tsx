@@ -8,8 +8,8 @@ import {
   injected,
   WagmiProvider,
 } from "wagmi";
-import { SolanaChains, SuiChains } from "@orderly.network/types";
-import { InitWagmi } from "../../types";
+import { InitWagmi, WalletType } from "../../types";
+import { getWalletTypeByChainId } from "../../util";
 
 interface InitWagmiProps extends PropsWithChildren {
   initialState?: any;
@@ -27,7 +27,10 @@ export function InitWagmiProvider({
 
   const [config] = useState(() => {
     const wagmiChains = initChains.filter(
-      (chain) => !SolanaChains.has(chain.id) && !SuiChains.has(chain.id),
+      (chain) =>
+        ![WalletType.SOL, WalletType.SUI].includes(
+          getWalletTypeByChainId(chain.id),
+        ),
     );
     const chains =
       wagmiChains && wagmiChains.length

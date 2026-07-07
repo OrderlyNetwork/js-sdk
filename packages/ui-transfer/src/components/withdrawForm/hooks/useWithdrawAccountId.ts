@@ -12,7 +12,7 @@ import {
   getAccountLookupIdentities,
   type WalletLookupNetwork,
   type WalletLookupIdentity,
-} from "../withdrawForm.script";
+} from "../../../utils/walletIdentity";
 
 type InternalWithdrawOptions = {
   token: string;

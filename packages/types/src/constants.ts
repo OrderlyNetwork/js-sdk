@@ -40,6 +40,18 @@ export const SOLANA_TESTNET_CHAINID = 901901901;
 export const SOLANA_MAINNET_CHAINID = 900900900;
 export const SUI_TESTNET_CHAINID = 904904904;
 export const SUI_MAINNET_CHAINID = 905905905;
+export const SUI_UNSUPPORTED_ACCOUNT_TYPE_ERROR_KEY =
+  "connector.sui.unsupportedAccountType";
+export const SUI_NETWORK_CONFIG = {
+  testnet: {
+    chainId: SUI_TESTNET_CHAINID,
+    rpcUrl: "https://fullnode.testnet.sui.io:443",
+  },
+  mainnet: {
+    chainId: SUI_MAINNET_CHAINID,
+    rpcUrl: "https://fullnode.mainnet.sui.io:443",
+  },
+} as const;
 export const STORY_TESTNET_CHAINID = 1516;
 export const MONAD_TESTNET_CHAINID = 10143;
 export const ABSTRACT_TESTNET_CHAINID = 11124;
@@ -125,23 +137,23 @@ export const SolanaDevnetChainInfo = {
 };
 
 export const SuiTestnetChainInfo = {
-  chain_id: "904904904",
+  chain_id: String(SUI_NETWORK_CONFIG.testnet.chainId),
   currency_decimal: 9,
   currency_symbol: "SUI",
   explorer_base_url: "https://suiscan.xyz/testnet",
   name: "Sui-Testnet",
-  public_rpc_url: "https://fullnode.testnet.sui.io:443",
+  public_rpc_url: SUI_NETWORK_CONFIG.testnet.rpcUrl,
   vault_address:
     "0x2fad715610f1af18dde2121e2aa35f38bcf88d2e0338f1dbdbe20df5e1e02506",
 };
 
 export const SuiMainnetChainInfo = {
-  chain_id: "905905905",
+  chain_id: String(SUI_NETWORK_CONFIG.mainnet.chainId),
   currency_decimal: 9,
   currency_symbol: "SUI",
   explorer_base_url: "https://suiscan.xyz/mainnet",
   name: "Sui-Mainnet",
-  public_rpc_url: "https://fullnode.mainnet.sui.io:443",
+  public_rpc_url: SUI_NETWORK_CONFIG.mainnet.rpcUrl,
   vault_address: "",
 };
 
