@@ -13,6 +13,7 @@ export type UseMarketsListFullReturn = ReturnType<
 
 const MarketsTypeMap = {
   all: MarketsType.ALL,
+  crypto: MarketsType.CRYPTO,
   new: MarketsType.NEW_LISTING,
   rwa: MarketsType.RWA,
   preTge: MarketsType.PRE_TGE,

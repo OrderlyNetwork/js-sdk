@@ -7,6 +7,7 @@ export type FooterProps = {
   twitterUrl?: string;
   discordUrl?: string;
   trailing?: ReactNode;
+  poweredBy?: boolean | ReactNode;
 };
 
 export const FooterWidget: React.FC<FooterProps> = (props) => {

@@ -21,6 +21,7 @@ import {
 
 export type MarketType =
   | "all"
+  | "crypto"
   | "recent"
   | "newListing"
   | "rwa"
@@ -60,6 +61,7 @@ export const useHorizontalMarketsScript = (
 
   const MarketsTypeMap: Record<string, MarketsType> = {
     all: MarketsType.ALL,
+    crypto: MarketsType.CRYPTO,
     recent: MarketsType.RECENT,
     newListing: MarketsType.NEW_LISTING,
     favorites: MarketsType.FAVORITES,

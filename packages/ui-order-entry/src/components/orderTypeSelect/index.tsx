@@ -1,14 +1,11 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide, OrderType } from "@orderly.network/types";
+import { cn, modal, Text, Tooltip, useScreen } from "@orderly.network/ui";
 import {
-  cn,
-  modal,
-  Select,
-  Text,
-  Tooltip,
-  useScreen,
-} from "@orderly.network/ui";
+  OrderTypeAdvancedSelectInjectabled,
+  OrderTypeMobileSelectInjectabled,
+} from "../orderEntry.injectabled";
 
 export const OrderTypeSelect = (props: {
   type: OrderType;
@@ -19,6 +16,9 @@ export const OrderTypeSelect = (props: {
   marketOrderDisabled?: boolean;
   /** Tooltip text when hovering over the disabled Market button. */
   marketOrderDisabledTooltip?: string;
+  /** Active custom order-type id (null for a real OrderType). */
+  selectedExtraId?: string | null;
+  onExtraSelect?: (id: string | null) => void;
 }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -65,16 +65,14 @@ export const OrderTypeSelect = (props: {
     ];
   }, [t]);
 
-  const displayLabelMap = useMemo(() => {
-    return {
-      [OrderType.LIMIT]: t("orderEntry.orderType.limit"),
-      [OrderType.MARKET]: t("common.marketPrice"),
-      [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
-      [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
-      [OrderType.SCALED]: t("orderEntry.orderType.scaledOrder"),
-      [OrderType.TRAILING_STOP]: t("orderEntry.orderType.trailingStop"),
-    };
-  }, [t]);
+  // Single source of truth: built-in types are exactly what appears in the
+  // type dropdown. Anything else is treated as a plugin custom-type id.
+  const builtInOrderEntryTypes = useMemo(
+    () => new Set(allOptions.map((o) => o.value as string)),
+    [allOptions],
+  );
+  const isBuiltInOrderEntryType = (value: string): value is OrderType =>
+    builtInOrderEntryTypes.has(value);
 
   // Must run on every render; do not place after `if (!isMobile) return` or hook order breaks when isMobile toggles.
   const mobileOptions = useMemo(() => allOptions, [allOptions]);
@@ -93,7 +91,22 @@ export const OrderTypeSelect = (props: {
     );
 
     const handleChange = (type: OrderType) => {
+      props.onExtraSelect?.(null);
       props.onChange(type);
+    };
+
+    const advancedItems = advancedOptions.map((o) => ({
+      value: o.value as string,
+      label: o.label,
+    }));
+    const advancedValue = props.selectedExtraId ?? props.type;
+    const routeAdvancedChange = (value: string) => {
+      if (isBuiltInOrderEntryType(value)) {
+        props.onExtraSelect?.(null);
+        props.onChange(value);
+      } else {
+        props.onExtraSelect?.(value);
+      }
     };
 
     return (
@@ -104,11 +117,13 @@ export const OrderTypeSelect = (props: {
         <button
           type="button"
           className={
-            props.type === OrderType.LIMIT
+            !props.selectedExtraId && props.type === OrderType.LIMIT
               ? selectedButtonClassName
               : unselectedButtonClassName
           }
-          aria-pressed={props.type === OrderType.LIMIT}
+          aria-pressed={
+            !props.selectedExtraId && props.type === OrderType.LIMIT
+          }
           onClick={() => handleChange(OrderType.LIMIT)}
           disabled={!props.canTrade}
           data-testid="oui-testid-orderEntry-orderType-limit"
@@ -137,11 +152,13 @@ export const OrderTypeSelect = (props: {
           <button
             type="button"
             className={
-              props.type === OrderType.MARKET
+              !props.selectedExtraId && props.type === OrderType.MARKET
                 ? selectedButtonClassName
                 : unselectedButtonClassName
             }
-            aria-pressed={props.type === OrderType.MARKET}
+            aria-pressed={
+              !props.selectedExtraId && props.type === OrderType.MARKET
+            }
             onClick={() => handleChange(OrderType.MARKET)}
             disabled={!props.canTrade}
             data-testid="oui-testid-orderEntry-orderType-market"
@@ -154,49 +171,28 @@ export const OrderTypeSelect = (props: {
           className="oui-flex-1"
           data-testid="oui-testid-orderEntry-orderType-advanced"
         >
-          <Select.options
-            testid="oui-testid-orderEntry-orderType-advanced-select"
-            currentValue={props.type}
-            value={props.type}
-            options={advancedOptions}
-            onValueChange={props.onChange}
+          <OrderTypeAdvancedSelectInjectabled
+            items={advancedItems}
+            value={advancedValue}
             placeholder={t("trading.layout.advanced")}
             disabled={!props.canTrade}
-            contentProps={{
-              className: "oui-bg-base-8",
-            }}
-            classNames={{
-              trigger: "oui-bg-base-7 oui-border-none oui-h-8 oui-rounded-md",
-            }}
-            valueFormatter={(value, option) => {
-              const isAdvanced =
-                value === OrderType.STOP_LIMIT ||
-                value === OrderType.STOP_MARKET ||
-                value === OrderType.SCALED ||
-                value === OrderType.TRAILING_STOP;
-              if (!isAdvanced) {
-                return (
-                  <Text size="xs" className="oui-text-base-contrast-80">
-                    {option.placeholder}
-                  </Text>
-                );
-              }
-              const label =
-                displayLabelMap[value as keyof typeof displayLabelMap];
-              return (
-                <Text size="xs" className="oui-text-base-contrast-80">
-                  {label}
-                </Text>
-              );
-            }}
-            size="md"
+            onValueChange={routeAdvancedChange}
           />
         </div>
       </div>
     );
   }
 
-  const handleMobileValueChange = (value: OrderType) => {
+  const mobileItems = mobileOptions.map((o) => ({
+    value: o.value as string,
+    label: o.label,
+  }));
+  const mobileValue = props.selectedExtraId ?? props.type;
+  const routeMobileChange = (value: string) => {
+    if (!isBuiltInOrderEntryType(value)) {
+      props.onExtraSelect?.(value);
+      return;
+    }
     if (
       marketOrderDisabled &&
       value === OrderType.MARKET &&
@@ -208,43 +204,16 @@ export const OrderTypeSelect = (props: {
       });
       return;
     }
+    props.onExtraSelect?.(null);
     props.onChange(value);
   };
 
   return (
-    <Select.options
-      testid="oui-testid-orderEntry-orderType-button"
-      currentValue={props.type}
-      value={props.type}
-      options={mobileOptions}
-      onValueChange={handleMobileValueChange}
-      contentProps={{
-        className: cn(
-          "oui-orderEntry-orderTypeSelect-content",
-          "oui-bg-base-8",
-        ),
-      }}
-      classNames={{
-        trigger: cn(
-          "oui-orderEntry-orderTypeSelect-btn",
-          "oui-bg-base-7 oui-border-line-12 oui-h-8 oui-rounded-md",
-        ),
-      }}
-      valueFormatter={(value, option) => {
-        const item = allOptions.find((o) => o.value === value);
-        if (!item) {
-          return <Text size={"xs"}>{option.placeholder}</Text>;
-        }
-
-        const label = displayLabelMap[value as keyof typeof displayLabelMap];
-
-        return (
-          <Text size={"xs"} className="oui-text-base-contrast-80">
-            {label}
-          </Text>
-        );
-      }}
-      size={"md"}
+    <OrderTypeMobileSelectInjectabled
+      items={mobileItems}
+      value={mobileValue}
+      disabled={!props.canTrade}
+      onValueChange={routeMobileChange}
     />
   );
 };

@@ -22,6 +22,9 @@ type OrderEntryHeaderProps = {
   marketOrderDisabled?: boolean;
   /** Tooltip when hovering over the disabled Market button. */
   marketOrderDisabledTooltip?: string;
+  /** Active custom order-type id (null for a real OrderType). */
+  selectedExtraId?: string | null;
+  onExtraSelect?: (id: string | null) => void;
 };
 
 export function OrderEntryHeader(props: OrderEntryHeaderProps) {
@@ -47,6 +50,8 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
         }}
         marketOrderDisabled={props.marketOrderDisabled}
         marketOrderDisabledTooltip={props.marketOrderDisabledTooltip}
+        selectedExtraId={props.selectedExtraId}
+        onExtraSelect={props.onExtraSelect}
       />
       <OrderEntryBuySellSwitchInjectabled
         side={side}
@@ -54,6 +59,7 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
         onSideChange={(nextSide: OrderSide) => {
           props.setOrderValue("side", nextSide);
         }}
+        selectedCustomTypeId={props.selectedExtraId}
       />
     </>
   );

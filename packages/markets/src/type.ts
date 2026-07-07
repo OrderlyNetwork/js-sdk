@@ -33,6 +33,7 @@ export enum MarketsTabName {
   Favorites = "favorites",
   Recent = "recent",
   All = "all",
+  Crypto = "crypto",
   Rwa = "rwa",
   PreTge = "preTge",
   NewListing = "newListing",

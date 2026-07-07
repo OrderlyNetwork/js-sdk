@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useConfig,
@@ -12,6 +12,7 @@ import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
 import { WS } from "@orderly.network/net";
 import {
   AccountStatusEnum,
+  MarginMode,
   OrderSide,
   OrderType,
   TradingviewFullscreenKey,
@@ -26,7 +27,11 @@ import {
 import { Decimal } from "@orderly.network/utils";
 import { useCssVariables } from "../hooks/useCssVariables";
 import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
-import { LoadingScreenOptions } from "../tradingviewAdapter/charting_library";
+import {
+  IChartingLibraryWidget,
+  LibrarySymbolInfo,
+  LoadingScreenOptions,
+} from "../tradingviewAdapter/charting_library";
 import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
 import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
 import useBroker from "../tradingviewAdapter/hooks/useBroker";
@@ -40,6 +45,7 @@ import {
 import {
   getOveriides,
   withExchangePrefix,
+  withoutExchangePrefix,
   getColorConfig,
   getOverridesConfigHash,
 } from "../utils/chart.util";
@@ -89,13 +95,46 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const cssVariables = useCssVariables(theme);
 
   const chart = useRef<Widget | null>(null);
+  const [readyWidget, setReadyWidget] = useState<IChartingLibraryWidget | null>(
+    null,
+  );
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
   const { state: accountState } = useAccount();
   const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
   const symbolsInfo = useSymbolsInfo();
+  const symbolsInfoRef = useRef(symbolsInfo);
   const [fullscreen, setFullscreen] = useLocalStorage(
     TradingviewFullscreenKey,
     false,
+  );
+
+  useEffect(() => {
+    symbolsInfoRef.current = symbolsInfo;
+  }, [symbolsInfo]);
+
+  const getSymbolCreatedTime = useCallback(
+    (symbolInfo: LibrarySymbolInfo): number | undefined => {
+      const candidates = [
+        symbolInfo.ticker,
+        symbolInfo.name,
+        ...(symbolInfo.base_name ?? []),
+      ]
+        .filter(
+          (symbolName): symbolName is string =>
+            typeof symbolName === "string" && symbolName.length > 0,
+        )
+        .map((symbolName) => withoutExchangePrefix(symbolName));
+
+      for (const candidate of candidates) {
+        const createdTime = symbolsInfoRef.current[candidate]?.("created_time");
+        if (typeof createdTime === "number") {
+          return createdTime;
+        }
+      }
+
+      return undefined;
+    },
+    [],
   );
 
   const { onSubmit, submitting } = useOrderEntry_deprecated(
@@ -176,6 +215,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       order_type: OrderType.MARKET,
       side,
       reduce_only: true,
+      margin_mode:
+        data.marginMode ?? data.margin_mode ?? marginMode ?? MarginMode.CROSS,
     };
     setSide(side);
     modal.show("MarketCloseConfirmID", {
@@ -365,7 +406,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         toolbarBg,
         overrides,
         studiesOverrides,
-        datafeed: new Datafeed(apiBaseUrl!, ws),
+        datafeed: new Datafeed(apiBaseUrl!, ws, { getSymbolCreatedTime }),
         contextMenu: {
           items_processor: async (defaultItems: any) => {
             return defaultItems;
@@ -394,6 +435,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
     return () => {
       chart.current?.remove();
+      setReadyWidget(null);
     };
   }, [
     isMobile,
@@ -412,6 +454,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     toolbarBg,
     customIndicatorsGetter,
     direction,
+    getSymbolCreatedTime,
   ]);
 
   useEffect(() => {
@@ -436,6 +479,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   useEffect(() => {
     if (chart.current && chart.current?.instance) {
       chart.current?.instance?.onChartReady(() => {
+        setReadyWidget(chart.current?.instance ?? null);
         if (isLoggedIn && chart.current?.instance) {
           createRenderer(
             chart.current.instance,
@@ -479,5 +523,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     classNames,
     direction,
     fullscreen,
+    readyWidget,
   };
 }
