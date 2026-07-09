@@ -100,7 +100,7 @@ export const affiliate = {
   "affiliate.referralCode.editCodeModal.description": "Edit your referral code",
   "affiliate.referralCode.editCodeModal.label": "Referral code",
   "affiliate.referralCode.editCodeModal.helpText.length":
-    "Must be 4–10 characters long",
+    "Must be 4–15 characters long",
   "affiliate.referralCode.editCodeModal.helpText.format":
     "Only uppercase letters (A–Z) and numbers (0–9) are allowed",
   "affiliate.referralCode.editCodeModal.success":

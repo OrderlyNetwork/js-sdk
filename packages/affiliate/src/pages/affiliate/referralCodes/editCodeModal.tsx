@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation } from "@orderly.network/hooks";
+import {
+  formatReferralCodeInput,
+  isReferralCodeLengthValid,
+  REFERRAL_CODE_MAX_LENGTH,
+  REFERRAL_CODE_MIN_LENGTH,
+  useMutation,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   inputFormatter,
@@ -42,7 +48,7 @@ export const EditCodeModal = modal.create<{
       length: false,
       format: false,
     };
-    if (_code.length < 4 || _code.length > 10) {
+    if (!isReferralCodeLengthValid(_code)) {
       _fieldError.length = true;
     }
     if (!/^[A-Z0-9]+$/.test(_code)) {
@@ -68,7 +74,7 @@ export const EditCodeModal = modal.create<{
             try {
               const res = await editCode({
                 current_referral_code: props.code.code,
-                new_referral_code: newCode.toUpperCase(),
+                new_referral_code: formatReferralCodeInput(newCode),
               });
               if (res.success) {
                 toast.success(
@@ -80,7 +86,7 @@ export const EditCodeModal = modal.create<{
               }
               toast.error(res.message);
             } catch (e) {
-              console.log("edit referral code error", e);
+              console.error("edit referral code error", e);
             }
           },
         },
@@ -98,8 +104,7 @@ export const EditCodeModal = modal.create<{
         }}
         value={newCode}
         onChange={(e) => {
-          const _value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-          setNewCode(_value);
+          setNewCode(formatReferralCodeInput(e.target.value));
         }}
         formatters={[
           inputFormatter.createRegexInputFormatter((value: string | number) => {
@@ -114,8 +119,8 @@ export const EditCodeModal = modal.create<{
           input:
             "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
         }}
-        maxLength={10}
-        minLength={4}
+        maxLength={REFERRAL_CODE_MAX_LENGTH}
+        minLength={REFERRAL_CODE_MIN_LENGTH}
         autoComplete="off"
         helpText=""
       />

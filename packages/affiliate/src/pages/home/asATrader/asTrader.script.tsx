@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import {
+  isReferralCodeLengthValid,
+  REFERRAL_CODE_MIN_LENGTH,
   useAccount,
   useCheckReferralCode,
   useMutation,
@@ -38,7 +40,9 @@ export const useAsTraderScript = () => {
     isExist,
     error: checkCodeError,
     isLoading,
-  } = useCheckReferralCode(code);
+  } = useCheckReferralCode(
+    code.length >= REFERRAL_CODE_MIN_LENGTH ? code : undefined,
+  );
 
   const hide = () => {
     setOpen(false);
@@ -50,6 +54,10 @@ export const useAsTraderScript = () => {
   );
 
   const onClickConfirm = async () => {
+    if (!isReferralCodeLengthValid(code) || !isExist) {
+      return;
+    }
+
     try {
       await bindCode({ referral_code: code });
       toast.success(t("affiliate.referralCode.bound"));

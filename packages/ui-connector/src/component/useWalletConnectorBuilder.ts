@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  formatReferralCodeInput,
+  isReferralCodeLengthValid,
   useAccount,
   useGetReferralCode,
   useLazyQuery,
@@ -14,14 +16,19 @@ export const useWalletConnectorBuilder = () => {
   const [helpText, setHelpText] = useState("");
   const { t } = useTranslation();
 
+  const formattedRefCode = useMemo(
+    () => formatReferralCodeInput(refCode),
+    [refCode],
+  );
+
   const { trigger: verifyRefCode } = useLazyQuery(
-    `/v1/public/referral/verify_ref_code?referral_code=${refCode}`,
+    `/v1/public/referral/verify_ref_code?referral_code=${formattedRefCode}`,
   );
 
   useEffect(() => {
     const refCode = localStorage.getItem("referral_code");
     if (refCode != null) {
-      setRefCode(refCode);
+      setRefCode(formatReferralCodeInput(refCode));
     }
   }, []);
 
@@ -39,18 +46,18 @@ export const useWalletConnectorBuilder = () => {
   const enableTradingComplted = () => {
     toast.success(t("connector.walletConnected"));
     // validate ref code and bind referral code
-    if (refCode.length >= 4 && refCode.length <= 10)
-      bindRefCode({ referral_code: refCode }).finally(() => {
+    if (isReferralCodeLengthValid(formattedRefCode))
+      bindRefCode({ referral_code: formattedRefCode }).finally(() => {
         localStorage.removeItem("referral_code");
       });
   };
 
   const checkRefCode = async () => {
-    if (refCode.length === 0) {
+    if (formattedRefCode.length === 0) {
       return Promise.resolve(undefined);
     }
 
-    if (refCode.length > 0 && (refCode.length < 4 || refCode.length > 10)) {
+    if (!isReferralCodeLengthValid(formattedRefCode)) {
       return Promise.resolve(t("connector.referralCode.invalid"));
     }
 
