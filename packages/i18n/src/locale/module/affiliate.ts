@@ -192,6 +192,17 @@ export const affiliate = {
   "affiliate.networkSize": "Network size",
   "affiliate.boundAt": "Bound at",
   "affiliate.customized": "Customized",
+  "affiliate.note": "Note",
+  "affiliate.editNote": "Edit Note",
+  "affiliate.remark": "Remark",
+  "affiliate.userAddress": "User address",
+  "affiliate.refereeNote": "Referee note",
+  "affiliate.refereeNote.placeholder": "Add a remark",
+  "affiliate.refereeNote.helpText":
+    "Remark must be 50 characters or less and include only letters, numbers, @, commas, spaces, hyphens, and underscores.",
+  "affiliate.refereeNote.helpText.short":
+    "Use up to 50 characters: letters, numbers, @, commas, spaces, hyphens, and underscores.",
+  "affiliate.refereeNote.save.success": "Referee note saved.",
   "affiliate.multiLevel": "Multilevel",
   "affiliate.multiLevel.tooltip":
     "Earn commissions from your direct invitees and their sub-affiliate.",
