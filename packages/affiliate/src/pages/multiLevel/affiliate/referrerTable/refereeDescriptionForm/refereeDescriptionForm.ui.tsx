@@ -41,7 +41,7 @@ export const RefereeDescriptionForm = (props: RefereeDescriptionFormProps) => {
     <Flex
       direction="column"
       itemAlign="start"
-      className="oui-affiliate-refereeDescriptionForm oui-font-semibold oui-text-base-contrast-54"
+      className="oui-affiliate-refereeDescriptionForm oui-font-semibold"
     >
       {titleView}
 
@@ -128,7 +128,7 @@ export const RefereeDescriptionForm = (props: RefereeDescriptionFormProps) => {
           disabled={props.buttonDisabled || props.confirmButtonLoading}
           loading={props.confirmButtonLoading}
           size="md"
-          className="oui-refereeDescriptionForm-confirm-btn oui-rounded-md disabled:oui-bg-[#443d59] disabled:oui-text-base-contrast-36"
+          className="oui-refereeDescriptionForm-confirm-btn oui-rounded-md"
         >
           {t("common.save")}
         </Button>
