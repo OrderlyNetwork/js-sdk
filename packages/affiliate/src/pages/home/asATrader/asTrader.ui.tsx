@@ -1,4 +1,10 @@
 import { FC } from "react";
+import {
+  formatReferralCodeInput,
+  isReferralCodeLengthValid,
+  REFERRAL_CODE_MAX_LENGTH,
+  REFERRAL_CODE_MIN_LENGTH,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
@@ -181,10 +187,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
             placeholder={t("affiliate.referralCode")}
             value={props.code}
             onChange={(e) => {
-              const _value = e.target.value
-                .toUpperCase()
-                .replace(/[^A-Z0-9]/g, "");
-              props.setCode(_value);
+              props.setCode(formatReferralCodeInput(e.target.value));
             }}
             formatters={[
               inputFormatter.createRegexInputFormatter(
@@ -200,16 +203,22 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
               props.setCode("");
             }}
             label={t("affiliate.referralCode.label")}
+            maxLength={REFERRAL_CODE_MAX_LENGTH}
+            minLength={REFERRAL_CODE_MIN_LENGTH}
             classNames={{
               label: "oui-text-2xs oui-text-base-contrast-54",
             }}
             helpText={
-              !props.isExist && !props.isLoading && props.code.length > 0
+              isReferralCodeLengthValid(props.code) &&
+              !props.isExist &&
+              !props.isLoading
                 ? t("affiliate.referralCode.notExist")
                 : undefined
             }
             color={
-              !props.isExist && !props.isLoading && props.code.length > 0
+              isReferralCodeLengthValid(props.code) &&
+              !props.isExist &&
+              !props.isLoading
                 ? "danger"
                 : undefined
             }
@@ -228,7 +237,9 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                 size="md"
                 className="oui-px-[40px]"
                 fullWidth
-                disabled={props.code.length < 4 || !props.isExist}
+                disabled={
+                  !isReferralCodeLengthValid(props.code) || !props.isExist
+                }
                 onClick={(e) => {
                   e.stopPropagation();
                   props.onClickConfirm();

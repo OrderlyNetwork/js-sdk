@@ -32,7 +32,7 @@ export const connector = {
 
   "connector.referralCode.placeholder": "Referral code (Optional)",
   "connector.referralCode.invalid":
-    "The referral_code must be 4 to 10 characters long, only accept upper case roman characters and numbers",
+    "The referral_code must be 4 to 15 characters long, only accept upper case roman characters and numbers",
   "connector.referralCode.notExist": "This referral code does not exist.",
 
   "connector.somethingWentWrong": "Something went wrong",

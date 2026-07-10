@@ -1,4 +1,8 @@
 import { useRef } from "react";
+import {
+  REFERRAL_CODE_MAX_LENGTH,
+  REFERRAL_CODE_MIN_LENGTH,
+} from "@orderly.network/hooks";
 import { inputFormatter, TextField } from "@orderly.network/ui";
 
 export type ReferralCodeInputProps = {
@@ -50,8 +54,8 @@ export const ReferralCodeInput = (props: ReferralCodeInputProps) => {
       }}
       helpText={props.helpText}
       color={props.color}
-      maxLength={10}
-      minLength={4}
+      maxLength={REFERRAL_CODE_MAX_LENGTH}
+      minLength={REFERRAL_CODE_MIN_LENGTH}
       autoComplete="off"
       disabled={props.disabled}
       autoFocus={props.autoFocus}
