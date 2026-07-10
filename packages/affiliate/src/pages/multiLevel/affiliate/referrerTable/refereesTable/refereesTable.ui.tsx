@@ -225,7 +225,7 @@ const MobileRefereeItem: FC<{
             className="oui-refereesTable-note-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
             onClick={() => onEditDescription(item)}
           >
-            {item.description ? t("affiliate.editNote") : t("affiliate.note")}
+            {t("affiliate.note")}
           </Text>
           {showActionColumn &&
             item.bind_type !== "legacy" &&
@@ -370,9 +370,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
               className="oui-refereesTable-note-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
               onClick={() => props.onEditDescription(record)}
             >
-              {record.description
-                ? t("affiliate.editNote")
-                : t("affiliate.note")}
+              {t("affiliate.note")}
             </Text>
             {props.showActionColumn &&
               record.bind_type !== "legacy" &&
