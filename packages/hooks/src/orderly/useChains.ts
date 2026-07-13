@@ -22,7 +22,7 @@ import { useMainTokenStore } from "../provider/store/mainTokenStore";
 import { useTestTokenStore } from "../provider/store/testTokenStore";
 
 // testnet white list
-const TESTNET_WHITE_LIST = [
+export const TESTNET_WHITE_LIST = [
   ARBITRUM_TESTNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
   MONAD_TESTNET_CHAINID,
@@ -30,9 +30,9 @@ const TESTNET_WHITE_LIST = [
   BSC_TESTNET_CHAINID,
 ];
 
-const TESTNET_WHITE_CHAINS = TESTNET_WHITE_LIST.map((id) => ({
+export const TESTNET_WHITE_CHAINS = TESTNET_WHITE_LIST.map((id) => ({
   id,
-})) as FlatChain[];
+})) satisfies Pick<FlatChain, "id">[];
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;

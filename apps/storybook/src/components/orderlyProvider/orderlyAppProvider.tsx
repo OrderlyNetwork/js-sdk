@@ -13,6 +13,7 @@ import {
 } from "@orderly.network/types";
 import { cn } from "@orderly.network/ui";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
+import { chainFilter } from "../../orderlyConfig/chains";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { useSymbolList } from "../../orderlyConfig/hooks/useSymbolList";
 import { notification } from "../../orderlyConfig/notification";
@@ -63,6 +64,7 @@ export const OrderlyAppRootProvider: FC<
           amplitudeId: "4463418c103f3a66c6d863357f951e25",
         }}
         themes={themes}
+        chainFilter={chainFilter}
         // chainFilter={(config) => {
         //   return {
         //     mainnet: [

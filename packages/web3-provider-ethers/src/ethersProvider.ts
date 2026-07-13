@@ -3,6 +3,22 @@ import { Web3Provider } from "@orderly.network/default-evm-adapter";
 import { API, isNativeTokenChecker } from "@orderly.network/types";
 import { parseError } from "./parseError";
 
+function isContractCallFailure(error: unknown): boolean {
+  if (!ethers.isError(error, "CALL_EXCEPTION")) {
+    return false;
+  }
+
+  if (error.data !== null || error.reason !== null || error.revert !== null) {
+    return true;
+  }
+
+  const rpcError = error.info?.error as { message?: unknown } | undefined;
+  return (
+    typeof rpcError?.message === "string" &&
+    /execution reverted/iu.test(rpcError.message)
+  );
+}
+
 class EthersProvider implements Web3Provider {
   private _provider!: BrowserProvider;
   private _originalProvider!: Eip1193Provider;
@@ -205,10 +221,55 @@ class EthersProvider implements Web3Provider {
       // get user address
       const signer = await this.browserProvider.getSigner();
       const userAddress = await signer.getAddress();
-
-      // create contract interface instance (for encoding and decoding data)
       const erc20Interface = new ethers.Interface(ERC20_ABI);
       const multicallInterface = new ethers.Interface(MULTICALL_ABI);
+
+      const multicallCode =
+        await this.browserProvider.getCode(MULTICALL3_ADDRESS);
+      if (multicallCode === "0x") {
+        return Promise.all(
+          addresses.map(async (tokenAddr) => {
+            if (isNativeTokenChecker(tokenAddr)) {
+              const balance =
+                await this.browserProvider.getBalance(userAddress);
+              return balance.toString();
+            }
+
+            let returnData: string;
+            try {
+              returnData = await this.browserProvider.call({
+                to: tokenAddr,
+                data: erc20Interface.encodeFunctionData("balanceOf", [
+                  userAddress,
+                ]),
+              });
+            } catch (error) {
+              if (isContractCallFailure(error)) {
+                console.warn("Failed to fetch token balance:", error);
+                return "0";
+              }
+              throw error;
+            }
+
+            if (returnData === "0x") {
+              return "0";
+            }
+
+            try {
+              const decoded = erc20Interface.decodeFunctionResult(
+                "balanceOf",
+                returnData,
+              );
+              return decoded?.[0]?.toString() || "0";
+            } catch (error) {
+              console.warn("Failed to decode balanceOf result:", error);
+              return "0";
+            }
+          }),
+        );
+      }
+
+      // create contract interface instance (for encoding and decoding data)
       const multicallContract = new ethers.Contract(
         MULTICALL3_ADDRESS,
         MULTICALL_ABI,
