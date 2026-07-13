@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { API } from "@orderly.network/types";
-import { useTokenInfo } from "../useTokensInfo/tokensInfo.store";
+import { useTokenInfo, useTokensInfo } from "../useTokensInfo/tokensInfo.store";
 
 let mockAppTokensInfo: API.Token[];
 let mockMainTokensInfo: API.Token[];
@@ -27,17 +27,37 @@ const createToken = (token: string, chainId: string): API.Token =>
     chain_details: [{ chain_id: chainId }],
   }) as API.Token;
 
-describe("useTokenInfo", () => {
-  const appToken = createToken("USDC", "1");
-  const mainnetToken = createToken("USDC", "42161");
-  const testnetToken = createToken("USDC", "99999");
+const appToken = createToken("USDC", "1");
+const mainnetToken = createToken("USDC", "42161");
+const testnetToken = createToken("USDC", "99999");
 
-  beforeEach(() => {
-    mockAppTokensInfo = [appToken];
-    mockMainTokensInfo = [mainnetToken];
-    mockTestTokensInfo = [testnetToken];
+beforeEach(() => {
+  mockAppTokensInfo = [appToken];
+  mockMainTokensInfo = [mainnetToken];
+  mockTestTokensInfo = [testnetToken];
+});
+
+describe("useTokensInfo", () => {
+  it("uses testnet token data when networkId is testnet", () => {
+    const { result } = renderHook(() => useTokensInfo("testnet"));
+
+    expect(result.current).toEqual([testnetToken]);
   });
 
+  it("uses mainnet token data when networkId is mainnet", () => {
+    const { result } = renderHook(() => useTokensInfo("mainnet"));
+
+    expect(result.current).toEqual([mainnetToken]);
+  });
+
+  it("uses app token data when networkId is omitted", () => {
+    const { result } = renderHook(() => useTokensInfo());
+
+    expect(result.current).toEqual([appToken]);
+  });
+});
+
+describe("useTokenInfo", () => {
   it("uses testnet token data when networkId is testnet", () => {
     const { result } = renderHook(() => useTokenInfo("USDC", "testnet"));
 

@@ -19,7 +19,7 @@ export const useExclusiveDepositOptions = (params?: {
   selectedNetwork?: string;
 }) => {
   const networkId = useConfig("networkId") as NetworkId;
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useTokensInfo(networkId);
   const selectedNetwork = params?.selectedNetwork;
 
   const [, { findByChainId }] = useChains(networkId, {
