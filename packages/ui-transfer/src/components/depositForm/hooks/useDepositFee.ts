@@ -24,6 +24,9 @@ export function useDepositFee(options: {
       .div(new Decimal(10).pow(decimals))
       .toString();
 
+    // If the USD fee is 0 while dstGasFee is non-zero, check the public WS
+    // `indexprices` topic for `SPOT_${nativeSymbol}_USDC`. useWSObserver
+    // normalizes that symbol to `PERP_${nativeSymbol}_USDC` for this lookup.
     const indexPrice = getIndexPrice(nativeSymbol!);
 
     const feeAmount = new Decimal(dstGasFee).mul(indexPrice || 0).toString();
