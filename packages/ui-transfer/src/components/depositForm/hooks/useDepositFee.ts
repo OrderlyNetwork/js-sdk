@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useAccount, useTokenInfo } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, NetworkId } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 
 export type UseDepositFeeReturn = ReturnType<typeof useDepositFee>;
@@ -9,11 +9,12 @@ export function useDepositFee(options: {
   nativeSymbol?: string;
   depositFee?: bigint;
   getIndexPrice: (token: string) => number;
+  networkId: NetworkId;
 }) {
-  const { nativeSymbol, depositFee = 0, getIndexPrice } = options;
+  const { nativeSymbol, depositFee = 0, getIndexPrice, networkId } = options;
   const { account } = useAccount();
 
-  const tokenInfo = useTokenInfo(nativeSymbol!);
+  const tokenInfo = useTokenInfo(nativeSymbol!, networkId);
 
   const feeProps = useMemo(() => {
     // deposit fee is native token, so evm decimals is 18, solana is 9
