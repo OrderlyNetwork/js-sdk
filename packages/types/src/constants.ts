@@ -57,6 +57,7 @@ export const MANTLE_TESTNET_CHAINID_HEX = "0x138b";
 // Mainnet
 export const ARBITRUM_MAINNET_CHAINID = 42161;
 export const ETHEREUM_MAINNET_CHAINID = 1;
+export const ADI_MAINNET_CHAINID = 36900;
 export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
 
 /** @deprecated use useScreen hook instead */
