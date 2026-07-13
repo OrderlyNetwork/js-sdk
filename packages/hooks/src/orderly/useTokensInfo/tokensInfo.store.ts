@@ -1,4 +1,7 @@
 import { useMemo } from "react";
+import { NetworkId } from "@orderly.network/types";
+import { useMainTokenStore } from "../../provider/store/mainTokenStore";
+import { useTestTokenStore } from "../../provider/store/testTokenStore";
 import { useAppStore } from "../appStore";
 
 // interface TokensInfoStore {
@@ -35,8 +38,22 @@ export const useTokensInfo = () => {
 /**
  * return token info by specify token
  */
-export const useTokenInfo = (token: string) => {
-  const tokensInfo = useAppStore((state) => state.tokensInfo);
+export const useTokenInfo = (token: string, networkId?: NetworkId) => {
+  const appTokensInfo = useAppStore((state) => state.tokensInfo);
+  const mainTokensInfo = useMainTokenStore((state) => state.data);
+  const testTokensInfo = useTestTokenStore((state) => state.data);
+
+  const tokensInfo = useMemo(() => {
+    if (networkId === "mainnet") {
+      return mainTokensInfo;
+    }
+
+    if (networkId === "testnet") {
+      return testTokensInfo;
+    }
+
+    return appTokensInfo;
+  }, [appTokensInfo, mainTokensInfo, networkId, testTokensInfo]);
 
   return useMemo(() => {
     return tokensInfo?.find((item) => item.token === token);

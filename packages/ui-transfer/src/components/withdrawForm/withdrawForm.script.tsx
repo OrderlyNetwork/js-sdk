@@ -400,6 +400,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const fee = useWithdrawFee({
     crossChainWithdraw,
     currentChain,
+    networkId,
     token: sourceToken?.symbol!,
     withdrawTo,
   });
