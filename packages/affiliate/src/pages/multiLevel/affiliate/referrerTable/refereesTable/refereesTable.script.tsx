@@ -13,6 +13,7 @@ import {
 import { useReferralContext } from "../../../../../provider";
 import { ReferralCodeFormType } from "../../../../../types";
 import { ReferralCodeFormDialogId } from "../../referralCodeForm/modal";
+import { RefereeDescriptionFormDialogId } from "../refereeDescriptionForm";
 
 type RefereesSortableKey =
   | "referee_rebate_rate"
@@ -107,6 +108,19 @@ export const useRefereesTableScript = (
     ],
   );
 
+  const onEditDescription = useCallback(
+    (item: RefereeDataType) => {
+      modal.show(RefereeDescriptionFormDialogId, {
+        address: item.address,
+        description: item.description,
+        onSuccess: () => {
+          refereesMutate();
+        },
+      });
+    },
+    [refereesMutate],
+  );
+
   const refereesData = useMemo(() => {
     const rows = refereesRows ?? [];
     if (!refereesSort) return rows;
@@ -152,6 +166,7 @@ export const useRefereesTableScript = (
     refereesPagination,
     isRefereesLoading,
     onEditReferee,
+    onEditDescription,
     onRefereesSort,
     showActionColumn,
     baseRebateRate,

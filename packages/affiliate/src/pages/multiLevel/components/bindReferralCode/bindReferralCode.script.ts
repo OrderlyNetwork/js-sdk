@@ -1,16 +1,14 @@
 import { useMemo, useState } from "react";
-import { useCheckReferralCode } from "@orderly.network/hooks";
+import {
+  formatReferralCodeInput,
+  isReferralCodeLengthValid,
+  REFERRAL_CODE_MIN_LENGTH,
+  useCheckReferralCode,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { useReferralCode } from "../../../../hooks/useReferralCode";
 import { BindReferralCodeWidgetProps } from "./bindReferralCode.widget";
-
-/** Matches ReferralCodeInput formatters: uppercase A–Z and digits only. */
-function formatReferralCodeInput(raw: string): string {
-  return String(raw)
-    .replace(/[a-z]/g, (c) => c.toUpperCase())
-    .replace(/[^A-Z0-9]/g, "");
-}
 
 export const useBindReferralCodeScript = (
   options: BindReferralCodeWidgetProps,
@@ -28,7 +26,9 @@ export const useBindReferralCodeScript = (
 
   const { isExist: isBindCodeExist, isLoading: isBindCodeChecking } =
     useCheckReferralCode(
-      formattedBindCode.length >= 4 ? formattedBindCode : undefined,
+      formattedBindCode.length >= REFERRAL_CODE_MIN_LENGTH
+        ? formattedBindCode
+        : undefined,
     );
 
   const { bindReferralCode, isMutating } = useReferralCode();
@@ -62,8 +62,7 @@ export const useBindReferralCodeScript = (
     }
 
     if (
-      formattedBindCode.length < 4 ||
-      formattedBindCode.length > 10 ||
+      !isReferralCodeLengthValid(formattedBindCode) ||
       isBindCodeChecking ||
       !isBindCodeExist
     ) {
@@ -81,8 +80,7 @@ export const useBindReferralCodeScript = (
 
   const buttonDisabled =
     !skipBinding &&
-    (formattedBindCode.length < 4 ||
-      formattedBindCode.length > 10 ||
+    (!isReferralCodeLengthValid(formattedBindCode) ||
       isBindCodeChecking ||
       !isBindCodeExist);
 

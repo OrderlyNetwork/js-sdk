@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, MouseEvent, ReactNode, useCallback, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Column,
@@ -7,6 +7,8 @@ import {
   ListView,
   Divider,
   useScreen,
+  Tooltip,
+  modal,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { Decimal } from "@orderly.network/utils";
@@ -50,18 +52,94 @@ const getRefereeType = (bindType: string) => {
   };
 };
 
+const useMobileDescriptionModal = (content: ReactNode, title: ReactNode) => {
+  const { isMobile } = useScreen();
+
+  return useCallback(
+    (e: MouseEvent) => {
+      if (!isMobile) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      modal.dialog({
+        title,
+        closable: true,
+        size: "sm",
+        content: (
+          <div className="oui-text-sm oui-leading-5 oui-text-base-contrast">
+            {content}
+          </div>
+        ),
+      });
+    },
+    [isMobile, content, title],
+  );
+};
+
+const DescriptionCell: FC<{
+  description?: string | null;
+}> = ({ description }) => {
+  const { t } = useTranslation();
+  const hasDescription = !!description && description.length > 0;
+  const onClick = useMobileDescriptionModal(
+    description,
+    t("affiliate.refereeNote"),
+  );
+  const { isMobile } = useScreen();
+
+  if (!hasDescription) {
+    return (
+      <Text size="2xs" intensity={54} className="oui-leading-[18px]">
+        --
+      </Text>
+    );
+  }
+
+  return (
+    <Tooltip content={description} open={isMobile ? false : undefined}>
+      <Text
+        size="2xs"
+        intensity={54}
+        className="oui-block oui-max-w-full oui-cursor-pointer oui-truncate oui-underline oui-decoration-dashed oui-underline-offset-4 oui-decoration-base-contrast-36 oui-leading-[18px]"
+        onClick={onClick}
+      >
+        {description}
+      </Text>
+    </Tooltip>
+  );
+};
+
+const AddressDescriptionCell: FC<{
+  item: RefereeDataType;
+}> = ({ item }) => {
+  const { t } = useTranslation();
+  return (
+    <Flex direction="column" itemAlign="start" gap={1} className="oui-min-w-0">
+      <AddressCell address={item.address} title={t("common.address")} />
+      <DescriptionCell description={item.description} />
+    </Flex>
+  );
+};
+
 const MobileRefereeItem: FC<{
   item: RefereeDataType;
   onEditReferee: RefereesTableScriptReturns["onEditReferee"];
+  onEditDescription: RefereesTableScriptReturns["onEditDescription"];
   showActionColumn: boolean;
   baseRebateRate: number;
-}> = ({ item, onEditReferee, showActionColumn, baseRebateRate }) => {
+}> = ({
+  item,
+  onEditReferee,
+  onEditDescription,
+  showActionColumn,
+  baseRebateRate,
+}) => {
   const { t } = useTranslation();
   const typeInfo = getRefereeType(item.bind_type);
   return (
     <MobileCard>
       <MobileCell label={t("common.address")}>
-        <AddressCell address={item.address} title={t("common.address")} />
+        <AddressDescriptionCell item={item} />
       </MobileCell>
       <MobileCell label={t("common.type")}>
         <TooltipCell
@@ -125,34 +203,42 @@ const MobileRefereeItem: FC<{
           title={t("affiliate.commission")}
         />
       </MobileCell>
-      {showActionColumn && (
-        <MobileCell
-          label={t("common.action")}
-          align="end"
-          className="oui-col-start-3"
+      <MobileCell
+        label={t("common.action")}
+        align="end"
+        className="oui-col-start-3"
+      >
+        <Flex
+          gap={2}
+          itemAlign="center"
+          className="oui-flex-wrap oui-justify-end oui-gap-y-1"
         >
-          {item.bind_type !== "legacy" && (
-            <Flex gap={2}>
-              <Text
-                className="oui-refereesTable-edit-btn oui-cursor-pointer oui-text-primary-light"
-                onClick={() => onEditReferee(ReferralCodeFormType.Edit, item)}
-              >
-                {t("common.edit")}
-              </Text>
-              {!item.is_default_rate && (
-                <Text
-                  className="oui-refereesTable-reset-btn oui-cursor-pointer oui-text-primary-light"
-                  onClick={() =>
-                    onEditReferee(ReferralCodeFormType.Reset, item)
-                  }
-                >
-                  {t("common.reset")}
-                </Text>
-              )}
-            </Flex>
+          {showActionColumn && item.bind_type !== "legacy" && (
+            <Text
+              className="oui-refereesTable-edit-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
+              onClick={() => onEditReferee(ReferralCodeFormType.Edit, item)}
+            >
+              {t("common.edit")}
+            </Text>
           )}
-        </MobileCell>
-      )}
+          <Text
+            className="oui-refereesTable-note-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
+            onClick={() => onEditDescription(item)}
+          >
+            {t("affiliate.note")}
+          </Text>
+          {showActionColumn &&
+            item.bind_type !== "legacy" &&
+            !item.is_default_rate && (
+              <Text
+                className="oui-refereesTable-reset-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
+                onClick={() => onEditReferee(ReferralCodeFormType.Reset, item)}
+              >
+                {t("common.reset")}
+              </Text>
+            )}
+        </Flex>
+      </MobileCell>
     </MobileCard>
   );
 };
@@ -167,8 +253,8 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
       {
         title: t("common.address"),
         dataIndex: "address",
-        render: (value: string) => (
-          <AddressCell address={value} title={t("common.address")} />
+        render: (_: string, record: RefereeDataType) => (
+          <AddressDescriptionCell item={record} />
         ),
       },
       {
@@ -261,42 +347,54 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
         ),
         onSort: true,
       },
-      ...(props.showActionColumn
-        ? [
-            {
-              title: t("common.action"),
-              dataIndex: "action",
-              render: (_: unknown, record: RefereeDataType) =>
-                record.bind_type !== "legacy" ? (
-                  <>
-                    <Text
-                      className="oui-refereesTable-edit-btn oui-cursor-pointer oui-text-primary-light"
-                      onClick={() =>
-                        props.onEditReferee(ReferralCodeFormType.Edit, record)
-                      }
-                    >
-                      {t("common.edit")}
-                    </Text>
-                    {!record.is_default_rate && (
-                      <Text
-                        className="oui-refereesTable-reset-btn oui-ms-2 oui-cursor-pointer oui-text-primary-light"
-                        onClick={() =>
-                          props.onEditReferee(
-                            ReferralCodeFormType.Reset,
-                            record,
-                          )
-                        }
-                      >
-                        {t("common.reset")}
-                      </Text>
-                    )}
-                  </>
-                ) : null,
-            } as Column<RefereeDataType>,
-          ]
-        : []),
+      {
+        title: t("common.action"),
+        dataIndex: "action",
+        render: (_: unknown, record: RefereeDataType) => (
+          <Flex
+            gap={2}
+            itemAlign="center"
+            className="oui-flex-wrap oui-gap-y-1"
+          >
+            {props.showActionColumn && record.bind_type !== "legacy" && (
+              <Text
+                className="oui-refereesTable-edit-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
+                onClick={() =>
+                  props.onEditReferee(ReferralCodeFormType.Edit, record)
+                }
+              >
+                {t("common.edit")}
+              </Text>
+            )}
+            <Text
+              className="oui-refereesTable-note-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
+              onClick={() => props.onEditDescription(record)}
+            >
+              {t("affiliate.note")}
+            </Text>
+            {props.showActionColumn &&
+              record.bind_type !== "legacy" &&
+              !record.is_default_rate && (
+                <Text
+                  className="oui-refereesTable-reset-btn oui-shrink-0 oui-cursor-pointer oui-text-primary-light"
+                  onClick={() =>
+                    props.onEditReferee(ReferralCodeFormType.Reset, record)
+                  }
+                >
+                  {t("common.reset")}
+                </Text>
+              )}
+          </Flex>
+        ),
+      } as Column<RefereeDataType>,
     ];
-  }, [t, props.onEditReferee, props.showActionColumn, props.baseRebateRate]);
+  }, [
+    t,
+    props.onEditReferee,
+    props.onEditDescription,
+    props.showActionColumn,
+    props.baseRebateRate,
+  ]);
 
   return (
     <>
@@ -310,6 +408,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
                 <MobileRefereeItem
                   item={item}
                   onEditReferee={props.onEditReferee}
+                  onEditDescription={props.onEditDescription}
                   showActionColumn={props.showActionColumn}
                   baseRebateRate={props.baseRebateRate}
                 />

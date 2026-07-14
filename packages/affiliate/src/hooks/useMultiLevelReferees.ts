@@ -7,6 +7,7 @@ export type RefereeDataType = {
   address: string;
   bind_code: string;
   bind_type: string;
+  description?: string | null;
   code_binding_time: number;
   is_default_rate: boolean;
   referral_rebate_rate: number;

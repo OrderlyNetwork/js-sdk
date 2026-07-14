@@ -1,5 +1,8 @@
 import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
+  formatReferralCodeInput,
+  REFERRAL_CODE_MAX_LENGTH,
+  REFERRAL_CODE_MIN_LENGTH,
   useAccount,
   useEventEmitter,
   useLocalStorage,
@@ -443,8 +446,7 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
       label=""
       value={props.refCode}
       onChange={(e) => {
-        const _value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-        props.setRefCode(_value);
+        props.setRefCode(formatReferralCodeInput(e.target.value));
       }}
       classNames={{
         label: "oui-text-base-contrast-54 oui-text-xs",
@@ -462,6 +464,8 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
         props.setRefCode("");
       }}
       autoComplete="off"
+      maxLength={REFERRAL_CODE_MAX_LENGTH}
+      minLength={REFERRAL_CODE_MIN_LENGTH}
       helpText={props.helpText}
       className="oui-mb-4"
       color={props.helpText ? "danger" : undefined}

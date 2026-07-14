@@ -59,7 +59,11 @@ export { useCollateral } from "./useCollateral";
 export type { CollateralOutputs } from "./useCollateral";
 export { useMaxQty } from "./useMaxQty";
 export { useMarginRatio, type MarginRatioReturn } from "./useMarginRatio";
-export { useChains } from "./useChains";
+export {
+  useChains,
+  TESTNET_WHITE_LIST,
+  TESTNET_WHITE_CHAINS,
+} from "./useChains";
 export { useStorageChain } from "./useStorageChain";
 export type {
   UseChainsOptions,

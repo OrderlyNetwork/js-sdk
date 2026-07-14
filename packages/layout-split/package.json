@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/layout-split",
-  "version": "2.1.3",
+  "version": "2.1.5",
   "description": "Split layout strategy implementation for Orderly layout system",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,7 +21,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@uiw/react-split": "^5.9.3",
+    "@uiw/react-split": "5.9.3",
     "@dnd-kit/abstract": "^0.3.2",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",

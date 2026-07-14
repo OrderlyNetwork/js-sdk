@@ -1,3 +1,4 @@
+import { REFERRAL_CODE_MIN_LENGTH } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, Checkbox, Divider, Flex, Text } from "@orderly.network/ui";
 import { ReferralCodeInput } from "../../affiliate/referralCodeForm/referralCodeInput";
@@ -13,7 +14,7 @@ export const BindReferralCode = (props: BindReferralCodeProps) => {
 
   const bindCodeInvalid =
     !props.skipBinding &&
-    props.formattedBindCode.length >= 4 &&
+    props.formattedBindCode.length >= REFERRAL_CODE_MIN_LENGTH &&
     !props.isBindCodeChecking &&
     props.isBindCodeExist === false;
 

@@ -1,4 +1,8 @@
 import { useMemo, useState } from "react";
+import {
+  formatReferralCodeInput,
+  isReferralCodeLengthValid,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -14,6 +18,11 @@ export const useReferralCodeFormScript = (
 
   const [newCode, setNewCode] = useState<string>(referralCode || "");
   const [isReview, setIsReview] = useState(false);
+
+  const formattedNewCode = useMemo(
+    () => formatReferralCodeInput(newCode),
+    [newCode],
+  );
 
   const bonusMaxRebatePercentage = useMemo(() => {
     return new Decimal(options.bonusMaxRebateRate ?? options.maxRebateRate ?? 0)
@@ -105,9 +114,14 @@ export const useReferralCodeFormScript = (
   };
 
   const onEdit = async () => {
+    if (codeChanged && !isReferralCodeLengthValid(formattedNewCode)) {
+      toast.error(t("affiliate.referralCode.editCodeModal.helpText.length"));
+      return;
+    }
+
     const editReferralCodeParams = {
       current_referral_code: referralCode!,
-      new_referral_code: newCode!.toUpperCase().replace(/[^A-Z0-9]/g, ""),
+      new_referral_code: formattedNewCode,
     };
 
     const updateRebateRateParams = {
@@ -192,8 +206,11 @@ export const useReferralCodeFormScript = (
     if (type !== ReferralCodeFormType.Edit) {
       return false;
     }
+    if (codeChanged && !isReferralCodeLengthValid(formattedNewCode)) {
+      return true;
+    }
     return !codeChanged && !rateChanged;
-  }, [codeChanged, rateChanged, type]);
+  }, [codeChanged, rateChanged, formattedNewCode, type]);
 
   const confirmButtonLoading = isMutating;
 
