@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useAccount, useTokenInfo } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, NetworkId } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 
 export type UseDepositFeeReturn = ReturnType<typeof useDepositFee>;
@@ -9,11 +9,12 @@ export function useDepositFee(options: {
   nativeSymbol?: string;
   depositFee?: bigint;
   getIndexPrice: (token: string) => number;
+  networkId: NetworkId;
 }) {
-  const { nativeSymbol, depositFee = 0, getIndexPrice } = options;
+  const { nativeSymbol, depositFee = 0, getIndexPrice, networkId } = options;
   const { account } = useAccount();
 
-  const tokenInfo = useTokenInfo(nativeSymbol!);
+  const tokenInfo = useTokenInfo(nativeSymbol!, networkId);
 
   const feeProps = useMemo(() => {
     // deposit fee is native token, so evm decimals is 18, solana is 9
@@ -24,6 +25,9 @@ export function useDepositFee(options: {
       .div(new Decimal(10).pow(decimals))
       .toString();
 
+    // If the USD fee is 0 while dstGasFee is non-zero, check the public WS
+    // `indexprices` topic for `SPOT_${nativeSymbol}_USDC`. useWSObserver
+    // normalizes that symbol to `PERP_${nativeSymbol}_USDC` for this lookup.
     const indexPrice = getIndexPrice(nativeSymbol!);
 
     const feeAmount = new Decimal(dstGasFee).mul(indexPrice || 0).toString();

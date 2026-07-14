@@ -357,6 +357,34 @@ export function appendThreeDvnQuoteRemainingAccounts(
   ];
 }
 
+/** Remaining accounts tail for non-mainnet `oappQuote` where ULN requires a single DVN. */
+export function appendOneDvnQuoteRemainingAccounts(
+  priceFeedPda: PublicKey,
+): LzSendRemainingAccount[] {
+  return [
+    {
+      pubkey: LZ_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: LZ_DVN_PDA,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: PRICE_FEED_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: priceFeedPda,
+      isWritable: false,
+      isSigner: false,
+    },
+  ];
+}
+
 /** Remaining accounts tail for `deposit` / `depositSol` after executor + first price-feed pair (3 required DVNs). */
 export function appendThreeDvnDepositRemainingAccounts(
   priceFeedPda: PublicKey,
@@ -408,6 +436,56 @@ export function appendThreeDvnDepositRemainingAccounts(
     },
     ...priceFeedPair(),
   ];
+}
+
+/** Remaining accounts tail for non-mainnet `deposit` / `depositSol` where ULN requires a single DVN. */
+export function appendOneDvnDepositRemainingAccounts(
+  priceFeedPda: PublicKey,
+): LzSendRemainingAccount[] {
+  return [
+    {
+      pubkey: LZ_DVN_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: LZ_DVN_PDA,
+      isWritable: true,
+      isSigner: false,
+    },
+    {
+      pubkey: PRICE_FEED_PROGRAM_ID,
+      isWritable: false,
+      isSigner: false,
+    },
+    {
+      pubkey: priceFeedPda,
+      isWritable: false,
+      isSigner: false,
+    },
+  ];
+}
+
+export function appendDvnQuoteRemainingAccounts(
+  programId: PublicKey,
+  priceFeedPda: PublicKey,
+): LzSendRemainingAccount[] {
+  if (programId.toBase58() === MAINNET_OAPP_PROGRAM_ID.toBase58()) {
+    return appendThreeDvnQuoteRemainingAccounts(priceFeedPda);
+  }
+
+  return appendOneDvnQuoteRemainingAccounts(priceFeedPda);
+}
+
+export function appendDvnDepositRemainingAccounts(
+  programId: PublicKey,
+  priceFeedPda: PublicKey,
+): LzSendRemainingAccount[] {
+  if (programId.toBase58() === MAINNET_OAPP_PROGRAM_ID.toBase58()) {
+    return appendThreeDvnDepositRemainingAccounts(priceFeedPda);
+  }
+
+  return appendOneDvnDepositRemainingAccounts(priceFeedPda);
 }
 
 export function getDstEID(OAPP_PROGRAM_ID: PublicKey) {

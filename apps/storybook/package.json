@@ -58,7 +58,7 @@
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.95.3",
-    "@uiw/react-split": "^5.9.3",
+    "@uiw/react-split": "5.9.3",
     "@web3-onboard/bitget": "^2.1.1",
     "@web3-onboard/core": "^2.22.2",
     "@web3-onboard/injected-wallets": "^2.10.16",

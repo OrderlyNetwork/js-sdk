@@ -172,7 +172,12 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     // when sourceToken or currentChain?.id changes, clean state
   }, [sourceToken, currentChain?.id]);
 
-  const fee = useDepositFee({ nativeSymbol, depositFee, getIndexPrice });
+  const fee = useDepositFee({
+    nativeSymbol,
+    depositFee,
+    getIndexPrice,
+    networkId,
+  });
 
   const {
     inputStatus,

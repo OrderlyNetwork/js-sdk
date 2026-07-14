@@ -43,6 +43,7 @@ export const MONAD_TESTNET_CHAINID = 10143;
 export const ABSTRACT_TESTNET_CHAINID = 11124;
 export const ABSTRACT_MAINNET_CHAINID = 2741;
 export const BSC_TESTNET_CHAINID = 97;
+export const ADI_TESTNET_CHAINID = 99999;
 export const ABSTRACT_CHAIN_ID_MAP = new Set([
   ABSTRACT_TESTNET_CHAINID,
   ABSTRACT_MAINNET_CHAINID,
@@ -56,6 +57,7 @@ export const MANTLE_TESTNET_CHAINID_HEX = "0x138b";
 // Mainnet
 export const ARBITRUM_MAINNET_CHAINID = 42161;
 export const ETHEREUM_MAINNET_CHAINID = 1;
+export const ADI_MAINNET_CHAINID = 36900;
 export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
 
 /** @deprecated use useScreen hook instead */

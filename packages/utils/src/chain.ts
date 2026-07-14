@@ -1,4 +1,5 @@
 import {
+  ADI_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
@@ -35,6 +36,7 @@ export const isTestnet = (chainId: number) => {
     MONAD_TESTNET_CHAINID,
     ABSTRACT_TESTNET_CHAINID,
     BSC_TESTNET_CHAINID,
+    ADI_TESTNET_CHAINID,
   ];
 
   return testnetIds.includes(chainId);

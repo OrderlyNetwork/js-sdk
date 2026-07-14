@@ -36,8 +36,8 @@ import {
 } from "./constant";
 import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
 import {
-  appendThreeDvnDepositRemainingAccounts,
-  appendThreeDvnQuoteRemainingAccounts,
+  appendDvnDepositRemainingAccounts,
+  appendDvnQuoteRemainingAccounts,
   getBrokerPDA,
   getDefaultSendConfigPda,
   getDefaultSendLibConfigPda,
@@ -512,7 +512,7 @@ export async function getDepositQuoteFee({
         isWritable: false,
         isSigner: false,
       },
-      ...appendThreeDvnQuoteRemainingAccounts(priceFeedPDA),
+      ...appendDvnQuoteRemainingAccounts(appProgramId, priceFeedPDA),
     ])
     .instruction();
 
@@ -790,7 +790,7 @@ export async function deposit({
       // 17
       pubkey: priceFeedPDA,
     },
-    ...appendThreeDvnDepositRemainingAccounts(priceFeedPDA),
+    ...appendDvnDepositRemainingAccounts(appProgramId, priceFeedPDA),
   ];
 
   const fee = await getDepositQuoteFee({

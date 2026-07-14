@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTokenInfo } from "@orderly.network/hooks";
+import { NetworkId } from "@orderly.network/types";
 import { WithdrawTo } from "../../../types";
 import { CurrentChain } from "../../depositForm/hooks";
 
@@ -7,11 +8,13 @@ export function useWithdrawFee(options: {
   token: string;
   currentChain?: CurrentChain | null;
   crossChainWithdraw: boolean;
+  networkId: NetworkId;
   withdrawTo: WithdrawTo;
 }) {
-  const { crossChainWithdraw, currentChain, token, withdrawTo } = options;
+  const { crossChainWithdraw, currentChain, networkId, token, withdrawTo } =
+    options;
 
-  const tokenInfo = useTokenInfo(token);
+  const tokenInfo = useTokenInfo(token, networkId);
 
   const fee = useMemo(() => {
     if (withdrawTo === WithdrawTo.Account) {
