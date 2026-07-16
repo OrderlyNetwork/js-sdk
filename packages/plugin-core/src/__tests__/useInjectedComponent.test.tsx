@@ -1,7 +1,9 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import React, { useEffect, useState } from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { OrderlyPluginProvider } from "../pluginContext";
 import { OrderlyPluginRegistry } from "../pluginRegistry";
+import { usePluginScope } from "../pluginScopeContext";
+import type { PluginRegistrationFn } from "../types";
 import { useInjectedComponent } from "../useInjectedComponent";
 
 const DefaultWidget = (props: { label?: string }) => (
@@ -96,5 +98,189 @@ describe("useInjectedComponent", () => {
     );
     expect(screen.getByTestId("default")).toBeTruthy();
     expect(screen.queryByTestId("other")).toBeNull();
+  });
+
+  it("keeps the default component mounted when pluginState changes", () => {
+    const mounted = jest.fn();
+    const unmounted = jest.fn();
+    const StatefulDefault = (props: { label?: string }) => {
+      useEffect(() => {
+        mounted();
+        return unmounted;
+      }, []);
+
+      return <div data-testid="stateful-default">{props.label}</div>;
+    };
+    const registerPlugin: PluginRegistrationFn = (sdk, state) => {
+      const networkId = state?.networkId;
+      sdk.registerPlugin({
+        id: "state-aware-plugin",
+        interceptors: [
+          {
+            target: "TradingView.Desktop",
+            component: (Original, props) => (
+              <div data-testid="plugin-state">
+                <span>{networkId}</span>
+                <Original {...props} />
+              </div>
+            ),
+          },
+        ],
+      });
+    };
+    const pluginState = (networkId: "mainnet" | "testnet") =>
+      ({
+        config: { brokerName: "Orderly" },
+        networkId,
+      }) as const;
+
+    const { rerender, unmount } = render(
+      <OrderlyPluginProvider
+        plugins={[registerPlugin]}
+        pluginState={pluginState("testnet")}
+      >
+        <SlotRenderer
+          path="TradingView.Desktop"
+          defaultComponent={StatefulDefault}
+        />
+      </OrderlyPluginProvider>,
+    );
+
+    expect(screen.getByTestId("plugin-state").textContent).toContain("testnet");
+    expect(mounted).toHaveBeenCalledTimes(1);
+    expect(unmounted).not.toHaveBeenCalled();
+
+    rerender(
+      <OrderlyPluginProvider
+        plugins={[registerPlugin]}
+        pluginState={pluginState("mainnet")}
+      >
+        <SlotRenderer
+          path="TradingView.Desktop"
+          defaultComponent={StatefulDefault}
+        />
+      </OrderlyPluginProvider>,
+    );
+
+    expect(screen.getByTestId("plugin-state").textContent).toContain("mainnet");
+    expect(mounted).toHaveBeenCalledTimes(1);
+    expect(unmounted).not.toHaveBeenCalled();
+
+    unmount();
+    expect(unmounted).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves interceptor hook state across plugin context updates", () => {
+    const registerPlugin: PluginRegistrationFn = (sdk, state) => {
+      const networkId = state?.networkId;
+      sdk.registerPlugin({
+        id: "hook-plugin",
+        interceptors: [
+          {
+            target: "TradingView.DisplayControl.DesktopMenuList",
+            component: function HookInterceptor(Original, props) {
+              const [count, setCount] = useState(0);
+              return (
+                <div>
+                  <button onClick={() => setCount((value) => value + 1)}>
+                    count:{count}
+                  </button>
+                  <span data-testid="hook-plugin-network">{networkId}</span>
+                  <Original {...props} />
+                </div>
+              );
+            },
+          },
+        ],
+      });
+    };
+    const pluginState = (networkId: "mainnet" | "testnet") =>
+      ({
+        config: { brokerName: "Orderly" },
+        networkId,
+      }) as const;
+
+    const { rerender } = render(
+      <OrderlyPluginProvider
+        plugins={[registerPlugin]}
+        pluginState={pluginState("testnet")}
+      >
+        <SlotRenderer
+          path="TradingView.DisplayControl.DesktopMenuList"
+          defaultComponent={DefaultWidget}
+        />
+      </OrderlyPluginProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "count:0" }));
+    expect(screen.getByRole("button", { name: "count:1" })).toBeTruthy();
+
+    rerender(
+      <OrderlyPluginProvider
+        plugins={[registerPlugin]}
+        pluginState={pluginState("mainnet")}
+      >
+        <SlotRenderer
+          path="TradingView.DisplayControl.DesktopMenuList"
+          defaultComponent={DefaultWidget}
+        />
+      </OrderlyPluginProvider>,
+    );
+
+    expect(screen.getByRole("button", { name: "count:1" })).toBeTruthy();
+    expect(screen.getByTestId("hook-plugin-network").textContent).toBe(
+      "mainnet",
+    );
+  });
+
+  it("keeps onion order and plugin scope for multiple interceptors", () => {
+    const createScopedInterceptor = (testId: string) =>
+      function ScopedInterceptor(
+        Original: React.ComponentType<any>,
+        props: any,
+      ) {
+        const scope = usePluginScope();
+        return (
+          <div data-testid={testId} data-plugin-id={scope?.pluginId}>
+            <Original {...props} />
+          </div>
+        );
+      };
+    const plugins = [
+      {
+        id: "inner-plugin",
+        interceptors: [
+          {
+            target: "Deposit.DepositForm",
+            component: createScopedInterceptor("inner-interceptor"),
+          },
+        ],
+      },
+      {
+        id: "outer-plugin",
+        interceptors: [
+          {
+            target: "Deposit.DepositForm",
+            component: createScopedInterceptor("outer-interceptor"),
+          },
+        ],
+      },
+    ];
+
+    render(
+      <OrderlyPluginProvider plugins={plugins}>
+        <SlotRenderer
+          path="Deposit.DepositForm"
+          defaultComponent={DefaultWidget}
+        />
+      </OrderlyPluginProvider>,
+    );
+
+    const outer = screen.getByTestId("outer-interceptor");
+    const inner = screen.getByTestId("inner-interceptor");
+    expect(outer.getAttribute("data-plugin-id")).toBe("outer-plugin");
+    expect(inner.getAttribute("data-plugin-id")).toBe("inner-plugin");
+    expect(outer.contains(inner)).toBe(true);
+    expect(inner.contains(screen.getByTestId("default"))).toBe(true);
   });
 });

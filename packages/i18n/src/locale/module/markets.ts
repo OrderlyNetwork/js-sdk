@@ -37,10 +37,10 @@ export const markets = {
   // TODO: confirm "change" first letter capital
   "markets.column.price&Change": "Price / Change",
   "markets.column.last": "Last",
-  "markets.column.24hPercentage": "24h%",
+  "markets.column.24hPercentage": "24h %",
   "markets.column.24hVol": "24h Vol",
   "markets.column.OI": "OI",
-  "markets.column.last&24hPercentage": "Last/24h%",
+  "markets.column.last&24hPercentage": "Last/24h %",
   "markets.column.mark": "Mark",
   "markets.column.index": "Index",
   "markets.column.mark&Index": "Mark / Index",

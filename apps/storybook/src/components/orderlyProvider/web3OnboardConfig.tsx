@@ -65,7 +65,7 @@ export async function initOnBoard(theme?: OnboardThemePreset) {
       id: `0x${(1).toString(16)}`,
       label: "Ethereum",
       token: "ETH",
-      rpcUrl: "https://mainnet.infura.io/v3/9155d40884554acdb17699a18a1fe348",
+      rpcUrl: "https://ethereum-rpc.publicnode.com",
     },
     {
       id: `0x${(56).toString(16)}`,

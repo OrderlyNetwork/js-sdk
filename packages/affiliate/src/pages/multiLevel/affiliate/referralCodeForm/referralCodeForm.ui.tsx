@@ -9,6 +9,7 @@ import {
   Divider,
   Tooltip,
   formatAddress,
+  Tips,
 } from "@orderly.network/ui";
 import { ReferralCodeFormField, ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormReturns } from "./referralCodeForm.script";
@@ -28,6 +29,10 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   const isEditingRefereeRebateRate = !!props.accountId;
 
   const noCommissionAvailable = props.maxRebatePercentage === 0;
+
+  const referralCodeRuleText = `${t(
+    "affiliate.referralCode.editCodeModal.helpText.length",
+  )}. ${t("affiliate.referralCode.editCodeModal.helpText.format")}`;
 
   const { title, description, buttonText } = useMemo(() => {
     switch (type) {
@@ -95,9 +100,22 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
     <ReferralCodeInput
       value={props.newCode}
       onChange={props.setNewCode}
-      autoFocus={props.focusField === ReferralCodeFormField.ReferralCode}
+      autoFocus={
+        !isReview &&
+        (type === ReferralCodeFormType.Create ||
+          props.focusField === ReferralCodeFormField.ReferralCode)
+      }
       disabled={isReview || hasBoundReferee}
-      label={t("affiliate.referralCode.editCodeModal.label")}
+      label={
+        <span className="oui-inline-flex oui-items-center oui-gap-1">
+          {t("affiliate.referralCode.editCodeModal.label")}
+          <Tips
+            content={referralCodeRuleText}
+            title={t("affiliate.referralCode.editCodeModal.label")}
+          />
+        </span>
+      }
+      placeholder={t("affiliate.referralCode.create.input.placeholder")}
     />
   );
 
@@ -170,6 +188,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       case ReferralCodeFormType.Create:
         return (
           <Flex width={"100%"} direction="column" itemAlign="start" gap={6}>
+            {referralCodeInput}
             {!noCommissionAvailable && rateEditor}
             {buttons}
           </Flex>

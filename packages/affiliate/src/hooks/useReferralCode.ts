@@ -19,6 +19,7 @@ export const useReferralCode = () => {
     useMutation("/v1/referral/multi_level/rebate_rate/set_default");
 
   const createReferralCode = async (params: {
+    referral_code: string;
     referee_rebate_rate: number;
   }) => {
     return doCreateReferralCode(params);

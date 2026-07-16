@@ -186,9 +186,13 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props) => {
         onOpenChange={props.onOpenMarketsSheetChange}
         classNames={{
           body: "oui-h-full oui-pb-0 ",
-          content: "!oui-w-[372px] !oui-max-w-[372px] !oui-p-0",
+          content: "!oui-w-full !oui-max-w-none !oui-p-0",
         }}
-        contentProps={{ side: "left", closeable: false }}
+        contentProps={{
+          side: "left",
+          closeClassName:
+            "!oui-end-1 oui-flex oui-size-11 oui-items-center oui-justify-center",
+        }}
       >
         <MarketsSheetWidget
           symbol={props.symbol}

@@ -28,7 +28,7 @@ const textFieldVariants = tv({
 });
 
 export type TextFieldProps = InputProps & {
-  label: string;
+  label: React.ReactNode;
   helpText?: string;
   classNames?: {
     root?: string;

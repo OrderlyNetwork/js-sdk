@@ -124,6 +124,8 @@ export const affiliate = {
   "affiliate.referralCode.review.modal.title": "Save changes?",
   "affiliate.referralCode.create": "Create referral code",
   "affiliate.referralCode.create.modal.title": "Create new referral code",
+  "affiliate.referralCode.create.input.placeholder":
+    "Input code (e.g., A1B2C3D4)",
   "affiliate.referralCode.create.success": "Referral code created!",
   "affiliate.referralCode.create.warning":
     "You are creating your referral code. Note that referee allocations can be increased later, but once a code has active referrals, its allocation cannot be decreased.",
