@@ -172,7 +172,7 @@ export function get24hPercentageColumn() {
 
 export function get24hVolOIColumn() {
   return {
-    title: i18n.t("markets.column.24hVolOI" as any),
+    title: i18n.t("markets.column.24hVol"),
     dataIndex: "24h_amount",
     align: "right",
     className: "oui-h-[36px]",
