@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Enregistrer les modifications ?",
   "affiliate.referralCode.create": "Créer des codes de parrainage",
   "affiliate.referralCode.create.modal.title": "Créer un nouveau code de parrainage",
+  "affiliate.referralCode.create.input.placeholder": "Saisir le code (ex. : A1B2C3D4)",
   "affiliate.referralCode.create.success": "Code de parrainage créé !",
   "affiliate.referralCode.create.warning": "Vous créez votre code de parrainage. Notez que les allocations des filleuls peuvent être augmentées plus tard, mais une fois qu'un code a des parrainages actifs, son allocation ne peut pas être diminuée.",
   "affiliate.rebateRate.edit.warning": "Pour protéger les utilisateurs existants, une fois qu'il y a des parrainages actifs liés à ce code, la répartition de commission par défaut pour les filleuls ne peut être ajustée qu'à la hausse.",

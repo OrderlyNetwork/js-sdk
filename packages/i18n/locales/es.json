@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "¿Guardar cambios?",
   "affiliate.referralCode.create": "Crear códigos de referido",
   "affiliate.referralCode.create.modal.title": "Crear nuevo código de referido",
+  "affiliate.referralCode.create.input.placeholder": "Introduce el código (p. ej., A1B2C3D4)",
   "affiliate.referralCode.create.success": "¡Código de referido creado!",
   "affiliate.referralCode.create.warning": "Está creando su código de referido. Tenga en cuenta que las asignaciones de referidos se pueden aumentar más tarde, pero una vez que un código tenga referidos activos, su asignación no se puede disminuir.",
   "affiliate.rebateRate.edit.warning": "Para proteger a los usuarios existentes, una vez que haya referidos activos vinculados a este código, la división de comisión predeterminada para referidos solo puede ajustarse al alza.",

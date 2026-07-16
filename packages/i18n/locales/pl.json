@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Zapisać zmiany?",
   "affiliate.referralCode.create": "Utwórz kody polecające",
   "affiliate.referralCode.create.modal.title": "Utwórz nowy kod polecający",
+  "affiliate.referralCode.create.input.placeholder": "Wprowadź kod (np. A1B2C3D4)",
   "affiliate.referralCode.create.success": "Kod polecający utworzony!",
   "affiliate.referralCode.create.warning": "Tworzysz swój kod polecający. Pamiętaj, że przydziały poleconych można później zwiększyć, ale gdy kod ma aktywne polecenia, jego przydział nie może zostać zmniejszony.",
   "affiliate.rebateRate.edit.warning": "Aby chronić istniejących użytkowników, po powiązaniu aktywnych poleceń z tym kodem domyślny podział prowizji dla poleconych można jedynie zwiększyć.",

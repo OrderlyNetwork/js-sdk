@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Lưu thay đổi?",
   "affiliate.referralCode.create": "Tạo mã giới thiệu",
   "affiliate.referralCode.create.modal.title": "Tạo mã giới thiệu mới",
+  "affiliate.referralCode.create.input.placeholder": "Nhập mã (ví dụ: A1B2C3D4)",
   "affiliate.referralCode.create.success": "Mã giới thiệu đã được tạo!",
   "affiliate.referralCode.create.warning": "Bạn đang tạo mã giới thiệu của mình. Lưu ý rằng phân bổ người được giới thiệu có thể được tăng sau, nhưng một khi mã có giới thiệu hoạt động, phân bổ của nó không thể giảm.",
   "affiliate.rebateRate.edit.warning": "Để bảo vệ người dùng hiện có, sau khi có giới thiệu hoạt động được liên kết với mã này, việc chia hoa hồng mặc định cho người được giới thiệu chỉ có thể được điều chỉnh tăng lên.",

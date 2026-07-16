@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Salvare le modifiche?",
   "affiliate.referralCode.create": "Crea codici di referral",
   "affiliate.referralCode.create.modal.title": "Crea nuovo codice di referral",
+  "affiliate.referralCode.create.input.placeholder": "Inserisci il codice (es. A1B2C3D4)",
   "affiliate.referralCode.create.success": "Codice di referral creato!",
   "affiliate.referralCode.create.warning": "Stai creando il tuo codice referral. Nota che le allocazioni dei referenti possono essere aumentate in seguito, ma una volta che un codice ha referral attivi, la sua allocazione non può essere diminuita.",
   "affiliate.rebateRate.edit.warning": "Per proteggere gli utenti esistenti, una volta che ci sono referral attivi collegati a questo codice, la divisione della commissione predefinita per i referenti può essere solo aumentata.",

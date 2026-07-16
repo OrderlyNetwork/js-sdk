@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "儲存變更？",
   "affiliate.referralCode.create": "建立推薦碼",
   "affiliate.referralCode.create.modal.title": "建立新推薦碼",
+  "affiliate.referralCode.create.input.placeholder": "輸入邀請碼（例如 A1B2C3D4）",
   "affiliate.referralCode.create.success": "推薦碼建立成功！",
   "affiliate.referralCode.create.warning": "您正在建立邀請碼。預設分成比例設定後，支援後續上調，但一旦綁定活躍用戶，該比例將無法下調，請謹慎設定。",
   "affiliate.rebateRate.edit.warning": "為保護老用戶權益，邀請碼一旦綁定活躍用戶，只可提高受邀人的預設返傭比例。",

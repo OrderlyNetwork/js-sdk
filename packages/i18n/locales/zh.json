@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "保存更改？",
   "affiliate.referralCode.create": "创建推荐码",
   "affiliate.referralCode.create.modal.title": "创建新推荐码",
+  "affiliate.referralCode.create.input.placeholder": "输入邀请码（例如 A1B2C3D4）",
   "affiliate.referralCode.create.success": "推荐码创建成功！",
   "affiliate.referralCode.create.warning": "您正在创建邀请码。默认返佣比例设定后，支持后续上调，但一旦绑定活跃用户，该比例将无法下调，请谨慎设置。",
   "affiliate.rebateRate.edit.warning": "为保护老用户权益，邀请码一旦绑定活跃用户，只可提高受邀人的默认返佣比例。",

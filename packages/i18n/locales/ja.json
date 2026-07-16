@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "変更を保存しますか？",
   "affiliate.referralCode.create": "紹介コードを作成",
   "affiliate.referralCode.create.modal.title": "新しい紹介コードを作成",
+  "affiliate.referralCode.create.input.placeholder": "コードを入力（例：A1B2C3D4）",
   "affiliate.referralCode.create.success": "紹介コードが作成されました！",
   "affiliate.referralCode.create.warning": "紹介コードを作成しています。紹介先の配分は後で増やすことができますが、コードにアクティブな紹介がある場合、配分を減らすことはできません。",
   "affiliate.rebateRate.edit.warning": "既存ユーザーを保護するため、このコードにアクティブな紹介がバインドされた後は、紹介先のデフォルト手数料分割は上方向にのみ調整できます。",

@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Simpan perubahan?",
   "affiliate.referralCode.create": "Buat kode referral",
   "affiliate.referralCode.create.modal.title": "Buat kode referral baru",
+  "affiliate.referralCode.create.input.placeholder": "Masukkan kode (mis. A1B2C3D4)",
   "affiliate.referralCode.create.success": "Kode referral dibuat!",
   "affiliate.referralCode.create.warning": "Anda sedang membuat kode referral Anda. Perhatikan bahwa alokasi referee dapat ditingkatkan nanti, tetapi begitu kode memiliki referral aktif, alokasinya tidak dapat dikurangi.",
   "affiliate.rebateRate.edit.warning": "Untuk melindungi pengguna yang ada, setelah ada referral aktif yang terikat ke kode ini, pembagian komisi default untuk referee hanya dapat disesuaikan ke atas.",

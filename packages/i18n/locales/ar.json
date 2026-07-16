@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "حفظ التغييرات؟",
   "affiliate.referralCode.create": "إنشاء رمز إحالة",
   "affiliate.referralCode.create.modal.title": "إنشاء رمز إحالة جديد",
+  "affiliate.referralCode.create.input.placeholder": "أدخل الرمز (مثل A1B2C3D4)",
   "affiliate.referralCode.create.success": "تم إنشاء رمز الإحالة!",
   "affiliate.referralCode.create.warning": "أنت تنشئ رمز الإحالة الخاص بك. لاحظ أنه يمكن زيادة حصص المُحالين لاحقاً، ولكن بمجرد أن يكون للرمز إحالات نشطة لا يمكن خفض حصته.",
   "affiliate.rebateRate.edit.warning": "لحماية المستخدمين الحاليين، بمجرد وجود إحالات نشطة مرتبطة بهذا الرمز، يمكن فقط رفع التوزيع الافتراضي للعمولة للمُحالين.",

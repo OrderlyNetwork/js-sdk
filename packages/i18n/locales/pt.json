@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Salvar alterações?",
   "affiliate.referralCode.create": "Criar códigos de indicação",
   "affiliate.referralCode.create.modal.title": "Criar novo código de indicação",
+  "affiliate.referralCode.create.input.placeholder": "Insira o código (ex.: A1B2C3D4)",
   "affiliate.referralCode.create.success": "Código de indicação criado!",
   "affiliate.referralCode.create.warning": "Você está criando seu código de indicação. Observe que as alocações de indicados podem ser aumentadas posteriormente, mas uma vez que um código tenha indicações ativas, sua alocação não pode ser diminuída.",
   "affiliate.rebateRate.edit.warning": "Para proteger os usuários existentes, uma vez que haja indicações ativas vinculadas a este código, a divisão de comissão padrão para indicados só pode ser ajustada para cima.",

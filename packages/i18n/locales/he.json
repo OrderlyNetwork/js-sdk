@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "לשמור שינויים?",
   "affiliate.referralCode.create": "צרו קוד הפניה",
   "affiliate.referralCode.create.modal.title": "יצירת קוד הפניה חדש",
+  "affiliate.referralCode.create.input.placeholder": "הזן קוד (לדוגמה: A1B2C3D4)",
   "affiliate.referralCode.create.success": "קוד ההפניה נוצר!",
   "affiliate.referralCode.create.warning": "יוצרים קוד הפניה. שימו לב: ניתן להעלות מאוחר יותר את ההקצאות למופנים, אך לאחר שיש הפניות פעילות לא ניתן להקטין את ההקצאה.",
   "affiliate.rebateRate.edit.warning": "כדי להגן על משתמשים קיימים, לאחר שיש הפניות פעילות לקוד זה, ניתן להעלות בלבד את חלוקת העמלה ברירת המחדל למופנים.",

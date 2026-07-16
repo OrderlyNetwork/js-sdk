@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Wijzigingen opslaan?",
   "affiliate.referralCode.create": "Verwijzingscodes maken",
   "affiliate.referralCode.create.modal.title": "Nieuwe verwijzingscode maken",
+  "affiliate.referralCode.create.input.placeholder": "Voer code in (bijv. A1B2C3D4)",
   "affiliate.referralCode.create.success": "Verwijzingscode gemaakt!",
   "affiliate.referralCode.create.warning": "U maakt uw verwijzingscode aan. Houd er rekening mee dat verwijzingstoewijzingen later kunnen worden verhoogd, maar zodra een code actieve verwijzingen heeft, kan de toewijzing niet worden verlaagd.",
   "affiliate.rebateRate.edit.warning": "Om bestaande gebruikers te beschermen, kan de standaard commissieverdeling voor verwijzingen alleen naar boven worden aangepast zodra er actieve verwijzingen aan deze code zijn gekoppeld.",

@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "تغییرات ذخیره شود؟",
   "affiliate.referralCode.create": "ایجاد کد معرفی",
   "affiliate.referralCode.create.modal.title": "ایجاد کد معرفی جدید",
+  "affiliate.referralCode.create.input.placeholder": "کد را وارد کنید (مثلاً A1B2C3D4)",
   "affiliate.referralCode.create.success": "کد معرفی ایجاد شد!",
   "affiliate.referralCode.create.warning": "در حال ایجاد کد معرفی هستید. توجه: سهم معرفی‌شدگان بعداً قابل افزایش است، اما پس از فعال‌شدن معرفی‌ها، سهم قابل کاهش نیست.",
   "affiliate.rebateRate.edit.warning": "برای محافظت از کاربران موجود، پس از اتصال معرفی‌های فعال به این کد، تقسیم پیش‌فرض کمیسیون برای معرفی‌شدگان فقط می‌تواند افزایش یابد.",

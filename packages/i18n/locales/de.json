@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Änderungen speichern?",
   "affiliate.referralCode.create": "Empfehlungscodes erstellen",
   "affiliate.referralCode.create.modal.title": "Neuen Empfehlungscode erstellen",
+  "affiliate.referralCode.create.input.placeholder": "Code eingeben (z. B. A1B2C3D4)",
   "affiliate.referralCode.create.success": "Empfehlungscode erstellt!",
   "affiliate.referralCode.create.warning": "Sie erstellen Ihren Empfehlungscode. Beachten Sie, dass die Zuweisungen für Empfohlene später erhöht werden können, aber sobald ein Code aktive Empfehlungen hat, kann seine Zuweisung nicht verringert werden.",
   "affiliate.rebateRate.edit.warning": "Zum Schutz bestehender Benutzer kann die Standard-Provisionsteilung für Empfohlene erst nach Bindung aktiver Empfehlungen an diesen Code nur nach oben angepasst werden.",

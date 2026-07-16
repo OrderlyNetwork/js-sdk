@@ -1039,6 +1039,7 @@
   "affiliate.referralCode.review.modal.title": "Зберегти зміни?",
   "affiliate.referralCode.create": "Створити реферальні коди",
   "affiliate.referralCode.create.modal.title": "Створити новий реферальний код",
+  "affiliate.referralCode.create.input.placeholder": "Введіть код (наприклад, A1B2C3D4)",
   "affiliate.referralCode.create.success": "Реферальний код створено!",
   "affiliate.referralCode.create.warning": "Ви створюєте свій реферальний код. Зверніть увагу, що розподіл рефералів можна збільшити пізніше, але як тільки код має активні реферали, його розподіл не можна зменшити.",
   "affiliate.rebateRate.edit.warning": "Для захисту існуючих користувачів після прив'язки активних рефералів до цього коду розподіл комісії за замовчуванням для рефералів можна лише збільшити.",
