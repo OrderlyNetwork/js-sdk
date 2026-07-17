@@ -24,6 +24,11 @@ export const useReferralCodeFormScript = (
     [newCode],
   );
 
+  const isCodeValid = useMemo(
+    () => isReferralCodeLengthValid(formattedNewCode),
+    [formattedNewCode],
+  );
+
   const bonusMaxRebatePercentage = useMemo(() => {
     return new Decimal(options.bonusMaxRebateRate ?? options.maxRebateRate ?? 0)
       .mul(100)
@@ -153,8 +158,14 @@ export const useReferralCodeFormScript = (
   };
 
   const onCreate = async () => {
+    if (!isCodeValid) {
+      toast.error(t("affiliate.referralCode.editCodeModal.helpText.length"));
+      return;
+    }
+
     try {
       const res = await createReferralCode({
+        referral_code: formattedNewCode,
         referee_rebate_rate: new Decimal(refereeBonusRebatePercentage)
           .div(100)
           .toNumber(),
@@ -183,6 +194,12 @@ export const useReferralCodeFormScript = (
   const onClick = () => {
     switch (type) {
       case ReferralCodeFormType.Create:
+        if (!isCodeValid) {
+          toast.error(
+            t("affiliate.referralCode.editCodeModal.helpText.length"),
+          );
+          return;
+        }
         if (isReview) {
           onCreate();
         } else {
@@ -203,6 +220,9 @@ export const useReferralCodeFormScript = (
   };
 
   const buttonDisabled = useMemo(() => {
+    if (type === ReferralCodeFormType.Create) {
+      return !isCodeValid;
+    }
     if (type !== ReferralCodeFormType.Edit) {
       return false;
     }
@@ -210,7 +230,7 @@ export const useReferralCodeFormScript = (
       return true;
     }
     return !codeChanged && !rateChanged;
-  }, [codeChanged, rateChanged, formattedNewCode, type]);
+  }, [codeChanged, rateChanged, formattedNewCode, isCodeValid, type]);
 
   const confirmButtonLoading = isMutating;
 

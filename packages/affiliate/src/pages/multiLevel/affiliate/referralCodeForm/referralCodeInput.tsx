@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { type ReactNode, useRef } from "react";
 import {
   REFERRAL_CODE_MAX_LENGTH,
   REFERRAL_CODE_MIN_LENGTH,
@@ -10,7 +10,7 @@ export type ReferralCodeInputProps = {
   onChange: (value: string) => void;
   autoFocus: boolean;
   disabled: boolean;
-  label?: string;
+  label?: ReactNode;
   placeholder?: string;
   helpText?: string;
   color?: "danger";
