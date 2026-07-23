@@ -114,7 +114,7 @@ export class PositionLineService {
     } else if (pnlDecimal.lessThan(0)) {
       pnlColor = colorConfig.downColor;
     } else {
-      pnlColor = colorConfig.pnlZoreColor;
+      pnlColor = colorConfig.pnlZeroColor;
     }
     const sideColor = isPositiveBalance
       ? colorConfig.upColor

@@ -12,17 +12,17 @@ Re-exports TradingView library types (IBrokerConnectionAdapterHost, IChartingLib
 
 ### ChartPosition
 
-| Field | Type | Description |
-|-------|------|-------------|
-| symbol | string | |
-| open | number | |
-| balance | number | |
-| closablePosition | number | |
-| unrealPnl | number | |
-| interest | number | |
-| unrealPnlDecimal | number | |
-| basePriceDecimal | number | |
-| positionSide? | PositionSide | |
+| Field            | Type         | Description |
+| ---------------- | ------------ | ----------- |
+| symbol           | string       |             |
+| open             | number       |             |
+| balance          | number       |             |
+| closablePosition | number       |             |
+| unrealPnl        | number       |             |
+| interest         | number       |             |
+| unrealPnlDecimal | number       |             |
+| basePriceDecimal | number       |             |
+| positionSide?    | PositionSide |             |
 
 ### OrderInterface
 
@@ -30,7 +30,7 @@ Order/algo fields: order_id, algo_order_id, symbol, side, quantity, price, trigg
 
 ### ColorConfigInterface
 
-chartBG?, upColor?, downColor?, pnlUpColor?, pnlDownColor?, pnlZoreColor?, textColor?, qtyTextColor?, font?, closeIcon?, volumeUpColor?, volumeDownColor?.
+chartBG?, upColor?, downColor?, pnlUpColor?, pnlDownColor?, pnlZeroColor?, textColor?, qtyTextColor?, font?, closeIcon?, volumeUpColor?, volumeDownColor?. The misspelled `pnlZoreColor?` field is deprecated but remains supported for backward compatibility; `pnlZeroColor` takes precedence when both are provided.
 
 ### Enums
 

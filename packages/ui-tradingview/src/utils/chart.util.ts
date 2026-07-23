@@ -13,6 +13,7 @@ export const defaultColorConfig: Record<
     downColor: "#D92D6B",
     pnlUpColor: "#00B49E",
     pnlDownColor: "#FF447C",
+    pnlZeroColor: "#333948",
     pnlZoreColor: "#333948",
     textColor: "#FFFFFF",
     qtyTextColor: "#F4F7F9",
@@ -27,6 +28,7 @@ export const defaultColorConfig: Record<
     downColor: "#F6465D",
     pnlUpColor: "#2ebd85",
     pnlDownColor: "#F6465D",
+    pnlZeroColor: "#333948",
     pnlZoreColor: "#333948",
     textColor: "#000000",
     qtyTextColor: "#000000",
@@ -51,6 +53,11 @@ export const getColorConfig = ({
     customerColorConfig?.chartBG ||
     cssVariables.chartBG ||
     defaultCconfig.chartBG;
+  const pnlZeroColor =
+    customerColorConfig?.pnlZeroColor ??
+    customerColorConfig?.pnlZoreColor ??
+    defaultCconfig.pnlZeroColor ??
+    defaultCconfig.pnlZoreColor;
 
   // dark mode incompatible
   // const upColor =
@@ -72,6 +79,8 @@ export const getColorConfig = ({
     ...defaultCconfig,
     ...customerColorConfig,
     chartBG,
+    pnlZeroColor,
+    pnlZoreColor: pnlZeroColor,
     liqLineColor,
     // upColor,
     // downColor,

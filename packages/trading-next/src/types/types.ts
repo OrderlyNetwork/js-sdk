@@ -124,6 +124,8 @@ export interface ColorConfigInterface {
   downColor?: string;
   pnlUpColor?: string;
   pnlDownColor?: string;
+  pnlZeroColor?: string;
+  /** @deprecated Use pnlZeroColor instead. */
   pnlZoreColor?: string;
   textColor?: string;
   qtyTextColor?: string;
