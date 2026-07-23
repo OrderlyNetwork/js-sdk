@@ -112,6 +112,7 @@ export interface TradingViewConfigInterface {
   studiesOverrides?: TradingviewWidgetPropsInterface["studiesOverrides"];
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
+  theme?: TradingviewWidgetPropsInterface["theme"];
   locale?: TradingviewWidgetPropsInterface["locale"];
   enabled_features?: string[];
   disabled_features?: string[];

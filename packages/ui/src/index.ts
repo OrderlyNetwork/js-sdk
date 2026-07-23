@@ -58,6 +58,7 @@ export {
 export {
   useOrderlyTheme,
   type ThemeConfig,
+  type TradingViewColorConfig,
 } from "./provider/orderlyThemeContext";
 export * from "./plugin";
 

@@ -43,19 +43,25 @@ export const getColorConfig = ({
   theme,
   cssVariables,
   customerColorConfig,
+  themeColorConfig,
 }: {
   theme: "dark" | "light";
   cssVariables: Record<string, string>;
   customerColorConfig?: ColorConfigInterface;
+  themeColorConfig?: ColorConfigInterface;
 }) => {
+  const resolvedColorConfig = {
+    ...customerColorConfig,
+    ...themeColorConfig,
+  };
   const defaultCconfig = defaultColorConfig[theme] || defaultColorConfig.dark;
   const chartBG =
-    customerColorConfig?.chartBG ||
+    resolvedColorConfig.chartBG ||
     cssVariables.chartBG ||
     defaultCconfig.chartBG;
   const pnlZeroColor =
-    customerColorConfig?.pnlZeroColor ??
-    customerColorConfig?.pnlZoreColor ??
+    resolvedColorConfig.pnlZeroColor ??
+    resolvedColorConfig.pnlZoreColor ??
     defaultCconfig.pnlZeroColor ??
     defaultCconfig.pnlZoreColor;
 
@@ -73,11 +79,11 @@ export const getColorConfig = ({
 
   /** Liquidation line uses same color as Position list Liq. Price (--oui-color-warning-light). */
   const liqLineColor =
-    customerColorConfig?.liqLineColor ?? cssVariables.warningLight;
+    resolvedColorConfig.liqLineColor ?? cssVariables.warningLight;
 
   return {
     ...defaultCconfig,
-    ...customerColorConfig,
+    ...resolvedColorConfig,
     chartBG,
     pnlZeroColor,
     pnlZoreColor: pnlZeroColor,

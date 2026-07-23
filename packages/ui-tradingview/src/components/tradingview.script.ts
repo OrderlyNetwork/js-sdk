@@ -92,6 +92,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const { isMobile } = useScreen();
   const { currentTheme } = useOrderlyTheme();
   const theme = props.theme ?? currentTheme?.mode ?? "dark";
+  const themeColorConfig = currentTheme?.tradingViewColorConfig;
   const cssVariables = useCssVariables(theme);
 
   const chart = useRef<Widget | null>(null);
@@ -192,9 +193,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     return getColorConfig({
       theme,
       customerColorConfig,
+      themeColorConfig,
       cssVariables,
     });
-  }, [theme, customerColorConfig, cssVariables]);
+  }, [theme, customerColorConfig, themeColorConfig, cssVariables]);
 
   const ws = useWS();
   const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] =

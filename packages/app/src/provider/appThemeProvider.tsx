@@ -15,13 +15,29 @@ export const ORDERLY_THEME_STORAGE_KEY = "orderly_theme_id";
 export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
   const { children, themes, ...rest } = props;
 
-  const [currentThemeId, setCurrentThemeId] = useLocalStorage<
-    string | undefined
-  >(ORDERLY_THEME_STORAGE_KEY, themes?.[0]?.id);
+  const defaultTheme = useMemo(() => {
+    return themes?.find((theme) => theme.isDefault) ?? themes?.[0];
+  }, [themes]);
+
+  const [storedThemeId, setStoredThemeId] = useLocalStorage<string | undefined>(
+    ORDERLY_THEME_STORAGE_KEY,
+    undefined,
+  );
 
   const currentTheme = useMemo(() => {
-    return themes?.find((theme) => theme.id === currentThemeId);
-  }, [themes, currentThemeId]);
+    return themes?.find((theme) => theme.id === storedThemeId) ?? defaultTheme;
+  }, [themes, storedThemeId, defaultTheme]);
+
+  const currentThemeId = currentTheme?.id;
+
+  // Persist the fallback when the stored theme no longer exists.
+  useEffect(() => {
+    if (!currentThemeId || currentThemeId === storedThemeId) {
+      return;
+    }
+
+    setStoredThemeId(currentThemeId);
+  }, [currentThemeId, storedThemeId, setStoredThemeId]);
 
   // Apply theme to DOM via data-oui-theme and optional cssVars.
   useEffect(() => {
@@ -49,7 +65,7 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
       themes={themes}
       currentThemeId={currentThemeId}
       currentTheme={currentTheme}
-      setCurrentThemeId={setCurrentThemeId}
+      setCurrentThemeId={setStoredThemeId}
       {...rest}
     >
       {children}
