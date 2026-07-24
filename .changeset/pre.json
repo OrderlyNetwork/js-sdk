@@ -50,6 +50,7 @@
   },
   "changesets": [
     "cuddly-experts-heal",
-    "many-bats-guess"
+    "many-bats-guess",
+    "wild-beans-fly"
   ]
 }
