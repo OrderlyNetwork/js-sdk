@@ -26,7 +26,12 @@ vi.mock("@orderly.network/hooks", async () => {
 
 vi.mock("@orderly.network/ui", () => ({
   DARK_THEME_CSS_VARS: {
-    "--oui-color-base-9": "22 20 28",
+    "--oui-color-primary": "dark-primary",
+    "--oui-color-base-9": "dark-base-9",
+  },
+  LIGHT_THEME_CSS_VARS: {
+    "--oui-color-primary": "light-primary",
+    "--oui-color-base-9": "light-base-9",
   },
   OrderlyThemeProvider: (props: CapturedThemeProviderProps) => {
     themeProviderState.props = props;
@@ -59,6 +64,8 @@ describe("AppThemeProvider", () => {
   beforeEach(() => {
     window.localStorage.clear();
     document.documentElement.removeAttribute("data-oui-theme");
+    document.documentElement.style.removeProperty("--oui-color-primary");
+    document.documentElement.style.removeProperty("--oui-color-base-9");
     themeProviderState.props = undefined;
   });
 
@@ -133,6 +140,57 @@ describe("AppThemeProvider", () => {
 
     expect(themeProviderState.props?.currentThemeId).toBe("light");
     expect(themeProviderState.props?.currentTheme).toBe(firstDefault);
+  });
+
+  it("fills missing dark theme css vars with dark defaults", () => {
+    renderProvider([
+      {
+        ...darkTheme,
+        cssVars: {
+          "--oui-color-primary": "custom-primary",
+        },
+      },
+    ]);
+
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-primary"),
+    ).toBe("custom-primary");
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-base-9"),
+    ).toBe("dark-base-9");
+  });
+
+  it("fills missing light theme css vars with light defaults", () => {
+    renderProvider([
+      {
+        ...lightTheme,
+        cssVars: {
+          "--oui-color-primary": "custom-primary",
+        },
+      },
+    ]);
+
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-primary"),
+    ).toBe("custom-primary");
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-base-9"),
+    ).toBe("light-base-9");
+  });
+
+  it("preserves an explicitly empty css var override", () => {
+    renderProvider([
+      {
+        ...darkTheme,
+        cssVars: {
+          "--oui-color-primary": "",
+        },
+      },
+    ]);
+
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-primary"),
+    ).toBe("");
   });
 
   it("clears the DOM theme and does not persist when themes are empty", () => {

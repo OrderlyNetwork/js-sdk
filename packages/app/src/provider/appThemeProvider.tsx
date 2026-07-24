@@ -4,6 +4,7 @@ import {
   OrderlyThemeProvider,
   type OrderlyThemeProviderProps,
   DARK_THEME_CSS_VARS,
+  LIGHT_THEME_CSS_VARS,
   type ThemeCssVars,
 } from "@orderly.network/ui";
 
@@ -52,10 +53,15 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
 
     root.setAttribute("data-oui-theme", currentThemeId);
 
+    const baseThemeVars =
+      currentTheme?.mode === "light"
+        ? LIGHT_THEME_CSS_VARS
+        : DARK_THEME_CSS_VARS;
+
     // override default theme css vars with current theme css vars
-    Object.entries(DARK_THEME_CSS_VARS).forEach(([key, value]) => {
+    Object.entries(baseThemeVars).forEach(([key, defaultValue]) => {
       const newValue =
-        currentTheme?.cssVars?.[key as keyof ThemeCssVars] || value;
+        currentTheme?.cssVars?.[key as keyof ThemeCssVars] ?? defaultValue;
       root.style.setProperty(key, newValue);
     });
   }, [currentThemeId, currentTheme]);
