@@ -178,6 +178,25 @@ describe("AppThemeProvider", () => {
     ).toBe("light-base-9");
   });
 
+  it("updates css vars when a theme with the same id changes mode", () => {
+    const themeId = "shared-theme";
+    const { rerender } = renderProvider([{ ...darkTheme, id: themeId }]);
+
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-base-9"),
+    ).toBe("dark-base-9");
+
+    rerender(
+      <AppThemeProvider themes={[{ ...lightTheme, id: themeId }]}>
+        <div>content</div>
+      </AppThemeProvider>,
+    );
+
+    expect(
+      document.documentElement.style.getPropertyValue("--oui-color-base-9"),
+    ).toBe("light-base-9");
+  });
+
   it("preserves an explicitly empty css var override", () => {
     renderProvider([
       {

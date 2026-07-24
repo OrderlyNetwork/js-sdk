@@ -1,4 +1,10 @@
-import { FC, PropsWithChildren, useEffect, useMemo } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+} from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import {
   OrderlyThemeProvider,
@@ -12,6 +18,9 @@ export type AppThemeProviderProps =
   PropsWithChildren<OrderlyThemeProviderProps>;
 
 export const ORDERLY_THEME_STORAGE_KEY = "orderly_theme_id";
+
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
   const { children, themes, ...rest } = props;
@@ -41,7 +50,7 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
   }, [currentThemeId, storedThemeId, setStoredThemeId]);
 
   // Apply theme to DOM via data-oui-theme and optional cssVars.
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (typeof document === "undefined") return;
 
     const root = document.documentElement;

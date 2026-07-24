@@ -93,7 +93,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const { currentTheme } = useOrderlyTheme();
   const theme = props.theme ?? currentTheme?.mode ?? "dark";
   const themeColorConfig = currentTheme?.tradingViewColorConfig;
-  const cssVariables = useCssVariables(theme);
+  const cssVariables = useCssVariables(theme, currentTheme);
 
   const chart = useRef<Widget | null>(null);
   const [readyWidget, setReadyWidget] = useState<IChartingLibraryWidget | null>(
@@ -355,7 +355,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         studiesOverrides,
       );
 
-      const toolbarBg = cssVariables.chartBG;
+      const toolbarBg = colorConfig.chartBG;
 
       const loadingScreen =
         customerLoadingScreen ??
