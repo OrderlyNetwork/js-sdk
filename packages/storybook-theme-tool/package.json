@@ -1,6 +1,6 @@
 {
   "name": "storybook-theme-tool",
-  "version": "3.1.7-alpha.2",
+  "version": "3.1.7-alpha.3",
   "description": "Theme builder for Storybook",
   "private": true,
   "exports": {
