@@ -26,6 +26,8 @@ export type TradingViewColorConfig = {
   textColor?: string;
   qtyTextColor?: string;
   font?: string;
+  closeIconColor?: string;
+  /** @deprecated Use closeIconColor instead. */
   closeIcon?: string;
   volumeUpColor?: string;
   volumeDownColor?: string;

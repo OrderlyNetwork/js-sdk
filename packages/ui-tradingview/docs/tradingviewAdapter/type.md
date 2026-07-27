@@ -30,7 +30,7 @@ Order/algo fields: order_id, algo_order_id, symbol, side, quantity, price, trigg
 
 ### ColorConfigInterface
 
-chartBG?, upColor?, downColor?, pnlUpColor?, pnlDownColor?, pnlZeroColor?, textColor?, qtyTextColor?, font?, closeIcon?, volumeUpColor?, volumeDownColor?. The misspelled `pnlZoreColor?` field is deprecated but remains supported for backward compatibility; `pnlZeroColor` takes precedence when both are provided.
+chartBG?, upColor?, downColor?, pnlUpColor?, pnlDownColor?, pnlZeroColor?, textColor?, qtyTextColor?, font?, closeIconColor?, closeIcon?, volumeUpColor?, volumeDownColor?. The `closeIcon?` field is deprecated in favor of `closeIconColor?` and remains supported for backward compatibility. The misspelled `pnlZoreColor?` field is also deprecated; `closeIconColor?` and `pnlZeroColor?` take precedence when both aliases are provided.
 
 ### Enums
 

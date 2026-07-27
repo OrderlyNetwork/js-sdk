@@ -20,6 +20,7 @@ export const defaultColorConfig: Record<
     font,
     volumeUpColor: "#0C3E3A",
     volumeDownColor: "#5A1E36",
+    closeIconColor: "rgba(255, 255, 255, 0.8)",
     closeIcon: "rgba(255, 255, 255, 0.8)",
   },
   light: {
@@ -35,6 +36,7 @@ export const defaultColorConfig: Record<
     font,
     volumeUpColor: "#2ebd85",
     volumeDownColor: "#F6465D",
+    closeIconColor: "rgba(0, 0, 0, 0.8)",
     closeIcon: "rgba(0, 0, 0, 0.8)",
   },
 };
@@ -64,6 +66,11 @@ export const getColorConfig = ({
     resolvedColorConfig.pnlZoreColor ??
     defaultCconfig.pnlZeroColor ??
     defaultCconfig.pnlZoreColor;
+  const closeIconColor =
+    resolvedColorConfig.closeIconColor ??
+    resolvedColorConfig.closeIcon ??
+    defaultCconfig.closeIconColor ??
+    defaultCconfig.closeIcon;
 
   // dark mode incompatible
   // const upColor =
@@ -87,6 +94,9 @@ export const getColorConfig = ({
     chartBG,
     pnlZeroColor,
     pnlZoreColor: pnlZeroColor,
+    closeIconColor,
+    // Keep the legacy field populated for consumers that still read it.
+    closeIcon: closeIconColor,
     liqLineColor,
     // upColor,
     // downColor,

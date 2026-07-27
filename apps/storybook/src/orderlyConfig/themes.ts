@@ -23,7 +23,7 @@ export const themes: ThemeConfig[] = [
     //   qtyTextColor: "#000000",
     //   volumeUpColor: "#0ECB81",
     //   volumeDownColor: "#F6465D",
-    //   closeIcon: "rgba(0, 0, 0, 0.8)",
+    //   closeIconColor: "rgba(0, 0, 0, 0.8)",
     // },
   },
   {
@@ -41,7 +41,7 @@ export const themes: ThemeConfig[] = [
     //   qtyTextColor: "#F4F7F9",
     //   volumeUpColor: "#0C3E3A",
     //   volumeDownColor: "#5A1E36",
-    //   closeIcon: "rgba(255, 255, 255, 0.8)",
+    //   closeIconColor: "rgba(255, 255, 255, 0.8)",
     // },
   },
   {
