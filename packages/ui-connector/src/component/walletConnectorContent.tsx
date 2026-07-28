@@ -10,11 +10,7 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { i18n, useTranslation } from "@orderly.network/i18n";
-import {
-  AccountStatusEnum,
-  ChainNamespace,
-  LedgerWalletKey,
-} from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import {
   Box,
   Button,
@@ -49,14 +45,15 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [remember, setRemember] = useState(true);
   const ee = useEventEmitter();
   const { t } = useTranslation();
-  const { disconnect, namespace } = useWalletConnector();
+  const { disconnect, namespace, wallet } = useWalletConnector();
 
   const { state: accountState, account } = useAccount();
   const [state, setState] = useState(initAccountState);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showLedgerButton, setShowLedgerButton] = useState(false);
-  const { ledgerWallet, setLedgerAddress } = useStorageLedgerAddress();
+  const { ledgerWallet, clearManualLedgerAddress } = useStorageLedgerAddress();
+  const adapterName = wallet?.label ?? accountState.connectWallet?.name;
   const handleRef = useRef(0);
   const [firstShowDialog] = useLocalStorage(
     "orderly-first-show-wallet-connector-dialog",
@@ -253,9 +250,20 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             state={state}
             signIn={onSignIn}
             enableTrading={onEnableTrading}
+            onUseStandardWallet={() => {
+              if (
+                namespace === ChainNamespace.solana &&
+                account.address &&
+                adapterName
+              ) {
+                clearManualLedgerAddress(account.address, adapterName);
+              }
+            }}
             loading={loading}
             disabled={state >= AccountStatusEnum.EnableTrading}
             showLedgerButton={showLedgerButton}
+            adapterName={adapterName}
+            namespace={namespace}
           />
         </Box>
       </Flex>
@@ -294,40 +302,58 @@ const DisconnectIcon = () => {
   );
 };
 
-const ActionButton: FC<{
+export const ActionButton: FC<{
   state: AccountStatusEnum;
   signIn: () => Promise<any>;
   enableTrading: () => Promise<any>;
+  onUseStandardWallet: () => void;
   loading: boolean;
   showLedgerButton?: boolean;
+  adapterName?: string;
+  namespace?: ChainNamespace | null;
   disabled?: boolean;
 }> = ({
   state,
   signIn,
   enableTrading,
+  onUseStandardWallet,
   loading,
   disabled,
   showLedgerButton,
+  adapterName,
+  namespace,
 }) => {
   const { t } = useTranslation();
+  const showLedgerAction = Boolean(
+    showLedgerButton && namespace === ChainNamespace.solana && adapterName,
+  );
 
   if (state <= AccountStatusEnum.NotSignedIn) {
     return (
       <Flex direction={"column"} gap={3} className="oui-w-full">
         <Button
           fullWidth
-          onClick={() => signIn()}
+          onClick={() => {
+            if (showLedgerAction) {
+              onUseStandardWallet();
+            }
+            signIn();
+          }}
           loading={loading}
           disabled={disabled}
         >
           {t("connector.createAccount")}
         </Button>
-        {showLedgerButton && (
-          <WithLedgerButton
-            onClick={() => signIn()}
-            content={t("connector.createAccountWithLedger")}
-          />
-        )}
+        {showLedgerAction &&
+          namespace === ChainNamespace.solana &&
+          adapterName && (
+            <WithLedgerButton
+              onClick={() => signIn()}
+              content={t("connector.createAccountWithLedger")}
+              adapterName={adapterName}
+              namespace={namespace}
+            />
+          )}
       </Flex>
     );
   }
@@ -336,19 +362,28 @@ const ActionButton: FC<{
     <Flex direction={"column"} gap={3} className="oui-w-full">
       <Button
         fullWidth
-        onClick={() => enableTrading()}
+        onClick={() => {
+          if (showLedgerAction) {
+            onUseStandardWallet();
+          }
+          enableTrading();
+        }}
         loading={loading}
         disabled={disabled}
       >
         {t("connector.enableTrading")}
       </Button>
-      {showLedgerButton && (
-        <WithLedgerButton
-          onClick={() => enableTrading()}
-          disabled={disabled}
-          content={t("connector.enableTradingWithLedger")}
-        />
-      )}
+      {showLedgerAction &&
+        namespace === ChainNamespace.solana &&
+        adapterName && (
+          <WithLedgerButton
+            onClick={() => enableTrading()}
+            disabled={disabled}
+            content={t("connector.enableTradingWithLedger")}
+            adapterName={adapterName}
+            namespace={namespace}
+          />
+        )}
     </Flex>
   );
 
@@ -407,15 +442,18 @@ const WithLedgerButton = ({
   onClick,
   disabled,
   content,
+  adapterName,
+  namespace,
 }: {
   onClick: () => void;
   disabled?: boolean;
   content: ReactNode;
+  adapterName: string;
+  namespace?: ChainNamespace | null;
 }) => {
-  const { t } = useTranslation();
   const { state } = useAccount();
   const address = state.address;
-  const { setLedgerAddress } = useStorageLedgerAddress();
+  const { setManualLedgerAddress } = useStorageLedgerAddress();
   if (!address) {
     return null;
   }
@@ -425,7 +463,9 @@ const WithLedgerButton = ({
       color="primary"
       fullWidth
       onClick={() => {
-        setLedgerAddress(address);
+        if (namespace === ChainNamespace.solana) {
+          setManualLedgerAddress(address, adapterName);
+        }
         onClick();
       }}
       disabled={disabled}

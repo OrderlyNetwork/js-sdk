@@ -36,7 +36,7 @@ const SolanaWalletContext = createContext<SolanaWalletContextValue | null>(
 export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { setLedgerAddress } = useStorageLedgerAddress();
+  const { syncLedgerAddress } = useStorageLedgerAddress();
   const { network, solanaInfo, connectorWalletType } =
     useWalletConnectorPrivy();
 
@@ -96,10 +96,6 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       },
     };
 
-    if (walletSolana.adapter.name === "Ledger") {
-      setLedgerAddress(publicKey.toBase58());
-    }
-
     setWallet(newWallet);
   }, [
     publicKey,
@@ -110,6 +106,17 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     solanaInfo,
     isManual,
   ]);
+
+  const ledgerAddress = publicKey?.toBase58();
+  const ledgerAdapterName = walletSolana?.adapter.name;
+
+  useEffect(() => {
+    if (!ledgerAddress || !ledgerAdapterName) {
+      return;
+    }
+
+    syncLedgerAddress(ledgerAddress, ledgerAdapterName);
+  }, [ledgerAddress, ledgerAdapterName, syncLedgerAddress]);
 
   useEffect(() => {
     setWalletMethods({
@@ -124,6 +131,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       disconnectSolana,
       network,
       solanaInfo,
+      syncLedgerAddress,
     });
   }, [
     select,
@@ -137,6 +145,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     disconnectSolana,
     network,
     solanaInfo,
+    syncLedgerAddress,
   ]);
 
   const dedupedWallets = useMemo(() => {
