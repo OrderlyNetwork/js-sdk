@@ -63,6 +63,7 @@ specs/
 .qoder/
 .agents
 .specflow
+.reference/
 skills-lock.json
 sdk-docs/bundled
 *.sqlite
