@@ -4,11 +4,8 @@ import { shouldSkipPackage } from "@changesets/should-skip-package";
 import { Release, VersionType } from "@changesets/types";
 import writeChangeset from "@changesets/write";
 import { getPackages } from "@manypkg/get-packages";
-import SimpleGit from "simple-git";
 import { $, retry, expBackoff } from "zx";
 import { notifyTelegram } from "./notifyTelegram";
-
-const simpleGit = SimpleGit();
 
 // Enable verbose logging for shell commands executed via zx
 $.verbose = true;
@@ -258,8 +255,8 @@ async function retryPublishNpm() {
  * Throws error if uncommitted changes are present.
  */
 async function checkGitStatus() {
-  const status = await simpleGit.status();
-  if (status.isClean()) {
+  const status = await $`git status --porcelain`.quiet();
+  if (!status.stdout.trim()) {
     return true;
   }
   throw new Error(
@@ -285,8 +282,15 @@ async function checkBranch() {
  * Uses CI branch environment variable if available.
  */
 async function getCurrentBranch() {
-  const status = await simpleGit.status();
-  const currentBranch = ciBranch || status.current;
+  const branch = await $`git branch --show-current`.quiet();
+  const currentBranch = ciBranch || branch.stdout.trim();
+
+  if (!currentBranch) {
+    throw new Error(
+      "Unable to determine the current Git branch from detached HEAD. Check out a branch or set CUSTOM_PRE_TAG before releasing.",
+    );
+  }
+
   console.log("currentBranch: ", currentBranch);
   return currentBranch;
 }
