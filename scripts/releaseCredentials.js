@@ -158,7 +158,17 @@ function getNpmRegistryKey(registry) {
 }
 
 function withRegistryEnvironment(env, registry) {
-  return registry ? { ...env, NPM_CONFIG_REGISTRY: registry } : { ...env };
+  if (!registry) {
+    return { ...env };
+  }
+
+  // Set both spellings: npm CLI accepts NPM_CONFIG_*, but @changesets/cli
+  // reads process.env.npm_config_registry directly (case-sensitive on Linux).
+  return {
+    ...env,
+    NPM_CONFIG_REGISTRY: registry,
+    npm_config_registry: registry,
+  };
 }
 
 module.exports = {

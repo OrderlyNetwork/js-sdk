@@ -19,8 +19,11 @@ $.verbose = true;
 // Current branch in CI environment
 const ciBranch = process.env.CI_COMMIT_BRANCH;
 
-// URL of the current GitLab CI pipeline, if the release runs in CI.
+// URL of the current GitLab CI job (preferred) or pipeline, if the release runs in CI.
+const ciJobUrl = process.env.CI_JOB_URL;
 const ciPipelineUrl = process.env.CI_PIPELINE_URL;
+const ciLinkUrl = ciJobUrl || ciPipelineUrl;
+const ciLinkLabel = ciJobUrl ? "View Job" : "View Pipeline";
 
 // Truthy if running in CI environment
 const isCI = ciBranch;
@@ -76,6 +79,10 @@ async function main() {
     // Ensure working directory is clean before releasing
     await checkGitStatus();
 
+    // Fail before changing versions or publishing when CI credentials are
+    // missing or an internal release would fall back to the public registry.
+    validateReleaseCredentials();
+
     // In CI environment, verify branch naming unless manually triggered
     if (isCI && !manualTrigger) {
       await checkBranch();
@@ -96,9 +103,7 @@ async function main() {
     );
     console.error(msg);
     await notifySafely(msg, {
-      link: ciPipelineUrl
-        ? { label: "View Pipeline", url: ciPipelineUrl }
-        : undefined,
+      link: ciLinkUrl ? { label: ciLinkLabel, url: ciLinkUrl } : undefined,
     });
     throw error;
   }
@@ -216,6 +221,10 @@ async function release() {
 
   // Build the project after version bump
   await $`pnpm build`;
+
+  console.log(
+    `publishing to registry: ${npm.registry || "https://registry.npmjs.org"}`,
+  );
 
   await withNpmAuth(
     { registry: npm.registry, token: npm.token },
@@ -351,6 +360,30 @@ async function publishNpm(npmCommand: Shell = $) {
 async function retryPublishNpm(npmCommand: Shell = $) {
   // Delay sequence: 2s, 4s, 8s, then capped at 10s.
   await retry(10, expBackoff("10s", "2s"), () => publishNpm(npmCommand));
+}
+
+/**
+ * Validate release credentials before making any version or pre-release
+ * changes. Internal releases must never silently fall back to public npm.
+ */
+function validateReleaseCredentials() {
+  if (!npm.token) {
+    throw new Error(
+      "NPM_TOKEN is required to publish packages. Check the CI release-token mapping and variable scope.",
+    );
+  }
+
+  if (isCI && ciBranch?.startsWith("internal/") && !npm.registry) {
+    throw new Error(
+      "NPM_REGISTRY is required for internal releases; refusing to publish to registry.npmjs.org.",
+    );
+  }
+
+  if (isCI && (!git.username || !git.token)) {
+    throw new Error(
+      "GIT_USERNAME and GIT_TOKEN are required in CI to push the release commit and tag.",
+    );
+  }
 }
 
 /**

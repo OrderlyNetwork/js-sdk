@@ -70,14 +70,18 @@ function getConfiguredProviders(message, { link } = {}) {
   const telegramChatId = process.env.TELEGRAM_CHAT_ID;
   const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 
-  if (telegramToken && telegramChatId) {
+  if (
+    isProviderEnabled(process.env.ENABLE_TELEGRAM) &&
+    telegramToken &&
+    telegramChatId
+  ) {
     providers.push({
       name: "Telegram",
       send: () => sendTelegram(message, telegramToken, telegramChatId, link),
     });
   }
 
-  if (slackWebhookUrl) {
+  if (isProviderEnabled(process.env.ENABLE_SLACK) && slackWebhookUrl) {
     providers.push({
       name: "Slack",
       send: () => sendSlack(message, slackWebhookUrl, link),
@@ -85,6 +89,17 @@ function getConfiguredProviders(message, { link } = {}) {
   }
 
   return providers;
+}
+
+/**
+ * When the enable flag is unset, keep the existing credential-based behavior.
+ * When set, only the exact string "true" enables the provider.
+ *
+ * @param {string | undefined} envValue
+ * @returns {boolean}
+ */
+function isProviderEnabled(envValue) {
+  return envValue === undefined || envValue === "true";
 }
 
 async function sendTelegram(message, token, chatId, link) {
@@ -153,11 +168,13 @@ function formatTelegramMessage(message, link) {
 }
 
 function formatSlackMessage(message, link) {
+  const formattedMessage = `\`\`\`\n${escapeSlackMrkdwn(message)}\n\`\`\``;
+
   if (!link) {
-    return message;
+    return formattedMessage;
   }
 
-  return `${message}\n<${escapeSlackMrkdwn(link.url)}|${escapeSlackMrkdwn(link.label)}>`;
+  return `${formattedMessage}\n<${escapeSlackMrkdwn(link.url)}|${escapeSlackMrkdwn(link.label)}>`;
 }
 
 function escapeHtml(message) {

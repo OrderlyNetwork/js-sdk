@@ -59,6 +59,11 @@ describe("release credentials", () => {
           context.env.NPM_CONFIG_REGISTRY,
           "https://npm.example.com/custom/",
         );
+        // @changesets/cli reads the lowercase key on Linux CI.
+        assert.equal(
+          context.env.npm_config_registry,
+          "https://npm.example.com/custom/",
+        );
         assert.notEqual(configPath, projectNpmrc);
       },
     );

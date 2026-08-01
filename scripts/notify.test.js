@@ -7,6 +7,8 @@ const notificationEnvironmentVariables = [
   "TELEGRAM_TOKEN",
   "TELEGRAM_CHAT_ID",
   "SLACK_WEBHOOK_URL",
+  "ENABLE_TELEGRAM",
+  "ENABLE_SLACK",
 ];
 const originalEnvironment = Object.fromEntries(
   notificationEnvironmentVariables.map((name) => [name, process.env[name]]),
@@ -73,7 +75,7 @@ describe("notify", () => {
       options: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: "release completed" }),
+        body: JSON.stringify({ text: "```\nrelease completed\n```" }),
       },
     });
   });
@@ -127,11 +129,83 @@ describe("notify", () => {
     );
     assert.equal(
       requests[1].body.text,
-      "pipeline failed\n<https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&amp;b=2|View Pipeline>",
+      "```\npipeline failed\n```\n<https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&amp;b=2|View Pipeline>",
     );
   });
 
   test("does not send or throw when no provider is configured", async () => {
+    let requestCount = 0;
+    let warning;
+    global.fetch = async () => {
+      requestCount += 1;
+      return response();
+    };
+    console.warn = (message) => {
+      warning = message;
+    };
+
+    await notify("message");
+
+    assert.equal(requestCount, 0);
+    assert.equal(warning, "No notification provider configured");
+  });
+
+  test("skips Telegram when ENABLE_TELEGRAM is not true", async () => {
+    configureTelegram();
+    process.env.ENABLE_TELEGRAM = "false";
+    process.env.SLACK_WEBHOOK_URL = "https://hooks.slack.test/services/example";
+    const requests = [];
+    global.fetch = async (url) => {
+      requests.push(url);
+      return response();
+    };
+
+    await notify("message");
+
+    assert.deepEqual(requests, ["https://hooks.slack.test/services/example"]);
+  });
+
+  test("skips Slack when ENABLE_SLACK is not true", async () => {
+    configureTelegram();
+    process.env.ENABLE_SLACK = "false";
+    process.env.SLACK_WEBHOOK_URL = "https://hooks.slack.test/services/example";
+    const requests = [];
+    global.fetch = async (url) => {
+      requests.push(url);
+      return response();
+    };
+
+    await notify("message");
+
+    assert.deepEqual(requests, [
+      "https://api.telegram.org/bottelegram-token/sendMessage",
+    ]);
+  });
+
+  test("sends to both providers when ENABLE flags are true", async () => {
+    configureTelegram();
+    process.env.ENABLE_TELEGRAM = "true";
+    process.env.ENABLE_SLACK = "true";
+    process.env.SLACK_WEBHOOK_URL = "https://hooks.slack.test/services/example";
+    const requests = [];
+    global.fetch = async (url) => {
+      requests.push(url);
+      return response();
+    };
+
+    await notify("message");
+
+    assert.deepEqual(requests, [
+      "https://api.telegram.org/bottelegram-token/sendMessage",
+      "https://hooks.slack.test/services/example",
+    ]);
+  });
+
+  test("does not send when both ENABLE flags disable providers", async () => {
+    configureTelegram();
+    process.env.ENABLE_TELEGRAM = "false";
+    process.env.ENABLE_SLACK = "false";
+    process.env.SLACK_WEBHOOK_URL = "https://hooks.slack.test/services/example";
     let requestCount = 0;
     let warning;
     global.fetch = async () => {
