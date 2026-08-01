@@ -5,7 +5,7 @@ import { Release, VersionType } from "@changesets/types";
 import writeChangeset from "@changesets/write";
 import { getPackages } from "@manypkg/get-packages";
 import { $, retry, expBackoff } from "zx";
-import { notifyTelegram } from "./notifyTelegram";
+import { notify, notifySafely } from "./notify";
 
 // Enable verbose logging for shell commands executed via zx
 $.verbose = true;
@@ -65,7 +65,7 @@ const releasePackageName = "@orderly.network/hooks";
 /**
  * Main entry point for the release script.
  * Performs git checks, branch validation, tag handling, release, and notifications.
- * Handles errors and sends failure notifications via Telegram.
+ * Handles errors and sends failure notifications to configured providers.
  */
 async function main() {
   try {
@@ -86,8 +86,8 @@ async function main() {
     // Get list of successfully published packages
     const successfulPackages = await getSuccessfulPackages();
 
-    // Notify success on Telegram
-    await notifyTelegram(successfulPackages);
+    // Notify configured providers of success
+    await notify(successfulPackages);
 
     // ignore pre-release branch
     if (ciBranch !== "pre-release") {
@@ -95,12 +95,12 @@ async function main() {
       await $`pnpm trigger:pipeline`;
     }
   } catch (error: any) {
-    // Log error and notify failure on Telegram
+    // Log error and notify configured providers of failure
     const msg = `release error: ${
       error.message || error.stderr || JSON.stringify(error)
     }`;
     console.error(msg);
-    await notifyTelegram(msg);
+    await notifySafely(msg);
     throw error;
   }
 }
