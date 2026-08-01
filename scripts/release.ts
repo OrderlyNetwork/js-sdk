@@ -54,8 +54,13 @@ const exitPreTag = process.env.EXIT_PRE_TAG === "true";
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
 
 // Flag indicating if publishing to public npm registry
+const normalizedNpmRegistry = npm.registry?.replace(/\/+$/, "");
 const isPublicNpm =
-  !npm.registry || npm.registry === "https://registry.npmjs.org";
+  !normalizedNpmRegistry ||
+  normalizedNpmRegistry === "https://registry.npmjs.org";
+
+// Package whose version is used for the repository-level release tag
+const releasePackageName = "@orderly.network/hooks";
 
 /**
  * Main entry point for the release script.
@@ -218,16 +223,71 @@ async function release() {
     // Commit changes with specified message
     await $`git commit -m ${git.commitMessage}`;
 
+    // Create a repository-level tag before pushing the release commit
+    const releaseTag = await createReleaseTag();
+
     // Push commits to remote repository in CI environment
     if (isCI) {
       const remoteUrl = await getRemoteUrl();
-      // Use --no-verify to skip git hooks during push
-      await $`git push --no-verify ${remoteUrl}`;
+      if (releaseTag) {
+        await pushReleaseCommitAndTag(remoteUrl || "origin", releaseTag);
+      } else {
+        // Use --no-verify to skip git hooks during push
+        await $`git push --no-verify ${remoteUrl}`;
+      }
     } else {
-      // Push to local origin with local git token authentication
-      await $`git push --no-verify`;
+      if (releaseTag) {
+        await pushReleaseCommitAndTag("origin", releaseTag);
+      } else {
+        // Push to local origin with local git token authentication
+        await $`git push --no-verify`;
+      }
     }
   }
+}
+
+/**
+ * Create a lightweight repository-level tag for a stable public npm release.
+ * Pre-release versions and releases to private registries are ignored.
+ */
+async function createReleaseTag() {
+  if (!isPublicNpm) {
+    return;
+  }
+
+  const packages = await getPackages(process.cwd());
+  const releasePackage = packages.packages.find(
+    (pkg) => pkg.packageJson.name === releasePackageName,
+  );
+
+  if (!releasePackage) {
+    throw new Error(`Release package not found: ${releasePackageName}`);
+  }
+
+  const version = releasePackage.packageJson.version;
+  if (!/^\d+\.\d+\.\d+$/.test(version)) {
+    console.log(
+      `skip repository release tag for pre-release version: ${version}`,
+    );
+    return;
+  }
+
+  const tag = `v${version}`;
+  await $`git tag ${tag}`;
+  console.log(`repository release tag created successfully: ${tag}`);
+  return tag;
+}
+
+/**
+ * Atomically push the release commit and its repository-level tag.
+ */
+async function pushReleaseCommitAndTag(remote: string, tag: string) {
+  const branch = await getCurrentBranch();
+  const branchRef = `HEAD:refs/heads/${branch}`;
+  const tagRef = `refs/tags/${tag}:refs/tags/${tag}`;
+
+  await $`git push --atomic --no-verify ${remote} ${branchRef} ${tagRef}`;
+  console.log(`release commit and tag pushed successfully: ${tag}`);
 }
 
 /**
