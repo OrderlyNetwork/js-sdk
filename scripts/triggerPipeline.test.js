@@ -137,6 +137,18 @@ describe("trigger pipeline", () => {
     assert.equal(requests[0].options.headers["PRIVATE-TOKEN"], gitToken);
     assert.equal(requests[1].options.body.get("token"), triggerToken);
     assert.equal(requests[1].options.body.get("ref"), "release/20260801");
+    assert.equal(
+      requests[1].options.body.get("variables[PACKAGE_VERSION]"),
+      "1.2.3",
+    );
+    assert.equal(
+      requests[1].options.body.get("variables[TRIGGER_BRANCH]"),
+      "release/20260801",
+    );
+    assert.equal(
+      requests[1].options.body.get("variables[APP_TARGET]"),
+      "storybook",
+    );
     assert.doesNotMatch(logs.join("\n"), new RegExp(gitToken));
     assert.doesNotMatch(logs.join("\n"), new RegExp(triggerToken));
   });
@@ -272,6 +284,7 @@ describe("trigger pipeline", () => {
 
 function createEnvironment(gitToken, triggerToken, projectId = "123") {
   return {
+    APP_TARGET: "storybook",
     CI_COMMIT_BRANCH: "internal/20260801",
     GIT_TOKEN: gitToken,
     TRIGGER_PIPELINE_PROJECT_ID: projectId,

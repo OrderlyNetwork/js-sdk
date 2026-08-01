@@ -91,8 +91,8 @@ async function triggerPipeline(
   } = {},
 ) {
   const config = getTriggerConfig(env);
+  validateTriggerConfig(config);
   const ref = getTriggerBranch(config);
-  validateTriggerConfig(config, ref);
 
   const branchIsExist = await checkBranchIsExist(ref, {
     projectId: config.projectId,
@@ -113,6 +113,9 @@ async function triggerPipeline(
   formData.append("ref", ref);
   formData.append("variables[PACKAGE_VERSION]", packageVersion);
   formData.append("variables[TRIGGER_BRANCH]", ref);
+  if (config.appTarget) {
+    formData.append("variables[APP_TARGET]", config.appTarget);
+  }
 
   const pipelineUrl = `https://gitlab.com/api/v4/projects/${encodeURIComponent(config.projectId)}/trigger/pipeline`;
   const response = await fetchWithTimeout(
@@ -158,21 +161,21 @@ function getPackageVersion(rootDirectory = REPOSITORY_ROOT) {
   return hooksPackageJson?.version;
 }
 
+const TRIGGER_CONFIG_FIELDS = [
+  { key: "projectId", envName: "TRIGGER_PIPELINE_PROJECT_ID", required: true },
+  { key: "token", envName: "TRIGGER_PIPELINE_TOKEN", required: true },
+  { key: "gitToken", envName: "GIT_TOKEN", required: true },
+  { key: "ciBranch", envName: "CI_COMMIT_BRANCH", required: true },
+  { key: "appTarget", envName: "APP_TARGET", required: false },
+];
+
 function getTriggerConfig(env = process.env) {
-  return {
-    ciBranch: env.CI_COMMIT_BRANCH,
-    gitToken: env.GIT_TOKEN,
-    projectId: env.TRIGGER_PIPELINE_PROJECT_ID,
-    token: env.TRIGGER_PIPELINE_TOKEN,
-    branch: env.TRIGGER_PIPELINE_BRANCH,
-  };
+  return Object.fromEntries(
+    TRIGGER_CONFIG_FIELDS.map(({ key, envName }) => [key, env[envName]]),
+  );
 }
 
 function getTriggerBranch(config) {
-  if (config.branch) {
-    return config.branch;
-  }
-
   if (config.ciBranch) {
     // Replace internal/ with release/, for example internal/20250923 -> release/20250923.
     return config.ciBranch.replace(/^internal\//, "release/");
@@ -181,15 +184,10 @@ function getTriggerBranch(config) {
   return "";
 }
 
-function validateTriggerConfig(config, ref) {
-  const missingVariables = [];
-
-  if (!config.projectId) missingVariables.push("TRIGGER_PIPELINE_PROJECT_ID");
-  if (!config.token) missingVariables.push("TRIGGER_PIPELINE_TOKEN");
-  if (!config.gitToken) missingVariables.push("GIT_TOKEN");
-  if (!ref) {
-    missingVariables.push("TRIGGER_PIPELINE_BRANCH or CI_COMMIT_BRANCH");
-  }
+function validateTriggerConfig(config) {
+  const missingVariables = TRIGGER_CONFIG_FIELDS.filter(
+    ({ key, required }) => required && !config[key],
+  ).map(({ envName }) => envName);
 
   if (missingVariables.length > 0) {
     throw new Error(
@@ -283,10 +281,9 @@ if (require.main === module) {
   });
 }
 
+// only for testing
 module.exports = {
-  checkBranchIsExist,
   getPackageVersion,
   getTriggerBranch,
   triggerPipeline,
-  validateTriggerConfig,
 };
