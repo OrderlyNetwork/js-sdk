@@ -4,8 +4,14 @@ import { shouldSkipPackage } from "@changesets/should-skip-package";
 import { Release, VersionType } from "@changesets/types";
 import writeChangeset from "@changesets/write";
 import { getPackages } from "@manypkg/get-packages";
-import { $, retry, expBackoff } from "zx";
-import { notify, notifySafely } from "./notify";
+import { $, expBackoff, retry, type Shell } from "zx";
+import { notifySafely } from "./notify";
+import {
+  createSafeHttpsRemoteUrl,
+  redactSecrets,
+  withGitAskPass,
+  withNpmAuth,
+} from "./releaseCredentials";
 
 // Enable verbose logging for shell commands executed via zx
 $.verbose = true;
@@ -50,9 +56,6 @@ const customPreTag = process.env.CUSTOM_PRE_TAG;
 // Flag to indicate if pre-release mode should be exited
 const exitPreTag = process.env.EXIT_PRE_TAG === "true";
 
-// NPM registry environment variable for publishing commands
-const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
-
 // Flag indicating if publishing to public npm registry
 const normalizedNpmRegistry = npm.registry?.replace(/\/+$/, "");
 const isPublicNpm =
@@ -64,8 +67,8 @@ const releasePackageName = "@orderly.network/hooks";
 
 /**
  * Main entry point for the release script.
- * Performs git checks, branch validation, tag handling, release, and notifications.
- * Handles errors and sends failure notifications to configured providers.
+ * Performs the critical release workflow, then runs post-release tasks on a
+ * best-effort basis.
  */
 async function main() {
   try {
@@ -82,26 +85,48 @@ async function main() {
 
     // Perform the release process: version bump, build, publish, and git commit/push
     await release();
-
-    // Get list of successfully published packages
-    const successfulPackages = await getSuccessfulPackages();
-
-    // Notify configured providers of success
-    await notify(successfulPackages);
-
-    // ignore pre-release branch
-    if (ciBranch !== "pre-release") {
-      // Trigger pipeline to update sdk verson and create tag
-      await $`pnpm trigger:pipeline`;
-    }
   } catch (error: any) {
     // Log error and notify configured providers of failure
-    const msg = `release error: ${
-      error.message || error.stderr || JSON.stringify(error)
-    }`;
+    const msg = redactSecrets(
+      `release error: ${
+        error.message || error.stderr || JSON.stringify(error)
+      }`,
+      [npm.token, git.token, process.env.TRIGGER_PIPELINE_TOKEN],
+    );
     console.error(msg);
     await notifySafely(msg);
     throw error;
+  }
+
+  await runPostReleaseTasks();
+}
+
+/**
+ * Run non-critical tasks after packages and git metadata have been published.
+ * Failures are logged but never change the result of a completed release.
+ */
+async function runPostReleaseTasks() {
+  try {
+    const successfulPackages = await getSuccessfulPackages();
+    await notifySafely(successfulPackages);
+  } catch (error) {
+    console.error(
+      redactSecrets(`Failed to prepare release notification: ${String(error)}`),
+    );
+  }
+
+  // Ignore the pre-release branch and local releases.
+  if (isCI && ciBranch !== "pre-release") {
+    try {
+      // Trigger pipeline to update SDK version and create tag.
+      await $`pnpm trigger:pipeline`;
+    } catch (error) {
+      console.error(
+        redactSecrets(
+          `Packages were published, but downstream pipeline trigger failed: ${String(error)}`,
+        ),
+      );
+    }
   }
 }
 
@@ -187,24 +212,21 @@ async function release() {
   // Build the project after version bump
   await $`pnpm build`;
 
-  // Authenticate with npm registry if token provided
-  if (npm.token) {
-    await authNPM();
-  }
+  await withNpmAuth(
+    { registry: npm.registry, token: npm.token },
+    async ({ env }) => {
+      const npm$ = $({ env, verbose: false });
 
-  // Publish packages, retrying if publishing to private/internal registry
-  if (isPublicNpm) {
-    // Public npm publishes do not retry
-    await publishNpm();
-  } else {
-    // Retry publishing with exponential backoff on failures
-    await retryPublishNpm();
-  }
-
-  // Restore .npmrc to original state after publishing
-  if (npm.token) {
-    await $`git restore .npmrc`;
-  }
+      // Publish packages, retrying if publishing to private/internal registry
+      if (isPublicNpm) {
+        // Public npm publishes do not retry
+        await publishNpm(npm$);
+      } else {
+        // Retry publishing with exponential backoff on failures
+        await retryPublishNpm(npm$);
+      }
+    },
+  );
 
   // Configure git user name and email for commits if provided
   // If not provide, use local user config
@@ -229,12 +251,23 @@ async function release() {
     // Push commits to remote repository in CI environment
     if (isCI) {
       const remoteUrl = await getRemoteUrl();
-      if (releaseTag) {
-        await pushReleaseCommitAndTag(remoteUrl || "origin", releaseTag);
-      } else {
-        // Use --no-verify to skip git hooks during push
-        await $`git push --no-verify ${remoteUrl}`;
-      }
+      await withGitAskPass(
+        { username: git.username, token: git.token },
+        async ({ env }) => {
+          const git$ = $({ env, verbose: false });
+
+          if (releaseTag) {
+            await pushReleaseCommitAndTag(
+              remoteUrl || "origin",
+              releaseTag,
+              git$,
+            );
+          } else {
+            // Use --no-verify to skip git hooks during push
+            await git$`git push --no-verify ${remoteUrl || "origin"}`;
+          }
+        },
+      );
     } else {
       if (releaseTag) {
         await pushReleaseCommitAndTag("origin", releaseTag);
@@ -281,12 +314,16 @@ async function createReleaseTag() {
 /**
  * Atomically push the release commit and its repository-level tag.
  */
-async function pushReleaseCommitAndTag(remote: string, tag: string) {
+async function pushReleaseCommitAndTag(
+  remote: string,
+  tag: string,
+  gitCommand: Shell = $,
+) {
   const branch = await getCurrentBranch();
   const branchRef = `HEAD:refs/heads/${branch}`;
   const tagRef = `refs/tags/${tag}:refs/tags/${tag}`;
 
-  await $`git push --atomic --no-verify ${remote} ${branchRef} ${tagRef}`;
+  await gitCommand`git push --atomic --no-verify ${remote} ${branchRef} ${tagRef}`;
   console.log(`release commit and tag pushed successfully: ${tag}`);
 }
 
@@ -294,20 +331,16 @@ async function pushReleaseCommitAndTag(remote: string, tag: string) {
  * Publish packages to npm using pnpm changeset publish command.
  * Uses custom npm registry if specified.
  */
-async function publishNpm() {
-  if (npmRegistry) {
-    return $`${npmRegistry} pnpm changeset publish`;
-  } else {
-    return $`pnpm changeset publish`;
-  }
+async function publishNpm(npmCommand: Shell = $) {
+  return npmCommand`pnpm changeset publish`;
 }
 
 /**
  * Retry publishing to npm up to 10 times with exponential backoff delays.
  */
-async function retryPublishNpm() {
-  // Retry 10 times, starting with 10 seconds delay, increasing by 2 seconds, max 10 seconds delay
-  await retry(10, expBackoff("10s", "2s"), publishNpm);
+async function retryPublishNpm(npmCommand: Shell = $) {
+  // Delay sequence: 2s, 4s, 8s, then capped at 10s.
+  await retry(10, expBackoff("10s", "2s"), () => publishNpm(npmCommand));
 }
 
 /**
@@ -356,48 +389,15 @@ async function getCurrentBranch() {
 }
 
 /**
- * Construct the remote git repository URL with authentication token if provided.
- * Supports GitLab personal access token authentication format.
+ * Construct a credential-free HTTPS URL from the configured origin remote.
  */
 async function getRemoteUrl() {
-  const repoPath = await getRepoPath();
-
-  if (git.token && git.username && repoPath) {
-    // Format: https://<username>:<token>@gitlab.com/<repoPath>.git
-    return `https://${git.username}:${git.token}@gitlab.com/${repoPath}.git`;
+  if (!git.token || !git.username) {
+    return "";
   }
 
-  return "";
-}
-
-/**
- * Extract the repository path (owner/name) from the git remote origin URL.
- * Supports HTTPS and SSH URLs for GitHub and GitLab.
- * Examples:
- * https://github.com/OrderlyNetwork/orderly-sdk-js.git => OrderlyNetwork/orderly-sdk-js
- * git@github.com:OrderlyNetwork/orderly-sdk-js.git => OrderlyNetwork/orderly-sdk-js
- */
-async function getRepoPath() {
-  const res = await $`git remote get-url origin`;
-  // console.log("getRepoPath: ", res);
-  const origin = res.stdout?.replace(/\s+/g, "");
-  const regex = /(?:github\.com|gitlab\.com)[:/](.+?\/.+?)\.git/;
-  const match = origin.match(regex);
-  const repoPath = match ? match[1] : null;
-  return repoPath;
-}
-
-/**
- * Authenticate npm by appending an auth token to the local ~/.npmrc file.
- * Uses custom registry if provided, defaults to public npm registry.
- */
-async function authNPM() {
-  // Remove protocol from registry URL for .npmrc syntax
-  const registry = (npm.registry || "https://registry.npmjs.org")
-    .replace("http://", "")
-    .replace("https://", "");
-  const content = `\n//${registry}/:_authToken="${npm.token}"`;
-  await $`echo ${content} >> .npmrc`;
+  const origin = (await $`git remote get-url origin`.quiet()).stdout.trim();
+  return createSafeHttpsRemoteUrl(origin);
 }
 
 /**

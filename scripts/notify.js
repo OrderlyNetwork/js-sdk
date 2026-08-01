@@ -47,7 +47,7 @@ async function notify(message) {
 }
 
 /**
- * Send a best-effort notification without replacing an existing error.
+ * Send a best-effort notification without affecting the caller's result.
  *
  * @param {string} message
  * @returns {Promise<void>}
@@ -57,7 +57,7 @@ async function notifySafely(message) {
     await notify(message);
   } catch (error) {
     console.error(
-      `Failed to send failure notification: ${normalizeError(error).message}`,
+      `Failed to send notification: ${normalizeError(error).message}`,
     );
   }
 }

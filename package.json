@@ -15,6 +15,7 @@
     "prepublishOnly": "pnpm build",
     "prepare": "husky",
     "test": "turbo run test",
+    "test:scripts": "node --test scripts/*.test.js",
     "release": "ts-node ./scripts/release.ts",
     "release:patch": "cross-env RELEASE_VERSION_TYPE=patch ts-node ./scripts/release.ts",
     "release:minor": "cross-env RELEASE_VERSION_TYPE=minor ts-node ./scripts/release.ts",

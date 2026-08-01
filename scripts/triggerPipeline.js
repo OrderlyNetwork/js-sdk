@@ -1,123 +1,167 @@
-const fs = require("fs");
-const path = require("path");
-const { notify, notifySafely } = require("./notify");
+const fs = require("node:fs");
+const path = require("node:path");
+const { notifySafely } = require("./notify");
+const { redactSecrets } = require("./releaseCredentials");
 
-// Current branch in CI environment
-const ciBranch = process.env.CI_COMMIT_BRANCH;
-const gitToken = process.env.GIT_TOKEN;
+async function main({ env = process.env, fetchImpl = global.fetch } = {}) {
+  const config = getTriggerConfig(env);
 
-const trigger = {
-  projectId: process.env.TRIGGER_PIPELINE_PROJECT_ID,
-  token: process.env.TRIGGER_PIPELINE_TOKEN,
-  branch: process.env.TRIGGER_PIPELINE_BRANCH,
-};
-
-async function main() {
   try {
-    const packageVersion = await getPackageVersion();
+    const packageVersion = getPackageVersion();
     if (!packageVersion) {
       throw new Error("Package version not found");
     }
-    // console.log("packageVersion: ", packageVersion);
 
-    await triggerPipeline(packageVersion);
+    await triggerPipeline(packageVersion, { env, fetchImpl });
   } catch (error) {
-    console.error("Error triggering pipeline:", error);
-    await notifySafely(`Error triggering pipeline: ${error.message}`);
+    const message = redactSecrets(
+      `Error triggering pipeline: ${getErrorMessage(error)}`,
+      [config.gitToken, config.token],
+      env,
+    );
+    console.error(message);
+    await notifySafely(message);
     throw error;
   }
 }
 
-async function checkBranchIsExist(branch) {
-  // https://docs.gitlab.com/api/branches/#get-single-repository-branch
-  const url = `https://gitlab.com/api/v4/projects/${trigger.projectId}/repository/branches/${encodeURIComponent(branch)}`;
-  console.log("url: ", url, gitToken);
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "PRIVATE-TOKEN": gitToken,
-      },
-    });
+async function checkBranchIsExist(
+  branch,
+  { projectId, gitToken, fetchImpl = global.fetch, logger = console },
+) {
+  const url = `https://gitlab.com/api/v4/projects/${projectId}/repository/branches/${encodeURIComponent(branch)}`;
+  logger.log(`Checking downstream branch: ${branch}`);
 
-    if (!response.ok) {
-      throw new Error(`404 Branch Not Found: ${branch}`);
-    }
+  const response = await fetchImpl(url, {
+    headers: {
+      "PRIVATE-TOKEN": gitToken,
+    },
+  });
 
-    const result = await response.json();
-    console.log(`The ${branch} branch is exist: `, result);
-    // if branch is exist, return true
-    return !!result;
-  } catch (error) {
-    console.log(error);
+  if (response.status === 404) {
     return false;
   }
+
+  if (!response.ok) {
+    throw new Error(`Branch lookup failed with status ${response.status}`);
+  }
+
+  return true;
 }
 
-async function triggerPipeline(packageVersion) {
-  const ref = getTriggerBranch();
+async function triggerPipeline(
+  packageVersion,
+  {
+    env = process.env,
+    fetchImpl = global.fetch,
+    logger = console,
+    notify = notifySafely,
+  } = {},
+) {
+  const config = getTriggerConfig(env);
+  const ref = getTriggerBranch(config);
+  validateTriggerConfig(config, ref);
 
-  const branchIsExist = await checkBranchIsExist(ref);
+  const branchIsExist = await checkBranchIsExist(ref, {
+    projectId: config.projectId,
+    gitToken: config.gitToken,
+    fetchImpl,
+    logger,
+  });
   if (!branchIsExist) {
-    // It’s possible that having no branch is expected, so don't throw an error.
-    await notify(`The ${ref} branch not found, pipeline will not be triggered`);
+    await notify(
+      `The ${ref} branch was not found, so the pipeline was not triggered`,
+    );
     return;
   }
 
-  if (!trigger.projectId || !trigger.token || !ref) {
-    throw new Error(
-      "Trigger pipeline failed: Trigger URL, token, or trigger branch not found",
-    );
-  }
-
   const formData = new FormData();
-  formData.append("token", trigger.token);
+  formData.append("token", config.token);
   formData.append("ref", ref);
   formData.append("variables[PACKAGE_VERSION]", packageVersion);
   formData.append("variables[TRIGGER_BRANCH]", ref);
 
-  try {
-    console.log("triggerPipeline: ", trigger.projectId, formData);
-    // https://docs.gitlab.com/ci/triggers/#use-curl
-    // https://gitlab.com/api/v4/projects/<project_id>/trigger/pipeline
-    const response = await fetch(
-      `https://gitlab.com/api/v4/projects/${trigger.projectId}/trigger/pipeline`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+  const response = await fetchImpl(
+    `https://gitlab.com/api/v4/projects/${config.projectId}/trigger/pipeline`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("Pipeline triggered successfully:", result);
-    await notify(`Pipeline on the ${ref} branch was triggered successfully`);
-    return result;
-  } catch (error) {
-    // console.error("Error triggering pipeline:", error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Pipeline trigger failed with status ${response.status}`);
   }
+
+  const result = await response.json();
+  logger.log(`Pipeline triggered successfully: ${result.id ?? "unknown"}`);
+  await notify(`Pipeline on the ${ref} branch was triggered successfully`);
+  return result;
 }
 
-async function getPackageVersion() {
-  const hooksPackage = path.resolve("packages/hooks", "package.json");
+function getPackageVersion(rootDirectory = process.cwd()) {
+  const hooksPackage = path.resolve(
+    rootDirectory,
+    "packages/hooks/package.json",
+  );
   const hooksPackageJson = JSON.parse(fs.readFileSync(hooksPackage, "utf8"));
   return hooksPackageJson?.version;
 }
 
-function getTriggerBranch() {
-  if (trigger.branch) {
-    return trigger.branch;
-  }
-
-  if (ciBranch) {
-    // replace internal/ with release/, example: internal/20250923 => release/20250923
-    return ciBranch?.replace("internal/", "release/");
-  }
-
-  throw new Error("Trigger branch not found");
+function getTriggerConfig(env = process.env) {
+  return {
+    ciBranch: env.CI_COMMIT_BRANCH,
+    gitToken: env.GIT_TOKEN,
+    projectId: env.TRIGGER_PIPELINE_PROJECT_ID,
+    token: env.TRIGGER_PIPELINE_TOKEN,
+    branch: env.TRIGGER_PIPELINE_BRANCH,
+  };
 }
 
-main();
+function getTriggerBranch(config) {
+  if (config.branch) {
+    return config.branch;
+  }
+
+  if (config.ciBranch) {
+    // Replace internal/ with release/, for example internal/20250923 -> release/20250923.
+    return config.ciBranch.replace("internal/", "release/");
+  }
+
+  return "";
+}
+
+function validateTriggerConfig(config, ref) {
+  const missingVariables = [];
+
+  if (!config.projectId) missingVariables.push("TRIGGER_PIPELINE_PROJECT_ID");
+  if (!config.token) missingVariables.push("TRIGGER_PIPELINE_TOKEN");
+  if (!config.gitToken) missingVariables.push("GIT_TOKEN");
+  if (!ref) {
+    missingVariables.push("TRIGGER_PIPELINE_BRANCH or CI_COMMIT_BRANCH");
+  }
+
+  if (missingVariables.length > 0) {
+    throw new Error(
+      `Trigger pipeline configuration missing: ${missingVariables.join(", ")}`,
+    );
+  }
+}
+
+function getErrorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+if (require.main === module) {
+  main().catch(() => {
+    process.exitCode = 1;
+  });
+}
+
+module.exports = {
+  checkBranchIsExist,
+  getPackageVersion,
+  getTriggerBranch,
+  triggerPipeline,
+  validateTriggerConfig,
+};

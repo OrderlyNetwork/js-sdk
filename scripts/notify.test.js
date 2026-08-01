@@ -165,7 +165,7 @@ describe("notify", () => {
     });
   });
 
-  test("does not throw when a failure notification cannot be sent", async () => {
+  test("does not throw when a best-effort notification cannot be sent", async () => {
     process.env.SLACK_WEBHOOK_URL = "https://hooks.slack.test/services/example";
     const errors = [];
     console.error = (...args) => errors.push(args.join(" "));
@@ -176,7 +176,7 @@ describe("notify", () => {
 
     assert.match(
       errors.join("\n"),
-      /Failed to send failure notification: Failed to send notifications: Slack/,
+      /Failed to send notification: Failed to send notifications: Slack/,
     );
   });
 
