@@ -106,6 +106,31 @@ describe("notify", () => {
     assert.deepEqual(requests, ["https://hooks.slack.test/services/example"]);
   });
 
+  test("formats notification links for Telegram and Slack", async () => {
+    configureTelegram();
+    process.env.SLACK_WEBHOOK_URL = "https://hooks.slack.test/services/example";
+    const requests = [];
+    global.fetch = async (url, options) => {
+      requests.push({ url, body: JSON.parse(options.body) });
+      return response();
+    };
+    const link = {
+      label: "View Pipeline",
+      url: "https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&b=2",
+    };
+
+    await notify("pipeline failed", { link });
+
+    assert.equal(
+      requests[0].body.text,
+      '<pre>pipeline failed</pre>\n<a href="https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&amp;b=2">View Pipeline</a>',
+    );
+    assert.equal(
+      requests[1].body.text,
+      "pipeline failed\n<https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&amp;b=2|View Pipeline>",
+    );
+  });
+
   test("does not send or throw when no provider is configured", async () => {
     let requestCount = 0;
     let warning;

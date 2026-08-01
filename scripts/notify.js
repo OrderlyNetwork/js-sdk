@@ -8,10 +8,11 @@ const TELEGRAM_MAX_MESSAGE_LENGTH = 4096;
  * had a chance to send the message.
  *
  * @param {string} message
+ * @param {{ link?: { label: string, url: string } }} [options]
  * @returns {Promise<void>}
  */
-async function notify(message) {
-  const providers = getConfiguredProviders(message);
+async function notify(message, options = {}) {
+  const providers = getConfiguredProviders(message, options);
 
   if (providers.length === 0) {
     console.warn("No notification provider configured");
@@ -50,11 +51,12 @@ async function notify(message) {
  * Send a best-effort notification without affecting the caller's result.
  *
  * @param {string} message
+ * @param {{ link?: { label: string, url: string } }} [options]
  * @returns {Promise<void>}
  */
-async function notifySafely(message) {
+async function notifySafely(message, options = {}) {
   try {
-    await notify(message);
+    await notify(message, options);
   } catch (error) {
     console.error(
       `Failed to send notification: ${normalizeError(error).message}`,
@@ -62,7 +64,7 @@ async function notifySafely(message) {
   }
 }
 
-function getConfiguredProviders(message) {
+function getConfiguredProviders(message, { link } = {}) {
   const providers = [];
   const telegramToken = process.env.TELEGRAM_TOKEN;
   const telegramChatId = process.env.TELEGRAM_CHAT_ID;
@@ -71,25 +73,25 @@ function getConfiguredProviders(message) {
   if (telegramToken && telegramChatId) {
     providers.push({
       name: "Telegram",
-      send: () => sendTelegram(message, telegramToken, telegramChatId),
+      send: () => sendTelegram(message, telegramToken, telegramChatId, link),
     });
   }
 
   if (slackWebhookUrl) {
     providers.push({
       name: "Slack",
-      send: () => sendSlack(message, slackWebhookUrl),
+      send: () => sendSlack(message, slackWebhookUrl, link),
     });
   }
 
   return providers;
 }
 
-async function sendTelegram(message, token, chatId) {
+async function sendTelegram(message, token, chatId, link) {
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
   const data = {
     chat_id: chatId,
-    text: formatTelegramMessage(message),
+    text: formatTelegramMessage(message, link),
     parse_mode: "HTML",
   };
 
@@ -114,7 +116,7 @@ async function sendTelegram(message, token, chatId) {
   }
 }
 
-async function sendSlack(message, webhookUrl) {
+async function sendSlack(message, webhookUrl, link) {
   let response;
   try {
     response = await fetch(webhookUrl, {
@@ -122,7 +124,7 @@ async function sendSlack(message, webhookUrl) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ text: message }),
+      body: JSON.stringify({ text: formatSlackMessage(message, link) }),
     });
   } catch (error) {
     throw createRequestError("Slack", error, [webhookUrl]);
@@ -136,11 +138,26 @@ async function sendSlack(message, webhookUrl) {
   }
 }
 
-function formatTelegramMessage(message) {
+function formatTelegramMessage(message, link) {
+  const linkLength = link ? Array.from(link.label).length + 1 : 0;
   const truncatedMessage = Array.from(message)
-    .slice(0, TELEGRAM_MAX_MESSAGE_LENGTH)
+    .slice(0, TELEGRAM_MAX_MESSAGE_LENGTH - linkLength)
     .join("");
-  return `<pre>${escapeHtml(truncatedMessage)}</pre>`;
+  const formattedMessage = `<pre>${escapeHtml(truncatedMessage)}</pre>`;
+
+  if (!link) {
+    return formattedMessage;
+  }
+
+  return `${formattedMessage}\n<a href="${escapeHtml(link.url)}">${escapeHtml(link.label)}</a>`;
+}
+
+function formatSlackMessage(message, link) {
+  if (!link) {
+    return message;
+  }
+
+  return `${message}\n<${escapeSlackMrkdwn(link.url)}|${escapeSlackMrkdwn(link.label)}>`;
 }
 
 function escapeHtml(message) {
@@ -150,6 +167,13 @@ function escapeHtml(message) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function escapeSlackMrkdwn(message) {
+  return message
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 async function readResponseBody(response) {

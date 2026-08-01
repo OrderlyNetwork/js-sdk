@@ -3,6 +3,10 @@ const path = require("node:path");
 const { notifySafely } = require("./notify");
 const { redactSecrets } = require("./releaseCredentials");
 
+const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+const MAX_ERROR_RESPONSE_LENGTH = 2_000;
+const REPOSITORY_ROOT = path.resolve(__dirname, "..");
+
 async function main({ env = process.env, fetchImpl = global.fetch } = {}) {
   const config = getTriggerConfig(env);
 
@@ -20,30 +24,57 @@ async function main({ env = process.env, fetchImpl = global.fetch } = {}) {
       env,
     );
     console.error(message);
-    await notifySafely(message);
+    const requestUrl = getRequestUrl(error);
+    await notifySafely(message, {
+      link: requestUrl
+        ? { label: "View Pipeline", url: requestUrl }
+        : undefined,
+    });
     throw error;
   }
 }
 
 async function checkBranchIsExist(
   branch,
-  { projectId, gitToken, fetchImpl = global.fetch, logger = console },
+  {
+    projectId,
+    gitToken,
+    fetchImpl = global.fetch,
+    logger = console,
+    timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
+  },
 ) {
-  const url = `https://gitlab.com/api/v4/projects/${projectId}/repository/branches/${encodeURIComponent(branch)}`;
+  const url = `https://gitlab.com/api/v4/projects/${encodeURIComponent(projectId)}/repository/branches/${encodeURIComponent(branch)}`;
   logger.log(`Checking downstream branch: ${branch}`);
 
-  const response = await fetchImpl(url, {
-    headers: {
-      "PRIVATE-TOKEN": gitToken,
+  const response = await fetchWithTimeout(
+    url,
+    {
+      headers: {
+        "PRIVATE-TOKEN": gitToken,
+      },
     },
-  });
-
-  if (response.status === 404) {
-    return false;
-  }
+    {
+      fetchImpl,
+      operation: "Branch lookup",
+      secrets: [gitToken],
+      timeoutMs,
+    },
+  );
 
   if (!response.ok) {
-    throw new Error(`Branch lookup failed with status ${response.status}`);
+    const responseDetails = await readErrorResponse(response, [gitToken]);
+
+    if (
+      response.status === 404 &&
+      responseIndicatesMissingBranch(responseDetails)
+    ) {
+      return false;
+    }
+
+    throw createHttpError("Branch lookup", url, response, responseDetails, [
+      gitToken,
+    ]);
   }
 
   return true;
@@ -56,6 +87,7 @@ async function triggerPipeline(
     fetchImpl = global.fetch,
     logger = console,
     notify = notifySafely,
+    timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
   } = {},
 ) {
   const config = getTriggerConfig(env);
@@ -67,6 +99,7 @@ async function triggerPipeline(
     gitToken: config.gitToken,
     fetchImpl,
     logger,
+    timeoutMs,
   });
   if (!branchIsExist) {
     await notify(
@@ -81,16 +114,33 @@ async function triggerPipeline(
   formData.append("variables[PACKAGE_VERSION]", packageVersion);
   formData.append("variables[TRIGGER_BRANCH]", ref);
 
-  const response = await fetchImpl(
-    `https://gitlab.com/api/v4/projects/${config.projectId}/trigger/pipeline`,
+  const pipelineUrl = `https://gitlab.com/api/v4/projects/${encodeURIComponent(config.projectId)}/trigger/pipeline`;
+  const response = await fetchWithTimeout(
+    pipelineUrl,
     {
       method: "POST",
       body: formData,
     },
+    {
+      fetchImpl,
+      operation: "Pipeline trigger",
+      secrets: [config.gitToken, config.token],
+      timeoutMs,
+    },
   );
 
   if (!response.ok) {
-    throw new Error(`Pipeline trigger failed with status ${response.status}`);
+    const responseDetails = await readErrorResponse(response, [
+      config.gitToken,
+      config.token,
+    ]);
+    throw createHttpError(
+      "Pipeline trigger",
+      pipelineUrl,
+      response,
+      responseDetails,
+      [config.gitToken, config.token],
+    );
   }
 
   const result = await response.json();
@@ -99,7 +149,7 @@ async function triggerPipeline(
   return result;
 }
 
-function getPackageVersion(rootDirectory = process.cwd()) {
+function getPackageVersion(rootDirectory = REPOSITORY_ROOT) {
   const hooksPackage = path.resolve(
     rootDirectory,
     "packages/hooks/package.json",
@@ -125,7 +175,7 @@ function getTriggerBranch(config) {
 
   if (config.ciBranch) {
     // Replace internal/ with release/, for example internal/20250923 -> release/20250923.
-    return config.ciBranch.replace("internal/", "release/");
+    return config.ciBranch.replace(/^internal\//, "release/");
   }
 
   return "";
@@ -150,6 +200,81 @@ function validateTriggerConfig(config, ref) {
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : String(error);
+}
+
+async function fetchWithTimeout(
+  url,
+  options,
+  { fetchImpl, operation, secrets, timeoutMs },
+) {
+  try {
+    return await fetchImpl(url, {
+      ...options,
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (error) {
+    if (error?.name === "TimeoutError") {
+      throw withRequestUrl(
+        new Error(`${operation} timed out after ${timeoutMs}ms`, {
+          cause: error,
+        }),
+        url,
+      );
+    }
+
+    const errorMessage = redactSecrets(getErrorMessage(error), secrets, {});
+    throw withRequestUrl(
+      new Error(`${operation} request failed: ${errorMessage}`, {
+        cause: error,
+      }),
+      url,
+    );
+  }
+}
+
+async function readErrorResponse(response, secrets) {
+  try {
+    const responseBody = await response.text();
+    const redactedBody = redactSecrets(responseBody, secrets, {});
+
+    if (redactedBody.length <= MAX_ERROR_RESPONSE_LENGTH) {
+      return redactedBody;
+    }
+
+    return `${redactedBody.slice(0, MAX_ERROR_RESPONSE_LENGTH)}...[truncated]`;
+  } catch {
+    return "";
+  }
+}
+
+function responseIndicatesMissingBranch(responseDetails) {
+  try {
+    const body = JSON.parse(responseDetails);
+    return (
+      typeof body?.message === "string" &&
+      /\bBranch Not Found\b/i.test(body.message)
+    );
+  } catch {
+    return /\bBranch Not Found\b/i.test(responseDetails);
+  }
+}
+
+function createHttpError(operation, url, response, responseDetails, secrets) {
+  const statusText = response.statusText ? ` ${response.statusText}` : "";
+  const details = responseDetails ? `: ${responseDetails}` : "";
+  const message = `${operation} failed with status ${response.status}${statusText}${details}`;
+  return withRequestUrl(new Error(redactSecrets(message, secrets, {})), url);
+}
+
+function withRequestUrl(error, url) {
+  error.requestUrl = url;
+  return error;
+}
+
+function getRequestUrl(error) {
+  return error instanceof Error && typeof error.requestUrl === "string"
+    ? error.requestUrl
+    : undefined;
 }
 
 if (require.main === module) {

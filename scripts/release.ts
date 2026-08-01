@@ -19,6 +19,9 @@ $.verbose = true;
 // Current branch in CI environment
 const ciBranch = process.env.CI_COMMIT_BRANCH;
 
+// URL of the current GitLab CI pipeline, if the release runs in CI.
+const ciPipelineUrl = process.env.CI_PIPELINE_URL;
+
 // Truthy if running in CI environment
 const isCI = ciBranch;
 
@@ -33,7 +36,7 @@ const npm = {
   token: process.env.NPM_TOKEN,
 };
 
-// Git user info and commit message for automated commits
+// Git user info for automated commits
 const git = {
   /** Git authentication token */
   token: process.env.GIT_TOKEN,
@@ -43,8 +46,6 @@ const git = {
   name: process.env.GIT_NAME,
   /** Git user email for commits */
   email: process.env.GIT_EMAIL,
-  /** Commit message for release commits */
-  commitMessage: process.env.GIT_COMMIT_MESSAGE,
 };
 
 // Custom release version type (major, minor, patch)
@@ -94,7 +95,11 @@ async function main() {
       [npm.token, git.token, process.env.TRIGGER_PIPELINE_TOKEN],
     );
     console.error(msg);
-    await notifySafely(msg);
+    await notifySafely(msg, {
+      link: ciPipelineUrl
+        ? { label: "View Pipeline", url: ciPipelineUrl }
+        : undefined,
+    });
     throw error;
   }
 
@@ -241,53 +246,47 @@ async function release() {
   // Stage all changes for commit
   await $`git add .`;
 
-  if (git.commitMessage) {
-    // Commit changes with specified message
-    await $`git commit -m ${git.commitMessage}`;
+  const packageVersion = await getReleasePackageVersion();
+  const commitMessage = `Release v${packageVersion}`;
+  await $`git commit -m ${commitMessage}`;
 
-    // Create a repository-level tag before pushing the release commit
-    const releaseTag = await createReleaseTag();
+  // Create a repository-level tag before pushing the release commit
+  const releaseTag = await createReleaseTag(packageVersion);
 
-    // Push commits to remote repository in CI environment
-    if (isCI) {
-      const remoteUrl = await getRemoteUrl();
-      await withGitAskPass(
-        { username: git.username, token: git.token },
-        async ({ env }) => {
-          const git$ = $({ env, verbose: false });
+  // Push commits to remote repository in CI environment
+  if (isCI) {
+    const remoteUrl = await getRemoteUrl();
+    await withGitAskPass(
+      { username: git.username, token: git.token },
+      async ({ env }) => {
+        const git$ = $({ env, verbose: false });
 
-          if (releaseTag) {
-            await pushReleaseCommitAndTag(
-              remoteUrl || "origin",
-              releaseTag,
-              git$,
-            );
-          } else {
-            // Use --no-verify to skip git hooks during push
-            await git$`git push --no-verify ${remoteUrl || "origin"}`;
-          }
-        },
-      );
+        if (releaseTag) {
+          await pushReleaseCommitAndTag(
+            remoteUrl || "origin",
+            releaseTag,
+            git$,
+          );
+        } else {
+          // Use --no-verify to skip git hooks during push
+          await git$`git push --no-verify ${remoteUrl || "origin"}`;
+        }
+      },
+    );
+  } else {
+    if (releaseTag) {
+      await pushReleaseCommitAndTag("origin", releaseTag);
     } else {
-      if (releaseTag) {
-        await pushReleaseCommitAndTag("origin", releaseTag);
-      } else {
-        // Push to local origin with local git token authentication
-        await $`git push --no-verify`;
-      }
+      // Push to local origin with local git token authentication
+      await $`git push --no-verify`;
     }
   }
 }
 
 /**
- * Create a lightweight repository-level tag for a stable public npm release.
- * Pre-release versions and releases to private registries are ignored.
+ * Read the version of the package used as the repository release version source.
  */
-async function createReleaseTag() {
-  if (!isPublicNpm) {
-    return;
-  }
-
+async function getReleasePackageVersion() {
   const packages = await getPackages(process.cwd());
   const releasePackage = packages.packages.find(
     (pkg) => pkg.packageJson.name === releasePackageName,
@@ -297,7 +296,18 @@ async function createReleaseTag() {
     throw new Error(`Release package not found: ${releasePackageName}`);
   }
 
-  const version = releasePackage.packageJson.version;
+  return releasePackage.packageJson.version;
+}
+
+/**
+ * Create a lightweight repository-level tag for a stable public npm release.
+ * Pre-release versions and releases to private registries are ignored.
+ */
+async function createReleaseTag(version: string) {
+  if (!isPublicNpm) {
+    return;
+  }
+
   if (!/^\d+\.\d+\.\d+$/.test(version)) {
     console.log(
       `skip repository release tag for pre-release version: ${version}`,
