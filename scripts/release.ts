@@ -128,8 +128,12 @@ async function runPostReleaseTasks() {
   // Ignore the pre-release branch and local releases.
   if (isCI && ciBranch !== "pre-release") {
     try {
+      // Auto-trigger defaults to demo/qa (matches DEMO trigger credentials in
+      // js-sdk.yaml). Manual trigger_pipeline matrix jobs override both vars.
+      const appTarget = process.env.APP_TARGET || "demo";
+      const releaseTagEnv = process.env.RELEASE_TAG_ENV || "qa";
       // Trigger pipeline to update SDK version and create tag.
-      await $`pnpm trigger:pipeline`;
+      await $`APP_TARGET=${appTarget} RELEASE_TAG_ENV=${releaseTagEnv} pnpm trigger:pipeline`;
     } catch (error) {
       console.error(
         redactSecrets(
