@@ -1,14 +1,21 @@
 import { useEffect } from "react";
-import { useEventEmitter } from "@orderly.network/hooks";
-import { useStorageLedgerAddress } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useEventEmitter,
+  useStorageLedgerAddress,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { LedgerWalletKey } from "@orderly.network/types";
+import { ChainNamespace } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 
 export function useWalletConnectError() {
   const { t } = useTranslation();
   const ee = useEventEmitter();
-  const { setLedgerAddress } = useStorageLedgerAddress();
+  const { state } = useAccount();
+  const { wallet, namespace } = useWalletConnector();
+  const { setManualLedgerAddress } = useStorageLedgerAddress();
+  const adapterName = wallet?.label ?? state.connectWallet?.name;
 
   useEffect(() => {
     const handleConnectError = (data: { message: string }) => {
@@ -19,6 +26,19 @@ export function useWalletConnectError() {
       userAddress: string;
       message: string;
     }) => {
+      if (namespace !== ChainNamespace.solana) {
+        return;
+      }
+
+      if (!adapterName) {
+        console.error(
+          "Unable to enable Ledger signing without a Solana adapter name",
+          { userAddress: data.userAddress },
+        );
+        toast.error(data.message);
+        return;
+      }
+
       window.setTimeout(() => {
         modal
           .confirm({
@@ -27,7 +47,7 @@ export function useWalletConnectError() {
             size: "sm",
             onOk: async () => {
               console.log("-- use ledger", true);
-              setLedgerAddress(data.userAddress);
+              setManualLedgerAddress(data.userAddress, adapterName);
 
               return Promise.resolve();
             },
@@ -51,7 +71,7 @@ export function useWalletConnectError() {
       ee.off("wallet:connect-error", handleConnectError);
       ee.off("wallet:sign-message-with-ledger-error", handleLedgerError);
     };
-  }, [ee, t]);
+  }, [adapterName, ee, namespace, setManualLedgerAddress, t]);
 
   return {};
 }

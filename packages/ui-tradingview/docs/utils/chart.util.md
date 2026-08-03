@@ -8,7 +8,7 @@ Chart theme and symbol helpers: default color config, overrides builder for pane
 
 ### defaultColorConfig
 
-`ColorConfigInterface`: upColor, downColor, chartBG, pnlUpColor, pnlDownColor, pnlZoreColor, textColor, qtyTextColor, font, volumeUpColor, volumeDownColor, closeIcon.
+`ColorConfigInterface`: upColor, downColor, chartBG, pnlUpColor, pnlDownColor, pnlZeroColor, textColor, qtyTextColor, font, volumeUpColor, volumeDownColor, closeIconColor. The deprecated `pnlZoreColor` and `closeIcon` aliases remain supported for backward compatibility; the correctly spelled/new fields take precedence when both are provided.
 
 ### getOveriides(colorConfig, isMobile?)
 

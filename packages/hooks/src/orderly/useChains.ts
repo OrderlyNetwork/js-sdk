@@ -5,12 +5,10 @@ import {
   NetworkId,
   type API,
   Chain as FlatChain,
-  MONAD_TESTNET_CHAINID,
   ArbitrumSepoliaChainInfo,
   SolanaDevnetChainInfo,
   SOLANA_TESTNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
-  ABSTRACT_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
   isNativeTokenChecker,
 } from "@orderly.network/types";
@@ -25,8 +23,6 @@ import { useTestTokenStore } from "../provider/store/testTokenStore";
 export const TESTNET_WHITE_LIST = [
   ARBITRUM_TESTNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
-  MONAD_TESTNET_CHAINID,
-  ABSTRACT_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
 ];
 

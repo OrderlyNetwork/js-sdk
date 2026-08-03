@@ -1,4 +1,5 @@
 import { MarginMode, OrderStatus } from "@orderly.network/types";
+import type { TradingViewColorConfig } from "@orderly.network/ui";
 import type { Order } from "./charting_library";
 
 export type {
@@ -238,19 +239,4 @@ export interface OrderInterface {
   total_executed_quantity?: number;
 }
 
-export interface ColorConfigInterface {
-  chartBG?: string;
-  upColor?: string;
-  downColor?: string;
-  pnlUpColor?: string;
-  pnlDownColor?: string;
-  pnlZoreColor?: string;
-  textColor?: string;
-  qtyTextColor?: string;
-  font?: string;
-  closeIcon?: string;
-  volumeUpColor?: string;
-  volumeDownColor?: string;
-  /** Liquidation line color; should match Position list Liq. Price (e.g. from --oui-color-warning-light). */
-  liqLineColor?: string;
-}
+export interface ColorConfigInterface extends TradingViewColorConfig {}

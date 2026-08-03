@@ -13,12 +13,14 @@ export const defaultColorConfig: Record<
     downColor: "#D92D6B",
     pnlUpColor: "#00B49E",
     pnlDownColor: "#FF447C",
+    pnlZeroColor: "#333948",
     pnlZoreColor: "#333948",
     textColor: "#FFFFFF",
     qtyTextColor: "#F4F7F9",
     font,
     volumeUpColor: "#0C3E3A",
     volumeDownColor: "#5A1E36",
+    closeIconColor: "rgba(255, 255, 255, 0.8)",
     closeIcon: "rgba(255, 255, 255, 0.8)",
   },
   light: {
@@ -27,12 +29,14 @@ export const defaultColorConfig: Record<
     downColor: "#F6465D",
     pnlUpColor: "#2ebd85",
     pnlDownColor: "#F6465D",
+    pnlZeroColor: "#333948",
     pnlZoreColor: "#333948",
     textColor: "#000000",
     qtyTextColor: "#000000",
     font,
     volumeUpColor: "#2ebd85",
     volumeDownColor: "#F6465D",
+    closeIconColor: "rgba(0, 0, 0, 0.8)",
     closeIcon: "rgba(0, 0, 0, 0.8)",
   },
 };
@@ -41,16 +45,32 @@ export const getColorConfig = ({
   theme,
   cssVariables,
   customerColorConfig,
+  themeColorConfig,
 }: {
   theme: "dark" | "light";
   cssVariables: Record<string, string>;
   customerColorConfig?: ColorConfigInterface;
+  themeColorConfig?: ColorConfigInterface;
 }) => {
+  const resolvedColorConfig = {
+    ...customerColorConfig,
+    ...themeColorConfig,
+  };
   const defaultCconfig = defaultColorConfig[theme] || defaultColorConfig.dark;
   const chartBG =
-    customerColorConfig?.chartBG ||
+    resolvedColorConfig.chartBG ||
     cssVariables.chartBG ||
     defaultCconfig.chartBG;
+  const pnlZeroColor =
+    resolvedColorConfig.pnlZeroColor ??
+    resolvedColorConfig.pnlZoreColor ??
+    defaultCconfig.pnlZeroColor ??
+    defaultCconfig.pnlZoreColor;
+  const closeIconColor =
+    resolvedColorConfig.closeIconColor ??
+    resolvedColorConfig.closeIcon ??
+    defaultCconfig.closeIconColor ??
+    defaultCconfig.closeIcon;
 
   // dark mode incompatible
   // const upColor =
@@ -66,12 +86,17 @@ export const getColorConfig = ({
 
   /** Liquidation line uses same color as Position list Liq. Price (--oui-color-warning-light). */
   const liqLineColor =
-    customerColorConfig?.liqLineColor ?? cssVariables.warningLight;
+    resolvedColorConfig.liqLineColor ?? cssVariables.warningLight;
 
   return {
     ...defaultCconfig,
-    ...customerColorConfig,
+    ...resolvedColorConfig,
     chartBG,
+    pnlZeroColor,
+    pnlZoreColor: pnlZeroColor,
+    closeIconColor,
+    // Keep the legacy field populated for consumers that still read it.
+    closeIcon: closeIconColor,
     liqLineColor,
     // upColor,
     // downColor,

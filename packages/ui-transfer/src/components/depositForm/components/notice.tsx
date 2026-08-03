@@ -22,6 +22,7 @@ export const Notice: FC<NoticeProps> = (props) => {
   if (content) {
     return (
       <Box
+        mt={3}
         mb={3}
         className="oui-text-center oui-text-xs oui-text-warning-darken"
       >

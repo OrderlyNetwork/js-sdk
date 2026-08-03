@@ -114,7 +114,7 @@ export class PositionLineService {
     } else if (pnlDecimal.lessThan(0)) {
       pnlColor = colorConfig.downColor;
     } else {
-      pnlColor = colorConfig.pnlZoreColor;
+      pnlColor = colorConfig.pnlZeroColor;
     }
     const sideColor = isPositiveBalance
       ? colorConfig.upColor
@@ -148,7 +148,7 @@ export class PositionLineService {
     const line = this.positionLines[idx]
       .setQuantity(quantity)
       .setPrice(price)
-      .setCloseButtonIconColor(colorConfig.closeIcon!)
+      .setCloseButtonIconColor(colorConfig.closeIconColor!)
       .setCloseButtonBorderColor(sideColor!)
       .setBodyBackgroundColor(pnlColor!)
       .setQuantityTextColor(sideColor!)
@@ -157,8 +157,8 @@ export class PositionLineService {
       .setQuantityBorderColor(sideColor!)
       .setText(text);
 
-    if (colorConfig.closeIcon) {
-      line.setCloseButtonIconColor(colorConfig.closeIcon);
+    if (colorConfig.closeIconColor) {
+      line.setCloseButtonIconColor(colorConfig.closeIconColor);
     }
 
     if (sideColor) {
