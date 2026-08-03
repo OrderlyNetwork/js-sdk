@@ -7,8 +7,17 @@ const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
 const MAX_ERROR_RESPONSE_LENGTH = 2_000;
 const REPOSITORY_ROOT = path.resolve(__dirname, "..");
 
-async function main({ env = process.env, fetchImpl = global.fetch } = {}) {
+async function main({
+  env = process.env,
+  fetchImpl = global.fetch,
+  notify = notifySafely,
+} = {}) {
   const config = getTriggerConfig(env);
+  // Use CI web UI URLs, not the GitLab API request URL (browser opens to 404).
+  const ciJobUrl = env.CI_JOB_URL;
+  const ciPipelineUrl = env.CI_PIPELINE_URL;
+  const ciLinkUrl = ciJobUrl || ciPipelineUrl;
+  const ciLinkLabel = ciJobUrl ? "View Job" : "View Pipeline";
 
   try {
     const packageVersion = getPackageVersion();
@@ -16,7 +25,7 @@ async function main({ env = process.env, fetchImpl = global.fetch } = {}) {
       throw new Error("Package version not found");
     }
 
-    await triggerPipeline(packageVersion, { env, fetchImpl });
+    await triggerPipeline(packageVersion, { env, fetchImpl, notify });
   } catch (error) {
     const message = redactSecrets(
       `Error triggering pipeline: ${getErrorMessage(error)}`,
@@ -24,11 +33,8 @@ async function main({ env = process.env, fetchImpl = global.fetch } = {}) {
       env,
     );
     console.error(message);
-    const requestUrl = getRequestUrl(error);
-    await notifySafely(message, {
-      link: requestUrl
-        ? { label: "View Pipeline", url: requestUrl }
-        : undefined,
+    await notify(message, {
+      link: ciLinkUrl ? { label: ciLinkLabel, url: ciLinkUrl } : undefined,
     });
     throw error;
   }
@@ -113,9 +119,8 @@ async function triggerPipeline(
   formData.append("ref", ref);
   formData.append("variables[PACKAGE_VERSION]", packageVersion);
   formData.append("variables[TRIGGER_BRANCH]", ref);
-  if (config.appTarget) {
-    formData.append("variables[APP_TARGET]", config.appTarget);
-  }
+  formData.append("variables[RELEASE_TAG_ENV]", config.releaseTagEnv);
+  formData.append("variables[APP_TARGET]", config.appTarget);
 
   const pipelineUrl = `https://gitlab.com/api/v4/projects/${encodeURIComponent(config.projectId)}/trigger/pipeline`;
   const response = await fetchWithTimeout(
@@ -166,8 +171,13 @@ const TRIGGER_CONFIG_FIELDS = [
   { key: "token", envName: "TRIGGER_PIPELINE_TOKEN", required: true },
   { key: "gitToken", envName: "GIT_TOKEN", required: true },
   { key: "ciBranch", envName: "CI_COMMIT_BRANCH", required: true },
-  { key: "appTarget", envName: "APP_TARGET", required: false },
+  // Required by downstream bump_sdk_and_release rules (frontend-ci.yaml).
+  { key: "releaseTagEnv", envName: "RELEASE_TAG_ENV", required: true },
+  { key: "appTarget", envName: "APP_TARGET", required: true },
 ];
+
+const ALLOWED_RELEASE_TAG_ENVS = new Set(["dev", "qa", "prod"]);
+const ALLOWED_APP_TARGETS = new Set(["demo", "dmm"]);
 
 function getTriggerConfig(env = process.env) {
   return Object.fromEntries(
@@ -176,6 +186,11 @@ function getTriggerConfig(env = process.env) {
 }
 
 function getTriggerBranch(config) {
+  // Downstream bump_sdk_and_release only allows prod when TRIGGER_BRANCH=main.
+  if (config.releaseTagEnv === "prod") {
+    return "main";
+  }
+
   if (config.ciBranch) {
     // Replace internal/ with release/, for example internal/20250923 -> release/20250923.
     return config.ciBranch.replace(/^internal\//, "release/");
@@ -192,6 +207,18 @@ function validateTriggerConfig(config) {
   if (missingVariables.length > 0) {
     throw new Error(
       `Trigger pipeline configuration missing: ${missingVariables.join(", ")}`,
+    );
+  }
+
+  if (!ALLOWED_RELEASE_TAG_ENVS.has(config.releaseTagEnv)) {
+    throw new Error(
+      `Invalid RELEASE_TAG_ENV "${config.releaseTagEnv}"; expected one of: ${[...ALLOWED_RELEASE_TAG_ENVS].join(", ")}`,
+    );
+  }
+
+  if (!ALLOWED_APP_TARGETS.has(config.appTarget)) {
+    throw new Error(
+      `Invalid APP_TARGET "${config.appTarget}"; expected one of: ${[...ALLOWED_APP_TARGETS].join(", ")}`,
     );
   }
 }
@@ -269,12 +296,6 @@ function withRequestUrl(error, url) {
   return error;
 }
 
-function getRequestUrl(error) {
-  return error instanceof Error && typeof error.requestUrl === "string"
-    ? error.requestUrl
-    : undefined;
-}
-
 if (require.main === module) {
   main().catch(() => {
     process.exitCode = 1;
@@ -285,5 +306,6 @@ if (require.main === module) {
 module.exports = {
   getPackageVersion,
   getTriggerBranch,
+  main,
   triggerPipeline,
 };

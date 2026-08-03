@@ -5,10 +5,64 @@ const { describe, test } = require("node:test");
 const {
   getPackageVersion,
   getTriggerBranch,
+  main,
   triggerPipeline,
 } = require("./triggerPipeline");
 
 describe("trigger pipeline", () => {
+  test("notifies failures with the CI job URL, not the API request URL", async () => {
+    const jobUrl = "https://gitlab.com/group/project/-/jobs/99";
+    const notifications = [];
+
+    await assert.rejects(
+      main({
+        env: {
+          ...createEnvironment("git-secret-token", "trigger-secret-token"),
+          CI_JOB_URL: jobUrl,
+        },
+        fetchImpl: async () =>
+          createResponse(503, { message: "Service temporarily unavailable" }),
+        notify: async (message, options) => {
+          notifications.push({ message, options });
+        },
+      }),
+      /Branch lookup failed with status 503/,
+    );
+
+    assert.equal(notifications.length, 1);
+    assert.deepEqual(notifications[0].options.link, {
+      label: "View Job",
+      url: jobUrl,
+    });
+    assert.doesNotMatch(notifications[0].options.link.url, /\/api\/v4\//);
+  });
+
+  test("falls back to the CI pipeline URL when CI_JOB_URL is missing", async () => {
+    const pipelineUrl = "https://gitlab.com/group/project/-/pipelines/42";
+    const notifications = [];
+
+    await assert.rejects(
+      main({
+        env: {
+          ...createEnvironment("git-secret-token", "trigger-secret-token"),
+          CI_PIPELINE_URL: pipelineUrl,
+        },
+        fetchImpl: async () =>
+          createResponse(503, { message: "Service temporarily unavailable" }),
+        notify: async (message, options) => {
+          notifications.push({ message, options });
+        },
+      }),
+      /Branch lookup failed with status 503/,
+    );
+
+    assert.equal(notifications.length, 1);
+    assert.deepEqual(notifications[0].options.link, {
+      label: "View Pipeline",
+      url: pipelineUrl,
+    });
+  });
+
   test("validates configuration before making a request", async () => {
     let requestCount = 0;
 
@@ -19,20 +73,36 @@ describe("trigger pipeline", () => {
           requestCount += 1;
         },
       }),
-      /TRIGGER_PIPELINE_PROJECT_ID.*TRIGGER_PIPELINE_TOKEN.*GIT_TOKEN/,
+      /TRIGGER_PIPELINE_PROJECT_ID.*TRIGGER_PIPELINE_TOKEN.*GIT_TOKEN.*RELEASE_TAG_ENV.*APP_TARGET/,
     );
 
     assert.equal(requestCount, 0);
   });
 
-  test("maps only an internal branch prefix to release", () => {
+  test("maps only an internal branch prefix to release for non-prod", () => {
     assert.equal(
-      getTriggerBranch({ ciBranch: "internal/20260801" }),
+      getTriggerBranch({
+        ciBranch: "internal/20260801",
+        releaseTagEnv: "dev",
+      }),
       "release/20260801",
     );
     assert.equal(
-      getTriggerBranch({ ciBranch: "feature/internal/20260801" }),
+      getTriggerBranch({
+        ciBranch: "feature/internal/20260801",
+        releaseTagEnv: "qa",
+      }),
       "feature/internal/20260801",
+    );
+  });
+
+  test("forces main when releasing to prod", () => {
+    assert.equal(
+      getTriggerBranch({
+        ciBranch: "internal/20260801",
+        releaseTagEnv: "prod",
+      }),
+      "main",
     );
   });
 
@@ -146,9 +216,10 @@ describe("trigger pipeline", () => {
       "release/20260801",
     );
     assert.equal(
-      requests[1].options.body.get("variables[APP_TARGET]"),
-      "storybook",
+      requests[1].options.body.get("variables[RELEASE_TAG_ENV]"),
+      "dev",
     );
+    assert.equal(requests[1].options.body.get("variables[APP_TARGET]"), "demo");
     assert.doesNotMatch(logs.join("\n"), new RegExp(gitToken));
     assert.doesNotMatch(logs.join("\n"), new RegExp(triggerToken));
   });
@@ -284,9 +355,10 @@ describe("trigger pipeline", () => {
 
 function createEnvironment(gitToken, triggerToken, projectId = "123") {
   return {
-    APP_TARGET: "storybook",
+    APP_TARGET: "demo",
     CI_COMMIT_BRANCH: "internal/20260801",
     GIT_TOKEN: gitToken,
+    RELEASE_TAG_ENV: "dev",
     TRIGGER_PIPELINE_PROJECT_ID: projectId,
     TRIGGER_PIPELINE_TOKEN: triggerToken,
   };

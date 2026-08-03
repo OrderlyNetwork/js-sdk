@@ -117,19 +117,19 @@ describe("notify", () => {
       return response();
     };
     const link = {
-      label: "View Pipeline",
-      url: "https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&b=2",
+      label: "View Job",
+      url: "https://gitlab.com/group/project/-/jobs/123?a=1&b=2",
     };
 
     await notify("pipeline failed", { link });
 
     assert.equal(
       requests[0].body.text,
-      '<pre>pipeline failed</pre>\n<a href="https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&amp;b=2">View Pipeline</a>',
+      '<pre>pipeline failed</pre>\n<a href="https://gitlab.com/group/project/-/jobs/123?a=1&amp;b=2">View Job</a>',
     );
     assert.equal(
       requests[1].body.text,
-      "```\npipeline failed\n```\n<https://gitlab.com/api/v4/projects/123/trigger/pipeline?a=1&amp;b=2|View Pipeline>",
+      "```\npipeline failed\n```\n<https://gitlab.com/group/project/-/jobs/123?a=1&amp;b=2|View Job>",
     );
   });
 
