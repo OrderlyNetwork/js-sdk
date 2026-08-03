@@ -9,7 +9,10 @@ const cssVar2Hex = (color: string) => {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 };
 
-export const useCssVariables = (theme: "dark" | "light") => {
+export const useCssVariables = (
+  theme: "dark" | "light",
+  themeConfig?: unknown,
+) => {
   const [cssVariables, setCssVariables] = useState<Record<string, string>>({});
   const themeAttribute = useThemeAttribute();
 
@@ -38,7 +41,7 @@ export const useCssVariables = (theme: "dark" | "light") => {
       // upColor: cssVar2Hex(profitColor),
       // downColor: cssVar2Hex(lossColor),
     });
-  }, [theme, themeAttribute]);
+  }, [theme, themeAttribute, themeConfig]);
 
   return cssVariables;
 };

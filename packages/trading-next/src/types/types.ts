@@ -113,6 +113,7 @@ export interface TradingViewConfigInterface {
   studiesOverrides?: TradingviewWidgetPropsInterface["studiesOverrides"];
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
+  theme?: TradingviewWidgetPropsInterface["theme"];
   locale?: TradingviewWidgetPropsInterface["locale"];
   enabled_features?: string[];
   disabled_features?: string[];
@@ -124,10 +125,14 @@ export interface ColorConfigInterface {
   downColor?: string;
   pnlUpColor?: string;
   pnlDownColor?: string;
+  pnlZeroColor?: string;
+  /** @deprecated Use pnlZeroColor instead. */
   pnlZoreColor?: string;
   textColor?: string;
   qtyTextColor?: string;
   font?: string;
+  closeIconColor?: string;
+  /** @deprecated Use closeIconColor instead. */
   closeIcon?: string;
 }
 

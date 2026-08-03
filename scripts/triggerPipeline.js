@@ -1,127 +1,311 @@
-const fs = require("fs");
-const path = require("path");
-const { notifyTelegram } = require("./notifyTelegram");
+const fs = require("node:fs");
+const path = require("node:path");
+const { notifySafely } = require("./notify");
+const { redactSecrets } = require("./releaseCredentials");
 
-// Current branch in CI environment
-const ciBranch = process.env.CI_COMMIT_BRANCH;
-const gitToken = process.env.GIT_TOKEN;
+const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+const MAX_ERROR_RESPONSE_LENGTH = 2_000;
+const REPOSITORY_ROOT = path.resolve(__dirname, "..");
 
-const trigger = {
-  projectId: process.env.TRIGGER_PIPELINE_PROJECT_ID,
-  token: process.env.TRIGGER_PIPELINE_TOKEN,
-  branch: process.env.TRIGGER_PIPELINE_BRANCH,
-};
+async function main({
+  env = process.env,
+  fetchImpl = global.fetch,
+  notify = notifySafely,
+} = {}) {
+  const config = getTriggerConfig(env);
+  // Use CI web UI URLs, not the GitLab API request URL (browser opens to 404).
+  const ciJobUrl = env.CI_JOB_URL;
+  const ciPipelineUrl = env.CI_PIPELINE_URL;
+  const ciLinkUrl = ciJobUrl || ciPipelineUrl;
+  const ciLinkLabel = ciJobUrl ? "View Job" : "View Pipeline";
 
-async function main() {
   try {
-    const packageVersion = await getPackageVersion();
+    const packageVersion = getPackageVersion();
     if (!packageVersion) {
       throw new Error("Package version not found");
     }
-    // console.log("packageVersion: ", packageVersion);
 
-    await triggerPipeline(packageVersion);
+    await triggerPipeline(packageVersion, { env, fetchImpl, notify });
   } catch (error) {
-    console.error("Error triggering pipeline:", error);
-    await notifyTelegram(`Error triggering pipeline: ${error.message}`);
+    const message = redactSecrets(
+      `Error triggering pipeline: ${getErrorMessage(error)}`,
+      [config.gitToken, config.token],
+      env,
+    );
+    console.error(message);
+    await notify(message, {
+      link: ciLinkUrl ? { label: ciLinkLabel, url: ciLinkUrl } : undefined,
+    });
     throw error;
   }
 }
 
-async function checkBranchIsExist(branch) {
-  // https://docs.gitlab.com/api/branches/#get-single-repository-branch
-  const url = `https://gitlab.com/api/v4/projects/${trigger.projectId}/repository/branches/${encodeURIComponent(branch)}`;
-  console.log("url: ", url, gitToken);
-  try {
-    const response = await fetch(url, {
+async function checkBranchIsExist(
+  branch,
+  {
+    projectId,
+    gitToken,
+    fetchImpl = global.fetch,
+    logger = console,
+    timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
+  },
+) {
+  const url = `https://gitlab.com/api/v4/projects/${encodeURIComponent(projectId)}/repository/branches/${encodeURIComponent(branch)}`;
+  logger.log(`Checking downstream branch: ${branch}`);
+
+  const response = await fetchWithTimeout(
+    url,
+    {
       headers: {
         "PRIVATE-TOKEN": gitToken,
       },
-    });
+    },
+    {
+      fetchImpl,
+      operation: "Branch lookup",
+      secrets: [gitToken],
+      timeoutMs,
+    },
+  );
 
-    if (!response.ok) {
-      throw new Error(`404 Branch Not Found: ${branch}`);
+  if (!response.ok) {
+    const responseDetails = await readErrorResponse(response, [gitToken]);
+
+    if (
+      response.status === 404 &&
+      responseIndicatesMissingBranch(responseDetails)
+    ) {
+      return false;
     }
 
-    const result = await response.json();
-    console.log(`The ${branch} branch is exist: `, result);
-    // if branch is exist, return true
-    return !!result;
-  } catch (error) {
-    console.log(error);
-    return false;
+    throw createHttpError("Branch lookup", url, response, responseDetails, [
+      gitToken,
+    ]);
   }
+
+  return true;
 }
 
-async function triggerPipeline(packageVersion) {
-  const ref = getTriggerBranch();
+async function triggerPipeline(
+  packageVersion,
+  {
+    env = process.env,
+    fetchImpl = global.fetch,
+    logger = console,
+    notify = notifySafely,
+    timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
+  } = {},
+) {
+  const config = getTriggerConfig(env);
+  validateTriggerConfig(config);
+  const ref = getTriggerBranch(config);
 
-  const branchIsExist = await checkBranchIsExist(ref);
+  const branchIsExist = await checkBranchIsExist(ref, {
+    projectId: config.projectId,
+    gitToken: config.gitToken,
+    fetchImpl,
+    logger,
+    timeoutMs,
+  });
   if (!branchIsExist) {
-    // It’s possible that having no branch is expected, so don't throw an error.
-    await notifyTelegram(
-      `The ${ref} branch not found, pipeline will not be triggered`,
+    await notify(
+      `The ${ref} branch was not found, so the pipeline was not triggered`,
     );
     return;
   }
 
-  if (!trigger.projectId || !trigger.token || !ref) {
-    throw new Error(
-      "Trigger pipeline failed: Trigger URL, token, or trigger branch not found",
-    );
-  }
-
   const formData = new FormData();
-  formData.append("token", trigger.token);
+  formData.append("token", config.token);
   formData.append("ref", ref);
   formData.append("variables[PACKAGE_VERSION]", packageVersion);
   formData.append("variables[TRIGGER_BRANCH]", ref);
+  formData.append("variables[RELEASE_TAG_ENV]", config.releaseTagEnv);
+  formData.append("variables[APP_TARGET]", config.appTarget);
 
-  try {
-    console.log("triggerPipeline: ", trigger.projectId, formData);
-    // https://docs.gitlab.com/ci/triggers/#use-curl
-    // https://gitlab.com/api/v4/projects/<project_id>/trigger/pipeline
-    const response = await fetch(
-      `https://gitlab.com/api/v4/projects/${trigger.projectId}/trigger/pipeline`,
-      {
-        method: "POST",
-        body: formData,
-      },
+  const pipelineUrl = `https://gitlab.com/api/v4/projects/${encodeURIComponent(config.projectId)}/trigger/pipeline`;
+  const response = await fetchWithTimeout(
+    pipelineUrl,
+    {
+      method: "POST",
+      body: formData,
+    },
+    {
+      fetchImpl,
+      operation: "Pipeline trigger",
+      secrets: [config.gitToken, config.token],
+      timeoutMs,
+    },
+  );
+
+  if (!response.ok) {
+    const responseDetails = await readErrorResponse(response, [
+      config.gitToken,
+      config.token,
+    ]);
+    throw createHttpError(
+      "Pipeline trigger",
+      pipelineUrl,
+      response,
+      responseDetails,
+      [config.gitToken, config.token],
     );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("Pipeline triggered successfully:", result);
-    await notifyTelegram(
-      `Pipeline on the ${ref} branch was triggered successfully`,
-    );
-    return result;
-  } catch (error) {
-    // console.error("Error triggering pipeline:", error);
-    throw error;
   }
+
+  const result = await response.json();
+  logger.log(`Pipeline triggered successfully: ${result.id ?? "unknown"}`);
+  await notify(`Pipeline on the ${ref} branch was triggered successfully`);
+  return result;
 }
 
-async function getPackageVersion() {
-  const hooksPackage = path.resolve("packages/hooks", "package.json");
+function getPackageVersion(rootDirectory = REPOSITORY_ROOT) {
+  const hooksPackage = path.resolve(
+    rootDirectory,
+    "packages/hooks/package.json",
+  );
   const hooksPackageJson = JSON.parse(fs.readFileSync(hooksPackage, "utf8"));
   return hooksPackageJson?.version;
 }
 
-function getTriggerBranch() {
-  if (trigger.branch) {
-    return trigger.branch;
-  }
+const TRIGGER_CONFIG_FIELDS = [
+  { key: "projectId", envName: "TRIGGER_PIPELINE_PROJECT_ID", required: true },
+  { key: "token", envName: "TRIGGER_PIPELINE_TOKEN", required: true },
+  { key: "gitToken", envName: "GIT_TOKEN", required: true },
+  { key: "ciBranch", envName: "CI_COMMIT_BRANCH", required: true },
+  // Required by downstream bump_sdk_and_release rules (frontend-ci.yaml).
+  { key: "releaseTagEnv", envName: "RELEASE_TAG_ENV", required: true },
+  { key: "appTarget", envName: "APP_TARGET", required: true },
+];
 
-  if (ciBranch) {
-    // replace internal/ with release/, example: internal/20250923 => release/20250923
-    return ciBranch?.replace("internal/", "release/");
-  }
+const ALLOWED_RELEASE_TAG_ENVS = new Set(["dev", "qa", "prod"]);
+const ALLOWED_APP_TARGETS = new Set(["demo", "dmm"]);
 
-  throw new Error("Trigger branch not found");
+function getTriggerConfig(env = process.env) {
+  return Object.fromEntries(
+    TRIGGER_CONFIG_FIELDS.map(({ key, envName }) => [key, env[envName]]),
+  );
 }
 
-main();
+function getTriggerBranch(config) {
+  // Downstream bump_sdk_and_release only allows prod when TRIGGER_BRANCH=main.
+  if (config.releaseTagEnv === "prod") {
+    return "main";
+  }
+
+  if (config.ciBranch) {
+    // Replace internal/ with release/, for example internal/20250923 -> release/20250923.
+    return config.ciBranch.replace(/^internal\//, "release/");
+  }
+
+  return "";
+}
+
+function validateTriggerConfig(config) {
+  const missingVariables = TRIGGER_CONFIG_FIELDS.filter(
+    ({ key, required }) => required && !config[key],
+  ).map(({ envName }) => envName);
+
+  if (missingVariables.length > 0) {
+    throw new Error(
+      `Trigger pipeline configuration missing: ${missingVariables.join(", ")}`,
+    );
+  }
+
+  if (!ALLOWED_RELEASE_TAG_ENVS.has(config.releaseTagEnv)) {
+    throw new Error(
+      `Invalid RELEASE_TAG_ENV "${config.releaseTagEnv}"; expected one of: ${[...ALLOWED_RELEASE_TAG_ENVS].join(", ")}`,
+    );
+  }
+
+  if (!ALLOWED_APP_TARGETS.has(config.appTarget)) {
+    throw new Error(
+      `Invalid APP_TARGET "${config.appTarget}"; expected one of: ${[...ALLOWED_APP_TARGETS].join(", ")}`,
+    );
+  }
+}
+
+function getErrorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+async function fetchWithTimeout(
+  url,
+  options,
+  { fetchImpl, operation, secrets, timeoutMs },
+) {
+  try {
+    return await fetchImpl(url, {
+      ...options,
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (error) {
+    if (error?.name === "TimeoutError") {
+      throw withRequestUrl(
+        new Error(`${operation} timed out after ${timeoutMs}ms`, {
+          cause: error,
+        }),
+        url,
+      );
+    }
+
+    const errorMessage = redactSecrets(getErrorMessage(error), secrets, {});
+    throw withRequestUrl(
+      new Error(`${operation} request failed: ${errorMessage}`, {
+        cause: error,
+      }),
+      url,
+    );
+  }
+}
+
+async function readErrorResponse(response, secrets) {
+  try {
+    const responseBody = await response.text();
+    const redactedBody = redactSecrets(responseBody, secrets, {});
+
+    if (redactedBody.length <= MAX_ERROR_RESPONSE_LENGTH) {
+      return redactedBody;
+    }
+
+    return `${redactedBody.slice(0, MAX_ERROR_RESPONSE_LENGTH)}...[truncated]`;
+  } catch {
+    return "";
+  }
+}
+
+function responseIndicatesMissingBranch(responseDetails) {
+  try {
+    const body = JSON.parse(responseDetails);
+    return (
+      typeof body?.message === "string" &&
+      /\bBranch Not Found\b/i.test(body.message)
+    );
+  } catch {
+    return /\bBranch Not Found\b/i.test(responseDetails);
+  }
+}
+
+function createHttpError(operation, url, response, responseDetails, secrets) {
+  const statusText = response.statusText ? ` ${response.statusText}` : "";
+  const details = responseDetails ? `: ${responseDetails}` : "";
+  const message = `${operation} failed with status ${response.status}${statusText}${details}`;
+  return withRequestUrl(new Error(redactSecrets(message, secrets, {})), url);
+}
+
+function withRequestUrl(error, url) {
+  error.requestUrl = url;
+  return error;
+}
+
+if (require.main === module) {
+  main().catch(() => {
+    process.exitCode = 1;
+  });
+}
+
+// only for testing
+module.exports = {
+  getPackageVersion,
+  getTriggerBranch,
+  main,
+  triggerPipeline,
+};

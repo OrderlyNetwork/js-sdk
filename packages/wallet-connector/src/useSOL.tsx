@@ -8,11 +8,10 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import {
   useEventEmitter,
-  useLocalStorage,
   useStorageLedgerAddress,
   WalletState,
 } from "@orderly.network/hooks";
-import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
+import { ChainNamespace } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
 import { useSolanaContext } from "./SolanaProvider";
 import { SolanaChainIdEnum, SolanaChains } from "./config";
@@ -22,7 +21,7 @@ export function useSOL() {
   const { isMobile } = useScreen();
   const { endpoint, network } = useSolanaContext();
   const { setVisible: setModalVisible, visible } = useWalletModal();
-  const { setLedgerAddress } = useStorageLedgerAddress();
+  const { syncLedgerAddress } = useStorageLedgerAddress();
   const {
     signMessage,
     signTransaction,
@@ -156,9 +155,7 @@ export function useSOL() {
               },
             ],
           };
-          if (wallet.adapter.name === "Ledger") {
-            setLedgerAddress(userAddress);
-          }
+          syncLedgerAddress(userAddress, wallet.adapter.name);
           setWallet(tempWallet as WalletState);
           setConnected(true);
           return [tempWallet];
@@ -262,10 +259,6 @@ export function useSOL() {
         },
       ],
     });
-    if (solanaWallet.adapter.name === "Ledger") {
-      setLedgerAddress(userAddress);
-    }
-
     setConnected(true);
   }, [
     publicKey,
@@ -277,6 +270,17 @@ export function useSOL() {
     endpoint,
     network,
   ]);
+
+  const ledgerAddress = publicKey?.toBase58();
+  const ledgerAdapterName = solanaWallet?.adapter.name;
+
+  useEffect(() => {
+    if (!ledgerAddress || !ledgerAdapterName) {
+      return;
+    }
+
+    syncLedgerAddress(ledgerAddress, ledgerAdapterName);
+  }, [ledgerAddress, ledgerAdapterName, syncLedgerAddress]);
 
   useEffect(() => {
     if (!solanaWallet) {

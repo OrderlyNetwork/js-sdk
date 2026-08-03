@@ -69,9 +69,6 @@ importers:
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
-      simple-git:
-        specifier: ^3.27.0
-        version: 3.28.0
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3))
@@ -493,12 +490,18 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.22.5
         version: 7.27.1(@babel/core@7.28.4)
+      '@testing-library/react':
+        specifier: ^14.2.1
+        version: 14.3.1(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.7(@types/react@18.3.23)
+      jsdom:
+        specifier: ^20.0.3
+        version: 20.0.3(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -517,6 +520,9 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.8.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@24.3.1)(@vitest/browser-playwright@4.0.16)(jiti@2.7.0)(jsdom@20.0.3(bufferutil@4.0.9)(utf-8-validate@5.0.10))(terser@5.44.0)(tsx@4.21.0)(yaml@2.8.3)
 
   packages/chart:
     dependencies:
@@ -2055,12 +2061,18 @@ importers:
         specifier: workspace:*
         version: link:../ui-chain-selector
     devDependencies:
+      '@testing-library/react':
+        specifier: ^14.2.1
+        version: 14.3.1(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.7(@types/react@18.3.23)
+      jsdom:
+        specifier: ^20.0.3
+        version: 20.0.3(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2076,6 +2088,9 @@ importers:
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(@swc/core@1.13.2(@swc/helpers@0.5.17))(jiti@2.7.0)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.8.3)
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@24.3.1)(@vitest/browser-playwright@4.0.16)(jiti@2.7.0)(jsdom@20.0.3(bufferutil@4.0.9)(utf-8-validate@5.0.10))(terser@5.44.0)(tsx@4.21.0)(yaml@2.8.3)
 
   packages/ui-leverage:
     dependencies:
@@ -14787,9 +14802,6 @@ packages:
 
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
-
-  simple-git@3.28.0:
-    resolution: {integrity: sha512-Rs/vQRwsn1ILH1oBUy8NucJlXmnnLeLCfcvbSehkPzbv3wwoFWIdtfd6Ndo6ZPhlPsCZ60CPI4rxurnwAa+a2w==}
 
   simple-git@3.35.2:
     resolution: {integrity: sha512-ZMjl06lzTm1EScxEGuM6+mEX+NQd14h/B3x0vWU+YOXAMF8sicyi1K4cjTfj5is+35ChJEHDl1EjypzYFWH2FA==}
@@ -34641,14 +34653,6 @@ snapshots:
       decompress-response: 6.0.0
       once: 1.4.0
       simple-concat: 1.0.1
-
-  simple-git@3.28.0:
-    dependencies:
-      '@kwsites/file-exists': 1.1.1
-      '@kwsites/promise-deferred': 1.1.1
-      debug: 4.4.3
-    transitivePeerDependencies:
-      - supports-color
 
   simple-git@3.35.2:
     dependencies:

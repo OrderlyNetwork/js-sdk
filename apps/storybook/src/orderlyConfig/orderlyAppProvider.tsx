@@ -1,7 +1,6 @@
 import type { RestrictedInfoOptions } from "@orderly.network/hooks";
 import type { AppLogos } from "@orderly.network/react-app";
 import { OrderlySecondaryLogo } from "../components/icons/orderlySecondaryLogo";
-import { OrderlyTextIcon } from "../components/icons/orderlyText";
 
 export type OrderlyAppProviderConfigProps = {
   appIcons: AppLogos;
@@ -10,13 +9,12 @@ export type OrderlyAppProviderConfigProps = {
 
 export const orderlyAppProviderConfig: OrderlyAppProviderConfigProps = {
   appIcons: {
-    main: {
-      component: (
-        <OrderlyTextIcon className="oui-w-[100px] oui-h-10 oui-fill-base-contrast" />
-      ),
-    },
+    // main: {
+    //   component: (
+    //     <OrderlyTextIcon className="oui-w-[100px] oui-h-10 oui-fill-base-contrast" />
+    //   ),
+    // },
     secondary: {
-      // img: "/orderly-logo-secondary.svg",
       component: <OrderlySecondaryLogo className="oui-text-base-contrast" />,
     },
   },

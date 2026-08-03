@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { ThemeCssVars } from "../tailwind";
+import type { ThemeCssVars } from "../tailwind";
 
 export type ComponentOverrides = {
   tabs: {
@@ -12,6 +12,27 @@ export type ComponentOverrides = {
      * */
     showTestnet: boolean;
   };
+};
+
+export type TradingViewColorConfig = {
+  chartBG?: string;
+  upColor?: string;
+  downColor?: string;
+  pnlUpColor?: string;
+  pnlDownColor?: string;
+  pnlZeroColor?: string;
+  /** @deprecated Use pnlZeroColor instead. */
+  pnlZoreColor?: string;
+  textColor?: string;
+  qtyTextColor?: string;
+  font?: string;
+  closeIconColor?: string;
+  /** @deprecated Use closeIconColor instead. */
+  closeIcon?: string;
+  volumeUpColor?: string;
+  volumeDownColor?: string;
+  /** Liquidation line color; should match Position list Liq. Price (e.g. from --oui-color-warning-light). */
+  liqLineColor?: string;
 };
 
 export type ThemeConfig = {
@@ -34,6 +55,10 @@ export type ThemeConfig = {
    * These are applied at runtime via document.documentElement.style.setProperty.
    */
   cssVars?: Partial<ThemeCssVars>;
+  /** Optional TradingView color overrides for this theme. */
+  tradingViewColorConfig?: TradingViewColorConfig;
+  /** Whether this theme should be used when no valid stored theme exists. */
+  isDefault?: boolean;
 };
 
 type GetComponentTheme = <T extends keyof ComponentOverrides>(

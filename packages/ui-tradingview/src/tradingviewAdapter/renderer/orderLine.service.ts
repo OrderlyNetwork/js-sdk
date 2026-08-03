@@ -350,7 +350,7 @@ export class OrderLineService {
 
     orderLine
       .setText(text)
-      .setCancelButtonIconColor(colorConfig.closeIcon!)
+      .setCancelButtonIconColor(colorConfig.closeIconColor!)
       .setCancelButtonBorderColor(color!)
       .setBodyTextColor(textColor!)
       .setBodyBorderColor(borderColor!)

@@ -42,6 +42,7 @@ interface WalletMethods {
   disconnectSolana: () => Promise<void>;
   network: Network;
   solanaInfo: any;
+  syncLedgerAddress: (address: string, adapterName: string) => void;
 }
 
 interface SolanaWalletState {
@@ -117,6 +118,10 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
         throw new Error("Wallet not connected");
       }
 
+      const userAddress = lastestWalletMethods.publicKey.toBase58();
+      const adapterName = lastestWalletMethods.walletSolana.adapter.name;
+      lastestWalletMethods.syncLedgerAddress(userAddress, adapterName);
+
       const wallet: Wallet = {
         label: updatedWalletMethods.walletSolana.adapter.name,
         icon: "",
@@ -131,7 +136,7 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
         },
         accounts: [
           {
-            address: lastestWalletMethods.publicKey.toBase58(),
+            address: userAddress,
           },
         ],
         chains: [

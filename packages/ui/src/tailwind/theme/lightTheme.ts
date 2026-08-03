@@ -67,7 +67,7 @@ export const LIGHT_THEME_CSS_VARS = {
   "--oui-gradient-success-start": "14 203 129",
   "--oui-gradient-success-end": "14 203 129",
 
-  "--oui-gradient-danger-start": "2246 70 93",
+  "--oui-gradient-danger-start": "246 70 93",
   "--oui-gradient-danger-end": "246 70 93",
 
   "--oui-gradient-warning-start": "255 182 93",
