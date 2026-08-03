@@ -108,10 +108,9 @@ export const Faq = () => {
 
                 {/* Answer (collapsible) */}
                 <CollapsibleContent>
-                  <Box
-                    className="oui-pt-3 oui-text-base-contrast-54"
-                    dangerouslySetInnerHTML={{ __html: item.answer }}
-                  />
+                  <Box className="oui-pt-3 oui-text-base-contrast-54">
+                    {item.answer}
+                  </Box>
                 </CollapsibleContent>
               </Flex>
             </Collapsible>
