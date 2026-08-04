@@ -7,6 +7,7 @@ import {
   SOLANA_TESTNET_CHAINID,
   STORY_TESTNET_CHAINID,
   SOLANA_MAINNET_CHAINID,
+  XLAYER_TESTNET_CHAINID,
 } from "@orderly.network/types";
 
 export const hex2int = (chainId: string): number => parseInt(chainId);
@@ -37,6 +38,7 @@ export const isTestnet = (chainId: number) => {
     ABSTRACT_TESTNET_CHAINID,
     BSC_TESTNET_CHAINID,
     ADI_TESTNET_CHAINID,
+    XLAYER_TESTNET_CHAINID,
   ];
 
   return testnetIds.includes(chainId);
