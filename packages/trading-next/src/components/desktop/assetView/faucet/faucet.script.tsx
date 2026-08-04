@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   useAccount,
+  useChains,
   useConfig,
   useMutation,
   useWalletConnector,
@@ -8,11 +9,11 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
-import { isTestnet } from "@orderly.network/utils";
 
 export function useFaucetScript() {
   const { t } = useTranslation();
   const { connectedChain, namespace } = useWalletConnector();
+  const [, { isTestnetChain }] = useChains();
   const { state, account } = useAccount();
   const config = useConfig();
   const operatorUrl = config.get<string>("operatorUrl");
@@ -29,9 +30,9 @@ export function useFaucetScript() {
     return (
       (state.status === AccountStatusEnum.EnableTrading ||
         state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
-      isTestnet(parseInt(connectedChain.id as string))
+      isTestnetChain(connectedChain.id)
     );
-  }, [state, connectedChain]);
+  }, [state, connectedChain, isTestnetChain]);
 
   const getFaucet = () => {
     if (loading) {

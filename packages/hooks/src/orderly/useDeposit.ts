@@ -13,7 +13,7 @@ import {
   TrackerEventName,
   isNativeTokenChecker,
 } from "@orderly.network/types";
-import { Decimal, isTestnet } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";
@@ -634,7 +634,7 @@ function useDepositFee(options: {
 
 function useTargetChain(srcChainId?: number) {
   const networkId = useConfig("networkId");
-  const [_, { findByChainId }] = useChains(undefined);
+  const [, { findByChainId, isTestnetChain }] = useChains(undefined);
 
   const targetChain = useMemo(() => {
     let chain: API.Chain | undefined;
@@ -642,7 +642,7 @@ function useTargetChain(srcChainId?: number) {
     // Orderly testnet supported chain
     if (networkId === "testnet") {
       chain = findByChainId(
-        isTestnet(srcChainId!) ? srcChainId! : ARBITRUM_TESTNET_CHAINID,
+        isTestnetChain(srcChainId) ? srcChainId! : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
     } else {
       chain = findByChainId(srcChainId!) as API.Chain;
@@ -653,7 +653,7 @@ function useTargetChain(srcChainId?: number) {
       }
     }
     return chain;
-  }, [networkId, findByChainId, srcChainId]);
+  }, [networkId, findByChainId, isTestnetChain, srcChainId]);
 
   return targetChain;
 }

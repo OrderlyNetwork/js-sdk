@@ -29,6 +29,10 @@ export const praseChainIdToNumber = (chainId: string | number): number => {
 
 export const parseChainIdToNumber = praseChainIdToNumber;
 
+/**
+ * @deprecated This helper relies on a static chain ID list. Use
+ * `useChains().isTestnetChain` to detect testnet chains from API data.
+ */
 export const isTestnet = (chainId: number) => {
   const testnetIds = [
     ARBITRUM_TESTNET_CHAINID,
