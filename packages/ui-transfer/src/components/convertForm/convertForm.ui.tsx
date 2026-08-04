@@ -1,6 +1,5 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, Text, textVariants } from "@orderly.network/ui";
+import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { AvailableQuantity } from "../availableQuantity";
 import { ConvertAction } from "../convertAction";
@@ -10,26 +9,10 @@ import { QuantityInput } from "../quantityInput";
 import { Slippage } from "../slippage";
 import { SwapCoin } from "../swapCoin";
 import type { ConvertFormScriptReturn } from "./convertForm.script";
-import { unnormalizeAmount } from "./quoteAmount";
 
 export type ConvertFormProps = ConvertFormScriptReturn;
 
-const QuoteDetailRow: React.FC<{
-  label: string;
-  value: React.ReactNode;
-}> = ({ label, value }) => (
-  <Flex width="100%" itemAlign="center" justify="between">
-    <Text size="2xs" intensity={36}>
-      {label}
-    </Text>
-    <Text size="2xs" intensity={80}>
-      {value}
-    </Text>
-  </Flex>
-);
-
 export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
-  const { t } = useTranslation();
   const {
     loading,
     disabled,
@@ -51,7 +34,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     nextLTV,
     networkId,
     balanceRevalidating,
-    quoteDetails,
   } = props;
 
   return (
@@ -83,7 +65,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           value={
             isQuoteLoading || !quantity || Number.isNaN(Number(outAmounts))
               ? ""
-              : unnormalizeAmount(outAmounts, targetToken?.decimals ?? 6)
+              : outAmounts
           }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
@@ -105,34 +87,9 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
               !quantity ||
               Number.isNaN(Number(minimumReceived))
                 ? "-"
-                : unnormalizeAmount(
-                    minimumReceived.toString(),
-                    targetToken?.decimals ?? 6,
-                  )
+                : minimumReceived.toString()
             }
           />
-          {quoteDetails && (
-            <Flex width="100%" direction="column" gap={1}>
-              <QuoteDetailRow
-                label={t("transfer.convert.priceImpact")}
-                value={
-                  quoteDetails.priceImpactPercent === null
-                    ? t("transfer.convert.unavailable")
-                    : `${quoteDetails.priceImpactPercent}%`
-                }
-              />
-              {quoteDetails.estimatedGasFeeValue !== null && (
-                <QuoteDetailRow
-                  label={t("transfer.convert.gasFee")}
-                  value={quoteDetails.estimatedGasFeeValue}
-                />
-              )}
-              <QuoteDetailRow
-                label={t("transfer.convert.quoteExpires")}
-                value={new Date(quoteDetails.expiresAt).toLocaleTimeString()}
-              />
-            </Flex>
-          )}
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
             currentLtv={currentLTV}

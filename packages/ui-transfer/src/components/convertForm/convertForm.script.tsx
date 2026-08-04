@@ -15,48 +15,15 @@ import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
-import {
-  calculateMinimumReceived,
-  calculateQuoteRate,
-  getQuoteTokenDecimals,
-  toRawQuoteAmount,
-} from "./quoteAmount";
+import { calculateMinimumReceived, calculateQuoteRate } from "./quoteAmount";
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
 const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 const SWAP_QUOTE_DEBOUNCE_MS = 300;
 
-const normalizeQuoteErrorCode = (code: number | string | undefined) => {
-  if (typeof code === "string" && /^-?\d+$/.test(code)) {
-    return Number(code);
-  }
-
-  return code;
-};
-
-const getQuoteErrorMessageKey = (code: number | string | undefined) => {
-  switch (normalizeQuoteErrorCode(code)) {
-    case -1005:
-      return "transfer.convert.quoteInvalidParam";
-    case -1040:
-      return "transfer.convert.quoteChainUnsupported";
-    case -1041:
-      return "transfer.convert.quoteTokenPairUnsupported";
-    case -1043:
-      return "transfer.convert.quoteRejected";
-    case -1042:
-      return "transfer.convert.quoteUnavailable";
-    case -1044:
-      return "transfer.convert.quoteDisabled";
-    case -1003:
-      return "transfer.convert.quoteRateLimited";
-    case -1010:
-      return "transfer.convert.quoteExternalUnavailable";
-    default:
-      return "transfer.convert.quoteFailed";
-  }
-};
+const getQuoteErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
 
 export interface ConvertFormScriptOptions {
   token?: string;
@@ -164,19 +131,17 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
           return;
         }
 
-        const code = normalizeQuoteErrorCode((error as SwapQuoteError)?.code);
+        const code = Number((error as SwapQuoteError)?.code);
         console.error("[convertForm] Swap quote failed:", error);
+        toast.error(getQuoteErrorMessage(error));
 
         if (code === -1002) {
-          toast.error(t("connector.createAccount"));
           void Promise.resolve(connectWallet()).catch((connectError) => {
             console.error(
               "[convertForm] Account recovery failed:",
               connectError,
             );
           });
-        } else {
-          toast.error(t(getQuoteErrorMessageKey(code)));
         }
         resetQuote();
       });
@@ -186,7 +151,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       active = false;
       window.clearTimeout(timer);
     };
-  }, [postQuote, quoteRequest, resetQuote, t]);
+  }, [connectWallet, postQuote, quoteRequest, resetQuote]);
 
   const isQuoteDataMatched = useMemo(() => {
     if (!quoteData || !quoteRequest) {
@@ -195,8 +160,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
     const fromToken = quoteData.fromToken;
     const toToken = quoteData.toToken;
-    // Quote raw amounts use logical token decimals, not chain_details decimals.
-    const sourceDecimals = getQuoteTokenDecimals(sourceToken);
 
     if (
       !fromToken ||
@@ -205,18 +168,15 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       !toToken.tokenAddress ||
       !fromToken.amount ||
       !toToken.estimatedAmount ||
+      !toToken.estimatedValue ||
       !quoteData.gasEstimate ||
       typeof quoteData.expiresAt !== "number"
     ) {
       return false;
     }
 
-    return (
-      fromToken.amount ===
-        toRawQuoteAmount(quoteRequest.amount, sourceDecimals) &&
-      quoteData.expiresAt > Date.now()
-    );
-  }, [quoteData, quoteRequest, sourceToken]);
+    return quoteData.expiresAt > Date.now();
+  }, [quoteData, quoteRequest]);
 
   useEffect(() => {
     if (quoteData && !isQuoteDataMatched) {
@@ -226,24 +186,22 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const memoizedOutAmounts = useMemo<string>(() => {
     if (quoteData && !isQuoteLoading && isQuoteDataMatched) {
-      return quoteData.toToken.estimatedAmount;
+      return quoteData.toToken.estimatedValue;
     }
 
     return "-";
   }, [quoteData, isQuoteDataMatched, isQuoteLoading]);
 
   const memoizedConvertRate = useMemo(() => {
-    if (quoteData && !isQuoteLoading && isQuoteDataMatched) {
+    if (quoteData && quoteRequest && !isQuoteLoading && isQuoteDataMatched) {
       return calculateQuoteRate(
-        quoteData.fromToken.amount,
-        quoteData.toToken.estimatedAmount,
-        getQuoteTokenDecimals(sourceToken),
-        getQuoteTokenDecimals(targetToken),
+        quoteRequest.amount,
+        quoteData.toToken.estimatedValue,
       );
     }
 
     return "-";
-  }, [isQuoteDataMatched, isQuoteLoading, quoteData, sourceToken, targetToken]);
+  }, [isQuoteDataMatched, isQuoteLoading, quoteData, quoteRequest]);
 
   const memoizedMinimumReceived = useMemo<string>(() => {
     if (!quoteData || isQuoteLoading || !isQuoteDataMatched) {
@@ -256,7 +214,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     }
 
     return calculateMinimumReceived(
-      quoteData.toToken.estimatedAmount,
+      quoteData.toToken.estimatedValue,
       effectiveSlippage.toString(),
     );
   }, [quoteData, isQuoteDataMatched, isQuoteLoading]);
@@ -279,7 +237,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
           "[convertForm] Expired swap quote refresh failed:",
           error,
         );
-        toast.error(t("transfer.convert.quoteFailed"));
+        toast.error(getQuoteErrorMessage(error));
         resetQuote();
       });
     }, delay);
@@ -288,7 +246,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       active = false;
       window.clearTimeout(timer);
     };
-  }, [isQuoteDataMatched, postQuote, quoteData, quoteRequest, resetQuote, t]);
+  }, [isQuoteDataMatched, postQuote, quoteData, quoteRequest, resetQuote]);
 
   const currentLtv = useComputedLTV();
 
@@ -324,14 +282,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     convertRate: memoizedConvertRate,
     minimumReceived: memoizedMinimumReceived,
     outAmounts: memoizedOutAmounts,
-    quoteDetails:
-      quoteData && isQuoteDataMatched && !isQuoteLoading
-        ? {
-            priceImpactPercent: quoteData.priceImpactPercent,
-            estimatedGasFeeValue: quoteData.gasEstimate.estimatedFeeValue,
-            expiresAt: quoteData.expiresAt,
-          }
-        : null,
     isQuoteLoading,
     currentLTV: currentLtv,
     nextLTV: nextLTV,

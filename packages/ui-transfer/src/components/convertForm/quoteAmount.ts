@@ -1,35 +1,15 @@
 import { Decimal } from "@orderly.network/utils";
 
-/**
- * Quote amounts use the logical token precision from /v1/public/token.
- * `chain_details` describes network metadata and must not override this
- * precision for the provider-neutral quote response.
- */
-export const getQuoteTokenDecimals = (token?: {
-  decimals?: number;
-  chain_details?: unknown;
-}) => token?.decimals ?? 6;
-
-export const toRawQuoteAmount = (amount: number, decimals: number) =>
-  new Decimal(amount).mul(new Decimal(10).pow(decimals)).toFixed(0);
-
-export const unnormalizeAmount = (amount: string, decimals: number) =>
-  new Decimal(amount).div(new Decimal(10).pow(decimals)).toString();
-
+// The quote target is fixed to USDC, so estimatedValue is the display amount.
 export const calculateQuoteRate = (
-  inputAmount: string,
-  outputAmount: string,
-  sourceDecimals: number,
-  targetDecimals: number,
-) =>
-  new Decimal(unnormalizeAmount(outputAmount, targetDecimals))
-    .div(unnormalizeAmount(inputAmount, sourceDecimals))
-    .toString();
+  inputAmount: number,
+  estimatedUsdcValue: string,
+) => new Decimal(estimatedUsdcValue).div(inputAmount).toString();
 
 export const calculateMinimumReceived = (
-  estimatedAmount: string,
+  estimatedUsdcValue: string,
   slippageLimitPercent: string,
 ) =>
-  new Decimal(estimatedAmount)
+  new Decimal(estimatedUsdcValue)
     .mul(new Decimal(1).minus(new Decimal(slippageLimitPercent).div(100)))
     .toString();
