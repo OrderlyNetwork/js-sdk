@@ -17,6 +17,10 @@ import { Decimal } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";
+import {
+  type AllowanceComparison,
+  waitForAllowance as pollAllowanceUntilSatisfied,
+} from "./allowance";
 import { useChains } from "./useChains";
 
 export type DepositOptions = {
@@ -147,7 +151,7 @@ export const useDeposit = (options: DepositOptions) => {
         decimals: decimal,
       });
 
-      await updateAllowanceWhenTxSuccess(result.hash);
+      await updateAllowanceWhenTxSuccess(result.hash, "0", "eq");
     },
     [account, updateAllowanceWhenTxSuccess],
   );
@@ -172,17 +176,19 @@ export const useDeposit = (options: DepositOptions) => {
           );
         }
       }
-      return account.assetsManager
-        .approve({
-          address: options.address,
-          amount,
-          vaultAddress,
-          isSetMaxValue,
-          decimals: options.decimals!,
-        })
-        .then((result: any) => {
-          return updateAllowanceWhenTxSuccess(result.hash);
-        });
+      const result = await account.assetsManager.approve({
+        address: options.address,
+        amount,
+        vaultAddress,
+        isSetMaxValue,
+        decimals: options.decimals!,
+      });
+
+      const expectedAllowance =
+        amount ||
+        account.walletAdapter?.formatUnits(MaxUint256, options.decimals!);
+
+      return updateAllowanceWhenTxSuccess(result.hash, expectedAllowance);
     },
     [
       account,
@@ -216,7 +222,9 @@ export const useDeposit = (options: DepositOptions) => {
 
     return depositPromise
       .then((result: any) => {
-        updateAllowanceWhenTxSuccess(result.hash);
+        void updateAllowanceWhenTxSuccess(result.hash).catch((error) => {
+          console.error("deposit allowance refresh error", error);
+        });
         // when deposit request success, update balance
         setBalance((value) =>
           value ? new Decimal(value).sub(quantity).toString() : "0",
@@ -466,39 +474,67 @@ function useAllowance(options: {
     }
   }, [swrAllowance]);
 
-  const updateAllowanceWhenTxSuccess = useCallback(
-    (txHash: string) => {
-      return account.walletAdapter
-        ?.pollTransactionReceiptWithBackoff(txHash)
-        .then((receipt) => {
-          if (receipt.status === 1) {
-            mutateAllowance();
-            // fetchAllowance({ address, decimals, vaultAddress }).then(
-            //   (allowance) => {
-            //     setAllowance(allowance);
-            //   },
-            // );
-          }
-        });
+  const waitForAllowance = useCallback(
+    async (expectedAmount: string, comparison: AllowanceComparison = "gte") => {
+      return pollAllowanceUntilSatisfied({
+        readAllowance: () =>
+          fetchAllowance({
+            address,
+            decimals,
+            vaultAddress,
+          }),
+        expectedAmount,
+        comparison,
+        onRead: setAllowance,
+        onSatisfied: (currentAllowance) =>
+          mutateAllowance(currentAllowance, { revalidate: false }).then(() => {
+            return undefined;
+          }),
+      });
     },
-    [account],
+    [address, decimals, fetchAllowance, mutateAllowance, vaultAddress],
   );
 
-  const enquireAllowance = useCallback(async () => {
-    const _allowance = await fetchAllowance({
+  const updateAllowanceWhenTxSuccess = useCallback(
+    async (
+      txHash: string,
+      expectedAmount?: string,
+      comparison: AllowanceComparison = "gte",
+    ) => {
+      const receipt =
+        await account.walletAdapter?.pollTransactionReceiptWithBackoff(txHash);
+
+      if (!receipt || Number(receipt.status) !== 1) {
+        throw new SDKError("Transaction failed");
+      }
+
+      if (expectedAmount !== undefined) {
+        return waitForAllowance(expectedAmount, comparison);
+      }
+
+      const currentAllowance = await fetchAllowance({
+        address,
+        decimals,
+        vaultAddress,
+      });
+      setAllowance(currentAllowance);
+      await mutateAllowance(currentAllowance, { revalidate: false });
+      return currentAllowance;
+    },
+    [
+      account,
       address,
       decimals,
+      fetchAllowance,
+      mutateAllowance,
       vaultAddress,
-    });
+      waitForAllowance,
+    ],
+  );
 
-    setAllowance(_allowance);
-
-    if (new Decimal(quantity).greaterThan(_allowance)) {
-      throw new SDKError("Insufficient allowance");
-    }
-
-    return _allowance;
-  }, [account, address, decimals, vaultAddress, quantity]);
+  const enquireAllowance = useCallback(() => {
+    return waitForAllowance(quantity);
+  }, [quantity, waitForAllowance]);
 
   return {
     allowance,
