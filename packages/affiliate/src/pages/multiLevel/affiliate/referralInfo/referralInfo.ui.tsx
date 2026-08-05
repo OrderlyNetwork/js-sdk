@@ -27,13 +27,15 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
         className="oui-referralInfo-header"
       >
         <Text size="lg">{t("affiliate.referral")}</Text>
-        <Button
-          size="xs"
-          color="secondary"
-          onClick={() => props.onEdit(ReferralCodeFormField.ReferralCode)}
-        >
-          {t("affiliate.configure")}
-        </Button>
+        {props.showConfigureButton ? (
+          <Button
+            size="xs"
+            color="secondary"
+            onClick={() => props.onEdit(ReferralCodeFormField.ReferralCode)}
+          >
+            {t("affiliate.configure")}
+          </Button>
+        ) : null}
       </Flex>
 
       <Container className="oui-referralInfo-code oui-flex-col oui-items-start oui-gap-4 oui-p-5">
