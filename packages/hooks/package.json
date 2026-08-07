@@ -44,7 +44,7 @@
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/web3-provider-ethers": "workspace:*",
     "immer": "^10.1.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "ramda": "^0.29.0",
     "swr": "2.2.4",
     "use-constant": "^1.1.1",

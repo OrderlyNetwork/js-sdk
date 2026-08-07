@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { PublicKey } from "@solana/web3.js";
-import { WooFiSwapWidgetReact } from "woofi-swap-widget-kit/react";
+// import { WooFiSwapWidgetReact } from "woofi-swap-widget-kit/react";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { ChainNamespace, SOLANA_MAINNET_CHAINID } from "@orderly.network/types";
@@ -20,7 +20,8 @@ import {
 } from "@orderly.network/ui";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
-import "woofi-swap-widget-kit/style.css";
+
+// import "woofi-swap-widget-kit/style.css";
 
 function useLatestCallback<T extends (...args: never[]) => unknown>(fn: T): T {
   const fnRef = useRef(fn);
@@ -125,7 +126,7 @@ const SwapWidget = () => {
 
   return (
     <Flex direction="column" justify="center" dir="ltr">
-      <WooFiSwapWidgetReact
+      {/* <WooFiSwapWidgetReact
         brokerAddress={brokerAddress}
         evmProvider={evmProvider}
         solanaProvider={solanaProvider}
@@ -139,7 +140,7 @@ const SwapWidget = () => {
           enableHyperevm: false,
           enableZksync: false,
         }}
-      />
+      /> */}
       {showWarning && (
         <Flex
           className={cn(

@@ -37,7 +37,7 @@
     "immer": "^10.1.1",
     "ramda": "^0.29.0",
     "date-fns": "^3.6.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.18.1"
   },
   "devDependencies": {
     "@types/ramda": "^0.29.3",
