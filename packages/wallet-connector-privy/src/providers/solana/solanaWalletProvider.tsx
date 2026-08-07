@@ -16,29 +16,53 @@ interface SolanaWalletContextValue {
   isConnected: boolean;
 }
 
-const defaultUseSolanaWallet = {
+const disabledSolanaWalletValue: SolanaWalletContextValue = {
   wallets: [],
-  select: () => Promise.resolve(),
-  connect: () => Promise.resolve(),
+  connectedChain: null,
+  connect: () =>
+    Promise.reject(new Error("Solana wallet connector is disabled")),
   wallet: null,
-  publicKey: null,
-  connecting: false,
-  signMessage: () => Promise.resolve(),
-  signTransaction: () => Promise.resolve(),
-  sendTransaction: () => Promise.resolve(),
   disconnect: () => Promise.resolve(),
+  isConnected: false,
 };
 
 const SolanaWalletContext = createContext<SolanaWalletContextValue | null>(
   null,
 );
 
-export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
+export const SolanaWalletProvider: React.FC<{
+  children: React.ReactNode;
+  disabled: boolean;
+}> = ({ children, disabled }) => {
+  useEffect(() => {
+    if (disabled) {
+      useSolanaWalletStore.setState({
+        wallet: null,
+        isConnecting: false,
+        error: null,
+        isManual: false,
+        walletMethods: null,
+        pendingWalletName: null,
+      });
+    }
+  }, [disabled]);
+
+  if (disabled) {
+    return (
+      <SolanaWalletContext.Provider value={disabledSolanaWalletValue}>
+        {children}
+      </SolanaWalletContext.Provider>
+    );
+  }
+
+  return <EnabledSolanaWalletProvider>{children}</EnabledSolanaWalletProvider>;
+};
+
+const EnabledSolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { syncLedgerAddress } = useStorageLedgerAddress();
-  const { network, solanaInfo, connectorWalletType } =
-    useWalletConnectorPrivy();
+  const { network, solanaInfo } = useWalletConnectorPrivy();
 
   const {
     wallets,
@@ -51,7 +75,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     signTransaction,
     sendTransaction,
     disconnect: disconnectSolana,
-  } = connectorWalletType.disableSolana ? defaultUseSolanaWallet : useWallet();
+  } = useWallet();
 
   const {
     wallet,

@@ -1,11 +1,13 @@
-import React, { PropsWithChildren, useMemo, useState } from "react";
-import { AbstractWalletProvider } from "@abstract-foundation/agw-react";
+import React, { PropsWithChildren, useMemo } from "react";
+import { AbstractWalletProvider as AGWProvider } from "@abstract-foundation/agw-react";
 // Use abstract for mainnet
 import { abstractTestnet, abstract } from "viem/chains";
 import { useWalletConnectorPrivy } from "../../provider";
-import { Network } from "../../types";
+import { InitAbstract, Network } from "../../types";
 
-export const InitAbstractProvider = (props: PropsWithChildren) => {
+export const InitAbstractProvider = (
+  props: PropsWithChildren<{ abstractConfig: InitAbstract }>,
+) => {
   const { network } = useWalletConnectorPrivy();
   const chain = useMemo(() => {
     if (network === Network.mainnet) {
@@ -14,8 +16,8 @@ export const InitAbstractProvider = (props: PropsWithChildren) => {
     return abstractTestnet;
   }, [network]);
   return (
-    <AbstractWalletProvider chain={chain}>
+    <AGWProvider chain={chain} queryClient={props.abstractConfig.queryClient}>
       {props.children}
-    </AbstractWalletProvider>
+    </AGWProvider>
   );
 };

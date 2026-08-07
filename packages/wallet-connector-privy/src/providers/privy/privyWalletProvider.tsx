@@ -62,12 +62,11 @@ const defaultPrivyWalletContextValue: PrivyWalletContextValue = {
 
 const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
 
-export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { connectorWalletType } = useWalletConnectorPrivy();
-
-  if (connectorWalletType.disablePrivy) {
+export const PrivyWalletProvider: React.FC<{
+  children: React.ReactNode;
+  disabled: boolean;
+}> = ({ children, disabled }) => {
+  if (disabled) {
     return (
       <PrivyWalletContext.Provider value={defaultPrivyWalletContextValue}>
         {children}
