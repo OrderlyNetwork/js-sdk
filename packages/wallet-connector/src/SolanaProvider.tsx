@@ -10,12 +10,12 @@ import {
   WalletError,
   WalletNotReadyError,
 } from "@solana/wallet-adapter-base";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useScreen } from "@orderly.network/ui";

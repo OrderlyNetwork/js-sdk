@@ -9,8 +9,8 @@ import {
   WalletAdapterNetwork,
   WalletError,
 } from "@solana/wallet-adapter-base";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { WalletProvider } from "@solana/wallet-adapter-react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useWalletConnectorPrivy } from "../../provider";
 import { InitSolana } from "../../types";
