@@ -25,7 +25,7 @@
     "@uiw/codemirror-theme-github": "^4.23.8",
     "@uiw/react-codemirror": "^4.23.8",
     "@orderly.network/ui": "workspace:*",
-    "storybook": "^10.1.10"
+    "storybook": "^10.4.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
