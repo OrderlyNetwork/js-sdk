@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "流動性が不足しています。後ほど再度お試しください。または、別のチェーンを使用して入金してください。",
   "transfer.convert.completed": "変換が完了しました",
   "transfer.convert.failed": "変換に失敗しました",
-  "transfer.convert.quoteFailed": "見積もりリクエストに失敗しました。後でもう一度お試しください。",
   "transfer.depositCap": "入金上限",
   "transfer.depositCap.tooltip": "最大入金額 ",
   "transfer.deposit.convertRate": "換算レート",

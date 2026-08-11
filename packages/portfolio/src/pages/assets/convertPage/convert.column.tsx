@@ -10,6 +10,7 @@ import {
   toast,
 } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import type { ConvertRecord, ConvertTransaction } from "../type";
 
 export interface ConvertColumnsOptions {
@@ -24,13 +25,51 @@ export interface ConvertDetailColumnsOptions {
 
 export const ConvertedAssetColumn = ({
   convertedAssets,
+  details = [],
 }: {
-  convertedAssets: Record<string, number>;
+  convertedAssets?: Record<string, number> | null;
+  details?: ConvertTransaction[];
 }) => {
   const { t } = useTranslation();
   const assets = useMemo(() => {
-    return Object.keys(convertedAssets);
-  }, [convertedAssets]);
+    const convertedAssetNames = Object.keys(convertedAssets ?? {}).filter(
+      Boolean,
+    );
+
+    // Failed conversions can have an empty `converted_asset` summary while
+    // the asset name is still available on the transaction details.
+    if (convertedAssetNames.length > 0) {
+      return convertedAssetNames;
+    }
+
+    return Array.from(
+      new Set(
+        details
+          .map((detail) => detail.converted_asset)
+          .filter((asset): asset is string => Boolean(asset)),
+      ),
+    );
+  }, [convertedAssets, details]);
+
+  const quantities = useMemo<Record<string, number | string>>(() => {
+    if (
+      convertedAssets &&
+      Object.keys(convertedAssets).some((asset) => Boolean(asset))
+    ) {
+      return convertedAssets;
+    }
+
+    return details.reduce<Record<string, number | string>>((result, detail) => {
+      if (detail.converted_asset) {
+        result[detail.converted_asset] = new Decimal(
+          result[detail.converted_asset] ?? 0,
+        )
+          .plus(detail.converted_qty ?? 0)
+          .toString();
+      }
+      return result;
+    }, {});
+  }, [convertedAssets, details]);
 
   const tooltipContent = useMemo(() => {
     return (
@@ -59,13 +98,13 @@ export const ConvertedAssetColumn = ({
               <Text.formatted>{asset}</Text.formatted>
             </Flex>
             <div>
-              <Text.formatted>{convertedAssets[asset]}</Text.formatted>
+              <Text.formatted>{quantities[asset]}</Text.formatted>
             </div>
           </Flex>
         ))}
       </Flex>
     );
-  }, [assets, convertedAssets, t]);
+  }, [assets, quantities, t]);
 
   return (
     <Flex itemAlign="center" gap={2}>
@@ -110,8 +149,16 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         align: "left",
         width: 200,
         maxWidth: 200,
-        render(convertedAssets: Record<string, number>) {
-          return <ConvertedAssetColumn convertedAssets={convertedAssets} />;
+        render(
+          convertedAssets: Record<string, number> | null | undefined,
+          record: ConvertRecord,
+        ) {
+          return (
+            <ConvertedAssetColumn
+              convertedAssets={convertedAssets}
+              details={record.details}
+            />
+          );
         },
       },
       {

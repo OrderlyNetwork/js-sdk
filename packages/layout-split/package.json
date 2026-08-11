@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/layout-split",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Split layout strategy implementation for Orderly layout system",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

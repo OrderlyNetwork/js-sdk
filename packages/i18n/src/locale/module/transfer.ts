@@ -167,8 +167,6 @@ export const transfer = {
 
   "transfer.convert.completed": "Convert completed",
   "transfer.convert.failed": "Convert failed",
-  "transfer.convert.quoteFailed":
-    "Quote request failed. Please try again later.",
   "transfer.depositCap": "Deposit cap",
   "transfer.depositCap.tooltip": "Max deposit amount for ",
   "transfer.deposit.convertRate": "Convert rate",

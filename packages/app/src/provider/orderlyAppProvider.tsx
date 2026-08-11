@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useMemo } from "react";
 import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
+import type { NetworkId } from "@orderly.network/types";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
@@ -43,6 +44,14 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     ...configProps
   } = props;
 
+  const configStore = configProps.configStore;
+  const brokerName =
+    props.brokerName ?? configStore?.get<string>("brokerName") ?? "Orderly";
+  const networkId =
+    configProps.networkId ??
+    configStore?.get<NetworkId>("networkId") ??
+    "testnet";
+
   useTrack();
   useBootstrap();
 
@@ -54,16 +63,16 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
    */
   const pluginState = useMemo(
     () => ({
-      config: { appIcons, brokerName: props.brokerName! },
-      networkId: configProps.networkId!,
+      config: { appIcons, brokerName },
+      networkId,
     }),
-    [appIcons, props.brokerName, configProps.networkId],
+    [appIcons, brokerName, networkId],
   );
 
   const pluginsList = plugins ?? EMPTY_PLUGINS;
 
   return (
-    <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
+    <AppConfigProvider appIcons={appIcons} brokerName={brokerName}>
       <AppThemeProvider
         // dateFormatting={dateFormatting}
         components={components}

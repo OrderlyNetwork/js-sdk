@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "نقدینگی کافی نیست؛ بعداً امتحان کنید یا زنجیرهٔ دیگر برای واریز.",
   "transfer.convert.completed": "تبدیل انجام شد",
   "transfer.convert.failed": "تبدیل ناموفق",
-  "transfer.convert.quoteFailed": "درخواست قیمت ناموفق بود. لطفاً بعداً دوباره تلاش کنید.",
   "transfer.depositCap": "سقف واریز",
   "transfer.depositCap.tooltip": "حداکثر مبلغ واریز برای ",
   "transfer.deposit.convertRate": "نرخ تبدیل",

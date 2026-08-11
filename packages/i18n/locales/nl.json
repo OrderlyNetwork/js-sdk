@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "Onvoldoende liquiditeit. Probeer het later opnieuw of gebruik een andere chain om te storten.",
   "transfer.convert.completed": "Conversie voltooid",
   "transfer.convert.failed": "Conversie mislukt",
-  "transfer.convert.quoteFailed": "Offerteaanvraag mislukt. Probeer het later opnieuw.",
   "transfer.depositCap": "Stortingslimiet",
   "transfer.depositCap.tooltip": "Max. stortingsbedrag voor ",
   "transfer.deposit.convertRate": "Omrekeningskoers",

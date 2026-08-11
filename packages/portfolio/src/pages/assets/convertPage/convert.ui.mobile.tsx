@@ -164,7 +164,10 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
     <div className="oui-flex oui-flex-col oui-gap-2 oui-rounded-xl oui-bg-base-9 oui-p-2">
       <div className="oui-flex oui-justify-between">
         <div className="oui-flex oui-items-center oui-text-xs oui-font-semibold oui-text-base-contrast-80">
-          <ConvertedAssetColumn convertedAssets={item.converted_asset} />
+          <ConvertedAssetColumn
+            convertedAssets={item.converted_asset}
+            details={item.details}
+          />
           <div
             className="oui-ms-2 oui-text-primary"
             onClick={() => {

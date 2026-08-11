@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "Không đủ thanh khoản. Vui lòng thử lại sau hoặc sử dụng chuỗi khác để nạp tiền.",
   "transfer.convert.completed": "Chuyển đổi đã hoàn thành",
   "transfer.convert.failed": "Chuyển đổi thất bại",
-  "transfer.convert.quoteFailed": "Yêu cầu báo giá không thành công. Vui lòng thử lại sau.",
   "transfer.depositCap": "Hạn mức nạp tiền",
   "transfer.depositCap.tooltip": "Số tiền nạp tối đa cho ",
   "transfer.deposit.convertRate": "Tỷ lệ chuyển đổi",

@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "Yeterli likidite yok. Lütfen daha sonra tekrar deneyin veya başka bir zincir kullanarak yatırın.",
   "transfer.convert.completed": "Dönüşüm tamamlandı",
   "transfer.convert.failed": "Dönüştürme başarısız",
-  "transfer.convert.quoteFailed": "Fiyat teklifi isteği başarısız oldu. Lütfen daha sonra tekrar deneyin.",
   "transfer.depositCap": "Yatırım limiti",
   "transfer.depositCap.tooltip": "Maksimum yatırım tutarı ",
   "transfer.deposit.convertRate": "Dönüştürme oranı",

@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "Недостатньо ліквідності. Будь ласка, спробуйте пізніше або використайте інший ланцюг для депозиту.",
   "transfer.convert.completed": "Конвертацію завершено",
   "transfer.convert.failed": "Помилка конвертації",
-  "transfer.convert.quoteFailed": "Не вдалося запросити котирування. Спробуйте пізніше.",
   "transfer.depositCap": "Ліміт депозиту",
   "transfer.depositCap.tooltip": "Максимальна сума депозиту для ",
   "transfer.deposit.convertRate": "Курс конвертації",

@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "Liquidez insuficiente. Tente novamente mais tarde ou use outra rede para depositar.",
   "transfer.convert.completed": "Conversão concluída",
   "transfer.convert.failed": "Conversão falhou",
-  "transfer.convert.quoteFailed": "Falha ao solicitar cotação. Tente novamente mais tarde.",
   "transfer.depositCap": "Limite de depósito",
   "transfer.depositCap.tooltip": "Valor máximo de depósito para ",
   "transfer.deposit.convertRate": "Taxa de conversão",

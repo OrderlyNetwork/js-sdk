@@ -8,10 +8,7 @@ import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
 import { Slippage } from "../slippage";
 import { SwapCoin } from "../swapCoin";
-import {
-  unnormalizeAmount,
-  type ConvertFormScriptReturn,
-} from "./convertForm.script";
+import type { ConvertFormScriptReturn } from "./convertForm.script";
 
 export type ConvertFormProps = ConvertFormScriptReturn;
 
@@ -37,7 +34,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     nextLTV,
     networkId,
     balanceRevalidating,
-    targetChainInfo,
   } = props;
 
   return (
@@ -69,7 +65,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           value={
             isQuoteLoading || !quantity || Number.isNaN(Number(outAmounts))
               ? ""
-              : unnormalizeAmount(outAmounts, targetChainInfo?.decimals ?? 6)
+              : outAmounts
           }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
@@ -85,16 +81,13 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
             symbol={targetToken?.token || ""}
-            precision={targetChainInfo?.precision ?? 6}
+            precision={targetToken?.precision ?? 6}
             value={
               isQuoteLoading ||
               !quantity ||
               Number.isNaN(Number(minimumReceived))
                 ? "-"
-                : unnormalizeAmount(
-                    minimumReceived.toString(),
-                    targetChainInfo?.decimals ?? 6,
-                  )
+                : minimumReceived.toString()
             }
           />
           <LtvWidget
