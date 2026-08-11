@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "流動性不足。請稍後再试或使用其他鏈進行存款。",
   "transfer.convert.completed": "轉換完成",
   "transfer.convert.failed": "轉換失敗",
-  "transfer.convert.quoteFailed": "報價請求失敗。請稍後再試。",
   "transfer.depositCap": "存款上限",
   "transfer.depositCap.tooltip": "最大存款金額 ",
   "transfer.deposit.convertRate": "兑换匯率",

@@ -4,37 +4,31 @@ import {
   useConvert,
   useComputedLTV,
   useLocalStorage,
-  useOdosQuote,
+  useSwapQuote,
   useWalletConnector,
 } from "@orderly.network/hooks";
+import type { SwapQuoteError, SwapQuoteRequest } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { account } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
 import type { NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
-
-const { calcMinimumReceived } = account;
+import { calculateMinimumReceived, calculateQuoteRate } from "./quoteAmount";
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
 const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
-const ODOS_QUOTE_DEBOUNCE_MS = 300;
+const SWAP_QUOTE_DEBOUNCE_MS = 300;
+
+const getQuoteErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
 
 export interface ConvertFormScriptOptions {
   token?: string;
   close?: () => void;
 }
-
-export const normalizeAmount = (amount: string, decimals: number) => {
-  return new Decimal(amount).mul(new Decimal(10).pow(decimals)).toFixed(0);
-};
-
-export const unnormalizeAmount = (amount: string, decimals: number) => {
-  return new Decimal(amount).div(new Decimal(10).pow(decimals)).toString();
-};
 
 export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { token: defaultToken, close } = options;
@@ -48,17 +42,12 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const [quantity, setQuantity] = useState<string>("");
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, connectWallet } = useAppContext();
 
   const { wallet } = useWalletConnector();
 
-  const {
-    sourceToken,
-    sourceTokens,
-    onSourceTokenChange,
-    targetToken,
-    targetChainInfo,
-  } = useToken({ defaultValue: defaultToken });
+  const { sourceToken, sourceTokens, onSourceTokenChange, targetToken } =
+    useToken({ defaultValue: defaultToken });
 
   const { walletName, address } = useMemo(
     () => ({
@@ -74,7 +63,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const [slippage, setSlippage] = useLocalStorage(
     ORDERLY_CONVERT_SLIPPAGE_KEY,
-    1,
+    0.5,
   );
 
   const { maxAmount, convert } = useConvert({ token: sourceToken?.token });
@@ -108,57 +97,25 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const [
     postQuote,
     { data: quoteData, reset: resetQuote, isMutating: isQuoteLoading },
-  ] = useOdosQuote();
+  ] = useSwapQuote();
 
-  const quoteRequest = useMemo(() => {
-    const { quoteChainId, contract_address, decimals } = sourceToken || {};
-    const targetAddress = targetChainInfo?.contract_address;
-
+  const quoteRequest = useMemo<SwapQuoteRequest | null>(() => {
     if (
       !quantity ||
       new Decimal(quantity).lte(0) ||
-      !quoteChainId ||
-      !contract_address ||
-      typeof decimals === "undefined" ||
-      !targetAddress ||
-      !address
+      !sourceToken?.token ||
+      !targetToken?.token
     ) {
       return null;
     }
 
-    const inputAmount = normalizeAmount(quantity, decimals);
-
     return {
-      inputAmount,
-      inputTokenAddress: contract_address.toLowerCase(),
-      outputTokenAddress: targetAddress.toLowerCase(),
-      body: {
-        chainId: parseInt(quoteChainId),
-        inputTokens: [
-          {
-            amount: inputAmount,
-            tokenAddress: contract_address,
-          },
-        ],
-        outputTokens: [
-          {
-            proportion: 1,
-            tokenAddress: targetAddress,
-          },
-        ],
-        userAddr: address,
-        // simple: true,
-      },
+      fromToken: sourceToken.token,
+      toToken: targetToken.token,
+      amount: new Decimal(quantity).toNumber(),
+      slippage: new Decimal(slippage).div(100).toNumber(),
     };
-  }, [
-    quantity,
-    sourceToken?.quoteChainId,
-    sourceToken?.contract_address,
-    sourceToken?.decimals,
-    targetChainInfo?.contract_address,
-    targetChainInfo?.decimals,
-    address,
-  ]);
+  }, [quantity, slippage, sourceToken?.token, targetToken?.token]);
 
   useEffect(() => {
     resetQuote();
@@ -169,50 +126,56 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
     let active = true;
     const timer = window.setTimeout(() => {
-      // https://docs.odos.xyz/build/api-docs
-      postQuote(quoteRequest.body).catch((error) => {
+      postQuote(quoteRequest).catch((error) => {
         if (!active) {
           return;
         }
 
-        let message = t("transfer.convert.failed");
+        const code = Number((error as SwapQuoteError)?.code);
+        console.error("[convertForm] Swap quote failed:", error);
+        toast.error(getQuoteErrorMessage(error));
 
-        if (error instanceof Error) {
-          message = error.message;
-        } else if (error) {
-          message = String(error);
+        if (code === -1002) {
+          void Promise.resolve(connectWallet()).catch((connectError) => {
+            console.error(
+              "[convertForm] Account recovery failed:",
+              connectError,
+            );
+          });
         }
-
-        if (message === "Failed to fetch") {
-          message = t("transfer.convert.failed");
-        }
-
-        console.error("[convertForm] Odos quote failed:", error);
-        toast.error(message);
         resetQuote();
       });
-    }, ODOS_QUOTE_DEBOUNCE_MS);
+    }, SWAP_QUOTE_DEBOUNCE_MS);
 
     return () => {
       active = false;
       window.clearTimeout(timer);
     };
-  }, [postQuote, quoteRequest, resetQuote, t]);
+  }, [connectWallet, postQuote, quoteRequest, resetQuote]);
 
   const isQuoteDataMatched = useMemo(() => {
     if (!quoteData || !quoteRequest) {
       return false;
     }
 
-    const inAmount = quoteData?.inAmounts?.[0]?.toString();
-    const inToken = quoteData?.inTokens?.[0]?.toLowerCase();
-    const outToken = quoteData?.outTokens?.[0]?.toLowerCase();
+    const fromToken = quoteData.fromToken;
+    const toToken = quoteData.toToken;
 
-    return (
-      inAmount === quoteRequest.inputAmount &&
-      inToken === quoteRequest.inputTokenAddress &&
-      outToken === quoteRequest.outputTokenAddress
-    );
+    if (
+      !fromToken ||
+      !toToken ||
+      !fromToken.tokenAddress ||
+      !toToken.tokenAddress ||
+      !fromToken.amount ||
+      !toToken.estimatedAmount ||
+      !toToken.estimatedValue ||
+      !quoteData.gasEstimate ||
+      typeof quoteData.expiresAt !== "number"
+    ) {
+      return false;
+    }
+
+    return quoteData.expiresAt > Date.now();
   }, [quoteData, quoteRequest]);
 
   useEffect(() => {
@@ -223,45 +186,67 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const memoizedOutAmounts = useMemo<string>(() => {
     if (quoteData && !isQuoteLoading && isQuoteDataMatched) {
-      return quoteData?.outAmounts[0];
+      return quoteData.toToken.estimatedValue;
     }
 
     return "-";
   }, [quoteData, isQuoteDataMatched, isQuoteLoading]);
 
   const memoizedConvertRate = useMemo(() => {
-    if (quoteData && !isQuoteLoading && isQuoteDataMatched) {
-      return new Decimal(
-        unnormalizeAmount(
-          quoteData.outAmounts[0],
-          targetChainInfo?.decimals ?? 6,
-        ),
-      )
-        .div(
-          unnormalizeAmount(quoteData.inAmounts[0], sourceToken?.decimals ?? 6),
-        )
-        .toString();
+    if (quoteData && quoteRequest && !isQuoteLoading && isQuoteDataMatched) {
+      return calculateQuoteRate(
+        quoteRequest.amount,
+        quoteData.toToken.estimatedValue,
+      );
     }
 
     return "-";
-  }, [
-    isQuoteDataMatched,
-    isQuoteLoading,
-    quoteData,
-    sourceToken,
-    targetChainInfo,
-  ]);
+  }, [isQuoteDataMatched, isQuoteLoading, quoteData, quoteRequest]);
 
-  const memoizedMinimumReceived = useMemo(() => {
+  const memoizedMinimumReceived = useMemo<string>(() => {
     if (!quoteData || isQuoteLoading || !isQuoteDataMatched) {
-      return 0;
+      return "0";
     }
 
-    return calcMinimumReceived({
-      amount: quoteData?.outAmounts[0],
-      slippage: Number(slippage),
-    });
-  }, [quoteData, isQuoteDataMatched, isQuoteLoading, slippage]);
+    const effectiveSlippage = Number(quoteData.slippageLimitPercent);
+    if (!Number.isFinite(effectiveSlippage)) {
+      return "0";
+    }
+
+    return calculateMinimumReceived(
+      quoteData.toToken.estimatedValue,
+      effectiveSlippage.toString(),
+    );
+  }, [quoteData, isQuoteDataMatched, isQuoteLoading]);
+
+  useEffect(() => {
+    if (!quoteData || !quoteRequest || !isQuoteDataMatched) {
+      return;
+    }
+
+    const delay = Math.max(0, quoteData.expiresAt - Date.now());
+    let active = true;
+    const timer = window.setTimeout(() => {
+      resetQuote();
+      postQuote(quoteRequest).catch((error) => {
+        if (!active) {
+          return;
+        }
+
+        console.error(
+          "[convertForm] Expired swap quote refresh failed:",
+          error,
+        );
+        toast.error(getQuoteErrorMessage(error));
+        resetQuote();
+      });
+    }, delay);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [isQuoteDataMatched, postQuote, quoteData, quoteRequest, resetQuote]);
 
   const currentLtv = useComputedLTV();
 
@@ -300,6 +285,5 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     isQuoteLoading,
     currentLTV: currentLtv,
     nextLTV: nextLTV,
-    targetChainInfo,
   };
 };

@@ -196,7 +196,9 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       case ReferralCodeFormType.Edit:
         return (
           <Flex width={"100%"} direction="column" itemAlign="start" gap={6}>
-            {isEditingRefereeRebateRate ? refereeInfo : referralCodeInput}
+            {isEditingRefereeRebateRate
+              ? refereeInfo
+              : !hasBoundReferee && referralCodeInput}
             {!noCommissionAvailable && rateEditor}
             {buttons}
           </Flex>

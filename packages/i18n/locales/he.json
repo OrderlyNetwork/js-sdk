@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "אין מספיק נזילות. נסו מאוחר יותר או רשת אחרת להפקדה.",
   "transfer.convert.completed": "ההמרה הושלמה",
   "transfer.convert.failed": "ההמרה נכשלה",
-  "transfer.convert.quoteFailed": "בקשת הצעת המחיר נכשלה. נסה שוב מאוחר יותר.",
   "transfer.depositCap": "תקרת הפקדה",
   "transfer.depositCap.tooltip": "סכום הפקדה מקסימלי עבור ",
   "transfer.deposit.convertRate": "שער המרה",

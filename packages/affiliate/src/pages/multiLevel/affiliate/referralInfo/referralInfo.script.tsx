@@ -42,6 +42,17 @@ export const useReferralInfoScript = () => {
     return !new Decimal(multiLevelRebateInfo?.bonus_max_rebate_rate ?? 0).eq(0);
   }, [multiLevelRebateInfo]);
 
+  const showConfigureButton = useMemo(() => {
+    const hasDirectReferees = (multiLevelRebateInfo?.direct_invites ?? 0) > 0;
+    const hasAssignedCommission = !new Decimal(
+      multiLevelRebateInfo?.bonus_max_rebate_rate ??
+        multiLevelRebateInfo?.max_rebate_rate ??
+        0,
+    ).eq(0);
+
+    return hasAssignedCommission || !hasDirectReferees;
+  }, [multiLevelRebateInfo]);
+
   const directBonusRebateRate = useMemo(() => {
     return new Decimal(multiLevelRebateInfo?.direct_bonus_rebate_rate ?? 0)
       .mul(100)
@@ -75,6 +86,7 @@ export const useReferralInfoScript = () => {
     directTradesRate,
     indirectTradesRate,
     showIndirectTrades,
+    showConfigureButton,
     directBonusRebateRate,
   };
 };

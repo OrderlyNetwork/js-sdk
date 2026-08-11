@@ -37,7 +37,16 @@ export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
 export { useSymbolLeverageMap } from "./useSymbolLeverageMap";
 export { useMarginModes, useMarginModeBySymbol } from "./useMarginModes";
-export { useOdosQuote } from "./useOdosQuote";
+export {
+  useSwapQuote,
+  type GasEstimate,
+  isSwapQuoteData,
+  type SwapQuoteData,
+  type SwapQuoteError,
+  type SwapQuoteRequest,
+  type SwapQuoteResponse,
+  type SwapQuoteToken,
+} from "./useSwapQuote";
 export { useComputedLTV } from "./useComputedLTV";
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";

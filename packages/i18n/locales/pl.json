@@ -921,7 +921,6 @@
   "transfer.swapDeposit.notEnoughLiquidity": "Niewystarczająca płynność. Spróbuj ponownie później lub użyj innego łańcucha do wpłaty.",
   "transfer.convert.completed": "Konwersja zakończona",
   "transfer.convert.failed": "Konwersja nieudana",
-  "transfer.convert.quoteFailed": "Żądanie wyceny nie powiodło się. Spróbuj ponownie później.",
   "transfer.depositCap": "Limit wpłaty",
   "transfer.depositCap.tooltip": "Maksymalna kwota wpłaty dla ",
   "transfer.deposit.convertRate": "Kurs wymiany",

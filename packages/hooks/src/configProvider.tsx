@@ -131,8 +131,11 @@ export const OrderlyConfigProvider: FC<
   }, [configStore, brokerId, brokerName, networkId]);
 
   const innerKeyStore = useMemo<OrderlyKeyStore>(() => {
-    return keyStore || new LocalStorageStore(networkId);
-  }, [networkId, keyStore]);
+    if (keyStore) return keyStore;
+
+    const networkId = innerConfigStore.get<NetworkId>("networkId");
+    return new LocalStorageStore(networkId);
+  }, [innerConfigStore, keyStore]);
 
   const innerWalletAdapters = useMemo<WalletAdapter[]>(() => {
     return (
