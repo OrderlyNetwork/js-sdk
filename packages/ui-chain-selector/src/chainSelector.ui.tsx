@@ -1,3 +1,4 @@
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Flex,
@@ -8,9 +9,8 @@ import {
   cn,
   tv,
 } from "@orderly.network/ui";
-import { ChainType, TChainItem } from "./type";
 import { UseChainSelectorScriptReturn } from "./chainSelector.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { ChainType, TChainItem } from "./type";
 
 export type ChainSelectorProps = {
   isWrongNetwork?: boolean;
@@ -96,37 +96,39 @@ export const ChainSelector = (props: ChainSelectorProps) => {
         size={variant === "wide" ? "md" : "lg"}
         onValueChange={(e) => props.onTabChange(e as ChainType)}
       >
-        <TabPanel value={ChainType.Mainnet} title={t("connector.mainnet")}>
-          {!!props.recentChains?.length && (
-            <Flex gap={2} className={recentList()}>
-              {props.recentChains?.map((item) => {
+        {props.showMainnet && (
+          <TabPanel value={ChainType.Mainnet} title={t("connector.mainnet")}>
+            {!!props.recentChains?.length && (
+              <Flex gap={2} className={recentList()}>
+                {props.recentChains?.map((item) => {
+                  return (
+                    <RecentChainItem
+                      key={item.id}
+                      item={item}
+                      onClick={() => props.onChainClick(item)}
+                      iconClassName={icon()}
+                    />
+                  );
+                })}
+              </Flex>
+            )}
+
+            <Box r="2xl" className={cn(list(), mainnetList())}>
+              {props.chains.mainnet?.map((chain) => {
+                const selected = props.selectChainId === chain.id;
                 return (
-                  <RecentChainItem
-                    key={item.id}
-                    item={item}
-                    onClick={() => props.onChainClick(item)}
-                    iconClassName={icon()}
+                  <ChainItem
+                    key={chain.id}
+                    selected={selected}
+                    item={chain}
+                    onClick={() => props.onChainClick(chain)}
+                    className={item({ selected })}
                   />
                 );
               })}
-            </Flex>
-          )}
-
-          <Box r="2xl" className={cn(list(), mainnetList())}>
-            {props.chains.mainnet?.map((chain) => {
-              const selected = props.selectChainId === chain.id;
-              return (
-                <ChainItem
-                  key={chain.id}
-                  selected={selected}
-                  item={chain}
-                  onClick={() => props.onChainClick(chain)}
-                  className={item({ selected })}
-                />
-              );
-            })}
-          </Box>
-        </TabPanel>
+            </Box>
+          </TabPanel>
+        )}
 
         {props.showTestnet && (
           <TabPanel value={ChainType.Testnet} title={t("connector.testnet")}>

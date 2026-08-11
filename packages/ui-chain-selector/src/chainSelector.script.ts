@@ -5,10 +5,10 @@ import {
   useWalletConnector,
   useLocalStorage,
 } from "@orderly.network/hooks";
-import { NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
-import { ChainType, TChainItem } from "./type";
+import { NetworkId } from "@orderly.network/types";
 import { useOrderlyTheme } from "@orderly.network/ui";
+import { ChainType, TChainItem } from "./type";
 
 const KEY = "orderly_selected_chains";
 const MAX_RECENT_CHAINS = 6;
@@ -27,19 +27,19 @@ export type UseChainSelectorScriptOptions = {
     chainId: number,
     state: {
       isTestnet: boolean;
-    }
+    },
   ) => void;
   onChainChangeAfter?: (
     chainId: number,
     state: {
       isTestnet: boolean;
       isWalletConnected: boolean;
-    }
+    },
   ) => void;
 };
 
 export const useChainSelectorScript = (
-  options: UseChainSelectorScriptOptions
+  options: UseChainSelectorScriptOptions,
 ) => {
   const { networkId, bridgeLessOnly } = options || {};
   const { setStorageChain } = useStorageChain();
@@ -52,7 +52,7 @@ export const useChainSelectorScript = (
     useAppContext();
 
   const [selectChainId, setSelectChainId] = useState<number | undefined>(
-    currentChainId
+    currentChainId,
   );
 
   const { getComponentTheme } = useOrderlyTheme();
@@ -92,6 +92,8 @@ export const useChainSelectorScript = (
 
     return true;
   }, [chains.testnet]);
+
+  const showMainnet = chains.mainnet.length > 0;
 
   const { recentChains, saveRecentChain } = useRecentChains(chains);
 
@@ -152,7 +154,8 @@ export const useChainSelectorScript = (
     chains,
     currentChainId,
     wrongNetwork,
-    showTestnet
+    showMainnet,
+    showTestnet,
   );
 
   return {
@@ -162,6 +165,7 @@ export const useChainSelectorScript = (
     onChainClick,
     selectedTab,
     onTabChange,
+    showMainnet,
     showTestnet,
   };
 };
@@ -170,7 +174,8 @@ function useChainTab(
   chains: Record<NetworkId, TChainItem[]>,
   currentChainId?: number,
   wrongNetwork?: boolean,
-  showTestnet?: boolean
+  showMainnet?: boolean,
+  showTestnet?: boolean,
 ) {
   const [selectedTab, setSelectedTab] = useState<ChainType>(ChainType.Mainnet);
 
@@ -179,6 +184,13 @@ function useChainTab(
   };
 
   useEffect(() => {
+    if (!showMainnet) {
+      if (showTestnet) {
+        setSelectedTab(ChainType.Testnet);
+      }
+      return;
+    }
+
     if (!showTestnet) {
       setSelectedTab(ChainType.Mainnet);
       return;
@@ -186,7 +198,7 @@ function useChainTab(
 
     if (currentChainId) {
       const isMainnet = chains.mainnet?.some(
-        (chain) => chain.id === currentChainId
+        (chain) => chain.id === currentChainId,
       );
       if (isMainnet) {
         setSelectedTab(wrongNetwork ? ChainType.Testnet : ChainType.Mainnet);
@@ -194,14 +206,14 @@ function useChainTab(
       }
 
       const isTestnet = chains.testnet?.some(
-        (chain) => chain.id === currentChainId
+        (chain) => chain.id === currentChainId,
       );
       if (isTestnet) {
         setSelectedTab(wrongNetwork ? ChainType.Mainnet : ChainType.Testnet);
         return;
       }
     }
-  }, [currentChainId, chains, wrongNetwork, showTestnet]);
+  }, [currentChainId, chains, wrongNetwork, showMainnet, showTestnet]);
 
   return { selectedTab, onTabChange };
 }
@@ -209,13 +221,13 @@ function useChainTab(
 function useRecentChains(chains: Record<NetworkId, TChainItem[]>) {
   const [recentChainsIds, setRecentChainsIds] = useLocalStorage<string[]>(
     KEY,
-    []
+    [],
   );
 
   const recentChains = useMemo<TChainItem[]>(() => {
     return recentChainsIds
       ?.map((id: string) =>
-        chains.mainnet?.find((item) => item.id === parseInt(id))
+        chains.mainnet?.find((item) => item.id === parseInt(id)),
       )
       .filter((chains: TChainItem) => !!chains);
   }, [chains, recentChainsIds]);
@@ -230,7 +242,7 @@ function useRecentChains(chains: Record<NetworkId, TChainItem[]>) {
       ids = [chain.id, ...ids].slice(0, MAX_RECENT_CHAINS);
       setRecentChainsIds(ids);
     },
-    [recentChainsIds]
+    [recentChainsIds],
   );
 
   return { recentChains, saveRecentChain };
