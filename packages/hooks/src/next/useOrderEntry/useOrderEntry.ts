@@ -391,7 +391,7 @@ const useOrderEntry = (
     let orderQuantity = new Decimal(order_quantity);
 
     if (side === OrderSide.BUY) {
-      book = orderBook.asks.reverse();
+      book = [...orderBook.asks].reverse();
     } else {
       book = orderBook.bids;
     }
