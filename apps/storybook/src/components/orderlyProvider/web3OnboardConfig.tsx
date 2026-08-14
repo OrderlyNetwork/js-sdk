@@ -1,7 +1,8 @@
 import type { OnboardAPI } from "@web3-onboard/core";
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
-import walletConnectModule from "@web3-onboard/walletconnect";
+
+// import walletConnectModule from "@web3-onboard/walletconnect";
 
 let onboardInstance: OnboardAPI | null = null;
 
@@ -163,16 +164,16 @@ export async function initOnBoard(theme?: OnboardThemePreset) {
   //   },
   // ];
 
-  const wcV2InitOptions = {
-    version: 2,
-    projectId: "walletconnec appid",
-    dappUrl: window.location.origin,
-  };
+  // const wcV2InitOptions = {
+  //   version: 2,
+  //   projectId: "walletconnec appid",
+  //   dappUrl: window.location.origin,
+  // };
   const injected = injectedModule();
-  const walletConnect = walletConnectModule(wcV2InitOptions);
+  // const walletConnect = walletConnectModule(wcV2InitOptions);
   const wallets = [
     injected,
-    // walletConnect
+    // walletConnect,
   ];
   return Promise.resolve().then(() => {
     if (onboardInstance) {

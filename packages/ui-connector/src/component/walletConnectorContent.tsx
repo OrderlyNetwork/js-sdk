@@ -453,7 +453,8 @@ const WithLedgerButton = ({
 }) => {
   const { state } = useAccount();
   const address = state.address;
-  const { setManualLedgerAddress } = useStorageLedgerAddress();
+  const { setManualLedgerAddress, setLedgerAddress } =
+    useStorageLedgerAddress();
   if (!address) {
     return null;
   }

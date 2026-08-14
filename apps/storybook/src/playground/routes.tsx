@@ -81,7 +81,7 @@ const AffiliatePage = lazyImportPage(
 const TradingRewardsPage = lazyImportPage(
   () => import("./pages/rewards/trading/page"),
 );
-const SwapPage = lazyImportPage(() => import("./pages/swap/page"));
+// const SwapPage = lazyImportPage(() => import("./pages/swap/page"));
 const VaultsPage = lazyImportPage(() => import("./pages/vaults/page"));
 
 const PointsPage = lazyImportPage(() => import("./pages/points/page"));
@@ -237,10 +237,10 @@ const AppRoute: React.FC = () => {
       path: "points",
       element: <PointsPage />,
     },
-    {
-      path: "swap",
-      element: <SwapPage />,
-    },
+    // {
+    //   path: "swap",
+    //   element: <SwapPage />,
+    // },
   ];
 
   const router = createBrowserRouter([

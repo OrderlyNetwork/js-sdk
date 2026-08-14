@@ -5,7 +5,6 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   TrackerEventName,
 } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";
@@ -28,7 +27,7 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
 
   const networkId = useConfig("networkId");
 
-  const [_, { findByChainId }] = useChains(undefined);
+  const [, { findByChainId, isTestnetChain }] = useChains(undefined);
 
   const { track } = useTrack();
 
@@ -48,7 +47,7 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
     // Orderly testnet supported chain
     if (networkId === "testnet") {
       chain = findByChainId(
-        isTestnet(srcChainId!) ? srcChainId! : ARBITRUM_TESTNET_CHAINID,
+        isTestnetChain(srcChainId) ? srcChainId! : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
     } else {
       chain = findByChainId(srcChainId!) as API.Chain;
@@ -59,7 +58,7 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
       }
     }
     return chain;
-  }, [networkId, findByChainId, srcChainId]);
+  }, [networkId, findByChainId, isTestnetChain, srcChainId]);
 
   // Mantle chain: USDC → USDC.e
   const dst = useMemo(() => {

@@ -70,7 +70,7 @@ const TPSLOrderPriceItem = ({
   );
 };
 
-export function useTPSLOrderPrice(order: any) {
+export function getTPSLOrderPrice(order: any) {
   // @ts-ignore
   const { sl_trigger_price, tp_trigger_price } =
     !("algo_type" in order) || !Array.isArray(order.child_orders)

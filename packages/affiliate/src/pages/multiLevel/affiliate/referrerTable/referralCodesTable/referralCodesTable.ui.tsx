@@ -27,8 +27,10 @@ const getRefereeRebateRateText = (
   return new Decimal(refereeRate).add(baseRebateRate).mul(100).toFixed(0);
 };
 
-const getReferralCodeType = (referralType?: "single" | "multi") => {
-  const { t } = useTranslation();
+const getReferralCodeType = (
+  referralType: "single" | "multi" | undefined,
+  t: ReturnType<typeof useTranslation>["t"],
+) => {
   if (referralType === "multi") {
     return {
       text: t("affiliate.multiLevel"),
@@ -54,7 +56,7 @@ const MobileReferralCodeItem: FC<{
     item.referee_rebate_rate ?? 0,
     item.base_rebate_rate ?? 0,
   );
-  const typeInfo = getReferralCodeType(item.referral_type);
+  const typeInfo = getReferralCodeType(item.referral_type, t);
 
   return (
     <MobileCard>
@@ -137,7 +139,7 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
         title: t("common.type"),
         dataIndex: "referral_type",
         render: (_: unknown, record: ReferralCodesRow) => {
-          const typeInfo = getReferralCodeType(record.referral_type);
+          const typeInfo = getReferralCodeType(record.referral_type, t);
           return (
             <TooltipCell
               text={typeInfo.text}

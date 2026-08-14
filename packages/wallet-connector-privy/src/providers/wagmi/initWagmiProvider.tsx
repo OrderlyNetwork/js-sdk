@@ -1,13 +1,6 @@
 import React, { PropsWithChildren, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  abstractTestnet,
-  arbitrum,
-  Chain,
-  mainnet,
-  okc,
-  sepolia,
-} from "viem/chains";
+import { Chain, mainnet } from "viem/chains";
 import {
   createConfig,
   createStorage,
@@ -15,7 +8,7 @@ import {
   injected,
   WagmiProvider,
 } from "wagmi";
-import { useWalletConnectorPrivy } from "../../provider";
+import { SolanaChains } from "@orderly.network/types";
 import { InitWagmi } from "../../types";
 
 interface InitWagmiProps extends PropsWithChildren {
@@ -30,18 +23,19 @@ export function InitWagmiProvider({
   initChains,
   wagmiConfig,
 }: InitWagmiProps) {
-  const { connectorWalletType } = useWalletConnectorPrivy();
-  if (connectorWalletType.disableWagmi) {
-    return children;
-  }
   const [queryClient] = useState(() => new QueryClient());
 
-  const [config] = useState(() =>
-    createConfig({
-      chains:
-        initChains && initChains.length
-          ? (initChains as unknown as [Chain, ...Chain[]])
-          : [mainnet],
+  const [config] = useState(() => {
+    const wagmiChains = initChains.filter(
+      (chain) => !SolanaChains.has(chain.id),
+    );
+    const chains =
+      wagmiChains && wagmiChains.length
+        ? (wagmiChains as unknown as [Chain, ...Chain[]])
+        : [mainnet];
+
+    return createConfig({
+      chains,
       multiInjectedProviderDiscovery: true,
       storage: wagmiConfig.storage
         ? wagmiConfig.storage
@@ -52,11 +46,9 @@ export function InitWagmiProvider({
       connectors: wagmiConfig.connectors
         ? wagmiConfig.connectors
         : [injected()],
-      transports: Object.fromEntries(
-        initChains.map((chain) => [chain.id, http()]),
-      ),
-    }),
-  );
+      transports: Object.fromEntries(chains.map((chain) => [chain.id, http()])),
+    });
+  });
 
   return (
     <WagmiProvider config={config} initialState={initialState}>

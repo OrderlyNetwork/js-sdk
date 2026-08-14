@@ -37,8 +37,10 @@ const getRefereeRebateRateText = (
   return new Decimal(refereeRate).add(baseRebateRate).mul(100).toFixed(0) + "%";
 };
 
-const getRefereeType = (bindType: string) => {
-  const { t } = useTranslation();
+const getRefereeType = (
+  bindType: string,
+  t: ReturnType<typeof useTranslation>["t"],
+) => {
   if (bindType === "legacy") {
     return {
       text: t("affiliate.singleLevelLegacy"),
@@ -135,7 +137,7 @@ const MobileRefereeItem: FC<{
   baseRebateRate,
 }) => {
   const { t } = useTranslation();
-  const typeInfo = getRefereeType(item.bind_type);
+  const typeInfo = getRefereeType(item.bind_type, t);
   return (
     <MobileCard>
       <MobileCell label={t("common.address")}>
@@ -261,7 +263,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
         title: t("common.type"),
         dataIndex: "bind_type",
         render: (_: unknown, record: RefereeDataType) => {
-          const typeInfo = getRefereeType(record.bind_type);
+          const typeInfo = getRefereeType(record.bind_type, t);
           return (
             <TooltipCell
               text={typeInfo.text}

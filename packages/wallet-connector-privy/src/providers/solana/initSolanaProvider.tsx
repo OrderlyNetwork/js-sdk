@@ -3,17 +3,14 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState,
 } from "react";
 import {
   Adapter,
   WalletAdapterNetwork,
   WalletError,
-  WalletNotReadyError,
 } from "@solana/wallet-adapter-base";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { WalletProvider } from "@solana/wallet-adapter-react";
-import { ConnectionProvider } from "@solana/wallet-adapter-react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useWalletConnectorPrivy } from "../../provider";
 import { InitSolana } from "../../types";
@@ -28,11 +25,7 @@ export function InitSolanaProvider({
   children,
 }: IProps) {
   const ee = useEventEmitter();
-  const { network, setSolanaInfo, connectorWalletType } =
-    useWalletConnectorPrivy();
-  if (connectorWalletType.disableSolana) {
-    return children;
-  }
+  const { network, setSolanaInfo } = useWalletConnectorPrivy();
 
   const wallets = useMemo(() => {
     return walletsProp ?? [new PhantomWalletAdapter()];

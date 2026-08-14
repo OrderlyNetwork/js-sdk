@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
-    "degit": "^2.8.4",
+    "degit": "^2.8.6",
     "enquirer": "^2.4.1",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",

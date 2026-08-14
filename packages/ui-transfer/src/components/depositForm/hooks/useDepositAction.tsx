@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
@@ -18,13 +18,18 @@ export function useDepositAction(options: Options) {
     options;
   const [isMutating, setIsMutating] = useState(false);
   const [depositError, setDepositError] = useState("");
+  const mutationLock = useRef(false);
 
   const ee = useEventEmitter();
   const { t } = useTranslation();
 
-  const doDeposit = useCallback(async () => {
+  const runDeposit = useCallback(async () => {
     try {
-      await deposit();
+      if (needSwap) {
+        await swapDeposit?.();
+      } else {
+        await deposit();
+      }
       setDepositError("");
     } catch (err: any) {
       console.error("orderly deposit error", err);
@@ -45,40 +50,9 @@ export function useDepositAction(options: Options) {
       }
       throw err;
     }
-  }, [deposit, onSuccess, t, ee]);
+  }, [deposit, needSwap, swapDeposit, t]);
 
-  const onDeposit = useCallback(async () => {
-    const num = Number(quantity);
-
-    if (isNaN(num) || num <= 0) {
-      toast.error(t("transfer.quantity.invalid"));
-      return;
-    }
-
-    if (isMutating) return;
-
-    setIsMutating(true);
-
-    try {
-      if (needSwap) {
-        await swapDeposit?.();
-      } else {
-        await doDeposit();
-      }
-      toast.success(t("transfer.deposit.requested"));
-      ee.emit("deposit:requested");
-      onSuccess?.();
-    } catch (err: any) {
-      // all errors are handled by toast.error in doDeposit or swapDeposit
-    } finally {
-      setIsMutating(false);
-    }
-  }, [quantity, isMutating, needSwap, doDeposit, swapDeposit, t]);
-
-  const onApprove = useCallback(async () => {
-    if (isMutating) return;
-    setIsMutating(true);
-
+  const runApprove = useCallback(async () => {
     try {
       await approve(quantity);
       toast.success(t("transfer.deposit.approve.success"));
@@ -88,24 +62,95 @@ export function useDepositAction(options: Options) {
         err.message || err?.errorCode || t("transfer.deposit.approve.failed"),
       );
       throw err;
-    } finally {
-      setIsMutating(false);
     }
-  }, [approve, isMutating, quantity, t]);
+  }, [approve, quantity, t]);
 
-  const onApproveAndDeposit = useCallback(async () => {
-    if (isMutating) return;
+  const isValidQuantity = useCallback(() => {
+    const num = Number(quantity);
+
+    if (isNaN(num) || num <= 0) {
+      toast.error(t("transfer.quantity.invalid"));
+      return false;
+    }
+
+    return true;
+  }, [quantity, t]);
+
+  const startMutation = useCallback(() => {
+    if (mutationLock.current) {
+      return false;
+    }
+
+    mutationLock.current = true;
     setIsMutating(true);
+    return true;
+  }, []);
+
+  const finishMutation = useCallback(() => {
+    mutationLock.current = false;
+    setIsMutating(false);
+  }, []);
+
+  const onDeposit = useCallback(async () => {
+    if (mutationLock.current) return;
+    if (!isValidQuantity() || !startMutation()) {
+      return;
+    }
 
     try {
-      await onApprove();
-      await onDeposit();
+      await runDeposit();
+      toast.success(t("transfer.deposit.requested"));
+      ee.emit("deposit:requested");
+      onSuccess?.();
+    } catch (err: any) {
+      // runDeposit reports the error to the user.
+    } finally {
+      finishMutation();
+    }
+  }, [
+    ee,
+    finishMutation,
+    isValidQuantity,
+    onSuccess,
+    runDeposit,
+    startMutation,
+    t,
+  ]);
+
+  const onApprove = useCallback(async () => {
+    if (!startMutation()) return;
+    try {
+      await runApprove();
+    } finally {
+      finishMutation();
+    }
+  }, [finishMutation, runApprove, startMutation]);
+
+  const onApproveAndDeposit = useCallback(async () => {
+    if (mutationLock.current) return;
+    if (!isValidQuantity() || !startMutation()) return;
+
+    try {
+      await runApprove();
+      await runDeposit();
+      toast.success(t("transfer.deposit.requested"));
+      ee.emit("deposit:requested");
+      onSuccess?.();
     } catch (err) {
       console.error("approve and deposit error", err);
     } finally {
-      setIsMutating(false);
+      finishMutation();
     }
-  }, [isMutating, onApprove, onDeposit]);
+  }, [
+    ee,
+    finishMutation,
+    isValidQuantity,
+    onSuccess,
+    runApprove,
+    runDeposit,
+    startMutation,
+    t,
+  ]);
 
   return {
     isMutating,

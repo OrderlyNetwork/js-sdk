@@ -11,6 +11,7 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
   isNativeTokenChecker,
+  XLAYER_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
 import { OrderlyContext } from "../orderlyContext";
@@ -61,6 +62,7 @@ export type UseChainsOptions = {
 
 export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
+  isTestnetChain: (chainId?: number | string) => boolean;
   checkChainSupport: (
     chainId: number | string,
     networkId: NetworkId,
@@ -205,6 +207,7 @@ export function useChains(
       !chainInfos ||
       !testChainInfos
     ) {
+      chainsMap.current = new Map();
       return [];
     }
     const mainnetChains = formatChains({
@@ -225,13 +228,17 @@ export function useChains(
     let mainnetArr = needFetchFromAPI ? mainnetChains : customChains?.mainnet;
     let testnetArr = needFetchFromAPI ? testnetChains : customChains?.testnet;
 
+    const nextChainsMap = new Map<number, Chain>();
+
     testnetArr?.forEach((chain) => {
-      chainsMap.current.set(chain.network_infos?.chain_id, chain);
+      nextChainsMap.set(chain.network_infos.chain_id, chain);
     });
 
     mainnetArr?.forEach((chain) => {
-      chainsMap.current.set(chain.network_infos?.chain_id, chain);
+      nextChainsMap.set(chain.network_infos.chain_id, chain);
     });
+
+    chainsMap.current = nextChainsMap;
 
     mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
     testnetArr = filterByAllowedChains(
@@ -301,10 +308,36 @@ export function useChains(
     [chains],
   );
 
+  const isTestnetChain = useCallback(
+    (chainId?: number | string) => {
+      if (typeof chainId === "undefined") {
+        return false;
+      }
+
+      const normalizedChainId =
+        typeof chainId === "number"
+          ? chainId
+          : chainId.trim() === ""
+            ? NaN
+            : Number(chainId);
+
+      if (!Number.isFinite(normalizedChainId)) {
+        return false;
+      }
+
+      return (
+        chainsMap.current.get(normalizedChainId)?.network_infos?.mainnet ===
+        false
+      );
+    },
+    [chains],
+  );
+
   return [
     chains,
     {
       findByChainId,
+      isTestnetChain,
       checkChainSupport,
       error: tokenError,
     },
