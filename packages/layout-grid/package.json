@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/layout-grid",
-  "version": "2.1.8",
+  "version": "2.1.9-alpha.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
