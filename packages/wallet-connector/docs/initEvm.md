@@ -16,12 +16,12 @@ Same as in [types](types.md): optional subset of `InitOptions`.
 
 Used by `InitEvm` only (not the root provider). Props for this component:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `apiKey` | `string` | No | Passed to `initConfig`. |
-| `options` | `ConnectorInitOptions` | No | Merged with fetched chains. |
-| `skipInit` | `boolean` | No | If true, skip init and render children immediately. |
-| `children` | `ReactNode` | Yes | App tree. |
+| Prop       | Type                   | Required | Description                                         |
+| ---------- | ---------------------- | -------- | --------------------------------------------------- |
+| `apiKey`   | `string`               | No       | Passed to `initConfig`.                             |
+| `options`  | `ConnectorInitOptions` | No       | Merged with fetched chains.                         |
+| `skipInit` | `boolean`              | No       | If true, skip init and render children immediately. |
+| `children` | `ReactNode`            | Yes      | App tree.                                           |
 
 ---
 
@@ -35,8 +35,9 @@ Used by `InitEvm` only (not the root provider). Props for this component:
 4. Fetches chain info from:
    - `https://testnet-api.orderly.org/v1/public/chain_info`
    - `https://api.orderly.org/v1/public/chain_info`
-5. Maps response `data.rows` to `{ id, token, label, rpcUrl, blockExplorerUrl }`, merges into `options.chains`, calls `initConfig(apiKey, options)`, registers with `register('onboardAPI', onboardAPI)`, then renders children.
-6. Until initialized, returns `null` (no children).
+5. If the testnet request fails because of a network error, a non-success response, or invalid JSON, logs the error and falls back to the built-in Arbitrum Sepolia chain info. A mainnet request failure still prevents initialization.
+6. Maps response `data.rows` to `{ id, token, label, rpcUrl, blockExplorerUrl }`, merges into `options.chains`, calls `initConfig(apiKey, options)`, registers with `register('onboardAPI', onboardAPI)`, then renders children.
+7. Until initialized, returns `null` (no children).
 
 ## Usage example
 

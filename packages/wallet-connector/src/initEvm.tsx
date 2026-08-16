@@ -1,10 +1,13 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { useSimpleDI } from "@orderly.network/hooks";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
-import { Optional } from "@orderly.network/types";
-import { initConfig } from "./config";
 import { merge } from "lodash";
+import { useSimpleDI } from "@orderly.network/hooks";
+import { ArbitrumSepoliaChainInfo, Optional } from "@orderly.network/types";
+import { initConfig } from "./config";
 
+const TESTNET_CHAIN_INFO_URL =
+  "https://testnet-api.orderly.org/v1/public/chain_info";
+const MAINNET_CHAIN_INFO_URL = "https://api.orderly.org/v1/public/chain_info";
 
 export type ConnectorInitOptions = Optional<
   InitOptions,
@@ -25,7 +28,7 @@ export interface WalletConnectorProviderProps {
 }
 
 export function InitEvm(
-  props: PropsWithChildren<WalletConnectorProviderProps>
+  props: PropsWithChildren<WalletConnectorProviderProps>,
 ) {
   const [initialized, setInitialized] = useState(!!props.skipInit);
 
@@ -49,8 +52,15 @@ export function InitEvm(
     }
 
     Promise.all([
-      fetchChainInfo('https://testnet-api.orderly.org/v1/public/chain_info'),
-      fetchChainInfo('https://api.orderly.org/v1/public/chain_info'),
+      fetchChainInfo(TESTNET_CHAIN_INFO_URL).catch((error) => {
+        console.error("Error fetching testnet chain info:", error);
+        return {
+          data: {
+            rows: [ArbitrumSepoliaChainInfo],
+          },
+        };
+      }),
+      fetchChainInfo(MAINNET_CHAIN_INFO_URL),
     ])
       .then(([testChainInfo, mainnetChainInfo]) => {
         const testChains = processChainInfo(testChainInfo);
@@ -60,17 +70,17 @@ export function InitEvm(
         options = merge({ chains: [...testChains, ...mainnetChains] }, options);
 
         onboardAPI = initConfig(props.apiKey, options as InitOptions);
-        register('onboardAPI', onboardAPI);
+        register("onboardAPI", onboardAPI);
         setInitialized(true);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       });
   }, []);
 
   if (!initialized) return null;
 
-  return props.children
+  return props.children;
 }
 
 const fetchChainInfo = async (url: string) => {
