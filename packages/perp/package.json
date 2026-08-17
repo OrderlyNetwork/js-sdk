@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/perp",
-  "version": "5.1.8",
+  "version": "5.1.9",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,8 +17,8 @@
     "dist"
   ],
   "devDependencies": {
-    "@babel/core": "^7.22.9",
-    "@babel/preset-env": "^7.22.9",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
     "@babel/preset-typescript": "^7.22.5",
     "@jest/globals": "^30.0.2",
     "@types/jest": "^29.5.3",

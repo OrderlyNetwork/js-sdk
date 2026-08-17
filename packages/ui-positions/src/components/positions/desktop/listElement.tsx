@@ -5,6 +5,7 @@ import { PriceInput } from "./priceInput";
 import { QuantityInput } from "./quantityInput";
 
 export const renderQuantity = (value: number) => {
+  // TODO(hooks): Convert this renderer to a React cell component before using hooks.
   const symbolInfo = useSymbolContext();
   return (
     <Text.numeral

@@ -40,7 +40,7 @@ import { TriggerPriceCell } from "./components/triggerPriceCell";
 import { OrderSymbolCell } from "./orderSymbolCell";
 import { Renew } from "./renew";
 import { TP_SLEditButton } from "./tpslEdit";
-import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
+import { TPSLOrderPrice, getTPSLOrderPrice } from "./tpslPrice";
 import { OrderTriggerPrice } from "./tpslTriggerPrice";
 
 export const useOrderColumn = (props: {
@@ -575,7 +575,7 @@ function tpslPrice(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     renderPlantText: (value: string, record: any) => {
-      const { tpTriggerPrice, slTriggerPrice } = useTPSLOrderPrice(record);
+      const { tpTriggerPrice, slTriggerPrice } = getTPSLOrderPrice(record);
       const callback = `${tpTriggerPrice || ""}${
         slTriggerPrice ? `${tpTriggerPrice ? "\n" : ""}${slTriggerPrice}` : ""
       }`;
@@ -834,6 +834,7 @@ function realizedPnL(option?: {
       return value > 0 ? `+${formatValue}` : formatValue;
     },
     render: (_value: number | undefined, record: any) => {
+      // TODO(hooks): Extract this render body into a cell component before using hooks.
       const { quote_dp } = useSymbolContext();
       const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
       const value = new Decimal(_value ?? 0).toNumber();

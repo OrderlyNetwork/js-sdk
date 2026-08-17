@@ -14,7 +14,6 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast, useModal } from "@orderly.network/ui";
-import { isTestnet } from "@orderly.network/utils";
 import { ReferralProps, TradingRewardsProps } from "../../../types/types";
 
 export const useAccountSheetScript = (
@@ -30,6 +29,7 @@ export const useAccountSheetScript = (
   const config = useConfig();
 
   const { connectedChain, disconnect, namespace } = useWalletConnector();
+  const [, { isTestnetChain }] = useChains();
 
   const chainId =
     account.chainId || connectedChain?.id || linkDeviceStorage?.chainId;
@@ -39,13 +39,12 @@ export const useAccountSheetScript = (
       return (
         (state.status === AccountStatusEnum.EnableTrading ||
           state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
-        // @ts-ignore
-        isTestnet(parseInt(chainId))
+        isTestnetChain(chainId)
       );
     }
 
     return false;
-  }, [state.status, chainId]);
+  }, [state.status, chainId, isTestnetChain]);
 
   const chainName = useGetChains(chainId);
 

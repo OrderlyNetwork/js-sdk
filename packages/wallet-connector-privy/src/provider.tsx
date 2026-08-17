@@ -217,7 +217,12 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       type.disableAGW = true;
     }
     return type;
-  }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
+  }, [
+    props.privyConfig,
+    props.wagmiConfig,
+    props.solanaConfig,
+    props.abstractConfig,
+  ]);
 
   const walletChainTypeConfig = useMemo(() => {
     const chainTypeObj: WalletChainTypeConfig = {
@@ -380,7 +385,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       const mainnetChains = processChainInfo(mainnetChainsList);
 
       const chains = [...testChains, ...mainnetChains];
-
       setTestnetChains(testChains);
       setMainnetChains(mainnetChains);
 
@@ -416,7 +420,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
         <PrivyWallet privyConfig={props.privyConfig} initChains={initChains}>
           <WagmiWallet wagmiConfig={props.wagmiConfig} initChains={initChains}>
             <SolanaWallet solanaConfig={props.solanaConfig}>
-              <AbstractWallet>
+              <AbstractWallet abstractConfig={props.abstractConfig}>
                 <Main headerProps={props.headerProps}>{props.children}</Main>
               </AbstractWallet>
             </SolanaWallet>

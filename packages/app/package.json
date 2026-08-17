@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react-app",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "description": "Create React App with Orderly Network components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -30,8 +30,8 @@
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.9",
-    "@babel/preset-env": "^7.22.9",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
     "@babel/preset-typescript": "^7.22.5",
     "@testing-library/react": "^14.2.1",
     "@types/react": "^18.3.2",
@@ -40,10 +40,10 @@
     "react-dom": "^18.2.0",
     "jsdom": "^20.0.3",
     "tsconfig": "workspace:*",
-    "tailwindcss": "^3.4.4",
+    "tailwindcss": "^3.4.19",
     "tsup": "^8.5.1",
     "typescript": "^5.1.6",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.10"
   },
   "react": ">=18",
   "react-dom": ">=18"

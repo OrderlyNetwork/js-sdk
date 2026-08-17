@@ -10,11 +10,7 @@ import {
   type WalletError,
   WalletNotReadyError,
 } from "@solana/wallet-adapter-base";
-import {
-  LedgerWalletAdapter,
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { useThemeAttribute } from "@orderly.network/ui";
 import {
   Network,
@@ -101,8 +97,6 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
         devnetRpc: "https://api.devnet.solana.com",
         wallets: [
           new PhantomWalletAdapter(),
-          new SolflareWalletAdapter(),
-          new LedgerWalletAdapter(),
           new SolanaMobileWalletAdapter({
             addressSelector: createDefaultAddressSelector(),
             appIdentity: {

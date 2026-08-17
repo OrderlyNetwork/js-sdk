@@ -1,10 +1,13 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
-import { useSimpleDI } from "@orderly.network/hooks";
+import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
-import { Optional } from "@orderly.network/types";
-import { initConfig } from "./config";
 import { merge } from "lodash";
-
+import {
+  useMainnetChainsStore,
+  useSimpleDI,
+  useTestnetChainsStore,
+} from "@orderly.network/hooks";
+import { Optional, SolanaChains } from "@orderly.network/types";
+import { initConfig } from "./config";
 
 export type ConnectorInitOptions = Optional<
   InitOptions,
@@ -25,67 +28,118 @@ export interface WalletConnectorProviderProps {
 }
 
 export function InitEvm(
-  props: PropsWithChildren<WalletConnectorProviderProps>
+  props: PropsWithChildren<WalletConnectorProviderProps>,
 ) {
   const [initialized, setInitialized] = useState(!!props.skipInit);
+  const initializedRef = useRef(!!props.skipInit);
+  const fetchRequestedRef = useRef(false);
 
   const { get, register } = useSimpleDI();
+  const fetchMainChains = useMainnetChainsStore((state) => state.fetchData);
+  const fetchTestChains = useTestnetChainsStore((state) => state.fetchData);
+  const mainnetChainsHydrated = useMainnetChainsStore(
+    (state) => state.hydrated,
+  );
+  const testnetChainsHydrated = useTestnetChainsStore(
+    (state) => state.hydrated,
+  );
+  const mainnetChainInfos = useMainnetChainsStore((state) => state.data);
+  const testnetChainInfos = useTestnetChainsStore((state) => state.data);
 
   useEffect(() => {
     document.body.style.setProperty("--onboard-modal-z-index", "88");
   }, []);
 
   useEffect(() => {
-    if (props.skipInit) {
+    if (props.skipInit || initializedRef.current) {
       return;
     }
 
-    let onboardAPI = get("onboardAPI") as OnboardAPI;
+    const registeredOnboardAPI = get("onboardAPI") as OnboardAPI;
 
-    if (onboardAPI) {
+    if (registeredOnboardAPI) {
       console.log("[Orderly SDK]:onboardAPI already initialized");
+      initializedRef.current = true;
       setInitialized(true);
       return;
     }
 
-    Promise.all([
-      fetchChainInfo('https://testnet-api.orderly.org/v1/public/chain_info'),
-      fetchChainInfo('https://api.orderly.org/v1/public/chain_info'),
-    ])
-      .then(([testChainInfo, mainnetChainInfo]) => {
-        const testChains = processChainInfo(testChainInfo);
-        const mainnetChains = processChainInfo(mainnetChainInfo);
+    if (
+      !mainnetChainsHydrated ||
+      !testnetChainsHydrated ||
+      !Array.isArray(mainnetChainInfos) ||
+      !Array.isArray(testnetChainInfos)
+    ) {
+      return;
+    }
 
-        let options = props.options || {};
-        options = merge({ chains: [...testChains, ...mainnetChains] }, options);
+    try {
+      const testChains = processChainInfo(testnetChainInfos);
+      const mainnetChains = processChainInfo(mainnetChainInfos);
+      const options = merge(
+        { chains: [...testChains, ...mainnetChains] },
+        props.options || {},
+      );
 
-        onboardAPI = initConfig(props.apiKey, options as InitOptions);
-        register('onboardAPI', onboardAPI);
-        setInitialized(true);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+      const onboardAPI = initConfig(props.apiKey, options as InitOptions);
+      register("onboardAPI", onboardAPI);
+      initializedRef.current = true;
+      setInitialized(true);
+    } catch (error) {
+      console.error("Error initializing Web3 Onboard:", error);
+    }
+  }, [
+    get,
+    mainnetChainInfos,
+    mainnetChainsHydrated,
+    props.apiKey,
+    props.options,
+    props.skipInit,
+    register,
+    testnetChainInfos,
+    testnetChainsHydrated,
+  ]);
+
+  useEffect(() => {
+    if (
+      props.skipInit ||
+      initializedRef.current ||
+      fetchRequestedRef.current ||
+      !mainnetChainsHydrated ||
+      !testnetChainsHydrated
+    ) {
+      return;
+    }
+
+    if (Array.isArray(mainnetChainInfos) && testnetChainInfos) {
+      return;
+    }
+
+    fetchRequestedRef.current = true;
+    void fetchMainChains();
+    void fetchTestChains();
+  }, [
+    fetchMainChains,
+    fetchTestChains,
+    mainnetChainInfos,
+    mainnetChainsHydrated,
+    props.skipInit,
+    testnetChainInfos,
+    testnetChainsHydrated,
+  ]);
 
   if (!initialized) return null;
 
-  return props.children
+  return props.children;
 }
 
-const fetchChainInfo = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data from ${url}`);
-  }
-  return response.json();
-};
-
 const processChainInfo = (chainInfo: any) =>
-  chainInfo?.data?.rows?.map((row: any) => ({
-    id: Number(row.chain_id),
-    token: row.currency_symbol,
-    label: row.name,
-    rpcUrl: row.public_rpc_url,
-    blockExplorerUrl: row.explorer_base_url,
-  })) || [];
+  (Array.isArray(chainInfo) ? chainInfo : [])
+    .filter((row: any) => !SolanaChains.has(Number(row.chain_id)))
+    .map((row: any) => ({
+      id: Number(row.chain_id),
+      token: row.currency_symbol,
+      label: row.name,
+      rpcUrl: row.public_rpc_url,
+      blockExplorerUrl: row.explorer_base_url,
+    }));

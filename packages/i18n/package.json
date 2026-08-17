@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/i18n",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -54,7 +54,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@types/react": "^18.3.2",
