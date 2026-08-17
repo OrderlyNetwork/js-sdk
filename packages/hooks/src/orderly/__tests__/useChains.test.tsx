@@ -5,7 +5,7 @@ import { useChains } from "../useChains";
 let mockMainnetChainInfos: API.NetworkInfos[];
 let mockTestnetChainInfos: API.NetworkInfos[];
 let mockMainnetTokens: API.Token[];
-let mockTestnetTokens: API.Token[];
+let mockTestnetTokens: API.Token[] | null;
 
 jest.mock("../../provider/store/chainInfoMainStore", () => ({
   useMainnetChainsStore: (
@@ -24,8 +24,9 @@ jest.mock("../../provider/store/mainTokenStore", () => ({
 }));
 
 jest.mock("../../provider/store/testTokenStore", () => ({
-  useTestTokenStore: (selector: (state: { data: API.Token[] }) => unknown) =>
-    selector({ data: mockTestnetTokens }),
+  useTestTokenStore: (
+    selector: (state: { data: API.Token[] | null }) => unknown,
+  ) => selector({ data: mockTestnetTokens }),
 }));
 
 const TESTNET_CHAIN_ID = 123456;
@@ -48,6 +49,16 @@ beforeEach(() => {
   mockTestnetChainInfos = [createChainInfo(TESTNET_CHAIN_ID, "Testnet")];
   mockMainnetTokens = [];
   mockTestnetTokens = [];
+});
+
+describe("useChains empty data", () => {
+  test("returns a stable grouped shape while data is unavailable", () => {
+    mockTestnetTokens = null;
+
+    const { result } = renderHook(() => useChains());
+
+    expect(result.current[0]).toEqual({ mainnet: [], testnet: [] });
+  });
 });
 
 describe("useChains isTestnetChain", () => {

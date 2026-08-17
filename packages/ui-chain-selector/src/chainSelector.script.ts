@@ -45,6 +45,7 @@ export const useChainSelectorScript = (
   const { setStorageChain } = useStorageChain();
 
   const config = useConfig();
+  const resolvedNetworkId = networkId ?? config.get<NetworkId>("networkId");
   const [_chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
 
@@ -105,7 +106,7 @@ export const useChainSelectorScript = (
 
       return {
         result,
-        wrongNetwork: !checkChainSupport(chain.id, config.get("networkId")),
+        wrongNetwork: !checkChainSupport(chain.id, resolvedNetworkId),
         chainId: chain.id,
       };
     }
