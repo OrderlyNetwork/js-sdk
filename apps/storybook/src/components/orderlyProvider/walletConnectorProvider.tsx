@@ -1,23 +1,43 @@
-import { FC, ReactNode } from "react";
-// import { WalletConnector } from "./walletConnector";
-import { WalletConnectorPrivy } from "./walletConnectorPrivy";
+import { FC, lazy, ReactNode, Suspense } from "react";
+import type { WalletMode } from "./walletMode";
+
+const LegacyWalletConnector = lazy(() =>
+  import("./walletConnector").then((module) => ({
+    default: module.WalletConnector,
+  })),
+);
+
+const PrivyWalletConnector = lazy(() =>
+  import("./walletConnectorPrivy").then((module) => ({
+    default: module.WalletConnectorPrivy,
+  })),
+);
 
 type WalletConnectorProviderProps = {
   children: ReactNode;
-  usePrivy?: boolean;
+  walletMode?: WalletMode;
   networkId?: string;
 };
 
 export const WalletConnectorProvider: FC<WalletConnectorProviderProps> = (
   props,
 ) => {
-  // use privy wallet connector
-  return (
-    <WalletConnectorPrivy usePrivy={props.usePrivy} networkId={props.networkId}>
-      {props.children}
-    </WalletConnectorPrivy>
-  );
+  const walletMode = props.walletMode ?? "wallet";
 
-  // use wallet-connector(web3 onboard)
-  // return <WalletConnector>{props.children}</WalletConnector>;
+  return (
+    <Suspense fallback={null}>
+      {walletMode === "legacy" ? (
+        <LegacyWalletConnector networkId={props.networkId}>
+          {props.children}
+        </LegacyWalletConnector>
+      ) : (
+        <PrivyWalletConnector
+          enablePrivyLogin={walletMode === "privy"}
+          networkId={props.networkId}
+        >
+          {props.children}
+        </PrivyWalletConnector>
+      )}
+    </Suspense>
+  );
 };
