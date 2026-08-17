@@ -208,7 +208,7 @@ export function useChains(
       !testChainInfos
     ) {
       chainsMap.current = new Map();
-      return [];
+      return networkId ? [] : { mainnet: [], testnet: [] };
     }
     const mainnetChains = formatChains({
       tokenChains: tokenChainsRes,
