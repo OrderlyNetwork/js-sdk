@@ -1,12 +1,11 @@
 ---
 name: migrate-package-to-standalone
 description: Migrates a monorepo sub-package to a standalone package (copy with excludes, then apply config changes).
-disable-model-invocation: true
 ---
 
 # Migrate Subpackage to Standalone
 
-**When to use:** This skill has `disable-model-invocation: true`; it is only run when the user explicitly invokes `/migrate-package-to-standalone`.
+Use this skill when the user asks to migrate a monorepo package into a standalone package, either in place or into a separate destination.
 
 ---
 
@@ -46,7 +45,7 @@ All paths in the steps below are relative to the **destination (target)** direct
 ## Rule 1: Add .gitignore
 
 - In the destination root, add a `.gitignore` file.
-- **Content:** Copy from this skill’s template. Read the file at **`.cursor/skills/migrate-package-to-standalone/templates/.gitignore`** (relative to the workspace root) and write its contents to the destination’s `.gitignore`.
+- **Content:** Copy from this skill’s template. Read the file at **`.agents/skills/migrate-package-to-standalone/templates/.gitignore`** (relative to the workspace root) and write its contents to the destination’s `.gitignore`.
 
 ---
 
@@ -181,7 +180,7 @@ If a package stops relying solely on centralized locale data and **vendors trans
 ## Rule 9: Add .gitlab-ci.yml
 
 - In the destination root, add a `.gitlab-ci.yml` file.
-- **Content:** Copy from this skill’s template. Read the file at **`.cursor/skills/migrate-package-to-standalone/templates/.gitlab-ci.yml`** (relative to the workspace root) and write its contents to the destination’s `.gitlab-ci.yml`.
+- **Content:** Copy from this skill’s template. Read the file at **`.agents/skills/migrate-package-to-standalone/templates/.gitlab-ci.yml`** (relative to the workspace root) and write its contents to the destination’s `.gitlab-ci.yml`.
 
 ---
 
