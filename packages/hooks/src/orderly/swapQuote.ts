@@ -28,10 +28,7 @@ export interface SwapQuoteData {
   traceId: string;
   chainId: string;
   fromToken: SwapQuoteToken & { amount: string; value: string };
-  toToken: SwapQuoteToken & {
-    estimatedAmount: string;
-    estimatedValue: string;
-  };
+  toToken: SwapQuoteToken;
   valueCurrency: string;
   netOutValue: string;
   priceImpactPercent: string | null;
@@ -61,6 +58,9 @@ const isString = (value: unknown): value is string => typeof value === "string";
 const isNullableString = (value: unknown): value is string | null =>
   value === null || isString(value);
 
+const isOptionalString = (value: unknown): value is string | undefined =>
+  value === undefined || isString(value);
+
 const invalidQuoteResponseError = () => {
   const error = new Error("Invalid quote response") as SwapQuoteError;
   error.code = "INVALID_QUOTE_RESPONSE";
@@ -87,8 +87,8 @@ export const isSwapQuoteData = (value: unknown): value is SwapQuoteData => {
     isString(fromToken.value) &&
     isRecord(toToken) &&
     isString(toToken.tokenAddress) &&
-    isString(toToken.estimatedAmount) &&
-    isString(toToken.estimatedValue) &&
+    isOptionalString(toToken.estimatedAmount) &&
+    isOptionalString(toToken.estimatedValue) &&
     value.valueCurrency === "USD" &&
     isString(value.netOutValue) &&
     isString(value.slippageLimitPercent) &&
