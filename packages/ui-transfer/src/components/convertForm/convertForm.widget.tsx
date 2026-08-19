@@ -1,7 +1,11 @@
 import React from "react";
 // import pick from "ramda/es/pick";
 import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import {
+  registerSimpleDialog,
+  registerSimpleSheet,
+  useModal,
+} from "@orderly.network/ui";
 import type { ConvertFormScriptOptions } from "./convertForm.script";
 import { useConvertFormScript } from "./convertForm.script";
 import { ConvertFormUI } from "./convertForm.ui";
@@ -16,12 +20,18 @@ export const ConvertFormWidget: React.FC<ConvertFormScriptOptions> = (
   return <ConvertFormUI {...state} />;
 };
 
-registerSimpleDialog(ConvertDialogId, ConvertFormWidget, {
+const ConvertFormModalWidget: React.FC<ConvertFormScriptOptions> = (props) => {
+  const { visible } = useModal();
+
+  return visible ? <ConvertFormWidget {...props} /> : null;
+};
+
+registerSimpleDialog(ConvertDialogId, ConvertFormModalWidget, {
   size: "md",
   classNames: { content: "oui-border oui-border-line-6" },
   title: () => i18n.t("transfer.convert"),
 });
 
-registerSimpleSheet(ConvertSheetId, ConvertFormWidget, {
+registerSimpleSheet(ConvertSheetId, ConvertFormModalWidget, {
   title: () => i18n.t("transfer.convert"),
 });
