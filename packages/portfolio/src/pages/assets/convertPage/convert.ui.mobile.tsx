@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { isValidElement, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   useModal,
@@ -12,8 +12,9 @@ import {
   toast,
   ScrollIndicator,
 } from "@orderly.network/ui";
+import { getEffectiveConvertStatus } from "@orderly.network/ui-transfer";
 import { ConvertRecord, ConvertTransaction } from "../type";
-import { ConvertedAssetColumn } from "./convert.column";
+import { ConvertedAssetColumn, ConvertStatusBadge } from "./convert.column";
 import { useConvertScript } from "./convert.script";
 
 type ConvertMobileUIProps = {
@@ -27,7 +28,7 @@ type ConvertMobileItemProps = {
 
 type ConvertMobileFieldProps = {
   label: string;
-  value?: string | number;
+  value?: React.ReactNode;
   className?: string;
   copyable?: boolean;
   rule?: "address" | "txId";
@@ -140,9 +141,13 @@ const ConvertMobileField: React.FC<ConvertMobileFieldProps> = ({
       onClick={onClick}
     >
       <p>{label}</p>
-      <Text.formatted rule={rule} copyable={copyable} onCopy={onCopy}>
-        {value || "-"}
-      </Text.formatted>
+      {isValidElement(value) ? (
+        value
+      ) : (
+        <Text.formatted rule={rule} copyable={copyable} onCopy={onCopy}>
+          {value || "-"}
+        </Text.formatted>
+      )}
     </div>
   );
 };
@@ -204,10 +209,10 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
           label={t("common.type")}
           value={item.type?.charAt(0).toUpperCase() + item.type?.slice(1)}
         />
-        <ConvertMobileField
-          label={t("common.status")}
-          value={item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
-        />
+        <div className="oui-flex oui-flex-col oui-gap-1 oui-text-2xs oui-text-base-contrast-36">
+          <p>{t("common.status")}</p>
+          <ConvertStatusBadge status={getEffectiveConvertStatus(item)} />
+        </div>
       </div>
     </div>
   );
@@ -279,12 +284,7 @@ const ConverHistoryItemDetailsDialog =
                   />
                   <ConvertMobileField
                     label={t("common.result")}
-                    value={
-                      detail.result
-                        ? detail.result.charAt(0).toUpperCase() +
-                          detail.result.slice(1)
-                        : "-"
-                    }
+                    value={<ConvertStatusBadge status={detail.result} />}
                   />
                 </div>
               </div>

@@ -10,6 +10,7 @@ import {
   toast,
 } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
+import { getEffectiveConvertStatus } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
 import type { ConvertRecord, ConvertTransaction } from "../type";
 
@@ -22,6 +23,43 @@ export interface ConvertDetailColumnsOptions {
   indexPrices: Record<string, number>;
   chainsInfo: any[];
 }
+
+export const ConvertStatusBadge = ({ status }: { status?: string }) => {
+  const { t } = useTranslation();
+  const normalizedStatus = status?.toLowerCase();
+  const statusConfig = {
+    completed: {
+      color: "success" as const,
+      label: t("assetHistory.status.completed"),
+    },
+    succeeded: {
+      color: "success" as const,
+      label: t("transfer.convert.succeeded"),
+    },
+    pending: {
+      color: "warning" as const,
+      label: t("assetHistory.status.pending"),
+    },
+    failed: {
+      color: "danger" as const,
+      label: t("assetHistory.status.failed"),
+    },
+    cancelled: {
+      color: "neutral" as const,
+      label: t("orders.status.canceled"),
+    },
+  };
+  const config = statusConfig[normalizedStatus as keyof typeof statusConfig];
+
+  return (
+    <Text color={config?.color ?? "neutral"} size="xs" weight="semibold">
+      {config?.label ||
+        (normalizedStatus
+          ? normalizedStatus.charAt(0).toUpperCase() + normalizedStatus.slice(1)
+          : "-")}
+    </Text>
+  );
+};
 
 export const ConvertedAssetColumn = ({
   convertedAssets,
@@ -225,9 +263,9 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         dataIndex: "status",
         align: "left",
         width: 150,
-        render(status: string) {
+        render(_status: string, record: ConvertRecord) {
           return (
-            <Text>{status.charAt(0).toUpperCase() + status.slice(1)}</Text>
+            <ConvertStatusBadge status={getEffectiveConvertStatus(record)} />
           );
         },
       },
@@ -367,9 +405,7 @@ export const useConvertDetailColumns = (
         align: "left",
         width: 100,
         render(result: string) {
-          return (
-            <Text>{result?.charAt(0).toUpperCase() + result?.slice(1)}</Text>
-          );
+          return <ConvertStatusBadge status={result} />;
         },
       },
     ];

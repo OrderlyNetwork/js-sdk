@@ -65,6 +65,13 @@ describe("swap quote response normalization", () => {
     );
   });
 
+  it("accepts netOutValue when estimatedValue is omitted", () => {
+    const toToken = { ...quote.toToken };
+    delete toToken.estimatedValue;
+
+    expect(isSwapQuoteData({ ...quote, toToken })).toBe(true);
+  });
+
   it("preserves stable error fields from the failure envelope", () => {
     expect(() =>
       normalizeSwapQuoteResponse({

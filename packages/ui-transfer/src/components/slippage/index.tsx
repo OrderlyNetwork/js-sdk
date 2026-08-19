@@ -11,6 +11,19 @@ import {
   Tips,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import {
+  getSlippageRiskLevel,
+  shouldDisableSlippageSave,
+} from "./slippage.utils";
+
+interface SlippageRiskGuidance {
+  recommendedValue: number;
+  tooltip: ReactNode;
+  helperText: ReactNode;
+  minimumError: ReactNode;
+  lowWarning: ReactNode;
+  highWarning: ReactNode;
+}
 
 interface SlippageProps {
   value?: number;
@@ -20,6 +33,7 @@ interface SlippageProps {
   dp?: number;
   message?: ReactNode;
   validate?: (value: number) => string;
+  riskGuidance?: SlippageRiskGuidance;
 }
 
 const options = [0.5, 1, 2];
@@ -32,10 +46,12 @@ export const Slippage: FC<SlippageProps> = (props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (props.value && !options.includes(props.value!)) {
-      setCustomValue(props.value!.toString());
+    if (props.value !== undefined && !options.includes(props.value)) {
+      setValue(undefined);
+      setCustomValue(props.value.toString());
     } else {
       setValue(props.value);
+      setCustomValue("");
     }
   }, [props.value, open]);
 
@@ -60,7 +76,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
 
     const d = new Decimal(val);
     setValue(undefined);
-    if (d.lt(min)) {
+    if (d.lt(min) && !props.riskGuidance) {
       setCustomValue(min.toString());
     } else if (d.gt(max)) {
       setCustomValue(max.toString());
@@ -84,11 +100,31 @@ export const Slippage: FC<SlippageProps> = (props) => {
     return Promise.resolve(true);
   };
 
-  const disabled = !getValue();
+  const currentValue = getValue();
+  const riskLevel = props.riskGuidance
+    ? getSlippageRiskLevel(
+        currentValue,
+        min,
+        props.riskGuidance.recommendedValue,
+      )
+    : undefined;
 
   const errorMessage = useMemo(() => {
-    return props.validate?.(getValue()!);
-  }, [value, customValue, props.validate]);
+    if (riskLevel === "minimum") {
+      return props.riskGuidance?.minimumError;
+    }
+    return currentValue === undefined
+      ? undefined
+      : props.validate?.(currentValue);
+  }, [currentValue, props.riskGuidance, props.validate, riskLevel]);
+
+  const warningMessage =
+    riskLevel === "low"
+      ? props.riskGuidance?.lowWarning
+      : riskLevel === "high"
+        ? props.riskGuidance?.highWarning
+        : undefined;
+  const disabled = shouldDisableSlippageSave(currentValue, riskLevel);
 
   const content = (
     <div className="oui-text-2xs">
@@ -97,7 +133,10 @@ export const Slippage: FC<SlippageProps> = (props) => {
           {t("transfer.slippage.slippageTolerance")}
         </Text>
         <Tips
-          content={t("transfer.slippage.slippageTolerance.description")}
+          content={
+            props.riskGuidance?.tooltip ??
+            t("transfer.slippage.slippageTolerance.description")
+          }
           title={t("common.tips")}
           classNamss={{
             trigger: "oui-mt-[2px] oui-size-4",
@@ -139,14 +178,31 @@ export const Slippage: FC<SlippageProps> = (props) => {
           }}
         />
       </Flex>
+      {(props.riskGuidance?.helperText || props.message) && (
+        <Text
+          as="div"
+          size="2xs"
+          intensity={54}
+          className="oui-mt-3 oui-leading-4"
+        >
+          {props.riskGuidance?.helperText || props.message}
+        </Text>
+      )}
       {errorMessage && (
-        <Flex mt={6}>
+        <Flex mt={3}>
           <Text
             size="2xs"
             color="warning"
             className="oui-w-full oui-text-center"
           >
             {errorMessage}
+          </Text>
+        </Flex>
+      )}
+      {!errorMessage && warningMessage && (
+        <Flex mt={3}>
+          <Text as="div" size="2xs" color="warning" className="oui-leading-4">
+            {warningMessage}
           </Text>
         </Flex>
       )}
