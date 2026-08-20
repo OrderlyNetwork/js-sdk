@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
+import { PropsWithChildren, useCallback, useEffect, useMemo } from "react";
 import {
   Adapter,
   WalletAdapterNetwork,
@@ -12,8 +7,9 @@ import {
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { WalletProvider } from "@solana/wallet-adapter-react";
 import { useEventEmitter } from "@orderly.network/hooks";
+import { WALLET_CONNECT_ERROR } from "../../connectEvents";
 import { useWalletConnectorPrivy } from "../../provider";
-import { InitSolana } from "../../types";
+import { InitSolana, WalletConnectType } from "../../types";
 
 interface IProps extends PropsWithChildren<InitSolana> {}
 
@@ -50,11 +46,13 @@ export function InitSolanaProvider({
   const handleOnError = useCallback(
     (error: WalletError, adapter?: Adapter) => {
       if (error.name === "WalletAccountError") {
-        ee.emit("wallet:connect-error", {
+        ee.emit(WALLET_CONNECT_ERROR, {
+          walletType: WalletConnectType.SOL,
           message: "Please switch to a wallet with Solana address.",
         });
         return;
       }
+
       onError?.(error, adapter);
     },
     [ee, onError],

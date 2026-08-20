@@ -2,10 +2,14 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { ActionButton } from "./walletConnectorContent";
+import { ActionButton, WalletConnectContent } from "./walletConnectorContent";
 
 const mocks = vi.hoisted(() => ({
   setManualLedgerAddress: vi.fn(),
+  accountState: {
+    address: "address-a",
+    status: 2 as AccountStatusEnum,
+  },
 }));
 
 vi.mock("@orderly.network/hooks", () => ({
@@ -13,7 +17,8 @@ vi.mock("@orderly.network/hooks", () => ({
   REFERRAL_CODE_MAX_LENGTH: 20,
   REFERRAL_CODE_MIN_LENGTH: 1,
   useAccount: () => ({
-    state: { address: "address-a" },
+    state: mocks.accountState,
+    account: { address: "address-a" },
   }),
   useEventEmitter: () => ({ emit: vi.fn() }),
   useLocalStorage: () => [undefined, vi.fn()],
@@ -31,6 +36,7 @@ vi.mock("@orderly.network/i18n", () => ({
 describe("ActionButton Ledger mode", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.accountState.status = AccountStatusEnum.NotSignedIn;
   });
 
   afterEach(() => {
@@ -156,5 +162,48 @@ describe("ActionButton Ledger mode", () => {
     expect(onUseStandardWallet).not.toHaveBeenCalled();
     expect(signIn).toHaveBeenCalledTimes(1);
     expect(mocks.setManualLedgerAddress).not.toHaveBeenCalled();
+  });
+
+  it("renders the requested onboarding step before account state catches up", () => {
+    render(
+      <WalletConnectContent
+        initAccountState={AccountStatusEnum.DisabledTrading}
+        signIn={vi.fn()}
+        enableTrading={vi.fn()}
+        refCode=""
+        setRefCode={vi.fn()}
+        showRefCodeInput={false}
+      />,
+    );
+
+    expect(screen.queryByText("connector.createAccount")).toBeNull();
+    expect(screen.getAllByText("connector.enableTrading")).toHaveLength(2);
+  });
+
+  it("advances the visible step when the live account state moves forward", () => {
+    mocks.accountState.status = AccountStatusEnum.DisabledTrading;
+
+    render(
+      <WalletConnectContent
+        initAccountState={AccountStatusEnum.NotSignedIn}
+        signIn={vi.fn()}
+        enableTrading={vi.fn()}
+        refCode=""
+        setRefCode={vi.fn()}
+        showRefCodeInput={false}
+      />,
+    );
+
+    const createAccountStep = screen.getByText("connector.createAccount");
+    const enableTradingStep = screen.getAllByText("connector.enableTrading")[0];
+
+    expect(
+      createAccountStep.parentElement?.parentElement?.querySelector("svg"),
+    ).not.toBeNull();
+    expect(
+      enableTradingStep.parentElement?.parentElement?.querySelector(
+        ".oui-bg-primary-light",
+      ),
+    ).not.toBeNull();
   });
 });

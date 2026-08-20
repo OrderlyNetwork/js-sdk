@@ -22,13 +22,17 @@ import {
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
 
-const ModalTitle = () => {
+const ModalTitle = ({ status }: { status?: AccountStatusEnum }) => {
   const { t } = useTranslation();
   const { state } = useAccount();
-  if (state.status < AccountStatusEnum.SignedIn) {
+  const displayStatus =
+    typeof status !== "undefined" && state.status < status
+      ? status
+      : state.status;
+  if (displayStatus < AccountStatusEnum.SignedIn) {
     return <Text>{t("connector.createAccount")}</Text>;
   }
-  if (state.status < AccountStatusEnum.EnableTrading) {
+  if (displayStatus < AccountStatusEnum.EnableTrading) {
     return <Text>{t("connector.enableTrading")}</Text>;
   }
   return <Text>{t("connector.connectWallet")}</Text>;
@@ -62,7 +66,8 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
                   ) {
                     modal
                       .show(WalletConnectorModalId, {
-                        title: <ModalTitle />,
+                        initAccountState: props.accountStatus,
+                        title: <ModalTitle status={props.accountStatus} />,
                       })
                       .then(
                         (r) => console.log(r),

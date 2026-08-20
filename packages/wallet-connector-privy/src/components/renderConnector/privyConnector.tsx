@@ -22,7 +22,7 @@ const RenderLoginMethodsDom = ({
           "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
           "oui-bg-[#333948]",
         )}
-        onClick={() => connect({ walletType: "privy", extraType: "email" })}
+        onClick={() => connect("email")}
       >
         <img
           src="https://oss.orderly.network/static/sdk/privy/email.svg"
@@ -41,7 +41,7 @@ const RenderLoginMethodsDom = ({
           "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
           "oui-bg-[#335FFC]",
         )}
-        onClick={() => connect({ walletType: "privy", extraType: "google" })}
+        onClick={() => connect("google")}
       >
         <img
           src="https://oss.orderly.network/static/sdk/privy/google.svg"
@@ -60,7 +60,7 @@ const RenderLoginMethodsDom = ({
           "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
           "oui-bg-[#07080A]",
         )}
-        onClick={() => connect({ walletType: "privy", extraType: "twitter" })}
+        onClick={() => connect("twitter")}
       >
         <img
           src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
@@ -79,7 +79,7 @@ const RenderLoginMethodsDom = ({
           "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
           "oui-bg-[#3D79A9]",
         )}
-        onClick={() => connect({ walletType: "privy", extraType: "telegram" })}
+        onClick={() => connect("telegram")}
       >
         <svg
           width="18"

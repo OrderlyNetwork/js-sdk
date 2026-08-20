@@ -1,7 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import {
   useAccount,
   useChains,
+  useEventEmitter,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -17,22 +18,35 @@ import {
   WalletConnectorSheetId,
 } from "@orderly.network/ui-connector";
 
-const ModalTitle = () => {
+const ModalTitle = ({ status }: { status?: AccountStatusEnum }) => {
   const { t } = useTranslation();
   const { state } = useAccount();
-  if (state.status < AccountStatusEnum.SignedIn) {
+  const displayStatus =
+    typeof status !== "undefined" && state.status < status
+      ? status
+      : state.status;
+  if (displayStatus < AccountStatusEnum.SignedIn) {
     return <Text>{t("connector.createAccount")}</Text>;
   }
-  if (state.status < AccountStatusEnum.EnableTrading) {
+  if (displayStatus < AccountStatusEnum.EnableTrading) {
     return <Text>{t("connector.enableTrading")}</Text>;
   }
   return <Text>{t("connector.connectWallet")}</Text>;
+};
+
+const WALLET_CONNECT_OAUTH_RESUME_RESULT = "wallet:connect-oauth-resume-result";
+
+type WalletConnectOAuthResumeResult = {
+  status?: AccountStatusEnum;
+  wrongNetwork?: boolean;
+  handled?: boolean;
 };
 
 export const useAccountMenu = (): any => {
   const { t } = useTranslation();
   const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
+  const ee = useEventEmitter();
   const { connectWallet, disabledConnect, wrongNetwork, setCurrentChainId } =
     useAppContext();
 
@@ -40,54 +54,83 @@ export const useAccountMenu = (): any => {
 
   const { isMobile } = useScreen();
 
-  const onCrateAccount = async () => {
-    const modalId = isMobile ? WalletConnectorSheetId : WalletConnectorModalId;
-    modal
-      .show(modalId, {
-        title: <ModalTitle />,
-      })
-      .then(
-        (res) => console.log("return ::", res),
-        (err) => console.log("error:::", err),
-      );
-  };
+  const openWalletConnector = useCallback(
+    async (status: AccountStatusEnum = state.status) => {
+      const modalId = isMobile
+        ? WalletConnectorSheetId
+        : WalletConnectorModalId;
+      modal
+        .show(modalId, {
+          initAccountState: status,
+          title: <ModalTitle status={status} />,
+        })
+        .catch(() => {});
+    },
+    [isMobile, state.status],
+  );
 
-  const onCreateOrderlyKey = async () => {
-    const modalId = isMobile ? WalletConnectorSheetId : WalletConnectorModalId;
-    modal
-      .show(modalId, {
-        title: <ModalTitle />,
-      })
-      .then(
-        (res) => console.log("return ::", res),
-        (err) => console.log("error:::", err),
-      );
-  };
+  const statusChangeHandler = useCallback(
+    (status?: AccountStatusEnum) => {
+      if (
+        typeof status === "undefined" ||
+        status <= AccountStatusEnum.Connected ||
+        status >= AccountStatusEnum.EnableTrading
+      ) {
+        return;
+      }
 
-  const switchChain = () => {
-    account.once("validate:end", (status) => {
+      openWalletConnector(status);
+    },
+    [openWalletConnector],
+  );
+
+  const switchChain = useCallback(() => {
+    // Chain selection resolves before account validation, so this is the only
+    // authoritative signal for opening the onboarding modal.
+    const handleValidateEnd = (status: AccountStatusEnum) => {
       if (status < AccountStatusEnum.EnableTrading) {
-        statusChangeHandler({ status });
+        statusChangeHandler(status);
       } else {
         toast.success(t("connector.walletConnected"));
       }
-    });
+    };
 
-    modal.show<{ wrongNetwork: boolean }>(ChainSelectorDialogId).then(
+    account.once("validate:end", handleValidateEnd);
+
+    const modalId = isMobile ? ChainSelectorSheetId : ChainSelectorDialogId;
+    modal.show<{ wrongNetwork: boolean }>(modalId).then(
       (r) => {
-        if (!r.wrongNetwork) {
-          if (state.status < AccountStatusEnum.EnableTrading) {
-            statusChangeHandler(state);
-          } else {
-            toast.success(t("connector.walletConnected"));
-          }
+        if (r.wrongNetwork) {
+          account.off("validate:end", handleValidateEnd);
         }
       },
       (error) => {
+        account.off("validate:end", handleValidateEnd);
         console.log("[switchChain error]", error);
       },
     );
-  };
+  }, [account, isMobile, statusChangeHandler, t]);
+
+  useEffect(() => {
+    const handleOAuthResumeResult = (
+      result?: WalletConnectOAuthResumeResult,
+    ) => {
+      if (!result || result.handled) {
+        return;
+      }
+      result.handled = true;
+      if (result.wrongNetwork) {
+        switchChain();
+      } else {
+        statusChangeHandler(result.status);
+      }
+    };
+
+    ee.on(WALLET_CONNECT_OAUTH_RESUME_RESULT, handleOAuthResumeResult);
+    return () => {
+      ee.off(WALLET_CONNECT_OAUTH_RESUME_RESULT, handleOAuthResumeResult);
+    };
+  }, [ee, statusChangeHandler, switchChain]);
 
   const connect = async () => {
     const res = await connectWallet();
@@ -99,23 +142,7 @@ export const useAccountMenu = (): any => {
     if (res.wrongNetwork) {
       switchChain();
     } else {
-      statusChangeHandler(res);
-    }
-  };
-
-  const statusChangeHandler = (nextState: any) => {
-    if (
-      nextState.validating ||
-      nextState.status <= AccountStatusEnum.Connected
-    ) {
-      return;
-    }
-
-    if (nextState.status < AccountStatusEnum.SignedIn) {
-      onCrateAccount();
-    }
-    if (nextState.status < AccountStatusEnum.EnableTrading) {
-      onCreateOrderlyKey();
+      statusChangeHandler(res.status);
     }
   };
 
@@ -174,8 +201,8 @@ export const useAccountMenu = (): any => {
     address: state.address,
     accountState: state,
     connect,
-    onCrateAccount,
-    onCreateOrderlyKey,
+    onCrateAccount: openWalletConnector,
+    onCreateOrderlyKey: openWalletConnector,
     onOpenExplorer,
     onDisconnect,
     onSwitchNetwork,

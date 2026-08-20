@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useCallback, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
@@ -67,6 +67,98 @@ export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   // validatingIndicator?: ReactElement;
 };
 
+const useConnectWalletHandler = (options: {
+  networkId?: NetworkId;
+  bridgeLessOnly?: boolean;
+}) => {
+  const { networkId, bridgeLessOnly } = options;
+  const { t } = useTranslation();
+  const { connectWallet } = useAppContext();
+  const { account, state } = useAccount();
+  const { isMobile } = useScreen();
+
+  const openWalletConnector = useCallback(
+    (status: AccountStatusEnum) => {
+      modal
+        .show(isMobile ? WalletConnectorSheetId : WalletConnectorModalId, {
+          initAccountState: status,
+          title: <ModalTitle status={status} />,
+        })
+        .catch(() => {});
+    },
+    [isMobile],
+  );
+
+  const onConnectOrderly = useCallback(() => {
+    openWalletConnector(state.status);
+  }, [openWalletConnector, state.status]);
+
+  const handleAccountStatus = useCallback(
+    (status?: AccountStatusEnum) => {
+      if (
+        typeof status !== "undefined" &&
+        status > AccountStatusEnum.Connected &&
+        status < AccountStatusEnum.EnableTrading
+      ) {
+        openWalletConnector(status);
+      }
+    },
+    [openWalletConnector],
+  );
+
+  const switchChain = useCallback(() => {
+    const handleValidateEnd = (status: AccountStatusEnum) => {
+      if (status < AccountStatusEnum.EnableTrading) {
+        handleAccountStatus(status);
+      } else {
+        toast.success(t("connector.walletConnected"));
+      }
+    };
+
+    account.once("validate:end", handleValidateEnd);
+
+    modal
+      .show<{ wrongNetwork: boolean }>(
+        isMobile ? ChainSelectorSheetId : ChainSelectorDialogId,
+        {
+          networkId,
+          bridgeLessOnly,
+        },
+      )
+      .then(
+        (result) => {
+          if (result.wrongNetwork) {
+            account.off("validate:end", handleValidateEnd);
+          }
+        },
+        (error) => {
+          account.off("validate:end", handleValidateEnd);
+          console.error("[switchChain error]", error);
+        },
+      );
+  }, [account, bridgeLessOnly, handleAccountStatus, isMobile, networkId, t]);
+
+  const onConnectWallet = useCallback(async () => {
+    try {
+      const res = await connectWallet();
+
+      if (!res) {
+        return;
+      }
+
+      if (res.wrongNetwork) {
+        switchChain();
+      } else {
+        handleAccountStatus(res.status);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [connectWallet, handleAccountStatus, switchChain]);
+
+  return { onConnectOrderly, onConnectWallet, switchChain };
+};
+
 export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
   props,
 ) => {
@@ -84,6 +176,8 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
   const { t } = useTranslation();
   const { state } = useAccount();
   const { wrongNetwork, disabledConnect } = useAppContext();
+  const { onConnectOrderly, onConnectWallet, switchChain } =
+    useConnectWalletHandler({ networkId, bridgeLessOnly });
 
   const _status = useMemo(() => {
     if (status === undefined) {
@@ -146,6 +240,9 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
         labels={labels}
         descriptions={descriptions}
         disabledConnect={disabledConnect}
+        onConnectOrderly={onConnectOrderly}
+        onConnectWallet={onConnectWallet}
+        switchChain={switchChain}
       />
     );
   }, [
@@ -155,6 +252,9 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
     wrongNetwork,
     labels,
     descriptions,
+    onConnectOrderly,
+    onConnectWallet,
+    switchChain,
   ]);
 
   /**
@@ -171,13 +271,17 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
   );
 };
 
-const ModalTitle: React.FC = () => {
+const ModalTitle: React.FC<{ status?: AccountStatusEnum }> = ({ status }) => {
   const { t } = useTranslation();
   const { state } = useAccount();
-  if (state.status < AccountStatusEnum.SignedIn) {
+  const displayStatus =
+    typeof status !== "undefined" && state.status < status
+      ? status
+      : state.status;
+  if (displayStatus < AccountStatusEnum.SignedIn) {
     return <Text>{t("connector.createAccount")}</Text>;
   }
-  if (state.status < AccountStatusEnum.EnableTrading) {
+  if (displayStatus < AccountStatusEnum.EnableTrading) {
     return <Text>{t("connector.enableTrading")}</Text>;
   }
   return <Text>{t("connector.connectWallet")}</Text>;
@@ -192,75 +296,12 @@ const DefaultFallback: React.FC<{
   bridgeLessOnly?: boolean;
   descriptions?: alertMessages;
   disabledConnect?: boolean;
+  onConnectOrderly: () => void;
+  onConnectWallet: () => Promise<void>;
+  switchChain: () => void;
 }> = (props) => {
   const { buttonProps, labels, descriptions } = props;
-  const { t } = useTranslation();
-  const { connectWallet } = useAppContext();
-  const { account } = useAccount();
-  const { isMobile } = useScreen();
-
-  const onConnectOrderly = () => {
-    modal
-      .show(isMobile ? WalletConnectorSheetId : WalletConnectorModalId, {
-        title: <ModalTitle />,
-      })
-      .then(
-        (r) => console.log(r),
-        (error) => console.log(error),
-      );
-  };
-
-  const onConnectWallet = async () => {
-    const res = await connectWallet();
-
-    if (!res) {
-      return;
-    }
-
-    if (res.wrongNetwork) {
-      switchChain();
-    } else {
-      if (
-        (res?.status ?? AccountStatusEnum.NotConnected) <
-        AccountStatusEnum.EnableTrading
-      ) {
-        onConnectOrderly();
-      }
-    }
-  };
-
-  const switchChain = () => {
-    account.once("validate:end", (status) => {
-      if (status < AccountStatusEnum.EnableTrading) {
-        onConnectOrderly();
-      } else {
-        toast.success(t("connector.walletConnected"));
-      }
-    });
-
-    modal
-      .show<{ wrongNetwork: boolean }>(
-        isMobile ? ChainSelectorSheetId : ChainSelectorDialogId,
-        {
-          networkId: props.networkId,
-          bridgeLessOnly: props.bridgeLessOnly,
-        },
-      )
-      .then(
-        (r) => {
-          if (!r.wrongNetwork) {
-            if (props.status >= AccountStatusEnum.Connected) {
-              if (props.status < AccountStatusEnum.EnableTrading) {
-                onConnectOrderly();
-              } else {
-                toast.success(t("connector.walletConnected"));
-              }
-            }
-          }
-        },
-        (error) => console.log("[switchChain error]", error),
-      );
-  };
+  const { onConnectOrderly, onConnectWallet, switchChain } = props;
 
   if (props.wrongNetwork && !props.disabledConnect) {
     return (

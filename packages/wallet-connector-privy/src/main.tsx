@@ -1,13 +1,33 @@
-import React, { useMemo } from "react";
-import { WalletConnectorContext } from "@orderly.network/hooks";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  useEventEmitter,
+  WalletConnectorContext,
+} from "@orderly.network/hooks";
 import type {
   WalletConnectorContextState,
   WalletState,
 } from "@orderly.network/hooks";
 import { ConnectDrawer } from "./components/connectDrawer";
+import {
+  type WalletConnectErrorPayload,
+  type WalletConnectProviderPayload,
+  WALLET_CONNECT_ERROR,
+  WALLET_CONNECT_PROVIDER_CANCEL,
+  WALLET_CONNECT_PROVIDER_START,
+  WALLET_CONNECT_WALLET_SELECTED,
+} from "./connectEvents";
+import { ConnectRequestController } from "./connectRequest";
 import { useWallet } from "./hooks/useWallet";
 import "./injectUsercenter";
+import { clearOAuthConnectIntent } from "./oauthConnectIntent";
 import { useWalletConnectorPrivy } from "./provider";
+import { WalletConnectType } from "./types";
 
 interface MainProps {
   headerProps?: {
@@ -18,29 +38,178 @@ interface MainProps {
 export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
   const { headerProps, children } = props;
 
-  const { wallet, connectedChain, setChain, namespace, onDisconnect } =
-    useWallet();
+  const {
+    wallet,
+    walletType,
+    connectedChain,
+    setChain,
+    namespace,
+    onDisconnect,
+    restoreConnectorState,
+  } = useWallet();
 
   const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
+  const ee = useEventEmitter();
+  const [connecting, setConnecting] = useState(false);
+  const controllerRef = useRef<ConnectRequestController>();
+  const connectorSnapshotRef = useRef<{
+    walletType: WalletConnectType;
+    previousConnectorKey?: string;
+    previousChainId?: number;
+  } | null>(null);
+  const restoreConnectorStateRef = useRef(restoreConnectorState);
+  restoreConnectorStateRef.current = restoreConnectorState;
 
-  const connect = (options: any): Promise<WalletState[]> => {
-    // fix wallet-connector package connect
-    if (options && options.autoSelect) {
-      return Promise.resolve([]);
+  if (!controllerRef.current) {
+    controllerRef.current = new ConnectRequestController(setConnecting);
+  }
+
+  const rollbackConnector = useCallback((walletType: WalletConnectType) => {
+    const snapshot = connectorSnapshotRef.current;
+    if (!snapshot || snapshot.walletType !== walletType) {
+      return false;
     }
-    setTargetWalletType(undefined);
-    return new Promise((resolve) => {
-      setOpenConnectDrawer(true);
-      resolve([]);
-    });
-  };
+
+    connectorSnapshotRef.current = null;
+    restoreConnectorStateRef.current(
+      snapshot.previousConnectorKey,
+      snapshot.previousChainId,
+    );
+    return true;
+  }, []);
+
+  useEffect(() => {
+    const controller = controllerRef.current!;
+    const handleProviderStart = (payload?: WalletConnectProviderPayload) => {
+      if (!payload?.walletType) {
+        return;
+      }
+      if (!connectorSnapshotRef.current) {
+        connectorSnapshotRef.current = {
+          walletType: payload.walletType,
+          previousConnectorKey: payload.previousConnectorKey,
+          previousChainId: payload.previousChainId,
+        };
+      } else {
+        connectorSnapshotRef.current.walletType = payload.walletType;
+      }
+      controller.startProvider(payload.walletType);
+    };
+    const handleProviderCancel = (payload?: WalletConnectProviderPayload) => {
+      if (!payload?.walletType) {
+        return;
+      }
+      if (payload.walletType === WalletConnectType.PRIVY) {
+        clearOAuthConnectIntent();
+      }
+      const rolledBack = rollbackConnector(payload.walletType);
+      const cancelled = controller.cancelProvider(payload.walletType);
+      if (!rolledBack && !cancelled) {
+        return;
+      }
+      setOpenConnectDrawer(false);
+    };
+    const handleConnectError = (payload?: WalletConnectErrorPayload) => {
+      if (!payload?.walletType) {
+        return;
+      }
+      if (payload.walletType === WalletConnectType.PRIVY) {
+        clearOAuthConnectIntent();
+      }
+      const rolledBack = rollbackConnector(payload.walletType);
+      const failed = controller.fail(
+        new Error(payload.message || "Failed to connect to the wallet."),
+        payload.walletType,
+      );
+      if (!rolledBack && !failed) {
+        return;
+      }
+      setOpenConnectDrawer(false);
+    };
+    const handleWalletSelected = (selectedWallet?: WalletState) => {
+      if (!selectedWallet || !controller.hasPendingRequest) {
+        return;
+      }
+      controller.selectWallet(selectedWallet);
+      clearOAuthConnectIntent();
+      setOpenConnectDrawer(false);
+    };
+    ee.on(WALLET_CONNECT_PROVIDER_START, handleProviderStart);
+    ee.on(WALLET_CONNECT_PROVIDER_CANCEL, handleProviderCancel);
+    ee.on(WALLET_CONNECT_ERROR, handleConnectError);
+    ee.on(WALLET_CONNECT_WALLET_SELECTED, handleWalletSelected);
+    return () => {
+      ee.off(WALLET_CONNECT_PROVIDER_START, handleProviderStart);
+      ee.off(WALLET_CONNECT_PROVIDER_CANCEL, handleProviderCancel);
+      ee.off(WALLET_CONNECT_ERROR, handleConnectError);
+      ee.off(WALLET_CONNECT_WALLET_SELECTED, handleWalletSelected);
+      const snapshot = connectorSnapshotRef.current;
+      if (snapshot && snapshot.walletType !== WalletConnectType.PRIVY) {
+        rollbackConnector(snapshot.walletType);
+      }
+      controller.dispose();
+    };
+  }, [ee, rollbackConnector, setOpenConnectDrawer]);
+
+  useEffect(() => {
+    if (connectorSnapshotRef.current?.walletType === walletType && wallet) {
+      connectorSnapshotRef.current = null;
+    }
+
+    const controller = controllerRef.current!;
+    const hadPendingRequest = controller.hasPendingRequest;
+    controller.completeAggregatedWallet(wallet, walletType);
+    if (hadPendingRequest && !controller.hasPendingRequest) {
+      clearOAuthConnectIntent();
+      setOpenConnectDrawer(false);
+    }
+  }, [setOpenConnectDrawer, wallet, walletType]);
+
+  const connect = useCallback(
+    (options?: { autoSelect?: boolean }): Promise<WalletState[]> => {
+      const controller = controllerRef.current!;
+      const hadPendingRequest = controller.hasPendingRequest;
+      const promise = controller.begin({
+        baselineWallet: wallet,
+        autoSelect: options?.autoSelect,
+      });
+
+      if (!options?.autoSelect && !hadPendingRequest) {
+        setTargetWalletType(undefined);
+        setOpenConnectDrawer(true);
+      }
+
+      return promise;
+    },
+    [setOpenConnectDrawer, setTargetWalletType, wallet],
+  );
+
+  const handleConnectDrawerOpenChange = useCallback(
+    (open: boolean) => {
+      setOpenConnectDrawer(open);
+      if (!open) {
+        const cancelledWalletType =
+          controllerRef.current!.cancelFromDrawerClose();
+        const snapshotWalletType = connectorSnapshotRef.current?.walletType;
+        const rollbackWalletType =
+          cancelledWalletType ??
+          (snapshotWalletType !== WalletConnectType.PRIVY
+            ? snapshotWalletType
+            : undefined);
+        if (rollbackWalletType) {
+          rollbackConnector(rollbackWalletType);
+        }
+      }
+    },
+    [rollbackConnector, setOpenConnectDrawer],
+  );
 
   const memoizedValue = useMemo<WalletConnectorContextState>(
     () => ({
       connect,
       disconnect: onDisconnect,
-      connecting: false,
+      connecting,
       wallet,
       setChain,
       connectedChain,
@@ -48,14 +217,22 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
       chains: [],
       settingChain: false,
     }),
-    [connect, setChain, onDisconnect, connectedChain, wallet, namespace],
+    [
+      connect,
+      connecting,
+      setChain,
+      onDisconnect,
+      connectedChain,
+      wallet,
+      namespace,
+    ],
   );
 
   return (
     <WalletConnectorContext.Provider value={memoizedValue}>
       <ConnectDrawer
         open={openConnectDrawer}
-        onChangeOpen={setOpenConnectDrawer}
+        onChangeOpen={handleConnectDrawerOpenChange}
         headerProps={headerProps}
       />
       {children}

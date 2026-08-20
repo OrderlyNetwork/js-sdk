@@ -1,10 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
-import {
-  AbstractChains,
-  ChainNamespace,
-  SolanaChains,
-} from "@orderly.network/types";
+import { useEventEmitter, useStorageChain } from "@orderly.network/hooks";
+import { AbstractChains, ChainNamespace } from "@orderly.network/types";
+import { WALLET_CONNECT_WALLET_SELECTED } from "../../connectEvents";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useAbstractWallet } from "../../providers/abstractWallet/abstractWalletProvider";
@@ -26,6 +23,7 @@ export function RenderNonPrivyWallet() {
   const [walletList, setWalletList] = useState<ConnectWallet[]>([]);
   const [addWalletList, setAddWalletList] = useState<WalletType[]>([]);
   const { storageChain } = useStorageChain();
+  const ee = useEventEmitter();
   const { connectorWalletType, walletChainTypeConfig } =
     useWalletConnectorPrivy();
   const { wallet: walletInWagmi, isConnected: isConnectedEvm } =
@@ -120,7 +118,17 @@ export function RenderNonPrivyWallet() {
             address={wallet.address}
             isActive={isActive(wallet.type)}
             onActiveChange={() => {
+              const selectedWallet =
+                wallet.type === WalletType.EVM
+                  ? walletInWagmi
+                  : wallet.type === WalletType.SOL
+                    ? walletInSolana
+                    : walletInAbstract;
+              if (!selectedWallet) {
+                return;
+              }
               switchWallet(wallet.type);
+              ee.emit(WALLET_CONNECT_WALLET_SELECTED, selectedWallet);
             }}
             isPrivy={false}
             isMulti={walletList.length > 1}
