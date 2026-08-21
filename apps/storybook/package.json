@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "2.1.10",
+  "version": "2.1.11",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",
@@ -62,6 +62,7 @@
     "@web3-onboard/core": "2.24.0",
     "@web3-onboard/injected-wallets": "^2.11.3",
     "@web3-onboard/react": "^2.11.0",
+    "@web3-onboard/walletconnect": "2.6.2",
     "buffer": "6.0.3",
     "date-fns": "^3.6.0",
     "immer": "^10.1.1",

@@ -55,13 +55,12 @@ CLAUDE.md
 
 *storybook.log
 storybook-static/
-.claude/
+.claude/settings.local.json
 .specify/
 .specs/
 specs/
 .tmp.*
 .qoder/
-.agents
 .specflow
 .reference/
 skills-lock.json

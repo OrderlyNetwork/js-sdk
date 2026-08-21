@@ -20,6 +20,7 @@ import {
   AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
+  isWalletChainChangePendingResult,
   NetworkId,
 } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -323,6 +324,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
         chainId: int2hex(Number(chainInfo.network_infos?.chain_id)),
       })
         .then((switched) => {
+          if (isWalletChainChangePendingResult(switched)) {
+            return;
+          }
           if (switched) {
             toast.success(t("connector.networkSwitched"));
             // clean input value

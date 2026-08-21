@@ -1,16 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   useAbstractClient,
   useGlobalWalletSignerAccount,
   useLoginWithAbstract,
 } from "@abstract-foundation/agw-react";
-import { useAccount } from "wagmi";
-import { ConnectedChain } from "@orderly.network/hooks";
+import { useAccount, useConnect } from "wagmi";
+import { ConnectedChain, useEventEmitter } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { windowGuard } from "@orderly.network/utils";
+import {
+  getWalletConnectErrorMessage,
+  isWalletConnectCancellation,
+  WALLET_CONNECT_ERROR,
+  WALLET_CONNECT_PROVIDER_CANCEL,
+} from "../../connectEvents";
 import { useWalletConnectorPrivy } from "../../provider";
-import { AbstractChainsMap, IWalletState } from "../../types";
+import {
+  AbstractChainsMap,
+  IWalletState,
+  WalletConnectType,
+} from "../../types";
 
 interface AbstractWalletContextValue {
   connect: () => void;
@@ -53,14 +70,64 @@ export const AbstractWalletProvider = (
 const EnabledAbstractWalletProvider = (props: PropsWithChildren) => {
   const { network } = useWalletConnectorPrivy();
   const { login, logout } = useLoginWithAbstract();
+  const { connect: connectWagmi, connectors } = useConnect();
   const [wallet, setWallet] = useState<IWalletState | null>(null);
   const { data: client } = useAbstractClient();
   const { connector } = useAccount();
   const { address } = useGlobalWalletSignerAccount();
+  const ee = useEventEmitter();
 
-  const connect = () => {
-    return login();
-  };
+  const connect = useCallback(() => {
+    const abstractConnector = connectors.find(
+      (connector) => connector.id === "xyz.abs.privy",
+    );
+    if (!abstractConnector) {
+      ee.emit(WALLET_CONNECT_ERROR, {
+        walletType: WalletConnectType.ABSTRACT,
+        message: "Abstract connector not found",
+      });
+      return;
+    }
+
+    try {
+      connectWagmi(
+        { connector: abstractConnector },
+        {
+          onError: (error) => {
+            if (isWalletConnectCancellation(error)) {
+              ee.emit(WALLET_CONNECT_PROVIDER_CANCEL, {
+                walletType: WalletConnectType.ABSTRACT,
+              });
+              return;
+            }
+
+            ee.emit(WALLET_CONNECT_ERROR, {
+              walletType: WalletConnectType.ABSTRACT,
+              message: getWalletConnectErrorMessage(
+                error,
+                "Failed to connect to Abstract Global Wallet.",
+              ),
+            });
+          },
+        },
+      );
+    } catch (error) {
+      if (isWalletConnectCancellation(error)) {
+        ee.emit(WALLET_CONNECT_PROVIDER_CANCEL, {
+          walletType: WalletConnectType.ABSTRACT,
+        });
+        return;
+      }
+
+      ee.emit(WALLET_CONNECT_ERROR, {
+        walletType: WalletConnectType.ABSTRACT,
+        message: getWalletConnectErrorMessage(
+          error,
+          "Failed to connect to Abstract Global Wallet.",
+        ),
+      });
+    }
+  }, [connectWagmi, connectors, ee]);
 
   const disconnect = () => {
     return logout();
@@ -96,43 +163,55 @@ const EnabledAbstractWalletProvider = (props: PropsWithChildren) => {
       setWallet(null);
       return;
     }
-    connector?.getProvider().then((provider: any) => {
-      console.log("xxx abstract wallet in wagmi provider", provider);
-      const tempWallet: IWalletState = {
-        label: "AGW",
-        icon: "",
-        provider: {
-          ...provider,
-          agwWallet: true,
-          sendTransaction: async (params: any) => {
-            console.log("--- agw wallet sendTransaction", params);
-            return client.sendTransaction(params);
+    connector
+      ?.getProvider()
+      .then((provider: any) => {
+        console.log("xxx abstract wallet in wagmi provider", provider);
+        const tempWallet: IWalletState = {
+          label: "AGW",
+          icon: "",
+          provider: {
+            ...provider,
+            agwWallet: true,
+            sendTransaction: async (params: any) => {
+              console.log("--- agw wallet sendTransaction", params);
+              return client.sendTransaction(params);
+            },
+            writeContract: async (params: any) => {
+              console.log("--- agw wallet writeContract", params);
+              return client.writeContract(params);
+            },
           },
-          writeContract: async (params: any) => {
-            console.log("--- agw wallet writeContract", params);
-            return client.writeContract(params);
+          accounts: [
+            {
+              address: address,
+            },
+          ],
+          chains: [
+            {
+              id: AbstractChainsMap.get(network)!,
+              namespace: ChainNamespace.evm,
+            },
+          ],
+          chain: connectedChain,
+          additionalInfo: {
+            AGWAddress: client.account.address,
           },
-        },
-        accounts: [
-          {
-            address: address,
-          },
-        ],
-        chains: [
-          {
-            id: AbstractChainsMap.get(network)!,
-            namespace: ChainNamespace.evm,
-          },
-        ],
-        chain: connectedChain,
-        additionalInfo: {
-          AGWAddress: client.account.address,
-        },
-      };
-      console.log("-- abstract wallet tempWallet", tempWallet);
-      setWallet(tempWallet);
-    });
-  }, [client, connectedChain, connector, address, network]);
+        };
+        console.log("-- abstract wallet tempWallet", tempWallet);
+        setWallet(tempWallet);
+      })
+      .catch((error) => {
+        setWallet(null);
+        ee.emit(WALLET_CONNECT_ERROR, {
+          walletType: WalletConnectType.ABSTRACT,
+          message: getWalletConnectErrorMessage(
+            error,
+            "Failed to initialize Abstract Global Wallet.",
+          ),
+        });
+      });
+  }, [address, client, connectedChain, connector, ee, network]);
 
   useEffect(() => {
     windowGuard(() => {

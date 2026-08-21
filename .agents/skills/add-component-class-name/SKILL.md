@@ -1,5 +1,5 @@
 ---
-name: add-component-className
+name: add-component-class-name
 description: Add semantic override classNames (oui-*) for style hooks. Use when the user asks for custom styling, theme overrides, or CSS-targetable elements.
 ---
 

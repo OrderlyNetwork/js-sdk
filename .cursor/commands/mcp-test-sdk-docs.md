@@ -33,7 +33,7 @@ Before MCP Inspector connection, ensure:
 
 When this command is invoked:
 
-1. Read and follow `.cursor/skills/mcp-sdk-docs-test/SKILL.md`.
+1. Read and follow `.agents/skills/mcp-sdk-docs-test/SKILL.md`.
 2. Execute the selected mode checklist.
 3. Return:
    - pass/fail per check

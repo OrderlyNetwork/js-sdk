@@ -1,9 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
+import {
+  useEventEmitter,
+  useStorageChain,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AbstractChains, ChainNamespace } from "@orderly.network/types";
 import { cn, ExclamationFillIcon } from "@orderly.network/ui";
 import { windowGuard } from "@orderly.network/utils";
+import { WALLET_CONNECT_WALLET_SELECTED } from "../connectEvents";
 import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
@@ -154,6 +159,7 @@ export function RenderPrivyWallet() {
     walletChainTypeConfig,
     connectorWalletType,
   } = useWalletConnectorPrivy();
+  const ee = useEventEmitter();
   const {
     walletEVM,
     walletSOL,
@@ -162,7 +168,8 @@ export function RenderPrivyWallet() {
     linkedAccount,
     selectWallet,
   } = usePrivyWallet();
-  const { switchWallet, disconnect } = useWallet();
+  const { switchWallet } = useWallet();
+  const { disconnect } = useWalletConnector();
   const { storageChain } = useStorageChain();
   const [walletList, setWalletList] = useState<ConnectWallet[]>([]);
   const [addWallet, setAddWallet] = useState<React.ReactNode[]>([]);
@@ -244,12 +251,21 @@ export function RenderPrivyWallet() {
                 wallet.type === WalletType.EVM
                   ? ChainNamespace.evm
                   : ChainNamespace.solana;
-              // Always select the specific clicked wallet first
-              selectWallet(walletNamespace, wallet.address);
-              if (storageChain?.namespace !== walletNamespace) {
-                // Also switch chain namespace if crossing types
-                switchWallet(wallet.type);
+              const selectedWallet =
+                walletNamespace === ChainNamespace.evm
+                  ? allWalletsEVM.find(
+                      (item) => item.accounts[0]?.address === wallet.address,
+                    )
+                  : allWalletsSOL.find(
+                      (item) => item.accounts[0]?.address === wallet.address,
+                    );
+              if (!selectedWallet) {
+                return;
               }
+              setTargetWalletType(wallet.type);
+              selectWallet(walletNamespace, wallet.address);
+              switchWallet(wallet.type, selectedWallet);
+              ee.emit(WALLET_CONNECT_WALLET_SELECTED, selectedWallet);
             }}
           />
         ))}
@@ -269,9 +285,12 @@ export function RenderPrivyWallet() {
     isActive,
     switchWallet,
     selectWallet,
+    allWalletsEVM,
+    allWalletsSOL,
     storageChain,
     t,
     loading,
+    ee,
   ]);
 
   useEffect(() => {
@@ -342,7 +361,9 @@ export function RenderPrivyWallet() {
         )}
         <div
           className="oui-cursor-pointer oui-text-2xs oui-font-semibold oui-text-primary"
-          onClick={() => disconnect(WalletConnectType.PRIVY)}
+          onClick={() =>
+            disconnect({ walletType: WalletConnectType.PRIVY } as any)
+          }
         >
           {t("connector.privy.logout")}
         </div>

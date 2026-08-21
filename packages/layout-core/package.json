@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/layout-core",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "Core layout strategy protocol and runtime glue for Orderly layout system",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

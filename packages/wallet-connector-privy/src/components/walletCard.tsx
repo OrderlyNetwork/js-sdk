@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { ChainNamespace } from "@orderly.network/types";
 import {
@@ -16,7 +17,6 @@ import {
   toast,
   Tooltip,
 } from "@orderly.network/ui";
-import { useWallet } from "../hooks/useWallet";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { WalletConnectType, WalletType } from "../types";
 import { PrivyConnectorImagePath } from "../util";
@@ -134,7 +134,7 @@ function NonPrivyWalletHandleOption({
 }: {
   walletType: WalletType;
 }) {
-  const { disconnect } = useWallet();
+  const { disconnect } = useWalletConnector();
   const disconnectWallet = () => {
     let walletConnectType: WalletConnectType = WalletConnectType.EVM;
     switch (walletType) {
@@ -148,7 +148,7 @@ function NonPrivyWalletHandleOption({
         walletConnectType = WalletConnectType.ABSTRACT;
         break;
     }
-    disconnect(walletConnectType);
+    disconnect({ walletType: walletConnectType } as any);
   };
   return (
     <div onClick={() => disconnectWallet()}>

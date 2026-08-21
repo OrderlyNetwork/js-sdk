@@ -22,15 +22,23 @@ import { LinkDeviceMobile } from "./linkDevice";
 export function UserCenter(props: any) {
   const { accountState: state } = props;
   return (
-    <RenderUserCenter state={state} disabledConnect={props.disabledConnect} />
+    <RenderUserCenter
+      state={state}
+      disabledConnect={props.disabledConnect}
+      onConnect={props.connect}
+    />
   );
 }
 
 export const MwebUserCenter = (props: any) => {
-  const { state } = props;
+  const state = props.accountState ?? props.state;
 
   return (
-    <RenderUserCenter state={state} disabledConnect={props.disabledConnect} />
+    <RenderUserCenter
+      state={state}
+      disabledConnect={props.disabledConnect}
+      onConnect={props.connect}
+    />
   );
 };
 
@@ -44,6 +52,11 @@ const RenderUserCenter = (props: any) => {
   const { connectedChain } = useWalletConnector();
 
   const disabled = state.validating || props.disabledConnect;
+
+  const openWalletCenter = () => {
+    const result = props.onConnect ? props.onConnect() : connect();
+    result?.catch((error: unknown) => console.error(error));
+  };
 
   const userAddress = useMemo(() => {
     if (
@@ -71,6 +84,26 @@ const RenderUserCenter = (props: any) => {
     );
   }
   if (state.status <= AccountStatusEnum.NotConnected || disabled) {
+    if (!props.onConnect) {
+      return (
+        <AuthGuard
+          buttonProps={{
+            "data-testid": "oui-testid-nav-bar-connectWallet-btn",
+            size: "md",
+            className: cn(
+              "wallet-connect-button",
+              isMobile && "oui-font-semibold oui-px-2",
+            ),
+          }}
+          labels={{
+            connectWallet: isMobile
+              ? t("connector.connect")
+              : t("connector.connectWallet"),
+          }}
+        />
+      );
+    }
+
     return (
       <Button
         data-testid="oui-testid-nav-bar-connectWallet-btn"
@@ -83,13 +116,7 @@ const RenderUserCenter = (props: any) => {
         )}
         loading={state.validating}
         disabled={disabled}
-        onClick={() => {
-          connect()
-            .then((r: any) => {
-              console.log("*****", r);
-            })
-            .catch((e: any) => console.error(e));
-        }}
+        onClick={openWalletCenter}
       >
         {isMobile ? t("connector.connect") : t("connector.connectWallet")}
       </Button>
@@ -106,7 +133,7 @@ const RenderUserCenter = (props: any) => {
           size: "md",
         }}
       >
-        <div onClick={() => connect()}>
+        <div onClick={openWalletCenter}>
           <Button
             size="md"
             variant="gradient"
@@ -133,7 +160,7 @@ const RenderUserCenter = (props: any) => {
     );
   }
   return (
-    <div onClick={() => connect()}>
+    <div onClick={openWalletCenter}>
       <Button
         size="md"
         variant="gradient"

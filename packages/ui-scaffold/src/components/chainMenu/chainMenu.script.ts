@@ -1,16 +1,24 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
-  useChains,
   useConfig,
   useAccount,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { API, Chain, NetworkId } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  NetworkId,
+  type WalletChainChangeState,
+} from "@orderly.network/types";
+import { useChainChangeValidation } from "@orderly.network/ui-connector";
 
 export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
 
-export const useChainMenuScript = () => {
+export type UseChainMenuScriptOptions = {
+  onAccountValidated?: (status: AccountStatusEnum) => void;
+};
+
+export const useChainMenuScript = (options: UseChainMenuScriptOptions = {}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { state } = useAccount();
@@ -18,19 +26,33 @@ export const useChainMenuScript = () => {
   const { currentChainId, wrongNetwork, disabledConnect, setCurrentChainId } =
     useAppContext();
   const networkId = useConfig("networkId") as NetworkId;
+  const {
+    onChainChangeBefore: prepareChainChange,
+    onChainChangeAfter: completeChainChange,
+  } = useChainChangeValidation({
+    onAccountValidated: options.onAccountValidated,
+  });
 
-  const hide = () => {
+  const hide = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
-  const onChainChangeBefore = () => {
-    setLoading(true);
-    hide();
-  };
+  const onChainChangeBefore = useCallback(
+    (chainId: number) => {
+      setLoading(true);
+      hide();
+      prepareChainChange(chainId);
+    },
+    [hide, prepareChainChange],
+  );
 
-  const onChainChangeAfter = () => {
-    setLoading(false);
-  };
+  const onChainChangeAfter = useCallback(
+    (_chainId: number, result: WalletChainChangeState) => {
+      setLoading(false);
+      completeChainChange(_chainId, result);
+    },
+    [completeChainChange],
+  );
 
   return {
     isConnected: !!connectedChain,

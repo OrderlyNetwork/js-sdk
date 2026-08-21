@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useConfig,
   useEventEmitter,
@@ -26,8 +26,25 @@ import {
   windowGuard,
 } from "@orderly.network/utils";
 import { getLinkDeviceData } from "./useLinkDevice";
+import {
+  clearOAuthConnectIntent,
+  getReturnedOAuthConnectIntent,
+  hasOAuthConnectIntent,
+  matchesReturnedOAuthConnectIntent,
+  type WalletConnectOAuthReturnedPayload,
+  type WalletConnectOAuthResumePayload,
+  WALLET_CONNECT_OAUTH_RETURNED,
+  WALLET_CONNECT_OAUTH_RESUME,
+  WALLET_CONNECT_OAUTH_RESUME_RESULT,
+} from "./walletConnectResume";
 
 const WALLET_KEY = "orderly:wallet-info";
+
+type WalletConnectResult = {
+  wallet?: WalletState;
+  status?: AccountStatusEnum;
+  wrongNetwork?: boolean;
+};
 
 export const useWalletStateHandle = (options: {
   // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
@@ -53,6 +70,7 @@ export const useWalletStateHandle = (options: {
 
   const ee = useEventEmitter();
   const isManualConnect = useRef<boolean>(false);
+  const oauthResumeInFlightRef = useRef<string>();
   const brokerId = useConfig("brokerId");
   const { account, state: accountState } = useAccount();
   const keyStore = useKeyStore();
@@ -80,6 +98,119 @@ export const useWalletStateHandle = (options: {
       namespace,
     };
   }, [connectedWallet]);
+
+  const connectWalletState = useCallback(
+    async (wallet: WalletState): Promise<WalletConnectResult> => {
+      const chainId = praseChainIdToNumber(wallet.chains[0].id);
+
+      if (
+        !checkChainSupport(chainId, networkId) ||
+        (ABSTRACT_CHAIN_ID_MAP.has(chainId) && wallet.label !== "AGW")
+      ) {
+        return { wrongNetwork: true };
+      }
+
+      if (
+        accountState.status === AccountStatusEnum.EnableTradingWithoutConnected
+      ) {
+        localStorage.removeItem("orderly_link_device");
+        await account.disconnect();
+      }
+
+      const status = await account.setAddress(wallet.accounts[0].address, {
+        provider: wallet.provider,
+        chain: {
+          id: chainId,
+          namespace: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
+        },
+        wallet: {
+          name: wallet.label,
+        },
+        additionalInfo: wallet.additionalInfo ?? {},
+      });
+      track(TrackerEventName.walletConnect, {
+        wallet: wallet.label,
+        network: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
+      });
+
+      return { wallet, status, wrongNetwork: false };
+    },
+    [account, accountState.status, checkChainSupport, networkId, track],
+  );
+
+  const handleOAuthResume = useCallback(
+    async (payload?: WalletConnectOAuthResumePayload) => {
+      if (
+        !payload?.intentId ||
+        !payload.wallet ||
+        oauthResumeInFlightRef.current === payload.intentId ||
+        !matchesReturnedOAuthConnectIntent(payload.intentId)
+      ) {
+        return;
+      }
+
+      oauthResumeInFlightRef.current = payload.intentId;
+      isManualConnect.current = true;
+
+      try {
+        const result = await connectWalletState(payload.wallet);
+        clearOAuthConnectIntent(payload.intentId);
+        ee.emit(WALLET_CONNECT_OAUTH_RESUME_RESULT, {
+          ...result,
+          intentId: payload.intentId,
+          handled: false,
+        });
+      } catch (error) {
+        clearOAuthConnectIntent(payload.intentId);
+        console.error("Failed to resume Privy OAuth connection", error);
+      } finally {
+        isManualConnect.current = false;
+        if (oauthResumeInFlightRef.current === payload.intentId) {
+          oauthResumeInFlightRef.current = undefined;
+        }
+      }
+    },
+    [connectWalletState, ee],
+  );
+
+  useEffect(() => {
+    ee.on(WALLET_CONNECT_OAUTH_RESUME, handleOAuthResume);
+    return () => {
+      ee.off(WALLET_CONNECT_OAUTH_RESUME, handleOAuthResume);
+    };
+  }, [ee, handleOAuthResume]);
+
+  useEffect(() => {
+    const handleOAuthReturned = (
+      payload?: WalletConnectOAuthReturnedPayload,
+    ) => {
+      if (!payload?.intentId || connectedWallet?.label !== "privy") {
+        return;
+      }
+
+      void handleOAuthResume({
+        intentId: payload.intentId,
+        wallet: connectedWallet,
+      });
+    };
+
+    ee.on(WALLET_CONNECT_OAUTH_RETURNED, handleOAuthReturned);
+    return () => {
+      ee.off(WALLET_CONNECT_OAUTH_RETURNED, handleOAuthReturned);
+    };
+  }, [connectedWallet, ee, handleOAuthResume]);
+
+  useEffect(() => {
+    const intent = getReturnedOAuthConnectIntent();
+    if (!intent || connectedWallet?.label !== "privy") {
+      return;
+    }
+
+    void handleOAuthResume({
+      intentId: intent.id,
+      wallet: connectedWallet,
+    });
+  }, [connectedWallet, handleOAuthResume]);
 
   useEffect(() => {
     if (
@@ -160,6 +291,7 @@ export const useWalletStateHandle = (options: {
       return;
     }
 
+    if (hasOAuthConnectIntent()) return;
     if (unsupported || !connectedChain) return;
     if (isManualConnect.current) return;
 
@@ -225,11 +357,7 @@ export const useWalletStateHandle = (options: {
   /**
    * User manually connects to wallet
    */
-  const connectWallet = async (): Promise<{
-    wallet?: WalletState;
-    status?: AccountStatusEnum;
-    wrongNetwork?: boolean;
-  } | null> => {
+  const connectWallet = async (): Promise<WalletConnectResult | null> => {
     isManualConnect.current = true;
     // const walletState = await connect();
 
@@ -241,46 +369,7 @@ export const useWalletStateHandle = (options: {
           walletState[0] &&
           walletState[0].accounts.length > 0
         ) {
-          const wallet = walletState[0];
-          const chainId = praseChainIdToNumber(wallet.chains[0].id);
-
-          if (!checkChainSupport(chainId, networkId)) {
-            return {
-              wrongNetwork: true,
-            };
-          }
-          //
-          if (!account) {
-            throw new Error("account is not initialized");
-          }
-          // clear link device data when connect wallt
-          if (
-            accountState.status ===
-            AccountStatusEnum.EnableTradingWithoutConnected
-          ) {
-            localStorage.removeItem("orderly_link_device");
-            await account.disconnect();
-          }
-
-          const status = await account.setAddress(wallet.accounts[0].address, {
-            provider: wallet.provider,
-            chain: {
-              id: praseChainIdToNumber(wallet.chains[0].id),
-              namespace:
-                wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
-            },
-            wallet: {
-              name: wallet.label,
-            },
-            // label: ,
-          });
-          track(TrackerEventName.walletConnect, {
-            wallet: wallet.label,
-            network: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
-          });
-          console.log("-- xxxxxx status", status);
-
-          return { wallet, status, wrongNetwork: false };
+          return connectWalletState(walletState[0]);
         }
 
         return null;

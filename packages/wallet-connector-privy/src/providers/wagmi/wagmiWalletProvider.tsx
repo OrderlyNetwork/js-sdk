@@ -13,7 +13,15 @@ import {
   useDisconnect,
   useSwitchChain,
 } from "wagmi";
+import { useEventEmitter } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
+import {
+  getWalletConnectErrorMessage,
+  isWalletConnectCancellation,
+  WALLET_CONNECT_ERROR,
+  WALLET_CONNECT_PROVIDER_CANCEL,
+} from "../../connectEvents";
+import { WalletConnectType } from "../../types";
 
 interface WagmiWalletContextValue {
   connectors: Connector[];
@@ -57,10 +65,35 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [wallet, setWallet] = useState<undefined | any>(undefined);
-  const { connect, connectors: wagmiConnectors } = useConnect();
+  const { connect: connectWagmi, connectors: wagmiConnectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { connector, isConnected, address, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
+  const ee = useEventEmitter();
+
+  const connect = useCallback(
+    (args: any) => {
+      connectWagmi(args, {
+        onError: (error) => {
+          if (isWalletConnectCancellation(error)) {
+            ee.emit(WALLET_CONNECT_PROVIDER_CANCEL, {
+              walletType: WalletConnectType.EVM,
+            });
+            return;
+          }
+
+          ee.emit(WALLET_CONNECT_ERROR, {
+            walletType: WalletConnectType.EVM,
+            message: getWalletConnectErrorMessage(
+              error,
+              "Failed to connect to the wallet.",
+            ),
+          });
+        },
+      });
+    },
+    [connectWagmi, ee],
+  );
 
   const connectedChain = useMemo(() => {
     if (chainId) {
@@ -95,26 +128,47 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       setWallet(undefined);
       return;
     }
-    connector.getProvider?.().then((provider) => {
-      setWallet({
-        label: connector.name,
-        icon: "",
-        provider: provider,
-        accounts: [
-          {
-            address: address,
-          },
-        ],
-        chains: [
-          {
-            id: chainId,
-            namespace: ChainNamespace.evm,
-          },
-        ],
-        chain: connectedChain,
+    const providerPromise = connector.getProvider?.();
+    if (!providerPromise) {
+      setWallet(undefined);
+      ee.emit(WALLET_CONNECT_ERROR, {
+        walletType: WalletConnectType.EVM,
+        message: "Failed to initialize the wallet provider.",
       });
-    });
-  }, [connector, chainId, isConnected, address, connectedChain]);
+      return;
+    }
+
+    providerPromise
+      .then((provider) => {
+        setWallet({
+          label: connector.name,
+          icon: "",
+          provider: provider,
+          accounts: [
+            {
+              address: address,
+            },
+          ],
+          chains: [
+            {
+              id: chainId,
+              namespace: ChainNamespace.evm,
+            },
+          ],
+          chain: connectedChain,
+        });
+      })
+      .catch((error) => {
+        setWallet(undefined);
+        ee.emit(WALLET_CONNECT_ERROR, {
+          walletType: WalletConnectType.EVM,
+          message: getWalletConnectErrorMessage(
+            error,
+            "Failed to initialize the wallet provider.",
+          ),
+        });
+      });
+  }, [address, chainId, connectedChain, connector, ee, isConnected]);
 
   const connectors = useMemo(() => {
     return wagmiConnectors

@@ -17,6 +17,8 @@ export const Chain: FC<ChainState> = (props) => {
             // networkId: props.networkId,
             bridgeLessOnly: false,
             isWrongNetwork: props.wrongNetwork,
+            onChainChangeBefore: props.onChainChangeBefore,
+            onChainChangeAfter: props.onChainChangeAfter,
           })
           .then(
             (r: any) => {
