@@ -48,8 +48,11 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const { disconnect, namespace, wallet } = useWalletConnector();
 
   const { state: accountState, account } = useAccount();
-  const [state, setState] = useState(initAccountState);
-  const [activeStep, setActiveStep] = useState(0);
+  const displayStatus =
+    accountState.status < initAccountState
+      ? initAccountState
+      : accountState.status;
+  const [actionStep, setActionStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showLedgerButton, setShowLedgerButton] = useState(false);
   const { ledgerWallet, clearManualLedgerAddress } = useStorageLedgerAddress();
@@ -64,10 +67,6 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       localStorage.setItem("orderly-first-show-wallet-connector-dialog", "1");
     };
   }, []);
-
-  useEffect(() => {
-    setState(accountState.status);
-  }, [accountState]);
 
   const steps = useMemo(() => {
     const steps = [];
@@ -89,6 +88,19 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
 
     return steps;
   }, [initAccountState, t]);
+
+  const statusStep = useMemo(() => {
+    const firstIncompleteStep = steps.findIndex((step) => {
+      if (step.key === "signIn") {
+        return displayStatus < AccountStatusEnum.SignedIn;
+      }
+      return displayStatus < AccountStatusEnum.EnableTrading;
+    });
+
+    return firstIncompleteStep === -1 ? steps.length : firstIncompleteStep;
+  }, [displayStatus, steps]);
+
+  const activeStep = Math.max(actionStep, statusStep);
 
   useEffect(() => {
     if (namespace != ChainNamespace.solana) {
@@ -117,7 +129,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           handleRef.current++;
           console.log(res);
           setLoading(false);
-          setActiveStep((step) => step + 1);
+          setActionStep((step) => step + 1);
           try {
             await props.enableTradingComplted?.();
           } catch (e) {}
@@ -157,7 +169,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const onDisconnect = async () => {
     localStorage.removeItem("orderly_link_device");
     disconnect({
-      label: (state as unknown as any).connectWallet?.name,
+      label: accountState.connectWallet?.name,
     }).then(() => {
       account.disconnect();
       if (typeof props.close === "function") {
@@ -172,7 +184,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       .signIn()
       .then(
         (res) => {
-          setActiveStep((step) => step + 1);
+          setActionStep((step) => step + 1);
           onEnableTrading();
         },
         (reject) => {
@@ -247,7 +259,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       <Flex justify={"center"} mt={8} className="oui-w-full">
         <Box className="oui-w-full">
           <ActionButton
-            state={state}
+            state={displayStatus}
             signIn={onSignIn}
             enableTrading={onEnableTrading}
             onUseStandardWallet={() => {
@@ -260,14 +272,14 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
               }
             }}
             loading={loading}
-            disabled={state >= AccountStatusEnum.EnableTrading}
+            disabled={displayStatus >= AccountStatusEnum.EnableTrading}
             showLedgerButton={showLedgerButton}
             adapterName={adapterName}
             namespace={namespace}
           />
         </Box>
       </Flex>
-      {state > AccountStatusEnum.NotConnected && (
+      {displayStatus > AccountStatusEnum.NotConnected && (
         <Flex
           justify={"center"}
           mt={4}

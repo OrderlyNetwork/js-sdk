@@ -65,10 +65,31 @@ Start building with Orderly SDKs using these ready-to-use templates:
 
   set broker name
 
-- usePrivy
+- walletMode
 
-  true/false
+  `privy` (default), `wallet`, or `legacy`
 
 ```
-http://localhost:5173/en/perp/PERP_ETH_USDC?env=prod&networkId=mainnet&brokerId=demo&broderName=Orderly&theme=orderly&usePrivy=false
+http://localhost:5173/en/perp/PERP_ETH_USDC?env=prod&networkId=mainnet&brokerId=demo&broderName=Orderly&theme=orderly&walletMode=wallet
 ```
+
+### Wallet modes
+
+The Vite playground reads the wallet mode from the URL when it first renders:
+
+- `walletMode=privy` uses the current wallet provider with Privy login enabled.
+- `walletMode=wallet` uses the current wallet provider with external wallets only.
+- `walletMode=legacy` uses the legacy Web3 Onboard provider in development.
+
+For example:
+
+```text
+http://localhost:5173/?walletMode=privy
+http://localhost:5173/?walletMode=wallet
+http://localhost:5173/?walletMode=legacy
+```
+
+Missing or invalid values default to `privy`. The `legacy` mode is only active
+in the Vite development environment; production builds fall back to `privy`.
+Reload the page after changing the mode. Switching modes does not clear sessions
+persisted by Privy, WalletConnect, or browser wallets.

@@ -1,8 +1,6 @@
 ---
-
 name: replace-hardcoded-colors
-description: Finds hardcoded color values (hex, rgb, rgba) in a specified directory, a single file, or multiple files and replaces them with theme variables from apps/storybook/src/tailwind/customTheme.ts. Prefers Tailwind class names (oui-*) from packages/ui/tailwind.config.js when the context allows; otherwise uses CSS variables (e.g. rgb(var(--oui-color-primary)) or rgba with alpha). When the original was rgba, keep the comma syntax: rgba(var(--oui-color-*), alpha); do not convert to slash syntax. When code already uses rgb(var(--oui-*)/α) or rgb(var(--oui-*)_/_α), do not convert to rgba(var(--oui-*), α). When no exact match exists, uses the closest theme color by semantics or RGB distance. Use when the user asks to find or replace hardcoded colors in a directory/file(s), or to align colors with customTheme.
-
+description: "Finds hardcoded color values (hex, rgb, rgba) in a specified directory, a single file, or multiple files and replaces them with theme variables from apps/storybook/src/tailwind/customTheme.ts. Prefers Tailwind class names (oui-*) from packages/ui/tailwind.config.js when the context allows; otherwise uses CSS variables (e.g. rgb(var(--oui-color-primary)) or rgba with alpha). When the original was rgba, keep the comma syntax: rgba(var(--oui-color-*), alpha); do not convert to slash syntax. When code already uses rgb(var(--oui-*)/α) or rgb(var(--oui-*)_/_α), do not convert to rgba(var(--oui-*), α). When no exact match exists, uses the closest theme color by semantics or RGB distance. Use when the user asks to find or replace hardcoded colors in a directory/file(s), or to align colors with customTheme."
 ---
 
 # Replace Hardcoded Colors with Theme Variables

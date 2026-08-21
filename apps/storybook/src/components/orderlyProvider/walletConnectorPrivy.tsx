@@ -19,6 +19,10 @@ import {
 } from "@orderly.network/wallet-connector-privy";
 import { themes } from "../../orderlyConfig/themes";
 import { CustomProductNav } from "../customProductNav";
+import {
+  WALLET_CONNECT_APP_METADATA,
+  WALLET_CONNECT_PROJECT_ID,
+} from "./walletConnectorConfig";
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
   console.log("-- mobile wallet adapter", adapter);
@@ -28,7 +32,7 @@ const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
 
 type WalletConnectorPrivyProps = {
   children: ReactNode;
-  usePrivy?: boolean;
+  enablePrivyLogin?: boolean;
   networkId?: string;
 };
 
@@ -58,7 +62,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
       }}
       // customChains={customChainsAbstarct}
       privyConfig={
-        props.usePrivy
+        props.enablePrivyLogin
           ? {
               appid: "cm50h5kjc011111gdn7i8cd2k",
               config: {
@@ -79,15 +83,15 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
         connectors: [
           wagmiConnectors.injected(),
           wagmiConnectors.walletConnect({
-            projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+            projectId: WALLET_CONNECT_PROJECT_ID,
             showQrModal: true,
             qrModalOptions: { themeMode },
             storageOptions: {},
             metadata: {
-              name: "Orderly Network",
-              description: "Orderly Network",
-              url: "https://orderly.network",
-              icons: ["https://oss.orderly.network/static/sdk/chains.png"],
+              name: WALLET_CONNECT_APP_METADATA.name,
+              description: WALLET_CONNECT_APP_METADATA.description,
+              url: WALLET_CONNECT_APP_METADATA.url,
+              icons: [WALLET_CONNECT_APP_METADATA.icon],
             },
           }),
         ],

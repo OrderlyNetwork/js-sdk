@@ -1,12 +1,16 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router";
+import {
+  parseWalletMode,
+  type WalletMode,
+} from "../../components/orderlyProvider/walletMode";
 
 export type SearchParams = {
   networkId?: string;
   brokerId?: string;
   brokerName?: string;
   env?: string;
-  usePrivy?: boolean;
+  walletMode: WalletMode;
 };
 
 export function useEnvFormUrl() {
@@ -17,15 +21,14 @@ export function useEnvFormUrl() {
     const networkId = searchParams.get("networkId") || undefined;
     const brokerId = searchParams.get("brokerId") || undefined;
     const brokerName = searchParams.get("brokerName") || undefined;
-    const usePrivy = searchParams.get("usePrivy") || undefined;
+    const walletMode = parseWalletMode(searchParams.get("walletMode"));
 
     return {
       env,
       networkId,
       brokerId,
       brokerName,
-      // default true
-      usePrivy: usePrivy !== "false",
+      walletMode,
     };
   }, [searchParams]);
 }

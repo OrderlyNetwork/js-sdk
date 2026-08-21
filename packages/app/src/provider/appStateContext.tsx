@@ -3,6 +3,7 @@ import {
   RestrictedInfoReturns,
   type MarketCategoryConfig,
 } from "@orderly.network/hooks";
+import type { WalletChainChangeState } from "@orderly.network/types";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
 export type RouteOption = {
@@ -43,10 +44,7 @@ export type AppContextState = {
   disabledConnect: boolean;
   currentChainId: number | undefined;
   setCurrentChainId: (chainId: number | undefined) => void;
-  onChainChanged?: (
-    chainId: number,
-    state: { isTestnet: boolean; isWalletConnected: boolean },
-  ) => void;
+  onChainChanged?: (chainId: number, state: WalletChainChangeState) => void;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
   restrictedInfo: RestrictedInfoReturns;
   showAnnouncement: boolean;

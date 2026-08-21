@@ -17,12 +17,12 @@
 
 ## Before applying
 
-- Use the **Checklist before applying** in [SKILL.md](.cursor/skills/replace-hardcoded-colors/SKILL.md) to verify each replacement type (class vs CSS variable, rgba comma syntax, gradient direction preserved).
+- Use the **Checklist before applying** in [SKILL.md](SKILL.md) to verify each replacement type (class vs CSS variable, rgba comma syntax, gradient direction preserved).
 - Literal SVG `fill` and `fillOpacity` are in scope: replace with theme class (e.g. `oui-text-base-contrast`) on `<svg>` and `fill="currentColor"`.
 
 ## Source files
 
 - **Color values**: [apps/storybook/src/tailwind/customTheme.ts](apps/storybook/src/tailwind/customTheme.ts)
 - **Class names**: [packages/ui/tailwind.config.js](packages/ui/tailwind.config.js) — `theme.extend.colors`, prefix `oui-`
-- **Variable list (default theme)**: [.cursor/skills/theme-designer/variables.md](.cursor/skills/theme-designer/variables.md) — same variable names; values may differ by theme.
-- **Full color & gradient tables (for exact match)**: [.cursor/skills/replace-hardcoded-colors/SKILL.md](.cursor/skills/replace-hardcoded-colors/SKILL.md) — customTheme color reference and gradient reference.
+- **Variable list (default theme)**: [`apps/storybook/src/tailwind/customTheme.ts`](../../../apps/storybook/src/tailwind/customTheme.ts) — canonical variables for the default theme.
+- **Full color & gradient tables (for exact match)**: [SKILL.md](SKILL.md) — customTheme color reference and gradient reference.

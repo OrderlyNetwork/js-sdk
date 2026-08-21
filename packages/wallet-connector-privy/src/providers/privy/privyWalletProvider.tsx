@@ -7,12 +7,41 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { usePrivy, useSolanaWallets, useWallets } from "@privy-io/react-auth";
+import {
+  useLogin,
+  usePrivy,
+  useSolanaWallets,
+  useWallets,
+} from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { useLocalStorage, useTrack, WalletState } from "@orderly.network/hooks";
-import { ChainNamespace, TrackerEventName } from "@orderly.network/types";
+import {
+  useEventEmitter,
+  useLocalStorage,
+  useStorageChain,
+  useTrack,
+  WalletState,
+} from "@orderly.network/hooks";
+import {
+  AbstractChains,
+  ChainNamespace,
+  TrackerEventName,
+} from "@orderly.network/types";
+import {
+  getWalletConnectErrorMessage,
+  isWalletConnectCancellation,
+  WALLET_CONNECT_ERROR,
+  WALLET_CONNECT_OAUTH_RETURNED,
+  WALLET_CONNECT_PROVIDER_CANCEL,
+} from "../../connectEvents";
+import {
+  clearOAuthConnectIntent,
+  isRedirectLoginMethod,
+  markOAuthConnectIntent,
+  markOAuthConnectIntentReturned,
+} from "../../oauthConnectIntent";
 import { useWalletConnectorPrivy } from "../../provider";
-import { ConnectProps, SolanaChainsMap } from "../../types";
+import { ConnectProps, SolanaChainsMap, WalletConnectType } from "../../types";
+import { buildPrivyEvmWallet } from "./privyEvmWallet";
 
 interface WalletStatePrivy extends WalletState {
   chain: {
@@ -25,6 +54,8 @@ interface PrivyWalletContextValue {
   connect: (params?: ConnectProps) => void;
   walletEVM: WalletStatePrivy | null;
   walletSOL: WalletStatePrivy | null;
+  walletEVMReady: boolean;
+  walletSOLReady: boolean;
   allWalletsEVM: WalletStatePrivy[];
   allWalletsSOL: WalletStatePrivy[];
   isConnected: boolean;
@@ -37,17 +68,12 @@ interface PrivyWalletContextValue {
   disconnect: () => Promise<void>;
 }
 
-const getPrivyEmbeddedWalletChainId = (chainId: string) => {
-  if (!chainId) {
-    return null;
-  }
-  return parseInt(chainId.split("eip155:")[1]);
-};
-
 const defaultPrivyWalletContextValue: PrivyWalletContextValue = {
   connect: () => {},
   walletEVM: null,
   walletSOL: null,
+  walletEVMReady: true,
+  walletSOLReady: true,
   allWalletsEVM: [],
   allWalletsSOL: [],
   isConnected: false,
@@ -80,10 +106,15 @@ export const PrivyWalletProvider: React.FC<{
 const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { network, solanaInfo, setSolanaInfo, connectorWalletType } =
-    useWalletConnectorPrivy();
   const {
-    login,
+    network,
+    mainnetChains,
+    testnetChains,
+    solanaInfo,
+    setSolanaInfo,
+    connectorWalletType,
+  } = useWalletConnectorPrivy();
+  const {
     logout,
     ready,
     authenticated,
@@ -91,8 +122,47 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
     exportWallet: exportEvmWallet,
     createWallet: createEvmWallet,
   } = usePrivy();
-  const { wallets: walletsEVM } = useWallets();
+  const ee = useEventEmitter();
+  const { wallets: walletsEVM, ready: evmWalletsSourceReady } = useWallets();
   const connectedRef = useRef(false);
+  const manualLoginRef = useRef(false);
+
+  const finishManualLogin = useCallback(() => {
+    manualLoginRef.current = false;
+  }, []);
+
+  const { login } = useLogin({
+    onComplete: () => {
+      const intent = markOAuthConnectIntentReturned();
+      if (intent) {
+        ee.emit(WALLET_CONNECT_OAUTH_RETURNED, { intentId: intent.id });
+      }
+      finishManualLogin();
+    },
+    onError: (error) => {
+      const wasManual = manualLoginRef.current;
+      clearOAuthConnectIntent();
+      finishManualLogin();
+      if (!wasManual) {
+        return;
+      }
+
+      if (isWalletConnectCancellation(error)) {
+        ee.emit(WALLET_CONNECT_PROVIDER_CANCEL, {
+          walletType: WalletConnectType.PRIVY,
+        });
+        return;
+      }
+
+      ee.emit(WALLET_CONNECT_ERROR, {
+        walletType: WalletConnectType.PRIVY,
+        message: getWalletConnectErrorMessage(
+          error,
+          "Failed to log in with Privy.",
+        ),
+      });
+    },
+  });
 
   const {
     ready: solanaReady,
@@ -103,6 +173,8 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
 
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
   const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);
+  const [walletEVMReady, setWalletEVMReady] = useState(false);
+  const [walletSOLReady, setWalletSOLReady] = useState(false);
   const [allWalletsEVM, setAllWalletsEVM] = useState<WalletStatePrivy[]>([]);
   const [allWalletsSOL, setAllWalletsSOL] = useState<WalletStatePrivy[]>([]);
 
@@ -114,6 +186,21 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
     "privy_selected_sol_address",
     "",
   );
+  const { storageChain } = useStorageChain();
+
+  const targetEvmChainId = useMemo(() => {
+    if (
+      storageChain?.namespace !== ChainNamespace.evm ||
+      AbstractChains.has(storageChain.chainId)
+    ) {
+      return undefined;
+    }
+
+    const activeChains = network === "mainnet" ? mainnetChains : testnetChains;
+    return activeChains.some((chain) => chain.id === storageChain.chainId)
+      ? storageChain.chainId
+      : undefined;
+  }, [mainnetChains, network, storageChain, testnetChains]);
 
   // Keep a ref map from address → raw Privy EVM wallet for switchChain
   const rawEvmWalletsRef = useRef<Map<string, any>>(new Map());
@@ -168,13 +255,44 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
     return Promise.reject("no wallet");
   };
 
-  const connect = (params?: ConnectProps) => {
-    if (params?.extraType) {
-      login({ loginMethods: [params.extraType as any] });
-      return;
-    }
-    login();
-  };
+  const connect = useCallback(
+    (params?: ConnectProps) => {
+      manualLoginRef.current = true;
+      const isOAuthRedirect = isRedirectLoginMethod(params?.extraType);
+      clearOAuthConnectIntent();
+
+      try {
+        if (params?.extraType) {
+          if (isOAuthRedirect) {
+            markOAuthConnectIntent(params.extraType);
+          }
+          login({ loginMethods: [params.extraType as any] });
+          return;
+        }
+        login();
+      } catch (error) {
+        if (isOAuthRedirect) {
+          clearOAuthConnectIntent();
+        }
+        finishManualLogin();
+        if (isWalletConnectCancellation(error)) {
+          ee.emit(WALLET_CONNECT_PROVIDER_CANCEL, {
+            walletType: WalletConnectType.PRIVY,
+          });
+          return;
+        }
+
+        ee.emit(WALLET_CONNECT_ERROR, {
+          walletType: WalletConnectType.PRIVY,
+          message: getWalletConnectErrorMessage(
+            error,
+            "Failed to log in with Privy.",
+          ),
+        });
+      }
+    },
+    [ee, finishManualLogin, login],
+  );
 
   const disconnect = () => {
     return logout();
@@ -234,11 +352,20 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
 
   // Build all EVM wallets
   useEffect(() => {
-    if (!authenticated || !walletsEVM || !walletsEVM[0]) {
+    if (!authenticated || !evmWalletsSourceReady) {
       setAllWalletsEVM([]);
       setWalletEVM(null);
+      setWalletEVMReady(false);
       return;
     }
+    if (!walletsEVM || !walletsEVM[0]) {
+      setAllWalletsEVM([]);
+      setWalletEVM(null);
+      setWalletEVMReady(true);
+      return;
+    }
+
+    setWalletEVMReady(false);
 
     const embeddedWallets = walletsEVM.filter(
       (w) => w.connectorType === "embedded",
@@ -253,59 +380,88 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
     }
     rawEvmWalletsRef.current = newMap;
 
-    Promise.all(
-      wallets.map((w) =>
-        w.getEthereumProvider().then(
-          (provider: any): WalletStatePrivy => ({
-            label: "privy",
-            icon: "",
-            provider: provider,
-            accounts: [{ address: w.address }],
-            chains: [
-              {
-                id: getPrivyEmbeddedWalletChainId(w.chainId) ?? 1,
-                namespace: ChainNamespace.evm,
-              },
-            ],
-            chain: {
-              id: getPrivyEmbeddedWalletChainId(w.chainId) ?? 1,
-              namespace: ChainNamespace.evm,
-            },
-          }),
-        ),
-      ),
-    )
-      .then((builtWallets) => {
-        setAllWalletsEVM(builtWallets);
+    let cancelled = false;
 
-        // Pick selected wallet: persisted address > first wallet
-        const preferred = selectedEvmAddress
-          ? builtWallets.find(
-              (w) => w.accounts[0]?.address === selectedEvmAddress,
-            )
-          : undefined;
-        setWalletEVM(preferred ?? builtWallets[0] ?? null);
-      })
-      .catch((e) => {
-        console.warn("Failed to build EVM wallets", e);
+    Promise.allSettled(
+      wallets.map((wallet) => buildPrivyEvmWallet(wallet, targetEvmChainId)),
+    ).then((results) => {
+      if (cancelled) {
+        return;
+      }
+
+      const builtWallets = results.flatMap((result) =>
+        result.status === "fulfilled" ? [result.value] : [],
+      );
+      const failures = results.filter(
+        (result): result is PromiseRejectedResult =>
+          result.status === "rejected",
+      );
+
+      failures.forEach((result) => {
+        console.warn("Failed to build an EVM wallet", result.reason);
+      });
+
+      if (builtWallets.length === 0) {
         setAllWalletsEVM([]);
         setWalletEVM(null);
-      });
-  }, [walletsEVM, authenticated]);
+        setWalletEVMReady(true);
+
+        // A Privy user may still have a usable Solana wallet. Do not cancel
+        // that successful login because an EVM wallet failed to initialize.
+        if (solanaReady && !walletsSOL?.[0]) {
+          ee.emit(WALLET_CONNECT_ERROR, {
+            walletType: WalletConnectType.PRIVY,
+            message: getWalletConnectErrorMessage(
+              failures[0]?.reason,
+              "Failed to initialize the Privy wallet.",
+            ),
+          });
+        }
+        return;
+      }
+
+      setAllWalletsEVM(builtWallets);
+
+      // Pick selected wallet: persisted address > first wallet
+      const preferred = selectedEvmAddress
+        ? builtWallets.find(
+            (w) => w.accounts[0]?.address === selectedEvmAddress,
+          )
+        : undefined;
+      setWalletEVM(preferred ?? builtWallets[0] ?? null);
+      setWalletEVMReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    authenticated,
+    ee,
+    evmWalletsSourceReady,
+    selectedEvmAddress,
+    solanaReady,
+    targetEvmChainId,
+    walletsEVM,
+    walletsSOL,
+  ]);
 
   // Build all SOL wallets
   useEffect(() => {
     if (!authenticated) {
       setAllWalletsSOL([]);
       setWalletSOL(null);
+      setWalletSOLReady(false);
       return;
     }
     if (!solanaReady) {
+      setWalletSOLReady(false);
       return;
     }
     if (!walletsSOL || !walletsSOL[0]) {
       setAllWalletsSOL([]);
       setWalletSOL(null);
+      setWalletSOLReady(true);
       return;
     }
 
@@ -347,6 +503,7 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
       ? builtWallets.find((w) => w.accounts[0]?.address === selectedSolAddress)
       : undefined;
     setWalletSOL(preferred ?? builtWallets[0] ?? null);
+    setWalletSOLReady(true);
   }, [walletsSOL, authenticated, solanaReady, network, solanaInfo]);
 
   useEffect(() => {
@@ -367,6 +524,8 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
       connect,
       walletEVM,
       walletSOL,
+      walletEVMReady,
+      walletSOLReady,
       allWalletsEVM,
       allWalletsSOL,
       isConnected,
@@ -382,6 +541,8 @@ const PrivyWalletProviderInner: React.FC<{ children: React.ReactNode }> = ({
       connect,
       walletEVM,
       walletSOL,
+      walletEVMReady,
+      walletSOLReady,
       allWalletsEVM,
       allWalletsSOL,
       isConnected,

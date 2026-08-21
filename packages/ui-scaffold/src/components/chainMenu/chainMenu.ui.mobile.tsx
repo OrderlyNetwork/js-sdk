@@ -16,6 +16,8 @@ export const ChainMenuUiMobile = (props: UseChainMenuScriptReturn) => {
             // networkId: props.networkId,
             bridgeLessOnly: false,
             isWrongNetwork: props.wrongNetwork,
+            onChainChangeBefore: props.onChainChangeBefore,
+            onChainChangeAfter: props.onChainChangeAfter,
           })
           .then(
             (r: any) => {

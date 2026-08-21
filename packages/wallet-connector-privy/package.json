@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
     "build": "tsup --tsconfig tsconfig.build.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "keywords": [],
   "files": [
@@ -42,12 +42,15 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@testing-library/react": "^14.2.1",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.3.0",
+    "jsdom": "^20.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsconfig": "workspace:*",
-    "tsup": "^8.5.1"
+    "tsup": "^8.5.1",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "react": ">=18"

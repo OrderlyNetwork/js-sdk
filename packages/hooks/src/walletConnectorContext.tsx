@@ -1,7 +1,10 @@
 import { createContext, useContext } from "react";
 import type { EIP1193Provider } from "@web3-onboard/common";
 import { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
-import { ChainNamespace } from "@orderly.network/types";
+import {
+  ChainNamespace,
+  type WalletChainChangeResult,
+} from "@orderly.network/types";
 
 type WalletProvider = (EIP1193Provider | SolanaWalletProvider) & {
   publicKey?: SolanaWalletProvider["publicKey"]; // For Solana providers
@@ -32,7 +35,9 @@ export interface WalletConnectorContextState {
   connect: (options?: any) => Promise<WalletState[]>;
   disconnect: (options: any) => Promise<any[]>;
   connecting: boolean;
-  setChain: (options: { chainId: string | number }) => Promise<any>;
+  setChain: (options: {
+    chainId: string | number;
+  }) => Promise<WalletChainChangeResult>;
   chains: any[];
   // switchChain: (options: { chainId: string }) => Promise<any>;
   wallet: WalletState | null;
