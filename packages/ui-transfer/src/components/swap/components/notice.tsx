@@ -1,6 +1,9 @@
 import { FC, useMemo, ReactNode } from "react";
 import { useTranslation, Trans } from "@orderly.network/i18n";
-import { NetworkId } from "@orderly.network/types";
+import {
+  isWalletChainChangePendingResult,
+  NetworkId,
+} from "@orderly.network/types";
 import { Box, Text } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
@@ -18,7 +21,12 @@ export const Notice: FC<NoticeProps> = (props) => {
   const { t } = useTranslation();
 
   const showChainSelect = () => {
-    modal.show(ChainSelectorDialogId, { networkId });
+    void modal.show(ChainSelectorDialogId, { networkId }).catch((error) => {
+      if (error === "cancel" || isWalletChainChangePendingResult(error)) {
+        return;
+      }
+      console.error("[switchChain error]", error);
+    });
   };
 
   const content = useMemo(() => {

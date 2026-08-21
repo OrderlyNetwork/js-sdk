@@ -1,6 +1,4 @@
-import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
   ChainIcon,
@@ -13,30 +11,12 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Spinner,
-  Text,
 } from "@orderly.network/ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorWidget,
 } from "@orderly.network/ui-chain-selector";
-import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
-
-const ModalTitle = ({ status }: { status?: AccountStatusEnum }) => {
-  const { t } = useTranslation();
-  const { state } = useAccount();
-  const displayStatus =
-    typeof status !== "undefined" && state.status < status
-      ? status
-      : state.status;
-  if (displayStatus < AccountStatusEnum.SignedIn) {
-    return <Text>{t("connector.createAccount")}</Text>;
-  }
-  if (displayStatus < AccountStatusEnum.EnableTrading) {
-    return <Text>{t("connector.enableTrading")}</Text>;
-  }
-  return <Text>{t("connector.connectWallet")}</Text>;
-};
 
 export const ChainMenu = (props: UseChainMenuScriptReturn) => {
   const { t } = useTranslation();
@@ -57,26 +37,10 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
             modal
               .show<{ wrongNetwork: boolean }>(ChainSelectorDialogId, {
                 networkId: props.networkId,
+                onChainChangeBefore: props.onChainChangeBefore,
+                onChainChangeAfter: props.onChainChangeAfter,
               })
-              .then(
-                (r) => {
-                  if (
-                    !r.wrongNetwork &&
-                    props.accountStatus < AccountStatusEnum.EnableTrading
-                  ) {
-                    modal
-                      .show(WalletConnectorModalId, {
-                        initAccountState: props.accountStatus,
-                        title: <ModalTitle status={props.accountStatus} />,
-                      })
-                      .then(
-                        (r) => console.log(r),
-                        (error) => console.log(error),
-                      );
-                  }
-                },
-                (error) => console.log(error),
-              );
+              .catch((error) => console.log(error));
           }}
         >
           {t("connector.wrongNetwork")}

@@ -6,7 +6,11 @@ import {
   useLocalStorage,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { NetworkId } from "@orderly.network/types";
+import {
+  isWalletChainChangePendingResult,
+  NetworkId,
+  type WalletChainChangeState,
+} from "@orderly.network/types";
 import { useOrderlyTheme } from "@orderly.network/ui";
 import { ChainType, TChainItem } from "./type";
 
@@ -17,25 +21,25 @@ export type UseChainSelectorScriptReturn = ReturnType<
   typeof useChainSelectorScript
 >;
 
+export type ChainSelectorResult = {
+  result: true;
+  wrongNetwork: boolean;
+  chainId: number;
+};
+
 export type UseChainSelectorScriptOptions = {
   networkId?: NetworkId;
   bridgeLessOnly?: boolean;
   close?: () => void;
-  resolve?: (isSuccess: boolean) => void;
-  reject?: () => void;
+  resolve?: (result: ChainSelectorResult) => void;
+  reject?: (reason?: unknown) => void;
   onChainChangeBefore?: (
     chainId: number,
     state: {
       isTestnet: boolean;
     },
   ) => void;
-  onChainChangeAfter?: (
-    chainId: number,
-    state: {
-      isTestnet: boolean;
-      isWalletConnected: boolean;
-    },
-  ) => void;
+  onChainChangeAfter?: (chainId: number, state: WalletChainChangeState) => void;
 };
 
 export const useChainSelectorScript = (
@@ -102,6 +106,7 @@ export const useChainSelectorScript = (
     if (connectedChain) {
       const result = await setChain({ chainId: chain.id });
 
+      if (isWalletChainChangePendingResult(result)) return result;
       if (!result) return result;
 
       return {
@@ -115,17 +120,22 @@ export const useChainSelectorScript = (
 
     setCurrentChainId(chain.id);
     return {
-      result: true,
+      result: true as const,
       wrongNetwork: false,
       chainId: chain.id,
     };
     // return Promise.reject("No connected chain");
   };
 
-  const changedCallback = (chain: TChainItem, isWalletConnected: boolean) => {
+  const changedCallback = (
+    chain: TChainItem,
+    isWalletConnected: boolean,
+    isWalletConnectionPending = false,
+  ) => {
     const params = {
       isTestnet: chain.isTestnet,
       isWalletConnected,
+      isWalletConnectionPending,
     };
     options.onChainChangeAfter?.(chain.id, params);
     onChainChanged?.(chain.id, params);
@@ -134,19 +144,29 @@ export const useChainSelectorScript = (
   const onChainClick = async (chain: TChainItem) => {
     setSelectChainId(chain.id);
     options.onChainChangeBefore?.(chain.id, { isTestnet: chain.isTestnet });
-    try {
-      const complete = await onChainChange?.(chain);
 
-      if (complete) {
-        options.resolve?.(complete);
-        options.close?.();
-        saveRecentChain(chain);
-        changedCallback(chain, true);
-      } else {
-        setSelectChainId(undefined);
-        changedCallback(chain, false);
-      }
+    let complete: Awaited<ReturnType<typeof onChainChange>>;
+    try {
+      complete = await onChainChange(chain);
     } catch (err) {
+      setSelectChainId(undefined);
+      changedCallback(chain, false);
+      return;
+    }
+
+    if (isWalletChainChangePendingResult(complete)) {
+      setSelectChainId(undefined);
+      options.reject?.(complete);
+      options.close?.();
+      saveRecentChain(chain);
+      changedCallback(chain, false, true);
+    } else if (complete) {
+      options.resolve?.(complete);
+      options.close?.();
+      saveRecentChain(chain);
+      changedCallback(chain, true);
+    } else {
+      setSelectChainId(undefined);
       changedCallback(chain, false);
     }
   };

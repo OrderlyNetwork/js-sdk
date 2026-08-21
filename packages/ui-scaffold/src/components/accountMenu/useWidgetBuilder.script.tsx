@@ -7,32 +7,19 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal, toast, useScreen, Text } from "@orderly.network/ui";
+import {
+  AccountStatusEnum,
+  isWalletChainChangePendingResult,
+} from "@orderly.network/types";
+import { modal, toast, useScreen } from "@orderly.network/ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
 } from "@orderly.network/ui-chain-selector";
 import {
-  WalletConnectorModalId,
-  WalletConnectorSheetId,
+  useChainChangeValidation,
+  useOnboardingModal,
 } from "@orderly.network/ui-connector";
-
-const ModalTitle = ({ status }: { status?: AccountStatusEnum }) => {
-  const { t } = useTranslation();
-  const { state } = useAccount();
-  const displayStatus =
-    typeof status !== "undefined" && state.status < status
-      ? status
-      : state.status;
-  if (displayStatus < AccountStatusEnum.SignedIn) {
-    return <Text>{t("connector.createAccount")}</Text>;
-  }
-  if (displayStatus < AccountStatusEnum.EnableTrading) {
-    return <Text>{t("connector.enableTrading")}</Text>;
-  }
-  return <Text>{t("connector.connectWallet")}</Text>;
-};
 
 const WALLET_CONNECT_OAUTH_RESUME_RESULT = "wallet:connect-oauth-resume-result";
 
@@ -53,63 +40,47 @@ export const useAccountMenu = (): any => {
   const [, { findByChainId }] = useChains();
 
   const { isMobile } = useScreen();
+  const { openOnboardingModal, handleAccountStatus } = useOnboardingModal();
 
-  const openWalletConnector = useCallback(
-    async (status: AccountStatusEnum = state.status) => {
-      const modalId = isMobile
-        ? WalletConnectorSheetId
-        : WalletConnectorModalId;
-      modal
-        .show(modalId, {
-          initAccountState: status,
-          title: <ModalTitle status={status} />,
-        })
-        .catch(() => {});
-    },
-    [isMobile, state.status],
-  );
-
-  const statusChangeHandler = useCallback(
-    (status?: AccountStatusEnum) => {
-      if (
-        typeof status === "undefined" ||
-        status <= AccountStatusEnum.Connected ||
-        status >= AccountStatusEnum.EnableTrading
-      ) {
-        return;
-      }
-
-      openWalletConnector(status);
-    },
-    [openWalletConnector],
-  );
-
-  const switchChain = useCallback(() => {
-    // Chain selection resolves before account validation, so this is the only
-    // authoritative signal for opening the onboarding modal.
-    const handleValidateEnd = (status: AccountStatusEnum) => {
+  const handleValidatedStatus = useCallback(
+    (status: AccountStatusEnum) => {
       if (status < AccountStatusEnum.EnableTrading) {
-        statusChangeHandler(status);
+        handleAccountStatus(status);
       } else {
         toast.success(t("connector.walletConnected"));
       }
-    };
+    },
+    [handleAccountStatus, t],
+  );
+  const { onChainChangeBefore, onChainChangeAfter } = useChainChangeValidation({
+    onAccountValidated: handleValidatedStatus,
+  });
+  const {
+    onChainChangeBefore: onSwitchNetworkBefore,
+    onChainChangeAfter: onSwitchNetworkAfter,
+  } = useChainChangeValidation({
+    onAccountValidated: handleAccountStatus,
+  });
 
-    account.once("validate:end", handleValidateEnd);
+  const openCurrentOnboarding = useCallback(
+    () => openOnboardingModal(state.status),
+    [openOnboardingModal, state.status],
+  );
 
+  const switchChain = useCallback(() => {
     const modalId = isMobile ? ChainSelectorSheetId : ChainSelectorDialogId;
-    modal.show<{ wrongNetwork: boolean }>(modalId).then(
-      (r) => {
-        if (r.wrongNetwork) {
-          account.off("validate:end", handleValidateEnd);
+    modal
+      .show<{ wrongNetwork: boolean }>(modalId, {
+        onChainChangeBefore,
+        onChainChangeAfter,
+      })
+      .catch((error) => {
+        if (isWalletChainChangePendingResult(error)) {
+          return;
         }
-      },
-      (error) => {
-        account.off("validate:end", handleValidateEnd);
         console.log("[switchChain error]", error);
-      },
-    );
-  }, [account, isMobile, statusChangeHandler, t]);
+      });
+  }, [isMobile, onChainChangeAfter, onChainChangeBefore]);
 
   useEffect(() => {
     const handleOAuthResumeResult = (
@@ -122,7 +93,7 @@ export const useAccountMenu = (): any => {
       if (result.wrongNetwork) {
         switchChain();
       } else {
-        statusChangeHandler(result.status);
+        handleAccountStatus(result.status);
       }
     };
 
@@ -130,7 +101,7 @@ export const useAccountMenu = (): any => {
     return () => {
       ee.off(WALLET_CONNECT_OAUTH_RESUME_RESULT, handleOAuthResumeResult);
     };
-  }, [ee, statusChangeHandler, switchChain]);
+  }, [ee, handleAccountStatus, switchChain]);
 
   const connect = async () => {
     const res = await connectWallet();
@@ -142,7 +113,7 @@ export const useAccountMenu = (): any => {
     if (res.wrongNetwork) {
       switchChain();
     } else {
-      statusChangeHandler(res.status);
+      handleAccountStatus(res.status);
     }
   };
 
@@ -184,6 +155,8 @@ export const useAccountMenu = (): any => {
       }>(modalId, {
         bridgeLessOnly: false,
         isWrongNetwork: wrongNetwork,
+        onChainChangeBefore: onSwitchNetworkBefore,
+        onChainChangeAfter: onSwitchNetworkAfter,
       })
       .then(
         (r: any) => {
@@ -193,7 +166,11 @@ export const useAccountMenu = (): any => {
           }
           toast.success(t("connector.networkSwitched"));
         },
-        (error) => console.log("[switchChain error]", error),
+        (error) => {
+          if (!isWalletChainChangePendingResult(error)) {
+            console.log("[switchChain error]", error);
+          }
+        },
       );
   };
 
@@ -201,8 +178,8 @@ export const useAccountMenu = (): any => {
     address: state.address,
     accountState: state,
     connect,
-    onCrateAccount: openWalletConnector,
-    onCreateOrderlyKey: openWalletConnector,
+    onCrateAccount: openCurrentOnboarding,
+    onCreateOrderlyKey: openCurrentOnboarding,
     onOpenExplorer,
     onDisconnect,
     onSwitchNetwork,

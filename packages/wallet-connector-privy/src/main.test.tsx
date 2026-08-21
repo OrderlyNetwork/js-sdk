@@ -4,6 +4,7 @@ import { act, render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WalletConnectorContext } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
+import { WALLET_CONNECT_ABORTED } from "@orderly.network/ui-connector";
 import {
   WALLET_CONNECT_ERROR,
   WALLET_CONNECT_PROVIDER_CANCEL,
@@ -159,7 +160,9 @@ describe("Privy connector Main", () => {
     const selection = contextValue.connect();
     act(() => mocks.drawerProps.onChangeOpen(false));
     await expect(selection).resolves.toEqual([]);
+    expect(mocks.ee.emit).toHaveBeenCalledWith(WALLET_CONNECT_ABORTED);
 
+    mocks.ee.emit.mockClear();
     const provider = contextValue.connect();
     act(() => {
       mocks.ee.emit(WALLET_CONNECT_PROVIDER_START, {
@@ -170,6 +173,7 @@ describe("Privy connector Main", () => {
       });
     });
     await expect(provider).resolves.toEqual([]);
+    expect(mocks.ee.emit).toHaveBeenCalledWith(WALLET_CONNECT_ABORTED);
   });
 
   it("restores the previous connector after provider cancellation", async () => {
@@ -269,6 +273,7 @@ describe("Privy connector Main", () => {
       WalletConnectType.EVM,
       421614,
     );
+    expect(mocks.ee.emit).toHaveBeenCalledWith(WALLET_CONNECT_ABORTED);
   });
 
   it("does not cancel a provider when the drawer closes programmatically", async () => {
@@ -286,6 +291,7 @@ describe("Privy connector Main", () => {
       });
       mocks.drawerProps.onChangeOpen(false);
     });
+    expect(mocks.ee.emit).not.toHaveBeenCalledWith(WALLET_CONNECT_ABORTED);
 
     mocks.walletState.wallet = wallet;
     mocks.walletState.walletType = WalletConnectType.PRIVY;

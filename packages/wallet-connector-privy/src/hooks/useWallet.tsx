@@ -14,6 +14,8 @@ import {
   defaultMainnetChains,
   defaultTestnetChains,
   TrackerEventName,
+  WALLET_CHAIN_CHANGE_PENDING_RESULT,
+  type WalletChainChangeResult,
 } from "@orderly.network/types";
 import {
   getWalletConnectErrorMessage,
@@ -180,7 +182,7 @@ export function useWallet() {
 
   const setChain = async (chain: {
     chainId: number | string;
-  }): Promise<boolean | undefined> => {
+  }): Promise<WalletChainChangeResult> => {
     const chainType = getChainType(parseInt(chain.chainId as string));
 
     if (isPrivy) {
@@ -209,6 +211,7 @@ export function useWallet() {
       if (chainType === WalletType.ABSTRACT) {
         setOpenConnectDrawer(true);
         setTargetWalletType(WalletType.ABSTRACT);
+        return WALLET_CHAIN_CHANGE_PENDING_RESULT;
       }
 
       if (chainType === WalletType.SOL) {
@@ -221,7 +224,7 @@ export function useWallet() {
         } else {
           setOpenConnectDrawer(true);
           setTargetWalletType(WalletType.SOL);
-          return Promise.reject(new Error("No solana wallet found"));
+          return WALLET_CHAIN_CHANGE_PENDING_RESULT;
         }
       }
     } else {
@@ -238,7 +241,7 @@ export function useWallet() {
         } else {
           setOpenConnectDrawer(true);
           setTargetWalletType(WalletType.EVM);
-          return Promise.resolve(true);
+          return WALLET_CHAIN_CHANGE_PENDING_RESULT;
         }
 
         return Promise.resolve(true);
@@ -251,7 +254,7 @@ export function useWallet() {
         } else {
           setOpenConnectDrawer(true);
           setTargetWalletType(WalletType.SOL);
-          return Promise.resolve(true);
+          return WALLET_CHAIN_CHANGE_PENDING_RESULT;
         }
       }
       if (chainType === WalletType.ABSTRACT) {
@@ -263,7 +266,7 @@ export function useWallet() {
           setOpenConnectDrawer(true);
           // TODO need send abstract type
           setTargetWalletType(WalletType.ABSTRACT);
-          return Promise.reject(new Error("No abstract wallet found"));
+          return WALLET_CHAIN_CHANGE_PENDING_RESULT;
         }
       }
     }

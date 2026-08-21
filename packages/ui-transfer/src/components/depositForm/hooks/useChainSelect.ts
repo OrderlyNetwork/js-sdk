@@ -6,7 +6,11 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API, NetworkId } from "@orderly.network/types";
+import {
+  API,
+  isWalletChainChangePendingResult,
+  NetworkId,
+} from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { CurrentChain } from "../../../types";
@@ -59,6 +63,9 @@ export function useChainSelect() {
         chainId: int2hex(Number(chainInfo.network_infos?.chain_id)),
       })
         .then((switched) => {
+          if (isWalletChainChangePendingResult(switched)) {
+            return;
+          }
           if (switched) {
             toast.success(t("connector.networkSwitched"));
           } else {

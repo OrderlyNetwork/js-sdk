@@ -9,8 +9,13 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { AccountStatusEnum } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  SOLANA_MAINNET_CHAINID,
+  WALLET_CHAIN_CHANGE_PENDING_RESULT,
+} from "@orderly.network/types";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
+import { WALLET_CONNECT_ABORTED } from "../constants/events";
 import { AuthGuard } from "./authGuard";
 import { WalletConnectorModalId } from "./walletConnector";
 
@@ -68,8 +73,15 @@ const mocks = vi.hoisted(() => {
       address: undefined as string | undefined,
     },
     connectWallet: vi.fn(),
+    connectedChain: {
+      id: 42161,
+      namespace: "EVM",
+    },
     modalShow: vi.fn(),
     toastSuccess: vi.fn(),
+    wallet: {
+      accounts: [{ address: "0x123" }],
+    },
     wrongNetwork: false,
     emitValidateEnd(status: AccountStatusEnum) {
       const listeners = [...validateEndHandlers];
@@ -90,6 +102,10 @@ vi.mock("@orderly.network/hooks", () => ({
     state: mocks.accountState,
   }),
   useEventEmitter: () => mocks.ee,
+  useWalletConnector: () => ({
+    connectedChain: mocks.connectedChain,
+    wallet: mocks.wallet,
+  }),
 }));
 
 vi.mock("@orderly.network/i18n", () => ({
@@ -257,6 +273,8 @@ describe("AuthGuard manual wallet onboarding", () => {
       ),
     );
 
+    const chainSelectorOptions = mocks.modalShow.mock.calls[0][1];
+    act(() => chainSelectorOptions.onChainChangeBefore(SOLANA_MAINNET_CHAINID));
     act(() => mocks.emitValidateEnd(AccountStatusEnum.DisabledTrading));
 
     await waitFor(() =>
@@ -266,6 +284,100 @@ describe("AuthGuard manual wallet onboarding", () => {
       ),
     );
     expect(mocks.modalShow).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps waiting for validation when wallet connection is pending", async () => {
+    mocks.connectWallet.mockResolvedValue({ wrongNetwork: true });
+    mocks.modalShow.mockRejectedValueOnce(WALLET_CHAIN_CHANGE_PENDING_RESULT);
+    render(<AuthGuard />);
+
+    fireEvent.click(screen.getByText("connector.connectWallet"));
+
+    await waitFor(() =>
+      expect(mocks.modalShow).toHaveBeenCalledWith(
+        ChainSelectorDialogId,
+        expect.any(Object),
+      ),
+    );
+
+    const chainSelectorOptions = mocks.modalShow.mock.calls[0][1];
+    act(() => chainSelectorOptions.onChainChangeBefore(SOLANA_MAINNET_CHAINID));
+    act(() =>
+      chainSelectorOptions.onChainChangeAfter(SOLANA_MAINNET_CHAINID, {
+        isTestnet: false,
+        isWalletConnected: false,
+        isWalletConnectionPending: true,
+      }),
+    );
+    act(() => mocks.emitValidateEnd(AccountStatusEnum.DisabledTrading));
+
+    await waitFor(() =>
+      expect(mocks.modalShow).toHaveBeenCalledWith(
+        WalletConnectorModalId,
+        expect.any(Object),
+      ),
+    );
+  });
+
+  it("stops waiting for validation when wallet connection is aborted", async () => {
+    mocks.connectWallet.mockResolvedValue({ wrongNetwork: true });
+    mocks.modalShow.mockRejectedValueOnce(WALLET_CHAIN_CHANGE_PENDING_RESULT);
+    render(<AuthGuard />);
+
+    fireEvent.click(screen.getByText("connector.connectWallet"));
+
+    await waitFor(() =>
+      expect(mocks.modalShow).toHaveBeenCalledWith(
+        ChainSelectorDialogId,
+        expect.any(Object),
+      ),
+    );
+
+    const chainSelectorOptions = mocks.modalShow.mock.calls[0][1];
+    act(() => chainSelectorOptions.onChainChangeBefore(SOLANA_MAINNET_CHAINID));
+    act(() => mocks.ee.emit(WALLET_CONNECT_ABORTED));
+    act(() => mocks.emitValidateEnd(AccountStatusEnum.DisabledTrading));
+
+    expect(mocks.account.off).toHaveBeenCalledWith(
+      "validate:end",
+      expect.any(Function),
+    );
+    expect(mocks.modalShow).toHaveBeenCalledTimes(1);
+  });
+
+  it("uses the current status without leaving a same-wallet listener", async () => {
+    mocks.accountState.status = AccountStatusEnum.NotSignedIn;
+    mocks.accountState.address = "0x123";
+    mocks.account.address = "0x123";
+    mocks.wrongNetwork = true;
+    render(<AuthGuard />);
+
+    fireEvent.click(screen.getByText("connector.wrongNetwork"));
+
+    await waitFor(() =>
+      expect(mocks.modalShow).toHaveBeenCalledWith(
+        ChainSelectorDialogId,
+        expect.any(Object),
+      ),
+    );
+
+    const chainSelectorOptions = mocks.modalShow.mock.calls[0][1];
+    act(() => chainSelectorOptions.onChainChangeBefore(10));
+    act(() =>
+      chainSelectorOptions.onChainChangeAfter(10, {
+        isTestnet: false,
+        isWalletConnected: true,
+        isWalletConnectionPending: false,
+      }),
+    );
+
+    expect(mocks.account.once).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(mocks.modalShow).toHaveBeenCalledWith(
+        WalletConnectorModalId,
+        expect.any(Object),
+      ),
+    );
   });
 
   it("does not let AuthGuard instances compete for OAuth resume results", () => {

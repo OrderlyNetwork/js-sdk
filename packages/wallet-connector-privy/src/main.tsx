@@ -13,6 +13,7 @@ import type {
   WalletConnectorContextState,
   WalletState,
 } from "@orderly.network/hooks";
+import { WALLET_CONNECT_ABORTED } from "@orderly.network/ui-connector";
 import { ConnectDrawer } from "./components/connectDrawer";
 import {
   type WalletConnectErrorPayload,
@@ -108,6 +109,7 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
       if (!rolledBack && !cancelled) {
         return;
       }
+      ee.emit(WALLET_CONNECT_ABORTED);
       setOpenConnectDrawer(false);
     };
     const handleConnectError = (payload?: WalletConnectErrorPayload) => {
@@ -125,6 +127,7 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
       if (!rolledBack && !failed) {
         return;
       }
+      ee.emit(WALLET_CONNECT_ABORTED);
       setOpenConnectDrawer(false);
     };
     const handleWalletSelected = (selectedWallet?: WalletState) => {
@@ -200,9 +203,12 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
         if (rollbackWalletType) {
           rollbackConnector(rollbackWalletType);
         }
+        if (snapshotWalletType !== WalletConnectType.PRIVY) {
+          ee.emit(WALLET_CONNECT_ABORTED);
+        }
       }
     },
-    [rollbackConnector, setOpenConnectDrawer],
+    [ee, rollbackConnector, setOpenConnectDrawer],
   );
 
   const memoizedValue = useMemo<WalletConnectorContextState>(

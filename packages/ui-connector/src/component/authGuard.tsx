@@ -2,7 +2,11 @@ import React, { ReactElement, useCallback, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  isWalletChainChangePendingResult,
+  NetworkId,
+} from "@orderly.network/types";
 import {
   Button,
   Either,
@@ -18,10 +22,8 @@ import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
 } from "@orderly.network/ui-chain-selector";
-import {
-  WalletConnectorModalId,
-  WalletConnectorSheetId,
-} from "./walletConnector";
+import { useChainChangeValidation } from "../hooks/useChainChangeValidation";
+import { useOnboardingModal } from "../hooks/useOnboardingModal";
 
 type ChainProps = {
   networkId?: NetworkId;
@@ -74,69 +76,52 @@ const useConnectWalletHandler = (options: {
   const { networkId, bridgeLessOnly } = options;
   const { t } = useTranslation();
   const { connectWallet } = useAppContext();
-  const { account, state } = useAccount();
+  const { state } = useAccount();
   const { isMobile } = useScreen();
-
-  const openWalletConnector = useCallback(
-    (status: AccountStatusEnum) => {
-      modal
-        .show(isMobile ? WalletConnectorSheetId : WalletConnectorModalId, {
-          initAccountState: status,
-          title: <ModalTitle status={status} />,
-        })
-        .catch(() => {});
-    },
-    [isMobile],
-  );
+  const { openOnboardingModal, handleAccountStatus } = useOnboardingModal();
 
   const onConnectOrderly = useCallback(() => {
-    openWalletConnector(state.status);
-  }, [openWalletConnector, state.status]);
+    void openOnboardingModal(state.status);
+  }, [openOnboardingModal, state.status]);
 
-  const handleAccountStatus = useCallback(
-    (status?: AccountStatusEnum) => {
-      if (
-        typeof status !== "undefined" &&
-        status > AccountStatusEnum.Connected &&
-        status < AccountStatusEnum.EnableTrading
-      ) {
-        openWalletConnector(status);
-      }
-    },
-    [openWalletConnector],
-  );
-
-  const switchChain = useCallback(() => {
-    const handleValidateEnd = (status: AccountStatusEnum) => {
+  const handleValidatedStatus = useCallback(
+    (status: AccountStatusEnum) => {
       if (status < AccountStatusEnum.EnableTrading) {
         handleAccountStatus(status);
       } else {
         toast.success(t("connector.walletConnected"));
       }
-    };
+    },
+    [handleAccountStatus, t],
+  );
+  const { onChainChangeBefore, onChainChangeAfter } = useChainChangeValidation({
+    onAccountValidated: handleValidatedStatus,
+  });
 
-    account.once("validate:end", handleValidateEnd);
-
+  const switchChain = useCallback(() => {
     modal
       .show<{ wrongNetwork: boolean }>(
         isMobile ? ChainSelectorSheetId : ChainSelectorDialogId,
         {
           networkId,
           bridgeLessOnly,
+          onChainChangeBefore,
+          onChainChangeAfter,
         },
       )
-      .then(
-        (result) => {
-          if (result.wrongNetwork) {
-            account.off("validate:end", handleValidateEnd);
-          }
-        },
-        (error) => {
-          account.off("validate:end", handleValidateEnd);
-          console.error("[switchChain error]", error);
-        },
-      );
-  }, [account, bridgeLessOnly, handleAccountStatus, isMobile, networkId, t]);
+      .catch((error) => {
+        if (isWalletChainChangePendingResult(error)) {
+          return;
+        }
+        console.error("[switchChain error]", error);
+      });
+  }, [
+    bridgeLessOnly,
+    isMobile,
+    networkId,
+    onChainChangeAfter,
+    onChainChangeBefore,
+  ]);
 
   const onConnectWallet = useCallback(async () => {
     try {
@@ -269,22 +254,6 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
       {props.children}
     </Either>
   );
-};
-
-const ModalTitle: React.FC<{ status?: AccountStatusEnum }> = ({ status }) => {
-  const { t } = useTranslation();
-  const { state } = useAccount();
-  const displayStatus =
-    typeof status !== "undefined" && state.status < status
-      ? status
-      : state.status;
-  if (displayStatus < AccountStatusEnum.SignedIn) {
-    return <Text>{t("connector.createAccount")}</Text>;
-  }
-  if (displayStatus < AccountStatusEnum.EnableTrading) {
-    return <Text>{t("connector.enableTrading")}</Text>;
-  }
-  return <Text>{t("connector.connectWallet")}</Text>;
 };
 
 const DefaultFallback: React.FC<{

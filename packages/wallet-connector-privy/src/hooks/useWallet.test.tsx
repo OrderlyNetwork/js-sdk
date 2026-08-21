@@ -1,7 +1,11 @@
 // @vitest-environment jsdom
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
+import {
+  ChainNamespace,
+  ConnectorKey,
+  WALLET_CHAIN_CHANGE_PENDING_RESULT,
+} from "@orderly.network/types";
 import { WalletConnectType, WalletType } from "../types";
 import { useWallet } from "./useWallet";
 
@@ -24,7 +28,14 @@ const mocks = vi.hoisted(() => {
     network: "testnet",
     setConnectorKey: vi.fn(),
     setStorageChain: vi.fn(),
+    setOpenConnectDrawer: vi.fn(),
+    setTargetWalletType: vi.fn(),
     track: vi.fn(),
+    walletChainTypeConfig: {
+      hasEvm: true,
+      hasSol: true,
+      hasAbstract: true,
+    },
     evmConnected: true,
     solConnected: true,
     abstractConnected: true,
@@ -58,10 +69,10 @@ vi.mock("../provider", () => ({
     mainnetChains: [{ id: 1 }, { id: 900900900 }],
     testnetChains: [{ id: 421614 }, { id: 901901901 }, { id: 11124 }],
     network: mocks.network,
-    setOpenConnectDrawer: vi.fn(),
+    setOpenConnectDrawer: mocks.setOpenConnectDrawer,
     targetWalletType: undefined,
-    setTargetWalletType: vi.fn(),
-    walletChainTypeConfig: { hasEvm: true, hasSol: true, hasAbstract: true },
+    setTargetWalletType: mocks.setTargetWalletType,
+    walletChainTypeConfig: mocks.walletChainTypeConfig,
   }),
 }));
 
@@ -118,11 +129,16 @@ describe("useWallet switchWallet", () => {
     mocks.privySol = null;
     mocks.privyEvmReady = true;
     mocks.privySolReady = true;
+    mocks.walletChainTypeConfig.hasEvm = true;
+    mocks.walletChainTypeConfig.hasSol = true;
+    mocks.walletChainTypeConfig.hasAbstract = true;
     mocks.setConnectorKey.mockClear();
     mocks.setConnectorKey.mockImplementation((value: string) => {
       mocks.connectorKey = value;
     });
     mocks.setStorageChain.mockClear();
+    mocks.setOpenConnectDrawer.mockClear();
+    mocks.setTargetWalletType.mockClear();
     mocks.track.mockClear();
   });
 
@@ -141,6 +157,79 @@ describe("useWallet switchWallet", () => {
       expect(mocks.setStorageChain).toHaveBeenCalledWith(chainId);
     },
   );
+
+  it("marks a Privy Solana fallback as pending without reporting success", async () => {
+    mocks.connectorKey = WalletConnectType.PRIVY;
+    const { result } = renderHook(() => useWallet());
+
+    await expect(result.current.setChain({ chainId: 901901901 })).resolves.toBe(
+      WALLET_CHAIN_CHANGE_PENDING_RESULT,
+    );
+
+    expect(mocks.setOpenConnectDrawer).toHaveBeenCalledWith(true);
+    expect(mocks.setTargetWalletType).toHaveBeenCalledWith(WalletType.SOL);
+  });
+
+  it("marks a Privy Abstract fallback as pending without reporting success", async () => {
+    mocks.connectorKey = WalletConnectType.PRIVY;
+    const { result } = renderHook(() => useWallet());
+
+    await expect(result.current.setChain({ chainId: 11124 })).resolves.toBe(
+      WALLET_CHAIN_CHANGE_PENDING_RESULT,
+    );
+
+    expect(mocks.setOpenConnectDrawer).toHaveBeenCalledWith(true);
+    expect(mocks.setTargetWalletType).toHaveBeenCalledWith(WalletType.ABSTRACT);
+  });
+
+  it("keeps the chain switch pending while connecting an Abstract fallback wallet", async () => {
+    mocks.abstractConnected = false;
+    const { result } = renderHook(() => useWallet());
+
+    await expect(result.current.setChain({ chainId: 11124 })).resolves.toBe(
+      WALLET_CHAIN_CHANGE_PENDING_RESULT,
+    );
+
+    expect(mocks.setOpenConnectDrawer).toHaveBeenCalledWith(true);
+    expect(mocks.setTargetWalletType).toHaveBeenCalledWith(WalletType.ABSTRACT);
+  });
+
+  it("marks a disconnected EVM fallback as pending without reporting success", async () => {
+    mocks.evmConnected = false;
+    const { result } = renderHook(() => useWallet());
+
+    await expect(result.current.setChain({ chainId: 421614 })).resolves.toBe(
+      WALLET_CHAIN_CHANGE_PENDING_RESULT,
+    );
+
+    expect(mocks.setOpenConnectDrawer).toHaveBeenCalledWith(true);
+    expect(mocks.setTargetWalletType).toHaveBeenCalledWith(WalletType.EVM);
+  });
+
+  it("marks a disconnected Solana fallback as pending without reporting success", async () => {
+    mocks.solConnected = false;
+    const { result } = renderHook(() => useWallet());
+
+    await expect(result.current.setChain({ chainId: 901901901 })).resolves.toBe(
+      WALLET_CHAIN_CHANGE_PENDING_RESULT,
+    );
+
+    expect(mocks.setOpenConnectDrawer).toHaveBeenCalledWith(true);
+    expect(mocks.setTargetWalletType).toHaveBeenCalledWith(WalletType.SOL);
+  });
+
+  it("rejects a Privy chain switch when the target wallet type is unsupported", async () => {
+    mocks.connectorKey = WalletConnectType.PRIVY;
+    mocks.walletChainTypeConfig.hasSol = false;
+    const { result } = renderHook(() => useWallet());
+
+    await expect(
+      result.current.setChain({ chainId: 901901901 }),
+    ).rejects.toThrow("No solana wallet found");
+
+    expect(mocks.setOpenConnectDrawer).not.toHaveBeenCalled();
+    expect(mocks.setTargetWalletType).not.toHaveBeenCalled();
+  });
 
   it.each([
     [WalletType.EVM, WalletConnectType.EVM, 421614],

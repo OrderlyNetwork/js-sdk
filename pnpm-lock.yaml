@@ -2003,6 +2003,9 @@ importers:
         specifier: workspace:*
         version: link:../ui
     devDependencies:
+      '@testing-library/react':
+        specifier: ^14.2.1
+        version: 14.3.1(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
@@ -2012,6 +2015,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.21(postcss@8.5.26)
+      jsdom:
+        specifier: ^20.0.3
+        version: 20.0.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
       postcss:
         specifier: ^8.5.26
         version: 8.5.26
@@ -2033,6 +2039,9 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.8.3
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@26.2.0)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@20.0.3(bufferutil@4.0.9)(utf-8-validate@6.0.5))(vite@7.3.5(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/ui-connector:
     dependencies:
@@ -2445,6 +2454,9 @@ importers:
       '@swc/core':
         specifier: ^1.4.12
         version: 1.13.2(@swc/helpers@0.5.17)
+      '@testing-library/react':
+        specifier: ^14.2.1
+        version: 14.3.1(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
@@ -2454,6 +2466,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.21(postcss@8.5.26)
+      jsdom:
+        specifier: ^20.0.3
+        version: 20.0.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
       postcss:
         specifier: ^8.5.26
         version: 8.5.26
@@ -2472,6 +2487,9 @@ importers:
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(@swc/core@1.13.2(@swc/helpers@0.5.17))(jiti@2.7.0)(postcss@8.5.26)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.9.0)
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@26.2.0)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@20.0.3(bufferutil@4.0.9)(utf-8-validate@6.0.5))(vite@7.3.5(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/ui-share:
     dependencies:
