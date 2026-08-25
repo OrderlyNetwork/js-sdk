@@ -72,5 +72,25 @@ describe("createDataStore fallback", () => {
       const result = await resolveFallbackData(null, initChains, storage);
       expect(result).toEqual(initChains);
     });
+
+    it("ignores invalid in-memory and IndexedDB data", async () => {
+      const storage = createStorage([{ chain_id: "" }]);
+      const sanitizer = (data: unknown) =>
+        Array.isArray(data) &&
+        data.length > 0 &&
+        data.every((item) => !!item?.chain_id)
+          ? (data as { chain_id: string }[])
+          : null;
+
+      const result = await resolveFallbackData(
+        [{ chain_id: "" }],
+        initChains,
+        storage,
+        sanitizer,
+      );
+
+      expect(result).toBe(initChains);
+      expect(storage.getItem).toHaveBeenCalled();
+    });
   });
 });

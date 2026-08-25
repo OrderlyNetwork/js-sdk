@@ -10,17 +10,34 @@ import { indexedDBManager } from "./indexedDBManager";
 /**
  * Configuration for IndexedDB storage
  */
+export interface IndexedDBMetadataConfig {
+  /**
+   * Object-store keyPath used by the reserved metadata record. The metadata
+   * record lives in the SAME object store as the data rows under the
+   * reserved `recordKey`: any code reading this store directly must filter
+   * it out (see readAttributedIndexedDBState). Data-store sanitizers also
+   * drop it as an invalid row as a safety net.
+   */
+  keyPath: string;
+  /** Reserved key that cannot collide with a real data row. */
+  recordKey: string;
+  /** Field containing the metadata payload. */
+  metadataField: string;
+}
+
 interface IndexedDBStorageConfig {
   /** Database name */
   dbName: string;
   /** Object store name */
   storeName: string;
+  /** Optional metadata record stored atomically with the data rows. */
+  metadata?: IndexedDBMetadataConfig;
 }
 
 /**
  * IndexedDB storage interface for array-based data operations
  */
-interface IndexedDBStorage<T = unknown> {
+export interface IndexedDBStorage<T = unknown> {
   /** Get all stored data */
   getItem: () => Promise<Array<T> | null>;
   /** Replace all data (clear and insert) */
@@ -28,6 +45,41 @@ interface IndexedDBStorage<T = unknown> {
   /** Clear all data */
   removeItem: () => Promise<void>;
 }
+
+export interface AttributedIndexedDBState<T, M = unknown> {
+  data: T[];
+  metadata: M;
+}
+
+/**
+ * Splits the reserved metadata record from data rows. A missing metadata record
+ * is treated as a cache miss so legacy, unattributed data is never published.
+ */
+export const readAttributedIndexedDBState = async <T, M = unknown>(
+  indexedDBStorage: IndexedDBStorage<T>,
+  config: IndexedDBMetadataConfig,
+): Promise<AttributedIndexedDBState<T, M> | null> => {
+  const rows = await indexedDBStorage.getItem();
+  if (!rows) {
+    return null;
+  }
+
+  const metadataRecord = rows.find(
+    (row) =>
+      row !== null &&
+      typeof row === "object" &&
+      (row as Record<string, unknown>)[config.keyPath] === config.recordKey,
+  ) as Record<string, unknown> | undefined;
+  const metadata = metadataRecord?.[config.metadataField];
+  if (typeof metadata === "undefined") {
+    return null;
+  }
+
+  return {
+    data: rows.filter((row) => row !== metadataRecord),
+    metadata: metadata as M,
+  };
+};
 
 /**
  * Creates an IndexedDB storage instance using simple connection manager
@@ -152,12 +204,18 @@ type IndexedDBPersistOptions<T, U = T> = Omit<
  */
 export const adaptToStateStorage = <T>(
   indexedDBStorage: IndexedDBStorage<T>,
+  metadataConfig?: IndexedDBMetadataConfig,
 ): StateStorage => ({
   getItem: async (): Promise<string | null> => {
     try {
-      const result = await indexedDBStorage.getItem();
+      const result = metadataConfig
+        ? await readAttributedIndexedDBState(indexedDBStorage, metadataConfig)
+        : await indexedDBStorage.getItem();
 
-      return result && Array.isArray(result) && result.length > 0
+      return result &&
+        (Array.isArray(result)
+          ? result.length > 0
+          : Array.isArray(result.data) && result.data.length > 0)
         ? JSON.stringify({
             state: result,
             version: 0,
@@ -172,9 +230,26 @@ export const adaptToStateStorage = <T>(
   setItem: async (_name: string, value: string): Promise<void> => {
     try {
       const parsed = JSON.parse(value);
-      const stateData = (parsed as { state?: Array<T> | null })?.state;
+      const stateData = (
+        parsed as {
+          state?: Array<T> | AttributedIndexedDBState<T> | null;
+        }
+      )?.state;
 
-      if (Array.isArray(stateData)) {
+      if (
+        metadataConfig &&
+        stateData !== null &&
+        typeof stateData === "object" &&
+        !Array.isArray(stateData) &&
+        Array.isArray(stateData.data) &&
+        typeof stateData.metadata !== "undefined"
+      ) {
+        const metadataRecord = {
+          [metadataConfig.keyPath]: metadataConfig.recordKey,
+          [metadataConfig.metadataField]: stateData.metadata,
+        } as T;
+        await indexedDBStorage.setItem([...stateData.data, metadataRecord]);
+      } else if (Array.isArray(stateData) && !metadataConfig) {
         // Replace all data with the persisted array
         await indexedDBStorage.setItem(stateData);
       } else if (stateData === null) {
@@ -240,7 +315,7 @@ export const persistIndexedDB = <
 
   // Create JSON storage wrapper for IndexedDB
   const jsonStorage = createJSONStorage(() =>
-    adaptToStateStorage(indexedDBStorage),
+    adaptToStateStorage(indexedDBStorage, indexedDBConfig.metadata),
   );
 
   // Apply persist middleware with IndexedDB storage

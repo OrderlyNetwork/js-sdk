@@ -5,8 +5,6 @@ import {
   NetworkId,
   type API,
   Chain as FlatChain,
-  ArbitrumSepoliaChainInfo,
-  SolanaDevnetChainInfo,
   SOLANA_TESTNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
@@ -15,8 +13,12 @@ import {
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
 import { OrderlyContext } from "../orderlyContext";
-import { useMainnetChainsStore } from "../provider/store/chainInfoMainStore";
-import { useTestnetChainsStore } from "../provider/store/chainInfoTestStore";
+import {
+  mainnetChainFallback,
+  testnetChainFallback,
+  useMainnetChainsStore,
+  useTestnetChainsStore,
+} from "../provider/store";
 import { useMainTokenStore } from "../provider/store/mainTokenStore";
 import { useTestTokenStore } from "../provider/store/testTokenStore";
 
@@ -74,8 +76,6 @@ export type UseChainsReturnObject = {
 //   ArbitrumSepoliaTokenInfo,
 //   SolanaDevnetTokenInfo,
 // ]);
-
-const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
 export function useChains(
   networkId?: undefined,
@@ -176,7 +176,19 @@ export function useChains(
   //   },
   // );
 
-  const chainInfos = useMainnetChainsStore((state) => state.data);
+  const mainnetChainInfos = useMainnetChainsStore((state) => state.data);
+  const mainnetChainInfoOrigin = useMainnetChainsStore(
+    (state) => state.dataOrigin,
+  );
+  // Only broker-authorized chain info feeds chain selection (deposit /
+  // withdraw UIs). Wallet connectors (initEvm / privy provider) intentionally
+  // read the store's raw data as a superset: onboard / privy cannot add
+  // chains after initialization, and a missing chain breaks wallet switching
+  // even for chains the broker filter excludes.
+  const chainInfos =
+    mainnetChainInfoOrigin === "broker"
+      ? mainnetChainInfos
+      : mainnetChainFallback;
   // only prod env return mainnet chains info
   // const { data: chainInfos, error: chainInfoErr } = useQuery(
   //   needFetchFromAPI
@@ -185,7 +197,14 @@ export function useChains(
   //   { ...commonSwrOpts },
   // );
 
-  const testChainInfos = useTestnetChainsStore((state) => state.data);
+  const testnetChainInfos = useTestnetChainsStore((state) => state.data);
+  const testnetChainInfoOrigin = useTestnetChainsStore(
+    (state) => state.dataOrigin,
+  );
+  const testChainInfos =
+    testnetChainInfoOrigin === "broker"
+      ? testnetChainInfos
+      : testnetChainFallback;
   // testnet chains info
   // const { data: testChainInfos, error: testChainInfoError } = useQuery(
   //   needFetchFromAPI

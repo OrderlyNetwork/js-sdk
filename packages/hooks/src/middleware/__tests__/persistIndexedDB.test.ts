@@ -1,4 +1,13 @@
-import { adaptToStateStorage } from "../persistIndexedDB";
+import {
+  adaptToStateStorage,
+  readAttributedIndexedDBState,
+} from "../persistIndexedDB";
+
+const metadataConfig = {
+  keyPath: "id",
+  recordKey: "__metadata__",
+  metadataField: "__source__",
+};
 
 describe("adaptToStateStorage", () => {
   const createStorage = () => ({
@@ -44,6 +53,59 @@ describe("adaptToStateStorage", () => {
 
       expect(storage.setItem).not.toHaveBeenCalled();
       expect(storage.removeItem).not.toHaveBeenCalled();
+    });
+
+    it("writes data and source metadata atomically in attributed mode", async () => {
+      const storage = createStorage();
+      const adapter = adaptToStateStorage(storage, metadataConfig);
+
+      await adapter.setItem(
+        "orderly-store",
+        JSON.stringify({
+          state: {
+            data: [{ id: "chain" }],
+            metadata: { dataOrigin: "broker" },
+          },
+          version: 0,
+        }),
+      );
+
+      expect(storage.setItem).toHaveBeenCalledWith([
+        { id: "chain" },
+        {
+          id: "__metadata__",
+          __source__: { dataOrigin: "broker" },
+        },
+      ]);
+    });
+  });
+
+  describe("attributed reads", () => {
+    it("filters the metadata record from hydrated data", async () => {
+      const storage = createStorage();
+      storage.getItem.mockResolvedValue([
+        { id: "chain" },
+        {
+          id: "__metadata__",
+          __source__: { dataOrigin: "broker" },
+        },
+      ]);
+
+      await expect(
+        readAttributedIndexedDBState(storage, metadataConfig),
+      ).resolves.toEqual({
+        data: [{ id: "chain" }],
+        metadata: { dataOrigin: "broker" },
+      });
+    });
+
+    it("ignores legacy rows without source metadata", async () => {
+      const storage = createStorage();
+      storage.getItem.mockResolvedValue([{ id: "legacy" }]);
+
+      await expect(
+        readAttributedIndexedDBState(storage, metadataConfig),
+      ).resolves.toBeNull();
     });
   });
 });

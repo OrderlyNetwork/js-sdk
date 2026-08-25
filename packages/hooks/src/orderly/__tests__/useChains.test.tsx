@@ -4,19 +4,35 @@ import { useChains } from "../useChains";
 
 let mockMainnetChainInfos: API.NetworkInfos[];
 let mockTestnetChainInfos: API.NetworkInfos[];
+let mockMainnetChainInfoOrigin: "broker" | "generic";
+let mockTestnetChainInfoOrigin: "broker" | "generic";
 let mockMainnetTokens: API.Token[];
 let mockTestnetTokens: API.Token[] | null;
 
 jest.mock("../../provider/store/chainInfoMainStore", () => ({
   useMainnetChainsStore: (
-    selector: (state: { data: API.NetworkInfos[] }) => unknown,
-  ) => selector({ data: mockMainnetChainInfos }),
+    selector: (state: {
+      data: API.NetworkInfos[];
+      dataOrigin: "broker" | "generic";
+    }) => unknown,
+  ) =>
+    selector({
+      data: mockMainnetChainInfos,
+      dataOrigin: mockMainnetChainInfoOrigin,
+    }),
 }));
 
 jest.mock("../../provider/store/chainInfoTestStore", () => ({
   useTestnetChainsStore: (
-    selector: (state: { data: API.NetworkInfos[] }) => unknown,
-  ) => selector({ data: mockTestnetChainInfos }),
+    selector: (state: {
+      data: API.NetworkInfos[];
+      dataOrigin: "broker" | "generic";
+    }) => unknown,
+  ) =>
+    selector({
+      data: mockTestnetChainInfos,
+      dataOrigin: mockTestnetChainInfoOrigin,
+    }),
 }));
 
 jest.mock("../../provider/store/mainTokenStore", () => ({
@@ -47,6 +63,8 @@ const createChainInfo = (chainId: number, name: string): API.NetworkInfos =>
 beforeEach(() => {
   mockMainnetChainInfos = [createChainInfo(MAINNET_CHAIN_ID, "Mainnet")];
   mockTestnetChainInfos = [createChainInfo(TESTNET_CHAIN_ID, "Testnet")];
+  mockMainnetChainInfoOrigin = "broker";
+  mockTestnetChainInfoOrigin = "broker";
   mockMainnetTokens = [];
   mockTestnetTokens = [];
 });
@@ -58,6 +76,26 @@ describe("useChains empty data", () => {
     const { result } = renderHook(() => useChains());
 
     expect(result.current[0]).toEqual({ mainnet: [], testnet: [] });
+  });
+});
+
+describe("useChains chain-info authority", () => {
+  test("does not expose generic wallet-init data for chain selection", () => {
+    const genericMainnetChainId = 777777;
+    mockMainnetChainInfos = [
+      createChainInfo(genericMainnetChainId, "Generic Mainnet"),
+    ];
+    mockMainnetChainInfoOrigin = "generic";
+    mockTestnetChainInfoOrigin = "generic";
+
+    const { result } = renderHook(() => useChains());
+
+    expect(result.current[1].findByChainId(TESTNET_CHAIN_ID)).toBeUndefined();
+    expect(
+      result.current[1].findByChainId(genericMainnetChainId),
+    ).toBeUndefined();
+    expect(result.current[1].findByChainId(MAINNET_CHAIN_ID)).toBeDefined();
+    expect(result.current[1].findByChainId(421614)).toBeDefined();
   });
 });
 
