@@ -34,6 +34,7 @@ export const useExclusiveDepositOptions = (params?: {
       chainName: string;
       explorerUrl: string;
       tokenSymbol: string;
+      displayName: string;
     }[] = [];
 
     for (const token of tokensInfo) {
@@ -47,6 +48,7 @@ export const useExclusiveDepositOptions = (params?: {
               (chain as any)?.network_infos?.name ?? `Chain ${chainId}`,
             explorerUrl: (chain as any)?.network_infos?.explorer_base_url ?? "",
             tokenSymbol: token.token,
+            displayName: detail.display_name || token.token,
           });
         }
       }
@@ -90,7 +92,7 @@ export const useExclusiveDepositOptions = (params?: {
     for (const combo of combos) {
       if (combo.chainId === chainId && !seen.has(combo.tokenSymbol)) {
         seen.add(combo.tokenSymbol);
-        result.push({ label: combo.tokenSymbol, value: combo.tokenSymbol });
+        result.push({ label: combo.displayName, value: combo.tokenSymbol });
       }
     }
 
