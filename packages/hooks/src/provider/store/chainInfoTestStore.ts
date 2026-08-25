@@ -8,6 +8,12 @@ import { createDataStore } from "./createDataStore";
 
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
+// Unlike the mainnet store, testnet chains intentionally use the static
+// fallback as `initData`: in prod the testnet API is not guaranteed to be
+// reachable, so the store must serve the fallback immediately and upgrade
+// to fetched data only when the request succeeds. Consumers may therefore
+// initialize with the fallback first — this divergence from mainnet
+// (initData: null + fallbackData) is by design.
 export const useTestnetChainsStore = createDataStore<API.Chain>({
   name: "orderly-test-chain-info",
   dbName: "ORDERLY_STORE",

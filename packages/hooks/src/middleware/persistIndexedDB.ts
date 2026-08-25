@@ -1,4 +1,3 @@
-import pathOr from "ramda/es/pathOr";
 import { StateCreator, StoreMutatorIdentifier } from "zustand";
 import {
   PersistOptions,
@@ -33,7 +32,7 @@ interface IndexedDBStorage<T = unknown> {
 /**
  * Creates an IndexedDB storage instance using simple connection manager
  */
-const createIndexedDBStorage = <T = unknown>(
+export const createIndexedDBStorage = <T = unknown>(
   config: IndexedDBStorageConfig,
 ): IndexedDBStorage<T> => {
   const { dbName, storeName } = config;
@@ -151,7 +150,7 @@ type IndexedDBPersistOptions<T, U = T> = Omit<
 /**
  * Adapts IndexedDBStorage to Zustand's StateStorage interface
  */
-const adaptToStateStorage = <T>(
+export const adaptToStateStorage = <T>(
   indexedDBStorage: IndexedDBStorage<T>,
 ): StateStorage => ({
   getItem: async (): Promise<string | null> => {
@@ -173,17 +172,18 @@ const adaptToStateStorage = <T>(
   setItem: async (_name: string, value: string): Promise<void> => {
     try {
       const parsed = JSON.parse(value);
-      const stateData = pathOr([], ["state"], parsed) as Array<T> | null;
+      const stateData = (parsed as { state?: Array<T> | null })?.state;
 
-      // Always update IndexedDB, even if data is empty or null
-      // This ensures that empty states clear the IndexedDB store
       if (Array.isArray(stateData)) {
+        // Replace all data with the persisted array
         await indexedDBStorage.setItem(stateData);
       } else if (stateData === null) {
         // Explicitly clear IndexedDB when state is null
         await indexedDBStorage.removeItem();
       }
-      // If stateData is undefined or not an array, do nothing (preserve existing data)
+      // If the `state` key is absent (undefined), do nothing and preserve the
+      // existing data. Stores use this to skip persisting error-path fallback
+      // data so IndexedDB only ever holds successful responses.
     } catch (error) {
       console.error("Failed to set item in IndexedDB storage:", error);
       console.warn("Raw value that failed to parse:", _name, value);
