@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "الكمية مطلوبة",
   "orderEntry.orderQuantity.error.min": "يجب أن تكون الكمية أكبر من {{value}}",
   "orderEntry.orderQuantity.error.max": "يجب أن تكون الكمية أصغر من {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "رصيد غير كافٍ لإتمام هذا الطلب",
   "orderEntry.orderPrice.error.required": "السعر مطلوب",
   "orderEntry.orderPrice.error.min": "يجب أن يكون السعر أكبر من {{value}}",
   "orderEntry.orderPrice.error.max": "يجب أن يكون السعر أصغر من {{value}}",

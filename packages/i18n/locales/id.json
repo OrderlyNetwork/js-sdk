@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Jumlah diperlukan",
   "orderEntry.orderQuantity.error.min": "Jumlah harus lebih besar dari {{value}}",
   "orderEntry.orderQuantity.error.max": "Jumlah harus kurang dari {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Saldo tidak mencukupi untuk menempatkan pesanan ini",
   "orderEntry.orderPrice.error.required": "Harga diperlukan",
   "orderEntry.orderPrice.error.min": "Harga harus lebih besar dari {{value}}",
   "orderEntry.orderPrice.error.max": "Harga harus kurang dari {{value}}",

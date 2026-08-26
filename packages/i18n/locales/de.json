@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Menge ist erforderlich",
   "orderEntry.orderQuantity.error.min": "Menge muss größer als {{value}} sein",
   "orderEntry.orderQuantity.error.max": "Menge muss kleiner als {{value}} sein",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Unzureichendes Guthaben, um diese Order aufzugeben",
   "orderEntry.orderPrice.error.required": "Preis ist erforderlich",
   "orderEntry.orderPrice.error.min": "Preis muss größer als {{value}} sein",
   "orderEntry.orderPrice.error.max": "Preis muss kleiner als {{value}} sein",

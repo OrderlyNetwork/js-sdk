@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Потрібна кількість",
   "orderEntry.orderQuantity.error.min": "Кількість повинна бути більшою за {{value}}",
   "orderEntry.orderQuantity.error.max": "Кількість повинна бути меншою за {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Недостатньо коштів для розміщення цього ордера",
   "orderEntry.orderPrice.error.required": "Потрібна ціна",
   "orderEntry.orderPrice.error.min": "Ціна повинна бути більшою за {{value}}",
   "orderEntry.orderPrice.error.max": "Ціна повинна бути меншою за {{value}}",

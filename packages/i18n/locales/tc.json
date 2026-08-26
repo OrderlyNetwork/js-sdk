@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "數量是必需的",
   "orderEntry.orderQuantity.error.min": "數量必须大於{{value}}",
   "orderEntry.orderQuantity.error.max": "數量必须小於{{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "餘額不足，無法下單",
   "orderEntry.orderPrice.error.required": "價格是必需的",
   "orderEntry.orderPrice.error.min": "價格必须大於{{value}}",
   "orderEntry.orderPrice.error.max": "價格必须小於{{value}}",

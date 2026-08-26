@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "تعداد الزامی است",
   "orderEntry.orderQuantity.error.min": "تعداد باید بزرگ‌تر از {{value}} باشد",
   "orderEntry.orderQuantity.error.max": "تعداد باید کمتر از {{value}} باشد",
+  "orderEntry.orderQuantity.error.insufficientBalance": "موجودی برای ثبت این سفارش کافی نیست",
   "orderEntry.orderPrice.error.required": "قیمت الزامی است",
   "orderEntry.orderPrice.error.min": "قیمت باید بزرگ‌تر از {{value}} باشد",
   "orderEntry.orderPrice.error.max": "قیمت باید کمتر از {{value}} باشد",
