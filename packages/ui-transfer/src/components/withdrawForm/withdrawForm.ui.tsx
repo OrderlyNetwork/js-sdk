@@ -133,6 +133,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             testId="oui-testid-withdraw-dialog-quantity-input"
             displayType="vaultBalance"
             disabled={!props.isLoggedIn}
+            showDisplayName={false}
           />
         </Box>
         <AvailableQuantity
@@ -146,6 +147,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           tooltipContent={t("transfer.withdraw.available.tooltip", {
             amount: maxQuantity.toString(),
           })}
+          showDisplayName={false}
         />
         <Box mx={2} mt={1}>
           <UnsettlePnlInfo
@@ -210,6 +212,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               token={sourceToken}
               value={props.showQty}
               readOnly
+              showDisplayName
             />
           </TabPanel>
           {internalWithdrawPanel}
