@@ -24,8 +24,8 @@ export type AvailableQuantityProps = {
   notional?: number;
   /**
    * Token label display mode.
-   * - `true` (default): wallet-side chain assets — `display_name || symbol`
-   * - `false`: platform-side Orderly account assets — symbol only
+   * - `false` (default): platform-side Orderly account assets — symbol only
+   * - `true`: wallet-side chain assets — `display_name || symbol`
    */
   showDisplayName?: boolean;
 };
@@ -63,7 +63,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
     maxQuantity,
     token,
     loading,
-    showDisplayName = true,
+    showDisplayName = false,
   } = props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();

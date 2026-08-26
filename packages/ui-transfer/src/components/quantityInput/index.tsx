@@ -39,8 +39,8 @@ export type QuantityInputProps = {
   showBalance?: boolean;
   /**
    * Token label display mode.
-   * - `true` (default): wallet-side chain assets — `display_name || symbol`
-   * - `false`: platform-side Orderly account assets — symbol only
+   * - `false` (default): platform-side Orderly account assets — symbol only
+   * - `true`: wallet-side chain assets — `display_name || symbol`
    */
   showDisplayName?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
@@ -66,7 +66,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     tokenShowCaret,
     balancesRevalidating,
     showBalance,
-    showDisplayName = true,
+    showDisplayName = false,
     ...rest
   } = props;
 

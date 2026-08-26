@@ -179,6 +179,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
                 disabled={!props.isLoggedIn}
                 balancesRevalidating={batchBalancesRevalidating}
                 showBalance
+                showDisplayName
               />
             </Box>
 
@@ -191,6 +192,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
               onClick={() => {
                 onQuantityChange(maxDepositAmount);
               }}
+              showDisplayName
             />
 
             {/* Yield-bearing collateral reminder */}
@@ -216,7 +218,6 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
               readOnly
               status={targetInputStatus}
               hintMessage={targetHintMessage}
-              showDisplayName={false}
               // when show deposit cap, hide select caret
               tokenShowCaret={!showTargetDepositCap && targetTokens?.length > 1}
               tokenValueFormatter={

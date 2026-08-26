@@ -76,6 +76,7 @@ export const SwapDepositForm: FC<UseSwapDepositFormScriptReturn> = (props) => {
             status={inputStatus}
             hintMessage={hintMessage}
             data-testid="oui-testid-swap-deposit-dialog-quantity-input"
+            showDisplayName
           />
         </Box>
 
@@ -87,6 +88,7 @@ export const SwapDepositForm: FC<UseSwapDepositFormScriptReturn> = (props) => {
           onClick={() => {
             onQuantityChange(maxQuantity);
           }}
+          showDisplayName
         />
         <ExchangeDivider />
 
