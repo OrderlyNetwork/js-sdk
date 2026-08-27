@@ -1,32 +1,47 @@
 import { ethers } from "ethers";
 import type { API } from "@orderly.network/types";
 
-const blockCount = 5;
+// A wider span smooths out irregular block intervals (e.g. batch-y ZK chains
+// where most blocks are seconds apart but occasional gaps exceed 150s).
+const blockSpan = 25;
+const maxAttempts = 2;
 
 export async function getEvmBlockTime(chain: API.Chain) {
   const provider = new ethers.JsonRpcProvider(
     chain.network_infos.public_rpc_url,
   );
 
-  const latest = await provider.getBlockNumber();
+  let lastError: unknown;
+  try {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        // Two samples blockSpan apart give a stable average with only 2 RPC
+        // calls, instead of one call per block.
+        const head = await provider.getBlock("latest");
+        if (head?.timestamp == null) {
+          continue;
+        }
 
-  const blocks = await Promise.all(
-    Array.from({ length: blockCount }, (_, i) => provider.getBlock(latest - i)),
-  );
+        const tail = await provider.getBlock(head.number - blockSpan);
+        if (tail?.timestamp == null) {
+          continue;
+        }
 
-  const timestamps = blocks
-    .filter((b) => b?.timestamp != null)
-    .map((b) => Number(b?.timestamp));
-
-  if (timestamps.length < 2) {
+        const elapsed = Number(head.timestamp) - Number(tail.timestamp);
+        if (elapsed > 0) {
+          return elapsed / blockSpan;
+        }
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    console.error(
+      "getEvmBlockTime failed",
+      chain.network_infos.chain_id,
+      lastError ?? "no usable block timestamps",
+    );
     return 0;
+  } finally {
+    provider.destroy();
   }
-
-  let sum = 0;
-  for (let i = 0; i < timestamps.length - 1; i++) {
-    const diff = timestamps[i] - timestamps[i + 1];
-    sum += diff;
-  }
-
-  return sum / (timestamps.length - 1);
 }
