@@ -29,6 +29,7 @@
     "@orderly.network/layout-split": "workspace:*",
     "@orderly.network/markets": "workspace:*",
     "@orderly.network/portfolio": "workspace:*",
+    "@orderly.network/prediction": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/trading-next": "workspace:*",
     "@orderly.network/trading": "workspace:*",

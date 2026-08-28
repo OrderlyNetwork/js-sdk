@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Tooltip,
   cn,
@@ -7,7 +8,6 @@ import {
   SimpleDialog,
   useScreen,
 } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
 
 /**
  * default style is desktop effect
@@ -38,7 +38,10 @@ const DesktopLayout: FC<{
     >
       <Flex
         gap={1}
-        className={cn("oui-cursor-pointer oui-text-2xs", className)}
+        className={cn(
+          "oui-orderBook-markPrice oui-cursor-pointer oui-text-2xs",
+          className,
+        )}
       >
         <FlagIcon size={iconSize} />
         <Text.numeral
@@ -66,7 +69,10 @@ const MobileLayout: FC<{
     <>
       <Flex
         gap={1}
-        className={cn("oui-cursor-pointer oui-text-2xs", className)}
+        className={cn(
+          "oui-orderBook-markPrice oui-cursor-pointer oui-text-2xs",
+          className,
+        )}
         onClick={() => {
           setOpen(true);
         }}

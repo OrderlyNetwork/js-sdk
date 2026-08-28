@@ -10,6 +10,7 @@ import {
   TradingInactiveIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
+  BarChartIcon,
 } from "@orderly.network/ui";
 import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../playground/constant";
@@ -38,6 +39,7 @@ const LeftSection = (props: {
   onSelect: (tab: string) => void;
   onSpotClick: () => void;
   onPerpsClick: () => void;
+  onPredictionClick: () => void;
   onRWAClick: () => void;
   onHoverTab: (tab: "perps" | null) => void;
 }) => {
@@ -46,6 +48,7 @@ const LeftSection = (props: {
     onSelect,
     onSpotClick,
     onPerpsClick,
+    onPredictionClick,
     onRWAClick,
     onHoverTab,
   } = props;
@@ -75,6 +78,17 @@ const LeftSection = (props: {
       },
       onMouseEnter: () => {
         onHoverTab("perps");
+      },
+    },
+    {
+      key: "prediction",
+      activeIcon: <BarChartIcon />,
+      inactiveIcon: <BarChartIcon />,
+      title: t("prediction.title"),
+      description: t("prediction.description"),
+      onClick: () => {
+        onSelect("prediction");
+        onPredictionClick();
       },
     },
     {
@@ -177,10 +191,24 @@ export const customTradeSubMenuRender = () => {
       onRouteChange({ href: PathEnum.Rwa, name: "rwa" });
     };
 
+    const handlePredictionClick = () => {
+      onRouteChange({
+        href: PathEnum.Prediction,
+        name: "prediction",
+      });
+    };
+
     useEffect(() => {
       const pathname = location.pathname || "";
-      if (pathname.includes(PathEnum.Swap)) setSelectedTab("spot");
-      if (pathname.includes(PathEnum.Rwa)) setSelectedTab("rwa");
+      if (pathname.includes(PathEnum.Prediction)) {
+        setSelectedTab("prediction");
+      } else if (pathname.includes(PathEnum.Swap)) {
+        setSelectedTab("spot");
+      } else if (pathname.includes(PathEnum.Rwa)) {
+        setSelectedTab("rwa");
+      } else {
+        setSelectedTab("perps");
+      }
     }, [location.pathname]);
 
     const showPerpsRightSection =
@@ -199,6 +227,7 @@ export const customTradeSubMenuRender = () => {
           onSelect={setSelectedTab}
           onSpotClick={handleSpotClick}
           onPerpsClick={handlePerpsClick}
+          onPredictionClick={handlePredictionClick}
           onRWAClick={handleRWAClick}
           onHoverTab={setHoverTab}
         />

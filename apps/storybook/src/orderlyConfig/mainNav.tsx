@@ -71,7 +71,7 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
     {
       name: i18n.t("common.trading"),
       href: "/",
-      activeHrefs: [PathEnum.Swap],
+      activeHrefs: [PathEnum.Swap, PathEnum.Prediction],
       isHomePageInMobile: true,
       customSubMenuRender: customTradeSubMenuRender(),
     },

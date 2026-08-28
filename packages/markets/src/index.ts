@@ -29,6 +29,14 @@ export * from "./type";
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";
 export { SymbolDisplay } from "./components/symbolDisplay";
+export {
+  FavoritesIcon,
+  FavoritesIcon2,
+  TriangleDownIcon,
+  UnFavoritesIcon,
+  UnFavoritesIcon2,
+} from "./icons";
+export { useMarketsContext } from "./components/marketsProvider";
 
 export type {
   BuiltInMarketTab,

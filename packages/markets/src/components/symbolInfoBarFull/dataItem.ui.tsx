@@ -1,7 +1,7 @@
 import React from "react";
 import { cn, Flex, Tooltip, Text } from "@orderly.network/ui";
 
-interface DataItemProps {
+export interface DataItemProps {
   label: string;
   value: React.ReactNode;
   hint?: React.ReactNode;

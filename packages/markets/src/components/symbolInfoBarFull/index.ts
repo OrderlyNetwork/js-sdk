@@ -5,3 +5,5 @@ export {
 export { useSymbolInfoBarFullScript } from "./symbolInfoBarFull.script";
 export { SymbolInfoBarFullWidget } from "./symbolInfoBarFull.widget";
 export type { SymbolInfoBarFullProps } from "./symbolInfoBarFull.ui";
+export { DataItem } from "./dataItem.ui";
+export type { DataItemProps } from "./dataItem.ui";

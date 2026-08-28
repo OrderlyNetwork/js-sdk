@@ -27,6 +27,7 @@ export * from "./components/mobile/portfolioSheet";
 export * from "./components/mobile/fundingRate";
 export * from "./components/mobile/fundingRateModal";
 export * from "./pages/trading";
+export { useFirstTimeDeposit } from "./pages/trading/hooks/useFirstTimeDeposit";
 export * from "./provider/tradingPageContext";
 export * from "./provider/tradingPageProvider";
 export * from "./hooks";

@@ -19,16 +19,21 @@ export const PortfolioLayout: FC<PropsWithChildren<PortfolioLayoutProps>> = (
   props,
 ) => {
   const { children, leftSideProps, classNames, ...rest } = props;
+  const portfolioLeftSideProps = {
+    ...leftSideProps,
+    maxWidth: leftSideProps?.maxWidth ?? 210,
+  };
 
   return (
     <Scaffold
+      leftSideProps={portfolioLeftSideProps}
       leftSidebar={
         props.hideSideBar ? null : (
           <LeftSidebar
             current={props.routerAdapter?.currentPath}
             routerAdapter={props.routerAdapter}
             items={props.items}
-            {...leftSideProps}
+            {...portfolioLeftSideProps}
           />
         )
       }

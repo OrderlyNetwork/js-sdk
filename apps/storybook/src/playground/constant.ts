@@ -3,10 +3,12 @@ export enum PathEnum {
   Perp = "/perp",
   PerpGrid = "/perp-grid",
   Rwa = "/rwa",
+  Prediction = "/prediction",
   Swap = "/swap",
 
   Portfolio = "/portfolio",
   Positions = "/portfolio/positions",
+  Predictions = "/portfolio/predictions",
   Orders = "/portfolio/orders",
   Assets = "/portfolio/assets",
   FeeTier = "/portfolio/fee",
@@ -33,6 +35,7 @@ export const PageTitleMap = {
   [PathEnum.ApiKey]: "API keys",
   [PathEnum.Orders]: "Orders",
   [PathEnum.Positions]: "Positions",
+  [PathEnum.Predictions]: "Predictions",
   [PathEnum.Assets]: "Assets",
   [PathEnum.Setting]: "Settings",
   [PathEnum.History]: "History",
@@ -44,4 +47,5 @@ export const PageTitleMap = {
   [PathEnum.Vaults]: "Vaults",
   [PathEnum.Points]: "Points",
   [PathEnum.Swap]: "Spot",
+  [PathEnum.Prediction]: "Prediction",
 };

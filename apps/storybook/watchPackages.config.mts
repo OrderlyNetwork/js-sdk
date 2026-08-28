@@ -182,6 +182,12 @@ const page: Package[] = [
     includeCSS: true,
   },
   {
+    package: "@orderly.network/prediction",
+    path: "../../packages/prediction/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/trading",
     path: "../../packages/trading/src",
     watch: true,

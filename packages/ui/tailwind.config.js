@@ -24,6 +24,7 @@ module.exports = withTV({
     "../ui-share/src/**/*.{ts,js,tsx,jsx}",
     "../trading-rewards/src/**/*.{ts,js,tsx,jsx}",
     "../portfolio/src/**/*.{ts,js,tsx,jsx}",
+    "../prediction/src/**/*.{ts,js,tsx,jsx}",
     "../ui-scaffold/src/**/*.{ts,js,tsx,jsx}",
     "../affiliate/src/**/*.{ts,js,tsx,jsx}",
     "../markets/src/**/*.{ts,js,tsx,jsx}",

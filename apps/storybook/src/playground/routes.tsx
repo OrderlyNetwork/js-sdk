@@ -55,6 +55,7 @@ const MarketsPage = lazyImportPage(() => import("./pages/markets/page"));
 const PerpPage = lazyImportPage(() => import("./pages/perp/page"));
 const PerpGridPage = lazyImportPage(() => import("./pages/perp-grid/page"));
 const PerpSplitPage = lazyImportPage(() => import("./pages/perp-split/page"));
+const PredictionPage = lazyImportPage(() => import("./pages/prediction/page"));
 const APIKeyPage = lazyImportPage(
   () => import("./pages/portfolio/api-key/page"),
 );
@@ -71,6 +72,9 @@ const OrdersPage = lazyImportPage(
 const PortfolioPage = lazyImportPage(() => import("./pages/portfolio/page"));
 const PositionsPage = lazyImportPage(
   () => import("./pages/portfolio/positions/page"),
+);
+const PredictionsPage = lazyImportPage(
+  () => import("./pages/portfolio/predictions/page"),
 );
 const SettingsPage = lazyImportPage(
   () => import("./pages/portfolio/setting/page"),
@@ -135,6 +139,10 @@ const AppRoute: React.FC = () => {
       children: tradeRoutes,
     },
     {
+      path: "prediction",
+      element: <PredictionPage />,
+    },
+    {
       path: "perp-grid",
       children: [
         {
@@ -171,6 +179,10 @@ const AppRoute: React.FC = () => {
         {
           path: "positions",
           element: <PositionsPage />,
+        },
+        {
+          path: "predictions",
+          element: <PredictionsPage />,
         },
         {
           path: "orders",

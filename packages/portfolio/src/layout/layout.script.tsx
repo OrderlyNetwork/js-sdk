@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { useScreen } from "@orderly.network/ui";
+import { BarChartIcon, useScreen } from "@orderly.network/ui";
 import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
 
 export enum PortfolioLeftSidebarPath {
   Overview = "/portfolio",
   Positions = "/portfolio/positions",
+  Predictions = "/portfolio/predictions",
   Orders = "/portfolio/orders",
   Assets = "/portfolio/assets",
   FeeTier = "/portfolio/feeTier",
@@ -67,6 +68,15 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
               className="oui-fill-current group-data-[actived=true]:oui-fill-[url(#side-menu-gradient)]"
             />
           </svg>
+        ),
+      },
+      {
+        name: t("prediction.tab.predictions"),
+        href: PortfolioLeftSidebarPath.Predictions,
+        icon: (
+          <span className="oui-flex oui-size-[18px] oui-items-center oui-justify-center [&>svg]:oui-size-[18px]">
+            <BarChartIcon />
+          </span>
         ),
       },
       {

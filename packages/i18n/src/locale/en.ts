@@ -10,6 +10,7 @@ import { orderEntry } from "./module/orderEntry";
 import { orders } from "./module/orders";
 import { portfolio } from "./module/portfolio";
 import { positions } from "./module/positions";
+import { prediction } from "./module/prediction";
 import { scaffold } from "./module/scaffold";
 import { share } from "./module/share";
 import { tpsl } from "./module/tpsl";
@@ -26,6 +27,7 @@ export const en = {
   ...common,
   ...markets,
   ...portfolio,
+  ...prediction,
   ...trading,
   ...chart,
   ...positions,

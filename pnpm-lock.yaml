@@ -163,6 +163,9 @@ importers:
       '@orderly.network/portfolio':
         specifier: workspace:*
         version: link:../../packages/portfolio
+      '@orderly.network/prediction':
+        specifier: workspace:*
+        version: link:../../packages/prediction
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../../packages/app
@@ -1410,6 +1413,58 @@ importers:
       tailwindcss:
         specifier: ^3.4.19
         version: 3.4.19(tsx@4.21.0)(yaml@2.9.0)
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(@swc/core@1.13.2(@swc/helpers@0.5.17))(jiti@2.7.0)(postcss@8.5.26)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.9.0)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.8.3
+
+  packages/prediction:
+    dependencies:
+      '@orderly.network/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@orderly.network/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@orderly.network/markets':
+        specifier: workspace:*
+        version: link:../markets
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
+      '@orderly.network/trading':
+        specifier: workspace:*
+        version: link:../trading
+      '@orderly.network/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@orderly.network/ui-connector':
+        specifier: workspace:*
+        version: link:../ui-connector
+      '@orderly.network/ui-scaffold':
+        specifier: workspace:*
+        version: link:../ui-scaffold
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.2
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.23)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig

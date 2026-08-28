@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import {
   Box,
   CloseIcon,
@@ -13,6 +13,7 @@ import {
 } from "@orderly.network/ui";
 import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { MarketsTabName } from "../../type";
+import type { MarketTabConfig } from "../../type";
 import { CommunityBrokerTabs } from "../communityBrokerTabs";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
@@ -33,6 +34,23 @@ import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 
 export type DropDownMarketsProps = DropDownMarketsScriptReturn & {
   contentClassName?: string;
+  /** Renders a custom panel when the tab is not backed by the markets data source. */
+  renderTabContent?: (
+    tab: MarketTabConfig,
+    key: string,
+    hide: () => void,
+  ) => ReactNode | undefined;
+  renderTabBeforeContent?: (
+    tab: MarketTabConfig,
+    key: string,
+    hide: () => void,
+  ) => ReactNode;
+  /** Appends a separate market section after the built-in markets list. */
+  renderTabAfterContent?: (
+    tab: MarketTabConfig,
+    key: string,
+    hide: () => void,
+  ) => ReactNode;
 };
 
 export const DropDownMarkets: React.FC<
@@ -97,7 +115,11 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   const { tabs } = useMarketsContext();
   const tabDataFilters = useCustomTabDataFilters(tabs);
 
-  const renderBuiltInContent = (tabType: MarketsTabName) => {
+  const renderBuiltInContent = (
+    tab: MarketTabConfig,
+    key: string,
+    tabType: MarketsTabName,
+  ) => {
     if (tabType === MarketsTabName.Rwa) {
       return (
         <RwaSubcategoryTabs
@@ -128,26 +150,52 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       );
     }
 
+    const beforeContent = props.renderTabBeforeContent?.(tab, key, props.hide);
+    const afterContent = props.renderTabAfterContent?.(tab, key, props.hide);
+    const hasSupplementalContent = Boolean(beforeContent || afterContent);
+
     return (
-      <div className={cls}>
-        <MarketsListWidget
-          type={tabType}
-          initialSort={tabSort[tabType]}
-          onSort={onTabSort(tabType)}
-          getColumns={getColumns}
-          tableClassNames={{
-            root: cn("oui-dropDownMarkets-list", "!oui-bg-base-8"),
-            scroll: "oui-pb-5 oui-px-1",
-          }}
-          rowClassName="!oui-h-[34px]"
-          {...getFavoritesProps(tabType)}
-          emptyView={renderEmptyView({
-            type: tabType,
-            onClick: () => {
-              onTabChange(MarketsTabName.All);
-            },
-          })}
-        />
+      <div
+        className={cn(
+          cls,
+          "oui-flex oui-flex-col",
+          hasSupplementalContent ? "oui-overflow-auto" : "oui-overflow-hidden",
+        )}
+      >
+        {beforeContent}
+        <div
+          className={cn(
+            "oui-min-h-0 oui-overflow-hidden",
+            hasSupplementalContent ? "oui-flex-none" : "oui-flex-1",
+          )}
+        >
+          <MarketsListWidget
+            type={tabType}
+            initialSort={tabSort[tabType]}
+            onSort={onTabSort(tabType)}
+            getColumns={getColumns}
+            tableClassNames={{
+              root: cn(
+                "oui-dropDownMarkets-list",
+                "!oui-bg-base-8",
+                hasSupplementalContent && "!oui-h-auto",
+              ),
+              scroll: cn(
+                "oui-pb-5 oui-px-1",
+                hasSupplementalContent && "!oui-h-auto !oui-min-h-0",
+              ),
+            }}
+            rowClassName="!oui-h-[34px]"
+            {...getFavoritesProps(tabType)}
+            emptyView={renderEmptyView({
+              type: tabType,
+              onClick: () => {
+                onTabChange(MarketsTabName.All);
+              },
+            })}
+          />
+        </div>
+        {afterContent}
       </div>
     );
   };
@@ -231,6 +279,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           const isBuiltIn = isBuiltInMarketTab(tab);
           const isCommunity =
             isBuiltIn && tab.type === MarketsTabName.Community;
+          const customContent = props.renderTabContent?.(tab, key, props.hide);
 
           return (
             <TabPanel
@@ -242,11 +291,13 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               title={resolveTabTitle(tab, builtInTitles, <RwaTab />)}
               value={key}
             >
-              {isCommunity
-                ? renderCommunityContent()
-                : isBuiltIn
-                  ? renderBuiltInContent(tab.type as MarketsTabName)
-                  : renderCustomContent(key)}
+              {customContent !== undefined
+                ? customContent
+                : isCommunity
+                  ? renderCommunityContent()
+                  : isBuiltIn
+                    ? renderBuiltInContent(tab, key, tab.type as MarketsTabName)
+                    : renderCustomContent(key)}
             </TabPanel>
           );
         })}
