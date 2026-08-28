@@ -26,7 +26,6 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
-    "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/perp": "workspace:*",
     "@akamfoad/qr": "^0.4.0",

@@ -1,4 +1,3 @@
-import { WalletState } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { isSolana } from "@orderly.network/utils";
 import { getEvmBlockTime } from "./getEvmBlockTime";
@@ -6,13 +5,15 @@ import { getSolanaBlockTime } from "./getSolanaBlockTime";
 
 // https://tokenterminal.com/explorer/metrics/block-time
 export async function getBlockTime(inputs: {
-  chainId: number;
+  chainId: number | string;
   chain: API.Chain;
-  wallet: WalletState | null;
 }) {
-  const { chainId, chain, wallet } = inputs;
+  const { chain } = inputs;
+  // Normalize before routing: some data sources provide chain_id as a string,
+  // which `isSolana` would fail to match.
+  const chainId = Number(inputs.chainId);
   if (isSolana(chainId)) {
-    return getSolanaBlockTime(chain, wallet);
+    return getSolanaBlockTime(chain);
   }
   return getEvmBlockTime(chain);
 }
