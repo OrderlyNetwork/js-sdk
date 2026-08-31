@@ -587,7 +587,6 @@ export function useOrderEntry(
       })
       .catch((err) => {});
   }, [
-    formattedOrder.broker_id,
     formattedOrder.order_quantity,
     formattedOrder.total,
     formattedOrder.trigger_price,
