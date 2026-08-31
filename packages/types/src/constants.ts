@@ -89,6 +89,15 @@ export const isNativeTokenChecker = (address?: string) => {
   );
 };
 
+export const ArbitrumMainnetChainInfo = {
+  name: "Arbitrum",
+  public_rpc_url: "https://arb1.arbitrum.io/rpc",
+  chain_id: "42161",
+  currency_symbol: "ETH",
+  currency_decimal: 18,
+  explorer_base_url: "https://arbiscan.io",
+  vault_address: "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9",
+};
 export const ArbitrumSepoliaChainInfo = {
   name: "Arbitrum Sepolia",
   public_rpc_url: "https://arbitrum-sepolia.gateway.tenderly.co",
@@ -114,6 +123,15 @@ export const AbstractTestnetTokenInfo = {
   withdrawal_fee: 1,
   cross_chain_withdrawal_fee: 2,
   display_name: "USDC",
+};
+export const SolanaMainnetChainInfo = {
+  chain_id: "900900900",
+  currency_decimal: 9,
+  currency_symbol: "SOL",
+  explorer_base_url: "https://explorer.solana.com",
+  name: "Solana",
+  public_rpc_url: "https://api.mainnet-beta.solana.com",
+  vault_address: "ErBmAD61mGFKvrFNaTJuxoPwqrS8GgtwtqJTJVjFWx9Q",
 };
 export const SolanaDevnetChainInfo = {
   chain_id: "901901901",

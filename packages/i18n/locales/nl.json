@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Hoeveelheid is vereist",
   "orderEntry.orderQuantity.error.min": "Hoeveelheid moet groter zijn dan {{value}}",
   "orderEntry.orderQuantity.error.max": "Hoeveelheid moet kleiner zijn dan {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Onvoldoende saldo om deze order te plaatsen",
   "orderEntry.orderPrice.error.required": "Prijs is vereist",
   "orderEntry.orderPrice.error.min": "Prijs moet groter zijn dan {{value}}",
   "orderEntry.orderPrice.error.max": "Prijs moet kleiner zijn dan {{value}}",

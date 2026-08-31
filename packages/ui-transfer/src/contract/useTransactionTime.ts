@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useChains, useWalletConnector } from "@orderly.network/hooks";
+import { useChains } from "@orderly.network/hooks";
 import { getBlockTime } from "./getBlockTime";
 import { getChainConfirmations } from "./getChainConfirmations";
 
@@ -10,7 +10,6 @@ export const useTransactionTime = (chainId?: number | string) => {
   const confirmationsMap = useRef<Record<string, number>>({});
 
   const [, { findByChainId }] = useChains();
-  const { wallet } = useWalletConnector();
 
   const chain = useMemo(() => {
     if (!chainId) {
@@ -21,7 +20,7 @@ export const useTransactionTime = (chainId?: number | string) => {
   }, [chainId, findByChainId]);
 
   useEffect(() => {
-    if (!chain || !wallet) {
+    if (!chain) {
       return;
     }
 
@@ -33,7 +32,6 @@ export const useTransactionTime = (chainId?: number | string) => {
       getBlockTime({
         chainId,
         chain,
-        wallet,
       })
         .then((time) => {
           console.log("average block time", chainId, time);
@@ -60,7 +58,7 @@ export const useTransactionTime = (chainId?: number | string) => {
           console.error("getChainConfirmations error", error);
         });
     }
-  }, [chain, wallet]);
+  }, [chain]);
 
   const transactionTime = useMemo(() => {
     if (blockTime && confirmations) {

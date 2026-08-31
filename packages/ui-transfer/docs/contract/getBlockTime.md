@@ -8,13 +8,12 @@ Returns the average block time for a chain. Dispatches to EVM or Solana implemen
 
 ## Exports
 
-### getBlockTime(inputs): Promise<number>
+### getBlockTime(inputs): Promise\<number\>
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| inputs.chainId | number | Chain ID |
-| inputs.chain | API.Chain | Chain config |
-| inputs.wallet | WalletState \| null | Wallet (required for Solana) |
+| Parameter      | Type             | Description  |
+| -------------- | ---------------- | ------------ |
+| inputs.chainId | number \| string | Chain ID     |
+| inputs.chain   | API.Chain        | Chain config |
 
 **Returns:** Average block time in seconds (or 0 if unavailable).
 
@@ -23,5 +22,5 @@ Returns the average block time for a chain. Dispatches to EVM or Solana implemen
 ```ts
 import { getBlockTime } from "@orderly.network/ui-transfer";
 
-const time = await getBlockTime({ chainId: 1, chain, wallet });
+const time = await getBlockTime({ chainId: 1, chain });
 ```

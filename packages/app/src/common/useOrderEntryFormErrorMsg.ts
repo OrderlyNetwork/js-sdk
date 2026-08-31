@@ -5,6 +5,7 @@ import {
   OrderValidationResult,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
 
 type Keys = keyof OrderValidationResult;
 type ErrorType = Partial<OrderValidationItem["type"]>;
@@ -22,18 +23,22 @@ export function useOrderEntryFormErrorMsg(
       min?: string | number;
       max?: string | number;
     },
+    isZeroMax = false,
   ) => {
     const { value, min, max } = params || {};
+    const quantityMaxMsg = isZeroMax
+      ? t("orderEntry.orderQuantity.error.insufficientBalance")
+      : t("orderEntry.orderQuantity.error.max", { value });
     const map: Partial<Record<Keys, Partial<Record<ErrorType, string>>>> = {
       quantity: {
         required: t("orderEntry.orderQuantity.error.required"),
         min: t("orderEntry.orderQuantity.error.min", { value }),
-        max: t("orderEntry.orderQuantity.error.max", { value }),
+        max: quantityMaxMsg,
       },
       order_quantity: {
         required: t("orderEntry.orderQuantity.error.required"),
         min: t("orderEntry.orderQuantity.error.min", { value }),
-        max: t("orderEntry.orderQuantity.error.max", { value }),
+        max: quantityMaxMsg,
       },
       order_price: {
         required: t("orderEntry.orderPrice.error.required"),
@@ -129,7 +134,22 @@ export function useOrderEntryFormErrorMsg(
     (key: Keys, customValue?: string) => {
       const { type, value, min, max } = errors?.[key] || ({} as any);
       if (type) {
-        return getMessage(key, type, { value: customValue || value, min, max });
+        // customValue is a display string that may carry a unit suffix
+        // (e.g. "3.5 ETH"); only the raw validation value is safe to parse.
+        // Fall back to false if value is not a valid decimal.
+        let isZeroMax = false;
+        try {
+          isZeroMax =
+            value !== undefined && value !== "" && new Decimal(value).eq(0);
+        } catch {
+          isZeroMax = false;
+        }
+        return getMessage(
+          key,
+          type,
+          { value: customValue || value, min, max },
+          isZeroMax,
+        );
       }
       return "";
     },

@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "נדרשת כמות",
   "orderEntry.orderQuantity.error.min": "הכמות חייבת להיות גדולה מ‑{{value}}",
   "orderEntry.orderQuantity.error.max": "הכמות חייבת להיות קטנה מ‑{{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "יתרה לא מספקת לביצוע ההזמנה",
   "orderEntry.orderPrice.error.required": "נדרש מחיר",
   "orderEntry.orderPrice.error.min": "המחיר חייב להיות גדול מ‑{{value}}",
   "orderEntry.orderPrice.error.max": "המחיר חייב להיות קטן מ‑{{value}}",

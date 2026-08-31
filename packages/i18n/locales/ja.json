@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "数量は必須です",
   "orderEntry.orderQuantity.error.min": "数量は{{value}}より大きい必要があります",
   "orderEntry.orderQuantity.error.max": "数量は{{value}}未満である必要があります",
+  "orderEntry.orderQuantity.error.insufficientBalance": "残高不足のため注文を出せません",
   "orderEntry.orderPrice.error.required": "価格は必須です",
   "orderEntry.orderPrice.error.min": "価格は{{value}}より大きい必要があります",
   "orderEntry.orderPrice.error.max": "価格は{{value}}未満である必要があります",

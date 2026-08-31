@@ -92,6 +92,8 @@ export const orderEntry = {
   "orderEntry.orderQuantity.error.min":
     "Quantity must be greater than {{value}}",
   "orderEntry.orderQuantity.error.max": "Quantity must be less than {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance":
+    "Insufficient balance to place this order",
 
   "orderEntry.orderPrice.error.required": "Price is required",
   "orderEntry.orderPrice.error.min": "Price must be greater than {{value}}",
