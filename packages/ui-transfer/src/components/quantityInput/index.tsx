@@ -37,6 +37,12 @@ export type QuantityInputProps = {
   tokenShowCaret?: boolean;
   balancesRevalidating?: boolean;
   showBalance?: boolean;
+  /**
+   * Token label display mode.
+   * - `false` (default): platform-side Orderly account assets — symbol only
+   * - `true`: wallet-side chain assets — `display_name || symbol`
+   */
+  showDisplayName?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
@@ -60,6 +66,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     tokenShowCaret,
     balancesRevalidating,
     showBalance,
+    showDisplayName = false,
     ...rest
   } = props;
 
@@ -69,6 +76,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [width, setWidth] = useState(0);
+
+  const getTokenLabel = (tokenInfo: API.TokenInfo) =>
+    showDisplayName
+      ? tokenInfo.display_name || tokenInfo.symbol!
+      : tokenInfo.symbol!;
 
   const tokenOptions = useMemo(() => {
     return tokens.map((token) => {
@@ -80,11 +92,11 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         : false;
       return {
         ...token,
-        name: token.display_name || token.symbol!,
+        name: getTokenLabel(token),
         insufficientBalance,
       };
     });
-  }, [tokens, value, vaultBalanceList]);
+  }, [tokens, value, vaultBalanceList, showDisplayName]);
 
   useEffect(() => {
     const rect = inputRef?.current?.getBoundingClientRect();
@@ -92,7 +104,9 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   }, [inputRef]);
 
   const _onTokenChange = (value: string) => {
-    const find = tokens.find((item) => item.symbol === value);
+    const find =
+      tokens.find((item) => getTokenLabel(item) === value) ??
+      tokens.find((item) => item.symbol === value);
     if (find) {
       onTokenChange?.(find);
     }
@@ -134,6 +148,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     </Box>
   );
 
+  const tokenLabel = token ? getTokenLabel(token) : undefined;
+
   const suffix = (
     <div className="oui-absolute oui-end-0">
       <Select.tokens
@@ -142,7 +158,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         disabled={rest.disabled}
         variant="text"
         tokens={tokenOptions}
-        value={token?.display_name || token?.symbol}
+        value={tokenLabel}
         size={rest.size}
         onValueChange={_onTokenChange}
         showIcon

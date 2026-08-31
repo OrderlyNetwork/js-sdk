@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Số lượng là bắt buộc",
   "orderEntry.orderQuantity.error.min": "Số lượng phải lớn hơn {{value}}",
   "orderEntry.orderQuantity.error.max": "Số lượng phải nhỏ hơn {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Số dư không đủ để đặt lệnh này",
   "orderEntry.orderPrice.error.required": "Giá là bắt buộc",
   "orderEntry.orderPrice.error.min": "Giá phải lớn hơn {{value}}",
   "orderEntry.orderPrice.error.max": "Giá phải nhỏ hơn {{value}}",

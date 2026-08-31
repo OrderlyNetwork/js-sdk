@@ -22,6 +22,7 @@ export const CHAIN_ID_TO_ENDPOINT_ID: Record<number | string, number> = {
   1101: 30158, // Polygon zkEVM Mainnet
   169: 30217, // Manta Pacific Mainnet
   5000: 30181, // Mantle Mainnet
+  5003: 40246, // Mantle Sepolia Testnet
   81457: 30243, // Blast Mainnet
   252: 30255, // Fraxtal Mainnet
   34443: 30260, // Mode Mainnet
@@ -143,6 +144,7 @@ export const CHAIN_ID_TO_ENDPOINT_ID: Record<number | string, number> = {
 
   // Orderly
   291: 30213, // Orderly Mainnet
+  4460: 40200, // Orderly Testnet
 
   // CoreDAO
   1116: 30153, // CoreDAO Mainnet
@@ -332,6 +334,7 @@ export const CHAIN_ID_TO_ENDPOINT_ID: Record<number | string, number> = {
 
   // X Layer
   196: 30274, // X Layer Mainnet
+  1952: 40416, // X Layer Testnet (xlayer2-testnet)
 
   // XChain
   94524: 30291, // XChain Mainnet
@@ -381,6 +384,50 @@ export const CHAIN_ID_TO_ENDPOINT_ID: Record<number | string, number> = {
   // Tron
   728126428: 30420, // Tron Mainnet
   2494104990: 40420, // Tron Testnet
+
+  // Newer mainnets (LayerZero metadata)
+  2044: 30148, // Shrapnel Subnet Mainnet
+  2355: 30379, // Silicon Mainnet
+  5031: 30380, // Somnia Mainnet
+  484: 30381, // Camp Mainnet
+  6985385: 30382, // Humanity Mainnet
+  9745: 30383, // Plasma Mainnet
+  9069: 30384, // Apex Fusion Nexus Mainnet
+  202110: 30385, // Dinari Mainnet
+  1408: 30386, // zkVerify Mainnet
+  16661: 30388, // 0G Mainnet
+  10088: 30389, // GateLayer Mainnet
+  143: 30390, // Monad Mainnet
+  5064014: 30391, // Ethereal Mainnet
+  1612: 30392, // Openledger Mainnet
+  97477: 30393, // Doma Mainnet
+  1776: 30394, // Injective EVM Mainnet
+  988: 30396, // Stable Mainnet
+  261131: 30397, // Zama Mainnet
+  4326: 30398, // MegaETH Mainnet
+  26514: 30399, // Horizen Mainnet
+  4153: 30401, // Rise Mainnet
+  151: 30402, // Redbelly Mainnet
+  4114: 30403, // Citrea Mainnet
+  2288: 30404, // Moca Mainnet
+  2366: 30406, // Kite Mainnet
+  1672: 30407, // Pharos Mainnet
+  3282: 30408, // Irys Mainnet
+  88888: 30409, // Chiliz Mainnet
+  4217: 30410, // Tempo Mainnet
+  685689: 30412, // Gensyn Mainnet
+  904: 30413, // Ault Mainnet
+  47763: 30414, // Neox Mainnet
+  72957: 30415, // Rayls Mainnet
+  4663: 30416, // Robinhood Chain Mainnet
+  46630: 40451, // Robinhood Chain Testnet
+  5042: 30417, // Arc Mainnet
+  36900: 30418, // ADI Mainnet (permissionless LayerZero deployment, not in official docs; verified on-chain via RelayV2 endpoint())
+  99999: 40462, // ADI Network AB Testnet
+  222: 30464, // Opn Mainnet
+  6714: 30465, // Anubis Mainnet
+  4352: 30466, // MemeCore Mainnet
+  177: 30467, // HashKey Mainnet
 };
 
 /**

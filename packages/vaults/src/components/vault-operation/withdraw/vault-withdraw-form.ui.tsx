@@ -51,7 +51,9 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
         <QuantityInput
           value={quantity}
           onValueChange={onQuantityChange}
-          token={{ display_name: "Shares", precision: 6 } as any}
+          token={
+            { display_name: "Shares", symbol: "Shares", precision: 6 } as any
+          }
           testId="oui-testid-vault-withdraw-dialog-quantity-input"
           hintMessage={inputHint.hintMessage}
           status={inputHint.status as any}

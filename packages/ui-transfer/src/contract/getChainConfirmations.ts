@@ -1,42 +1,91 @@
 import { ethers } from "ethers";
 import { API } from "@orderly.network/types";
+import { isSolana } from "@orderly.network/utils";
+import endpointV2Abi from "./abi/endpointV2Abi.json";
 import getAppUlnConfigAbi from "./abi/getAppUlnConfigAbi.json";
 import { getEndpointId } from "./endpointId";
+import {
+  getOrderlyNetworkKey,
+  ORDERLY_ENDPOINT_V2,
+  ORDERLY_RELAY_OAPP,
+  ORDERLY_RPC_URL,
+  ORDERLY_SOL_PEER_OAPP,
+  type OrderlyNetworkKey,
+} from "./layerzeroConfig";
 
 /**
- * no need to distinguish between EVM and SOL
+ * Required confirmations for a deposit pathway (Orderly Receive ULN).
+ * Reads the real RelayV2 / Sol peer OApp config. When the OApp config is
+ * unset (`confirmations = 0`), falls back to the default ULN config
+ * (`oapp = 0x0`) on the same receive library resolved from the endpoint
+ * (see the fallback comment below for details).
  */
 export async function getChainConfirmations(chain: API.Chain) {
   const chainId = chain.network_infos.chain_id;
   const isMainnet = chain.network_infos.mainnet;
+  const networkKey = getOrderlyNetworkKey(isMainnet);
+  const sourceEid = getEndpointId(chainId);
 
-  const publicRpcUrl = isMainnet
-    ? "https://rpc.orderly.network"
-    : "https://testnet-rpc.orderly.org";
+  if (!sourceEid) {
+    return 0;
+  }
 
-  // mainnet: https://explorer-orderly-mainnet-0.t.conduit.xyz/address/0xCFf08a35A5f27F306e2DA99ff198dB90f13DEF77?tab=read_write_contract
-  // testnet: https://testnet-explorer.orderly.org/address/0x3013C32e5F45E69ceA9baD4d96786704C2aE148c?tab=read_contract#39e3f938
-  const contractAddress = isMainnet
-    ? "0xCFf08a35A5f27F306e2DA99ff198dB90f13DEF77"
-    : "0x3013C32e5F45E69ceA9baD4d96786704C2aE148c";
+  const oapp = resolveDepositOApp(chainId, networkKey);
+  const provider = new ethers.JsonRpcProvider(ORDERLY_RPC_URL[networkKey]);
 
-  const endpointId = getEndpointId(chainId);
+  try {
+    // Resolve the actually-effective receive library instead of hardcoding
+    // the ULN address, so the fallback below always reads the live ULN.
+    const endpoint = new ethers.Contract(
+      ORDERLY_ENDPOINT_V2[networkKey],
+      endpointV2Abi,
+      provider,
+    );
+    const [receiveLibAddress] = await endpoint.getReceiveLibrary(
+      oapp,
+      sourceEid,
+    );
+    if (!receiveLibAddress || receiveLibAddress === ethers.ZeroAddress) {
+      return 0;
+    }
 
-  const address = "0x0000000000000000000000000000000000000000";
+    const receiveLib = new ethers.Contract(
+      receiveLibAddress,
+      getAppUlnConfigAbi,
+      provider,
+    );
+    const config = await receiveLib.getAppUlnConfig(oapp, sourceEid);
+    const confirmations = Number(config.confirmations || 0);
+    if (confirmations > 0) {
+      return confirmations;
+    }
 
-  const provider = new ethers.JsonRpcProvider(publicRpcUrl);
+    // Fallback to the default ULN config (oapp = 0x0) when the OApp config is
+    // unset. On Orderly testnet the RelayV2 OApp has no per-chain ULN config
+    // on-chain (getAppUlnConfig returns 0 for every chain), and on mainnet
+    // some chains are unset too (verified on-chain: Gnosis/Blast/Linea/
+    // HyperEVM return 0 for the RelayV2 OApp while the default config holds
+    // the real values). Without this fallback the deposit status UI hides
+    // the estimated time entirely (a zero confirmations count yields no
+    // estimate).
+    const defaultConfig = await receiveLib.getAppUlnConfig(
+      ethers.ZeroAddress,
+      sourceEid,
+    );
+    return Number(defaultConfig.confirmations || 0);
+  } catch (error) {
+    console.error("getChainConfirmations error", error);
+    return 0;
+  }
+}
 
-  const contract = new ethers.Contract(
-    contractAddress,
-    // full abi: https://explorer-orderly-mainnet-0.t.conduit.xyz/address/0xCFf08a35A5f27F306e2DA99ff198dB90f13DEF77?tab=contract_abi
-    // this only need to use getAppUlnConfig abi, other functions are not needed
-    getAppUlnConfigAbi,
-    provider,
-  );
+function resolveDepositOApp(
+  chainId: number,
+  networkKey: OrderlyNetworkKey,
+): string {
+  if (isSolana(chainId)) {
+    return ORDERLY_SOL_PEER_OAPP[networkKey];
+  }
 
-  const result = await contract.getAppUlnConfig(address, endpointId);
-
-  // console.log("getChainConfirmations", chainId, result);
-
-  return Number(result.confirmations || 0);
+  return ORDERLY_RELAY_OAPP[networkKey];
 }

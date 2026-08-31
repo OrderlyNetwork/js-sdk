@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "수량이 필요합니다",
   "orderEntry.orderQuantity.error.min": "수량은 {{value}}보다 커야 합니다",
   "orderEntry.orderQuantity.error.max": "수량은 {{value}}보다 작아야 합니다",
+  "orderEntry.orderQuantity.error.insufficientBalance": "잔액이 부족하여 주문을 제출할 수 없습니다",
   "orderEntry.orderPrice.error.required": "가격이 필요합니다",
   "orderEntry.orderPrice.error.min": "가격은 {{value}}보다 커야 합니다",
   "orderEntry.orderPrice.error.max": "가격은 {{value}}보다 작아야 합니다",

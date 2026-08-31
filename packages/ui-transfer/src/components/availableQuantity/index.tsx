@@ -22,6 +22,12 @@ export type AvailableQuantityProps = {
   loading?: boolean;
   tooltipContent?: React.ReactNode;
   notional?: number;
+  /**
+   * Token label display mode.
+   * - `false` (default): platform-side Orderly account assets — symbol only
+   * - `true`: wallet-side chain assets — `display_name || symbol`
+   */
+  showDisplayName?: boolean;
 };
 
 type AvailableTooltipMessageProps = {
@@ -52,7 +58,13 @@ const AvailableTooltipMessage: FC<AvailableTooltipMessageProps> = ({
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
-  const { quantity, maxQuantity, token, loading } = props;
+  const {
+    quantity,
+    maxQuantity,
+    token,
+    loading,
+    showDisplayName = false,
+  } = props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
   const dir = useDocumentDirection();
@@ -60,7 +72,9 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
 
   const { getIndexPrice } = useIndexPricesStream();
 
-  const name = token?.display_name || token?.symbol || "";
+  const name = showDisplayName
+    ? token?.display_name || token?.symbol || ""
+    : token?.symbol || "";
   const dp = token?.precision ?? token?.decimals ?? 2;
 
   const notional = useMemo(() => {

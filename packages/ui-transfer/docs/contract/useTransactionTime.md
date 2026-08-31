@@ -10,11 +10,11 @@ React hook that returns the estimated transaction confirmation time (in seconds)
 
 ### useTransactionTime(chainId?: number | string): number
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| chainId | number \| string | Optional chain ID; uses `useChains().findByChainId` and `useWalletConnector().wallet` |
+| Parameter | Type             | Description                                         |
+| --------- | ---------------- | --------------------------------------------------- |
+| chainId   | number \| string | Optional chain ID; uses `useChains().findByChainId` |
 
-**Returns:** Estimated time in seconds (0 if chain/wallet not ready or fetch failed).
+**Returns:** Estimated time in seconds (0 if chain not ready or fetch failed).
 
 ## Usage example
 

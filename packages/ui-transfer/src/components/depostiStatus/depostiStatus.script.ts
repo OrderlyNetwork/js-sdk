@@ -207,8 +207,14 @@ export function useDepositStatusScript() {
   };
 }
 
+const MIN_ESTIMATED_SECONDS = 30;
+const MAX_ESTIMATED_SECONDS = 30 * 60; // 30 minutes
+
 function formatEstimatedTime(totalSeconds: number) {
-  const sec = Math.max(30, totalSeconds);
+  const sec = Math.min(
+    MAX_ESTIMATED_SECONDS,
+    Math.max(MIN_ESTIMATED_SECONDS, totalSeconds),
+  );
   let minutes = Math.floor(sec / 60);
   let seconds = sec % 60;
 

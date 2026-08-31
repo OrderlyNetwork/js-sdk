@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Требуется количество",
   "orderEntry.orderQuantity.error.min": "Количество должно быть больше {{value}}",
   "orderEntry.orderQuantity.error.max": "Количество должно быть меньше {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Недостаточно средств для размещения этого ордера",
   "orderEntry.orderPrice.error.required": "Требуется цена",
   "orderEntry.orderPrice.error.min": "Цена должна быть больше {{value}}",
   "orderEntry.orderPrice.error.max": "Цена должна быть меньше {{value}}",

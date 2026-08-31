@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Quantidade é obrigatória",
   "orderEntry.orderQuantity.error.min": "Quantidade deve ser maior que {{value}}",
   "orderEntry.orderQuantity.error.max": "Quantidade deve ser menor que {{value}}",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Saldo insuficiente para enviar este pedido",
   "orderEntry.orderPrice.error.required": "Preço é obrigatório",
   "orderEntry.orderPrice.error.min": "Preço deve ser maior que {{value}}",
   "orderEntry.orderPrice.error.max": "Preço deve ser menor que {{value}}",

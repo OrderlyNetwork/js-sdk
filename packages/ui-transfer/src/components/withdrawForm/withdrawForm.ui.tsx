@@ -210,6 +210,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               token={sourceToken}
               value={props.showQty}
               readOnly
+              showDisplayName
             />
           </TabPanel>
           {internalWithdrawPanel}

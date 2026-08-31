@@ -629,6 +629,7 @@
   "orderEntry.orderQuantity.error.required": "Miktar gerekli",
   "orderEntry.orderQuantity.error.min": "Miktar {{value}}'den büyük olmalıdır",
   "orderEntry.orderQuantity.error.max": "Miktar {{value}}'den az olmalıdır",
+  "orderEntry.orderQuantity.error.insufficientBalance": "Bu emri vermek için yetersiz bakiye",
   "orderEntry.orderPrice.error.required": "Fiyat gerekli",
   "orderEntry.orderPrice.error.min": "Fiyat {{value}}'den büyük olmalıdır",
   "orderEntry.orderPrice.error.max": "Fiyat {{value}}'den az olmalıdır",

@@ -90,7 +90,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
         {needSwap && (
           <ConvertRate
             sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+            targetSymbol={targetToken?.symbol}
             precision={targetToken?.precision}
             swapPrice={swapPrice!}
             swapPriceInUSD={swapPriceInUSD}
@@ -179,6 +179,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
                 disabled={!props.isLoggedIn}
                 balancesRevalidating={batchBalancesRevalidating}
                 showBalance
+                showDisplayName
               />
             </Box>
 
@@ -191,6 +192,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
               onClick={() => {
                 onQuantityChange(maxDepositAmount);
               }}
+              showDisplayName
             />
 
             {/* Yield-bearing collateral reminder */}

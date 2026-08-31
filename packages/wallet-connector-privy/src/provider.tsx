@@ -13,16 +13,11 @@ import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
 import {
   Chains,
+  testnetChainFallback,
   useMainnetChainsStore,
   useTestnetChainsStore,
 } from "@orderly.network/hooks";
-import {
-  AbstractChains,
-  API,
-  ArbitrumSepoliaChainInfo,
-  SolanaChains,
-  SolanaDevnetChainInfo,
-} from "@orderly.network/types";
+import { AbstractChains, API, SolanaChains } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
 import { AbstractWallet } from "./providers/abstractWallet";
@@ -41,8 +36,6 @@ import {
   WalletChainTypeConfig,
   WalletType,
 } from "./types";
-
-const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
 const processChainInfo = (chainInfo: any) =>
   chainInfo.map((row: any) =>
@@ -391,7 +384,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       setInitChains(chains);
     } catch (error) {
       console.error("Error initChains:", error);
-      testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
+      testChainsList = testnetChainFallback;
       mainnetChainsList = [];
     }
 
