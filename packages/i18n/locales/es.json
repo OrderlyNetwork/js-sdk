@@ -365,6 +365,8 @@
   "positions.closePosition": "Cerrar posición",
   "positions.fundingFee.title": "Tarifa de financiación",
   "positions.fundingFee.tooltip": "Tarifas de financiación totales solo de posiciones cerradas, incluidas las porciones parcialmente cerradas.",
+  "positions.unsettledFundingFee": "Tarifa de financiación no liquidada",
+  "positions.unsettledFundingFee.tooltip": "Tarifas de financiación acumuladas desde la liquidación más reciente o la actualización del coste de la posición. Tras la liquidación o los ajustes de la posición, el importe se incorpora al coste de la posición y vuelve a acumularse. No representa el total de tarifas de financiación desde que se abrió la posición.",
   "positions.fundingRate.tooltip": "Importe de la tarifa de financiación para cada intervalo de financiación durante el tiempo que la posición estuvo abierta. Los registros pueden incluir tarifas de financiación tanto de posiciones cerradas como de posiciones actualmente abiertas.",
   "positions.liquidation": "Liquidación",
   "positions.positionHistory": "Historial de posiciones",

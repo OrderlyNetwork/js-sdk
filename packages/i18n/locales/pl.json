@@ -365,6 +365,8 @@
   "positions.closePosition": "Zamknij pozycję",
   "positions.fundingFee.title": "Opłata finansowa",
   "positions.fundingFee.tooltip": "Całkowite opłaty finansowe tylko z zamkniętych pozycji, w tym częściowo zamknięte części.",
+  "positions.unsettledFundingFee": "Nierozliczona opłata finansowa",
+  "positions.unsettledFundingFee.tooltip": "Opłaty finansowe narosłe od ostatniego rozliczenia lub aktualizacji kosztu pozycji. Po rozliczeniu lub korektach pozycji kwota jest wliczana do kosztu pozycji i zaczyna narastać ponownie. Nie stanowi łącznych opłat finansowych od momentu otwarcia pozycji.",
   "positions.fundingRate.tooltip": "Kwota opłaty finansowej za każdy interwał finansowania w czasie, gdy pozycja była otwarta. Zapisy mogą obejmować opłaty finansowe zarówno z zamkniętych pozycji, jak i z obecnie otwartych pozycji.",
   "positions.liquidation": "Likwidacja",
   "positions.positionHistory": "Historia pozycji",

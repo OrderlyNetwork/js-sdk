@@ -365,6 +365,8 @@
   "positions.closePosition": "סגירת פוזיציה",
   "positions.fundingFee.title": "עמלת מימון",
   "positions.fundingFee.tooltip": "סך עמלות המימון מפוזיציות שנסגרו בלבד, כולל סגירה חלקית.",
+  "positions.unsettledFundingFee": "עמלת מימון שלא יושבה",
+  "positions.unsettledFundingFee.tooltip": "עמלות מימון שנצברו מאז היישוב האחרון או עדכון עלות הפוזיציה. לאחר יישוב או התאמות לפוזיציה, הסכום נכלל בעלות הפוזיציה ומתחיל להצטבר מחדש. הוא אינו מייצג את סך עמלות המימון מאז פתיחת הפוזיציה.",
   "positions.fundingRate.tooltip": "סכום עמלת המימון לכל מרווח בזמן שהפוזיציה הייתה פתוחה.",
   "positions.liquidation": "חיסול",
   "positions.positionHistory": "היסטוריית פוזיציות",

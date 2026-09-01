@@ -365,6 +365,8 @@
   "positions.closePosition": "Fermer la position",
   "positions.fundingFee.title": "Frais de financement",
   "positions.fundingFee.tooltip": "Frais de financement totaux uniquement des positions fermées, y compris les portions partiellement fermées.",
+  "positions.unsettledFundingFee": "Frais de financement non réglés",
+  "positions.unsettledFundingFee.tooltip": "Frais de financement accumulés depuis le règlement le plus récent ou la mise à jour du coût de la position. Après règlement ou ajustements de position, le montant est intégré au coût de la position et recommence à s'accumuler. Il ne représente pas le total des frais de financement depuis l'ouverture de la position.",
   "positions.fundingRate.tooltip": "Montant des frais de financement pour chaque intervalle de financement pendant la période où la position était ouverte. Les enregistrements peuvent inclure les frais de financement des positions fermées et des positions actuellement ouvertes.",
   "positions.liquidation": "Liquidation",
   "positions.positionHistory": "Historique des positions",

@@ -365,6 +365,8 @@
   "positions.closePosition": "Tutup Posisi",
   "positions.fundingFee.title": "Biaya pendanaan",
   "positions.fundingFee.tooltip": "Total biaya pendanaan hanya dari posisi yang ditutup, termasuk bagian yang ditutup sebagian.",
+  "positions.unsettledFundingFee": "Biaya pendanaan belum diselesaikan",
+  "positions.unsettledFundingFee.tooltip": "Biaya pendanaan yang terkumpul sejak penyelesaian terakhir atau pembaruan biaya posisi. Setelah penyelesaian atau penyesuaian posisi, jumlah tersebut dimasukkan ke dalam biaya posisi dan mulai terakumulasi lagi. Ini tidak mewakili total biaya pendanaan sejak posisi dibuka.",
   "positions.fundingRate.tooltip": "Jumlah biaya pendanaan untuk setiap interval pendanaan selama posisi dibuka. Catatan mungkin termasuk biaya pendanaan dari posisi yang ditutup dan posisi yang saat ini terbuka.",
   "positions.liquidation": "Likuidasi",
   "positions.positionHistory": "Riwayat posisi",

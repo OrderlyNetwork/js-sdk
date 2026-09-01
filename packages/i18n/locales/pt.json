@@ -365,6 +365,8 @@
   "positions.closePosition": "Fechar Posição",
   "positions.fundingFee.title": "Taxa de financiamento",
   "positions.fundingFee.tooltip": "Taxas de financiamento totais apenas de posições fechadas, incluindo porções parcialmente fechadas.",
+  "positions.unsettledFundingFee": "Taxa de financiamento não liquidada",
+  "positions.unsettledFundingFee.tooltip": "Taxas de financiamento acumuladas desde a liquidação mais recente ou a atualização do custo da posição. Após a liquidação ou ajustes da posição, o valor é incorporado ao custo da posição e volta a acumular. Não representa o total de taxas de financiamento desde a abertura da posição.",
   "positions.fundingRate.tooltip": "Valor da taxa de financiamento para cada intervalo de financiamento durante o período em que a posição estava aberta. Os registros podem incluir taxas de financiamento de posições fechadas e de posições atualmente abertas.",
   "positions.liquidation": "Liquidação",
   "positions.positionHistory": "Histórico de posições",

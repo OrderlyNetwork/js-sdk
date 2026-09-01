@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
@@ -18,6 +18,7 @@ import {
 import { Decimal } from "@orderly.network/utils";
 import { SymbolBadge } from "../positions/desktop/symbolBadge";
 import { EndReachedBox } from "./endReachedBox";
+import { negateFee } from "./negateFee";
 
 type FundingFeeHistory = {
   created_time: number;
@@ -33,13 +34,28 @@ type FundingFeeHistory = {
 const PAGE_SIZE = 60;
 
 export const FundingFeeHistoryUI: FC<{
-  total: number;
+  total?: number;
   symbol: string;
   start_t: string;
-  end_t: string;
-}> = ({ total, symbol, start_t, end_t }) => {
+  end_t?: string;
+  feeType?: "closed" | "unsettled";
+}> = ({ total, symbol, start_t, end_t, feeType = "closed" }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+  const isUnsettled = feeType === "unsettled";
+  const feeLabel = t(
+    isUnsettled ? "positions.unsettledFundingFee" : "funding.fundingFee",
+  );
+  const feeTooltip = t(
+    isUnsettled
+      ? "positions.unsettledFundingFee.tooltip"
+      : "positions.fundingFee.tooltip",
+  );
+
+  // The dialog content unmounts on close, so a missing end_t means the dialog
+  // just opened: freeze "now" once at mount to keep the query key stable while
+  // open (useState initializer, not useMemo, which React may recompute).
+  const [endTime] = useState(() => end_t ?? Date.now().toString());
 
   const { isLoading, data, setSize } =
     usePrivateInfiniteQuery<FundingFeeHistory>(
@@ -49,7 +65,7 @@ export const FundingFeeHistoryUI: FC<{
           pageIndex > 0
         )
           return null;
-        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
+        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${endTime}`;
       },
       {
         revalidateFirstPage: false,
@@ -67,7 +83,7 @@ export const FundingFeeHistoryUI: FC<{
     return data.flat().map((item) => {
       return {
         ...item,
-        funding_fee: -item.funding_fee,
+        funding_fee: negateFee(item.funding_fee) ?? 0,
       };
     });
   }, [data]);
@@ -120,14 +136,14 @@ export const FundingFeeHistoryUI: FC<{
             label={
               isMobile ? (
                 <FundingFeeLabelButton
-                  label={`${t("funding.fundingFee")} (USDC)`}
-                  tooltip={t("positions.fundingFee.tooltip")}
+                  label={`${feeLabel} (USDC)`}
+                  tooltip={feeTooltip}
                   size={14}
                 />
               ) : (
                 <FundingFeeLabel
-                  label={`${t("funding.fundingFee")} (USDC)`}
-                  tooltip={t("positions.fundingFee.tooltip")}
+                  label={`${feeLabel} (USDC)`}
+                  tooltip={feeTooltip}
                   size={14}
                 />
               )
@@ -138,7 +154,7 @@ export const FundingFeeHistoryUI: FC<{
               showIdentifier: true,
             }}
           >
-            {total}
+            {total ?? "--"}
           </Statistic>
         </div>
       </Grid>
@@ -209,13 +225,9 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
       {
         title: t("common.time"),
         dataIndex: "created_time",
-        width: 120,
-        render: (value: string) => {
-          return (
-            <Text.formatted rule="date" suffix={<SymbolBadge symbol={value} />}>
-              {value}
-            </Text.formatted>
-          );
+        width: 175,
+        render: (value: number) => {
+          return <Text.formatted rule="date">{value}</Text.formatted>;
         },
       },
       {
@@ -257,7 +269,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
   }, [t]);
 
   return (
-    <div className="oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
+    <div className="oui-custom-scrollbar oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
       <EndReachedBox onEndReached={loadMore}>
         <DataTable
           classNames={{
@@ -281,7 +293,7 @@ const HistoryDataListViewSimple: FC<ListProps> = ({
     return <FundingFeeItem item={item} />;
   }, []);
   return (
-    <div className="oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto">
+    <div className="oui-custom-scrollbar oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto">
       <ListView
         dataSource={data}
         renderItem={renderItem}

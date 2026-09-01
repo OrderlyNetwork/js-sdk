@@ -365,6 +365,8 @@
   "positions.closePosition": "關閉持倉",
   "positions.fundingFee.title": "資金費用",
   "positions.fundingFee.tooltip": "僅來自已平倉頭寸的總資金費用，包括部分平倉的部分。",
+  "positions.unsettledFundingFee": "未結算資金費用",
+  "positions.unsettledFundingFee.tooltip": "自最近一次結算或倉位成本更新以來累計的資金費用。結算或倉位調整後，該金額將計入倉位成本並重新開始累計。它不代表自開倉以來的總資金費用。",
   "positions.fundingRate.tooltip": "頭寸開放期間每個資金間隔的資金費用金額。記錄可能包括來自已平倉頭寸和當前開倉頭寸的資金費用。",
   "positions.liquidation": "清算",
   "positions.positionHistory": "持倉歷史",

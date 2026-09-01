@@ -20,6 +20,8 @@ import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../constants";
+import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { negateFee } from "../../fundingFeeHistory/negateFee";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
 import { AdjustMarginDialogId } from "../adjustMargin/adjustMargin.widget";
 import { ClosePositionWidget } from "../closePosition";
@@ -338,19 +340,28 @@ export const useColumn = (config: ColumnConfig) => {
           );
         },
       },
-      // {
-      //   title: t("funding.fundingFee"),
-      //   dataIndex: "fundingFee",
-      //   width: 100,
-      //   render: (value, record) => (
-      //     <FundingFeeButton
-      //       fee={value}
-      //       symbol={record.symbol}
-      //       start_t={record.timestamp.toString()}
-      //       end_t={fundingFeeEndTime.current}
-      //     />
-      //   ),
-      // },
+      {
+        title: (
+          <Tooltip
+            className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast-54"
+            content={t("positions.unsettledFundingFee.tooltip")}
+          >
+            <Text className="oui-underline oui-decoration-dotted">
+              {t("positions.unsettledFundingFee")}
+            </Text>
+          </Tooltip>
+        ),
+        dataIndex: "accrued_funding_fee",
+        width: 140,
+        render: (value, record) => (
+          <FundingFeeButton
+            fee={negateFee(value)}
+            symbol={record.symbol}
+            start_t={record.timestamp.toString()}
+            feeType="unsettled"
+          />
+        ),
+      },
       // {
       //   title: t("common.qty"),
       //   dataIndex: "close_qty",

@@ -365,6 +365,8 @@
   "positions.closePosition": "Position schließen",
   "positions.fundingFee.title": "Finanzierungsgebühr",
   "positions.fundingFee.tooltip": "Gesamte Finanzierungsgebühren nur aus geschlossenen Positionen, einschließlich teilweise geschlossener Teile.",
+  "positions.unsettledFundingFee": "Nicht abgerechnete Finanzierungsgebühr",
+  "positions.unsettledFundingFee.tooltip": "Seit der letzten Abrechnung oder Aktualisierung der Positionskosten aufgelaufene Finanzierungsgebühren. Nach Abrechnung oder Positionsanpassungen wird der Betrag in die Positionskosten eingerechnet und beginnt erneut zu akkumulieren. Er stellt nicht die gesamten Finanzierungsgebühren seit Eröffnung der Position dar.",
   "positions.fundingRate.tooltip": "Finanzierungsgebührenbetrag für jedes Finanzierungsintervall während der Zeit, in der die Position offen war. Aufzeichnungen können Finanzierungsgebühren sowohl von geschlossenen Positionen als auch von aktuell offenen Positionen enthalten.",
   "positions.liquidation": "Liquidation",
   "positions.positionHistory": "Positionsverlauf",

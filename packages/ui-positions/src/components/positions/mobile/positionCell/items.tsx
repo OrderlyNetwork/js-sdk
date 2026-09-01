@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef } from "react";
+import { FC, useMemo } from "react";
 import { useTpslPriceChecker } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, PositionType } from "@orderly.network/types";
@@ -20,6 +20,7 @@ import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../../constants";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { negateFee } from "../../../fundingFeeHistory/negateFee";
 import { RwaStatusTag } from "../../../rwaStatus/rwaStatus";
 import { AdjustMarginSheetId } from "../../adjustMargin";
 import { LeverageBadge } from "../../desktop/components";
@@ -428,15 +429,14 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
 
 export const FundingFee: FC<PositionCellState> = (props) => {
   const { t } = useTranslation();
-  const fundingFeeEndTime = useRef(Date.now().toString());
   return (
     <Flex justify={"end"} className="oui-w-full oui-text-2xs">
-      <Text intensity={36}>{t("funding.fundingFee")}: </Text>
+      <Text intensity={36}>{t("positions.unsettledFundingFee")}: </Text>
       <FundingFeeButton
-        fee={props.item.fundingFee!}
+        fee={negateFee(props.item.accrued_funding_fee)}
         symbol={props.item.symbol}
         start_t={props.item.timestamp.toString()}
-        end_t={fundingFeeEndTime.current}
+        feeType="unsettled"
       />
     </Flex>
   );

@@ -365,6 +365,8 @@
   "positions.closePosition": "Positie sluiten",
   "positions.fundingFee.title": "Financieringskosten",
   "positions.fundingFee.tooltip": "Totale financieringskosten alleen van gesloten posities, inclusief gedeeltelijk gesloten delen.",
+  "positions.unsettledFundingFee": "Niet-verrekende financieringskosten",
+  "positions.unsettledFundingFee.tooltip": "Financieringskosten opgebouwd sinds de meest recente verrekening of update van de positiekosten. Na verrekening of positieaanpassingen wordt het bedrag in de positiekosten opgenomen en begint het opnieuw te accumuleren. Het vertegenwoordigt niet de totale financieringskosten sinds de positie is geopend.",
   "positions.fundingRate.tooltip": "Financieringskostenbedrag voor elk financieringsinterval gedurende de tijd dat de positie open was. Records kunnen financieringskosten bevatten van zowel gesloten posities als momenteel open posities.",
   "positions.liquidation": "Liquidatie",
   "positions.positionHistory": "Positiegeschiedenis",

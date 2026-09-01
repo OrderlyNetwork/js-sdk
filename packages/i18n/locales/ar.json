@@ -365,6 +365,8 @@
   "positions.closePosition": "إغلاق المركز",
   "positions.fundingFee.title": "رسوم التمويل",
   "positions.fundingFee.tooltip": "إجمالي رسوم التمويل من المراكز المُغلقة فقط، بما في ذلك الأجزاء المُغلقة جزئياً.",
+  "positions.unsettledFundingFee": "رسوم التمويل غير المسوّاة",
+  "positions.unsettledFundingFee.tooltip": "رسوم التمويل المتراكمة منذ آخر تسوية أو تحديث لتكلفة المركز. بعد التسوية أو تعديلات المركز، تُدمج هذه المبالغ في تكلفة المركز وتبدأ بالتراكم من جديد. وهي لا تمثل إجمالي رسوم التمويل منذ فتح المركز.",
   "positions.fundingRate.tooltip": "مبلغ رسوم التمويل لكل فاصل تمويل خلال فترة بقاء المركز مفتوحاً. قد تتضمن السجلات رسوم تمويل من مراكز مُغلقة ومراكز مفتوحة حالياً.",
   "positions.liquidation": "التصفية",
   "positions.positionHistory": "سجل المراكز",

@@ -365,6 +365,8 @@
   "positions.closePosition": "Đóng vị thế",
   "positions.fundingFee.title": "Phí tài trợ",
   "positions.fundingFee.tooltip": "Tổng phí tài trợ chỉ từ các vị trí đã đóng, bao gồm cả các phần đã đóng một phần.",
+  "positions.unsettledFundingFee": "Phí tài trợ chưa thanh toán",
+  "positions.unsettledFundingFee.tooltip": "Phí tài trợ tích lũy kể từ lần thanh toán gần nhất hoặc cập nhật chi phí vị thế. Sau khi thanh toán hoặc điều chỉnh vị thế, số tiền này được cộng vào chi phí vị thế và bắt đầu tích lũy lại. Nó không đại diện cho tổng phí tài trợ kể từ khi mở vị thế.",
   "positions.fundingRate.tooltip": "Số tiền phí tài trợ cho mỗi khoảng thời gian tài trợ trong thời gian vị thế được mở. Bản ghi có thể bao gồm phí tài trợ từ cả vị thế đã đóng và vị thế hiện đang mở.",
   "positions.liquidation": "Thanh lý",
   "positions.positionHistory": "Lịch sử vị thế",

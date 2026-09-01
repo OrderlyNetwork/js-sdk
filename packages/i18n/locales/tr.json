@@ -365,6 +365,8 @@
   "positions.closePosition": "Pozisyonu Kapat",
   "positions.fundingFee.title": "Fonlama ücreti",
   "positions.fundingFee.tooltip": "Yalnızca kapatılan pozisyonlardan toplam fonlama ücretleri, kısmen kapatılan kısımlar dahil.",
+  "positions.unsettledFundingFee": "Ödenmemiş fonlama ücreti",
+  "positions.unsettledFundingFee.tooltip": "En son uzlaşma veya pozisyon maliyeti güncellemesinden bu yana biriken fonlama ücretleri. Uzlaşma veya pozisyon ayarlamalarından sonra tutar, pozisyon maliyetine dahil edilir ve yeniden birikmeye başlar. Pozisyon açıldığından beri toplam fonlama ücretlerini temsil etmez.",
   "positions.fundingRate.tooltip": "Pozisyonun açık olduğu süre boyunca her fonlama aralığı için fonlama ücreti tutarı. Kayıtlar hem kapatılan pozisyonlardan hem de şu anda açık pozisyonlardan gelen fonlama ücretlerini içerebilir.",
   "positions.liquidation": "Likidasyon",
   "positions.positionHistory": "Pozisyon geçmişi",

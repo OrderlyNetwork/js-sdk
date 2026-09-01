@@ -10,11 +10,12 @@ import {
 import { FundingFeeHistoryUI } from "./fundingFeeHistory.ui";
 
 export const FundingFeeButton: FC<{
-  fee: number;
+  fee?: number;
   symbol: string;
   start_t: string;
-  end_t: string;
-}> = ({ fee, symbol, start_t, end_t }) => {
+  end_t?: string;
+  feeType?: "closed" | "unsettled";
+}> = ({ fee, symbol, start_t, end_t, feeType = "closed" }) => {
   const { t } = useTranslation();
   const [isOpen, { setTrue, setFalse }] = useBoolean(false);
   const { isMobile } = useScreen();
@@ -29,7 +30,7 @@ export const FundingFeeButton: FC<{
           ignoreDP
           className="oui-border-b oui-border-line-16 oui-border-dashed oui-py-0.5"
         >
-          {fee}
+          {fee ?? "--"}
         </Text.numeral>
       </button>
       {isMobile ? (
@@ -46,6 +47,7 @@ export const FundingFeeButton: FC<{
             symbol={symbol}
             start_t={start_t}
             end_t={end_t}
+            feeType={feeType}
           />
         </SimpleSheet>
       ) : (
@@ -63,6 +65,7 @@ export const FundingFeeButton: FC<{
             symbol={symbol}
             start_t={start_t}
             end_t={end_t}
+            feeType={feeType}
           />
         </SimpleDialog>
       )}
