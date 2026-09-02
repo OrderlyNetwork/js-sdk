@@ -333,6 +333,7 @@ export const FundingFee: FC<PositionHistoryCellState> = (props) => {
         end_t={(
           props.item.close_timestamp ?? props.item.last_update_time
         ).toString()}
+        marginMode={props.item.margin_mode}
       />
     </Flex>
   );

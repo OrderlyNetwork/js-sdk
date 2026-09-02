@@ -437,6 +437,7 @@ export const FundingFee: FC<PositionCellState> = (props) => {
         symbol={props.item.symbol}
         start_t={props.item.timestamp.toString()}
         feeType="unsettled"
+        marginMode={props.item.margin_mode}
       />
     </Flex>
   );

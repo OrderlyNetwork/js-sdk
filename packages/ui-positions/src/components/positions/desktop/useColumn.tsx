@@ -359,6 +359,7 @@ export const useColumn = (config: ColumnConfig) => {
             symbol={record.symbol}
             start_t={record.timestamp.toString()}
             feeType="unsettled"
+            marginMode={record.margin_mode}
           />
         ),
       },

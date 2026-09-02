@@ -1,7 +1,7 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { EMPTY_LIST, MarginMode } from "@orderly.network/types";
 import {
   Grid,
   Statistic,
@@ -14,6 +14,7 @@ import {
   Tooltip,
   ExclamationFillIcon,
   modal,
+  Spinner,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { SymbolBadge } from "../positions/desktop/symbolBadge";
@@ -28,6 +29,7 @@ type FundingFeeHistory = {
   payment_type: "Pay" | "Receive";
   status: "Accrued" | "Settled";
   symbol: string;
+  margin_mode: MarginMode;
   updated_time: number;
 };
 
@@ -39,7 +41,8 @@ export const FundingFeeHistoryUI: FC<{
   start_t: string;
   end_t: string;
   feeType?: "closed" | "unsettled";
-}> = ({ total, symbol, start_t, end_t, feeType = "closed" }) => {
+  marginMode?: MarginMode;
+}> = ({ total, symbol, start_t, end_t, feeType = "closed", marginMode }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
   const isUnsettled = feeType === "unsettled";
@@ -52,43 +55,69 @@ export const FundingFeeHistoryUI: FC<{
       : "positions.fundingFee.tooltip",
   );
 
-  const { isLoading, data, setSize } =
-    usePrivateInfiniteQuery<FundingFeeHistory>(
-      (pageIndex, previousPageData) => {
-        if (
-          (!previousPageData || (previousPageData.length ?? 0) < PAGE_SIZE) &&
-          pageIndex > 0
-        )
-          return null;
-        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
-      },
-      {
-        revalidateFirstPage: false,
-      },
-    );
+  const { isLoading, isValidating, data, setSize } = usePrivateInfiniteQuery<
+    FundingFeeHistory[]
+  >(
+    (pageIndex, previousPageData) => {
+      if (
+        (!previousPageData || (previousPageData.length ?? 0) < PAGE_SIZE) &&
+        pageIndex > 0
+      )
+        return null;
+      return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
+    },
+    {
+      revalidateFirstPage: false,
+    },
+  );
+
+  const loadingMoreRef = useRef(false);
+  const loadedPageCount = data?.length ?? 0;
+  const lastPage = data?.[loadedPageCount - 1];
+  const hasMore = Array.isArray(lastPage) && lastPage.length === PAGE_SIZE;
 
   const loadMore = useCallback(() => {
+    if (loadingMoreRef.current || isValidating || !hasMore) return;
+
+    loadingMoreRef.current = true;
     setSize((prev) => {
       return prev + 1;
     });
-  }, [setSize]);
+  }, [hasMore, isValidating, setSize]);
+
+  useEffect(() => {
+    if (!isValidating) {
+      loadingMoreRef.current = false;
+    }
+  }, [isValidating]);
 
   const flattenData = useMemo(() => {
     if (!Array.isArray(data)) return [];
-    return data.flat().map((item) => {
-      return {
-        ...item,
-        funding_fee: negateFee(item.funding_fee) ?? 0,
-      };
-    });
-  }, [data]);
+    return data
+      .flat()
+      .filter((item) => marginMode == null || item.margin_mode === marginMode)
+      .map((item) => {
+        return {
+          ...item,
+          funding_fee: negateFee(item.funding_fee) ?? 0,
+        };
+      });
+  }, [data, marginMode]);
+
+  useEffect(() => {
+    if (flattenData.length === 0 && hasMore) {
+      loadMore();
+    }
+  }, [flattenData.length, hasMore, loadMore, loadedPageCount]);
+
+  const isListLoading = isLoading || (flattenData.length === 0 && hasMore);
 
   const listView = useMemo(() => {
     if (isMobile) {
       return (
         <HistoryDataListViewSimple
           data={flattenData ?? EMPTY_LIST}
-          isLoading={isLoading}
+          isLoading={isListLoading}
           loadMore={loadMore}
         />
       );
@@ -96,11 +125,11 @@ export const FundingFeeHistoryUI: FC<{
     return (
       <HistoryDataListView
         data={flattenData ?? EMPTY_LIST}
-        isLoading={isLoading}
+        isLoading={isListLoading}
         loadMore={loadMore}
       />
     );
-  }, [isMobile, flattenData, isLoading]);
+  }, [isMobile, flattenData, isListLoading, loadMore]);
 
   return (
     <div>
@@ -293,6 +322,13 @@ const HistoryDataListViewSimple: FC<ListProps> = ({
         dataSource={data}
         renderItem={renderItem}
         isLoading={isLoading}
+        emptyView={
+          isLoading ? (
+            <div className="oui-flex oui-h-full oui-items-center oui-justify-center">
+              <Spinner />
+            </div>
+          ) : undefined
+        }
         contentClassName="oui-space-y-0"
         loadMore={loadMore}
       />

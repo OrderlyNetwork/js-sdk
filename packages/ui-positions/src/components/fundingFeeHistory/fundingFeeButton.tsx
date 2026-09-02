@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { useBoolean } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import {
   SimpleDialog,
   SimpleSheet,
@@ -13,6 +14,7 @@ type FundingFeeButtonProps = {
   fee?: number;
   symbol: string;
   start_t: string;
+  marginMode?: MarginMode;
 } & (
   | {
       feeType?: "closed";
@@ -30,6 +32,7 @@ export const FundingFeeButton: FC<FundingFeeButtonProps> = ({
   start_t,
   end_t,
   feeType = "closed",
+  marginMode,
 }) => {
   const { t } = useTranslation();
   const [isOpen, { setTrue, setFalse }] = useBoolean(false);
@@ -48,6 +51,7 @@ export const FundingFeeButton: FC<FundingFeeButtonProps> = ({
       start_t={start_t}
       end_t={requestEndTime}
       feeType={feeType}
+      marginMode={marginMode}
     />
   );
 

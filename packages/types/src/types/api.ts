@@ -584,6 +584,7 @@ export declare namespace API {
 
   export interface FundingFeeRow {
     symbol: string;
+    margin_mode: MarginMode;
     funding_rate: number;
     mark_price: number;
     funding_fee: number;

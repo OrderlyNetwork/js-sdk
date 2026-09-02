@@ -126,6 +126,7 @@ export const usePositionHistoryColumn = (props: {
                 end_t={(
                   record.close_timestamp ?? record.last_update_time
                 ).toString()}
+                marginMode={record.margin_mode}
               />
             );
           },
