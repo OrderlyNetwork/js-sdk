@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
@@ -37,7 +37,7 @@ export const FundingFeeHistoryUI: FC<{
   total?: number;
   symbol: string;
   start_t: string;
-  end_t?: string;
+  end_t: string;
   feeType?: "closed" | "unsettled";
 }> = ({ total, symbol, start_t, end_t, feeType = "closed" }) => {
   const { t } = useTranslation();
@@ -52,11 +52,6 @@ export const FundingFeeHistoryUI: FC<{
       : "positions.fundingFee.tooltip",
   );
 
-  // The dialog content unmounts on close, so a missing end_t means the dialog
-  // just opened: freeze "now" once at mount to keep the query key stable while
-  // open (useState initializer, not useMemo, which React may recompute).
-  const [endTime] = useState(() => end_t ?? Date.now().toString());
-
   const { isLoading, data, setSize } =
     usePrivateInfiniteQuery<FundingFeeHistory>(
       (pageIndex, previousPageData) => {
@@ -65,7 +60,7 @@ export const FundingFeeHistoryUI: FC<{
           pageIndex > 0
         )
           return null;
-        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${endTime}`;
+        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
       },
       {
         revalidateFirstPage: false,
