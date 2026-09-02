@@ -1,4 +1,11 @@
-import { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  FC,
+  type MutableRefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST, MarginMode } from "@orderly.network/types";
@@ -34,6 +41,7 @@ type FundingFeeHistory = {
 };
 
 const PAGE_SIZE = 60;
+const LOAD_MORE_THRESHOLD = 300;
 
 export const FundingFeeHistoryUI: FC<{
   total?: number;
@@ -72,6 +80,8 @@ export const FundingFeeHistoryUI: FC<{
   );
 
   const loadingMoreRef = useRef(false);
+  const wasValidatingRef = useRef(isValidating);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const loadedPageCount = data?.length ?? 0;
   const lastPage = data?.[loadedPageCount - 1];
   const hasMore = Array.isArray(lastPage) && lastPage.length === PAGE_SIZE;
@@ -86,9 +96,11 @@ export const FundingFeeHistoryUI: FC<{
   }, [hasMore, isValidating, setSize]);
 
   useEffect(() => {
-    if (!isValidating) {
+    if (wasValidatingRef.current && !isValidating) {
       loadingMoreRef.current = false;
     }
+
+    wasValidatingRef.current = isValidating;
   }, [isValidating]);
 
   const flattenData = useMemo(() => {
@@ -105,10 +117,18 @@ export const FundingFeeHistoryUI: FC<{
   }, [data, marginMode]);
 
   useEffect(() => {
-    if (flattenData.length === 0 && hasMore) {
+    if (isValidating || !hasMore) return;
+
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const distanceToBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+
+    if (distanceToBottom <= LOAD_MORE_THRESHOLD) {
       loadMore();
     }
-  }, [flattenData.length, hasMore, loadMore, loadedPageCount]);
+  }, [flattenData.length, hasMore, isValidating, loadMore, loadedPageCount]);
 
   const isListLoading = isLoading || (flattenData.length === 0 && hasMore);
 
@@ -119,6 +139,7 @@ export const FundingFeeHistoryUI: FC<{
           data={flattenData ?? EMPTY_LIST}
           isLoading={isListLoading}
           loadMore={loadMore}
+          containerRef={scrollContainerRef}
         />
       );
     }
@@ -127,6 +148,7 @@ export const FundingFeeHistoryUI: FC<{
         data={flattenData ?? EMPTY_LIST}
         isLoading={isListLoading}
         loadMore={loadMore}
+        containerRef={scrollContainerRef}
       />
     );
   }, [isMobile, flattenData, isListLoading, loadMore]);
@@ -240,9 +262,15 @@ type ListProps = {
   isLoading: boolean;
   data: any[];
   loadMore: () => void;
+  containerRef: MutableRefObject<HTMLDivElement | null>;
 };
 
-const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
+const HistoryDataListView: FC<ListProps> = ({
+  isLoading,
+  data,
+  loadMore,
+  containerRef,
+}) => {
   const { t } = useTranslation();
   const columns = useMemo(() => {
     return [
@@ -293,7 +321,10 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
   }, [t]);
 
   return (
-    <div className="oui-custom-scrollbar oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
+    <div
+      ref={containerRef}
+      className="oui-custom-scrollbar oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto"
+    >
       <EndReachedBox onEndReached={loadMore}>
         <DataTable
           classNames={{
@@ -312,12 +343,16 @@ const HistoryDataListViewSimple: FC<ListProps> = ({
   data,
   isLoading,
   loadMore,
+  containerRef,
 }) => {
   const renderItem = useCallback((item: FundingFeeHistory) => {
     return <FundingFeeItem item={item} />;
   }, []);
   return (
-    <div className="oui-custom-scrollbar oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto">
+    <div
+      ref={containerRef}
+      className="oui-custom-scrollbar oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto"
+    >
       <ListView
         dataSource={data}
         renderItem={renderItem}
