@@ -13,7 +13,7 @@ import {
   MarginMode,
 } from "@orderly.network/types";
 import { Decimal, getBBOType, zero } from "@orderly.network/utils";
-import { useAccountInfo } from "../../orderly/appStore";
+import { useAccountInfo, useAppStore } from "../../orderly/appStore";
 import {
   useCollateral,
   useFundingRatesStore,
@@ -22,7 +22,10 @@ import {
   useSymbolsInfo,
 } from "../../orderly/orderlyHooks";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
-import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
+import {
+  usePositions,
+  usePositionStore,
+} from "../../orderly/usePositionStream/usePosition.store";
 import { useOrderlyContext } from "../../orderlyContext";
 import { useSymbolStore } from "../../provider/store/symbolStore";
 import {
@@ -47,14 +50,26 @@ import {
   appendOrderMetadata,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
+import {
+  assertUSDCBorrowWithinLimit,
+  calculateProjectedUSDCBorrow,
+  getOrderQuantityAndNotional,
+  normalizeUSDCBorrowLimit,
+  type GeneratedOrderForBorrowProjection,
+} from "./usdcBorrowLimit";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 import { useRwaLeverageSync } from "./useRwaLeverageSync";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
+export type SubmitOrderOptions = {
+  resetOnSuccess?: boolean;
+  usdcBorrowLimit?: number;
+};
+
 export type OrderEntryReturn = {
-  submit: (options?: { resetOnSuccess?: boolean }) => Promise<{
+  submit: (options?: SubmitOrderOptions) => Promise<{
     success: boolean;
     data: Record<string, any>;
     timestamp: number;
@@ -89,14 +104,13 @@ export type OrderEntryReturn = {
     /**
      * @deprecated Use `validate` instead.
      */
-    validator: () => Promise<OrderValidationResult | null>;
+    validator: () => Promise<OrderlyOrder>;
     /**
      * Function to validate the order.
      * @returns {Promise<OrderValidationResult | null>} The validation result.
      */
-    validate: (
-      otherErrors?: OrderValidationResult,
-    ) => Promise<OrderValidationResult | null>;
+    validate: (otherErrors?: OrderValidationResult) => Promise<OrderlyOrder>;
+    getProjectedUSDCBorrow: (order: Partial<OrderlyOrder>) => number | null;
   };
   freeCollateral: number;
   /**
@@ -262,23 +276,19 @@ const useOrderEntry = (
 
   const bestAskBid = bestAskBidSnapshot;
 
-  const getReferencePriceForSide = (side: OrderSide): number | null => {
-    if (bestAskBid.length < 2 || !formattedOrder.order_type) {
+  const getReferencePriceForOrder = (
+    order: Partial<OrderlyOrder>,
+  ): number | null => {
+    if (bestAskBid.length < 2 || !order.order_type || !order.side) {
       return null;
     }
-    const referencePrice = getOrderReferencePriceFromOrder(
-      {
-        ...formattedOrder,
-        side,
-      },
-      bestAskBid,
-    );
+    const referencePrice = getOrderReferencePriceFromOrder(order, bestAskBid);
 
-    const slippage = Number(formattedOrder.slippage);
+    const slippage = Number(order.slippage);
     if (
-      effectiveMarginMode !== MarginMode.ISOLATED ||
-      side !== OrderSide.BUY ||
-      formattedOrder.order_type !== OrderType.MARKET ||
+      (order.margin_mode ?? effectiveMarginMode) !== MarginMode.ISOLATED ||
+      order.side !== OrderSide.BUY ||
+      order.order_type !== OrderType.MARKET ||
       !referencePrice ||
       !Number.isFinite(slippage) ||
       slippage <= 0
@@ -290,6 +300,9 @@ const useOrderEntry = (
       .mul(new Decimal(1).add(new Decimal(slippage).div(100)))
       .toNumber();
   };
+
+  const getReferencePriceForSide = (side: OrderSide): number | null =>
+    getReferencePriceForOrder({ ...formattedOrder, side });
 
   // Calculate reference price for the new order using best bid/ask when available.
   const buyReferencePriceFromOrder = getReferencePriceForSide(OrderSide.BUY);
@@ -640,53 +653,114 @@ const useOrderEntry = (
    */
   const validateOrder = (
     otherErrors?: OrderValidationResult,
-  ): Promise<OrderValidationResult | null> => {
-    return new Promise<OrderValidationResult | null>(
-      async (resolve, reject) => {
-        const creator = getOrderCreator(formattedOrder);
-        let errors = await validate(formattedOrder, creator, prepareData());
-        if (otherErrors) {
-          errors = {
-            ...errors,
-            ...otherErrors,
-          };
-        }
-        const keys = Object.keys(errors);
-        if (keys.length > 0) {
-          // setErrors(errors);
+  ): Promise<OrderlyOrder> => {
+    return new Promise<OrderlyOrder>(async (resolve, reject) => {
+      const creator = getOrderCreator(formattedOrder);
+      let errors = await validate(formattedOrder, creator, prepareData());
+      if (otherErrors) {
+        errors = {
+          ...errors,
+          ...otherErrors,
+        };
+      }
+      const keys = Object.keys(errors);
+      if (keys.length > 0) {
+        // setErrors(errors);
+        setMeta(
+          produce((draft) => {
+            draft.errors = errors;
+          }),
+        );
+        if (!meta.validated) {
+          // setMeta((prev) => ({ ...prev, validated: true }));
           setMeta(
             produce((draft) => {
-              draft.errors = errors;
+              draft.validated = true;
             }),
           );
-          if (!meta.validated) {
-            // setMeta((prev) => ({ ...prev, validated: true }));
-            setMeta(
-              produce((draft) => {
-                draft.validated = true;
-              }),
-            );
-          }
-          reject(errors);
         }
-        // create order
-        const order = generateOrder(creator, prepareData());
-        resolve(order);
-      },
-    );
+        reject(errors);
+      }
+      // create order
+      const order = generateOrder(creator, prepareData());
+      resolve(order);
+    });
   };
 
   const { freeCollateral, totalCollateral } = useCollateral();
 
-  const currentPosition = useMemo(() => {
+  const currentPositionData = useMemo(() => {
     const rows = positions ?? [];
-    const p = Array.isArray(rows)
-      ? (rows as { symbol?: string; position_qty?: number }[]).find(
-          (r) => r.symbol === symbol,
+    const marginMode = formattedOrder.margin_mode ?? effectiveMarginMode;
+    return Array.isArray(rows)
+      ? rows.find(
+          (position) =>
+            position.symbol === symbol &&
+            (position.margin_mode ?? MarginMode.CROSS) === marginMode,
         )
-      : null;
-    return p?.position_qty ?? 0;
-  }, [positions, symbol]);
+      : undefined;
+  }, [positions, symbol, formattedOrder.margin_mode, effectiveMarginMode]);
+  const currentPosition = currentPositionData?.position_qty ?? 0;
+
+  const getProjectedUSDCBorrow = useMemoizedFn(
+    (generatedOrder: Partial<OrderlyOrder>): number | null => {
+      const order = generatedOrder as GeneratedOrderForBorrowProjection;
+      const marginMode =
+        order.margin_mode ?? formattedOrder.margin_mode ?? effectiveMarginMode;
+      const reduceOnly = order.reduce_only ?? formattedOrder.reduce_only;
+
+      if (marginMode !== MarginMode.ISOLATED || reduceOnly) {
+        return 0;
+      }
+
+      const portfolio = useAppStore.getState().portfolio;
+      if (!portfolio.holding) {
+        return null;
+      }
+
+      const positionRows = usePositionStore.getState().positions.all.rows ?? [];
+      const position = positionRows.find(
+        (item) =>
+          item.symbol === symbol &&
+          (item.margin_mode ?? MarginMode.CROSS) === marginMode,
+      );
+      const usdcHolding = portfolio.holding.find(
+        (item) => item.token === "USDC",
+      );
+      if (!usdcHolding) {
+        return null;
+      }
+
+      const orderValues = getOrderQuantityAndNotional({
+        generatedOrder: order,
+        formattedOrder,
+        marginMode,
+        getReferencePrice: getReferencePriceForOrder,
+      });
+
+      if (!orderValues) {
+        return null;
+      }
+
+      const leverage = symbolLeverage ?? position?.leverage;
+      return calculateProjectedUSDCBorrow({
+        marginMode,
+        reduceOnly,
+        orderSide: order.side ?? formattedOrder.side,
+        orderQuantity: orderValues.orderQuantity,
+        orderNotional: orderValues.orderNotional,
+        leverage: Number(leverage),
+        markPrice: Number(actions.getMarkPriceBySymbol(symbol)),
+        positionQty: position?.position_qty ?? 0,
+        pendingLongQty: position?.pending_long_qty ?? 0,
+        pendingShortQty: position?.pending_short_qty ?? 0,
+        usdcHolding: usdcHolding.holding,
+        usdcPendingShort: usdcHolding.pending_short,
+        usdcIsolatedOrderFrozen: usdcHolding.isolated_order_frozen,
+        totalUnsettledPnL: portfolio.unsettledPnL,
+      });
+    },
+  );
 
   // TODO: move to the calculation service
   const estLiqPrice = useMemo(() => {
@@ -779,19 +853,13 @@ const useOrderEntry = (
     );
   };
 
-  const submitOrder = async (options?: {
-    /**
-     * reset the order state after order create success
-     * default is true
-     */
-    resetOnSuccess?: boolean;
-  }) => {
+  const submitOrder = async (options?: SubmitOrderOptions) => {
     /**
      * validate order
      */
     const creator = getOrderCreator(formattedOrder);
     const errors = await validate(formattedOrder, creator, prepareData());
-    const { resetOnSuccess = true } = options || {};
+    const { resetOnSuccess = true, usdcBorrowLimit } = options || {};
     // setMeta((prev) => ({ ...prev, submitted: true, validated: true }));
     setMeta(
       produce((draft) => {
@@ -809,6 +877,11 @@ const useOrderEntry = (
     }
 
     const order = generateOrder(creator, prepareData());
+
+    if (usdcBorrowLimit !== undefined) {
+      const borrowLimit = normalizeUSDCBorrowLimit(usdcBorrowLimit);
+      assertUSDCBorrowWithinLimit(getProjectedUSDCBorrow(order), borrowLimit);
+    }
 
     const isScaledOrder = order.order_type === OrderType.SCALED;
 
@@ -900,6 +973,7 @@ const useOrderEntry = (
        */
       validator: validateOrder,
       validate: validateOrder,
+      getProjectedUSDCBorrow,
     },
     freeCollateral,
     setValue: useMemoizedFn(setValue),

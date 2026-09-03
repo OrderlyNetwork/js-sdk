@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "您的账户处于仅减仓模式，无法开新仓位。您是否要关闭仅减仓模式并继续下单？",
   "orderEntry.placeOrderNow": "立即下单",
   "orderEntry.maxQty.reminder.content": "订单数量已减少至最大可用数量：{{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "无法开仓",
+  "orderEntry.usdcBorrowLimit.content": "此订单会使您的 USDC 借款超过 {{limit}} USDC 上限。请减少下单数量，或存入／转入更多 USDC 后重试。",
   "orderEntry.permissionlessNotice.title": "社区上架行情公告",
   "orderEntry.permissionlessNotice.content1": "该行情通过无门槛上架系统，由第三方部署者进行上架。",
   "orderEntry.permissionlessNotice.content2": "该行情并非由 Orderly 创建、审核或背书。此类行情可能存在流动性较低、波动较高、信息不完整或更高的强平风险。",

@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Su cuenta está en modo de solo reducción y no puede abrir nuevas posiciones. ¿Desea desactivar el modo de solo reducción y proceder con la orden?",
   "orderEntry.placeOrderNow": "Realizar orden ahora",
   "orderEntry.maxQty.reminder.content": "Cantidad de orden reducida al máximo disponible: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "No se puede abrir la posición",
+  "orderEntry.usdcBorrowLimit.content": "Esta orden haría que su préstamo de USDC supere el límite de {{limit}} USDC. Reduzca el tamaño de la orden o deposite/transfiera más USDC e inténtelo de nuevo.",
   "orderEntry.permissionlessNotice.title": "Aviso del mercado listado por la comunidad",
   "orderEntry.permissionlessNotice.content1": "Este mercado fue listado por un tercero que hace el despliegue mediante el sistema de listado sin permisos.",
   "orderEntry.permissionlessNotice.content2": "No ha sido creado, revisado ni respaldado por Orderly. Estos mercados pueden implicar baja liquidez, alta volatilidad, información incompleta o un mayor riesgo de liquidación.",

@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "حساب در حالت فقط کاهش است و نمی‌توان موقعیت جدید باز کرد. می‌خواهید فقط کاهش را خاموش کرده و سفارش را ادامه دهید؟",
   "orderEntry.placeOrderNow": "ثبت سفارش الان",
   "orderEntry.maxQty.reminder.content": "تعداد سفارش به حداکثر موجود کاهش یافت: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "امکان باز کردن موقعیت نیست",
+  "orderEntry.usdcBorrowLimit.content": "این سفارش باعث می‌شود میزان وام‌گیری USDC شما از سقف {{limit}} USDC فراتر رود. حجم سفارش را کاهش دهید یا USDC بیشتری واریز/منتقل کنید و دوباره تلاش کنید.",
   "orderEntry.permissionlessNotice.title": "اطلاع مارکت لیست‌شده توسط جامعه",
   "orderEntry.permissionlessNotice.content1": "این مارکت توسط استقراردهنده شخص ثالث از طریق سیستم لیستینگ بدون مجوز ثبت شده است.",
   "orderEntry.permissionlessNotice.content2": "توسط Orderly ساخته، بازبینی یا تأیید نشده است. چنین مارکت‌هایی ممکن است نقدینگی کم، نوسان بالا، اطلاعات ناقص یا ریسک لیکوییدیشن بالاتر داشته باشند.",

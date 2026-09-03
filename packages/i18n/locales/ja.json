@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "お客様のアカウントはポジション削減のみモードになっており、新しいポジションを開くことができません。ポジション削減のみモードをオフにして注文を続行しますか？",
   "orderEntry.placeOrderNow": "今すぐ注文",
   "orderEntry.maxQty.reminder.content": "注文数量を最大利用可能数に減らしました：{{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "ポジションをオープンできません",
+  "orderEntry.usdcBorrowLimit.content": "この注文により、USDC の借入額が上限の {{limit}} USDC を超えます。注文数量を減らすか、USDC を追加で入金／振替してから再度お試しください。",
   "orderEntry.permissionlessNotice.title": "コミュニティ掲載マーケットのお知らせ",
   "orderEntry.permissionlessNotice.content1": "本マーケットは、許可不要の掲載システムを通じて第三者のデプロイヤーによって掲載されました。",
   "orderEntry.permissionlessNotice.content2": "本マーケットは Orderly によって作成、レビュー、または推奨されたものではありません。このようなマーケットには、流動性の低さ、高いボラティリティ、不完全な情報、または清算リスクの増加が含まれる可能性があります。",

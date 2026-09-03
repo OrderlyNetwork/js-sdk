@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "귀하의 계정이 감소 전용 모드에 있어 새로운 포지션을 열 수 없습니다. 감소 전용 모드를 해제하고 주문을 진행하시겠습니까?",
   "orderEntry.placeOrderNow": "지금 주문하기",
   "orderEntry.maxQty.reminder.content": "주문 수량이 최대 사용 가능 수량으로 감소되었습니다: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "포지션을 개설할 수 없습니다",
+  "orderEntry.usdcBorrowLimit.content": "이 주문으로 인해 USDC 차입액이 {{limit}} USDC 한도를 초과합니다. 주문 수량을 줄이거나 USDC를 추가로 입금/이체한 후 다시 시도하세요.",
   "orderEntry.permissionlessNotice.title": "커뮤니티 상장 마켓 안내",
   "orderEntry.permissionlessNotice.content1": "본 마켓은 허가 없는 상장 시스템을 통해 제3자 배포자가 등록했습니다.",
   "orderEntry.permissionlessNotice.content2": "본 마켓은 Orderly가 생성, 검토, 또는 보증하지 않았습니다. 이러한 마켓에는 유동성 부족, 높은 변동성, 불완전한 정보, 또는 청산 위험 증가가 포함될 수 있습니다.",

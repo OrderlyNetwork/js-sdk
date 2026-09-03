@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Hesabınız sadece azaltma modunda ve yeni pozisyon açamıyor. Sadece azaltma modunu kapatıp emirle devam etmek ister misiniz?",
   "orderEntry.placeOrderNow": "Şimdi emir ver",
   "orderEntry.maxQty.reminder.content": "Sipariş miktarı mevcut maksimuma düşürüldü: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Pozisyon açılamıyor",
+  "orderEntry.usdcBorrowLimit.content": "Bu emir, USDC borcunuzun {{limit}} USDC limitini aşmasına neden olur. Emir miktarını azaltın veya daha fazla USDC yatırın/aktarın ve tekrar deneyin.",
   "orderEntry.permissionlessNotice.title": "Topluluk Tarafından Listelenen Piyasa Duyurusu",
   "orderEntry.permissionlessNotice.content1": "Bu piyasa, izinsiz listeleme sistemi üzerinden üçüncü taraf bir dağıtıcı (deployer) tarafından listelendi.",
   "orderEntry.permissionlessNotice.content2": "Bu piyasa Orderly tarafından oluşturulmamış, incelenmemiş veya onaylanmamıştır. Bu tür piyasalar; düşük likidite, yüksek volatilite, eksik bilgi veya artan tasfiye (likidasyon) riski içerebilir.",

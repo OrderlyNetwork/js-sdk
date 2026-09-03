@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Twoje konto jest w trybie tylko redukcji i nie może otwierać nowych pozycji. Czy chcesz wyłączyć tryb tylko redukcji i kontynuować z zamówieniem?",
   "orderEntry.placeOrderNow": "Złóż zamówienie teraz",
   "orderEntry.maxQty.reminder.content": "Ilość zamówienia zmniejszona do maksymalnej dostępnej: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Nie można otworzyć pozycji",
+  "orderEntry.usdcBorrowLimit.content": "To zlecenie spowodowałoby przekroczenie limitu pożyczki USDC wynoszącego {{limit}} USDC. Zmniejsz wielkość zlecenia albo wpłać/przenieś więcej USDC i spróbuj ponownie.",
   "orderEntry.permissionlessNotice.title": "Ogłoszenie rynku notowanego przez społeczność",
   "orderEntry.permissionlessNotice.content1": "Ten rynek został notowany przez zewnętrznego wdrażającego za pośrednictwem systemu bez pozwolenia.",
   "orderEntry.permissionlessNotice.content2": "Ten rynek nie został utworzony, zweryfikowany ani zatwierdzony przez Orderly. Takie rynki mogą wiązać się z niską płynnością, wysoką zmiennością, niepełnymi informacjami lub zwiększonym ryzykiem likwidacji.",

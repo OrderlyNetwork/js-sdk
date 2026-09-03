@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "החשבון במצב reduce‑only ולא ניתן לפתוח פוזיציות חדשות. לכבות reduce‑only ולהמשיך בפקודה?",
   "orderEntry.placeOrderNow": "שליחת פקודה עכשיו",
   "orderEntry.maxQty.reminder.content": "כמות הפקודה צומצמה למקסימום הזמין: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "לא ניתן לפתוח פוזיציה",
+  "orderEntry.usdcBorrowLimit.content": "פקודה זו תגרום להלוואת ה-USDC שלך לחרוג מהמגבלה של {{limit}} USDC. יש להקטין את גודל הפקודה, או להפקיד/להעביר עוד USDC ולנסות שוב.",
   "orderEntry.permissionlessNotice.title": "הודעת שוק ברישום קהילתי",
   "orderEntry.permissionlessNotice.content1": "השוק רושם על ידי צד שלישי דרך מערכת הרישום ללא הרשאות.",
   "orderEntry.permissionlessNotice.content2": "לא נוצר, לא נבדק ולא מאושר על ידי Orderly. שווקים כאלה עלולים לכלול נזילות נמוכה, תנודתיות גבוהה, מידע חלקי או סיכון חיסול מוגבר.",

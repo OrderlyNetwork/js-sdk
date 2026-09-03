@@ -3,26 +3,13 @@ import {
   useComputedLTV,
   useHoldingStream,
   useIndexPricesStream,
-  useQuery,
   useAppStore,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
-import { API, MarginMode } from "@orderly.network/types";
+import { MarginMode } from "@orderly.network/types";
 import { modal, useScreen } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
-
-const useConvertThreshold = () => {
-  const { data, error, isLoading } = useQuery<API.ConvertThreshold>(
-    "/v1/public/auto_convert_threshold",
-    { errorRetryCount: 3 },
-  );
-  return {
-    ltv_threshold: new Decimal(data?.ltv_threshold ?? 0).mul(100).toNumber(),
-    negative_usdc_threshold: data?.negative_usdc_threshold,
-    isLoading,
-    error,
-  } as const;
-};
+import { zero } from "@orderly.network/utils";
+import { useConvertThreshold } from "../../hooks/useConvertThreshold";
 
 export const useLTVTooltipScript = (marginMode?: MarginMode) => {
   const { isMobile } = useScreen();

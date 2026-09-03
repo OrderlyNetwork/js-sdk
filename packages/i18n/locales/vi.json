@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Tài khoản của bạn đang ở chế độ chỉ giảm và không thể mở vị thế mới. Bạn có muốn tắt chế độ chỉ giảm và tiếp tục với lệnh không?",
   "orderEntry.placeOrderNow": "Đặt lệnh ngay",
   "orderEntry.maxQty.reminder.content": "Số lượng đơn hàng đã được giảm xuống mức tối đa có sẵn: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Không thể mở vị thế",
+  "orderEntry.usdcBorrowLimit.content": "Lệnh này sẽ khiến khoản vay USDC của bạn vượt quá giới hạn {{limit}} USDC. Hãy giảm khối lượng lệnh hoặc nạp/chuyển thêm USDC rồi thử lại.",
   "orderEntry.permissionlessNotice.title": "Thông báo thị trường được niêm yết bởi cộng đồng",
   "orderEntry.permissionlessNotice.content1": "Thị trường này được bên triển khai thứ ba niêm yết thông qua hệ thống niêm yết không cần cấp phép.",
   "orderEntry.permissionlessNotice.content2": "Thị trường không được Orderly tạo, xem xét hoặc xác nhận. Những thị trường như vậy có thể liên quan đến thanh khoản thấp, biến động cao, thông tin chưa đầy đủ hoặc rủi ro bị thanh lý cao hơn.",

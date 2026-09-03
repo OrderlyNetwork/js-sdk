@@ -23,6 +23,7 @@ import {
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
+import { useConvertThreshold } from "./hooks/useConvertThreshold";
 import { useFocusAndBlur } from "./hooks/useFocusAndBlur";
 import { usePriceInputContainer } from "./hooks/usePriceInputContainer";
 import { InputType } from "./types";
@@ -391,6 +392,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [isSymbolPostOnly, formattedOrder.order_type, setOrderValues]);
 
   const currentLtv = useComputedLTV();
+  const { usdcBorrowLimit } = useConvertThreshold();
   const askAndBid = useAskAndBid();
 
   const fillMiddleValue = () => {
@@ -525,6 +527,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     onBBOChange,
     toggleBBO,
     currentLtv,
+    usdcBorrowLimit,
     fillMiddleValue,
     symbol,
     soundAlert,

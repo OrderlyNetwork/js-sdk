@@ -59,6 +59,33 @@ export function isolatedMarginRate(inputs: {
     .add(inputs.isoTakerFeeBuffer ?? IsoTakerFeeBuffer);
 }
 
+export function additionalIsolatedOrderFrozen(inputs: {
+  newOrderNotional: number;
+  pendingOrders?: Array<{ referencePrice: number; quantity: number }>;
+  existingFrozen?: number;
+  leverage: number;
+  isoTakerFeeBuffer?: number;
+}): Decimal {
+  const {
+    newOrderNotional,
+    pendingOrders = [],
+    existingFrozen = 0,
+    leverage,
+    isoTakerFeeBuffer = IsoTakerFeeBuffer,
+  } = inputs;
+
+  const totalOrderNotional = pendingOrders.reduce(
+    (acc, order) =>
+      acc.add(new Decimal(order.referencePrice).mul(order.quantity)),
+    new Decimal(newOrderNotional),
+  );
+  const additionalFrozen = totalOrderNotional
+    .mul(isolatedMarginRate({ leverage, isoTakerFeeBuffer }))
+    .sub(existingFrozen);
+
+  return additionalFrozen.gt(0) ? additionalFrozen : new Decimal(0);
+}
+
 export function maxQtyForIsolatedMargin(inputs: {
   /**
    * @description Trading symbol
@@ -303,14 +330,15 @@ function maxQtyIsolatedBinarySearch(
       orderSide === OrderSide.BUY ? pendingLongOrders : pendingSellOrders;
     const existingFrozen =
       orderSide === OrderSide.BUY ? isoOrderFrozenLong : isoOrderFrozenShort;
-    const totalOrderNotional = pendingOrders.reduce(
-      (acc, order) =>
-        acc.add(new Decimal(order.referencePrice).mul(order.quantity)),
-      new Decimal(mid).mul(currentOrderReferencePrice),
-    );
-    const orderFrozen = totalOrderNotional
-      .mul(isolatedMarginRate({ leverage, isoTakerFeeBuffer }))
-      .sub(existingFrozen);
+    const orderFrozen = additionalIsolatedOrderFrozen({
+      newOrderNotional: new Decimal(mid)
+        .mul(currentOrderReferencePrice)
+        .toNumber(),
+      pendingOrders,
+      existingFrozen,
+      leverage,
+      isoTakerFeeBuffer,
+    });
 
     // Calculate open notional after order execution
     const newPositionQty =

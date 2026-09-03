@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "حسابك في وضع التخفيض فقط ولا يمكنه فتح مراكز جديدة. هل ترغب في إيقاف وضع التخفيض فقط والمتابعة لتنفيذ الطلب؟",
   "orderEntry.placeOrderNow": "تنفيذ الطلب الآن",
   "orderEntry.maxQty.reminder.content": "تم خفض كمية الطلب إلى الحد الأقصى المتاح: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "تعذر فتح مركز",
+  "orderEntry.usdcBorrowLimit.content": "سيؤدي هذا الأمر إلى تجاوز اقتراضك من USDC حد {{limit}} USDC. قلّل حجم الأمر، أو أودِع/حوّل المزيد من USDC ثم حاول مرة أخرى.",
   "orderEntry.permissionlessNotice.title": "إشعار السوق المدرج من المجتمع",
   "orderEntry.permissionlessNotice.content1": "تم إدراج هذا السوق من قبل جهة نشر تابعة لجهة خارجية عبر نظام الإدراج بدون إذن.",
   "orderEntry.permissionlessNotice.content2": "لم يتم إنشاؤه أو مراجعته أو تأييده من قبل Orderly. قد تتضمن مثل هذه الأسواق سيولة منخفضة وتقلبات عالية ومعلومات غير كاملة أو مخاطر تصفية إضافية.",

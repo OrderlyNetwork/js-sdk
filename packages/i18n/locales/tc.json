@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "您的帳戶處於僅减仓模式，無法开新倉位。您是否要關閉僅减仓模式并繼續下單？",
   "orderEntry.placeOrderNow": "立即下單",
   "orderEntry.maxQty.reminder.content": "訂單數量已減少至最大可用數量：{{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "無法開倉",
+  "orderEntry.usdcBorrowLimit.content": "此訂單會使您的 USDC 借款超過 {{limit}} USDC 上限。請降低下單數量，或存入／轉入更多 USDC 後再試。",
   "orderEntry.permissionlessNotice.title": "社群上架市場公告",
   "orderEntry.permissionlessNotice.content1": "此市場透過無需許可的上架系統，由第三方部署者進行上架。",
   "orderEntry.permissionlessNotice.content2": "此市場並非由 Orderly 建立、審查或背書。此類市場可能涉及流動性較低、波動較高、資訊不完整或更高的強制平倉風險。",

@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Your account is in reduce-only and cannot open new positions. Would you like to turn off reduce-only mode and proceed with the order?",
   "orderEntry.placeOrderNow": "Place order now",
   "orderEntry.maxQty.reminder.content": "Order qty reduced to max available: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Unable to open position",
+  "orderEntry.usdcBorrowLimit.content": "This order would cause your USDC borrowing to exceed the {{limit}} USDC limit. Reduce your order size, or deposit/transfer more USDC and try again.",
   "orderEntry.permissionlessNotice.title": "Community-Listed Market Notice",
   "orderEntry.permissionlessNotice.content1": "This market was listed by a third-party deployer through the permissionless listing system.",
   "orderEntry.permissionlessNotice.content2": "It is not created, reviewed, or endorsed by Orderly. Such markets may involve low liquidity, high volatility, incomplete information, or increased liquidation risk.",

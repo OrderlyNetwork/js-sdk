@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Uw account staat in alleen vermindering modus en kan geen nieuwe posities openen. Wilt u de alleen vermindering modus uitschakelen en doorgaan met de order?",
   "orderEntry.placeOrderNow": "Plaats order nu",
   "orderEntry.maxQty.reminder.content": "Bestelhoeveelheid verlaagd naar maximaal beschikbaar: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Positie kan niet worden geopend",
+  "orderEntry.usdcBorrowLimit.content": "Door deze order zou uw USDC-lening de limiet van {{limit}} USDC overschrijden. Verlaag de ordergrootte of stort/draag meer USDC over en probeer het opnieuw.",
   "orderEntry.permissionlessNotice.title": "Kennisgeving van community-geliste markt",
   "orderEntry.permissionlessNotice.content1": "Deze markt is door een derde partij geplaatst via het permissionless listing-systeem.",
   "orderEntry.permissionlessNotice.content2": "Deze markt is niet door Orderly gemaakt, beoordeeld of onderschreven. Dergelijke markten kunnen een lage liquiditeit, een hoge volatiliteit, onvolledige informatie of een verhoogd liquidatierisico met zich meebrengen.",

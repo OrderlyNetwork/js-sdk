@@ -690,6 +690,8 @@
   "orderEntry.reduceOnly.reminder.content": "Akun Anda berada dalam mode hanya pengurangan dan tidak dapat membuka posisi baru. Apakah Anda ingin mematikan mode hanya pengurangan dan melanjutkan dengan pesanan?",
   "orderEntry.placeOrderNow": "Buat pesanan sekarang",
   "orderEntry.maxQty.reminder.content": "Jumlah pesanan dikurangi ke maksimum yang tersedia: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Tidak dapat membuka posisi",
+  "orderEntry.usdcBorrowLimit.content": "Order ini akan membuat pinjaman USDC Anda melebihi batas {{limit}} USDC. Kurangi ukuran order atau deposit/transfer lebih banyak USDC, lalu coba lagi.",
   "orderEntry.permissionlessNotice.title": "Pemberitahuan Pasar yang Tercantum oleh Komunitas",
   "orderEntry.permissionlessNotice.content1": "Pasar ini dicantumkan oleh pihak ketiga melalui sistem pencantuman tanpa izin.",
   "orderEntry.permissionlessNotice.content2": "Pasar ini tidak dibuat, ditinjau, atau didukung oleh Orderly. Pasar seperti ini dapat melibatkan likuiditas rendah, volatilitas tinggi, informasi yang tidak lengkap, atau peningkatan risiko likuidasi.",

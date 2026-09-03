@@ -190,6 +190,9 @@ export const orderEntry = {
   "orderEntry.placeOrderNow": "Place order now",
   "orderEntry.maxQty.reminder.content":
     "Order qty reduced to max available: {{maxQty}}",
+  "orderEntry.usdcBorrowLimit.title": "Unable to open position",
+  "orderEntry.usdcBorrowLimit.content":
+    "This order would cause your USDC borrowing to exceed the {{limit}} USDC limit. Reduce your order size, or deposit/transfer more USDC and try again.",
 
   "orderEntry.permissionlessNotice.title": "Community-Listed Market Notice",
   "orderEntry.permissionlessNotice.content1":
