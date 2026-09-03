@@ -10,7 +10,7 @@ import {
   TradingInactiveIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
-  BarChartIcon,
+  PredictionIcon,
 } from "@orderly.network/ui";
 import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../playground/constant";
@@ -82,8 +82,8 @@ const LeftSection = (props: {
     },
     {
       key: "prediction",
-      activeIcon: <BarChartIcon />,
-      inactiveIcon: <BarChartIcon />,
+      activeIcon: <PredictionIcon active size={20} />,
+      inactiveIcon: <PredictionIcon size={20} />,
       title: t("prediction.title"),
       description: t("prediction.description"),
       onClick: () => {

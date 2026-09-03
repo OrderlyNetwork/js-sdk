@@ -13,6 +13,7 @@ export const prediction = {
   "prediction.round": "Round",
   "prediction.openingPrice": "Opening price",
   "prediction.currentPrice": "Current price",
+  "prediction.finalPrice": "Final price",
   "prediction.settlementIn": "Settlement in",
   "prediction.settlementInHint": "Time remaining until the round settles.",
   "prediction.chance": "Chance",

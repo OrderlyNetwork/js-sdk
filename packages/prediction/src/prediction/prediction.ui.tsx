@@ -1007,16 +1007,22 @@ const PriceChart: React.FC<{
           </div>
         </div>
         <div className="oui-min-w-0">
-          <Tooltip
-            content={t("prediction.chart.currentPriceHint")}
-            className="oui-max-w-[330px] oui-bg-base-6"
-            arrow={{ className: "oui-fill-base-6" }}
-            delayDuration={300}
-          >
-            <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-xs oui-text-base-contrast-54">
-              {t("prediction.currentPrice")}
+          {isPastRound ? (
+            <span className="oui-text-xs oui-text-base-contrast-54">
+              {t("prediction.finalPrice")}
             </span>
-          </Tooltip>
+          ) : (
+            <Tooltip
+              content={t("prediction.chart.currentPriceHint")}
+              className="oui-max-w-[330px] oui-bg-base-6"
+              arrow={{ className: "oui-fill-base-6" }}
+              delayDuration={300}
+            >
+              <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-xs oui-text-base-contrast-54">
+                {t("prediction.currentPrice")}
+              </span>
+            </Tooltip>
+          )}
           <div className="oui-mt-1 oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap">
             <span
               className={cn(

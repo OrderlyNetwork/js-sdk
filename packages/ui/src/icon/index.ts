@@ -86,6 +86,7 @@ export { SelectedChoicesFillIcon } from "./selectedChoicesFill";
 export { PopupUnionIcon } from "./popupUnion";
 export { SpotIcon } from "./spotIcon";
 export { PerpsIcon } from "./perpsIcon";
+export { PredictionIcon } from "./predictionIcon";
 export { EmptyStateIcon } from "./emptyData";
 export { VectorIcon } from "./vectorIcon";
 export { SwapHorizIcon } from "./swapHoriz";
