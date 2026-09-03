@@ -21,6 +21,11 @@ export class USDCBorrowLimitExceededError extends Error {
   }
 }
 
+/**
+ * The backend returns `negative_usdc_threshold` as a positive number (e.g. 50000).
+ * Missing, non-finite, or signed values fall back to a normalized positive limit
+ * so the submission guard always compares against a concrete number.
+ */
 export const normalizeUSDCBorrowLimit = (
   value: number | null | undefined,
 ): number => {

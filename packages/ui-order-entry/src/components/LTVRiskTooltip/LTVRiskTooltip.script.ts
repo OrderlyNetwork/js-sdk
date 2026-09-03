@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 import {
+  useAppStore,
   useComputedLTV,
+  useConvertThreshold,
   useHoldingStream,
   useIndexPricesStream,
-  useAppStore,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import { MarginMode } from "@orderly.network/types";
 import { modal, useScreen } from "@orderly.network/ui";
-import { zero } from "@orderly.network/utils";
-import { useConvertThreshold } from "../../hooks/useConvertThreshold";
+import { Decimal, zero } from "@orderly.network/utils";
 
 export const useLTVTooltipScript = (marginMode?: MarginMode) => {
   const { isMobile } = useScreen();
@@ -21,6 +21,11 @@ export const useLTVTooltipScript = (marginMode?: MarginMode) => {
     negative_usdc_threshold,
     isLoading: isThresholdLoading,
   } = useConvertThreshold();
+
+  // The shared hook returns the raw ratio (e.g. 0.9); the tooltip renders a percentage.
+  const ltvThresholdPercentage = new Decimal(ltv_threshold ?? 0)
+    .mul(100)
+    .toNumber();
 
   const tokensInfo = useAppStore((state) => state.tokensInfo);
 
@@ -66,7 +71,7 @@ export const useLTVTooltipScript = (marginMode?: MarginMode) => {
   return {
     holdingData,
     isHoldingLoading,
-    ltv_threshold,
+    ltv_threshold: ltvThresholdPercentage,
     negative_usdc_threshold,
     isThresholdLoading,
     currentLtv: currentLtv,
