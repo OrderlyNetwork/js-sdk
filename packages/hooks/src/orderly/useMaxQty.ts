@@ -111,7 +111,7 @@ export function useMaxQty(
 
   const symbolInfo = useSymbolsInfo();
 
-  const { totalCollateral, freeCollateralUSDCOnly } = useCollateral();
+  const { totalCollateral, freeCollateral } = useCollateral();
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -179,7 +179,7 @@ export function useMaxQty(
     const sellOrdersQty = currentSymbolPosition?.pending_short_qty ?? 0;
 
     if (finalMarginMode === MarginMode.ISOLATED) {
-      const availableBalance = freeCollateralUSDCOnly;
+      const availableBalance = freeCollateral;
       // Build pending orders arrays (only if quantity > 0)
       // Use mark price as reference price (since we don't have actual order prices)
       const pendingLongOrders: Array<{
@@ -273,7 +273,7 @@ export function useMaxQty(
     symbolInfo,
     side,
     totalCollateral,
-    freeCollateralUSDCOnly,
+    freeCollateral,
     finalMarginMode,
     symbolLeverage,
     currentOrderReferencePrice,

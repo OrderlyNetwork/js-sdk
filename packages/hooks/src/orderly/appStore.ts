@@ -3,6 +3,7 @@ import { immer } from "zustand/middleware/immer";
 import { API } from "@orderly.network/types";
 import { WSMessage } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
+import { mergeHoldingBalance } from "../utils/mergeHoldingBalance";
 
 // import { devtools } from "zustand/middleware";
 
@@ -195,8 +196,10 @@ export const useAppStore = create<
                   (item) => item.token === key,
                 );
                 if (holding) {
-                  holding.holding = msg[key].holding;
-                  holding.frozen = msg[key].frozen;
+                  Object.assign(
+                    holding,
+                    mergeHoldingBalance(holding, msg[key]),
+                  );
                 }
                 // else {
                 //   state.portfolio.holding.push({

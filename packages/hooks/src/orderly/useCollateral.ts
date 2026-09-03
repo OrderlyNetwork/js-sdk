@@ -18,9 +18,10 @@ export type CollateralOutputs = {
    */
   freeCollateral: number;
   /**
-   * Free collateral that can be used for new positions (USDC only)
+   * Legacy free collateral metric backed only by USDC
    *
-   * Calculated as: freeCollateral - SUM(non-USDC holding.holding × mark_price × discount)
+   * Isolated-margin trading limits use `freeCollateral` instead. This field is
+   * retained for backward compatibility.
    */
   freeCollateralUSDCOnly: number;
   /**

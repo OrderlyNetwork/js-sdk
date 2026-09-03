@@ -73,7 +73,7 @@ export function maxQtyForIsolatedMargin(inputs: {
    */
   currentOrderReferencePrice: number;
   /**
-   * @description Available balance (USDC)
+   * @description Eligible available collateral denominated in USDC
    */
   availableBalance: number;
   /**

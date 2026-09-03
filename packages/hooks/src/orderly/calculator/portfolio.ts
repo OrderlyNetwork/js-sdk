@@ -4,6 +4,7 @@ import { API, EMPTY_LIST, MarginMode } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { createGetter } from "../../utils/createGetter";
+import { mergeHoldingBalance } from "../../utils/mergeHoldingBalance";
 import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
 import { BaseCalculator } from "./baseCalculator";
@@ -56,13 +57,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       } else {
         holding = holding.map((item) => {
           if (data.holding[item.token]) {
-            return {
-              ...item,
-              holding: data.holding[item.token].holding,
-              frozen: data.holding[item.token].frozen,
-              isolatedMargin: data.holding[item.token].isolatedMargin,
-              isolatedOrderFrozen: data.holding[item.token].isolatedOrderFrozen,
-            };
+            return mergeHoldingBalance(item, data.holding[item.token]);
           }
 
           return item;

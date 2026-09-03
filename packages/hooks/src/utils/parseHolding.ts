@@ -4,10 +4,12 @@ import { Decimal } from "@orderly.network/utils";
 
 type NonUSDCHolding = {
   holding: number;
+  pendingShort: number;
   indexPrice: number;
   // margin replacement rate, default 0
   collateralCap: number;
   collateralRatio: Decimal;
+  isCollateral: boolean;
 };
 
 export const parseHolding = (
@@ -31,25 +33,32 @@ export const parseHolding = (
         base_weight = 0,
         discount_factor = 0,
         user_max_qty = 0,
+        is_collateral = false,
       } = tokenInfo || {};
 
       const holdingQty = item?.holding ?? 0;
+      const pendingShort = item?.pending_short ?? 0;
+      const effectiveHolding = new Decimal(holdingQty)
+        .add(pendingShort)
+        .toNumber();
 
       const indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
 
       const collateralRatio = account.collateralRatio({
         baseWeight: base_weight,
         discountFactor: discount_factor,
-        collateralQty: holdingQty,
+        collateralQty: Math.max(effectiveHolding, 0),
         collateralCap: user_max_qty,
         indexPrice,
       });
 
       nonUSDC.push({
         holding: holdingQty,
+        pendingShort,
         indexPrice,
         collateralCap: user_max_qty,
         collateralRatio: collateralRatio,
+        isCollateral: is_collateral,
       });
     }
   });

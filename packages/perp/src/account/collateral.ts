@@ -1,5 +1,31 @@
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, type Numeric } from "@orderly.network/utils";
 import { IMRFactorPower } from "../constants";
+
+export const normalizeCollateralCap = (
+  collateralQty: number,
+  collateralCap: number,
+) => {
+  return collateralCap === -1 ? collateralQty : Math.max(collateralCap, 0);
+};
+
+export const positiveCollateralContribution = (params: {
+  collateralQty: number;
+  collateralCap: number;
+  collateralRatio: Numeric;
+  indexPrice: number;
+}): Decimal => {
+  const { collateralQty, collateralCap, collateralRatio, indexPrice } = params;
+
+  if (collateralQty <= 0 || !Number.isFinite(indexPrice) || indexPrice <= 0) {
+    return new Decimal(0);
+  }
+
+  const cap = normalizeCollateralCap(collateralQty, collateralCap);
+
+  return new Decimal(Math.min(collateralQty, cap))
+    .mul(collateralRatio)
+    .mul(indexPrice);
+};
 
 export const collateralRatio = (params: {
   baseWeight: number;
@@ -17,7 +43,7 @@ export const collateralRatio = (params: {
   } = params;
 
   // if collateralCap is -1, it means the collateral is unlimited
-  const cap = collateralCap === -1 ? collateralQty : collateralCap;
+  const cap = normalizeCollateralCap(collateralQty, collateralCap);
 
   const K = new Decimal(1.2);
   const DCF = new Decimal(discountFactor || 0);
@@ -39,11 +65,10 @@ export const collateralContribution = (params: {
 }) => {
   const { collateralQty, collateralCap, collateralRatio, indexPrice } = params;
 
-  // if collateralCap is -1, it means the collateral is unlimited
-  const cap = collateralCap === -1 ? collateralQty : collateralCap;
-
-  return new Decimal(Math.min(collateralQty, cap))
-    .mul(collateralRatio)
-    .mul(indexPrice)
-    .toNumber();
+  return positiveCollateralContribution({
+    collateralQty,
+    collateralCap,
+    collateralRatio,
+    indexPrice,
+  }).toNumber();
 };

@@ -127,7 +127,7 @@ export const orderEntry = {
   "marginMode.crossMarginDescription":
     "Margin and PnL are shared across positions. You may lose all positions if liquidation occurs.",
   "marginMode.isolatedMarginDescription":
-    "Margin and PnL are independent for each position. You'll only lose the current position if liquidation occurs. Only USDC is accepted as collateral. <0>Learn more</0>",
+    "Margin and PnL are independent for each position. You'll only lose the current position if liquidation occurs. Isolated margin is denominated in USDC, and eligible collateral assets can back the required USDC balance. <0>Learn more</0>",
   "marginMode.current": "Current",
   "marginMode.marginModeSettings": "Margin mode settings",
   "marginMode.updatedSuccessfully": "Updated successfully",
