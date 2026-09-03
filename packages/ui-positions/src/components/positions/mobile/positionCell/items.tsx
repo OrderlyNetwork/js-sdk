@@ -429,9 +429,20 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
 
 export const FundingFee: FC<PositionCellState> = (props) => {
   const { t } = useTranslation();
+
+  const fundingFeeLabel = (
+    <Text intensity={36} className="oui-underline oui-decoration-dotted">
+      {t("positions.unsettledFundingFee")}:{" "}
+    </Text>
+  );
+
   return (
-    <Flex justify={"end"} className="oui-w-full oui-text-2xs">
-      <Text intensity={36}>{t("positions.unsettledFundingFee")}: </Text>
+    <Flex gap={1} justify={"end"} className="oui-w-full oui-text-2xs">
+      <Tips
+        trigger={fundingFeeLabel}
+        content={t("positions.unsettledFundingFee.tooltip")}
+        title={t("common.tips")}
+      />
       <FundingFeeButton
         fee={negateFee(props.item.accrued_funding_fee)}
         symbol={props.item.symbol}
