@@ -179,10 +179,8 @@ class PortfolioCalculator extends BaseCalculator<any> {
       {},
     );
 
-    // TODO: Pass actual orders data for accurate initial margin calculation
     const totalInitialMarginWithOrders = account.totalInitialMarginWithQty({
       positions: positions.rows,
-      orders: [],
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
       maxLeverageBySymbol,
