@@ -104,7 +104,8 @@ describe("USDC borrow limit", () => {
       usdcHolding: -49_990,
     });
 
-    expect(projectedBorrow).toBeCloseTo(50_005.09, 8);
+    // Only the 0.5 opening remainder freezes: 0.5 * 100 * 0.1006 = 5.03
+    expect(projectedBorrow).toBeCloseTo(49_995.03, 8);
   });
 
   it("accounts for existing same-side close orders in a reversal", () => {
@@ -119,7 +120,46 @@ describe("USDC borrow limit", () => {
       usdcHolding: -49_999,
     });
 
-    expect(projectedBorrow).toBeCloseTo(50_002.018, 8);
+    // The earlier same-price pending order keeps its closing priority, so
+    // only 0.05 of the new order opens: 0.05 * 100 * 0.1006 = 0.503
+    expect(projectedBorrow).toBeCloseTo(49_999.503, 8);
+  });
+
+  it("prices closing-priority reallocation with per-order pending data", () => {
+    const projectedBorrow = calculateProjectedUSDCBorrow({
+      ...baseInputs,
+      orderSide: OrderSide.SELL,
+      positionQty: 1,
+      orderQuantity: 1,
+      orderNotional: 100,
+      markPrice: 150,
+      pendingOrders: [
+        {
+          side: OrderSide.SELL,
+          referencePrice: 200,
+          quantity: 1,
+          createdTime: 1000,
+        },
+      ],
+      usdcHolding: 0,
+    });
+
+    // The cheaper new order takes over closing, so the resting SELL @ 200
+    // becomes the opening quantity: 1 * 200 * 0.1006 = 20.12
+    expect(projectedBorrow).toBeCloseTo(20.12, 8);
+  });
+
+  it("does not block a pure closing order by existing negative balance", () => {
+    const projectedBorrow = calculateProjectedUSDCBorrow({
+      ...baseInputs,
+      orderSide: OrderSide.SELL,
+      positionQty: 2,
+      orderQuantity: 1,
+      orderNotional: 100,
+      usdcHolding: -60_000,
+    });
+
+    expect(projectedBorrow).toBe(0);
   });
 
   it("aggregates scaled child order quantity and notional", () => {
@@ -129,7 +169,15 @@ describe("USDC borrow limit", () => {
         { quantity: 2, referencePrice: 100 },
         { quantity: 1, referencePrice: 110 },
       ]),
-    ).toEqual({ orderQuantity: 4, orderNotional: 400 });
+    ).toEqual({
+      orderQuantity: 4,
+      orderNotional: 400,
+      orders: [
+        { quantity: 1, referencePrice: 90 },
+        { quantity: 2, referencePrice: 100 },
+        { quantity: 1, referencePrice: 110 },
+      ],
+    });
   });
 
   it.each([
@@ -148,7 +196,11 @@ describe("USDC borrow limit", () => {
       expectedType: OrderType.LIMIT,
       expectedQuantity: "2",
       referencePrice: 90,
-      expected: { orderQuantity: 2, orderNotional: 180 },
+      expected: {
+        orderQuantity: 2,
+        orderNotional: 180,
+        orders: [{ quantity: 2, referencePrice: 90 }],
+      },
     },
     {
       name: "market",
@@ -163,7 +215,11 @@ describe("USDC borrow limit", () => {
       expectedType: OrderType.MARKET,
       expectedQuantity: "3",
       referencePrice: 100,
-      expected: { orderQuantity: 3, orderNotional: 300 },
+      expected: {
+        orderQuantity: 3,
+        orderNotional: 300,
+        orders: [{ quantity: 3, referencePrice: 100 }],
+      },
     },
     {
       name: "stop market payload",
@@ -180,7 +236,11 @@ describe("USDC borrow limit", () => {
       expectedType: OrderType.STOP_MARKET,
       expectedQuantity: "4",
       referencePrice: 105,
-      expected: { orderQuantity: 4, orderNotional: 420 },
+      expected: {
+        orderQuantity: 4,
+        orderNotional: 420,
+        orders: [{ quantity: 4, referencePrice: 105 }],
+      },
     },
     {
       name: "BBO payload",
@@ -196,7 +256,11 @@ describe("USDC borrow limit", () => {
       expectedType: OrderType.LIMIT,
       expectedQuantity: "5",
       referencePrice: 99,
-      expected: { orderQuantity: 5, orderNotional: 495 },
+      expected: {
+        orderQuantity: 5,
+        orderNotional: 495,
+        orders: [{ quantity: 5, referencePrice: 99 }],
+      },
     },
   ])(
     "normalizes $name before calculating notional",
@@ -242,7 +306,14 @@ describe("USDC borrow limit", () => {
         marginMode: MarginMode.ISOLATED,
         getReferencePrice: (order) => Number(order.order_price),
       }),
-    ).toEqual({ orderQuantity: 3, orderNotional: 310 });
+    ).toEqual({
+      orderQuantity: 3,
+      orderNotional: 310,
+      orders: [
+        { quantity: 1, referencePrice: 90 },
+        { quantity: 2, referencePrice: 110 },
+      ],
+    });
   });
 
   it("does not project from non-finite pending quantities", () => {

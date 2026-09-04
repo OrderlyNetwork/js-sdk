@@ -4,6 +4,15 @@ import { useMaxQty } from "../useMaxQty";
 
 const mockMaxQtyForIsolatedMargin = jest.fn((..._args: unknown[]) => 42);
 
+const mockPositionRows: Array<{
+  symbol: string;
+  margin_mode: MarginMode;
+  position_qty: number;
+  pending_long_qty: number;
+  pending_short_qty: number;
+  leverage: number;
+}> = [];
+
 jest.mock("@orderly.network/perp", () => {
   const actual = jest.requireActual("@orderly.network/perp");
   return {
@@ -41,8 +50,12 @@ jest.mock("../useMarkPricesStream", () => ({
   }),
 }));
 
+jest.mock("../useOrderStream/useOrderStream", () => ({
+  useOrderStream: () => [null, {}],
+}));
+
 jest.mock("../usePositionStream/usePosition.store", () => ({
-  usePositions: () => [],
+  usePositions: () => mockPositionRows,
 }));
 
 jest.mock("../useSymbolsInfo", () => ({
@@ -58,6 +71,7 @@ jest.mock("../useSymbolsInfo", () => ({
 describe("useMaxQty", () => {
   beforeEach(() => {
     mockMaxQtyForIsolatedMargin.mockClear();
+    mockPositionRows.splice(0);
   });
 
   it("should use total free collateral for isolated-margin orders", () => {
@@ -71,6 +85,35 @@ describe("useMaxQty", () => {
     expect(mockMaxQtyForIsolatedMargin).toHaveBeenCalledWith(
       expect.objectContaining({
         availableBalance: 250,
+        isolatedPendingOrders: [],
+      }),
+    );
+  });
+
+  it("should synthesize aggregate pending orders at mark price when the stream is unavailable", () => {
+    mockPositionRows.push({
+      symbol: "PERP_BTC_USDC",
+      margin_mode: MarginMode.ISOLATED,
+      position_qty: 1,
+      pending_long_qty: 0,
+      pending_short_qty: 2,
+      leverage: 10,
+    });
+
+    renderHook(() =>
+      useMaxQty("PERP_BTC_USDC", OrderSide.SELL, {
+        marginMode: MarginMode.ISOLATED,
+      }),
+    );
+
+    // The flip binary search must always receive per-order input so it runs
+    // the close/open allocation, even while the order stream is loading
+    expect(mockMaxQtyForIsolatedMargin).toHaveBeenCalledWith(
+      expect.objectContaining({
+        availableBalance: 250,
+        isolatedPendingOrders: [
+          { side: OrderSide.SELL, referencePrice: 50000, quantity: 2 },
+        ],
       }),
     );
   });

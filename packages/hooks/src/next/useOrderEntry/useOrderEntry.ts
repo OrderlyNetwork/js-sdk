@@ -5,6 +5,7 @@ import {
   SDKError,
   API,
   OrderlyOrder,
+  OrderStatus,
   OrderType,
   OrderLevel,
   TrackerEventName,
@@ -22,6 +23,7 @@ import {
   useSymbolsInfo,
 } from "../../orderly/orderlyHooks";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
+import { useOrderStream } from "../../orderly/useOrderStream/useOrderStream";
 import {
   usePositions,
   usePositionStore,
@@ -37,6 +39,7 @@ import { useConfig } from "../../useConfig";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
+import { resolveIsolatedPendingOrders } from "../../utils/order/isolatedPendingOrders";
 import { getOrderReferencePriceFromOrder } from "../../utils/order/orderPrice";
 import { getScaledOrderSkew } from "../../utils/order/scaledOrder";
 import {
@@ -65,6 +68,11 @@ type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
 export type SubmitOrderOptions = {
   resetOnSuccess?: boolean;
+  /**
+   * Server-configured USDC borrow limit (`negative_usdc_threshold`). When
+   * omitted or unavailable (loading/failed request), the guard falls back to
+   * DEFAULT_USDC_BORROW_LIMIT (50,000) instead of being skipped.
+   */
   usdcBorrowLimit?: number;
 };
 
@@ -702,6 +710,15 @@ const useOrderEntry = (
   }, [positions, symbol, formattedOrder.margin_mode, effectiveMarginMode]);
   const currentPosition = currentPositionData?.position_qty ?? 0;
 
+  // Per-order pending data for the risk-engine frozen simulation. `null`
+  // means the stream has not loaded yet and the borrow projection falls back
+  // to the aggregate pending quantities on the position.
+  const [symbolOpenOrders] = useOrderStream({
+    symbol,
+    status: OrderStatus.INCOMPLETE,
+    size: 100,
+  });
+
   const getProjectedUSDCBorrow = useMemoizedFn(
     (generatedOrder: Partial<OrderlyOrder>): number | null => {
       const order = generatedOrder as GeneratedOrderForBorrowProjection;
@@ -742,6 +759,14 @@ const useOrderEntry = (
         return null;
       }
 
+      const markPrice = Number(actions.getMarkPriceBySymbol(symbol));
+      const pendingOrders = resolveIsolatedPendingOrders(symbolOpenOrders, {
+        symbol,
+        fallbackPrice: markPrice > 0 ? markPrice : 0,
+        pendingLongQty: position?.pending_long_qty ?? 0,
+        pendingShortQty: position?.pending_short_qty ?? 0,
+      });
+
       const leverage = symbolLeverage ?? position?.leverage;
       return calculateProjectedUSDCBorrow({
         marginMode,
@@ -749,11 +774,13 @@ const useOrderEntry = (
         orderSide: order.side ?? formattedOrder.side,
         orderQuantity: orderValues.orderQuantity,
         orderNotional: orderValues.orderNotional,
+        newOrderEntries: orderValues.orders,
         leverage: Number(leverage),
-        markPrice: Number(actions.getMarkPriceBySymbol(symbol)),
+        markPrice,
         positionQty: position?.position_qty ?? 0,
         pendingLongQty: position?.pending_long_qty ?? 0,
         pendingShortQty: position?.pending_short_qty ?? 0,
+        pendingOrders,
         usdcHolding: usdcHolding.holding,
         usdcPendingShort: usdcHolding.pending_short,
         usdcIsolatedOrderFrozen: usdcHolding.isolated_order_frozen,
@@ -878,10 +905,10 @@ const useOrderEntry = (
 
     const order = generateOrder(creator, prepareData());
 
-    if (usdcBorrowLimit !== undefined) {
-      const borrowLimit = normalizeUSDCBorrowLimit(usdcBorrowLimit);
-      assertUSDCBorrowWithinLimit(getProjectedUSDCBorrow(order), borrowLimit);
-    }
+    // The guard always compares against a concrete limit: an omitted or
+    // unavailable threshold falls back to DEFAULT_USDC_BORROW_LIMIT.
+    const borrowLimit = normalizeUSDCBorrowLimit(usdcBorrowLimit);
+    assertUSDCBorrowWithinLimit(getProjectedUSDCBorrow(order), borrowLimit);
 
     const isScaledOrder = order.order_type === OrderType.SCALED;
 

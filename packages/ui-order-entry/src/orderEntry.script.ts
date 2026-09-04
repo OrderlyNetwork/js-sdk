@@ -11,6 +11,7 @@ import {
   useOrderEntry,
   useOrderlyContext,
   useTpslPriceChecker,
+  normalizeUSDCBorrowLimit,
 } from "@orderly.network/hooks";
 import { useCanTrade } from "@orderly.network/react-app";
 import {
@@ -392,7 +393,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [isSymbolPostOnly, formattedOrder.order_type, setOrderValues]);
 
   const currentLtv = useComputedLTV();
-  const { negative_usdc_threshold: usdcBorrowLimit } = useConvertThreshold();
+  const { negative_usdc_threshold } = useConvertThreshold();
+  // While the threshold is loading or the request failed, fall back to the
+  // default borrow limit so the guard never silently skips.
+  const usdcBorrowLimit = normalizeUSDCBorrowLimit(negative_usdc_threshold);
   const askAndBid = useAskAndBid();
 
   const fillMiddleValue = () => {

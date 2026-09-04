@@ -1,6 +1,9 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { MarginMode, OrderSide, OrderType } from "@orderly.network/types";
-import { USDCBorrowLimitExceededError } from "../usdcBorrowLimit";
+import {
+  DEFAULT_USDC_BORROW_LIMIT,
+  USDCBorrowLimitExceededError,
+} from "../usdcBorrowLimit";
 import { useOrderEntry } from "../useOrderEntry";
 
 const mockSymbol = "PERP_BTC_USDC";
@@ -72,6 +75,10 @@ jest.mock("../../../orderly/orderlyHooks", () => ({
 
 jest.mock("../../../orderly/useMarkPrice/useMarkPriceStore", () => ({
   useMarkPriceActions: () => ({ getMarkPriceBySymbol: () => 100 }),
+}));
+
+jest.mock("../../../orderly/useOrderStream/useOrderStream", () => ({
+  useOrderStream: () => [null, {}],
 }));
 
 jest.mock("../../../orderly/usePositionStream/usePosition.store", () => ({
@@ -174,6 +181,32 @@ describe("useOrderEntry USDC borrow limit submission guard", () => {
     });
 
     expect(thrownError).toBeInstanceOf(USDCBorrowLimitExceededError);
+    expect(mockCreateOrder).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the default limit when the threshold is unavailable", async () => {
+    const { result } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: { margin_mode: MarginMode.ISOLATED },
+      }),
+    );
+    publishOrderbook();
+
+    mockPortfolio.holding[0].holding = -50_000;
+
+    let thrownError: unknown;
+    await act(async () => {
+      try {
+        await result.current.submit();
+      } catch (error) {
+        thrownError = error;
+      }
+    });
+
+    expect(thrownError).toBeInstanceOf(USDCBorrowLimitExceededError);
+    expect((thrownError as USDCBorrowLimitExceededError).borrowLimit).toBe(
+      DEFAULT_USDC_BORROW_LIMIT,
+    );
     expect(mockCreateOrder).not.toHaveBeenCalled();
   });
 

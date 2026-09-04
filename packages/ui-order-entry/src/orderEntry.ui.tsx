@@ -213,11 +213,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       )
       .then((order) => {
         const projectedBorrow = helper.getProjectedUSDCBorrow(order);
-        if (
-          projectedBorrow !== null &&
-          usdcBorrowLimit !== undefined &&
-          projectedBorrow > usdcBorrowLimit
-        ) {
+        if (projectedBorrow !== null && projectedBorrow > usdcBorrowLimit) {
           throw new USDCBorrowLimitExceededError(
             projectedBorrow,
             usdcBorrowLimit,

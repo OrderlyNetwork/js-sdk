@@ -7,6 +7,8 @@ import {
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 
+type IsolatedPendingOrder = account.IsolatedPendingOrder;
+
 export const DEFAULT_USDC_BORROW_LIMIT = 50_000;
 
 export class USDCBorrowLimitExceededError extends Error {
@@ -45,6 +47,18 @@ export type ProjectedUSDCBorrowInputs = {
   positionQty?: number;
   pendingLongQty?: number;
   pendingShortQty?: number;
+  /**
+   * Per-order isolated open orders for the symbol (reduce-only excluded).
+   * When provided, the frozen delta is simulated with the risk-engine
+   * close/open allocation (price + time priority). When omitted,
+   * `pendingLongQty`/`pendingShortQty` are approximated at `markPrice`.
+   */
+  pendingOrders?: IsolatedPendingOrder[];
+  /**
+   * Per-child entries of the submitted order (scaled children). Defaults to a
+   * single entry derived from `orderQuantity`/`orderNotional`.
+   */
+  newOrderEntries?: Array<{ quantity: number; referencePrice: number }>;
   usdcHolding: number;
   usdcPendingShort?: number;
   usdcIsolatedOrderFrozen?: number;
@@ -60,7 +74,11 @@ export type GeneratedOrderForBorrowProjection = Partial<OrderlyOrder> & {
 
 export const aggregateOrderQuantityAndNotional = (
   orders: Array<{ quantity: number; referencePrice: number }>,
-): { orderQuantity: number; orderNotional: number } | null => {
+): {
+  orderQuantity: number;
+  orderNotional: number;
+  orders: Array<{ quantity: number; referencePrice: number }>;
+} | null => {
   if (orders.length === 0) {
     return null;
   }
@@ -86,6 +104,7 @@ export const aggregateOrderQuantityAndNotional = (
   return {
     orderQuantity: orderQuantity.toNumber(),
     orderNotional: orderNotional.toNumber(),
+    orders: orders.map((order) => ({ ...order })),
   };
 };
 
@@ -94,7 +113,11 @@ export const getOrderQuantityAndNotional = (inputs: {
   formattedOrder: Partial<OrderlyOrder>;
   marginMode: MarginMode;
   getReferencePrice: (order: Partial<OrderlyOrder>) => number | null;
-}): { orderQuantity: number; orderNotional: number } | null => {
+}): {
+  orderQuantity: number;
+  orderNotional: number;
+  orders: Array<{ quantity: number; referencePrice: number }>;
+} | null => {
   const { generatedOrder, formattedOrder, marginMode, getReferencePrice } =
     inputs;
 
@@ -165,6 +188,8 @@ export const calculateProjectedUSDCBorrow = (
     positionQty = 0,
     pendingLongQty = 0,
     pendingShortQty = 0,
+    pendingOrders,
+    newOrderEntries,
     usdcHolding,
     usdcPendingShort = 0,
     usdcIsolatedOrderFrozen = 0,
@@ -198,46 +223,74 @@ export const calculateProjectedUSDCBorrow = (
     return null;
   }
 
-  const sameSidePendingQty = Math.max(
-    0,
-    orderSide === OrderSide.BUY ? pendingLongQty : pendingShortQty,
-  );
   const isReverseOrder =
     (orderSide === OrderSide.BUY && positionQty < 0) ||
     (orderSide === OrderSide.SELL && positionQty > 0);
-  const remainingCloseQty = isReverseOrder
-    ? Math.max(0, Math.abs(positionQty) - sameSidePendingQty)
-    : 0;
-  const openingQty = isReverseOrder
-    ? Math.max(0, orderQuantity - remainingCloseQty)
-    : orderQuantity;
 
-  if (openingQty <= 0) {
-    return 0;
-  }
-
-  const marginRate = account.isolatedMarginRate({ leverage });
-  let additionalFrozen: Decimal;
-
-  if (isReverseOrder && sameSidePendingQty > 0) {
-    if (!Number.isFinite(markPrice) || markPrice <= 0) {
+  // Per-order data takes precedence. Without it, approximate both sides of
+  // the aggregate pending quantity at mark price; the mark price is only
+  // load-bearing for reverse-side closing allocation.
+  let effectivePendingOrders: IsolatedPendingOrder[];
+  if (pendingOrders !== undefined) {
+    effectivePendingOrders = pendingOrders;
+  } else {
+    const reversePendingQty =
+      positionQty > 0 ? pendingShortQty : pendingLongQty;
+    if (
+      isReverseOrder &&
+      reversePendingQty > 0 &&
+      !(Number.isFinite(markPrice) && markPrice > 0)
+    ) {
       return null;
     }
 
-    const existingFrozen = new Decimal(sameSidePendingQty)
-      .mul(markPrice)
-      .mul(marginRate)
-      .toNumber();
-    additionalFrozen = account.additionalIsolatedOrderFrozen({
-      newOrderNotional: orderNotional,
-      pendingOrders: [
-        { referencePrice: markPrice, quantity: sameSidePendingQty },
-      ],
-      existingFrozen,
-      leverage,
-    });
-  } else {
-    additionalFrozen = new Decimal(orderNotional).mul(marginRate);
+    effectivePendingOrders = [];
+    if (Number.isFinite(markPrice) && markPrice > 0) {
+      if (pendingLongQty > 0) {
+        effectivePendingOrders.push({
+          side: OrderSide.BUY,
+          referencePrice: markPrice,
+          quantity: pendingLongQty,
+        });
+      }
+      if (pendingShortQty > 0) {
+        effectivePendingOrders.push({
+          side: OrderSide.SELL,
+          referencePrice: markPrice,
+          quantity: pendingShortQty,
+        });
+      }
+    }
+  }
+
+  const newOrderEntriesResolved =
+    newOrderEntries !== undefined && newOrderEntries.length > 0
+      ? newOrderEntries
+      : [
+          {
+            quantity: orderQuantity,
+            referencePrice: orderNotional / orderQuantity,
+          },
+        ];
+
+  // The risk engine prices closing priority (BUY high→low, SELL low→high,
+  // earlier order first) and only freezes the opening remainder, including
+  // the reallocation this order causes among existing pending orders.
+  const additionalFrozen = account.additionalIsolatedOrderFrozenByOrders({
+    positionQty,
+    newOrders: newOrderEntriesResolved.map((entry) => ({
+      ...entry,
+      side: orderSide,
+      createdTime: Date.now(),
+    })),
+    pendingOrders: effectivePendingOrders,
+    leverage,
+  });
+
+  // Orders that add no frozen margin (pure closing, no reallocation) must not
+  // be blocked by the existing negative USDC balance.
+  if (additionalFrozen.lte(0)) {
+    return 0;
   }
 
   const effectiveUSDCBalance = new Decimal(usdcHolding)
