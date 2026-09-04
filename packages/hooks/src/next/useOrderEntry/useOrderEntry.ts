@@ -287,14 +287,31 @@ const useOrderEntry = (
   const getReferencePriceForOrder = (
     order: Partial<OrderlyOrder>,
   ): number | null => {
-    if (bestAskBid.length < 2 || !order.order_type || !order.side) {
+    if (!order.order_type || !order.side) {
       return null;
     }
-    const referencePrice = getOrderReferencePriceFromOrder(order, bestAskBid);
+    const isIsolated =
+      (order.margin_mode ?? effectiveMarginMode) === MarginMode.ISOLATED;
+
+    // ISOLATED MARKET orders are priced from mark price +/- price_range to
+    // match the backend freezing reference price
+    // (ReferencePriceServiceImpl), not from the Ask1/Bid1 touch. CROSS keeps
+    // the legacy Ask1/Bid1 reference.
+    const referencePrice = getOrderReferencePriceFromOrder(
+      order,
+      bestAskBid,
+      isIsolated
+        ? {
+            markPrice,
+            priceRange: symbolInfo.price_range,
+            pricePrecision: symbolInfo.quote_dp,
+          }
+        : undefined,
+    );
 
     const slippage = Number(order.slippage);
     if (
-      (order.margin_mode ?? effectiveMarginMode) !== MarginMode.ISOLATED ||
+      !isIsolated ||
       order.side !== OrderSide.BUY ||
       order.order_type !== OrderType.MARKET ||
       !referencePrice ||
@@ -304,15 +321,39 @@ const useOrderEntry = (
       return referencePrice;
     }
 
-    return new Decimal(referencePrice)
-      .mul(new Decimal(1).add(new Decimal(slippage).div(100)))
-      .toNumber();
+    // Backend clamps the MARKET BUY reference against midPrice * (1 +
+    // slippage): keep the cheaper of (mark + range) and mid * (1 + slippage).
+    if (!(bestAskBid[0] > 0 && bestAskBid[1] > 0)) {
+      // Without a mid price the range price is already the conservative
+      // upper bound for a BUY.
+      return referencePrice;
+    }
+
+    const midPrice = new Decimal(bestAskBid[0]).add(bestAskBid[1]).div(2);
+    const slippagePrice = midPrice.mul(
+      new Decimal(1).add(new Decimal(slippage).div(100)),
+    );
+
+    return slippagePrice.lessThan(referencePrice)
+      ? slippagePrice.toNumber()
+      : referencePrice;
   };
 
-  const getReferencePriceForSide = (side: OrderSide): number | null =>
-    getReferencePriceForOrder({ ...formattedOrder, side });
+  const getReferencePriceForSide = (side: OrderSide): number | null => {
+    // Max Qty is BBO-driven and keeps its original mark-price fallback until
+    // both sides of the orderbook snapshot are available. Borrow projection
+    // calls getReferencePriceForOrder directly so priced LIMIT/SCALED orders
+    // can still use their submitted prices without an unconditional BBO gate.
+    if (bestAskBid.length < 2) {
+      return null;
+    }
+    return getReferencePriceForOrder({ ...formattedOrder, side });
+  };
 
-  // Calculate reference price for the new order using best bid/ask when available.
+  // Reference price for the new order, kept in sync with how the backend
+  // risk engine prices orders (mark price +/- price_range for ISOLATED
+  // MARKET, otherwise BBO / submitted prices), so the displayed max qty
+  // matches what the backend will actually accept.
   const buyReferencePriceFromOrder = getReferencePriceForSide(OrderSide.BUY);
   const sellReferencePriceFromOrder = getReferencePriceForSide(OrderSide.SELL);
 

@@ -58,7 +58,7 @@ jest.mock("../../../orderly/appStore", () => ({
 jest.mock("../../../orderly/orderlyHooks", () => ({
   useCollateral: () => ({ freeCollateral: 0, totalCollateral: 0 }),
   useFundingRatesStore: () => ({}),
-  useMaxQty: () => 10,
+  useMaxQty: jest.fn(() => 10),
   useSymbolLeverageMap: () => ({
     getSymbolLeverage: () => 10,
     refresh: jest.fn(),
@@ -69,6 +69,7 @@ jest.mock("../../../orderly/orderlyHooks", () => ({
       base_dp: 4,
       quote_dp: 2,
       base_tick: 0.0001,
+      price_range: 0.05,
     }),
   }),
 }));
@@ -116,7 +117,7 @@ jest.mock("../../../useTrack", () => ({
 }));
 jest.mock("../../../utils/order/orderPrice", () => ({
   ...jest.requireActual("../../../utils/order/orderPrice"),
-  getOrderReferencePriceFromOrder: () => 100,
+  getOrderReferencePriceFromOrder: jest.fn(() => 100),
 }));
 jest.mock("../useOrderEntry.internal", () => ({
   useOrderEntryNextInternal: () => ({
@@ -137,11 +138,24 @@ jest.mock("use-debounce", () => ({
   useDebouncedCallback: (callback: (data: unknown) => void) => callback,
 }));
 
+const mockUseMaxQty = jest.requireMock("../../../orderly/orderlyHooks")
+  .useMaxQty as jest.Mock;
+const mockGetOrderReferencePriceFromOrder = jest.requireMock(
+  "../../../utils/order/orderPrice",
+).getOrderReferencePriceFromOrder as jest.Mock;
+
 describe("useOrderEntry USDC borrow limit submission guard", () => {
   beforeEach(() => {
     mockCreateOrder.mockReset();
     mockValidate.mockReset().mockResolvedValue({});
     mockGenerateOrder.mockReset().mockReturnValue(mockGeneratedOrder);
+    mockUseMaxQty.mockClear();
+    mockGetOrderReferencePriceFromOrder.mockReset().mockReturnValue(100);
+    Object.assign(mockFormattedOrder, {
+      ...mockGeneratedOrder,
+      order_quantity: "0",
+    });
+    delete (mockFormattedOrder as { slippage?: number }).slippage;
     mockPortfolio.holding[0].holding = 100;
     mockPortfolio.unsettledPnL = 0;
     mockPositionRows.splice(0);
@@ -156,6 +170,89 @@ describe("useOrderEntry USDC borrow limit submission guard", () => {
       });
     });
   };
+
+  it("keeps the BBO gate for max qty while the orderbook is unavailable", () => {
+    Object.assign(mockFormattedOrder, {
+      order_type: OrderType.MARKET,
+      slippage: 1,
+    });
+    mockGetOrderReferencePriceFromOrder.mockImplementation((order) =>
+      order.side === OrderSide.BUY ? 110 : 90,
+    );
+
+    renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: { margin_mode: MarginMode.ISOLATED },
+      }),
+    );
+
+    expect(mockGetOrderReferencePriceFromOrder).not.toHaveBeenCalled();
+    expect(mockUseMaxQty).toHaveBeenCalledWith(mockSymbol, OrderSide.BUY, {
+      reduceOnly: false,
+      marginMode: MarginMode.ISOLATED,
+      currentOrderReferencePrice: undefined,
+    });
+    expect(mockUseMaxQty).toHaveBeenCalledWith(mockSymbol, OrderSide.SELL, {
+      reduceOnly: false,
+      marginMode: MarginMode.ISOLATED,
+      currentOrderReferencePrice: undefined,
+    });
+  });
+
+  it("keeps CROSS MARKET orders on the legacy Ask1/Bid1 reference", () => {
+    Object.assign(mockFormattedOrder, {
+      order_type: OrderType.MARKET,
+      margin_mode: MarginMode.CROSS,
+      slippage: 1,
+    });
+    mockGetOrderReferencePriceFromOrder.mockImplementation(() => 100);
+
+    renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: { margin_mode: MarginMode.CROSS },
+      }),
+    );
+    publishOrderbook();
+
+    expect(mockGetOrderReferencePriceFromOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ side: OrderSide.BUY }),
+      [100, 99],
+      undefined,
+    );
+    // cross MARKET BUY ignores the slippage markup
+    expect(mockUseMaxQty).toHaveBeenCalledWith(
+      mockSymbol,
+      OrderSide.BUY,
+      expect.objectContaining({ currentOrderReferencePrice: 100 }),
+    );
+  });
+
+  it("clamps the isolated MARKET BUY reference against the mid-price slippage", () => {
+    Object.assign(mockFormattedOrder, {
+      order_type: OrderType.MARKET,
+      slippage: 1,
+    });
+    mockGetOrderReferencePriceFromOrder.mockImplementation(() => 110);
+
+    renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: { margin_mode: MarginMode.ISOLATED },
+      }),
+    );
+    publishOrderbook(); // asks [[100, 10]], bids [[99, 10]] -> mid 99.5
+
+    expect(mockGetOrderReferencePriceFromOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ side: OrderSide.BUY }),
+      [100, 99],
+      { markPrice: 100, priceRange: 0.05, pricePrecision: 2 },
+    );
+    // min(110, 99.5 * 1.01)
+    expect(mockUseMaxQty).toHaveBeenCalledWith(
+      mockSymbol,
+      OrderSide.BUY,
+      expect.objectContaining({ currentOrderReferencePrice: 100.495 }),
+    );
+  });
 
   it("rechecks current portfolio state and blocks mutation when the limit is exceeded", async () => {
     const { result } = renderHook(() =>
