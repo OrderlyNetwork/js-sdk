@@ -25,6 +25,7 @@ import {
   ChevronUpIcon,
   cn,
   DataTable,
+  DataFilter,
   Input,
   PopoverContent,
   PopoverRoot,
@@ -40,7 +41,7 @@ import {
   Tooltip,
   toast,
 } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
+import type { Column, DataFilterItem } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { RestrictedInfo } from "@orderly.network/ui-scaffold";
 import { Decimal } from "@orderly.network/utils";
@@ -53,6 +54,10 @@ import type {
   PredictionRoundPhase,
   PredictionState,
 } from "./prediction.script";
+import {
+  usePredictionFilters,
+  predictionDateRange,
+} from "./predictionFilters.script";
 
 const usdFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
@@ -2001,13 +2006,12 @@ export type PredictionDataPanelProps = {
 export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   state,
   tabs = [
-    "openOrders",
-    "positions",
     "predictions",
-    "assets",
+    "openOrders",
+    "filled",
+    "predictionHistory",
     "orderHistory",
-    "tradeHistory",
-    "transactionHistory",
+    "assets",
   ],
   className,
 }) => {
@@ -2018,18 +2022,16 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
 
   const tabCount: Partial<Record<PredictionDataTab, number>> = {
     openOrders: showPrototypeData ? state.openOrders.length : 0,
-    positions: showPrototypeData ? state.mockPerpPositions.length : 0,
     predictions: showPrototypeData ? state.positions.length : 0,
   };
 
   const tabContent: Record<PredictionDataTab, React.ReactNode> = {
-    openOrders: <OpenOrdersTable state={state} />,
-    positions: <PerpPositionsTable state={state} />,
-    predictions: <PredictionsPanel state={state} />,
+    openOrders: <PredictionOrdersTable state={state} mode="pending" />,
+    predictions: <HoldingsTable state={state} />,
+    filled: <PredictionOrdersTable state={state} mode="filled" />,
+    predictionHistory: <PredictionHistoryTable state={state} />,
     assets: <AssetsTable state={state} />,
-    orderHistory: <OrderHistoryTable state={state} />,
-    tradeHistory: <TradeHistoryTable state={state} />,
-    transactionHistory: <TransactionHistoryTable state={state} />,
+    orderHistory: <PredictionOrdersTable state={state} mode="history" />,
   };
 
   return (
@@ -2213,615 +2215,548 @@ const PredictionDataTable: React.FC<{
   );
 };
 
-const PredictionsPanel: React.FC<{ state: PredictionState }> = ({ state }) => {
+/* eslint-disable react/jsx-key -- DataTable cells are positional arrays keyed by their parent row. */
+const RoundSymbol = ({ round }: { round: number }) => {
   const { t } = useTranslation();
   return (
-    <Tabs
-      className="oui-prediction-dataPanel-subtabs oui-mt-2 oui-h-[calc(100%_-_8px)]"
-      value={state.activePredictionTab}
-      onValueChange={(value) =>
-        state.setActivePredictionTab(value as "open" | "settled")
-      }
-      variant="contained"
-      classNames={{
-        trigger: "oui-group oui-dataPanel-subtab-btn",
-        tabsContent: "oui-h-[calc(100%_-_28px)] oui-overflow-x-auto",
-      }}
-    >
-      <TabPanel value="open" title={t("prediction.tab.open")}>
-        <PredictionPositionsTable state={state} />
-      </TabPanel>
-      <TabPanel value="settled" title={t("prediction.tab.settled")}>
-        <SettledTable state={state} />
-      </TabPanel>
-    </Tabs>
+    <div className="oui-py-1 oui-whitespace-nowrap">
+      <div>{t("prediction.btcUpDown")}</div>
+      <div className="oui-mt-1 oui-text-base-contrast-54 oui-tabular-nums">
+        {formatRoundBadge(round)}
+      </div>
+    </div>
   );
 };
 
-/* eslint-disable react/jsx-key -- DataTable cells are positional arrays keyed by their parent row. */
-const PredictionPositionsTable: React.FC<{ state: PredictionState }> = ({
+const SellPosition = ({
   state,
+  outcome,
+}: {
+  state: PredictionState;
+  outcome: PredictionOutcome;
 }) => {
   const { t } = useTranslation();
-  const countdownLabel =
-    state.countdown > 0
-      ? formatCountdown(state.countdown)
-      : t(`prediction.playground.phase.${state.roundPhase}`);
-  const rows = state.positions.map((position) => {
-    const marketPrice = state.outcomePrices[position.outcome];
-    const pnl = new Decimal(marketPrice)
-      .sub(position.averagePrice)
-      .mul(position.quantity)
-      .toNumber();
-    const cost = new Decimal(position.averagePrice)
-      .mul(position.quantity)
-      .toNumber();
-    const roe = cost > 0 ? (pnl / cost) * 100 : 0;
-    const prepareSell = (type: "market" | "limit") => {
-      state.setSelectedOutcome(position.outcome);
-      state.setOrderSide("sell");
-      state.setOrderType(type);
-      state.setAmountUnit("outcome");
-      state.setAmount(String(position.quantity));
-    };
-
-    return {
-      id: position.outcome,
-      sortValues: [
-        t("prediction.btcUpDown"),
-        position.quantity,
-        position.quantity,
-        position.averagePrice,
-        marketPrice,
-        pnl,
-        "",
-      ],
-      cells: [
-        <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
-          <span
-            className={cn(
-              "oui-h-10 oui-w-1 oui-flex-none oui-rounded-[1px]",
-              position.outcome === "up"
-                ? "oui-bg-trade-profit"
-                : "oui-bg-trade-loss",
-            )}
-          />
-          <div className="oui-min-w-0 oui-text-base-contrast">
-            <span className="oui-block oui-whitespace-nowrap">
-              {t("prediction.btcUpDown")}
-            </span>
-            <span className="oui-mt-1 oui-flex oui-items-center oui-gap-1.5 oui-whitespace-nowrap">
-              <span
-                className={cn(
-                  position.outcome === "up"
-                    ? "oui-text-trade-profit"
-                    : "oui-text-trade-loss",
-                )}
-              >
-                {t(`prediction.${position.outcome}`)}
-              </span>
-              <Badge
-                className="oui-predictions-roundBadge oui-tabular-nums"
-                color="neutral"
-                size="xs"
-              >
-                {formatRoundBadge(state.round)}
-              </Badge>
-              <Badge
-                className="oui-predictions-countdownBadge oui-tabular-nums"
-                color={state.countdown > 0 ? "warning" : "neutral"}
-                size="xs"
-              >
-                {countdownLabel}
-              </Badge>
-            </span>
-          </div>
-        </div>,
-        <TableNumber value={position.quantity} />,
-        <TableNumber value={position.quantity} />,
-        <TableNumber value={position.averagePrice} />,
-        <TableNumber value={marketPrice} />,
-        <span
-          className={pnl >= 0 ? "oui-text-trade-profit" : "oui-text-trade-loss"}
+  const [open, setOpen] = useState(false);
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
+  const [type, setType] = useState<"market" | "limit">("market");
+  const available = state.availableQuantity(outcome);
+  const tradable =
+    state.isRoundTradable && state.prototypeRegionState !== "restricted";
+  const valid =
+    tradable &&
+    Number(quantity) > 0 &&
+    Number(quantity) <= available &&
+    (type === "market" || (Number(price) > 0 && Number(price) < 1));
+  return (
+    <PopoverRoot
+      open={open}
+      onOpenChange={(value) => {
+        setOpen(value);
+        if (value) {
+          setQuantity(String(available));
+          setPrice(state.outcomePrices[outcome].toFixed(4));
+        }
+      }}
+    >
+      <PopoverTrigger asChild>
+        <Button
+          size="sm"
+          variant="outlined"
+          color="secondary"
+          disabled={!tradable || available <= 0}
         >
-          <span className="oui-block">
-            {pnl >= 0 ? "+" : ""}
-            <TableNumber value={pnl} dp={2} suffix="USDC" />
-          </span>
-          <span className="oui-block">
-            {roe >= 0 ? "+" : ""}
-            {roe.toFixed(2)}%
-          </span>
-        </span>,
-        <span className="oui-flex oui-justify-end oui-gap-2">
+          {t("common.sell")}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="top"
+        align="end"
+        className="oui-w-[360px] oui-max-w-[calc(100vw-32px)] oui-p-5"
+      >
+        <div className="oui-flex oui-flex-col oui-gap-3">
+          <OutcomeBadge outcome={outcome} />
+          <Input
+            prefix={t("common.quantity")}
+            value={quantity}
+            onValueChange={setQuantity}
+          />
+          <Slider
+            value={[
+              available > 0
+                ? Math.min(100, (Number(quantity) / available) * 100)
+                : 0,
+            ]}
+            onValueChange={([value]) =>
+              setQuantity(
+                new Decimal(available)
+                  .mul(value)
+                  .div(100)
+                  .toFixed(4, Decimal.ROUND_DOWN),
+              )
+            }
+          />
           <Button
-            className="oui-predictions-close-btn"
             size="sm"
             variant="outlined"
             color="secondary"
-            onClick={() => prepareSell("market")}
+            onClick={() => setQuantity(String(available))}
           >
-            {t("positions.column.close")}
+            {t("tpsl.entirePosition")}
           </Button>
-        </span>,
-      ],
-    };
-  });
-
-  return (
-    <PredictionDataTable
-      minWidth={1210}
-      columns={[
-        tableColumn(t("common.symbol"), 310, {
-          fixed: "start",
-          sortable: true,
-        }),
-        tableColumn(t("prediction.size"), 120, { sortable: true }),
-        tableColumn(t("common.available"), 120),
-        tableColumn(t("prediction.entryPrice"), 140, { sortable: true }),
-        tableColumn(t("common.markPrice"), 140, { sortable: true }),
-        tableColumn(t("prediction.pnlRoe"), 170, { sortable: true }),
-        tableColumn("", 110, {
-          align: "right",
-          fixed: "end",
-          type: "action",
-        }),
-      ]}
-      rows={rows}
-    />
-  );
-};
-
-const PerpPositionsTable: React.FC<{
-  state: PredictionState;
-}> = ({ state }) => {
-  const { t } = useTranslation();
-  const positions = state.mockPerpPositions;
-  return (
-    <PredictionDataTable
-      minWidth={1510}
-      columns={[
-        tableColumn(t("common.symbol"), 200, {
-          fixed: "start",
-          sortable: true,
-        }),
-        tableColumn(t("common.quantity"), 120, { sortable: true }),
-        tableColumn(t("common.avgOpen"), 120, { sortable: true }),
-        tableColumn(t("common.markPrice"), 120, { sortable: true }),
-        tableColumn(t("positions.column.liqPrice"), 100, { sortable: true }),
-        tableColumn(t("common.unrealizedPnl"), 180, { sortable: true }),
-        tableColumn(t("common.fullTPSL"), 150),
-        tableColumn(t("common.partialTPSL"), 150),
-        tableColumn(t("common.notional"), 100, { sortable: true }),
-        tableColumn(t("positions.column.margin"), 140, { sortable: true }),
-        tableColumn("", 80, {
-          align: "right",
-          fixed: "end",
-          type: "action",
-        }),
-      ]}
-      rows={positions.map((position) => {
-        const signedQuantity =
-          position.side === "long" ? position.quantity : -position.quantity;
-        const notional = new Decimal(position.quantity)
-          .mul(position.markPrice)
-          .toNumber();
-        const roi =
-          position.margin > 0
-            ? new Decimal(position.pnl).div(position.margin).mul(100).toNumber()
-            : 0;
-        return {
-          id: position.symbol,
-          sortValues: [
-            position.symbol,
-            signedQuantity,
-            position.averagePrice,
-            position.markPrice,
-            position.liquidationPrice,
-            position.pnl,
-            undefined,
-            undefined,
-            notional,
-            position.margin,
-            undefined,
-          ],
-          cells: [
-            <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
-              <span
-                className={cn(
-                  "oui-h-10 oui-w-1 oui-rounded-[1px]",
-                  position.side === "long"
-                    ? "oui-bg-trade-profit"
-                    : "oui-bg-trade-loss",
-                )}
-              />
-              <div className="oui-flex oui-flex-col oui-items-start oui-gap-1">
-                <span className="oui-text-base-contrast">
-                  {position.symbol
-                    .replace("PERP_", "")
-                    .replace("_USDC", "-PERP")}
-                </span>
-                <Badge size="xs" color="primary">
-                  {position.leverage}x
-                </Badge>
-              </div>
-            </div>,
-            <span
-              className={cn(
-                position.side === "long"
-                  ? "oui-text-trade-profit"
-                  : "oui-text-trade-loss",
-              )}
-            >
-              <TableNumber value={signedQuantity} />
-            </span>,
-            <TableNumber value={position.averagePrice} dp={2} />,
-            <TableNumber value={position.markPrice} dp={2} />,
-            <span className="oui-text-warning-light">
-              <TableNumber value={position.liquidationPrice} dp={2} />
-            </span>,
-            <span
-              className={cn(
-                "oui-flex oui-gap-1",
-                position.pnl >= 0
-                  ? "oui-text-trade-profit"
-                  : "oui-text-trade-loss",
-              )}
-            >
-              <TableNumber value={position.pnl} dp={2} />
-              <span>
-                ({roi >= 0 ? "+" : ""}
-                {roi.toFixed(2)}%)
-              </span>
-            </span>,
-            "--",
-            "--",
-            <TableNumber value={notional} dp={2} />,
-            <TableNumber value={position.margin} dp={2} />,
-            <Button
-              variant="outlined"
-              size="sm"
-              color="secondary"
-              onClick={() => state.closeMockPerpPosition(position.symbol)}
-            >
-              {t("positions.column.close")}
-            </Button>,
-          ],
-        };
-      })}
-    />
-  );
-};
-
-const OpenOrdersTable: React.FC<{ state: PredictionState }> = ({ state }) => {
-  const { t } = useTranslation();
-  return (
-    <PredictionDataTable
-      minWidth={1380}
-      columns={[
-        tableColumn(t("common.symbol"), 280, { fixed: "start" }),
-        tableColumn(t("common.type"), 100),
-        tableColumn(t("common.side"), 110),
-        tableColumn(t("common.orderPrice"), 130),
-        tableColumn(t("prediction.filledAmount"), 120),
-        tableColumn(t("prediction.totalAmount"), 120),
-        tableColumn(t("prediction.orderValue"), 150),
-        tableColumn(t("prediction.explorer"), 110),
-        tableColumn(t("common.time"), 170),
-        tableColumn("", 100, {
-          align: "right",
-          fixed: "end",
-          type: "action",
-        }),
-      ]}
-      toolbar={
-        <div className="oui-prediction-openOrders-toolbar oui-flex oui-h-[49px] oui-items-center oui-justify-end oui-border-b oui-border-line-4 oui-px-2">
-          <Button
-            size="xs"
-            variant="outlined"
-            color="secondary"
-            className="oui-openOrders-cancelAll-btn"
-            disabled={state.openOrders.length === 0}
-            onClick={state.cancelAllOrders}
-          >
-            {t("orders.cancelAll")}
-          </Button>
-        </div>
-      }
-      rows={state.openOrders.map((order) => ({
-        id: String(order.id),
-        sortValues: [
-          t("prediction.btcUpDown"),
-          order.type,
-          order.side,
-          order.price,
-          0,
-          order.quantity,
-          order.price * order.quantity,
-          "",
-          order.timestamp,
-          "",
-        ],
-        cells: [
-          <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
-            <span
-              className={cn(
-                "oui-h-10 oui-w-1 oui-flex-none oui-rounded-[1px]",
-                order.outcome === "up"
-                  ? "oui-bg-trade-profit"
-                  : "oui-bg-trade-loss",
-              )}
+          <Select.options
+            value={type}
+            options={[
+              { label: t("common.market"), value: "market" },
+              { label: t("common.limit"), value: "limit" },
+            ]}
+            onValueChange={(value) => setType(value as "market" | "limit")}
+          />
+          {type === "limit" && (
+            <Input
+              prefix={t("common.price")}
+              value={price}
+              onValueChange={setPrice}
             />
-            <div className="oui-min-w-0 oui-text-base-contrast">
-              <span className="oui-block oui-whitespace-nowrap">
-                {t("prediction.btcUpDown")}
-              </span>
-              <Badge
-                className="oui-mt-1 oui-openOrders-roundBadge oui-tabular-nums"
-                color="neutral"
-                size="xs"
-              >
-                {formatRoundBadge(order.round)}
-              </Badge>
-            </div>
-          </div>,
-          <span className="oui-capitalize">{t(`common.${order.type}`)}</span>,
-          <span className="oui-whitespace-nowrap">
-            <span className="oui-capitalize">{t(`common.${order.side}`)}</span>
-            <span className="oui-text-base-contrast-54">-</span>
-            <span
-              className={cn(
-                order.outcome === "up"
-                  ? "oui-text-trade-profit"
-                  : "oui-text-trade-loss",
-              )}
+          )}
+          <div className="oui-flex oui-justify-end oui-gap-2">
+            <Button
+              size="sm"
+              variant="outlined"
+              color="secondary"
+              onClick={() => setOpen(false)}
             >
-              {t(`prediction.${order.outcome}`)}
-            </span>
-          </span>,
-          <TableNumber value={order.price} />,
-          <TableNumber value={0} dp={2} />,
-          <TableNumber value={order.quantity} />,
-          <TableNumber
-            value={order.price * order.quantity}
-            dp={2}
-            suffix="USDC"
-          />,
-          <Button
-            size="xs"
-            variant="text"
-            color="secondary"
-            className="oui-openOrders-explorer-btn"
+              {t("common.cancel")}
+            </Button>
+            <Button
+              size="sm"
+              disabled={!valid}
+              onClick={() => {
+                if (
+                  state.sellPosition(
+                    outcome,
+                    Number(quantity),
+                    type,
+                    Number(price),
+                  )
+                )
+                  setOpen(false);
+              }}
+            >
+              {t("common.confirm")}
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </PopoverRoot>
+  );
+};
+
+const PredictionFilters = ({
+  filters,
+  mode,
+  trailing,
+}: {
+  filters: ReturnType<typeof usePredictionFilters>;
+  mode: "holdings" | "pending" | "filled" | "history" | "settlements";
+  trailing?: React.ReactNode;
+}) => {
+  const { t } = useTranslation();
+  const items: DataFilterItem[] = [];
+  if (mode !== "holdings" && mode !== "settlements")
+    items.push({
+      type: "select",
+      name: "side",
+      value: filters.side,
+      options: [
+        { label: t("common.side.all"), value: "all" },
+        { label: t("common.buy"), value: "buy" },
+        { label: t("common.sell"), value: "sell" },
+      ],
+    });
+  items.push({
+    type: "select",
+    name: "outcome",
+    value: filters.outcome,
+    options: [
+      { label: t("prediction.filter.allOutcomes"), value: "all" },
+      { label: t("prediction.up"), value: "up" },
+      { label: t("prediction.down"), value: "down" },
+    ],
+  });
+  if (mode === "history") {
+    items.push({
+      type: "select",
+      name: "status",
+      value: filters.status,
+      options: [
+        { label: t("common.status.all"), value: "all" },
+        { label: t("orders.status.pending"), value: "pending" },
+        { label: t("prediction.status.filled"), value: "filled" },
+        { label: t("prediction.status.cancelled"), value: "cancelled" },
+      ],
+    });
+  }
+  if (mode === "history" || mode === "settlements") {
+    items.push({
+      type: "range",
+      name: "dateRange",
+      value: filters.dateRange,
+      fromDate: predictionDateRange(90).from,
+      toDate: predictionDateRange(1).to,
+    });
+  }
+  return (
+    <div className="oui-flex oui-flex-wrap oui-items-center oui-gap-3 oui-px-2">
+      <DataFilter
+        className="oui-w-auto oui-flex-wrap oui-gap-y-3"
+        items={items}
+        onFilter={filters.onFilter}
+      />
+      {mode === "settlements" &&
+        [1, 7, 30, 90].map((days) => (
+          <button
+            key={days}
+            type="button"
+            aria-pressed={filters.days === days}
+            onClick={() => filters.updateDays(days)}
+            className="oui-relative oui-rounded oui-px-2 oui-py-[2px] oui-text-sm"
           >
-            {t("prediction.view")}
-          </Button>,
-          formatTableTime(order.timestamp),
+            <span className="oui-pointer-events-none oui-absolute oui-inset-0 oui-rounded oui-opacity-[.12] oui-gradient-primary" />
+            <Text.gradient
+              color={filters.days === days ? "brand" : undefined}
+              className={
+                filters.days !== days ? "oui-text-base-contrast-54" : undefined
+              }
+            >
+              {days}D
+            </Text.gradient>
+          </button>
+        ))}
+      {trailing && <div className="oui-ml-auto">{trailing}</div>}
+    </div>
+  );
+};
+
+const HoldingsTable = ({ state }: { state: PredictionState }) => {
+  const { t } = useTranslation();
+  const filters = usePredictionFilters();
+  return (
+    <PredictionDataTable
+      minWidth={1320}
+      toolbar={<PredictionFilters filters={filters} mode="holdings" />}
+      columns={[
+        tableColumn(t("common.symbol"), 250, { fixed: "start" }),
+        tableColumn(t("prediction.outcome"), 100),
+        tableColumn(t("prediction.size"), 110),
+        tableColumn(t("common.available"), 110),
+        tableColumn(t("prediction.entryPrice"), 130),
+        tableColumn(t("common.markPrice"), 130),
+        tableColumn(t("common.unrealizedPnl"), 170),
+        tableColumn(t("prediction.countdownStatus"), 150),
+        tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
+      ]}
+      rows={state.positions.filter(filters.matches).map((position) => ({
+        id: position.outcome,
+        cells: [
+          <RoundSymbol round={state.round} />,
+          <OutcomeBadge outcome={position.outcome} />,
+          <TableNumber value={position.quantity} />,
+          <TableNumber value={state.availableQuantity(position.outcome)} />,
+          <TableNumber value={position.averagePrice} />,
+          <TableNumber value={state.outcomePrices[position.outcome]} />,
+          <Text.pnl dp={2}>
+            {new Decimal(state.outcomePrices[position.outcome])
+              .sub(position.averagePrice)
+              .mul(position.quantity)
+              .toNumber()}
+          </Text.pnl>,
+          state.isRoundTradable
+            ? formatCountdown(state.countdown)
+            : t(`prediction.playground.phase.${state.roundPhase}`),
+          <SellPosition state={state} outcome={position.outcome} />,
+        ],
+      }))}
+    />
+  );
+};
+
+const PendingValue = ({
+  state,
+  order,
+  field,
+}: {
+  state: PredictionState;
+  order: PredictionState["openOrders"][number];
+  field: "price" | "quantity";
+}) => {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(String(order[field]));
+  const [error, setError] = useState(false);
+  return (
+    <PopoverRoot
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        setValue(String(order[field]));
+        setError(false);
+      }}
+    >
+      <PopoverTrigger asChild>
+        <Button
+          variant="text"
+          color="secondary"
+          size="xs"
+          disabled={
+            !state.isRoundTradable ||
+            state.prototypeRegionState === "restricted"
+          }
+        >
+          {field === "quantity" ? "0 / " : ""}
+          <TableNumber value={order[field]} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent side="top" align="end" className="oui-w-64 oui-p-4">
+        <Input value={value} onValueChange={setValue} />
+        {error && <Text color="danger">{t("prediction.invalidOrder")}</Text>}
+        <div className="oui-mt-3 oui-flex oui-justify-end oui-gap-2">
           <Button
             size="sm"
             variant="outlined"
             color="secondary"
-            className="oui-openOrders-cancel-btn"
-            onClick={() => state.cancelOrder(order.id)}
+            onClick={() => setOpen(false)}
           >
             {t("common.cancel")}
-          </Button>,
-        ],
-      }))}
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => {
+              if (
+                state.editPendingOrder(
+                  order.id,
+                  field === "price" ? Number(value) : order.price,
+                  field === "quantity" ? Number(value) : order.quantity,
+                )
+              )
+                setOpen(false);
+              else setError(true);
+            }}
+          >
+            {t("common.confirm")}
+          </Button>
+        </div>
+      </PopoverContent>
+    </PopoverRoot>
+  );
+};
+
+const PredictionOrdersTable = ({
+  state,
+  mode,
+}: {
+  state: PredictionState;
+  mode: "pending" | "filled" | "history";
+}) => {
+  const { t } = useTranslation();
+  const pending = mode === "pending";
+  const filters = usePredictionFilters(mode === "history");
+  const records = pending
+    ? state.openOrders
+    : mode === "filled"
+      ? state.history.filter((o) => o.status === "filled")
+      : [...state.openOrders, ...state.history];
+  const columns = [
+    tableColumn(t("common.symbol"), 250, { fixed: "start" as const }),
+    tableColumn(t("common.side"), 120),
+    tableColumn(t("common.type"), 100),
+    tableColumn(
+      t(
+        mode === "filled"
+          ? "prediction.filledQuantity"
+          : "orders.column.fill&Quantity",
+      ),
+      150,
+    ),
+    tableColumn(t("common.orderPrice"), 130),
+    ...(!pending ? [tableColumn(t("prediction.avgFillPrice"), 130)] : []),
+    tableColumn(
+      t(pending ? "prediction.orderValue" : "prediction.filledValue"),
+      150,
+    ),
+    ...(!pending ? [tableColumn(t("common.fee"), 100)] : []),
+    ...(mode === "history" ? [tableColumn(t("common.status"), 120)] : []),
+    tableColumn(t("orders.column.orderTime"), 170),
+    ...(mode !== "filled"
+      ? [
+          tableColumn("", 100, {
+            fixed: "end" as const,
+            align: "right" as const,
+            type: "action" as const,
+          }),
+        ]
+      : []),
+  ];
+  return (
+    <PredictionDataTable
+      minWidth={1400}
+      columns={columns}
+      toolbar={
+        <PredictionFilters
+          filters={filters}
+          mode={mode}
+          trailing={
+            pending ? (
+              <Button
+                size="xs"
+                variant="outlined"
+                color="secondary"
+                disabled={!state.openOrders.length}
+                onClick={state.cancelAllOrders}
+              >
+                {t("orders.cancelAll")}
+              </Button>
+            ) : undefined
+          }
+        />
+      }
+      rows={records
+        .filter((order) =>
+          filters.matches({
+            ...order,
+            status: "status" in order ? order.status : "pending",
+          }),
+        )
+        .map((order) => {
+          const isPending = !("status" in order);
+          const filled = "status" in order && order.status === "filled";
+          const filledQuantity = filled ? order.quantity : 0;
+          return {
+            id: String(order.id),
+            cells: [
+              <RoundSymbol round={order.round} />,
+              <span>
+                {t(`common.${order.side}`)}{" "}
+                <OutcomeBadge outcome={order.outcome} />
+              </span>,
+              t(`common.${order.type}`),
+              pending ? (
+                <PendingValue state={state} order={order} field="quantity" />
+              ) : (
+                <span>
+                  <TableNumber value={filledQuantity} />
+                  {mode !== "filled" && (
+                    <>
+                      {" "}
+                      / <TableNumber value={order.quantity} />
+                    </>
+                  )}
+                </span>
+              ),
+              pending ? (
+                <PendingValue state={state} order={order} field="price" />
+              ) : order.type === "market" ? (
+                t("common.market")
+              ) : (
+                <TableNumber value={order.price} />
+              ),
+              ...(!pending
+                ? [filled ? <TableNumber value={order.price} /> : "--"]
+                : []),
+              <TableNumber
+                value={new Decimal(pending ? order.quantity : filledQuantity)
+                  .mul(order.price)
+                  .toNumber()}
+                dp={2}
+                suffix="USDC"
+              />,
+              ...(!pending
+                ? [<TableNumber value={0} dp={2} suffix="USDC" />]
+                : []),
+              ...(mode === "history"
+                ? [
+                    t(
+                      isPending
+                        ? "orders.status.pending"
+                        : filled
+                          ? "prediction.status.filled"
+                          : "prediction.status.cancelled",
+                    ),
+                  ]
+                : []),
+              formatTableTime(order.timestamp),
+              ...(mode !== "filled"
+                ? [
+                    isPending ? (
+                      <Button
+                        size="sm"
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => state.cancelOrder(order.id)}
+                      >
+                        {t("common.cancel")}
+                      </Button>
+                    ) : null,
+                  ]
+                : []),
+            ],
+          };
+        })}
     />
   );
 };
 
-const OrderHistoryTable: React.FC<{ state: PredictionState }> = ({ state }) => {
+const PredictionHistoryTable = ({ state }: { state: PredictionState }) => {
   const { t } = useTranslation();
+  const filters = usePredictionFilters(true);
   return (
     <PredictionDataTable
-      minWidth={1380}
+      minWidth={1400}
+      toolbar={<PredictionFilters filters={filters} mode="settlements" />}
       columns={[
-        tableColumn(t("common.symbol"), 280, { fixed: "start" }),
-        tableColumn(t("common.type"), 100),
-        tableColumn(t("common.side"), 110),
-        tableColumn(t("prediction.filledOrderPrice"), 150),
-        tableColumn(t("prediction.filledTotalAmount"), 160),
-        tableColumn(t("prediction.filledTotalValue"), 160),
-        tableColumn(t("prediction.explorer"), 130),
-        tableColumn(t("prediction.statusOrderId"), 140),
-        tableColumn(t("common.time"), 170),
+        tableColumn(t("common.symbol"), 250, { fixed: "start" }),
+        tableColumn(t("prediction.outcome"), 100),
+        tableColumn(t("prediction.closedQuantity"), 130),
+        tableColumn(t("prediction.avgEntryPrice"), 140),
+        tableColumn(t("prediction.exitSettlementPrice"), 170),
+        tableColumn(t("prediction.result"), 130),
+        tableColumn(t("positions.history.column.netPnl"), 140),
+        tableColumn(t("prediction.closedSettledTime"), 180),
       ]}
-      rows={state.history.map((trade) => {
-        const value = trade.price * trade.quantity;
-        return {
-          id: `${trade.id}-${trade.timestamp}`,
-          sortValues: [
-            t("prediction.btcUpDown"),
-            trade.type,
-            trade.side,
-            trade.price,
-            trade.quantity,
-            value,
-            "",
-            trade.status,
-            trade.timestamp,
-          ],
+      rows={state.settlements
+        .filter((record) =>
+          filters.matches({
+            outcome: record.outcome,
+            status: record.result === "closed" ? "closed" : "settled",
+            timestamp: record.settledAt,
+          }),
+        )
+        .map((record) => ({
+          id: String(record.id),
           cells: [
-            <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
-              <span
-                className={cn(
-                  "oui-h-10 oui-w-1 oui-flex-none oui-rounded-[1px]",
-                  trade.outcome === "up"
-                    ? "oui-bg-trade-profit"
-                    : "oui-bg-trade-loss",
+            <RoundSymbol round={record.round} />,
+            <OutcomeBadge outcome={record.outcome} />,
+            <TableNumber value={record.quantity} />,
+            <TableNumber value={record.averagePrice} />,
+            <div>
+              <TableNumber value={record.settlementPrice} />
+              <div className="oui-text-base-contrast-54">
+                {t(
+                  record.result === "closed"
+                    ? "prediction.exitPrice"
+                    : "prediction.settlementPrice",
                 )}
-              />
-              <div className="oui-min-w-0 oui-text-base-contrast">
-                <span className="oui-block oui-whitespace-nowrap">
-                  {t("prediction.btcUpDown")}
-                </span>
-                <Badge
-                  className="oui-mt-1 oui-orderHistory-roundBadge oui-tabular-nums"
-                  color="neutral"
-                  size="xs"
-                >
-                  {formatRoundBadge(trade.round)}
-                </Badge>
               </div>
             </div>,
-            <span className="oui-capitalize">{t(`common.${trade.type}`)}</span>,
-            <span className="oui-whitespace-nowrap">
-              <span className="oui-capitalize">
-                {t(`common.${trade.side}`)}
-              </span>
-              <span className="oui-text-base-contrast-54">-</span>
-              <span
-                className={cn(
-                  trade.outcome === "up"
-                    ? "oui-text-trade-profit"
-                    : "oui-text-trade-loss",
-                )}
-              >
-                {t(`prediction.${trade.outcome}`)}
-              </span>
-            </span>,
-            <span>
-              <span className="oui-block">
-                {trade.status === "filled" ? (
-                  <TableNumber value={trade.price} />
-                ) : (
-                  "--"
-                )}
-              </span>
-              <span className="oui-block">
-                <TableNumber value={trade.price} />
-              </span>
-            </span>,
-            <span>
-              <span className="oui-block">
-                <TableNumber
-                  value={trade.status === "filled" ? trade.quantity : 0}
-                />
-              </span>
-              <span className="oui-block">
-                <TableNumber value={trade.quantity} />
-              </span>
-            </span>,
-            <span>
-              <span className="oui-block">
-                <TableNumber
-                  value={trade.status === "filled" ? value : 0}
-                  dp={2}
-                  suffix="USDC"
-                />
-              </span>
-              <span className="oui-block">
-                <TableNumber value={value} dp={2} suffix="USDC" />
-              </span>
-            </span>,
-            <Button
-              size="xs"
-              variant="text"
-              color="secondary"
-              className="oui-orderHistory-explorer-btn"
-            >
-              {t("prediction.viewExplorer")}
-            </Button>,
-            <span>
-              <span className="oui-block">
-                {t(`prediction.status.${trade.status}`)}
-              </span>
-              <span className="oui-block">#{Math.abs(trade.id)}</span>
-            </span>,
-            formatTableTime(trade.timestamp),
+            record.result === "closed" ? (
+              t("prediction.closed")
+            ) : (
+              <OutcomeBadge outcome={record.result ?? record.outcome} />
+            ),
+            <Text.pnl dp={2}>{record.pnl}</Text.pnl>,
+            formatTableTime(record.settledAt),
           ],
-        };
-      })}
-    />
-  );
-};
-
-const TradeHistoryTable: React.FC<{ state: PredictionState }> = ({ state }) => {
-  const { t } = useTranslation();
-  const filledTrades = state.history.filter(
-    (trade) => trade.status === "filled",
-  );
-  return (
-    <PredictionDataTable
-      minWidth={1260}
-      columns={[
-        tableColumn(t("common.symbol"), 280, { fixed: "start" }),
-        tableColumn(t("common.side"), 110),
-        tableColumn(t("prediction.executedPrice"), 130),
-        tableColumn(t("prediction.executedAmount"), 150),
-        tableColumn(t("prediction.executedValue"), 150),
-        tableColumn(t("common.fee"), 170),
-        tableColumn(t("common.realizedPnl"), 150),
-        tableColumn(t("prediction.role"), 100),
-        tableColumn(t("common.time"), 170),
-      ]}
-      rows={filledTrades.map((trade) => ({
-        id: `${trade.id}-${trade.timestamp}`,
-        sortValues: [
-          t("prediction.btcUpDown"),
-          trade.side,
-          trade.price,
-          trade.quantity,
-          trade.price * trade.quantity,
-          trade.price * trade.quantity * 0.001,
-          0,
-          "taker",
-          trade.timestamp,
-        ],
-        cells: [
-          <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
-            <span
-              className={cn(
-                "oui-h-10 oui-w-1 oui-flex-none oui-rounded-[1px]",
-                trade.outcome === "up"
-                  ? "oui-bg-trade-profit"
-                  : "oui-bg-trade-loss",
-              )}
-            />
-            <div className="oui-min-w-0 oui-text-base-contrast">
-              <span className="oui-block oui-whitespace-nowrap">
-                {t("prediction.btcUpDown")}
-              </span>
-              <Badge
-                className="oui-mt-1 oui-tradeHistory-roundBadge oui-tabular-nums"
-                color="neutral"
-                size="xs"
-              >
-                {formatRoundBadge(trade.round)}
-              </Badge>
-            </div>
-          </div>,
-          <span className="oui-whitespace-nowrap">
-            <span className="oui-capitalize">{t(`common.${trade.side}`)}</span>
-            <span className="oui-text-base-contrast-54">-</span>
-            <span
-              className={cn(
-                trade.outcome === "up"
-                  ? "oui-text-trade-profit"
-                  : "oui-text-trade-loss",
-              )}
-            >
-              {t(`prediction.${trade.outcome}`)}
-            </span>
-          </span>,
-          <TableNumber value={trade.price} />,
-          <TableNumber value={trade.quantity} />,
-          <TableNumber
-            value={trade.price * trade.quantity}
-            dp={2}
-            suffix="USDC"
-          />,
-          <TableNumber
-            value={trade.price * trade.quantity * 0.001}
-            dp={8}
-            suffix="USDC"
-          />,
-          "--",
-          t("prediction.taker"),
-          formatTableTime(trade.timestamp),
-        ],
-      }))}
+        }))}
     />
   );
 };
@@ -2925,141 +2860,6 @@ const AssetsTable: React.FC<{ state: PredictionState }> = ({ state }) => {
   );
 };
 
-const TransactionHistoryTable: React.FC<{ state: PredictionState }> = ({
-  state,
-}) => {
-  const { t } = useTranslation();
-  return (
-    <PredictionDataTable
-      columns={[
-        tableColumn(t("common.time"), 180),
-        tableColumn(t("common.type"), 140),
-        tableColumn(t("prediction.asset"), 120),
-        tableColumn(t("common.amount"), 160),
-        tableColumn(t("common.status"), 120),
-      ]}
-      rows={state.mockTransactions.map((transaction) => ({
-        id: String(transaction.id),
-        sortValues: [
-          transaction.timestamp,
-          transaction.type,
-          transaction.asset,
-          transaction.amount,
-          transaction.status,
-        ],
-        cells: [
-          formatTableTime(transaction.timestamp),
-          t(`prediction.transaction.${transaction.type}`),
-          transaction.asset,
-          <TableNumber
-            value={transaction.amount}
-            dp={2}
-            suffix={transaction.asset}
-          />,
-          t(`prediction.transaction.${transaction.status}`),
-        ],
-      }))}
-    />
-  );
-};
-
-const SettledTable: React.FC<{ state: PredictionState }> = ({ state }) => {
-  const { t } = useTranslation();
-  return (
-    <PredictionDataTable
-      minWidth={1160}
-      columns={[
-        tableColumn(t("common.symbol"), 270, {
-          fixed: "start",
-          sortable: true,
-        }),
-        tableColumn(t("prediction.outcome"), 110),
-        tableColumn(t("prediction.size"), 110, { sortable: true }),
-        tableColumn(t("prediction.entryPrice"), 130, { sortable: true }),
-        tableColumn(t("prediction.settlementPrice"), 150, {
-          sortable: true,
-        }),
-        tableColumn(t("prediction.payout"), 140, { sortable: true }),
-        tableColumn(t("common.realizedPnl"), 170, { sortable: true }),
-        tableColumn(t("prediction.settledTime"), 180),
-        tableColumn("", 80, {
-          align: "right",
-          fixed: "end",
-          type: "action",
-        }),
-      ]}
-      rows={state.settlements.map((settlement) => {
-        const cost = new Decimal(settlement.averagePrice)
-          .mul(settlement.quantity)
-          .toNumber();
-        const roe = cost > 0 ? (settlement.pnl / cost) * 100 : 0;
-        return {
-          id: String(settlement.id),
-          sortValues: [
-            t("prediction.btcUpDown"),
-            settlement.outcome,
-            settlement.quantity,
-            settlement.averagePrice,
-            settlement.settlementPrice,
-            settlement.payout,
-            settlement.pnl,
-            settlement.settledAt,
-            undefined,
-          ],
-          cells: [
-            <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
-              <span
-                className={cn(
-                  "oui-h-10 oui-w-1 oui-flex-none oui-rounded-[1px]",
-                  settlement.outcome === "up"
-                    ? "oui-bg-trade-profit"
-                    : "oui-bg-trade-loss",
-                )}
-              />
-              <div className="oui-min-w-0 oui-text-base-contrast">
-                <span className="oui-block oui-whitespace-nowrap">
-                  {t("prediction.btcUpDown")}
-                </span>
-                <Badge
-                  className="oui-mt-1 oui-predictions-roundBadge oui-tabular-nums"
-                  color="neutral"
-                  size="xs"
-                >
-                  {formatRoundBadge(settlement.round)}
-                </Badge>
-              </div>
-            </div>,
-            <OutcomeBadge outcome={settlement.outcome} />,
-            <TableNumber value={settlement.quantity} />,
-            <TableNumber value={settlement.averagePrice} />,
-            <TableNumber value={settlement.settlementPrice} />,
-            <TableNumber value={settlement.payout} dp={2} suffix="USDC" />,
-            <span
-              className={cn(
-                settlement.pnl >= 0
-                  ? "oui-text-trade-profit"
-                  : "oui-text-trade-loss",
-              )}
-            >
-              <span className="oui-block">
-                {settlement.pnl >= 0 ? "+" : ""}
-                <TableNumber value={settlement.pnl} dp={2} suffix="USDC" />
-              </span>
-              <span className="oui-block">
-                {roe >= 0 ? "+" : ""}
-                {roe.toFixed(2)}%
-              </span>
-            </span>,
-            formatTableTime(settlement.settledAt),
-            <Button size="xs" variant="text" color="secondary">
-              {t("prediction.view")}
-            </Button>,
-          ],
-        };
-      })}
-    />
-  );
-};
 /* eslint-enable react/jsx-key */
 
 export const PredictionPlayground: React.FC<
@@ -3084,12 +2884,9 @@ export const PredictionPlayground: React.FC<
   const [open, setOpen] = useState(false);
   const phases: PredictionRoundPhase[] = [
     "trading",
-    "closingSoon",
-    "closed",
     "resolving",
     "resolvedUp",
     "resolvedDown",
-    "void",
   ];
   const authStates: PredictionPrototypeAuthState[] = [
     "real",

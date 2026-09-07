@@ -9,11 +9,12 @@ import {
 import type { PredictionPortfolioState } from "./predictionPortfolio.script";
 
 const portfolioPredictionTabs: PredictionDataTab[] = [
-  "openOrders",
   "predictions",
+  "openOrders",
+  "filled",
+  "predictionHistory",
   "orderHistory",
-  "tradeHistory",
-  "transactionHistory",
+  "assets",
 ];
 
 export const PredictionPortfolio: React.FC<PredictionPortfolioState> = (

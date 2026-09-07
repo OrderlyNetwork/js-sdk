@@ -16,13 +16,11 @@ export type PredictionRoundPhase =
   | "void";
 export type PredictionDataTab =
   | "openOrders"
-  | "positions"
   | "predictions"
   | "assets"
   | "orderHistory"
-  | "tradeHistory"
-  | "transactionHistory";
-export type PredictionPositionTab = "open" | "settled";
+  | "filled"
+  | "predictionHistory";
 export type PredictionPrototypeAuthState =
   | "real"
   | "disconnected"
@@ -70,6 +68,7 @@ export type PredictionSettlement = {
   quantity: number;
   averagePrice: number;
   settlementPrice: number;
+  result?: PredictionOutcome | "closed";
   payout: number;
   pnl: number;
   settledAt: number;
@@ -232,7 +231,8 @@ export const usePredictionScript = () => {
       averagePrice: 0.46,
       settlementPrice: 1,
       payout: 18,
-      pnl: 8.25,
+      pnl: 9.72,
+      result: "up",
       settledAt: Date.now() - 22 * 60 * 1_000,
     },
   ]);
@@ -280,9 +280,7 @@ export const usePredictionScript = () => {
       status: "completed",
     },
   ];
-  const [activeTab, setActiveTab] = useState<PredictionDataTab>("openOrders");
-  const [activePredictionTab, setActivePredictionTab] =
-    useState<PredictionPositionTab>("open");
+  const [activeTab, setActiveTab] = useState<PredictionDataTab>("predictions");
   const [notification, setNotification] = useState<PredictionNotification>();
   const notificationIdRef = useRef(0);
   const tickRef = useRef(0);
@@ -380,7 +378,23 @@ export const usePredictionScript = () => {
   const odds =
     selectedPrice > 0 ? new Decimal(1).div(selectedPrice).toNumber() : 0;
 
-  const selectedTokenBalance = selectedPosition?.quantity ?? 0;
+  const availableQuantity = (outcome: PredictionOutcome, excludeId?: number) =>
+    Math.max(
+      0,
+      new Decimal(positions.find((p) => p.outcome === outcome)?.quantity ?? 0)
+        .sub(
+          openOrders
+            .filter(
+              (o) =>
+                o.side === "sell" &&
+                o.outcome === outcome &&
+                o.id !== excludeId,
+            )
+            .reduce((sum, o) => sum.add(o.quantity), new Decimal(0)),
+        )
+        .toNumber(),
+    );
+  const selectedTokenBalance = availableQuantity(selectedOutcome);
   const maxQuoteAmount =
     orderSide === "buy"
       ? balance
@@ -542,17 +556,27 @@ export const usePredictionScript = () => {
 
     setBalance((previous) => previous + payout);
     setSettlements((previous) => [
-      {
-        id: nextIdRef.current++,
-        round,
-        outcome: winningOutcome,
-        quantity,
-        averagePrice: quantity > 0 ? cost / quantity : 0,
-        settlementPrice: 1,
-        payout,
-        pnl: payout - cost,
-        settledAt: Date.now(),
-      },
+      ...positions.map((position) => {
+        const settlementPrice = position.outcome === winningOutcome ? 1 : 0;
+        const payout = new Decimal(position.quantity)
+          .mul(settlementPrice)
+          .toNumber();
+        return {
+          id: nextIdRef.current++,
+          round,
+          outcome: position.outcome,
+          quantity: position.quantity,
+          averagePrice: position.averagePrice,
+          settlementPrice,
+          payout,
+          pnl: new Decimal(settlementPrice)
+            .sub(position.averagePrice)
+            .mul(position.quantity)
+            .toNumber(),
+          settledAt: Date.now(),
+          result: winningOutcome,
+        };
+      }),
       ...previous,
     ]);
     setPositions([]);
@@ -573,10 +597,109 @@ export const usePredictionScript = () => {
     setRound((previous) => previous + ROUND_SECONDS);
     setCountdown(ROUND_SECONDS);
     setRoundPhase("trading");
-    setActiveTab("predictions");
-    setActivePredictionTab("settled");
+    setActiveTab("predictionHistory");
     notify("prediction.message.settled");
   }, [currentPrice, notify, openingPrice, positions, round]);
+
+  const sellPosition = (
+    outcome: PredictionOutcome,
+    quantity: number,
+    type: PredictionOrderType,
+    limit: number,
+  ) => {
+    const price = type === "market" ? outcomePrices[outcome] : limit;
+    const position = positions.find((p) => p.outcome === outcome);
+    if (
+      !isRoundTradable ||
+      prototypeRegionState === "restricted" ||
+      !position ||
+      !Number.isFinite(quantity) ||
+      quantity <= 0 ||
+      quantity > availableQuantity(outcome) ||
+      !Number.isFinite(price) ||
+      price <= 0 ||
+      price >= 1
+    )
+      return false;
+    const order: PredictionOpenOrder = {
+      id: nextIdRef.current++,
+      outcome,
+      side: "sell",
+      type,
+      price,
+      quantity,
+      round,
+      timestamp: Date.now(),
+    };
+    if (type === "limit") {
+      setOpenOrders((previous) => [order, ...previous]);
+      setActiveTab("openOrders");
+      notify("prediction.message.orderPlaced");
+    } else {
+      const payout = new Decimal(quantity).mul(price).toNumber();
+      setBalance((previous) => new Decimal(previous).add(payout).toNumber());
+      setPositions((previous) =>
+        previous
+          .map((p) =>
+            p.outcome === outcome
+              ? {
+                  ...p,
+                  quantity: new Decimal(p.quantity).sub(quantity).toNumber(),
+                }
+              : p,
+          )
+          .filter((p) => p.quantity > 0),
+      );
+      setHistory((previous) => [{ ...order, status: "filled" }, ...previous]);
+      setSettlements((previous) => [
+        {
+          id: nextIdRef.current++,
+          round,
+          outcome,
+          quantity,
+          averagePrice: position.averagePrice,
+          settlementPrice: price,
+          payout,
+          pnl: new Decimal(price)
+            .sub(position.averagePrice)
+            .mul(quantity)
+            .toNumber(),
+          settledAt: Date.now(),
+          result: "closed",
+        },
+        ...previous,
+      ]);
+      notify("prediction.message.orderFilled");
+    }
+    return true;
+  };
+
+  const editPendingOrder = (id: number, price: number, quantity: number) => {
+    const order = openOrders.find((o) => o.id === id);
+    if (
+      !order ||
+      !isRoundTradable ||
+      prototypeRegionState === "restricted" ||
+      !Number.isFinite(price) ||
+      !Number.isFinite(quantity) ||
+      price <= 0 ||
+      price >= 1 ||
+      quantity <= 0
+    )
+      return false;
+    if (
+      order.side === "sell" &&
+      quantity > availableQuantity(order.outcome, id)
+    )
+      return false;
+    if (order.side === "buy" && new Decimal(price).mul(quantity).gt(balance))
+      return false;
+    setOpenOrders((previous) =>
+      previous.map((o) => (o.id === id ? { ...o, price, quantity } : o)),
+    );
+    notify("prediction.message.orderUpdated");
+    return true;
+  };
 
   const placeOrder = useCallback(() => {
     setNotification(undefined);
@@ -590,6 +713,13 @@ export const usePredictionScript = () => {
       return;
     }
 
+    if (orderSide === "sell") {
+      if (
+        sellPosition(selectedOutcome, orderQuantity, orderType, selectedPrice)
+      )
+        setAmount("");
+      return;
+    }
     const price = selectedPrice;
     const quantity = orderQuantity;
     const order: PredictionOpenOrder = {
@@ -658,10 +788,10 @@ export const usePredictionScript = () => {
     ]);
     setAmount("");
     setActiveTab("predictions");
-    setActivePredictionTab("open");
     notify("prediction.message.orderFilled");
   }, [
     canPlaceOrder,
+    sellPosition,
     notify,
     orderNotional,
     orderQuantity,
@@ -678,7 +808,7 @@ export const usePredictionScript = () => {
       if (!order) return;
 
       setHistory((historyItems) => [
-        { ...order, status: "cancelled", timestamp: Date.now() },
+        { ...order, status: "cancelled" },
         ...historyItems,
       ]);
       setOpenOrders((previous) => previous.filter((item) => item.id !== id));
@@ -696,7 +826,6 @@ export const usePredictionScript = () => {
           ...orders.map((order) => ({
             ...order,
             status: "cancelled" as const,
-            timestamp: Date.now(),
           })),
           ...historyItems,
         ]);
@@ -765,8 +894,6 @@ export const usePredictionScript = () => {
     setPrototypeRegionState,
     activeTab,
     setActiveTab,
-    activePredictionTab,
-    setActivePredictionTab,
     orderBook,
     selectedPrice,
     selectedPosition,
@@ -783,6 +910,9 @@ export const usePredictionScript = () => {
     canPlaceOrder,
     notification,
     placeOrder,
+    availableQuantity,
+    sellPosition,
+    editPendingOrder,
     cancelOrder,
     cancelAllOrders,
     setMaxAmount,

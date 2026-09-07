@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { BarChartIcon, useScreen } from "@orderly.network/ui";
+import { PredictionIcon, useScreen } from "@orderly.network/ui";
 import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
 
 export enum PortfolioLeftSidebarPath {
@@ -73,11 +73,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
       {
         name: t("prediction.tab.predictions"),
         href: PortfolioLeftSidebarPath.Predictions,
-        icon: (
-          <span className="oui-flex oui-size-[18px] oui-items-center oui-justify-center [&>svg]:oui-size-[18px]">
-            <BarChartIcon />
-          </span>
-        ),
+        icon: <PredictionIcon monochrome size={18} />,
       },
       {
         name: t("common.orders"),
