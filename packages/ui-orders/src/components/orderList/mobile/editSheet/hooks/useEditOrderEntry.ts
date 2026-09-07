@@ -13,6 +13,11 @@ export const useEditOrderEntry = (props: {
   maxQty: number;
 }) => {
   const { order, orderType, maxQty } = props;
+  const orderPrice = order.price || undefined;
+  const [previousOrderValues, setPreviousOrderValues] = useState({
+    price: orderPrice,
+    quantity: order.quantity,
+  });
 
   const [formattedOrder, setFormattedOrder] = useState({
     symbol: order.symbol,
@@ -24,13 +29,31 @@ export const useEditOrderEntry = (props: {
     order_type: orderType,
     margin_mode: order.margin_mode,
     // TODO: trailing stop order edit price twice, order.price will be 0
-    order_price: order.price || undefined,
+    order_price: orderPrice,
     order_quantity: order.quantity,
     trigger_price: order.trigger_price,
     activated_price: order.activated_price,
     callback_value: order.callback_value,
     callback_rate: order.callback_rate ? order.callback_rate * 100 : undefined,
   });
+
+  const priceChanged = !Object.is(previousOrderValues.price, orderPrice);
+  const quantityChanged = !Object.is(
+    previousOrderValues.quantity,
+    order.quantity,
+  );
+
+  if (priceChanged || quantityChanged) {
+    setPreviousOrderValues({
+      price: orderPrice,
+      quantity: order.quantity,
+    });
+    setFormattedOrder((current) => ({
+      ...current,
+      order_price: priceChanged ? orderPrice : current.order_price,
+      order_quantity: quantityChanged ? order.quantity : current.order_quantity,
+    }));
+  }
 
   const { markPrice, errors, validate, clearErrors } = useOrderEntity(
     formattedOrder,

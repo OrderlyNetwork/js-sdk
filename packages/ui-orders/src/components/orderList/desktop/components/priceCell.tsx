@@ -27,7 +27,14 @@ export const PriceCell = (props: {
     return order.price?.toString() ?? "Market";
   }, [order.price, order.type]);
 
+  const [previousOriginValue, setPreviousOriginValue] =
+    useState<string>(originValue);
   const [value, setValue] = useState<string>(originValue);
+
+  if (previousOriginValue !== originValue) {
+    setPreviousOriginValue(originValue);
+    setValue(originValue);
+  }
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
 
