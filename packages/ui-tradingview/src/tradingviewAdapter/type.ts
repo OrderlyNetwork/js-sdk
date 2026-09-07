@@ -190,6 +190,8 @@ type OrderOverview = {
   executed: number;
 };
 export interface OrderInterface {
+  parent_algo_type?: string;
+  margin_mode?: MarginMode;
   order_id: number;
   algo_order_id: number; // Algo order root id (also the algo order first parent_order_id)
   parent_algo_order_id?: number;

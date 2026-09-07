@@ -15,7 +15,12 @@ import {
   PopoverRoot,
   PopoverContent,
 } from "@orderly.network/ui";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import {
+  commifyOptional,
+  Decimal,
+  isPositionalTPSL,
+  getTPSLQuantity,
+} from "@orderly.network/utils";
 import { EditType } from "../../../../type";
 import { grayCell } from "../../../../utils/util";
 import { useSymbolContext } from "../../../provider/symbolContext";
@@ -30,7 +35,7 @@ export const QuantityCell = (props: {
 }) => {
   const { order } = props;
   const { reduce_only } = order;
-  const originValue = order.quantity.toString();
+  const originValue = order.quantity?.toString() ?? "";
   const [value, setValue] = useState(originValue);
 
   const [editing, setEditing] = useState(false);
@@ -74,7 +79,7 @@ export const QuantityCell = (props: {
   };
 
   useEffect(() => {
-    setQuantity(order.quantity.toString());
+    setQuantity(order.quantity?.toString() ?? "");
   }, [props.order.quantity]);
 
   const closePopover = () => {
@@ -83,7 +88,7 @@ export const QuantityCell = (props: {
   };
   const cancelPopover = () => {
     setOpen(false);
-    setQuantity(order.quantity.toString());
+    setQuantity(order.quantity?.toString() ?? "");
     setEditing(false);
   };
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -200,7 +205,7 @@ export const QuantityCell = (props: {
         },
         (err: any) => {
           toast.error(err.message);
-          setQuantity(order.quantity.toString());
+          setQuantity(order.quantity?.toString() ?? "");
           cancelPopover();
         },
       )
@@ -344,7 +349,9 @@ const PreviewCell: FC<{
             "oui-border oui-border-line-12 oui-bg-base-7 oui-px-2",
         )}
       >
-        <Text size="2xs">{value}</Text>
+        <Text size="2xs">
+          {isPositionalTPSL(order) ? (getTPSLQuantity(order) ?? "--") : value}
+        </Text>
       </Flex>
     </Flex>
   );

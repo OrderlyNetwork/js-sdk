@@ -1,5 +1,10 @@
 import { i18n } from "@orderly.network/i18n";
-import { Decimal } from "@orderly.network/utils";
+import {
+  Decimal,
+  getTPSLQuantity,
+  getTPSLEstimatePrice,
+  isPositionalTPSL,
+} from "@orderly.network/utils";
 import {
   AlgoType,
   OrderInterface,
@@ -35,7 +40,7 @@ export const formatOrderNo = (orderNo?: number) => {
 };
 
 export const isPositionTpsl = (order: OrderInterface) =>
-  order.type === OrderType.CLOSE_POSITION;
+  isPositionalTPSL(order);
 export const isActivatedPositionTpsl = (order: OrderInterface) =>
   isPositionTpsl(order) && order.is_activated;
 
@@ -84,16 +89,15 @@ export const buildQuantityTpslNoMap = (orders: OrderInterface[]) => {
 };
 
 export const getTpslEstPnl = (tpslOrder: OrderInterface, position: any) => {
-  const quantity = Math.abs(
-    tpslOrder.type === OrderType.CLOSE_POSITION
-      ? position.balance
-      : tpslOrder.quantity,
-  );
+  const quantity = getTPSLQuantity(tpslOrder, position?.balance);
+  const price = getTPSLEstimatePrice(tpslOrder);
+  if (quantity == null || price == null || !position)
+    return { estPnl: undefined, quantity, openPrice: undefined };
   const sideFlag = tpslOrder.side === SideType.SELL ? 1 : -1;
 
   // Use mark price for PnL calculation when available, fallback to entry price
   const priceRef = position.open;
-  const estPnl = new Decimal(tpslOrder.trigger_price)
+  const estPnl = new Decimal(price)
     .minus(priceRef)
     .times(quantity)
     .times(sideFlag)

@@ -17,7 +17,6 @@ export type Props = {
   quote_dp: number;
   positionType: PositionType;
   errors: OrderValidationResult | null;
-  hideOrderPrice?: boolean;
   values: {
     // enable: boolean;
     trigger_price: string | undefined;

@@ -3,8 +3,9 @@ import {
   AlgoOrderRootType,
   OrderSide,
   OrderType,
+  PositionType,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, resolveTPSLOrderType } from "@orderly.network/utils";
 import { getPriceRange } from "../../../utils/order/orderPrice";
 import {
   OrderValidationItem,
@@ -26,16 +27,13 @@ const formatPrice = (price: number, quote_dp: number): number => {
  * Consolidates validation logic from baseBracketOrderCreator and baseAlgoCreator
  * to eliminate code duplication
  */
-export class TPSLValidationStrategy
-  implements
-    IValidationStrategy<
-      Partial<
-        AlgoOrderEntity<
-          AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
-        >
-      >
+export class TPSLValidationStrategy implements IValidationStrategy<
+  Partial<
+    AlgoOrderEntity<
+      AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
     >
-{
+  >
+> {
   /**
    * Validates TP/SL order values
    * @param values - TP/SL order values including trigger prices, order prices, etc.
@@ -52,6 +50,39 @@ export class TPSLValidationStrategy
   ): OrderValidationResult {
     const result: OrderValidationResult = Object.create(null);
 
+    const normalized = { ...values };
+    for (const leg of ["tp", "sl"] as const) {
+      const triggerKey = `${leg}_trigger_price` as const;
+      const priceKey = `${leg}_order_price` as const;
+      const trigger = values[triggerKey];
+      const price = values[priceKey];
+      if (
+        !trigger ||
+        resolveTPSLOrderType(values[`${leg}_order_type`], price) !==
+          OrderType.LIMIT
+      ) {
+        normalized[priceKey] = undefined;
+        continue;
+      }
+      if (price == null || price === "") {
+        result[priceKey] = OrderValidation.required(priceKey);
+        normalized[priceKey] = undefined;
+      } else if (
+        !Number.isFinite(Number(price)) ||
+        new Decimal(price).todp(config.symbol.quote_dp).lte(0)
+      ) {
+        result[priceKey] = OrderValidation.min(
+          priceKey,
+          config.symbol.quote_tick,
+        );
+        normalized[priceKey] = undefined;
+      } else {
+        normalized[priceKey] = new Decimal(price)
+          .todp(config.symbol.quote_dp)
+          .toString();
+      }
+    }
+
     const {
       tp_trigger_price,
       tp_order_price,
@@ -63,7 +94,7 @@ export class TPSLValidationStrategy
       quantity,
       order_type,
       order_price,
-    } = values;
+    } = normalized;
 
     const qty = Number(quantity);
     const maxQty = config.maxQty;
@@ -81,10 +112,13 @@ export class TPSLValidationStrategy
     const tpslSide = side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
 
     // Validate quantity
-    if (!isNaN(qty) && qty > maxQty) {
+    const fullPosition =
+      values.position_type === PositionType.FULL ||
+      values.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL;
+    if (!fullPosition && !isNaN(qty) && qty > maxQty) {
       result.quantity = OrderValidation.max("quantity", config.maxQty);
     }
-    if (!isNaN(qty) && qty < (base_min ?? 0)) {
+    if (!fullPosition && !isNaN(qty) && qty < (base_min ?? 0)) {
       result.quantity = OrderValidation.min("quantity", base_min ?? 0);
     }
 
@@ -105,14 +139,6 @@ export class TPSLValidationStrategy
       Number(sl_trigger_price) < 0
     ) {
       result.sl_trigger_price = OrderValidation.min("sl_trigger_price", 0);
-    }
-
-    // Validate order prices are required for limit orders
-    if (tp_order_type === OrderType.LIMIT && !tp_order_price) {
-      result.tp_order_price = OrderValidation.required("tp_order_price");
-    }
-    if (sl_order_type === OrderType.LIMIT && !sl_order_price) {
-      result.sl_order_price = OrderValidation.required("sl_order_price");
     }
 
     // Validate based on order side and mark price
@@ -291,7 +317,7 @@ export class TPSLValidationStrategy
       // FE limit: tp_order_price must be greater than tp_trigger_price for BUY orders
       if (tpTrigger > tpOrderPrice) {
         result.tp_trigger_price =
-          OrderValidation.priceErrorMax("tp_trigger_price");
+          OrderValidation.priceErrorMin("tp_trigger_price");
       }
     }
   }

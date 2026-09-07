@@ -57,7 +57,7 @@ export const findTPSLOrderPriceFromOrder = (
   );
   if (tpOrder) {
     if (tpOrder.trigger_price) {
-      if (tpOrder.price) {
+      if (tpOrder.type === OrderType.LIMIT) {
         tp_order_price = tpOrder.price;
       } else {
         tp_order_price = OrderType.MARKET;
@@ -66,7 +66,7 @@ export const findTPSLOrderPriceFromOrder = (
   }
   if (slOrder) {
     if (slOrder.trigger_price) {
-      if (slOrder.price) {
+      if (slOrder.type === OrderType.LIMIT) {
         sl_order_price = slOrder.price;
       } else {
         sl_order_price = OrderType.MARKET;
@@ -91,7 +91,7 @@ export const findPositionTPSLFromOrders = (
     return (
       order.symbol === symbol &&
       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
-      order.margin_mode === marginMode &&
+      (order.margin_mode ?? MarginMode.CROSS) === marginMode &&
       (order.root_algo_status === OrderStatus.NEW ||
         order.root_algo_status === OrderStatus.REPLACED ||
         order.root_algo_status === OrderStatus.PARTIAL_FILLED)
@@ -101,7 +101,7 @@ export const findPositionTPSLFromOrders = (
     ?.filter((order) => {
       return (
         order.symbol === symbol &&
-        order.margin_mode === marginMode &&
+        (order.margin_mode ?? MarginMode.CROSS) === marginMode &&
         order.algo_type === AlgoOrderRootType.TP_SL &&
         (order.root_algo_status === OrderStatus.NEW ||
           order.root_algo_status === OrderStatus.REPLACED ||

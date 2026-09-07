@@ -82,9 +82,13 @@ export const useTPSLBuilder = (
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { marginMode: symbolMarginMode } = useMarginModeBySymbol(symbol);
   const [{ rows: positions }] = usePositionStream();
-  const mainAccountPosition = positions.find((item) => {
-    const marginMode = options.position?.margin_mode ?? symbolMarginMode;
-    return item.symbol === symbol && item.margin_mode === marginMode;
+  const mainAccountPosition = positions?.find((item) => {
+    const marginMode =
+      order?.margin_mode ?? options.position?.margin_mode ?? MarginMode.CROSS;
+    return (
+      item.symbol === symbol &&
+      (item.margin_mode ?? MarginMode.CROSS) === marginMode
+    );
   });
 
   const isSubAccount =
@@ -128,7 +132,10 @@ export const useTPSLBuilder = (
       position_qty: position?.position_qty ?? 0,
       average_open_price: position?.average_open_price ?? 0,
       // Prefer options.position?.margin_mode: mainAccountPosition (from stream) often has wrong default CROSS
-      margin_mode: options.position?.margin_mode ?? position?.margin_mode,
+      margin_mode:
+        order?.margin_mode ??
+        options.position?.margin_mode ??
+        position?.margin_mode,
     },
     {
       defaultOrder: order,

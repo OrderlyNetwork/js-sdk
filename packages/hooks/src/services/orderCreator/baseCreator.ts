@@ -10,7 +10,7 @@ import {
   PositionType,
   MarginMode,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, resolveTPSLOrderType } from "@orderly.network/utils";
 import { getMinNotional } from "../../utils/createOrder";
 import {
   OrderCreator,
@@ -301,15 +301,13 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   protected getChildOrderType(
     positionType?: PositionType,
     orderPrice?: string,
+    orderType?: OrderType,
   ): OrderType {
-    if (positionType === PositionType.FULL) {
-      return OrderType.CLOSE_POSITION;
-    }
-    let type = OrderType.MARKET;
-    if (orderPrice) {
-      type = OrderType.LIMIT;
-    }
-    return type;
+    return resolveTPSLOrderType(
+      orderType,
+      orderPrice,
+      positionType !== PositionType.PARTIAL,
+    );
   }
 
   protected parseBracketOrder(data: OrderlyOrder): AlgoOrderChildOrders | null {
@@ -326,12 +324,16 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         algo_type: AlgoOrderType.TAKE_PROFIT,
         side: side,
         // TODO need confirm child order type
-        type: this.getChildOrderType(data.position_type, data.tp_order_price),
+        type: this.getChildOrderType(
+          data.position_type,
+          data.tp_order_price,
+          data.tp_order_type,
+        ),
         trigger_price: tp_trigger_price,
         symbol: data.symbol,
         reduce_only: true,
       };
-      if (data.tp_order_price) {
+      if (orderItem.type === OrderType.LIMIT && data.tp_order_price) {
         orderItem.price = data.tp_order_price;
       }
 
@@ -344,13 +346,17 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         algo_type: AlgoOrderType.STOP_LOSS,
         side: side,
         // TODO need confirm child order type
-        type: this.getChildOrderType(data.position_type, data.sl_order_price),
+        type: this.getChildOrderType(
+          data.position_type,
+          data.sl_order_price,
+          data.sl_order_type,
+        ),
         trigger_price: sl_trigger_price,
         symbol: data.symbol,
         reduce_only: true,
       };
 
-      if (data.sl_order_price) {
+      if (orderItem.type === OrderType.LIMIT && data.sl_order_price) {
         orderItem.price = data.sl_order_price;
       }
 

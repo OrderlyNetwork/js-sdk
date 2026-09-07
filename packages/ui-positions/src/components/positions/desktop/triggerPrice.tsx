@@ -21,6 +21,12 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+import {
+  getTPSLLeg,
+  getTPSLEstimatePrice,
+  getTPSLQuantity,
+  matchesTPSLPosition,
+} from "@orderly.network/utils";
 import { formatNum } from "@orderly.network/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { TPSLEditIcon, AddIcon } from "./components";
@@ -52,14 +58,15 @@ export const TriggerPrice: FC<{
 };
 
 export const TriggerPriceItem: FC<{
-  qty: number;
-  price: number;
+  qty?: number;
+  price?: number;
   entryPrice: number;
   orderSide: OrderSide;
   orderType: AlgoOrderType;
   symbolInfo: API.SymbolExt;
 }> = (props) => {
   const { qty, price, entryPrice, orderSide, orderType, symbolInfo } = props;
+  if (qty == null || price == null) return <span>--</span>;
   const pnl = formatNum
     .pnl(
       utils.priceToPnl(
@@ -119,22 +126,29 @@ export const TPSLTriggerPrice: FC<{
   const pnl = useMemo(() => {
     const msgs = [];
 
-    if (!props.tooltip || !order || !position) return;
+    if (
+      !props.tooltip ||
+      !order ||
+      !position ||
+      !matchesTPSLPosition(order, position)
+    )
+      return;
 
-    let quantity = order.quantity;
-
-    if (quantity === 0) {
-      if (order.child_orders[0].type === "CLOSE_POSITION") {
-        quantity = position.position_qty;
-      }
-    }
+    const tp = getTPSLLeg(order, "tp");
+    const sl = getTPSLLeg(order, "sl");
+    const tpQty = tp ? getTPSLQuantity(tp, position.position_qty) : undefined;
+    const slQty = sl ? getTPSLQuantity(sl, position.position_qty) : undefined;
+    const tpPrice = tp ? getTPSLEstimatePrice(tp) : undefined;
+    const slPrice = sl ? getTPSLEstimatePrice(sl) : undefined;
 
     if (!!props.takeProfitPrice) {
       msgs.push(
         <TriggerPriceItem
           key={"tp"}
-          qty={quantity}
-          price={props.takeProfitPrice}
+          qty={
+            tpQty == null ? undefined : tpQty * (tp?.side === "BUY" ? -1 : 1)
+          }
+          price={tpPrice}
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.TAKE_PROFIT}
@@ -147,8 +161,10 @@ export const TPSLTriggerPrice: FC<{
       msgs.push(
         <TriggerPriceItem
           key={"sl"}
-          qty={quantity}
-          price={props.stopLossPrice}
+          qty={
+            slQty == null ? undefined : slQty * (sl?.side === "BUY" ? -1 : 1)
+          }
+          price={slPrice}
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.STOP_LOSS}
@@ -161,6 +177,8 @@ export const TPSLTriggerPrice: FC<{
   }, [
     props.takeProfitPrice,
     props.stopLossPrice,
+    position,
+    order,
     position?.average_open_price,
     order?.side,
     order?.quantity,

@@ -2564,16 +2564,40 @@ importers:
         specifier: workspace:*
         version: link:../utils
     devDependencies:
+      '@babel/preset-env':
+        specifier: ^7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-react':
+        specifier: ^7.22.5
+        version: 7.27.1(@babel/core@7.29.7)
+      '@babel/preset-typescript':
+        specifier: ^7.22.5
+        version: 7.27.1(@babel/core@7.29.7)
+      '@types/jest':
+        specifier: ^29.5.14
+        version: 29.5.14
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.7(@types/react@18.3.23)
+      babel-jest:
+        specifier: ^29.6.1
+        version: 29.7.0(@babel/core@7.29.7)
+      jest:
+        specifier: ^29.6.1
+        version: 29.7.0(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@26.2.0)(typescript@5.8.3))
+      jest-environment-jsdom:
+        specifier: ^29.7.0
+        version: 29.7.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
       react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-test-renderer:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       tailwindcss:
@@ -2625,12 +2649,33 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
     devDependencies:
+      '@babel/preset-env':
+        specifier: ^7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-react':
+        specifier: ^7.22.5
+        version: 7.27.1(@babel/core@7.29.7)
+      '@babel/preset-typescript':
+        specifier: ^7.22.5
+        version: 7.27.1(@babel/core@7.29.7)
+      '@types/jest':
+        specifier: ^29.5.14
+        version: 29.5.14
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.7(@types/react@18.3.23)
+      babel-jest:
+        specifier: ^29.6.1
+        version: 29.7.0(@babel/core@7.29.7)
+      jest:
+        specifier: ^29.6.1
+        version: 29.7.0(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@26.2.0)(typescript@5.8.3))
+      jest-environment-jsdom:
+        specifier: ^29.7.0
+        version: 29.7.0
       react:
         specifier: ^18.2.0
         version: 18.3.1

@@ -10,6 +10,7 @@ import {
 import {
   unstable_serialize,
   useAccount,
+  usePositionStream,
   useMemoizedFn,
   useMutation,
   useSWRConfig,
@@ -22,6 +23,12 @@ import {
 import { API, MarginMode, OrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
+import {
+  getTPSLLeg,
+  getTPSLEstimatePrice,
+  getTPSLQuantity,
+  matchesTPSLPosition,
+} from "@orderly.network/utils";
 import { useSymbolContext } from "../provider/symbolContext";
 
 export type TPSLOrderRowContextState = {
@@ -57,7 +64,10 @@ export const TPSLOrderRowProvider: FC<
 > = (props) => {
   const { order, children } = props;
   const { quote_dp } = useSymbolContext();
-  const [position, setPosition] = useState<API.PositionTPSLExt>();
+  const [{ rows: livePositions }] = usePositionStream(order.symbol);
+  const position = livePositions?.find((item) =>
+    matchesTPSLPosition(order, item),
+  );
 
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
   const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
@@ -113,15 +123,6 @@ export const TPSLOrderRowProvider: FC<
     quote_dp,
   });
 
-  useEffect(() => {
-    if ("algo_type" in order || ((order as any)?.reduce_only ?? false)) {
-      const position = getRelatedPosition(order.symbol, order.margin_mode);
-      if (position) {
-        setPosition(position);
-      }
-    }
-  }, [getRelatedPosition, order.margin_mode, order.symbol]);
-
   const memoizedValue = useMemo<TPSLOrderRowContextState>(() => {
     return {
       order: order,
@@ -164,14 +165,6 @@ function calcTPSLPnL(props: {
 }) {
   const { order, position, quote_dp } = props;
 
-  if (!position)
-    return {
-      sl_trigger_price: undefined,
-      tp_trigger_price: undefined,
-      slPnL: undefined,
-      tpPnL: undefined,
-    };
-
   const isTPSLOrder = "algo_type" in order && Array.isArray(order.child_orders);
 
   const { sl_trigger_price, tp_trigger_price } = isTPSLOrder
@@ -187,24 +180,26 @@ function calcTPSLPnL(props: {
         tp_order_price: undefined,
       };
 
-  let quantity = order.quantity;
-
-  if (quantity === 0) {
-    if (order.child_orders?.[0].type === "CLOSE_POSITION") {
-      quantity = position.position_qty;
-    }
-  }
-
-  const avgOpenPrice = position.average_open_price;
+  const tp = getTPSLLeg(order, "tp");
+  const sl = getTPSLLeg(order, "sl");
+  const tpQuantity = tp
+    ? getTPSLQuantity(tp, position?.position_qty)
+    : undefined;
+  const slQuantity = sl
+    ? getTPSLQuantity(sl, position?.position_qty)
+    : undefined;
+  const tpPrice = tp ? getTPSLEstimatePrice(tp) : undefined;
+  const slPrice = sl ? getTPSLEstimatePrice(sl) : undefined;
+  const avgOpenPrice = position?.average_open_price;
   const tpPnL =
-    typeof quantity === "number" &&
-    typeof tp_trigger_price === "number" &&
+    typeof tpQuantity === "number" &&
+    typeof tpPrice === "number" &&
     typeof avgOpenPrice === "number"
       ? utils.priceToPnl(
           {
-            qty: quantity,
-            price: tp_trigger_price,
-            entryPrice: position.average_open_price,
+            qty: tpQuantity * (tp?.side === "BUY" ? -1 : 1),
+            price: tpPrice,
+            entryPrice: avgOpenPrice,
             orderSide: order.side as OrderSide,
             orderType: AlgoOrderType.TAKE_PROFIT,
           },
@@ -213,14 +208,14 @@ function calcTPSLPnL(props: {
       : undefined;
 
   const slPnL =
-    typeof quantity === "number" &&
-    typeof sl_trigger_price === "number" &&
+    typeof slQuantity === "number" &&
+    typeof slPrice === "number" &&
     typeof avgOpenPrice === "number"
       ? utils.priceToPnl(
           {
-            qty: quantity,
-            price: sl_trigger_price,
-            entryPrice: position.average_open_price,
+            qty: slQuantity * (sl?.side === "BUY" ? -1 : 1),
+            price: slPrice,
+            entryPrice: avgOpenPrice,
             orderSide: order.side as OrderSide,
             orderType: AlgoOrderType.STOP_LOSS,
           },

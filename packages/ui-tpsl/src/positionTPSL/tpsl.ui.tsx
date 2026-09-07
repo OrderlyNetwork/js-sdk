@@ -143,13 +143,6 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
                 }}
               />
             )}
-            {TPSL_OrderEntity.position_type === PositionType.FULL && (
-              <DotStatus
-                color="warning"
-                size="xs"
-                label={t("tpsl.positionType.full.tips.market")}
-              />
-            )}
           </Flex>
           {renderQtyInput()}
           <Flex
@@ -182,9 +175,6 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
                   TPSL_OrderEntity.tp_order_price?.toString() ?? undefined,
                 order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
               }}
-              hideOrderPrice={
-                TPSL_OrderEntity.position_type === PositionType.FULL
-              }
               errors={validated ? tpErrors : null}
               disableOrderTypeSelector={isEditing}
               quote_dp={symbolInfo("quote_dp")}
@@ -231,9 +221,6 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
                   TPSL_OrderEntity.sl_order_price?.toString() ?? undefined,
                 order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
               }}
-              hideOrderPrice={
-                TPSL_OrderEntity.position_type === PositionType.FULL
-              }
               errors={
                 validated
                   ? slErrors

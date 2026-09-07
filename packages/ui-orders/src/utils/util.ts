@@ -8,6 +8,12 @@ import {
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
+import {
+  isPositionalTPSL,
+  getTPSLLeg,
+  getTPSLQuantity,
+  isEntirePositionTPSL,
+} from "@orderly.network/utils";
 import { Decimal } from "@orderly.network/utils";
 
 export const upperCaseFirstLetter = (str: string) => {
@@ -58,18 +64,16 @@ const getOrderTypeBadges = (record: any): string[] => {
 
     if (!!record.parent_algo_type) {
       if (algoType === AlgoOrderType.STOP_LOSS) {
-        const types =
-          orderType === OrderType.CLOSE_POSITION
-            ? [i18n.t("common.position"), i18n.t("tpsl.sl")]
-            : [i18n.t("tpsl.sl")];
+        const types = isPositionalTPSL(record)
+          ? [i18n.t("common.position"), i18n.t("tpsl.sl")]
+          : [i18n.t("tpsl.sl")];
         list.push(...types);
       }
 
       if (algoType === AlgoOrderType.TAKE_PROFIT) {
-        const types =
-          orderType === OrderType.CLOSE_POSITION
-            ? [i18n.t("common.position"), i18n.t("tpsl.tp")]
-            : [i18n.t("tpsl.tp")];
+        const types = isPositionalTPSL(record)
+          ? [i18n.t("common.position"), i18n.t("tpsl.tp")]
+          : [i18n.t("tpsl.tp")];
         list.push(...types);
       }
 
@@ -309,4 +313,22 @@ export function convertApiOrderTypeToOrderEntryType(order: API.AlgoOrderExt) {
   }
 
   return order.type;
+}
+
+export function getPositionalQuantityText(order: API.AlgoOrder): string {
+  if (isEntirePositionTPSL(order)) return i18n.t("tpsl.entirePosition");
+  if (!order.child_orders?.length)
+    return String(getTPSLQuantity(order) ?? "--");
+  return (
+    (["tp", "sl"] as const)
+      .flatMap((leg) => {
+        const child = getTPSLLeg(order, leg);
+        if (!child?.trigger_price) return [];
+        const quantity = isEntirePositionTPSL(child)
+          ? i18n.t("tpsl.entirePosition")
+          : (getTPSLQuantity(child) ?? "--");
+        return [`${i18n.t(leg === "tp" ? "tpsl.tp" : "tpsl.sl")}: ${quantity}`];
+      })
+      .join(" / ") || "--"
+  );
 }

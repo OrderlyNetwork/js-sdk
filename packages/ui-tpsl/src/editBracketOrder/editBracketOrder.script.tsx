@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import {
   ERROR_MSG_CODES,
+  createTPSLOrderUpdates,
   useMaxQty,
   useMutation,
   useOrderEntry,
@@ -18,7 +19,7 @@ import {
   PositionType,
   SDKError,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, resolveTPSLOrderType } from "@orderly.network/utils";
 
 function getInitialOrder(order: API.AlgoOrderExt) {
   const childOrder = order.child_orders[0];
@@ -27,11 +28,10 @@ function getInitialOrder(order: API.AlgoOrderExt) {
       ? PositionType.PARTIAL
       : PositionType.FULL;
   const tpOrder = childOrder.child_orders.find(
-    (item) =>
-      item.algo_type === AlgoOrderType.TAKE_PROFIT && item.trigger_price,
+    (item) => item.algo_type === AlgoOrderType.TAKE_PROFIT,
   );
   const slOrder = childOrder.child_orders.find(
-    (item) => item.algo_type === AlgoOrderType.STOP_LOSS && item.trigger_price,
+    (item) => item.algo_type === AlgoOrderType.STOP_LOSS,
   );
   const tpslPriceInfo: {
     tp_trigger_price?: string | undefined;
@@ -44,9 +44,7 @@ function getInitialOrder(order: API.AlgoOrderExt) {
   if (tpOrder) {
     tpslPriceInfo.tp_trigger_price = tpOrder.trigger_price?.toString();
     tpslPriceInfo.tp_order_type =
-      typeof tpOrder.type === "string"
-        ? (tpOrder.type.replace("_ORDER", "") as OrderType)
-        : undefined;
+      tpOrder.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
     if (tpslPriceInfo.tp_order_type === OrderType.LIMIT) {
       tpslPriceInfo.tp_order_price = tpOrder.price?.toString();
     }
@@ -54,9 +52,7 @@ function getInitialOrder(order: API.AlgoOrderExt) {
   if (slOrder) {
     tpslPriceInfo.sl_trigger_price = slOrder.trigger_price?.toString();
     tpslPriceInfo.sl_order_type =
-      typeof slOrder.type === "string"
-        ? (slOrder.type.replace("_ORDER", "") as OrderType)
-        : undefined;
+      slOrder.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
     if (tpslPriceInfo.sl_order_type === OrderType.LIMIT) {
       tpslPriceInfo.sl_order_price = slOrder.price?.toString();
     }
@@ -65,6 +61,7 @@ function getInitialOrder(order: API.AlgoOrderExt) {
   return {
     baseInfo: {
       symbol: order.symbol,
+      margin_mode: order.margin_mode ?? MarginMode.CROSS,
       order_type: order.type,
       side: order.side,
       order_price: order.price,
@@ -186,47 +183,29 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     return helper
       .validate(isSlPriceError ? slPriceError : undefined)
       .then(() => {
-        const tpOrder: {
-          order_id?: number;
-          trigger_price?: string;
-          algo_type: AlgoOrderType;
-          price?: string;
-          reduce_only?: boolean;
-          is_activated?: boolean;
-        } = {
-          order_id: tpInfo.orderId,
-          algo_type: AlgoOrderType.TAKE_PROFIT,
-          trigger_price: formattedOrder.tp_trigger_price,
-          reduce_only: true,
-        };
-        if (formattedOrder.tp_order_type === OrderType.LIMIT) {
-          tpOrder.price = formattedOrder.tp_order_price;
-        }
-
-        const slOrder: {
-          order_id?: number;
-          trigger_price?: string;
-          algo_type: AlgoOrderType;
-          price?: string;
-          reduce_only?: boolean;
-          is_activated?: boolean;
-        } = {
-          order_id: slInfo.orderId,
-          algo_type: AlgoOrderType.STOP_LOSS,
-          trigger_price: formattedOrder.sl_trigger_price,
-          reduce_only: true,
-        };
-        if (formattedOrder.sl_order_type === OrderType.LIMIT) {
-          slOrder.price = formattedOrder.sl_order_price;
-        }
-
-        const childOrders = [];
-        if (tpInfo.orderId) {
-          childOrders.push(tpOrder);
-        }
-        if (slInfo.orderId) {
-          childOrders.push(slOrder);
-        }
+        const parent = props.order.child_orders[0];
+        const legs = (["tp", "sl"] as const).map((leg) => ({
+          algo_type:
+            leg === "tp" ? AlgoOrderType.TAKE_PROFIT : AlgoOrderType.STOP_LOSS,
+          type: resolveTPSLOrderType(
+            formattedOrder[`${leg}_order_type`],
+            formattedOrder[`${leg}_order_price`],
+            baseInfo.position_type === PositionType.FULL,
+          ),
+          is_activated: !!formattedOrder[`${leg}_trigger_price`],
+          trigger_price: formattedOrder[`${leg}_trigger_price`]
+            ? new Decimal(formattedOrder[`${leg}_trigger_price`]!)
+                .todp(symbolInfo.quote_dp)
+                .toNumber()
+            : undefined,
+          price: formattedOrder[`${leg}_order_price`]
+            ? new Decimal(formattedOrder[`${leg}_order_price`]!)
+                .todp(symbolInfo.quote_dp)
+                .toNumber()
+            : undefined,
+        }));
+        const childOrders = createTPSLOrderUpdates(legs, parent);
+        if (!childOrders.length) return;
         return doUpdateOrder({
           order_id: props.order.algo_order_id,
           child_orders: [

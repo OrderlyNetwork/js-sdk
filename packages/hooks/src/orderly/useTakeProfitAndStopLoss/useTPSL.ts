@@ -13,6 +13,11 @@ import {
 } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
+import {
+  getTPSLLeg,
+  getTPSLQuantity,
+  isTPSLTriggered,
+} from "@orderly.network/utils";
 import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
 import { useOrderlyContext } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
@@ -220,24 +225,22 @@ export const useTaskProfitAndStopLossInternal = (
     if (trigger_prices.sl_trigger_price) {
       order.sl_trigger_price = trigger_prices.sl_trigger_price;
     }
-    const order_prices = findTPSLOrderPriceFromOrder(options.defaultOrder!);
-    if (
-      order_prices.tp_order_price &&
-      order_prices.tp_order_price !== OrderType.MARKET
-    ) {
-      order.tp_order_type = OrderType.LIMIT;
-      order.tp_order_price = order_prices.tp_order_price;
-    }
-    if (
-      order_prices.sl_order_price &&
-      order_prices.sl_order_price !== OrderType.MARKET
-    ) {
-      order.sl_order_type = OrderType.LIMIT;
-      order.sl_order_price = order_prices.sl_order_price;
+    for (const leg of ["tp", "sl"] as const) {
+      const child = options.defaultOrder.child_orders?.find(
+        (item) =>
+          item.algo_type === (leg === "tp" ? "TAKE_PROFIT" : "STOP_LOSS"),
+      );
+      if (child) {
+        order[`${leg}_order_type`] =
+          child.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
+        order[`${leg}_order_price`] =
+          child.type === OrderType.LIMIT ? child.price?.toString() : undefined;
+      }
     }
     setValues(order);
   }, []);
 
+  const editingOrder = isEditing ? options?.defaultOrder : undefined;
   const _setOrderValue = (
     key: string,
     value: number | string | boolean,
@@ -248,7 +251,24 @@ export const useTaskProfitAndStopLossInternal = (
     // console.log("[updateOrder:]", key, value);
 
     setOrder((prev) => {
-      const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
+      const leg = key.startsWith("tp_")
+        ? "tp"
+        : key.startsWith("sl_")
+          ? "sl"
+          : undefined;
+      const child =
+        editingOrder && leg ? getTPSLLeg(editingOrder, leg) : undefined;
+      const triggered = child && isTPSLTriggered(child);
+      const quantity = triggered
+        ? getTPSLQuantity(child)
+        : Number(prev.quantity);
+      const side = triggered
+        ? child.side === OrderSide.BUY
+          ? OrderSide.SELL
+          : OrderSide.BUY
+        : position.position_qty! > 0
+          ? OrderSide.BUY
+          : OrderSide.SELL;
 
       // if (key === "sl_pnl") {
       //   value = value ? `-${value}` : "";
@@ -260,10 +280,7 @@ export const useTaskProfitAndStopLossInternal = (
           key,
           value,
           entryPrice: position.average_open_price!,
-          qty:
-            side === OrderSide.BUY
-              ? Number(prev.quantity)!
-              : -Number(prev.quantity)!,
+          qty: side === OrderSide.BUY ? (quantity ?? 0) : -(quantity ?? 0),
           orderSide: side,
           markPrice: markPrice ?? position.average_open_price!, // use mark price as the default value
           values: prev as Partial<OrderlyOrder>,
@@ -273,6 +290,9 @@ export const useTaskProfitAndStopLossInternal = (
         },
       );
 
+      if (triggered && quantity == null && leg) {
+        newValue[`${leg}_pnl`] = "";
+      }
       const newValueAll = {
         ...prev,
         ...newValue,
@@ -452,16 +472,17 @@ export const useTaskProfitAndStopLossInternal = (
   //   // setError(validate());
   // }, [order]);
 
-  const compare = (): boolean => {
-    const quantityNum = Number(order.quantity);
-    if (isNaN(quantityNum)) return false;
-    return quantityNum === Math.abs(Number(position.position_qty));
-  };
-
   const getOrderCreator = () => {
-    // if the order is existed, and the order type is POSITIONAL_TP_SL, always return POSITIONAL_TP_SL
-    // else use qty to determine the order type
-    if (options?.defaultOrder?.algo_type === AlgoOrderRootType.TP_SL) {
+    if (
+      isEditing &&
+      options?.defaultOrder?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+    ) {
+      return OrderFactory.create(AlgoOrderRootType.POSITIONAL_TP_SL);
+    }
+    if (
+      isEditing &&
+      options?.defaultOrder?.algo_type === AlgoOrderRootType.TP_SL
+    ) {
       return OrderFactory.create(AlgoOrderRootType.TP_SL);
     }
     return OrderFactory.create(
@@ -479,24 +500,11 @@ export const useTaskProfitAndStopLossInternal = (
   }) => {
     const defaultOrder = options?.defaultOrder;
     const orderId = defaultOrder?.algo_order_id;
-    const algoType = defaultOrder?.algo_type;
 
-    // if algo_order_id is not existed, create new order
-    if (!orderId) {
+    // A default order does not turn an explicitly non-editing flow into an update.
+    if (!isEditing || !orderId) {
       return createOrder(params);
     }
-
-    // if algo_order_id is existed and algoType = POSITION_TP_SL
-    if (algoType === AlgoOrderRootType.POSITIONAL_TP_SL) {
-      // if order.qty = position.qty, update order
-      if (compare()) {
-        return updateOrder(orderId!, params);
-      }
-      // if order.qty != position.qty, create new tp/sl order
-      return createOrder(params);
-    }
-
-    // if algo_order_id is existed and algoType = TP_SL, delete order and create new order
 
     return updateOrder(orderId!, params);
   };

@@ -9,6 +9,7 @@ import {
   Text,
   ThrottledButton,
 } from "@orderly.network/ui";
+import { isPositionalTPSL } from "@orderly.network/utils";
 import { ActivitedPriceInput } from "./components/activitedPriceInput";
 import { ConfirmDialogContent } from "./components/editDialogContent";
 import { EditSheetContext } from "./components/editSheetContext";
@@ -149,8 +150,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           {triggerPriceInput}
           {renderPriceInput()}
           {trailingCallbackInput}
-          {quantityInput}
-          {quantitySlider}
+          {!isPositionalTPSL(item) && quantityInput}
+          {!isPositionalTPSL(item) && quantitySlider}
         </Flex>
         {buttons}
       </Flex>

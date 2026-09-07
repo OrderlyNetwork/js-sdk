@@ -7,12 +7,19 @@ import {
   AlgoOrderRootType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
+import { withTPSLProvenance, isPositionalTPSL } from "@orderly.network/utils";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
+import {
+  sanitizeTPSLChildUpdates,
+  TPSLChildUpdate,
+} from "../../services/orderCreator/tpslOrderUpdates";
+import { validateTPSLChild } from "../../services/orderCreator/validateTPSLChild";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { generateKeyFun } from "../../utils/swr";
 import version from "../../version";
 import { useMarkPricesStream } from "../useMarkPricesStream";
+import { useSymbolsInfo } from "../useSymbolsInfo";
 
 type CreateOrderType = "normalOrder" | "algoOrder";
 
@@ -73,6 +80,7 @@ export const useOrderStream = (
   );
 
   const { data: markPrices } = useMarkPricesStream();
+  const symbolsInfo = useSymbolsInfo();
 
   const { registerKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
@@ -188,7 +196,7 @@ export const useOrderStream = (
       orders = [...orders, ...algoOrders];
     }
 
-    // return ordersResponse.data?.map((item) => item.rows)?.flat();
+    orders = orders?.map((order) => withTPSLProvenance(order));
 
     if (includes.includes("ALL") && excludes.length === 0) {
       return orders;
@@ -334,12 +342,76 @@ export const useOrderStream = (
 
   const _updateOrder = useCallback(
     (orderId: string, order: OrderEntity, type: CreateOrderType) => {
+      const findOrder = (items: any[]): any =>
+        items?.find((item) => Number(item.algo_order_id) === Number(orderId)) ??
+        items?.map((item) => findOrder(item.child_orders ?? [])).find(Boolean);
+      const original = findOrder(flattenOrders ?? []);
       switch (type) {
         case "algoOrder":
+          if (
+            original &&
+            isPositionalTPSL(original) &&
+            ["TAKE_PROFIT", "STOP_LOSS"].includes(original.algo_type)
+          ) {
+            const requestedType = order.order_type?.replace("STOP_", "");
+            const existingType = original.type === "LIMIT" ? "LIMIT" : "MARKET";
+            if (
+              requestedType &&
+              (requestedType === "CLOSE_POSITION"
+                ? "MARKET"
+                : requestedType) !== existingType
+            ) {
+              return Promise.reject(
+                new SDKError(
+                  "Changing an existing TP/SL order type is not supported",
+                ),
+              );
+            }
+            const errors = validateTPSLChild(
+              original,
+              { price: order.order_price, trigger_price: order.trigger_price },
+              {
+                symbol: symbolsInfo[original.symbol](),
+                markPrice: markPrices?.[original.symbol],
+              },
+            );
+            if (Object.keys(errors).length)
+              return Promise.reject(
+                new SDKError(
+                  Object.values(errors)[0]?.message ?? "Invalid TP/SL price",
+                ),
+              );
+            const change = {
+              order_id: original.algo_order_id,
+              price: order.order_price,
+              trigger_price: order.trigger_price,
+            };
+            const nested =
+              original.parent_algo_order_id !== original.root_algo_order_id
+                ? [
+                    {
+                      order_id: original.parent_algo_order_id,
+                      child_orders: [change],
+                    },
+                  ]
+                : [change];
+            const root = flattenOrders?.find(
+              (item) => item.algo_order_id === original.root_algo_order_id,
+            );
+            const child_orders = sanitizeTPSLChildUpdates(nested as any, root);
+            if (!child_orders.length) return Promise.resolve();
+            return doUpdateAlgoOrder({
+              order_id: original.root_algo_order_id,
+              child_orders,
+            });
+          }
           return doUpdateAlgoOrder({
             order_id: orderId,
             price: order.order_price,
-            quantity: order.order_quantity,
+            quantity:
+              original && isPositionalTPSL(original)
+                ? undefined
+                : order.order_quantity,
             trigger_price: order.trigger_price,
 
             // trailing stop order fields
@@ -353,22 +425,28 @@ export const useOrderStream = (
           return doUpdateOrder({ ...order, order_id: orderId });
       }
     },
-    [],
+    [flattenOrders, doUpdateAlgoOrder, doUpdateOrder, markPrices, symbolsInfo],
   );
 
   /**
    * update order
    */
-  const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "normalOrder");
-  }, []);
+  const updateOrder = useCallback(
+    (orderId: string, order: OrderEntity) => {
+      return _updateOrder(orderId, order, "normalOrder");
+    },
+    [_updateOrder],
+  );
 
   /**
    * update algo order
    */
-  const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "algoOrder");
-  }, []);
+  const updateAlgoOrder = useCallback(
+    (orderId: string, order: OrderEntity) => {
+      return _updateOrder(orderId, order, "algoOrder");
+    },
+    [_updateOrder],
+  );
 
   const _cancelOrder = useCallback(
     (orderId: number, type: CreateOrderType, symbol?: string) => {
@@ -448,22 +526,51 @@ export const useOrderStream = (
   );
 
   const updateTPSLOrder = useCallback(
-    (
+    async (
       /**
        * the root algo order id
        */
       orderId: number,
-      childOrders: API.AlgoOrder["child_orders"],
+      childOrders: TPSLChildUpdate[],
     ) => {
       if (!Array.isArray(childOrders)) {
         throw new SDKError("Children orders is required");
       }
+      const original = flattenOrders?.find(
+        (order) => Number(order.algo_order_id) === Number(orderId),
+      );
+      const validateChildren = (changes: any[], parent: any) => {
+        for (const change of changes) {
+          const child = parent?.child_orders?.find(
+            (item: API.AlgoOrder) =>
+              Number(item.algo_order_id) === Number(change.order_id),
+          );
+          if (!child || change.is_activated === false) continue;
+          if (change.child_orders) validateChildren(change.child_orders, child);
+          else if (
+            ["TAKE_PROFIT", "STOP_LOSS"].includes(child.algo_type) &&
+            (change.trigger_price != null || change.price != null)
+          ) {
+            const errors = validateTPSLChild(child, change, {
+              symbol: symbolsInfo[child.symbol ?? parent.symbol](),
+              markPrice: markPrices?.[child.symbol ?? parent.symbol],
+            });
+            if (Object.keys(errors).length)
+              throw new SDKError(
+                Object.values(errors)[0]?.message ?? "Invalid TP/SL price",
+              );
+          }
+        }
+      };
+      validateChildren(childOrders, original);
+      const changes = sanitizeTPSLChildUpdates(childOrders, original);
+      if (!changes.length) return Promise.resolve();
       return doUpdateAlgoOrder({
         order_id: orderId,
-        child_orders: childOrders,
+        child_orders: changes,
       });
     },
-    [],
+    [flattenOrders, doUpdateAlgoOrder, markPrices, symbolsInfo],
   );
 
   const meta = useMemo(() => {

@@ -14,11 +14,17 @@ import { cn, Column, Flex, Text } from "@orderly.network/ui";
 import { Badge } from "@orderly.network/ui";
 import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import {
+  isPositionalTPSL,
+  isEntirePositionTPSL,
+  getTPSLQuantity,
+} from "@orderly.network/utils";
+import {
   commifyOptional,
   Decimal,
   formatNum,
   getTrailingStopPrice,
 } from "@orderly.network/utils";
+import { getPositionalQuantityText } from "../../../utils/util";
 import {
   grayCell,
   parseBadgesFor,
@@ -386,15 +392,11 @@ function type(option?: {
     formatter: (value: string, record: any) => {
       if (!!record.parent_algo_type) {
         if (record.algo_type === AlgoOrderType.STOP_LOSS) {
-          return record.type === OrderType.CLOSE_POSITION
-            ? `Position SL`
-            : "SL";
+          return isPositionalTPSL(record) ? `Position SL` : "SL";
         }
 
         if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
-          return record.type === OrderType.CLOSE_POSITION
-            ? `Position TP`
-            : "TP";
+          return isPositionalTPSL(record) ? `Position TP` : "TP";
         }
       }
 
@@ -439,10 +441,7 @@ function fillAndQuantity(option?: {
         : undefined,
 
     renderPlantText: (value: string, record: any) => {
-      if (
-        record.type === OrderType.CLOSE_POSITION &&
-        record.status !== OrderStatus.FILLED
-      ) {
+      if (isEntirePositionTPSL(record)) {
         return i18n.t("tpsl.entirePosition");
       }
 
@@ -451,16 +450,21 @@ function fillAndQuantity(option?: {
         "algo_type" in record && record.algo_type === AlgoOrderRootType.TP_SL
           ? ""
           : `${executed} / `;
-      return first + `${record.quantity}`;
+      return (
+        first +
+        `${isPositionalTPSL(record) ? (getTPSLQuantity(record) ?? "--") : record.quantity}`
+      );
     },
     render: (value: string, record: any) => {
-      if (
-        record.type === OrderType.CLOSE_POSITION &&
-        record.status !== OrderStatus.FILLED
-      ) {
+      if (isEntirePositionTPSL(record)) {
         return i18n.t("tpsl.entirePosition");
       }
-      return <QuantityCell order={record} disabled={option?.disableEdit} />;
+      return (
+        <QuantityCell
+          order={record}
+          disabled={option?.disableEdit || isPositionalTPSL(record)}
+        />
+      );
       // return value;
     },
   };
@@ -495,7 +499,8 @@ function quantity(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      if (isPositionalTPSL(record)) return getPositionalQuantityText(record);
+      if (isEntirePositionTPSL(record)) {
         return i18n.t("tpsl.entirePosition");
       }
 
@@ -504,13 +509,20 @@ function quantity(option?: {
         "algo_type" in record && record.algo_type === AlgoOrderRootType.TP_SL
           ? ""
           : `${executed}/`;
-      return first + `${record.quantity}`;
+      return (
+        first +
+        `${isPositionalTPSL(record) ? (getTPSLQuantity(record) ?? "--") : record.quantity}`
+      );
     },
     render: (value: string, record: any) => {
-      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      if (isPositionalTPSL(record) && record.child_orders?.length)
+        return getPositionalQuantityText(record);
+      if (isEntirePositionTPSL(record)) {
         return i18n.t("tpsl.entirePosition");
       }
-      return <QuantityCell order={record} />;
+      return (
+        <QuantityCell order={record} disabled={isPositionalTPSL(record)} />
+      );
       // return value;
     },
   };
@@ -754,24 +766,20 @@ function estTotal(option?: {
     onSort:
       (option?.enableSort ?? false)
         ? (a, b, type) => {
-            const aTotal =
-              a.type === OrderType.CLOSE_POSITION &&
-              a.status !== OrderStatus.FILLED
+            const aTotal = isEntirePositionTPSL(a)
+              ? 0
+              : a.total_executed_quantity === 0 ||
+                  Number.isNaN(a.average_executed_price) ||
+                  a.average_executed_price === null
                 ? 0
-                : a.total_executed_quantity === 0 ||
-                    Number.isNaN(a.average_executed_price) ||
-                    a.average_executed_price === null
-                  ? 0
-                  : a.total_executed_quantity * a.average_executed_price;
-            const bTotal =
-              b.type === OrderType.CLOSE_POSITION &&
-              b.status !== OrderStatus.FILLED
+                : a.total_executed_quantity * a.average_executed_price;
+            const bTotal = isEntirePositionTPSL(b)
+              ? 0
+              : b.total_executed_quantity === 0 ||
+                  Number.isNaN(b.average_executed_price) ||
+                  b.average_executed_price === null
                 ? 0
-                : b.total_executed_quantity === 0 ||
-                    Number.isNaN(b.average_executed_price) ||
-                    b.average_executed_price === null
-                  ? 0
-                  : b.total_executed_quantity * b.average_executed_price;
+                : b.total_executed_quantity * b.average_executed_price;
             return compareNumbers(aTotal, bTotal);
             // if (type === "asc") {
             //   return compareNumbers(aTotal, bTotal);
@@ -984,7 +992,7 @@ function tpslNotional(option?: {
     onSort: option?.enableSort,
     className: option?.className,
     renderPlantText: (value: any, record: any) => {
-      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      if (isEntirePositionTPSL(record)) {
         return i18n.t("tpsl.entirePosition");
       }
       return commifyOptional(
@@ -996,7 +1004,7 @@ function tpslNotional(option?: {
       );
     },
     render: (value: any, record: any) => {
-      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      if (isEntirePositionTPSL(record)) {
         return i18n.t("tpsl.entirePosition");
       }
 
@@ -1165,10 +1173,7 @@ function estTotalValue(record: any, isPending: boolean): string {
     return getNotional(record) || "--";
   }
 
-  if (
-    record.type === OrderType.CLOSE_POSITION &&
-    record.status !== OrderStatus.FILLED
-  ) {
+  if (isEntirePositionTPSL(record)) {
     return i18n.t("tpsl.entirePosition");
   }
 

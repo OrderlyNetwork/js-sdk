@@ -16,6 +16,9 @@ export const useEditOrderEntry = (props: {
 
   const [formattedOrder, setFormattedOrder] = useState({
     symbol: order.symbol,
+    parent_algo_type: order.parent_algo_type,
+    algo_type: order.algo_type,
+    tpsl_execution_type: order.type,
     side: order.side as OrderSide,
     reduce_only: order.reduce_only,
     order_type: orderType,

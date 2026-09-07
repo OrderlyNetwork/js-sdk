@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react";
 import { OrderSide, OrderType, SDKError } from "@orderly.network/types";
+import { isPositionalTPSL } from "@orderly.network/utils";
 import { useMarkPriceBySymbol } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
+import { validateTPSLChild } from "../../services/orderCreator/validateTPSLChild";
 import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { getOrderCreator } from "./helper";
 
@@ -41,6 +43,17 @@ export const useOrderEntity = (
   const validate = useMemoizedFn(async () => {
     return new Promise<OrderValidationResult | null>(
       async (resolve, reject) => {
+        if (isPositionalTPSL(order)) {
+          const errors = validateTPSLChild(
+            { ...order, type: order.tpsl_execution_type ?? order.order_type },
+            { trigger_price: order.trigger_price, price: order.order_price },
+            prepareData(),
+          );
+          setErrors(errors);
+          if (Object.keys(errors).length) reject(errors);
+          else resolve(order as any);
+          return;
+        }
         const creator = getOrderCreator(order);
         const errors = await creator?.validate(order, prepareData());
 

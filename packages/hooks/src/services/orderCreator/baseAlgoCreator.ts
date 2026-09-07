@@ -13,6 +13,7 @@ import { TPSLValidationStrategy } from "./validators/TPSLValidationStrategy";
 
 export type AlgoOrderUpdateEntity = {
   trigger_price?: number;
+  price?: number;
   order_id: number;
   quantity?: number;
   is_activated?: boolean;
@@ -26,8 +27,7 @@ export abstract class BaseAlgoOrderCreator<
   T extends AlgoOrderEntity<
     AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
   >,
-> implements OrderCreator<T>
-{
+> implements OrderCreator<T> {
   private tpslValidationStrategy = new TPSLValidationStrategy();
 
   abstract create(values: T, config: ValuesDepConfig): T;

@@ -7,6 +7,7 @@ import {
   OrderSide,
   PositionType,
 } from "@orderly.network/types";
+import { resolveTPSLOrderType } from "@orderly.network/utils";
 import { OrderBuilder } from "./OrderBuilder";
 
 /**
@@ -159,10 +160,11 @@ export class BracketOrderBuilder extends OrderBuilder {
     positionType?: PositionType,
     orderPrice?: number | string,
   ): OrderType {
-    if (positionType === PositionType.FULL) {
-      return OrderType.CLOSE_POSITION;
-    }
-    return orderPrice ? OrderType.LIMIT : OrderType.MARKET;
+    return resolveTPSLOrderType(
+      undefined,
+      orderPrice,
+      positionType !== PositionType.PARTIAL,
+    );
   }
 
   /**

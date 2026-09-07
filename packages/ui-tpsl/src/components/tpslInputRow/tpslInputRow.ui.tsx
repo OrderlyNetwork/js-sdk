@@ -93,10 +93,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
         {props.inputWarnNode}
         <Flex
           direction={"column"}
-          className={cn(
-            "oui-w-full oui-gap-0.5",
-            props.hideOrderPrice ? "oui-hidden" : "",
-          )}
+          className={cn("oui-w-full oui-gap-0.5")}
           itemAlign={"start"}
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
@@ -104,10 +101,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
           </Text>
           <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
-              disabled={
-                positionType === PositionType.FULL ||
-                values.order_type === OrderType.MARKET
-              }
+              disabled={values.order_type === OrderType.MARKET}
               type={"order price"}
               label={
                 values.order_type === OrderType.LIMIT
@@ -122,10 +116,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
               quote_dp={props.quote_dp}
             />
             <OrderPriceType
-              disabled={
-                positionType === PositionType.FULL ||
-                props.disableOrderTypeSelector
-              }
+              disabled={props.disableOrderTypeSelector}
               type={values.order_type}
               onChange={(value) => {
                 props.onChange(`${props.type}_order_type`, value as OrderType);
@@ -135,11 +126,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
         </Flex>
       </Flex>
       <RenderROI
-        price={
-          values.order_type === OrderType.MARKET
-            ? values.trigger_price
-            : values.order_price
-        }
+        price={values.trigger_price}
         orderType={values.order_type}
         pnl={values.PnL}
         roi={props.roi}
