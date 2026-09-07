@@ -62,12 +62,12 @@ const MobileLayout: FC<ReferralCodesReturns> = (props) => {
   return (
     <ListView
       dataSource={props.codes}
+      keyExtractor={(item) => item.code}
       className="oui-max-h-[240px] oui-w-full"
-      renderItem={(e, index) => {
+      renderItem={(e) => {
         return (
           <Flex direction={"column"}>
             <MobileCell
-              key={index}
               data={e}
               editRate={props.editRate}
               copyLink={props.copyLink}
@@ -337,6 +337,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       bordered
       columns={columns}
       dataSource={props.codes}
+      generatedRowKey={(record: ReferralCodeType) => record.code}
       classNames={{
         header: "oui-px-0",
         root: "2xl:oui-flex-1 2xl:oui-max-h-[230px] 3xl:oui-max-h-[300px]",
