@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -7,6 +7,8 @@ import { Decimal } from "@orderly.network/utils";
 import usePositionMargin from "./hooks/usePositionMargin";
 
 export type AdjustMarginTab = "add" | "reduce";
+
+type AmountInputSource = "input" | "slider";
 
 export interface AdjustMarginScriptProps {
   position: API.PositionTPSLExt;
@@ -41,6 +43,9 @@ export const useAdjustMarginScript = (
 
   const [tab, setTab] = useState<AdjustMarginTab>("add");
   const [inputValue, setInputValue] = useState("");
+  const [sliderValue, setSliderValue] = useState(0);
+  const lastInputSource = useRef<AmountInputSource>("input");
+  const selectedSliderValue = useRef(0);
 
   const [updateMargin, { isMutating: isLoading }] = useMutation(
     "/v1/position_margin",
@@ -66,26 +71,65 @@ export const useAdjustMarginScript = (
     finalMargin,
   );
 
-  const sliderValue = useMemo(() => {
-    if (!inputValue || !maxAmount) return 0;
+  const previousMaxAmount = useRef(maxAmount);
 
-    const percent = new Decimal(inputValue).div(maxAmount).mul(100).toNumber();
-    return Math.min(100, Math.max(0, percent));
+  useEffect(() => {
+    if (Object.is(previousMaxAmount.current, maxAmount)) return;
+    previousMaxAmount.current = maxAmount;
+
+    if (maxAmount === null || maxAmount <= 0) {
+      setInputValue("");
+      setSliderValue(0);
+      lastInputSource.current = "input";
+      selectedSliderValue.current = 0;
+      return;
+    }
+
+    if (lastInputSource.current === "slider") {
+      const nextValue = new Decimal(maxAmount)
+        .mul(selectedSliderValue.current)
+        .div(100);
+      setInputValue(nextValue.toFixed(2, Decimal.ROUND_DOWN));
+      return;
+    }
+
+    if (!inputValue) {
+      setSliderValue(0);
+      return;
+    }
+
+    const inputAmount = new Decimal(inputValue);
+    const nextValue = inputAmount.gt(maxAmount)
+      ? new Decimal(maxAmount).toFixed(2, Decimal.ROUND_DOWN)
+      : inputValue;
+    const nextSliderValue = new Decimal(nextValue)
+      .div(maxAmount)
+      .mul(100)
+      .toNumber();
+
+    setInputValue(nextValue);
+    setSliderValue(Math.min(100, Math.max(0, nextSliderValue)));
   }, [inputValue, maxAmount]);
 
   const onInputChange = useCallback(
     (value: string) => {
       let finalValue = value;
 
-      // If maxAmount exists, limit input value to not exceed maxAmount
-      if (maxAmount && value) {
+      if (maxAmount !== null && value) {
         const inputDecimal = new Decimal(value);
         if (inputDecimal.gt(maxAmount)) {
           finalValue = new Decimal(maxAmount).toFixed(2, Decimal.ROUND_DOWN);
         }
       }
 
+      lastInputSource.current = "input";
       setInputValue(finalValue);
+
+      const nextSliderValue =
+        finalValue && maxAmount
+          ? new Decimal(finalValue).div(maxAmount).mul(100).toNumber()
+          : 0;
+      setSliderValue(Math.min(100, Math.max(0, nextSliderValue)));
     },
     [maxAmount],
   );
@@ -93,6 +137,11 @@ export const useAdjustMarginScript = (
   const onSliderChange = useCallback(
     (value: number) => {
       if (!maxAmount) return;
+
+      lastInputSource.current = "slider";
+      selectedSliderValue.current = value;
+      setSliderValue(value);
+
       const nextValue = new Decimal(maxAmount).mul(value).div(100);
       setInputValue(nextValue.toFixed(2, Decimal.ROUND_DOWN));
     },
@@ -102,12 +151,15 @@ export const useAdjustMarginScript = (
   const onTabChange = useCallback((nextTab: AdjustMarginTab) => {
     setTab(nextTab);
     setInputValue("");
+    setSliderValue(0);
+    lastInputSource.current = "input";
+    selectedSliderValue.current = 0;
   }, []);
 
   const canConfirm = useMemo(() => {
-    if (!inputValue || maxAmount === null) return false;
+    if (!inputValue || maxAmount === null || maxAmount <= 0) return false;
     const value = new Decimal(inputValue);
-    return !value.isZero() && value.isPositive();
+    return value.isPositive() && value.lte(maxAmount);
   }, [inputValue, maxAmount]);
 
   const onConfirm = useCallback(async () => {
