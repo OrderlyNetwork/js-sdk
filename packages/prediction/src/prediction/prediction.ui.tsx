@@ -1400,7 +1400,7 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
           </div>
           <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
             <Text intensity={36}>{t("prediction.chance")}</Text>
-            <Text color="success">{formatPercent(state.upChance)}</Text>
+            <Text intensity={98}>{formatPercent(state.upChance)}</Text>
           </div>
           <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
             <Text intensity={36}>{t("prediction.roundChange")}</Text>
@@ -2448,16 +2448,28 @@ const HoldingsTable = ({ state }: { state: PredictionState }) => {
       columns={[
         tableColumn(t("common.symbol"), 250, { fixed: "start" }),
         tableColumn(t("prediction.outcome"), 100),
-        tableColumn(t("prediction.size"), 110),
-        tableColumn(t("common.available"), 110),
-        tableColumn(t("prediction.entryPrice"), 130),
-        tableColumn(t("common.markPrice"), 130),
-        tableColumn(t("common.unrealizedPnl"), 170),
+        tableColumn(t("prediction.size"), 110, { sortable: true }),
+        tableColumn(t("common.available"), 110, { sortable: true }),
+        tableColumn(t("prediction.entryPrice"), 130, { sortable: true }),
+        tableColumn(t("common.markPrice"), 130, { sortable: true }),
+        tableColumn(t("common.unrealizedPnl"), 170, { sortable: true }),
         tableColumn(t("prediction.countdownStatus"), 150),
         tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
       ]}
       rows={state.positions.filter(filters.matches).map((position) => ({
         id: position.outcome,
+        sortValues: [
+          undefined,
+          undefined,
+          position.quantity,
+          state.availableQuantity(position.outcome),
+          position.averagePrice,
+          state.outcomePrices[position.outcome],
+          new Decimal(state.outcomePrices[position.outcome])
+            .sub(position.averagePrice)
+            .mul(position.quantity)
+            .toNumber(),
+        ],
         cells: [
           <RoundSymbol round={state.round} />,
           <OutcomeBadge outcome={position.outcome} />,
@@ -2720,8 +2732,10 @@ const PredictionHistoryTable = ({ state }: { state: PredictionState }) => {
         tableColumn(t("prediction.avgEntryPrice"), 140),
         tableColumn(t("prediction.exitSettlementPrice"), 170),
         tableColumn(t("prediction.result"), 130),
-        tableColumn(t("positions.history.column.netPnl"), 140),
-        tableColumn(t("prediction.closedSettledTime"), 180),
+        tableColumn(t("positions.history.column.netPnl"), 140, {
+          sortable: true,
+        }),
+        tableColumn(t("prediction.closedSettledTime"), 180, { sortable: true }),
       ]}
       rows={state.settlements
         .filter((record) =>
@@ -2733,6 +2747,16 @@ const PredictionHistoryTable = ({ state }: { state: PredictionState }) => {
         )
         .map((record) => ({
           id: String(record.id),
+          sortValues: [
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            record.pnl,
+            record.settledAt,
+          ],
           cells: [
             <RoundSymbol round={record.round} />,
             <OutcomeBadge outcome={record.outcome} />,
@@ -3272,7 +3296,7 @@ export const Prediction: React.FC<
               label={t("prediction.chance")}
               hint={t("prediction.chanceHint")}
               value={
-                <Text color="success">{formatPercent(state.upChance)}</Text>
+                <Text intensity={98}>{formatPercent(state.upChance)}</Text>
               }
             />
             <DataItem
