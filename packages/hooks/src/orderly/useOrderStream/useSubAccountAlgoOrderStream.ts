@@ -180,7 +180,10 @@ export const useSubAccountAlgoOrderStream = (
         order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
         order.algo_type === AlgoOrderRootType.TP_SL
       ) {
-        order.quantity = order.child_orders[0].quantity;
+        const childQuantity = order.child_orders?.[0]?.quantity;
+        if (childQuantity !== undefined) {
+          order.quantity = childQuantity;
+        }
       }
       return order;
     });

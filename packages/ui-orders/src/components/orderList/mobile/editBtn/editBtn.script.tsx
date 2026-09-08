@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useCallback, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
-import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
 import { TabType } from "../../../orders.widget";
 import { useOrderListContext } from "../../orderListContext";
 import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
@@ -12,27 +10,16 @@ import { OrderCellState } from "../orderCell.script";
 export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;
   const { t } = useTranslation();
-  const symbolInfo = useSymbolsInfo()[props.state.item.symbol]();
+  const [tpslSheetMounted, setTPSLSheetMounted] = useState(false);
+  const [tpslSheetOpen, setTPSLSheetOpen] = useState(false);
 
   const { editAlgoOrder, editOrder } = useOrderListContext();
   const { position } = useTPSLOrderRowContext();
 
   const onShowEditSheet = useCallback(() => {
     if (props.state.type === TabType.tp_sl) {
-      modal
-        .sheet({
-          content: (
-            <PositionTPSLSheet
-              symbol={props.state.item.symbol}
-              symbolInfo={symbolInfo}
-              isEditing
-              order={props.state.item}
-            />
-          ),
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTPSLSheetMounted(true);
+      setTPSLSheetOpen(true);
     } else {
       modal
         .sheet({
@@ -54,11 +41,15 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
           console.log(error);
         });
     }
-  }, [editAlgoOrder, editOrder, position, state, symbolInfo, t]);
+  }, [editAlgoOrder, editOrder, position, state, t]);
 
   return {
     ...state,
     onShowEditSheet,
+    position,
+    tpslSheetMounted,
+    tpslSheetOpen,
+    setTPSLSheetOpen,
   };
 };
 

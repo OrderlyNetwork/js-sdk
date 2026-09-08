@@ -25,6 +25,10 @@ import {
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { PositionTPSLConfirm } from "./positionTpslConfirm";
+import {
+  getChangedTPSLEditableOrderValues,
+  getTPSLEditableOrderValues,
+} from "./tpslOrderSync";
 
 type PropsWithTriggerPrice = {
   withTriggerPrice?: boolean;
@@ -84,7 +88,10 @@ export const useTPSLBuilder = (
   const [{ rows: positions }] = usePositionStream();
   const mainAccountPosition = positions?.find((item) => {
     const marginMode =
-      order?.margin_mode ?? options.position?.margin_mode ?? MarginMode.CROSS;
+      order?.margin_mode ??
+      options.position?.margin_mode ??
+      symbolMarginMode ??
+      MarginMode.CROSS;
     return (
       item.symbol === symbol &&
       (item.margin_mode ?? MarginMode.CROSS) === marginMode
@@ -147,6 +154,30 @@ export const useTPSLBuilder = (
       isEditing,
     },
   );
+
+  const externalOrderValues = useMemo(
+    () => (isEditing && order ? getTPSLEditableOrderValues(order) : undefined),
+    [isEditing, order],
+  );
+  const previousExternalOrderValues = useRef(externalOrderValues);
+
+  useEffect(() => {
+    if (!externalOrderValues) {
+      previousExternalOrderValues.current = undefined;
+      return;
+    }
+
+    const previousValues = previousExternalOrderValues.current;
+    previousExternalOrderValues.current = externalOrderValues;
+
+    const changes = previousValues
+      ? getChangedTPSLEditableOrderValues(previousValues, externalOrderValues)
+      : externalOrderValues;
+
+    if (Object.keys(changes).length > 0) {
+      setValues(changes);
+    }
+  }, [externalOrderValues, setValues]);
 
   const slPriceError = useTpslPriceChecker({
     slPrice: tpslOrder.sl_trigger_price?.toString() ?? undefined,

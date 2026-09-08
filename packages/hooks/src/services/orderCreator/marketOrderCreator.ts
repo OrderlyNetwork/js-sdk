@@ -26,7 +26,7 @@ export class MarketOrderCreator extends BaseOrderCreator<OrderEntity> {
   ): OrderEntity {
     // Cast to OrderlyOrder for baseOrder method which expects OrderlyOrder
     const orderlyValues = values as unknown as OrderlyOrder;
-    const data = this.baseOrder(orderlyValues);
+    const data = this.baseOrder(orderlyValues, config);
 
     // Remove fields that should not be in market orders
     // Using type assertion to safely delete optional properties

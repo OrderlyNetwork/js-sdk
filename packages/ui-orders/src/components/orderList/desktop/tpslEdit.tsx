@@ -1,22 +1,38 @@
+import { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
-import { useSymbolContext } from "../../provider/symbolContext";
+import { Button } from "@orderly.network/ui";
+import { TPSLEditModal } from "@orderly.network/ui-tpsl";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
-export const TP_SLEditButton = (props: { order: API.Order }) => {
+export const TP_SLEditButton = (_props: { order: API.Order }) => {
   const { position, order } = useTPSLOrderRowContext();
-  const { quote_dp, base_dp } = useSymbolContext();
   const { t } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <PositionTPSLPopover
-      quoteDP={quote_dp}
-      baseDP={base_dp}
-      position={position!}
-      order={order}
-      label={t("common.edit")}
-      isEditing
-    />
+    <>
+      <Button
+        variant="outlined"
+        size="sm"
+        color="secondary"
+        onClick={() => {
+          setMounted(true);
+          setOpen(true);
+        }}
+      >
+        {t("common.edit")}
+      </Button>
+      {mounted && (
+        <TPSLEditModal
+          mode="dialog"
+          open={open}
+          onOpenChange={setOpen}
+          order={order}
+          position={position}
+        />
+      )}
+    </>
   );
 };

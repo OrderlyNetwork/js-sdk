@@ -205,6 +205,92 @@ describe("Positional limit creation and compatibility", () => {
   });
 });
 
+describe("Bracket LIMIT payload boundary", () => {
+  const bracketCreators = [
+    ["limit", () => new BracketLimitOrderCreator()],
+    ["market", () => new BracketMarketOrderCreator()],
+  ] as const;
+  const legs = ["tp", "sl"] as const;
+
+  const createBracketValues = (
+    leg: (typeof legs)[number],
+    price: string | number | undefined,
+    orderType = OrderType.LIMIT,
+  ) =>
+    createMockOrderlyOrder({
+      position_type: PositionType.FULL,
+      order_quantity: "2",
+      tp_trigger_price: leg === "tp" ? "4100" : undefined,
+      tp_order_type: leg === "tp" ? orderType : undefined,
+      tp_order_price: leg === "tp" ? price : undefined,
+      sl_trigger_price: leg === "sl" ? "3900" : undefined,
+      sl_order_type: leg === "sl" ? orderType : undefined,
+      sl_order_price: leg === "sl" ? price : undefined,
+    } as any);
+
+  it.each(bracketCreators)(
+    "rejects invalid %s Bracket LIMIT prices for TP and SL",
+    (_name, createCreator) => {
+      for (const leg of legs) {
+        for (const price of [
+          undefined,
+          "",
+          0,
+          -1,
+          Number.NaN,
+          Number.POSITIVE_INFINITY,
+          "0.001",
+        ]) {
+          expect(() =>
+            createCreator().create(createBracketValues(leg, price), config),
+          ).toThrow(/positive finite price/);
+        }
+      }
+    },
+  );
+
+  it.each(bracketCreators)(
+    "requires config for enabled %s Bracket LIMIT children",
+    (_name, createCreator) => {
+      expect(() =>
+        createCreator().create(createBracketValues("tp", "4110")),
+      ).toThrow(/configuration is required/);
+    },
+  );
+
+  it.each(bracketCreators)(
+    "preserves valid %s Bracket LIMIT price values and types",
+    (_name, createCreator) => {
+      for (const price of ["4110", 4110]) {
+        const result: any = createCreator().create(
+          createBracketValues("tp", price),
+          config,
+        );
+        expect(result.child_orders[0].child_orders[0]).toMatchObject({
+          type: OrderType.LIMIT,
+          price,
+        });
+      }
+    },
+  );
+
+  it.each(bracketCreators)(
+    "ignores stale prices on explicit %s Bracket MARKET children",
+    (_name, createCreator) => {
+      const result: any = createCreator().create(
+        createBracketValues("tp", "-1", OrderType.MARKET),
+        config,
+      );
+      expect(result.child_orders[0].child_orders[0]).toMatchObject({
+        type: OrderType.CLOSE_POSITION,
+      });
+      expect(result.child_orders[0].child_orders[0]).not.toHaveProperty(
+        "price",
+      );
+    },
+  );
+});
+
 describe("Positional price editing", () => {
   it("sends price-only and combined updates without type or quantity", () => {
     expect(

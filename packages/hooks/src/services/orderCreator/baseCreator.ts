@@ -116,7 +116,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     return errors;
   }
 
-  baseOrder(data: OrderlyOrder): OrderlyOrder {
+  baseOrder(data: OrderlyOrder, config?: ValuesDepConfig): OrderlyOrder {
     const order: Pick<
       OrderEntity,
       | "symbol"
@@ -152,7 +152,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       order.visible_quantity = data.visible_quantity;
     }
 
-    const bracketOrder = this.parseBracketOrder(data);
+    const bracketOrder = this.parseBracketOrder(data, config);
 
     if (!bracketOrder) {
       return order as OrderlyOrder;
@@ -310,7 +310,10 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     );
   }
 
-  protected parseBracketOrder(data: OrderlyOrder): AlgoOrderChildOrders | null {
+  protected parseBracketOrder(
+    data: OrderlyOrder,
+    config?: ValuesDepConfig,
+  ): AlgoOrderChildOrders | null {
     const orders: ChildOrder[] = [];
 
     const side = data.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
@@ -333,7 +336,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         symbol: data.symbol,
         reduce_only: true,
       };
-      if (orderItem.type === OrderType.LIMIT && data.tp_order_price) {
+      if (orderItem.type === OrderType.LIMIT) {
+        this.assertValidBracketLimitPrice(data.tp_order_price, config);
         orderItem.price = data.tp_order_price;
       }
 
@@ -356,7 +360,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         reduce_only: true,
       };
 
-      if (orderItem.type === OrderType.LIMIT && data.sl_order_price) {
+      if (orderItem.type === OrderType.LIMIT) {
+        this.assertValidBracketLimitPrice(data.sl_order_price, config);
         orderItem.price = data.sl_order_price;
       }
 
@@ -370,6 +375,28 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       algo_type: algoType,
       child_orders: orders,
     };
+  }
+
+  private assertValidBracketLimitPrice(
+    price: string | number | undefined,
+    config?: ValuesDepConfig,
+  ): asserts price is string | number {
+    if (!config) {
+      throw new Error(
+        "Order configuration is required for a Bracket TP/SL limit order",
+      );
+    }
+
+    if (
+      price == null ||
+      price === "" ||
+      !Number.isFinite(Number(price)) ||
+      new Decimal(price).todp(config.symbol.quote_dp).lte(0)
+    ) {
+      throw new Error(
+        "An enabled Bracket TP/SL limit order requires a positive finite price",
+      );
+    }
   }
 
   private validateBracketOrder(
