@@ -14,9 +14,16 @@ export const useEditOrderEntry = (props: {
 }) => {
   const { order, orderType, maxQty } = props;
   const orderPrice = order.price || undefined;
+  const callbackRate = order.callback_rate
+    ? order.callback_rate * 100
+    : undefined;
   const [previousOrderValues, setPreviousOrderValues] = useState({
     price: orderPrice,
     quantity: order.quantity,
+    triggerPrice: order.trigger_price,
+    activatedPrice: order.activated_price,
+    callbackValue: order.callback_value,
+    callbackRate,
   });
 
   const [formattedOrder, setFormattedOrder] = useState({
@@ -34,7 +41,7 @@ export const useEditOrderEntry = (props: {
     trigger_price: order.trigger_price,
     activated_price: order.activated_price,
     callback_value: order.callback_value,
-    callback_rate: order.callback_rate ? order.callback_rate * 100 : undefined,
+    callback_rate: callbackRate,
   });
 
   const priceChanged = !Object.is(previousOrderValues.price, orderPrice);
@@ -42,16 +49,53 @@ export const useEditOrderEntry = (props: {
     previousOrderValues.quantity,
     order.quantity,
   );
+  const triggerPriceChanged = !Object.is(
+    previousOrderValues.triggerPrice,
+    order.trigger_price,
+  );
+  const activatedPriceChanged = !Object.is(
+    previousOrderValues.activatedPrice,
+    order.activated_price,
+  );
+  const callbackValueChanged = !Object.is(
+    previousOrderValues.callbackValue,
+    order.callback_value,
+  );
+  const callbackRateChanged = !Object.is(
+    previousOrderValues.callbackRate,
+    callbackRate,
+  );
 
-  if (priceChanged || quantityChanged) {
+  if (
+    priceChanged ||
+    quantityChanged ||
+    triggerPriceChanged ||
+    activatedPriceChanged ||
+    callbackValueChanged ||
+    callbackRateChanged
+  ) {
     setPreviousOrderValues({
       price: orderPrice,
       quantity: order.quantity,
+      triggerPrice: order.trigger_price,
+      activatedPrice: order.activated_price,
+      callbackValue: order.callback_value,
+      callbackRate,
     });
     setFormattedOrder((current) => ({
       ...current,
       order_price: priceChanged ? orderPrice : current.order_price,
       order_quantity: quantityChanged ? order.quantity : current.order_quantity,
+      trigger_price: triggerPriceChanged
+        ? order.trigger_price
+        : current.trigger_price,
+      activated_price: activatedPriceChanged
+        ? order.activated_price
+        : current.activated_price,
+      callback_value: callbackValueChanged
+        ? order.callback_value
+        : current.callback_value,
+      callback_rate: callbackRateChanged ? callbackRate : current.callback_rate,
     }));
   }
 
