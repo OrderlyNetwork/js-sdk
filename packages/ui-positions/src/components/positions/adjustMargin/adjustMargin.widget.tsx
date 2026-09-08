@@ -8,6 +8,16 @@ import {
 import { useAdjustMarginScript } from "./adjustMargin.script";
 import { AdjustMargin } from "./adjustMargin.ui";
 
+/**
+ * Legacy global registration of the adjust-margin dialog/sheet, kept for
+ * backward compatibility with external consumers that open it via
+ * `modal.show(AdjustMarginDialogId | AdjustMarginSheetId)`.
+ *
+ * Internal code no longer uses this path: the desktop/mobile position tables
+ * render `AdjustMarginButton` instead, which wraps the same script/UI in a
+ * locally controlled `SimpleDialog`/`SimpleSheet`. Keep both paths in sync
+ * when changing dialog options or the widget's props.
+ */
 export const AdjustMarginDialogId = "AdjustMarginDialog";
 export const AdjustMarginSheetId = "AdjustMarginSheet";
 

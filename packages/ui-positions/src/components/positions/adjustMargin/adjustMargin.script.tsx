@@ -41,7 +41,6 @@ export const useAdjustMarginScript = (
 
   const [tab, setTab] = useState<AdjustMarginTab>("add");
   const [inputValue, setInputValue] = useState("");
-  const [sliderValue, setSliderValue] = useState(0);
 
   const [updateMargin, { isMutating: isLoading }] = useMutation(
     "/v1/position_margin",
@@ -67,32 +66,12 @@ export const useAdjustMarginScript = (
     finalMargin,
   );
 
-  const syncSliderFromInput = useCallback(
-    (value: string) => {
-      if (!value) {
-        setSliderValue(0);
-        return;
-      }
-      if (!maxAmount) return;
-      const val = new Decimal(value);
-      if (maxAmount === 0) {
-        setSliderValue(0);
-        return;
-      }
-      const percent = val.div(maxAmount).mul(100).toNumber();
-      setSliderValue(Math.min(100, Math.max(0, percent)));
-    },
-    [maxAmount],
-  );
+  const sliderValue = useMemo(() => {
+    if (!inputValue || !maxAmount) return 0;
 
-  const syncInputFromSlider = useCallback(
-    (value: number) => {
-      if (!maxAmount) return;
-      const val = new Decimal(maxAmount).mul(value).div(100);
-      setInputValue(val.toFixed(2, Decimal.ROUND_DOWN));
-    },
-    [maxAmount],
-  );
+    const percent = new Decimal(inputValue).div(maxAmount).mul(100).toNumber();
+    return Math.min(100, Math.max(0, percent));
+  }, [inputValue, maxAmount]);
 
   const onInputChange = useCallback(
     (value: string) => {
@@ -107,36 +86,35 @@ export const useAdjustMarginScript = (
       }
 
       setInputValue(finalValue);
-      syncSliderFromInput(finalValue);
     },
-    [syncSliderFromInput, maxAmount],
+    [maxAmount],
   );
 
   const onSliderChange = useCallback(
     (value: number) => {
-      setSliderValue(value);
-      syncInputFromSlider(value);
+      if (!maxAmount) return;
+      const nextValue = new Decimal(maxAmount).mul(value).div(100);
+      setInputValue(nextValue.toFixed(2, Decimal.ROUND_DOWN));
     },
-    [syncInputFromSlider],
+    [maxAmount],
   );
 
   const onTabChange = useCallback((nextTab: AdjustMarginTab) => {
     setTab(nextTab);
     setInputValue("");
-    setSliderValue(0);
   }, []);
 
   const canConfirm = useMemo(() => {
-    if (!inputValue) return false;
+    if (!inputValue || maxAmount === null) return false;
     const value = new Decimal(inputValue);
     return !value.isZero() && value.isPositive();
-  }, [inputValue]);
+  }, [inputValue, maxAmount]);
 
   const onConfirm = useCallback(async () => {
     if (!inputValue || new Decimal(inputValue).isZero()) return;
 
     // Validate if input value exceeds maxAmount
-    if (maxAmount) {
+    if (maxAmount !== null) {
       const inputDecimal = new Decimal(inputValue);
       if (inputDecimal.gt(maxAmount)) {
         toast.error(t("positions.adjustMargin.marginCannotMoreThanMax"));

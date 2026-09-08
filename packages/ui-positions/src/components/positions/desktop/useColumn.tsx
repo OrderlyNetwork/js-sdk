@@ -4,17 +4,11 @@ import { API } from "@orderly.network/types";
 import {
   Box,
   cn,
-  Divider,
   Flex,
   HoverCard,
   Column,
   Text,
   Tooltip,
-  modal,
-  useScreen,
-  AddCircleIcon,
-  Button,
-  IconButton,
 } from "@orderly.network/ui";
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
@@ -23,7 +17,7 @@ import { LIQ_DISTANCE_THRESHOLD } from "../../../constants";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { negateFee } from "../../fundingFeeHistory/negateFee";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
-import { AdjustMarginDialogId } from "../adjustMargin/adjustMargin.widget";
+import { AdjustMarginButton } from "../adjustMargin/adjustMarginButton";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
@@ -50,7 +44,6 @@ export const useColumn = (config: ColumnConfig) => {
     positionReverse,
   } = config;
   const { t } = useTranslation();
-  const { isMobile } = useScreen();
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
     () => [
       {
@@ -323,18 +316,7 @@ export const useColumn = (config: ColumnConfig) => {
                 {isIsolated ? (record.margin ?? "--") : "--"}
               </Text.numeral>
               {isIsolated && (
-                <IconButton
-                  color="secondary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    modal.show(AdjustMarginDialogId, {
-                      position: record,
-                      symbol: record.symbol,
-                    });
-                  }}
-                >
-                  <AddCircleIcon size={16} fill="currentColor" opacity={1} />
-                </IconButton>
+                <AdjustMarginButton position={record} mode="dialog" />
               )}
             </Flex>
           );

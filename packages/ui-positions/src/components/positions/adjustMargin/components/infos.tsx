@@ -25,8 +25,9 @@ export const Infos: FC<InfosProps> = ({
         label={t("positions.adjustMargin.currentMargin")}
         valueProps={{ dp: 2, unit: " USDC", padding: false }}
         classNames={{
-          root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-text-2xs oui-h-5",
-          label: "oui-text-2xs",
+          root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-gap-2 oui-text-2xs oui-h-5",
+          label: "oui-text-2xs oui-whitespace-nowrap",
+          value: "oui-shrink-0 oui-whitespace-nowrap",
         }}
       >
         {currentMargin}
@@ -35,8 +36,9 @@ export const Infos: FC<InfosProps> = ({
         label={t("positions.adjustMargin.liqPriceAfter")}
         valueProps={{ dp: 2, unit: " USDC", padding: false }}
         classNames={{
-          root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-text-2xs oui-h-5",
-          label: "oui-text-2xs",
+          root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-gap-2 oui-text-2xs oui-h-5",
+          label: "oui-text-2xs oui-whitespace-nowrap",
+          value: "oui-shrink-0 oui-whitespace-nowrap",
         }}
       >
         {liquidationPrice ?? "--"}
@@ -45,8 +47,9 @@ export const Infos: FC<InfosProps> = ({
         label={t("positions.adjustMargin.leverageAfter")}
         valueProps={{ dp: 2, unit: " x" }}
         classNames={{
-          root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-text-2xs oui-h-5",
-          label: "oui-text-2xs",
+          root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-gap-2 oui-text-2xs oui-h-5",
+          label: "oui-text-2xs oui-whitespace-nowrap",
+          value: "oui-shrink-0 oui-whitespace-nowrap",
         }}
       >
         {effectiveLeverage ?? "--"}

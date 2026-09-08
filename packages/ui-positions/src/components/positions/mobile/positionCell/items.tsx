@@ -3,13 +3,10 @@ import { useTpslPriceChecker } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, PositionType } from "@orderly.network/types";
 import {
-  AddCircleIcon,
   Badge,
   cn,
   Flex,
   Grid,
-  IconButton,
-  modal,
   Statistic,
   Text,
   Tips,
@@ -22,7 +19,7 @@ import { LIQ_DISTANCE_THRESHOLD } from "../../../../constants";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { negateFee } from "../../../fundingFeeHistory/negateFee";
 import { RwaStatusTag } from "../../../rwaStatus/rwaStatus";
-import { AdjustMarginSheetId } from "../../adjustMargin";
+import { AdjustMarginButton } from "../../adjustMargin/adjustMarginButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { PositionSymbolCell } from "../../desktop/positionSymbolCell";
@@ -183,20 +180,7 @@ export const Margin: FC<PositionCellState> = (props) => {
         <Text.numeral dp={2} intensity={80}>
           {isIsolated ? (item.margin ?? "--") : "--"}
         </Text.numeral>
-        {isIsolated && (
-          <IconButton
-            color="secondary"
-            onClick={(e) => {
-              e.stopPropagation();
-              modal.show(AdjustMarginSheetId, {
-                position: item,
-                symbol: item.symbol,
-              });
-            }}
-          >
-            <AddCircleIcon size={16} fill="currentColor" opacity={1} />
-          </IconButton>
-        )}
+        {isIsolated && <AdjustMarginButton position={item} mode="sheet" />}
       </Flex>
     </Statistic>
   );
