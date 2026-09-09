@@ -1,7 +1,9 @@
 import { AlgoOrderRootType, API, OrderType } from "@orderly.network/types";
 import {
   getChangedTPSLEditableOrderValues,
+  getTPSLEditOrderType,
   getTPSLEditableOrderValues,
+  isTPSLOrderTypeLocked,
 } from "./tpslOrderSync";
 
 const createOrder = (overrides: Partial<API.AlgoOrder> = {}) =>
@@ -29,6 +31,44 @@ const createOrder = (overrides: Partial<API.AlgoOrder> = {}) =>
   }) as API.AlgoOrder;
 
 describe("TP/SL external order synchronization", () => {
+  it("locks editing and defaults a missing child to MARKET", () => {
+    const tpOnly = createOrder({
+      child_orders: [createOrder().child_orders[0]],
+    });
+
+    expect(getTPSLEditOrderType(tpOnly, "tp")).toBe(OrderType.LIMIT);
+    expect(getTPSLEditOrderType(tpOnly, "sl")).toBe(OrderType.MARKET);
+    expect(isTPSLOrderTypeLocked(tpOnly, "tp")).toBe(true);
+    expect(isTPSLOrderTypeLocked(tpOnly, "sl")).toBe(true);
+    expect(getTPSLEditableOrderValues(tpOnly)).toMatchObject({
+      sl_trigger_price: "",
+      sl_order_type: OrderType.MARKET,
+      sl_order_price: "",
+    });
+  });
+
+  it("treats an inactive server placeholder as an existing immutable leg", () => {
+    const order = createOrder({
+      child_orders: [
+        createOrder().child_orders[0],
+        {
+          ...createOrder().child_orders[1],
+          type: OrderType.MARKET,
+          trigger_price: 3800,
+          price: 3790,
+          is_activated: false,
+        },
+      ],
+    });
+
+    expect(isTPSLOrderTypeLocked(order, "sl")).toBe(true);
+    expect(getTPSLEditableOrderValues(order)).toMatchObject({
+      sl_trigger_price: "",
+      sl_order_type: OrderType.MARKET,
+      sl_order_price: "",
+    });
+  });
+
   it("extracts every editable field from an order", () => {
     expect(getTPSLEditableOrderValues(createOrder())).toEqual({
       quantity: 2,

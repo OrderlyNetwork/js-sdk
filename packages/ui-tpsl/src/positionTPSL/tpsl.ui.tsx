@@ -176,7 +176,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
                 order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
               }}
               errors={validated ? tpErrors : null}
-              disableOrderTypeSelector={isEditing}
+              disableOrderTypeSelector={props.disableTPOrderTypeSelector}
               quote_dp={symbolInfo("quote_dp")}
               positionType={
                 TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
@@ -232,7 +232,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               positionType={
                 TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
               }
-              disableOrderTypeSelector={isEditing}
+              disableOrderTypeSelector={props.disableSLOrderTypeSelector}
               onChange={(key, value) => {
                 props.setOrderValue(key as keyof OrderlyOrder, value);
               }}

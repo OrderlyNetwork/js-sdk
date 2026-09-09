@@ -56,11 +56,34 @@ export class TPSLValidationStrategy implements IValidationStrategy<
       const priceKey = `${leg}_order_price` as const;
       const trigger = values[triggerKey];
       const price = values[priceKey];
-      if (
-        !trigger ||
-        resolveTPSLOrderType(values[`${leg}_order_type`], price) !==
-          OrderType.LIMIT
-      ) {
+      const hasTrigger =
+        trigger !== undefined && trigger !== null && trigger !== "";
+      const hasPrice = price !== undefined && price !== null && price !== "";
+      const resolvedType = resolveTPSLOrderType(
+        values[`${leg}_order_type`],
+        price,
+      );
+
+      // A LIMIT price means the user is configuring this leg. Do not treat it
+      // as an inactive placeholder when its trigger price is still empty.
+      if (!hasTrigger) {
+        if (hasPrice && resolvedType === OrderType.LIMIT) {
+          result[triggerKey] = OrderValidation.required(triggerKey);
+        }
+        normalized[priceKey] = undefined;
+        continue;
+      }
+
+      const triggerNumber = Number(trigger);
+      if (!Number.isFinite(triggerNumber) || triggerNumber <= 0) {
+        result[triggerKey] = OrderValidation.min(
+          triggerKey,
+          config.symbol.quote_tick,
+        );
+        normalized[triggerKey] = undefined;
+      }
+
+      if (resolvedType !== OrderType.LIMIT) {
         normalized[priceKey] = undefined;
         continue;
       }
@@ -120,25 +143,6 @@ export class TPSLValidationStrategy implements IValidationStrategy<
     }
     if (!fullPosition && !isNaN(qty) && qty < (base_min ?? 0)) {
       result.quantity = OrderValidation.min("quantity", base_min ?? 0);
-    }
-
-    // Validate trigger prices are not negative
-    // Only validate if the value is actually set and not empty string
-    if (
-      tp_trigger_price !== undefined &&
-      tp_trigger_price !== "" &&
-      tp_trigger_price !== null &&
-      Number(tp_trigger_price) < 0
-    ) {
-      result.tp_trigger_price = OrderValidation.min("tp_trigger_price", 0);
-    }
-    if (
-      sl_trigger_price !== undefined &&
-      sl_trigger_price !== "" &&
-      sl_trigger_price !== null &&
-      Number(sl_trigger_price) < 0
-    ) {
-      result.sl_trigger_price = OrderValidation.min("sl_trigger_price", 0);
     }
 
     // Validate based on order side and mark price

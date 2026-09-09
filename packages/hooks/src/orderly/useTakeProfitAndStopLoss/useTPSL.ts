@@ -26,10 +26,6 @@ import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositi
 import { useSubAccountMutation } from "../../subAccount";
 import { useMutation } from "../../useMutation";
 import { useMarkPrice } from "../useMarkPrice";
-import {
-  findTPSLFromOrder,
-  findTPSLOrderPriceFromOrder,
-} from "../usePositionStream/utils";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
 
@@ -217,25 +213,26 @@ export const useTaskProfitAndStopLossInternal = (
 
   useEffect(() => {
     if (!isEditing || !options?.defaultOrder) return;
-    const trigger_prices = findTPSLFromOrder(options.defaultOrder!);
     const order: ComputedAlgoOrder = {};
-    if (trigger_prices.tp_trigger_price) {
-      order.tp_trigger_price = trigger_prices.tp_trigger_price;
-    }
-    if (trigger_prices.sl_trigger_price) {
-      order.sl_trigger_price = trigger_prices.sl_trigger_price;
-    }
+    const isActive = (item?: API.AlgoOrder) =>
+      !!item &&
+      item.is_activated !== false &&
+      Number.isFinite(Number(item.trigger_price)) &&
+      Number(item.trigger_price) > 0;
     for (const leg of ["tp", "sl"] as const) {
       const child = options.defaultOrder.child_orders?.find(
         (item) =>
           item.algo_type === (leg === "tp" ? "TAKE_PROFIT" : "STOP_LOSS"),
       );
-      if (child) {
-        order[`${leg}_order_type`] =
-          child.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
-        order[`${leg}_order_price`] =
-          child.type === OrderType.LIMIT ? child.price?.toString() : undefined;
+      if (isActive(child)) {
+        order[`${leg}_trigger_price`] = child!.trigger_price;
       }
+      order[`${leg}_order_type`] =
+        child?.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
+      order[`${leg}_order_price`] =
+        isActive(child) && child?.type === OrderType.LIMIT
+          ? child.price?.toString()
+          : undefined;
     }
     setValues(order);
   }, []);

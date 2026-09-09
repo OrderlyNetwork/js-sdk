@@ -10,7 +10,10 @@ import { BracketLimitOrderCreator } from "../bracketLimitOrderCreator";
 import { BracketMarketOrderCreator } from "../bracketMarketOrderCreator";
 import { BracketOrderBuilder } from "../builders/BracketOrderBuilder";
 import { TPSLOrderCreator } from "../tpslOrderCreator";
-import { sanitizeTPSLChildUpdates } from "../tpslOrderUpdates";
+import {
+  createTPSLOrderUpdates,
+  sanitizeTPSLChildUpdates,
+} from "../tpslOrderUpdates";
 import { TPSLPositionOrderCreator } from "../tpslPositionOrderCreator";
 import { createMockConfig, createMockOrderlyOrder } from "./testHelpers";
 
@@ -147,6 +150,50 @@ describe("Positional limit creation and compatibility", () => {
       ),
     ).toBeNull();
   });
+  it("requires a trigger price when an inactive LIMIT leg has an order price", async () => {
+    const result = await creator.validate(
+      {
+        ...values,
+        tp_trigger_price: "",
+        tp_order_price: "4210",
+      },
+      config,
+    );
+
+    expect(result?.tp_trigger_price).toMatchObject({ type: "required" });
+  });
+  it.each([OrderType.MARKET, OrderType.LIMIT])(
+    "rejects non-positive and non-finite %s trigger prices",
+    async (orderType) => {
+      const configWithoutMarkPrice = createMockConfig({
+        markPrice: undefined as any,
+      });
+      for (const validationConfig of [config, configWithoutMarkPrice]) {
+        for (const triggerPrice of [
+          0,
+          "0",
+          -1,
+          "-1",
+          Number.NaN,
+          "NaN",
+          Number.POSITIVE_INFINITY,
+          "Infinity",
+        ]) {
+          const result = await creator.validate(
+            {
+              ...values,
+              tp_trigger_price: triggerPrice,
+              tp_order_type: orderType,
+              tp_order_price:
+                orderType === OrderType.LIMIT ? "4110" : undefined,
+            },
+            validationConfig,
+          );
+          expect(result?.tp_trigger_price).toBeDefined();
+        }
+      }
+    },
+  );
   it("preserves the existing price relation, hint direction and protection range", async () => {
     // Long TP: order price below the trigger must hint "set trigger lower"
     expect(
@@ -341,6 +388,111 @@ describe("Positional price editing", () => {
       creator.crateUpdateOrder(values, inactiveOrder, config)[0].child_orders,
     ).toEqual([{ order_id: 12, trigger_price: 3900 }]);
   });
+  it("reactivates an inactive leg when its trigger price is unchanged", () => {
+    const inactiveOrder = oldOrder();
+    inactiveOrder.child_orders[1] = {
+      ...inactiveOrder.child_orders[1],
+      type: OrderType.LIMIT,
+      trigger_price: 3900,
+      price: 3890,
+      is_activated: false,
+    };
+
+    expect(
+      creator.crateUpdateOrder(
+        {
+          ...values,
+          sl_trigger_price: "3900",
+          sl_order_type: OrderType.LIMIT,
+          sl_order_price: "3890",
+        },
+        inactiveOrder,
+        config,
+      )[0].child_orders,
+    ).toEqual([{ order_id: 12, trigger_price: 3900 }]);
+  });
+  it("does not update an inactive placeholder when another leg changes", () => {
+    const inactiveOrder = oldOrder();
+    inactiveOrder.child_orders[0] = {
+      ...inactiveOrder.child_orders[0],
+      type: OrderType.CLOSE_POSITION,
+      trigger_price: 0,
+      is_activated: false,
+    };
+
+    expect(
+      createTPSLOrderUpdates(
+        [
+          {
+            algo_type: AlgoOrderType.TAKE_PROFIT,
+            type: OrderType.CLOSE_POSITION,
+            is_activated: false,
+          },
+          {
+            algo_type: AlgoOrderType.STOP_LOSS,
+            type: OrderType.CLOSE_POSITION,
+            is_activated: true,
+            trigger_price: 3895,
+          },
+        ],
+        inactiveOrder,
+      ),
+    ).toEqual([{ order_id: 12, trigger_price: 3895 }]);
+  });
+  it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])(
+    "rejects an invalid enabled trigger price %s during editing",
+    (triggerPrice) => {
+      expect(() =>
+        createTPSLOrderUpdates(
+          [
+            {
+              algo_type: AlgoOrderType.TAKE_PROFIT,
+              type: OrderType.CLOSE_POSITION,
+              is_activated: true,
+              trigger_price: triggerPrice,
+            },
+          ],
+          oldOrder(),
+        ),
+      ).toThrow(/trigger price/);
+    },
+  );
+  it("rejects changing an inactive placeholder's configured type", () => {
+    const inactiveOrder = oldOrder();
+    inactiveOrder.child_orders[1] = {
+      ...inactiveOrder.child_orders[1],
+      type: OrderType.CLOSE_POSITION,
+      is_activated: false,
+    };
+
+    expect(() =>
+      creator.crateUpdateOrder(
+        {
+          ...values,
+          sl_order_type: OrderType.LIMIT,
+          sl_order_price: "3890",
+        },
+        inactiveOrder,
+        config,
+      ),
+    ).toThrow(/type/);
+  });
+  it("rejects adding a child that is missing from the server order", () => {
+    const tpOnlyOrder = oldOrder();
+    tpOnlyOrder.child_orders = [tpOnlyOrder.child_orders[0]];
+
+    expect(() =>
+      creator.crateUpdateOrder(
+        {
+          ...values,
+          sl_order_type: OrderType.LIMIT,
+          sl_order_price: "3890",
+        },
+        tpOnlyOrder,
+        config,
+      ),
+    ).toThrow(/missing TP\/SL child/);
+  });
   it("preserves omitted legs and only deactivates explicitly cleared legs", () => {
     expect(
       creator.crateUpdateOrder(
@@ -459,10 +611,47 @@ describe("Positional price editing", () => {
     ).toEqual([{ order_id: 11, is_activated: false }]);
     expect(() =>
       sanitizeTPSLChildUpdates(
-        [{ order_id: 11, type: OrderType.MARKET }],
+        [{ order_id: 11, type: OrderType.MARKET } as any],
         parent,
       ),
     ).toThrow(/type/);
+    expect(() =>
+      sanitizeTPSLChildUpdates(
+        [{ order_id: 11, type: OrderType.LIMIT } as any],
+        parent,
+      ),
+    ).toThrow(/type/);
+    const placeholderParent = oldOrder();
+    placeholderParent.child_orders[1] = {
+      ...placeholderParent.child_orders[1],
+      type: OrderType.CLOSE_POSITION,
+      is_activated: false,
+    };
+    expect(() =>
+      sanitizeTPSLChildUpdates(
+        [
+          {
+            order_id: 12,
+            type: OrderType.LIMIT,
+            trigger_price: 3900,
+            price: 3890,
+          } as any,
+        ],
+        placeholderParent,
+      ),
+    ).toThrow(/type/);
+    expect(
+      sanitizeTPSLChildUpdates(
+        [
+          {
+            order_id: 12,
+            trigger_price: 3900,
+            price: 3890,
+          },
+        ],
+        placeholderParent,
+      ),
+    ).toEqual([{ order_id: 12, trigger_price: 3900 }]);
     const bracket = {
       child_orders: [parent],
       algo_type: AlgoOrderRootType.BRACKET,
@@ -480,5 +669,19 @@ describe("Positional price editing", () => {
     ).toEqual([
       { order_id: 10, child_orders: [{ order_id: 11, price: 4120 }] },
     ]);
+    const tpOnlyParent = oldOrder();
+    tpOnlyParent.child_orders = [tpOnlyParent.child_orders[0]];
+    expect(() =>
+      sanitizeTPSLChildUpdates(
+        [{ algo_type: AlgoOrderType.STOP_LOSS, trigger_price: 3900 } as any],
+        tpOnlyParent,
+      ),
+    ).toThrow(/order id/);
+    expect(() =>
+      sanitizeTPSLChildUpdates(
+        [{ order_id: 999, trigger_price: 3900 }],
+        tpOnlyParent,
+      ),
+    ).toThrow(/order id/);
   });
 });

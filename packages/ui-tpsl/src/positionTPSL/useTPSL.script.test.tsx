@@ -8,6 +8,7 @@ let mockPositions: any[] = [];
 const mockClose = jest.fn();
 const mockSetValue = jest.fn();
 const mockSetValues = jest.fn();
+const mockIsTPSLOrderTypeLocked = jest.fn(() => false);
 const mockUseTPSLOrder = jest.fn(() => [
   {
     side: OrderSide.BUY,
@@ -60,6 +61,8 @@ jest.mock("./positionTpslConfirm", () => ({
 jest.mock("./tpslOrderSync", () => ({
   getChangedTPSLEditableOrderValues: jest.fn(() => ({})),
   getTPSLEditableOrderValues: jest.fn(() => ({})),
+  isTPSLOrderTypeLocked: (order: unknown, leg: unknown) =>
+    mockIsTPSLOrderTypeLocked(order, leg),
 }));
 
 const isolatedPosition = {
@@ -105,6 +108,7 @@ const renderBuilder = (options: Partial<TPSLBuilderOptions> = {}) => {
 describe("useTPSLBuilder position selection", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockIsTPSLOrderTypeLocked.mockReturnValue(false);
     mockMarginMode = MarginMode.ISOLATED;
     mockPositions = [isolatedPosition, crossPosition];
   });
@@ -174,6 +178,21 @@ describe("useTPSLBuilder position selection", () => {
 
     expect(view.result.position).toBe(subAccountPosition);
     expect(mockClose).not.toHaveBeenCalled();
+    view.unmount();
+  });
+
+  it("locks both order type selectors while editing", () => {
+    mockIsTPSLOrderTypeLocked.mockReturnValue(true);
+    const view = renderBuilder({
+      order: {
+        symbol: "PERP_ETH_USDC",
+        child_orders: [],
+      } as any,
+      isEditing: true,
+    });
+
+    expect(view.result.disableTPOrderTypeSelector).toBe(true);
+    expect(view.result.disableSLOrderTypeSelector).toBe(true);
     view.unmount();
   });
 });

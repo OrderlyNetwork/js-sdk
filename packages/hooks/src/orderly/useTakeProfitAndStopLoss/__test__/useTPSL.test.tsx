@@ -118,4 +118,114 @@ describe("useTPSLOrder create and edit routing", () => {
       undefined,
     );
   });
+
+  it("rejects reactivating a LIMIT TP without a trigger price", async () => {
+    const orderWithInactiveTP = {
+      ...existingFullOrder,
+      child_orders: [
+        {
+          ...existingFullOrder.child_orders[0],
+          type: OrderType.LIMIT,
+          trigger_price: 0,
+          is_activated: false,
+        },
+        {
+          ...existingFullOrder.child_orders[1],
+          type: OrderType.LIMIT,
+          price: 3890,
+        },
+      ],
+    } as API.AlgoOrder;
+
+    const { result } = renderHook(() =>
+      useTaskProfitAndStopLossInternal(
+        {
+          symbol: "PERP_ETH_USDC",
+          position_qty: 2,
+          average_open_price: 4000,
+        },
+        {
+          defaultOrder: orderWithInactiveTP,
+          isEditing: true,
+          positionType: PositionType.FULL,
+        },
+      ),
+    );
+
+    act(() => {
+      result.current[1].setValues({ tp_order_price: 4210 });
+    });
+
+    let validationError: unknown;
+    await act(async () => {
+      try {
+        await result.current[1].validate();
+      } catch (error) {
+        validationError = error;
+      }
+    });
+
+    expect(validationError).toMatchObject({
+      tp_trigger_price: { type: "required" },
+    });
+    expect(result.current[1].metaState).toMatchObject({
+      validated: true,
+      errors: { tp_trigger_price: { type: "required" } },
+    });
+    expect(mockUpdateOrder).not.toHaveBeenCalled();
+  });
+
+  it("reactivates a default-market TP placeholder without changing its type", async () => {
+    const orderWithInactiveTP = {
+      ...existingFullOrder,
+      child_orders: [
+        {
+          ...existingFullOrder.child_orders[0],
+          type: OrderType.CLOSE_POSITION,
+          trigger_price: 0,
+          is_activated: false,
+        },
+        {
+          ...existingFullOrder.child_orders[1],
+          type: OrderType.LIMIT,
+          price: 3890,
+        },
+      ],
+    } as API.AlgoOrder;
+
+    const { result } = renderHook(() =>
+      useTaskProfitAndStopLossInternal(
+        {
+          symbol: "PERP_ETH_USDC",
+          position_qty: 2,
+          average_open_price: 4000,
+        },
+        {
+          defaultOrder: orderWithInactiveTP,
+          isEditing: true,
+          positionType: PositionType.FULL,
+        },
+      ),
+    );
+
+    act(() => {
+      result.current[1].setValues({
+        tp_trigger_price: 4100,
+        tp_order_price: 4110,
+      });
+    });
+
+    await act(async () => {
+      await result.current[1].submit();
+    });
+
+    expect(mockUpdateOrder).toHaveBeenCalledWith(
+      {
+        order_id: 10,
+        child_orders: [{ order_id: 11, trigger_price: 4100 }],
+      },
+      {},
+      undefined,
+    );
+  });
 });

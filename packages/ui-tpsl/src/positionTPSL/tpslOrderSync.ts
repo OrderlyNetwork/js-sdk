@@ -21,30 +21,64 @@ const editableKeys = [
   "sl_order_price",
 ] as const satisfies readonly (keyof TPSLEditableOrderValues)[];
 
+type TPSLLeg = "tp" | "sl";
+
+const getOrderType = (child?: API.AlgoOrder): OrderType | undefined => {
+  if (!child) return undefined;
+  return child.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
+};
+
+const isActiveLeg = (child?: API.AlgoOrder) =>
+  !!child &&
+  child.is_activated !== false &&
+  Number.isFinite(Number(child.trigger_price)) &&
+  Number(child.trigger_price) > 0;
+
+/** Use the execution type configured on this server-owned child. */
+export function getTPSLEditOrderType(
+  order: API.AlgoOrder | undefined,
+  leg: TPSLLeg,
+): OrderType {
+  if (!order) return OrderType.MARKET;
+  return getOrderType(getTPSLLeg(order, leg)) ?? OrderType.MARKET;
+}
+
+/** Order types cannot be changed while editing an existing TP/SL order. */
+export function isTPSLOrderTypeLocked(
+  order: API.AlgoOrder | undefined,
+  _leg: TPSLLeg,
+): boolean {
+  return !!order;
+}
+
 export function getTPSLEditableOrderValues(
   order: API.AlgoOrder,
 ): TPSLEditableOrderValues {
   const tpOrder = getTPSLLeg(order, "tp");
   const slOrder = getTPSLLeg(order, "sl");
+  const tpOrderType = getTPSLEditOrderType(order, "tp");
+  const slOrderType = getTPSLEditOrderType(order, "sl");
 
   return {
     quantity:
       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
         ? 0
         : (order.quantity ?? ""),
-    tp_trigger_price: tpOrder?.trigger_price?.toString() ?? "",
-    tp_order_type:
-      tpOrder?.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET,
+    tp_trigger_price: isActiveLeg(tpOrder)
+      ? tpOrder!.trigger_price!.toString()
+      : "",
+    tp_order_type: tpOrderType,
     tp_order_price:
-      tpOrder?.type === OrderType.LIMIT
-        ? (tpOrder.price?.toString() ?? "")
+      tpOrderType === OrderType.LIMIT && isActiveLeg(tpOrder)
+        ? (tpOrder?.price?.toString() ?? "")
         : "",
-    sl_trigger_price: slOrder?.trigger_price?.toString() ?? "",
-    sl_order_type:
-      slOrder?.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET,
+    sl_trigger_price: isActiveLeg(slOrder)
+      ? slOrder!.trigger_price!.toString()
+      : "",
+    sl_order_type: slOrderType,
     sl_order_price:
-      slOrder?.type === OrderType.LIMIT
-        ? (slOrder.price?.toString() ?? "")
+      slOrderType === OrderType.LIMIT && isActiveLeg(slOrder)
+        ? (slOrder?.price?.toString() ?? "")
         : "",
   };
 }

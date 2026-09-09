@@ -28,6 +28,7 @@ import { PositionTPSLConfirm } from "./positionTpslConfirm";
 import {
   getChangedTPSLEditableOrderValues,
   getTPSLEditableOrderValues,
+  isTPSLOrderTypeLocked,
 } from "./tpslOrderSync";
 
 type PropsWithTriggerPrice = {
@@ -160,6 +161,10 @@ export const useTPSLBuilder = (
     [isEditing, order],
   );
   const previousExternalOrderValues = useRef(externalOrderValues);
+  const disableTPOrderTypeSelector =
+    !!isEditing && isTPSLOrderTypeLocked(order, "tp");
+  const disableSLOrderTypeSelector =
+    !!isEditing && isTPSLOrderTypeLocked(order, "sl");
 
   useEffect(() => {
     if (!externalOrderValues) {
@@ -441,6 +446,8 @@ export const useTPSLBuilder = (
 
   return {
     isEditing,
+    disableTPOrderTypeSelector,
+    disableSLOrderTypeSelector,
     symbolInfo: symbolInfo[symbol],
     maxQty,
     setQuantity: useMemoizedFn(setQuantity),
