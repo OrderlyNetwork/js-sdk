@@ -5,12 +5,11 @@ import { usePredictionScript } from "./prediction.script";
 import { Prediction } from "./prediction.ui";
 
 export const PredictionWidget: React.FC = () => {
-  const state = usePredictionScript();
   const canTrade = useCanTrade();
   const { disabledConnect } = useAppContext();
+  const state = usePredictionScript(disabledConnect);
   const isFirstTimeDeposit = useFirstTimeDeposit();
-  const isRegionRestricted =
-    disabledConnect || state.prototypeRegionState === "restricted";
+  const isRegionRestricted = state.isRegionRestricted;
 
   return (
     <Prediction
@@ -19,9 +18,6 @@ export const PredictionWidget: React.FC = () => {
       orderEntryAccountReady={canTrade}
       orderEntryFunded={canTrade && !isFirstTimeDeposit}
       orderEntryRestricted={isRegionRestricted}
-      showPrototypeRestrictionNotice={
-        state.prototypeRegionState === "restricted" && !disabledConnect
-      }
     />
   );
 };

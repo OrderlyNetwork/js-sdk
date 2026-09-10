@@ -1,6 +1,6 @@
 export const prediction = {
   "prediction.title": "Prediction",
-  "prediction.description": "Trade BTC outcomes with real-time odds",
+  "prediction.description": "Trade outcomes with real-time odds",
   "prediction.prototype": "Prototype",
   "prediction.prototypeDisclaimer":
     "Prototype only. Orders and balances are simulated locally.",
@@ -8,6 +8,17 @@ export const prediction = {
   "prediction.question":
     "Will the BTC index price finish above the opening price?",
   "prediction.up": "Up",
+  "prediction.region.restrictedTitle": "Region restricted",
+  "prediction.region.restrictedDescription":
+    "Prediction trading is not available in your region.",
+  "prediction.playground.region.unavailable": "Unavailable",
+  "prediction.region.unavailableTitle": "Prediction trading unavailable",
+  "prediction.region.unavailableDescription":
+    "Prediction markets are not available in your region.",
+  "prediction.playground.roundView": "Round view",
+  "prediction.playground.view.past": "Past",
+  "prediction.playground.view.live": "Live",
+  "prediction.playground.view.future": "Future",
   "prediction.filter.allOutcomes": "All outcomes",
   "prediction.filter.settled": "Settled",
   "prediction.down": "Down",

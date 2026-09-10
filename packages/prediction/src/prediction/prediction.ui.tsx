@@ -26,7 +26,9 @@ import {
   cn,
   DataTable,
   DataFilter,
+  Divider,
   Input,
+  inputFormatter,
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
@@ -43,7 +45,6 @@ import {
 } from "@orderly.network/ui";
 import type { Column, DataFilterItem } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { RestrictedInfo } from "@orderly.network/ui-scaffold";
 import { Decimal } from "@orderly.network/utils";
 import type {
   PredictionChartPoint,
@@ -116,31 +117,6 @@ const LiveIndicator = () => (
     <span className="oui-liveIndicator-dot oui-relative oui-size-1.5 oui-rounded-full oui-bg-danger" />
   </span>
 );
-
-const PrototypeRestrictedInfo: React.FC = () => {
-  const { t } = useTranslation();
-  const container = useRef<HTMLDivElement>(null);
-
-  return (
-    <RestrictedInfo
-      restrictedInfo={{
-        ip: "",
-        invalidRegions: [],
-        restrictedOpen: true,
-        content: t("prediction.restrictedRegion.description"),
-        canUnblock: false,
-        accessRestricted: true,
-        setAccessRestricted: () => undefined,
-      }}
-      brokerName=""
-      container={container}
-      mutiLine={false}
-      agree={false}
-      setAgree={() => undefined}
-      className="oui-prediction-restrictedInfo oui-relative oui-z-[1] oui-mb-3 oui-bg-base-9"
-    />
-  );
-};
 
 const CountdownDisplay: React.FC<{
   seconds: number;
@@ -726,6 +702,8 @@ const RoundNavigator: React.FC<{
 };
 
 const PriceChart: React.FC<{
+  selectedRound: number;
+  onSelectRound: (round: number) => void;
   points: PredictionChartPoint[];
   openingPrice: number;
   currentPrice: number;
@@ -734,6 +712,8 @@ const PriceChart: React.FC<{
   roundPhase: PredictionRoundPhase;
   onGoToLiveMarket: () => void;
 }> = ({
+  selectedRound,
+  onSelectRound,
   points,
   openingPrice,
   currentPrice,
@@ -744,7 +724,6 @@ const PriceChart: React.FC<{
 }) => {
   const { t } = useTranslation();
   const [chartMode, setChartMode] = useState<PredictionChartMode>("price");
-  const [selectedRound, setSelectedRound] = useState(round);
   const [liveCandles, setLiveCandles] = useState<PredictionCandle[]>(() =>
     createMockCandleHistory(currentPrice),
   );
@@ -764,7 +743,6 @@ const PriceChart: React.FC<{
   const windowDuration = 45_000;
 
   useEffect(() => {
-    setSelectedRound(round);
     setFrozenChart(null);
     setHoveredPoint(null);
     setLiveCandles(createMockCandleHistory(currentPrice));
@@ -802,14 +780,14 @@ const PriceChart: React.FC<{
     });
   }, [currentPrice]);
 
-  const selectRound = (nextRound: number) => {
-    setSelectedRound(nextRound);
-    if (nextRound < round) {
+  const selectRound = onSelectRound;
+  useEffect(() => {
+    if (selectedRound < round) {
       setFrozenChart({
         points: points.map((point) => ({ ...point })),
         candles: createMockCandleHistory(
           currentPrice,
-          Date.now() - (round - nextRound) * 1_000,
+          Date.now() - (round - selectedRound) * 1_000,
         ),
         openingPrice,
         currentPrice,
@@ -817,7 +795,7 @@ const PriceChart: React.FC<{
     } else {
       setFrozenChart(null);
     }
-  };
+  }, [selectedRound, round]);
 
   const isPastRound = selectedRound < round;
   const isFutureRound = selectedRound > round;
@@ -1061,6 +1039,11 @@ const PriceChart: React.FC<{
                 {usdFormatter.format(
                   Math.abs(chartCurrentPrice - chartOpeningPrice),
                 )}
+                {" ("}
+                {chartOpeningPrice > 0
+                  ? `${isUp ? "+" : ""}${new Decimal(chartCurrentPrice).sub(chartOpeningPrice).div(chartOpeningPrice).mul(100).toFixed(2)}%`
+                  : "--"}
+                {")"}
               </span>
             )}
           </div>
@@ -1345,9 +1328,6 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<"chart" | "data">("chart");
   const [contentVisible, setContentVisible] = useState(true);
-  const isPriceUp = state.currentPrice >= state.openingPrice;
-  const priceMove =
-    ((state.currentPrice - state.openingPrice) / state.openingPrice) * 100;
 
   return (
     <Tabs
@@ -1381,6 +1361,8 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
     >
       <TabPanel title={t("trading.tabs.chart")} value="chart">
         <PriceChart
+          selectedRound={state.selectedRound}
+          onSelectRound={state.selectMarketRound}
           points={state.priceHistory}
           openingPrice={state.openingPrice}
           currentPrice={state.currentPrice}
@@ -1401,12 +1383,6 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
           <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
             <Text intensity={36}>{t("prediction.chance")}</Text>
             <Text intensity={98}>{formatPercent(state.upChance)}</Text>
-          </div>
-          <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
-            <Text intensity={36}>{t("prediction.roundChange")}</Text>
-            <Text color={isPriceUp ? "success" : "danger"}>
-              {`${priceMove >= 0 ? "+" : ""}${priceMove.toFixed(2)}%`}
-            </Text>
           </div>
         </div>
       </TabPanel>
@@ -1550,8 +1526,8 @@ const PredictionOrderBook: React.FC<
 };
 
 const RoundOrderStatusCard: React.FC<
-  Pick<PredictionState, "round" | "roundPhase">
-> = ({ round, roundPhase }) => {
+  Pick<PredictionState, "round" | "roundPhase"> & { restricted?: boolean }
+> = ({ round, roundPhase, restricted }) => {
   const { t } = useTranslation();
   const isResolving = roundPhase === "closed" || roundPhase === "resolving";
   const resolvedOutcome =
@@ -1562,8 +1538,23 @@ const RoundOrderStatusCard: React.FC<
         : null;
 
   return (
-    <section className="oui-flex oui-h-full oui-min-h-[360px] oui-flex-col oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9 oui-p-6 oui-text-center md:oui-h-auto">
-      {isResolving && (
+    <section
+      className={cn(
+        "oui-flex oui-h-full oui-min-h-[360px] oui-flex-col oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9 oui-p-6 oui-text-center md:oui-h-auto",
+        restricted && "oui-flex-1 xl:oui-flex-none",
+      )}
+    >
+      {restricted && (
+        <div role="status">
+          <h2 className="oui-text-lg oui-font-semibold oui-text-base-contrast">
+            {t("prediction.region.restrictedTitle")}
+          </h2>
+          <p className="oui-mt-4 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+            {t("prediction.region.restrictedDescription")}
+          </p>
+        </div>
+      )}
+      {!restricted && isResolving && (
         <>
           <Spinner size="lg" color="primary" />
           <h2 className="oui-mt-6 oui-text-lg oui-font-semibold oui-text-base-contrast">
@@ -1578,7 +1569,7 @@ const RoundOrderStatusCard: React.FC<
         </>
       )}
 
-      {resolvedOutcome && (
+      {!restricted && resolvedOutcome && (
         <>
           <div
             className={cn(
@@ -1612,7 +1603,7 @@ const RoundOrderStatusCard: React.FC<
         </>
       )}
 
-      {roundPhase === "void" && (
+      {!restricted && roundPhase === "void" && (
         <>
           <div className="oui-flex oui-size-16 oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 oui-text-2xl oui-text-base-contrast-54">
             —
@@ -2241,8 +2232,29 @@ const SellPosition = ({
   const [price, setPrice] = useState("");
   const [type, setType] = useState<"market" | "limit">("market");
   const available = state.availableQuantity(outcome);
-  const tradable =
-    state.isRoundTradable && state.prototypeRegionState !== "restricted";
+  const percentage =
+    available > 0
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            new Decimal(Number(quantity) || 0)
+              .div(available)
+              .mul(100)
+              .toNumber(),
+          ),
+        )
+      : 0;
+  const selectPercentage = (value: number) =>
+    setQuantity(
+      value === 100
+        ? String(available)
+        : new Decimal(available)
+            .mul(value)
+            .div(100)
+            .toFixed(4, Decimal.ROUND_DOWN),
+    );
+  const tradable = state.isRoundTradable && !state.isRegionRestricted;
   const valid =
     tradable &&
     Number(quantity) > 0 &&
@@ -2273,63 +2285,121 @@ const SellPosition = ({
         side="top"
         align="end"
         className="oui-w-[360px] oui-max-w-[calc(100vw-32px)] oui-p-5"
+        onOpenAutoFocus={(event) => event.preventDefault()}
       >
-        <div className="oui-flex oui-flex-col oui-gap-3">
-          <OutcomeBadge outcome={outcome} />
-          <Input
-            prefix={t("common.quantity")}
-            value={quantity}
-            onValueChange={setQuantity}
-          />
+        <div className="oui-flex oui-flex-col oui-gap-2">
+          <div>
+            <OutcomeBadge outcome={outcome} />
+          </div>
+          <div className="oui-mb-1 oui-flex oui-w-full oui-items-center oui-gap-2">
+            <Input.tooltip
+              prefix={t("common.quantity")}
+              align="right"
+              size="md"
+              fullWidth
+              autoComplete="off"
+              formatters={[
+                inputFormatter.numberFormatter,
+                inputFormatter.dpFormatter(4),
+              ]}
+              triggerClassName="oui-min-w-0 oui-flex-1"
+              classNames={{
+                prefix: "oui-text-base-contrast-54",
+                root: "oui-w-full oui-outline-line-12",
+              }}
+              value={quantity}
+              onValueChange={setQuantity}
+            />
+          </div>
+          <div className="oui-flex oui-w-full oui-gap-2">
+            {[25, 50, 75, 100].map((value) => (
+              <Button
+                key={value}
+                variant="outlined"
+                size="xs"
+                color="secondary"
+                className={cn(
+                  "oui-w-1/4",
+                  percentage === value && "oui-border-primary oui-text-primary",
+                )}
+                onClick={() => selectPercentage(value)}
+              >
+                {value}%
+              </Button>
+            ))}
+          </div>
           <Slider
-            value={[
-              available > 0
-                ? Math.min(100, (Number(quantity) / available) * 100)
-                : 0,
+            showTip
+            markCount={4}
+            min={0}
+            max={100}
+            color="primary"
+            value={[percentage]}
+            onValueChange={([value]) => selectPercentage(value)}
+          />
+          <div className="oui-flex oui-w-full oui-items-center oui-justify-between">
+            <Text size="2xs" color="primary">
+              {new Decimal(percentage).toDecimalPlaces(2).toNumber()}%
+            </Text>
+            <div className="oui-flex oui-items-center oui-gap-1">
+              <Text size="2xs" intensity={54}>
+                {t("common.available")}
+              </Text>
+              <Text.numeral intensity={54} size="2xs" dp={4} padding={false}>
+                {available}
+              </Text.numeral>
+            </div>
+          </div>
+          <Divider my={2} intensity={8} className="oui-w-full" />
+          <Input.tooltip
+            size="md"
+            fullWidth
+            autoComplete="off"
+            triggerClassName="oui-w-full"
+            formatters={[
+              inputFormatter.numberFormatter,
+              inputFormatter.dpFormatter(4),
             ]}
-            onValueChange={([value]) =>
-              setQuantity(
-                new Decimal(available)
-                  .mul(value)
-                  .div(100)
-                  .toFixed(4, Decimal.ROUND_DOWN),
-              )
+            value={type === "market" ? "" : price}
+            onValueChange={setPrice}
+            disabled={type === "market"}
+            placeholder={type === "market" ? "--" : ""}
+            classNames={{
+              suffix: "oui-text-base-contrast-54",
+              root: "oui-w-full oui-outline-line-12 focus-within:oui-outline-line-12",
+            }}
+            suffix={
+              <Select.options
+                variant="text"
+                size="md"
+                classNames={{
+                  trigger: "oui-w-[--radix-select-content-available-width]",
+                }}
+                contentProps={{
+                  align: "end",
+                  className: "oui-border oui-border-line-6",
+                }}
+                value={type}
+                options={[
+                  { label: t("common.limit"), value: "limit" },
+                  { label: t("common.market"), value: "market" },
+                ]}
+                onValueChange={(value) => setType(value as "market" | "limit")}
+              />
             }
           />
-          <Button
-            size="sm"
-            variant="outlined"
-            color="secondary"
-            onClick={() => setQuantity(String(available))}
-          >
-            {t("tpsl.entirePosition")}
-          </Button>
-          <Select.options
-            value={type}
-            options={[
-              { label: t("common.market"), value: "market" },
-              { label: t("common.limit"), value: "limit" },
-            ]}
-            onValueChange={(value) => setType(value as "market" | "limit")}
-          />
-          {type === "limit" && (
-            <Input
-              prefix={t("common.price")}
-              value={price}
-              onValueChange={setPrice}
-            />
-          )}
-          <div className="oui-flex oui-justify-end oui-gap-2">
+          <div className="oui-mt-3 oui-flex oui-w-full oui-gap-2 oui-pb-1">
             <Button
-              size="sm"
-              variant="outlined"
+              size="md"
+              fullWidth
               color="secondary"
               onClick={() => setOpen(false)}
             >
               {t("common.cancel")}
             </Button>
             <Button
-              size="sm"
+              size="md"
+              fullWidth
               disabled={!valid}
               onClick={() => {
                 if (
@@ -2477,7 +2547,7 @@ const HoldingsTable = ({ state }: { state: PredictionState }) => {
           <TableNumber value={state.availableQuantity(position.outcome)} />,
           <TableNumber value={position.averagePrice} />,
           <TableNumber value={state.outcomePrices[position.outcome]} />,
-          <Text.pnl dp={2}>
+          <Text.pnl dp={2} coloring>
             {new Decimal(state.outcomePrices[position.outcome])
               .sub(position.averagePrice)
               .mul(position.quantity)
@@ -2520,10 +2590,7 @@ const PendingValue = ({
           variant="text"
           color="secondary"
           size="xs"
-          disabled={
-            !state.isRoundTradable ||
-            state.prototypeRegionState === "restricted"
-          }
+          disabled={!state.isRoundTradable || state.isRegionRestricted}
         >
           {field === "quantity" ? "0 / " : ""}
           <TableNumber value={order[field]} />
@@ -2623,7 +2690,7 @@ const PredictionOrdersTable = ({
                 size="xs"
                 variant="outlined"
                 color="secondary"
-                disabled={!state.openOrders.length}
+                disabled={!state.openOrders.length || state.isRegionRestricted}
                 onClick={state.cancelAllOrders}
               >
                 {t("orders.cancelAll")}
@@ -2705,6 +2772,7 @@ const PredictionOrdersTable = ({
                         variant="outlined"
                         color="secondary"
                         onClick={() => state.cancelOrder(order.id)}
+                        disabled={state.isRegionRestricted}
                       >
                         {t("common.cancel")}
                       </Button>
@@ -2777,7 +2845,9 @@ const PredictionHistoryTable = ({ state }: { state: PredictionState }) => {
             ) : (
               <OutcomeBadge outcome={record.result ?? record.outcome} />
             ),
-            <Text.pnl dp={2}>{record.pnl}</Text.pnl>,
+            <Text.pnl dp={2} coloring>
+              {record.pnl}
+            </Text.pnl>,
             formatTableTime(record.settledAt),
           ],
         }))}
@@ -2891,6 +2961,8 @@ export const PredictionPlayground: React.FC<
     PredictionState,
     | "roundPhase"
     | "setRoundPhase"
+    | "roundView"
+    | "setRoundView"
     | "prototypeAuthState"
     | "setPrototypeAuthState"
     | "prototypeRegionState"
@@ -2899,6 +2971,8 @@ export const PredictionPlayground: React.FC<
 > = ({
   roundPhase,
   setRoundPhase,
+  roundView,
+  setRoundView,
   prototypeAuthState,
   setPrototypeAuthState,
   prototypeRegionState,
@@ -2906,23 +2980,20 @@ export const PredictionPlayground: React.FC<
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const phases: PredictionRoundPhase[] = [
-    "trading",
-    "resolving",
-    "resolvedUp",
-    "resolvedDown",
-  ];
+  const phases: PredictionRoundPhase[] =
+    roundView === "past"
+      ? ["resolving", "resolvedUp", "resolvedDown"]
+      : ["trading"];
   const authStates: PredictionPrototypeAuthState[] = [
-    "real",
     "disconnected",
     "connected",
     "accountReady",
     "funded",
   ];
   const regionStates: PredictionPrototypeRegionState[] = [
-    "real",
     "allowed",
     "restricted",
+    "unavailable",
   ];
 
   return (
@@ -2933,6 +3004,52 @@ export const PredictionPlayground: React.FC<
             {t("prediction.playground")}
           </div>
           <div className="oui-mb-1 oui-mt-1 oui-px-2 oui-text-3xs oui-font-semibold oui-uppercase oui-text-base-contrast-36">
+            {t("prediction.playground.roundView")}
+          </div>
+          <div className="oui-space-y-1">
+            {(["past", "live", "future"] as const).map((view) => (
+              <button
+                key={view}
+                type="button"
+                onClick={() => setRoundView(view)}
+                className={cn(
+                  "oui-flex oui-w-full oui-items-center oui-justify-between oui-rounded-lg oui-px-2 oui-py-2 oui-text-start oui-text-xs oui-transition-colors",
+                  roundView === view
+                    ? "oui-bg-base-6 oui-text-base-contrast"
+                    : "oui-text-base-contrast-54 hover:oui-bg-base-6 hover:oui-text-base-contrast-80",
+                )}
+              >
+                {t(`prediction.playground.view.${view}`)}
+                {roundView === view && (
+                  <span className="oui-size-1.5 oui-rounded-full oui-bg-primary" />
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="oui-mb-1 oui-mt-3 oui-border-t oui-border-line-12 oui-px-2 oui-pt-3 oui-text-3xs oui-font-semibold oui-uppercase oui-text-base-contrast-36">
+            {t("prediction.playground.round")}
+          </div>
+          <div className="oui-space-y-1">
+            {phases.map((phase) => (
+              <button
+                key={phase}
+                type="button"
+                onClick={() => setRoundPhase(phase)}
+                className={cn(
+                  "oui-flex oui-w-full oui-items-center oui-justify-between oui-rounded-lg oui-px-2 oui-py-2 oui-text-start oui-text-xs oui-transition-colors",
+                  roundPhase === phase
+                    ? "oui-bg-base-6 oui-text-base-contrast"
+                    : "oui-text-base-contrast-54 hover:oui-bg-base-6 hover:oui-text-base-contrast-80",
+                )}
+              >
+                {t(`prediction.playground.phase.${phase}`)}
+                {roundPhase === phase && (
+                  <span className="oui-size-1.5 oui-rounded-full oui-bg-primary" />
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="oui-mb-1 oui-mt-3 oui-border-t oui-border-line-12 oui-px-2 oui-pt-3 oui-text-3xs oui-font-semibold oui-uppercase oui-text-base-contrast-36">
             {t("prediction.playground.auth")}
           </div>
           <div className="oui-space-y-1">
@@ -2973,29 +3090,6 @@ export const PredictionPlayground: React.FC<
               >
                 {t(`prediction.playground.region.${regionState}`)}
                 {prototypeRegionState === regionState && (
-                  <span className="oui-size-1.5 oui-rounded-full oui-bg-primary" />
-                )}
-              </button>
-            ))}
-          </div>
-          <div className="oui-mb-1 oui-mt-3 oui-border-t oui-border-line-12 oui-px-2 oui-pt-3 oui-text-3xs oui-font-semibold oui-uppercase oui-text-base-contrast-36">
-            {t("prediction.playground.round")}
-          </div>
-          <div className="oui-space-y-1">
-            {phases.map((phase) => (
-              <button
-                key={phase}
-                type="button"
-                onClick={() => setRoundPhase(phase)}
-                className={cn(
-                  "oui-flex oui-w-full oui-items-center oui-justify-between oui-rounded-lg oui-px-2 oui-py-2 oui-text-start oui-text-xs oui-transition-colors",
-                  roundPhase === phase
-                    ? "oui-bg-base-6 oui-text-base-contrast"
-                    : "oui-text-base-contrast-54 hover:oui-bg-base-6 hover:oui-text-base-contrast-80",
-                )}
-              >
-                {t(`prediction.playground.phase.${phase}`)}
-                {roundPhase === phase && (
                   <span className="oui-size-1.5 oui-rounded-full oui-bg-primary" />
                 )}
               </button>
@@ -3160,7 +3254,6 @@ export const Prediction: React.FC<
     orderEntryAccountReady?: boolean;
     orderEntryFunded?: boolean;
     orderEntryRestricted?: boolean;
-    showPrototypeRestrictionNotice?: boolean;
   }
 > = (state) => {
   const { t } = useTranslation();
@@ -3176,9 +3269,6 @@ export const Prediction: React.FC<
     }
   }, [state.notification, t]);
 
-  const isPriceUp = state.currentPrice >= state.openingPrice;
-  const priceMove =
-    ((state.currentPrice - state.openingPrice) / state.openingPrice) * 100;
   const [favoriteMarketIds, setFavoriteMarketIds] = useLocalStorage<string[]>(
     PREDICTION_FAVORITES_STORAGE_KEY,
     [],
@@ -3209,8 +3299,7 @@ export const Prediction: React.FC<
 
   // Regional restrictions come from the shared app provider and must always
   // take precedence over prototype-only authentication states.
-  const hasPrototypeAuthOverride =
-    state.prototypeAuthState !== "real" && !state.orderEntryRestricted;
+  const hasPrototypeAuthOverride = state.prototypeAuthState !== "real";
   const effectiveAccountReady = state.orderEntryRestricted
     ? false
     : hasPrototypeAuthOverride
@@ -3222,9 +3311,7 @@ export const Prediction: React.FC<
     : hasPrototypeAuthOverride
       ? state.prototypeAuthState === "funded"
       : (state.orderEntryFunded ?? true);
-  const accountPanel = state.showPrototypeRestrictionNotice ? (
-    <PrototypeAuthPrompt state="disconnected" disabled />
-  ) : hasPrototypeAuthOverride ? (
+  const accountPanel = hasPrototypeAuthOverride ? (
     state.prototypeAuthState === "funded" ? null : state.prototypeAuthState ===
       "real" ? null : (
       <PrototypeAuthPrompt state={state.prototypeAuthState} />
@@ -3233,12 +3320,33 @@ export const Prediction: React.FC<
     state.accountPanel
   );
 
+  if (state.prototypeRegionState === "unavailable") {
+    return (
+      <main
+        id="oui-prediction-page"
+        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-items-center oui-justify-center oui-bg-base-10 oui-p-6"
+      >
+        <div
+          role="status"
+          className="oui-max-w-lg oui-space-y-3 oui-text-center"
+        >
+          <h1 className="oui-text-xl oui-font-semibold oui-text-base-contrast">
+            {t("prediction.region.unavailableTitle")}
+          </h1>
+          <p className="oui-text-sm oui-text-base-contrast-54">
+            {t("prediction.region.unavailableDescription")}
+          </p>
+        </div>
+        <PredictionPlayground {...state} />
+      </main>
+    );
+  }
+
   return (
     <main
       id="oui-prediction-page"
       className="oui-min-h-[calc(100vh-64px)] oui-bg-base-10 oui-p-3 oui-font-semibold lg:oui-p-4"
     >
-      {state.showPrototypeRestrictionNotice && <PrototypeRestrictedInfo />}
       <div className="oui-grid oui-gap-3 md:oui-grid-cols-2 md:oui-items-stretch xl:oui-min-h-[calc(100vh-96px)] xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] xl:oui-grid-rows-[auto_auto_minmax(350px,1fr)]">
         <header className="oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-1 xl:oui-col-span-1 xl:oui-col-start-1 xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
           <DropDownMarketsWidget
@@ -3299,15 +3407,6 @@ export const Prediction: React.FC<
                 <Text intensity={98}>{formatPercent(state.upChance)}</Text>
               }
             />
-            <DataItem
-              label={t("prediction.roundChange")}
-              hint={t("prediction.roundChangeHint")}
-              value={
-                <Text color={isPriceUp ? "success" : "danger"}>
-                  {`${priceMove >= 0 ? "+" : ""}${priceMove.toFixed(2)}%`}
-                </Text>
-              }
-            />
           </div>
         </header>
 
@@ -3315,6 +3414,8 @@ export const Prediction: React.FC<
           <MobileMarketPanel {...state} />
           <div className="oui-hidden xl:oui-block">
             <PriceChart
+              selectedRound={state.selectedRound}
+              onSelectRound={state.selectMarketRound}
               points={state.priceHistory}
               openingPrice={state.openingPrice}
               currentPrice={state.currentPrice}
@@ -3336,13 +3437,25 @@ export const Prediction: React.FC<
             roundPhase={state.roundPhase}
           />
         </div>
-        <div className="oui-space-y-3 md:oui-col-start-2 md:oui-row-start-3 xl:oui-col-start-3 xl:oui-row-span-3 xl:oui-row-start-1">
+        <div
+          className={cn(
+            "oui-space-y-3 md:oui-col-start-2 md:oui-row-start-3 xl:oui-col-start-3 xl:oui-row-span-3 xl:oui-row-start-1",
+            (state.isRegionRestricted || state.orderEntryRestricted) &&
+              "oui-flex oui-flex-col oui-self-stretch xl:oui-block",
+          )}
+        >
           {accountPanel && (
             <div className="oui-rounded-2xl oui-border oui-border-line-12 oui-bg-base-9 oui-p-3">
               {accountPanel}
             </div>
           )}
-          {state.isRoundTradable ? (
+          {state.isRegionRestricted || state.orderEntryRestricted ? (
+            <RoundOrderStatusCard
+              round={state.selectedRound}
+              roundPhase={state.roundPhase}
+              restricted
+            />
+          ) : state.isRoundTradable ? (
             <TradePanel
               {...state}
               orderEntryAccountReady={effectiveAccountReady}
@@ -3360,6 +3473,8 @@ export const Prediction: React.FC<
         </div>
       </div>
       <PredictionPlayground
+        roundView={state.roundView}
+        setRoundView={state.setRoundView}
         roundPhase={state.roundPhase}
         setRoundPhase={state.setRoundPhase}
         prototypeAuthState={state.prototypeAuthState}

@@ -27,7 +27,11 @@ export type PredictionPrototypeAuthState =
   | "connected"
   | "accountReady"
   | "funded";
-export type PredictionPrototypeRegionState = "real" | "allowed" | "restricted";
+export type PredictionPrototypeRegionState =
+  | "real"
+  | "allowed"
+  | "restricted"
+  | "unavailable";
 
 export type PredictionNotification = {
   id: number;
@@ -145,7 +149,7 @@ const createBook = (midPrice: number) => {
   return { asks: asks.reverse(), bids };
 };
 
-export const usePredictionScript = () => {
+export const usePredictionScript = (regionRestricted = false) => {
   const [prototypeAuthState, setPrototypeAuthState] =
     useLocalStorage<PredictionPrototypeAuthState>(
       PREDICTION_PROTOTYPE_AUTH_STORAGE_KEY,
@@ -157,6 +161,13 @@ export const usePredictionScript = () => {
       "real",
     );
   const [round, setRound] = useState(INITIAL_ROUND);
+  const isRegionRestricted =
+    regionRestricted ||
+    prototypeRegionState === "restricted" ||
+    prototypeRegionState === "unavailable";
+  const [selectedRound, setSelectedRound] = useState(INITIAL_ROUND);
+  const roundView =
+    selectedRound < round ? "past" : selectedRound > round ? "future" : "live";
   const [countdown, setCountdown] = useState(ROUND_SECONDS - 43);
   const [roundPhase, setRoundPhase] = useState<PredictionRoundPhase>("trading");
   const [openingPrice, setOpeningPrice] = useState(INITIAL_BTC_PRICE);
@@ -415,10 +426,11 @@ export const usePredictionScript = () => {
   );
 
   const isRoundTradable =
-    roundPhase === "trading" || roundPhase === "closingSoon";
+    selectedRound >= round &&
+    (roundPhase === "trading" || roundPhase === "closingSoon");
 
   const canPlaceOrder = useMemo(() => {
-    if (!isRoundTradable) return false;
+    if (!isRoundTradable || isRegionRestricted) return false;
     if (numericAmount <= 0 || selectedPrice <= 0 || selectedPrice >= 1) {
       return false;
     }
@@ -426,6 +438,7 @@ export const usePredictionScript = () => {
     return orderQuantity <= selectedTokenBalance;
   }, [
     balance,
+    isRegionRestricted,
     isRoundTradable,
     numericAmount,
     orderNotional,
@@ -461,7 +474,15 @@ export const usePredictionScript = () => {
       if (roundPhase === "trading" || roundPhase === "closingSoon") {
         setCountdown((previous) => {
           const next = Math.max(previous - 1, 0);
-          if (next === 30 && roundPhase === "trading") {
+          if (next === 0 && selectedRound > round) {
+            setRound((previousRound) => previousRound + ROUND_SECONDS);
+            return ROUND_SECONDS;
+          }
+          if (
+            next === 30 &&
+            roundPhase === "trading" &&
+            selectedRound === round
+          ) {
             setRoundPhase("closingSoon");
           }
           if (next === 0) setRoundPhase("closed");
@@ -471,7 +492,7 @@ export const usePredictionScript = () => {
     }, 1_000);
 
     return () => window.clearInterval(timer);
-  }, [roundPhase]);
+  }, [roundPhase, selectedRound, round]);
 
   const selectRoundPhase = useCallback(
     (phase: PredictionRoundPhase) => {
@@ -498,11 +519,29 @@ export const usePredictionScript = () => {
   const goToLiveRound = useCallback(() => {
     setOpeningPrice(currentPrice);
     setRound((previous) => previous + ROUND_SECONDS);
+    setSelectedRound(round + ROUND_SECONDS);
     setCountdown(ROUND_SECONDS);
     setRoundPhase("trading");
     setPriceHistory(createInitialHistory(currentPrice));
     setNotification(undefined);
-  }, [currentPrice]);
+  }, [currentPrice, round]);
+
+  const selectMarketRound = (nextRound: number) => {
+    setSelectedRound(nextRound);
+    setRoundPhase(nextRound < round ? "resolvedUp" : "trading");
+    setNotification(undefined);
+    setCountdown(ROUND_SECONDS - 43);
+  };
+  const setRoundView = (view: "past" | "live" | "future") => {
+    selectMarketRound(
+      round +
+        (view === "past"
+          ? -ROUND_SECONDS
+          : view === "future"
+            ? ROUND_SECONDS
+            : 0),
+    );
+  };
 
   const selectOutcome = useCallback(
     (outcome: PredictionOutcome) => {
@@ -595,6 +634,7 @@ export const usePredictionScript = () => {
     });
     setOpeningPrice(currentPrice);
     setRound((previous) => previous + ROUND_SECONDS);
+    setSelectedRound(round + ROUND_SECONDS);
     setCountdown(ROUND_SECONDS);
     setRoundPhase("trading");
     setActiveTab("predictionHistory");
@@ -611,7 +651,7 @@ export const usePredictionScript = () => {
     const position = positions.find((p) => p.outcome === outcome);
     if (
       !isRoundTradable ||
-      prototypeRegionState === "restricted" ||
+      isRegionRestricted ||
       !position ||
       !Number.isFinite(quantity) ||
       quantity <= 0 ||
@@ -628,7 +668,7 @@ export const usePredictionScript = () => {
       type,
       price,
       quantity,
-      round,
+      round: selectedRound,
       timestamp: Date.now(),
     };
     if (type === "limit") {
@@ -654,7 +694,7 @@ export const usePredictionScript = () => {
       setSettlements((previous) => [
         {
           id: nextIdRef.current++,
-          round,
+          round: selectedRound,
           outcome,
           quantity,
           averagePrice: position.averagePrice,
@@ -679,7 +719,7 @@ export const usePredictionScript = () => {
     if (
       !order ||
       !isRoundTradable ||
-      prototypeRegionState === "restricted" ||
+      isRegionRestricted ||
       !Number.isFinite(price) ||
       !Number.isFinite(quantity) ||
       price <= 0 ||
@@ -729,7 +769,7 @@ export const usePredictionScript = () => {
       type: orderType,
       price,
       quantity,
-      round,
+      round: selectedRound,
       timestamp: Date.now(),
     };
 
@@ -798,12 +838,14 @@ export const usePredictionScript = () => {
     orderSide,
     orderType,
     round,
+    selectedRound,
     selectedOutcome,
     selectedPrice,
   ]);
 
   const cancelOrder = useCallback(
     (id: number) => {
+      if (isRegionRestricted) return;
       const order = openOrders.find((item) => item.id === id);
       if (!order) return;
 
@@ -814,10 +856,11 @@ export const usePredictionScript = () => {
       setOpenOrders((previous) => previous.filter((item) => item.id !== id));
       notify("prediction.message.orderCanceled");
     },
-    [notify, openOrders],
+    [notify, openOrders, isRegionRestricted],
   );
 
   const cancelAllOrders = useCallback(() => {
+    if (isRegionRestricted) return;
     if (openOrders.length === 0) return;
 
     setOpenOrders((orders) => {
@@ -833,7 +876,7 @@ export const usePredictionScript = () => {
       return [];
     });
     notify("prediction.message.ordersCanceled");
-  }, [notify, openOrders.length]);
+  }, [notify, openOrders.length, isRegionRestricted]);
 
   const setMaxAmount = useCallback(() => {
     setAmount(maxAmount.toFixed(amountUnit === "quote" ? 2 : 4));
@@ -858,6 +901,10 @@ export const usePredictionScript = () => {
     round,
     countdown,
     roundPhase,
+    selectedRound,
+    selectMarketRound,
+    roundView,
+    setRoundView,
     setRoundPhase: selectRoundPhase,
     goToLiveRound,
     isRoundTradable,
@@ -891,6 +938,7 @@ export const usePredictionScript = () => {
     prototypeAuthState,
     setPrototypeAuthState,
     prototypeRegionState,
+    isRegionRestricted,
     setPrototypeRegionState,
     activeTab,
     setActiveTab,

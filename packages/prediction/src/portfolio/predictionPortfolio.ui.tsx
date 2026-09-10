@@ -43,6 +43,8 @@ export const PredictionPortfolio: React.FC<PredictionPortfolioState> = (
         />
       </Box>
       <PredictionPlayground
+        roundView={state.roundView}
+        setRoundView={state.setRoundView}
         roundPhase={state.roundPhase}
         setRoundPhase={state.setRoundPhase}
         prototypeAuthState={state.prototypeAuthState}
