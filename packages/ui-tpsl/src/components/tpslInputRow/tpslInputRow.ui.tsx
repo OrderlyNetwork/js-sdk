@@ -66,20 +66,35 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
           </Text>
           <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
+              disabled={props.disableTriggerEditing}
               type={`${props.type} price`}
               value={values.trigger_price}
               error={getErrorMsg(`${props.type}_trigger_price`)}
               onValueChange={(value) => {
-                props.onChange(`${props.type}_trigger_price`, value);
+                if (!props.disableTriggerEditing) {
+                  props.onChange(`${props.type}_trigger_price`, value);
+                }
               }}
               quote_dp={props.quote_dp}
               classNames={{
-                root: props.inputWarnNode
-                  ? "oui-outline-warning-darken focus-within:oui-outline-warning-darken"
+                root: cn(
+                  !getErrorMsg(`${props.type}_trigger_price`) &&
+                    "oui-outline-line-12",
+                  props.disableTriggerEditing &&
+                    "oui-bg-base-6 oui-opacity-50 oui-cursor-not-allowed",
+                  props.inputWarnNode &&
+                    "oui-outline-warning-darken focus-within:oui-outline-warning-darken",
+                ),
+                input: props.disableTriggerEditing
+                  ? "oui-text-base-contrast-54"
                   : undefined,
               }}
             />
             <PnlInputWidget
+              disabled={
+                !!props.disableTriggerEditing &&
+                (values.order_type !== OrderType.LIMIT || !values.trigger_price)
+              }
               type={props.type === "tp" ? "TP" : "SL"}
               onChange={(key, value) => {
                 props.onChange(key, value as string);
@@ -110,6 +125,13 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
               }
               value={values.order_price}
               error={getErrorMsg(`${props.type}_order_price`)}
+              classNames={{
+                root: cn(
+                  "oui-bg-base-6",
+                  !getErrorMsg(`${props.type}_order_price`) &&
+                    "oui-outline-line-12",
+                ),
+              }}
               onValueChange={(value) => {
                 props.onChange(`${props.type}_order_price`, value);
               }}

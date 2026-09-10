@@ -3,6 +3,7 @@ import {
   AlgoOrderRootType,
   API,
   OrderSide,
+  OrderStatus,
   OrderType,
   PositionType,
 } from "@orderly.network/types";
@@ -13,6 +14,7 @@ const mockCreateOrder = jest.fn().mockResolvedValue({ success: true });
 const mockUpdateOrder = jest.fn().mockResolvedValue({ success: true });
 const mockDeleteOrder = jest.fn().mockResolvedValue({ success: true });
 let mockSymbolInfo = createMockSymbolConfig();
+let mockMarkPrice = 4000;
 
 jest.mock("../../../next/useOrderEntry/helper", () => ({
   appendOrderMetadata: (order: unknown) => order,
@@ -34,7 +36,7 @@ jest.mock("../../../useMutation", () => ({
 }));
 
 jest.mock("../../useMarkPrice", () => ({
-  useMarkPrice: () => ({ data: 4000 }),
+  useMarkPrice: () => ({ data: mockMarkPrice }),
 }));
 
 jest.mock("../../useSymbolsInfo", () => ({
@@ -70,6 +72,7 @@ describe("useTPSLOrder create and edit routing", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockSymbolInfo = createMockSymbolConfig();
+    mockMarkPrice = 4000;
   });
 
   it("creates a new partial order when defaultOrder is provided but isEditing is false", async () => {
@@ -228,4 +231,178 @@ describe("useTPSLOrder create and edit routing", () => {
       undefined,
     );
   });
+
+  it.each([
+    { slActivated: true, emptyTrigger: undefined },
+    { slActivated: false, emptyTrigger: undefined },
+    { slActivated: false, emptyTrigger: "" },
+  ])(
+    "allows a price-only edit after triggering with %j",
+    async ({ slActivated, emptyTrigger }) => {
+      mockMarkPrice = 2471.7;
+      const triggeredLimitOrder = {
+        ...existingFullOrder,
+        is_triggered: true,
+        child_orders: [
+          {
+            ...existingFullOrder.child_orders[0],
+            type: OrderType.LIMIT,
+            trigger_price: 2470.9,
+            price: 2490,
+            status: OrderStatus.NEW,
+            is_triggered: false,
+          },
+          {
+            ...existingFullOrder.child_orders[1],
+            algo_status: OrderStatus.CANCELLED,
+            is_activated: slActivated,
+          },
+        ],
+      } as API.AlgoOrder;
+      const { result } = renderHook(() =>
+        useTaskProfitAndStopLossInternal(
+          {
+            symbol: "PERP_ETH_USDC",
+            position_qty: 2,
+            average_open_price: 4000,
+          },
+          {
+            defaultOrder: triggeredLimitOrder,
+            isEditing: true,
+            positionType: PositionType.FULL,
+          },
+        ),
+      );
+
+      act(() => {
+        result.current[1].setValues({ tp_order_price: 2485 });
+        if (emptyTrigger !== undefined) {
+          result.current[1].setValues({ sl_trigger_price: emptyTrigger });
+        }
+      });
+
+      await act(async () => {
+        await expect(result.current[1].validate()).resolves.toBeDefined();
+        await result.current[1].submit();
+      });
+
+      expect(mockUpdateOrder).toHaveBeenCalledWith(
+        {
+          order_id: 10,
+          child_orders: [{ order_id: 11, price: 2485 }],
+        },
+        {},
+        undefined,
+      );
+    },
+  );
+
+  it.each([
+    ["tp_offset", 200],
+    ["tp_offset_percentage", 0.05],
+    ["tp_offset_from_mark", 200],
+    ["tp_offset_percentage_from_mark", 0.05],
+    ["tp_pnl", 400],
+  ])(
+    "edits triggered Limit price through %s without changing the trigger",
+    async (key, value) => {
+      const defaultOrder = {
+        ...existingFullOrder,
+        is_triggered: true,
+        child_orders: [
+          {
+            ...existingFullOrder.child_orders[0],
+            type: OrderType.LIMIT,
+            price: 4110,
+          },
+          existingFullOrder.child_orders[1],
+        ],
+      } as API.AlgoOrder;
+      const { result } = renderHook(() =>
+        useTaskProfitAndStopLossInternal(
+          {
+            symbol: "PERP_ETH_USDC",
+            position_qty: 2,
+            average_open_price: 4000,
+          },
+          { defaultOrder, isEditing: true, positionType: PositionType.FULL },
+        ),
+      );
+
+      act(() => {
+        result.current[1].setValue(key as string, value);
+      });
+
+      expect(Number(result.current[0].tp_trigger_price)).toBe(4100);
+      expect(Number(result.current[0].tp_order_price)).toBe(4200);
+      await act(async () => {
+        await expect(result.current[1].validate()).resolves.toBeDefined();
+        await result.current[1].submit();
+      });
+      expect(mockUpdateOrder).toHaveBeenCalledWith(
+        { order_id: 10, child_orders: [{ order_id: 11, price: 4200 }] },
+        {},
+        undefined,
+      );
+    },
+  );
+
+  it.each([
+    { activated: true, trigger: 3901 },
+    { activated: true, trigger: "" },
+    { activated: false, trigger: 3900 },
+  ])(
+    "rejects a trigger change after triggering with %j",
+    async ({ activated, trigger }) => {
+      const triggeredLimitOrder = {
+        ...existingFullOrder,
+        is_triggered: true,
+        child_orders: [
+          {
+            ...existingFullOrder.child_orders[0],
+            type: OrderType.LIMIT,
+            trigger_price: 3900,
+            price: 3950,
+            is_triggered: true,
+            is_activated: activated,
+          },
+          existingFullOrder.child_orders[1],
+        ],
+      } as API.AlgoOrder;
+      const { result } = renderHook(() =>
+        useTaskProfitAndStopLossInternal(
+          {
+            symbol: "PERP_ETH_USDC",
+            position_qty: 2,
+            average_open_price: 4000,
+          },
+          {
+            defaultOrder: triggeredLimitOrder,
+            isEditing: true,
+            positionType: PositionType.FULL,
+          },
+        ),
+      );
+
+      act(() => {
+        result.current[1].setValues({ tp_trigger_price: trigger });
+      });
+
+      let validationError: unknown;
+      await act(async () => {
+        try {
+          await result.current[1].validate();
+        } catch (error) {
+          validationError = error;
+        }
+      });
+
+      expect(validationError).toMatchObject({
+        tp_trigger_price: {
+          message: "Trigger price cannot be changed after TP/SL is triggered",
+        },
+      });
+      expect(mockUpdateOrder).not.toHaveBeenCalled();
+    },
+  );
 });

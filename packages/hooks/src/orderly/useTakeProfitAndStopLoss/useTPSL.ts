@@ -16,6 +16,7 @@ import { AlgoOrderType } from "@orderly.network/types";
 import {
   getTPSLLeg,
   getTPSLQuantity,
+  isActiveTPSLLeg,
   isTPSLTriggered,
 } from "@orderly.network/utils";
 import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
@@ -52,6 +53,11 @@ export type ComputedAlgoOrder = Partial<
 export type ValidateError = {
   [P in keyof ComputedAlgoOrder]?: OrderValidationItem;
 };
+
+const triggeredTPSLTriggerPriceError = {
+  type: -1,
+  message: "Trigger price cannot be changed after TP/SL is triggered",
+} as const;
 
 // const checkIsEnableTpSL = (
 //   order?: API.AlgoOrder,
@@ -214,23 +220,18 @@ export const useTaskProfitAndStopLossInternal = (
   useEffect(() => {
     if (!isEditing || !options?.defaultOrder) return;
     const order: ComputedAlgoOrder = {};
-    const isActive = (item?: API.AlgoOrder) =>
-      !!item &&
-      item.is_activated !== false &&
-      Number.isFinite(Number(item.trigger_price)) &&
-      Number(item.trigger_price) > 0;
     for (const leg of ["tp", "sl"] as const) {
       const child = options.defaultOrder.child_orders?.find(
         (item) =>
           item.algo_type === (leg === "tp" ? "TAKE_PROFIT" : "STOP_LOSS"),
       );
-      if (isActive(child)) {
+      if (isActiveTPSLLeg(child)) {
         order[`${leg}_trigger_price`] = child!.trigger_price;
       }
       order[`${leg}_order_type`] =
         child?.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
       order[`${leg}_order_price`] =
-        isActive(child) && child?.type === OrderType.LIMIT
+        isActiveTPSLLeg(child) && child?.type === OrderType.LIMIT
           ? child.price?.toString()
           : undefined;
     }
@@ -395,10 +396,52 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   const validateFunc = async (
-    order: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
+    currentOrder: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
   ) => {
     const creator = getOrderCreator();
-    return creator.validate(order, valueConfig);
+    const lockedTriggerErrors: ValidateError = {};
+    const skipTPSLTriggerPriceAgainstMark = (["tp", "sl"] as const).reduce<
+      Partial<Record<"tp" | "sl", boolean>>
+    >((result, leg) => {
+      const child = editingOrder?.child_orders?.find(
+        (item) =>
+          item.algo_type === (leg === "tp" ? "TAKE_PROFIT" : "STOP_LOSS"),
+      );
+      const currentTriggerPrice = currentOrder[`${leg}_trigger_price`];
+      const triggerPriceEmpty =
+        currentTriggerPrice === undefined || currentTriggerPrice === "";
+      const triggerPriceChanged =
+        !!child &&
+        (isActiveTPSLLeg(child)
+          ? triggerPriceEmpty ||
+            Number(currentTriggerPrice) !== Number(child.trigger_price)
+          : !triggerPriceEmpty);
+      if (
+        editingOrder &&
+        editingOrder.is_triggered === true &&
+        child &&
+        !triggerPriceChanged
+      ) {
+        result[leg] = true;
+      }
+      if (editingOrder?.is_triggered === true && triggerPriceChanged) {
+        lockedTriggerErrors[`${leg}_trigger_price`] =
+          triggeredTPSLTriggerPriceError;
+      }
+      return result;
+    }, {});
+
+    const validationConfig = {
+      ...valueConfig,
+      skipTPSLTriggerPriceAgainstMark:
+        Object.keys(skipTPSLTriggerPriceAgainstMark).length > 0
+          ? skipTPSLTriggerPriceAgainstMark
+          : undefined,
+    };
+    const errors = await creator.validate(currentOrder, validationConfig);
+    return Object.keys(lockedTriggerErrors).length
+      ? { ...errors, ...lockedTriggerErrors }
+      : errors;
   };
 
   const setValues = (values: Partial<ComputedAlgoOrder>) => {
@@ -421,47 +464,44 @@ export const useTaskProfitAndStopLossInternal = (
     const orderCreator = getOrderCreator();
 
     return new Promise((resolve, reject) => {
-      return orderCreator
-        .validate(
-          order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-          valueConfig,
-        )
-        .then((errors) => {
-          if (otherErrors) {
-            errors = {
-              ...errors,
-              ...otherErrors,
-            };
-          }
-          if (errors) {
-            const keys = Object.keys(errors);
-            if (keys.length > 0) {
-              // setErrors(errors);
+      return validateFunc(
+        order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
+      ).then((errors) => {
+        if (otherErrors) {
+          errors = {
+            ...errors,
+            ...otherErrors,
+          };
+        }
+        if (errors) {
+          const keys = Object.keys(errors);
+          if (keys.length > 0) {
+            // setErrors(errors);
+            setMeta(
+              produce((draft) => {
+                draft.errors = errors;
+              }),
+            );
+            if (!meta.validated) {
+              // setMeta((prev) => ({ ...prev, validated: true }));
               setMeta(
                 produce((draft) => {
-                  draft.errors = errors;
+                  draft.validated = true;
                 }),
               );
-              if (!meta.validated) {
-                // setMeta((prev) => ({ ...prev, validated: true }));
-                setMeta(
-                  produce((draft) => {
-                    draft.validated = true;
-                  }),
-                );
-              }
             }
-            setErrors(errors);
-            return reject(errors);
           }
+          setErrors(errors);
+          return reject(errors);
+        }
 
-          resolve(
-            orderCreator.create(
-              order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-              valueConfig,
-            ),
-          );
-        });
+        resolve(
+          orderCreator.create(
+            order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
+            valueConfig,
+          ),
+        );
+      });
     });
   };
 

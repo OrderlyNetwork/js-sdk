@@ -1,5 +1,5 @@
 import { AlgoOrderRootType, API, OrderType } from "@orderly.network/types";
-import { getTPSLLeg } from "@orderly.network/utils";
+import { getTPSLLeg, isActiveTPSLLeg } from "@orderly.network/utils";
 
 export type TPSLEditableOrderValues = {
   quantity: number | string;
@@ -27,12 +27,6 @@ const getOrderType = (child?: API.AlgoOrder): OrderType | undefined => {
   if (!child) return undefined;
   return child.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
 };
-
-const isActiveLeg = (child?: API.AlgoOrder) =>
-  !!child &&
-  child.is_activated !== false &&
-  Number.isFinite(Number(child.trigger_price)) &&
-  Number(child.trigger_price) > 0;
 
 /** Use the execution type configured on this server-owned child. */
 export function getTPSLEditOrderType(
@@ -64,20 +58,20 @@ export function getTPSLEditableOrderValues(
       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
         ? 0
         : (order.quantity ?? ""),
-    tp_trigger_price: isActiveLeg(tpOrder)
+    tp_trigger_price: isActiveTPSLLeg(tpOrder)
       ? tpOrder!.trigger_price!.toString()
       : "",
     tp_order_type: tpOrderType,
     tp_order_price:
-      tpOrderType === OrderType.LIMIT && isActiveLeg(tpOrder)
+      tpOrderType === OrderType.LIMIT && isActiveTPSLLeg(tpOrder)
         ? (tpOrder?.price?.toString() ?? "")
         : "",
-    sl_trigger_price: isActiveLeg(slOrder)
+    sl_trigger_price: isActiveTPSLLeg(slOrder)
       ? slOrder!.trigger_price!.toString()
       : "",
     sl_order_type: slOrderType,
     sl_order_price:
-      slOrderType === OrderType.LIMIT && isActiveLeg(slOrder)
+      slOrderType === OrderType.LIMIT && isActiveTPSLLeg(slOrder)
         ? (slOrder?.price?.toString() ?? "")
         : "",
   };

@@ -165,6 +165,10 @@ export const useTPSLBuilder = (
     !!isEditing && isTPSLOrderTypeLocked(order, "tp");
   const disableSLOrderTypeSelector =
     !!isEditing && isTPSLOrderTypeLocked(order, "sl");
+  const parentTriggered = !!isEditing && order?.is_triggered === true;
+  const disableTPTriggerEditing = parentTriggered;
+  const disableSLTriggerEditing = parentTriggered;
+  const disableQuantityEditing = parentTriggered;
 
   useEffect(() => {
     if (!externalOrderValues) {
@@ -190,8 +194,17 @@ export const useTPSLBuilder = (
     side: tpslOrder.side,
   });
 
+  // Keep historical liquidation risk visible without blocking unrelated edits.
+  const originalSlPrice = Number(externalOrderValues?.sl_trigger_price);
+  const isUnchangedSlPrice =
+    !!isEditing &&
+    Number.isFinite(originalSlPrice) &&
+    originalSlPrice > 0 &&
+    Number(tpslOrder.sl_trigger_price) === originalSlPrice;
   const isSlPriceWarning =
-    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
+    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING ||
+    (isUnchangedSlPrice &&
+      slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_ERROR);
 
   const setQuantity = (value: number | string) => {
     setValue("quantity", value);
@@ -448,6 +461,9 @@ export const useTPSLBuilder = (
     isEditing,
     disableTPOrderTypeSelector,
     disableSLOrderTypeSelector,
+    disableTPTriggerEditing,
+    disableSLTriggerEditing,
+    disableQuantityEditing,
     symbolInfo: symbolInfo[symbol],
     maxQty,
     setQuantity: useMemoizedFn(setQuantity),
@@ -461,6 +477,7 @@ export const useTPSLBuilder = (
     // needConfirm,
     onSubmit,
     slPriceError,
+    isSlPriceWarning,
     estLiqPrice,
     metaState,
     errors,

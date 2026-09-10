@@ -22,6 +22,11 @@ const formatPrice = (price: number, quote_dp: number): number => {
   return new Decimal(price).toDecimalPlaces(quote_dp).toNumber();
 };
 
+type TPSLValidationConfig = ValuesDepConfig & {
+  /** Skip only the stage-specific trigger-to-mark check for selected legs. */
+  skipTPSLTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
+};
+
 /**
  * Strategy for validating Take Profit / Stop Loss orders
  * Consolidates validation logic from baseBracketOrderCreator and baseAlgoCreator
@@ -46,7 +51,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
       >
     >,
-    config: ValuesDepConfig,
+    config: TPSLValidationConfig,
   ): OrderValidationResult {
     const result: OrderValidationResult = Object.create(null);
 
@@ -161,6 +166,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
           quote_dp: quote_dp ?? 0,
           tpslSide,
           symbol: config.symbol,
+          skipTriggerPriceAgainstMark: config.skipTPSLTriggerPriceAgainstMark,
         },
         result,
       );
@@ -179,6 +185,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
           quote_dp: quote_dp ?? 0,
           tpslSide,
           symbol: config.symbol,
+          skipTriggerPriceAgainstMark: config.skipTPSLTriggerPriceAgainstMark,
         },
         result,
       );
@@ -207,6 +214,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
       quote_dp: number;
       tpslSide: OrderSide;
       symbol: any;
+      skipTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
     },
     result: OrderValidationResult,
   ): void {
@@ -216,8 +224,15 @@ export class TPSLValidationStrategy implements IValidationStrategy<
       sl_trigger_price,
       sl_order_price,
     } = prices;
-    const { mark_price, quote_min, quote_max, quote_dp, tpslSide, symbol } =
-      config;
+    const {
+      mark_price,
+      quote_min,
+      quote_max,
+      quote_dp,
+      tpslSide,
+      symbol,
+      skipTriggerPriceAgainstMark,
+    } = config;
 
     // Validate SL trigger price
     if (
@@ -234,7 +249,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
             formatPrice(quote_min, quote_dp),
           );
         }
-        if (slTrigger >= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.sl && slTrigger >= mark_price) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -251,7 +266,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
     ) {
       const tpTrigger = Number(tp_trigger_price);
       if (!isNaN(tpTrigger)) {
-        if (tpTrigger <= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.tp && tpTrigger <= mark_price) {
           result.tp_trigger_price = OrderValidation.min(
             "tp_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -346,6 +361,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
       quote_dp: number;
       tpslSide: OrderSide;
       symbol: any;
+      skipTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
     },
     result: OrderValidationResult,
   ): void {
@@ -355,8 +371,15 @@ export class TPSLValidationStrategy implements IValidationStrategy<
       sl_trigger_price,
       sl_order_price,
     } = prices;
-    const { mark_price, quote_min, quote_max, quote_dp, tpslSide, symbol } =
-      config;
+    const {
+      mark_price,
+      quote_min,
+      quote_max,
+      quote_dp,
+      tpslSide,
+      symbol,
+      skipTriggerPriceAgainstMark,
+    } = config;
 
     // Validate SL trigger price
     if (
@@ -373,7 +396,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
             formatPrice(quote_max, quote_dp),
           );
         }
-        if (slTrigger <= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.sl && slTrigger <= mark_price) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -390,7 +413,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
     ) {
       const tpTrigger = Number(tp_trigger_price);
       if (!isNaN(tpTrigger)) {
-        if (tpTrigger >= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.tp && tpTrigger >= mark_price) {
           result.tp_trigger_price = OrderValidation.max(
             "tp_trigger_price",
             formatPrice(mark_price, quote_dp),

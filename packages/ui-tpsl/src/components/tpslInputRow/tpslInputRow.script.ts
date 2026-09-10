@@ -13,6 +13,7 @@ import {
 
 export type Props = {
   disableOrderTypeSelector?: boolean;
+  disableTriggerEditing?: boolean;
   type: "tp" | "sl";
   quote_dp: number;
   positionType: PositionType;

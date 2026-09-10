@@ -24,7 +24,7 @@ jest.mock("@orderly.network/ui", () => {
   };
 });
 jest.mock("../../pnlInput/pnlInput.widget", () => ({
-  PnlInputWidget: () => null,
+  PnlInputWidget: (props: any) => mockReact.createElement("pnl-input", props),
 }));
 jest.mock("../orderPriceType", () => ({
   OrderPriceType: (props: any) => mockReact.createElement("order-type", props),
@@ -72,6 +72,44 @@ describe("Full-position TP/SL row", () => {
     expect(
       tree.root.findAllByType("price-input" as any)[1].props.disabled,
     ).toBe(false);
+    tree.unmount();
+  });
+  it("locks the trigger but keeps the Limit order price and Offset editable", () => {
+    props.onChange.mockClear();
+    const tree = create(
+      <TPSLInputRowUI
+        {...props}
+        disableOrderTypeSelector
+        disableTriggerEditing
+      />,
+    );
+    const inputs = tree.root.findAllByType("price-input" as any);
+
+    expect(inputs[0].props.disabled).toBe(true);
+    expect(inputs[1].props.disabled).toBe(false);
+    expect(tree.root.findByType("pnl-input" as any).props.disabled).toBe(false);
+    expect(tree.root.findByType("order-type" as any).props.disabled).toBe(true);
+
+    act(() => inputs[0].props.onValueChange("4200"));
+    expect(props.onChange).not.toHaveBeenCalled();
+
+    act(() => inputs[1].props.onValueChange("4120"));
+    expect(props.onChange).toHaveBeenCalledWith("tp_order_price", "4120");
+    tree.unmount();
+  });
+  it.each([
+    { order_type: OrderType.MARKET, trigger_price: "4100" },
+    { order_type: OrderType.LIMIT, trigger_price: "" },
+    { order_type: OrderType.LIMIT, trigger_price: undefined },
+  ])("locks Offset when it could change a locked trigger: %j", (values) => {
+    const tree = create(
+      <TPSLInputRowUI
+        {...props}
+        disableTriggerEditing
+        values={{ ...props.values, ...values }}
+      />,
+    );
+    expect(tree.root.findByType("pnl-input" as any).props.disabled).toBe(true);
     tree.unmount();
   });
   it("keeps Market order price disabled but permits changing new order type", () => {

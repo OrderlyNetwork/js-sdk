@@ -23,6 +23,7 @@ export type TPSLOrderState = {
   parent_algo_type?: string;
   root_algo_order_algo_type?: string;
   type?: string | number;
+  is_activated?: boolean;
   is_triggered?: boolean;
   triggered?: boolean;
   trigger_time?: number;
@@ -37,6 +38,22 @@ export type TPSLOrderState = {
   trigger_price?: number;
   child_orders?: TPSLOrderState[];
 };
+
+/**
+ * A TP/SL leg counts as active only when it was activated on the server and
+ * still carries a usable positive trigger price; cancelled or placeholder
+ * legs (e.g. blanked inactive legs while editing) are not active.
+ */
+export function isActiveTPSLLeg(
+  order?: Pick<TPSLOrderState, "is_activated" | "trigger_price">,
+): boolean {
+  return (
+    !!order &&
+    order.is_activated !== false &&
+    Number.isFinite(Number(order.trigger_price)) &&
+    Number(order.trigger_price) > 0
+  );
+}
 
 /** Provenance is independent of the execution type and execution stage. */
 export function isPositionalTPSL(order: TPSLOrderState): boolean {

@@ -71,13 +71,12 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
     props.slPriceError,
   );
 
-  const isSlPriceWarning =
-    props.slPriceError?.sl_trigger_price?.type ===
-    ERROR_MSG_CODES.SL_PRICE_WARNING;
+  const isSlPriceWarning = props.isSlPriceWarning;
 
   const isSlPriceError =
+    !isSlPriceWarning &&
     props.slPriceError?.sl_trigger_price?.type ===
-    ERROR_MSG_CODES.SL_PRICE_ERROR;
+      ERROR_MSG_CODES.SL_PRICE_ERROR;
 
   if (!position) {
     return null;
@@ -101,6 +100,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
           onQuantityChange={props.setQuantity}
           base={symbolInfo("base")}
           isEditing={props.isEditing}
+          disabled={props.disableQuantityEditing}
           errorMsg={validated ? getErrorMsg("quantity") : undefined}
         />
       </Box>
@@ -177,6 +177,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               }}
               errors={validated ? tpErrors : null}
               disableOrderTypeSelector={props.disableTPOrderTypeSelector}
+              disableTriggerEditing={props.disableTPTriggerEditing}
               quote_dp={symbolInfo("quote_dp")}
               positionType={
                 TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
@@ -233,6 +234,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
                 TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
               }
               disableOrderTypeSelector={props.disableSLOrderTypeSelector}
+              disableTriggerEditing={props.disableSLTriggerEditing}
               onChange={(key, value) => {
                 props.setOrderValue(key as keyof OrderlyOrder, value);
               }}
