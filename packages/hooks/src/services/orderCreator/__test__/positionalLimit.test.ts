@@ -12,6 +12,7 @@ import { BracketOrderBuilder } from "../builders/BracketOrderBuilder";
 import { TPSLOrderCreator } from "../tpslOrderCreator";
 import {
   createTPSLOrderUpdates,
+  normalizeTPSLChildType,
   sanitizeTPSLChildUpdates,
 } from "../tpslOrderUpdates";
 import { TPSLPositionOrderCreator } from "../tpslPositionOrderCreator";
@@ -43,6 +44,16 @@ const oldOrder = () =>
   }) as API.AlgoOrder;
 
 describe("Positional limit creation and compatibility", () => {
+  it("normalizes market child types for full and partial TP/SL", () => {
+    expect(normalizeTPSLChildType(OrderType.MARKET, true)).toBe(
+      OrderType.CLOSE_POSITION,
+    );
+    expect(normalizeTPSLChildType(OrderType.CLOSE_POSITION, false)).toBe(
+      OrderType.MARKET,
+    );
+    expect(normalizeTPSLChildType(OrderType.LIMIT, true)).toBe(OrderType.LIMIT);
+  });
+
   it.each([OrderType.MARKET, OrderType.LIMIT])(
     "serializes independent %s legs without quantities",
     (type) => {
@@ -457,7 +468,7 @@ describe("Positional price editing", () => {
       ).toThrow(/trigger price/);
     },
   );
-  it("rejects changing an inactive placeholder's configured type", () => {
+  it("reactivates an inactive MARKET leg as LIMIT", () => {
     const inactiveOrder = oldOrder();
     inactiveOrder.child_orders[1] = {
       ...inactiveOrder.child_orders[1],
@@ -465,7 +476,7 @@ describe("Positional price editing", () => {
       is_activated: false,
     };
 
-    expect(() =>
+    expect(
       creator.crateUpdateOrder(
         {
           ...values,
@@ -474,8 +485,77 @@ describe("Positional price editing", () => {
         },
         inactiveOrder,
         config,
-      ),
-    ).toThrow(/type/);
+      )[0].child_orders,
+    ).toEqual([
+      {
+        order_id: 12,
+        order_type: OrderType.LIMIT,
+        trigger_price: 3900,
+        price: 3890,
+      },
+    ]);
+  });
+  it("reactivates an inactive full-position LIMIT leg as MARKET", () => {
+    const inactiveOrder = oldOrder();
+    inactiveOrder.child_orders[0] = {
+      ...inactiveOrder.child_orders[0],
+      is_activated: false,
+    };
+
+    expect(
+      creator.crateUpdateOrder(
+        {
+          ...values,
+          tp_order_type: OrderType.MARKET,
+          tp_order_price: undefined,
+        },
+        inactiveOrder,
+        config,
+      )[0].child_orders,
+    ).toEqual([
+      {
+        order_id: 11,
+        order_type: OrderType.CLOSE_POSITION,
+        trigger_price: 4100,
+      },
+    ]);
+  });
+  it("reactivates an inactive partial LIMIT leg as MARKET", () => {
+    const partialCreator = new TPSLOrderCreator();
+    const partialValues = {
+      ...values,
+      position_type: PositionType.PARTIAL,
+      quantity: "1",
+    };
+    const partialOld = {
+      ...partialCreator.create(partialValues, config),
+      algo_order_id: 20,
+      child_orders: partialCreator
+        .create(partialValues, config)
+        .child_orders.map((child, index) => ({
+          ...child,
+          algo_order_id: index + 21,
+        })),
+    } as API.AlgoOrder;
+    partialOld.child_orders[0].is_activated = false;
+
+    expect(
+      partialCreator.crateUpdateOrder(
+        {
+          ...partialValues,
+          tp_order_type: OrderType.MARKET,
+          tp_order_price: undefined,
+        },
+        partialOld,
+        config,
+      )[0].child_orders,
+    ).toEqual([
+      {
+        order_id: 21,
+        order_type: OrderType.MARKET,
+        trigger_price: 4100,
+      },
+    ]);
   });
   it("rejects adding a child that is missing from the server order", () => {
     const tpOnlyOrder = oldOrder();
@@ -595,6 +675,26 @@ describe("Positional price editing", () => {
       ),
     ).toThrow(/type/);
   });
+  it("rejects changing the type of a triggered inactive leg", () => {
+    const triggeredOrder = oldOrder();
+    triggeredOrder.child_orders[0] = {
+      ...triggeredOrder.child_orders[0],
+      is_activated: false,
+      is_triggered: true,
+    };
+
+    expect(() =>
+      creator.crateUpdateOrder(
+        {
+          ...values,
+          tp_order_type: OrderType.MARKET,
+          tp_order_price: undefined,
+        },
+        triggeredOrder,
+        config,
+      ),
+    ).toThrow(/type/);
+  });
   it("guards low-level nested updates", () => {
     const parent = oldOrder();
     expect(
@@ -615,19 +715,19 @@ describe("Positional price editing", () => {
         parent,
       ),
     ).toThrow(/type/);
-    expect(() =>
+    expect(
       sanitizeTPSLChildUpdates(
         [{ order_id: 11, type: OrderType.LIMIT } as any],
         parent,
       ),
-    ).toThrow(/type/);
+    ).toEqual([]);
     const placeholderParent = oldOrder();
     placeholderParent.child_orders[1] = {
       ...placeholderParent.child_orders[1],
       type: OrderType.CLOSE_POSITION,
       is_activated: false,
     };
-    expect(() =>
+    expect(
       sanitizeTPSLChildUpdates(
         [
           {
@@ -639,7 +739,14 @@ describe("Positional price editing", () => {
         ],
         placeholderParent,
       ),
-    ).toThrow(/type/);
+    ).toEqual([
+      {
+        order_id: 12,
+        order_type: OrderType.LIMIT,
+        trigger_price: 3900,
+        price: 3890,
+      },
+    ]);
     expect(
       sanitizeTPSLChildUpdates(
         [
@@ -652,6 +759,48 @@ describe("Positional price editing", () => {
         placeholderParent,
       ),
     ).toEqual([{ order_id: 12, trigger_price: 3900 }]);
+    const inactiveLimitParent = oldOrder();
+    inactiveLimitParent.child_orders[0] = {
+      ...inactiveLimitParent.child_orders[0],
+      is_activated: false,
+    };
+    expect(
+      sanitizeTPSLChildUpdates(
+        [
+          {
+            order_id: 11,
+            type: OrderType.MARKET,
+            trigger_price: 4100,
+            price: 4110,
+          },
+        ],
+        inactiveLimitParent,
+      ),
+    ).toEqual([
+      {
+        order_id: 11,
+        order_type: OrderType.CLOSE_POSITION,
+        trigger_price: 4100,
+      },
+    ]);
+    expect(() =>
+      sanitizeTPSLChildUpdates(
+        [{ order_id: 12, type: OrderType.LIMIT }],
+        placeholderParent,
+      ),
+    ).toThrow(/trigger price/);
+    expect(() =>
+      sanitizeTPSLChildUpdates(
+        [
+          {
+            order_id: 12,
+            type: OrderType.LIMIT,
+            trigger_price: 3900,
+          },
+        ],
+        placeholderParent,
+      ),
+    ).toThrow(/limit price/);
     const bracket = {
       child_orders: [parent],
       algo_type: AlgoOrderRootType.BRACKET,
@@ -668,6 +817,40 @@ describe("Positional price editing", () => {
       ),
     ).toEqual([
       { order_id: 10, child_orders: [{ order_id: 11, price: 4120 }] },
+    ]);
+    const inactiveBracket = {
+      child_orders: [placeholderParent],
+      algo_type: AlgoOrderRootType.BRACKET,
+    } as API.AlgoOrder;
+    expect(
+      sanitizeTPSLChildUpdates(
+        [
+          {
+            order_id: 10,
+            child_orders: [
+              {
+                order_id: 12,
+                type: OrderType.LIMIT,
+                trigger_price: 3900,
+                price: 3890,
+              },
+            ],
+          },
+        ],
+        inactiveBracket,
+      ),
+    ).toEqual([
+      {
+        order_id: 10,
+        child_orders: [
+          {
+            order_id: 12,
+            order_type: OrderType.LIMIT,
+            trigger_price: 3900,
+            price: 3890,
+          },
+        ],
+      },
     ]);
     const tpOnlyParent = oldOrder();
     tpOnlyParent.child_orders = [tpOnlyParent.child_orders[0]];

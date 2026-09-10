@@ -5,11 +5,13 @@ import {
   OrderStatus,
   API,
   AlgoOrderRootType,
+  OrderType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { withTPSLProvenance, isPositionalTPSL } from "@orderly.network/utils";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
 import {
+  normalizeTPSLChildType,
   sanitizeTPSLChildUpdates,
   TPSLChildUpdate,
 } from "../../services/orderCreator/tpslOrderUpdates";
@@ -345,38 +347,40 @@ export const useOrderStream = (
 
   const _updateOrder = useCallback(
     (orderId: string, order: OrderEntity, type: CreateOrderType) => {
-      const findOrder = (items: any[]): any =>
-        items?.find((item) => Number(item.algo_order_id) === Number(orderId)) ??
-        items?.map((item) => findOrder(item.child_orders ?? [])).find(Boolean);
+      const findOrder = (items: any[], id: string | number = orderId): any =>
+        items?.find((item) => Number(item.algo_order_id) === Number(id)) ??
+        items
+          ?.map((item) => findOrder(item.child_orders ?? [], id))
+          .find(Boolean);
       const original = findOrder(flattenOrders ?? []);
       switch (type) {
         case "algoOrder":
           if (
             original &&
-            isPositionalTPSL(original) &&
             ["TAKE_PROFIT", "STOP_LOSS"].includes(original.algo_type)
           ) {
             const requestedType = order.order_type?.replace("STOP_", "");
-            const existingType = original.type === "LIMIT" ? "LIMIT" : "MARKET";
-            if (
-              requestedType &&
-              (requestedType === "CLOSE_POSITION"
-                ? "MARKET"
-                : requestedType) !== existingType
-            ) {
+            const updateType = normalizeTPSLChildType(
+              requestedType as OrderType | undefined,
+              isPositionalTPSL(original),
+            );
+            if (requestedType && !updateType) {
               return Promise.reject(
-                new SDKError(
-                  "Changing an existing TP/SL order type is not supported",
-                ),
+                new SDKError("A TP/SL order type must be LIMIT or MARKET"),
               );
             }
             const errors = validateTPSLChild(
               original,
-              { price: order.order_price, trigger_price: order.trigger_price },
+              {
+                type: updateType,
+                price: order.order_price,
+                trigger_price: order.trigger_price,
+              },
               {
                 symbol: symbolsInfo[original.symbol](),
                 markPrice: markPrices?.[original.symbol],
               },
+              findOrder(flattenOrders ?? [], original.parent_algo_order_id),
             );
             if (Object.keys(errors).length)
               return Promise.reject(
@@ -386,6 +390,10 @@ export const useOrderStream = (
               );
             const change = {
               order_id: original.algo_order_id,
+              ...(updateType && { type: updateType }),
+              quantity: isPositionalTPSL(original)
+                ? undefined
+                : order.order_quantity,
               price: order.order_price,
               trigger_price: order.trigger_price,
             };
@@ -552,12 +560,23 @@ export const useOrderStream = (
           if (change.child_orders) validateChildren(change.child_orders, child);
           else if (
             ["TAKE_PROFIT", "STOP_LOSS"].includes(child.algo_type) &&
-            (change.trigger_price != null || change.price != null)
+            (change.type != null ||
+              change.trigger_price != null ||
+              change.price != null)
           ) {
-            const errors = validateTPSLChild(child, change, {
-              symbol: symbolsInfo[child.symbol ?? parent.symbol](),
-              markPrice: markPrices?.[child.symbol ?? parent.symbol],
-            });
+            const errors = validateTPSLChild(
+              child,
+              {
+                type: change.type,
+                price: change.price,
+                trigger_price: change.trigger_price,
+              },
+              {
+                symbol: symbolsInfo[child.symbol ?? parent.symbol](),
+                markPrice: markPrices?.[child.symbol ?? parent.symbol],
+              },
+              parent,
+            );
             if (Object.keys(errors).length)
               throw new SDKError(
                 Object.values(errors)[0]?.message ?? "Invalid TP/SL price",

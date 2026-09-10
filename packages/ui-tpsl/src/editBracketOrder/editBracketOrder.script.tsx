@@ -19,6 +19,7 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { Decimal, resolveTPSLOrderType } from "@orderly.network/utils";
+import { isTPSLOrderTypeLocked } from "../positionTPSL/tpslOrderSync";
 import {
   getBracketTPSLPriceInfo,
   hasBracketTPSLPriceChanged,
@@ -51,6 +52,8 @@ function getInitialOrder(order: API.AlgoOrderExt) {
       // sl_enable: !!slOrder?.trigger_price,
     },
     tpslPriceInfo,
+    disableTPOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "tp"),
+    disableSLOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "sl"),
     tpInfo: {
       orderId: tpOrder?.algo_order_id,
     },
@@ -64,9 +67,12 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
   if (!props.order) {
     throw new SDKError("order is required for editBracketOrder");
   }
-  const { baseInfo, tpslPriceInfo, tpInfo, slInfo } = getInitialOrder(
-    props.order,
-  );
+  const {
+    baseInfo,
+    tpslPriceInfo,
+    disableTPOrderTypeSelector,
+    disableSLOrderTypeSelector,
+  } = getInitialOrder(props.order);
 
   const [doUpdateOrder, { isMutating }] = useMutation("/v1/algo/order", "PUT");
 
@@ -163,6 +169,8 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     onSubmit,
     isMutating,
     isPriceChanged,
+    disableTPOrderTypeSelector,
+    disableSLOrderTypeSelector,
   };
 };
 

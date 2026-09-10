@@ -15,7 +15,9 @@ let mockSlPriceError: any = null;
 const mockClose = jest.fn();
 const mockSetValue = jest.fn();
 const mockSetValues = jest.fn();
-const mockIsTPSLOrderTypeLocked = jest.fn(() => false);
+const mockIsTPSLOrderTypeLocked = jest.fn(
+  (_order?: unknown, _leg?: unknown) => false,
+);
 const mockUseTPSLOrder = jest.fn(() => [
   {
     side: OrderSide.BUY,
@@ -232,6 +234,21 @@ describe("useTPSLBuilder position selection", () => {
 
     expect(view.result.disableTPOrderTypeSelector).toBe(true);
     expect(view.result.disableSLOrderTypeSelector).toBe(true);
+    view.unmount();
+  });
+
+  it("applies the order type lock independently to each leg", () => {
+    mockIsTPSLOrderTypeLocked.mockImplementation((_order, leg) => leg === "tp");
+    const view = renderBuilder({
+      order: {
+        symbol: "PERP_ETH_USDC",
+        child_orders: [],
+      } as any,
+      isEditing: true,
+    });
+
+    expect(view.result.disableTPOrderTypeSelector).toBe(true);
+    expect(view.result.disableSLOrderTypeSelector).toBe(false);
     view.unmount();
   });
 

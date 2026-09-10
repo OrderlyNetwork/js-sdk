@@ -1,5 +1,9 @@
 import { AlgoOrderRootType, API, OrderType } from "@orderly.network/types";
-import { getTPSLLeg, isActiveTPSLLeg } from "@orderly.network/utils";
+import {
+  getTPSLLeg,
+  isActiveTPSLLeg,
+  isTPSLTriggered,
+} from "@orderly.network/utils";
 
 export type TPSLEditableOrderValues = {
   quantity: number | string;
@@ -37,12 +41,14 @@ export function getTPSLEditOrderType(
   return getOrderType(getTPSLLeg(order, leg)) ?? OrderType.MARKET;
 }
 
-/** Order types cannot be changed while editing an existing TP/SL order. */
+/** Only an existing, explicitly inactive leg may change execution type. */
 export function isTPSLOrderTypeLocked(
   order: API.AlgoOrder | undefined,
-  _leg: TPSLLeg,
+  leg: TPSLLeg,
 ): boolean {
-  return !!order;
+  if (!order) return false;
+  const child = getTPSLLeg(order, leg);
+  return !child || child.is_activated !== false || isTPSLTriggered(child);
 }
 
 export function getTPSLEditableOrderValues(

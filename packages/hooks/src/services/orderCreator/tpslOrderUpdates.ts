@@ -1,5 +1,5 @@
 import { API, OrderType } from "@orderly.network/types";
-import { isPositionalTPSL } from "@orderly.network/utils";
+import { isPositionalTPSL, isTPSLTriggered } from "@orderly.network/utils";
 import { AlgoOrderUpdateEntity } from "./baseAlgoCreator";
 
 type TPSLChildInput = {
@@ -12,13 +12,30 @@ type TPSLChildInput = {
 
 const isLimit = (type?: OrderType) => type === OrderType.LIMIT;
 
+const isTPSLExecutionType = (type?: OrderType) =>
+  type === OrderType.LIMIT ||
+  type === OrderType.MARKET ||
+  type === OrderType.CLOSE_POSITION;
+
+export const normalizeTPSLChildType = (
+  type: OrderType | undefined,
+  fullPosition: boolean,
+): OrderType | undefined => {
+  if (!isTPSLExecutionType(type)) return undefined;
+  if (type === OrderType.LIMIT) return OrderType.LIMIT;
+  return fullPosition ? OrderType.CLOSE_POSITION : OrderType.MARKET;
+};
+
+const hasOrderTypeChanged = (oldType?: OrderType, nextType?: OrderType) =>
+  isLimit(oldType) !== isLimit(nextType);
+
 const assertLimitPrice = (price?: number | string) => {
   if (!Number.isFinite(Number(price)) || Number(price) <= 0) {
     throw new Error("A TP/SL limit price must be positive and finite");
   }
 };
 
-/** Build minimal updates while preserving the server-owned type of existing legs. */
+/** Build minimal updates, allowing an inactive leg to change execution type. */
 export function createTPSLOrderUpdates(
   children: TPSLChildInput[],
   oldValue: API.AlgoOrder,
@@ -82,11 +99,23 @@ export function createTPSLOrderUpdates(
     if (!Number.isFinite(orderId)) {
       throw new Error("An existing TP/SL child requires an order id");
     }
-    if (isLimit(oldOrder.type) !== isLimit(next.type)) {
+    const nextType = normalizeTPSLChildType(
+      next.type,
+      isPositionalTPSL(oldValue),
+    );
+    if (!nextType) {
+      throw new Error("A TP/SL order type must be LIMIT or MARKET");
+    }
+    const typeChanged = hasOrderTypeChanged(oldOrder.type, nextType);
+    if (
+      typeChanged &&
+      (oldOrder.is_activated !== false || isTPSLTriggered(oldOrder))
+    ) {
       throw new Error("Changing an existing TP/SL order type is not supported");
     }
 
     const update: AlgoOrderUpdateEntity = { order_id: orderId };
+    if (typeChanged) update.order_type = nextType;
     const nextTriggerPrice = Number(next.trigger_price);
     if (
       oldOrder.is_activated === false ||
@@ -94,7 +123,10 @@ export function createTPSLOrderUpdates(
     ) {
       update.trigger_price = nextTriggerPrice;
     }
-    if (isLimit(next.type) && Number(oldOrder.price) !== Number(next.price)) {
+    if (
+      isLimit(nextType) &&
+      (typeChanged || Number(oldOrder.price) !== Number(next.price))
+    ) {
       assertLimitPrice(next.price);
       update.price = Number(next.price);
     }
@@ -105,6 +137,7 @@ export function createTPSLOrderUpdates(
 
 export type TPSLChildUpdate = {
   order_id: number;
+  type?: OrderType;
   trigger_price?: number | string;
   price?: number | string;
   quantity?: number | string;
@@ -120,9 +153,6 @@ export function sanitizeTPSLChildUpdates(
   return updates.flatMap<any>((input) => {
     if (input.order_id == null) {
       throw new Error("A TP/SL child order id is required for editing");
-    }
-    if (Object.prototype.hasOwnProperty.call(input, "type")) {
-      throw new Error("Changing an existing TP/SL order type is not supported");
     }
     if (!parent) {
       throw new Error("A parent TP/SL order is required for child updates");
@@ -147,6 +177,35 @@ export function sanitizeTPSLChildUpdates(
       const children = sanitizeTPSLChildUpdates(input.child_orders, old);
       if (children.length) (update as any).child_orders = children;
     }
+    const hasType = input.type != null;
+    const nextType = hasType
+      ? normalizeTPSLChildType(
+          input.type,
+          isPositionalTPSL(parent) || isPositionalTPSL(old),
+        )
+      : undefined;
+    const typeChanged = hasType && hasOrderTypeChanged(old.type, nextType);
+    if (hasType) {
+      if (!nextType) {
+        throw new Error("A TP/SL order type must be LIMIT or MARKET");
+      }
+      if (
+        !["TAKE_PROFIT", "STOP_LOSS"].includes(old.algo_type) ||
+        (typeChanged && (old.is_activated !== false || isTPSLTriggered(old)))
+      ) {
+        throw new Error(
+          "Changing an existing TP/SL order type is not supported",
+        );
+      }
+      if (typeChanged) {
+        if (input.trigger_price == null) {
+          throw new Error(
+            "Reactivating a TP/SL child with a new type requires a trigger price",
+          );
+        }
+        update.order_type = nextType;
+      }
+    }
     if (input.trigger_price != null) {
       const triggerPrice = Number(input.trigger_price);
       if (!Number.isFinite(triggerPrice) || triggerPrice <= 0) {
@@ -159,9 +218,10 @@ export function sanitizeTPSLChildUpdates(
         update.trigger_price = triggerPrice;
       }
     }
-    if (input.price != null && isLimit(old.type)) {
+    const effectiveType = hasType ? nextType : old.type;
+    if (isLimit(effectiveType) && (input.price != null || typeChanged)) {
       assertLimitPrice(input.price);
-      if (Number(old.price) !== Number(input.price)) {
+      if (typeChanged || Number(old.price) !== Number(input.price)) {
         update.price = Number(input.price);
       }
     }

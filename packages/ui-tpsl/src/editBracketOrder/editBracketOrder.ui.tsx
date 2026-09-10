@@ -160,7 +160,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
             {/* {formattedOrder.tp_enable && ( */}
             <TPSLInputRowWidget
               disableEnableCheckbox
-              disableOrderTypeSelector
+              disableOrderTypeSelector={props.disableTPOrderTypeSelector}
               rootOrderPrice={formattedOrder.order_price}
               symbol={symbolInfo.symbol}
               type="tp"
@@ -183,7 +183,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
             {/* {formattedOrder.sl_enable && ( */}
             <TPSLInputRowWidget
               disableEnableCheckbox
-              disableOrderTypeSelector
+              disableOrderTypeSelector={props.disableSLOrderTypeSelector}
               rootOrderPrice={formattedOrder.order_price}
               symbol={symbolInfo.symbol}
               type="sl"

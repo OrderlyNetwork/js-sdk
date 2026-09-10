@@ -47,7 +47,7 @@ describe("TP/SL external order synchronization", () => {
     });
   });
 
-  it("treats an inactive server placeholder as an existing immutable leg", () => {
+  it("unlocks an inactive server placeholder and keeps its configured type", () => {
     const order = createOrder({
       child_orders: [
         createOrder().child_orders[0],
@@ -61,12 +61,23 @@ describe("TP/SL external order synchronization", () => {
       ],
     });
 
-    expect(isTPSLOrderTypeLocked(order, "sl")).toBe(true);
+    expect(isTPSLOrderTypeLocked(order, "sl")).toBe(false);
     expect(getTPSLEditableOrderValues(order)).toMatchObject({
       sl_trigger_price: "",
       sl_order_type: OrderType.MARKET,
       sl_order_price: "",
     });
+  });
+
+  it("keeps a triggered inactive leg locked", () => {
+    const order = createOrder();
+    order.child_orders[1] = {
+      ...order.child_orders[1],
+      is_activated: false,
+      is_triggered: true,
+    };
+
+    expect(isTPSLOrderTypeLocked(order, "sl")).toBe(true);
   });
 
   it("extracts every editable field from an order", () => {

@@ -17,6 +17,7 @@ export type AlgoOrderUpdateEntity = {
   order_id: number;
   quantity?: number;
   is_activated?: boolean;
+  order_type?: OrderType;
 };
 
 /**

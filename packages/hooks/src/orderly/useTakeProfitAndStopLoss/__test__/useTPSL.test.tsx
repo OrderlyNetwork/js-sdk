@@ -232,6 +232,63 @@ describe("useTPSLOrder create and edit routing", () => {
     );
   });
 
+  it("reactivates an inactive full-position MARKET leg as LIMIT", async () => {
+    const orderWithInactiveTP = {
+      ...existingFullOrder,
+      child_orders: [
+        {
+          ...existingFullOrder.child_orders[0],
+          trigger_price: 0,
+          is_activated: false,
+        },
+        existingFullOrder.child_orders[1],
+      ],
+    } as API.AlgoOrder;
+
+    const { result } = renderHook(() =>
+      useTaskProfitAndStopLossInternal(
+        {
+          symbol: "PERP_ETH_USDC",
+          position_qty: 2,
+          average_open_price: 4000,
+        },
+        {
+          defaultOrder: orderWithInactiveTP,
+          isEditing: true,
+          positionType: PositionType.FULL,
+        },
+      ),
+    );
+
+    act(() => {
+      result.current[1].setValues({
+        tp_trigger_price: 4100,
+        tp_order_type: OrderType.LIMIT,
+        tp_order_price: 4110,
+      });
+    });
+
+    await act(async () => {
+      await result.current[1].submit();
+    });
+
+    expect(mockUpdateOrder).toHaveBeenCalledWith(
+      {
+        order_id: 10,
+        child_orders: [
+          {
+            order_id: 11,
+            order_type: OrderType.LIMIT,
+            trigger_price: 4100,
+            price: 4110,
+          },
+        ],
+      },
+      {},
+      undefined,
+    );
+  });
+
   it.each([
     { slActivated: true, emptyTrigger: undefined },
     { slActivated: false, emptyTrigger: undefined },
