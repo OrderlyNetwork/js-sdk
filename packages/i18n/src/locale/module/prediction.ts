@@ -8,6 +8,8 @@ export const prediction = {
   "prediction.question":
     "Will the BTC index price finish above the opening price?",
   "prediction.up": "Up",
+  "prediction.filter.allInstruments": "All instruments",
+  "prediction.filter.perps": "Perps",
   "prediction.region.restrictedTitle": "Region restricted",
   "prediction.region.restrictedDescription":
     "Prediction trading is not available in your region.",

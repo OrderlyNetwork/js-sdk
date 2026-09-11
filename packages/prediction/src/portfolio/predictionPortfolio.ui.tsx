@@ -10,17 +10,15 @@ import type { PredictionPortfolioState } from "./predictionPortfolio.script";
 
 const portfolioPredictionTabs: PredictionDataTab[] = [
   "predictions",
-  "openOrders",
-  "filled",
   "predictionHistory",
-  "orderHistory",
-  "assets",
 ];
 
 export const PredictionPortfolio: React.FC<PredictionPortfolioState> = (
   state,
 ) => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] =
+    React.useState<PredictionDataTab>("predictions");
 
   return (
     <Flex
@@ -37,8 +35,9 @@ export const PredictionPortfolio: React.FC<PredictionPortfolioState> = (
       <Divider className="oui-w-full" />
       <Box width="100%" className="oui-h-[calc(100%_-_59px)]">
         <PredictionDataPanel
-          state={state}
+          state={{ ...state, activeTab, setActiveTab }}
           tabs={portfolioPredictionTabs}
+          embedded
           className="oui-prediction-portfolio-dataPanel"
         />
       </Box>

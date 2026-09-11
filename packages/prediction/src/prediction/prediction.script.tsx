@@ -110,7 +110,7 @@ export type PredictionOrderBookLevel = {
 };
 
 const ROUND_SECONDS = 5 * 60;
-const CHART_WINDOW_MS = 45 * 1_000;
+const CHART_WINDOW_MS = 65 * 1_000;
 const INITIAL_BALANCE = 1_000;
 const INITIAL_BTC_PRICE = 64_280.4;
 const INITIAL_ROUND = 1_787_541_000;
@@ -452,8 +452,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     const timer = window.setInterval(() => {
       tickRef.current += 1;
       const tick = tickRef.current;
-      const delta =
-        Math.sin(tick / 2.7) * 8 + Math.cos(tick / 5.1) * 4 + (tick % 5) - 2;
+      const delta = Math.sin(tick / 12) * 0.35 + Math.cos(tick / 23) * 0.18;
       if (
         roundPhase === "trading" ||
         roundPhase === "closingSoon" ||

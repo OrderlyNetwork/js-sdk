@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import type { LocaleMessages } from "@orderly.network/i18n";
 import {
   builtInTabs,
   DataItem,
@@ -45,6 +46,7 @@ import {
 } from "@orderly.network/ui";
 import type { Column, DataFilterItem } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { TabType, useOrderColumn } from "@orderly.network/ui-orders";
 import { Decimal } from "@orderly.network/utils";
 import type {
   PredictionChartPoint,
@@ -405,9 +407,10 @@ const RoundNavigator: React.FC<{
   const status = (itemRound: number) => {
     if (itemRound < round) return "ended";
     if (itemRound === round) {
-      return roundPhase === "resolvedUp" ||
-        roundPhase === "resolvedDown" ||
-        roundPhase === "void"
+      return selectedRound === round &&
+        (roundPhase === "resolvedUp" ||
+          roundPhase === "resolvedDown" ||
+          roundPhase === "void")
         ? "ended"
         : "live";
     }
@@ -415,8 +418,9 @@ const RoundNavigator: React.FC<{
   };
 
   const result = (itemRound: number): PredictionOutcome => {
-    if (itemRound === round && roundPhase === "resolvedUp") return "up";
-    if (itemRound === round && roundPhase === "resolvedDown") return "down";
+    if (itemRound === selectedRound && roundPhase === "resolvedUp") return "up";
+    if (itemRound === selectedRound && roundPhase === "resolvedDown")
+      return "down";
     return Math.abs(Math.floor(itemRound / 300)) % 2 === 0 ? "up" : "down";
   };
 
@@ -740,7 +744,13 @@ const PriceChart: React.FC<{
   const height = 230;
   const plotWidth = 650;
   const plotHeight = height;
-  const windowDuration = 45_000;
+  const windowDuration = 60 * 60 * 1_000;
+  const candleScaleRef = useRef<{
+    round: number;
+    minimum: number;
+    maximum: number;
+    step: number;
+  } | null>(null);
 
   useEffect(() => {
     setFrozenChart(null);
@@ -783,12 +793,17 @@ const PriceChart: React.FC<{
   const selectRound = onSelectRound;
   useEffect(() => {
     if (selectedRound < round) {
+      const endTimestamp = (selectedRound + 300) * 1_000;
+      const historicalCandles = createMockCandleHistory(
+        currentPrice,
+        endTimestamp,
+      );
       setFrozenChart({
-        points: points.map((point) => ({ ...point })),
-        candles: createMockCandleHistory(
-          currentPrice,
-          Date.now() - (round - selectedRound) * 1_000,
-        ),
+        points: historicalCandles.map((candle) => ({
+          timestamp: candle.timestamp,
+          price: candle.close,
+        })),
+        candles: historicalCandles,
         openingPrice,
         currentPrice,
       });
@@ -799,9 +814,37 @@ const PriceChart: React.FC<{
 
   const isPastRound = selectedRound < round;
   const isFutureRound = selectedRound > round;
-  const chartPoints = isPastRound && frozenChart ? frozenChart.points : points;
-  const chartCandles =
-    isPastRound && frozenChart ? frozenChart.candles : liveCandles;
+  const liveTimestamp = (round + 300 - countdown) * 1_000;
+  const alignedLiveCandles = useMemo(() => {
+    const offset = liveTimestamp - (points.at(-1)?.timestamp ?? liveTimestamp);
+    return liveCandles.map((candle) => ({
+      ...candle,
+      timestamp: candle.timestamp + offset,
+    }));
+  }, [liveCandles, points, liveTimestamp]);
+  const chartPoints = useMemo(() => {
+    if (isPastRound) return frozenChart?.points ?? [];
+    const offset = liveTimestamp - (points.at(-1)?.timestamp ?? liveTimestamp);
+    const alignedPoints = points.map((point) => ({
+      ...point,
+      timestamp: point.timestamp + offset,
+    }));
+    return [
+      ...alignedLiveCandles
+        .filter(
+          (candle) =>
+            candle.timestamp < (alignedPoints[0]?.timestamp ?? liveTimestamp),
+        )
+        .map((candle) => ({
+          timestamp: candle.timestamp,
+          price: candle.close,
+        })),
+      ...alignedPoints,
+    ];
+  }, [isPastRound, frozenChart, points, liveTimestamp, alignedLiveCandles]);
+  const chartCandles = isPastRound
+    ? (frozenChart?.candles ?? [])
+    : alignedLiveCandles;
   const chartOpeningPrice =
     isPastRound && frozenChart ? frozenChart.openingPrice : openingPrice;
   const chartCurrentPrice =
@@ -810,20 +853,42 @@ const PriceChart: React.FC<{
 
   const chart = useMemo(() => {
     const isCandleMode = chartMode === "candles";
-    const latestTimestamp = isCandleMode
-      ? (chartCandles.at(-1)?.timestamp ?? Date.now())
-      : (chartPoints.at(-1)?.timestamp ?? Date.now());
-    const visibleCandles = isCandleMode ? chartCandles : [];
-    const windowEnd = isCandleMode
-      ? latestTimestamp + CANDLE_INTERVAL_MS / 2
-      : latestTimestamp + 2_000;
-    const windowStart = isCandleMode
-      ? (visibleCandles.at(0)?.timestamp ?? windowEnd - CANDLE_INTERVAL_MS)
-      : windowEnd - windowDuration;
-    const activeWindowDuration = Math.max(windowEnd - windowStart, 1);
+    const windowEnd = isPastRound
+      ? (selectedRound + 300) * 1_000
+      : liveTimestamp;
+    const windowStart = windowEnd - (isPastRound ? windowDuration : 60_000);
+    const tickInterval = isPastRound ? 300_000 : 10_000;
+    const firstTick = Math.ceil(windowStart / tickInterval) * tickInterval;
+    const visibleCandles = isCandleMode
+      ? chartCandles.filter(
+          (candle) =>
+            candle.timestamp >= windowStart && candle.timestamp <= windowEnd,
+        )
+      : [];
     const visiblePoints = isCandleMode
       ? []
-      : chartPoints.filter((point) => point.timestamp >= windowStart);
+      : chartPoints.filter(
+          (point) =>
+            point.timestamp >= windowStart && point.timestamp <= windowEnd,
+        );
+    const firstVisiblePoint = visiblePoints[0];
+    const previousPoint = [...chartPoints]
+      .reverse()
+      .find((point) => point.timestamp < windowStart);
+    if (
+      firstVisiblePoint &&
+      previousPoint &&
+      firstVisiblePoint.timestamp > windowStart
+    ) {
+      const boundaryPrice = new Decimal(firstVisiblePoint.price)
+        .sub(previousPoint.price)
+        .mul(windowStart - previousPoint.timestamp)
+        .div(firstVisiblePoint.timestamp - previousPoint.timestamp)
+        .add(previousPoint.price)
+        .toNumber();
+      visiblePoints.unshift({ timestamp: windowStart, price: boundaryPrice });
+    }
+    const activeWindowDuration = Math.max(windowEnd - windowStart, 1);
     const values = [
       ...visiblePoints.map((point) => point.price),
       ...visibleCandles.flatMap((candle) => [candle.high, candle.low]),
@@ -832,20 +897,49 @@ const PriceChart: React.FC<{
     ];
     const rawMinimum = Math.min(...values);
     const rawMaximum = Math.max(...values);
-    const padding = Math.max((rawMaximum - rawMinimum) * 0.12, 8);
-    const minimum = rawMinimum - padding;
-    const maximum = rawMaximum + padding;
-    const range = Math.max(maximum - minimum, 1);
+    const padding = Math.max(
+      (rawMaximum - rawMinimum) * 0.15,
+      Math.abs(chartCurrentPrice) * 0.0001,
+      0.000001,
+    );
+    const roughStep = (rawMaximum - rawMinimum + padding * 2) / 5;
+    const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+    const step =
+      ([1, 2, 5, 10].find((value) => value * magnitude >= roughStep) ?? 10) *
+      magnitude;
+    const nextScale = {
+      round: selectedRound,
+      minimum: Math.floor((rawMinimum - padding) / step) * step,
+      maximum: Math.ceil((rawMaximum + padding) / step) * step,
+      step,
+    };
+    const cachedScale = candleScaleRef.current;
+    const keepCandleScale =
+      isCandleMode &&
+      cachedScale?.round === selectedRound &&
+      rawMinimum >= cachedScale.minimum &&
+      rawMaximum <= cachedScale.maximum;
+    const scale = keepCandleScale ? cachedScale : nextScale;
+    if (isCandleMode && !keepCandleScale) candleScaleRef.current = scale;
+    const { minimum, maximum } = scale;
+    const range = maximum - minimum;
     const getY = (price: number) =>
       plotHeight - ((price - minimum) / range) * plotHeight;
     const getX = (timestamp: number) =>
       ((timestamp - windowStart) / activeWindowDuration) * plotWidth;
     const line = visiblePoints
-      .map((point) => {
+      .map((point, index) => {
         const x = getX(point.timestamp);
-        return `${x},${getY(point.price)}`;
+        const y = getY(point.price);
+        if (index === 0) return `M ${x},${y}`;
+        const previous = visiblePoints[index - 1];
+        const previousX = getX(previous.timestamp);
+        const previousY = getY(previous.price);
+        const middleX = (previousX + x) / 2;
+        return `C ${middleX},${previousY} ${middleX},${y} ${x},${y}`;
       })
       .join(" ");
+    const firstPoint = visiblePoints.at(0);
     const lastPoint = visiblePoints.at(-1);
     const candleWidth = Math.max(
       Math.min((plotWidth / Math.max(visibleCandles.length, 1)) * 0.62, 8),
@@ -860,11 +954,10 @@ const PriceChart: React.FC<{
       closeY: getY(candle.close),
       up: candle.close >= candle.open,
     }));
-    const candleTickStep = Math.max(Math.floor(visibleCandles.length / 5), 1);
     return {
       line,
       area: line
-        ? `0,${plotHeight} ${line} ${lastPoint ? getX(lastPoint.timestamp) : 0},${plotHeight}`
+        ? `${line} L ${lastPoint ? getX(lastPoint.timestamp) : 0},${plotHeight} L ${firstPoint ? getX(firstPoint.timestamp) : 0},${plotHeight} Z`
         : "",
       openingY: getY(chartOpeningPrice),
       currentY: getY(chartCurrentPrice),
@@ -886,40 +979,21 @@ const PriceChart: React.FC<{
             xRatio: getX(point.timestamp) / plotWidth,
             yRatio: getY(point.price) / height,
           })),
-      yTicks: [0, 1 / 3, 2 / 3, 1].map((ratio) => ({
-        ratio,
-        value: maximum - range * ratio,
-      })),
-      xTicks: isCandleMode
-        ? visibleCandles
-            .filter(
-              (_, index) =>
-                index % candleTickStep === 0 ||
-                index === visibleCandles.length - 1,
-            )
-            .map((candle) => ({
-              timestamp: candle.timestamp,
-              ratio: getX(candle.timestamp) / plotWidth,
-            }))
-        : Array.from(
-            {
-              length: Math.max(
-                Math.floor(
-                  (latestTimestamp - Math.ceil(windowStart / 9_000) * 9_000) /
-                    9_000,
-                ) + 1,
-                0,
-              ),
-            },
-            (_, index) => {
-              const timestamp =
-                Math.ceil(windowStart / 9_000) * 9_000 + index * 9_000;
-              return {
-                timestamp,
-                ratio: getX(timestamp) / plotWidth,
-              };
-            },
-          ),
+      yTicks: Array.from(
+        { length: Math.round(range / scale.step) + 1 },
+        (_, index) => {
+          const value = maximum - index * scale.step;
+          return { ratio: (maximum - value) / range, value };
+        },
+      ),
+      yDecimals: Math.max(0, -Math.floor(Math.log10(scale.step))),
+      xTicks: Array.from(
+        { length: Math.floor((windowEnd - firstTick) / tickInterval) + 1 },
+        (_, index) => {
+          const timestamp = firstTick + index * tickInterval;
+          return { timestamp, ratio: getX(timestamp) / plotWidth };
+        },
+      ),
     };
   }, [
     chartCandles,
@@ -928,6 +1002,9 @@ const PriceChart: React.FC<{
     chartOpeningPrice,
     chartPoints,
     isFutureRound,
+    selectedRound,
+    isPastRound,
+    liveTimestamp,
   ]);
 
   const isUp = chartCurrentPrice >= chartOpeningPrice;
@@ -1122,26 +1199,24 @@ const PriceChart: React.FC<{
             vectorEffect="non-scaling-stroke"
           />
         )}
-        <line
-          x1="0"
-          x2={plotWidth}
-          y1={chart.currentY}
-          y2={chart.currentY}
-          stroke="currentColor"
-          strokeDasharray="5 5"
-          strokeOpacity="0.65"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-        />
+        {!isFutureRound && (
+          <line
+            x1="0"
+            x2={width}
+            y1={chart.currentY}
+            y2={chart.currentY}
+            stroke="currentColor"
+            strokeDasharray="5 5"
+            strokeOpacity="0.65"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
         {chartMode === "price" ? (
           <>
-            <polygon
-              points={chart.area}
-              fill="currentColor"
-              fillOpacity="0.08"
-            />
-            <polyline
-              points={chart.line}
+            <path d={chart.area} fill="currentColor" fillOpacity="0.08" />
+            <path
+              d={chart.line}
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -1222,7 +1297,7 @@ const PriceChart: React.FC<{
           </>
         )}
       </div>
-      {chartMode === "price" && (
+      {chartMode === "price" && chartPoints.length > 0 && (
         <span
           className={cn(
             "oui-pointer-events-none oui-absolute oui-z-10 oui-h-3 oui-w-3 -oui-translate-x-1/2 -oui-translate-y-1/2 oui-rounded-full",
@@ -1244,7 +1319,11 @@ const PriceChart: React.FC<{
             top: `calc(80px + (100% - 168px) * ${ratio})`,
           }}
         >
-          ${Math.round(value).toLocaleString("en-US")}
+          $
+          {value.toLocaleString("en-US", {
+            minimumFractionDigits: chart.yDecimals,
+            maximumFractionDigits: chart.yDecimals,
+          })}
         </span>
       ))}
       {!isFutureRound && (
@@ -1297,16 +1376,28 @@ const PriceChart: React.FC<{
           )}
         </div>
       )}
-      <div className="oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-end-[72px] oui-z-10 oui-h-8 oui-text-xs oui-tabular-nums oui-text-base-contrast-36">
-        {chart.xTicks.map(({ timestamp, ratio }) => (
-          <span
-            key={timestamp}
-            className="oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap"
-            style={{ left: `${ratio * 100}%` }}
-          >
-            {chartTimeFormatter.format(new Date(timestamp))}
-          </span>
-        ))}
+      <div
+        className="oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-z-10 oui-h-8 oui-text-xs oui-tabular-nums oui-text-base-contrast-36"
+        style={{ width: `calc((100% - 32px) * ${plotWidth / width})` }}
+      >
+        {chart.xTicks
+          .filter(({ ratio }) => ratio >= 0.04 && ratio <= 0.96)
+          .map(({ timestamp, ratio }) => (
+            <span
+              key={timestamp}
+              className={cn(
+                "oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap",
+                isPastRound &&
+                  timestamp % 600_000 !== 0 &&
+                  "oui-hidden xl:oui-block",
+              )}
+              style={{ left: `${ratio * 100}%` }}
+            >
+              {(isPastRound ? roundTimeFormatter : chartTimeFormatter).format(
+                new Date(timestamp),
+              )}
+            </span>
+          ))}
       </div>
       <RoundNavigator
         round={round}
@@ -1511,7 +1602,7 @@ const PredictionOrderBook: React.FC<
             quote: "USDC",
           }}
           isMobile={false}
-          showBuySellRatio
+          showBuySellRatio={!isPastRound}
           setShowBuySellRatio={() => undefined}
           buySellRatio={{
             buyPercentage: 52.4,
@@ -1992,6 +2083,7 @@ export type PredictionDataPanelProps = {
   state: PredictionState;
   tabs?: PredictionDataTab[];
   className?: string;
+  embedded?: boolean;
 };
 
 export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
@@ -2005,6 +2097,7 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     "assets",
   ],
   className,
+  embedded = false,
 }) => {
   const { t } = useTranslation();
   const showPrototypeData =
@@ -2029,8 +2122,8 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     <PredictionPrototypeAuthContext.Provider value={state.prototypeAuthState}>
       <Box
         intensity={900}
-        r="2xl"
-        p={2}
+        r={embedded ? undefined : "2xl"}
+        p={embedded ? 0 : 2}
         className={cn(
           "oui-prediction-dataPanel-container oui-h-full oui-overflow-hidden",
           className,
@@ -2042,12 +2135,14 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           onValueChange={(value) =>
             state.setActiveTab(value as PredictionDataTab)
           }
-          variant="contained"
-          size="lg"
+          variant={embedded ? undefined : "contained"}
+          size={embedded ? undefined : "lg"}
           classNames={{
+            tabsList: embedded ? "!oui-border-none oui-pb-1" : undefined,
             trigger: "oui-group oui-dataPanel-tab-btn",
-            tabsContent:
-              "oui-h-[calc(100%_-_32px)] oui-min-h-36 oui-overflow-x-auto",
+            tabsContent: embedded
+              ? "oui-h-[calc(100%_-_28px)] oui-min-h-36 oui-overflow-x-auto"
+              : "oui-h-[calc(100%_-_32px)] oui-min-h-36 oui-overflow-x-auto",
           }}
         >
           {tabs.map((tab) => (
@@ -2207,13 +2302,59 @@ const PredictionDataTable: React.FC<{
 };
 
 /* eslint-disable react/jsx-key -- DataTable cells are positional arrays keyed by their parent row. */
-const RoundSymbol = ({ round }: { round: number }) => {
+const RoundSymbol = ({
+  round,
+  outcome,
+}: {
+  round: number;
+  outcome: PredictionOutcome;
+}) => {
   const { t } = useTranslation();
   return (
-    <div className="oui-py-1 oui-whitespace-nowrap">
-      <div>{t("prediction.btcUpDown")}</div>
-      <div className="oui-mt-1 oui-text-base-contrast-54 oui-tabular-nums">
-        {formatRoundBadge(round)}
+    <div className="oui-flex oui-items-center oui-gap-2 oui-py-1 oui-whitespace-nowrap">
+      <span
+        aria-hidden="true"
+        className={cn(
+          "oui-h-[42px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
+          outcome === "up" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
+        )}
+      />
+      <div>
+        <div>{t("prediction.btcUpDown")}</div>
+        <div className="oui-mt-1 oui-text-base-contrast-54 oui-tabular-nums">
+          {formatRoundBadge(round)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PredictionOrderSymbol = ({
+  order,
+}: {
+  order: PredictionState["openOrders"][number];
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
+      <span
+        aria-label={t(`common.${order.side}`)}
+        title={t(`common.${order.side}`)}
+        className={cn(
+          "oui-h-[34px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
+          order.side === "buy" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
+        )}
+      />
+      <div className="oui-min-w-0 oui-text-base-contrast">
+        <div className="oui-whitespace-nowrap">{t("prediction.btcUpDown")}</div>
+        <div className="oui-mt-1 oui-flex oui-items-center oui-gap-1 oui-whitespace-nowrap">
+          <Badge color="neutral" size="xs">
+            {t(`common.${order.type}`)}
+          </Badge>
+          <span className="oui-whitespace-nowrap oui-text-base-contrast-54 oui-tabular-nums">
+            {formatRoundBadge(order.round)}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -2471,7 +2612,7 @@ const PredictionFilters = ({
     items.push({
       type: "range",
       name: "dateRange",
-      value: filters.dateRange,
+      value: { from: filters.dateRange.from, to: filters.dateRange.to },
       fromDate: predictionDateRange(90).from,
       toDate: predictionDateRange(1).to,
     });
@@ -2541,7 +2682,7 @@ const HoldingsTable = ({ state }: { state: PredictionState }) => {
             .toNumber(),
         ],
         cells: [
-          <RoundSymbol round={state.round} />,
+          <RoundSymbol round={state.round} outcome={position.outcome} />,
           <OutcomeBadge outcome={position.outcome} />,
           <TableNumber value={position.quantity} />,
           <TableNumber value={state.availableQuantity(position.outcome)} />,
@@ -2630,56 +2771,132 @@ const PendingValue = ({
   );
 };
 
-const PredictionOrdersTable = ({
+export const PredictionOrderCell = ({
+  state,
+  order,
+  field,
+}: {
+  state: PredictionState;
+  order: PredictionState["openOrders"][number] & {
+    status?: "filled" | "cancelled";
+  };
+  field: string;
+}) => {
+  const { t } = useTranslation();
+  const pending = !order.status;
+  const filled = order.status === "filled";
+  switch (field) {
+    case "symbol":
+      return <PredictionOrderSymbol order={order} />;
+    case "side":
+      return (
+        <span className="oui-inline-flex oui-items-center oui-gap-1 oui-whitespace-nowrap">
+          {t(`common.${order.side}`)}
+          <OutcomeBadge outcome={order.outcome} />
+        </span>
+      );
+    case "fill_quantity":
+      return pending ? (
+        <PendingValue state={state} order={order} field="quantity" />
+      ) : (
+        <span>
+          <TableNumber value={filled ? order.quantity : 0} /> /{" "}
+          <TableNumber value={order.quantity} />
+        </span>
+      );
+    case "quantity":
+      return <TableNumber value={order.quantity} />;
+    case "price":
+      return pending ? (
+        <PendingValue state={state} order={order} field="price" />
+      ) : order.type === "market" ? (
+        t("common.market")
+      ) : (
+        <TableNumber value={order.price} />
+      );
+    case "average_executed_price":
+      return filled ? <TableNumber value={order.price} /> : "--";
+    case "executed":
+    case "notional":
+      return (
+        <TableNumber
+          value={new Decimal(pending || filled ? order.quantity : 0)
+            .mul(order.price)
+            .toNumber()}
+          dp={2}
+          suffix="USDC"
+        />
+      );
+    case "status":
+      return t(
+        pending
+          ? "orders.status.pending"
+          : filled
+            ? "prediction.status.filled"
+            : "prediction.status.cancelled",
+      );
+    case "created_time":
+      return formatTableTime(order.timestamp);
+    case "action":
+      return pending ? (
+        <Button
+          size="sm"
+          variant="outlined"
+          color="secondary"
+          disabled={state.isRegionRestricted}
+          onClick={() => state.cancelOrder(order.id)}
+        >
+          {t("common.cancel")}
+        </Button>
+      ) : null;
+    default:
+      return "--";
+  }
+};
+
+export const PredictionOrdersTable = ({
   state,
   mode,
+  status,
 }: {
   state: PredictionState;
   mode: "pending" | "filled" | "history";
+  status?: "cancelled" | "unsupported";
 }) => {
   const { t } = useTranslation();
   const pending = mode === "pending";
   const filters = usePredictionFilters(mode === "history");
+  const orderColumns = useOrderColumn({
+    _type: pending
+      ? TabType.pending
+      : mode === "filled"
+        ? TabType.filled
+        : TabType.all,
+    includePrediction: true,
+  });
   const records = pending
     ? state.openOrders
     : mode === "filled"
-      ? state.history.filter((o) => o.status === "filled")
+      ? state.history.filter((order) => order.status === "filled")
       : [...state.openOrders, ...state.history];
-  const columns = [
-    tableColumn(t("common.symbol"), 250, { fixed: "start" as const }),
-    tableColumn(t("common.side"), 120),
-    tableColumn(t("common.type"), 100),
-    tableColumn(
-      t(
-        mode === "filled"
-          ? "prediction.filledQuantity"
-          : "orders.column.fill&Quantity",
-      ),
-      150,
-    ),
-    tableColumn(t("common.orderPrice"), 130),
-    ...(!pending ? [tableColumn(t("prediction.avgFillPrice"), 130)] : []),
-    tableColumn(
-      t(pending ? "prediction.orderValue" : "prediction.filledValue"),
-      150,
-    ),
-    ...(!pending ? [tableColumn(t("common.fee"), 100)] : []),
-    ...(mode === "history" ? [tableColumn(t("common.status"), 120)] : []),
-    tableColumn(t("orders.column.orderTime"), 170),
-    ...(mode !== "filled"
-      ? [
-          tableColumn("", 100, {
-            fixed: "end" as const,
-            align: "right" as const,
-            type: "action" as const,
-          }),
-        ]
-      : []),
-  ];
   return (
     <PredictionDataTable
-      minWidth={1400}
-      columns={columns}
+      minWidth={orderColumns.reduce(
+        (width, column) => width + Number(column.width ?? 130),
+        0,
+      )}
+      columns={orderColumns.map((column) =>
+        tableColumn(column.title, Number(column.width ?? 130), {
+          fixed:
+            column.fixed === "left"
+              ? "start"
+              : column.fixed === "right"
+                ? "end"
+                : column.fixed,
+          align: column.align,
+          type: column.type === "action" ? "action" : "data",
+        }),
+      )}
       toolbar={
         <PredictionFilters
           filters={filters}
@@ -2700,88 +2917,30 @@ const PredictionOrdersTable = ({
         />
       }
       rows={records
+        .filter(
+          (order) =>
+            !status ||
+            (status === "cancelled" &&
+              "status" in order &&
+              order.status === "cancelled"),
+        )
         .filter((order) =>
           filters.matches({
             ...order,
-            status: "status" in order ? order.status : "pending",
+            status: "status" in order ? String(order.status) : "pending",
           }),
         )
-        .map((order) => {
-          const isPending = !("status" in order);
-          const filled = "status" in order && order.status === "filled";
-          const filledQuantity = filled ? order.quantity : 0;
-          return {
-            id: String(order.id),
-            cells: [
-              <RoundSymbol round={order.round} />,
-              <span>
-                {t(`common.${order.side}`)}{" "}
-                <OutcomeBadge outcome={order.outcome} />
-              </span>,
-              t(`common.${order.type}`),
-              pending ? (
-                <PendingValue state={state} order={order} field="quantity" />
-              ) : (
-                <span>
-                  <TableNumber value={filledQuantity} />
-                  {mode !== "filled" && (
-                    <>
-                      {" "}
-                      / <TableNumber value={order.quantity} />
-                    </>
-                  )}
-                </span>
-              ),
-              pending ? (
-                <PendingValue state={state} order={order} field="price" />
-              ) : order.type === "market" ? (
-                t("common.market")
-              ) : (
-                <TableNumber value={order.price} />
-              ),
-              ...(!pending
-                ? [filled ? <TableNumber value={order.price} /> : "--"]
-                : []),
-              <TableNumber
-                value={new Decimal(pending ? order.quantity : filledQuantity)
-                  .mul(order.price)
-                  .toNumber()}
-                dp={2}
-                suffix="USDC"
-              />,
-              ...(!pending
-                ? [<TableNumber value={0} dp={2} suffix="USDC" />]
-                : []),
-              ...(mode === "history"
-                ? [
-                    t(
-                      isPending
-                        ? "orders.status.pending"
-                        : filled
-                          ? "prediction.status.filled"
-                          : "prediction.status.cancelled",
-                    ),
-                  ]
-                : []),
-              formatTableTime(order.timestamp),
-              ...(mode !== "filled"
-                ? [
-                    isPending ? (
-                      <Button
-                        size="sm"
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => state.cancelOrder(order.id)}
-                        disabled={state.isRegionRestricted}
-                      >
-                        {t("common.cancel")}
-                      </Button>
-                    ) : null,
-                  ]
-                : []),
-            ],
-          };
-        })}
+        .map((order) => ({
+          id: String(order.id),
+          cells: orderColumns.map((column) => (
+            <PredictionOrderCell
+              key={String(column.dataIndex)}
+              state={state}
+              order={order}
+              field={String(column.dataIndex)}
+            />
+          )),
+        }))}
     />
   );
 };
@@ -2826,7 +2985,7 @@ const PredictionHistoryTable = ({ state }: { state: PredictionState }) => {
             record.settledAt,
           ],
           cells: [
-            <RoundSymbol round={record.round} />,
+            <RoundSymbol round={record.round} outcome={record.outcome} />,
             <OutcomeBadge outcome={record.outcome} />,
             <TableNumber value={record.quantity} />,
             <TableNumber value={record.averagePrice} />,
@@ -3261,7 +3420,9 @@ export const Prediction: React.FC<
   useEffect(() => {
     if (!state.notification) return;
 
-    const message = t(state.notification.message);
+    const message = String(
+      t(state.notification.message as keyof LocaleMessages),
+    );
     if (state.notification.tone === "danger") {
       toast.error(message);
     } else {
@@ -3277,7 +3438,7 @@ export const Prediction: React.FC<
   const togglePredictionFavorite = () => {
     setFavoriteMarketIds(
       isPredictionFavorite
-        ? favoriteMarketIds.filter((id) => id !== PREDICTION_MARKET_ID)
+        ? favoriteMarketIds.filter((id: string) => id !== PREDICTION_MARKET_ID)
         : [...favoriteMarketIds, PREDICTION_MARKET_ID],
     );
   };

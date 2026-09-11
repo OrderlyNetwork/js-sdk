@@ -1446,6 +1446,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
+      '@orderly.network/ui-orders':
+        specifier: workspace:*
+        version: link:../ui-orders
       '@orderly.network/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
 import {
@@ -10,6 +10,7 @@ import {
   DataFilter,
   cn,
   TableFeatures,
+  DataTable,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { formatSymbol } from "@orderly.network/utils";
@@ -28,7 +29,17 @@ const getOrderRowKey = <T extends API.Order | API.AlgoOrder>(item: T) =>
     : `order-${(item as API.Order).order_id}`;
 
 export const DesktopOrderList: FC<
-  OrdersBuilderState & { testIds?: { tableBody?: string } }
+  OrdersBuilderState & {
+    testIds?: { tableBody?: string };
+    supplementalRows?: Array<{
+      id: string;
+      timestamp: number;
+      renderCell: (field: string) => ReactNode;
+      plainText?: (field: string) => string;
+    }>;
+    useClientTable?: boolean;
+    cancelAllDisabled?: boolean;
+  }
 > = (props) => {
   const { sharePnLConfig, ...rest } = props;
   const columns = useOrderColumn({
@@ -37,8 +48,50 @@ export const DesktopOrderList: FC<
     pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbolsInfo: props.symbolsInfo,
+    includePrediction: !!props.supplementalRows,
   });
 
+  const [page, setPage] = useState(1);
+  const mergedRows = props.supplementalRows
+    ? [
+        ...(props.dataSource ?? []),
+        ...props.supplementalRows.map((row) => ({
+          __supplemental: row,
+          created_time: row.timestamp,
+          order_id: row.id,
+        })),
+      ].sort(
+        (a, b) => Number(b.created_time ?? 0) - Number(a.created_time ?? 0),
+      )
+    : props.dataSource;
+  useEffect(
+    () => setPage(1),
+    [props.type, props.filterItems, props.supplementalRows?.length],
+  );
+  const mergedColumns = props.supplementalRows
+    ? columns.map((column) => ({
+        ...column,
+        render: (value: any, record: any, index: number, context: any) =>
+          record.__supplemental
+            ? record.__supplemental.renderCell(String(column.dataIndex))
+            : typeof column.render === "function"
+              ? column.render(value, record, index, context)
+              : value,
+        renderPlantText: (
+          value: any,
+          record: any,
+          index: number,
+          context: any,
+        ) =>
+          record.__supplemental
+            ? (record.__supplemental.plainText?.(String(column.dataIndex)) ??
+              "")
+            : column.renderPlantText
+              ? column.renderPlantText(value, record, index, context)
+              : String(value ?? ""),
+      }))
+    : columns;
+  const TableComponent = props.useClientTable ? DataTable : AuthGuardDataTable;
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -56,15 +109,15 @@ export const DesktopOrderList: FC<
             }}
             trailing={
               [TabType.pending, TabType.tp_sl].includes(props.type) && (
-                <CancelAll {...props} />
+                <CancelAll {...props} disabled={props.cancelAllDisabled} />
               )
             }
           />
         )}
-        <AuthGuardDataTable
-          columns={columns}
+        <TableComponent
+          columns={mergedColumns as any}
           loading={props.isLoading}
-          dataSource={props.dataSource}
+          dataSource={mergedRows as any}
           bordered
           ignoreLoadingCheck={true}
           testIds={{
@@ -86,6 +139,7 @@ export const DesktopOrderList: FC<
           }}
           generatedRowKey={getOrderRowKey}
           renderRowContainer={(record: any, index, children) => {
+            if (record.__supplemental) return children;
             if (
               props.type === TabType.tp_sl ||
               props.type === TabType.pending
@@ -101,8 +155,19 @@ export const DesktopOrderList: FC<
               <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
             );
           }}
-          pagination={props.pagination}
-          manualPagination={props.manualPagination}
+          pagination={
+            props.supplementalRows
+              ? {
+                  page,
+                  pageSize: 20,
+                  count: mergedRows?.length ?? 0,
+                  onPageChange: setPage,
+                }
+              : props.pagination
+          }
+          manualPagination={
+            props.supplementalRows ? false : props.manualPagination
+          }
           features={[TableFeatures.DownloadFeature]}
           getTableInstance={(table) => {
             props.tableInstance.current = table;
@@ -211,7 +276,7 @@ export const MobileOrderList: FC<
   );
 };
 
-const CancelAll: FC<OrdersBuilderState> = (props) => {
+const CancelAll: FC<OrdersBuilderState & { disabled?: boolean }> = (props) => {
   const { t } = useTranslation();
   const { symbol } = props;
 
@@ -222,7 +287,7 @@ const CancelAll: FC<OrdersBuilderState> = (props) => {
       variant="outlined"
       color="secondary"
       size="xs"
-      disabled={(props.dataSource?.length ?? 0) == 0}
+      disabled={props.disabled ?? (props.dataSource?.length ?? 0) == 0}
       className="disabled:oui-bg-transport"
       onClick={(e) => props.onCancelAll()}
       data-testid={`oui-testid-dataList-${props.type.toLowerCase()}-cancelAll-button`}
