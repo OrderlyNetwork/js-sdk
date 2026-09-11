@@ -25,6 +25,11 @@ import {
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { PositionTPSLConfirm } from "./positionTpslConfirm";
+import {
+  getChangedTPSLEditableOrderValues,
+  getTPSLEditableOrderValues,
+  isTPSLOrderTypeLocked,
+} from "./tpslOrderSync";
 
 type PropsWithTriggerPrice = {
   withTriggerPrice?: boolean;
@@ -82,9 +87,16 @@ export const useTPSLBuilder = (
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { marginMode: symbolMarginMode } = useMarginModeBySymbol(symbol);
   const [{ rows: positions }] = usePositionStream();
-  const mainAccountPosition = positions.find((item) => {
-    const marginMode = options.position?.margin_mode ?? symbolMarginMode;
-    return item.symbol === symbol && item.margin_mode === marginMode;
+  const mainAccountPosition = positions?.find((item) => {
+    const marginMode =
+      order?.margin_mode ??
+      options.position?.margin_mode ??
+      symbolMarginMode ??
+      MarginMode.CROSS;
+    return (
+      item.symbol === symbol &&
+      (item.margin_mode ?? MarginMode.CROSS) === marginMode
+    );
   });
 
   const isSubAccount =
@@ -128,7 +140,10 @@ export const useTPSLBuilder = (
       position_qty: position?.position_qty ?? 0,
       average_open_price: position?.average_open_price ?? 0,
       // Prefer options.position?.margin_mode: mainAccountPosition (from stream) often has wrong default CROSS
-      margin_mode: options.position?.margin_mode ?? position?.margin_mode,
+      margin_mode:
+        order?.margin_mode ??
+        options.position?.margin_mode ??
+        position?.margin_mode,
     },
     {
       defaultOrder: order,
@@ -141,14 +156,55 @@ export const useTPSLBuilder = (
     },
   );
 
+  const externalOrderValues = useMemo(
+    () => (isEditing && order ? getTPSLEditableOrderValues(order) : undefined),
+    [isEditing, order],
+  );
+  const previousExternalOrderValues = useRef(externalOrderValues);
+  const disableTPOrderTypeSelector =
+    !!isEditing && isTPSLOrderTypeLocked(order, "tp");
+  const disableSLOrderTypeSelector =
+    !!isEditing && isTPSLOrderTypeLocked(order, "sl");
+  const parentTriggered = !!isEditing && order?.is_triggered === true;
+  const disableTPTriggerEditing = parentTriggered;
+  const disableSLTriggerEditing = parentTriggered;
+  const disableQuantityEditing = parentTriggered;
+
+  useEffect(() => {
+    if (!externalOrderValues) {
+      previousExternalOrderValues.current = undefined;
+      return;
+    }
+
+    const previousValues = previousExternalOrderValues.current;
+    previousExternalOrderValues.current = externalOrderValues;
+
+    const changes = previousValues
+      ? getChangedTPSLEditableOrderValues(previousValues, externalOrderValues)
+      : externalOrderValues;
+
+    if (Object.keys(changes).length > 0) {
+      setValues(changes);
+    }
+  }, [externalOrderValues, setValues]);
+
   const slPriceError = useTpslPriceChecker({
     slPrice: tpslOrder.sl_trigger_price?.toString() ?? undefined,
     liqPrice: estLiqPrice ?? null,
     side: tpslOrder.side,
   });
 
+  // Keep historical liquidation risk visible without blocking unrelated edits.
+  const originalSlPrice = Number(externalOrderValues?.sl_trigger_price);
+  const isUnchangedSlPrice =
+    !!isEditing &&
+    Number.isFinite(originalSlPrice) &&
+    originalSlPrice > 0 &&
+    Number(tpslOrder.sl_trigger_price) === originalSlPrice;
   const isSlPriceWarning =
-    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
+    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING ||
+    (isUnchangedSlPrice &&
+      slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_ERROR);
 
   const setQuantity = (value: number | string) => {
     setValue("quantity", value);
@@ -403,6 +459,11 @@ export const useTPSLBuilder = (
 
   return {
     isEditing,
+    disableTPOrderTypeSelector,
+    disableSLOrderTypeSelector,
+    disableTPTriggerEditing,
+    disableSLTriggerEditing,
+    disableQuantityEditing,
     symbolInfo: symbolInfo[symbol],
     maxQty,
     setQuantity: useMemoizedFn(setQuantity),
@@ -416,6 +477,7 @@ export const useTPSLBuilder = (
     // needConfirm,
     onSubmit,
     slPriceError,
+    isSlPriceWarning,
     estLiqPrice,
     metaState,
     errors,

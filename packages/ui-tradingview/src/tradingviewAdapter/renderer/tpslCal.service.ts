@@ -1,3 +1,4 @@
+import { getTPSLQuantity, matchesTPSLPosition } from "@orderly.network/utils";
 import { ChartPosition, OrderInterface } from "../type";
 import { getOrderId } from "./order.util";
 import {
@@ -31,7 +32,9 @@ export class TpslCalService {
       return "";
     }
 
-    const position = this.positions[0];
+    const position = this.positions.find((position) =>
+      matchesTPSLPosition(tpslOrder, position),
+    );
 
     if (!position) {
       return "";
@@ -48,15 +51,10 @@ export class TpslCalService {
    * @returns quantity number or undefined when positions unavailable
    */
   getTpslQuantity(tpslOrder: OrderInterface): number | undefined {
-    if (this.positions === null) {
-      return undefined;
-    }
-    const position = this.positions[0];
-    if (!position) {
-      return undefined;
-    }
-    const { quantity } = getTpslEstPnl(tpslOrder, position);
-    return quantity;
+    const position = this.positions?.find((position) =>
+      matchesTPSLPosition(tpslOrder, position),
+    );
+    return getTPSLQuantity(tpslOrder, position?.balance);
   }
 
   prepareTpslPnlMap(newPendingOrders: OrderInterface[]) {

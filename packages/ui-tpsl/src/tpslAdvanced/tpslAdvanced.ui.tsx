@@ -200,35 +200,9 @@ export const TPSLAdvancedUI = (props: Props) => {
             <TPSLPositionTypeWidget
               value={formattedOrder.position_type ?? PositionType.PARTIAL}
               onChange={(key, value) => {
-                // setOrderValue("position_type", value);
-                if (value === PositionType.FULL) {
-                  setValues({
-                    position_type: PositionType.FULL,
-                    tp_order_type: OrderType.MARKET,
-                    tp_order_price: undefined,
-                    sl_order_type: OrderType.MARKET,
-                    sl_order_price: undefined,
-                  });
-                  // setOrderValue("tp_order_type", OrderType.MARKET);
-                  // setOrderValue("sl_order_type", OrderType.MARKET);
-                  return;
-                }
                 setOrderValue("position_type", value);
               }}
             />
-            {formattedOrder.position_type === PositionType.FULL && (
-              <Flex
-                justify={"start"}
-                itemAlign={"start"}
-                gap={2}
-                className="oui-mt-3 oui-w-full"
-              >
-                <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-warning-darken" />
-                <Text className="oui-text-2xs oui-text-warning-darken">
-                  {t("tpsl.positionType.full.tips.market")}
-                </Text>
-              </Flex>
-            )}
           </div>
           <Flex direction={"column"} gap={6}>
             <TPSLInputRowWidget
@@ -239,9 +213,6 @@ export const TPSLAdvancedUI = (props: Props) => {
               values={tpValues}
               errors={validated ? errors : null}
               quote_dp={symbolInfo.quote_dp}
-              hideOrderPrice={
-                formattedOrder.position_type === PositionType.FULL
-              }
               onChange={(key, value) => {
                 // setTpValuse((prev) => ({ ...prev, [key]: value }));
                 setOrderValue(key as keyof OrderlyOrder, value);
@@ -257,9 +228,6 @@ export const TPSLAdvancedUI = (props: Props) => {
               type="sl"
               side={formattedOrder.side as OrderSide}
               values={slValues}
-              hideOrderPrice={
-                formattedOrder.position_type === PositionType.FULL
-              }
               errors={
                 validated ? errors : isSlPriceError ? props.slPriceError : null
               }

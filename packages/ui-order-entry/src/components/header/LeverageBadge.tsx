@@ -30,6 +30,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   const marginMode = props.marginMode;
 
   const isDisabled = !!disabled;
+  const isMarginModeDisabled = isDisabled || !enabled;
   const curLeverage = symbolLeverage ?? 1;
 
   const showLeverageModal = () => {
@@ -45,7 +46,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   };
 
   const showMarginModeModal = () => {
-    if (isDisabled || !enabled) {
+    if (isMarginModeDisabled) {
       return;
     }
 
@@ -73,11 +74,13 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
           "oui-flex oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1",
           "oui-px-3 oui-py-1.5",
           "oui-text-xs oui-font-semibold oui-text-base-contrast-54",
-          isDisabled ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
+          isMarginModeDisabled
+            ? "oui-cursor-not-allowed"
+            : "oui-cursor-pointer",
         )}
         data-testid="oui-testid-orderEntry-margin-mode"
         aria-label={t("marginMode.switchMarginMode")}
-        disabled={isDisabled}
+        disabled={isMarginModeDisabled}
         onClick={showMarginModeModal}
       >
         <Text>

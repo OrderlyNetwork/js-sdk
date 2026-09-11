@@ -1,12 +1,11 @@
-import { FC, useCallback, useState } from "react";
-import { useConfig, useMutation } from "@orderly.network/hooks";
+import { FC } from "react";
+import { useMutation } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderEntity } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
 
 export const Renew: FC<{ record: any }> = (props) => {
   const { record } = props;
-  const [open, setOpen] = useState(false);
   const [doCreateOrder, { data, error, reset, isMutating }] = useMutation<
     OrderEntity,
     any
@@ -14,9 +13,7 @@ export const Renew: FC<{ record: any }> = (props) => {
 
   const { t } = useTranslation();
 
-  const brokerId = useConfig("brokerId");
-  const onSubmit = useCallback(() => {
-    setOpen(false);
+  const onSubmit = () => {
     const data: OrderEntity = {
       symbol: record.symbol,
       order_type: record.type,
@@ -24,7 +21,6 @@ export const Renew: FC<{ record: any }> = (props) => {
       order_quantity: record.quantity,
       order_amount: record.amount,
       side: record.side,
-      broker_id: brokerId,
     };
 
     if (Number(record.visible_quantity) < Number(record.quantity)) {
@@ -44,7 +40,7 @@ export const Renew: FC<{ record: any }> = (props) => {
     }
 
     doCreateOrder(data);
-  }, []);
+  };
 
   return (
     <Button

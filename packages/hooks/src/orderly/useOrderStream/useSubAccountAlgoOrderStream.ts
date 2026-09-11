@@ -8,6 +8,10 @@ import {
   AlgoOrderRootType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
+import {
+  sanitizeTPSLChildUpdates,
+  TPSLChildUpdate,
+} from "../../services/orderCreator/tpslOrderUpdates";
 import { useSubAccountMutation, useSubAccountQuery } from "../../subAccount";
 import { useEventEmitter } from "../../useEventEmitter";
 import version from "../../version";
@@ -180,7 +184,10 @@ export const useSubAccountAlgoOrderStream = (
         order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
         order.algo_type === AlgoOrderRootType.TP_SL
       ) {
-        order.quantity = order.child_orders[0].quantity;
+        const childQuantity = order.child_orders?.[0]?.quantity;
+        if (childQuantity !== undefined) {
+          order.quantity = childQuantity;
+        }
       }
       return order;
     });
@@ -351,17 +358,23 @@ export const useSubAccountAlgoOrderStream = (
        * the root algo order id
        */
       orderId: number,
-      childOrders: API.AlgoOrder["child_orders"],
+      childOrders: TPSLChildUpdate[],
     ) => {
       if (!Array.isArray(childOrders)) {
         throw new SDKError("Children orders is required");
       }
+      const original = flattenOrders?.find(
+        (order: API.AlgoOrder) =>
+          Number(order.algo_order_id) === Number(orderId),
+      );
+      const changes = sanitizeTPSLChildUpdates(childOrders, original);
+      if (!changes.length) return Promise.resolve();
       return doUpdateAlgoOrder({
         order_id: orderId,
-        child_orders: childOrders,
+        child_orders: changes,
       });
     },
-    [],
+    [flattenOrders, doUpdateAlgoOrder],
   );
 
   const refresh = useDebouncedCallback(() => {

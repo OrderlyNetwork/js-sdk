@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import { API, AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
+import { withTPSLProvenance } from "@orderly.network/utils";
 
 export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
   const formattedData = useMemo(() => {
     const _data: API.AlgoOrderExt[] = [];
 
     for (let index = 0; index < data.length; index++) {
-      const element = data[index];
+      const element = withTPSLProvenance(data[index]);
       // console.log("element", element);
       if (
         element.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||

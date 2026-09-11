@@ -27,7 +27,23 @@ export const TrailingCallbackCell = (props: {
       : callback_value?.toString()!;
   }, [callback_value, callback_rate]);
 
+  const [previousCallbackValues, setPreviousCallbackValues] = useState({
+    callbackValue: callback_value,
+    callbackRate: callback_rate,
+  });
   const [value, setValue] = useState<string>(originValue!);
+
+  if (
+    !Object.is(previousCallbackValues.callbackValue, callback_value) ||
+    !Object.is(previousCallbackValues.callbackRate, callback_rate)
+  ) {
+    setPreviousCallbackValues({
+      callbackValue: callback_value,
+      callbackRate: callback_rate,
+    });
+    setValue(originValue);
+  }
+
   const [submitting, setSubmitting] = useState(false);
 
   const disabled = props.disabled || order.is_triggered;

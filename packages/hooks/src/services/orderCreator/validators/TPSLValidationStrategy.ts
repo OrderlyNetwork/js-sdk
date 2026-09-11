@@ -3,8 +3,9 @@ import {
   AlgoOrderRootType,
   OrderSide,
   OrderType,
+  PositionType,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, resolveTPSLOrderType } from "@orderly.network/utils";
 import { getPriceRange } from "../../../utils/order/orderPrice";
 import {
   OrderValidationItem,
@@ -21,21 +22,23 @@ const formatPrice = (price: number, quote_dp: number): number => {
   return new Decimal(price).toDecimalPlaces(quote_dp).toNumber();
 };
 
+type TPSLValidationConfig = ValuesDepConfig & {
+  /** Skip only the stage-specific trigger-to-mark check for selected legs. */
+  skipTPSLTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
+};
+
 /**
  * Strategy for validating Take Profit / Stop Loss orders
  * Consolidates validation logic from baseBracketOrderCreator and baseAlgoCreator
  * to eliminate code duplication
  */
-export class TPSLValidationStrategy
-  implements
-    IValidationStrategy<
-      Partial<
-        AlgoOrderEntity<
-          AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
-        >
-      >
+export class TPSLValidationStrategy implements IValidationStrategy<
+  Partial<
+    AlgoOrderEntity<
+      AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
     >
-{
+  >
+> {
   /**
    * Validates TP/SL order values
    * @param values - TP/SL order values including trigger prices, order prices, etc.
@@ -48,9 +51,65 @@ export class TPSLValidationStrategy
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
       >
     >,
-    config: ValuesDepConfig,
+    config: TPSLValidationConfig,
   ): OrderValidationResult {
     const result: OrderValidationResult = Object.create(null);
+
+    const normalized = { ...values };
+    for (const leg of ["tp", "sl"] as const) {
+      const triggerKey = `${leg}_trigger_price` as const;
+      const priceKey = `${leg}_order_price` as const;
+      const trigger = values[triggerKey];
+      const price = values[priceKey];
+      const hasTrigger =
+        trigger !== undefined && trigger !== null && trigger !== "";
+      const hasPrice = price !== undefined && price !== null && price !== "";
+      const resolvedType = resolveTPSLOrderType(
+        values[`${leg}_order_type`],
+        price,
+      );
+
+      // A LIMIT price means the user is configuring this leg. Do not treat it
+      // as an inactive placeholder when its trigger price is still empty.
+      if (!hasTrigger) {
+        if (hasPrice && resolvedType === OrderType.LIMIT) {
+          result[triggerKey] = OrderValidation.required(triggerKey);
+        }
+        normalized[priceKey] = undefined;
+        continue;
+      }
+
+      const triggerNumber = Number(trigger);
+      if (!Number.isFinite(triggerNumber) || triggerNumber <= 0) {
+        result[triggerKey] = OrderValidation.min(
+          triggerKey,
+          config.symbol.quote_tick,
+        );
+        normalized[triggerKey] = undefined;
+      }
+
+      if (resolvedType !== OrderType.LIMIT) {
+        normalized[priceKey] = undefined;
+        continue;
+      }
+      if (price == null || price === "") {
+        result[priceKey] = OrderValidation.required(priceKey);
+        normalized[priceKey] = undefined;
+      } else if (
+        !Number.isFinite(Number(price)) ||
+        new Decimal(price).todp(config.symbol.quote_dp).lte(0)
+      ) {
+        result[priceKey] = OrderValidation.min(
+          priceKey,
+          config.symbol.quote_tick,
+        );
+        normalized[priceKey] = undefined;
+      } else {
+        normalized[priceKey] = new Decimal(price)
+          .todp(config.symbol.quote_dp)
+          .toString();
+      }
+    }
 
     const {
       tp_trigger_price,
@@ -63,7 +122,7 @@ export class TPSLValidationStrategy
       quantity,
       order_type,
       order_price,
-    } = values;
+    } = normalized;
 
     const qty = Number(quantity);
     const maxQty = config.maxQty;
@@ -81,38 +140,14 @@ export class TPSLValidationStrategy
     const tpslSide = side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
 
     // Validate quantity
-    if (!isNaN(qty) && qty > maxQty) {
+    const fullPosition =
+      values.position_type === PositionType.FULL ||
+      values.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL;
+    if (!fullPosition && !isNaN(qty) && qty > maxQty) {
       result.quantity = OrderValidation.max("quantity", config.maxQty);
     }
-    if (!isNaN(qty) && qty < (base_min ?? 0)) {
+    if (!fullPosition && !isNaN(qty) && qty < (base_min ?? 0)) {
       result.quantity = OrderValidation.min("quantity", base_min ?? 0);
-    }
-
-    // Validate trigger prices are not negative
-    // Only validate if the value is actually set and not empty string
-    if (
-      tp_trigger_price !== undefined &&
-      tp_trigger_price !== "" &&
-      tp_trigger_price !== null &&
-      Number(tp_trigger_price) < 0
-    ) {
-      result.tp_trigger_price = OrderValidation.min("tp_trigger_price", 0);
-    }
-    if (
-      sl_trigger_price !== undefined &&
-      sl_trigger_price !== "" &&
-      sl_trigger_price !== null &&
-      Number(sl_trigger_price) < 0
-    ) {
-      result.sl_trigger_price = OrderValidation.min("sl_trigger_price", 0);
-    }
-
-    // Validate order prices are required for limit orders
-    if (tp_order_type === OrderType.LIMIT && !tp_order_price) {
-      result.tp_order_price = OrderValidation.required("tp_order_price");
-    }
-    if (sl_order_type === OrderType.LIMIT && !sl_order_price) {
-      result.sl_order_price = OrderValidation.required("sl_order_price");
     }
 
     // Validate based on order side and mark price
@@ -131,6 +166,7 @@ export class TPSLValidationStrategy
           quote_dp: quote_dp ?? 0,
           tpslSide,
           symbol: config.symbol,
+          skipTriggerPriceAgainstMark: config.skipTPSLTriggerPriceAgainstMark,
         },
         result,
       );
@@ -149,6 +185,7 @@ export class TPSLValidationStrategy
           quote_dp: quote_dp ?? 0,
           tpslSide,
           symbol: config.symbol,
+          skipTriggerPriceAgainstMark: config.skipTPSLTriggerPriceAgainstMark,
         },
         result,
       );
@@ -177,6 +214,7 @@ export class TPSLValidationStrategy
       quote_dp: number;
       tpslSide: OrderSide;
       symbol: any;
+      skipTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
     },
     result: OrderValidationResult,
   ): void {
@@ -186,8 +224,15 @@ export class TPSLValidationStrategy
       sl_trigger_price,
       sl_order_price,
     } = prices;
-    const { mark_price, quote_min, quote_max, quote_dp, tpslSide, symbol } =
-      config;
+    const {
+      mark_price,
+      quote_min,
+      quote_max,
+      quote_dp,
+      tpslSide,
+      symbol,
+      skipTriggerPriceAgainstMark,
+    } = config;
 
     // Validate SL trigger price
     if (
@@ -204,7 +249,7 @@ export class TPSLValidationStrategy
             formatPrice(quote_min, quote_dp),
           );
         }
-        if (slTrigger >= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.sl && slTrigger >= mark_price) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -221,7 +266,7 @@ export class TPSLValidationStrategy
     ) {
       const tpTrigger = Number(tp_trigger_price);
       if (!isNaN(tpTrigger)) {
-        if (tpTrigger <= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.tp && tpTrigger <= mark_price) {
           result.tp_trigger_price = OrderValidation.min(
             "tp_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -291,7 +336,7 @@ export class TPSLValidationStrategy
       // FE limit: tp_order_price must be greater than tp_trigger_price for BUY orders
       if (tpTrigger > tpOrderPrice) {
         result.tp_trigger_price =
-          OrderValidation.priceErrorMax("tp_trigger_price");
+          OrderValidation.priceErrorMin("tp_trigger_price");
       }
     }
   }
@@ -316,6 +361,7 @@ export class TPSLValidationStrategy
       quote_dp: number;
       tpslSide: OrderSide;
       symbol: any;
+      skipTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
     },
     result: OrderValidationResult,
   ): void {
@@ -325,8 +371,15 @@ export class TPSLValidationStrategy
       sl_trigger_price,
       sl_order_price,
     } = prices;
-    const { mark_price, quote_min, quote_max, quote_dp, tpslSide, symbol } =
-      config;
+    const {
+      mark_price,
+      quote_min,
+      quote_max,
+      quote_dp,
+      tpslSide,
+      symbol,
+      skipTriggerPriceAgainstMark,
+    } = config;
 
     // Validate SL trigger price
     if (
@@ -343,7 +396,7 @@ export class TPSLValidationStrategy
             formatPrice(quote_max, quote_dp),
           );
         }
-        if (slTrigger <= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.sl && slTrigger <= mark_price) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -360,7 +413,7 @@ export class TPSLValidationStrategy
     ) {
       const tpTrigger = Number(tp_trigger_price);
       if (!isNaN(tpTrigger)) {
-        if (tpTrigger >= mark_price) {
+        if (!skipTriggerPriceAgainstMark?.tp && tpTrigger >= mark_price) {
           result.tp_trigger_price = OrderValidation.max(
             "tp_trigger_price",
             formatPrice(mark_price, quote_dp),

@@ -17,6 +17,10 @@ export { default as version } from "./version";
 export { fetcher, noCacheConfig, type useQueryOptions } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
 export {
+  useConvertThreshold,
+  type ConvertThresholdReturns,
+} from "./useConvertThreshold";
+export {
   timestampWaitingMiddleware,
   resetTimestampOffsetState,
 } from "./middleware/timestampWaitingMiddleware";
@@ -153,3 +157,5 @@ export { useMarketList, useMarketMap } from "./orderly/useMarket/market.store";
 export * from "./next/tpsl";
 
 export * from "./feature-flag";
+
+export { createTPSLOrderUpdates } from "./services/orderCreator/tpslOrderUpdates";

@@ -3,8 +3,8 @@ import { findTPSLFromOrder } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
+import { FlexCell } from "./common";
 
 export const QtyRender = ({ order }: { order: API.AlgoOrder }) => {
   const { position, base_dp } = useTPSLDetailContext();
@@ -20,9 +20,9 @@ export const QtyRender = ({ order }: { order: API.AlgoOrder }) => {
 
   return (
     <Flex
-      direction={"column"}
-      justify={"start"}
-      itemAlign={"start"}
+      direction="column"
+      justify="start"
+      itemAlign="start"
       className="oui-h-full oui-text-2xs"
     >
       <FlexCell>

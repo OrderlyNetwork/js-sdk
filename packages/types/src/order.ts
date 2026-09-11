@@ -246,7 +246,6 @@ export interface OrderEntity extends ScaledOrder, TrailingStopOrder {
   visible_quantity?: number;
   reduce_only?: boolean;
   side: OrderSide;
-  broker_id?: string;
   slippage?: number;
 
   // internal fields

@@ -1,9 +1,21 @@
 import { Decimal, zero } from "@orderly.network/utils";
+import { positiveCollateralContribution } from "./collateral";
+
+export type NonUSDCHolding = {
+  holding: number;
+  /** Signed pending quantity. Pending sells are negative. */
+  pendingShort?: number;
+  indexPrice: number;
+  collateralCap: number;
+  collateralRatio: Decimal;
+  /** Defaults to true for backward compatibility. */
+  isCollateral?: boolean;
+};
 
 /**
  * @formulaId totalCollateral
  * @name Total Collateral
- * @formula Total collateral = usdc balance.holding + SUM(non-usdc balance.holding * mark price * discount) + total unsettlement PNL
+ * @formula Total collateral = usdc balance.holding + usdc balance.pending_short - usdc balance.isolated_order_frozen + SUM(non-usdc effective holding value) + total cross unsettlement PNL
  * @description
  *
  * ## Definition
@@ -14,9 +26,13 @@ import { Decimal, zero } from "@orderly.network/utils";
  *
  * **usdc balance.holding**: USDC holding quantity
  *
- * **non-usdc balance.holding * mark price**: Value of non-USDC asset holdings (denominated in USDC)
+ * **non-USDC effective holding**: `holding + pending_short`. Positive eligible collateral applies its cap and collateral ratio. Negative quantities are valued at the full index price as debt.
  *
  * **holding**: Asset quantity held by the user, from `/v1/client/holding` or v2 Websocket API | Balance
+ *
+ * **pending_short**: Signed pending quantity; pending sells are negative
+ *
+ * **is_collateral**: Positive assets contribute only when enabled as collateral
  *
  * **mark price**: Current price of the asset, from v2 Websocket API | Balance
  *
@@ -31,12 +47,7 @@ import { Decimal, zero } from "@orderly.network/utils";
  */
 export function totalCollateral(inputs: {
   USDCHolding: number;
-  nonUSDCHolding: {
-    holding: number;
-    indexPrice: number;
-    collateralCap: number;
-    collateralRatio: Decimal;
-  }[];
+  nonUSDCHolding: NonUSDCHolding[];
   /**
    * Sum of user's account unsettled PNL
    */
@@ -70,14 +81,40 @@ export function totalCollateral(inputs: {
     .add(usdcBalancePendingShortQty)
     .sub(Math.abs(usdcBalanceIsolatedOrderFrozen));
 
-  // Calculate non-USDC holdings value
+  let hasUnpricedDebt = false;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
-    const finalHolding = Math.min(cur.holding, cur.collateralCap);
-    const value = new Decimal(finalHolding)
-      .mul(cur.collateralRatio)
-      .mul(cur.indexPrice);
-    return acc.add(value);
+    const effectiveHolding = new Decimal(cur.holding)
+      .add(cur.pendingShort ?? 0)
+      .toNumber();
+
+    if (effectiveHolding < 0) {
+      if (!Number.isFinite(cur.indexPrice) || cur.indexPrice <= 0) {
+        hasUnpricedDebt = true;
+        return acc;
+      }
+
+      // Debt is valued at full index price without collateral discounts or caps.
+      return acc.add(new Decimal(effectiveHolding).mul(cur.indexPrice));
+    }
+
+    if (cur.isCollateral === false) {
+      return acc;
+    }
+
+    return acc.add(
+      positiveCollateralContribution({
+        collateralQty: effectiveHolding,
+        collateralCap: cur.collateralCap,
+        collateralRatio: cur.collateralRatio,
+        indexPrice: cur.indexPrice,
+      }),
+    );
   }, zero);
+
+  // Match backend fail-closed behavior when a debt cannot be priced.
+  if (hasUnpricedDebt) {
+    return zero;
+  }
 
   // Use totalCrossUnsettledPnL if provided, otherwise use unsettlementPnL
   const pnl =

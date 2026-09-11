@@ -27,7 +27,7 @@ export class LimitOrderCreator<
     // Cast to OrderlyOrder for baseOrder method which expects OrderlyOrder
     const orderlyValues = values as unknown as OrderlyOrder;
     const order = {
-      ...this.baseOrder(orderlyValues),
+      ...this.baseOrder(orderlyValues, config),
       order_price: orderlyValues.order_price,
     };
 

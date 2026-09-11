@@ -10,6 +10,12 @@ import { API, AlgoOrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { cn, Text, Tooltip } from "@orderly.network/ui";
 import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+import {
+  getTPSLLeg,
+  getTPSLEstimatePrice,
+  getTPSLQuantity,
+  matchesTPSLPosition,
+} from "@orderly.network/utils";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const OrderTriggerPrice = () => {
@@ -57,22 +63,29 @@ export const TPSLTriggerPrice: FC<{
   const pnl = useMemo(() => {
     const msgs = [];
 
-    if (!props.tooltip || !order || !position) return;
+    if (
+      !props.tooltip ||
+      !order ||
+      !position ||
+      !matchesTPSLPosition(order, position)
+    )
+      return;
 
-    let quantity = order.quantity;
-
-    if (quantity === 0) {
-      if (order.child_orders?.[0].type === "CLOSE_POSITION") {
-        quantity = position.position_qty;
-      }
-    }
+    const tp = getTPSLLeg(order, "tp");
+    const sl = getTPSLLeg(order, "sl");
+    const tpQty = tp ? getTPSLQuantity(tp, position.position_qty) : undefined;
+    const slQty = sl ? getTPSLQuantity(sl, position.position_qty) : undefined;
+    const tpPrice = tp ? getTPSLEstimatePrice(tp) : undefined;
+    const slPrice = sl ? getTPSLEstimatePrice(sl) : undefined;
 
     if (!!props.takeProfitPrice) {
       msgs.push(
         <TriggerPriceItem
           key={"tp"}
-          qty={quantity}
-          price={props.takeProfitPrice}
+          qty={
+            tpQty == null ? undefined : tpQty * (tp?.side === "BUY" ? -1 : 1)
+          }
+          price={tpPrice}
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.TAKE_PROFIT}
@@ -85,8 +98,10 @@ export const TPSLTriggerPrice: FC<{
       msgs.push(
         <TriggerPriceItem
           key={"sl"}
-          qty={quantity}
-          price={props.stopLossPrice}
+          qty={
+            slQty == null ? undefined : slQty * (sl?.side === "BUY" ? -1 : 1)
+          }
+          price={slPrice}
           entryPrice={position.average_open_price}
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.STOP_LOSS}
@@ -99,6 +114,8 @@ export const TPSLTriggerPrice: FC<{
   }, [
     props.takeProfitPrice,
     props.stopLossPrice,
+    position,
+    order,
     position?.average_open_price,
     order?.side,
     order?.quantity,
@@ -211,8 +228,8 @@ export const TPSLTriggerPrice: FC<{
 };
 
 const TriggerPriceItem: FC<{
-  qty: number;
-  price: number;
+  qty?: number;
+  price?: number;
   entryPrice: number;
   orderSide: OrderSide;
   orderType: AlgoOrderType;
@@ -220,6 +237,8 @@ const TriggerPriceItem: FC<{
 }> = (props) => {
   const { qty, price, entryPrice, orderSide, orderType, symbolInfo } = props;
   const { t } = useTranslation();
+
+  if (qty == null || price == null) return <span>{t("tpsl.estPnl")}: --</span>;
 
   const pnl = utils.priceToPnl(
     {

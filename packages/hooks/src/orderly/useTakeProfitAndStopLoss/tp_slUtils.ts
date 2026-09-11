@@ -5,6 +5,7 @@ import { AlgoOrderType } from "@orderly.network/types";
 import {
   Decimal,
   getTPSLDirection,
+  resolveTPSLOrderType,
   todpIfNeed,
   zero,
 } from "@orderly.network/utils";
@@ -370,9 +371,14 @@ function checkTPSLOrderTypeIsMarket(
 ) {
   const keyPrefix = key.slice(0, 3);
   const orderTypeKey = `${keyPrefix}order_type` as keyof OrderlyOrder;
-  return values[orderTypeKey]
-    ? values[orderTypeKey] === OrderType.MARKET
-    : true;
+  return (
+    resolveTPSLOrderType(
+      values[orderTypeKey] as OrderType | undefined,
+      values[`${keyPrefix}order_price` as keyof OrderlyOrder] as
+        | string
+        | undefined,
+    ) !== OrderType.LIMIT
+  );
 }
 
 export function tpslCalculateHelper(
@@ -449,9 +455,14 @@ export function tpslCalculateHelper(
     offset_percentage_from_mark,
     pnl,
     order_price,
-    tpsl_order_type =
-      inputs.values[`${keyPrefix}order_type` as keyof OrderlyOrder] ??
-      OrderType.MARKET;
+    tpsl_order_type = resolveTPSLOrderType(
+      inputs.values[`${keyPrefix}order_type` as keyof OrderlyOrder] as
+        | OrderType
+        | undefined,
+      inputs.values[`${keyPrefix}order_price` as keyof OrderlyOrder] as
+        | string
+        | undefined,
+    );
 
   const entryPrice = new Decimal(inputs.entryPrice)
     .todp(options.symbol?.quote_dp ?? 2, Decimal.ROUND_UP)
@@ -589,7 +600,7 @@ export function tpslCalculateHelper(
 
     case "tp_order_type":
     case "sl_order_type": {
-      tpsl_order_type = inputs.value;
+      tpsl_order_type = inputs.value as OrderType;
       trigger_price =
         (inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] as
           | string

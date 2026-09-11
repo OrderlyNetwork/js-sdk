@@ -43,12 +43,12 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   const [{ rows: positions }] = usePositionStream(symbol);
   const position = useMemo(
     () =>
-      orderMarginMode != null
-        ? positions?.find(
-            (row) =>
-              row.symbol === symbol && row.margin_mode === orderMarginMode,
-          )
-        : positions?.[0],
+      positions?.find(
+        (row) =>
+          row.symbol === symbol &&
+          (row.margin_mode ?? MarginMode.CROSS) ===
+            (orderMarginMode ?? MarginMode.CROSS),
+      ),
     [positions, symbol, orderMarginMode],
   );
   const positionQty = position?.position_qty;
@@ -141,20 +141,21 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   };
 
   const renderTPSLQty = () => {
+    if (order.position_type === PositionType.FULL)
+      return (
+        <Flex justify="between">
+          <Text>{t("common.orderQty")}</Text>
+          <Text>{t("tpsl.entirePosition")}</Text>
+        </Flex>
+      );
     if (!positionQty || !order.order_quantity) {
       return null;
     }
-    let qty = new Decimal(order.order_quantity);
-    if (order.position_type === PositionType.FULL) {
-      qty = qty.plus(new Decimal(positionQty ?? 0));
-    }
+    const qty = new Decimal(order.order_quantity);
+
     return (
       <Flex justify={"between"}>
-        <Text>
-          {order.position_type === PositionType.FULL
-            ? t("common.positionQty")
-            : t("common.orderQty")}
-        </Text>
+        <Text>{t("common.orderQty")}</Text>
         <Text.numeral
           rule={"price"}
           dp={base_dp}

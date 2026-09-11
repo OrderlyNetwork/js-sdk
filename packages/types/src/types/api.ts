@@ -378,6 +378,10 @@ export declare namespace API {
     position_qty: number;
     cost_position: number;
     last_sum_unitary_funding: number;
+    /**
+     * Accumulated funding fee since the position was opened, returned by /v1/positions
+     */
+    accrued_funding_fee?: number;
     pending_long_qty: number;
     pending_short_qty: number;
     settle_price: number;
@@ -580,6 +584,7 @@ export declare namespace API {
 
   export interface FundingFeeRow {
     symbol: string;
+    margin_mode: MarginMode;
     funding_rate: number;
     mark_price: number;
     funding_fee: number;
@@ -789,9 +794,11 @@ export declare namespace WSMessage {
   export interface Position {
     symbol: string;
     marginMode?: MarginMode;
+    marginToken?: string;
     positionQty: number;
     costPosition: number;
     lastSumUnitaryFunding: number;
+    accruedFundingFee?: number;
     sumUnitaryFundingVersion: number;
     pendingLongQty: number;
     pendingShortQty: number;
@@ -803,10 +810,20 @@ export declare namespace WSMessage {
     markPrice: number;
     estLiqPrice: number;
     version: number;
+    /**
+     * Timestamp when the position was opened (13-digit ms)
+     */
+    timestamp?: number;
+    /**
+     * Timestamp when the position was last updated (13-digit ms)
+     */
+    updatedTime?: number;
     imr: number;
     imrwithOrders: number;
     mmrwithOrders: number;
     mmr: number;
+    leverage?: number;
+    margin?: number;
   }
 
   export interface VaultBalance {

@@ -1,87 +1,54 @@
-import { findTPSLFromOrder } from "@orderly.network/hooks";
-import { positions as perpPositions } from "@orderly.network/perp";
-import { API, OrderSide } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
-import { Decimal, formatNum, getTPSLDirection } from "@orderly.network/utils";
-import { FlexCell } from "../components/common";
+import {
+  Decimal,
+  getTPSLLeg,
+  getTPSLQuantity,
+  getTPSLEstimatePrice,
+  matchesTPSLPosition,
+} from "@orderly.network/utils";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
+import { FlexCell } from "./common";
 
 export const EstPnlRender = ({ order }: { order: API.AlgoOrder }) => {
-  const { position, base_dp, quote_dp } = useTPSLDetailContext();
-  const { tp_trigger_price, sl_trigger_price } = findTPSLFromOrder(order);
-
-  let tp_unrealPnl = undefined;
-  let sl_unrealPnl = undefined;
-  const qty = new Decimal(order.quantity).eq(0)
-    ? position.position_qty
-    : order.quantity;
-
-  const side = position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL;
-  const openPrice = position?.average_open_price;
-
-  if (tp_trigger_price) {
-    const direction = getTPSLDirection({
-      side,
-      type: "tp",
-      closePrice: tp_trigger_price,
-      orderPrice: openPrice,
-    });
-    tp_unrealPnl = formatNum
-      .pnl(
-        perpPositions.unrealizedPnL({
-          qty,
-          openPrice,
-          // markPrice: unRealizedPrice,
-          markPrice: tp_trigger_price,
-        }),
-      )
-      ?.abs()
-      .mul(direction)
-      .toNumber();
-  }
-
-  if (sl_trigger_price) {
-    const direction = getTPSLDirection({
-      side,
-      type: "sl",
-      closePrice: sl_trigger_price,
-      orderPrice: openPrice,
-    });
-    sl_unrealPnl = formatNum
-      .pnl(
-        perpPositions.unrealizedPnL({
-          qty: qty,
-          openPrice,
-          // markPrice: unRealizedPrice,
-          markPrice: sl_trigger_price,
-        }),
-      )
-      ?.abs()
-      .mul(direction)
-      .toNumber();
-  }
+  const { position } = useTPSLDetailContext();
+  const matched = matchesTPSLPosition(order, position);
   return (
     <Flex
       gap={2}
-      direction={"column"}
-      justify={"between"}
-      itemAlign={"start"}
+      direction="column"
+      justify="between"
+      itemAlign="start"
       className="oui-text-2xs"
     >
-      {tp_unrealPnl && (
-        <FlexCell>
-          <Text.numeral dp={2} rm={Decimal.ROUND_DOWN} coloring padding={false}>
-            {tp_unrealPnl}
-          </Text.numeral>
-        </FlexCell>
-      )}
-      {sl_unrealPnl && (
-        <FlexCell>
-          <Text.numeral dp={2} rm={Decimal.ROUND_DOWN} coloring padding={false}>
-            {sl_unrealPnl}
-          </Text.numeral>
-        </FlexCell>
-      )}
+      {(["tp", "sl"] as const).map((leg) => {
+        const child = getTPSLLeg(order, leg);
+        if (!child?.trigger_price) return null;
+        const qty = matched
+          ? getTPSLQuantity(child, position.position_qty)
+          : undefined;
+        const price = getTPSLEstimatePrice(child);
+        const pnl =
+          qty != null && price != null
+            ? new Decimal(price)
+                .minus(position.average_open_price)
+                .mul(qty)
+                .mul(child.side === "BUY" ? -1 : 1)
+                .toNumber()
+            : undefined;
+        return (
+          <FlexCell key={leg}>
+            <Text.numeral
+              dp={2}
+              rm={Decimal.ROUND_DOWN}
+              coloring
+              padding={false}
+            >
+              {pnl ?? "--"}
+            </Text.numeral>
+          </FlexCell>
+        );
+      })}
     </Flex>
   );
 };

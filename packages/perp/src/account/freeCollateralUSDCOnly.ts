@@ -1,4 +1,6 @@
 import { Decimal, zero } from "@orderly.network/utils";
+import { positiveCollateralContribution } from "./collateral";
+import type { NonUSDCHolding } from "./totalCollateral";
 
 export type FreeCollateralUSDCOnlyInputs = {
   /**
@@ -8,14 +10,9 @@ export type FreeCollateralUSDCOnlyInputs = {
   freeCollateral: Decimal;
   /**
    * Non-USDC token holdings; same structure as in totalCollateral.
-   * Each item contributes (capped_holding × index_price × discount) to the sum to subtract.
+   * Each positive eligible item contributes (capped effective holding × index price × collateral ratio) to the sum to subtract.
    */
-  nonUSDCHolding: {
-    holding: number;
-    indexPrice: number;
-    collateralCap: number;
-    collateralRatio: Decimal;
-  }[];
+  nonUSDCHolding: NonUSDCHolding[];
 };
 
 /**
@@ -26,7 +23,7 @@ export type FreeCollateralUSDCOnlyInputs = {
  *
  * ## Definition
  *
- * **Free Collateral (USDC Only)**: Part of free collateral that is backed only by USDC (and unsettled PNL), i.e. excluding the value of non-USDC collateral.
+ * **Free Collateral (USDC Only)**: Legacy metric representing the part of free collateral backed only by USDC (and unsettled PNL). Isolated-margin limits use total free collateral instead.
  *
  * **free_collateral**: From freeCollateral (total_collateral_value - total_initial_margin_with_orders).
  *
@@ -46,11 +43,22 @@ export function freeCollateralUSDCOnly(
   const { freeCollateral, nonUSDCHolding } = inputs;
 
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
-    const finalHolding = Math.min(cur.holding, cur.collateralCap);
-    const value = new Decimal(finalHolding)
-      .mul(cur.collateralRatio)
-      .mul(cur.indexPrice);
-    return acc.add(value);
+    const effectiveHolding = new Decimal(cur.holding)
+      .add(cur.pendingShort ?? 0)
+      .toNumber();
+
+    if (cur.isCollateral === false) {
+      return acc;
+    }
+
+    return acc.add(
+      positiveCollateralContribution({
+        collateralQty: effectiveHolding,
+        collateralCap: cur.collateralCap,
+        collateralRatio: cur.collateralRatio,
+        indexPrice: cur.indexPrice,
+      }),
+    );
   }, zero);
 
   const value = freeCollateral.sub(nonUSDCHoldingValue);

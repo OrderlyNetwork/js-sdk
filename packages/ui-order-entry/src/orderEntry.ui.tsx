@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
   ERROR_MSG_CODES,
   OrderValidationResult,
+  USDCBorrowLimitExceededError,
   useLocalStorage,
   useMemoizedFn,
   useOrderlyContext,
@@ -87,6 +88,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     walletAddress,
     isPermissionlessListing,
     symbol,
+    usdcBorrowLimit,
   } = props;
   const [maxQtyConfirmOpen, setMaxQtyConfirmOpen] = useState(false);
   const [selectedExtraId, setSelectedExtraId] = useState<string | null>(null);
@@ -209,6 +211,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           return Promise.reject();
         },
       )
+      .then((order) => {
+        const projectedBorrow = helper.getProjectedUSDCBorrow(order);
+        if (projectedBorrow !== null && projectedBorrow > usdcBorrowLimit) {
+          throw new USDCBorrowLimitExceededError(
+            projectedBorrow,
+            usdcBorrowLimit,
+          );
+        }
+        return order;
+      })
       .then((order: any) => {
         const shouldShowPermissionlessNotice =
           isPermissionlessListing &&
@@ -254,7 +266,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       })
       .then(() => {
         // validate success, submit order
-        return submit({ resetOnSuccess: false }).then((result: any) => {
+        return submit({
+          resetOnSuccess: false,
+          usdcBorrowLimit,
+        }).then((result: any) => {
           if (!result.success && result.message) {
             toast.error(result.message);
           } else if (result.success && isScaledOrder) {
@@ -266,6 +281,17 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         });
       })
       .catch((error) => {
+        if (error instanceof USDCBorrowLimitExceededError) {
+          modal.alert({
+            title: t("orderEntry.usdcBorrowLimit.title"),
+            message: t("orderEntry.usdcBorrowLimit.content", {
+              limit: new Intl.NumberFormat("en-US", {
+                maximumFractionDigits: 8,
+              }).format(error.borrowLimit),
+            }),
+          });
+          return;
+        }
         // submit order error
         if (error?.message) {
           toast.error(error.message);

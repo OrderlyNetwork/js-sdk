@@ -1,5 +1,6 @@
 import { AlgoOrder, API } from "@orderly.network/types";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { TPSLEditModal } from "../positionTPSL";
 import { useTPSLDetail } from "./tpslDetail.script";
 import { TPSLDetailProvider } from "./tpslDetailProvider";
 import { TPSLDetailUI } from "./tsplDetail.ui";
@@ -14,12 +15,23 @@ export type TPSLDetailProps = {
 export const TPSLDetailWidget = (props: TPSLDetailProps) => {
   const state = useTPSLDetail(props);
   return (
-    <TPSLDetailProvider
-      symbol={props.position.symbol}
-      position={props.position}
-    >
-      <TPSLDetailUI {...state} />
-    </TPSLDetailProvider>
+    <>
+      <TPSLDetailProvider
+        symbol={props.position.symbol}
+        position={props.position}
+      >
+        <TPSLDetailUI {...state} />
+      </TPSLDetailProvider>
+      {state.tpslEditOrder && (
+        <TPSLEditModal
+          mode={state.tpslEditMode}
+          open={state.tpslEditOpen}
+          onOpenChange={state.onTPSLEditOpenChange}
+          order={state.tpslEditOrder}
+          position={state.position}
+        />
+      )}
+    </>
   );
 };
 export const TPSLDetailDialogId = "TPSLDetailDialogId ";

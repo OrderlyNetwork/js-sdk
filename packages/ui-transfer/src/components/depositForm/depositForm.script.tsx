@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useConfig,
+  useConvertThreshold,
   useDeposit,
   useIndexPricesStream,
   useOrderlyContext,
@@ -12,7 +13,6 @@ import { useAuthGuard } from "@orderly.network/ui-connector";
 import { useActionType } from "./hooks/useActionType";
 import { useChainSelect } from "./hooks/useChainSelect";
 import { useCollateralValue } from "./hooks/useCollateralValue";
-import { useConvertThreshold } from "./hooks/useConvertThreshold";
 import { useDepositAction } from "./hooks/useDepositAction";
 import { useDepositFee } from "./hooks/useDepositFee";
 import { useDepositFormQuantities } from "./hooks/useDepositQuantities";

@@ -18,7 +18,13 @@ import { OrderSide } from "@orderly.network/types";
 import { Badge, cn, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+import {
+  isEntirePositionTPSL,
+  isPositionalTPSL,
+  getTPSLQuantity,
+} from "@orderly.network/utils";
 import { Decimal, getTrailingStopPrice } from "@orderly.network/utils";
+import { getPositionalQuantityText } from "../../../utils/util";
 import {
   getNotional,
   parseBadgesFor,
@@ -133,10 +139,7 @@ export const OrderState: FC<OrderCellState> = (props) => {
 export const Qty: FC<OrderCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
-  const isEntirePosition =
-    item.type === OrderType.CLOSE_POSITION &&
-    // @ts-ignore
-    item?.status !== OrderStatus.FILLED;
+  const isEntirePosition = isEntirePositionTPSL(item);
 
   return (
     <Statistic
@@ -150,10 +153,14 @@ export const Qty: FC<OrderCellState> = (props) => {
         dp={props.base_dp}
         padding={false}
         coloring
-        placeholder={t("tpsl.entirePosition")}
+        placeholder={isEntirePosition ? t("tpsl.entirePosition") : "--"}
         intensity={80}
       >
-        {isEntirePosition ? t("tpsl.entirePosition") : item.quantity}
+        {isEntirePosition
+          ? t("tpsl.entirePosition")
+          : isPositionalTPSL(item)
+            ? (getTPSLQuantity(item) ?? "--")
+            : item.quantity}
       </Text.numeral>
     </Statistic>
   );
@@ -568,7 +575,9 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
   const { t } = useTranslation();
 
   const quantity = useMemo(() => {
-    if (item.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+    if (isPositionalTPSL(item))
+      return <Text intensity={80}>{getPositionalQuantityText(item)}</Text>;
+    if (isEntirePositionTPSL(item)) {
       return (
         <span className="oui-text-base-contrast-80">
           {t("tpsl.entirePosition")}

@@ -101,8 +101,10 @@ export function orderFee(inputs: {
  *   - If `limit_price` is not provided: same as MARKET
  *
  * - MARKET
- *   - BUY:   `reference = Ask1`
- *   - SELL:  `reference = Bid1`
+ *   - With `markPrice` + `priceRange`: backend-aligned freezing price, i.e.
+ *     `BUY = floor(markPrice * (1 + priceRange))`,
+ *     `SELL = ceil(markPrice * (1 - priceRange))`
+ *   - Otherwise (legacy fallback): `BUY = Ask1`, `SELL = Bid1`
  *
  * - STOP MARKET
  *   - If `stop_price` provided: `reference = stop_price`
@@ -146,17 +148,63 @@ export function getOrderReferencePrice(
      */
     limitPrice?: number;
     /**
-     * @description Trigger price (for STOP_MARKET / STOP_LIMIT / TRAILING_STOP orders)
+     * Trigger price (for STOP_MARKET / STOP_LIMIT / TRAILING_STOP orders)
      */
     triggerPrice?: number;
+    /**
+     * Mark price of the symbol. When provided together with `priceRange`,
+     * MARKET orders are priced from the mark price instead of Ask1/Bid1,
+     * matching the backend risk-engine freezing reference price.
+     */
+    markPrice?: number;
+    /**
+     * Symbol `price_range` config (e.g. 0.1 = 10%) applied to `markPrice`
+     * for MARKET reference pricing.
+     */
+    priceRange?: number;
+    /**
+     * Decimal places used to round MARKET reference prices (usually quote_dp).
+     */
+    pricePrecision?: number;
   },
   askPrice: number,
   bidPrice: number,
 ): number | null {
   /**
-   * Helper: get MARKET-style reference price using best bid/ask.
+   * Helper: get MARKET-style reference price.
+   *
+   * The backend risk engine freezes MARKET orders at the mark price adjusted
+   * by the symbol price range, not at the touch: BUY rounds
+   * `markPrice * (1 + priceRange)` down, SELL rounds
+   * `markPrice * (1 - priceRange)` up. Ask1/Bid1 remain as a fallback when
+   * mark/config data is unavailable.
    */
   const getMarketRefPrice = (): number | null => {
+    const mark = isValidPrice(order.markPrice) ? order.markPrice : undefined;
+    const range =
+      typeof order.priceRange === "number" && order.priceRange > 0
+        ? order.priceRange
+        : undefined;
+
+    if (mark !== undefined && range !== undefined) {
+      const raw =
+        order.side === OrderSide.BUY
+          ? new Decimal(mark).mul(new Decimal(1).add(range))
+          : new Decimal(mark).mul(new Decimal(1).sub(range));
+
+      const rounded =
+        typeof order.pricePrecision === "number" && order.pricePrecision >= 0
+          ? raw.toDecimalPlaces(
+              order.pricePrecision,
+              order.side === OrderSide.BUY
+                ? Decimal.ROUND_FLOOR
+                : Decimal.ROUND_CEIL,
+            )
+          : raw;
+
+      return rounded.gt(0) ? rounded.toNumber() : null;
+    }
+
     if (order.side === OrderSide.BUY) {
       return askPrice > 0 ? askPrice : null;
     }

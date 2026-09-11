@@ -4,6 +4,7 @@ import { API } from "@orderly.network/types";
 import { getTimestamp } from "@orderly.network/utils";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWS } from "../useWS";
+import { mergeHoldingBalance } from "../utils/mergeHoldingBalance";
 
 export const useHoldingStream = () => {
   const ws = useWS();
@@ -39,11 +40,7 @@ export const useHoldingStream = () => {
               return prevData?.map((item) => {
                 const token = holding[item.token];
                 if (token) {
-                  return {
-                    ...item,
-                    frozen: token.frozen,
-                    holding: token.holding,
-                  };
+                  return mergeHoldingBalance(item, token);
                 }
                 return item;
               });

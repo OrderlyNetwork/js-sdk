@@ -199,12 +199,19 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
             <Flex justify={"between"}>
               <Text>{t("common.orderQty")}</Text>
               <Text.numeral
+                placeholder={
+                  order.position_type === PositionType.FULL
+                    ? t("tpsl.entirePosition")
+                    : "--"
+                }
                 rule={"price"}
                 dp={baseDP}
                 padding={false}
                 className="oui-text-base-contrast"
               >
-                {order.quantity ?? "-"}
+                {order.position_type === PositionType.FULL
+                  ? t("tpsl.entirePosition")
+                  : (order.quantity ?? "--")}
               </Text.numeral>
             </Flex>
 

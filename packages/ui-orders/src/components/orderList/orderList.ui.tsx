@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import type { API } from "@orderly.network/types";
 import {
   Flex,
   ListView,
@@ -20,6 +21,11 @@ import { OrderCellWidget } from "./mobile";
 import { OrdersBuilderState } from "./orderList.script";
 import { OrderListProvider } from "./orderListProvider";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
+
+const getOrderRowKey = <T extends API.Order | API.AlgoOrder>(item: T) =>
+  item.algo_order_id !== undefined
+    ? `algo-${item.algo_order_id}`
+    : `order-${(item as API.Order).order_id}`;
 
 export const DesktopOrderList: FC<
   OrdersBuilderState & { testIds?: { tableBody?: string } }
@@ -78,11 +84,7 @@ export const DesktopOrderList: FC<
               ),
             };
           }}
-          generatedRowKey={(record, index) =>
-            `${props.type}${index}${
-              record.order_id || record.algo_order_id
-            }_index${index}`
-          }
+          generatedRowKey={getOrderRowKey}
           renderRowContainer={(record: any, index, children) => {
             if (
               props.type === TabType.tp_sl ||
@@ -178,6 +180,7 @@ export const MobileOrderList: FC<
           className={props.classNames?.root}
           contentClassName={props.classNames?.content}
           dataSource={props.dataSource}
+          keyExtractor={getOrderRowKey}
           loadMore={props.loadMore}
           isLoading={props.isLoading}
           renderItem={(item, index) => {

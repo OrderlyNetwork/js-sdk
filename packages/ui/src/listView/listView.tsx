@@ -9,6 +9,12 @@ import { useEndReached } from "./useEndReached";
 export interface ListViewProps<T, D> {
   dataSource: T[] | null | undefined;
   renderItem: (item: T, index: number, extraData?: D) => React.ReactNode;
+  /**
+   * Extract a stable key from each item. Must be unique among items and
+   * stable across reorders/removals; defaults to the array index, which is
+   * only safe for static or append-only lists.
+   */
+  keyExtractor?: (item: T, index: number) => React.Key;
   className?: string;
   contentClassName?: string;
   isLoading?: boolean;
@@ -61,11 +67,20 @@ const ListViewInner = <T, D>(props: ListViewProps<T, D>, ref: ListViewRef) => {
     }
 
     return props.dataSource.map((item, index) => (
-      <React.Fragment key={index}>
+      <React.Fragment
+        key={props.keyExtractor ? props.keyExtractor(item, index) : index}
+      >
         {props.renderItem(item, index, props.extraData)}
       </React.Fragment>
     ));
-  }, [emptyDataSouce, props.dataSource, props.extraData, props.emptyView]);
+  }, [
+    emptyDataSouce,
+    props.dataSource,
+    props.extraData,
+    props.emptyView,
+    props.keyExtractor,
+    props.renderItem,
+  ]);
 
   const loadingViewElement = useMemo(() => {
     if ((props.dataSource?.length || 0) === 0) return null;

@@ -18,7 +18,15 @@ export const TriggerPriceCell = (props: {
   const { order } = props;
   const originValue = order.trigger_price?.toString();
 
+  const [previousOriginValue, setPreviousOriginValue] =
+    useState<string>(originValue);
   const [value, setValue] = useState<string>(originValue);
+
+  if (previousOriginValue !== originValue) {
+    setPreviousOriginValue(originValue);
+    setValue(originValue);
+  }
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const disabled = props.disabled || order.is_triggered;

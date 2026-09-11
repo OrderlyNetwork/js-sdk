@@ -25,6 +25,7 @@ export const PNLInput = (props: PNLInputProps) => {
     quote_dp,
     value,
     pnl,
+    disabled,
   } = props;
 
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -57,6 +58,7 @@ export const PNLInput = (props: PNLInputProps) => {
       placeholder={placeholder}
       align={"right"}
       value={value}
+      disabled={disabled}
       data-testid={props.testId}
       autoComplete={"off"}
       onValueChange={onValueChange}
@@ -70,7 +72,10 @@ export const PNLInput = (props: PNLInputProps) => {
       classNames={{
         input: cn("oui-text-2xs", color),
         prefix: "oui-text-base-contrast-54 oui-text-2xs",
-        root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
+        root: cn(
+          "oui-outline-line-12 focus-within:oui-outline-primary-light",
+          disabled && "oui-bg-base-6 oui-opacity-50 oui-cursor-not-allowed",
+        ),
       }}
       onFocus={() => {
         setIsInputFocused(true);
@@ -95,6 +100,7 @@ export const PNLInput = (props: PNLInputProps) => {
               </Text>
             )}
           <PNLMenus
+            disabled={disabled}
             mode={mode}
             modes={modes}
             onModeChange={(item) => onModeChange(item.value as PnLMode)}
@@ -106,10 +112,23 @@ export const PNLInput = (props: PNLInputProps) => {
 };
 
 const PNLMenus = (props: {
+  disabled?: boolean;
   mode?: string;
   modes: MenuItem[];
   onModeChange: (value: MenuItem) => void;
 }) => {
+  if (props.disabled) {
+    return (
+      <button
+        type="button"
+        className="oui-p-2 oui-text-base-contrast-54 oui-cursor-not-allowed"
+        disabled
+      >
+        <CaretDownIcon size={12} color="inherit" />
+      </button>
+    );
+  }
+
   return (
     <SimpleDropdownMenu
       currentValue={props.mode}
@@ -117,10 +136,14 @@ const PNLMenus = (props: {
       align={"end"}
       size={"xs"}
       className={"oui-min-w-[120px]"}
-      onSelect={(item) => props.onModeChange(item as MenuItem)}
+      onSelect={(item) => {
+        if (!props.disabled) {
+          props.onModeChange(item as MenuItem);
+        }
+      }}
     >
-      <button className={"oui-p-2"}>
-        <CaretDownIcon size={12} color={"white"} />
+      <button type="button" className="oui-p-2">
+        <CaretDownIcon size={12} color="white" />
       </button>
     </SimpleDropdownMenu>
   );

@@ -331,8 +331,9 @@ export const FundingFee: FC<PositionHistoryCellState> = (props) => {
         symbol={props.item.symbol}
         start_t={props.item.open_timestamp.toString()}
         end_t={(
-          props.item.close_timestamp || props.item.last_update_time
-        )?.toString()}
+          props.item.close_timestamp ?? props.item.last_update_time
+        ).toString()}
+        marginMode={props.item.margin_mode}
       />
     </Flex>
   );

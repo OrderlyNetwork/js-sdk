@@ -26,6 +26,7 @@ export type PNL_Values = {
 
 export type BuilderProps = {
   type: "TP" | "SL";
+  disabled?: boolean;
 
   quote_dp?: number;
   onChange: (key: string, value: number | string) => void;
@@ -109,7 +110,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
-    props.onChange(key, value);
+    if (!props.disabled) {
+      props.onChange(key, value);
+    }
   };
 
   const formatter = (options: {
@@ -273,8 +276,11 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     type: props.type,
     formatter,
     onModeChange: (mode: PnLMode) => {
-      setMode(mode);
+      if (!props.disabled) {
+        setMode(mode);
+      }
     },
+    disabled: props.disabled,
     value,
     pnl: values[PnLMode.PnL],
     onValueChange,
