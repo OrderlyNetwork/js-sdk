@@ -3,6 +3,9 @@ export const positions = {
   "positions.fundingFee.title": "Funding Fee",
   "positions.fundingFee.tooltip":
     "Total funding fees from closed positions only, including partially closed portions.",
+  "positions.unsettledFundingFee": "Unsettled funding fee",
+  "positions.unsettledFundingFee.tooltip":
+    "Funding fees accrued since the most recent settlement or position cost update. After settlement or position adjustments, the amount is incorporated into the position cost and starts accruing again. It does not represent the total funding fees since the position was opened.",
   "positions.fundingRate.tooltip":
     "Funding fee amount for each funding interval during the time the position was open. Records may include funding fees from both closed positions and currently open positions.",
   "positions.liquidation": "Liquidation",

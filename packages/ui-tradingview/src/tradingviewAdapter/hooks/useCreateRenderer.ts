@@ -14,6 +14,10 @@ import {
   MarginMode,
   OrderStatus,
 } from "@orderly.network/types";
+import {
+  matchesTPSLPosition,
+  withTPSLProvenance,
+} from "@orderly.network/utils";
 import { DisplayControlSettingInterface } from "../../type";
 import { Renderer } from "../renderer/renderer";
 import { AlgoType } from "../type";
@@ -192,8 +196,11 @@ export default function useCreateRenderer(
       return;
     }
 
-    const symbolPosition = positions.find((item) => item.symbol === symbol);
-    pendingOrders?.forEach((order) => {
+    pendingOrders?.forEach((rawOrder) => {
+      const order = withTPSLProvenance(rawOrder);
+      const symbolPosition = positions.find((item) =>
+        matchesTPSLPosition(order, item),
+      );
       if (symbol !== order.symbol) {
         return;
       }
@@ -211,16 +218,14 @@ export default function useCreateRenderer(
             }
           }
         } else if (order.algo_type === AlgoType.TP_SL) {
-          if (symbolPosition) {
-            for (const child_order of order.child_orders) {
-              child_order.root_algo_order_algo_type = order.algo_type;
-              child_order.position_qty = symbolPosition.position_qty;
-              if (
-                child_order.trigger_price &&
-                child_order.status !== OrderStatus.FILLED
-              ) {
-                tpslOrder.push(child_order);
-              }
+          for (const child_order of order.child_orders) {
+            child_order.root_algo_order_algo_type = order.algo_type;
+            child_order.position_qty = symbolPosition?.position_qty;
+            if (
+              child_order.trigger_price &&
+              child_order.status !== OrderStatus.FILLED
+            ) {
+              tpslOrder.push(child_order);
             }
           }
         } else if (
@@ -230,6 +235,27 @@ export default function useCreateRenderer(
           stopOrder.push(order);
         } else if (order.algo_type === AlgoType.BRACKET) {
           bracketOrder.push(order);
+          for (const parent of order.child_orders ?? []) {
+            for (const child of parent.child_orders ?? []) {
+              if (
+                !child.trigger_price ||
+                [
+                  OrderStatus.FILLED,
+                  OrderStatus.CANCELLED,
+                  OrderStatus.REJECTED,
+                ].includes(child.algo_status)
+              )
+                continue;
+              const lineOrder = {
+                ...child,
+                root_algo_order_algo_type: parent.algo_type,
+                position_qty: symbolPosition?.position_qty,
+              };
+              if (parent.algo_type === AlgoType.POSITIONAL_TP_SL)
+                positionTpsl.push(lineOrder);
+              else tpslOrder.push(lineOrder);
+            }
+          }
         } else if (order.algo_type === AlgoType.TRAILING_STOP) {
           if (order.is_activated && order.extreme_price) {
             trailingStopOrder.push(order);

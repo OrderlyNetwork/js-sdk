@@ -39,11 +39,9 @@ export const tpsl = {
   "tpsl.positionType.full": "TP/SL: Full position",
   "tpsl.positionType.partial": "TP/SL: Partial position",
   "tpsl.positionType.full.tips":
-    "TPSL (full) applies to the full position. Newly activated TPSL (full) orders will overwrite previous orders. Full position will be market closed when the price is triggered.",
+    "Full-position TP/SL closes the position using a market or limit order. Its quantity is determined when triggered. A triggered limit order keeps that quantity even if the position changes, and may not fill immediately.",
   "tpsl.positionType.partial.tips":
-    "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL.",
-  "tpsl.positionType.full.tips.market":
-    "Full-position TP/SL orders are market only",
+    "Partial TP/SL closes the specified quantity using a market or limit order when the mark price reaches the trigger price.",
   "tpsl.advanced.ROI":
     "When the mark price reaches <0/>, it will trigger a <1/> order, and estimated PnL will be <2/> and ROI is <3/>.",
   "tpsl.advanced.submit": "Submit",

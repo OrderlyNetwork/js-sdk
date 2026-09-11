@@ -22,7 +22,18 @@ export default function useEditOrder(onToast: any) {
           ];
 
           // @ts-ignore
-          return updateTPSLOrder(order.root_algo_order_id, algoParams)
+          return updateTPSLOrder(
+            order.root_algo_order_id,
+            order.parent_algo_order_id &&
+              order.parent_algo_order_id !== order.root_algo_order_id
+              ? [
+                  {
+                    order_id: order.parent_algo_order_id,
+                    child_orders: algoParams,
+                  },
+                ]
+              : algoParams,
+          )
             .then((res) => {})
             .catch((e) => {
               if (onToast) {
@@ -109,6 +120,6 @@ export default function useEditOrder(onToast: any) {
           onToast.error(e.message);
         });
     },
-    [updateOrder],
+    [updateOrder, updateAlgoOrder, updateTPSLOrder, onToast],
   );
 }

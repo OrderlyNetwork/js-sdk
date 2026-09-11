@@ -18,19 +18,9 @@ const usePositionMargin = (
    */
   finalMargin: number,
 ) => {
-  const { freeCollateral, freeCollateralUSDCOnly, usdcHolding } = useCollateral(
-    {
-      dp: 2,
-    },
-  );
+  const { freeCollateral } = useCollateral({ dp: 2 });
 
   const positions = usePositions();
-
-  const total_cross_unsettled_pnl = useMemo(() => {
-    return positions
-      ?.filter((item) => (item.margin_mode ?? "CROSS") === "CROSS")
-      .reduce((acc, item) => acc.add(item.unsettled_pnl), new Decimal(0));
-  }, [positions]);
 
   // sum_unitary_funding >> fundingRates.sybmol.sum_unitary_funding
 
@@ -88,9 +78,7 @@ const usePositionMargin = (
 
   const maxAmount = useMemo(() => {
     if (isAdd) {
-      if (!freeCollateralUSDCOnly) return null;
-      // Max add = max(0, free_collateral_usdc_only)
-      return Math.max(0, freeCollateralUSDCOnly);
+      return Math.max(0, freeCollateral);
     }
     if (
       !imr ||
@@ -112,10 +100,11 @@ const usePositionMargin = (
       positionUnsettledPnL: unsettledPnlValue,
     });
   }, [
-    total_cross_unsettled_pnl,
-    usdcHolding,
     isAdd,
     freeCollateral,
+    imr,
+    notional,
+    currentPosition,
     unSettledPnl,
     isolatedMargin,
   ]);

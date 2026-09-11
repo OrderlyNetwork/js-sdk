@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -7,6 +7,8 @@ import { Decimal } from "@orderly.network/utils";
 import usePositionMargin from "./hooks/usePositionMargin";
 
 export type AdjustMarginTab = "add" | "reduce";
+
+type AmountInputSource = "input" | "slider";
 
 export interface AdjustMarginScriptProps {
   position: API.PositionTPSLExt;
@@ -42,6 +44,8 @@ export const useAdjustMarginScript = (
   const [tab, setTab] = useState<AdjustMarginTab>("add");
   const [inputValue, setInputValue] = useState("");
   const [sliderValue, setSliderValue] = useState(0);
+  const lastInputSource = useRef<AmountInputSource>("input");
+  const selectedSliderValue = useRef(0);
 
   const [updateMargin, { isMutating: isLoading }] = useMutation(
     "/v1/position_margin",
@@ -67,76 +71,102 @@ export const useAdjustMarginScript = (
     finalMargin,
   );
 
-  const syncSliderFromInput = useCallback(
-    (value: string) => {
-      if (!value) {
-        setSliderValue(0);
-        return;
-      }
-      if (!maxAmount) return;
-      const val = new Decimal(value);
-      if (maxAmount === 0) {
-        setSliderValue(0);
-        return;
-      }
-      const percent = val.div(maxAmount).mul(100).toNumber();
-      setSliderValue(Math.min(100, Math.max(0, percent)));
-    },
-    [maxAmount],
-  );
+  const previousMaxAmount = useRef(maxAmount);
 
-  const syncInputFromSlider = useCallback(
-    (value: number) => {
-      if (!maxAmount) return;
-      const val = new Decimal(maxAmount).mul(value).div(100);
-      setInputValue(val.toFixed(2, Decimal.ROUND_DOWN));
-    },
-    [maxAmount],
-  );
+  useEffect(() => {
+    if (Object.is(previousMaxAmount.current, maxAmount)) return;
+    previousMaxAmount.current = maxAmount;
+
+    if (maxAmount === null || maxAmount <= 0) {
+      setInputValue("");
+      setSliderValue(0);
+      lastInputSource.current = "input";
+      selectedSliderValue.current = 0;
+      return;
+    }
+
+    if (lastInputSource.current === "slider") {
+      const nextValue = new Decimal(maxAmount)
+        .mul(selectedSliderValue.current)
+        .div(100);
+      setInputValue(nextValue.toFixed(2, Decimal.ROUND_DOWN));
+      return;
+    }
+
+    if (!inputValue) {
+      setSliderValue(0);
+      return;
+    }
+
+    const inputAmount = new Decimal(inputValue);
+    const nextValue = inputAmount.gt(maxAmount)
+      ? new Decimal(maxAmount).toFixed(2, Decimal.ROUND_DOWN)
+      : inputValue;
+    const nextSliderValue = new Decimal(nextValue)
+      .div(maxAmount)
+      .mul(100)
+      .toNumber();
+
+    setInputValue(nextValue);
+    setSliderValue(Math.min(100, Math.max(0, nextSliderValue)));
+  }, [inputValue, maxAmount]);
 
   const onInputChange = useCallback(
     (value: string) => {
       let finalValue = value;
 
-      // If maxAmount exists, limit input value to not exceed maxAmount
-      if (maxAmount && value) {
+      if (maxAmount !== null && value) {
         const inputDecimal = new Decimal(value);
         if (inputDecimal.gt(maxAmount)) {
           finalValue = new Decimal(maxAmount).toFixed(2, Decimal.ROUND_DOWN);
         }
       }
 
+      lastInputSource.current = "input";
       setInputValue(finalValue);
-      syncSliderFromInput(finalValue);
+
+      const nextSliderValue =
+        finalValue && maxAmount
+          ? new Decimal(finalValue).div(maxAmount).mul(100).toNumber()
+          : 0;
+      setSliderValue(Math.min(100, Math.max(0, nextSliderValue)));
     },
-    [syncSliderFromInput, maxAmount],
+    [maxAmount],
   );
 
   const onSliderChange = useCallback(
     (value: number) => {
+      if (!maxAmount) return;
+
+      lastInputSource.current = "slider";
+      selectedSliderValue.current = value;
       setSliderValue(value);
-      syncInputFromSlider(value);
+
+      const nextValue = new Decimal(maxAmount).mul(value).div(100);
+      setInputValue(nextValue.toFixed(2, Decimal.ROUND_DOWN));
     },
-    [syncInputFromSlider],
+    [maxAmount],
   );
 
   const onTabChange = useCallback((nextTab: AdjustMarginTab) => {
     setTab(nextTab);
     setInputValue("");
     setSliderValue(0);
+    lastInputSource.current = "input";
+    selectedSliderValue.current = 0;
   }, []);
 
   const canConfirm = useMemo(() => {
-    if (!inputValue) return false;
+    if (!inputValue || maxAmount === null || maxAmount <= 0) return false;
     const value = new Decimal(inputValue);
-    return !value.isZero() && value.isPositive();
-  }, [inputValue]);
+    return value.isPositive() && value.lte(maxAmount);
+  }, [inputValue, maxAmount]);
 
   const onConfirm = useCallback(async () => {
     if (!inputValue || new Decimal(inputValue).isZero()) return;
 
     // Validate if input value exceeds maxAmount
-    if (maxAmount) {
+    if (maxAmount !== null) {
       const inputDecimal = new Decimal(inputValue);
       if (inputDecimal.gt(maxAmount)) {
         toast.error(t("positions.adjustMargin.marginCannotMoreThanMax"));

@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useBoolean } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import {
   SimpleDialog,
   SimpleSheet,
@@ -9,19 +10,54 @@ import {
 } from "@orderly.network/ui";
 import { FundingFeeHistoryUI } from "./fundingFeeHistory.ui";
 
-export const FundingFeeButton: FC<{
-  fee: number;
+type FundingFeeButtonProps = {
+  fee?: number;
   symbol: string;
   start_t: string;
-  end_t: string;
-}> = ({ fee, symbol, start_t, end_t }) => {
+  marginMode?: MarginMode;
+} & (
+  | {
+      feeType?: "closed";
+      end_t: string;
+    }
+  | {
+      feeType: "unsettled";
+      end_t?: string;
+    }
+);
+
+export const FundingFeeButton: FC<FundingFeeButtonProps> = ({
+  fee,
+  symbol,
+  start_t,
+  end_t,
+  feeType = "closed",
+  marginMode,
+}) => {
   const { t } = useTranslation();
   const [isOpen, { setTrue, setFalse }] = useBoolean(false);
+  const [requestEndTime, setRequestEndTime] = useState(end_t);
   const { isMobile } = useScreen();
+
+  const openFundingFeeHistory = () => {
+    setRequestEndTime(end_t ?? Date.now().toString());
+    setTrue();
+  };
+
+  const history = isOpen && requestEndTime && (
+    <FundingFeeHistoryUI
+      total={fee}
+      symbol={symbol}
+      start_t={start_t}
+      end_t={requestEndTime}
+      feeType={feeType}
+      marginMode={marginMode}
+    />
+  );
 
   return (
     <>
-      <button onClick={setTrue}>
+      <button onClick={openFundingFeeHistory}>
         <Text.numeral
           rule="price"
           coloring
@@ -29,7 +65,7 @@ export const FundingFeeButton: FC<{
           ignoreDP
           className="oui-border-b oui-border-line-16 oui-border-dashed oui-py-0.5"
         >
-          {fee}
+          {fee ?? "--"}
         </Text.numeral>
       </button>
       {isMobile ? (
@@ -41,12 +77,7 @@ export const FundingFeeButton: FC<{
             body: "oui-max-h-[80vh] oui-py-0",
           }}
         >
-          <FundingFeeHistoryUI
-            total={fee}
-            symbol={symbol}
-            start_t={start_t}
-            end_t={end_t}
-          />
+          {history}
         </SimpleSheet>
       ) : (
         <SimpleDialog
@@ -58,12 +89,7 @@ export const FundingFeeButton: FC<{
             body: "oui-max-h-[80vh] oui-bg-base-8 lg:oui-py-0",
           }}
         >
-          <FundingFeeHistoryUI
-            total={fee}
-            symbol={symbol}
-            start_t={start_t}
-            end_t={end_t}
-          />
+          {history}
         </SimpleDialog>
       )}
     </>

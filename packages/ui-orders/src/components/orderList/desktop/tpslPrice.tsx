@@ -77,11 +77,14 @@ export function getTPSLOrderPrice(order: any) {
       ? {}
       : findTPSLFromOrder(order);
 
+  const prices = findTPSLOrderPriceFromOrder(order);
+  const displayPrice = (price: number | OrderType | undefined) =>
+    price === OrderType.MARKET ? i18n.t("common.marketPrice") : (price ?? "--");
   const tpTriggerPrice = tp_trigger_price
-    ? `${i18n.t("tpsl.tp")} - ${i18n.t("common.marketPrice")}`
+    ? `${i18n.t("tpsl.tp")} - ${displayPrice(prices.tp_order_price)}`
     : undefined;
   const slTriggerPrice = sl_trigger_price
-    ? `${i18n.t("tpsl.sl")} - ${i18n.t("common.marketPrice")}`
+    ? `${i18n.t("tpsl.sl")} - ${displayPrice(prices.sl_order_price)}`
     : undefined;
 
   return { tpTriggerPrice, slTriggerPrice };

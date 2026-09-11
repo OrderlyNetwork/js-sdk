@@ -328,6 +328,7 @@ function useCalc(inputs: {
   );
   const [positions] = usePositionStream("all", {
     calcMode: unPnlPriceBasis,
+    includedPendingOrder: true,
   });
 
   const position = useMemo(() => {
@@ -399,10 +400,8 @@ function useCalc(inputs: {
         return acc;
       }, {}) ?? {};
 
-    // TODO: Pass actual orders data for accurate initial margin calculation
     const totalInitialMarginWithOrders = accountPerp.totalInitialMarginWithQty({
       positions: positionList,
-      orders: [],
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
       maxLeverageBySymbol,

@@ -69,22 +69,39 @@ export function getOrderPrice(
 export const getOrderReferencePrice = orderUtils.getOrderReferencePrice;
 
 /**
+ * Context required to price MARKET orders the same way the backend risk
+ * engine does (mark price +/- symbol price range instead of Ask1/Bid1).
+ */
+export type MarketReferencePriceContext = {
+  /** Mark price of the symbol */
+  markPrice?: number;
+  /** Symbol `price_range` config, e.g. 0.1 = 10% */
+  priceRange?: number;
+  /** Decimal places to round the MARKET reference price to (usually quote_dp) */
+  pricePrecision?: number;
+};
+
+/**
  * Adapter to calculate reference price directly from an `OrderlyOrder`
  * and the best bid / ask prices from orderbook.
  *
  * @param order    Partial order entity (side / type / price fields)
  * @param askAndBid `[Ask1, Bid1]` tuple
+ * @param marketContext Mark price / price range context for backend-aligned
+ *   MARKET reference pricing; when omitted MARKET falls back to Ask1/Bid1
  * @returns Reference price or null when it cannot be determined
  */
 export function getOrderReferencePriceFromOrder(
   order: Partial<OrderlyOrder>,
   askAndBid: number[],
+  marketContext?: MarketReferencePriceContext,
 ): number | null {
-  if (!askAndBid || askAndBid.length < 2) return null;
-
   if (!order.order_type || !order.side) {
     return null;
   }
+
+  const askPrice = askAndBid?.[0] ?? 0;
+  const bidPrice = askAndBid?.[1] ?? 0;
 
   return orderUtils.getOrderReferencePrice(
     {
@@ -95,9 +112,12 @@ export function getOrderReferencePriceFromOrder(
       triggerPrice: order.trigger_price
         ? Number(order.trigger_price)
         : undefined,
+      markPrice: marketContext?.markPrice,
+      priceRange: marketContext?.priceRange,
+      pricePrecision: marketContext?.pricePrecision,
     },
-    askAndBid[0],
-    askAndBid[1],
+    askPrice,
+    bidPrice,
   );
 }
 

@@ -1,4 +1,5 @@
 import { i18n } from "@orderly.network/i18n";
+import { isEntirePositionTPSL, isTPSLTriggered } from "@orderly.network/utils";
 import {
   Decimal,
   commify,
@@ -269,9 +270,10 @@ export class OrderLineService {
         isPositionTpsl(pendingOrder) ||
         isActivatedQuantityTpsl(pendingOrder);
       if (isTpsl) {
-        const percentStr =
-          isActivatedPositionTpsl(pendingOrder) || isPositionTpsl(pendingOrder)
-            ? "100%"
+        const percentStr = isEntirePositionTPSL(pendingOrder)
+          ? "100%"
+          : isTPSLTriggered(pendingOrder) || !pendingOrder.position_qty
+            ? ""
             : (() => {
                 const qty = new Decimal(pendingOrder.quantity).minus(
                   pendingOrder.executed ?? 0,
@@ -293,7 +295,7 @@ export class OrderLineService {
           qty != null
             ? commify(new Decimal(qty).todp(baseDp).toString())
             : textDash;
-        return `${qtyStr} (${percentStr})`;
+        return percentStr ? `${qtyStr} (${percentStr})` : qtyStr;
       }
     }
     return commify(new Decimal(pendingOrder.quantity).toString());
@@ -375,6 +377,7 @@ export class OrderLineService {
   }
 
   static getOrderEditKey(pendingOrder: any) {
+    if (isTpslOrder(pendingOrder)) return "trigger_price";
     const orderCombinationType = this.getCombinationType(pendingOrder);
 
     if (

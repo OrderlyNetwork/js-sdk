@@ -1,8 +1,10 @@
 import { describe, expect, it, test } from "@jest/globals";
+import { OrderSide, OrderType } from "@orderly.network/types";
 import {
   estLeverage,
   estLiqPrice,
   estLiqPriceIsolated,
+  getOrderReferencePrice,
   orderFee,
 } from "../src/order";
 
@@ -237,6 +239,129 @@ describe("order", () => {
     //   };
     //   expect(estLiqPrice(inputs)).toBe(5472);
     // });
+  });
+
+  describe("getOrderReferencePrice", () => {
+    const ask = 100.2;
+    const bid = 100.1;
+
+    it("prices MARKET BUY from mark + priceRange instead of Ask1", () => {
+      const price = getOrderReferencePrice(
+        {
+          orderType: OrderType.MARKET,
+          side: OrderSide.BUY,
+          markPrice: 100,
+          priceRange: 0.05,
+          pricePrecision: 2,
+        },
+        ask,
+        bid,
+      );
+      // floor(100 * 1.05)
+      expect(price).toBe(105);
+    });
+
+    it("prices MARKET SELL from mark - priceRange instead of Bid1", () => {
+      const price = getOrderReferencePrice(
+        {
+          orderType: OrderType.MARKET,
+          side: OrderSide.SELL,
+          markPrice: 100,
+          priceRange: 0.05,
+          pricePrecision: 2,
+        },
+        ask,
+        bid,
+      );
+      // ceil(100 * 0.95)
+      expect(price).toBe(95);
+    });
+
+    it("rounds MARKET BUY down and MARKET SELL up at pricePrecision", () => {
+      const buy = getOrderReferencePrice(
+        {
+          orderType: OrderType.MARKET,
+          side: OrderSide.BUY,
+          markPrice: 100.123,
+          priceRange: 0.05,
+          pricePrecision: 2,
+        },
+        ask,
+        bid,
+      );
+      // 105.12915 -> floor 105.12
+      expect(buy).toBe(105.12);
+
+      const sell = getOrderReferencePrice(
+        {
+          orderType: OrderType.MARKET,
+          side: OrderSide.SELL,
+          markPrice: 100.123,
+          priceRange: 0.05,
+          pricePrecision: 2,
+        },
+        ask,
+        bid,
+      );
+      // 95.11685 -> ceil 95.12
+      expect(sell).toBe(95.12);
+    });
+
+    it("falls back to Ask1/Bid1 when mark price or price range is missing", () => {
+      expect(
+        getOrderReferencePrice(
+          { orderType: OrderType.MARKET, side: OrderSide.BUY },
+          ask,
+          bid,
+        ),
+      ).toBe(ask);
+      expect(
+        getOrderReferencePrice(
+          { orderType: OrderType.MARKET, side: OrderSide.SELL },
+          ask,
+          bid,
+        ),
+      ).toBe(bid);
+      // mark price without a positive price range still falls back
+      expect(
+        getOrderReferencePrice(
+          {
+            orderType: OrderType.MARKET,
+            side: OrderSide.BUY,
+            markPrice: 100,
+            priceRange: 0,
+          },
+          ask,
+          bid,
+        ),
+      ).toBe(ask);
+    });
+
+    it("keeps LIMIT BUY at the submitted price and LIMIT SELL at max(limit, Bid1)", () => {
+      expect(
+        getOrderReferencePrice(
+          {
+            orderType: OrderType.LIMIT,
+            side: OrderSide.BUY,
+            limitPrice: 99,
+          },
+          ask,
+          bid,
+        ),
+      ).toBe(99);
+      // crossing SELL (limit below Bid1) uses Bid1
+      expect(
+        getOrderReferencePrice(
+          {
+            orderType: OrderType.LIMIT,
+            side: OrderSide.SELL,
+            limitPrice: 99,
+          },
+          ask,
+          bid,
+        ),
+      ).toBe(bid);
+    });
   });
 
   describe("estLiqPriceIsolated", () => {

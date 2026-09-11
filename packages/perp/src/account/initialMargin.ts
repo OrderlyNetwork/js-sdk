@@ -99,7 +99,8 @@ function IMR(inputs: {
  * Formula: total_initial_margin_with_orders = sum(cross_position_notional_with_orders_i * cross_IMR_i)
  *
  * @param positions - All positions (will be filtered to cross margin only)
- * @param orders - All orders (will be filtered to cross margin only)
+ * @param orders - All orders (will be filtered to cross margin only). When
+ * omitted, pending quantities aggregated on cross positions are used instead.
  * @param markPrices - Mark prices by symbol
  * @param symbolInfo - Symbol info accessor
  * @param IMR_Factors - IMR factors by symbol
@@ -107,7 +108,7 @@ function IMR(inputs: {
  */
 export function totalInitialMarginWithQty(inputs: {
   positions: API.Position[];
-  orders: API.Order[];
+  orders?: API.Order[];
   markPrices: { [key: string]: number };
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
@@ -126,9 +127,10 @@ export function totalInitialMarginWithQty(inputs: {
   const crossPositions = positions.filter(
     (p) => p.margin_mode !== MarginMode.ISOLATED,
   );
-  const crossOrders = orders.filter(
+  const crossOrders = (orders ?? []).filter(
     (o) => o.margin_mode !== MarginMode.ISOLATED,
   );
+  const usePositionPendingQty = orders === undefined;
   const crossLeverageBySymbol = crossPositions.reduce<Record<string, number>>(
     (acc, position) => {
       if (!acc[position.symbol] && position.leverage) {
@@ -148,16 +150,20 @@ export function totalInitialMarginWithQty(inputs: {
     .map((symbol) => {
       const positionQty = getQtyFromPositions(crossPositions, symbol);
       const markPrice = markPrices[symbol] || 0;
-      const buyOrdersQty = getQtyFromOrdersBySide(
-        crossOrders,
-        symbol,
-        OrderSide.BUY,
-      );
-      const sellOrdersQty = getQtyFromOrdersBySide(
-        crossOrders,
-        symbol,
-        OrderSide.SELL,
-      );
+      const buyOrdersQty = usePositionPendingQty
+        ? getPendingOrderQtyFromPositions(
+            crossPositions,
+            symbol,
+            "pending_long_qty",
+          )
+        : getQtyFromOrdersBySide(crossOrders, symbol, OrderSide.BUY);
+      const sellOrdersQty = usePositionPendingQty
+        ? getPendingOrderQtyFromPositions(
+            crossPositions,
+            symbol,
+            "pending_short_qty",
+          )
+        : getQtyFromOrdersBySide(crossOrders, symbol, OrderSide.SELL);
       const symbolMaxLeverage =
         crossLeverageBySymbol[symbol] ?? maxLeverageBySymbol?.[symbol] ?? 1;
 
@@ -173,6 +179,20 @@ export function totalInitialMarginWithQty(inputs: {
       });
     })
     .reduce((acc, margin) => acc.add(margin), zero)
+    .toNumber();
+}
+
+function getPendingOrderQtyFromPositions(
+  positions: API.Position[],
+  symbol: string,
+  field: "pending_long_qty" | "pending_short_qty",
+): number {
+  return positions
+    .filter((position) => position.symbol === symbol)
+    .reduce(
+      (total, position) => total.add(Math.max(position[field] ?? 0, 0)),
+      zero,
+    )
     .toNumber();
 }
 

@@ -1,5 +1,6 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import {
   cn,
   DataFilter,
@@ -20,6 +21,13 @@ import {
 
 type PositionHistoryProps = PositionHistoryState & {
   sharePnLConfig?: SharePnLConfig;
+};
+
+// position_id may be duplicated, so include symbol, margin mode, and open timestamp.
+const getPositionHistoryRowKey = (record: PositionHistoryExt) => {
+  const marginMode = record.margin_mode ?? MarginMode.CROSS;
+
+  return `${record.position_id}-${record.symbol}-${marginMode}-${record.open_timestamp}`;
 };
 
 export const PositionHistory: FC<PositionHistoryProps> = (props) => {
@@ -89,9 +97,7 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
         columns={column}
         bordered
         dataSource={props.dataSource}
-        generatedRowKey={(record: PositionHistoryExt, index) =>
-          `${record.symbol}_${record.position_id}_${index}`
-        }
+        generatedRowKey={getPositionHistoryRowKey}
         renderRowContainer={(record: any, index: number, children: any) => (
           <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
         )}
@@ -147,6 +153,7 @@ export const MobilePositionHistory: FC<
         )}
         contentClassName={cn("!oui-space-y-1", props.classNames?.content)}
         dataSource={props.dataSource}
+        keyExtractor={getPositionHistoryRowKey}
         renderItem={(item, index) => (
           <SymbolProvider symbol={item.symbol}>
             <PositionHistoryCellWidget

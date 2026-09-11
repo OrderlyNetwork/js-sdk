@@ -1,7 +1,14 @@
-import { FC, useCallback, useMemo } from "react";
+import {
+  FC,
+  type MutableRefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { EMPTY_LIST, MarginMode } from "@orderly.network/types";
 import {
   Grid,
   Statistic,
@@ -14,10 +21,12 @@ import {
   Tooltip,
   ExclamationFillIcon,
   modal,
+  Spinner,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { SymbolBadge } from "../positions/desktop/symbolBadge";
 import { EndReachedBox } from "./endReachedBox";
+import { negateFee } from "./negateFee";
 
 type FundingFeeHistory = {
   created_time: number;
@@ -27,69 +36,122 @@ type FundingFeeHistory = {
   payment_type: "Pay" | "Receive";
   status: "Accrued" | "Settled";
   symbol: string;
+  margin_mode: MarginMode;
   updated_time: number;
 };
 
 const PAGE_SIZE = 60;
+const LOAD_MORE_THRESHOLD = 300;
 
 export const FundingFeeHistoryUI: FC<{
-  total: number;
+  total?: number;
   symbol: string;
   start_t: string;
   end_t: string;
-}> = ({ total, symbol, start_t, end_t }) => {
+  feeType?: "closed" | "unsettled";
+  marginMode?: MarginMode;
+}> = ({ total, symbol, start_t, end_t, feeType = "closed", marginMode }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+  const isUnsettled = feeType === "unsettled";
+  const feeLabel = t(
+    isUnsettled ? "positions.unsettledFundingFee" : "funding.fundingFee",
+  );
+  const feeTooltip = t(
+    isUnsettled
+      ? "positions.unsettledFundingFee.tooltip"
+      : "positions.fundingFee.tooltip",
+  );
 
-  const { isLoading, data, setSize } =
-    usePrivateInfiniteQuery<FundingFeeHistory>(
-      (pageIndex, previousPageData) => {
-        if (
-          (!previousPageData || (previousPageData.length ?? 0) < PAGE_SIZE) &&
-          pageIndex > 0
-        )
-          return null;
-        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
-      },
-      {
-        revalidateFirstPage: false,
-      },
-    );
+  const { isLoading, isValidating, data, setSize } = usePrivateInfiniteQuery<
+    FundingFeeHistory[]
+  >(
+    (pageIndex, previousPageData) => {
+      if (
+        (!previousPageData || (previousPageData.length ?? 0) < PAGE_SIZE) &&
+        pageIndex > 0
+      )
+        return null;
+      return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
+    },
+    {
+      revalidateFirstPage: false,
+    },
+  );
+
+  const loadingMoreRef = useRef(false);
+  const wasValidatingRef = useRef(isValidating);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const loadedPageCount = data?.length ?? 0;
+  const lastPage = data?.[loadedPageCount - 1];
+  const hasMore = Array.isArray(lastPage) && lastPage.length === PAGE_SIZE;
 
   const loadMore = useCallback(() => {
+    if (loadingMoreRef.current || isValidating || !hasMore) return;
+
+    loadingMoreRef.current = true;
     setSize((prev) => {
       return prev + 1;
     });
-  }, [setSize]);
+  }, [hasMore, isValidating, setSize]);
+
+  useEffect(() => {
+    if (wasValidatingRef.current && !isValidating) {
+      loadingMoreRef.current = false;
+    }
+
+    wasValidatingRef.current = isValidating;
+  }, [isValidating]);
 
   const flattenData = useMemo(() => {
     if (!Array.isArray(data)) return [];
-    return data.flat().map((item) => {
-      return {
-        ...item,
-        funding_fee: -item.funding_fee,
-      };
-    });
-  }, [data]);
+    return data
+      .flat()
+      .filter((item) => marginMode == null || item.margin_mode === marginMode)
+      .map((item) => {
+        return {
+          ...item,
+          funding_fee: negateFee(item.funding_fee) ?? 0,
+        };
+      });
+  }, [data, marginMode]);
+
+  useEffect(() => {
+    if (isValidating || !hasMore) return;
+
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const distanceToBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+
+    if (distanceToBottom <= LOAD_MORE_THRESHOLD) {
+      loadMore();
+    }
+  }, [flattenData.length, hasMore, isValidating, loadMore, loadedPageCount]);
+
+  const isListLoading = isLoading || (flattenData.length === 0 && hasMore);
 
   const listView = useMemo(() => {
     if (isMobile) {
       return (
         <HistoryDataListViewSimple
           data={flattenData ?? EMPTY_LIST}
-          isLoading={isLoading}
+          isLoading={isListLoading}
           loadMore={loadMore}
+          containerRef={scrollContainerRef}
         />
       );
     }
     return (
       <HistoryDataListView
         data={flattenData ?? EMPTY_LIST}
-        isLoading={isLoading}
+        isLoading={isListLoading}
         loadMore={loadMore}
+        containerRef={scrollContainerRef}
       />
     );
-  }, [isMobile, flattenData, isLoading]);
+  }, [isMobile, flattenData, isListLoading, loadMore]);
 
   return (
     <div>
@@ -120,14 +182,14 @@ export const FundingFeeHistoryUI: FC<{
             label={
               isMobile ? (
                 <FundingFeeLabelButton
-                  label={`${t("funding.fundingFee")} (USDC)`}
-                  tooltip={t("positions.fundingFee.tooltip")}
+                  label={`${feeLabel} (USDC)`}
+                  tooltip={feeTooltip}
                   size={14}
                 />
               ) : (
                 <FundingFeeLabel
-                  label={`${t("funding.fundingFee")} (USDC)`}
-                  tooltip={t("positions.fundingFee.tooltip")}
+                  label={`${feeLabel} (USDC)`}
+                  tooltip={feeTooltip}
                   size={14}
                 />
               )
@@ -138,7 +200,7 @@ export const FundingFeeHistoryUI: FC<{
               showIdentifier: true,
             }}
           >
-            {total}
+            {total ?? "--"}
           </Statistic>
         </div>
       </Grid>
@@ -200,22 +262,24 @@ type ListProps = {
   isLoading: boolean;
   data: any[];
   loadMore: () => void;
+  containerRef: MutableRefObject<HTMLDivElement | null>;
 };
 
-const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
+const HistoryDataListView: FC<ListProps> = ({
+  isLoading,
+  data,
+  loadMore,
+  containerRef,
+}) => {
   const { t } = useTranslation();
   const columns = useMemo(() => {
     return [
       {
         title: t("common.time"),
         dataIndex: "created_time",
-        width: 120,
-        render: (value: string) => {
-          return (
-            <Text.formatted rule="date" suffix={<SymbolBadge symbol={value} />}>
-              {value}
-            </Text.formatted>
-          );
+        width: 175,
+        render: (value: number) => {
+          return <Text.formatted rule="date">{value}</Text.formatted>;
         },
       },
       {
@@ -257,7 +321,10 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
   }, [t]);
 
   return (
-    <div className="oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
+    <div
+      ref={containerRef}
+      className="oui-custom-scrollbar oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto"
+    >
       <EndReachedBox onEndReached={loadMore}>
         <DataTable
           classNames={{
@@ -276,16 +343,27 @@ const HistoryDataListViewSimple: FC<ListProps> = ({
   data,
   isLoading,
   loadMore,
+  containerRef,
 }) => {
   const renderItem = useCallback((item: FundingFeeHistory) => {
     return <FundingFeeItem item={item} />;
   }, []);
   return (
-    <div className="oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto">
+    <div
+      ref={containerRef}
+      className="oui-custom-scrollbar oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto"
+    >
       <ListView
         dataSource={data}
         renderItem={renderItem}
         isLoading={isLoading}
+        emptyView={
+          isLoading ? (
+            <div className="oui-flex oui-h-full oui-items-center oui-justify-center">
+              <Spinner />
+            </div>
+          ) : undefined
+        }
         contentClassName="oui-space-y-0"
         loadMore={loadMore}
       />

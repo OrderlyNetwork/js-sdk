@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { API, OrderEntity, OrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
-import { toast, useModal } from "@orderly.network/ui";
+import { toast } from "@orderly.network/ui";
 import { convertApiOrderTypeToOrderEntryType } from "../../../../utils/util";
 import { OrderCellState } from "../orderCell.script";
 import { useEditOrderEntry } from "./hooks/useEditOrderEntry";
@@ -13,10 +13,10 @@ export const useEditSheetScript = (props: {
   position?: API.PositionTPSLExt;
   editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
+  onClose: () => void;
 }) => {
-  const { state, editAlgoOrder, editOrder, position } = props;
+  const { state, editAlgoOrder, editOrder, position, onClose } = props;
   const { item: order } = state;
-  const { hide: onClose } = useModal();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -53,8 +53,6 @@ export const useEditSheetScript = (props: {
     orderType,
     maxQty,
   });
-
-  useEffect(() => {}, [order.price, formattedOrder.order_price]);
 
   const onCloseDialog = useCallback(() => {
     setDialogOpen(false);
@@ -103,7 +101,7 @@ export const useEditSheetScript = (props: {
       try {
         setSubmitting(true);
 
-        const res = await future;
+        await future;
         onClose();
       } catch (err: any) {
         toast.error(err?.message ?? `${err}`);
@@ -111,7 +109,7 @@ export const useEditSheetScript = (props: {
         setSubmitting(false);
       }
     },
-    [editAlgoOrder, editOrder, isTrailingStop],
+    [editAlgoOrder, editOrder, isStopMarket, isTrailingStop, onClose, order],
   );
 
   const onDialogConfirm = () => {

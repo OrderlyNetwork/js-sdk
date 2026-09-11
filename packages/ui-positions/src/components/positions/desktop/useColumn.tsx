@@ -4,24 +4,20 @@ import { API } from "@orderly.network/types";
 import {
   Box,
   cn,
-  Divider,
   Flex,
   HoverCard,
   Column,
   Text,
   Tooltip,
-  modal,
-  useScreen,
-  AddCircleIcon,
-  Button,
-  IconButton,
 } from "@orderly.network/ui";
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../constants";
+import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { negateFee } from "../../fundingFeeHistory/negateFee";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
-import { AdjustMarginDialogId } from "../adjustMargin/adjustMargin.widget";
+import { AdjustMarginButton } from "../adjustMargin/adjustMarginButton";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
@@ -48,7 +44,6 @@ export const useColumn = (config: ColumnConfig) => {
     positionReverse,
   } = config;
   const { t } = useTranslation();
-  const { isMobile } = useScreen();
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
     () => [
       {
@@ -321,36 +316,35 @@ export const useColumn = (config: ColumnConfig) => {
                 {isIsolated ? (record.margin ?? "--") : "--"}
               </Text.numeral>
               {isIsolated && (
-                <IconButton
-                  color="secondary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    modal.show(AdjustMarginDialogId, {
-                      position: record,
-                      symbol: record.symbol,
-                    });
-                  }}
-                >
-                  <AddCircleIcon size={16} fill="currentColor" opacity={1} />
-                </IconButton>
+                <AdjustMarginButton position={record} mode="dialog" />
               )}
             </Flex>
           );
         },
       },
-      // {
-      //   title: t("funding.fundingFee"),
-      //   dataIndex: "fundingFee",
-      //   width: 100,
-      //   render: (value, record) => (
-      //     <FundingFeeButton
-      //       fee={value}
-      //       symbol={record.symbol}
-      //       start_t={record.timestamp.toString()}
-      //       end_t={fundingFeeEndTime.current}
-      //     />
-      //   ),
-      // },
+      {
+        title: (
+          <Tooltip
+            className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast-54"
+            content={t("positions.unsettledFundingFee.tooltip")}
+          >
+            <Text className="oui-underline oui-decoration-dotted">
+              {t("positions.unsettledFundingFee")}
+            </Text>
+          </Tooltip>
+        ),
+        dataIndex: "accrued_funding_fee",
+        width: 140,
+        render: (value, record) => (
+          <FundingFeeButton
+            fee={negateFee(value)}
+            symbol={record.symbol}
+            start_t={record.timestamp.toString()}
+            feeType="unsettled"
+            marginMode={record.margin_mode}
+          />
+        ),
+      },
       // {
       //   title: t("common.qty"),
       //   dataIndex: "close_qty",

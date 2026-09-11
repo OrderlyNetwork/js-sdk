@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { useComputedLTV, useQuery } from "@orderly.network/hooks";
+import { useComputedLTV, useConvertThreshold } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
 
 export const useWithdrawLTV = (params: { token: string; quantity: string }) => {
   const { token, quantity } = params;
@@ -32,19 +31,5 @@ export const useWithdrawLTV = (params: { token: string; quantity: string }) => {
     nextLTV,
     ltvWarningMessage,
     t,
-  };
-};
-
-const useConvertThreshold = () => {
-  const { data } = useQuery<API.ConvertThreshold>(
-    "/v1/public/auto_convert_threshold",
-    {
-      revalidateOnFocus: false,
-    },
-  );
-
-  return {
-    ltv_threshold: data?.ltv_threshold,
-    negative_usdc_threshold: data?.negative_usdc_threshold,
   };
 };

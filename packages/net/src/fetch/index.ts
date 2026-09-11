@@ -47,10 +47,15 @@ function _createHeaders(
 ): HeadersInit {
   //
   const _headers = new Headers(headers);
+  const normalizedMethod = method?.toUpperCase() ?? "GET";
   // _headers.append("Accept", "application/json");
 
-  if (!_headers.has("Content-Type")) {
-    if (method !== "DELETE") {
+  if (
+    !_headers.has("Content-Type") &&
+    normalizedMethod !== "GET" &&
+    normalizedMethod !== "HEAD"
+  ) {
+    if (normalizedMethod !== "DELETE") {
       _headers.append("Content-Type", "application/json;charset=utf-8");
     } else {
       _headers.append("Content-Type", "application/x-www-form-urlencoded");

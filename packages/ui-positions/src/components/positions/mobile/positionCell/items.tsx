@@ -1,15 +1,12 @@
-import { FC, useMemo, useRef } from "react";
+import { FC, useMemo } from "react";
 import { useTpslPriceChecker } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, PositionType } from "@orderly.network/types";
 import {
-  AddCircleIcon,
   Badge,
   cn,
   Flex,
   Grid,
-  IconButton,
-  modal,
   Statistic,
   Text,
   Tips,
@@ -20,8 +17,9 @@ import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../../constants";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { negateFee } from "../../../fundingFeeHistory/negateFee";
 import { RwaStatusTag } from "../../../rwaStatus/rwaStatus";
-import { AdjustMarginSheetId } from "../../adjustMargin";
+import { AdjustMarginButton } from "../../adjustMargin/adjustMarginButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { PositionSymbolCell } from "../../desktop/positionSymbolCell";
@@ -182,20 +180,7 @@ export const Margin: FC<PositionCellState> = (props) => {
         <Text.numeral dp={2} intensity={80}>
           {isIsolated ? (item.margin ?? "--") : "--"}
         </Text.numeral>
-        {isIsolated && (
-          <IconButton
-            color="secondary"
-            onClick={(e) => {
-              e.stopPropagation();
-              modal.show(AdjustMarginSheetId, {
-                position: item,
-                symbol: item.symbol,
-              });
-            }}
-          >
-            <AddCircleIcon size={16} fill="currentColor" opacity={1} />
-          </IconButton>
-        )}
+        {isIsolated && <AdjustMarginButton position={item} mode="sheet" />}
       </Flex>
     </Statistic>
   );
@@ -428,15 +413,26 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
 
 export const FundingFee: FC<PositionCellState> = (props) => {
   const { t } = useTranslation();
-  const fundingFeeEndTime = useRef(Date.now().toString());
+
+  const fundingFeeLabel = (
+    <Text intensity={36} className="oui-underline oui-decoration-dotted">
+      {t("positions.unsettledFundingFee")}:{" "}
+    </Text>
+  );
+
   return (
-    <Flex justify={"end"} className="oui-w-full oui-text-2xs">
-      <Text intensity={36}>{t("funding.fundingFee")}: </Text>
+    <Flex gap={1} justify={"end"} className="oui-w-full oui-text-2xs">
+      <Tips
+        trigger={fundingFeeLabel}
+        content={t("positions.unsettledFundingFee.tooltip")}
+        title={t("common.tips")}
+      />
       <FundingFeeButton
-        fee={props.item.fundingFee!}
+        fee={negateFee(props.item.accrued_funding_fee)}
         symbol={props.item.symbol}
         start_t={props.item.timestamp.toString()}
-        end_t={fundingFeeEndTime.current}
+        feeType="unsettled"
+        marginMode={props.item.margin_mode}
       />
     </Flex>
   );

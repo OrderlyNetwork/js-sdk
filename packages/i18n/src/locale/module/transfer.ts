@@ -210,11 +210,11 @@ export const transfer = {
   "transfer.LTV.tooltip": `If your LTV exceeds {{threshold}}% or your USDC balance plus Unsettled PnL falls below {{usdcThreshold}}, your collateral will be automatically converted with a haircut. To avoid this, you can manually convert assets to USDC.`,
   "transfer.LTV.currentLTV": "Current LTV",
   "transfer.LTV.isolatedModeUsdcOnly":
-    "Only USDC can be used as margin in Isolated Mode.",
+    "Isolated margin is denominated in USDC. Eligible collateral assets can back the required USDC balance.",
   "transfer.LTV.availableCrossMarginHint":
     "Available balance = USDC balance + Unsettled PnL. All collateral assets contribute to your available margin.",
   "transfer.LTV.isolatedMarginOrderHint":
-    "In Isolated Margin mode, only USDC is accepted as margin. Convert your assets to USDC to place orders.",
+    "Isolated margin is denominated in USDC. Eligible collateral assets can back the required USDC balance. A negative USDC balance contributes to LTV and may trigger automatic conversion.",
   "transfer.convert": "Convert",
   // "transfer.convert.note": "Please note that convert fees will be charged.",
   "transfer.deposit.globalMaxQty.error":

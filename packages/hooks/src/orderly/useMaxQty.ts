@@ -1,11 +1,17 @@
 import { useMemo } from "react";
 import { account, positions as positionsPerp } from "@orderly.network/perp";
-import { type API, MarginMode, OrderSide } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import {
+  type API,
+  MarginMode,
+  OrderSide,
+  OrderStatus,
+} from "@orderly.network/types";
+import { resolveIsolatedPendingOrders } from "../utils/order/isolatedPendingOrders";
 import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
 import { useLeverageBySymbol } from "./useLeverageBySymbol";
 import { useMarkPricesStream } from "./useMarkPricesStream";
+import { useOrderStream } from "./useOrderStream/useOrderStream";
 import { usePositions } from "./usePositionStream/usePosition.store";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
@@ -111,11 +117,20 @@ export function useMaxQty(
 
   const symbolInfo = useSymbolsInfo();
 
-  const { totalCollateral, freeCollateralUSDCOnly } = useCollateral();
+  const { totalCollateral, freeCollateral } = useCollateral();
 
   const { data: markPrices } = useMarkPricesStream();
 
   const symbolLeverage = useLeverageBySymbol(symbol, finalMarginMode);
+
+  // Per-order pending data for the isolated frozen simulation. `null` means
+  // the stream has not loaded yet and the calculation falls back to the
+  // aggregate pending quantities on the position.
+  const [symbolOpenOrders] = useOrderStream({
+    symbol,
+    status: OrderStatus.INCOMPLETE,
+    size: 100,
+  });
 
   const maxQty = useMemo(() => {
     // Early return for invalid symbol
@@ -179,38 +194,61 @@ export function useMaxQty(
     const sellOrdersQty = currentSymbolPosition?.pending_short_qty ?? 0;
 
     if (finalMarginMode === MarginMode.ISOLATED) {
-      const availableBalance = freeCollateralUSDCOnly;
-      // Build pending orders arrays (only if quantity > 0)
-      // Use mark price as reference price (since we don't have actual order prices)
-      const pendingLongOrders: Array<{
-        referencePrice: number;
-        quantity: number;
-      }> =
-        buyOrdersQty > 0
-          ? [{ referencePrice: markPrice, quantity: buyOrdersQty }]
-          : [];
+      const availableBalance = freeCollateral;
 
-      const pendingSellOrders: Array<{
-        referencePrice: number;
-        quantity: number;
-      }> =
-        sellOrdersQty > 0
-          ? [{ referencePrice: markPrice, quantity: sellOrdersQty }]
-          : [];
+      // Per-order data when the order stream is trusted; otherwise
+      // approximate the aggregate pending quantities at mark price. Either
+      // way the flip binary search runs the risk-engine close/open
+      // allocation, never the legacy full-notional formula.
+      const isolatedPendingOrders = resolveIsolatedPendingOrders(
+        symbolOpenOrders,
+        {
+          symbol,
+          fallbackPrice: markPrice,
+          pendingLongQty: buyOrdersQty,
+          pendingShortQty: sellOrdersQty,
+        },
+      ) ?? [
+        ...(buyOrdersQty > 0
+          ? [
+              {
+                side: OrderSide.BUY,
+                referencePrice: markPrice,
+                quantity: buyOrdersQty,
+              },
+            ]
+          : []),
+        ...(sellOrdersQty > 0
+          ? [
+              {
+                side: OrderSide.SELL,
+                referencePrice: markPrice,
+                quantity: sellOrdersQty,
+              },
+            ]
+          : []),
+      ];
 
-      // Calculate frozen margins for pending orders: isoOrderFrozen = order_notional * (1 / leverage + fee buffer)
-      // Reuse Decimal instance for better performance
-      const markPriceDecimal = new Decimal(markPrice);
-      const marginRate = account.isolatedMarginRate({ leverage });
-      const isoOrderFrozenLong =
-        buyOrdersQty > 0
-          ? markPriceDecimal.mul(buyOrdersQty).mul(marginRate).toNumber()
-          : 0;
+      // Build pending orders arrays for the simplified same-direction
+      // formula (per-order prices when the stream is trusted).
+      const pendingLongOrders = isolatedPendingOrders
+        .filter((order) => order.side === OrderSide.BUY)
+        .map(({ referencePrice, quantity }) => ({
+          referencePrice,
+          quantity,
+        }));
 
-      const isoOrderFrozenShort =
-        sellOrdersQty > 0
-          ? markPriceDecimal.mul(sellOrdersQty).mul(marginRate).toNumber()
-          : 0;
+      const pendingSellOrders = isolatedPendingOrders
+        .filter((order) => order.side === OrderSide.SELL)
+        .map(({ referencePrice, quantity }) => ({
+          referencePrice,
+          quantity,
+        }));
+
+      // Legacy aggregate-frozen inputs, ignored by the allocation-based
+      // binary search; kept only for the maxQtyForIsolatedMargin API shape.
+      const isoOrderFrozenLong = 0;
+      const isoOrderFrozenShort = 0;
 
       // Get or calculate symbolMaxNotional
       // Priority: accountInfo.max_notional[symbol] > calculated maxPositionNotional
@@ -238,6 +276,7 @@ export function useMaxQty(
         pendingSellOrders,
         isoOrderFrozenLong,
         isoOrderFrozenShort,
+        isolatedPendingOrders,
         symbolMaxNotional,
       });
     }
@@ -273,10 +312,11 @@ export function useMaxQty(
     symbolInfo,
     side,
     totalCollateral,
-    freeCollateralUSDCOnly,
+    freeCollateral,
     finalMarginMode,
     symbolLeverage,
     currentOrderReferencePrice,
+    symbolOpenOrders,
   ]);
 
   return Math.max(maxQty, 0);

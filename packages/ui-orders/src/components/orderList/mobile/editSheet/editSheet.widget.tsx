@@ -8,6 +8,7 @@ type EditSheetWidgetProps = {
   editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
   position?: API.PositionTPSLExt;
+  onClose: () => void;
 };
 
 export const EditSheetWidget = (props: EditSheetWidgetProps) => {

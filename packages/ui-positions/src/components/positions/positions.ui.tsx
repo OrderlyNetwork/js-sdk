@@ -1,4 +1,5 @@
 import React from "react";
+import { MarginMode } from "@orderly.network/types";
 import type { API } from "@orderly.network/types";
 import { Badge, formatAddress, ListView } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -35,8 +36,8 @@ export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
       columns={columns}
       bordered
       dataSource={dataSource}
-      generatedRowKey={(record: any, index: number) =>
-        `${record.symbol}-${index}`
+      generatedRowKey={(record: any) =>
+        `${record.symbol}-${record.margin_mode || MarginMode.CROSS}`
       }
       renderRowContainer={(record: any, index: number, children: any) => {
         return (
@@ -81,6 +82,9 @@ export const MobilePositions: React.FC<
       className="oui-hide-scrollbar oui-w-full oui-space-y-0 oui-overflow-y-hidden"
       contentClassName="!oui-space-y-1"
       dataSource={dataSource}
+      keyExtractor={(item) =>
+        `${item.symbol}-${item.margin_mode || MarginMode.CROSS}`
+      }
       renderItem={(item, index) => (
         <SymbolProvider symbol={item.symbol}>
           <PositionsRowProvider position={item}>
@@ -129,8 +133,10 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
       dataSource={dataSource}
       expanded
       getSubRows={(row) => row.children}
-      generatedRowKey={(record, index) =>
-        `${record.account_id}${record.symbol || ""}-${index}`
+      generatedRowKey={(record: any) =>
+        record.children?.length
+          ? `account-${record.account_id}`
+          : `position-${record.account_id}-${record.symbol}-${record.margin_mode ?? MarginMode.CROSS}`
       }
       onCell={(column, record) => {
         const isGroup = (record.children ?? []).length > 0;

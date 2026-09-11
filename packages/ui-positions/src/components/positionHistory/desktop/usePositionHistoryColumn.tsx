@@ -124,8 +124,9 @@ export const usePositionHistoryColumn = (props: {
                 symbol={record.symbol}
                 start_t={record.open_timestamp.toString()}
                 end_t={(
-                  record.close_timestamp || record.last_update_time
-                )?.toString()}
+                  record.close_timestamp ?? record.last_update_time
+                ).toString()}
+                marginMode={record.margin_mode}
               />
             );
           },

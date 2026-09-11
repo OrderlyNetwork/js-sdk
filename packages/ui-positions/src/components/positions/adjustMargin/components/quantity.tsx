@@ -56,7 +56,7 @@ export const Quantity: FC<QuantityProps> = ({
           inputFormatter.numberFormatter,
           inputFormatter.dpFormatter(2),
         ]}
-        disabled={maxAmount === null || maxAmount <= 0}
+        disabled={maxAmount <= 0}
         autoComplete="off"
         classNames={{
           // Keep border color stable and remove focus ring (Input has focus-within:outline-primary-light by default)
@@ -82,7 +82,7 @@ export const Quantity: FC<QuantityProps> = ({
           tipFormatter={(v, _min, _max, percent) => `${percent.toFixed(0)}%`}
           marks={percentMarks}
           markLabelVisible={false}
-          disabled={maxAmount === null || maxAmount <= 0}
+          disabled={maxAmount <= 0}
         />
         <Flex justify="between" className="oui-w-full">
           <Text size="2xs" className="oui-text-primary">

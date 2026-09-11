@@ -7,6 +7,7 @@ import { useIndexPricesStream } from "../orderly/useIndexPricesStream";
 import { useMarkPricesStream } from "../orderly/useMarkPricesStream";
 import { POSITION_EMPTY } from "../orderly/usePositionStream/usePosition.store";
 import { useSymbolsInfo } from "../orderly/useSymbolsInfo";
+import { mergeHoldingBalance } from "../utils/mergeHoldingBalance";
 import { object2underscore } from "../utils/ws";
 import { formatPortfolio, Portfolio } from "./calculator/portfolio";
 import { calcByPrice, formatPositions } from "./calculator/positions";
@@ -128,7 +129,7 @@ export const useSubAccountDataObserver = (accountId?: string) => {
           setHolding((prev) => {
             return prev.map((item) => {
               if (holding[item.token]) {
-                return { ...item, holding: holding[item.token].holding };
+                return mergeHoldingBalance(item, holding[item.token]);
               }
               return item;
             });

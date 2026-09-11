@@ -7,12 +7,32 @@ import {
   WSMessage,
 } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
+import { withTPSLProvenance } from "@orderly.network/utils";
 import { object2underscore } from "../../utils/ws";
 import { BaseMergeHandler } from "./baseMergeHandler";
 
 export type AlgoOrderFieldChanges = Partial<
   Record<OrderType, Partial<Record<keyof API.AlgoOrder, boolean>>>
 >;
+
+/**
+ * Algo execution reports use executable type names such as LIMIT_ORDER and
+ * MARKET_ORDER, while REST responses and the SDK use LIMIT and MARKET.
+ * Normalize every node because TP/SL legs can be nested under positional or
+ * Bracket parents. Types without the suffix, such as CLOSE_POSITION, are kept.
+ * Pure like withTPSLProvenance: never mutate REST/WS inputs in place.
+ */
+const normalizeAlgoOrderTypes = (order: API.AlgoOrder): API.AlgoOrder => {
+  const type =
+    typeof order.type === "string" && order.type.endsWith("_ORDER")
+      ? (order.type.replace("_ORDER", "") as OrderType)
+      : order.type;
+  return {
+    ...order,
+    type,
+    child_orders: order.child_orders?.map(normalizeAlgoOrderTypes),
+  };
+};
 
 export class AlgoOrderMergeHandler extends BaseMergeHandler<
   WSMessage.AlgoOrder[],
@@ -95,15 +115,15 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
       rootOrder_.child_orders = [childOrders];
     }
 
-    return rootOrder_;
+    return withTPSLProvenance(normalizeAlgoOrderTypes(rootOrder_));
   }
 
-  static groupBracketChildOrders(orders: WSMessage.AlgoOrder[]): API.AlgoOrder {
+  static groupBracketChildOrders(orders: API.AlgoOrder[]): API.AlgoOrder {
     const innerOrders = [...orders];
     const rootOrderIndex = innerOrders.findIndex(
       (order) =>
-        order.algoType !== AlgoOrderType.STOP_LOSS &&
-        order.algoType !== AlgoOrderType.TAKE_PROFIT,
+        order.algo_type !== AlgoOrderType.STOP_LOSS &&
+        order.algo_type !== AlgoOrderType.TAKE_PROFIT,
     );
     if (rootOrderIndex === -1) {
       throw new SDKError("Root order not found");

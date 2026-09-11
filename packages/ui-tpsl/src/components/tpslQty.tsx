@@ -15,6 +15,7 @@ export type TPSLQuantityProps = {
   /** Raw form state while editing may be string (e.g. "", "0."). */
   quantity: number | string;
   isEditing?: boolean;
+  disabled?: boolean;
   errorMsg?: string;
 };
 
@@ -27,6 +28,7 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
 
   // format quantity to base tick
   const formatQuantity = (value: string) => {
+    if (props.disabled) return;
     let _qty = value;
     if (Number(value) > maxQty) {
       _qty = maxQty.toString();
@@ -37,6 +39,7 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
   };
 
   const onSliderValueChange = (value: number) => {
+    if (props.disabled) return;
     setSliderValue(value);
     // transform slider value to quantity
     const qty = new Decimal(value)
@@ -76,6 +79,7 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
             }}
             align="right"
             value={props.quantity}
+            disabled={props.disabled}
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
@@ -101,6 +105,7 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
               inputFormatter.currencyFormatter,
             ]}
             onValueChange={(value) => {
+              if (props.disabled) return;
               props.onQuantityChange?.(value);
               // TODO: optimize this
               const qty = Number(value);
@@ -127,6 +132,7 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
           showTip
           value={[sliderValue]}
           color="primary"
+          disabled={props.disabled}
           onValueChange={(value) => {
             onSliderValueChange(value[0]);
           }}
@@ -139,9 +145,12 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
         <Flex itemAlign={"center"} gap={1}>
           <button
             className={"oui-leading-none"}
+            disabled={props.disabled}
             style={{ lineHeight: 0 }}
             onClick={() => {
-              props.onQuantityChange?.(props.maxQty);
+              if (!props.disabled) {
+                props.onQuantityChange?.(props.maxQty);
+              }
             }}
           >
             <Text color={"primary"} size={"2xs"}>
