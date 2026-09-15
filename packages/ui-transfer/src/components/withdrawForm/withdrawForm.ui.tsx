@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
+  modal,
+  useScreen,
   Flex,
   Text,
   textVariants,
@@ -18,6 +20,10 @@ import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
 import { QuantityInput } from "../quantityInput";
+import {
+  ReverseConvertDialogId,
+  ReverseConvertSheetId,
+} from "../reverseConvert/reverseConvert.widget";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
 import { WithdrawAction } from "../withdrawAction";
 import { WithdrawWarningMessage } from "../withdrawWarningMessage";
@@ -60,6 +66,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   } = props;
 
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   const [addWalletOpen, setAddWalletOpen] = useState(false);
 
   const handleAddExternalWallet = (
@@ -147,6 +154,36 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             amount: maxQuantity.toString(),
           })}
         />
+        {props.isRobinhoodWithdrawal && (
+          <Flex
+            justify="end"
+            gap={1}
+            mt={2}
+            className="oui-flex-wrap oui-text-2xs oui-text-base-contrast-36"
+          >
+            <Trans
+              i18nKey="transfer.reverseConvert.available"
+              values={{ amount: props.availableUSDC }}
+              components={[
+                <Text.numeral key="amount" dp={2} padding>
+                  {props.availableUSDC}
+                </Text.numeral>,
+              ]}
+            />
+            <button
+              type="button"
+              className="oui-text-primary"
+              disabled={!props.isLoggedIn || !sourceToken}
+              onClick={() => {
+                void modal.show(
+                  isMobile ? ReverseConvertSheetId : ReverseConvertDialogId,
+                );
+              }}
+            >
+              {t("transfer.reverseConvert.action")}
+            </button>
+          </Flex>
+        )}
         <Box mx={2} mt={1}>
           <UnsettlePnlInfo
             unsettledPnl={props.unsettledPnL}

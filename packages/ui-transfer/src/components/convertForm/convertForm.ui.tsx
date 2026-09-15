@@ -180,7 +180,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
   );
 };
 
-const ConvertProgressStatus: React.FC<{
+export const ConvertProgressStatus: React.FC<{
   request: NonNullable<ConvertFormScriptReturn["activeConvertRequest"]>;
   isRefreshing: boolean;
 }> = ({ request, isRefreshing }) => {

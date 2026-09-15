@@ -18,6 +18,7 @@ const splitTokenBySymbol = <T extends { token?: string }>(items: T[]) => {
 
 interface Options {
   defaultValue?: string;
+  reverse?: boolean;
 }
 
 type ConvertTokenInfo = API.Token & {
@@ -34,7 +35,7 @@ export const getConvertTokenInfo = (
 });
 
 export const useToken = (options: Options) => {
-  const { defaultValue } = options;
+  const { defaultValue, reverse = false } = options;
 
   const [sourceToken, setSourceToken] = useState<ConvertTokenInfo>();
   const [targetToken, setTargetToken] = useState<ConvertTokenInfo>();
@@ -67,10 +68,20 @@ export const useToken = (options: Options) => {
     setTargetToken(usdc[0]);
   }, [defaultValue, newTokensInfo]);
 
+  const reverseSource = tokensInfo?.find((item) => item.token === "USDC");
+  const reverseTarget = tokensInfo?.find((item) => item.token === "USDG");
   return {
-    sourceToken,
-    sourceTokens,
+    sourceToken: reverse
+      ? reverseSource
+        ? getConvertTokenInfo(reverseSource)
+        : undefined
+      : sourceToken,
+    sourceTokens: reverse ? [] : sourceTokens,
     onSourceTokenChange: setSourceToken,
-    targetToken,
+    targetToken: reverse
+      ? reverseTarget
+        ? getConvertTokenInfo(reverseTarget)
+        : undefined
+      : targetToken,
   };
 };

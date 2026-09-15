@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useConfig,
@@ -18,6 +18,10 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import type { NetworkId } from "@orderly.network/types";
 import { toast, ToastTile } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import {
+  canReverseConvert,
+  REVERSE_CONVERT_SLIPPAGE,
+} from "../reverseConvert/policy";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import {
   createTrackedConvertRequest,
@@ -45,6 +49,7 @@ import {
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
 const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
+/** Shared by forward and reverse convert: only one pending convert is allowed. */
 const ORDERLY_TRACKED_CONVERT_KEY = "orderly_tracked_convert";
 const SWAP_QUOTE_DEBOUNCE_MS = 300;
 const CONVERT_HISTORY_REFRESH_INTERVAL = 10_000;
@@ -56,6 +61,12 @@ const getQuoteErrorMessage = (error: unknown) =>
 
 export interface ConvertFormScriptOptions {
   token?: string;
+  /**
+   * Internal fixed-direction form used by the Robinhood withdrawal entry.
+   * Still shares the same tracked convert session as the forward form because
+   * only one pending convert is allowed per account.
+   */
+  reverse?: boolean;
   close?: () => void;
 }
 
@@ -65,7 +76,8 @@ interface TrackedConvertState {
 }
 
 export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
-  const { token: defaultToken } = options;
+  const { token: defaultToken, reverse = false } = options;
+  const submitting = useRef(false);
 
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
@@ -88,12 +100,12 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const [quantity, setQuantity] = useState<string>("");
 
-  const { wrongNetwork, connectWallet } = useAppContext();
+  const { wrongNetwork, connectWallet, currentChainId } = useAppContext();
 
   const { wallet } = useWalletConnector();
 
   const { sourceToken, sourceTokens, onSourceTokenChange, targetToken } =
-    useToken({ defaultValue: defaultToken });
+    useToken({ defaultValue: defaultToken, reverse });
 
   const { walletName, address } = useMemo(
     () => ({
@@ -111,13 +123,15 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     ORDERLY_CONVERT_SLIPPAGE_KEY,
     0.5,
   );
-  const normalizedSlippage = normalizeConvertSlippage(Number(slippage));
+  const normalizedSlippage = reverse
+    ? REVERSE_CONVERT_SLIPPAGE * 100
+    : normalizeConvertSlippage(Number(slippage));
 
   useEffect(() => {
-    if (normalizedSlippage !== slippage) {
+    if (!reverse && normalizedSlippage !== slippage) {
       setSlippage(normalizedSlippage);
     }
-  }, [normalizedSlippage, setSlippage, slippage]);
+  }, [normalizedSlippage, setSlippage, slippage, reverse]);
 
   const { state: accountState } = useAccount();
   const canQueryConvertHistory =
@@ -190,6 +204,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   useEffect(() => {
     if (!currentTrackedRequest && latestPendingRequest) {
+      // Recover the account's single pending convert (forward or reverse).
       // Preserve the record id after it transitions out of the pending set.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTrackedConvert({
@@ -239,6 +254,22 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     }
   }, [activeStatus, persistedTrackedConvert, setPersistedTrackedConvert]);
 
+  const { mutate: refreshHoldings } = usePrivateQuery("/v1/client/holding", {
+    formatter: (data: any) => data.holding,
+  });
+  const refreshedId = useRef<number>();
+  useEffect(() => {
+    if (
+      reverse &&
+      trackedRecord &&
+      activeStatus === "succeeded" &&
+      refreshedId.current !== trackedRecord.convert_id
+    ) {
+      refreshedId.current = trackedRecord.convert_id;
+      void refreshHoldings();
+    }
+  }, [reverse, trackedRecord, activeStatus, refreshHoldings]);
+
   const trackedRequestKey = effectiveTrackedRequest
     ? `${effectiveTrackedRequest.convertId ?? "new"}:${effectiveTrackedRequest.previousMaxConvertId}:${effectiveTrackedRequest.sourceToken}:${effectiveTrackedRequest.targetToken}`
     : undefined;
@@ -257,14 +288,28 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const { maxAmount, convert } = useConvert({ token: sourceToken?.token });
 
+  const reverseAllowed = canReverseConvert(
+    currentChainId,
+    sourceToken?.token,
+    targetToken?.token,
+  );
   const onConvert = async () => {
     if (
+      submitting.current ||
       loading ||
+      !sourceToken ||
+      !targetToken ||
+      (reverse &&
+        (!reverseAllowed ||
+          disabled ||
+          !quoteData ||
+          quoteData.expiresAt <= Date.now())) ||
       activeStatus === "pending" ||
       (canQueryConvertHistory && !convertHistory)
     ) {
       return;
     }
+    submitting.current = true;
     setLoading(true);
     const requestSnapshot: TrackedConvertRequest = {
       accountId: accountState.accountId,
@@ -280,6 +325,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return convert({
       amount: Number(quantity),
       slippage: new Decimal(normalizedSlippage).div(100).toNumber(),
+      receivedAsset: targetToken?.token,
     })
       .then((response) => {
         const nextTrackedConvert: TrackedConvertState = {
@@ -312,6 +358,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         );
       })
       .finally(() => {
+        submitting.current = false;
         setLoading(false);
       });
   };
@@ -322,11 +369,24 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const [
     postQuote,
-    { data: quoteData, reset: resetQuote, isMutating: isQuoteLoading },
+    {
+      data: quoteData,
+      request: quotedRequest,
+      reset: resetQuote,
+      isMutating: isQuoteLoading,
+    },
   ] = useSwapQuote();
+
+  useEffect(() => {
+    if (reverse) {
+      setQuantity("");
+      resetQuote();
+    }
+  }, [reverse, currentChainId, accountState.accountId, resetQuote]);
 
   const quoteRequest = useMemo<SwapQuoteRequest | null>(() => {
     if (
+      (reverse && !reverseAllowed) ||
       !quantity ||
       new Decimal(quantity).lte(0) ||
       !sourceToken?.token ||
@@ -341,7 +401,14 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       amount: new Decimal(quantity).toNumber(),
       slippage: new Decimal(normalizedSlippage).div(100).toNumber(),
     };
-  }, [normalizedSlippage, quantity, sourceToken?.token, targetToken?.token]);
+  }, [
+    normalizedSlippage,
+    quantity,
+    sourceToken?.token,
+    targetToken?.token,
+    reverse,
+    reverseAllowed,
+  ]);
 
   useEffect(() => {
     resetQuote();
@@ -380,7 +447,11 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   }, [connectWallet, postQuote, quoteRequest, resetQuote]);
 
   const isQuoteDataMatched = useMemo(() => {
-    if (!quoteData || !quoteRequest) {
+    if (
+      !quoteData ||
+      !quoteRequest ||
+      JSON.stringify(quotedRequest) !== JSON.stringify(quoteRequest)
+    ) {
       return false;
     }
 
@@ -406,7 +477,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     );
 
     return targetAmount !== "-" && quoteData.expiresAt > Date.now();
-  }, [quoteData, quoteRequest, targetToken?.decimals]);
+  }, [quoteData, quoteRequest, quotedRequest, targetToken?.decimals]);
 
   useEffect(() => {
     if (quoteData && !isQuoteDataMatched) {
@@ -493,10 +564,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     };
   }, [isQuoteDataMatched, postQuote, quoteData, quoteRequest, resetQuote]);
 
-  const currentLtv = useComputedLTV();
-
+  const currentLTV = useComputedLTV();
   const nextLTV = useComputedLTV({
-    input: Number(quantity),
+    input: reverse ? 0 : Number(quantity),
     token: sourceToken?.token,
   });
 
@@ -505,6 +575,14 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const hasConvertStatusError =
     canQueryConvertHistory && !convertHistory && Boolean(convertHistoryError);
   const disabled =
+    !sourceToken ||
+    !targetToken ||
+    (reverse &&
+      (!reverseAllowed ||
+        !isQuoteDataMatched ||
+        isQuoteLoading ||
+        new Decimal(quantity || 0).lte(0) ||
+        new Decimal(quantity || 0).gt(maxAmount))) ||
     !quantity ||
     Number(quantity) === 0 ||
     isCheckingConvertStatus ||
@@ -531,6 +609,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { hasPositions, onSettlePnl } = useSettlePnl();
 
   return {
+    reverseAllowed,
+    currentLTV,
+    nextLTV,
     walletName,
     address,
     quantity,
@@ -555,8 +636,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     minimumReceived: memoizedMinimumReceived,
     outAmounts: memoizedOutAmounts,
     isQuoteLoading,
-    currentLTV: currentLtv,
-    nextLTV: nextLTV,
     activeConvertRequest,
     isRecoveredConvertRequest:
       (Boolean(currentTrackedRequest) &&

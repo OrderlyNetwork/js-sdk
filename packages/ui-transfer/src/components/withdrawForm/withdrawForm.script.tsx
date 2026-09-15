@@ -8,6 +8,7 @@ import {
   useConfig,
   useEventEmitter,
   useLocalStorage,
+  useMaxWithdrawal,
   useMemoizedFn,
   useWalletConnector,
   useWalletTopic,
@@ -33,6 +34,7 @@ import {
 } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { CurrentChain } from "../../types";
+import { isRobinhoodChain } from "../reverseConvert/policy";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useVaultBalance } from "./hooks/useVaultBalance";
 import { useWithdrawAccountId } from "./hooks/useWithdrawAccountId";
@@ -148,6 +150,13 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     currentChain,
     withdrawTo,
   });
+
+  const isRobinhoodWithdrawal =
+    withdrawTo === WithdrawTo.Wallet && isRobinhoodChain(currentChain?.id);
+  const availableUSDC = useMaxWithdrawal("USDC");
+  useEffect(() => {
+    setQuantity("");
+  }, [currentChain?.id, withdrawTo, sourceToken?.symbol]);
 
   const onSourceTokenChange = useMemoizedFn((token: API.TokenInfo) => {
     setQuantity("");
@@ -356,7 +365,12 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [pendingTokenSymbol, sourceTokens, onSourceTokenChange, currentChain]);
 
   const onWithdraw = async () => {
-    if (loading) {
+    if (
+      disabled ||
+      loading ||
+      !sourceToken ||
+      (isRobinhoodWithdrawal && sourceToken.symbol !== "USDG")
+    ) {
       return;
     }
     if (inputStatus !== "default") {
@@ -480,6 +494,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   ]);
 
   const disabled =
+    !sourceToken ||
     crossChainTrans ||
     !quantity ||
     Number(quantity) === 0 ||
@@ -540,6 +555,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   });
 
   return {
+    isRobinhoodWithdrawal,
+    availableUSDC,
     walletName,
     address,
     quantity,

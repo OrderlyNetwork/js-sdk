@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useRef, useState } from "react";
 import { useMemoizedFn } from "../shared/useMemoizedFn";
 import { useMutation } from "../useMutation";
 import {
@@ -7,6 +7,7 @@ import {
   SWAP_QUOTE_URL,
   unwrapSwapQuoteResponse,
   type SwapQuoteError,
+  type SwapQuoteData,
   type SwapQuoteRequest,
   type SwapQuoteResponse,
 } from "./swapQuote";
@@ -27,39 +28,53 @@ export type {
 } from "./swapQuote";
 
 export const useSwapQuote = () => {
-  const [trigger, { data, reset, isMutating }] = useMutation<
+  const [trigger, { reset, isMutating }] = useMutation<
     SwapQuoteResponse,
     SwapQuoteError
   >(SWAP_QUOTE_URL);
+  const generation = useRef(0);
+  const [accepted, setAccepted] = useState<{
+    data: SwapQuoteData;
+    request: SwapQuoteRequest;
+  }>();
   const [quoteError, setQuoteError] = useState<SwapQuoteError>();
 
   const postQuote = useMemoizedFn(async (request: SwapQuoteRequest | null) => {
+    const id = ++generation.current;
     setQuoteError(undefined);
+    setAccepted(undefined);
 
     try {
-      return await trigger(request).then(normalizeSwapQuoteResponse);
+      const response = await trigger(request).then(normalizeSwapQuoteResponse);
+      const quote = unwrapSwapQuoteResponse(response);
+      if (
+        id === generation.current &&
+        request &&
+        quote &&
+        isSwapQuoteData(quote)
+      ) {
+        setAccepted({ data: quote, request });
+      }
+      return response;
     } catch (requestError) {
-      setQuoteError(requestError as SwapQuoteError);
+      if (id === generation.current)
+        setQuoteError(requestError as SwapQuoteError);
       throw requestError;
     }
   });
 
   const resetQuote = useMemoizedFn(() => {
+    generation.current++;
+    setAccepted(undefined);
     reset();
     setQuoteError(undefined);
   });
 
-  const quoteData = useMemo(() => {
-    const quote = unwrapSwapQuoteResponse(
-      data as SwapQuoteResponse | undefined,
-    );
-    return quote && isSwapQuoteData(quote) ? quote : undefined;
-  }, [data]);
-
   return [
     postQuote,
     {
-      data: quoteData,
+      data: accepted?.data,
+      request: accepted?.request,
       error: quoteError,
       reset: resetQuote,
       isMutating,
