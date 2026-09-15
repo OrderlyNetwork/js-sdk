@@ -60,7 +60,7 @@ export const PricePoolDesktopUI: FC<PricePoolDesktopUIProps> = ({
             {shouldShowJoinButton && (
               <Button
                 size={"md"}
-                variant="gradient"
+                variant="contained"
                 color="primary"
                 className="oui-flex-1"
                 loading={isJoining}
@@ -82,7 +82,7 @@ export const PricePoolDesktopUI: FC<PricePoolDesktopUIProps> = ({
             {showTradeButton && (
               <Button
                 size={"md"}
-                variant="gradient"
+                variant="contained"
                 color="primary"
                 className="oui-flex-1"
                 onClick={onTradeNow}

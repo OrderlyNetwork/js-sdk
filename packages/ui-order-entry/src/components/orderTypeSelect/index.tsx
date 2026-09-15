@@ -83,7 +83,7 @@ export const OrderTypeSelect = (props: {
 
     const selectedButtonClassName = cn(
       baseButtonClassName,
-      "oui-bg-base-5 oui-text-base-contrast",
+      "oui-bg-primary oui-text-base-contrast",
     );
     const unselectedButtonClassName = cn(
       baseButtonClassName,

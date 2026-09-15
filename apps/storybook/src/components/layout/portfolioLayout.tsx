@@ -6,6 +6,7 @@ import {
 import { footerConfig, useBottomNav, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";
+import { useCustomRender } from "./useCustomRender";
 
 type PortfolioLayoutProps = {
   children: ReactNode;
@@ -16,6 +17,7 @@ export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
   const { onRouteChange } = useRouteContext();
   const mainNavProps = useMainNav();
   const bottomNavProps = useBottomNav();
+  const customRender = useCustomRender();
 
   return (
     <PortfolioLayoutWidget
@@ -23,6 +25,7 @@ export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
       mainNavProps={{
         ...mainNavProps,
         initialMenu: PathEnum.Portfolio,
+        customRender,
       }}
       bottomNavProps={bottomNavProps}
       routerAdapter={{

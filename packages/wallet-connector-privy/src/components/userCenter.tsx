@@ -9,15 +9,19 @@ import {
 import {
   Button,
   cn,
+  DARK_THEME_CSS_VARS,
   Flex,
   formatAddress,
+  LIGHT_THEME_CSS_VARS,
   Text,
+  useOrderlyTheme,
   useScreen,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
 import { LinkDeviceMobile } from "./linkDevice";
+import { shouldUseBlackIcon } from "./userCenter.utils";
 
 export function UserCenter(props: any) {
   const { accountState: state } = props;
@@ -50,6 +54,19 @@ const RenderUserCenter = (props: any) => {
   const { linkedAccount } = usePrivyWallet();
   const { state: accountState, account } = useAccount();
   const { connectedChain } = useWalletConnector();
+  const { currentTheme } = useOrderlyTheme();
+
+  // Keep the login glyph aligned with the theme's explicit contrast token.
+  // Custom CSS references cannot be resolved in JavaScript, so fall back to
+  // the theme mode when the value is not a literal RGB triplet.
+  const iconShouldBeBlack = useMemo(() => {
+    const primaryContrast =
+      currentTheme?.cssVars?.["--oui-color-primary-contrast"] ??
+      (currentTheme?.mode === "light"
+        ? LIGHT_THEME_CSS_VARS["--oui-color-primary-contrast"]
+        : DARK_THEME_CSS_VARS["--oui-color-primary-contrast"]);
+    return shouldUseBlackIcon(primaryContrast, currentTheme?.mode);
+  }, [currentTheme]);
 
   const disabled = state.validating || props.disabledConnect;
 
@@ -108,8 +125,6 @@ const RenderUserCenter = (props: any) => {
       <Button
         data-testid="oui-testid-nav-bar-connectWallet-btn"
         size="md"
-        variant={disabled ? undefined : "gradient"}
-        angle={45}
         className={cn(
           "wallet-connect-button",
           isMobile && "oui-font-semibold oui-px-2",
@@ -136,8 +151,7 @@ const RenderUserCenter = (props: any) => {
         <div onClick={openWalletCenter}>
           <Button
             size="md"
-            variant="gradient"
-            angle={45}
+            variant="contained"
             data-testid="oui-testid-nav-bar-address-btn"
             className="oui-px-2 oui-flex oui-items-center oui-justify-center oui-gap-1"
           >
@@ -145,12 +159,12 @@ const RenderUserCenter = (props: any) => {
               <RenderPrivyTypeIcon
                 type={linkedAccount.type}
                 size={14}
-                black={true}
+                black={iconShouldBeBlack}
               />
             )}
             <Text.formatted
               rule="address"
-              className="oui-text-[rgba(0,0,0,.88)] oui-font-semibold"
+              className="oui-text-primary-contrast oui-font-semibold"
             >
               {formatAddress(userAddress!)}
             </Text.formatted>
@@ -163,8 +177,7 @@ const RenderUserCenter = (props: any) => {
     <div onClick={openWalletCenter}>
       <Button
         size="md"
-        variant="gradient"
-        angle={45}
+        variant="contained"
         data-testid="oui-testid-nav-bar-address-btn"
         className="oui-flex oui-items-center oui-justify-center oui-gap-2"
       >
@@ -172,10 +185,10 @@ const RenderUserCenter = (props: any) => {
           <RenderPrivyTypeIcon
             type={linkedAccount.type}
             size={18}
-            black={true}
+            black={iconShouldBeBlack}
           />
         )}
-        <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
+        <Text.formatted rule="address" className="oui-text-primary-contrast">
           {formatAddress(userAddress!)}
         </Text.formatted>
       </Button>

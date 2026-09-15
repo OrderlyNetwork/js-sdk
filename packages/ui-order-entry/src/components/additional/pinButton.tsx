@@ -26,7 +26,7 @@ export const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         onMouseLeave={() => {
           setPath(defaultPath);
         }}
-        className="oui-text-primary-darken"
+        className="oui-text-primary"
       >
         <path d={path} />
       </svg>

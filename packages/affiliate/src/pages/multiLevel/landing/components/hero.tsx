@@ -3,7 +3,14 @@ import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { Button, cn, Flex, modal, Text } from "@orderly.network/ui";
+import {
+  Button,
+  cn,
+  Flex,
+  modal,
+  Text,
+  useOrderlyTheme,
+} from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { useReferralContext } from "../../../../provider";
 import { ReferralCodeFormType } from "../../../../types";
@@ -37,6 +44,7 @@ export const Hero = () => {
   const { t } = useTranslation();
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
+  const { currentTheme } = useOrderlyTheme();
   const status = state.status;
 
   const {
@@ -213,7 +221,7 @@ export const Hero = () => {
   return (
     <Flex
       gap={8}
-      className="oui-affiliate-hero oui-flex-col-reverse md:oui-flex-row"
+      className="oui-affiliate-hero oui-mb-[clamp(2rem,3vw,3rem)] oui-flex-col-reverse md:oui-flex-row"
       id="oui-affiliate-landing-hero"
       itemAlign={"center"}
     >
@@ -252,7 +260,12 @@ export const Hero = () => {
       <img
         src="https://oss.orderly.network/static/sdk/referral/network-diagram.png"
         alt="Network diagram"
-        className="oui-size-[335px] oui-object-cover md:oui-size-[480px]"
+        className={cn(
+          "oui-size-[335px] oui-object-cover md:oui-size-[480px]",
+          // The diagram ships as a dark PNG; lift it on light surfaces.
+          currentTheme?.mode === "light" &&
+            "oui-brightness-[1.65] oui-contrast-[0.82] oui-saturate-[0.82]",
+        )}
         id="oui-affiliate-landing-network-diagram"
       />
     </Flex>

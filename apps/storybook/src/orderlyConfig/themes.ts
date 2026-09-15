@@ -1,4 +1,8 @@
-import { LIGHT_THEME_CSS_VARS, type ThemeConfig } from "@orderly.network/ui";
+import {
+  CLASSIC_DARK_THEME_CSS_VARS,
+  LIGHT_THEME_CSS_VARS,
+  type ThemeConfig,
+} from "@orderly.network/ui";
 import { CUSTOM_THEME_CSS_VARS, ROUNDLESS_THEME_CSS_VARS } from "../theme";
 
 export const themes: ThemeConfig[] = [
@@ -7,6 +11,12 @@ export const themes: ThemeConfig[] = [
     displayName: "Dark",
     mode: "dark",
     isDefault: true,
+  },
+  {
+    id: "classic-dark",
+    displayName: "Dark (Classic)",
+    mode: "dark",
+    cssVars: CLASSIC_DARK_THEME_CSS_VARS,
   },
   {
     id: "light",

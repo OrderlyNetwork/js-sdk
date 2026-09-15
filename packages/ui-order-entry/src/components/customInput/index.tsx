@@ -65,11 +65,10 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
           ]
         }
         classNames={{
+          // No resting border: the solid `fill` surface of the inner input
+          // establishes the boundary (the focus outline stays available).
           root: cn(
-            "oui-orderEntry-customInput orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
-            props.error
-              ? "oui-border-transparent"
-              : "focus-within:oui-border-transparent",
+            "oui-orderEntry-customInput orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
             props.className,
             props.classNames?.root,
           ),

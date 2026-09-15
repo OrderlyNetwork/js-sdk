@@ -161,6 +161,7 @@ export const CampaignsHeaderMobileUI = memo<{
               key="general_campaign"
               currentCampaignId={currentCampaignId}
               onCampaignChange={onCampaignChange}
+              campaigns={campaigns}
               style={slideStyle}
               className="oui-w-full oui-shrink-0"
             />

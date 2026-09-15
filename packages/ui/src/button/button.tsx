@@ -25,6 +25,8 @@ const buttonVariants = tv(
         text: "oui-bg-transparent",
         outlined: "oui-border",
         contained: "oui-text-base-contrast",
+        // Token-driven brand gradient: real gradient in themes that define
+        // gradient values, flat brand fill under flattened presets (ODS).
         gradient: "oui-gradient-brand oui-text-base-10",
       },
       size: {

@@ -200,8 +200,6 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
     if (state.validating && !disabledConnect) {
       return (
         <StatusInfo
-          // variant={"gradient"}
-          angle={45}
           // fullWidth
           disabled
           loading
@@ -297,8 +295,6 @@ const DefaultFallback: React.FC<{
           onConnectWallet();
         }}
         // fullWidth
-        variant={props.disabledConnect ? undefined : "gradient"}
-        angle={45}
         description={descriptions?.connectWallet}
         disabled={props.disabledConnect}
         {...buttonProps}
@@ -316,7 +312,6 @@ const DefaultFallback: React.FC<{
           onConnectOrderly();
         }}
         // fullWidth
-        angle={45}
         description={descriptions?.signin}
         {...buttonProps}
       >

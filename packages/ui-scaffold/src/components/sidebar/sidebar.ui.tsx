@@ -179,7 +179,7 @@ const SideBarHeader: React.FC<SideBarHeaderProps> = (props) => {
 
   const titleElemet =
     typeof title === "string" ? (
-      <Text intensity={54} size="xs">
+      <Text size="xs" className="oui-text-primary">
         {title}
       </Text>
     ) : (

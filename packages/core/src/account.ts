@@ -274,6 +274,10 @@ export class Account {
 
   get isSubAccount(): boolean {
     const state = this.stateValue;
+    // Not connected / no active account → not a sub-account
+    if (!state.accountId || !state.mainAccountId) {
+      return false;
+    }
     return state.mainAccountId !== state.accountId;
   }
 
@@ -1221,6 +1225,8 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.NotConnected,
       accountId: undefined,
+      mainAccountId: undefined,
+      subAccountId: undefined,
       userId: undefined,
       address: undefined,
     };

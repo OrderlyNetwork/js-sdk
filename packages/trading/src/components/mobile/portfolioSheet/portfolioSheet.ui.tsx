@@ -291,7 +291,7 @@ const LeverageInput: React.FC<PortfolioSheetState> = (props) => {
       className={cn(
         "oui-w-full",
         "oui-rounded",
-        "oui-bg-base-6",
+        "oui-bg-fill",
         "oui-flex",
         "oui-items-center",
         "oui-justify-between",

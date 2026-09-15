@@ -17,6 +17,7 @@ import {
   Flex,
   CopyIcon,
   ChainIcon,
+  InfoFillIcon,
 } from "@orderly.network/ui";
 
 interface StatusInfo {
@@ -36,25 +37,30 @@ const useCurrentStatus = () => {
       description: t("connector.wrongNetwork.tooltip"),
       rootClass:
         "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-warning-darken))_0%,transparent_30%)]",
+      info: false,
     },
     connectWallet: {
       description: t("connector.trade.connectWallet.tooltip"),
-      rootClass:
-        "oui-bg-[linear-gradient(15deg,rgb(var(--oui-gradient-brand-start))_0%,transparent_30%)]",
+      // Informational treatment: quiet brand tint with an info glyph.
+      rootClass: "oui-bg-[rgb(var(--oui-color-primary-light)/0.06)]",
+      info: true,
     },
     notSignedIn: {
       description: t("connector.trade.createAccount.tooltip"),
       rootClass:
         "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-primary-darken))_0%,transparent_30%)]",
+      info: false,
     },
     disabledTrading: {
       description: t("connector.trade.enableTrading.tooltip"),
       rootClass:
         "oui-bg-[linear-gradient(15deg,rgb(var(--oui-color-primary-darken))_0%,transparent_30%)]",
+      info: false,
     },
     default: {
       description: "",
       rootClass: "",
+      info: false,
       arrowIconClass: "",
       textClass: "",
     },
@@ -239,7 +245,7 @@ const ShowAccount: FC = () => {
 export const AccountStatusMobile: FC = () => {
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
-  const { description, rootClass } = useCurrentStatus();
+  const { description, rootClass, info } = useCurrentStatus();
 
   const alreadyShowAccount = useMemo(() => {
     if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
@@ -258,19 +264,19 @@ export const AccountStatusMobile: FC = () => {
   return (
     <div
       className={cn([
-        "oui-flex oui-h-[44px] oui-w-full oui-items-center oui-justify-center oui-rounded-[10px] oui-px-3 oui-py-[10px]",
+        "oui-flex oui-h-[44px] oui-w-full oui-items-center oui-justify-center oui-gap-1.5 oui-rounded-[10px] oui-px-3 oui-py-[10px]",
         rootClass,
-        // "oui-bg-linear-65",
-        // "oui-from-[-20%]",
-        // "oui-to-[40%]",
-        // " oui-from-[#FF7B00]",
-        // " oui-to-[#FFEA00]",
       ])}
     >
+      {info && (
+        <InfoFillIcon className="oui-size-5 oui-flex-none oui-text-primary" />
+      )}
       <div
         className={cn(
           "oui-flex oui-items-center oui-justify-end oui-rounded-[10px] oui-text-xs oui-font-semibold",
-          "oui-text-base-contrast-54",
+          info
+            ? "oui-text-primary oui-font-medium"
+            : "oui-text-base-contrast-54",
         )}
       >
         {description}

@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsup && pnpm run build:css",
     "build:css": "npx tailwindcss -i ./src/tailwind.css -o ./dist/styles.css --minify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "orderly.network",
@@ -61,7 +61,8 @@
     "tailwindcss-animate": "^1.0.6",
     "tsconfig": "workspace:*",
     "tsup": "^8.5.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "react": ">=18",

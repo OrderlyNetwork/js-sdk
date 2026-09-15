@@ -1,43 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useMarkets, useQuery, MarketsType } from "@orderly.network/hooks";
-import { useEmblaCarousel } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { sortList, useSize } from "../../../utils";
-
-// export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
-// export type TEmblaApi = Pick<EmblaCarouselType, "scrollPrev" | "scrollNext">;
-// use UseEmblaCarouselType will bring type error
-export type TEmblaApi = {
-  scrollPrev: (jump?: boolean) => void;
-  scrollNext: (jump?: boolean) => void;
-};
+import { sortList } from "../../../utils";
 
 export type MarketsHeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
 
 export const useMarketsHeaderScript = () => {
-  const [scrollIndex, setScrollIndex] = useState(0);
   const data = useDataSource();
 
-  const { width } = useSize();
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    // duration: 25,
-    slidesToScroll: "auto",
-  });
-
-  useEffect(() => {
-    emblaApi?.on("select", () => {
-      setScrollIndex(emblaApi?.selectedScrollSnap());
-    });
-  }, [emblaApi]);
-
   return {
-    scrollIndex,
-    setScrollIndex,
-    emblaRef,
-    emblaApi: emblaApi as TEmblaApi,
-    enableScroll: width < 1440,
     ...data,
   };
 };

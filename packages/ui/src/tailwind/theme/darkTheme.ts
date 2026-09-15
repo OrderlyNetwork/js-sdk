@@ -1,50 +1,62 @@
 import plugin from "tailwindcss/plugin";
 
+const BUTTON_PRIMARY_RGB = "103 0 206";
+
+/**
+ * Orderly Design System v2 dark palette — the SDK default dark theme.
+ *
+ * Every gradient slot resolves to a flat semantic color, so gradient-driven
+ * treatments (brand buttons, gradient text) render as solid fills under this
+ * preset. Consumers that need visible gradients should use
+ * `CLASSIC_DARK_THEME_CSS_VARS` or define their own `cssVars`.
+ */
 export const DARK_THEME_CSS_VARS = {
   "--oui-font-family":
-    '"Manrope","PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
+    '"Atyp BL Text", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
-  /* colors */
-  "--oui-color-primary": "176 132 233",
-  "--oui-color-primary-light": "213 190 244",
-  "--oui-color-primary-darken": "137 76 209",
+  /* Orderly brand colors */
+  "--oui-color-primary": "156 117 255",
+  "--oui-color-primary-light": "156 117 255",
+  /* Orderly UI buttons consume the legacy `primary-darken` slot. */
+  "--oui-color-primary-darken": BUTTON_PRIMARY_RGB,
   "--oui-color-primary-contrast": "255 255 255",
 
-  "--oui-color-link": "189 107 237",
-  "--oui-color-link-light": "217 152 250",
+  "--oui-color-link": "156 117 255",
+  "--oui-color-link-light": "156 117 255",
 
   "--oui-color-secondary": "255 255 255",
-  "--oui-color-tertiary": "218 218 218",
-  "--oui-color-quaternary": "218 218 218",
+  "--oui-color-tertiary": "132 131 136",
+  "--oui-color-quaternary": "98 96 102",
 
-  "--oui-color-danger": "245 97 139",
-  "--oui-color-danger-light": "250 167 188",
-  "--oui-color-danger-darken": "237 72 122",
-  "--oui-color-danger-contrast": "255 255 255",
+  /* Status colors retain their existing product meanings. */
+  "--oui-color-danger": "233 77 122",
+  "--oui-color-danger-light": "233 77 122",
+  "--oui-color-danger-darken": "233 77 122",
+  "--oui-color-danger-contrast": "9 6 16",
 
-  "--oui-color-success": "41 233 169",
-  "--oui-color-success-light": "101 240 194",
-  "--oui-color-success-darken": "0 161 120",
-  "--oui-color-success-contrast": "255 255 255",
+  "--oui-color-success": "2 181 137",
+  "--oui-color-success-light": "2 181 137",
+  "--oui-color-success-darken": "2 181 137",
+  "--oui-color-success-contrast": "9 6 16",
 
-  "--oui-color-warning": "255 209 70",
-  "--oui-color-warning-light": "255 229 133",
-  "--oui-color-warning-darken": "255 152 0",
-  "--oui-color-warning-contrast": "255 255 255",
+  "--oui-color-warning": "217 171 82",
+  "--oui-color-warning-light": "217 171 82",
+  "--oui-color-warning-darken": "217 171 82",
+  "--oui-color-warning-contrast": "9 6 16",
 
-  "--oui-color-fill": "36 32 47",
-  "--oui-color-fill-active": "40 46 58",
+  "--oui-color-fill": "29 25 41",
+  "--oui-color-fill-active": "43 39 54",
 
-  "--oui-color-base-1": "93 83 123",
-  "--oui-color-base-2": "81 72 107",
-  "--oui-color-base-3": "68 61 69",
-  "--oui-color-base-4": "57 52 74",
-  "--oui-color-base-5": "51 46 66",
-  "--oui-color-base-6": "43 38 56",
-  "--oui-color-base-7": "36 32 47",
-  "--oui-color-base-8": "29 26 38",
-  "--oui-color-base-9": "22 20 28",
-  "--oui-color-base-10": "14 13 18",
+  "--oui-color-base-1": "57 53 65",
+  "--oui-color-base-2": "57 53 65",
+  "--oui-color-base-3": "29 25 41",
+  "--oui-color-base-4": "43 39 54",
+  "--oui-color-base-5": "43 39 54",
+  "--oui-color-base-6": "43 39 54",
+  "--oui-color-base-7": "29 25 41",
+  "--oui-color-base-8": "25 22 36",
+  "--oui-color-base-9": "19 14 29",
+  "--oui-color-base-10": "9 6 16",
 
   "--oui-color-base-foreground": "255 255 255",
   "--oui-color-line": "255 255 255",
@@ -52,35 +64,35 @@ export const DARK_THEME_CSS_VARS = {
   "--oui-color-base-static": "255 255 255",
   "--oui-color-base-static-contrast": "0 0 0",
 
-  "--oui-color-trading-loss": "245 97 139",
-  "--oui-color-trading-loss-contrast": "255 255 255",
-  "--oui-color-trading-profit": "41 233 169",
-  "--oui-color-trading-profit-contrast": "255 255 255",
+  "--oui-color-trading-loss": "233 77 122",
+  "--oui-color-trading-loss-contrast": "9 6 16",
+  "--oui-color-trading-profit": "2 181 137",
+  "--oui-color-trading-profit-contrast": "9 6 16",
 
-  /* gradients */
-  "--oui-gradient-primary-start": "40 0 97",
-  "--oui-gradient-primary-end": "189 107 237",
+  /* Gradient slots intentionally resolve to flat semantic colors. */
+  "--oui-gradient-primary-start": "156 117 255",
+  "--oui-gradient-primary-end": "156 117 255",
 
-  "--oui-gradient-secondary-start": "81 42 121",
-  "--oui-gradient-secondary-end": "176 132 233",
+  "--oui-gradient-secondary-start": "156 117 255",
+  "--oui-gradient-secondary-end": "156 117 255",
 
-  "--oui-gradient-success-start": "1 83 68",
-  "--oui-gradient-success-end": "41 223 169",
+  "--oui-gradient-success-start": "2 181 137",
+  "--oui-gradient-success-end": "2 181 137",
 
-  "--oui-gradient-danger-start": "153 24 76",
-  "--oui-gradient-danger-end": "245 97 139",
+  "--oui-gradient-danger-start": "233 77 122",
+  "--oui-gradient-danger-end": "233 77 122",
 
-  "--oui-gradient-brand-start": "231 219 249",
-  "--oui-gradient-brand-end": "159 107 225",
+  "--oui-gradient-warning-start": "217 171 82",
+  "--oui-gradient-warning-end": "217 171 82",
+
+  "--oui-gradient-neutral-start": "29 25 41",
+  "--oui-gradient-neutral-end": "29 25 41",
+
+  "--oui-gradient-brand-start": "156 117 255",
+  "--oui-gradient-brand-end": "156 117 255",
   "--oui-gradient-brand-stop-start": "6.62%",
   "--oui-gradient-brand-stop-end": "86.5%",
   "--oui-gradient-brand-angle": "17.44deg",
-
-  "--oui-gradient-warning-start": "152 58 8",
-  "--oui-gradient-warning-end": "255 209 70",
-
-  "--oui-gradient-neutral-start": "27 29 24",
-  "--oui-gradient-neutral-end": "38 41 46",
 
   /* rounded */
   "--oui-rounded-sm": "2px",

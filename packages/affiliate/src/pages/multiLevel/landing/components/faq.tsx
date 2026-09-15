@@ -82,7 +82,7 @@ export const Faq = () => {
         direction="column"
         itemAlign="stretch"
         gap={0}
-        className="oui-faq-list"
+        className="oui-faq-list oui-mt-[clamp(1.5rem,2vw,2rem)]"
       >
         {faqItems.map((item, index) => (
           <Fragment key={item.id}>
@@ -108,7 +108,7 @@ export const Faq = () => {
 
                 {/* Answer (collapsible) */}
                 <CollapsibleContent>
-                  <Box className="oui-pt-3 oui-text-base-contrast-54">
+                  <Box className="oui-pt-3 oui-text-base-contrast-54 oui-font-medium">
                     {item.answer}
                   </Box>
                 </CollapsibleContent>
