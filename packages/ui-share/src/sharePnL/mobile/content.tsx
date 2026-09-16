@@ -183,6 +183,7 @@ export const MobileSharePnLContent: FC<{
             ))}
           </CarouselContent>
           <div className="oui-mb-1 oui-mt-2 oui-flex oui-justify-center">
+            {/* TODO(theme): "oui-bg-base-300" is an invalid token (the base scale only defines 1-10) and generates no CSS, so the carousel dots have no background. Remove it or replace with "oui-bg-base-3" after visual comparison. */}
             <MyIdentifier
               dotClassName="oui-w-[16px] oui-h-[4px] oui-bg-base-300"
               dotActiveClassName="!oui-bg-primary-darken oui-w-[20px]"
@@ -230,7 +231,9 @@ export const MobileSharePnLContent: FC<{
           <div className="oui-h-[18px] oui-text-3xs oui-text-base-contrast-54">
             {t("share.pnl.optionalInfo.message")}
           </div>
+          {/* TODO(theme): "oui-bg-base-600" is an invalid token (the base scale only defines 1-10) and generates no CSS, so this wrapper has no background. Remove it or replace with "oui-bg-base-6" after visual comparison. */}
           <div className="oui-bg-base-600 oui-mx-1 oui-mt-3 oui-h-[48px]">
+            {/* TODO: "containerClassName" is never applied by BaseInput, so the intended transparent background and height have no effect. Remove it or switch to classNames={{ root: ... }} later. */}
             <Input
               placeholder={t("share.pnl.optionalInfo.message.placeholder")}
               containerClassName="oui-bg-transparent oui-h-[48px]"

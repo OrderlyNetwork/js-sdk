@@ -64,6 +64,7 @@ export const InnerInput: FC<{
         autoFocus
         color={open ? "danger" : undefined}
         classNames={{
+          // TODO(theme): "oui-bg-base-700" is an invalid token (the base scale only defines 1-10) and generates no CSS. Remove it or replace with a valid token (e.g. "oui-bg-base-7") after visual comparison.
           root: "oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded",
           input: "oui-pe-2",
         }}
