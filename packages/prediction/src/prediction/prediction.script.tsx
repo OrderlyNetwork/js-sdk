@@ -135,7 +135,7 @@ const createBook = (midPrice: number) => {
   const bids: PredictionOrderBookLevel[] = [];
 
   for (let index = 0; index < 7; index += 1) {
-    const step = (index + 1) * 0.005;
+    const step = (index + 1) * 0.01;
     asks.push({
       price: clamp(midPrice + step, 0.0001, 0.9999),
       quantity: 180 + index * 73 + ((index * 37) % 90),

@@ -151,7 +151,7 @@ const CountdownDisplay: React.FC<{
 };
 
 const formatPercent = (value: number) => `${value.toFixed(1)}%`;
-const formatContractPrice = (value: number) => value.toFixed(4);
+const formatContractPrice = (value: number) => value.toFixed(2);
 const formatRoundWindow = (round: number) => {
   const start = new Date(round * 1_000);
   const end = new Date(start.getTime() + 5 * 60 * 1_000);
@@ -1504,7 +1504,7 @@ const PredictionOrderBook: React.FC<
   const { t } = useTranslation();
   const selectPrice = (price: number) => {
     setOrderType("limit");
-    setLimitPrice(price.toFixed(4));
+    setLimitPrice(price.toFixed(2));
   };
 
   const asks = useMemo(
@@ -1582,10 +1582,10 @@ const PredictionOrderBook: React.FC<
           lastPrice={
             isPastRound
               ? [Number.NaN, Number.NaN]
-              : [Math.max(selectedPrice - 0.0001, 0), selectedPrice]
+              : [Math.max(selectedPrice - 0.01, 0), selectedPrice]
           }
-          depths={["0.0001", "0.001", "0.01"]}
-          selDepth="0.0001"
+          depths={["0.01"]}
+          selDepth="0.01"
           symbol={`PREDICTION_BTC_${selectedOutcome.toUpperCase()}`}
           base={selectedOutcome.toUpperCase()}
           quote="USDC"
@@ -1596,7 +1596,7 @@ const PredictionOrderBook: React.FC<
           pendingOrders={[]}
           symbolInfo={{
             base_dp: 2,
-            quote_dp: 4,
+            quote_dp: 2,
             base_tick: 0.01,
             base: selectedOutcome.toUpperCase(),
             quote: "USDC",
