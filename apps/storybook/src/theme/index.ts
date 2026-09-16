@@ -1,3 +1,3 @@
-export * from "./customTheme";
+export * from "./blueDarkTheme";
 export * from "./lightPrimaryTheme";
 export * from "./roundlessTheme";

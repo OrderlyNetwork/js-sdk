@@ -3,7 +3,7 @@ import {
   LIGHT_THEME_CSS_VARS,
   type ThemeConfig,
 } from "@orderly.network/ui";
-import { CUSTOM_THEME_CSS_VARS, ROUNDLESS_THEME_CSS_VARS } from "../theme";
+import { BLUE_DARK_THEME_CSS_VARS, ROUNDLESS_THEME_CSS_VARS } from "../theme";
 
 export const themes: ThemeConfig[] = [
   {
@@ -17,6 +17,24 @@ export const themes: ThemeConfig[] = [
     displayName: "Dark (Classic)",
     mode: "dark",
     cssVars: CLASSIC_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "blue-dark",
+    displayName: "Dark (Blue)",
+    mode: "dark",
+    cssVars: BLUE_DARK_THEME_CSS_VARS,
+    // tradingViewColorConfig: {
+    //   chartBG: "#131519",
+    //   upColor: "#00B49E",
+    //   downColor: "#FF447C",
+    //   pnlUpColor: "#00B49E",
+    //   pnlDownColor: "#FF447C",
+    //   textColor: "#FFFFFF",
+    //   qtyTextColor: "#F4F7F9",
+    //   volumeUpColor: "#0C3E3A",
+    //   volumeDownColor: "#5A1E36",
+    //   closeIconColor: "rgba(255, 255, 255, 0.8)",
+    // },
   },
   {
     id: "light",
@@ -34,24 +52,6 @@ export const themes: ThemeConfig[] = [
     //   volumeUpColor: "#0ECB81",
     //   volumeDownColor: "#F6465D",
     //   closeIconColor: "rgba(0, 0, 0, 0.8)",
-    // },
-  },
-  {
-    id: "custom",
-    displayName: "Custom",
-    mode: "dark",
-    cssVars: CUSTOM_THEME_CSS_VARS,
-    // tradingViewColorConfig: {
-    //   chartBG: "#131519",
-    //   upColor: "#00B49E",
-    //   downColor: "#FF447C",
-    //   pnlUpColor: "#00B49E",
-    //   pnlDownColor: "#FF447C",
-    //   textColor: "#FFFFFF",
-    //   qtyTextColor: "#F4F7F9",
-    //   volumeUpColor: "#0C3E3A",
-    //   volumeDownColor: "#5A1E36",
-    //   closeIconColor: "rgba(255, 255, 255, 0.8)",
     // },
   },
   {

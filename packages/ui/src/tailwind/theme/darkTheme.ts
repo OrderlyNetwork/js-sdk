@@ -5,14 +5,15 @@ const BUTTON_PRIMARY_RGB = "103 0 206";
 /**
  * Orderly Design System v2 dark palette — the SDK default dark theme.
  *
- * Every gradient slot resolves to a flat semantic color, so gradient-driven
- * treatments (brand buttons, gradient text) render as solid fills under this
- * preset. Consumers that need visible gradients should use
- * `CLASSIC_DARK_THEME_CSS_VARS` or define their own `cssVars`.
+ * Uses the Manrope type stack. Every gradient slot resolves to a flat
+ * semantic color, so gradient-driven treatments (brand buttons, gradient
+ * text) render as solid fills under this preset. Consumers that need
+ * visible gradients should use `CLASSIC_DARK_THEME_CSS_VARS` or define
+ * their own `cssVars`.
  */
 export const DARK_THEME_CSS_VARS = {
   "--oui-font-family":
-    '"Atyp BL Text", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
+    '"Manrope", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
   /* Orderly brand colors */
   "--oui-color-primary": "156 117 255",
