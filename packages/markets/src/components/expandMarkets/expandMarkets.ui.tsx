@@ -7,6 +7,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { RwaSubcategoryTabs } from "../rwaSubcategoryTabs";
 import { RwaTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import { ShowLowVolumeFilter } from "../shared/showLowVolumeFilter";
 import {
   isBuiltInMarketTab,
   tabKey,
@@ -203,12 +204,19 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       )}
       height="100%"
     >
-      <Box className="oui-expandMarkets-header" px={3} pb={2}>
+      <Box
+        className="oui-expandMarkets-header oui-flex oui-min-w-0 oui-items-center oui-gap-x-3"
+        px={3}
+        pb={2}
+      >
         <React.Suspense fallback={null}>
           <LazySearchInput
-            classNames={{ root: "oui-expandMarkets-search-input" }}
+            classNames={{
+              root: "oui-expandMarkets-search-input oui-min-w-0 oui-flex-1",
+            }}
           />
         </React.Suspense>
+        <ShowLowVolumeFilter />
       </Box>
       <Tabs
         variant="contained"

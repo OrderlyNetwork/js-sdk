@@ -14,6 +14,12 @@ export const markets = {
   "markets.topLosers": "Top losers",
 
   "markets.search.placeholder": "Search market",
+  "markets.showLowVolume": "Show low vol.",
+  "markets.showLowVolume.tooltip":
+    "Include markets with less than $1,000 in 24h trading volume.",
+  "markets.showLowVolume.empty":
+    "Matching markets are hidden by the 24h volume filter.",
+  "markets.showLowVolume.action": "Show low-volume markets",
   "markets.dataList.favorites.empty":
     "Click on the <0/> icon next to a market to add it to your list.",
 

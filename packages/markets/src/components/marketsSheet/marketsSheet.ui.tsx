@@ -9,6 +9,7 @@ import { RwaSubcategoryTabs } from "../rwaSubcategoryTabs";
 import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import { ShowLowVolumeFilter } from "../shared/showLowVolumeFilter";
 import {
   isBuiltInMarketTab,
   tabKey,
@@ -156,9 +157,14 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         <Text size="base" intensity={80}>
           {t("common.markets")}
         </Text>
-        <SearchInput
-          classNames={{ root: cn("oui-marketsSheet-search-input", "oui-mt-4") }}
-        />
+        <div className="oui-mt-4 oui-flex oui-min-w-0 oui-items-center oui-gap-x-2">
+          <SearchInput
+            classNames={{
+              root: "oui-marketsSheet-search-input oui-min-w-0 oui-flex-1",
+            }}
+          />
+          <ShowLowVolumeFilter />
+        </div>
       </Box>
 
       <Tabs

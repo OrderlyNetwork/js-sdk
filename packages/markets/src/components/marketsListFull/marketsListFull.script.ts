@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { TableSort, usePagination } from "@orderly.network/ui";
-import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
+import { useMarketsContext } from "../marketsProvider";
+import { useLowVolumeMarketFilter } from "../shared/lowVolumeMarketFilter";
+import { filterMarketsByLowVolume } from "../shared/marketVolumeFilter";
 import { MarketsListFullWidgetProps } from "./marketsListFull.widget";
 
 export type UseMarketsListFullScriptOptions = MarketsListFullWidgetProps;
@@ -33,14 +35,23 @@ export const useMarketsListFullScript = (
   const [data, favorite] = useMarkets(MarketsTypeMap[type]);
 
   const { searchValue } = useMarketsContext();
+  const { showLowVolume } = useLowVolumeMarketFilter();
 
   const { onSort, getSortedList, sort } = useSort(options.initialSort);
 
-  const dataSource = useMemo(() => {
+  const { dataSource, isHiddenByLowVolumeFilter } = useMemo(() => {
     const filtered = typeof dataFilter === "function" ? dataFilter(data) : data;
     const searchList = searchBySymbol(filtered, searchValue, "base-type");
-    return getSortedList(searchList);
-  }, [data, dataFilter, getSortedList, searchValue]);
+    const { visibleMarkets, allHidden } = filterMarketsByLowVolume(
+      searchList,
+      showLowVolume,
+    );
+
+    return {
+      dataSource: getSortedList(visibleMarkets),
+      isHiddenByLowVolumeFilter: allHidden,
+    };
+  }, [data, dataFilter, getSortedList, searchValue, showLowVolume]);
 
   useEffect(() => {
     setLoading(false);
@@ -48,7 +59,7 @@ export const useMarketsListFullScript = (
 
   useEffect(() => {
     setPage(1);
-  }, [searchValue]);
+  }, [searchValue, showLowVolume]);
 
   useEffect(() => {
     // Only all markets store sort
@@ -69,6 +80,7 @@ export const useMarketsListFullScript = (
   return {
     loading,
     dataSource,
+    isHiddenByLowVolumeFilter,
     favorite,
     onSort,
     pagination,

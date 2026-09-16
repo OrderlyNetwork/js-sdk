@@ -98,15 +98,21 @@ const createMultiSortComparator = (sortId: string, isDesc: boolean) => {
     const aValue = getNestedValue(a, sortId) ?? a[sortId];
     const bValue = getNestedValue(b, sortId) ?? b[sortId];
 
-    // Handle null/undefined values
-    if (aValue == null && bValue == null) return 0;
-    if (aValue == null) return 1;
-    if (bValue == null) return -1;
+    // Keep missing and invalid values at the bottom in both directions.
+    const aMissing =
+      aValue == null ||
+      (typeof aValue === "number" && !Number.isFinite(aValue));
+    const bMissing =
+      bValue == null ||
+      (typeof bValue === "number" && !Number.isFinite(bValue));
+    if (aMissing && bMissing) return 0;
+    if (aMissing) return 1;
+    if (bMissing) return -1;
 
     // Numeric comparison
     const aNum = Number(aValue);
     const bNum = Number(bValue);
-    if (!isNaN(aNum) && !isNaN(bNum)) {
+    if (Number.isFinite(aNum) && Number.isFinite(bNum)) {
       return isDesc ? bNum - aNum : aNum - bNum;
     }
 
