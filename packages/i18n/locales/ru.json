@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "От",
   "portfolio.overview.column.to": "Кому",
   "portfolio.overview.column.convert.convertedAsset": "Конвертированный актив",
-  "portfolio.overview.column.convert.usdcAmount": "Количество USDC",
+  "portfolio.overview.column.convert.receivedAmount": "Получено",
   "portfolio.overview.column.convert.convertId": "ID конвертации",
   "portfolio.overview.column.convert.details": "Детали",
   "portfolio.overview.tab.convert.history": "История конвертации",

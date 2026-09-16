@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "보내는 사람",
   "portfolio.overview.column.to": "받는 사람",
   "portfolio.overview.column.convert.convertedAsset": "변환된 자산",
-  "portfolio.overview.column.convert.usdcAmount": "USDC 수량",
+  "portfolio.overview.column.convert.receivedAmount": "수령 수량",
   "portfolio.overview.column.convert.convertId": "변환 ID",
   "portfolio.overview.column.convert.details": "세부 정보",
   "portfolio.overview.tab.convert.history": "변환 내역",

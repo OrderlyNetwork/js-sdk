@@ -8,6 +8,7 @@ import {
 } from "@orderly.network/types";
 import { WithdrawTo } from "../../types";
 import { useToken } from "../convertForm/hooks/useToken";
+import { getQuoteTargetAmount } from "../convertForm/quoteAmount";
 import { useWithdrawToken } from "../withdrawForm/hooks/useWithdrawToken";
 import { canReverseConvert } from "./policy";
 
@@ -39,7 +40,7 @@ afterEach(() => {
 });
 const tokens = [
   { token: "USDC", decimals: 6, on_chain_swap: true },
-  { token: "USDG", decimals: 8, on_chain_swap: false },
+  { token: "USDG", decimals: 6, on_chain_swap: false },
   { token: "USDT", decimals: 6, on_chain_swap: true },
 ];
 describe("Robinhood withdrawal conversion", () => {
@@ -59,8 +60,18 @@ describe("Robinhood withdrawal conversion", () => {
     mount(() => useToken({ reverse: true }));
     expect(result.sourceToken.token).toBe("USDC");
     expect(result.targetToken.token).toBe("USDG");
-    expect(result.targetToken.decimals).toBe(8);
+    expect(result.targetToken.decimals).toBe(6);
     expect(result.sourceTokens).toEqual([]);
+  });
+  it("decodes the DEV CeFi quote sample with metadata decimals", () => {
+    data.tokens = tokens;
+    mount(() => useToken({ reverse: true }));
+    // Real /v1/swap/quote response (USDC -> USDG, 2026-09 DEV): 1.2 USDC in,
+    // toToken.estimatedAmount "1200240" in minimal units; CeFi omits
+    // estimatedValue so decoding must use 10^token metadata decimals.
+    expect(
+      getQuoteTargetAmount(undefined, "1200240", result.targetToken.decimals),
+    ).toBe("1.20024");
   });
   it("does not fabricate missing metadata", () => {
     data.tokens = tokens.filter((t) => t.token !== "USDG");
@@ -80,7 +91,7 @@ describe("Robinhood withdrawal conversion", () => {
       id: ROBINHOOD_MAINNET_CHAINID,
       info: {
         token_infos: [
-          { symbol: "USDG", token_decimal: 8, is_collateral: true },
+          { symbol: "USDG", token_decimal: 6, is_collateral: true },
         ],
       },
     } as any;
@@ -88,7 +99,7 @@ describe("Robinhood withdrawal conversion", () => {
       useWithdrawToken({ withdrawTo: WithdrawTo.Wallet, currentChain }),
     );
     expect(result.sourceToken.symbol).toBe("USDG");
-    expect(result.sourceToken.token_decimal).toBe(8);
+    expect(result.sourceToken.token_decimal).toBe(6);
     expect(result.sourceTokens.map((t: any) => t.symbol)).toEqual(["USDG"]);
     expect(result.isTokenSupportedOnChain("USDG")).toBe(true);
   });

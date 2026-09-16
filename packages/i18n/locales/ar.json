@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "من",
   "portfolio.overview.column.to": "إلى",
   "portfolio.overview.column.convert.convertedAsset": "الأصل بعد التحويل",
-  "portfolio.overview.column.convert.usdcAmount": "مبلغ USDC",
+  "portfolio.overview.column.convert.receivedAmount": "المبلغ المستلم",
   "portfolio.overview.column.convert.convertId": "معرّف التحويل",
   "portfolio.overview.column.convert.details": "التفاصيل",
   "portfolio.overview.tab.convert.history": "سجل التحويل",

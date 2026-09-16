@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "Van",
   "portfolio.overview.column.to": "Naar",
   "portfolio.overview.column.convert.convertedAsset": "Geconverteerd actief",
-  "portfolio.overview.column.convert.usdcAmount": "USDC-bedrag",
+  "portfolio.overview.column.convert.receivedAmount": "Ontvangen bedrag",
   "portfolio.overview.column.convert.convertId": "Conversie-ID",
   "portfolio.overview.column.convert.details": "Details",
   "portfolio.overview.tab.convert.history": "Conversiegeschiedenis",

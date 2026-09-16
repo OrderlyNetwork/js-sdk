@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "De",
   "portfolio.overview.column.to": "Para",
   "portfolio.overview.column.convert.convertedAsset": "Ativo convertido",
-  "portfolio.overview.column.convert.usdcAmount": "Quantidade USDC",
+  "portfolio.overview.column.convert.receivedAmount": "Valor recebido",
   "portfolio.overview.column.convert.convertId": "ID de conversão",
   "portfolio.overview.column.convert.details": "Detalhes",
   "portfolio.overview.tab.convert.history": "Histórico de conversão",

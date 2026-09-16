@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "מ",
   "portfolio.overview.column.to": "אל",
   "portfolio.overview.column.convert.convertedAsset": "נכס שהומר",
-  "portfolio.overview.column.convert.usdcAmount": "סכום USDC",
+  "portfolio.overview.column.convert.receivedAmount": "סכום שהתקבל",
   "portfolio.overview.column.convert.convertId": "מזהה המרה",
   "portfolio.overview.column.convert.details": "פרטים",
   "portfolio.overview.tab.convert.history": "היסטוריית המרות",

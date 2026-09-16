@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "Từ",
   "portfolio.overview.column.to": "Đến",
   "portfolio.overview.column.convert.convertedAsset": "Tài sản đã chuyển đổi",
-  "portfolio.overview.column.convert.usdcAmount": "Số lượng USDC",
+  "portfolio.overview.column.convert.receivedAmount": "Số lượng nhận được",
   "portfolio.overview.column.convert.convertId": "ID chuyển đổi",
   "portfolio.overview.column.convert.details": "Chi tiết",
   "portfolio.overview.tab.convert.history": "Lịch sử chuyển đổi",

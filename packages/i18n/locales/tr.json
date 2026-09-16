@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "Kimden",
   "portfolio.overview.column.to": "Kime",
   "portfolio.overview.column.convert.convertedAsset": "Dönüştürülmüş varlık",
-  "portfolio.overview.column.convert.usdcAmount": "USDC miktarı",
+  "portfolio.overview.column.convert.receivedAmount": "Alınan tutar",
   "portfolio.overview.column.convert.convertId": "Dönüştürme ID'si",
   "portfolio.overview.column.convert.details": "Detaylar",
   "portfolio.overview.tab.convert.history": "Dönüştürme geçmişi",

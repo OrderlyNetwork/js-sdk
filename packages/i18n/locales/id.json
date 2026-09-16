@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "Dari",
   "portfolio.overview.column.to": "Ke",
   "portfolio.overview.column.convert.convertedAsset": "Aset yang dikonversi",
-  "portfolio.overview.column.convert.usdcAmount": "Jumlah USDC",
+  "portfolio.overview.column.convert.receivedAmount": "Jumlah diterima",
   "portfolio.overview.column.convert.convertId": "ID konversi",
   "portfolio.overview.column.convert.details": "Detail",
   "portfolio.overview.tab.convert.history": "Riwayat konversi",

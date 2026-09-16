@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "از",
   "portfolio.overview.column.to": "به",
   "portfolio.overview.column.convert.convertedAsset": "دارایی تبدیل‌شده",
-  "portfolio.overview.column.convert.usdcAmount": "مبلغ USDC",
+  "portfolio.overview.column.convert.receivedAmount": "مبلغ دریافتی",
   "portfolio.overview.column.convert.convertId": "شناسه تبدیل",
   "portfolio.overview.column.convert.details": "جزئیات",
   "portfolio.overview.tab.convert.history": "تاریخچه تبدیل",

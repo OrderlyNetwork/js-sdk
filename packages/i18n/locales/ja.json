@@ -223,7 +223,7 @@
   "portfolio.overview.column.form": "送信元",
   "portfolio.overview.column.to": "送信先",
   "portfolio.overview.column.convert.convertedAsset": "変換済み資産",
-  "portfolio.overview.column.convert.usdcAmount": "USDC 数量",
+  "portfolio.overview.column.convert.receivedAmount": "受取数量",
   "portfolio.overview.column.convert.convertId": "変換 ID",
   "portfolio.overview.column.convert.details": "詳細",
   "portfolio.overview.tab.convert.history": "変換履歴",
