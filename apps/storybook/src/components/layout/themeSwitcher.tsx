@@ -82,20 +82,26 @@ export function ThemeSwitcher() {
           onCloseAutoFocus={(event) => event.preventDefault()}
           className="oui-flex oui-min-w-[160px] oui-flex-col oui-gap-1 oui-p-2"
         >
-          {themes.map((theme) => (
-            <DropdownMenuItem
-              key={theme.id}
-              onSelect={() => setCurrentThemeId?.(theme.id)}
-              className="oui-h-9 oui-rounded-md oui-px-3 oui-py-2 oui-text-xs"
-            >
-              <Flex justify="between" width="100%" itemAlign="center">
-                {theme.displayName}
-                {currentThemeId === theme.id && (
-                  <Box width={4} height={4} gradient="primary" r="full" />
+          {themes.map((theme) => {
+            const selected = currentThemeId === theme.id;
+            return (
+              <DropdownMenuItem
+                key={theme.id}
+                onSelect={() => setCurrentThemeId?.(theme.id)}
+                className={cn(
+                  "oui-h-9 oui-rounded-md oui-px-3 oui-py-2 oui-text-xs",
+                  selected && "oui-bg-base-5",
                 )}
-              </Flex>
-            </DropdownMenuItem>
-          ))}
+              >
+                <Flex justify="between" width="100%" itemAlign="center">
+                  {theme.displayName}
+                  {selected && (
+                    <Box width={4} height={4} gradient="primary" r="full" />
+                  )}
+                </Flex>
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>

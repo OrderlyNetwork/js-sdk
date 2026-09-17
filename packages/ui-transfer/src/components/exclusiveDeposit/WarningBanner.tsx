@@ -10,12 +10,16 @@ export const WarningBanner: FC<WarningBannerProps> = ({ message }) => {
     <Flex
       itemAlign="start"
       gap={1}
-      className="oui-mt-4 oui-w-[calc(100%+2.5rem)] oui-rounded oui-bg-[#FF7D00]/10 oui-px-5 oui-py-2 oui-text-[#FF7D00]"
+      className="oui-mt-4 oui-w-[calc(100%+2.5rem)] oui-rounded oui-bg-warning-darken/10 oui-px-5 oui-py-2 oui-text-warning-darken"
     >
       <Box className="oui-mt-0.5">
         <WarningIcon width={16} height={16} />
       </Box>
-      <Text size="xs" intensity={80} className="oui-w-full oui-text-[#FF7D00]">
+      <Text
+        size="xs"
+        intensity={80}
+        className="oui-w-full oui-text-warning-darken"
+      >
         {message}
       </Text>
     </Flex>

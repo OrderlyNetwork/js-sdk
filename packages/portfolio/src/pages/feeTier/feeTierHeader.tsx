@@ -44,16 +44,7 @@ export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 export const DesktopHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
   const { label, value, interactive } = props;
   return (
-    <Box
-      gradient="neutral"
-      r="lg"
-      px={4}
-      py={2}
-      angle={184}
-      width="100%"
-      border
-      borderColor={6}
-    >
+    <Box gradient="neutral" r="lg" px={4} py={2} angle={184} width="100%">
       <Flex itemAlign="center" justify="between">
         <Text
           as="div"

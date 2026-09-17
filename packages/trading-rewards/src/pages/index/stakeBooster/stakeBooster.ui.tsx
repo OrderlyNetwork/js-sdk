@@ -74,8 +74,6 @@ const Statics: FC<{
       r="xl"
       gradient="neutral"
       angle={180}
-      border
-      borderColor={6}
     >
       <Text className="oui-text-xs xl:oui-text-sm oui-text-base-contrast-54">
         {props.title}

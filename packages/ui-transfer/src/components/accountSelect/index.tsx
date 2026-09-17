@@ -27,10 +27,9 @@ export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
 
   const trigger = (
     <Flex
-      intensity={500}
       className={cn(
-        "oui-rounded-b-sm oui-rounded-t-xl oui-border oui-border-line",
-        selectable ? "oui-cursor-pointer" : "oui-cursor-auto oui-bg-base-6",
+        "oui-rounded-b-sm oui-rounded-t-xl oui-bg-base-6",
+        selectable ? "oui-cursor-pointer" : "oui-cursor-auto",
       )}
       height={54}
       px={3}
@@ -101,7 +100,7 @@ export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
               width={4}
               height={4}
               r="full"
-              className="oui-transfer-form-account-select-active-dot oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)]"
+              className="oui-transfer-form-account-select-active-dot oui-gradient-brand"
             />
           )}
         </Flex>

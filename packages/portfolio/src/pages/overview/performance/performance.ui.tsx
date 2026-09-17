@@ -67,15 +67,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
       id="portfolio-overview-performance"
     >
       <Grid cols={3} gap={4}>
-        <Box
-          gradient="neutral"
-          r="md"
-          px={4}
-          py={2}
-          angle={184}
-          border
-          borderColor={6}
-        >
+        <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
             label={
               <LabelWithHint
@@ -90,15 +82,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
             {invisible ? "--" : aggregateValue.roi}
           </Statistic>
         </Box>
-        <Box
-          gradient="neutral"
-          r="md"
-          px={4}
-          py={2}
-          angle={184}
-          border
-          borderColor={6}
-        >
+        <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
             label={
               <LabelWithHint
@@ -113,15 +97,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
             {invisible ? "--" : aggregateValue.pnl}
           </Statistic>
         </Box>
-        <Box
-          gradient="neutral"
-          r="md"
-          px={4}
-          py={2}
-          angle={184}
-          border
-          borderColor={6}
-        >
+        <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
           <Statistic
             classNames={{
               label: "oui-w-full",

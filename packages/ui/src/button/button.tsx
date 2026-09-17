@@ -68,7 +68,7 @@ const buttonVariants = tv(
       {
         variant: "contained",
         color: "secondary",
-        className: ["oui-bg-base-4", "oui-text-secondary-contrast"],
+        className: ["oui-bg-base-4"],
       },
       {
         variant: "contained",
@@ -158,7 +158,7 @@ const buttonVariants = tv(
       {
         variant: "outlined",
         color: "gray",
-        className: ["oui-border-base-2", "oui-text-base"],
+        className: ["oui-border-base-2"],
       },
       // outlined end
       // {
@@ -190,7 +190,7 @@ const buttonVariants = tv(
       {
         variant: "text",
         color: "gray",
-        className: ["oui-text-base hover:oui-bg-base-2/10"],
+        className: ["hover:oui-bg-base-2/10"],
       },
       {
         variant: "text",

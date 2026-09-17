@@ -33,6 +33,7 @@ interface WalletCardProps {
 }
 
 const getCardBgClassName = (type: WalletType = WalletType.EVM) => {
+  // These colors identify wallet types and intentionally stay independent of the app theme.
   const cardBgColorMap: { [key in WalletType]: string } = {
     [WalletType.EVM]: "oui-bg-[#283BEE]",
     [WalletType.ABSTRACT]: "oui-bg-[#00A858]",

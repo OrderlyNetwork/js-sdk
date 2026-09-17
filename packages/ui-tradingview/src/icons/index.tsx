@@ -1,4 +1,5 @@
 import React, { FC, SVGProps } from "react";
+import { cn } from "@orderly.network/ui";
 
 export const CaretIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
@@ -228,6 +229,7 @@ export const SelectedIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    className={cn("oui-text-primary", props.className)}
   >
     <g id="Selected-Multiple Choices-fill">
       <path
@@ -235,7 +237,6 @@ export const SelectedIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
         fillRule="evenodd"
         clipRule="evenodd"
         d="M1.00684 5.99902C1.00684 3.23752 3.24544 0.999023 6.00684 0.999023C8.76834 0.999023 11.0068 3.23752 11.0068 5.99902C11.0068 8.76051 8.76834 10.999 6.00684 10.999C3.24544 10.999 1.00684 8.76051 1.00684 5.99902ZM8.49243 3.65563C8.60602 3.54726 8.76156 3.49957 8.91068 3.49957C9.05981 3.49957 9.21534 3.54726 9.32893 3.65563C9.5567 3.87231 9.5567 4.23649 9.32893 4.45317L5.25362 8.33706C5.02644 8.55374 4.6443 8.55374 4.41712 8.33706L2.67014 6.67253C2.44296 6.45585 2.44296 6.09161 2.67014 5.87499C2.89791 5.65831 3.28004 5.65831 3.50722 5.87499L4.83537 7.1407L8.49243 3.65563Z"
-        fill="#608CFF"
       />
     </g>
   </svg>
