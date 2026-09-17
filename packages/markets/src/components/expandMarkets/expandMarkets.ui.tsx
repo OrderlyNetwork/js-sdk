@@ -205,7 +205,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       height="100%"
     >
       <Box
-        className="oui-expandMarkets-header oui-flex oui-min-w-0 oui-items-center oui-gap-x-3"
+        className="oui-expandMarkets-header oui-flex oui-min-w-0 oui-items-center oui-gap-x-3 oui-pt-px"
         px={3}
         pb={2}
       >
