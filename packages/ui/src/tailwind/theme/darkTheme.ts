@@ -70,11 +70,11 @@ export const DARK_THEME_CSS_VARS = {
   // Neutral surface slots. These are common uses, not fixed component roles;
   // slots may share a color and are not required to form a strict gradient.
   // 1: prominent small surfaces, such as switch tracks.
-  "--oui-color-base-1": "57 53 65",
+  "--oui-color-base-1": "66 61 75",
   // 2: buttons, avatars, and other raised details.
   "--oui-color-base-2": "57 53 65",
   // 3: muted or disabled controls.
-  "--oui-color-base-3": "29 25 41",
+  "--oui-color-base-3": "33 29 46",
   // 4: interactive control surfaces, including buttons.
   "--oui-color-base-4": "43 39 54",
   // 5: selected, hovered, or disabled control surfaces.
@@ -84,9 +84,9 @@ export const DARK_THEME_CSS_VARS = {
   // 7: tabs, selectors, and secondary content surfaces.
   "--oui-color-base-7": "25 22 36",
   // 8: sheets, popovers, dropdowns, and similar containers.
-  "--oui-color-base-8": "19 14 29",
+  "--oui-color-base-8": "22 18 32",
   // 9: larger panels, tables, and content sections.
-  "--oui-color-base-9": "14 10 23",
+  "--oui-color-base-9": "19 14 29",
   // 10: the deepest page background and overlays.
   "--oui-color-base-10": "9 6 16",
 
