@@ -27,7 +27,7 @@ Before MCP Inspector connection, ensure:
 2. Inspector uses stdio-safe launch:
    - command: `node`
    - args: `packages/sdk-docs/dist/mcp-cli.js`
-   - cwd: `/Users/leo/orderly/orderly-web`
+   - cwd: the repository root of this checkout
 
 ## Execution Contract
 
