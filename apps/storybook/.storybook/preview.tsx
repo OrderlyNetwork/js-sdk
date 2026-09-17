@@ -21,7 +21,7 @@ const preview: Preview = {
       themes: {
         orderly: "orderly",
         custom: "custom",
-        roundless: "roundless",
+        squareDark: "square-dark",
         lightPrimary: "lightPrimary",
       },
       defaultTheme: import.meta.env.VITE_DEFAULT_THEME || "orderly",

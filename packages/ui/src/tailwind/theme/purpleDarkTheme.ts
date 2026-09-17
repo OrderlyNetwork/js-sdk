@@ -1,13 +1,13 @@
 import type { ThemeCssVars } from "./darkTheme";
 
 /**
- * Classic dark palette retained as an optional preset.
+ * Purple dark palette retained as an optional preset.
  *
  * Keeps the previous default look: Manrope type stack, richer light/darken
  * shade steps, and visible gradient pairs. Consumers opt in via
  * `ThemeConfig.cssVars`.
  */
-export const CLASSIC_DARK_THEME_CSS_VARS: ThemeCssVars = {
+export const PURPLE_DARK_THEME_CSS_VARS: ThemeCssVars = {
   "--oui-font-family":
     '"Manrope","PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 

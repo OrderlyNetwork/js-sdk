@@ -1,9 +1,17 @@
 import {
-  CLASSIC_DARK_THEME_CSS_VARS,
   LIGHT_THEME_CSS_VARS,
+  PURPLE_DARK_THEME_CSS_VARS,
   type ThemeConfig,
 } from "@orderly.network/ui";
-import { BLUE_DARK_THEME_CSS_VARS, ROUNDLESS_THEME_CSS_VARS } from "../theme";
+import {
+  AZURE_DARK_THEME_CSS_VARS,
+  BLUE_DARK_THEME_CSS_VARS,
+  CYAN_DARK_THEME_CSS_VARS,
+  GOLD_DARK_THEME_CSS_VARS,
+  MINT_DARK_THEME_CSS_VARS,
+  SQUARE_DARK_THEME_CSS_VARS,
+  TEAL_DARK_THEME_CSS_VARS,
+} from "../theme";
 
 export const themes: ThemeConfig[] = [
   {
@@ -11,30 +19,6 @@ export const themes: ThemeConfig[] = [
     displayName: "Dark",
     mode: "dark",
     isDefault: true,
-  },
-  {
-    id: "classic-dark",
-    displayName: "Dark (Classic)",
-    mode: "dark",
-    cssVars: CLASSIC_DARK_THEME_CSS_VARS,
-  },
-  {
-    id: "blue-dark",
-    displayName: "Dark (Blue)",
-    mode: "dark",
-    cssVars: BLUE_DARK_THEME_CSS_VARS,
-    // tradingViewColorConfig: {
-    //   chartBG: "#131519",
-    //   upColor: "#00B49E",
-    //   downColor: "#FF447C",
-    //   pnlUpColor: "#00B49E",
-    //   pnlDownColor: "#FF447C",
-    //   textColor: "#FFFFFF",
-    //   qtyTextColor: "#F4F7F9",
-    //   volumeUpColor: "#0C3E3A",
-    //   volumeDownColor: "#5A1E36",
-    //   closeIconColor: "rgba(255, 255, 255, 0.8)",
-    // },
   },
   {
     id: "light",
@@ -55,9 +39,85 @@ export const themes: ThemeConfig[] = [
     // },
   },
   {
-    id: "roundless",
-    displayName: "Roundless",
+    id: "square-dark",
+    displayName: "Dark (Square)",
     mode: "dark",
-    cssVars: ROUNDLESS_THEME_CSS_VARS,
+    cssVars: SQUARE_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "purple-dark",
+    displayName: "Dark (Purple)",
+    mode: "dark",
+    cssVars: PURPLE_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "blue-dark",
+    displayName: "Dark (Blue)",
+    mode: "dark",
+    cssVars: BLUE_DARK_THEME_CSS_VARS,
+    // tradingViewColorConfig: {
+    //   chartBG: "#131519",
+    //   upColor: "#00B49E",
+    //   downColor: "#FF447C",
+    //   pnlUpColor: "#00B49E",
+    //   pnlDownColor: "#FF447C",
+    //   textColor: "#FFFFFF",
+    //   qtyTextColor: "#F4F7F9",
+    //   volumeUpColor: "#0C3E3A",
+    //   volumeDownColor: "#5A1E36",
+    //   closeIconColor: "rgba(255, 255, 255, 0.8)",
+    // },
+  },
+  {
+    id: "mint-dark",
+    displayName: "Dark (Mint)",
+    mode: "dark",
+    cssVars: MINT_DARK_THEME_CSS_VARS,
+    tradingViewColorConfig: {
+      upColor: "#0FB276",
+      downColor: "#F5464B",
+      pnlUpColor: "#0FB276",
+      pnlDownColor: "#F5464B",
+    },
+  },
+  {
+    id: "gold-dark",
+    displayName: "Dark (Gold)",
+    mode: "dark",
+    cssVars: GOLD_DARK_THEME_CSS_VARS,
+    tradingViewColorConfig: {
+      upColor: "#22E58A",
+      downColor: "#FF5F69",
+      pnlUpColor: "#22E58A",
+      pnlDownColor: "#FF5F69",
+    },
+  },
+  {
+    id: "cyan-dark",
+    displayName: "Dark (Cyan)",
+    mode: "dark",
+    cssVars: CYAN_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "azure-dark",
+    displayName: "Dark (Azure)",
+    mode: "dark",
+    cssVars: AZURE_DARK_THEME_CSS_VARS,
+    tradingViewColorConfig: {
+      chartBG: "#111111",
+      upColor: "#0ad4a2",
+      downColor: "#e03a5a",
+      pnlUpColor: "#0ad4a2",
+      pnlDownColor: "#e03a5a",
+      volumeUpColor: "rgba(4, 85, 65, 0.7)",
+      volumeDownColor: "rgba(122, 24, 44, 0.7)",
+      textColor: "#aaaaaa",
+    },
+  },
+  {
+    id: "teal-dark",
+    displayName: "Dark (Teal)",
+    mode: "dark",
+    cssVars: TEAL_DARK_THEME_CSS_VARS,
   },
 ];

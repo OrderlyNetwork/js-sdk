@@ -94,7 +94,7 @@ export * from "./status";
 //===== tailwind
 export * as OUITailwind from "./tailwind";
 export {
-  CLASSIC_DARK_THEME_CSS_VARS,
+  PURPLE_DARK_THEME_CSS_VARS,
   DARK_THEME_CSS_VARS,
   LIGHT_THEME_CSS_VARS,
   getContrastTextRgb,

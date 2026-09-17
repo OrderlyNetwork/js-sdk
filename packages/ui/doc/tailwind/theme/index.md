@@ -2,25 +2,25 @@
 
 ## Directory Responsibility
 
-Theme CSS variables: default dark, classic dark, and light themes exported as DARK_THEME_CSS_VARS, CLASSIC_DARK_THEME_CSS_VARS, LIGHT_THEME_CSS_VARS, and ThemeCssVars type.
+Theme CSS variables: default dark, purple dark, and light themes exported as DARK_THEME_CSS_VARS, PURPLE_DARK_THEME_CSS_VARS, LIGHT_THEME_CSS_VARS, and ThemeCssVars type.
 
 ## Files
 
-| File                | Language   | Summary                              | Link                                       |
-| ------------------- | ---------- | ------------------------------------ | ------------------------------------------ |
-| index.ts            | TypeScript | Re-exports theme vars and type       | [index.md](index.md)                       |
-| darkTheme.ts        | TypeScript | Default (ODS v2) dark theme CSS vars | [darkTheme.md](darkTheme.md)               |
-| classicDarkTheme.ts | TypeScript | Classic dark theme CSS variables     | [classicDarkTheme.md](classicDarkTheme.md) |
-| lightTheme.ts       | TypeScript | Light theme CSS variables            | [lightTheme.md](lightTheme.md)             |
+| File               | Language   | Summary                              | Link                                     |
+| ------------------ | ---------- | ------------------------------------ | ---------------------------------------- |
+| index.ts           | TypeScript | Re-exports theme vars and type       | [index.md](index.md)                     |
+| darkTheme.ts       | TypeScript | Default (ODS v2) dark theme CSS vars | [darkTheme.md](darkTheme.md)             |
+| purpleDarkTheme.ts | TypeScript | Purple dark theme CSS variables      | [purpleDarkTheme.md](purpleDarkTheme.md) |
+| lightTheme.ts      | TypeScript | Light theme CSS variables            | [lightTheme.md](lightTheme.md)           |
 
 ## Key Entities
 
-| Entity                      | File                | Role                    |
-| --------------------------- | ------------------- | ----------------------- |
-| DARK_THEME_CSS_VARS         | darkTheme.ts        | Default dark theme vars |
-| CLASSIC_DARK_THEME_CSS_VARS | classicDarkTheme.ts | Classic dark theme vars |
-| LIGHT_THEME_CSS_VARS        | lightTheme.ts       | Light theme vars        |
-| ThemeCssVars                | index.ts            | Type for theme CSS vars |
+| Entity                     | File               | Role                    |
+| -------------------------- | ------------------ | ----------------------- |
+| DARK_THEME_CSS_VARS        | darkTheme.ts       | Default dark theme vars |
+| PURPLE_DARK_THEME_CSS_VARS | purpleDarkTheme.ts | Purple dark theme vars  |
+| LIGHT_THEME_CSS_VARS       | lightTheme.ts      | Light theme vars        |
+| ThemeCssVars               | index.ts           | Type for theme CSS vars |
 
 ## Theme Design Constraints
 

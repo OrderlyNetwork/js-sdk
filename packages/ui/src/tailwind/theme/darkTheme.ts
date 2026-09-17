@@ -6,7 +6,7 @@ import plugin from "tailwindcss/plugin";
  * Uses the Manrope type stack. Built-in gradient utilities receive matching
  * RGB values at both stops, so brand buttons and gradient text appear solid
  * under this preset. Treatments with different stop opacities can still fade.
- * For color-shifting gradients, use `CLASSIC_DARK_THEME_CSS_VARS` or define
+ * For color-shifting gradients, use `PURPLE_DARK_THEME_CSS_VARS` or define
  * custom `cssVars`.
  */
 export const DARK_THEME_CSS_VARS = {
