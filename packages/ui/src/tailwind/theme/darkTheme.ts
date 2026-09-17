@@ -67,16 +67,16 @@ export const DARK_THEME_CSS_VARS = {
   // Reserved active fill surface; no built-in component currently uses it.
   "--oui-color-fill-active": "43 39 54",
 
-  // Neutral surface slots. These are common uses, not fixed component roles;
-  // slots may share a color and are not required to form a strict gradient.
+  // Neutral surface slots progress from lighter details to darker backgrounds.
+  // These are common uses, not fixed component roles.
   // 1: prominent small surfaces, such as switch tracks.
   "--oui-color-base-1": "66 61 75",
   // 2: buttons, avatars, and other raised details.
   "--oui-color-base-2": "57 53 65",
   // 3: muted or disabled controls.
-  "--oui-color-base-3": "33 29 46",
+  "--oui-color-base-3": "54 50 64",
   // 4: interactive control surfaces, including buttons.
-  "--oui-color-base-4": "43 39 54",
+  "--oui-color-base-4": "51 47 62",
   // 5: selected, hovered, or disabled control surfaces.
   "--oui-color-base-5": "43 39 54",
   // 6: input fields, tooltips, and other control surfaces.
