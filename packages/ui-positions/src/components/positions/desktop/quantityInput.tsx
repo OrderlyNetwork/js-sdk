@@ -51,9 +51,6 @@ export const QuantityInput = (props: { value: number }) => {
       <PopoverTrigger>
         <Input
           size="sm"
-          classNames={{
-            root: "oui-outline-none oui-border oui-border-solid oui-border-line-12 focus-within:oui-outline-primary-light",
-          }}
           formatters={[
             inputFormatter.numberFormatter,
             ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),

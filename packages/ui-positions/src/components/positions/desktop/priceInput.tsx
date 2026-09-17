@@ -2,7 +2,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import { OrderType } from "@orderly.network/types";
 import {
   CaretDownIcon,
-  cn,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -42,11 +41,6 @@ export const PriceInput = () => {
             </button>
           </DropdownMenuTrigger>
         }
-        classNames={{
-          root: cn(
-            "oui-border oui-border-solid oui-border-line-12 oui-outline-none focus-within:oui-outline-primary-light",
-          ),
-        }}
       />
       <DropdownMenuContent
         align="end"

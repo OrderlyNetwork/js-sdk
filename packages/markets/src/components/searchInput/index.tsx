@@ -3,7 +3,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseCircleFillIcon,
-  cn,
   Input,
   InputProps,
 } from "@orderly.network/ui";
@@ -40,14 +39,7 @@ export const SearchInput: React.FC<SearchInputProps> = (props) => {
       onCompositionStart={handleCompositionStart}
       onCompositionEnd={handleCompositionEnd}
       placeholder={t("markets.search.placeholder")}
-      classNames={{
-        ...classNames,
-        // use mt-px to fix the top border issue
-        root: cn(
-          "oui-mt-px oui-border oui-border-line focus-within:oui-border-transparent",
-          classNames?.root,
-        ),
-      }}
+      classNames={classNames}
       size="sm"
       prefix={
         <Box pl={3} pr={1}>

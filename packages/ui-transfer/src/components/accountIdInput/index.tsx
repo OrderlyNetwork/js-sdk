@@ -110,13 +110,13 @@ export const TextAreaInput = (props: TextAreaInputProps) => {
       {prefix}
       <div
         className={cn(
-          "oui-relative oui-w-full oui-rounded-lg oui-border oui-border-line oui-mb-1",
-          "oui-bg-base-5 oui-text-sm oui-text-base-contrast",
-          "focus-within:oui-border-primary-light",
+          "oui-relative oui-w-full oui-rounded-lg oui-mb-1",
+          "oui-bg-base-6 oui-text-sm oui-text-base-contrast",
+          "oui-outline oui-outline-1 oui-outline-offset-0 oui-outline-transparent focus-within:oui-outline-primary-light",
           displayStatus === "error" &&
-            "oui-border-danger-light focus-within:oui-border-danger-light",
+            "oui-outline-danger-light focus-within:oui-outline-danger-light",
           displayStatus === "warning" &&
-            "oui-border-warning-light focus-within:oui-border-warning-light",
+            "oui-outline-warning-light focus-within:oui-outline-warning-light",
           "disabled:oui-cursor-not-allowed",
         )}
       >

@@ -25,7 +25,7 @@ const inputVariants = tv(
       ],
       box: [
         "oui-rounded",
-        "oui-bg-fill",
+        "oui-bg-base-6",
         "oui-flex",
         "oui-items-center",
         "oui-outline",
