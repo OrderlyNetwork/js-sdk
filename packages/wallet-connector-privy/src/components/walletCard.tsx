@@ -233,26 +233,19 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
   if (walletType === WalletType.EVM) {
     return (
       <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-        <div className="oui-relative oui-flex oui-items-center oui-justify-center">
-          <div className="oui-flex oui-h-[18px] oui-items-center oui-justify-center ">
-            <img
-              src="https://oss.orderly.network/static/sdk/chains.png"
-              className="oui-relative oui-z-0 oui-h-[18px] oui-w-[49px]"
-            />
+        <div className="oui-relative oui-flex oui-h-[18px] oui-w-[55px] oui-items-center">
+          <img
+            src="https://oss.orderly.network/static/sdk/chains.png"
+            className="oui-h-[18px] oui-w-[49px]"
+          />
+          <div className="oui-absolute oui-end-0 oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
+            <EVMChainPopover>
+              <MoreIcon className="oui-size-3 oui-text-base-contrast-80 hover:oui-text-base-contrast" />
+            </EVMChainPopover>
           </div>
-          <div className="oui-relative oui-start-[-9px] oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
-              <EVMChainPopover>
-                <MoreIcon
-                  className="oui-relative oui-z-10 oui-size-3 oui-text-secondary/80 hover:oui-text-secondary"
-                  style={{ zIndex: 1 }}
-                />
-              </EVMChainPopover>
-            </div>
-            <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
-              Evm
-            </div>
-          </div>
+        </div>
+        <div className="oui-text-2xs oui-font-semibold oui-text-secondary">
+          Evm
         </div>
       </div>
     );
