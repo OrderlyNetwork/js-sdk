@@ -3,14 +3,7 @@ import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import {
-  Button,
-  cn,
-  Flex,
-  modal,
-  Text,
-  useOrderlyTheme,
-} from "@orderly.network/ui";
+import { Button, cn, Flex, modal, Text } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { useReferralContext } from "../../../../provider";
 import { ReferralCodeFormType } from "../../../../types";
@@ -18,6 +11,7 @@ import { ReferralCodeFormDialogId } from "../../affiliate/referralCodeForm/modal
 import type { BindReferralCodeSuccessPayload } from "../../components/bindReferralCode/bindReferralCode.widget";
 import { BindReferralCodeDialogId } from "../../components/bindReferralCode/modal";
 import { TradingVolumeProgress } from "../../components/tradingVolumeProgress";
+import { NetworkDiagram } from "./networkDiagram";
 
 /** SWR mutate may resolve to various shapes — only treat object rebate configs as valid. */
 function parseMaxRebateRateInfoFromSettled(
@@ -44,7 +38,6 @@ export const Hero = () => {
   const { t } = useTranslation();
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
-  const { currentTheme } = useOrderlyTheme();
   const status = state.status;
 
   const {
@@ -257,15 +250,10 @@ export const Hero = () => {
         </AuthGuard>
       </Flex>
 
-      <img
-        src="https://oss.orderly.network/static/sdk/referral/network-diagram.png"
-        alt="Network diagram"
-        className={cn(
-          "oui-size-[335px] oui-object-cover md:oui-size-[480px]",
-          // The diagram ships as a dark PNG; lift it on light surfaces.
-          currentTheme?.mode === "light" &&
-            "oui-brightness-[1.65] oui-contrast-[0.82] oui-saturate-[0.82]",
-        )}
+      <NetworkDiagram
+        role="img"
+        aria-label="Network diagram"
+        className="oui-size-[335px] md:oui-size-[480px]"
         id="oui-affiliate-landing-network-diagram"
       />
     </Flex>
