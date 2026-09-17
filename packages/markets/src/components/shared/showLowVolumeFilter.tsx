@@ -12,7 +12,7 @@ export const ShowLowVolumeFilter = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "oui-flex oui-shrink-0 oui-items-center oui-gap-x-1",
+        "oui-markets-lowVolumeFilter oui-flex oui-shrink-0 oui-items-center oui-gap-x-1",
         className,
       )}
     >
