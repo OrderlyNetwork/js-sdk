@@ -43,7 +43,7 @@ export const portfolio = {
   "portfolio.overview.column.to": "To",
 
   "portfolio.overview.column.convert.convertedAsset": "Converted asset",
-  "portfolio.overview.column.convert.usdcAmount": "USDC amount",
+  "portfolio.overview.column.convert.receivedAmount": "Received amount",
   "portfolio.overview.column.convert.convertId": "Convert ID",
   "portfolio.overview.column.convert.details": "Details",
   "portfolio.overview.tab.convert.history": "Convert history",

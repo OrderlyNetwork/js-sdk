@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Column, TabPanel, Tabs } from "@orderly.network/ui";
+import { Box, cn, Column, Flex, TabPanel, Tabs } from "@orderly.network/ui";
 import { CommunityBrokerTabs } from "../../../components/communityBrokerTabs";
 import { MarketsListWidget } from "../../../components/marketsList";
 import { useMarketsContext } from "../../../components/marketsProvider";
@@ -13,6 +13,7 @@ import {
   getSymbolColumn,
 } from "../../../components/shared/column";
 import { useFavoritesProps } from "../../../components/shared/hooks/useFavoritesExtraProps";
+import { ShowLowVolumeFilter } from "../../../components/shared/showLowVolumeFilter";
 import {
   composeTabTitle,
   isBuiltInMarketTab,
@@ -36,6 +37,22 @@ type BuiltInTabMeta = {
   value: string;
   tabName?: MarketsTabName;
 };
+
+const SearchWithLowVolumeFilter = ({ className }: { className?: string }) => (
+  <Flex
+    className={cn(
+      "oui-mx-3 oui-min-w-0 oui-items-center oui-gap-x-2",
+      className,
+    )}
+  >
+    <SearchInput
+      classNames={{
+        root: "oui-min-w-0 oui-flex-1",
+      }}
+    />
+    <ShowLowVolumeFilter />
+  </Flex>
+);
 
 export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
   props,
@@ -116,13 +133,11 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
 
     return (
       <>
-        <SearchInput
-          classNames={{
-            root: cn(
-              "oui-mx-3 oui-mt-5",
-              activeTab === MarketsTabName.Favorites ? "oui-mb-4" : "oui-mb-2",
-            ),
-          }}
+        <SearchWithLowVolumeFilter
+          className={cn(
+            "oui-mt-5",
+            activeTab === MarketsTabName.Favorites ? "oui-mb-4" : "oui-mb-2",
+          )}
         />
         {type === MarketsTabName.Rwa ? (
           <RwaSubcategoryTabs
@@ -210,11 +225,7 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
               >
                 {tab.type === "community" ? (
                   <>
-                    <SearchInput
-                      classNames={{
-                        root: "oui-mx-3 oui-mb-2 oui-mt-5",
-                      }}
-                    />
+                    <SearchWithLowVolumeFilter className="oui-mb-2 oui-mt-5" />
                     <CommunityBrokerTabs
                       storageKey="orderly_mobile_markets_datalist_community_sel_sub_tab"
                       size="md"
@@ -245,11 +256,7 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
               })}
               value={key}
             >
-              <SearchInput
-                classNames={{
-                  root: "oui-mx-3 oui-mb-2 oui-mt-5",
-                }}
-              />
+              <SearchWithLowVolumeFilter className="oui-mb-2 oui-mt-5" />
               <MarketsListWidget
                 type={MarketsTabName.All}
                 dataFilter={(data) => tabDataFilters[key]?.(data) ?? data}

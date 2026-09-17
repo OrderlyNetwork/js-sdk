@@ -1,4 +1,4 @@
-import { isValidElement, useMemo } from "react";
+import { Fragment, isValidElement, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   useModal,
@@ -25,6 +25,11 @@ type ConvertMobileItemProps = {
   item?: any;
   chainsInfo: any[];
 };
+
+// Amounts in convert history are denominated in the row's received_asset
+// (USDC for forward, the target collateral for reverse conversions).
+const amountWithAsset = (amount: number | undefined, asset?: string) =>
+  asset ? `${amount ?? "-"} ${asset}` : `${amount ?? "-"}`;
 
 type ConvertMobileFieldProps = {
   label: string;
@@ -196,10 +201,13 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
       {/* 5 fields in grid container: 3 per row, wrap to next line */}
       <div className="oui-grid oui-grid-cols-3 oui-gap-2">
         <ConvertMobileField
-          label={t("portfolio.overview.column.convert.usdcAmount")}
-          value={item.received_qty}
+          label={t("portfolio.overview.column.convert.receivedAmount")}
+          value={amountWithAsset(item.received_qty, item.received_asset)}
         />
-        <ConvertMobileField label={t("common.fee")} value={totalHaircut} />
+        <ConvertMobileField
+          label={t("common.fee")}
+          value={amountWithAsset(totalHaircut, item.received_asset)}
+        />
         <ConvertMobileField
           label={t("portfolio.overview.column.convert.convertId")}
           value={item.convert_id}
@@ -237,7 +245,7 @@ const ConverHistoryItemDetailsDialog =
       >
         <div className="oui-flex oui-h-[300px] oui-flex-col oui-gap-3 oui-overflow-y-auto oui-rounded-lg oui-bg-base-7 oui-p-2">
           {item.details.map((detail, index) => (
-            <>
+            <Fragment key={detail.transaction_id ?? index}>
               <div className="oui-flex oui-flex-col oui-gap-2">
                 <div className="oui-flex oui-items-center oui-gap-1">
                   <TokenIcon name={detail.converted_asset} size="xs" />
@@ -251,10 +259,21 @@ const ConverHistoryItemDetailsDialog =
                     value={detail.converted_qty}
                   />
                   <ConvertMobileField
-                    label={t("portfolio.overview.column.convert.usdcAmount")}
-                    value={detail.received_qty}
+                    label={t(
+                      "portfolio.overview.column.convert.receivedAmount",
+                    )}
+                    value={amountWithAsset(
+                      detail.received_qty,
+                      detail.received_asset,
+                    )}
                   />
-                  <ConvertMobileField label="Fee" value={detail.haircut} />
+                  <ConvertMobileField
+                    label={t("common.fee")}
+                    value={amountWithAsset(
+                      detail.haircut,
+                      detail.received_asset,
+                    )}
+                  />
                   <ConvertMobileField
                     label={t("common.txId")}
                     copyable={!!detail.tx_id}
@@ -289,7 +308,7 @@ const ConverHistoryItemDetailsDialog =
                 </div>
               </div>
               {index < item.details.length - 1 && <Divider />}
-            </>
+            </Fragment>
           ))}
         </div>
       </SimpleSheet>

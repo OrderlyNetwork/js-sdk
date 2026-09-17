@@ -179,6 +179,7 @@ export const findTrackedConvertRecord = (
   );
 };
 
+/** Latest pending convert for the account. Forward and reverse share this slot. */
 export const findLatestPendingConvertRecord = (rows: ConvertHistoryRecord[]) =>
   rows.find((record) => getEffectiveConvertStatus(record) === "pending");
 
@@ -188,11 +189,18 @@ export const getConvertIdFromResponse = (response: unknown) => {
   }
 
   const value = response as {
+    converted_id?: unknown;
     convertId?: unknown;
     convert_id?: unknown;
-    data?: { convertId?: unknown; convert_id?: unknown };
+    data?: {
+      converted_id?: unknown;
+      convertId?: unknown;
+      convert_id?: unknown;
+    };
   };
   const convertId =
+    value.data?.converted_id ??
+    value.converted_id ??
     value.data?.convertId ??
     value.data?.convert_id ??
     value.convertId ??

@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { cn, DataTable } from "@orderly.network/ui";
-import { useMarketsContext } from "../../components/marketsProvider";
+import { useMarketsContext } from "../marketsProvider";
+import { LowVolumeEmptyView } from "../shared/lowVolumeEmptyView";
 import { useMarketsListFullColumns } from "./column";
 import {
   type MarketsListFullType,
@@ -15,6 +16,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
   const {
     loading,
     dataSource,
+    isHiddenByLowVolumeFilter,
     favorite,
     onSort,
     initialSort,
@@ -57,8 +59,12 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       pagination={pagination}
       classNames={{
         header: "oui-h-12",
+        empty: isHiddenByLowVolumeFilter
+          ? "oui-items-start oui-pt-16"
+          : undefined,
       }}
       manualSorting
+      emptyView={isHiddenByLowVolumeFilter ? <LowVolumeEmptyView /> : undefined}
     />
   );
 };

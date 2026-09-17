@@ -1,13 +1,13 @@
 ---
 name: replace-hardcoded-colors
-description: "Finds hardcoded color values (hex, rgb, rgba) in a specified directory, a single file, or multiple files and replaces them with theme variables from apps/storybook/src/tailwind/customTheme.ts. Prefers Tailwind class names (oui-*) from packages/ui/tailwind.config.js when the context allows; otherwise uses CSS variables (e.g. rgb(var(--oui-color-primary)) or rgba with alpha). When the original was rgba, keep the comma syntax: rgba(var(--oui-color-*), alpha); do not convert to slash syntax. When code already uses rgb(var(--oui-*)/α) or rgb(var(--oui-*)_/_α), do not convert to rgba(var(--oui-*), α). When no exact match exists, uses the closest theme color by semantics or RGB distance. Use when the user asks to find or replace hardcoded colors in a directory/file(s), or to align colors with customTheme."
+description: "Finds hardcoded color values (hex, rgb, rgba) in a specified directory, a single file, or multiple files and replaces them with theme variables from apps/storybook/src/theme/customTheme.ts. Prefers Tailwind class names (oui-*) from packages/ui/tailwind.config.js when the context allows; otherwise uses CSS variables (e.g. rgb(var(--oui-color-primary)) or rgba with alpha). When the original was rgba, keep the comma syntax: rgba(var(--oui-color-*), alpha); do not convert to slash syntax. When code already uses rgb(var(--oui-*)/α) or rgb(var(--oui-*)_/_α), do not convert to rgba(var(--oui-*), α). When no exact match exists, uses the closest theme color by semantics or RGB distance. Use when the user asks to find or replace hardcoded colors in a directory/file(s), or to align colors with customTheme."
 ---
 
 # Replace Hardcoded Colors with Theme Variables
 
 ## Scope
 
-- **Color source**: [apps/storybook/src/tailwind/customTheme.ts](apps/storybook/src/tailwind/customTheme.ts) only. All replacement values come from its `--oui-color-*` and gradient variables.
+- **Color source**: [apps/storybook/src/theme/customTheme.ts](apps/storybook/src/theme/customTheme.ts) only. All replacement values come from its `--oui-color-*` and gradient variables.
 - **Tailwind reference**: [packages/ui/tailwind.config.js](packages/ui/tailwind.config.js). Use its `theme.extend.colors` (prefix `oui-`) to decide valid class names and when to use class vs CSS variable.
 - **Target**: User may specify **one of**:
   - **Directory**: Scan that directory and its subdirectories (recursively). Include only relevant files (e.g. `.tsx`, `.ts`, `.jsx`, `.js`, `.css`); exclude `node_modules`, `dist`, and similar.
@@ -25,7 +25,7 @@ description: "Finds hardcoded color values (hex, rgb, rgba) in a specified direc
      Example prompt: "Which directory or which file(s) should I scan for hardcoded colors?"
 
 2. **Build color map from customTheme**  
-   Parse `apps/storybook/src/tailwind/customTheme.ts` and build a map: normalized RGB (and optional hex) → variable name (e.g. `96 140 255` / `#608CFF` → `--oui-color-primary`). Use the table below if parsing is not possible.
+   Parse `apps/storybook/src/theme/customTheme.ts` and build a map: normalized RGB (and optional hex) → variable name (e.g. `96 140 255` / `#608CFF` → `--oui-color-primary`). Use the table below if parsing is not possible.
 
 3. **Find hardcoded colors**  
    In the chosen **directory** (all relevant files under it, recursively) or in the specified **file(s)** (only those paths), search for:

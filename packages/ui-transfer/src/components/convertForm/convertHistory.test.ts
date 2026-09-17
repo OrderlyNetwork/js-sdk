@@ -125,6 +125,7 @@ describe("convert history helpers", () => {
   });
 
   it.each([
+    [{ data: { converted_id: 131211 } }, 131211],
     [{ convertId: 131211 }, 131211],
     [{ convert_id: "131211" }, 131211],
     [{ data: { convertId: 131211 } }, 131211],

@@ -1,0 +1,1 @@
+../../.cursor/commands/mcp-test-sdk-docs.md

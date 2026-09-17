@@ -69,7 +69,20 @@ export function sortList(list: any[], sort?: SortType) {
   if (sortKey && sortOrder) {
     // sort list
     sortedList.sort((a: any, b: any) => {
-      const comparison = compareValues(a[sortKey], b[sortKey]);
+      const aValue = a[sortKey];
+      const bValue = b[sortKey];
+      const aMissing =
+        aValue == null ||
+        (typeof aValue === "number" && !Number.isFinite(aValue));
+      const bMissing =
+        bValue == null ||
+        (typeof bValue === "number" && !Number.isFinite(bValue));
+
+      if (aMissing && bMissing) return 0;
+      if (aMissing) return 1;
+      if (bMissing) return -1;
+
+      const comparison = compareValues(aValue, bValue);
       // Handle sort order: desc means reverse the comparison result
       return sortOrder === "desc" ? -comparison : comparison;
     });

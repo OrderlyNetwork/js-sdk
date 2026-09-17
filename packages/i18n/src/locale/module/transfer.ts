@@ -1,4 +1,12 @@
 export const transfer = {
+  "transfer.reverseConvert.available":
+    "You have <0>{{amount}}</0> USDC available.",
+  "transfer.reverseConvert.action": "Convert to USDG",
+  "transfer.reverseConvert.estimate":
+    "Estimated amount. Final received amount depends on execution.",
+  "transfer.reverseConvert.unavailable":
+    "USDC to USDG conversion is unavailable on this network or token data is not ready.",
+
   "transfer.network": "Network",
   "transfer.lowestFee": "lowest fee",
   "transfer.web3Wallet.your": "Your Web3 Wallet",

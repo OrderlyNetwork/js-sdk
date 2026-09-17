@@ -1,6 +1,6 @@
 # newwidget
 
-Create a brand new standard Widget (script/ui/widget/index four-piece set), following `specs/002-widget-rules.md` specifications.
+Create a brand new standard Widget (script/ui/widget/index four-piece set), following the rules and templates in this document.
 
 ## Applicable Scenarios
 
@@ -216,7 +216,7 @@ When components need to be used in UI (especially component names obtained from 
 
 1. **Get Component Name**: Get component name from Figma MCP or other design tools (e.g., `Button`, `Input`, `Card`, etc.)
 
-2. **Search Component Index**: Search for the component in `packages/ui/doc/components.md`
+2. **Search Component Index**: Search for the component in `packages/ui/doc/index.md`
    - Confirm if the component exists
    - Understand the component's basic description and export information
 
@@ -264,6 +264,5 @@ When components need to be used in UI (especially component names obtained from 
 
 ## References
 
-- Specifications: `specs/002-widget-rules.md`
 - Reference implementation: `packages/trading/src/components/mobile/fundingRateModal/`
-- Component index: `packages/ui/doc/components.md`
+- Component index: `packages/ui/doc/index.md`

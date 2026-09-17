@@ -22,7 +22,7 @@
 
 ## Source files
 
-- **Color values**: [apps/storybook/src/tailwind/customTheme.ts](apps/storybook/src/tailwind/customTheme.ts)
+- **Color values**: [apps/storybook/src/theme/customTheme.ts](apps/storybook/src/theme/customTheme.ts)
 - **Class names**: [packages/ui/tailwind.config.js](packages/ui/tailwind.config.js) — `theme.extend.colors`, prefix `oui-`
-- **Variable list (default theme)**: [`apps/storybook/src/tailwind/customTheme.ts`](../../../apps/storybook/src/tailwind/customTheme.ts) — canonical variables for the default theme.
+- **Variable list (default theme)**: [`apps/storybook/src/theme/customTheme.ts`](../../../apps/storybook/src/theme/customTheme.ts) — canonical variables for the default theme.
 - **Full color & gradient tables (for exact match)**: [SKILL.md](SKILL.md) — customTheme color reference and gradient reference.

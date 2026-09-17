@@ -1,6 +1,6 @@
 # editwidget
 
-Command instructions for editing/creating standard Widgets (script/ui/widget/index). This command follows the rules and templates in `specs/002-widget-rules.md`.
+Command instructions for editing/creating standard Widgets (script/ui/widget/index). This command follows the rules and templates defined in this document.
 
 ## Target Objects
 
@@ -105,7 +105,7 @@ When components need to be used in UI (especially component names obtained from 
 
 1. **Get Component Name**: Get component name from Figma MCP or other design tools (e.g., `Button`, `Input`, `Card`, etc.)
 
-2. **Search Component Index**: Search for the component in `packages/ui/doc/components.md`
+2. **Search Component Index**: Search for the component in `packages/ui/doc/index.md`
    - Confirm if the component exists
    - Understand the component's basic description and export information
 
@@ -153,5 +153,5 @@ When components need to be used in UI (especially component names obtained from 
 
 ## References
 
-- Rules and templates: `specs/002-widget-rules.md`
-- Component index: `packages/ui/doc/components.md`
+- Full four-piece templates: `.cursor/commands/newwidget.md`
+- Component index: `packages/ui/doc/index.md`
