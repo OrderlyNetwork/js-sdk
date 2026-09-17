@@ -1,58 +1,34 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { PrivyClientConfig } from "@privy-io/react-auth";
 import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Grid, useOrderlyTheme } from "@orderly.network/ui";
+import { cn, Flex, Grid } from "@orderly.network/ui";
 import { useScreen } from "@orderly.network/ui";
 import { useWalletConnectorPrivy } from "../../provider";
 
-/**
- * Social sign-in choices share one token-driven surface so they sit on the
- * same layer as the wallet choices below them. `keepIconColor` marks
- * multicolor brand marks (Google) that must not be filtered.
- */
 const LoginMethodButton = ({
   onClick,
   icon,
-  keepIconColor,
+  backgroundClassName,
   label,
 }: {
   onClick: () => void;
   icon: React.ReactNode;
-  keepIconColor?: boolean;
+  backgroundClassName: string;
   label: string;
 }) => {
-  const { currentTheme } = useOrderlyTheme();
-  const isLight = currentTheme?.mode === "light";
   return (
     <div
       className={cn(
         "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
-        "oui-bg-base-5 lg:oui-bg-base-10",
+        backgroundClassName,
       )}
       onClick={onClick}
     >
-      {isNodeImg(icon) ? (
-        <img
-          src={icon.props.src}
-          className={cn(
-            "oui-size-[18px]",
-            // The email/twitter marks are white-only assets; darken them on
-            // light surfaces.
-            isLight && !keepIconColor && "oui-brightness-0",
-          )}
-        />
-      ) : (
-        icon
-      )}
-      <div className="oui-text-2xs oui-text-base-contrast">{label}</div>
+      {icon}
+      <div className="oui-text-2xs oui-text-base-static">{label}</div>
     </div>
   );
 };
-
-const isNodeImg = (
-  node: React.ReactNode,
-): node is React.ReactElement<{ src: string }> =>
-  React.isValidElement(node) && (node.type as unknown) === "img";
 
 const RenderLoginMethodsDom = ({
   connect,
@@ -67,6 +43,7 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <LoginMethodButton
         onClick={() => connect("email")}
+        backgroundClassName="oui-bg-[#333948]"
         icon={
           <img
             src="https://oss.orderly.network/static/sdk/privy/email.svg"
@@ -81,7 +58,7 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <LoginMethodButton
         onClick={() => connect("google")}
-        keepIconColor
+        backgroundClassName="oui-bg-[#335FFC]"
         icon={
           <img
             src="https://oss.orderly.network/static/sdk/privy/google.svg"
@@ -96,6 +73,7 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <LoginMethodButton
         onClick={() => connect("twitter")}
+        backgroundClassName="oui-bg-[#07080A]"
         icon={
           <img
             src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
@@ -110,6 +88,7 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <LoginMethodButton
         onClick={() => connect("telegram")}
+        backgroundClassName="oui-bg-[#3D79A9]"
         icon={
           <svg
             width="18"
@@ -120,7 +99,7 @@ const RenderLoginMethodsDom = ({
           >
             <path
               d="M2.652 8.12916L15.0683 4.04929C15.6468 3.87358 16.1499 4.16929 15.9587 4.91069L13.8458 13.3962C13.6898 13.9961 13.2672 14.1461 12.6836 13.859L9.46384 11.8362L7.90929 13.109C7.73824 13.2547 7.59234 13.379 7.2603 13.379L7.4867 10.5891L13.4584 5.99923C13.72 5.80638 13.398 5.69495 13.0559 5.8878L5.68061 9.8434L2.50107 8.99914C1.81687 8.81058 1.80178 8.41201 2.652 8.12916Z"
-              className="oui-fill-base-foreground"
+              className="oui-fill-base-static"
             />
           </svg>
         }
