@@ -538,6 +538,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         current={undefined}
         symbol={props.symbol}
         sharePnLConfig={props.sharePnLConfig}
+        dataListProductContent={props.dataListProductContent}
       />
     </React.Suspense>
   );

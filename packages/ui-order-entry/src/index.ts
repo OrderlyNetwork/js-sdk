@@ -11,4 +11,5 @@ export { AdditionalInfo } from "./components/additional/additionalInfo";
 export { CustomInput, type CustomInputProps } from "./components/customInput";
 export { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 export { FeesWidget } from "./components/fee";
+export { SlippageUI } from "./components/slippage/slippage.ui";
 export { SymbolBadge } from "./components/symbolBadge";

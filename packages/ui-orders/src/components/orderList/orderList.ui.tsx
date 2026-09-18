@@ -11,6 +11,7 @@ import {
   cn,
   TableFeatures,
   DataTable,
+  type DataFilterItem,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { formatSymbol } from "@orderly.network/utils";
@@ -39,6 +40,8 @@ export const DesktopOrderList: FC<
     }>;
     useClientTable?: boolean;
     cancelAllDisabled?: boolean;
+    additionalFilterItems?: DataFilterItem[];
+    onAdditionalFilter?: (filter: { name: string; value: unknown }) => void;
   }
 > = (props) => {
   const { sharePnLConfig, ...rest } = props;
@@ -101,11 +104,23 @@ export const DesktopOrderList: FC<
       // cancelTPSLOrder={props.cancelTPSLOrder}
     >
       <Flex direction="column" width="100%" height="100%" itemAlign="start">
-        {props.filterItems.length > 0 && (
+        {[...(props.additionalFilterItems ?? []), ...props.filterItems].length >
+          0 && (
           <DataFilter
-            items={props.filterItems}
-            onFilter={(value: any) => {
-              props.onFilter(value);
+            items={[
+              ...(props.additionalFilterItems ?? []),
+              ...props.filterItems,
+            ]}
+            onFilter={(filter: any) => {
+              if (
+                props.additionalFilterItems?.some(
+                  (item) => item.name === filter.name,
+                )
+              ) {
+                props.onAdditionalFilter?.(filter);
+                return;
+              }
+              props.onFilter(filter);
             }}
             trailing={
               [TabType.pending, TabType.tp_sl].includes(props.type) && (

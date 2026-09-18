@@ -41,6 +41,7 @@ export interface DesktopOrderBookProps {
   showBuySellRatio?: boolean;
   setShowBuySellRatio?: (show: boolean) => void;
   buySellRatio?: BuySellRatio | null;
+  showBuySellRatioSettings?: boolean;
 }
 
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
@@ -54,6 +55,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
     showBuySellRatio = true,
     setShowBuySellRatio,
     buySellRatio,
+    showBuySellRatioSettings = true,
   } = props;
 
   const { t } = useTranslation();
@@ -123,10 +125,12 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
             value={props.activeDepth}
             onChange={onDepthChange}
           />
-          <BuySellRatioSettings
-            showBuySellRatio={showBuySellRatio}
-            setShowBuySellRatio={setShowBuySellRatio}
-          />
+          {showBuySellRatioSettings && setShowBuySellRatio && (
+            <BuySellRatioSettings
+              showBuySellRatio={showBuySellRatio}
+              setShowBuySellRatio={setShowBuySellRatio}
+            />
+          )}
         </Flex>
         <DesktopHeader quote={quote} base={base} />
         <InjectableDesktopAsks

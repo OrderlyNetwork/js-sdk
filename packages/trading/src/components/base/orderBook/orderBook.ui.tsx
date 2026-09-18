@@ -4,9 +4,12 @@ import { DesktopOrderBook } from "../../desktop/orderBook/index.desktop";
 import { OrderBook as MWebOrderBook } from "../../mobile/orderBook";
 import type { OrderBookState } from "./orderBook.script";
 
-export const OrderBook: React.FC<OrderBookState & { className?: string }> = (
-  props,
-) => {
+export const OrderBook: React.FC<
+  OrderBookState & {
+    className?: string;
+    showBuySellRatioSettings?: boolean;
+  }
+> = (props) => {
   return (
     <Box
       className="oui-orderBook oui-font-semibold"
@@ -56,6 +59,7 @@ export const OrderBook: React.FC<OrderBookState & { className?: string }> = (
           showBuySellRatio={props.showBuySellRatio}
           setShowBuySellRatio={props.setShowBuySellRatio}
           buySellRatio={props.buySellRatio}
+          showBuySellRatioSettings={props.showBuySellRatioSettings}
         />
       )}
     </Box>

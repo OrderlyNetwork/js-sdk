@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, usePositionStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { LocaleMessages } from "@orderly.network/i18n";
 import {
@@ -12,8 +12,15 @@ import {
   useMarketsContext,
 } from "@orderly.network/markets";
 import type { MarketTabConfig } from "@orderly.network/markets";
-import { OrderBook as PerpOrderBook } from "@orderly.network/trading";
+import { useDataTap } from "@orderly.network/react-app";
 import {
+  OrderBook as PerpOrderBook,
+  PerpsPositionsPanel,
+  PerpsPositionsSettings,
+} from "@orderly.network/trading";
+import { OrderStatus } from "@orderly.network/types";
+import {
+  AddCircleIcon,
   AssetIcon,
   Badge,
   BarChartIcon,
@@ -30,6 +37,7 @@ import {
   Divider,
   Input,
   inputFormatter,
+  modal,
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
@@ -40,13 +48,22 @@ import {
   Tabs,
   TableFeatures,
   Text,
+  Tips,
   TokenIcon,
   Tooltip,
   toast,
+  useScreen,
 } from "@orderly.network/ui";
 import type { Column, DataFilterItem } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { TabType, useOrderColumn } from "@orderly.network/ui-orders";
+import { SlippageUI } from "@orderly.network/ui-order-entry";
+import {
+  DesktopOrderList,
+  TabType,
+  useOrderColumn,
+  useOrderListScript,
+} from "@orderly.network/ui-orders";
+import { PositionHistoryWidget } from "@orderly.network/ui-positions";
 import { Decimal } from "@orderly.network/utils";
 import type {
   PredictionChartPoint,
@@ -386,7 +403,13 @@ const RoundNavigator: React.FC<{
   const pastMenuRef = useRef<HTMLDivElement>(null);
 
   const recentRounds = [round - 1_500, round - 1_200, round - 900, round - 600];
-  const visibleRounds = [round - 300, round, round + 300];
+  // Keep the live market centred by default. Once a historical or upcoming
+  // market is selected, anchor the visible sequence to that selection so the
+  // selected market is always the first round in chronological order.
+  const visibleRounds =
+    selectedRound === round
+      ? [round - 300, round, round + 300]
+      : [selectedRound, selectedRound + 300, selectedRound + 600];
   const menuRounds = useMemo(() => {
     if (menu === "past") {
       return Array.from(
@@ -1602,14 +1625,10 @@ const PredictionOrderBook: React.FC<
             quote: "USDC",
           }}
           isMobile={false}
-          showBuySellRatio={!isPastRound}
+          showBuySellRatio={false}
           setShowBuySellRatio={() => undefined}
-          buySellRatio={{
-            buyPercentage: 52.4,
-            sellPercentage: 47.6,
-            buyAmount: displayedBids.at(-1)?.[3] ?? 0,
-            sellAmount: displayedAsks[0]?.[3] ?? 0,
-          }}
+          buySellRatio={null}
+          showBuySellRatioSettings={false}
         />
       </div>
     </section>
@@ -1722,6 +1741,7 @@ const TradePanel: React.FC<
 > = (state) => {
   const { t } = useTranslation();
   const orderEntryAccountReady = state.orderEntryAccountReady ?? true;
+  const { isMobile } = useScreen();
   const orderEntryFunded = state.orderEntryFunded ?? true;
   const outcomeLabel = t(`prediction.${state.selectedOutcome}`);
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
@@ -1730,7 +1750,7 @@ const TradePanel: React.FC<
     ? `0 ${state.orderSide === "buy" ? "USDC" : outcomeLabel}`
     : state.orderSide === "buy"
       ? `${usdFormatter.format(state.balance)} USDC`
-      : `${contractFormatter.format(state.selectedPosition?.quantity ?? 0)} ${outcomeLabel}`;
+      : `${contractFormatter.format(state.availableQuantity(state.selectedOutcome))} ${outcomeLabel}`;
   const amountUnitOptions = [
     { label: "USDC", value: "quote" },
     { label: outcomeLabel, value: "outcome" },
@@ -1738,36 +1758,70 @@ const TradePanel: React.FC<
   const maxDisplayValue = orderEntryFunded
     ? `${state.amountUnit === "quote" ? usdFormatter.format(state.maxAmount) : contractFormatter.format(state.maxAmount)} ${inputUnit}`
     : `0 ${inputUnit}`;
+  const canAdjustAmount =
+    orderEntryAccountReady &&
+    orderEntryFunded &&
+    state.maxAmount > 0 &&
+    state.selectedPrice > 0 &&
+    state.selectedPrice < 1 &&
+    state.isRoundTradable &&
+    !state.isRegionRestricted;
+  const sliderColor = canAdjustAmount
+    ? state.orderSide === "buy"
+      ? "buy"
+      : "sell"
+    : undefined;
 
   return (
     <aside className="oui-overflow-hidden oui-rounded-xl oui-bg-base-9">
-      <div className="oui-prediction-orderEntry-form oui-min-w-0 oui-p-3">
-        <div className="oui-flex oui-w-full oui-gap-1">
-          {(["market", "limit"] as const).map((type) => (
-            <button
-              key={type}
-              type="button"
-              disabled={!orderEntryAccountReady}
-              onClick={() => state.setOrderType(type)}
-              className={cn(
-                "oui-flex oui-h-8 oui-flex-1 oui-items-center oui-justify-center oui-rounded oui-px-3 oui-py-0.5 oui-text-xs oui-font-semibold oui-transition-colors disabled:oui-cursor-not-allowed",
-                state.orderType === type
-                  ? "oui-bg-base-5 oui-text-base-contrast"
-                  : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
-              )}
-            >
-              {t(`common.${type}`)}
-            </button>
-          ))}
-        </div>
+      <div className="oui-prediction-orderEntry-form oui-min-w-0 oui-p-3 oui-text-base-contrast-54">
+        {isMobile ? (
+          <Select.options
+            size="md"
+            value={state.orderType}
+            options={(["limit", "market"] as const).map((type) => ({
+              value: type,
+              label: t(`common.${type}`),
+            }))}
+            disabled={!orderEntryAccountReady}
+            onValueChange={(type) =>
+              state.setOrderType(type as "limit" | "market")
+            }
+            classNames={{
+              trigger:
+                "oui-w-full oui-h-8 oui-rounded-md oui-border-line-12 oui-bg-base-8",
+            }}
+          />
+        ) : (
+          <div className="oui-flex oui-w-full oui-gap-1">
+            {(["limit", "market"] as const).map((type) => (
+              <button
+                key={type}
+                type="button"
+                disabled={!orderEntryAccountReady}
+                aria-pressed={state.orderType === type}
+                onClick={() => state.setOrderType(type)}
+                className={cn(
+                  "oui-flex oui-h-8 oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1 oui-rounded oui-px-3 oui-py-0.5 oui-text-xs oui-font-semibold disabled:oui-cursor-not-allowed",
+                  state.orderType === type
+                    ? "oui-bg-base-5 oui-text-base-contrast"
+                    : "oui-bg-base-7 oui-text-base-contrast-36",
+                )}
+              >
+                <Text size="xs">{t(`common.${type}`)}</Text>
+              </button>
+            ))}
+          </div>
+        )}
 
-        <div className="oui-mt-3 oui-grid oui-w-full oui-grid-cols-2 oui-gap-x-2 xl:oui-flex xl:oui-gap-x-[6px]">
+        <div className="oui-mt-2 oui-grid oui-w-full oui-flex-1 oui-grid-cols-2 oui-gap-x-2 xl:oui-mt-3 xl:oui-flex xl:oui-gap-x-[6px]">
           {(["buy", "sell"] as const).map((side) => (
             <Button
               key={side}
               type="button"
               size="md"
               fullWidth
+              aria-pressed={state.orderSide === side}
               onClick={() => state.setOrderSide(side)}
               className={cn(
                 side === "buy"
@@ -1784,7 +1838,7 @@ const TradePanel: React.FC<
           ))}
         </div>
 
-        <div className="oui-mt-3 oui-grid oui-grid-cols-2 oui-overflow-hidden oui-rounded-lg oui-bg-base-10 oui-p-0.5">
+        <div className="oui-mt-2 oui-grid oui-grid-cols-2 oui-overflow-hidden oui-rounded-lg oui-bg-base-10 oui-p-0.5 xl:oui-mt-3">
           {(["up", "down"] as const).map((outcome) => {
             const isActive = state.selectedOutcome === outcome;
             return (
@@ -1812,14 +1866,54 @@ const TradePanel: React.FC<
           })}
         </div>
 
-        <div className="oui-mt-3 oui-flex oui-items-center oui-justify-between oui-text-2xs">
-          <span className="oui-border-b oui-border-dashed oui-border-line-12 oui-text-base-contrast-54">
-            {t("common.available")}
-          </span>
-          <span className="oui-text-base-contrast-80">{availableValue}</span>
+        <div className="oui-mt-2 oui-flex oui-items-center oui-justify-between oui-text-2xs xl:oui-mt-3">
+          <Tips
+            title={t("common.tips")}
+            content={
+              <div className="oui-text-pretty oui-text-2xs oui-leading-normal oui-text-base-contrast-80">
+                {t(
+                  state.orderSide === "buy"
+                    ? "prediction.available.buyHint"
+                    : "prediction.available.sellHint",
+                )}
+              </div>
+            }
+            trigger={
+              <Text
+                size="2xs"
+                className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-base-contrast-54"
+              >
+                {t("common.available")}
+              </Text>
+            }
+          />
+          <div className="oui-flex oui-items-center oui-gap-1">
+            <span className="oui-text-base-contrast-80">{availableValue}</span>
+            {state.orderSide === "buy" && (
+              <Button
+                type="button"
+                variant="text"
+                size="xs"
+                color="secondary"
+                aria-label={t("common.deposit")}
+                className="oui-p-0 hover:oui-text-base-contrast-80"
+                disabled={state.isRegionRestricted}
+                onClick={() =>
+                  modal.show(
+                    isMobile
+                      ? "DepositAndWithdrawWithSheetId"
+                      : "DepositAndWithdrawWithDialogId",
+                    { activeTab: "deposit" },
+                  )
+                }
+              >
+                <AddCircleIcon opacity={1} />
+              </Button>
+            )}
+          </div>
         </div>
 
-        <div className="oui-mt-2 oui-space-y-2">
+        <div className="oui-mt-2 oui-space-y-1 xl:oui-mt-3">
           {state.orderType === "limit" && (
             <>
               <PredictionOrderInput
@@ -1828,7 +1922,7 @@ const TradePanel: React.FC<
                 value={state.limitPrice}
                 suffix="USDC"
                 onChange={state.setLimitPrice}
-                position="single"
+                position="top"
               />
               <PredictionOrderInput
                 id="prediction-order-amount"
@@ -1836,7 +1930,7 @@ const TradePanel: React.FC<
                 value={state.amount}
                 suffix={outcomeLabel}
                 onChange={state.setAmount}
-                position="single"
+                position="middle"
               />
               <PredictionOrderInput
                 id="prediction-total-value"
@@ -1848,7 +1942,7 @@ const TradePanel: React.FC<
                 }
                 suffix="USDC"
                 readOnly
-                position="single"
+                position="bottom"
               />
             </>
           )}
@@ -1877,35 +1971,52 @@ const TradePanel: React.FC<
                 />
               }
               onChange={state.setAmount}
+              dp={state.amountUnit === "quote" ? 2 : 4}
               position="single"
             />
           )}
         </div>
 
-        <div className="oui-mt-4 oui-px-1">
+        <div className="oui-mt-2 xl:oui-mt-3">
           <Slider
-            value={[state.orderPercentage]}
+            value={[canAdjustAmount ? state.orderPercentage : 0]}
             min={0}
             max={100}
             step={1}
             markCount={4}
             showTip
-            color={state.orderSide === "buy" ? "buy" : "sell"}
-            disabled={!orderEntryAccountReady}
+            color={sliderColor}
+            disabled={!canAdjustAmount}
             tipFormatter={(value) => `${Math.round(value)}%`}
             onValueChange={(value) => state.setOrderPercentage(value[0])}
           />
+          <div className="oui-flex oui-items-center oui-justify-between oui-pt-1 xl:oui-pt-2">
+            <Text.numeral
+              size="2xs"
+              color={sliderColor}
+              dp={2}
+              padding={false}
+              suffix="%"
+            >
+              {canAdjustAmount ? state.orderPercentage : 0}
+            </Text.numeral>
+            <button
+              type="button"
+              disabled={!canAdjustAmount}
+              onClick={() => state.setOrderPercentage(100)}
+              className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
+            >
+              {t(
+                state.orderSide === "buy"
+                  ? "orderEntry.maxBuy"
+                  : "orderEntry.maxSell",
+              )}
+              <Text size="2xs" color={sliderColor}>
+                {maxDisplayValue}
+              </Text>
+            </button>
+          </div>
         </div>
-
-        {state.orderType === "limit" && (
-          <button
-            type="button"
-            className="oui-mt-4 oui-flex oui-items-center oui-gap-2 oui-text-xs oui-text-base-contrast-54"
-          >
-            {t("prediction.gtc")}
-            <CaretDownIcon size={14} color="inherit" />
-          </button>
-        )}
 
         <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
           <InfoRow
@@ -1951,8 +2062,17 @@ const TradePanel: React.FC<
         </div>
 
         <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
-          <InfoRow label={t("common.max")} value={maxDisplayValue} />
-          <InfoRow label={t("prediction.estFee")} value="0 USDC" dashed />
+          {state.orderType === "market" && (
+            <SlippageUI
+              slippage={state.slippage}
+              setSlippage={state.setSlippage}
+              estSlippage={state.estimatedSlippage}
+            />
+          )}
+          <InfoRow
+            label={t("common.fees")}
+            value={`${t("dmm.taker")}: --% / ${t("dmm.maker")}: 0%`}
+          />
         </div>
       </div>
     </aside>
@@ -1966,8 +2086,9 @@ const PredictionOrderInput: React.FC<{
   suffix: React.ReactNode;
   onChange?: (value: string) => void;
   readOnly?: boolean;
-  position: "top" | "bottom" | "single";
-}> = ({ id, label, value, suffix, onChange, readOnly, position }) => (
+  dp?: number;
+  position: "top" | "middle" | "bottom" | "single";
+}> = ({ id, label, value, suffix, onChange, readOnly, dp = 4, position }) => (
   <Input
     id={id}
     name={id}
@@ -1978,6 +2099,12 @@ const PredictionOrderInput: React.FC<{
     placeholder="0"
     value={value}
     readOnly={readOnly}
+    formatters={[
+      inputFormatter.dpFormatter(dp),
+      inputFormatter.numberFormatter,
+      inputFormatter.currencyFormatter,
+      inputFormatter.decimalPointFormatter,
+    ]}
     prefix={
       <label
         htmlFor={id}
@@ -1986,19 +2113,28 @@ const PredictionOrderInput: React.FC<{
         {label}
       </label>
     }
-    suffix={suffix}
+    suffix={
+      typeof suffix === "string" ? (
+        suffix
+      ) : (
+        <div className="oui-absolute oui-end-0 oui-top-0 oui-flex oui-h-full oui-flex-col oui-items-end oui-justify-end oui-px-2 oui-py-2 oui-text-2xs oui-text-base-contrast-36">
+          {suffix}
+        </div>
+      )
+    }
     classNames={{
       root: cn(
         "oui-relative oui-h-[54px] oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 focus-within:oui-border-transparent",
         position === "single" && "oui-rounded-xl",
         position === "top" && "oui-rounded-t-xl oui-rounded-b",
+        position === "middle" && "oui-rounded",
         position === "bottom" && "oui-rounded-t oui-rounded-b-xl",
       ),
       input: "oui-mb-1 oui-mt-5 oui-h-5",
       suffix:
-        "oui-absolute oui-end-2 oui-top-0 oui-justify-start oui-py-2 oui-text-2xs oui-text-base-contrast-36",
+        "oui-absolute oui-end-0 oui-top-0 oui-items-end oui-justify-end oui-py-2 oui-text-2xs oui-text-base-contrast-36",
     }}
-    onChange={(event) => onChange?.(event.target.value)}
+    onValueChange={onChange}
   />
 );
 
@@ -2100,6 +2236,8 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
 }) => {
   const { t } = useTranslation();
+  const [positionProduct, setPositionProduct] =
+    useState<ProductType>("prediction");
   const showPrototypeData =
     state.prototypeAuthState === "real" ||
     state.prototypeAuthState === "funded";
@@ -2110,12 +2248,25 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   };
 
   const tabContent: Record<PredictionDataTab, React.ReactNode> = {
-    openOrders: <PredictionOrdersTable state={state} mode="pending" />,
-    predictions: <HoldingsTable state={state} />,
-    filled: <PredictionOrdersTable state={state} mode="filled" />,
-    predictionHistory: <PredictionHistoryTable state={state} />,
+    openOrders: <SharedProductOrdersPanel state={state} mode="pending" />,
+    predictions: (
+      <SharedProductDataPanel
+        state={state}
+        type="positions"
+        initialProduct="prediction"
+        onProductChange={setPositionProduct}
+      />
+    ),
+    filled: <SharedProductOrdersPanel state={state} mode="filled" />,
+    predictionHistory: (
+      <SharedProductDataPanel
+        state={state}
+        type="positionHistory"
+        initialProduct="prediction"
+      />
+    ),
     assets: <AssetsTable state={state} />,
-    orderHistory: <PredictionOrdersTable state={state} mode="history" />,
+    orderHistory: <SharedProductOrdersPanel state={state} mode="history" />,
   };
 
   return (
@@ -2126,6 +2277,7 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
         p={embedded ? 0 : 2}
         className={cn(
           "oui-prediction-dataPanel-container oui-h-full oui-overflow-hidden",
+          "oui-relative",
           className,
         )}
       >
@@ -2160,8 +2312,100 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
             </TabPanel>
           ))}
         </Tabs>
+        {state.activeTab === "predictions" && positionProduct === "perps" && (
+          <div className="oui-absolute oui-end-2 oui-top-2 oui-z-10">
+            <PerpsPositionsSettings />
+          </div>
+        )}
       </Box>
     </PredictionPrototypeAuthContext.Provider>
+  );
+};
+
+type ProductDataType = "positions" | "positionHistory";
+type ProductType = "perps" | "prediction";
+
+export type SharedProductDataPanelProps = {
+  state: PredictionState;
+  type: ProductDataType;
+  /** The product shown when this panel first opens on a page. */
+  initialProduct: ProductType;
+  perpsSymbol?: string;
+  /** Content rendered before the Perps / Prediction control, such as account filters. */
+  beforeProductSelector?: React.ReactNode;
+  perpsPositionsContent?: React.ReactNode;
+  perpsPositionHistoryContent?: React.ReactNode;
+  onProductChange?: (product: ProductType) => void;
+};
+
+/**
+ * Lets either trading surface inspect Perps and Prediction data without
+ * combining their different columns or filters into one table.
+ */
+export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
+  state,
+  type,
+  initialProduct,
+  perpsSymbol,
+  beforeProductSelector,
+  perpsPositionsContent,
+  perpsPositionHistoryContent,
+  onProductChange,
+}) => {
+  const { t } = useTranslation();
+  const [product, setProduct] = useState<ProductType>(initialProduct);
+  const [perpsPositions] = usePositionStream();
+  const perpsPositionCount = useDataTap(perpsPositions.rows?.length) ?? 0;
+  const predictionPositionCount = state.positions.length;
+
+  const content =
+    product === "prediction" ? (
+      type === "positions" ? (
+        <HoldingsTable state={state} />
+      ) : (
+        <PredictionHistoryTable state={state} />
+      )
+    ) : type === "positions" ? (
+      (perpsPositionsContent ?? <PerpsPositionsPanel symbol={perpsSymbol} />)
+    ) : (
+      (perpsPositionHistoryContent ?? <PositionHistoryWidget />)
+    );
+
+  return (
+    <div className="oui-flex oui-h-full oui-min-h-0 oui-flex-col">
+      {beforeProductSelector}
+      <div
+        role="tablist"
+        aria-label={t("common.positions")}
+        className="oui-mt-2 oui-inline-flex oui-w-fit oui-gap-x-[6px]"
+      >
+        {(["perps", "prediction"] as const).map((item) => {
+          const active = product === item;
+          return (
+            <button
+              key={item}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => {
+                setProduct(item);
+                onProductChange?.(item);
+              }}
+              data-state={active ? "active" : "inactive"}
+              className={cn(
+                "oui-group !oui-rounded-md oui-inline-flex oui-h-7 oui-items-center oui-justify-center oui-gap-x-1 oui-bg-base-7 oui-px-3 oui-text-2xs oui-font-medium oui-text-base-contrast-36 oui-transition-all hover:oui-bg-base-5 hover:oui-text-base-contrast-54 data-[state=active]:oui-bg-base-5 data-[state=active]:oui-text-base-contrast",
+              )}
+            >
+              {item === "perps" ? t("common.perps") : t("prediction.title")} (
+              {item === "perps" ? perpsPositionCount : predictionPositionCount})
+            </button>
+          );
+        })}
+      </div>
+      <div className="oui-min-h-0 oui-flex-1 oui-overflow-hidden">
+        {content}
+      </div>
+    </div>
   );
 };
 
@@ -2567,10 +2811,14 @@ const PredictionFilters = ({
   filters,
   mode,
   trailing,
+  leadingItems = [],
+  onLeadingFilter,
 }: {
   filters: ReturnType<typeof usePredictionFilters>;
   mode: "holdings" | "pending" | "filled" | "history" | "settlements";
   trailing?: React.ReactNode;
+  leadingItems?: DataFilterItem[];
+  onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
 }) => {
   const { t } = useTranslation();
   const items: DataFilterItem[] = [];
@@ -2621,8 +2869,14 @@ const PredictionFilters = ({
     <div className="oui-flex oui-flex-wrap oui-items-center oui-gap-3 oui-px-2">
       <DataFilter
         className="oui-w-auto oui-flex-wrap oui-gap-y-3"
-        items={items}
-        onFilter={filters.onFilter}
+        items={[...leadingItems, ...items]}
+        onFilter={(filter) => {
+          if (leadingItems.some((item) => item.name === filter.name)) {
+            onLeadingFilter?.(filter);
+            return;
+          }
+          filters.onFilter(filter);
+        }}
       />
       {mode === "settlements" &&
         [1, 7, 30, 90].map((days) => (
@@ -2649,20 +2903,35 @@ const PredictionFilters = ({
   );
 };
 
-const HoldingsTable = ({ state }: { state: PredictionState }) => {
+const HoldingsTable = ({
+  state,
+  leadingFilterItems,
+  onLeadingFilter,
+}: {
+  state: PredictionState;
+  leadingFilterItems?: DataFilterItem[];
+  onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
+}) => {
   const { t } = useTranslation();
   const filters = usePredictionFilters();
   return (
     <PredictionDataTable
       minWidth={1320}
-      toolbar={<PredictionFilters filters={filters} mode="holdings" />}
+      toolbar={
+        <PredictionFilters
+          filters={filters}
+          mode="holdings"
+          leadingItems={leadingFilterItems}
+          onLeadingFilter={onLeadingFilter}
+        />
+      }
       columns={[
         tableColumn(t("common.symbol"), 250, { fixed: "start" }),
         tableColumn(t("prediction.outcome"), 100),
         tableColumn(t("prediction.size"), 110, { sortable: true }),
         tableColumn(t("common.available"), 110, { sortable: true }),
         tableColumn(t("prediction.entryPrice"), 130, { sortable: true }),
-        tableColumn(t("common.markPrice"), 130, { sortable: true }),
+        tableColumn(t("prediction.lastPrice"), 130, { sortable: true }),
         tableColumn(t("common.unrealizedPnl"), 170, { sortable: true }),
         tableColumn(t("prediction.countdownStatus"), 150),
         tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
@@ -2858,10 +3127,14 @@ export const PredictionOrdersTable = ({
   state,
   mode,
   status,
+  leadingFilterItems,
+  onLeadingFilter,
 }: {
   state: PredictionState;
   mode: "pending" | "filled" | "history";
   status?: "cancelled" | "unsupported";
+  leadingFilterItems?: DataFilterItem[];
+  onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
 }) => {
   const { t } = useTranslation();
   const pending = mode === "pending";
@@ -2901,6 +3174,8 @@ export const PredictionOrdersTable = ({
         <PredictionFilters
           filters={filters}
           mode={mode}
+          leadingItems={leadingFilterItems}
+          onLeadingFilter={onLeadingFilter}
           trailing={
             pending ? (
               <Button
@@ -2945,13 +3220,146 @@ export const PredictionOrdersTable = ({
   );
 };
 
-const PredictionHistoryTable = ({ state }: { state: PredictionState }) => {
+type ProductOrderMode = "pending" | "filled" | "history";
+type ProductOrderInstrument = "all" | ProductType;
+
+const AllProductOrdersTable: React.FC<{
+  state: PredictionState;
+  mode: ProductOrderMode;
+  includePrediction: boolean;
+  productFilterItems: DataFilterItem[];
+  onProductFilter: (filter: { name: string; value: unknown }) => void;
+}> = ({
+  state,
+  mode,
+  includePrediction,
+  productFilterItems,
+  onProductFilter,
+}) => {
+  const pending = mode === "pending";
+  const type = pending
+    ? TabType.pending
+    : mode === "filled"
+      ? TabType.filled
+      : TabType.orderHistory;
+  const orderListState = useOrderListScript({
+    type,
+    ordersStatus: pending
+      ? OrderStatus.INCOMPLETE
+      : mode === "filled"
+        ? OrderStatus.FILLED
+        : undefined,
+  });
+  const predictionOrders = pending
+    ? state.openOrders
+    : mode === "filled"
+      ? state.history.filter((order) => order.status === "filled")
+      : [...state.openOrders, ...state.history];
+
+  return (
+    <DesktopOrderList
+      {...orderListState}
+      additionalFilterItems={productFilterItems}
+      onAdditionalFilter={onProductFilter}
+      supplementalRows={
+        includePrediction
+          ? predictionOrders.map((order) => ({
+              id: `prediction-${order.id}`,
+              timestamp: order.timestamp,
+              renderCell: (field) => (
+                <PredictionOrderCell
+                  state={state}
+                  order={order}
+                  field={field}
+                />
+              ),
+            }))
+          : undefined
+      }
+    />
+  );
+};
+
+export const SharedProductOrdersPanel: React.FC<{
+  state: PredictionState;
+  mode: ProductOrderMode;
+}> = ({ state, mode }) => {
+  const { t } = useTranslation();
+  const [instrument, setInstrument] = useState<ProductOrderInstrument>("all");
+  const productFilterItems: DataFilterItem[] = [
+    {
+      type: "select",
+      name: "instrument",
+      value: instrument,
+      options: [
+        { label: t("prediction.filter.allInstruments"), value: "all" },
+        { label: t("common.perps"), value: "perps" },
+        { label: t("prediction.title"), value: "prediction" },
+      ],
+    },
+  ];
+  const onProductFilter = ({ value }: { name: string; value: unknown }) => {
+    if (value === "all" || value === "perps" || value === "prediction") {
+      setInstrument(value);
+    }
+  };
+
+  if (instrument === "prediction") {
+    return (
+      <PredictionOrdersTable
+        state={state}
+        mode={mode}
+        leadingFilterItems={productFilterItems}
+        onLeadingFilter={onProductFilter}
+      />
+    );
+  }
+
+  if (instrument === "perps") {
+    return (
+      <AllProductOrdersTable
+        state={state}
+        mode={mode}
+        includePrediction={false}
+        productFilterItems={productFilterItems}
+        onProductFilter={onProductFilter}
+      />
+    );
+  }
+
+  return (
+    <AllProductOrdersTable
+      state={state}
+      mode={mode}
+      includePrediction
+      productFilterItems={productFilterItems}
+      onProductFilter={onProductFilter}
+    />
+  );
+};
+
+const PredictionHistoryTable = ({
+  state,
+  leadingFilterItems,
+  onLeadingFilter,
+}: {
+  state: PredictionState;
+  leadingFilterItems?: DataFilterItem[];
+  onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
+}) => {
   const { t } = useTranslation();
   const filters = usePredictionFilters(true);
   return (
     <PredictionDataTable
       minWidth={1400}
-      toolbar={<PredictionFilters filters={filters} mode="settlements" />}
+      toolbar={
+        <PredictionFilters
+          filters={filters}
+          mode="settlements"
+          leadingItems={leadingFilterItems}
+          onLeadingFilter={onLeadingFilter}
+        />
+      }
       columns={[
         tableColumn(t("common.symbol"), 250, { fixed: "start" }),
         tableColumn(t("prediction.outcome"), 100),
@@ -3558,12 +3966,10 @@ export const Prediction: React.FC<
           <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 xl:oui-grid 2xl:oui-flex 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
             <DataItem
               label={t("prediction.chart.btcPrice")}
-              hint={t("prediction.chart.btcPriceHint")}
               value={<Text.numeral dp={2}>{state.currentPrice}</Text.numeral>}
             />
             <DataItem
               label={t("prediction.chance")}
-              hint={t("prediction.chanceHint")}
               value={
                 <Text intensity={98}>{formatPercent(state.upChance)}</Text>
               }

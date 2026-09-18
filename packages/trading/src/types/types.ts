@@ -161,4 +161,12 @@ export type TradingPageProps = BaseTradingPageProps & {
   referral?: ReferralProps;
   tradingRewards?: TradingRewardsProps;
   bottomSheetLeading?: React.ReactNode | string;
+  /** Optional content that supplements Perps data tabs with another product. */
+  dataListProductContent?: Partial<{
+    positions: ReactNode | ((perpsContent: ReactNode) => ReactNode);
+    pending: ReactNode;
+    filled: ReactNode;
+    positionHistory: ReactNode;
+    orderHistory: ReactNode;
+  }>;
 };

@@ -1440,15 +1440,24 @@ importers:
       '@orderly.network/trading':
         specifier: workspace:*
         version: link:../trading
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
+      '@orderly.network/ui-order-entry':
+        specifier: workspace:*
+        version: link:../ui-order-entry
       '@orderly.network/ui-orders':
         specifier: workspace:*
         version: link:../ui-orders
+      '@orderly.network/ui-positions':
+        specifier: workspace:*
+        version: link:../ui-positions
       '@orderly.network/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
@@ -5463,6 +5472,7 @@ packages:
 
   '@metamask/sdk-install-modal-web@0.32.1':
     resolution: {integrity: sha512-MGmAo6qSjf1tuYXhCu2EZLftq+DSt5Z7fsIKr2P+lDgdTPWgLfZB1tJKzNcwKKOdf6q9Qmmxn7lJuI/gq5LrKw==}
+    deprecated: No longer maintained, superseded by https://docs.metamask.io/metamask-connect
 
   '@metamask/sdk@0.33.1':
     resolution: {integrity: sha512-1mcOQVGr9rSrVcbKPNVzbZ8eCl1K0FATsYH3WJ/MH4WcZDWGECWrXJPNMZoEAkLxWiMe8jOQBumg2pmcDa9zpQ==}
@@ -10350,6 +10360,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'

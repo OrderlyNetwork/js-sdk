@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
+import {
+  planPredictionExecution,
+  type PredictionOrderPolicy,
+} from "./predictionExecution";
 
 export type PredictionOutcome = "up" | "down";
 export type PredictionOrderSide = "buy" | "sell";
@@ -51,6 +55,7 @@ export type PredictionPosition = {
 };
 
 export type PredictionOpenOrder = {
+  policy?: PredictionOrderPolicy;
   id: number;
   outcome: PredictionOutcome;
   side: PredictionOrderSide;
@@ -149,6 +154,39 @@ const createBook = (midPrice: number) => {
   return { asks: asks.reverse(), bids };
 };
 
+const estimateMarketSlippage = (
+  side: PredictionOrderSide,
+  quantity: number,
+  orderBook: {
+    asks: PredictionOrderBookLevel[];
+    bids: PredictionOrderBookLevel[];
+  },
+) => {
+  if (!Number.isFinite(quantity) || quantity <= 0) return null;
+
+  const levels = (side === "buy" ? orderBook.asks : orderBook.bids)
+    .filter((level) => level.quantity > 0)
+    .sort((a, b) => (side === "buy" ? a.price - b.price : b.price - a.price));
+  const bestPrice = levels[0]?.price;
+  if (!bestPrice) return null;
+
+  let remaining = new Decimal(quantity);
+  let notional = new Decimal(0);
+  for (const level of levels) {
+    const fill = remaining.lte(level.quantity)
+      ? remaining
+      : new Decimal(level.quantity);
+    notional = notional.add(fill.mul(level.price));
+    remaining = remaining.sub(fill);
+    if (remaining.lte(0)) break;
+  }
+
+  const filled = new Decimal(quantity).sub(remaining);
+  if (filled.lte(0)) return null;
+
+  return notional.div(filled).sub(bestPrice).abs().div(bestPrice).toNumber();
+};
+
 export const usePredictionScript = (regionRestricted = false) => {
   const [prototypeAuthState, setPrototypeAuthState] =
     useLocalStorage<PredictionPrototypeAuthState>(
@@ -179,9 +217,14 @@ export const usePredictionScript = (regionRestricted = false) => {
     useState<PredictionOutcome>("up");
   const [orderSide, setOrderSide] = useState<PredictionOrderSide>("buy");
   const [orderType, setOrderType] = useState<PredictionOrderType>("market");
+  const orderPolicy: PredictionOrderPolicy = "gtc";
   const [amountUnit, setAmountUnit] = useState<PredictionAmountUnit>("quote");
   const [amount, setAmount] = useState("100");
+  const [selectedPercentage, setSelectedPercentage] = useState<number | null>(
+    null,
+  );
   const [limitPrice, setLimitPrice] = useState("0.5000");
+  const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "1");
   const [balance, setBalance] = useState(INITIAL_BALANCE);
   const [positions, setPositions] = useState<PredictionPosition[]>([
     { outcome: "up", quantity: 24, averagePrice: 0.4625 },
@@ -424,6 +467,14 @@ export const usePredictionScript = (regionRestricted = false) => {
     () => createBook(selectedMarketPrice),
     [selectedMarketPrice],
   );
+  const estimatedSlippage = useMemo(
+    () => estimateMarketSlippage(orderSide, orderQuantity, orderBook),
+    [orderBook, orderQuantity, orderSide],
+  );
+  const isSlippageExceeded =
+    orderType === "market" &&
+    estimatedSlippage !== null &&
+    estimatedSlippage > new Decimal(slippage || 0).div(100).toNumber();
 
   const isRoundTradable =
     selectedRound >= round &&
@@ -431,6 +482,7 @@ export const usePredictionScript = (regionRestricted = false) => {
 
   const canPlaceOrder = useMemo(() => {
     if (!isRoundTradable || isRegionRestricted) return false;
+    if (isSlippageExceeded) return false;
     if (numericAmount <= 0 || selectedPrice <= 0 || selectedPrice >= 1) {
       return false;
     }
@@ -440,6 +492,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     balance,
     isRegionRestricted,
     isRoundTradable,
+    isSlippageExceeded,
     numericAmount,
     orderNotional,
     orderQuantity,
@@ -752,35 +805,64 @@ export const usePredictionScript = (regionRestricted = false) => {
       return;
     }
 
-    if (orderSide === "sell") {
-      if (
-        sellPosition(selectedOutcome, orderQuantity, orderType, selectedPrice)
-      )
-        setAmount("");
-      return;
-    }
-    const price = selectedPrice;
-    const quantity = orderQuantity;
+    const policy = orderType === "limit" ? orderPolicy : "gtc";
+    const execution =
+      orderType === "limit"
+        ? planPredictionExecution(
+            policy,
+            orderSide,
+            selectedPrice,
+            orderQuantity,
+            orderSide === "buy" ? orderBook.asks : orderBook.bids,
+          )
+        : {
+            filled: orderQuantity,
+            cancelled: 0,
+            pending: 0,
+            price: selectedPrice,
+          };
+    const price = execution.price;
+    const quantity = execution.filled;
     const order: PredictionOpenOrder = {
       id: nextIdRef.current++,
       outcome: selectedOutcome,
       side: orderSide,
       type: orderType,
-      price,
-      quantity,
+      price: selectedPrice,
+      quantity: orderQuantity,
+      policy,
       round: selectedRound,
       timestamp: Date.now(),
     };
 
-    if (orderType === "limit") {
+    if (execution.pending > 0) {
       setOpenOrders((previous) => [order, ...previous]);
       setActiveTab("openOrders");
       notify("prediction.message.orderPlaced");
       return;
     }
 
+    if (execution.cancelled > 0) {
+      setHistory((previous) => [
+        {
+          ...order,
+          id: nextIdRef.current++,
+          quantity: execution.cancelled,
+          status: "cancelled",
+        },
+        ...previous,
+      ]);
+    }
+    if (quantity === 0) {
+      setActiveTab("orderHistory");
+      notify("prediction.message.orderCanceled");
+      return;
+    }
+
     if (orderSide === "buy") {
-      setBalance((previous) => previous - orderNotional);
+      setBalance((previous) =>
+        new Decimal(previous).sub(new Decimal(quantity).mul(price)).toNumber(),
+      );
       setPositions((previous) => {
         const existing = previous.find(
           (position) => position.outcome === selectedOutcome,
@@ -791,7 +873,9 @@ export const usePredictionScript = (regionRestricted = false) => {
             { outcome: selectedOutcome, quantity, averagePrice: price },
           ];
         }
-        const nextQuantity = existing.quantity + quantity;
+        const nextQuantity = new Decimal(existing.quantity)
+          .add(quantity)
+          .toNumber();
         const nextAverage = new Decimal(existing.quantity)
           .mul(existing.averagePrice)
           .add(new Decimal(quantity).mul(price))
@@ -809,28 +893,51 @@ export const usePredictionScript = (regionRestricted = false) => {
       });
     } else {
       const proceeds = new Decimal(quantity).mul(price).toNumber();
-      setBalance((previous) => previous + proceeds);
+      setBalance((previous) => new Decimal(previous).add(proceeds).toNumber());
       setPositions((previous) =>
         previous
           .map((position) =>
             position.outcome === selectedOutcome
-              ? { ...position, quantity: position.quantity - quantity }
+              ? {
+                  ...position,
+                  quantity: new Decimal(position.quantity)
+                    .sub(quantity)
+                    .toNumber(),
+                }
               : position,
           )
-          .filter((position) => position.quantity > 0.0001),
+          .filter((position) => position.quantity > 0),
       );
+      const averagePrice = selectedPosition?.averagePrice ?? 0;
+      setSettlements((previous) => [
+        {
+          id: nextIdRef.current++,
+          round: selectedRound,
+          outcome: selectedOutcome,
+          quantity,
+          averagePrice,
+          settlementPrice: price,
+          payout: proceeds,
+          pnl: new Decimal(price).sub(averagePrice).mul(quantity).toNumber(),
+          settledAt: Date.now(),
+          result: "closed",
+        },
+        ...previous,
+      ]);
     }
 
     setHistory((previous) => [
-      { ...order, status: "filled", timestamp: Date.now() },
+      { ...order, price, quantity, status: "filled", timestamp: Date.now() },
       ...previous,
     ]);
+    setSelectedPercentage(null);
     setAmount("");
     setActiveTab("predictions");
     notify("prediction.message.orderFilled");
   }, [
     canPlaceOrder,
-    sellPosition,
+    orderBook,
+    selectedPosition,
     notify,
     orderNotional,
     orderQuantity,
@@ -877,24 +984,37 @@ export const usePredictionScript = (regionRestricted = false) => {
     notify("prediction.message.ordersCanceled");
   }, [notify, openOrders.length, isRegionRestricted]);
 
-  const setMaxAmount = useCallback(() => {
-    setAmount(maxAmount.toFixed(amountUnit === "quote" ? 2 : 4));
-  }, [amountUnit, maxAmount]);
-
   const setOrderPercentage = useCallback(
     (percentage: number) => {
+      const nextPercentage = clamp(percentage, 0, 100);
+      setSelectedPercentage(nextPercentage);
       const nextAmount = new Decimal(maxAmount)
-        .mul(clamp(percentage, 0, 100))
+        .mul(nextPercentage)
         .div(100)
-        .toNumber();
+        .toDecimalPlaces(amountUnit === "quote" ? 2 : 4, Decimal.ROUND_DOWN);
       setAmount(
-        nextAmount > 0
+        nextAmount.gt(0)
           ? nextAmount.toFixed(amountUnit === "quote" ? 2 : 4)
           : "",
       );
     },
     [amountUnit, maxAmount],
   );
+
+  useEffect(() => {
+    if (selectedPercentage !== null) {
+      setOrderPercentage(selectedPercentage);
+    }
+  }, [selectedPercentage, setOrderPercentage]);
+
+  const setManualAmount = useCallback((value: string) => {
+    setSelectedPercentage(null);
+    setAmount(value);
+  }, []);
+
+  const setMaxAmount = useCallback(() => {
+    setOrderPercentage(100);
+  }, [setOrderPercentage]);
 
   return {
     round,
@@ -921,7 +1041,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     amountUnit,
     setAmountUnit: selectAmountUnit,
     amount,
-    setAmount,
+    setAmount: setManualAmount,
     limitPrice,
     setLimitPrice,
     balance,
@@ -942,6 +1062,10 @@ export const usePredictionScript = (regionRestricted = false) => {
     activeTab,
     setActiveTab,
     orderBook,
+    slippage,
+    setSlippage,
+    estimatedSlippage,
+    isSlippageExceeded,
     selectedPrice,
     selectedPosition,
     estimatedContracts,
@@ -953,7 +1077,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     maxAmount,
     maxQuoteAmount,
     maxOutcomeAmount,
-    orderPercentage,
+    orderPercentage: selectedPercentage ?? orderPercentage,
     canPlaceOrder,
     notification,
     placeOrder,

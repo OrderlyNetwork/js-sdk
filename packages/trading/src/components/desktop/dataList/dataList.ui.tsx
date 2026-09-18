@@ -19,6 +19,8 @@ import {
   PositionHistoryWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
+import type { PositionsProps } from "@orderly.network/ui-positions";
+import { useTradingLocalStorage } from "../../../hooks";
 import { InjectableDataListDesktopTabs } from "./dataList.injectable";
 import { DataListState, DataListTabType } from "./dataList.script";
 
@@ -58,6 +60,69 @@ const PositionsView: React.FC<DataListState> = (props) => {
         />
       </Box>
     </Flex>
+  );
+};
+
+const resolvePositionsContent = (
+  content:
+    | React.ReactNode
+    | ((perpsContent: React.ReactNode) => React.ReactNode)
+    | undefined,
+  perpsContent: React.ReactNode,
+) =>
+  typeof content === "function"
+    ? content(perpsContent)
+    : (content ?? perpsContent);
+
+/** A standalone Perps positions panel for surfaces that embed it outside DataList. */
+export const PerpsPositionsPanel: React.FC<PositionsProps> = (props) => {
+  const localStorage = useTradingLocalStorage({
+    pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
+  });
+  const symbol = localStorage.showAllSymbol ? undefined : props.symbol;
+
+  return (
+    <Flex direction="column" width="100%" height="100%">
+      <React.Suspense fallback={null}>
+        <LazyPositionHeaderWidget
+          setPnlNotionalDecimalPrecision={
+            localStorage.setPnlNotionalDecimalPrecision
+          }
+          pnlNotionalDecimalPrecision={localStorage.pnlNotionalDecimalPrecision}
+          symbol={symbol}
+          setUnPnlPriceBasic={localStorage.setUnPnlPriceBasic}
+          unPnlPriceBasis={localStorage.unPnlPriceBasis}
+        />
+      </React.Suspense>
+      <Divider className="oui-w-full" />
+      <Box className="oui-min-h-0 oui-flex-1" width="100%">
+        <PositionsWidget
+          {...props}
+          symbol={symbol}
+          pnlNotionalDecimalPrecision={localStorage.pnlNotionalDecimalPrecision}
+          calcMode={localStorage.unPnlPriceBasis}
+        />
+      </Box>
+    </Flex>
+  );
+};
+
+export const PerpsPositionsSettings: React.FC = () => {
+  const localStorage = useTradingLocalStorage();
+
+  return (
+    <React.Suspense fallback={null}>
+      <LazySettingWidget
+        pnlNotionalDecimalPrecision={localStorage.pnlNotionalDecimalPrecision}
+        setPnlNotionalDecimalPrecision={
+          localStorage.setPnlNotionalDecimalPrecision
+        }
+        unPnlPriceBasis={localStorage.unPnlPriceBasis}
+        setUnPnlPriceBasic={localStorage.setUnPnlPriceBasic}
+        hideOtherSymbols={!localStorage.showAllSymbol}
+        setHideOtherSymbols={(value) => localStorage.setShowAllSymbol(!value)}
+      />
+    </React.Suspense>
   );
 };
 
@@ -118,12 +183,15 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.positions,
       title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
-      content: <PositionsView {...props} />,
+      content: resolvePositionsContent(
+        props.dataListProductContent?.positions,
+        <PositionsView {...props} />,
+      ),
     },
     {
       value: DataListTabType.pending,
       title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
-      content: (
+      content: props.dataListProductContent?.pending ?? (
         <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
@@ -149,7 +217,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.filled,
       title: t("orders.status.filled"),
-      content: (
+      content: props.dataListProductContent?.filled ?? (
         <DesktopOrderListWidget
           type={TabType.filled}
           symbol={showAllSymbol ? undefined : symbol}
@@ -164,7 +232,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.positionHistory,
       title: t("positions.positionHistory"),
-      content: (
+      content: props.dataListProductContent?.positionHistory ?? (
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
@@ -176,7 +244,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.orderHistory,
       title: t("orders.orderHistory"),
-      content: (
+      content: props.dataListProductContent?.orderHistory ?? (
         <DesktopOrderListWidget
           type={TabType.orderHistory}
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
@@ -221,11 +289,31 @@ export const DataList: React.FC<DataListState> = (props) => {
   ];
 
   return (
-    <Tabs
-      className="oui-trading-dataList-tabs oui-h-full"
-      defaultValue={current || DataListTabType.positions}
-      variant="contained"
-      trailing={
+    <div className="oui-relative oui-h-full">
+      <Tabs
+        className="oui-trading-dataList-tabs oui-h-full"
+        defaultValue={current || DataListTabType.positions}
+        variant="contained"
+        size="lg"
+        classNames={{
+          trigger: "oui-group",
+          tabsContent: "oui-h-[calc(100%_-_32px)]",
+        }}
+      >
+        {tabPanelItems.map((item) => {
+          const { content, ...rest } = item;
+          return (
+            <TabPanel {...rest} key={`item-${rest.value}`}>
+              {content}
+            </TabPanel>
+          );
+        })}
+        {/* Plugin-appendable tabs. Empty by default; a plugin intercepts
+            `Trading.DataList.Desktop.Tabs` and appends `{ id, title, content }`
+            entries, which self-register into the Tabs context above. */}
+        <InjectableDataListDesktopTabs items={[]} />
+      </Tabs>
+      <div className="oui-absolute oui-end-0 oui-top-0 oui-z-10">
         <React.Suspense fallback={null}>
           <LazySettingWidget
             pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
@@ -236,25 +324,7 @@ export const DataList: React.FC<DataListState> = (props) => {
             setHideOtherSymbols={(value) => setShowAllSymbol(!value)}
           />
         </React.Suspense>
-      }
-      size="lg"
-      classNames={{
-        trigger: "oui-group",
-        tabsContent: "oui-h-[calc(100%_-_32px)]",
-      }}
-    >
-      {tabPanelItems.map((item) => {
-        const { content, ...rest } = item;
-        return (
-          <TabPanel {...rest} key={`item-${rest.value}`}>
-            {content}
-          </TabPanel>
-        );
-      })}
-      {/* Plugin-appendable tabs. Empty by default; a plugin intercepts
-          `Trading.DataList.Desktop.Tabs` and appends `{ id, title, content }`
-          entries, which self-register into the Tabs context above. */}
-      <InjectableDataListDesktopTabs items={[]} />
-    </Tabs>
+      </div>
+    </div>
   );
 };

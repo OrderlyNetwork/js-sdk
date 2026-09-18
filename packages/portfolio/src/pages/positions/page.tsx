@@ -30,7 +30,23 @@ enum TabsType {
   liquidation = "Liquidation",
 }
 
-export const PositionsPage: React.FC<PositionsProps> = (props) => {
+export type PortfolioPositionsPageProps = PositionsProps & {
+  /**
+   * Allows an app to place a separate product selector and table next to the
+   * default Perps positions table without coupling Portfolio to that product.
+   */
+  positionProductContent?: (perpsContent: React.ReactNode) => React.ReactNode;
+  /** Equivalent extension point for Position history. */
+  positionHistoryProductContent?: (
+    perpsContent: React.ReactNode,
+  ) => React.ReactNode;
+};
+
+export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
+  positionProductContent,
+  positionHistoryProductContent,
+  ...positionsProps
+}) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
   const { state, isMainAccount } = useAccount();
@@ -73,6 +89,34 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
     return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [subAccounts]);
 
+  const renderAccountFilter = () =>
+    isMainAccount ? (
+      <DataFilter
+        onFilter={onAccountFilter}
+        items={[
+          {
+            type: "select",
+            name: "account",
+            value: selectedAccount,
+            options: memoizedOptions,
+          },
+        ]}
+      />
+    ) : null;
+
+  const perpsPositionsContent = isMainAccount ? (
+    <CombinePositionsWidget
+      selectedAccount={selectedAccount}
+      {...positionsProps}
+    />
+  ) : (
+    <PositionsWidget {...positionsProps} enableSortingStorage={false} />
+  );
+
+  const perpsPositionHistoryContent = (
+    <PositionHistoryWidget {...positionsProps} enableSortingStorage={false} />
+  );
+
   return (
     <Flex
       // p={6}
@@ -91,43 +135,29 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
         <Tabs
           value={tab}
           onValueChange={(e) => setTab(e as any)}
+          size="lg"
           classNames={{
             tabsList: "!oui-border-none oui-pb-1",
-            tabsContent: "oui-h-[calc(100%_-_28px)]",
+            tabsContent: "oui-h-[calc(100%_-_32px)]",
             trigger: "oui-group",
           }}
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
-            {isMainAccount ? (
-              <>
-                <DataFilter
-                  onFilter={onAccountFilter}
-                  items={[
-                    {
-                      type: "select",
-                      name: "account",
-                      value: selectedAccount,
-                      options: memoizedOptions,
-                    },
-                  ]}
-                />
-                <CombinePositionsWidget
-                  selectedAccount={selectedAccount}
-                  {...props}
-                />
-              </>
-            ) : (
-              <PositionsWidget {...props} enableSortingStorage={false} />
-            )}
+            {renderAccountFilter()}
+            {positionProductContent?.(perpsPositionsContent) ??
+              perpsPositionsContent}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}
             title={t("positions.positionHistory")}
           >
-            <PositionHistoryWidget {...props} enableSortingStorage={false} />
+            {renderAccountFilter()}
+            {positionHistoryProductContent?.(perpsPositionHistoryContent) ??
+              perpsPositionHistoryContent}
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
+            {renderAccountFilter()}
             <LiquidationWidget />
           </TabPanel>
         </Tabs>

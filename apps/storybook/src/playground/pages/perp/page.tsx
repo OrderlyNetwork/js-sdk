@@ -2,6 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { generatePath } from "@orderly.network/i18n";
 import { registerLayoutSplitPlugin } from "@orderly.network/layout-split";
+import {
+  SharedProductDataPanel,
+  SharedProductOrdersPanel,
+  useSharedPredictionState,
+} from "@orderly.network/prediction";
 import { TradingPage, TradingPageProps } from "@orderly.network/trading";
 import { API } from "@orderly.network/types";
 import { OrderlyPluginProvider } from "@orderly.network/ui";
@@ -16,6 +21,7 @@ export default function PerpPage() {
   const params = useParams();
   const [symbol, setSymbol] = useState(params.symbol!);
   const navigate = useNavigate();
+  const predictionState = useSharedPredictionState();
 
   useEffect(() => {
     updateSymbol(symbol);
@@ -43,6 +49,46 @@ export default function PerpPage() {
         onSymbolChange={onSymbolChange}
         tradingViewConfig={tradingPageConfig.tradingViewConfig}
         sharePnLConfig={tradingPageConfig.sharePnLConfig}
+        dataListProductContent={
+          predictionState
+            ? {
+                positions: (perpsPositionsContent) => (
+                  <SharedProductDataPanel
+                    state={predictionState}
+                    type="positions"
+                    initialProduct="perps"
+                    perpsSymbol={symbol}
+                    perpsPositionsContent={perpsPositionsContent}
+                  />
+                ),
+                pending: (
+                  <SharedProductOrdersPanel
+                    state={predictionState}
+                    mode="pending"
+                  />
+                ),
+                filled: (
+                  <SharedProductOrdersPanel
+                    state={predictionState}
+                    mode="filled"
+                  />
+                ),
+                positionHistory: (
+                  <SharedProductDataPanel
+                    state={predictionState}
+                    type="positionHistory"
+                    initialProduct="perps"
+                  />
+                ),
+                orderHistory: (
+                  <SharedProductOrdersPanel
+                    state={predictionState}
+                    mode="history"
+                  />
+                ),
+              }
+            : undefined
+        }
       />
     </BaseLayout>
   );

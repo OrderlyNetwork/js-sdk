@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { OrderSide, OrderStatus, API } from "@orderly.network/types";
+import type { DataFilterItem } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TabType } from "../orders.widget";
 import { OrderListInstance, useOrderListScript } from "./orderList.script";
@@ -16,15 +17,24 @@ export type DesktopOrderListWidgetProps = {
   testIds?: {
     tableBody?: string;
   };
+  additionalFilterItems?: DataFilterItem[];
+  onAdditionalFilter?: (filter: { name: string; value: unknown }) => void;
 };
 
 export const DesktopOrderListWidget = forwardRef<
   OrderListInstance,
   DesktopOrderListWidgetProps
 >((props, ref) => {
-  const { testIds, ...rest } = props;
+  const { testIds, additionalFilterItems, onAdditionalFilter, ...rest } = props;
   const state = useOrderListScript({ ...rest, ref });
-  return <DesktopOrderList {...state} testIds={testIds} />;
+  return (
+    <DesktopOrderList
+      {...state}
+      testIds={testIds}
+      additionalFilterItems={additionalFilterItems}
+      onAdditionalFilter={onAdditionalFilter}
+    />
+  );
 });
 
 export const MobileOrderListWidget: React.FC<{

@@ -4,6 +4,7 @@ import { MarginMode } from "@orderly.network/types";
 import {
   cn,
   DataFilter,
+  type DataFilterItem,
   Flex,
   Grid,
   ListView,
@@ -21,6 +22,8 @@ import {
 
 type PositionHistoryProps = PositionHistoryState & {
   sharePnLConfig?: SharePnLConfig;
+  additionalFilterItems?: DataFilterItem[];
+  onAdditionalFilter?: (filter: { name: string; value: unknown }) => void;
 };
 
 // position_id may be duplicated, so include symbol, margin mode, and open timestamp.
@@ -55,9 +58,20 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
       <Flex gap={3}>
         {props.filterItems.length > 0 && (
           <DataFilter
-            items={props.filterItems}
-            onFilter={(value: any) => {
-              props.onFilter(value);
+            items={[
+              ...(props.additionalFilterItems ?? []),
+              ...props.filterItems,
+            ]}
+            onFilter={(filter: any) => {
+              if (
+                props.additionalFilterItems?.some(
+                  (item) => item.name === filter.name,
+                )
+              ) {
+                props.onAdditionalFilter?.(filter);
+                return;
+              }
+              props.onFilter(filter);
             }}
           />
         )}
