@@ -4,10 +4,8 @@ import {
   type ThemeConfig,
 } from "@orderly.network/ui";
 import {
-  AZURE_DARK_THEME_CSS_VARS,
   BLUE_DARK_THEME_CSS_VARS,
   CYAN_DARK_THEME_CSS_VARS,
-  GOLD_DARK_THEME_CSS_VARS,
   MINT_DARK_THEME_CSS_VARS,
   SQUARE_DARK_THEME_CSS_VARS,
   TEAL_DARK_THEME_CSS_VARS,
@@ -81,38 +79,10 @@ export const themes: ThemeConfig[] = [
     },
   },
   {
-    id: "gold-dark",
-    displayName: "Dark (Gold)",
-    mode: "dark",
-    cssVars: GOLD_DARK_THEME_CSS_VARS,
-    tradingViewColorConfig: {
-      upColor: "#22E58A",
-      downColor: "#FF5F69",
-      pnlUpColor: "#22E58A",
-      pnlDownColor: "#FF5F69",
-    },
-  },
-  {
     id: "cyan-dark",
     displayName: "Dark (Cyan)",
     mode: "dark",
     cssVars: CYAN_DARK_THEME_CSS_VARS,
-  },
-  {
-    id: "azure-dark",
-    displayName: "Dark (Azure)",
-    mode: "dark",
-    cssVars: AZURE_DARK_THEME_CSS_VARS,
-    tradingViewColorConfig: {
-      chartBG: "#111111",
-      upColor: "#0ad4a2",
-      downColor: "#e03a5a",
-      pnlUpColor: "#0ad4a2",
-      pnlDownColor: "#e03a5a",
-      volumeUpColor: "rgba(4, 85, 65, 0.7)",
-      volumeDownColor: "rgba(122, 24, 44, 0.7)",
-      textColor: "#aaaaaa",
-    },
   },
   {
     id: "teal-dark",
