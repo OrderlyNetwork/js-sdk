@@ -31,6 +31,7 @@ export const Message: FC<{
       >
         {t("share.pnl.optionalInfo.message")}
       </div>
+      {/* TODO(theme): "oui-bg-base-900" is an invalid token (the base scale only defines 1-10) and generates no CSS, so this wrapper has no background. Remove it or replace with "oui-bg-base-9" after visual comparison. */}
       <div className="oui-bg-base-900 oui-mx-2 oui-rounded-sm">
         <Input
           ref={inputRef}

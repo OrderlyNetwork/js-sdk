@@ -47,7 +47,7 @@ export const ActionItem: FC<ActionSheetItemProps> = (props) => {
       className={cn(
         "oui-flex oui-justify-center oui-items-center oui-text-lg oui-h-[52px] oui-cursor-pointer",
 
-        props.active && "oui-text-primary-darken"
+        props.active && "oui-text-primary-darken",
       )}
       onClick={onItemClick}
     >
@@ -57,6 +57,7 @@ export const ActionItem: FC<ActionSheetItemProps> = (props) => {
 };
 
 export const ActionDivision: FC = (props) => {
+  // TODO(theme): "oui-bg-base-300" is an invalid token (the base scale only defines 1-10) and generates no CSS, so this divider is invisible. Remove it or replace with "oui-bg-base-3" after visual comparison.
   return (
     <div className="oui-relative oui-h-[1px] oui-bg-base-300 oui-mt-[-1px]"></div>
   );
@@ -114,8 +115,9 @@ export type SystemActionSheetItem = "Cancel" | "Confirm" | "---";
 
 export type ActionSheetItem = BaseActionSheetItem | SystemActionSheetItem;
 
-export interface ActionSheetProps
-  extends ComponentPropsWithoutRef<typeof Sheet> {
+export interface ActionSheetProps extends ComponentPropsWithoutRef<
+  typeof Sheet
+> {
   actionSheets: ActionSheetItem[];
   value?: BaseActionSheetItem;
   onValueChange?: (value: string) => void;

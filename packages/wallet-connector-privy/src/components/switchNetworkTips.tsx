@@ -47,7 +47,7 @@ export function SwitchNetworkTips({
   return (
     <div
       onClick={onSwitchNetwork}
-      className="oui-mb-3 oui-flex oui-cursor-pointer oui-items-center oui-justify-between  oui-gap-1 oui-rounded-[8px] oui-bg-[rgba(var(--oui-color-warning-darken),0.1)] oui-px-2 oui-py-[6px] "
+      className="oui-mb-3 oui-flex oui-cursor-pointer oui-items-center oui-justify-between  oui-gap-1 oui-rounded-[8px] oui-bg-[rgb(var(--oui-color-warning-darken)_/_0.1)] oui-px-2 oui-py-[6px] "
     >
       <Flex gap={1}>
         <ExclamationFillIcon

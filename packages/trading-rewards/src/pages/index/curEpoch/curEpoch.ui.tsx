@@ -149,19 +149,6 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
               : "linear-gradient(0deg, rgb(var(--oui-gradient-secondary-end)) 2.62%, rgb(var(--oui-gradient-secondary-start)) 86.5%)"
           }
         />
-        {/* {state.notConnected && (
-          <Button
-            variant="gradient"
-            fullWidth
-            onClick={(e) => {
-              e.stopPropagation();
-              state.connect();
-            }}
-          >
-            Connect wallet
-          </Button>
-        )} */}
-
         <div className="oui-w-full">
           <AuthGuard
             status={AccountStatusEnum.SignedIn}

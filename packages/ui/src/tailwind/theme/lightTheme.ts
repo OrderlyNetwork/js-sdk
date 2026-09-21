@@ -14,7 +14,7 @@ export const LIGHT_THEME_CSS_VARS = {
   "--oui-color-link-light": "252 213 53",
 
   "--oui-color-secondary": "255 255 255",
-  "--oui-color-tertiary": "234 236 239",
+  "--oui-color-tertiary": "105 105 105",
   "--oui-color-quaternary": "218 218 218",
 
   "--oui-color-danger": "246 70 93",
@@ -53,9 +53,9 @@ export const LIGHT_THEME_CSS_VARS = {
   "--oui-color-base-static-contrast": "0 0 0",
 
   "--oui-color-trading-loss": "246 70 93",
-  "--oui-color-trading-loss-contrast": "255 255 255",
+  "--oui-color-trading-loss-contrast": "12 14 18",
   "--oui-color-trading-profit": "14 203 129",
-  "--oui-color-trading-profit-contrast": "255 255 255",
+  "--oui-color-trading-profit-contrast": "12 14 18",
 
   /* gradients */
   "--oui-gradient-primary-start": "240 185 11",

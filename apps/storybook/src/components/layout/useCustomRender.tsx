@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { Flex, useScreen } from "@orderly.network/ui";
 import { MainNavWidgetProps } from "@orderly.network/ui-scaffold";
+import { ThemeSwitcher } from "./themeSwitcher";
 
 export function useCustomRender() {
   const { isMobile } = useScreen();
@@ -21,6 +22,7 @@ export function useCustomRender() {
               {components.languageSwitcher}
               {components.scanQRCode}
               {components.linkDevice}
+              <ThemeSwitcher />
               {components.chainMenu}
               {components.walletConnect}
             </Flex>
@@ -37,8 +39,10 @@ export function useCustomRender() {
           <Flex gapX={2}>
             {components.accountSummary}
             {components.linkDevice}
+            {components.notify}
             {components.languageSwitcher}
             {components.subAccount}
+            <ThemeSwitcher />
             {components.chainMenu}
             {components.walletConnect}
           </Flex>

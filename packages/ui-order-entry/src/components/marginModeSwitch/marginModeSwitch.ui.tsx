@@ -188,7 +188,7 @@ const OptionCard: FC<{
         props.disabled
           ? "oui-cursor-not-allowed oui-opacity-50 oui-border oui-border-transparent"
           : props.selected
-            ? "oui-border oui-border-[#38e2fe]"
+            ? "oui-border oui-border-primary"
             : "oui-border oui-border-transparent hover:oui-border-line-12",
         !props.disabled && "oui-cursor-pointer",
       )}
@@ -238,10 +238,10 @@ const OptionCard: FC<{
           className={cn(
             "oui-absolute -oui-end-px -oui-top-px",
             "oui-rounded-bl-md oui-rounded-tr-md",
-            "oui-bg-[#38e2fe] oui-px-1 oui-py-0.5",
+            "oui-bg-primary oui-px-1 oui-py-0.5",
           )}
         >
-          <Text className="oui-text-2xs oui-leading-none oui-font-semibold oui-text-black">
+          <Text className="oui-text-2xs oui-leading-none oui-font-semibold oui-text-primary-contrast">
             {t("marginMode.current")}
           </Text>
         </div>

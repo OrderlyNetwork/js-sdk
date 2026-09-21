@@ -142,7 +142,7 @@ export function ConnectDrawer(props: {
                 itemAlign="center"
                 justify="between"
                 gap={4}
-                className="oui-rounded-[8px] oui-px-3 oui-py-2 oui-text-2xs oui-bg-[linear-gradient(270deg,rgba(var(--oui-gradient-brand-end),0.10)_0%,rgba(var(--oui-gradient-brand-start),0.10)_100%)] oui-w-full"
+                className="oui-rounded-[8px] oui-px-3 oui-py-2 oui-text-2xs oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end)_/_0.10)_0%,rgb(var(--oui-gradient-brand-start)_/_0.10)_100%)] oui-w-full"
                 onClick={() => showPwaDialog()}
               >
                 <Text className="oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)] oui-bg-clip-text oui-text-transparent">

@@ -87,12 +87,12 @@ export const BaseReminder: FC<BaseReminderProps> = ({
               height="14"
               viewBox="0 0 14 14"
               fill="none"
+              className="oui-text-base-contrast-54"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 d="M3.507 6.996c0-.322.26-.583.583-.583h4.407l-1.73-1.748.82-.82 2.749 2.732a.6.6 0 0 1 .17.42.6.6 0 0 1-.17.418l-2.75 2.731-.82-.82 1.73-1.747H4.09a.583.583 0 0 1-.583-.583"
-                fill="#fff"
-                fillOpacity=".54"
+                fill="currentColor"
               />
             </svg>
           </a>

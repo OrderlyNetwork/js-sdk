@@ -47,7 +47,7 @@ export const Axis: FC<AxisProps> = (props) => {
       .call((g) =>
         g
           .selectAll(".tick line")
-          .attr("stroke", "rgba(var(--oui-color-line), 0.08)"),
+          .attr("stroke", "rgb(var(--oui-color-line) / 0.08)"),
       )
       .call((g) =>
         g

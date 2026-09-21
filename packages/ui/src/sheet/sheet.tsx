@@ -117,6 +117,7 @@ const SheetContent = React.forwardRef<
           {...props}
         >
           {closeable && (
+            // TODO(theme): "oui-ring-offset-base-700" is an invalid token (the base scale only defines 1-10) and generates no CSS. Remove it or replace with a valid token (e.g. "oui-ring-offset-base-7") after visual comparison.
             <SheetPrimitive.Close
               className={cnBase(
                 "oui-sheet-close-btn oui-ring-offset-base-700 focus-visible:oui-ring-ring oui-absolute oui-end-4 oui-top-4 oui-z-10 oui-rounded-sm oui-transition-opacity focus-visible:oui-outline-none focus-visible:oui-ring-2 focus-visible:oui-ring-offset-2 active:oui-outline-none disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary",

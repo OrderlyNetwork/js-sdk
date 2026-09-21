@@ -154,7 +154,7 @@ const QuantityDistributionHint: FC<QuantityDistributionHintProps> = (props) => {
             {currentContent?.quantity}
           </Flex>
           <Flex width="100%" gapX={1} justify="center">
-            <Text className="oui-text-base-1">{t("common.price")}</Text>
+            <Text>{t("common.price")}</Text>
             <PriceChart />
           </Flex>
         </Flex>
@@ -226,6 +226,9 @@ const QuantityDistribution: FC<QuantityDistributionProps> = (props) => {
   );
 };
 
+// Apply opacity to each SVG as a group to avoid double blending at overlaps.
+const quantityHintFill = "rgb(var(--oui-color-base-foreground))";
+
 const FlatQuantity = () => {
   return (
     <svg
@@ -233,20 +236,15 @@ const FlatQuantity = () => {
       height="40"
       viewBox="0 0 218 40"
       fill="none"
+      opacity={0.54}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect
-        x="18"
-        y="18"
-        width="181"
-        height="4"
-        fill="rgb(var(--oui-color-base-2))"
-      />
+      <rect x="18" y="18" width="181" height="4" fill={quantityHintFill} />
       <circle
         cx="15"
         cy="20"
         r="6"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -254,7 +252,7 @@ const FlatQuantity = () => {
         cx="62"
         cy="20"
         r="6"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -262,7 +260,7 @@ const FlatQuantity = () => {
         cx="109"
         cy="20"
         r="6"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -270,7 +268,7 @@ const FlatQuantity = () => {
         cx="156"
         cy="20"
         r="6"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -278,7 +276,7 @@ const FlatQuantity = () => {
         cx="203"
         cy="20"
         r="6"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -293,20 +291,15 @@ const AscendingQuantity = () => {
       height="40"
       viewBox="0 0 218 40"
       fill="none"
+      opacity={0.54}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect
-        x="18"
-        y="18"
-        width="181"
-        height="4"
-        fill="rgb(var(--oui-color-base-2))"
-      />
+      <rect x="18" y="18" width="181" height="4" fill={quantityHintFill} />
       <circle
         cx="15"
         cy="20"
         r="4.28571"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="1.42857"
       />
@@ -314,7 +307,7 @@ const AscendingQuantity = () => {
         cx="62"
         cy="20"
         r="5.14286"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="1.71429"
       />
@@ -322,7 +315,7 @@ const AscendingQuantity = () => {
         cx="109"
         cy="20"
         r="6"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -330,7 +323,7 @@ const AscendingQuantity = () => {
         cx="156"
         cy="20"
         r="6.85714"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2.28571"
       />
@@ -338,7 +331,7 @@ const AscendingQuantity = () => {
         cx="203"
         cy="20"
         r="7.71429"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2.57143"
       />
@@ -353,20 +346,21 @@ const DescendingQuantity = () => {
       height="40"
       viewBox="0 0 218 40"
       fill="none"
+      opacity={0.54}
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect
         width="181"
         height="4"
         transform="matrix(-1 0 0 1 200 18)"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
       />
       <circle
         cx="5"
         cy="5"
         r="4.28571"
         transform="matrix(-1 0 0 1 208 15)"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="1.42857"
       />
@@ -375,7 +369,7 @@ const DescendingQuantity = () => {
         cy="6"
         r="5.14286"
         transform="matrix(-1 0 0 1 162 14)"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="1.71429"
       />
@@ -384,7 +378,7 @@ const DescendingQuantity = () => {
         cy="7"
         r="6"
         transform="matrix(-1 0 0 1 116 13)"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2"
       />
@@ -393,7 +387,7 @@ const DescendingQuantity = () => {
         cy="8"
         r="6.85714"
         transform="matrix(-1 0 0 1 70 12)"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2.28571"
       />
@@ -402,7 +396,7 @@ const DescendingQuantity = () => {
         cy="9"
         r="7.71429"
         transform="matrix(-1 0 0 1 24 11)"
-        fill="rgb(var(--oui-color-base-2))"
+        fill={quantityHintFill}
         stroke="rgb(var(--oui-color-base-5))"
         strokeWidth="2.57143"
       />
@@ -417,11 +411,12 @@ const PriceChart = () => {
       height="8"
       viewBox="0 0 176 8"
       fill="none"
+      opacity={0.54}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
         d="M175.354 4.35355C175.549 4.15829 175.549 3.84171 175.354 3.64645L172.172 0.464466C171.976 0.269204 171.66 0.269204 171.464 0.464466C171.269 0.659728 171.269 0.976311 171.464 1.17157L174.293 4L171.464 6.82843C171.269 7.02369 171.269 7.34027 171.464 7.53553C171.66 7.7308 171.976 7.7308 172.172 7.53553L175.354 4.35355ZM0 4V4.5H175V4V3.5H0V4Z"
-        fill="rgb(var(--oui-color-base-1))"
+        fill={quantityHintFill}
       />
     </svg>
   );

@@ -1,7 +1,5 @@
-import { FC, useMemo } from "react";
-import { parseJSON, useAccount } from "@orderly.network/hooks";
+import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { RouterAdapter } from "@orderly.network/types";
 import {
   Flex,
@@ -17,7 +15,6 @@ type Props = {
   unrealPnL: number;
   unrealROI: number;
   visible: boolean;
-  namespace: string | null;
   toggleVisible: () => void;
   canTrade: boolean;
   routerAdapter?: RouterAdapter;
@@ -25,37 +22,22 @@ type Props = {
 
 export const PortfolioValueMobile: FC<Props> = (props) => {
   const { t } = useTranslation();
-  const { state } = useAccount();
-
-  const currentNamespace = useMemo(() => {
-    if (props.namespace) {
-      return props.namespace;
-    }
-    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
-      return getLinkDeviceStorage()?.chainNamespace;
-    }
-    return null;
-  }, [props.namespace, state.status]);
   return (
     <Flex
       direction={"column"}
       width={"100%"}
       height={"100%"}
-      className={cn([
-        "oui-relative oui-items-start oui-overflow-hidden oui-rounded-2xl oui-bg-base-9",
-        currentNamespace === ChainNamespace.evm && "oui-bg-[#283BEE]",
-        currentNamespace === ChainNamespace.solana && "oui-bg-[#630EAD]",
-      ])}
+      className="oui-relative oui-items-start oui-overflow-hidden oui-rounded-2xl oui-bg-primary-darken"
       p={4}
     >
       <Flex direction="row" gapX={1} itemAlign={"center"}>
-        <Text className="oui-text-sm oui-text-base-static-54">
+        <Text className="oui-text-sm oui-text-primary-contrast/[0.54]">
           {t("portfolio.overview.handle.title")}
         </Text>
         <EyeIcon
           size={16}
           className={cn(
-            props.canTrade ? "oui-text-base-static-54" : "oui-hidden",
+            props.canTrade ? "oui-text-primary-contrast/[0.54]" : "oui-hidden",
           )}
           onClick={props.toggleVisible}
         />
@@ -68,11 +50,11 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
       >
         <Text.numeral
           visible={props.visible}
-          className="oui-text-3xl oui-font-bold oui-text-base-static"
+          className="oui-text-3xl oui-font-bold oui-text-primary-contrast"
         >
           {props.portfolioValue ?? "--"}
         </Text.numeral>
-        <Text className="oui-text-base oui-font-bold oui-text-base-static-80">
+        <Text className="oui-text-base oui-font-bold oui-text-primary-contrast/80">
           USDC
         </Text>
       </Flex>
@@ -80,7 +62,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
         direction="row"
         gapX={1}
         itemAlign={"center"}
-        className="oui-text-sm oui-text-base-static"
+        className="oui-text-sm oui-text-primary-contrast"
       >
         <Text.pnl visible={props.visible}>{props.unrealPnL ?? "--"}</Text.pnl>
         <Text.roi
@@ -104,21 +86,9 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
         <ArrowRightShortIcon
           size={18}
           opacity={0.99}
-          className="oui-text-base-static"
+          className="oui-text-primary-contrast"
         />
       </div>
     </Flex>
   );
 };
-
-type LinkDeviceStorage = { chainId: number; chainNamespace: ChainNamespace };
-
-function getLinkDeviceStorage() {
-  try {
-    const linkDeviceStorage = localStorage.getItem("orderly_link_device");
-    const json = linkDeviceStorage ? parseJSON(linkDeviceStorage) : null;
-    return json as LinkDeviceStorage;
-  } catch (err) {
-    console.error("getLinkDeviceStorage", err);
-  }
-}

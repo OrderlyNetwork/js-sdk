@@ -260,7 +260,7 @@ export const NormalPricePoolUI: FC<NormalPricePoolUIProps> = ({
                 {shouldShowJoinButton && (
                   <Button
                     size={isMobile ? "sm" : "md"}
-                    variant="gradient"
+                    variant="contained"
                     color="primary"
                     className="oui-flex-1"
                     loading={isJoining}
@@ -282,7 +282,7 @@ export const NormalPricePoolUI: FC<NormalPricePoolUIProps> = ({
                 {showTradeButton && (
                   <Button
                     size={isMobile ? "sm" : "md"}
-                    variant="gradient"
+                    variant="contained"
                     color="primary"
                     className="oui-flex-1"
                     onClick={onTradeNow}

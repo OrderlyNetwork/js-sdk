@@ -1,32 +1,26 @@
-import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 import { withThemeBuilder } from "storybook-theme-tool/preview";
 import { OrderlyProvider } from "../src/components/orderlyProvider";
 import { customViewports } from "./screenSizes";
+import {
+  resolveToolbarThemeId,
+  withOrderlyThemeToolbar,
+} from "./withOrderlyThemeToolbar";
 import "../src/playground/styles/fonts.css";
 import "../src/tailwind.css";
 
 const preview: Preview = {
   decorators: [
-    (Story) => {
+    (Story, context) => {
       return (
-        <OrderlyProvider>
+        <OrderlyProvider toolbarThemeId={resolveToolbarThemeId(context)}>
           <Story />
         </OrderlyProvider>
       );
     },
     withThemeBuilder,
-    // https://github.com/storybookjs/storybook/blob/next/code/addons/themes/docs/getting-started/tailwind.md#%EF%B8%8F-using-a-data-attribute-for-theme
-    withThemeByDataAttribute({
-      themes: {
-        orderly: "orderly",
-        custom: "custom",
-        roundless: "roundless",
-        lightPrimary: "lightPrimary",
-      },
-      defaultTheme: import.meta.env.VITE_DEFAULT_THEME || "orderly",
-      attributeName: "data-oui-theme",
-    }),
+    // Registers toolbar labels only; DOM attribute is owned by AppThemeProvider.
+    withOrderlyThemeToolbar,
   ],
   // tags: ["autodocs"],
   parameters: {

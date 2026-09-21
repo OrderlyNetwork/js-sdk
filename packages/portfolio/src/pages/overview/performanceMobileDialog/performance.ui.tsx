@@ -146,7 +146,7 @@ export const PerformanceMobileUI: React.FC<
           </Text.numeral>
         </Flex>
       </Flex>
-      <Tabs defaultValue={"dailyPnl"}>
+      <Tabs defaultValue={"dailyPnl"} showScrollIndicator>
         <TabPanel
           value={"dailyPnl"}
           title={t("portfolio.overview.performance.dailyPnl")}

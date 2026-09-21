@@ -102,6 +102,7 @@ export const EditReferralRate = modal.create<{
           <div className="oui-text-2xs oui-mt-6 oui-text-base-contrast-80">
             {t("affiliate.referralRate.editRateModal.label.you")}
           </div>
+          {/* TODO(theme): "oui-bg-base-700" is an invalid token (the base scale only defines 1-10) and generates no CSS; "containerClassName" is also never applied by BaseInput, so this styling has no effect at all. Remove it or replace with a valid token after visual comparison. */}
           <Input
             ref={inputRef}
             containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary-darken"
@@ -135,6 +136,7 @@ export const EditReferralRate = modal.create<{
           <div className="oui-text-2xs oui-mt-6 oui-text-base-contrast-80">
             {t("affiliate.referralRate.editRateModal.label.referee")}
           </div>
+          {/* TODO(theme): "oui-bg-base-700" is an invalid token (the base scale only defines 1-10) and generates no CSS; "containerClassName" is also never applied by BaseInput, so this styling has no effect at all. Remove it or replace with a valid token after visual comparison. */}
           <Input
             containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary-darken"
             placeholder="Enter code"

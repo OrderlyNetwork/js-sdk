@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { TableSort } from "@orderly.network/ui";
 import { formatSymbol } from "@orderly.network/utils";
 import { SortType } from "./type";
@@ -189,30 +189,4 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
 
   // Combine results with prioritized matches first
   return [...exactMatches, ...startsWithMatches, ...otherMatches];
-}
-
-export function useSize() {
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
-
-  useEffect(() => {
-    setWidth(window.innerWidth);
-    setHeight(window.innerHeight);
-
-    const handleResize = () => {
-      setHeight(window.innerHeight);
-      setWidth(window.innerWidth);
-    };
-
-    window?.addEventListener("resize", handleResize);
-
-    return () => {
-      window?.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  return {
-    width,
-    height,
-  };
 }

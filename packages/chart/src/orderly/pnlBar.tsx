@@ -146,7 +146,7 @@ export const PnLBarChart: React.FC<PnLChartProps> = (props) => {
           strokeOpacity={0.04}
         />
 
-        <ReferenceLine y={0} stroke="rgba(var(--oui-color-line), 0.04)" />
+        <ReferenceLine y={0} stroke="rgb(var(--oui-color-line) / 0.04)" />
 
         {!invisible && (
           <Bar dataKey="pnl" shape={<RoundedRectangle />}>

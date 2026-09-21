@@ -62,12 +62,12 @@ export const RefereeDescriptionForm = (props: RefereeDescriptionFormProps) => {
             onChange={(event) => props.setDescription(event.target.value)}
             placeholder={t("affiliate.refereeNote.placeholder")}
             className={[
-              "oui-h-10 oui-w-full oui-rounded-md oui-border oui-bg-base-6 oui-px-3 oui-py-2.5",
-              "oui-text-sm oui-font-semibold oui-leading-5 oui-tracking-[0.03em] oui-text-base-contrast-98 oui-outline-none",
+              "oui-h-10 oui-w-full oui-rounded-md oui-bg-base-6 oui-px-3 oui-py-2.5",
+              "oui-text-sm oui-font-semibold oui-leading-5 oui-tracking-[0.03em] oui-text-base-contrast-98",
               "placeholder:oui-text-base-contrast-20",
               showError
-                ? "oui-border-danger"
-                : "oui-border-line-12 focus:oui-border-line-12",
+                ? "oui-outline oui-outline-1 oui-outline-danger"
+                : "oui-outline-none",
             ].join(" ")}
           />
           <Flex width="100%" gap={1} itemAlign="start" className="oui-pl-1">

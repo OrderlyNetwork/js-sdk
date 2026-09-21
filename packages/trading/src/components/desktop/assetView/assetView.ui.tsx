@@ -91,8 +91,7 @@ const useCurrentStatusText = (): StatusInfo => {
       connectWallet: {
         title: t("connector.connectWallet"),
         description: t("connector.trade.connectWallet.tooltip"),
-        titleClsName:
-          "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
+        titleColor: "primary",
       },
       createAccount: {
         title: t("connector.createAccount"),
@@ -548,16 +547,6 @@ export const AssetView: FC<
           </Box>
         )}
       </AuthGuard>
-      <div
-        className={cn(
-          "oui-absolute oui-inset-0 oui-rotate-180",
-          "oui-pointer-events-none oui-rounded-2xl oui-blur-[200px]",
-        )}
-        style={{
-          background:
-            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(var(--oui-color-base-foreground)/0) -48.92deg, rgba(var(--oui-color-base-foreground)/0) 125.18deg, rgb(var(--oui-color-primary)) 193.41deg, rgb(var(--oui-color-warning)) 216.02deg, rgb(var(--oui-color-link)) 236.07deg, rgb(var(--oui-color-primary-light)) 259.95deg, rgba(var(--oui-color-base-foreground)/0) 311.08deg, rgba(var(--oui-color-base-foreground)/0) 485.18deg)",
-        }}
-      />
     </Box>
   );
 };

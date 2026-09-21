@@ -132,17 +132,12 @@ const MarketsMobileContent: React.FC<MarketsContentProps> = (props) => {
 
   return (
     <Tabs
-      variant="text"
       size="xl"
       value={props.activeTab}
       onValueChange={props.onTabChange as (value: string) => void}
       classNames={{
         tabsListContainer: "oui-border-0",
         tabsList: "oui-mx-6 oui-my-2",
-        trigger: cn(
-          "oui-text-2xl oui-font-bold",
-          "data-[state=active]:after:oui-bg-transparent!",
-        ),
         tabsContent: "oui-px-3",
       }}
       leading={

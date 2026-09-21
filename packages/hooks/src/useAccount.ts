@@ -93,6 +93,10 @@ export const useAccount = () => {
   }, [account]);
 
   const isSubAccount = useMemo(() => {
+    // Not connected / no active account → not a sub-account
+    if (!state.accountId || !state.mainAccountId) {
+      return false;
+    }
     return state.accountId !== state.mainAccountId;
   }, [state]);
 

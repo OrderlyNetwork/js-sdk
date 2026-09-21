@@ -11,7 +11,7 @@ export const Account: FC<AccountState> = (props) => {
       }}
     >
       <Button
-        variant="gradient"
+        variant="contained"
         size={"sm"}
         className="oui-max-w-[83px]"
         onClick={(e) => {

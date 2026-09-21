@@ -140,6 +140,10 @@ module.exports = withTV({
           darken: "rgb(var(--oui-color-success-darken) / <alpha-value>)",
           contrast: "rgb(var(--oui-color-success-contrast) / <alpha-value>)",
         },
+        fill: {
+          DEFAULT: "rgb(var(--oui-color-fill) / <alpha-value>)",
+          active: "rgb(var(--oui-color-fill-active) / <alpha-value>)",
+        },
         base: {
           1: "rgb(var(--oui-color-base-1) / <alpha-value>)",
           2: "rgb(var(--oui-color-base-2) / <alpha-value>)",

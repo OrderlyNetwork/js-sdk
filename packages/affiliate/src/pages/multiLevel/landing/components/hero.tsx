@@ -11,6 +11,7 @@ import { ReferralCodeFormDialogId } from "../../affiliate/referralCodeForm/modal
 import type { BindReferralCodeSuccessPayload } from "../../components/bindReferralCode/bindReferralCode.widget";
 import { BindReferralCodeDialogId } from "../../components/bindReferralCode/modal";
 import { TradingVolumeProgress } from "../../components/tradingVolumeProgress";
+import { NetworkDiagram } from "./networkDiagram";
 
 /** SWR mutate may resolve to various shapes — only treat object rebate configs as valid. */
 function parseMaxRebateRateInfoFromSettled(
@@ -213,7 +214,7 @@ export const Hero = () => {
   return (
     <Flex
       gap={8}
-      className="oui-affiliate-hero oui-flex-col-reverse md:oui-flex-row"
+      className="oui-affiliate-hero oui-mb-[clamp(2rem,3vw,3rem)] oui-flex-col-reverse md:oui-flex-row"
       id="oui-affiliate-landing-hero"
       itemAlign={"center"}
     >
@@ -249,10 +250,10 @@ export const Hero = () => {
         </AuthGuard>
       </Flex>
 
-      <img
-        src="https://oss.orderly.network/static/sdk/referral/network-diagram.png"
-        alt="Network diagram"
-        className="oui-size-[335px] oui-object-cover md:oui-size-[480px]"
+      <NetworkDiagram
+        role="img"
+        aria-label="Network diagram"
+        className="oui-size-[335px] md:oui-size-[480px]"
         id="oui-affiliate-landing-network-diagram"
       />
     </Flex>

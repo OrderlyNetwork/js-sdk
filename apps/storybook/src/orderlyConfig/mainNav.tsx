@@ -90,7 +90,7 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
     {
       name: i18n.t("affiliate.referral"),
       href: "/rewards/affiliate",
-      onlyInMainAccount: true,
+      // onlyInMainAccount: true,
       isSubMenuInMobile: true,
       subMenuBackNav: {
         name: "portfolio",
@@ -102,10 +102,10 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       href: "/leaderboard",
       customRender: customArenRender("mainNav"),
     },
-    {
-      name: "points",
-      href: "/points",
-    },
+    // {
+    //   name: "points",
+    //   href: "/points",
+    // },
     {
       name: i18n.t("tradingView.timeInterval.more"),
       href: "",

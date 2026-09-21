@@ -1,11 +1,11 @@
-import { Flex, Text } from "@orderly.network/ui";
-import { JumpIcon } from "../components/jumpIcon";
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text } from "@orderly.network/ui";
+import { commifyOptional } from "@orderly.network/utils";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
+import { JumpIcon } from "../components/jumpIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { AvailableReturns } from "./availableToClaim.script";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const AvailableToClaim: FC<AvailableReturns> = (props) => {
   const { t } = useTranslation();
@@ -57,8 +57,6 @@ const Statics: FC<{
       r="xl"
       gradient="neutral"
       angle={180}
-      border
-      borderColor={6}
     >
       <Text className="oui-text-xs xl:oui-text-sm oui-text-base-contrast-54">
         {props.title}

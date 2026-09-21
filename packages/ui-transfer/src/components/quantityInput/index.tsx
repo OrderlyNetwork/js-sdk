@@ -237,14 +237,12 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           ...classNames,
           root: cn(
             "oui-relative oui-h-[54px] oui-px-3",
-            "oui-rounded-lg oui-border oui-border-line",
+            "oui-rounded-lg",
             status === "error" &&
               "oui-outline-danger-light focus-within:oui-outline-danger-light",
             status === "warning" &&
               "oui-outline-warning-light focus-within:oui-outline-warning-light",
-            props.readOnly
-              ? "oui-border-none oui-bg-base-6 focus-within:oui-outline-0"
-              : "oui-bg-base-5",
+            props.readOnly && "focus-within:oui-outline-0",
             classNames?.root,
           ),
           input: cn("oui-absolute oui-bottom-0", classNames?.input),

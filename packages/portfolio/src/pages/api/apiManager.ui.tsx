@@ -92,7 +92,6 @@ const AccountInfo: React.FC<ApiManagerScriptReturns> = (props) => {
         r="xl"
         gradient="neutral"
         angle={27}
-        border
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>
@@ -118,7 +117,6 @@ const AccountInfo: React.FC<ApiManagerScriptReturns> = (props) => {
         r="xl"
         gradient="neutral"
         angle={27}
-        border
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>

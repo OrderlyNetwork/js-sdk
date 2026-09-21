@@ -115,7 +115,13 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   );
 
   return (
-    <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
+    <Box
+      id="oui-markets-list"
+      intensity={900}
+      p={6}
+      r="2xl"
+      className="oui-mt-6"
+    >
       <Tabs
         variant="contained"
         size="xl"
