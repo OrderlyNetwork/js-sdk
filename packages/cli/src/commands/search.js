@@ -9,7 +9,7 @@ const {
 const { fetchWithTimeout, getHttpTimeoutMs } = require("../internal/auth");
 const {
   MARKETPLACE_API_PLUGINS_URL,
-  MARKETPLACE_WEB_BASE_URL,
+  MARKETPLACE_WEB_BROWSE_URL,
 } = require("../internal/constants");
 const {
   normalizePlugins,
@@ -19,9 +19,36 @@ const {
   getNpmPackageUrl,
   parseGithubRepoUrl,
 } = require("../internal/formatting");
+const { VALID_TAGS } = require("../internal/marketplaceSchema");
 
 const SORT_OPTIONS = ["downloads", "stars", "name", "updated"];
 const ORDER_OPTIONS = ["asc", "desc"];
+
+/**
+ * Map a comma-separated --tag value to backend tag slugs. Display names from
+ * the Marketplace tag list ("Order Entry") are slugified with the same rule
+ * the backend seeds tags with; anything else passes through so raw slugs keep
+ * working.
+ */
+function toTagSlugs(value) {
+  return String(value || "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const match = VALID_TAGS.find(
+        (tag) => tag.toLowerCase() === part.toLowerCase(),
+      );
+      if (!match) {
+        return part;
+      }
+      return match
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    })
+    .join(",");
+}
 
 const SEARCH_COLUMNS = {
   headers: [
@@ -81,7 +108,10 @@ function buildSearchUrl(argv) {
     url.searchParams.set("search", query);
   }
   if (tag) {
-    url.searchParams.set("tag", tag);
+    const tagSlugs = toTagSlugs(tag);
+    if (tagSlugs) {
+      url.searchParams.set("tag", tagSlugs);
+    }
   }
 
   url.searchParams.set("sort", argv.sort);
@@ -138,7 +168,8 @@ module.exports = {
       })
       .option("tag", {
         type: "string",
-        describe: "string; optional Marketplace tag slug to filter by",
+        describe:
+          'string; optional Marketplace tag to filter by, by display name (e.g. "Order Entry") or slug (e.g. "order-entry"); display names are converted to slugs automatically',
       })
       .option("sort", {
         type: "string",
@@ -258,7 +289,7 @@ module.exports = {
         `\nShowing ${plugins.length} of ${total} plugin(s) ` +
           `(page ${page}/${totalPages || 1})`,
       );
-      dim(`Browse plugins on the web: ${MARKETPLACE_WEB_BASE_URL}`);
+      dim(`Browse plugins on the web: ${MARKETPLACE_WEB_BROWSE_URL}`);
     } catch (e) {
       // Surface target endpoint to make network/runtime failures actionable.
       const cause = e?.message || String(e);

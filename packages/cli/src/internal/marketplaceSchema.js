@@ -1,4 +1,4 @@
-/** Valid Marketplace plugin tags (must match backend). */
+/** Valid Marketplace plugin tags (must match @dex-creator/schemas MarketplaceTags). */
 const VALID_TAGS = [
   "UI",
   "Indicator",
@@ -7,20 +7,38 @@ const VALID_TAGS = [
   "Chart",
   "Portfolio",
   "Analytics",
+  "Market",
+  "OrderBook",
+  "Deposit",
+  "Withdraw",
+  "Transfer",
+  "Swap",
+  "Liquidity",
+  "Staking",
+  "Rewards",
   "Tool",
   "Widget",
+  "AI",
 ];
 
 const MAX_TAGS = 5;
-const MAX_COVER_IMAGES = 10;
+const MIN_TAGS = 1;
+const MAX_COVER_IMAGES = 5;
+const MIN_COVER_IMAGES = 1;
+const MAX_NAME_LENGTH = 120;
+const MAX_DESCRIPTION_LENGTH = 500;
+const MAX_NPM_NAME_LENGTH = 214;
 const MAX_USAGE_PROMPT_LENGTH = 8192;
 
-/** Regex patterns matching backend createPluginSchema. */
+/**
+ * Regex patterns matching @dex-creator/schemas. The repo URL pattern allows
+ * dots in owner/repo names and tolerates a trailing slash or `.git` suffix,
+ * both of which the backend strips.
+ */
 const NPM_NAME_REGEX =
   /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
-const GITHUB_URL_REGEX = /^https:\/\/github\.com\/[\w-]+\/[\w-]+$/;
+const GITHUB_URL_REGEX = /^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/?$/;
 const PLUGIN_ID_REGEX = /^[a-zA-Z][a-zA-Z0-9-]*$/;
-const UPLOADS_PATH_REGEX = /^\/uploads\/.+$/;
 
 /**
  * Split tags into valid and invalid buckets against the Marketplace whitelist.
@@ -34,13 +52,16 @@ function partitionTags(tags) {
 }
 
 /**
- * Validate submission payload against backend schema rules.
+ * Validate submission payload against backend schema rules
+ * (@dex-creator/schemas MarketplaceSubmitSchema).
  * @returns {{ valid: boolean, errors: string[] }}
  */
 function validateSubmission({
   npmName,
   repoUrl,
   pluginId,
+  name,
+  description,
   tags,
   coverImages,
   usagePrompt,
@@ -49,6 +70,12 @@ function validateSubmission({
 
   if (!npmName) {
     errors.push("npmName is required (set in package.json)");
+  } else if (typeof npmName !== "string") {
+    errors.push("npmName must be a string (set in package.json)");
+  } else if (npmName.trim().length > MAX_NPM_NAME_LENGTH) {
+    errors.push(
+      `npmName is too long (${npmName.trim().length} chars), maximum is ${MAX_NPM_NAME_LENGTH}`,
+    );
   } else if (!NPM_NAME_REGEX.test(npmName)) {
     errors.push(`npmName "${npmName}" is not a valid npm package name`);
   }
@@ -63,38 +90,49 @@ function validateSubmission({
     );
   }
 
-  if (!pluginId) {
-    errors.push("pluginId is required (set in manifest or pass interactively)");
-  } else if (!PLUGIN_ID_REGEX.test(pluginId)) {
+  // Optional: the backend derives the plugin ID from the npm name when omitted.
+  if (pluginId && !PLUGIN_ID_REGEX.test(pluginId)) {
     errors.push(
       `pluginId must start with a letter and contain only letters, digits, or hyphens, got: ${pluginId}`,
     );
   }
 
+  if (!name || name.trim().length === 0) {
+    errors.push("name is required (set in manifest or answer the prompt)");
+  } else if (name.trim().length > MAX_NAME_LENGTH) {
+    errors.push(
+      `name is too long (${name.trim().length} chars), maximum is ${MAX_NAME_LENGTH}`,
+    );
+  }
+
+  if (!description || description.trim().length === 0) {
+    errors.push(
+      "description is required (set in manifest/package.json or answer the prompt)",
+    );
+  } else if (description.trim().length > MAX_DESCRIPTION_LENGTH) {
+    errors.push(
+      `description is too long (${description.trim().length} chars), maximum is ${MAX_DESCRIPTION_LENGTH}`,
+    );
+  }
+
+  if (tags.length < MIN_TAGS) {
+    errors.push(
+      `At least ${MIN_TAGS} tag is required (e.g., UI, Trading, Tool)`,
+    );
+  }
   if (tags.length > MAX_TAGS) {
     errors.push(`Too many tags (${tags.length}), maximum is ${MAX_TAGS}`);
   }
 
+  if (!coverImages || coverImages.length < MIN_COVER_IMAGES) {
+    errors.push(
+      `At least ${MIN_COVER_IMAGES} cover image is required (list local files under coverImages in the manifest; they are uploaded automatically)`,
+    );
+  }
   if (coverImages && coverImages.length > MAX_COVER_IMAGES) {
     errors.push(
       `Too many cover images (${coverImages.length}), maximum is ${MAX_COVER_IMAGES}`,
     );
-  }
-
-  if (coverImages && coverImages.length > 0) {
-    const invalidCoverImage = coverImages.find((image) => {
-      if (typeof image !== "string" || image.length === 0) {
-        return true;
-      }
-
-      return !URL.canParse(image) && !UPLOADS_PATH_REGEX.test(image);
-    });
-
-    if (invalidCoverImage) {
-      errors.push(
-        `coverImages contains an invalid value: ${invalidCoverImage}. Each value must be an absolute URL or a path that starts with /uploads/`,
-      );
-    }
   }
 
   if (usagePrompt && usagePrompt.length > MAX_USAGE_PROMPT_LENGTH) {
@@ -114,6 +152,31 @@ function validateSubmission({
 function validateUpdatePayload(payload) {
   const errors = [];
 
+  for (const field of ["name", "description"]) {
+    if (!(field in payload)) {
+      continue;
+    }
+
+    const value = payload[field];
+    if (typeof value !== "string") {
+      errors.push(`${field} must be a string`);
+      continue;
+    }
+
+    if (value.trim().length === 0) {
+      errors.push(`${field} must not be empty`);
+      continue;
+    }
+
+    const maxLength =
+      field === "name" ? MAX_NAME_LENGTH : MAX_DESCRIPTION_LENGTH;
+    if (value.trim().length > maxLength) {
+      errors.push(
+        `${field} is too long (${value.trim().length} chars), maximum is ${maxLength}`,
+      );
+    }
+  }
+
   if (payload.tags && payload.tags.length > MAX_TAGS) {
     errors.push(
       `Too many tags (${payload.tags.length}), maximum is ${MAX_TAGS}`,
@@ -126,13 +189,20 @@ function validateUpdatePayload(payload) {
     );
   }
 
-  if (
-    payload.usagePrompt &&
-    payload.usagePrompt.length > MAX_USAGE_PROMPT_LENGTH
-  ) {
-    errors.push(
-      `usagePrompt is too long (${payload.usagePrompt.length} chars), maximum is ${MAX_USAGE_PROMPT_LENGTH}`,
-    );
+  if ("usagePrompt" in payload) {
+    if (
+      payload.usagePrompt !== null &&
+      typeof payload.usagePrompt !== "string"
+    ) {
+      errors.push("usagePrompt must be a string or null");
+    } else if (
+      typeof payload.usagePrompt === "string" &&
+      payload.usagePrompt.length > MAX_USAGE_PROMPT_LENGTH
+    ) {
+      errors.push(
+        `usagePrompt is too long (${payload.usagePrompt.length} chars), maximum is ${MAX_USAGE_PROMPT_LENGTH}`,
+      );
+    }
   }
 
   return { valid: errors.length === 0, errors };
@@ -141,12 +211,16 @@ function validateUpdatePayload(payload) {
 module.exports = {
   VALID_TAGS,
   MAX_TAGS,
+  MIN_TAGS,
   MAX_COVER_IMAGES,
+  MIN_COVER_IMAGES,
+  MAX_NAME_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
+  MAX_NPM_NAME_LENGTH,
   MAX_USAGE_PROMPT_LENGTH,
   NPM_NAME_REGEX,
   GITHUB_URL_REGEX,
   PLUGIN_ID_REGEX,
-  UPLOADS_PATH_REGEX,
   partitionTags,
   validateSubmission,
   validateUpdatePayload,

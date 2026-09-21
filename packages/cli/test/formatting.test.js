@@ -8,7 +8,7 @@ const {
   terminalLink,
   parseGithubRepoUrl,
   renderTable,
-} = require("./formatting");
+} = require("../src/internal/formatting");
 
 describe("normalizePlugins", () => {
   it("unwraps common API response shapes", () => {

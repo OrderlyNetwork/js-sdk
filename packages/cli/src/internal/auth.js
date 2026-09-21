@@ -1,7 +1,7 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { CLI_BIN_NAME, MARKETPLACE_API_BASE_URL } = require("./constants");
+const { CLI_BIN_NAME, AUTH_API_BASE_URL } = require("./constants");
 
 const authHome =
   process.env.HOME ||
@@ -54,7 +54,7 @@ function saveOAuthToken(tokenData) {
     email: tokenData.email || null,
     username: tokenData.username || null,
     avatarUrl: tokenData.avatarUrl || null,
-    loginMethod: "github",
+    loginMethod: "wallet",
     loginAt: new Date().toISOString(),
   });
 }
@@ -123,7 +123,7 @@ async function refreshCliToken(options = {}) {
   }
 
   try {
-    const refreshUrl = `${MARKETPLACE_API_BASE_URL}/auth/refresh-cli`;
+    const refreshUrl = `${AUTH_API_BASE_URL}/refresh-cli`;
     onAuthEvent?.("refresh_started", { url: refreshUrl });
     const response = await fetchWithTimeout(
       refreshUrl,

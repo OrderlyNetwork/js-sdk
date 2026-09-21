@@ -32,18 +32,34 @@ npx @orderly.network/devkit --help
 
 ## Authentication
 
-Login uses GitHub OAuth in the browser and a short-lived local callback server.
+Login opens the Marketplace web login page, where you connect a wallet and sign a message. The signature is exchanged for a CLI token pair, which the web page delivers to a short-lived local callback server.
 
 - **Credentials file:** `~/.orderly/auth.json` (created automatically).
-- The CLI opens the marketplace login page and completes OAuth callback automatically.
+- Access tokens are refreshed automatically; `logout` also revokes the session server-side.
+- The callback port must be an integer from **9876 to 9899** — the web page refuses to deliver credentials to any other local port.
 
 ```bash
-orderly-devkit login              # open browser, complete GitHub auth
+orderly-devkit login              # open browser, connect wallet and sign
 orderly-devkit login --force      # re-authenticate even if already logged in
 orderly-devkit login --port 9877  # if default port is busy (default is 9876)
-orderly-devkit whoami
+orderly-devkit whoami             # show the account and check the session
 orderly-devkit logout
 ```
+
+`whoami` probes an authenticated endpoint, so an expired session is reported as such instead of appearing logged in. When the marketplace is unreachable it warns and still reports the stored account.
+
+**Submitting also requires a linked GitHub account.** Connect it once in the web console (`https://dex.orderly.network/en/marketplace-listings`); otherwise `submit` fails with a 409.
+
+### Environment variables
+
+| Variable                      | Default                           | Purpose                                                                                                           |
+| ----------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `ORDERLY_API_URL`             | `https://dex-api.orderly.network` | API origin. A legacy `/api`, `/api/marketplace`, or `/api/auth` suffix is stripped.                               |
+| `ORDERLY_WEB_URL`             | `https://dex.orderly.network`     | Web console origin used for the login and management links.                                                       |
+| `ORDERLY_HTTP_TIMEOUT_MS`     | `15000`                           | Per-request timeout for CLI HTTP calls.                                                                           |
+| `GCS_PUBLIC_BASE_URL`         | —                                 | Extra origin accepted for marketplace-hosted cover URLs, for running against a local GCS emulator (see `submit`). |
+| `ORDERLY_DEVKIT_NO_ENV_HINTS` | —                                 | Set to any non-empty value to suppress the post-`create`/`submit` tip about the SDK Docs MCP.                     |
+| `ORDERLY_MCP_INSTALL_DEBUG`   | —                                 | Set to `1` or `true` to trace `mcp install` child-process failures on stderr.                                     |
 
 ## Commands overview
 
@@ -64,24 +80,28 @@ orderly-devkit create module
 orderly-devkit create module --name my-module
 ```
 
-### Marketplace: `submit`, `search`, `list`, `update`, `view`
+### Marketplace: `submit`, `search`, `list`, `update`, `view`, `disable`
 
-These commands use the Marketplace API. Public read commands (`search`, `view`) do not require login. Owner-scoped commands (`submit`, `list`, `update`) require login (`orderly-devkit login`).
+These commands use the Marketplace API. Public read commands (`search`, `view`) do not require login. Owner-scoped commands (`submit`, `list`, `update`, `disable`) require login (`orderly-devkit login`).
 
 **`submit`** — register a new plugin from a local directory.
 
 - Resolves metadata from `package.json` and/or `.orderly-manifest.json`.
+- Required: `npmName`, `repoUrl`, `name`, `description`, at least one tag, and at least one cover image. `name` and `description` are prompted for when missing.
 - `repoUrl` should be a GitHub URL (`https://github.com/<owner>/<repo>`); it can be filled from `git remote` when missing.
-- **Tags** must be from the allowed set: `UI`, `Indicator`, `Order Entry`, `Trading`, `Chart`, `Portfolio`, `Analytics`, `Tool`, `Widget` (max 5).
+- **Tags** must be from the allowed set (max 5): `UI`, `Indicator`, `Order Entry`, `Trading`, `Chart`, `Portfolio`, `Analytics`, `Market`, `OrderBook`, `Deposit`, `Withdraw`, `Transfer`, `Swap`, `Liquidity`, `Staking`, `Rewards`, `Tool`, `Widget`, `AI`.
+- **`coverImages`** (1–5) may be local paths relative to the plugin directory; they are uploaded to the Marketplace and replaced with the managed URLs. `--dry-run` validates them without uploading.
+  Existing remote covers must use `https://oss.orderly.network/marketplace/`. Third-party or malformed URLs are rejected before any upload. For a local GCS emulator, set `GCS_PUBLIC_BASE_URL` to the same origin configured on the backend; `/marketplace/` is still required.
+- `pluginId` is optional — the backend derives it from the npm package name when omitted.
+- Submissions are queued and audited asynchronously; the command reports the submission status rather than a final listing. Resubmitting before the audit finishes returns a 409 — track the submission with `list` and resubmit once it completes.
 
 ```bash
 orderly-devkit submit
 orderly-devkit submit --path ./my-plugin
 orderly-devkit submit -p ./my-plugin --tags UI,Trading --dry-run
-orderly-devkit submit -p ./my-plugin --storybook-url https://example.com/storybook
 ```
 
-**`search`** — search public available plugins in Marketplace.
+**`search`** — search public available plugins in Marketplace. `--tag` accepts a tag display name (e.g. `Order Entry`) or its slug (e.g. `order-entry`); display names are converted to slugs automatically.
 
 ```bash
 orderly-devkit search
@@ -90,16 +110,18 @@ orderly-devkit search orderbook --tag trading --limit 5
 orderly-devkit search funding --sort updated --order desc --json
 ```
 
-**`list`** — list plugins associated with your account.
+**`list`** — list plugins associated with your account, including the latest audit status for each.
 
 ```bash
 orderly-devkit list
 orderly-devkit list --json
 ```
 
+Note that listings only appear here once the audit worker has created them; a queued submission is not yet a listing.
+
 **`update`** — PATCH plugin metadata for an existing listing (requires `pluginId` in `.orderly-manifest.json`).
 
-Updatable fields include: `name`, `description`, `tags`, `coverImages`, `storybookUrl`, `storybookTooltip`, `usagePrompt`.
+Updatable fields: `name`, `description`, `tags`, `coverImages`, `usagePrompt`. Local `coverImages` are uploaded before the PATCH, and only on a real run — `--dry-run` validates them without uploading. An explicit `usagePrompt: null` (or `""`) in the manifest clears the server-side value; a generated manifest simply omits the field.
 
 ```bash
 orderly-devkit update --path ./my-plugin --dry-run
@@ -111,6 +133,15 @@ orderly-devkit update -p ./my-plugin
 ```bash
 orderly-devkit view <plugin-id>
 ```
+
+**`disable`** — delist one of your plugins (sets its status to `deprecated`). Only `available` plugins can be delisted, and the change cannot be undone from the CLI.
+
+```bash
+orderly-devkit disable
+orderly-devkit disable --pluginId my-plugin-id
+```
+
+> `delete` is no longer supported: the Marketplace API exposes no delete endpoint. Use `disable` to delist, or manage listings in the web console.
 
 ### `mcp install`
 
@@ -125,11 +156,29 @@ orderly-devkit mcp install --dry-run
 orderly-devkit mcp install --force
 ```
 
-| Option     | Description                                                                               |
-| ---------- | ----------------------------------------------------------------------------------------- |
-| `--client` | `claude`, `codex`, `cursor`, `opencode`, `all`, or comma-separated list (default: `all`). |
-| `--scope`  | `user` or `project` (default: `user`).                                                    |
-| `--name`   | MCP server id in config (default: `orderly-sdk-docs`).                                    |
+| Option               | Description                                                                                                      |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `--client`           | `claude`, `codex`, `cursor`, `opencode`, `all`, or comma-separated list (default: `all`).                        |
+| `--scope`            | `user` or `project` (default: `user`).                                                                           |
+| `--name`             | MCP server id in config (default: `orderly-sdk-docs`).                                                           |
+| `--sdk-docs-version` | Pin `@orderly.network/sdk-docs` to a version or dist-tag (e.g. `0.1.0`, `beta`) for this run and written config. |
+| `--dry-run`          | Print the planned config changes without writing any files.                                                      |
+| `--force`            | Replace an existing MCP entry wholesale instead of merging into it (drops fields you added to the entry).        |
+
+### `mcp detect`
+
+Check whether the **Orderly SDK Docs** MCP server is already configured for your coding agents. Claude, Codex, Cursor, and OpenCode are each inspected at both **user** scope (e.g. `~/.cursor/mcp.json`) and **project** scope (e.g. `.cursor/mcp.json` under the current directory). The report lists every config path with its state — `configured` (with the matched server key), `not detected`, `no file`, or `invalid JSON` — and is read-only: config files are never modified.
+
+```bash
+orderly-devkit mcp detect
+orderly-devkit mcp detect --client cursor
+orderly-devkit mcp detect --json
+```
+
+| Option     | Description                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------- |
+| `--client` | `claude`, `codex`, `cursor`, `opencode`, `all`, or comma-separated list (default: `all`).         |
+| `--json`   | Print a machine-readable JSON report (paths, states, matched server key) instead of human output. |
 
 ### `skills install`
 
@@ -163,6 +212,7 @@ orderly-devkit skills install -- --some-upstream-skills-flag
 - **Login: port in use** — run `orderly-devkit login --port <free-port>`.
 - **Ctrl+C during prompts** — the CLI handles enquirer cancellation and exits with a clear message when possible.
 - **Invalid working directory** — if the shell’s cwd was deleted, the CLI may switch to `HOME` or the package directory and warn you.
+- **`mcp install` hangs or fails silently** — set `ORDERLY_MCP_INSTALL_DEBUG=1` to trace the child process, and verify `npx` is available on `PATH`.
 
 ## License
 

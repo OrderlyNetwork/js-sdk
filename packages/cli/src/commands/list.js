@@ -11,9 +11,22 @@ const {
 } = require("../internal/formatting");
 
 const LIST_COLUMNS = {
-  headers: ["ID", "Name", "Version", "Status", "Description"],
-  keys: ["id", "name", "version", "status", "description"],
+  headers: ["ID", "Name", "Version", "Status", "Audit", "Description"],
+  keys: ["id", "name", "version", "status", "audit", "description"],
 };
+
+/**
+ * Summarize the latest audit job so authors can follow an in-flight review
+ * without opening the web console.
+ */
+function formatAudit(plugin) {
+  const audit = plugin?.latestAudit;
+  if (!audit) {
+    return "-";
+  }
+  const status = audit.status || "unknown";
+  return audit.verdict ? `${status}/${audit.verdict}` : status;
+}
 
 function mapRow(plugin) {
   return {
@@ -21,7 +34,8 @@ function mapRow(plugin) {
     name: plugin?.name || plugin?.npmName || "-",
     version: plugin?.version || plugin?.latestVersion || "-",
     status: plugin?.status || "-",
-    description: truncate(plugin?.description || "-", 72),
+    audit: formatAudit(plugin),
+    description: truncate(plugin?.description || "-", 56),
   };
 }
 

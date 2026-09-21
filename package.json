@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter @orderly.network/storybook dev",
+    "devkit": "node packages/cli/bin/cli.js",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 turbo run build",
     "storybook": "pnpm --filter @orderly.network/storybook storybook",
     "storybook:tradingPage": "pnpm --filter @orderly.network/storybook storybook:tradingPage",
