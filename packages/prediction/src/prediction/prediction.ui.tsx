@@ -174,7 +174,7 @@ const formatRoundWindow = (round: number) => {
   const end = new Date(start.getTime() + 5 * 60 * 1_000);
   const formattedEnd = roundEndFormatter
     .format(end)
-    .replace(/ (GMT[+-]\d+)$/, " ($1)");
+    .replace(/ GMT([+-]\d+(?::\d+)?)$/, " (UTC$1)");
   return `${roundStartFormatter.format(start)} – ${formattedEnd}`;
 };
 
@@ -262,17 +262,20 @@ type PredictionCandle = {
 };
 
 const CANDLE_INTERVAL_MS = 60_000;
-const CANDLE_COUNT = 72;
+const CANDLE_COUNT = 81;
+const CANDLE_WINDOW_MS = 80 * 60_000;
+const CANDLE_TICK_INTERVAL_MS = 7 * 60_000;
 
 const createMockCandleHistory = (
   anchorPrice: number,
   endTimestamp = Date.now(),
+  count = CANDLE_COUNT,
 ): PredictionCandle[] => {
   const end =
     Math.floor(endTimestamp / CANDLE_INTERVAL_MS) * CANDLE_INTERVAL_MS;
   let previousClose = anchorPrice - 36;
-  const candles = Array.from({ length: CANDLE_COUNT }, (_, index) => {
-    const timestamp = end - (CANDLE_COUNT - 1 - index) * CANDLE_INTERVAL_MS;
+  const candles = Array.from({ length: count }, (_, index) => {
+    const timestamp = end - (count - 1 - index) * CANDLE_INTERVAL_MS;
     const open = previousClose;
     const move =
       Math.sin(index / 3.4) * 10 +
@@ -297,6 +300,40 @@ const createMockCandleHistory = (
     low: candle.low + offset,
     close: candle.close + offset,
   }));
+};
+
+const rollLiveCandles = (
+  candles: PredictionCandle[],
+  price: number,
+): PredictionCandle[] => {
+  const lastCandle = candles.at(-1);
+  if (!lastCandle) return createMockCandleHistory(price);
+
+  const currentMinute =
+    Math.floor(Date.now() / CANDLE_INTERVAL_MS) * CANDLE_INTERVAL_MS;
+  if (currentMinute > lastCandle.timestamp) {
+    return [
+      ...candles.slice(-(CANDLE_COUNT - 1)),
+      {
+        timestamp: currentMinute,
+        open: lastCandle.close,
+        high: Math.max(lastCandle.close, price),
+        low: Math.min(lastCandle.close, price),
+        close: price,
+      },
+    ];
+  }
+
+  const high = Math.max(lastCandle.high, price);
+  const low = Math.min(lastCandle.low, price);
+  if (
+    high === lastCandle.high &&
+    low === lastCandle.low &&
+    price === lastCandle.close
+  ) {
+    return candles;
+  }
+  return [...candles.slice(0, -1), { ...lastCandle, high, low, close: price }];
 };
 
 const resolutionFormatter = new Intl.DateTimeFormat("en-US", {
@@ -495,7 +532,7 @@ const RoundNavigator: React.FC<{
           {t("prediction.rounds.resolutionTime")}
         </div>
         <div className="oui-mt-2 oui-grid oui-grid-cols-[56px_1fr] oui-gap-y-2 oui-text-xs">
-          <span className="oui-text-base-contrast-54">GMT+8</span>
+          <span className="oui-text-base-contrast-54">UTC+8</span>
           <span className="oui-text-end oui-text-base-contrast">
             {resolutionFormatter.format(new Date((itemRound + 300) * 1_000))}
           </span>
@@ -781,37 +818,22 @@ const PriceChart: React.FC<{
     setLiveCandles(createMockCandleHistory(currentPrice));
   }, [round]);
 
+  const currentPriceRef = useRef(currentPrice);
+  currentPriceRef.current = currentPrice;
+
   useEffect(() => {
-    setLiveCandles((candles) => {
-      const lastCandle = candles.at(-1);
-      if (!lastCandle) return createMockCandleHistory(currentPrice);
-
-      const currentMinute =
-        Math.floor(Date.now() / CANDLE_INTERVAL_MS) * CANDLE_INTERVAL_MS;
-      if (currentMinute > lastCandle.timestamp) {
-        return [
-          ...candles.slice(-(CANDLE_COUNT - 1)),
-          {
-            timestamp: currentMinute,
-            open: lastCandle.close,
-            high: Math.max(lastCandle.close, currentPrice),
-            low: Math.min(lastCandle.close, currentPrice),
-            close: currentPrice,
-          },
-        ];
-      }
-
-      return [
-        ...candles.slice(0, -1),
-        {
-          ...lastCandle,
-          high: Math.max(lastCandle.high, currentPrice),
-          low: Math.min(lastCandle.low, currentPrice),
-          close: currentPrice,
-        },
-      ];
-    });
+    setLiveCandles((candles) => rollLiveCandles(candles, currentPrice));
   }, [currentPrice]);
+
+  // Open the next minute's candle even when the price hasn't ticked.
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setLiveCandles((candles) =>
+        rollLiveCandles(candles, currentPriceRef.current),
+      );
+    }, 1_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const selectRound = onSelectRound;
   useEffect(() => {
@@ -839,7 +861,13 @@ const PriceChart: React.FC<{
   const isFutureRound = selectedRound > round;
   const liveTimestamp = (round + 300 - countdown) * 1_000;
   const alignedLiveCandles = useMemo(() => {
-    const offset = liveTimestamp - (points.at(-1)?.timestamp ?? liveTimestamp);
+    // Keep candles on whole minutes so the axis labels don't flicker when
+    // the round clock drifts a few hundred ms from the wall clock.
+    const offset =
+      Math.round(
+        (liveTimestamp - (points.at(-1)?.timestamp ?? liveTimestamp)) /
+          CANDLE_INTERVAL_MS,
+      ) * CANDLE_INTERVAL_MS;
     return liveCandles.map((candle) => ({
       ...candle,
       timestamp: candle.timestamp + offset,
@@ -876,12 +904,35 @@ const PriceChart: React.FC<{
 
   const chart = useMemo(() => {
     const isCandleMode = chartMode === "candles";
-    const windowEnd = isPastRound
-      ? (selectedRound + 300) * 1_000
-      : liveTimestamp;
-    const windowStart = windowEnd - (isPastRound ? windowDuration : 60_000);
-    const tickInterval = isPastRound ? 300_000 : 10_000;
-    const firstTick = Math.ceil(windowStart / tickInterval) * tickInterval;
+    const roundEnd = (selectedRound + 300) * 1_000;
+    // Candle charts pin the latest candle to the right edge (one candle of
+    // padding) and label ticks backwards from it, so the axis only shifts
+    // when a new candle opens.
+    const candleAnchor =
+      chartCandles.at(-1)?.timestamp ??
+      (isPastRound ? roundEnd : liveTimestamp);
+    const windowEnd = isCandleMode
+      ? candleAnchor + CANDLE_INTERVAL_MS
+      : isPastRound
+        ? roundEnd
+        : liveTimestamp;
+    const windowStart =
+      windowEnd -
+      (isCandleMode ? CANDLE_WINDOW_MS : isPastRound ? windowDuration : 60_000);
+    const tickInterval = isCandleMode
+      ? CANDLE_TICK_INTERVAL_MS
+      : isPastRound
+        ? 300_000
+        : 10_000;
+    const firstTick = isCandleMode
+      ? candleAnchor -
+        Math.floor((candleAnchor - windowStart) / tickInterval) * tickInterval
+      : Math.ceil(windowStart / tickInterval) * tickInterval;
+    const lastTick = isCandleMode ? candleAnchor : windowEnd;
+    const tickTimestamps = Array.from(
+      { length: Math.floor((lastTick - firstTick) / tickInterval) + 1 },
+      (_, index) => firstTick + index * tickInterval,
+    );
     const visibleCandles = isCandleMode
       ? chartCandles.filter(
           (candle) =>
@@ -1010,13 +1061,20 @@ const PriceChart: React.FC<{
         },
       ),
       yDecimals: Math.max(0, -Math.floor(Math.log10(scale.step))),
-      xTicks: Array.from(
-        { length: Math.floor((windowEnd - firstTick) / tickInterval) + 1 },
-        (_, index) => {
-          const timestamp = firstTick + index * tickInterval;
-          return { timestamp, ratio: getX(timestamp) / plotWidth };
-        },
-      ),
+      xTicks: tickTimestamps
+        .map((timestamp) => ({
+          timestamp,
+          ratio: getX(timestamp) / plotWidth,
+          // Below xl only every other tick fits.
+          compact: isCandleMode
+            ? (candleAnchor - timestamp) % (tickInterval * 2) === 0
+            : !isPastRound || timestamp % 600_000 === 0,
+        }))
+        .filter(({ ratio }) =>
+          isCandleMode
+            ? ratio >= 0.02 && ratio <= 1
+            : ratio >= 0.04 && ratio <= 0.96,
+        ),
     };
   }, [
     chartCandles,
@@ -1403,24 +1461,21 @@ const PriceChart: React.FC<{
         className="oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-z-10 oui-h-8 oui-text-xs oui-tabular-nums oui-text-base-contrast-36"
         style={{ width: `calc((100% - 32px) * ${plotWidth / width})` }}
       >
-        {chart.xTicks
-          .filter(({ ratio }) => ratio >= 0.04 && ratio <= 0.96)
-          .map(({ timestamp, ratio }) => (
-            <span
-              key={timestamp}
-              className={cn(
-                "oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap",
-                isPastRound &&
-                  timestamp % 600_000 !== 0 &&
-                  "oui-hidden xl:oui-block",
-              )}
-              style={{ left: `${ratio * 100}%` }}
-            >
-              {(isPastRound ? roundTimeFormatter : chartTimeFormatter).format(
-                new Date(timestamp),
-              )}
-            </span>
-          ))}
+        {chart.xTicks.map(({ timestamp, ratio, compact }) => (
+          <span
+            key={timestamp}
+            className={cn(
+              "oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap",
+              !compact && "oui-hidden xl:oui-block",
+            )}
+            style={{ left: `${ratio * 100}%` }}
+          >
+            {(isPastRound || chartMode === "candles"
+              ? roundTimeFormatter
+              : chartTimeFormatter
+            ).format(new Date(timestamp))}
+          </span>
+        ))}
       </div>
       <RoundNavigator
         round={round}
@@ -3058,12 +3113,7 @@ export const PredictionOrderCell = ({
     case "symbol":
       return <PredictionOrderSymbol order={order} />;
     case "side":
-      return (
-        <span className="oui-inline-flex oui-items-center oui-gap-1 oui-whitespace-nowrap">
-          {t(`common.${order.side}`)}
-          <OutcomeBadge outcome={order.outcome} />
-        </span>
-      );
+      return <OutcomeBadge outcome={order.outcome} />;
     case "fill_quantity":
       return pending ? (
         <PendingValue state={state} order={order} field="quantity" />
