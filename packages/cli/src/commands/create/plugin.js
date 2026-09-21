@@ -15,7 +15,10 @@ const {
   error,
   warn,
 } = require("../../shared");
-const { INTERCEPTOR_TARGETS } = require("../../internal/constants");
+const {
+  CLI_BIN_NAME,
+  INTERCEPTOR_TARGETS,
+} = require("../../internal/constants");
 const { generateManifest } = require("../../internal/manifest");
 const {
   maybePrintOrderlyDevEnvironmentHints,
@@ -157,7 +160,12 @@ module.exports = {
     // Determine if all required params are provided (non-interactive mode)
     const hasAllParams =
       argv.name && argv.id && argv.interceptor && argv.target;
-    const nonInteractive = argv["no-interactive"] || hasAllParams;
+    // yargs parses `--no-interactive` as boolean negation (`interactive: false`);
+    // the declared "no-interactive" key itself never turns true.
+    const nonInteractive =
+      argv.interactive === false ||
+      argv["no-interactive"] === true ||
+      hasAllParams;
 
     if (!nonInteractive) {
       info(
@@ -246,6 +254,7 @@ module.exports = {
       try {
         generateManifest(resolvedDir, {
           pluginId: pluginId,
+          name: pluginName,
           tags: [],
         });
         info(
@@ -259,12 +268,16 @@ module.exports = {
       info(`Next steps:`);
       info(`  cd ${targetDir}`);
       info(`  npm run dev  # or your setup command`);
+      info(
+        `  Fill in description, tags, and coverImages in .orderly-manifest.json before '${CLI_BIN_NAME} submit'`,
+      );
       maybePrintOrderlyDevEnvironmentHints(resolvedDir);
     } catch (err) {
       error(`Failed to create plugin: ${err.message}`);
       if (err.stack) {
         console.error(err.stack);
       }
+      process.exitCode = 1;
     }
   },
 };

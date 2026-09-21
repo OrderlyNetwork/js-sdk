@@ -11,9 +11,10 @@
     "src"
   ],
   "scripts": {
+    "cli": "node ./bin/cli.js",
     "clean": "rimraf dist",
     "link-global": "pnpm link --global",
-    "test": "node --test src/**/*.test.js"
+    "test": "node --test"
   },
   "engines": {
     "node": ">=20.19.0"

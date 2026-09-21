@@ -30,14 +30,14 @@ function openBrowser(url) {
 
 module.exports = {
   command: "login",
-  describe: "Login to Orderly Marketplace via GitHub",
+  describe: "Login to Orderly Marketplace via wallet",
   builder: (yargs) => {
     return yargs
       .option("port", {
         alias: "p",
         type: "number",
         describe:
-          "number; local callback server port used for the OAuth redirect (must be available). Default is the CLI_CALLBACK_PORT constant",
+          "number; available local callback port, an integer from 9876 to 9899. Default: 9876",
         default: CLI_CALLBACK_PORT,
       })
       .option("force", {
@@ -49,7 +49,7 @@ module.exports = {
       })
       .example(
         `${CLI_BIN_NAME} login`,
-        "Open the browser and complete GitHub OAuth",
+        "Open the browser and connect your wallet",
       )
       .example(
         `${CLI_BIN_NAME} login --force --port 9877`,
@@ -58,7 +58,14 @@ module.exports = {
   },
   handler: async (argv) => {
     heading("Login to Orderly Marketplace");
-    info("This will open your browser to authenticate via GitHub.\n");
+    info("This will open your browser to authenticate with your wallet.\n");
+
+    const port = argv.port ?? CLI_CALLBACK_PORT;
+    if (!Number.isInteger(port) || port < CLI_CALLBACK_PORT || port > 9899) {
+      error("Login port must be an integer from 9876 to 9899.");
+      process.exitCode = 1;
+      return;
+    }
 
     if (isLoggedIn() && !argv.force) {
       warn("You are already logged in.");
@@ -68,36 +75,22 @@ module.exports = {
 
     // Generate CSRF state
     const state = crypto.randomBytes(16).toString("hex");
-    const port = argv.port;
     const browserUrl = `${MARKETPLACE_WEB_LOGIN_URL}?port=${port}&state=${state}`;
 
-    // Start local callback server
-    const { server, waitForToken, cancel } = startCallbackServer({
+    // Start local callback server (loopback only)
+    const { server, waitForToken, cancel, listen } = startCallbackServer({
       port,
       state,
     });
 
-    // Handle server errors (e.g. port in use)
-    const serverReady = new Promise((resolve, reject) => {
-      server.on("error", (err) => {
-        if (err.code === "EADDRINUSE") {
-          reject(
-            new Error(
-              `Port ${port} is already in use. Use --port to specify a different port.`,
-            ),
-          );
-        } else {
-          reject(err);
-        }
-      });
-      server.on("listening", resolve);
-    });
-
     try {
-      server.listen(port);
-      await serverReady;
+      await listen();
     } catch (err) {
-      error(err.message);
+      error(
+        err.code === "EADDRINUSE"
+          ? `Port ${port} is already in use. Use --port to specify a different port.`
+          : err.message,
+      );
       server.close();
       process.exitCode = 1;
       return;

@@ -2,25 +2,28 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 const { CLI_BIN_NAME } = require("./constants");
+const { parseGithubRepoUrl } = require("./formatting");
 
 const MANIFEST_FILENAME = ".orderly-manifest.json";
 
 /**
- * Read repoUrl from git remote origin.
+ * Read repoUrl from git remote origin. SSH remotes are normalized to the
+ * canonical https form the Marketplace requires.
+ * @param {string} [cwd] - Directory to read the remote from; defaults to the
+ * process working directory.
  */
-function getRepoUrl() {
+function getRepoUrl(cwd) {
   try {
     const remoteUrl = execSync("git remote get-url origin", {
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,
+      cwd: cwd || undefined,
     }).trim();
 
-    if (remoteUrl.startsWith("git@")) {
-      return remoteUrl
-        .replace("git@", "")
-        .replace(":", "/")
-        .replace(".git", "");
+    const github = parseGithubRepoUrl(remoteUrl);
+    if (github?.url.startsWith("https://github.com/")) {
+      return github.url;
     }
 
     return remoteUrl.replace(/\.git$/, "");
@@ -30,21 +33,22 @@ function getRepoUrl() {
 }
 
 /**
- * Read npm package name from package.json.
+ * Read and parse package.json, returning null when missing or malformed.
  */
-function getNpmName(packageJsonPath) {
+function readPackageJson(packageJsonPath) {
   try {
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-    return packageJson.name || null;
+    return JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
   } catch (e) {
     return null;
   }
 }
 
 /**
- * Generate `.orderly-manifest.json` in the plugin directory.
+ * Generate `.orderly-manifest.json` in the plugin directory. Fields mirror
+ * the Marketplace submit schema, which requires name, description, at least
+ * one tag, and at least one cover image.
  * @param {string} pluginDir - Plugin root directory
- * @param {Object} pluginInfo - pluginId, tags, storybookUrl, etc.
+ * @param {Object} pluginInfo - pluginId, name, description, tags, etc.
  */
 function generateManifest(pluginDir, pluginInfo = {}) {
   const packageJsonPath = path.join(pluginDir, "package.json");
@@ -53,14 +57,21 @@ function generateManifest(pluginDir, pluginInfo = {}) {
     throw new Error("package.json not found in plugin directory");
   }
 
+  const packageJson = readPackageJson(packageJsonPath);
+
   const manifest = {
-    npmName: getNpmName(packageJsonPath),
+    npmName: packageJson?.name || null,
     pluginId: pluginInfo.pluginId || null,
-    repoUrl: pluginInfo.repoUrl || getRepoUrl() || null,
+    repoUrl: pluginInfo.repoUrl || getRepoUrl(pluginDir) || null,
+    name: pluginInfo.name || null,
+    description: pluginInfo.description || packageJson?.description || null,
     tags: pluginInfo.tags || [],
-    storybookUrl: pluginInfo.storybookUrl || null,
-    storybookTooltip: pluginInfo.storybookTooltip || null,
-    usagePrompt: pluginInfo.usagePrompt || null,
+    // Local paths are resolved against the plugin directory and uploaded to
+    // the Marketplace cover-images endpoint on submit.
+    coverImages: pluginInfo.coverImages || [],
+    // Omitted unless explicitly set: `update` sends usagePrompt: null for a
+    // stored null, which would clear the server-side value on every run.
+    ...(pluginInfo.usagePrompt ? { usagePrompt: pluginInfo.usagePrompt } : {}),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -110,14 +121,17 @@ function resolvePluginManifest(pluginDir) {
     return null;
   }
 
+  const packageJson = readPackageJson(packageJsonPath);
+
   return {
-    npmName: getNpmName(packageJsonPath),
+    npmName: packageJson?.name || null,
     pluginId: null,
-    repoUrl: getRepoUrl(),
+    repoUrl: getRepoUrl(pluginDir),
+    // The npm name is a poor display name, so leave it unset and let submit
+    // prompt for one.
+    name: null,
+    description: packageJson?.description || null,
     tags: [],
-    storybookUrl: null,
-    storybookTooltip: null,
-    usagePrompt: null,
     coverImages: [],
   };
 }
@@ -148,40 +162,11 @@ function updateManifest(pluginDir, updates) {
   return updatedManifest;
 }
 
-/**
- * Check whether the manifest contains required submit fields.
- * @param {string} pluginDir - Plugin root directory
- * @returns {{ valid: boolean, missing: string[] }}
- */
-function validateManifest(pluginDir) {
-  const manifest = readManifest(pluginDir);
-  const missing = [];
-
-  if (!manifest) {
-    return { valid: false, missing: ["manifest file not found"] };
-  }
-
-  if (!manifest.npmName) {
-    missing.push("npmName (from package.json)");
-  }
-
-  if (!manifest.repoUrl) {
-    missing.push("repoUrl (configure git remote or run in git repository)");
-  }
-
-  return {
-    valid: missing.length === 0,
-    missing,
-  };
-}
-
 module.exports = {
   MANIFEST_FILENAME,
   getRepoUrl,
-  getNpmName,
   generateManifest,
   readManifest,
   resolvePluginManifest,
   updateManifest,
-  validateManifest,
 };

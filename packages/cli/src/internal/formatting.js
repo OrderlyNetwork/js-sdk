@@ -67,7 +67,7 @@ function visibleLength(value) {
 
 /**
  * OSC 8 hyperlink for terminals that support clickable links (iTerm2, VS Code, etc.).
- * Falls back to plain text when stdout is not a TTY or NO_COLOR is set.
+ * Falls back to plain text when stdout is not a TTY.
  */
 function terminalLink(text, url) {
   const label = String(text ?? "");
@@ -77,7 +77,7 @@ function terminalLink(text, url) {
     return label || "-";
   }
 
-  if (!process.stdout.isTTY || process.env.NO_COLOR) {
+  if (!process.stdout.isTTY) {
     return label;
   }
 

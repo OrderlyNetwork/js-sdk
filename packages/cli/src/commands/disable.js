@@ -11,7 +11,7 @@ const { requireAuth, authenticatedFetch } = require("../internal/auth");
 const {
   CLI_BIN_NAME,
   MARKETPLACE_API_MY_PLUGINS_URL,
-  getMarketplaceApiPluginSelfStatusUrl,
+  getMarketplaceApiPluginUrl,
 } = require("../internal/constants");
 const { normalizePlugins } = require("../internal/formatting");
 
@@ -76,9 +76,11 @@ module.exports = {
           return;
         }
 
-        const plugins = normalizePlugins(listData);
+        const plugins = normalizePlugins(listData).filter(
+          (plugin) => plugin?.status === "available",
+        );
         if (plugins.length === 0) {
-          info("You have not submitted any plugins yet.");
+          info("You have no available plugins to delist.");
           info(
             `If Marketplace Web shows records, run \`${CLI_BIN_NAME} whoami\` to confirm account consistency and \`${CLI_BIN_NAME} list --json\` to inspect the raw API response.`,
           );
@@ -100,7 +102,7 @@ module.exports = {
         }
 
         selectedPluginId = await select(
-          "Select a plugin to delist (set status to disabled):",
+          "Select a plugin to delist (set status to deprecated):",
           choices,
           0,
         );
@@ -114,7 +116,7 @@ module.exports = {
         return;
       }
 
-      const endpoint = getMarketplaceApiPluginSelfStatusUrl(selectedPluginId);
+      const endpoint = getMarketplaceApiPluginUrl(selectedPluginId);
       info(`Submitting delist request to ${endpoint} ...`);
       const disableResponse = await authenticatedFetch(endpoint, {
         method: "PATCH",
@@ -122,7 +124,7 @@ module.exports = {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ status: "disabled" }),
+        body: JSON.stringify({ status: "deprecated" }),
       });
 
       const disableData = await disableResponse.json().catch(() => null);
@@ -141,7 +143,7 @@ module.exports = {
       }
 
       const updatedName = disableData?.name || disableData?.npmName || "N/A";
-      const updatedStatus = disableData?.status || "disabled";
+      const updatedStatus = disableData?.status || "deprecated";
       success("\nPlugin delisted successfully.");
       info(`Plugin ID: ${selectedPluginId}`);
       info(`Plugin Name: ${updatedName}`);

@@ -22,21 +22,44 @@ const INTERCEPTOR_TARGETS = [
 // Module types supported
 const MODULE_TYPES = ["page", "component", "hook", "utils", "module"];
 
-const MARKETPLACE_API_BASE_URL =
-  process.env.ORDERLY_API_URL || "https://marketplace-api.orderly.network";
-const MARKETPLACE_WEB_BASE_URL =
-  process.env.ORDERLY_WEB_URL || "https://marketplace.orderly.network";
+/**
+ * Reduce ORDERLY_API_URL to the origin the CLI appends API paths to. Before
+ * the dex.orderly.network migration this variable held a full API base, so an
+ * existing `/api`, `/api/marketplace`, or `/api/auth` suffix is stripped
+ * instead of being duplicated.
+ * @param {string | undefined} value
+ * @returns {string | null}
+ */
+function toApiOrigin(value) {
+  const trimmed = String(value || "")
+    .trim()
+    .replace(/\/+$/, "");
+  if (!trimmed) {
+    return null;
+  }
+  return trimmed.replace(/\/api(?:\/marketplace|\/auth)?$/, "");
+}
+
+// New marketplace (Orderly One / dex-creator) endpoints. Auth routes live
+// under /api/auth while marketplace routes live under /api/marketplace, so
+// the two bases must be derived from the same origin separately.
+const MARKETPLACE_API_ORIGIN =
+  toApiOrigin(process.env.ORDERLY_API_URL) || "https://dex-api.orderly.network";
+const MARKETPLACE_API_BASE_URL = `${MARKETPLACE_API_ORIGIN}/api/marketplace`;
+const AUTH_API_BASE_URL = `${MARKETPLACE_API_ORIGIN}/api/auth`;
+
+const MARKETPLACE_WEB_BASE_URL = (
+  process.env.ORDERLY_WEB_URL || "https://dex.orderly.network"
+).replace(/\/+$/, "");
+// The web app forces a $lang prefix; the CLI always uses the default locale.
+const MARKETPLACE_WEB_LOGIN_URL = `${MARKETPLACE_WEB_BASE_URL}/en/cli/login`;
+const MARKETPLACE_WEB_BROWSE_URL = `${MARKETPLACE_WEB_BASE_URL}/en/marketplace`;
+/** Owner-facing page for managing submitted plugins and submissions. */
+const MARKETPLACE_WEB_LISTINGS_URL = `${MARKETPLACE_WEB_BASE_URL}/en/marketplace-listings`;
 
 const MARKETPLACE_API_PLUGINS_URL = `${MARKETPLACE_API_BASE_URL}/plugins`;
+const MARKETPLACE_API_PLUGINS_SUBMIT_URL = `${MARKETPLACE_API_PLUGINS_URL}/submit`;
 const MARKETPLACE_API_MY_PLUGINS_URL = `${MARKETPLACE_API_BASE_URL}/my-plugins`;
-/**
- * Build plugin self-status endpoint for author-owned status updates.
- * @param {string} pluginId
- * @returns {string}
- */
-function getMarketplaceApiPluginSelfStatusUrl(pluginId) {
-  return `${MARKETPLACE_API_PLUGINS_URL}/${encodeURIComponent(pluginId)}/self-status`;
-}
 /**
  * Build plugin detail endpoint for plugin-level operations.
  * @param {string} pluginId
@@ -48,7 +71,6 @@ function getMarketplaceApiPluginUrl(pluginId) {
 
 const CLI_CALLBACK_PORT = 9876;
 const CLI_LOGIN_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
-const MARKETPLACE_WEB_LOGIN_URL = `${MARKETPLACE_WEB_BASE_URL}/cli/login`;
 
 /** GitHub shorthand for https://github.com/OrderlyNetwork/orderly-skills (Vercel skills CLI). */
 const ORDERLY_SKILLS_REPO = "OrderlyNetwork/orderly-skills";
@@ -68,15 +90,19 @@ module.exports = {
   CLI_BIN_NAME,
   INTERCEPTOR_TARGETS,
   MODULE_TYPES,
+  MARKETPLACE_API_ORIGIN,
   MARKETPLACE_API_BASE_URL,
+  AUTH_API_BASE_URL,
   MARKETPLACE_WEB_BASE_URL,
+  MARKETPLACE_WEB_LOGIN_URL,
+  MARKETPLACE_WEB_BROWSE_URL,
+  MARKETPLACE_WEB_LISTINGS_URL,
   MARKETPLACE_API_PLUGINS_URL,
+  MARKETPLACE_API_PLUGINS_SUBMIT_URL,
   MARKETPLACE_API_MY_PLUGINS_URL,
   getMarketplaceApiPluginUrl,
-  getMarketplaceApiPluginSelfStatusUrl,
   CLI_CALLBACK_PORT,
   CLI_LOGIN_TIMEOUT_MS,
-  MARKETPLACE_WEB_LOGIN_URL,
   ORDERLY_SKILLS_REPO,
   ORDERLY_PLUGIN_SKILL_NAMES,
   DEFAULT_ORDERLY_SDK_DOCS_MCP_NAME,

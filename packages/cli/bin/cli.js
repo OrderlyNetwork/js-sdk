@@ -94,9 +94,13 @@ yargs(hideBin(process.argv))
   .strictCommands()
   .demandCommand(1, "Please specify a command.")
   .command("create", "Create a new plugin or module", (yargs) => {
-    return yargs.commandDir(path.join(commandsDir, "create"));
+    return yargs.commandDir(path.join(commandsDir, "create"), {
+      exclude: /\.test\.js$/,
+    });
   })
-  .commandDir(commandsDir)
+  // co-located test files are not commands; requiring them would run their
+  // node:test suites inside the CLI process
+  .commandDir(commandsDir, { exclude: /\.test\.js$/ })
   .recommendCommands()
   .fail((message, error, parser) => {
     // Always show usage/help for missing or invalid command input.
