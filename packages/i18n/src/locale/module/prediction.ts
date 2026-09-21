@@ -13,10 +13,6 @@ export const prediction = {
   "prediction.region.restrictedTitle": "Region restricted",
   "prediction.region.restrictedDescription":
     "Prediction trading is not available in your region.",
-  "prediction.playground.region.unavailable": "Unavailable",
-  "prediction.region.unavailableTitle": "Prediction trading unavailable",
-  "prediction.region.unavailableDescription":
-    "Prediction markets are not available in your region.",
   "prediction.playground.roundView": "Round view",
   "prediction.playground.view.past": "Past",
   "prediction.playground.view.live": "Live",

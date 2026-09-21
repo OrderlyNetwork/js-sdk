@@ -31,11 +31,7 @@ export type PredictionPrototypeAuthState =
   | "connected"
   | "accountReady"
   | "funded";
-export type PredictionPrototypeRegionState =
-  | "real"
-  | "allowed"
-  | "restricted"
-  | "unavailable";
+export type PredictionPrototypeRegionState = "real" | "allowed" | "restricted";
 
 export type PredictionNotification = {
   id: number;
@@ -200,9 +196,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     );
   const [round, setRound] = useState(INITIAL_ROUND);
   const isRegionRestricted =
-    regionRestricted ||
-    prototypeRegionState === "restricted" ||
-    prototypeRegionState === "unavailable";
+    regionRestricted || prototypeRegionState === "restricted";
   const [selectedRound, setSelectedRound] = useState(INITIAL_ROUND);
   const roundView =
     selectedRound < round ? "past" : selectedRound > round ? "future" : "live";
@@ -467,9 +461,22 @@ export const usePredictionScript = (regionRestricted = false) => {
     () => createBook(selectedMarketPrice),
     [selectedMarketPrice],
   );
+  const estimateOrderSlippage = useCallback(
+    (
+      side: PredictionOrderSide,
+      quantity: number,
+      outcome: PredictionOutcome = selectedOutcome,
+    ) =>
+      estimateMarketSlippage(
+        side,
+        quantity,
+        createBook(outcomePrices[outcome]),
+      ),
+    [outcomePrices, selectedOutcome],
+  );
   const estimatedSlippage = useMemo(
-    () => estimateMarketSlippage(orderSide, orderQuantity, orderBook),
-    [orderBook, orderQuantity, orderSide],
+    () => estimateOrderSlippage(orderSide, orderQuantity),
+    [estimateOrderSlippage, orderQuantity, orderSide],
   );
   const isSlippageExceeded =
     orderType === "market" &&
@@ -700,6 +707,11 @@ export const usePredictionScript = (regionRestricted = false) => {
     limit: number,
   ) => {
     const price = type === "market" ? outcomePrices[outcome] : limit;
+    const estimatedSellSlippage =
+      type === "market"
+        ? estimateOrderSlippage("sell", quantity, outcome)
+        : null;
+    const maxSlippage = new Decimal(slippage || 0).div(100).toNumber();
     const position = positions.find((p) => p.outcome === outcome);
     if (
       !isRoundTradable ||
@@ -710,7 +722,8 @@ export const usePredictionScript = (regionRestricted = false) => {
       quantity > availableQuantity(outcome) ||
       !Number.isFinite(price) ||
       price <= 0 ||
-      price >= 1
+      price >= 1 ||
+      (estimatedSellSlippage !== null && estimatedSellSlippage > maxSlippage)
     )
       return false;
     const order: PredictionOpenOrder = {
@@ -1062,6 +1075,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     activeTab,
     setActiveTab,
     orderBook,
+    estimateOrderSlippage,
     slippage,
     setSlippage,
     estimatedSlippage,

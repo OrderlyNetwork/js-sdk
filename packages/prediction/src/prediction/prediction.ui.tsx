@@ -2672,6 +2672,14 @@ const SellPosition = ({
   const [price, setPrice] = useState("");
   const [type, setType] = useState<"market" | "limit">("market");
   const available = state.availableQuantity(outcome);
+  const estimatedSlippage = useMemo(
+    () => state.estimateOrderSlippage("sell", Number(quantity), outcome),
+    [outcome, quantity, state],
+  );
+  const isSlippageExceeded =
+    type === "market" &&
+    estimatedSlippage !== null &&
+    estimatedSlippage > new Decimal(state.slippage || 0).div(100).toNumber();
   const percentage =
     available > 0
       ? Math.max(
@@ -2699,6 +2707,7 @@ const SellPosition = ({
     tradable &&
     Number(quantity) > 0 &&
     Number(quantity) <= available &&
+    !isSlippageExceeded &&
     (type === "market" || (Number(price) > 0 && Number(price) < 1));
   return (
     <PopoverRoot
@@ -2828,6 +2837,15 @@ const SellPosition = ({
               />
             }
           />
+          {type === "market" && (
+            <div className="oui-mt-2">
+              <SlippageUI
+                slippage={state.slippage}
+                setSlippage={state.setSlippage}
+                estSlippage={estimatedSlippage}
+              />
+            </div>
+          )}
           <div className="oui-mt-3 oui-flex oui-w-full oui-gap-2 oui-pb-1">
             <Button
               size="md"
@@ -3610,7 +3628,6 @@ export const PredictionPlayground: React.FC<
   const regionStates: PredictionPrototypeRegionState[] = [
     "allowed",
     "restricted",
-    "unavailable",
   ];
 
   return (
@@ -3938,28 +3955,6 @@ export const Prediction: React.FC<
   ) : (
     state.accountPanel
   );
-
-  if (state.prototypeRegionState === "unavailable") {
-    return (
-      <main
-        id="oui-prediction-page"
-        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-items-center oui-justify-center oui-bg-base-10 oui-p-6"
-      >
-        <div
-          role="status"
-          className="oui-max-w-lg oui-space-y-3 oui-text-center"
-        >
-          <h1 className="oui-text-xl oui-font-semibold oui-text-base-contrast">
-            {t("prediction.region.unavailableTitle")}
-          </h1>
-          <p className="oui-text-sm oui-text-base-contrast-54">
-            {t("prediction.region.unavailableDescription")}
-          </p>
-        </div>
-        <PredictionPlayground {...state} />
-      </main>
-    );
-  }
 
   return (
     <main
