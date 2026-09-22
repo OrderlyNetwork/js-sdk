@@ -33,6 +33,10 @@ export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
       }}
       leftSideProps={{
         current: props.currentPath || PortfolioLeftSidebarPath.Overview,
+        // Prediction menu labels need a slightly wider sidebar than the
+        // scaffold default (185); keep this scoped to storybook so other
+        // portfolio integrators are not forced into a new default width.
+        maxWidth: 210,
       }}
     >
       {props.children}

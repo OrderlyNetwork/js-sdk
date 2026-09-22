@@ -168,6 +168,9 @@ export const prediction = {
   "prediction.message.insufficientBalance": "Insufficient simulated balance.",
   "prediction.message.insufficientContracts":
     "You do not hold enough contracts to sell.",
+  "prediction.message.sellFailed": "Unable to sell position.",
+  "prediction.message.slippageExceeded":
+    "Estimated slippage exceeds your max slippage.",
   "prediction.message.orderPlaced": "Order opened.",
   "prediction.message.orderFilled": "Order filled.",
   "prediction.message.orderCanceled": "Order canceled.",

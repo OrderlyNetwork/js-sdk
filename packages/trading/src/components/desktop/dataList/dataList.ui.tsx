@@ -289,31 +289,11 @@ export const DataList: React.FC<DataListState> = (props) => {
   ];
 
   return (
-    <div className="oui-relative oui-h-full">
-      <Tabs
-        className="oui-trading-dataList-tabs oui-h-full"
-        defaultValue={current || DataListTabType.positions}
-        variant="contained"
-        size="lg"
-        classNames={{
-          trigger: "oui-group",
-          tabsContent: "oui-h-[calc(100%_-_32px)]",
-        }}
-      >
-        {tabPanelItems.map((item) => {
-          const { content, ...rest } = item;
-          return (
-            <TabPanel {...rest} key={`item-${rest.value}`}>
-              {content}
-            </TabPanel>
-          );
-        })}
-        {/* Plugin-appendable tabs. Empty by default; a plugin intercepts
-            `Trading.DataList.Desktop.Tabs` and appends `{ id, title, content }`
-            entries, which self-register into the Tabs context above. */}
-        <InjectableDataListDesktopTabs items={[]} />
-      </Tabs>
-      <div className="oui-absolute oui-end-0 oui-top-0 oui-z-10">
+    <Tabs
+      className="oui-trading-dataList-tabs oui-h-full"
+      defaultValue={current || DataListTabType.positions}
+      variant="contained"
+      trailing={
         <React.Suspense fallback={null}>
           <LazySettingWidget
             pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
@@ -324,7 +304,25 @@ export const DataList: React.FC<DataListState> = (props) => {
             setHideOtherSymbols={(value) => setShowAllSymbol(!value)}
           />
         </React.Suspense>
-      </div>
-    </div>
+      }
+      size="lg"
+      classNames={{
+        trigger: "oui-group",
+        tabsContent: "oui-h-[calc(100%_-_32px)]",
+      }}
+    >
+      {tabPanelItems.map((item) => {
+        const { content, ...rest } = item;
+        return (
+          <TabPanel {...rest} key={`item-${rest.value}`}>
+            {content}
+          </TabPanel>
+        );
+      })}
+      {/* Plugin-appendable tabs. Empty by default; a plugin intercepts
+          `Trading.DataList.Desktop.Tabs` and appends `{ id, title, content }`
+          entries, which self-register into the Tabs context above. */}
+      <InjectableDataListDesktopTabs items={[]} />
+    </Tabs>
   );
 };

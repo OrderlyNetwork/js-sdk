@@ -56,7 +56,8 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
     <Flex direction="column" width="100%" height="100%" itemAlign="start">
       {/* <Divider className="oui-w-full" /> */}
       <Flex gap={3}>
-        {props.filterItems.length > 0 && (
+        {[...(props.additionalFilterItems ?? []), ...props.filterItems].length >
+          0 && (
           <DataFilter
             items={[
               ...(props.additionalFilterItems ?? []),

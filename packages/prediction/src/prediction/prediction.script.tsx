@@ -183,7 +183,12 @@ const estimateMarketSlippage = (
   return notional.div(filled).sub(bestPrice).abs().div(bestPrice).toNumber();
 };
 
-export const usePredictionScript = (regionRestricted = false) => {
+export const usePredictionScript = (
+  regionRestricted = false,
+  // When false the per-second simulation stays suspended; the shared provider
+  // toggles it so unrelated routes do not tick the prototype market.
+  active = true,
+) => {
   const [prototypeAuthState, setPrototypeAuthState] =
     useLocalStorage<PredictionPrototypeAuthState>(
       PREDICTION_PROTOTYPE_AUTH_STORAGE_KEY,
@@ -218,7 +223,10 @@ export const usePredictionScript = (regionRestricted = false) => {
     null,
   );
   const [limitPrice, setLimitPrice] = useState("0.5000");
-  const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "1");
+  const [slippage, setSlippage] = useLocalStorage(
+    "orderly-prediction-slippage",
+    "1",
+  );
   const [balance, setBalance] = useState(INITIAL_BALANCE);
   const [positions, setPositions] = useState<PredictionPosition[]>([
     { outcome: "up", quantity: 24, averagePrice: 0.4625 },
@@ -333,6 +341,8 @@ export const usePredictionScript = (regionRestricted = false) => {
   const notificationIdRef = useRef(0);
   const tickRef = useRef(0);
   const nextIdRef = useRef(1);
+  const currentPriceRef = useRef(currentPrice);
+  currentPriceRef.current = currentPrice;
 
   // Keep prototype feedback behind one event-like boundary so real execution
   // reports can replace it without changing the order-entry UI.
@@ -343,6 +353,10 @@ export const usePredictionScript = (regionRestricted = false) => {
     },
     [],
   );
+
+  // The UI toasts a notification once and clears it, so a stale message cannot
+  // replay when the prediction page remounts with provider-held state.
+  const clearNotification = useCallback(() => setNotification(undefined), []);
 
   const closeMockPerpPosition = useCallback(
     (symbol: string) => {
@@ -509,49 +523,61 @@ export const usePredictionScript = (regionRestricted = false) => {
   ]);
 
   useEffect(() => {
+    if (!active) return;
     const timer = window.setInterval(() => {
       tickRef.current += 1;
       const tick = tickRef.current;
       const delta = Math.sin(tick / 12) * 0.35 + Math.cos(tick / 23) * 0.18;
+      const timestamp = Date.now();
+
       if (
         roundPhase === "trading" ||
         roundPhase === "closingSoon" ||
         roundPhase === "closed"
       ) {
-        setCurrentPrice((previous) => {
-          const next = previous + delta;
-          const timestamp = Date.now();
-          setPriceHistory((points) => [
-            ...points.filter(
-              (point) => point.timestamp >= timestamp - CHART_WINDOW_MS,
-            ),
-            { price: next, timestamp },
-          ]);
-          return next;
-        });
+        const next = currentPriceRef.current + delta;
+        currentPriceRef.current = next;
+        setCurrentPrice(next);
+        setPriceHistory((points) => [
+          ...points.filter(
+            (point) => point.timestamp >= timestamp - CHART_WINDOW_MS,
+          ),
+          { price: next, timestamp },
+        ]);
       }
+
       if (roundPhase === "trading" || roundPhase === "closingSoon") {
-        setCountdown((previous) => {
-          const next = Math.max(previous - 1, 0);
-          if (next === 0 && selectedRound > round) {
-            setRound((previousRound) => previousRound + ROUND_SECONDS);
-            return ROUND_SECONDS;
-          }
-          if (
-            next === 30 &&
-            roundPhase === "trading" &&
-            selectedRound === round
-          ) {
-            setRoundPhase("closingSoon");
-          }
-          if (next === 0) setRoundPhase("closed");
-          return next;
-        });
+        setCountdown((previous) => Math.max(previous - 1, 0));
       }
     }, 1_000);
 
     return () => window.clearInterval(timer);
-  }, [roundPhase, selectedRound, round]);
+  }, [active, roundPhase]);
+
+  // Drive round phase transitions from countdown outside setState updaters so
+  // StrictMode double-invocation cannot advance the round twice, and so
+  // throttled ticks that skip exactly 30s still enter closingSoon via <= 30.
+  useEffect(() => {
+    if (roundPhase !== "trading" && roundPhase !== "closingSoon") return;
+
+    if (countdown <= 0) {
+      if (selectedRound > round) {
+        setRound((previousRound) => previousRound + ROUND_SECONDS);
+        setCountdown(ROUND_SECONDS);
+        return;
+      }
+      setRoundPhase("closed");
+      return;
+    }
+
+    if (
+      countdown <= 30 &&
+      roundPhase === "trading" &&
+      selectedRound === round
+    ) {
+      setRoundPhase("closingSoon");
+    }
+  }, [countdown, roundPhase, selectedRound, round]);
 
   const selectRoundPhase = useCallback(
     (phase: PredictionRoundPhase) => {
@@ -642,17 +668,10 @@ export const usePredictionScript = (regionRestricted = false) => {
       currentPrice >= openingPrice ? "up" : "down";
     const payout = positions
       .filter((position) => position.outcome === winningOutcome)
-      .reduce((total, position) => total + position.quantity, 0);
-    const cost = positions.reduce(
-      (total, position) => total + position.quantity * position.averagePrice,
-      0,
-    );
-    const quantity = positions.reduce(
-      (total, position) => total + position.quantity,
-      0,
-    );
+      .reduce((total, position) => total.add(position.quantity), new Decimal(0))
+      .toNumber();
 
-    setBalance((previous) => previous + payout);
+    setBalance((previous) => new Decimal(previous).add(payout).toNumber());
     setSettlements((previous) => [
       ...positions.map((position) => {
         const settlementPrice = position.outcome === winningOutcome ? 1 : 0;
@@ -713,6 +732,8 @@ export const usePredictionScript = (regionRestricted = false) => {
         : null;
     const maxSlippage = new Decimal(slippage || 0).div(100).toNumber();
     const position = positions.find((p) => p.outcome === outcome);
+    const slippageExceeded =
+      estimatedSellSlippage !== null && estimatedSellSlippage > maxSlippage;
     if (
       !isRoundTradable ||
       isRegionRestricted ||
@@ -723,9 +744,18 @@ export const usePredictionScript = (regionRestricted = false) => {
       !Number.isFinite(price) ||
       price <= 0 ||
       price >= 1 ||
-      (estimatedSellSlippage !== null && estimatedSellSlippage > maxSlippage)
-    )
+      slippageExceeded
+    ) {
+      notify(
+        slippageExceeded
+          ? "prediction.message.slippageExceeded"
+          : !position || quantity <= 0 || quantity > availableQuantity(outcome)
+            ? "prediction.message.insufficientContracts"
+            : "prediction.message.sellFailed",
+        "danger",
+      );
       return false;
+    }
     const order: PredictionOpenOrder = {
       id: nextIdRef.current++,
       outcome,
@@ -1094,6 +1124,7 @@ export const usePredictionScript = (regionRestricted = false) => {
     orderPercentage: selectedPercentage ?? orderPercentage,
     canPlaceOrder,
     notification,
+    clearNotification,
     placeOrder,
     availableQuantity,
     sellPosition,

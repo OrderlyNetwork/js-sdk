@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { useScreen } from "@orderly.network/ui";
+import { PredictionIcon, useScreen } from "@orderly.network/ui";
 import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
 
 export enum PortfolioLeftSidebarPath {
   Overview = "/portfolio",
   Positions = "/portfolio/positions",
   Orders = "/portfolio/orders",
+  Predictions = "/portfolio/predictions",
   Assets = "/portfolio/assets",
   FeeTier = "/portfolio/feeTier",
   ApiKey = "/portfolio/apiKey",
@@ -86,6 +87,11 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
             />
           </svg>
         ),
+      },
+      {
+        name: t("prediction.title"),
+        href: PortfolioLeftSidebarPath.Predictions,
+        icon: <PredictionIcon size={18} monochrome />,
       },
       {
         name: t("common.assets"),

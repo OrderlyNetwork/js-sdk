@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
 import {
@@ -44,6 +44,9 @@ export const DesktopOrderList: FC<
     onAdditionalFilter?: (filter: { name: string; value: unknown }) => void;
   }
 > = (props) => {
+  // An empty supplemental array must not switch the table into client-side
+  // prediction mode; only non-empty supplemental rows do.
+  const hasSupplementalRows = (props.supplementalRows?.length ?? 0) > 0;
   const { sharePnLConfig, ...rest } = props;
   const columns = useOrderColumn({
     _type: props.type,
@@ -51,49 +54,51 @@ export const DesktopOrderList: FC<
     pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbolsInfo: props.symbolsInfo,
-    includePrediction: !!props.supplementalRows,
+    includePrediction: hasSupplementalRows,
   });
 
   const [page, setPage] = useState(1);
-  const mergedRows = props.supplementalRows
-    ? [
-        ...(props.dataSource ?? []),
-        ...props.supplementalRows.map((row) => ({
-          __supplemental: row,
-          created_time: row.timestamp,
-          order_id: row.id,
-        })),
-      ].sort(
-        (a, b) => Number(b.created_time ?? 0) - Number(a.created_time ?? 0),
-      )
-    : props.dataSource;
+  const mergedRows = useMemo(() => {
+    if (!hasSupplementalRows) return props.dataSource;
+    return [
+      ...(props.dataSource ?? []),
+      ...props.supplementalRows!.map((row) => ({
+        __supplemental: row,
+        created_time: row.timestamp,
+        order_id: row.id,
+      })),
+    ].sort((a, b) => Number(b.created_time ?? 0) - Number(a.created_time ?? 0));
+  }, [hasSupplementalRows, props.dataSource, props.supplementalRows]);
+
   useEffect(
     () => setPage(1),
     [props.type, props.filterItems, props.supplementalRows?.length],
   );
-  const mergedColumns = props.supplementalRows
-    ? columns.map((column) => ({
-        ...column,
-        render: (value: any, record: any, index: number, context: any) =>
-          record.__supplemental
-            ? record.__supplemental.renderCell(String(column.dataIndex))
-            : typeof column.render === "function"
-              ? column.render(value, record, index, context)
-              : value,
-        renderPlantText: (
-          value: any,
-          record: any,
-          index: number,
-          context: any,
-        ) =>
-          record.__supplemental
-            ? (record.__supplemental.plainText?.(String(column.dataIndex)) ??
-              "")
-            : column.renderPlantText
-              ? column.renderPlantText(value, record, index, context)
-              : String(value ?? ""),
-      }))
-    : columns;
+
+  const mergedColumns = useMemo(() => {
+    if (!hasSupplementalRows) return columns;
+    return columns.map((column) => ({
+      ...column,
+      render: (value: any, record: any, index: number, context: any) =>
+        record.__supplemental
+          ? record.__supplemental.renderCell(String(column.dataIndex))
+          : typeof column.render === "function"
+            ? column.render(value, record, index, context)
+            : value,
+      renderPlantText: (
+        value: any,
+        record: any,
+        index: number,
+        context: any,
+      ) =>
+        record.__supplemental
+          ? (record.__supplemental.plainText?.(String(column.dataIndex)) ?? "")
+          : column.renderPlantText
+            ? column.renderPlantText(value, record, index, context)
+            : String(value ?? ""),
+    }));
+  }, [hasSupplementalRows, columns]);
+
   const TableComponent = props.useClientTable ? DataTable : AuthGuardDataTable;
   return (
     <OrderListProvider
@@ -171,7 +176,7 @@ export const DesktopOrderList: FC<
             );
           }}
           pagination={
-            props.supplementalRows
+            hasSupplementalRows
               ? {
                   page,
                   pageSize: 20,
@@ -181,7 +186,7 @@ export const DesktopOrderList: FC<
               : props.pagination
           }
           manualPagination={
-            props.supplementalRows ? false : props.manualPagination
+            hasSupplementalRows ? false : props.manualPagination
           }
           features={[TableFeatures.DownloadFeature]}
           getTableInstance={(table) => {

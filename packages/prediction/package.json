@@ -1,13 +1,15 @@
 {
   "name": "@orderly.network/prediction",
-  "version": "3.1.11",
+  "version": "3.2.1",
   "description": "Prediction market UI prototype for Orderly",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
+    "lint": "eslint src --max-warnings=0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -41,6 +43,7 @@
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.19",
     "tsconfig": "workspace:*",
     "tsup": "^8.5.1",
     "typescript": "^5.1.6"
