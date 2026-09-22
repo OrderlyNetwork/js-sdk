@@ -20,10 +20,7 @@ import {
 } from "@orderly.network/ui";
 import { SlippageUI } from "@orderly.network/ui-order-entry";
 import { Decimal } from "@orderly.network/utils";
-import type {
-  PredictionPrototypeAuthState,
-  PredictionState,
-} from "./prediction.script";
+import type { PredictionState } from "./prediction.script";
 import {
   formatContractPrice,
   usePredictionFormatters,
@@ -367,9 +364,11 @@ export const TradePanel: React.FC<
 > = (state) => {
   const { t } = useTranslation();
   const { formatUsd, formatContracts } = usePredictionFormatters();
-  const orderEntryAccountReady = state.orderEntryAccountReady ?? true;
+  // Fail closed: a TradePanel rendered without explicit auth flags must not
+  // default to a tradable state (matches the gating in prediction.ui.tsx).
+  const orderEntryAccountReady = state.orderEntryAccountReady ?? false;
   const { isMobile } = useScreen();
-  const orderEntryFunded = state.orderEntryFunded ?? true;
+  const orderEntryFunded = state.orderEntryFunded ?? false;
   const outcomeLabel = t(`prediction.${state.selectedOutcome}`);
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
   const buttonLabel = `${t(`common.${state.orderSide}`)} ${t(`prediction.${state.selectedOutcome}`)}`;
@@ -701,45 +700,5 @@ export const TradePanel: React.FC<
         </div>
       </div>
     </aside>
-  );
-};
-
-export const PredictionPrototypeAuthContext =
-  React.createContext<PredictionPrototypeAuthState>("real");
-
-export const PrototypeAuthPrompt: React.FC<{
-  state: Exclude<PredictionPrototypeAuthState, "real" | "funded">;
-  disabled?: boolean;
-}> = ({ state, disabled = false }) => {
-  const { t } = useTranslation();
-  const content = {
-    disconnected: {
-      label: t("connector.connectWallet"),
-      description: t("connector.trade.connectWallet.tooltip"),
-    },
-    connected: {
-      label: t("connector.createAccount"),
-      description: t("connector.trade.createAccount.tooltip"),
-    },
-    accountReady: {
-      label: t("common.deposit"),
-      description: t("trading.asset.startTrading.description"),
-    },
-  }[state];
-
-  return (
-    <div className="oui-flex oui-h-full oui-min-h-36 oui-flex-col oui-items-center oui-justify-center oui-p-6 oui-text-center">
-      <Button
-        size="md"
-        color="primary"
-        variant={disabled ? undefined : "gradient"}
-        disabled={disabled}
-      >
-        {content.label}
-      </Button>
-      <Text size="2xs" intensity={36} className="oui-mt-4 oui-max-w-sm">
-        {content.description}
-      </Text>
-    </div>
   );
 };

@@ -27,11 +27,9 @@ import {
 import { usePredictionFavorites } from "./predictionMockData.script";
 import {
   PredictionOrderBook,
-  PrototypeAuthPrompt,
   RoundOrderStatusCard,
   TradePanel,
 } from "./predictionOrderEntry.ui";
-import { PredictionPlayground } from "./predictionPlayground.ui";
 import { formatPercent, usePredictionFormatters } from "./predictionShared";
 
 // Re-exported here so the package entry keeps importing every public
@@ -44,7 +42,6 @@ export {
   SharedProductOrdersPanel,
 } from "./predictionDataPanels.ui";
 export type { PredictionDataPanelProps } from "./predictionDataPanels.ui";
-export { PredictionPlayground } from "./predictionPlayground.ui";
 
 const MobileMarketPanel: React.FC<PredictionState> = (state) => {
   const { t } = useTranslation();
@@ -157,28 +154,12 @@ export const Prediction: React.FC<
   // Prediction favorites render as a separate section because they are not
   // part of the current Perps markets data source.
 
-  // Regional restrictions come from the shared app provider and must always
-  // take precedence over prototype-only authentication states.
-  const hasPrototypeAuthOverride = state.prototypeAuthState !== "real";
-  const effectiveAccountReady = state.orderEntryRestricted
+  const orderEntryAccountReady = state.orderEntryRestricted
     ? false
-    : hasPrototypeAuthOverride
-      ? state.prototypeAuthState === "accountReady" ||
-        state.prototypeAuthState === "funded"
-      : (state.orderEntryAccountReady ?? true);
-  const effectiveAccountFunded = state.orderEntryRestricted
+    : (state.orderEntryAccountReady ?? false);
+  const orderEntryFunded = state.orderEntryRestricted
     ? false
-    : hasPrototypeAuthOverride
-      ? state.prototypeAuthState === "funded"
-      : (state.orderEntryFunded ?? true);
-  const accountPanel = hasPrototypeAuthOverride ? (
-    state.prototypeAuthState === "funded" ? null : state.prototypeAuthState ===
-      "real" ? null : (
-      <PrototypeAuthPrompt state={state.prototypeAuthState} />
-    )
-  ) : (
-    state.accountPanel
-  );
+    : (state.orderEntryFunded ?? false);
 
   return (
     <main
@@ -284,9 +265,9 @@ export const Prediction: React.FC<
               "oui-flex oui-flex-col oui-self-stretch xl:oui-block",
           )}
         >
-          {accountPanel && (
+          {state.accountPanel && (
             <div className="oui-rounded-2xl oui-border oui-border-line-12 oui-bg-base-9 oui-p-3">
-              {accountPanel}
+              {state.accountPanel}
             </div>
           )}
           {state.isRegionRestricted || state.orderEntryRestricted ? (
@@ -298,8 +279,8 @@ export const Prediction: React.FC<
           ) : state.isRoundTradable ? (
             <TradePanel
               {...state}
-              orderEntryAccountReady={effectiveAccountReady}
-              orderEntryFunded={effectiveAccountFunded}
+              orderEntryAccountReady={orderEntryAccountReady}
+              orderEntryFunded={orderEntryFunded}
             />
           ) : (
             <RoundOrderStatusCard
@@ -312,16 +293,6 @@ export const Prediction: React.FC<
           <PredictionDataPanel state={state} />
         </div>
       </div>
-      <PredictionPlayground
-        roundView={state.roundView}
-        setRoundView={state.setRoundView}
-        roundPhase={state.roundPhase}
-        setRoundPhase={state.setRoundPhase}
-        prototypeAuthState={state.prototypeAuthState}
-        setPrototypeAuthState={state.setPrototypeAuthState}
-        prototypeRegionState={state.prototypeRegionState}
-        setPrototypeRegionState={state.setPrototypeRegionState}
-      />
     </main>
   );
 };

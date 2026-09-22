@@ -7,7 +7,6 @@ export {
 export {
   PredictionOrdersTable,
   PredictionOrderCell,
-  PredictionPlayground,
   SharedProductDataPanel,
   SharedProductOrdersPanel,
 } from "./prediction/prediction.ui";

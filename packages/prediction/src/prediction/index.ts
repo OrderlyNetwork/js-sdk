@@ -4,6 +4,4 @@ export type {
   PredictionOutcome,
   PredictionOrderSide,
   PredictionOrderType,
-  PredictionPrototypeAuthState,
-  PredictionPrototypeRegionState,
 } from "./prediction.script";

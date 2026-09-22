@@ -12,7 +12,6 @@ import {
   Box,
   Button,
   cn,
-  DataTable,
   DataFilter,
   Divider,
   Input,
@@ -50,10 +49,6 @@ import {
   predictionDateRange,
 } from "./predictionFilters.script";
 import { buildMockPortfolioAssets } from "./predictionMockData.script";
-import {
-  PredictionPrototypeAuthContext,
-  PrototypeAuthPrompt,
-} from "./predictionOrderEntry.ui";
 import { formatCountdown, usePredictionFormatters } from "./predictionShared";
 
 const OutcomeBadge: React.FC<{ outcome: PredictionOutcome }> = ({
@@ -109,13 +104,10 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   const { t } = useTranslation();
   const [positionProduct, setPositionProduct] =
     useState<ProductType>("prediction");
-  const showPrototypeData =
-    state.prototypeAuthState === "real" ||
-    state.prototypeAuthState === "funded";
 
   const tabCount: Partial<Record<PredictionDataTab, number>> = {
-    openOrders: showPrototypeData ? state.openOrders.length : 0,
-    predictions: showPrototypeData ? state.positions.length : 0,
+    openOrders: state.openOrders.length,
+    predictions: state.positions.length,
   };
 
   const tabContent: Record<PredictionDataTab, React.ReactNode> = {
@@ -141,55 +133,53 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   };
 
   return (
-    <PredictionPrototypeAuthContext.Provider value={state.prototypeAuthState}>
-      <Box
-        intensity={900}
-        r={embedded ? undefined : "2xl"}
-        p={embedded ? 0 : 2}
-        className={cn(
-          "oui-prediction-dataPanel-container oui-h-full oui-overflow-hidden",
-          "oui-relative",
-          className,
-        )}
+    <Box
+      intensity={900}
+      r={embedded ? undefined : "2xl"}
+      p={embedded ? 0 : 2}
+      className={cn(
+        "oui-prediction-dataPanel-container oui-h-full oui-overflow-hidden",
+        "oui-relative",
+        className,
+      )}
+    >
+      <Tabs
+        className="oui-prediction-dataPanel-tabs oui-h-full"
+        value={state.activeTab}
+        onValueChange={(value) =>
+          state.setActiveTab(value as PredictionDataTab)
+        }
+        variant={embedded ? undefined : "contained"}
+        size={embedded ? undefined : "lg"}
+        classNames={{
+          tabsList: embedded ? "!oui-border-none oui-pb-1" : undefined,
+          trigger: "oui-group oui-dataPanel-tab-btn",
+          tabsContent: embedded
+            ? "oui-h-[calc(100%_-_28px)] oui-min-h-36 oui-overflow-x-auto"
+            : "oui-h-[calc(100%_-_32px)] oui-min-h-36 oui-overflow-x-auto",
+        }}
       >
-        <Tabs
-          className="oui-prediction-dataPanel-tabs oui-h-full"
-          value={state.activeTab}
-          onValueChange={(value) =>
-            state.setActiveTab(value as PredictionDataTab)
-          }
-          variant={embedded ? undefined : "contained"}
-          size={embedded ? undefined : "lg"}
-          classNames={{
-            tabsList: embedded ? "!oui-border-none oui-pb-1" : undefined,
-            trigger: "oui-group oui-dataPanel-tab-btn",
-            tabsContent: embedded
-              ? "oui-h-[calc(100%_-_28px)] oui-min-h-36 oui-overflow-x-auto"
-              : "oui-h-[calc(100%_-_32px)] oui-min-h-36 oui-overflow-x-auto",
-          }}
-        >
-          {tabs.map((tab) => (
-            <TabPanel
-              key={tab}
-              value={tab}
-              title={
-                <>
-                  {t(`prediction.tab.${tab}`)}
-                  {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
-                </>
-              }
-            >
-              {tabContent[tab]}
-            </TabPanel>
-          ))}
-        </Tabs>
-        {state.activeTab === "predictions" && positionProduct === "perps" && (
-          <div className="oui-absolute oui-end-2 oui-top-2 oui-z-10">
-            <PerpsPositionsSettings />
-          </div>
-        )}
-      </Box>
-    </PredictionPrototypeAuthContext.Provider>
+        {tabs.map((tab) => (
+          <TabPanel
+            key={tab}
+            value={tab}
+            title={
+              <>
+                {t(`prediction.tab.${tab}`)}
+                {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
+              </>
+            }
+          >
+            {tabContent[tab]}
+          </TabPanel>
+        ))}
+      </Tabs>
+      {state.activeTab === "predictions" && positionProduct === "perps" && (
+        <div className="oui-absolute oui-end-2 oui-top-2 oui-z-10">
+          <PerpsPositionsSettings />
+        </div>
+      )}
+    </Box>
   );
 };
 
@@ -308,7 +298,6 @@ const PredictionDataTable: React.FC<{
   minWidth?: number;
   toolbar?: React.ReactNode;
 }> = ({ columns, rows, minWidth = 720, toolbar }) => {
-  const prototypeAuthState = React.useContext(PredictionPrototypeAuthContext);
   const { pagination, setPage } = usePagination({ pageSize: 8 });
   const dataColumns = useMemo<Column<PredictionTableRow>[]>(
     () =>
@@ -362,54 +351,23 @@ const PredictionDataTable: React.FC<{
       style={{ minWidth }}
     >
       {toolbar}
-      {prototypeAuthState === "real" ? (
-        <AuthGuardDataTable
-          className="oui-prediction-dataTable"
-          columns={dataColumns}
-          dataSource={dataSource}
-          bordered
-          ignoreLoadingCheck
-          classNames={{
-            header: "oui-h-[38px]",
-            root: cn(
-              "oui-items-start",
-              toolbar && "!oui-h-[calc(100%_-_49px)]",
-            ),
-          }}
-          onRow={() => ({
-            className: "oui-h-12 oui-text-base-contrast-80",
-          })}
-          generatedRowKey={(record) => record.id}
-          pagination={tablePagination}
-          features={[TableFeatures.DownloadFeature]}
-        />
-      ) : (
-        <DataTable
-          className="oui-prediction-dataTable"
-          columns={dataColumns}
-          dataSource={prototypeAuthState === "funded" ? dataSource : []}
-          bordered
-          ignoreLoadingCheck
-          emptyView={
-            prototypeAuthState === "funded" ? undefined : (
-              <PrototypeAuthPrompt state={prototypeAuthState} />
-            )
-          }
-          classNames={{
-            header: "oui-h-[38px]",
-            root: cn(
-              "oui-items-start",
-              toolbar && "!oui-h-[calc(100%_-_49px)]",
-            ),
-          }}
-          onRow={() => ({
-            className: "oui-h-12 oui-text-base-contrast-80",
-          })}
-          generatedRowKey={(record) => record.id}
-          pagination={tablePagination}
-          features={[TableFeatures.DownloadFeature]}
-        />
-      )}
+      <AuthGuardDataTable
+        className="oui-prediction-dataTable"
+        columns={dataColumns}
+        dataSource={dataSource}
+        bordered
+        ignoreLoadingCheck
+        classNames={{
+          header: "oui-h-[38px]",
+          root: cn("oui-items-start", toolbar && "!oui-h-[calc(100%_-_49px)]"),
+        }}
+        onRow={() => ({
+          className: "oui-h-12 oui-text-base-contrast-80",
+        })}
+        generatedRowKey={(record) => record.id}
+        pagination={tablePagination}
+        features={[TableFeatures.DownloadFeature]}
+      />
     </div>
   );
 };
@@ -854,7 +812,7 @@ const HoldingsTable = ({
           </Text.pnl>,
           state.isRoundTradable
             ? formatCountdown(state.countdown)
-            : t(`prediction.playground.phase.${state.roundPhase}`),
+            : t(`prediction.phase.${state.roundPhase}`),
           <SellPosition state={state} outcome={position.outcome} />,
         ],
       }))}

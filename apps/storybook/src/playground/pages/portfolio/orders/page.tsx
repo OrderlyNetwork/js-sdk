@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   PredictionOrderCell,
-  PredictionPlayground,
   useSharedPredictionState,
 } from "@orderly.network/prediction";
+import { useCanTrade } from "@orderly.network/react-app";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Box,
@@ -36,6 +36,7 @@ function MixedOrders({
   ordersRef: React.RefObject<OrderListInstance>;
 }) {
   const state = useSharedPredictionState();
+  const canTrade = useCanTrade();
   const { t } = useTranslation();
   const perps = useOrderListScript({ type, ordersStatus, ref: ordersRef });
   const [outcome, setOutcome] = useState("all");
@@ -111,8 +112,8 @@ function MixedOrders({
   const predictionOrders = useMemo(() => {
     if (
       !state ||
+      !canTrade ||
       product === "perps" ||
-      state.prototypeAuthState !== "funded" ||
       type === TabType.tp_sl ||
       type === TabType.rejected
     )
@@ -151,7 +152,7 @@ function MixedOrders({
         return true;
       }),
     );
-  }, [state, product, type, filterItems]);
+  }, [state, canTrade, product, type, filterItems]);
   const supplementalRows = useMemo(
     () =>
       predictionOrders.map((order) => ({
@@ -221,7 +222,7 @@ function MixedOrders({
       }}
       dataSource={visiblePerps}
       supplementalRows={supplementalRows}
-      useClientTable={state?.prototypeAuthState === "funded"}
+      useClientTable={canTrade}
       onCancelAll={onCancelAll}
       cancelAllDisabled={
         !visiblePerps.length &&
@@ -233,7 +234,6 @@ function MixedOrders({
 
 export default function OrdersPage() {
   const { t } = useTranslation();
-  const state = useSharedPredictionState();
   const [product, setProduct] = useState("all");
   const [tab, setTab] = useState<string>(TabType.all);
   const ordersRef = useRef<OrderListInstance>(null);
@@ -333,7 +333,6 @@ export default function OrdersPage() {
             </TabPanel>
           ))}
         </Tabs>
-        {state && <PredictionPlayground {...state} />}
       </div>
     </Box>
   );

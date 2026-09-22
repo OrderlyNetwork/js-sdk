@@ -25,24 +25,12 @@ export type PredictionDataTab =
   | "orderHistory"
   | "filled"
   | "predictionHistory";
-export type PredictionPrototypeAuthState =
-  | "real"
-  | "disconnected"
-  | "connected"
-  | "accountReady"
-  | "funded";
-export type PredictionPrototypeRegionState = "real" | "allowed" | "restricted";
 
 export type PredictionNotification = {
   id: number;
   message: string;
   tone: "success" | "danger";
 };
-
-const PREDICTION_PROTOTYPE_AUTH_STORAGE_KEY =
-  "orderly-prediction-prototype-auth-state";
-const PREDICTION_PROTOTYPE_REGION_STORAGE_KEY =
-  "orderly-prediction-prototype-region-state";
 
 export type PredictionPosition = {
   outcome: PredictionOutcome;
@@ -189,22 +177,9 @@ export const usePredictionScript = (
   // toggles it so unrelated routes do not tick the prototype market.
   active = true,
 ) => {
-  const [prototypeAuthState, setPrototypeAuthState] =
-    useLocalStorage<PredictionPrototypeAuthState>(
-      PREDICTION_PROTOTYPE_AUTH_STORAGE_KEY,
-      "real",
-    );
-  const [prototypeRegionState, setPrototypeRegionState] =
-    useLocalStorage<PredictionPrototypeRegionState>(
-      PREDICTION_PROTOTYPE_REGION_STORAGE_KEY,
-      "real",
-    );
   const [round, setRound] = useState(INITIAL_ROUND);
-  const isRegionRestricted =
-    regionRestricted || prototypeRegionState === "restricted";
+  const isRegionRestricted = regionRestricted;
   const [selectedRound, setSelectedRound] = useState(INITIAL_ROUND);
-  const roundView =
-    selectedRound < round ? "past" : selectedRound > round ? "future" : "live";
   const [countdown, setCountdown] = useState(ROUND_SECONDS - 43);
   const [roundPhase, setRoundPhase] = useState<PredictionRoundPhase>("trading");
   const [openingPrice, setOpeningPrice] = useState(INITIAL_BTC_PRICE);
@@ -579,28 +554,6 @@ export const usePredictionScript = (
     }
   }, [countdown, roundPhase, selectedRound, round]);
 
-  const selectRoundPhase = useCallback(
-    (phase: PredictionRoundPhase) => {
-      setRoundPhase(phase);
-      setNotification(undefined);
-
-      if (phase === "trading") setCountdown(180);
-      if (phase === "closingSoon") setCountdown(20);
-      if (phase === "closed" || phase === "resolving") setCountdown(0);
-
-      if (phase === "resolvedUp" || phase === "resolvedDown") {
-        const nextPrice =
-          phase === "resolvedUp" ? openingPrice + 48 : openingPrice - 48;
-        setCurrentPrice(nextPrice);
-        setPriceHistory((points) => [
-          ...points,
-          { price: nextPrice, timestamp: Date.now() },
-        ]);
-      }
-    },
-    [openingPrice],
-  );
-
   const goToLiveRound = useCallback(() => {
     setOpeningPrice(currentPrice);
     setRound((previous) => previous + ROUND_SECONDS);
@@ -616,16 +569,6 @@ export const usePredictionScript = (
     setRoundPhase(nextRound < round ? "resolvedUp" : "trading");
     setNotification(undefined);
     setCountdown(ROUND_SECONDS - 43);
-  };
-  const setRoundView = (view: "past" | "live" | "future") => {
-    selectMarketRound(
-      round +
-        (view === "past"
-          ? -ROUND_SECONDS
-          : view === "future"
-            ? ROUND_SECONDS
-            : 0),
-    );
   };
 
   const selectOutcome = useCallback(
@@ -1065,9 +1008,6 @@ export const usePredictionScript = (
     roundPhase,
     selectedRound,
     selectMarketRound,
-    roundView,
-    setRoundView,
-    setRoundPhase: selectRoundPhase,
     goToLiveRound,
     isRoundTradable,
     openingPrice,
@@ -1097,11 +1037,7 @@ export const usePredictionScript = (
     reverseMockPerpPosition,
     triggerMockAssetAction,
     mockTransactions,
-    prototypeAuthState,
-    setPrototypeAuthState,
-    prototypeRegionState,
     isRegionRestricted,
-    setPrototypeRegionState,
     activeTab,
     setActiveTab,
     orderBook,
