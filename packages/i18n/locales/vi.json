@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Đã hủy tất cả lệnh.",
   "prediction.message.positionClosed": "Đã đóng vị thế.",
   "prediction.message.positionReversed": "Đã đảo chiều vị thế.",
-  "prediction.message.assetConvert": "Đã mở chuyển đổi.",
-  "prediction.message.assetTransfer": "Đã mở chuyển khoản.",
   "prediction.message.settled": "Phiên đã được quyết toán. Phiên mới 5 phút đã bắt đầu.",
   "trading.layout": "Bố cục",
   "trading.layout.advanced": "Nâng cao",

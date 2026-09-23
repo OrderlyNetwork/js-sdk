@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Все ордера отменены.",
   "prediction.message.positionClosed": "Позиция закрыта.",
   "prediction.message.positionReversed": "Позиция развёрнута.",
-  "prediction.message.assetConvert": "Открыта конвертация.",
-  "prediction.message.assetTransfer": "Открыт перевод.",
   "prediction.message.settled": "Раунд рассчитан. Начался новый пятиминутный раунд.",
   "trading.layout": "Макет",
   "trading.layout.advanced": "Расширенный",

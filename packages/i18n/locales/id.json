@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Semua order dibatalkan.",
   "prediction.message.positionClosed": "Posisi ditutup.",
   "prediction.message.positionReversed": "Posisi dibalik.",
-  "prediction.message.assetConvert": "Konversi dibuka.",
-  "prediction.message.assetTransfer": "Transfer dibuka.",
   "prediction.message.settled": "Ronde telah diselesaikan. Ronde baru lima menit telah dimulai.",
   "trading.layout": "Tata letak",
   "trading.layout.advanced": "Lanjutan",

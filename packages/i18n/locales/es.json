@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Todas las órdenes fueron canceladas.",
   "prediction.message.positionClosed": "Posición cerrada.",
   "prediction.message.positionReversed": "Posición invertida.",
-  "prediction.message.assetConvert": "Conversión abierta.",
-  "prediction.message.assetTransfer": "Transferencia abierta.",
   "prediction.message.settled": "Ronda liquidada. Ha comenzado una nueva ronda de cinco minutos.",
   "trading.layout": "Diseño",
   "trading.layout.advanced": "Avanzado",

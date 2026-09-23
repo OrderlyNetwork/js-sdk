@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Tüm emirler iptal edildi.",
   "prediction.message.positionClosed": "Pozisyon kapatıldı.",
   "prediction.message.positionReversed": "Pozisyon tersine çevrildi.",
-  "prediction.message.assetConvert": "Dönüşüm açıldı.",
-  "prediction.message.assetTransfer": "Transfer açıldı.",
   "prediction.message.settled": "Tur sonuçlandı. Yeni beş dakikalık tur başladı.",
   "trading.layout": "Düzen",
   "trading.layout.advanced": "Gelişmiş",

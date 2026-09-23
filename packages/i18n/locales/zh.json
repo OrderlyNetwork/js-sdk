@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "全部订单已取消。",
   "prediction.message.positionClosed": "仓位已平仓。",
   "prediction.message.positionReversed": "仓位已反转。",
-  "prediction.message.assetConvert": "已打开兑换。",
-  "prediction.message.assetTransfer": "已打开划转。",
   "prediction.message.settled": "本轮已结算，新的 5 分钟轮次已开始。",
   "trading.layout": "布局",
   "trading.layout.advanced": "高级",

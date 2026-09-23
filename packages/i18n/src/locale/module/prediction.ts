@@ -161,8 +161,6 @@ export const prediction = {
   "prediction.message.ordersCanceled": "All orders canceled.",
   "prediction.message.positionClosed": "Position closed.",
   "prediction.message.positionReversed": "Position reversed.",
-  "prediction.message.assetConvert": "Convert opened.",
-  "prediction.message.assetTransfer": "Transfer opened.",
   "prediction.message.settled":
     "Round settled. A new five-minute round has started.",
 } as const;

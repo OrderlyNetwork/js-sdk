@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "すべての注文がキャンセルされました。",
   "prediction.message.positionClosed": "ポジションを決済しました。",
   "prediction.message.positionReversed": "ポジションを反転しました。",
-  "prediction.message.assetConvert": "変換を開きました。",
-  "prediction.message.assetTransfer": "送金を開きました。",
   "prediction.message.settled": "ラウンドが確定しました。新しい5分ラウンドが開始されました。",
   "trading.layout": "レイアウト",
   "trading.layout.advanced": "詳細",

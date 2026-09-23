@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Tous les ordres ont été annulés.",
   "prediction.message.positionClosed": "Position clôturée.",
   "prediction.message.positionReversed": "Position inversée.",
-  "prediction.message.assetConvert": "Conversion ouverte.",
-  "prediction.message.assetTransfer": "Transfert ouvert.",
   "prediction.message.settled": "Tour réglé. Un nouveau tour de cinq minutes a commencé.",
   "trading.layout": "Disposition",
   "trading.layout.advanced": "Avancé",

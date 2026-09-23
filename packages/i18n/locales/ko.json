@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "모든 주문이 취소되었습니다.",
   "prediction.message.positionClosed": "포지션이 종료되었습니다.",
   "prediction.message.positionReversed": "포지션이 반전되었습니다.",
-  "prediction.message.assetConvert": "변환을 열었습니다.",
-  "prediction.message.assetTransfer": "이체를 열었습니다.",
   "prediction.message.settled": "라운드가 정산되었습니다. 새로운 5분 라운드가 시작되었습니다.",
   "trading.layout": "레이아웃",
   "trading.layout.advanced": "고급",

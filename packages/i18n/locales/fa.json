@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "همه سفارش‌ها لغو شدند.",
   "prediction.message.positionClosed": "موقعیت بسته شد.",
   "prediction.message.positionReversed": "موقعیت معکوس شد.",
-  "prediction.message.assetConvert": "تبدیل باز شد.",
-  "prediction.message.assetTransfer": "انتقال باز شد.",
   "prediction.message.settled": "دور تسویه شد. دور جدید پنج‌دقیقه‌ای آغاز شد.",
   "trading.layout": "چیدمان",
   "trading.layout.advanced": "پیشرفته",

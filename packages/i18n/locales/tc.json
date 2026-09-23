@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "全部訂單已取消。",
   "prediction.message.positionClosed": "倉位已平倉。",
   "prediction.message.positionReversed": "倉位已反轉。",
-  "prediction.message.assetConvert": "已開啟兌換。",
-  "prediction.message.assetTransfer": "已開啟轉帳。",
   "prediction.message.settled": "本輪已結算，新的 5 分鐘輪次已開始。",
   "trading.layout": "佈局",
   "trading.layout.advanced": "高級",

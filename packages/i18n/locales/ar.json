@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "تم إلغاء جميع الأوامر.",
   "prediction.message.positionClosed": "تم إغلاق المركز.",
   "prediction.message.positionReversed": "تم عكس المركز.",
-  "prediction.message.assetConvert": "تم فتح التبديل.",
-  "prediction.message.assetTransfer": "تم فتح التحويل.",
   "prediction.message.settled": "تمت تسوية الجولة. بدأت جولة جديدة مدتها خمس دقائق.",
   "trading.layout": "التخطيط",
   "trading.layout.advanced": "متقدم",

@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "Alle orders geannuleerd.",
   "prediction.message.positionClosed": "Positie gesloten.",
   "prediction.message.positionReversed": "Positie omgekeerd.",
-  "prediction.message.assetConvert": "Conversie geopend.",
-  "prediction.message.assetTransfer": "Transfer geopend.",
   "prediction.message.settled": "Ronde vereffend. Een nieuwe ronde van vijf minuten is gestart.",
   "trading.layout": "Layout",
   "trading.layout.advanced": "Geavanceerd",

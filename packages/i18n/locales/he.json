@@ -434,8 +434,6 @@
   "prediction.message.ordersCanceled": "כל הפקודות בוטלו.",
   "prediction.message.positionClosed": "העמדה נסגרה.",
   "prediction.message.positionReversed": "העמדה התהפכה.",
-  "prediction.message.assetConvert": "ההמרה נפתחה.",
-  "prediction.message.assetTransfer": "ההעברה נפתחה.",
   "prediction.message.settled": "הסבב סולק. החל סבב חדש של חמש דקות.",
   "trading.layout": "פריסה",
   "trading.layout.advanced": "מתקדם",
