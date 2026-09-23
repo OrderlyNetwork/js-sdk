@@ -304,8 +304,10 @@ const PredictionOrderInput: React.FC<{
       )
     }
     classNames={{
+      // No resting border: the solid `fill` surface of the inner input
+      // establishes the boundary (the focus outline stays available).
       root: cn(
-        "oui-relative oui-h-[54px] oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 focus-within:oui-border-transparent",
+        "oui-relative oui-h-[54px] oui-px-2 oui-py-1",
         position === "single" && "oui-rounded-xl",
         position === "top" && "oui-rounded-t-xl oui-rounded-b",
         position === "middle" && "oui-rounded",
@@ -680,7 +682,7 @@ export const TradePanel: React.FC<
 
         <div className="oui-mt-2 oui-text-center oui-text-2xs oui-font-normal oui-text-base-contrast-54">
           {t("prediction.tradingAgreement")}{" "}
-          <span className="oui-border-b oui-border-line-36 oui-text-base-contrast-54">
+          <span className="oui-border-b oui-border-base-contrast-36 oui-text-base-contrast-54">
             {t("prediction.termOfUse")}
           </span>
         </div>
