@@ -13,10 +13,22 @@ interface DesktopMarkPriceProps {
   asks: number[][];
   bids: number[][];
   symbolInfo: BasicSymbolInfo;
+  /** Renders the flagged mark-price label next to the middle price. @default true */
+  showMarkPrice?: boolean;
+  /** Renders the spread ratio on the trailing side. @default true */
+  showSpread?: boolean;
 }
 
 export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
-  const { markPrice = 0, lastPrice, asks, bids, symbolInfo } = props;
+  const {
+    markPrice = 0,
+    lastPrice,
+    asks,
+    bids,
+    symbolInfo,
+    showMarkPrice = true,
+    showSpread = true,
+  } = props;
   const { showTotal } = useOrderBookContext();
 
   return (
@@ -33,17 +45,21 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
           quote_dp={symbolInfo.quote_dp}
           className="oui-text-base"
         />
-        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
-      </div>
-      <div
-        className={cn(
-          "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
-          showTotal && "oui-basis-7/12",
-          "oui-pe-3",
+        {showMarkPrice && (
+          <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
         )}
-      >
-        <Spread asks={asks} bids={bids} />
       </div>
+      {showSpread && (
+        <div
+          className={cn(
+            "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
+            showTotal && "oui-basis-7/12",
+            "oui-pe-3",
+          )}
+        >
+          <Spread asks={asks} bids={bids} />
+        </div>
+      )}
     </div>
   );
 };
