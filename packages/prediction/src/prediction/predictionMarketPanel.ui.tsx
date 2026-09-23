@@ -22,23 +22,29 @@ import {
   usePredictionFormatters,
 } from "./predictionShared";
 
-const predictionMarketTab: MarketTabConfig = {
+const predictionMarketTab = (name: string): MarketTabConfig => ({
   id: "prediction",
-  name: "Prediction",
+  name,
   match: () => false,
-};
+});
 
-export const predictionMarketTabs: MarketTabConfig[] = [
-  builtInTabs.favorites,
-  builtInTabs.all,
-  builtInTabs.crypto,
-  predictionMarketTab,
-  builtInTabs.rwa,
-  builtInTabs.community,
-  builtInTabs.newListing,
-  builtInTabs.recent,
-  builtInTabs.preTge,
-];
+export const usePredictionMarketTabs = (): MarketTabConfig[] => {
+  const { t } = useTranslation();
+  return useMemo(
+    () => [
+      builtInTabs.favorites,
+      builtInTabs.all,
+      builtInTabs.crypto,
+      predictionMarketTab(t("prediction.title")),
+      builtInTabs.rwa,
+      builtInTabs.community,
+      builtInTabs.newListing,
+      builtInTabs.recent,
+      builtInTabs.preTge,
+    ],
+    [t],
+  );
+};
 
 export type PredictionMarketRowProps = Pick<
   PredictionState,
@@ -140,7 +146,7 @@ export const PredictionMarketPanel: React.FC<
         render: (value) => <Text size="2xs">{value}</Text>,
       },
     ],
-    [locale, props.isFavorite, props.onToggleFavorite, props.round, t],
+    [locale, props.isFavorite, props.onToggleFavorite, t],
   );
 
   const dataSource: PredictionMarketRecord[] = matchesSearch

@@ -11,6 +11,7 @@ import {
   cn,
   TableFeatures,
   DataTable,
+  type Column,
   type DataFilterItem,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -29,15 +30,29 @@ const getOrderRowKey = <T extends API.Order | API.AlgoOrder>(item: T) =>
     ? `algo-${item.algo_order_id}`
     : `order-${(item as API.Order).order_id}`;
 
+export type SupplementalOrderRow = {
+  id: string;
+  timestamp: number;
+  renderCell: (field: string) => ReactNode;
+  plainText?: (field: string) => string;
+};
+
+/**
+ * A supplemental row only carries the fields the merged table reads (row key
+ * and sort timestamp); every cell renders through renderCell.
+ */
+type MergedOrderRow =
+  | NonNullable<OrdersBuilderState["dataSource"]>[number]
+  | {
+      __supplemental: SupplementalOrderRow;
+      created_time: number;
+      order_id: string;
+    };
+
 export const DesktopOrderList: FC<
   OrdersBuilderState & {
     testIds?: { tableBody?: string };
-    supplementalRows?: Array<{
-      id: string;
-      timestamp: number;
-      renderCell: (field: string) => ReactNode;
-      plainText?: (field: string) => string;
-    }>;
+    supplementalRows?: SupplementalOrderRow[];
     useClientTable?: boolean;
     cancelAllDisabled?: boolean;
     additionalFilterItems?: DataFilterItem[];
@@ -58,8 +73,8 @@ export const DesktopOrderList: FC<
   });
 
   const [page, setPage] = useState(1);
-  const mergedRows = useMemo(() => {
-    if (!hasSupplementalRows) return props.dataSource;
+  const mergedRows = useMemo<MergedOrderRow[]>(() => {
+    if (!hasSupplementalRows) return props.dataSource ?? [];
     return [
       ...(props.dataSource ?? []),
       ...props.supplementalRows!.map((row) => ({
@@ -75,31 +90,34 @@ export const DesktopOrderList: FC<
     [props.type, props.filterItems, props.supplementalRows?.length],
   );
 
-  const mergedColumns = useMemo(() => {
+  const mergedColumns = useMemo<Column<MergedOrderRow>[]>(() => {
     if (!hasSupplementalRows) return columns;
-    return columns.map((column) => ({
-      ...column,
-      render: (value: any, record: any, index: number, context: any) =>
-        record.__supplemental
-          ? record.__supplemental.renderCell(String(column.dataIndex))
-          : typeof column.render === "function"
-            ? column.render(value, record, index, context)
-            : value,
-      renderPlantText: (
-        value: any,
-        record: any,
-        index: number,
-        context: any,
-      ) =>
-        record.__supplemental
-          ? (record.__supplemental.plainText?.(String(column.dataIndex)) ?? "")
-          : column.renderPlantText
-            ? column.renderPlantText(value, record, index, context)
-            : String(value ?? ""),
-    }));
+    return columns.map((column) => {
+      const { render, renderPlantText } = column;
+      return {
+        ...column,
+        render: (value, record, index, context) =>
+          "__supplemental" in record
+            ? record.__supplemental.renderCell(String(column.dataIndex))
+            : typeof render === "function"
+              ? render(value, record, index, context)
+              : value,
+        renderPlantText: (value, record, index, context) =>
+          "__supplemental" in record
+            ? (record.__supplemental.plainText?.(String(column.dataIndex)) ??
+              "")
+            : renderPlantText
+              ? renderPlantText(value, record, index, context)
+              : String(value ?? ""),
+      };
+    });
   }, [hasSupplementalRows, columns]);
 
-  const TableComponent = props.useClientTable ? DataTable : AuthGuardDataTable;
+  // Both tables are generic; instantiating the union keeps columns/dataSource
+  // type-checked instead of escaping through `as any`.
+  const TableComponent = props.useClientTable
+    ? DataTable<MergedOrderRow>
+    : AuthGuardDataTable<MergedOrderRow>;
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -135,9 +153,9 @@ export const DesktopOrderList: FC<
           />
         )}
         <TableComponent
-          columns={mergedColumns as any}
+          columns={mergedColumns}
           loading={props.isLoading}
-          dataSource={mergedRows as any}
+          dataSource={mergedRows}
           bordered
           ignoreLoadingCheck={true}
           testIds={{

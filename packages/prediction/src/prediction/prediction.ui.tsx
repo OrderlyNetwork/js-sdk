@@ -21,7 +21,7 @@ import { PriceChart } from "./predictionChart.ui";
 import { PredictionDataPanel } from "./predictionDataPanels.ui";
 import {
   PredictionMarketPanel,
-  predictionMarketTabs,
+  usePredictionMarketTabs,
   type PredictionMarketRowProps,
 } from "./predictionMarketPanel.ui";
 import { usePredictionFavorites } from "./predictionMockData.script";
@@ -120,6 +120,7 @@ export const Prediction: React.FC<
   const { t } = useTranslation();
   const { formatRoundWindow } = usePredictionFormatters();
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
+  const predictionMarketTabs = usePredictionMarketTabs();
 
   useEffect(() => {
     if (!state.notification) return;
@@ -166,7 +167,7 @@ export const Prediction: React.FC<
       id="oui-prediction-page"
       className="oui-min-h-[calc(100vh-64px)] oui-bg-base-10 oui-p-3 oui-font-semibold lg:oui-p-4"
     >
-      <div className="oui-grid oui-gap-3 md:oui-grid-cols-2 md:oui-items-stretch xl:oui-min-h-[calc(100vh-96px)] xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] xl:oui-grid-rows-[auto_auto_minmax(350px,1fr)]">
+      <div className="oui-grid oui-gap-3 md:oui-grid-cols-2 md:oui-items-stretch xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] xl:oui-grid-rows-[auto_auto_auto]">
         <header className="oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-1 xl:oui-col-span-1 xl:oui-col-start-1 xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
           <DropDownMarketsWidget
             symbol="PERP_BTC_USDC"
@@ -289,7 +290,10 @@ export const Prediction: React.FC<
             />
           )}
         </div>
-        <div className="oui-min-w-0 md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-4 xl:oui-row-start-3">
+        {/* Height mirrors perp DataList bounds (min 350 / max 800), but without
+            a splitter we size from the viewport so the panel is taller than the
+            350px initial default most users drag up to on perp. */}
+        <div className="oui-h-[min(800px,max(420px,42vh))] oui-min-h-0 oui-min-w-0 oui-overflow-hidden md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-4 xl:oui-row-start-3">
           <PredictionDataPanel state={state} />
         </div>
       </div>

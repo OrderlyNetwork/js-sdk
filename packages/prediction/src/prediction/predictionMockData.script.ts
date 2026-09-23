@@ -1,5 +1,4 @@
 import { useLocalStorage } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
 
 // Prototype-only mock market data and persistence. Real market wiring
 // replaces this module without touching the UI components.
@@ -26,39 +25,4 @@ export const usePredictionFavorites = () => {
     );
   };
   return { isFavorite, toggleFavorite };
-};
-
-export type PredictionMockAssetRow = {
-  asset: string;
-  quantity: number;
-  indexPrice: number;
-  assetValue: number;
-  collateralRatio: number;
-  collateralContribution: number;
-};
-
-export const buildMockPortfolioAssets = (
-  balance: number,
-  btcPrice: number,
-): PredictionMockAssetRow[] => {
-  const btcQuantity = 0.0184;
-  const btcValue = new Decimal(btcQuantity).mul(btcPrice).toNumber();
-  return [
-    {
-      asset: "USDC",
-      quantity: balance,
-      indexPrice: 1,
-      assetValue: balance,
-      collateralRatio: 1,
-      collateralContribution: balance,
-    },
-    {
-      asset: "BTC",
-      quantity: btcQuantity,
-      indexPrice: btcPrice,
-      assetValue: btcValue,
-      collateralRatio: 0.95,
-      collateralContribution: new Decimal(btcValue).mul(0.95).toNumber(),
-    },
-  ];
 };

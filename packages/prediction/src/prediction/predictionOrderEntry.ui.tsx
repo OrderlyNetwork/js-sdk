@@ -19,9 +19,9 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { SlippageUI } from "@orderly.network/ui-order-entry";
-import { Decimal } from "@orderly.network/utils";
 import type { PredictionState } from "./prediction.script";
 import {
+  accumulateOrderBookLevels,
   formatContractPrice,
   usePredictionFormatters,
 } from "./predictionShared";
@@ -53,40 +53,13 @@ export const PredictionOrderBook: React.FC<
   };
 
   const asks = useMemo(
-    () =>
-      orderBook.asks.map((level, index, levels) => {
-        const accumulatedLevels = levels.slice(index);
-        const accumulated = accumulatedLevels
-          .reduce((total, item) => total.add(item.quantity), new Decimal(0))
-          .toNumber();
-        const accumulatedAmount = accumulatedLevels
-          .reduce(
-            (total, item) =>
-              total.add(new Decimal(item.quantity).mul(item.price)),
-            new Decimal(0),
-          )
-          .toNumber();
-        return [level.price, level.quantity, accumulated, accumulatedAmount];
-      }),
+    // Asks render best-last, so cumulative totals grow from the last level.
+    () => accumulateOrderBookLevels(orderBook.asks, "backward"),
     [orderBook.asks],
   );
 
   const bids = useMemo(
-    () =>
-      orderBook.bids.map((level, index, levels) => {
-        const accumulatedLevels = levels.slice(0, index + 1);
-        const accumulated = accumulatedLevels
-          .reduce((total, item) => total.add(item.quantity), new Decimal(0))
-          .toNumber();
-        const accumulatedAmount = accumulatedLevels
-          .reduce(
-            (total, item) =>
-              total.add(new Decimal(item.quantity).mul(item.price)),
-            new Decimal(0),
-          )
-          .toNumber();
-        return [level.price, level.quantity, accumulated, accumulatedAmount];
-      }),
+    () => accumulateOrderBookLevels(orderBook.bids, "forward"),
     [orderBook.bids],
   );
 
@@ -323,7 +296,7 @@ const PredictionOrderInput: React.FC<{
 
 const InfoRow: React.FC<{
   label: string;
-  value: string;
+  value: React.ReactNode;
   hint?: React.ReactNode;
   valueClassName?: string;
   dashed?: boolean;
@@ -648,7 +621,11 @@ export const TradePanel: React.FC<
           <InfoRow
             label={t("prediction.odds")}
             hint={t("prediction.oddsHint")}
-            value={`${state.odds.toFixed(2)}x`}
+            value={
+              <>
+                <Text.numeral dp={2}>{state.odds}</Text.numeral>x
+              </>
+            }
             dashed
           />
           <InfoRow

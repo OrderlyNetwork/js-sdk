@@ -31,21 +31,16 @@ import {
 } from "./predictionChart.script";
 import {
   formatCountdown,
+  formatCountdownWithHours,
+  ROUND_INTERVAL_SECONDS,
   toIntlLocale,
   usePredictionFormatters,
 } from "./predictionShared";
 
 type PredictionChartMode = "price" | "candles";
 
-const formatRoundTooltipCountdown = (seconds: number) => {
-  const safeSeconds = Math.max(Math.floor(seconds), 0);
-  const hours = Math.floor(safeSeconds / 3_600);
-  const minutes = Math.floor((safeSeconds % 3_600) / 60);
-  const remainingSeconds = safeSeconds % 60;
-  return [hours, minutes, remainingSeconds]
-    .map((value) => String(value).padStart(2, "0"))
-    .join(":");
-};
+/** Rounds listed in the "Past" menu (≈24h of history, excluding the live round). */
+const PAST_MENU_ROUNDS = 287;
 
 const LiveIndicator = () => (
   <span className="oui-prediction-liveIndicator oui-relative oui-inline-flex oui-size-3 oui-flex-none oui-items-center oui-justify-center">
@@ -92,8 +87,8 @@ const formatRoundLabel = (
   liveRound: number,
   chart: ChartFormatters,
 ) => {
-  const resolutionTime = new Date((round + 5 * 60) * 1_000);
-  const today = new Date((liveRound + 5 * 60) * 1_000);
+  const resolutionTime = new Date((round + ROUND_INTERVAL_SECONDS) * 1_000);
+  const today = new Date((liveRound + ROUND_INTERVAL_SECONDS) * 1_000);
   const isToday =
     resolutionTime.getFullYear() === today.getFullYear() &&
     resolutionTime.getMonth() === today.getMonth() &&
@@ -104,7 +99,9 @@ const formatRoundLabel = (
 };
 
 const formatRoundTime = (round: number, chart: ChartFormatters) =>
-  chart.roundTimeFormatter.format(new Date((round + 5 * 60) * 1_000));
+  chart.roundTimeFormatter.format(
+    new Date((round + ROUND_INTERVAL_SECONDS) * 1_000),
+  );
 
 const RoundNavigator: React.FC<{
   round: number;
@@ -128,23 +125,33 @@ const RoundNavigator: React.FC<{
   const [menu, setMenu] = useState<"past" | "more" | null>(null);
   const pastMenuRef = useRef<HTMLDivElement>(null);
 
-  const recentRounds = [round - 1_500, round - 1_200, round - 900, round - 600];
+  const recentRounds = [5, 4, 3, 2].map(
+    (multiplier) => round - multiplier * ROUND_INTERVAL_SECONDS,
+  );
   // Keep the live market centred by default. Once a historical or upcoming
   // market is selected, anchor the visible sequence to that selection so the
   // selected market is always the first round in chronological order.
   const visibleRounds =
     selectedRound === round
-      ? [round - 300, round, round + 300]
-      : [selectedRound, selectedRound + 300, selectedRound + 600];
+      ? [round - ROUND_INTERVAL_SECONDS, round, round + ROUND_INTERVAL_SECONDS]
+      : [
+          selectedRound,
+          selectedRound + ROUND_INTERVAL_SECONDS,
+          selectedRound + 2 * ROUND_INTERVAL_SECONDS,
+        ];
   const menuRounds = useMemo(() => {
     if (menu === "past") {
       return Array.from(
-        { length: 287 },
-        (_, index) => round - (288 - index) * 300,
+        { length: PAST_MENU_ROUNDS },
+        (_, index) =>
+          round - (PAST_MENU_ROUNDS + 1 - index) * ROUND_INTERVAL_SECONDS,
       );
     }
 
-    return Array.from({ length: 8 }, (_, index) => round + (index + 2) * 300);
+    return Array.from(
+      { length: 8 },
+      (_, index) => round + (index + 2) * ROUND_INTERVAL_SECONDS,
+    );
   }, [menu, round]);
 
   useEffect(() => {
@@ -176,7 +183,8 @@ const RoundNavigator: React.FC<{
   const renderRoundTooltip = (itemRound: number) => {
     const itemStatus = status(itemRound);
     const itemResult = result(itemRound);
-    const upcomingCountdown = countdown + Math.max(itemRound - round - 300, 0);
+    const upcomingCountdown =
+      countdown + Math.max(itemRound - round - ROUND_INTERVAL_SECONDS, 0);
     return (
       <div className="oui-w-64 oui-p-2">
         <div className="oui-flex oui-items-center oui-justify-between oui-text-sm oui-font-semibold oui-text-base-contrast">
@@ -211,7 +219,7 @@ const RoundNavigator: React.FC<{
             </span>
           ) : (
             <span className="oui-tabular-nums">
-              {formatRoundTooltipCountdown(
+              {formatCountdownWithHours(
                 itemStatus === "live" ? countdown : upcomingCountdown,
               )}
             </span>
@@ -226,13 +234,13 @@ const RoundNavigator: React.FC<{
           </span>
           <span className="oui-text-end oui-text-base-contrast">
             {chart.resolutionLocalFormatter.format(
-              new Date((itemRound + 300) * 1_000),
+              new Date((itemRound + ROUND_INTERVAL_SECONDS) * 1_000),
             )}
           </span>
           <span className="oui-text-base-contrast-54">UTC</span>
           <span className="oui-text-end oui-text-base-contrast">
             {chart.resolutionUtcFormatter.format(
-              new Date((itemRound + 300) * 1_000),
+              new Date((itemRound + ROUND_INTERVAL_SECONDS) * 1_000),
             )}
           </span>
         </div>
@@ -516,10 +524,9 @@ export const PriceChart: React.FC<{
     setHoveredPoint(null);
   }, [round]);
 
-  const selectRound = onSelectRound;
   useEffect(() => {
     if (selectedRound < round) {
-      const endTimestamp = (selectedRound + 300) * 1_000;
+      const endTimestamp = (selectedRound + ROUND_INTERVAL_SECONDS) * 1_000;
       const historicalCandles = createMockCandleHistory(
         currentPrice,
         endTimestamp,
@@ -540,7 +547,7 @@ export const PriceChart: React.FC<{
 
   const isPastRound = selectedRound < round;
   const isFutureRound = selectedRound > round;
-  const liveTimestamp = (round + 300 - countdown) * 1_000;
+  const liveTimestamp = (round + ROUND_INTERVAL_SECONDS - countdown) * 1_000;
   const alignedLiveCandles = useMemo(() => {
     // Keep candles on whole minutes so the axis labels don't flicker when
     // the round clock drifts a few hundred ms from the wall clock.
@@ -581,11 +588,12 @@ export const PriceChart: React.FC<{
     isPastRound && frozenChart ? frozenChart.openingPrice : openingPrice;
   const chartCurrentPrice =
     isPastRound && frozenChart ? frozenChart.currentPrice : currentPrice;
-  const futureCountdown = countdown + Math.max(selectedRound - round - 300, 0);
+  const futureCountdown =
+    countdown + Math.max(selectedRound - round - ROUND_INTERVAL_SECONDS, 0);
 
   const chart = useMemo(() => {
     const isCandleMode = chartMode === "candles";
-    const roundEnd = (selectedRound + 300) * 1_000;
+    const roundEnd = (selectedRound + ROUND_INTERVAL_SECONDS) * 1_000;
     // Candle charts pin the latest candle to the right edge (one candle of
     // padding) and label ticks backwards from it, so the axis only shifts
     // when a new candle opens.
@@ -911,7 +919,7 @@ export const PriceChart: React.FC<{
         ) : (
           <button
             type="button"
-            onClick={() => selectRound(round)}
+            onClick={() => onSelectRound(round)}
             className="oui-ms-auto oui-flex oui-flex-none oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-xs oui-text-base-contrast-80 hover:oui-bg-base-6 hover:oui-text-base-contrast"
           >
             <LiveIndicator />
@@ -1160,7 +1168,7 @@ export const PriceChart: React.FC<{
         countdown={countdown}
         roundPhase={roundPhase}
         selectedRound={selectedRound}
-        onRoundChange={selectRound}
+        onRoundChange={onSelectRound}
         chartMode={chartMode}
         onChartModeChange={(mode) => {
           setChartMode(mode);

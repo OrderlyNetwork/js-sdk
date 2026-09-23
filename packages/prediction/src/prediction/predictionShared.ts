@@ -1,5 +1,12 @@
 import { useMemo } from "react";
 import { i18n, useLocaleCode } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
+
+/**
+ * Round ids are the epoch seconds of the round start; consecutive rounds are
+ * spaced by this many seconds and each round ends one interval after its id.
+ */
+export const ROUND_INTERVAL_SECONDS = 300;
 
 /** Map Orderly locale codes to BCP-47 tags that Intl understands. */
 export function toIntlLocale(locale?: string): string | undefined {
@@ -42,10 +49,25 @@ export const contractFormatter = {
   format: (value: number) => formatContracts(value),
 };
 
+/** "MM:SS"; minutes may exceed 59 ("75:30") — for compact two-box countdowns. */
 export const formatCountdown = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+};
+
+/**
+ * "H:MM:SS" with zero-padded hours ("01:15:30") — for tooltips where
+ * hour-scale spans are possible.
+ */
+export const formatCountdownWithHours = (seconds: number) => {
+  const safeSeconds = Math.max(Math.floor(seconds), 0);
+  const hours = Math.floor(safeSeconds / 3_600);
+  const minutes = Math.floor((safeSeconds % 3_600) / 60);
+  const remainingSeconds = safeSeconds % 60;
+  return [hours, minutes, remainingSeconds]
+    .map((value) => String(value).padStart(2, "0"))
+    .join(":");
 };
 
 export const formatPercent = (value: number) => `${value.toFixed(1)}%`;
@@ -67,7 +89,7 @@ export function getLocalTimeZoneOffsetLabel(
 export function formatRoundWindow(round: number, locale?: string) {
   const intlLocale = toIntlLocale(locale);
   const start = new Date(round * 1_000);
-  const end = new Date(start.getTime() + 5 * 60 * 1_000);
+  const end = new Date(start.getTime() + ROUND_INTERVAL_SECONDS * 1_000);
   const startText = new Intl.DateTimeFormat(intlLocale, {
     month: "short",
     day: "numeric",
@@ -95,7 +117,7 @@ export function formatRoundWindow(round: number, locale?: string) {
 
 export function formatRoundBadge(round: number, locale?: string) {
   const intlLocale = toIntlLocale(locale);
-  const end = new Date((round + 5 * 60) * 1_000);
+  const end = new Date((round + ROUND_INTERVAL_SECONDS) * 1_000);
   const dateText = new Intl.DateTimeFormat(intlLocale, {
     month: "2-digit",
     day: "2-digit",
@@ -188,4 +210,34 @@ export function usePredictionFormatters() {
       chart: createPredictionChartFormatters(locale),
     };
   }, [localeCode]);
+}
+
+/**
+ * Depth rows of [price, quantity, cumulativeQuantity, cumulativeNotional].
+ * "forward" accumulates from the first level (bids); "backward" accumulates
+ * from the last level (asks).
+ */
+export function accumulateOrderBookLevels(
+  levels: Array<{ price: number; quantity: number }>,
+  direction: "forward" | "backward",
+): Array<[number, number, number, number]> {
+  const rows: Array<[number, number, number, number]> = levels.map(
+    ({ price, quantity }) => [price, quantity, 0, 0],
+  );
+  const indices =
+    direction === "forward"
+      ? rows.map((_, index) => index)
+      : rows.map((_, index) => rows.length - 1 - index);
+  let cumulativeQuantity = new Decimal(0);
+  let cumulativeNotional = new Decimal(0);
+  for (const index of indices) {
+    const [price, quantity] = rows[index];
+    cumulativeQuantity = cumulativeQuantity.add(quantity);
+    cumulativeNotional = cumulativeNotional.add(
+      new Decimal(quantity).mul(price),
+    );
+    rows[index][2] = cumulativeQuantity.toNumber();
+    rows[index][3] = cumulativeNotional.toNumber();
+  }
+  return rows;
 }

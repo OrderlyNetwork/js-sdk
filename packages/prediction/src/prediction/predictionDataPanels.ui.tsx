@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { usePositionStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { AssetsModule } from "@orderly.network/portfolio";
 import { useDataTap } from "@orderly.network/react-app";
 import {
   PerpsPositionsPanel,
@@ -14,6 +15,7 @@ import {
   cn,
   DataFilter,
   Divider,
+  Flex,
   Input,
   inputFormatter,
   PopoverContent,
@@ -25,7 +27,6 @@ import {
   TabPanel,
   Tabs,
   Text,
-  TokenIcon,
   usePagination,
 } from "@orderly.network/ui";
 import type { Column, DataFilterItem } from "@orderly.network/ui";
@@ -48,7 +49,6 @@ import {
   usePredictionFilters,
   predictionDateRange,
 } from "./predictionFilters.script";
-import { buildMockPortfolioAssets } from "./predictionMockData.script";
 import { formatCountdown, usePredictionFormatters } from "./predictionShared";
 
 const OutcomeBadge: React.FC<{ outcome: PredictionOutcome }> = ({
@@ -128,7 +128,26 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
         initialProduct="prediction"
       />
     ),
-    assets: <AssetsTable state={state} />,
+    assets: (
+      <Flex
+        width="100%"
+        height="100%"
+        className="oui-overflow-y-auto oui-hide-scrollbar oui-pt-3"
+      >
+        <AssetsModule.AssetsDataTableWidget
+          classNames={{
+            scrollRoot:
+              "oui-h-full oui-mb-6 oui-mt-0 oui-p-0 oui-pt-3 oui-h-[calc(100%_-_40px)]",
+            root: "oui-gap-4 oui-h-full",
+            desc: "oui-ms-1",
+          }}
+          dataTableClassNames={{
+            header: "oui-bg-base-9",
+            root: "oui-h-[calc(100%_-_28px)]",
+          }}
+        />
+      </Flex>
+    ),
     orderHistory: <SharedProductOrdersPanel state={state} mode="history" />,
   };
 
@@ -138,13 +157,13 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
       r={embedded ? undefined : "2xl"}
       p={embedded ? 0 : 2}
       className={cn(
-        "oui-prediction-dataPanel-container oui-h-full oui-overflow-hidden",
+        "oui-prediction-dataPanel-container oui-h-full oui-min-h-0 oui-overflow-hidden",
         "oui-relative",
         className,
       )}
     >
       <Tabs
-        className="oui-prediction-dataPanel-tabs oui-h-full"
+        className="oui-prediction-dataPanel-tabs oui-h-full oui-min-h-0"
         value={state.activeTab}
         onValueChange={(value) =>
           state.setActiveTab(value as PredictionDataTab)
@@ -154,9 +173,12 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
         classNames={{
           tabsList: embedded ? "!oui-border-none oui-pb-1" : undefined,
           trigger: "oui-group oui-dataPanel-tab-btn",
+          // Perp DataList parity: fixed content height, no outer overflow.
+          // `overflow-x-auto` would also force overflow-y to auto (CSS quirk)
+          // and produce the external scrollbar around filters + table.
           tabsContent: embedded
-            ? "oui-h-[calc(100%_-_28px)] oui-min-h-36 oui-overflow-x-auto"
-            : "oui-h-[calc(100%_-_32px)] oui-min-h-36 oui-overflow-x-auto",
+            ? "oui-h-[calc(100%_-_28px)] oui-min-h-0 oui-overflow-hidden"
+            : "oui-h-[calc(100%_-_32px)] oui-min-h-0 oui-overflow-hidden",
         }}
       >
         {tabs.map((tab) => (
@@ -233,7 +255,7 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
     );
 
   return (
-    <div className="oui-flex oui-h-full oui-min-h-0 oui-flex-col">
+    <div className="oui-flex oui-h-full oui-min-h-0 oui-flex-col oui-overflow-hidden">
       {beforeProductSelector}
       <div
         role="tablist"
@@ -263,6 +285,7 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
           );
         })}
       </div>
+      {/* Remaining height after the product switcher; tables scroll inside. */}
       <div className="oui-min-h-0 oui-flex-1 oui-overflow-hidden">
         {content}
       </div>
@@ -295,10 +318,10 @@ const tableColumn = (
 const PredictionDataTable: React.FC<{
   columns: PredictionTableColumn[];
   rows: PredictionTableRow[];
-  minWidth?: number;
   toolbar?: React.ReactNode;
-}> = ({ columns, rows, minWidth = 720, toolbar }) => {
-  const { pagination, setPage } = usePagination({ pageSize: 8 });
+}> = ({ columns, rows, toolbar }) => {
+  // Perp parity: 20 rows per page, matching the merged DesktopOrderList view.
+  const { pagination, setPage } = usePagination({ pageSize: 20 });
   const dataColumns = useMemo<Column<PredictionTableRow>[]>(
     () =>
       columns.map((column, index) => ({
@@ -336,20 +359,20 @@ const PredictionDataTable: React.FC<{
     setPage(1);
   }, [dataSource.length, setPage]);
 
-  const tablePagination =
-    dataSource.length > 8
-      ? {
-          ...pagination,
-          pageSize: 8,
-          count: dataSource.length,
-        }
-      : undefined;
+  // Always hand pagination to the table: the DataTable hides the bar itself
+  // when there are no rows (useShowPagination), so empty and auth states stay
+  // clean without a local row-count threshold.
+  const tablePagination = {
+    ...pagination,
+    pageSize: 20,
+    count: dataSource.length,
+  };
 
+  // Perp parity (DesktopOrderList): toolbar sits above the table; the table
+  // root is height-constrained so DataTable's internal `overflow-auto` scroll
+  // area owns both axes. Column widths drive horizontal scroll + fixed pins.
   return (
-    <div
-      className="oui-prediction-dataTable-container oui-h-full"
-      style={{ minWidth }}
-    >
+    <div className="oui-prediction-dataTable-container oui-flex oui-h-full oui-min-h-0 oui-w-full oui-flex-col">
       {toolbar}
       <AuthGuardDataTable
         className="oui-prediction-dataTable"
@@ -359,7 +382,10 @@ const PredictionDataTable: React.FC<{
         ignoreLoadingCheck
         classNames={{
           header: "oui-h-[38px]",
-          root: cn("oui-items-start", toolbar && "!oui-h-[calc(100%_-_49px)]"),
+          root: cn(
+            "oui-items-start",
+            toolbar ? "!oui-h-[calc(100%_-_49px)]" : "oui-h-full",
+          ),
         }}
         onRow={() => ({
           className: "oui-h-12 oui-text-base-contrast-80",
@@ -712,6 +738,7 @@ const PredictionFilters = ({
       toDate: predictionDateRange(1).to,
     });
   }
+  // DataFilter already applies py={3}; only keep horizontal inset here.
   return (
     <div className="oui-flex oui-flex-wrap oui-items-center oui-gap-3 oui-px-2">
       <DataFilter
@@ -763,7 +790,6 @@ const HoldingsTable = ({
   const filters = usePredictionFilters();
   return (
     <PredictionDataTable
-      minWidth={1320}
       toolbar={
         <PredictionFilters
           filters={filters}
@@ -997,10 +1023,6 @@ export const PredictionOrdersTable = ({
       : [...state.openOrders, ...state.history];
   return (
     <PredictionDataTable
-      minWidth={orderColumns.reduce(
-        (width, column) => width + Number(column.width ?? 130),
-        0,
-      )}
       columns={orderColumns.map((column) =>
         tableColumn(column.title, Number(column.width ?? 130), {
           fixed:
@@ -1147,37 +1169,29 @@ export const SharedProductOrdersPanel: React.FC<{
     }
   };
 
-  if (instrument === "prediction") {
-    return (
+  const content =
+    instrument === "prediction" ? (
       <PredictionOrdersTable
         state={state}
         mode={mode}
         leadingFilterItems={productFilterItems}
         onLeadingFilter={onProductFilter}
       />
-    );
-  }
-
-  if (instrument === "perps") {
-    return (
+    ) : (
       <AllProductOrdersTable
         state={state}
         mode={mode}
-        includePrediction={false}
+        includePrediction={instrument === "all"}
         productFilterItems={productFilterItems}
         onProductFilter={onProductFilter}
       />
     );
-  }
 
+  // Clip to the tab pane so only DataTable's internal scrollbar appears.
   return (
-    <AllProductOrdersTable
-      state={state}
-      mode={mode}
-      includePrediction
-      productFilterItems={productFilterItems}
-      onProductFilter={onProductFilter}
-    />
+    <div className="oui-flex oui-h-full oui-min-h-0 oui-flex-col oui-overflow-hidden">
+      {content}
+    </div>
   );
 };
 
@@ -1195,7 +1209,6 @@ const PredictionHistoryTable = ({
   const filters = usePredictionFilters(true);
   return (
     <PredictionDataTable
-      minWidth={1400}
       toolbar={
         <PredictionFilters
           filters={filters}
@@ -1266,86 +1279,4 @@ const PredictionHistoryTable = ({
   );
 };
 
-const AssetsTable: React.FC<{ state: PredictionState }> = ({ state }) => {
-  const { t } = useTranslation();
-  const assets = buildMockPortfolioAssets(state.balance, state.currentPrice);
-  return (
-    <PredictionDataTable
-      minWidth={1130}
-      columns={[
-        tableColumn(t("portfolio.overview.column.token"), 150, {
-          fixed: "start",
-          sortable: true,
-        }),
-        tableColumn(t("portfolio.overview.column.qty"), 140, {
-          sortable: true,
-        }),
-        tableColumn(t("portfolio.overview.column.indexPrice"), 140, {
-          sortable: true,
-        }),
-        tableColumn(t("portfolio.overview.column.assetValue"), 140, {
-          sortable: true,
-        }),
-        tableColumn(t("portfolio.overview.column.collateralRatio"), 140, {
-          sortable: true,
-        }),
-        tableColumn(t("transfer.deposit.collateralContribution"), 140, {
-          sortable: true,
-        }),
-        tableColumn("", 180, {
-          align: "right",
-          fixed: "end",
-          type: "action",
-        }),
-      ]}
-      rows={assets.map((item) => ({
-        id: item.asset,
-        sortValues: [
-          item.asset,
-          item.quantity,
-          item.indexPrice,
-          item.assetValue,
-          item.collateralRatio,
-          item.collateralContribution,
-          undefined,
-        ],
-        cells: [
-          <span className="oui-flex oui-items-center oui-gap-2 oui-text-base-contrast">
-            <TokenIcon name={item.asset} size="sm" />
-            {item.asset}
-          </span>,
-          <TableNumber value={item.quantity} />,
-          <TableNumber value={item.indexPrice} dp={6} prefix="$" />,
-          <TableNumber value={item.assetValue} dp={6} prefix="$" />,
-          <TableNumber
-            value={new Decimal(item.collateralRatio).mul(100).toNumber()}
-            dp={2}
-            suffix="%"
-          />,
-          <TableNumber value={item.collateralContribution} dp={6} prefix="$" />,
-          <span className="oui-flex oui-items-center oui-justify-end oui-gap-3">
-            {item.asset !== "USDC" && (
-              <Button
-                size="sm"
-                variant="outlined"
-                color="secondary"
-                onClick={() => state.triggerMockAssetAction("convert")}
-              >
-                {t("transfer.convert")}
-              </Button>
-            )}
-            <Button
-              size="sm"
-              variant="outlined"
-              color="secondary"
-              onClick={() => state.triggerMockAssetAction("transfer")}
-            >
-              {t("common.transfer")}
-            </Button>
-          </span>,
-        ],
-      }))}
-    />
-  );
-};
 /* eslint-enable react/jsx-key */

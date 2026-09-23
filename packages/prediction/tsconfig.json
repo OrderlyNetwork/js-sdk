@@ -3,6 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@orderly.network/i18n": ["../i18n/src"],
+      "@orderly.network/portfolio": ["../portfolio/src"],
       "@orderly.network/ui": ["../ui/src"],
       "@orderly.network/utils": ["../utils/src"]
     }

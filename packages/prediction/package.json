@@ -27,6 +27,7 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets": "workspace:*",
+    "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/trading": "workspace:*",
     "@orderly.network/types": "workspace:*",

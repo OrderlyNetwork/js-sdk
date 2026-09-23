@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { PredictionOutcome } from "./prediction.script";
+import { ROUND_INTERVAL_SECONDS } from "./predictionShared";
 
 // Mock candle-simulation engine for the prototype chart. Real chart data
 // wiring replaces this module without touching the chart UI.
@@ -16,8 +17,6 @@ export const CANDLE_INTERVAL_MS = 60_000;
 export const CANDLE_COUNT = 81;
 export const CANDLE_WINDOW_MS = 80 * 60_000;
 export const CANDLE_TICK_INTERVAL_MS = 7 * 60_000;
-
-export const ROUND_INTERVAL_SECONDS = 300;
 
 // Rounds settle deterministically by id parity in the prototype, so ended
 // rounds keep a stable result without a settlement feed.

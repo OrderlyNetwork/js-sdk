@@ -5,6 +5,7 @@ import {
   planPredictionExecution,
   type PredictionOrderPolicy,
 } from "./predictionExecution";
+import { ROUND_INTERVAL_SECONDS } from "./predictionShared";
 
 export type PredictionOutcome = "up" | "down";
 export type PredictionOrderSide = "buy" | "sell";
@@ -98,7 +99,6 @@ export type PredictionOrderBookLevel = {
   quantity: number;
 };
 
-const ROUND_SECONDS = 5 * 60;
 const CHART_WINDOW_MS = 65 * 1_000;
 const INITIAL_BALANCE = 1_000;
 const INITIAL_BTC_PRICE = 64_280.4;
@@ -180,7 +180,7 @@ export const usePredictionScript = (
   const [round, setRound] = useState(INITIAL_ROUND);
   const isRegionRestricted = regionRestricted;
   const [selectedRound, setSelectedRound] = useState(INITIAL_ROUND);
-  const [countdown, setCountdown] = useState(ROUND_SECONDS - 43);
+  const [countdown, setCountdown] = useState(ROUND_INTERVAL_SECONDS - 43);
   const [roundPhase, setRoundPhase] = useState<PredictionRoundPhase>("trading");
   const [openingPrice, setOpeningPrice] = useState(INITIAL_BTC_PRICE);
   const [currentPrice, setCurrentPrice] = useState(INITIAL_BTC_PRICE + 76.2);
@@ -237,7 +237,7 @@ export const usePredictionScript = (
       type: "market",
       price: 0.455,
       quantity: 20,
-      round: INITIAL_ROUND - ROUND_SECONDS,
+      round: INITIAL_ROUND - ROUND_INTERVAL_SECONDS,
       status: "filled",
       timestamp: Date.now() - 8 * 60 * 1_000,
     },
@@ -248,7 +248,7 @@ export const usePredictionScript = (
       type: "limit",
       price: 0.42,
       quantity: 10,
-      round: INITIAL_ROUND - ROUND_SECONDS,
+      round: INITIAL_ROUND - ROUND_INTERVAL_SECONDS,
       status: "cancelled",
       timestamp: Date.now() - 14 * 60 * 1_000,
     },
@@ -256,7 +256,7 @@ export const usePredictionScript = (
   const [settlements, setSettlements] = useState<PredictionSettlement[]>(() => [
     {
       id: -5,
-      round: INITIAL_ROUND - ROUND_SECONDS,
+      round: INITIAL_ROUND - ROUND_INTERVAL_SECONDS,
       outcome: "up",
       quantity: 18,
       averagePrice: 0.46,
@@ -361,18 +361,9 @@ export const usePredictionScript = (
     [notify],
   );
 
-  const triggerMockAssetAction = useCallback(
-    (action: "convert" | "transfer") => {
-      notify(
-        `prediction.message.asset${action === "convert" ? "Convert" : "Transfer"}`,
-      );
-    },
-    [notify],
-  );
-
   const upChance = useMemo(() => {
     const relativeMove = (currentPrice - openingPrice) / openingPrice;
-    const timePressure = 1 + (1 - countdown / ROUND_SECONDS) * 0.35;
+    const timePressure = 1 + (1 - countdown / ROUND_INTERVAL_SECONDS) * 0.35;
     return clamp(50 + relativeMove * 4_000 * timePressure, 8, 92);
   }, [countdown, currentPrice, openingPrice]);
 
@@ -537,8 +528,8 @@ export const usePredictionScript = (
 
     if (countdown <= 0) {
       if (selectedRound > round) {
-        setRound((previousRound) => previousRound + ROUND_SECONDS);
-        setCountdown(ROUND_SECONDS);
+        setRound((previousRound) => previousRound + ROUND_INTERVAL_SECONDS);
+        setCountdown(ROUND_INTERVAL_SECONDS);
         return;
       }
       setRoundPhase("closed");
@@ -556,9 +547,9 @@ export const usePredictionScript = (
 
   const goToLiveRound = useCallback(() => {
     setOpeningPrice(currentPrice);
-    setRound((previous) => previous + ROUND_SECONDS);
-    setSelectedRound(round + ROUND_SECONDS);
-    setCountdown(ROUND_SECONDS);
+    setRound((previous) => previous + ROUND_INTERVAL_SECONDS);
+    setSelectedRound(round + ROUND_INTERVAL_SECONDS);
+    setCountdown(ROUND_INTERVAL_SECONDS);
     setRoundPhase("trading");
     setPriceHistory(createInitialHistory(currentPrice));
     setNotification(undefined);
@@ -568,7 +559,7 @@ export const usePredictionScript = (
     setSelectedRound(nextRound);
     setRoundPhase(nextRound < round ? "resolvedUp" : "trading");
     setNotification(undefined);
-    setCountdown(ROUND_SECONDS - 43);
+    setCountdown(ROUND_INTERVAL_SECONDS - 43);
   };
 
   const selectOutcome = useCallback(
@@ -654,9 +645,9 @@ export const usePredictionScript = (
       return [];
     });
     setOpeningPrice(currentPrice);
-    setRound((previous) => previous + ROUND_SECONDS);
-    setSelectedRound(round + ROUND_SECONDS);
-    setCountdown(ROUND_SECONDS);
+    setRound((previous) => previous + ROUND_INTERVAL_SECONDS);
+    setSelectedRound(round + ROUND_INTERVAL_SECONDS);
+    setCountdown(ROUND_INTERVAL_SECONDS);
     setRoundPhase("trading");
     setActiveTab("predictionHistory");
     notify("prediction.message.settled");
@@ -1035,7 +1026,6 @@ export const usePredictionScript = (
     mockPerpPositions,
     closeMockPerpPosition,
     reverseMockPerpPosition,
-    triggerMockAssetAction,
     mockTransactions,
     isRegionRestricted,
     activeTab,
