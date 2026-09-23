@@ -3,4 +3,7 @@ export { useOrdersScript } from "./components/orders.script";
 export type { OrdersBuilderState } from "./components/orders.script";
 
 export * from "./components/orderList";
-export { useOrderColumn } from "./components/orderList/desktop/useColumn";
+export {
+  useOrderColumn,
+  adaptColumnsForSupplementalRows,
+} from "./components/orderList/desktop/useColumn";

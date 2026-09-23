@@ -55,7 +55,6 @@ export const useOrderColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
   symbolsInfo?: SymbolsInfo;
-  includePrediction?: boolean;
 }) => {
   const {
     _type,
@@ -268,18 +267,23 @@ export const useOrderColumn = (props: {
     }
   }, [_type, pnlNotionalDecimalPrecision, sharePnLConfig, t]);
 
-  return useMemo(() => {
-    if (!props.includePrediction) return columns as Column[];
-    const shared = [...(columns ?? [])];
-    if (!shared.some((column) => column.dataIndex === "side")) {
-      shared.splice(1, 0, side({ width: 130 }));
-    }
-    return shared.map((column) =>
-      column.dataIndex === "symbol" ? { ...column, width: 250 } : column,
-    ) as Column[];
-  }, [columns, props.includePrediction]);
+  return columns as Column[];
+};
 
-  // return columns();
+/**
+ * Column layout companion to `supplementalRows`: ensures a side column exists
+ * and widens the symbol column so two-line supplemental symbols fit.
+ */
+export const adaptColumnsForSupplementalRows = (
+  columns: Column[],
+): Column[] => {
+  const shared = [...columns];
+  if (!shared.some((column) => column.dataIndex === "side")) {
+    shared.splice(1, 0, side({ width: 130 }));
+  }
+  return shared.map((column) =>
+    column.dataIndex === "symbol" ? { ...column, width: 250 } : column,
+  );
 };
 
 function instrument(option?: {

@@ -19,7 +19,10 @@ import { formatSymbol } from "@orderly.network/utils";
 import { grayCell } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { SymbolProvider } from "../provider/symbolProvider";
-import { useOrderColumn } from "./desktop/useColumn";
+import {
+  adaptColumnsForSupplementalRows,
+  useOrderColumn,
+} from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 import { OrdersBuilderState } from "./orderList.script";
 import { OrderListProvider } from "./orderListProvider";
@@ -60,17 +63,25 @@ export const DesktopOrderList: FC<
   }
 > = (props) => {
   // An empty supplemental array must not switch the table into client-side
-  // prediction mode; only non-empty supplemental rows do.
+  // merged mode; only non-empty supplemental rows do.
   const hasSupplementalRows = (props.supplementalRows?.length ?? 0) > 0;
   const { sharePnLConfig, ...rest } = props;
-  const columns = useOrderColumn({
+  const baseColumns = useOrderColumn({
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
     pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbolsInfo: props.symbolsInfo,
-    includePrediction: hasSupplementalRows,
   });
+  // Merged supplemental rows need their companion column layout; plain perp
+  // tables keep the stock columns.
+  const columns = useMemo(
+    () =>
+      hasSupplementalRows
+        ? adaptColumnsForSupplementalRows(baseColumns)
+        : baseColumns,
+    [baseColumns, hasSupplementalRows],
+  );
 
   const [page, setPage] = useState(1);
   const mergedRows = useMemo<MergedOrderRow[]>(() => {
