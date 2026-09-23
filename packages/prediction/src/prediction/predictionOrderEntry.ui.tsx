@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderBook as PerpOrderBook } from "@orderly.network/trading";
+import { OrderBookLadder } from "@orderly.network/trading";
 import {
   AddCircleIcon,
   Button,
@@ -11,7 +11,6 @@ import {
   inputFormatter,
   modal,
   Select,
-  Slider,
   Spinner,
   Text,
   Tips,
@@ -19,12 +18,22 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { SlippageUI } from "@orderly.network/ui-order-entry";
+import { PercentageControls } from "./orderEntry/form";
 import type { PredictionState } from "./prediction.script";
 import {
   accumulateOrderBookLevels,
   formatContractPrice,
   usePredictionFormatters,
 } from "./predictionShared";
+
+// Prediction books quote in USDC with two-decimal, 0.01-tick prices.
+const predictionSymbolInfo = (base: string) => ({
+  base_dp: 2,
+  quote_dp: 2,
+  base_tick: 0.01,
+  base,
+  quote: "USDC",
+});
 
 export const PredictionOrderBook: React.FC<
   Pick<
@@ -82,11 +91,12 @@ export const PredictionOrderBook: React.FC<
   const displayedAsks = isPastRound ? emptyLevels : asks;
   const displayedBids = isPastRound ? emptyLevels : bids;
   const displayedPrice = isPastRound ? Number.NaN : selectedPrice;
+  const base = selectedOutcome.toUpperCase();
 
   return (
     <section
       className={cn(
-        "oui-prediction-orderBook oui-flex oui-h-full oui-min-h-[300px] oui-flex-col oui-overflow-hidden oui-rounded-xl oui-bg-base-9 [&_.oui-orderBook-asks]:oui-h-full [&_.oui-orderBook-asks]:oui-justify-end [&_.oui-orderBook-markPrice]:oui-hidden xl:oui-min-h-[420px]",
+        "oui-prediction-orderBook oui-flex oui-h-full oui-min-h-[300px] oui-flex-col oui-overflow-hidden oui-rounded-xl oui-bg-base-9 xl:oui-min-h-[420px]",
         !isRoundTradable && "oui-pointer-events-none",
       )}
     >
@@ -96,8 +106,7 @@ export const PredictionOrderBook: React.FC<
         </span>
       </div>
       <div className="oui-min-h-0 oui-flex-1 oui-pb-3">
-        <PerpOrderBook
-          level={7}
+        <OrderBookLadder
           asks={displayedAsks}
           bids={displayedBids}
           markPrice={displayedPrice}
@@ -107,27 +116,12 @@ export const PredictionOrderBook: React.FC<
               : [Math.max(selectedPrice - 0.01, 0), selectedPrice]
           }
           depths={["0.01"]}
-          selDepth="0.01"
-          symbol={`PREDICTION_BTC_${selectedOutcome.toUpperCase()}`}
-          base={selectedOutcome.toUpperCase()}
+          base={base}
           quote="USDC"
-          isLoading={false}
+          symbolInfo={predictionSymbolInfo(base)}
           onItemClick={(item) => selectPrice(item[0])}
+          showMarkPrice={false}
           cellHeight={20}
-          onDepthChange={() => undefined}
-          pendingOrders={[]}
-          symbolInfo={{
-            base_dp: 2,
-            quote_dp: 2,
-            base_tick: 0.01,
-            base: selectedOutcome.toUpperCase(),
-            quote: "USDC",
-          }}
-          isMobile={false}
-          showBuySellRatio={false}
-          setShowBuySellRatio={() => undefined}
-          buySellRatio={null}
-          showBuySellRatioSettings={false}
         />
       </div>
     </section>
@@ -577,44 +571,29 @@ export const TradePanel: React.FC<
         </div>
 
         <div className="oui-mt-2 xl:oui-mt-3">
-          <Slider
-            value={[canAdjustAmount ? state.orderPercentage : 0]}
-            min={0}
-            max={100}
-            step={1}
-            markCount={4}
-            showTip
-            color={sliderColor}
+          <PercentageControls
+            percentage={canAdjustAmount ? state.orderPercentage : 0}
+            onPercentageChange={state.setOrderPercentage}
+            color={sliderColor ?? "primary"}
             disabled={!canAdjustAmount}
-            tipFormatter={(value) => `${Math.round(value)}%`}
-            onValueChange={(value) => state.setOrderPercentage(value[0])}
+            trailing={
+              <button
+                type="button"
+                disabled={!canAdjustAmount}
+                onClick={() => state.setOrderPercentage(100)}
+                className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
+              >
+                {t(
+                  state.orderSide === "buy"
+                    ? "orderEntry.maxBuy"
+                    : "orderEntry.maxSell",
+                )}
+                <Text size="2xs" color={sliderColor}>
+                  {maxDisplayValue}
+                </Text>
+              </button>
+            }
           />
-          <div className="oui-flex oui-items-center oui-justify-between oui-pt-1 xl:oui-pt-2">
-            <Text.numeral
-              size="2xs"
-              color={sliderColor}
-              dp={2}
-              padding={false}
-              suffix="%"
-            >
-              {canAdjustAmount ? state.orderPercentage : 0}
-            </Text.numeral>
-            <button
-              type="button"
-              disabled={!canAdjustAmount}
-              onClick={() => state.setOrderPercentage(100)}
-              className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
-            >
-              {t(
-                state.orderSide === "buy"
-                  ? "orderEntry.maxBuy"
-                  : "orderEntry.maxSell",
-              )}
-              <Text size="2xs" color={sliderColor}>
-                {maxDisplayValue}
-              </Text>
-            </button>
-          </div>
         </div>
 
         <div className="oui-mt-4 oui-space-y-2 oui-text-xs">

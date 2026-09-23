@@ -16,9 +16,9 @@ import {
   TokenIcon,
   useMediaQuery,
 } from "@orderly.network/ui";
+import { PredictionDataPanel } from "./dataPanels";
 import type { PredictionState } from "./prediction.script";
 import { PriceChart } from "./predictionChart.ui";
-import { PredictionDataPanel } from "./predictionDataPanels.ui";
 import {
   PredictionMarketPanel,
   usePredictionMarketTabs,
@@ -40,8 +40,8 @@ export {
   PredictionOrdersTable,
   SharedProductDataPanel,
   SharedProductOrdersPanel,
-} from "./predictionDataPanels.ui";
-export type { PredictionDataPanelProps } from "./predictionDataPanels.ui";
+} from "./dataPanels";
+export type { PredictionDataPanelProps } from "./dataPanels";
 
 const MobileMarketPanel: React.FC<PredictionState> = (state) => {
   const { t } = useTranslation();
