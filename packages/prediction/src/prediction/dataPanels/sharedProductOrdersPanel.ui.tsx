@@ -3,9 +3,12 @@ import { useTranslation } from "@orderly.network/i18n";
 import type { DataFilterItem } from "@orderly.network/ui";
 import { DesktopOrderList } from "@orderly.network/ui-orders";
 import type { PredictionState } from "../prediction.script";
+import { usePredictionFilters } from "../predictionFilters.script";
 import { PredictionOrderCell } from "./orders/predictionOrderCell.ui";
 import { PredictionOrdersTable } from "./orders/predictionOrdersTable.widget";
 import {
+  toPredictionSide,
+  toPredictionStatus,
   useAllProductOrdersTableScript,
   useSharedProductOrdersPanelScript,
   type ProductOrderMode,
@@ -28,25 +31,54 @@ const AllProductOrdersTable: React.FC<{
     state,
     mode,
   });
+  const filters = usePredictionFilters(mode === "history");
+  const perpsOnFilter = orderListState.onFilter as (filter: {
+    name: string;
+    value: unknown;
+  }) => void;
+  const onSharedFilter = (filter: { name: string; value: unknown }) => {
+    perpsOnFilter(filter);
+    if (filter.name === "side") {
+      filters.onFilter({
+        name: "side",
+        value: toPredictionSide(filter.value),
+      });
+    } else if (filter.name === "status") {
+      filters.onFilter({
+        name: "status",
+        value: toPredictionStatus(filter.value),
+      });
+    } else if (filter.name === "dateRange") {
+      filters.onFilter(filter);
+    }
+  };
 
   return (
     <DesktopOrderList
       {...(orderListState as React.ComponentProps<typeof DesktopOrderList>)}
+      onFilter={onSharedFilter}
       additionalFilterItems={productFilterItems}
       onAdditionalFilter={onProductFilter}
       supplementalRows={
         includePrediction
-          ? predictionOrders.map((order) => ({
-              id: `prediction-${order.id}`,
-              timestamp: order.timestamp,
-              renderCell: (field) => (
-                <PredictionOrderCell
-                  state={state}
-                  order={order}
-                  field={field}
-                />
-              ),
-            }))
+          ? predictionOrders
+              .filter((order) =>
+                filters.matches({
+                  ...order,
+                  status: "status" in order ? String(order.status) : "pending",
+                }),
+              )
+              .map((order) => ({
+                id: `prediction-${order.id}`,
+                timestamp: order.timestamp,
+                renderCell: (field) => (
+                  <PredictionOrderCell
+                    state={state}
+                    order={order}
+                    field={field}
+                  />
+                ),
+              }))
           : undefined
       }
     />

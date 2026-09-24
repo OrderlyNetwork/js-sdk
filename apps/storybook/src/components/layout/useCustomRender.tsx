@@ -18,11 +18,13 @@ export function useCustomRender() {
               {components.leftNav}
               {components.title}
             </Flex>
-            <Flex gapX={2}>
+            <Flex gapX={1}>
               {components.languageSwitcher}
               {components.scanQRCode}
               {components.linkDevice}
-              <ThemeSwitcher />
+              <span className="max-[359px]:oui-hidden">
+                <ThemeSwitcher />
+              </span>
               {components.chainMenu}
               {components.walletConnect}
             </Flex>

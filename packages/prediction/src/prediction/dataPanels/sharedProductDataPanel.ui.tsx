@@ -2,10 +2,18 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { PerpsPositionsPanel } from "@orderly.network/trading";
 import { cn } from "@orderly.network/ui";
-import { PositionHistoryWidget } from "@orderly.network/ui-positions";
+import {
+  MobilePositionHistoryWidget,
+  MobilePositionsWidget,
+  PositionHistoryWidget,
+} from "@orderly.network/ui-positions";
 import type { PredictionState } from "../prediction.script";
 import { PredictionHistoryTable } from "./history/predictionHistoryTable.widget";
 import { HoldingsTable } from "./holdings/holdingsTable.widget";
+import {
+  MobilePredictionHistory,
+  MobilePredictionPositions,
+} from "./predictionMobileCards.ui";
 import {
   useSharedProductDataPanelScript,
   type ProductDataType,
@@ -23,6 +31,7 @@ export type SharedProductDataPanelProps = {
   perpsPositionsContent?: React.ReactNode;
   perpsPositionHistoryContent?: React.ReactNode;
   onProductChange?: (product: ProductType) => void;
+  mobile?: boolean;
 };
 
 /**
@@ -38,6 +47,7 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   perpsPositionsContent,
   perpsPositionHistoryContent,
   onProductChange,
+  mobile = false,
 }) => {
   const { t } = useTranslation();
   const {
@@ -54,18 +64,39 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   const content =
     product === "prediction" ? (
       type === "positions" ? (
-        <HoldingsTable state={state} />
+        mobile ? (
+          <MobilePredictionPositions state={state} />
+        ) : (
+          <HoldingsTable state={state} />
+        )
+      ) : mobile ? (
+        <MobilePredictionHistory state={state} />
       ) : (
         <PredictionHistoryTable state={state} />
       )
     ) : type === "positions" ? (
-      (perpsPositionsContent ?? <PerpsPositionsPanel symbol={perpsSymbol} />)
+      (perpsPositionsContent ??
+      (mobile ? (
+        <MobilePositionsWidget symbol={perpsSymbol} />
+      ) : (
+        <PerpsPositionsPanel symbol={perpsSymbol} />
+      )))
     ) : (
-      (perpsPositionHistoryContent ?? <PositionHistoryWidget />)
+      (perpsPositionHistoryContent ??
+      (mobile ? (
+        <MobilePositionHistoryWidget symbol={perpsSymbol} />
+      ) : (
+        <PositionHistoryWidget />
+      )))
     );
 
   return (
-    <div className="oui-flex oui-h-full oui-min-h-0 oui-flex-col oui-overflow-hidden">
+    <div
+      className={cn(
+        "oui-flex oui-min-h-0 oui-flex-col",
+        mobile ? "oui-w-full" : "oui-h-full oui-overflow-hidden",
+      )}
+    >
       {beforeProductSelector}
       <div
         role="tablist"
@@ -86,14 +117,20 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
                 "oui-group !oui-rounded-md oui-inline-flex oui-h-7 oui-items-center oui-justify-center oui-gap-x-1 oui-bg-base-7 oui-px-3 oui-text-2xs oui-font-medium oui-text-base-contrast-36 oui-transition-all hover:oui-bg-base-5 hover:oui-text-base-contrast-54 data-[state=active]:oui-bg-base-5 data-[state=active]:oui-text-base-contrast",
               )}
             >
-              {item === "perps" ? t("common.perps") : t("prediction.title")} (
-              {item === "perps" ? perpsPositionCount : predictionPositionCount})
+              {item === "perps" ? t("common.perps") : t("prediction.title")}
+              {type === "positions" &&
+                ` (${item === "perps" ? perpsPositionCount : predictionPositionCount})`}
             </button>
           );
         })}
       </div>
       {/* Remaining height after the product switcher; tables scroll inside. */}
-      <div className="oui-min-h-0 oui-flex-1 oui-overflow-hidden">
+      <div
+        className={cn(
+          "oui-min-h-0 oui-flex-1",
+          !mobile && "oui-overflow-hidden",
+        )}
+      >
         {content}
       </div>
     </div>

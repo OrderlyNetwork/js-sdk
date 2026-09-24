@@ -13,12 +13,18 @@ export const PredictionFilters = ({
   trailing,
   leadingItems = [],
   onLeadingFilter,
+  onFilter,
+  showOutcome = true,
+  statusOptions,
 }: {
   filters: ReturnType<typeof usePredictionFilters>;
   mode: "holdings" | "pending" | "filled" | "history" | "settlements";
   trailing?: React.ReactNode;
   leadingItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
+  onFilter?: (filter: { name: string; value: unknown }) => void;
+  showOutcome?: boolean;
+  statusOptions?: { label: string; value: string }[];
 }) => {
   const { t } = useTranslation();
   const items: DataFilterItem[] = [];
@@ -33,22 +39,23 @@ export const PredictionFilters = ({
         { label: t("common.sell"), value: "sell" },
       ],
     });
-  items.push({
-    type: "select",
-    name: "outcome",
-    value: filters.outcome,
-    options: [
-      { label: t("prediction.filter.allOutcomes"), value: "all" },
-      { label: t("prediction.up"), value: "up" },
-      { label: t("prediction.down"), value: "down" },
-    ],
-  });
+  if (showOutcome)
+    items.push({
+      type: "select",
+      name: "outcome",
+      value: filters.outcome,
+      options: [
+        { label: t("prediction.filter.allOutcomes"), value: "all" },
+        { label: t("prediction.up"), value: "up" },
+        { label: t("prediction.down"), value: "down" },
+      ],
+    });
   if (mode === "history") {
     items.push({
       type: "select",
       name: "status",
       value: filters.status,
-      options: [
+      options: statusOptions ?? [
         { label: t("common.status.all"), value: "all" },
         { label: t("orders.status.pending"), value: "pending" },
         { label: t("prediction.status.filled"), value: "filled" },
@@ -77,6 +84,7 @@ export const PredictionFilters = ({
             return;
           }
           filters.onFilter(filter);
+          onFilter?.(filter);
         }}
       />
       {mode === "settlements" &&

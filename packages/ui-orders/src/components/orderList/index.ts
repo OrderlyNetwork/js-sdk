@@ -1,5 +1,8 @@
 export { DesktopOrderList, MobileOrderList } from "./orderList.ui";
-export type { SupplementalOrderRow } from "./orderList.ui";
+export type {
+  SupplementalOrderRow,
+  SupplementalMobileOrderRow,
+} from "./orderList.ui";
 export {
   DesktopOrderListWidget,
   MobileOrderListWidget,

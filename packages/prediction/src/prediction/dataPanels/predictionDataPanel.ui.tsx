@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetsModule } from "@orderly.network/portfolio";
 import { PerpsPositionsSettings } from "@orderly.network/trading";
-import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
 import type { PredictionDataTab, PredictionState } from "../prediction.script";
 import type { ProductType } from "./sharedProductDataPanel.script";
 import { SharedProductDataPanel } from "./sharedProductDataPanel.ui";
+import { MobileSharedProductOrdersPanel } from "./sharedProductOrdersPanel.mobile.ui";
 import { SharedProductOrdersPanel } from "./sharedProductOrdersPanel.ui";
 
 export type PredictionDataPanelProps = {
@@ -15,16 +16,103 @@ export type PredictionDataPanelProps = {
   embedded?: boolean;
 };
 
-export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
+const defaultTabs: PredictionDataTab[] = [
+  "predictions",
+  "openOrders",
+  "filled",
+  "predictionHistory",
+  "orderHistory",
+  "assets",
+];
+
+export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = (
+  props,
+) => {
+  const { isMobile } = useScreen();
+  return isMobile ? (
+    <MobilePredictionDataPanel {...props} />
+  ) : (
+    <DesktopPredictionDataPanel {...props} />
+  );
+};
+
+const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   state,
-  tabs = [
-    "predictions",
-    "openOrders",
-    "filled",
-    "predictionHistory",
-    "orderHistory",
-    "assets",
-  ],
+  tabs = defaultTabs,
+  className,
+  embedded = false,
+}) => {
+  const { t } = useTranslation();
+  const tabCount: Partial<Record<PredictionDataTab, number>> = {
+    openOrders: state.openOrders.length,
+    predictions: state.positions.length,
+  };
+  const content: Record<PredictionDataTab, React.ReactNode> = {
+    predictions: (
+      <SharedProductDataPanel
+        state={state}
+        type="positions"
+        initialProduct="prediction"
+        mobile
+      />
+    ),
+    openOrders: <MobileSharedProductOrdersPanel state={state} mode="pending" />,
+    filled: <MobileSharedProductOrdersPanel state={state} mode="filled" />,
+    predictionHistory: (
+      <SharedProductDataPanel
+        state={state}
+        type="positionHistory"
+        initialProduct="prediction"
+        mobile
+      />
+    ),
+    orderHistory: (
+      <MobileSharedProductOrdersPanel state={state} mode="history" />
+    ),
+    assets: <AssetsModule.AssetsWidget />,
+  };
+  return (
+    <div
+      className={cn(
+        "oui-prediction-dataPanel-mobile oui-w-full oui-rounded-xl oui-bg-base-9",
+        className,
+      )}
+    >
+      <Tabs
+        value={state.activeTab}
+        onValueChange={(value) =>
+          state.setActiveTab(value as PredictionDataTab)
+        }
+        size="lg"
+        classNames={{
+          tabsList: cn(
+            "oui-hide-scrollbar oui-overflow-x-auto oui-rounded-t-xl oui-bg-base-9 oui-p-2",
+            embedded && "!oui-border-none",
+          ),
+        }}
+      >
+        {tabs.map((tab) => (
+          <TabPanel
+            key={tab}
+            value={tab}
+            title={
+              <>
+                {t(`prediction.tab.${tab}`)}
+                {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
+              </>
+            }
+          >
+            {content[tab]}
+          </TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  );
+};
+
+const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
+  state,
+  tabs = defaultTabs,
   className,
   embedded = false,
 }) => {

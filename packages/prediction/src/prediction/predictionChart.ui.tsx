@@ -305,7 +305,7 @@ const RoundNavigator: React.FC<{
 
   return (
     <div className="oui-absolute oui-inset-x-0 oui-bottom-0 oui-z-20 oui-flex oui-h-14 oui-items-center oui-gap-2 oui-border-t oui-border-line-6 oui-bg-base-9 oui-px-3">
-      <div className="oui-relative oui-flex oui-min-w-0 oui-flex-1 oui-items-center oui-justify-start oui-gap-2 oui-overflow-x-auto">
+      <div className="oui-relative oui-flex oui-min-w-0 oui-flex-1 oui-items-center oui-justify-start oui-gap-2 oui-overflow-x-auto oui-hide-scrollbar">
         <PopoverRoot
           open={menu === "past"}
           onOpenChange={(open) => setMenu(open ? "past" : null)}
@@ -518,6 +518,26 @@ export const PriceChart: React.FC<{
     maximum: number;
     step: number;
   } | null>(null);
+  // Measured width of the tick-label strip: label density follows the real
+  // card width instead of a breakpoint, so labels never collide.
+  const xLabelsRef = useRef<HTMLDivElement>(null);
+  const [xLabelsWidth, setXLabelsWidth] = useState(0);
+
+  useEffect(() => {
+    const el = xLabelsRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        // borderBoxSize is absent on older Safari; the strip carries no
+        // padding/border, so contentRect.width is an exact fallback.
+        setXLabelsWidth(
+          entry.borderBoxSize?.[0]?.inlineSize ?? entry.contentRect.width,
+        );
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     setFrozenChart(null);
@@ -754,10 +774,6 @@ export const PriceChart: React.FC<{
         .map((timestamp) => ({
           timestamp,
           ratio: getX(timestamp) / plotWidth,
-          // Below xl only every other tick fits.
-          compact: isCandleMode
-            ? (candleAnchor - timestamp) % (tickInterval * 2) === 0
-            : !isPastRound || timestamp % 600_000 === 0,
         }))
         .filter(({ ratio }) =>
           isCandleMode
@@ -776,6 +792,22 @@ export const PriceChart: React.FC<{
     isPastRound,
     liveTimestamp,
   ]);
+
+  // Thin ticks greedily so adjacent labels keep ~88px ("11:14:50 AM" at
+  // text-xs) and never collide, whatever the card's rendered width.
+  const visibleXTicks = useMemo(() => {
+    if (xLabelsWidth <= 0) return chart.xTicks;
+    const ticks: typeof chart.xTicks = [];
+    for (const tick of chart.xTicks) {
+      if (
+        ticks.length === 0 ||
+        (tick.ratio - ticks[ticks.length - 1].ratio) * xLabelsWidth >= 88
+      ) {
+        ticks.push(tick);
+      }
+    }
+    return ticks;
+  }, [chart.xTicks, xLabelsWidth]);
 
   const isUp = chartCurrentPrice >= chartOpeningPrice;
   const liveTargetDirection =
@@ -805,8 +837,15 @@ export const PriceChart: React.FC<{
   };
 
   return (
-    <div className="oui-relative oui-h-[360px] oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-p-4 xl:oui-h-[calc(100vh-330px)] xl:oui-min-h-[480px] xl:oui-max-h-[640px]">
+    <div className="oui-prediction-priceChart oui-relative oui-h-[470px] oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-p-4 md:oui-h-[420px] lg:oui-h-[360px] 2xl:oui-h-[calc(100vh-330px)] 2xl:oui-min-h-[480px] 2xl:oui-max-h-[640px]">
       <style>{`
+        .oui-prediction-priceChart { --oui-prediction-chart-top: 190px; }
+        @media (min-width: 480px) {
+          .oui-prediction-priceChart { --oui-prediction-chart-top: 140px; }
+        }
+        @media (min-width: 768px) {
+          .oui-prediction-priceChart { --oui-prediction-chart-top: 80px; }
+        }
         @keyframes oui-prediction-target-pulse {
           0%, 100% { opacity: 0.36; }
           50% { opacity: 1; }
@@ -818,7 +857,11 @@ export const PriceChart: React.FC<{
           }
         }
       `}</style>
-      <div className="oui-relative oui-z-10 oui-flex oui-items-center oui-gap-4 xl:oui-gap-8">
+      {/* flex-wrap lets the countdown / go-to-live action drop to its own row
+          instead of squeezing the price stats off-card on narrow screens.
+          z-30 stays above the chart hover layer (z-20 @ top-20) so a wrapped
+          go-to-live button remains clickable on narrow screens. */}
+      <div className="oui-relative oui-z-30 oui-flex oui-flex-wrap oui-items-center oui-gap-x-4 oui-gap-y-2 2xl:oui-gap-x-8">
         <div className="oui-flex-none">
           <Tooltip
             content={t("prediction.chart.priceToBeatHint")}
@@ -851,10 +894,10 @@ export const PriceChart: React.FC<{
               </span>
             </Tooltip>
           )}
-          <div className="oui-mt-1 oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap">
+          <div className="oui-mt-1 oui-flex oui-flex-wrap oui-items-center oui-gap-x-2 oui-gap-y-1">
             <span
               className={cn(
-                "oui-text-xl oui-font-semibold oui-tabular-nums",
+                "oui-whitespace-nowrap oui-text-xl oui-font-semibold oui-tabular-nums",
                 isPastRound ? "oui-text-base-contrast" : "oui-text-primary",
               )}
             >
@@ -863,7 +906,7 @@ export const PriceChart: React.FC<{
             {!isFutureRound && (
               <span
                 className={cn(
-                  "oui-text-xs oui-tabular-nums",
+                  "oui-whitespace-nowrap oui-text-xs oui-tabular-nums",
                   isUp ? "oui-text-trade-profit" : "oui-text-trade-loss",
                 )}
               >
@@ -930,9 +973,13 @@ export const PriceChart: React.FC<{
       </div>
       <svg
         className={cn(
-          "oui-absolute oui-inset-x-4 oui-top-20 oui-h-[calc(100%-168px)] oui-w-[calc(100%-2rem)]",
+          "oui-absolute oui-inset-x-4 oui-w-[calc(100%-2rem)]",
           isPastRound ? "oui-text-base-contrast-54" : "oui-text-primary",
         )}
+        style={{
+          top: "var(--oui-prediction-chart-top)",
+          height: "calc(100% - var(--oui-prediction-chart-top) - 88px)",
+        }}
         viewBox={`0 0 ${width} ${height}`}
         preserveAspectRatio="none"
         role="img"
@@ -1024,8 +1071,12 @@ export const PriceChart: React.FC<{
         )}
       </svg>
       <div
-        className="oui-absolute oui-start-4 oui-top-20 oui-z-20 oui-h-[calc(100%-168px)] oui-cursor-crosshair"
-        style={{ width: `calc((100% - 32px) * ${plotWidth / width})` }}
+        className="oui-absolute oui-start-4 oui-z-20 oui-cursor-crosshair"
+        style={{
+          top: "var(--oui-prediction-chart-top)",
+          height: "calc(100% - var(--oui-prediction-chart-top) - 88px)",
+          width: `calc((100% - 32px) * ${plotWidth / width})`,
+        }}
         onPointerMove={handleChartPointerMove}
         onPointerLeave={() => setHoveredPoint(null)}
       >
@@ -1074,7 +1125,7 @@ export const PriceChart: React.FC<{
           )}
           style={{
             left: `calc(16px + (100% - 32px) * ${chart.endpointXRatio})`,
-            top: `calc(80px + (100% - 168px) * ${chart.endpointYRatio})`,
+            top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${chart.endpointYRatio})`,
           }}
         />
       )}
@@ -1083,7 +1134,7 @@ export const PriceChart: React.FC<{
           key={ratio}
           className="oui-pointer-events-none oui-absolute oui-end-4 oui-z-10 -oui-translate-y-1/2 oui-text-xs oui-tabular-nums oui-text-base-contrast-36"
           style={{
-            top: `calc(80px + (100% - 168px) * ${ratio})`,
+            top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${ratio})`,
           }}
         >
           $
@@ -1097,7 +1148,7 @@ export const PriceChart: React.FC<{
         <div
           className="oui-pointer-events-none oui-absolute oui-end-3 oui-z-10 oui-flex -oui-translate-y-1/2 oui-items-center oui-rounded-e-md oui-bg-base-3 oui-px-3 oui-py-1 oui-text-xs oui-text-base-contrast"
           style={{
-            top: `calc(80px + (100% - 168px) * ${chart.openingRatio})`,
+            top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${chart.openingRatio})`,
           }}
         >
           <span className="oui-absolute -oui-start-2 oui-top-1/2 -oui-translate-y-1/2 oui-border-y-[12px] oui-border-e-[10px] oui-border-y-transparent oui-border-e-base-3" />
@@ -1144,16 +1195,14 @@ export const PriceChart: React.FC<{
         </div>
       )}
       <div
+        ref={xLabelsRef}
         className="oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-z-10 oui-h-8 oui-text-xs oui-tabular-nums oui-text-base-contrast-36"
         style={{ width: `calc((100% - 32px) * ${plotWidth / width})` }}
       >
-        {chart.xTicks.map(({ timestamp, ratio, compact }) => (
+        {visibleXTicks.map(({ timestamp, ratio }) => (
           <span
             key={timestamp}
-            className={cn(
-              "oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap",
-              !compact && "oui-hidden xl:oui-block",
-            )}
+            className="oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap"
             style={{ left: `${ratio * 100}%` }}
           >
             {(isPastRound || chartMode === "candles"

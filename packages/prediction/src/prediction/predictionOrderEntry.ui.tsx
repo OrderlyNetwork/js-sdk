@@ -145,7 +145,7 @@ export const RoundOrderStatusCard: React.FC<
     <section
       className={cn(
         "oui-flex oui-h-full oui-min-h-[360px] oui-flex-col oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9 oui-p-6 oui-text-center md:oui-h-auto",
-        restricted && "oui-flex-1 xl:oui-flex-none",
+        restricted && "oui-flex-1 2xl:oui-flex-none",
       )}
     >
       {restricted && (

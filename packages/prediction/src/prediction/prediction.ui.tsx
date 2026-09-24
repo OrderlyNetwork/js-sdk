@@ -15,6 +15,7 @@ import {
   toast,
   TokenIcon,
   useMediaQuery,
+  useScreen,
 } from "@orderly.network/ui";
 import { PredictionDataPanel } from "./dataPanels";
 import type { PredictionState } from "./prediction.script";
@@ -120,6 +121,7 @@ export const Prediction: React.FC<
   const { t } = useTranslation();
   const { formatRoundWindow } = usePredictionFormatters();
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
+  const { isMobile } = useScreen();
   const predictionMarketTabs = usePredictionMarketTabs();
 
   useEffect(() => {
@@ -167,8 +169,11 @@ export const Prediction: React.FC<
       id="oui-prediction-page"
       className="oui-min-h-[calc(100vh-64px)] oui-bg-base-10 oui-p-3 oui-font-semibold lg:oui-p-4"
     >
-      <div className="oui-grid oui-gap-3 md:oui-grid-cols-2 md:oui-items-stretch xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] xl:oui-grid-rows-[auto_auto_auto]">
-        <header className="oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-1 xl:oui-col-span-1 xl:oui-col-start-1 xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
+      {/* Default 2-col so order book | trade sit side-by-side on phones
+          (theme md is 480px, too wide for most portrait devices). 2xl is the
+          theme's 1280px screen and must match isDesktopLayout below. */}
+      <div className="oui-grid oui-grid-cols-2 oui-items-stretch oui-gap-3 2xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] 2xl:oui-grid-rows-[auto_auto_auto]">
+        <header className="oui-col-span-2 oui-col-start-1 oui-row-start-1 oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 2xl:oui-col-span-1 2xl:oui-col-start-1 2xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
           <DropDownMarketsWidget
             symbol="PERP_BTC_USDC"
             tabs={predictionMarketTabs}
@@ -228,7 +233,7 @@ export const Prediction: React.FC<
           </div>
         </header>
 
-        <div className="oui-min-w-0 md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-2 xl:oui-col-span-1 xl:oui-col-start-1 xl:oui-row-start-2">
+        <div className="oui-col-span-2 oui-col-start-1 oui-row-start-2 oui-min-w-0 2xl:oui-col-span-1 2xl:oui-col-start-1 2xl:oui-row-start-2">
           {/* Mount a single chart per breakpoint: each PriceChart runs its own
               candle-simulation interval, so keeping both alive doubles the
               per-second work. */}
@@ -248,7 +253,7 @@ export const Prediction: React.FC<
             <MobileMarketPanel {...state} />
           )}
         </div>
-        <div className="oui-min-w-0 md:oui-col-start-1 md:oui-row-start-3 xl:oui-col-start-2 xl:oui-row-span-2 xl:oui-row-start-1">
+        <div className="oui-col-start-1 oui-row-start-3 oui-min-w-0 2xl:oui-col-start-2 2xl:oui-row-span-2 2xl:oui-row-start-1">
           <PredictionOrderBook
             orderBook={state.orderBook}
             selectedOutcome={state.selectedOutcome}
@@ -261,12 +266,13 @@ export const Prediction: React.FC<
         </div>
         <div
           className={cn(
-            "oui-space-y-3 md:oui-col-start-2 md:oui-row-start-3 xl:oui-col-start-3 xl:oui-row-span-3 xl:oui-row-start-1",
+            "oui-col-start-2 oui-row-start-3 oui-space-y-3 2xl:oui-col-start-3 2xl:oui-row-span-3 2xl:oui-row-start-1",
             (state.isRegionRestricted || state.orderEntryRestricted) &&
-              "oui-flex oui-flex-col oui-self-stretch xl:oui-block",
+              "oui-flex oui-flex-col oui-self-stretch 2xl:oui-block",
           )}
         >
-          {state.accountPanel && (
+          {/* Desktop-only: mobile trading uses the header AuthGuard instead. */}
+          {state.accountPanel && !isMobile && (
             <div className="oui-rounded-2xl oui-border oui-border-line-12 oui-bg-base-9 oui-p-3">
               {state.accountPanel}
             </div>
@@ -290,10 +296,7 @@ export const Prediction: React.FC<
             />
           )}
         </div>
-        {/* Height mirrors perp DataList bounds (min 350 / max 800), but without
-            a splitter we size from the viewport so the panel is taller than the
-            350px initial default most users drag up to on perp. */}
-        <div className="oui-h-[min(800px,max(420px,42vh))] oui-min-h-0 oui-min-w-0 oui-overflow-hidden md:oui-col-span-2 md:oui-col-start-1 md:oui-row-start-4 xl:oui-row-start-3">
+        <div className="oui-col-span-2 oui-col-start-1 oui-row-start-4 oui-min-h-0 oui-min-w-0 lg:oui-h-[min(800px,max(420px,42vh))] lg:oui-overflow-hidden 2xl:oui-row-start-3">
           <PredictionDataPanel state={state} />
         </div>
       </div>

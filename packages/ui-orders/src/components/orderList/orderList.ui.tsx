@@ -40,6 +40,12 @@ export type SupplementalOrderRow = {
   plainText?: (field: string) => string;
 };
 
+export type SupplementalMobileOrderRow = {
+  id: string;
+  timestamp: number;
+  renderItem: () => ReactNode;
+};
+
 /**
  * A supplemental row only carries the fields the merged table reads (row key
  * and sort timestamp); every cell renders through renderCell.
@@ -231,9 +237,29 @@ export const MobileOrderList: FC<
   OrdersBuilderState & {
     classNames?: { root?: string; cell?: string; content?: string };
     showFilter?: boolean;
+    supplementalRows?: SupplementalMobileOrderRow[];
   }
 > = (props) => {
   const { t } = useTranslation();
+  const rows = useMemo(() => {
+    if (!props.supplementalRows?.length) return props.dataSource ?? [];
+    return [
+      ...(props.dataSource ?? []),
+      ...props.supplementalRows.map((row) => ({ __supplemental: row })),
+    ].sort(
+      (a, b) =>
+        Number(
+          "__supplemental" in b
+            ? b.__supplemental.timestamp
+            : (b.created_time ?? 0),
+        ) -
+        Number(
+          "__supplemental" in a
+            ? a.__supplemental.timestamp
+            : (a.created_time ?? 0),
+        ),
+    );
+  }, [props.dataSource, props.supplementalRows]);
 
   return (
     <OrderListProvider
@@ -293,11 +319,18 @@ export const MobileOrderList: FC<
         <ListView
           className={props.classNames?.root}
           contentClassName={props.classNames?.content}
-          dataSource={props.dataSource}
-          keyExtractor={getOrderRowKey}
+          dataSource={rows}
+          keyExtractor={(item) =>
+            "__supplemental" in item
+              ? `supplemental-${item.__supplemental.id}`
+              : getOrderRowKey(item)
+          }
           loadMore={props.loadMore}
           isLoading={props.isLoading}
           renderItem={(item, index) => {
+            if ("__supplemental" in item) {
+              return item.__supplemental.renderItem();
+            }
             let children = (
               <OrderCellWidget
                 item={item}
