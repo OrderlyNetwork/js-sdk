@@ -42,6 +42,8 @@ const DEFAULT_ONE_TAP_AMOUNTS: OneTapAmounts = {
   up: [10],
   down: [10],
 };
+const MIN_ONE_TAP_AMOUNT = 1;
+const MAX_ONE_TAP_AMOUNT = 99999.99;
 const PREVIOUS_ONE_TAP_DEFAULT = [10, 50, 100];
 const LEGACY_ONE_TAP_DEFAULT = [10, 100, 1000];
 
@@ -49,7 +51,12 @@ const validOneTapAmounts = (amounts: unknown): amounts is number[] =>
   Array.isArray(amounts) &&
   amounts.length >= 1 &&
   amounts.length <= 3 &&
-  amounts.every((amount: number) => Number.isFinite(amount) && amount > 0);
+  amounts.every(
+    (amount: number) =>
+      Number.isFinite(amount) &&
+      amount >= MIN_ONE_TAP_AMOUNT &&
+      amount <= MAX_ONE_TAP_AMOUNT,
+  );
 
 const matchesOneTapPreset = (amounts: number[], preset: number[]) =>
   amounts.length === preset.length &&
@@ -664,6 +671,13 @@ export const TradePanel: React.FC<
                     </React.Fragment>
                   ))}
                 </div>
+                {oneTapEditorError && (
+                  <div className="oui-mt-2" role="alert">
+                    <Text size="2xs" color="danger">
+                      {t("prediction.oneTapInvalidAmounts")}
+                    </Text>
+                  </div>
+                )}
                 {draftOneTapAmounts.up.length < 3 && (
                   <button
                     type="button"
@@ -674,15 +688,10 @@ export const TradePanel: React.FC<
                       }));
                       setOneTapEditorError(false);
                     }}
-                    className="oui-mt-3 oui-text-xs oui-text-primary hover:oui-opacity-80"
+                    className="oui-mt-3 oui-block oui-text-xs oui-text-primary hover:oui-opacity-80"
                   >
                     + {t("prediction.oneTapAddPreset")}
                   </button>
-                )}
-                {oneTapEditorError && (
-                  <Text size="2xs" color="danger" className="oui-mt-2">
-                    {t("prediction.oneTapInvalidAmounts")}
-                  </Text>
                 )}
                 <div className="oui-mt-3 oui-flex oui-items-center oui-justify-between oui-gap-2">
                   <Button
@@ -816,37 +825,43 @@ export const TradePanel: React.FC<
 
         {isOneTap && (
           <div className="oui-mt-2 oui-grid oui-grid-cols-2 oui-gap-2 xl:oui-mt-3">
-            {(["up", "down"] as const).map((outcome) => (
-              <div
-                key={outcome}
-                className="oui-flex oui-min-w-0 oui-flex-col oui-gap-2"
-              >
-                {oneTapAmounts[outcome].map((quoteAmount, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    disabled={
-                      oneTapEditorOpen ||
-                      !orderEntryAccountReady ||
-                      !orderEntryFunded ||
-                      !state.canPlaceOneTapOrder(outcome, quoteAmount)
-                    }
-                    onClick={() => state.placeOneTapOrder(outcome, quoteAmount)}
-                    className={cn(
-                      "oui-flex oui-min-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-px-1 oui-py-1 oui-text-xs oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
-                      outcome === "up"
-                        ? "oui-bg-success-darken"
-                        : "oui-bg-danger-darken",
-                    )}
-                  >
-                    <span>${quoteAmount}</span>
-                    <span className="oui-text-2xs oui-font-normal oui-tabular-nums">
-                      {t("prediction.oneTapWin")} $
-                      {formatUsd(state.oneTapPayout(outcome, quoteAmount))}
-                    </span>
-                  </button>
-                ))}
-              </div>
+            {oneTapAmounts.up.map((_, index) => (
+              <React.Fragment key={index}>
+                {(["up", "down"] as const).map((outcome) => {
+                  const quoteAmount = oneTapAmounts[outcome][index];
+                  return (
+                    <button
+                      key={outcome}
+                      type="button"
+                      disabled={
+                        oneTapEditorOpen ||
+                        !orderEntryAccountReady ||
+                        !orderEntryFunded ||
+                        !state.canPlaceOneTapOrder(outcome, quoteAmount)
+                      }
+                      onClick={() =>
+                        state.placeOneTapOrder(outcome, quoteAmount)
+                      }
+                      className={cn(
+                        "oui-flex oui-min-h-12 oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-px-1 oui-py-1 oui-text-xs oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
+                        outcome === "up"
+                          ? "oui-bg-success-darken"
+                          : "oui-bg-danger-darken",
+                      )}
+                    >
+                      <span className="oui-text-base oui-leading-6 lg:oui-text-lg">
+                        ${quoteAmount}
+                      </span>
+                      <span className="oui-text-2xs oui-font-normal oui-tabular-nums">
+                        {t("prediction.oneTapWin")}{" "}
+                        <span className="oui-font-normal">
+                          ${formatUsd(state.oneTapPayout(outcome, quoteAmount))}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </React.Fragment>
             ))}
           </div>
         )}

@@ -23,7 +23,7 @@ export const prediction = {
   "prediction.oneTapRemoveRow": "Remove row",
   "prediction.oneTapWin": "Win",
   "prediction.oneTapInvalidAmounts":
-    "Each amount must be greater than 0 and have no more than 2 decimal places.",
+    "Enter 1–99,999.99 USDC for each preset (up to 2 decimal places).",
   "prediction.round": "Round",
   "prediction.openingPrice": "Opening price",
   "prediction.currentPrice": "Current price",
