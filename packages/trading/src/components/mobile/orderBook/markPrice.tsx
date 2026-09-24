@@ -7,9 +7,12 @@ import { useOrderBookContext } from "../../base/orderBook/orderContext";
 interface MarkPriceProps {
   markPrice: number;
   lastPrice: number[];
+  /** Renders the flagged mark-price label on the right. @default true */
+  showMarkPrice?: boolean;
 }
 
 export const MarkPrice: FC<MarkPriceProps> = (props) => {
+  const { showMarkPrice = true } = props;
   const { symbolInfo } = useOrderBookContext();
   const { quote_dp } = symbolInfo;
 
@@ -27,12 +30,14 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
         className="oui-text-sm"
         iconSize={14}
       />
-      <MarkPriceView
-        markPrice={props.markPrice}
-        quote_dp={quote_dp}
-        className="oui-text-2xs"
-        iconSize={12}
-      />
+      {showMarkPrice && (
+        <MarkPriceView
+          markPrice={props.markPrice}
+          quote_dp={quote_dp}
+          className="oui-text-2xs"
+          iconSize={12}
+        />
+      )}
     </Flex>
   );
 };

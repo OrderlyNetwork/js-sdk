@@ -67,11 +67,11 @@ const CountdownDisplay: React.FC<{
         {label}
       </span>
       <span className="oui-flex oui-items-center oui-gap-1 oui-text-xl oui-font-semibold oui-tabular-nums oui-text-base-contrast">
-        <span className="oui-min-w-10 oui-rounded-md oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center">
+        <span className="oui-min-w-10 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center">
           {minutes}
         </span>
-        <span className="oui-text-base-contrast-54">:</span>
-        <span className="oui-min-w-10 oui-rounded-md oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center">
+        <span className="oui-text-base-contrast">:</span>
+        <span className="oui-min-w-10 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center">
           {remainingSeconds}
         </span>
       </span>
@@ -839,11 +839,11 @@ export const PriceChart: React.FC<{
   return (
     <div className="oui-prediction-priceChart oui-relative oui-h-[470px] oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-p-4 md:oui-h-[420px] lg:oui-h-[360px] 2xl:oui-h-[calc(100vh-330px)] 2xl:oui-min-h-[480px] 2xl:oui-max-h-[640px]">
       <style>{`
-        .oui-prediction-priceChart { --oui-prediction-chart-top: 190px; }
-        @media (min-width: 480px) {
+        .oui-prediction-priceChart { --oui-prediction-chart-top: 180px; }
+        @media (min-width: 390px) {
           .oui-prediction-priceChart { --oui-prediction-chart-top: 140px; }
         }
-        @media (min-width: 768px) {
+        @media (min-width: 1280px) {
           .oui-prediction-priceChart { --oui-prediction-chart-top: 80px; }
         }
         @keyframes oui-prediction-target-pulse {
@@ -857,12 +857,18 @@ export const PriceChart: React.FC<{
           }
         }
       `}</style>
-      {/* flex-wrap lets the countdown / go-to-live action drop to its own row
-          instead of squeezing the price stats off-card on narrow screens.
-          z-30 stays above the chart hover layer (z-20 @ top-20) so a wrapped
-          go-to-live button remains clickable on narrow screens. */}
-      <div className="oui-relative oui-z-30 oui-flex oui-flex-wrap oui-items-center oui-gap-x-4 oui-gap-y-2 2xl:oui-gap-x-8">
-        <div className="oui-flex-none">
+      {/* Below 1280px (mobile/tablet panel) the action (countdown /
+          go-to-live) is ordered onto its own right-aligned row above the
+          price stats, matching the mobile design; 2xl:order-none restores
+          DOM order and ms-auto right-aligns it on the single-row desktop
+          header. Below 390px the two price stats stack (measured: even
+          base-size side-by-side type needs ~310px, unavailable under
+          ~381px viewport); from 390px they sit side by side with reduced
+          base/2xs type, stepping back up to xl at 430px. z-30 stays above
+          the chart hover layer (z-20 @ top-20) so the action remains
+          clickable over the chart. */}
+      <div className="oui-relative oui-z-30 oui-flex oui-flex-wrap oui-items-start oui-gap-x-3 oui-gap-y-2 min-[480px]:oui-gap-x-4 2xl:oui-items-center 2xl:oui-gap-x-8">
+        <div className="oui-w-full min-[390px]:oui-flex-none min-[390px]:oui-w-auto">
           <Tooltip
             content={t("prediction.chart.priceToBeatHint")}
             className="oui-max-w-[330px] oui-bg-base-6"
@@ -873,11 +879,11 @@ export const PriceChart: React.FC<{
               {t("prediction.chart.priceToBeat")}
             </span>
           </Tooltip>
-          <div className="oui-mt-1 oui-text-xl oui-font-semibold oui-tabular-nums oui-text-base-contrast-54">
+          <div className="oui-mt-1 oui-text-base oui-font-semibold oui-tabular-nums oui-text-base-contrast-54 min-[430px]:oui-text-xl">
             {isFutureRound ? "--" : `$${formatUsd(chartOpeningPrice)}`}
           </div>
         </div>
-        <div className="oui-min-w-0">
+        <div className="oui-min-w-0 oui-flex-1 2xl:oui-flex-none">
           {isPastRound ? (
             <span className="oui-text-xs oui-text-base-contrast-54">
               {t("prediction.finalPrice")}
@@ -897,7 +903,7 @@ export const PriceChart: React.FC<{
           <div className="oui-mt-1 oui-flex oui-flex-wrap oui-items-center oui-gap-x-2 oui-gap-y-1">
             <span
               className={cn(
-                "oui-whitespace-nowrap oui-text-xl oui-font-semibold oui-tabular-nums",
+                "oui-whitespace-nowrap oui-text-base oui-font-semibold oui-tabular-nums min-[430px]:oui-text-xl",
                 isPastRound ? "oui-text-base-contrast" : "oui-text-primary",
               )}
             >
@@ -906,7 +912,7 @@ export const PriceChart: React.FC<{
             {!isFutureRound && (
               <span
                 className={cn(
-                  "oui-whitespace-nowrap oui-text-xs oui-tabular-nums",
+                  "oui-whitespace-nowrap oui-text-2xs oui-tabular-nums min-[480px]:oui-text-xs",
                   isUp ? "oui-text-trade-profit" : "oui-text-trade-loss",
                 )}
               >
@@ -933,43 +939,45 @@ export const PriceChart: React.FC<{
             )}
           </div>
         </div>
-        {selectedRound === round &&
-        (roundPhase === "trading" || roundPhase === "closingSoon") ? (
-          <div className="oui-ms-auto oui-flex-none">
-            <CountdownDisplay
-              seconds={countdown}
-              label={t("prediction.rounds.endsIn")}
-            />
-          </div>
-        ) : selectedRound === round ? (
-          <button
-            type="button"
-            onClick={onGoToLiveMarket}
-            className="oui-ms-auto oui-flex oui-flex-none oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-xs oui-text-base-contrast-80 hover:oui-bg-base-6 hover:oui-text-base-contrast"
-          >
-            <LiveIndicator />
-            {t("prediction.rounds.goToLiveMarket")}
-            <ChevronRightIcon size={14} color="inherit" />
-          </button>
-        ) : isFutureRound ? (
-          <div className="oui-ms-auto oui-flex-none">
-            <CountdownDisplay
-              seconds={futureCountdown}
-              label={t("prediction.rounds.startsIn")}
-              mutedIcon
-            />
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => onSelectRound(round)}
-            className="oui-ms-auto oui-flex oui-flex-none oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-xs oui-text-base-contrast-80 hover:oui-bg-base-6 hover:oui-text-base-contrast"
-          >
-            <LiveIndicator />
-            {t("prediction.rounds.goToLiveMarket")}
-            <ChevronRightIcon size={14} color="inherit" />
-          </button>
-        )}
+        <div className="oui-order-first oui-flex oui-w-full oui-justify-end 2xl:oui-w-auto 2xl:oui-ms-auto 2xl:oui-flex-none 2xl:oui-order-none">
+          {selectedRound === round &&
+          (roundPhase === "trading" || roundPhase === "closingSoon") ? (
+            <div>
+              <CountdownDisplay
+                seconds={countdown}
+                label={t("prediction.rounds.endsIn")}
+              />
+            </div>
+          ) : selectedRound === round ? (
+            <button
+              type="button"
+              onClick={onGoToLiveMarket}
+              className="oui-flex oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2.5 oui-text-sm oui-text-base-contrast-80 hover:oui-bg-base-6 hover:oui-text-base-contrast 2xl:oui-px-3 2xl:oui-py-2 2xl:oui-text-xs"
+            >
+              <LiveIndicator />
+              {t("prediction.rounds.goToLiveMarket")}
+              <ChevronRightIcon size={14} color="inherit" />
+            </button>
+          ) : isFutureRound ? (
+            <div>
+              <CountdownDisplay
+                seconds={futureCountdown}
+                label={t("prediction.rounds.startsIn")}
+                mutedIcon
+              />
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onSelectRound(round)}
+              className="oui-flex oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2.5 oui-text-sm oui-text-base-contrast-80 hover:oui-bg-base-6 hover:oui-text-base-contrast 2xl:oui-px-3 2xl:oui-py-2 2xl:oui-text-xs"
+            >
+              <LiveIndicator />
+              {t("prediction.rounds.goToLiveMarket")}
+              <ChevronRightIcon size={14} color="inherit" />
+            </button>
+          )}
+        </div>
       </div>
       <svg
         className={cn(

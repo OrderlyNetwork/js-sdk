@@ -20,6 +20,10 @@ export * from "./components/base/lastTrades";
 export * from "./components/desktop/assetView";
 export * from "./components/base/orderBook";
 export * from "./components/desktop/orderBook";
+// Named (not barrel) export: keep the full mobile order book widget internal
+// and only expose the lean ladder for externally-driven books.
+export { MobileOrderBookLadder } from "./components/mobile/orderBook/ladder.mobile";
+export type { MobileOrderBookLadderProps } from "./components/mobile/orderBook/ladder.mobile";
 export * from "./components/desktop/riskRate";
 export * from "./components/desktop/orderBookAndTrades";
 export * from "./components/desktop/layout/splitLayout/splitLayout";

@@ -1,6 +1,9 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderBookLadder } from "@orderly.network/trading";
+import {
+  MobileOrderBookLadder,
+  OrderBookLadder,
+} from "@orderly.network/trading";
 import {
   AddCircleIcon,
   Button,
@@ -92,6 +95,25 @@ export const PredictionOrderBook: React.FC<
   const displayedBids = isPastRound ? emptyLevels : bids;
   const displayedPrice = isPastRound ? Number.NaN : selectedPrice;
   const base = selectedOutcome.toUpperCase();
+  const { isMobile } = useScreen();
+
+  // Shared by the desktop and mobile ladders; the mobile variant swaps the
+  // three-column header for the perps mobile two-column picker header.
+  const ladderProps = {
+    asks: displayedAsks,
+    bids: displayedBids,
+    markPrice: displayedPrice,
+    lastPrice: isPastRound
+      ? [Number.NaN, Number.NaN]
+      : [Math.max(selectedPrice - 0.01, 0), selectedPrice],
+    depths: ["0.01"],
+    base,
+    quote: "USDC",
+    symbolInfo: predictionSymbolInfo(base),
+    onItemClick: (item: number[]) => selectPrice(item[0]),
+    showMarkPrice: false,
+    cellHeight: 20,
+  };
 
   return (
     <section
@@ -106,23 +128,11 @@ export const PredictionOrderBook: React.FC<
         </span>
       </div>
       <div className="oui-min-h-0 oui-flex-1 oui-pb-3">
-        <OrderBookLadder
-          asks={displayedAsks}
-          bids={displayedBids}
-          markPrice={displayedPrice}
-          lastPrice={
-            isPastRound
-              ? [Number.NaN, Number.NaN]
-              : [Math.max(selectedPrice - 0.01, 0), selectedPrice]
-          }
-          depths={["0.01"]}
-          base={base}
-          quote="USDC"
-          symbolInfo={predictionSymbolInfo(base)}
-          onItemClick={(item) => selectPrice(item[0])}
-          showMarkPrice={false}
-          cellHeight={20}
-        />
+        {isMobile ? (
+          <MobileOrderBookLadder {...ladderProps} />
+        ) : (
+          <OrderBookLadder {...ladderProps} />
+        )}
       </div>
     </section>
   );
@@ -653,7 +663,21 @@ export const TradePanel: React.FC<
           )}
           <InfoRow
             label={t("common.fees")}
-            value={`${t("dmm.taker")}: --% / ${t("dmm.maker")}: 0%`}
+            // Same muted coloring as the perps order entry fee row
+            // (regularFees.ui.tsx): labels contrast-54, values contrast-80.
+            value={
+              <>
+                <span className="oui-text-base-contrast-54">
+                  {t("dmm.taker")}:{" "}
+                </span>
+                <span className="oui-text-base-contrast-80">--% / </span>
+                <span className="oui-text-base-contrast-54">
+                  {t("dmm.maker")}:{" "}
+                </span>
+                <span className="oui-text-base-contrast-80">0%</span>
+              </>
+            }
+            valueClassName="oui-font-normal"
           />
         </div>
       </div>

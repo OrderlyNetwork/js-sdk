@@ -169,10 +169,10 @@ export const Prediction: React.FC<
       id="oui-prediction-page"
       className="oui-min-h-[calc(100vh-64px)] oui-bg-base-10 oui-p-3 oui-font-semibold lg:oui-p-4"
     >
-      {/* Default 2-col so order book | trade sit side-by-side on phones
-          (theme md is 480px, too wide for most portrait devices). 2xl is the
+      {/* Order book | trade sit side-by-side below 2xl with the same 4fr/6fr
+          split as the perps mobile page (orderBookAndEntry). 2xl is the
           theme's 1280px screen and must match isDesktopLayout below. */}
-      <div className="oui-grid oui-grid-cols-2 oui-items-stretch oui-gap-3 2xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] 2xl:oui-grid-rows-[auto_auto_auto]">
+      <div className="oui-grid oui-grid-cols-[4fr_6fr] oui-items-stretch oui-gap-3 2xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] 2xl:oui-grid-rows-[auto_auto_auto]">
         <header className="oui-col-span-2 oui-col-start-1 oui-row-start-1 oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 2xl:oui-col-span-1 2xl:oui-col-start-1 2xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
           <DropDownMarketsWidget
             symbol="PERP_BTC_USDC"
