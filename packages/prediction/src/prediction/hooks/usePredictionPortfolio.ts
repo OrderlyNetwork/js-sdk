@@ -597,6 +597,108 @@ export const usePredictionPortfolio = ({
     [notify, onActiveTab, selectedRound],
   );
 
+  const oneTapPayout = useCallback(
+    (outcome: PredictionOutcome, quoteAmount: number) => {
+      const price = outcomePrices[outcome];
+      return price > 0 && price < 1
+        ? new Decimal(quoteAmount).div(price).toNumber()
+        : 0;
+    },
+    [outcomePrices],
+  );
+
+  const canPlaceOneTapOrder = useCallback(
+    (outcome: PredictionOutcome, quoteAmount: number) => {
+      const price = outcomePrices[outcome];
+      const quantity = oneTapPayout(outcome, quoteAmount);
+      const estimated = estimateMarketSlippage(
+        "buy",
+        quantity,
+        createBook(price),
+      );
+      return (
+        isRoundTradable &&
+        !isRegionRestricted &&
+        Number.isFinite(quoteAmount) &&
+        quoteAmount > 0 &&
+        quoteAmount <= balance &&
+        price > 0 &&
+        price < 1 &&
+        (estimated === null ||
+          estimated <= new Decimal(slippage || 0).div(100).toNumber())
+      );
+    },
+    [
+      balance,
+      isRegionRestricted,
+      isRoundTradable,
+      oneTapPayout,
+      outcomePrices,
+      slippage,
+    ],
+  );
+
+  const placeOneTapOrder = useCallback(
+    (
+      outcome: PredictionOutcome,
+      quoteAmount: number,
+      clearNotification: () => void,
+    ) => {
+      if (!canPlaceOneTapOrder(outcome, quoteAmount)) return;
+
+      const price = outcomePrices[outcome];
+      const quantity = oneTapPayout(outcome, quoteAmount);
+      const order: PredictionTrade = {
+        id: nextIdRef.current++,
+        outcome,
+        side: "buy",
+        type: "market",
+        price,
+        quantity,
+        round: selectedRound,
+        status: "filled",
+        timestamp: Date.now(),
+      };
+
+      clearNotification();
+      setBalance((previous) =>
+        new Decimal(previous).sub(quoteAmount).toNumber(),
+      );
+      setPositions((previous) => {
+        const existing = previous.find(
+          (position) => position.outcome === outcome,
+        );
+        if (!existing) {
+          return [...previous, { outcome, quantity, averagePrice: price }];
+        }
+        const nextQuantity = new Decimal(existing.quantity)
+          .add(quantity)
+          .toNumber();
+        const nextAverage = new Decimal(existing.quantity)
+          .mul(existing.averagePrice)
+          .add(new Decimal(quantity).mul(price))
+          .div(nextQuantity)
+          .toNumber();
+        return previous.map((position) =>
+          position.outcome === outcome
+            ? { ...position, quantity: nextQuantity, averagePrice: nextAverage }
+            : position,
+        );
+      });
+      setHistory((previous) => [order, ...previous]);
+      onActiveTab("predictions");
+      notify("prediction.message.orderFilled");
+    },
+    [
+      canPlaceOneTapOrder,
+      notify,
+      onActiveTab,
+      oneTapPayout,
+      outcomePrices,
+      selectedRound,
+    ],
+  );
+
   const cancelOrder = useCallback(
     (id: number) => {
       if (isRegionRestricted) return;
@@ -648,6 +750,9 @@ export const usePredictionPortfolio = ({
     sellPosition,
     editPendingOrder,
     placeOrder,
+    oneTapPayout,
+    canPlaceOneTapOrder,
+    placeOneTapOrder,
     cancelOrder,
     cancelAllOrders,
   };

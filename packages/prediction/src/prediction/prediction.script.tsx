@@ -5,7 +5,7 @@ import { usePredictionOrderBook } from "./hooks/usePredictionOrderBook";
 import { usePredictionOrderForm } from "./hooks/usePredictionOrderForm";
 import { usePredictionPortfolio } from "./hooks/usePredictionPortfolio";
 import { usePredictionRoundLifecycle } from "./hooks/usePredictionRoundLifecycle";
-import type { PredictionDataTab } from "./prediction.types";
+import type { PredictionDataTab, PredictionOutcome } from "./prediction.types";
 import type { PredictionOrderPolicy } from "./predictionExecution";
 
 export type {
@@ -123,6 +123,13 @@ export const usePredictionScript = (
     portfolio.placeOrder,
   ]);
 
+  const placeOneTapOrder = useCallback(
+    (outcome: PredictionOutcome, quoteAmount: number) => {
+      portfolio.placeOneTapOrder(outcome, quoteAmount, clearNotification);
+    },
+    [clearNotification, portfolio.placeOneTapOrder],
+  );
+
   return {
     round: round.round,
     countdown: round.countdown,
@@ -182,6 +189,9 @@ export const usePredictionScript = (
     notification,
     clearNotification,
     placeOrder,
+    oneTapPayout: portfolio.oneTapPayout,
+    canPlaceOneTapOrder: portfolio.canPlaceOneTapOrder,
+    placeOneTapOrder,
     availableQuantity: portfolio.availableQuantity,
     sellPosition: portfolio.sellPosition,
     editPendingOrder: portfolio.editPendingOrder,

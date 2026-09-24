@@ -17,6 +17,13 @@ export const prediction = {
   "prediction.filter.settled": "Settled",
   "prediction.down": "Down",
   "prediction.trade": "Trade",
+  "prediction.oneTap": "One-tap",
+  "prediction.oneTapBuy": "One-tap buy",
+  "prediction.oneTapAddPreset": "Add preset",
+  "prediction.oneTapRemoveRow": "Remove row",
+  "prediction.oneTapWin": "Win",
+  "prediction.oneTapInvalidAmounts":
+    "Each amount must be greater than 0 and have no more than 2 decimal places.",
   "prediction.round": "Round",
   "prediction.openingPrice": "Opening price",
   "prediction.currentPrice": "Current price",

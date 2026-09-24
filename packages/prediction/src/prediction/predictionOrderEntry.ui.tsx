@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   MobileOrderBookLadder,
@@ -9,10 +10,15 @@ import {
   Button,
   CaretDownIcon,
   CaretUpIcon,
+  CloseIcon,
   cn,
+  EditIcon,
   Input,
   inputFormatter,
   modal,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTrigger,
   Select,
   Spinner,
   Text,
@@ -22,12 +28,58 @@ import {
 } from "@orderly.network/ui";
 import { SlippageUI } from "@orderly.network/ui-order-entry";
 import { PercentageControls } from "./orderEntry/form";
-import type { PredictionState } from "./prediction.script";
+import type { PredictionOutcome, PredictionState } from "./prediction.script";
 import {
   accumulateOrderBookLevels,
   formatContractPrice,
   usePredictionFormatters,
 } from "./predictionShared";
+
+type TradeMode = "limit" | "market" | "oneTap";
+type OneTapAmounts = Record<PredictionOutcome, number[]>;
+
+const DEFAULT_ONE_TAP_AMOUNTS: OneTapAmounts = {
+  up: [10],
+  down: [10],
+};
+const PREVIOUS_ONE_TAP_DEFAULT = [10, 50, 100];
+const LEGACY_ONE_TAP_DEFAULT = [10, 100, 1000];
+
+const validOneTapAmounts = (amounts: unknown): amounts is number[] =>
+  Array.isArray(amounts) &&
+  amounts.length >= 1 &&
+  amounts.length <= 3 &&
+  amounts.every((amount: number) => Number.isFinite(amount) && amount > 0);
+
+const matchesOneTapPreset = (amounts: number[], preset: number[]) =>
+  amounts.length === preset.length &&
+  amounts.every((amount, index) => amount === preset[index]);
+
+const resolveOneTapAmounts = (
+  amounts: unknown,
+  outcome: PredictionOutcome,
+): number[] =>
+  validOneTapAmounts(amounts) &&
+  !matchesOneTapPreset(amounts, PREVIOUS_ONE_TAP_DEFAULT) &&
+  !matchesOneTapPreset(amounts, LEGACY_ONE_TAP_DEFAULT)
+    ? amounts
+    : DEFAULT_ONE_TAP_AMOUNTS[outcome];
+
+const alignOneTapAmounts = (up: number[], down: number[]): OneTapAmounts => {
+  const rowCount = Math.max(up.length, down.length);
+  const fillRows = (amounts: number[], opposite: number[]) => {
+    const aligned = [...amounts];
+    while (aligned.length < rowCount) {
+      const index = aligned.length;
+      aligned.push(opposite[index] ?? aligned[index - 1] ?? 10);
+    }
+    return aligned;
+  };
+  return {
+    up: fillRows(up, down),
+    down: fillRows(down, up),
+  };
+};
 
 // Prediction books quote in USDC with two-decimal, 0.01-tick prices.
 const predictionSymbolInfo = (base: string) => ({
@@ -343,6 +395,30 @@ export const TradePanel: React.FC<
 > = (state) => {
   const { t } = useTranslation();
   const { formatUsd, formatContracts } = usePredictionFormatters();
+  const [tradeMode, setTradeMode] = useState<TradeMode>("oneTap");
+  const [storedOneTapAmounts, setStoredOneTapAmounts] = useLocalStorage<
+    OneTapAmounts | number[]
+  >("orderly-prediction-one-tap-amounts", DEFAULT_ONE_TAP_AMOUNTS);
+  const [oneTapEditorOpen, setOneTapEditorOpen] = useState(false);
+  const [draftOneTapAmounts, setDraftOneTapAmounts] = useState<
+    Record<PredictionOutcome, string[]>
+  >({
+    up: DEFAULT_ONE_TAP_AMOUNTS.up.map(String),
+    down: DEFAULT_ONE_TAP_AMOUNTS.down.map(String),
+  });
+  const [oneTapEditorError, setOneTapEditorError] = useState(false);
+  const storedUpAmounts = Array.isArray(storedOneTapAmounts)
+    ? storedOneTapAmounts
+    : storedOneTapAmounts?.up;
+  const storedDownAmounts = Array.isArray(storedOneTapAmounts)
+    ? storedOneTapAmounts
+    : storedOneTapAmounts?.down;
+  const oneTapAmounts = alignOneTapAmounts(
+    resolveOneTapAmounts(storedUpAmounts, "up"),
+    resolveOneTapAmounts(storedDownAmounts, "down"),
+  );
+  const isOneTap = tradeMode === "oneTap";
+  const isBuyContext = isOneTap || state.orderSide === "buy";
   // Fail closed: a TradePanel rendered without explicit auth flags must not
   // default to a tradable state (matches the gating in prediction.ui.tsx).
   const orderEntryAccountReady = state.orderEntryAccountReady ?? false;
@@ -352,8 +428,8 @@ export const TradePanel: React.FC<
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
   const buttonLabel = `${t(`common.${state.orderSide}`)} ${t(`prediction.${state.selectedOutcome}`)}`;
   const availableValue = !orderEntryFunded
-    ? `0 ${state.orderSide === "buy" ? "USDC" : outcomeLabel}`
-    : state.orderSide === "buy"
+    ? `0 ${isBuyContext ? "USDC" : outcomeLabel}`
+    : isBuyContext
       ? `${formatUsd(state.balance)} USDC`
       : `${formatContracts(state.availableQuantity(state.selectedOutcome))} ${outcomeLabel}`;
   const amountUnitOptions = [
@@ -376,6 +452,43 @@ export const TradePanel: React.FC<
       ? "buy"
       : "sell"
     : undefined;
+  const oneTapSlippages = (["up", "down"] as const).flatMap((outcome) =>
+    oneTapAmounts[outcome].map((quoteAmount) =>
+      state.estimateOrderSlippage(
+        "buy",
+        state.oneTapPayout(outcome, quoteAmount),
+        outcome,
+      ),
+    ),
+  );
+  const oneTapEstimatedSlippage = Math.max(
+    0,
+    ...oneTapSlippages.filter((value): value is number => value !== null),
+  );
+  const selectTradeMode = (mode: TradeMode) => {
+    setTradeMode(mode);
+    state.setOrderType(mode === "oneTap" ? "market" : mode);
+  };
+  const saveOneTapAmounts = () => {
+    const amounts: OneTapAmounts = {
+      up: draftOneTapAmounts.up.map(Number),
+      down: draftOneTapAmounts.down.map(Number),
+    };
+    const valid =
+      (["up", "down"] as const).every(
+        (outcome) =>
+          validOneTapAmounts(amounts[outcome]) &&
+          draftOneTapAmounts[outcome].every((value) =>
+            /^\d+(\.\d{1,2})?$/.test(value.trim()),
+          ),
+      ) && amounts.up.length === amounts.down.length;
+    if (!valid) {
+      setOneTapEditorError(true);
+      return;
+    }
+    setStoredOneTapAmounts(amounts);
+    setOneTapEditorOpen(false);
+  };
 
   return (
     <aside className="oui-overflow-hidden oui-rounded-xl oui-bg-base-9">
@@ -383,15 +496,16 @@ export const TradePanel: React.FC<
         {isMobile ? (
           <Select.options
             size="md"
-            value={state.orderType}
-            options={(["limit", "market"] as const).map((type) => ({
+            value={tradeMode}
+            options={(["limit", "market", "oneTap"] as const).map((type) => ({
               value: type,
-              label: t(`common.${type}`),
+              label:
+                type === "oneTap"
+                  ? t("prediction.oneTap")
+                  : t(`common.${type}`),
             }))}
             disabled={!orderEntryAccountReady}
-            onValueChange={(type) =>
-              state.setOrderType(type as "limit" | "market")
-            }
+            onValueChange={(type) => selectTradeMode(type as TradeMode)}
             classNames={{
               trigger:
                 "oui-w-full oui-h-8 oui-rounded-md oui-border-line-12 oui-bg-base-8",
@@ -399,77 +513,259 @@ export const TradePanel: React.FC<
           />
         ) : (
           <div className="oui-flex oui-w-full oui-gap-1">
-            {(["limit", "market"] as const).map((type) => (
+            {(["limit", "market", "oneTap"] as const).map((type) => (
               <button
                 key={type}
                 type="button"
                 disabled={!orderEntryAccountReady}
-                aria-pressed={state.orderType === type}
-                onClick={() => state.setOrderType(type)}
+                aria-pressed={tradeMode === type}
+                onClick={() => selectTradeMode(type)}
                 className={cn(
                   "oui-flex oui-h-8 oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1 oui-rounded oui-px-3 oui-py-0.5 oui-text-xs oui-font-semibold disabled:oui-cursor-not-allowed",
-                  state.orderType === type
+                  tradeMode === type
                     ? "oui-bg-base-5 oui-text-base-contrast"
                     : "oui-bg-base-7 oui-text-base-contrast-36",
                 )}
               >
-                <Text size="xs">{t(`common.${type}`)}</Text>
+                <Text size="xs">
+                  {type === "oneTap"
+                    ? t("prediction.oneTap")
+                    : t(`common.${type}`)}
+                </Text>
               </button>
             ))}
           </div>
         )}
 
-        <div className="oui-mt-2 oui-grid oui-w-full oui-flex-1 oui-grid-cols-2 oui-gap-x-2 xl:oui-mt-3 xl:oui-flex xl:oui-gap-x-[6px]">
-          {(["buy", "sell"] as const).map((side) => (
-            <Button
-              key={side}
-              type="button"
-              size="md"
-              fullWidth
-              aria-pressed={state.orderSide === side}
-              onClick={() => state.setOrderSide(side)}
-              className={cn(
-                side === "buy"
-                  ? state.orderSide === side && orderEntryAccountReady
-                    ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                    : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6"
-                  : state.orderSide === side && orderEntryAccountReady
-                    ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-                    : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
-              )}
-            >
-              {t(`common.${side}`)}
-            </Button>
-          ))}
-        </div>
-
-        <div className="oui-mt-2 oui-grid oui-grid-cols-2 oui-overflow-hidden oui-rounded-lg oui-bg-base-10 oui-p-0.5 xl:oui-mt-3">
-          {(["up", "down"] as const).map((outcome) => {
-            const isActive = state.selectedOutcome === outcome;
-            return (
-              <button
-                key={outcome}
+        {!isOneTap && (
+          <div className="oui-mt-2 oui-grid oui-w-full oui-flex-1 oui-grid-cols-2 oui-gap-x-2 xl:oui-mt-3 xl:oui-flex xl:oui-gap-x-[6px]">
+            {(["buy", "sell"] as const).map((side) => (
+              <Button
+                key={side}
                 type="button"
-                onClick={() => state.setSelectedOutcome(outcome)}
+                size="md"
+                fullWidth
+                aria-pressed={state.orderSide === side}
+                onClick={() => state.setOrderSide(side)}
                 className={cn(
-                  "oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-text-xs oui-font-semibold oui-leading-tight oui-transition-colors",
+                  side === "buy"
+                    ? state.orderSide === side && orderEntryAccountReady
+                      ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+                      : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6"
+                    : state.orderSide === side && orderEntryAccountReady
+                      ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
+                      : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
+                )}
+              >
+                {t(`common.${side}`)}
+              </Button>
+            ))}
+          </div>
+        )}
+
+        {isOneTap && (
+          <div className="oui-mt-3 oui-flex oui-items-center oui-justify-between">
+            <Text
+              size="xs"
+              className="oui-font-semibold oui-text-base-contrast"
+            >
+              {t("prediction.oneTapBuy")}
+            </Text>
+            <PopoverRoot
+              open={oneTapEditorOpen}
+              onOpenChange={(open) => {
+                setOneTapEditorOpen(open);
+                setOneTapEditorError(false);
+                if (open)
+                  setDraftOneTapAmounts({
+                    up: oneTapAmounts.up.map(String),
+                    down: oneTapAmounts.down.map(String),
+                  });
+              }}
+            >
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-semibold oui-text-primary hover:oui-opacity-80"
+                >
+                  <EditIcon size={14} color="inherit" opacity={1} />
+                  {t("common.edit")}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                side="bottom"
+                align="end"
+                className="oui-w-80 oui-max-w-[calc(100vw-24px)] oui-p-3 sm:oui-w-[440px]"
+              >
+                <Text size="xs" className="oui-font-semibold">
+                  {t("prediction.oneTapBuy")}
+                </Text>
+                <div className="oui-mt-3 oui-grid oui-grid-cols-[1rem_minmax(0,1fr)_minmax(0,1fr)_1rem] oui-items-center oui-gap-2">
+                  <span />
+                  {(["up", "down"] as const).map((outcome) => (
+                    <Text
+                      key={outcome}
+                      size="xs"
+                      className={cn(
+                        "oui-font-semibold",
+                        outcome === "up"
+                          ? "oui-text-trade-profit"
+                          : "oui-text-trade-loss",
+                      )}
+                    >
+                      {t(`prediction.${outcome}`)} · USDC
+                    </Text>
+                  ))}
+                  <span />
+                  {draftOneTapAmounts.up.map((_, index) => (
+                    <React.Fragment key={index}>
+                      <span className="oui-text-xs">{index + 1}</span>
+                      {(["up", "down"] as const).map((outcome) => (
+                        <Input
+                          key={outcome}
+                          size="md"
+                          fullWidth
+                          className="oui-min-w-0"
+                          value={draftOneTapAmounts[outcome][index]}
+                          onValueChange={(nextValue) => {
+                            setDraftOneTapAmounts((previous) => ({
+                              ...previous,
+                              [outcome]: previous[outcome].map(
+                                (amount, position) =>
+                                  position === index ? nextValue : amount,
+                              ),
+                            }));
+                            setOneTapEditorError(false);
+                          }}
+                        />
+                      ))}
+                      {draftOneTapAmounts.up.length > 1 ? (
+                        <button
+                          type="button"
+                          aria-label={`${t("prediction.oneTapRemoveRow")} ${index + 1}`}
+                          onClick={() => {
+                            setDraftOneTapAmounts((previous) => ({
+                              up: previous.up.filter(
+                                (_, position) => position !== index,
+                              ),
+                              down: previous.down.filter(
+                                (_, position) => position !== index,
+                              ),
+                            }));
+                            setOneTapEditorError(false);
+                          }}
+                          className="oui-flex oui-size-4 oui-items-center oui-justify-center oui-text-base-contrast-54 hover:oui-text-base-contrast"
+                        >
+                          <CloseIcon size={14} color="inherit" opacity={1} />
+                        </button>
+                      ) : (
+                        <span className="oui-size-4" />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+                {draftOneTapAmounts.up.length < 3 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDraftOneTapAmounts((previous) => ({
+                        up: [...previous.up, ""],
+                        down: [...previous.down, ""],
+                      }));
+                      setOneTapEditorError(false);
+                    }}
+                    className="oui-mt-3 oui-text-xs oui-text-primary hover:oui-opacity-80"
+                  >
+                    + {t("prediction.oneTapAddPreset")}
+                  </button>
+                )}
+                {oneTapEditorError && (
+                  <Text size="2xs" color="danger" className="oui-mt-2">
+                    {t("prediction.oneTapInvalidAmounts")}
+                  </Text>
+                )}
+                <div className="oui-mt-3 oui-flex oui-items-center oui-justify-between oui-gap-2">
+                  <Button
+                    size="sm"
+                    variant="text"
+                    color="secondary"
+                    onClick={() => {
+                      setDraftOneTapAmounts({
+                        up: DEFAULT_ONE_TAP_AMOUNTS.up.map(String),
+                        down: DEFAULT_ONE_TAP_AMOUNTS.down.map(String),
+                      });
+                      setOneTapEditorError(false);
+                    }}
+                  >
+                    {t("common.reset")}
+                  </Button>
+                  <div className="oui-flex oui-gap-2">
+                    <Button
+                      size="sm"
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => setOneTapEditorOpen(false)}
+                    >
+                      {t("common.cancel")}
+                    </Button>
+                    <Button size="sm" onClick={saveOneTapAmounts}>
+                      {t("common.save")}
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </PopoverRoot>
+          </div>
+        )}
+
+        {isOneTap ? (
+          <div className="oui-mt-2 oui-grid oui-grid-cols-2 oui-gap-2 oui-overflow-hidden oui-rounded-lg oui-bg-base-10 oui-p-0.5 xl:oui-mt-3">
+            {(["up", "down"] as const).map((outcome) => (
+              <div
+                key={outcome}
+                className={cn(
+                  "oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-text-xs oui-font-semibold oui-leading-tight",
                   outcome === "up"
-                    ? isActive
-                      ? "oui-bg-trade-profit/15 oui-text-trade-profit"
-                      : "oui-text-base-contrast-54 hover:oui-bg-trade-profit/10"
-                    : isActive
-                      ? "oui-bg-trade-loss/15 oui-text-trade-loss"
-                      : "oui-text-base-contrast-54 hover:oui-bg-trade-loss/10",
+                    ? "oui-bg-trade-profit/15 oui-text-trade-profit"
+                    : "oui-bg-trade-loss/15 oui-text-trade-loss",
                 )}
               >
                 <span>{t(`prediction.${outcome}`)}</span>
                 <span className="oui-mt-0.5 oui-tabular-nums">
                   ${formatContractPrice(state.outcomePrices[outcome])}
                 </span>
-              </button>
-            );
-          })}
-        </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="oui-mt-2 oui-grid oui-grid-cols-2 oui-gap-2 oui-overflow-hidden oui-rounded-lg oui-bg-base-10 oui-p-0.5 xl:oui-mt-3">
+            {(["up", "down"] as const).map((outcome) => {
+              const isActive = state.selectedOutcome === outcome;
+              return (
+                <button
+                  key={outcome}
+                  type="button"
+                  onClick={() => state.setSelectedOutcome(outcome)}
+                  className={cn(
+                    "oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-text-xs oui-font-semibold oui-leading-tight oui-transition-colors",
+                    outcome === "up"
+                      ? isActive
+                        ? "oui-bg-trade-profit/15 oui-text-trade-profit"
+                        : "oui-text-base-contrast-54 hover:oui-bg-trade-profit/10"
+                      : isActive
+                        ? "oui-bg-trade-loss/15 oui-text-trade-loss"
+                        : "oui-text-base-contrast-54 hover:oui-bg-trade-loss/10",
+                  )}
+                >
+                  <span>{t(`prediction.${outcome}`)}</span>
+                  <span className="oui-mt-0.5 oui-tabular-nums">
+                    ${formatContractPrice(state.outcomePrices[outcome])}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="oui-mt-2 oui-flex oui-items-center oui-justify-between oui-text-2xs xl:oui-mt-3">
           <Tips
@@ -477,7 +773,7 @@ export const TradePanel: React.FC<
             content={
               <div className="oui-text-pretty oui-text-2xs oui-leading-normal oui-text-base-contrast-80">
                 {t(
-                  state.orderSide === "buy"
+                  isBuyContext
                     ? "prediction.available.buyHint"
                     : "prediction.available.sellHint",
                 )}
@@ -494,7 +790,7 @@ export const TradePanel: React.FC<
           />
           <div className="oui-flex oui-items-center oui-gap-1">
             <span className="oui-text-base-contrast-80">{availableValue}</span>
-            {state.orderSide === "buy" && (
+            {isBuyContext && (
               <Button
                 type="button"
                 variant="text"
@@ -518,133 +814,180 @@ export const TradePanel: React.FC<
           </div>
         </div>
 
-        <div className="oui-mt-2 oui-space-y-1 xl:oui-mt-3">
-          {state.orderType === "limit" && (
-            <>
-              <PredictionOrderInput
-                id="prediction-limit-price"
-                label={t("common.price")}
-                value={state.limitPrice}
-                suffix="USDC"
-                onChange={state.setLimitPrice}
-                position="top"
-              />
+        {isOneTap && (
+          <div className="oui-mt-2 oui-grid oui-grid-cols-2 oui-gap-2 xl:oui-mt-3">
+            {(["up", "down"] as const).map((outcome) => (
+              <div
+                key={outcome}
+                className="oui-flex oui-min-w-0 oui-flex-col oui-gap-2"
+              >
+                {oneTapAmounts[outcome].map((quoteAmount, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    disabled={
+                      oneTapEditorOpen ||
+                      !orderEntryAccountReady ||
+                      !orderEntryFunded ||
+                      !state.canPlaceOneTapOrder(outcome, quoteAmount)
+                    }
+                    onClick={() => state.placeOneTapOrder(outcome, quoteAmount)}
+                    className={cn(
+                      "oui-flex oui-min-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-px-1 oui-py-1 oui-text-xs oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
+                      outcome === "up"
+                        ? "oui-bg-success-darken"
+                        : "oui-bg-danger-darken",
+                    )}
+                  >
+                    <span>${quoteAmount}</span>
+                    <span className="oui-text-2xs oui-font-normal oui-tabular-nums">
+                      {t("prediction.oneTapWin")} $
+                      {formatUsd(state.oneTapPayout(outcome, quoteAmount))}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!isOneTap && (
+          <div className="oui-mt-2 oui-space-y-1 xl:oui-mt-3">
+            {state.orderType === "limit" && (
+              <>
+                <PredictionOrderInput
+                  id="prediction-limit-price"
+                  label={t("common.price")}
+                  value={state.limitPrice}
+                  suffix="USDC"
+                  onChange={state.setLimitPrice}
+                  position="top"
+                />
+                <PredictionOrderInput
+                  id="prediction-order-amount"
+                  label={t("common.amount")}
+                  value={state.amount}
+                  suffix={outcomeLabel}
+                  onChange={state.setAmount}
+                  position="middle"
+                />
+                <PredictionOrderInput
+                  id="prediction-total-value"
+                  label={t("common.totalValue")}
+                  value={
+                    state.orderQuantity > 0
+                      ? formatUsd(state.orderNotional)
+                      : ""
+                  }
+                  suffix="USDC"
+                  readOnly
+                  position="bottom"
+                />
+              </>
+            )}
+
+            {state.orderType === "market" && (
               <PredictionOrderInput
                 id="prediction-order-amount"
                 label={t("common.amount")}
                 value={state.amount}
-                suffix={outcomeLabel}
-                onChange={state.setAmount}
-                position="middle"
-              />
-              <PredictionOrderInput
-                id="prediction-total-value"
-                label={t("common.totalValue")}
-                value={
-                  state.orderQuantity > 0 ? formatUsd(state.orderNotional) : ""
+                suffix={
+                  <Select.options
+                    size="xs"
+                    showCaret
+                    value={state.amountUnit}
+                    options={amountUnitOptions}
+                    valueFormatter={(value) =>
+                      amountUnitOptions.find((option) => option.value === value)
+                        ?.label
+                    }
+                    classNames={{
+                      trigger:
+                        "oui-w-auto oui-border-none oui-bg-transparent oui-p-0 oui-shadow-none oui-text-base-contrast",
+                    }}
+                    contentProps={{ className: "oui-min-w-[112px]" }}
+                    onValueChange={state.setAmountUnit}
+                  />
                 }
-                suffix="USDC"
-                readOnly
-                position="bottom"
+                onChange={state.setAmount}
+                dp={state.amountUnit === "quote" ? 2 : 4}
+                position="single"
               />
-            </>
-          )}
+            )}
+          </div>
+        )}
 
-          {state.orderType === "market" && (
-            <PredictionOrderInput
-              id="prediction-order-amount"
-              label={t("common.amount")}
-              value={state.amount}
-              suffix={
-                <Select.options
-                  size="xs"
-                  showCaret
-                  value={state.amountUnit}
-                  options={amountUnitOptions}
-                  valueFormatter={(value) =>
-                    amountUnitOptions.find((option) => option.value === value)
-                      ?.label
-                  }
-                  classNames={{
-                    trigger:
-                      "oui-w-auto oui-border-none oui-bg-transparent oui-p-0 oui-shadow-none oui-text-base-contrast",
-                  }}
-                  contentProps={{ className: "oui-min-w-[112px]" }}
-                  onValueChange={state.setAmountUnit}
-                />
+        {!isOneTap && (
+          <div className="oui-mt-2 xl:oui-mt-3">
+            <PercentageControls
+              percentage={canAdjustAmount ? state.orderPercentage : 0}
+              onPercentageChange={state.setOrderPercentage}
+              color={sliderColor ?? "primary"}
+              disabled={!canAdjustAmount}
+              trailing={
+                <button
+                  type="button"
+                  disabled={!canAdjustAmount}
+                  onClick={() => state.setOrderPercentage(100)}
+                  className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
+                >
+                  {t(
+                    state.orderSide === "buy"
+                      ? "orderEntry.maxBuy"
+                      : "orderEntry.maxSell",
+                  )}
+                  <Text size="2xs" color={sliderColor}>
+                    {maxDisplayValue}
+                  </Text>
+                </button>
               }
-              onChange={state.setAmount}
-              dp={state.amountUnit === "quote" ? 2 : 4}
-              position="single"
             />
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="oui-mt-2 xl:oui-mt-3">
-          <PercentageControls
-            percentage={canAdjustAmount ? state.orderPercentage : 0}
-            onPercentageChange={state.setOrderPercentage}
-            color={sliderColor ?? "primary"}
-            disabled={!canAdjustAmount}
-            trailing={
-              <button
-                type="button"
-                disabled={!canAdjustAmount}
-                onClick={() => state.setOrderPercentage(100)}
-                className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
-              >
-                {t(
-                  state.orderSide === "buy"
-                    ? "orderEntry.maxBuy"
-                    : "orderEntry.maxSell",
-                )}
-                <Text size="2xs" color={sliderColor}>
-                  {maxDisplayValue}
-                </Text>
-              </button>
-            }
-          />
-        </div>
+        {!isOneTap && (
+          <>
+            <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
+              <InfoRow
+                label={t("prediction.odds")}
+                hint={t("prediction.oddsHint")}
+                value={
+                  <>
+                    <Text.numeral dp={2}>{state.odds}</Text.numeral>x
+                  </>
+                }
+                dashed
+              />
+              <InfoRow
+                label={t("prediction.toWin")}
+                hint={t("prediction.toWinHint")}
+                value={
+                  state.orderQuantity > 0
+                    ? `${formatUsd(state.estimatedPayout)} USDC`
+                    : "-- USDC"
+                }
+                dashed
+              />
+            </div>
 
-        <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
-          <InfoRow
-            label={t("prediction.odds")}
-            hint={t("prediction.oddsHint")}
-            value={
-              <>
-                <Text.numeral dp={2}>{state.odds}</Text.numeral>x
-              </>
-            }
-            dashed
-          />
-          <InfoRow
-            label={t("prediction.toWin")}
-            hint={t("prediction.toWinHint")}
-            value={
-              state.orderQuantity > 0
-                ? `${formatUsd(state.estimatedPayout)} USDC`
-                : "-- USDC"
-            }
-            dashed
-          />
-        </div>
-
-        <Button
-          className={cn(
-            "oui-mt-4",
-            !orderEntryFunded
-              ? "oui-bg-base-5 oui-text-base-contrast-36"
-              : state.orderSide === "buy"
-                ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                : "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
-          )}
-          fullWidth
-          size="md"
-          disabled={!orderEntryFunded || !state.canPlaceOrder}
-          onClick={state.placeOrder}
-        >
-          {buttonLabel}
-        </Button>
+            <Button
+              className={cn(
+                "oui-mt-4",
+                !orderEntryFunded
+                  ? "oui-bg-base-5 oui-text-base-contrast-36"
+                  : state.orderSide === "buy"
+                    ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+                    : "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
+              )}
+              fullWidth
+              size="md"
+              disabled={!orderEntryFunded || !state.canPlaceOrder}
+              onClick={state.placeOrder}
+            >
+              {buttonLabel}
+            </Button>
+          </>
+        )}
 
         <div className="oui-mt-2 oui-text-center oui-text-2xs oui-font-normal oui-text-base-contrast-54">
           {t("prediction.tradingAgreement")}{" "}
@@ -658,7 +1001,9 @@ export const TradePanel: React.FC<
             <SlippageUI
               slippage={state.slippage}
               setSlippage={state.setSlippage}
-              estSlippage={state.estimatedSlippage}
+              estSlippage={
+                isOneTap ? oneTapEstimatedSlippage : state.estimatedSlippage
+              }
             />
           )}
           <InfoRow
