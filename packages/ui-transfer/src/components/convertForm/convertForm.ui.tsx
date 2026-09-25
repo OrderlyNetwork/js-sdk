@@ -45,6 +45,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     convertRate,
     outAmounts,
     minimumReceived,
+    isCeFiQuote,
     isQuoteLoading,
     currentLTV,
     nextLTV,
@@ -115,29 +116,37 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             sourceSymbol={token?.token}
             targetSymbol={targetToken?.token}
           />
-          <Slippage
-            value={slippage}
-            onValueChange={onSlippageChange}
-            riskGuidance={{
-              recommendedValue: 0.5,
-              tooltip: t("transfer.convert.slippage.tooltip"),
-              helperText: t("transfer.convert.slippage.helper"),
-              minimumError: t("transfer.convert.slippage.minimumError"),
-              lowWarning: t("transfer.convert.slippage.lowWarning"),
-              highWarning: t("transfer.convert.slippage.highWarning"),
-            }}
-          />
-          <MinimumReceived
-            symbol={targetToken?.token || ""}
-            precision={targetToken?.precision ?? 6}
-            value={
-              isQuoteLoading ||
-              !quantity ||
-              Number.isNaN(Number(minimumReceived))
-                ? "-"
-                : minimumReceived.toString()
-            }
-          />
+          {/* CeFi execution ignores slippage, so the input is hidden and the
+              request silently carries the default value. */}
+          {!isCeFiQuote && (
+            <Slippage
+              value={slippage}
+              onValueChange={onSlippageChange}
+              riskGuidance={{
+                recommendedValue: 0.5,
+                tooltip: t("transfer.convert.slippage.tooltip"),
+                helperText: t("transfer.convert.slippage.helper"),
+                minimumError: t("transfer.convert.slippage.minimumError"),
+                lowWarning: t("transfer.convert.slippage.lowWarning"),
+                highWarning: t("transfer.convert.slippage.highWarning"),
+              }}
+            />
+          )}
+          {/* CeFi manual swaps carry no slippage guarantee, so the estimated
+              amount must not be presented as a guaranteed minimum. */}
+          {!isCeFiQuote && (
+            <MinimumReceived
+              symbol={targetToken?.token || ""}
+              precision={targetToken?.precision ?? 6}
+              value={
+                isQuoteLoading ||
+                !quantity ||
+                Number.isNaN(Number(minimumReceived))
+                  ? "-"
+                  : minimumReceived.toString()
+              }
+            />
+          )}
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
             currentLtv={currentLTV}

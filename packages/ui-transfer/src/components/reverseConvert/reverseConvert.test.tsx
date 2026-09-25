@@ -84,6 +84,15 @@ describe("Robinhood withdrawal conversion", () => {
     expect(result.sourceToken.token).toBe("USDT");
     expect(result.targetToken.token).toBe("USDC");
   });
+  it("lists CeFi-swap tokens (on_chain_swap false) as forward sources", () => {
+    data.tokens = tokens;
+    mount(() => useToken({ defaultValue: "USDG" }));
+    expect(result.sourceToken.token).toBe("USDG");
+    expect(result.targetToken.token).toBe("USDC");
+    expect(
+      result.sourceTokens.map(({ token }: { token: string }) => token),
+    ).toEqual(expect.arrayContaining(["USDT", "USDG"]));
+  });
   it("selects USDG for external withdrawal even with zero USDG holdings", () => {
     data.tokens = tokens;
     data.holdings = [{ token: "USDC", holding: 1250 }];

@@ -44,6 +44,8 @@ import {
   calculateMinimumReceived,
   calculateQuoteRate,
   getQuoteTargetAmount,
+  isCeFiQuote,
+  resolveIsCeFiQuote,
 } from "./quoteAmount";
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
@@ -53,6 +55,8 @@ const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 const ORDERLY_TRACKED_CONVERT_KEY = "orderly_tracked_convert";
 const SWAP_QUOTE_DEBOUNCE_MS = 300;
 const CONVERT_HISTORY_REFRESH_INTERVAL = 10_000;
+/** CeFi manual swaps ignore request slippage; the field must still be valid. */
+const CEFI_REQUEST_SLIPPAGE_PERCENT = 0.5;
 const CONVERT_DELAY_WARNING_TIMEOUT = 20_000;
 const CONVERT_HISTORY_URL = "/v1/asset/convert_history?page=1&size=20";
 
@@ -132,6 +136,15 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       setSlippage(normalizedSlippage);
     }
   }, [normalizedSlippage, setSlippage, slippage, reverse]);
+
+  // CeFi execution ignores the slippage field, but the shared manual_convert
+  // validation still requires a legal value, so on_chain_swap=false tokens
+  // (always CeFi-routed) send the default. Keyed to metadata only: folding
+  // live-quote state here would re-trigger a quote each time one lands.
+  const requestSlippagePercent =
+    sourceToken?.on_chain_swap === false
+      ? CEFI_REQUEST_SLIPPAGE_PERCENT
+      : normalizedSlippage;
 
   const { state: accountState } = useAccount();
   const canQueryConvertHistory =
@@ -324,7 +337,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     };
     return convert({
       amount: Number(quantity),
-      slippage: new Decimal(normalizedSlippage).div(100).toNumber(),
+      slippage: new Decimal(requestSlippagePercent).div(100).toNumber(),
       receivedAsset: targetToken?.token,
     })
       .then((response) => {
@@ -399,10 +412,10 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       fromToken: sourceToken.token,
       toToken: targetToken.token,
       amount: new Decimal(quantity).toNumber(),
-      slippage: new Decimal(normalizedSlippage).div(100).toNumber(),
+      slippage: new Decimal(requestSlippagePercent).div(100).toNumber(),
     };
   }, [
-    normalizedSlippage,
+    requestSlippagePercent,
     quantity,
     sourceToken?.token,
     targetToken?.token,
@@ -519,8 +532,47 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     quoteTargetAmount,
   ]);
 
+  // CeFi display rules belong to the pair, but routing is only observable
+  // from a matched quote; remember the last matched chainId so the rules
+  // survive quote reloads (input edits, expiry re-quotes, cleared input).
+  const [rememberedChainId, setRememberedChainId] = useState<string>();
+
+  useEffect(() => {
+    if (quoteData && isQuoteDataMatched) {
+      setRememberedChainId(quoteData.chainId);
+    }
+  }, [quoteData, isQuoteDataMatched]);
+
+  // A different pair must prove its routing with a fresh quote before the
+  // remembered chainId can drive display decisions again.
+  useEffect(() => {
+    setRememberedChainId(undefined);
+  }, [sourceToken?.token, targetToken?.token]);
+
+  // on_chain_swap=false tokens always route via CeFi, so token metadata can
+  // seed the routing guess before the first live quote lands; the quote's
+  // chainId remains the ground truth once available. The reverse inference
+  // does not hold (true only means on-chain is possible), so metadata stays
+  // a hint and never the authority (see resolveIsCeFiQuote).
+  const metadataHintsCeFi = sourceToken?.on_chain_swap === false;
+
+  const memoizedIsCeFiQuote = useMemo(
+    () =>
+      resolveIsCeFiQuote(
+        quoteData?.chainId,
+        Boolean(quoteData && isQuoteDataMatched),
+        rememberedChainId,
+        metadataHintsCeFi,
+      ),
+    [quoteData, isQuoteDataMatched, rememberedChainId, metadataHintsCeFi],
+  );
+
   const memoizedMinimumReceived = useMemo<string>(() => {
     if (!quoteData || isQuoteLoading || !isQuoteDataMatched) {
+      return "0";
+    }
+
+    if (isCeFiQuote(quoteData.chainId)) {
       return "0";
     }
 
@@ -634,6 +686,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       setSlippage(normalizeConvertSlippage(value)),
     convertRate: memoizedConvertRate,
     minimumReceived: memoizedMinimumReceived,
+    isCeFiQuote: memoizedIsCeFiQuote,
     outAmounts: memoizedOutAmounts,
     isQuoteLoading,
     activeConvertRequest,
