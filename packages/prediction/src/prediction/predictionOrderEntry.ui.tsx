@@ -63,14 +63,23 @@ const matchesOneTapPreset = (amounts: number[], preset: number[]) =>
   amounts.every((amount, index) => amount === preset[index]);
 
 const resolveOneTapAmounts = (
-  amounts: unknown,
+  stored: OneTapAmounts | number[],
   outcome: PredictionOutcome,
-): number[] =>
-  validOneTapAmounts(amounts) &&
-  !matchesOneTapPreset(amounts, PREVIOUS_ONE_TAP_DEFAULT) &&
-  !matchesOneTapPreset(amounts, LEGACY_ONE_TAP_DEFAULT)
-    ? amounts
+): number[] => {
+  // Only the legacy flat-array storage ever held the factory presets; values
+  // saved through the editor keep the object shape and must survive reload
+  // even when they happen to match a former default.
+  if (Array.isArray(stored)) {
+    return validOneTapAmounts(stored) &&
+      !matchesOneTapPreset(stored, PREVIOUS_ONE_TAP_DEFAULT) &&
+      !matchesOneTapPreset(stored, LEGACY_ONE_TAP_DEFAULT)
+      ? stored
+      : DEFAULT_ONE_TAP_AMOUNTS[outcome];
+  }
+  return validOneTapAmounts(stored?.[outcome])
+    ? stored[outcome]
     : DEFAULT_ONE_TAP_AMOUNTS[outcome];
+};
 
 const alignOneTapAmounts = (up: number[], down: number[]): OneTapAmounts => {
   const rowCount = Math.max(up.length, down.length);
@@ -414,15 +423,9 @@ export const TradePanel: React.FC<
     down: DEFAULT_ONE_TAP_AMOUNTS.down.map(String),
   });
   const [oneTapEditorError, setOneTapEditorError] = useState(false);
-  const storedUpAmounts = Array.isArray(storedOneTapAmounts)
-    ? storedOneTapAmounts
-    : storedOneTapAmounts?.up;
-  const storedDownAmounts = Array.isArray(storedOneTapAmounts)
-    ? storedOneTapAmounts
-    : storedOneTapAmounts?.down;
   const oneTapAmounts = alignOneTapAmounts(
-    resolveOneTapAmounts(storedUpAmounts, "up"),
-    resolveOneTapAmounts(storedDownAmounts, "down"),
+    resolveOneTapAmounts(storedOneTapAmounts, "up"),
+    resolveOneTapAmounts(storedOneTapAmounts, "down"),
   );
   const isOneTap = tradeMode === "oneTap";
   const isBuyContext = isOneTap || state.orderSide === "buy";
