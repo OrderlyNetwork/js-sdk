@@ -1,7 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.idea
-
 # dependencies
 node_modules
 .pnp
@@ -10,60 +8,56 @@ node_modules
 # testing
 coverage
 
-# next.js
-.next/
-out/
-build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env.local
-
-# turbo
-.turbo
-
-# vercel
-.vercel
-
+# build outputs
 dist/
 lib/
 esm/
-
-dev-tool
-
-!apps/docs
-!apps/docs/**/*
-apps/docs/dist
+storybook-static/
+.turbo
 apps/ai-docs/generated
 
-apps/docs/_doc_meta_
-
-
-hooks-example/
-
-.vscode
-
-CLAUDE.md
-
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *storybook.log
-storybook-static/
-.claude/settings.local.json
+
+# local env files & secrets
+.env.local
+*.pem
+
+# editors & OS files
+.idea
+.vscode
+.DS_Store
+.tmp.*
+
+# spec workflow (specflow specs / PRD references)
 .specify/
 .specs/
 specs/
-.tmp.*
-.qoder/
 .specflow
 .reference/
+
+# agent & AI tools
+.qoder/
+.zcode/
+.zcodeignore
+.claude/settings.local.json
 skills-lock.json
-sdk-docs/bundled
-*.sqlite
 .mcp.json
+*.sqlite
+
+# legacy: next.js / vercel leftovers (repo has no Next app)
+.next/
+out/
+build
+.vercel
+
+# legacy: local dirs that no longer exist (apps/docs was removed)
+dev-tool
+hooks-example/
+!apps/docs
+!apps/docs/**/*
+apps/docs/dist
+apps/docs/_doc_meta_
