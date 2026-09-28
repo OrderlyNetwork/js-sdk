@@ -1,6 +1,14 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Button, cn, toast } from "@orderly.network/ui";
+import {
+  Flex,
+  Text,
+  Button,
+  Divider,
+  Tooltip,
+  cn,
+  toast,
+} from "@orderly.network/ui";
 import { ReferralCodeFormField } from "../../../../types";
 import { ReferralInfoReturns } from "./referralInfo.script";
 
@@ -96,6 +104,43 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
           />
         ) : null}
       </Flex>
+
+      {props.showTradingFeeRebate && (
+        <>
+          <Divider intensity={6} className="oui-w-full" />
+          <Flex
+            width="100%"
+            justify="between"
+            itemAlign="center"
+            gap={2}
+            p={5}
+            r="2xl"
+            className="oui-affiliate-referralInfo-tradingFeeRebate oui-bg-base-contrast-4"
+          >
+            <Tooltip
+              content={t("affiliate.tradingFeeRebate.description")}
+              className="oui-max-w-[280px]"
+            >
+              <Text
+                size="base"
+                intensity={98}
+                tabIndex={0}
+                className="oui-min-w-0 oui-cursor-help oui-leading-6 oui-tracking-[0.03em] oui-underline oui-decoration-dotted oui-underline-offset-[6px]"
+              >
+                {t("affiliate.tradingFeeRebate")}: {props.tradingFeeRebateRate}%
+              </Text>
+            </Tooltip>
+            <Button
+              size="xs"
+              color="secondary"
+              className="oui-shrink-0"
+              onClick={props.onSetTradingFeeRebate}
+            >
+              {t("affiliate.tradingFeeRebate.set")}
+            </Button>
+          </Flex>
+        </>
+      )}
     </Flex>
   );
 };

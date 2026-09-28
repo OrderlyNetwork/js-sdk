@@ -96,6 +96,12 @@ export const affiliate = {
   "affiliate.trader.tradingRebates": "Trading rebates",
   "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
+  "affiliate.trader.yourRebateRate": "Your rebate rate",
+  "affiliate.trader.refereeRebate": "Referee rebate",
+  "affiliate.trader.tradingVolume": "Trading volume",
+  "affiliate.trader.past7d": "Past 7D",
+  "affiliate.trader.past30d": "Past 30D",
+  "affiliate.trader.past90d": "Past 90D",
   "affiliate.referralCode.editCodeModal.title": "Settings",
   "affiliate.referralCode.editCodeModal.description": "Edit your referral code",
   "affiliate.referralCode.editCodeModal.label": "Referral code",
@@ -166,11 +172,19 @@ export const affiliate = {
   "affiliate.directTradesDescription": "When your direct referee trades.",
   "affiliate.indirectTradesDescription":
     "When your referee's recruits (or deeper) trade.",
+  "affiliate.tradingFeeRebate": "Trading fee rebate",
+  "affiliate.tradingFeeRebate.description":
+    "Set the percentage of trading fees your directly referred traders receive back. Rebates are paid from your referral commission.",
+  "affiliate.tradingFeeRebate.set": "Set rebate",
+  "affiliate.tradingFeeRebate.modal.title": "Set trading fee rebate",
+  "affiliate.tradingFeeRebate.rate": "Trading fee rebate rate",
+  "affiliate.tradingFeeRebate.maximumAllowed": "Maximum allowed: {{rate}}%",
+  "affiliate.tradingFeeRebate.save.success": "Trading fee rebate saved.",
   "affiliate.extraBonusOnDirectReferrals":
     "<0>+ {{amount}}%</0> extra bonus on direct referrals",
-  "affiliate.earnReferralCommissions": "Earn referral commissions",
-  "affiliate.earnReferralCommissions.description":
-    "Invite traders and earn passive commissions from trades made throughout your entire referral network",
+  "affiliate.referralRewards": "Referral rewards",
+  "affiliate.referralRewards.description":
+    "Earn commissions from your referral network and view any trading fee rebates you're eligible for.",
 
   "affiliate.newReferralProgram.title": "Introducing the new referral program",
   "affiliate.newReferralProgram.description":

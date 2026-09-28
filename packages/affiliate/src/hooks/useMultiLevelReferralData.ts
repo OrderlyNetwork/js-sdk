@@ -3,6 +3,7 @@ import { Decimal } from "@orderly.network/utils";
 import {
   useMaxRebateRate,
   useMultiLevelRebateInfo,
+  useRefereeKickbackInfo,
   useVolumePrerequisite,
 } from "./useReferralApi";
 
@@ -28,6 +29,12 @@ export const useMultiLevelReferralData = () => {
 
   // if maxRebateRateRes is undefined, it means the multi-level referral is not enabled
   const isMultiLevelEnabled = !!maxRebateRateRes;
+  const {
+    data: refereeKickbackInfoRows,
+    isLoading: refereeKickbackInfoLoading,
+  } = useRefereeKickbackInfo(isMultiLevelEnabled);
+  // The fetcher unwraps the rows-wrapped payload into an array; keep the first row.
+  const refereeKickbackInfo = refereeKickbackInfoRows?.[0];
   const maxRebateRate = maxRebateRateRes?.max_rebate_rate;
   const bonusMaxRebateRate =
     maxRebateRateRes?.bonus_max_rebate_rate ?? maxRebateRate ?? 0;
@@ -61,7 +68,8 @@ export const useMultiLevelReferralData = () => {
   const isLoading =
     volumePrerequisiteLoading ||
     maxRebateRateLoading ||
-    multiLevelRebateInfoLoading;
+    multiLevelRebateInfoLoading ||
+    refereeKickbackInfoLoading;
 
   return {
     volumePrerequisite,
@@ -70,6 +78,7 @@ export const useMultiLevelReferralData = () => {
     bonusMaxRebateRate,
     baseRebateRate,
     multiLevelRebateInfo,
+    refereeKickbackInfo,
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,

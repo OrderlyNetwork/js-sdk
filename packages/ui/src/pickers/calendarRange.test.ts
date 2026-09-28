@@ -1,0 +1,22 @@
+import { describe, expect, it } from "vitest";
+import { isWithinCalendarMonths } from "./calendarRange";
+
+describe("calendar month range", () => {
+  it("allows the same date three calendar months later", () => {
+    expect(
+      isWithinCalendarMonths(new Date(2026, 5, 28), new Date(2026, 8, 28), 3),
+    ).toBe(true);
+    expect(
+      isWithinCalendarMonths(new Date(2026, 5, 28), new Date(2026, 8, 29), 3),
+    ).toBe(false);
+  });
+
+  it("handles month-end clamping and a reversed selection", () => {
+    expect(
+      isWithinCalendarMonths(new Date(2024, 0, 31), new Date(2024, 3, 30), 3),
+    ).toBe(true);
+    expect(
+      isWithinCalendarMonths(new Date(2024, 4, 1), new Date(2024, 0, 31), 3),
+    ).toBe(false);
+  });
+});

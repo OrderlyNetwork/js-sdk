@@ -43,6 +43,12 @@ export const useReferralCode = () => {
     return doUpdateRebateRate(params);
   };
 
+  const updateDefaultRefereeKickbackRatio = async (params: {
+    default_referee_kickback_ratio: number;
+  }) => {
+    return doUpdateRebateRate(params);
+  };
+
   const resetRebateRate = async (params: { account_ids: string[] }) => {
     return doResetRebateRate(params);
   };
@@ -59,6 +65,7 @@ export const useReferralCode = () => {
     createReferralCode,
     editReferralCode,
     updateRebateRate,
+    updateDefaultRefereeKickbackRatio,
     resetRebateRate,
     isMutating,
   } as const;
