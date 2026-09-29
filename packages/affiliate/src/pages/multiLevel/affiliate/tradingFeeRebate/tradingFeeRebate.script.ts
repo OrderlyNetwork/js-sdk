@@ -25,7 +25,7 @@ export const useTradingFeeRebateScript = (
   );
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { updateDefaultRefereeKickbackRatio, isMutating } = useReferralCode();
+  const { updateKickbackRatio, isMutating } = useReferralCode();
 
   const isValid = useMemo(() => {
     if (!PERCENT_INPUT_PATTERN.test(percentage)) return false;
@@ -48,10 +48,8 @@ export const useTradingFeeRebateScript = (
     if (buttonDisabled) return;
 
     try {
-      const response = await updateDefaultRefereeKickbackRatio({
-        default_referee_kickback_ratio: new Decimal(percentage)
-          .div(100)
-          .toNumber(),
+      const response = await updateKickbackRatio({
+        referee_kickback_ratio: new Decimal(percentage).div(100).toNumber(),
       });
 
       if (!response.success) {
