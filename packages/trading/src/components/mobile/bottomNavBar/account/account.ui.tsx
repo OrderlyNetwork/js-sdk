@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Button, formatAddress } from "@orderly.network/ui";
-import { AccountState } from "./account.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { AccountState } from "./account.script";
 
 export const Account: FC<AccountState> = (props) => {
   return (
@@ -11,7 +11,7 @@ export const Account: FC<AccountState> = (props) => {
       }}
     >
       <Button
-        variant="gradient"
+        variant="contained"
         size={"sm"}
         className="oui-max-w-[83px]"
         onClick={(e) => {

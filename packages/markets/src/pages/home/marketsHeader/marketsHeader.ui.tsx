@@ -13,10 +13,6 @@ type MarketsHeaderProps = MarketsHeaderReturns & {
 };
 export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
   const {
-    emblaRef,
-    emblaApi,
-    scrollIndex,
-    enableScroll,
     news,
     gainers,
     losers,
@@ -28,11 +24,6 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
   const { onSymbolChange } = useMarketsContext();
   const { t } = useTranslation();
 
-  const cls = cn(
-    "oui-min-w-0 oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)]",
-    enableScroll && "oui-cursor-pointer oui-select-none",
-  );
-
   const onSymbol = (item: any) => {
     onSymbolChange?.(item);
     favorite.addToHistory(item);
@@ -42,14 +33,12 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
     <div
       id="oui-markets-header"
       className={cn("oui-overflow-hidden", props.className)}
-      ref={enableScroll ? emblaRef : undefined}
     >
-      <Flex width="100%" gapX={4}>
+      <div className="oui-grid oui-grid-cols-3 oui-gap-4">
         <BlockList
           total24Amount={total24Amount}
           totalOpenInterest={totalOpenInterest}
           tvl={tvl}
-          className={cls}
         />
         <CardItem
           data={news}
@@ -58,7 +47,6 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
               {t("markets.newListings")}
             </Text.gradient>
           }
-          className={cls}
           onSymbol={onSymbol}
         />
         <CardItem
@@ -68,7 +56,6 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
               {t("markets.topGainers")}
             </Text>
           }
-          className={cls}
           onSymbol={onSymbol}
         />
         <CardItem
@@ -78,15 +65,7 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
               {t("markets.topLosers")}
             </Text>
           }
-          className={cls}
           onSymbol={onSymbol}
-        />
-      </Flex>
-      <div className="oui-mb-3 oui-mt-1  3xl:oui-mb-0 3xl:oui-mt-4">
-        <ScrollIndicator
-          scrollIndex={scrollIndex}
-          scrollPrev={emblaApi?.scrollPrev}
-          scrollNext={emblaApi?.scrollNext}
         />
       </div>
     </div>
@@ -136,17 +115,16 @@ const BlockList: React.FC<BlockListProps> = (props) => {
   }, [t, total24Amount, totalOpenInterest, tvl]);
 
   return (
-    <Flex
-      direction="column"
-      justify="between"
-      width="100%"
-      height={236}
-      className={props.className}
+    <div
+      className={cn(
+        "oui-col-span-3 oui-grid oui-grid-cols-3 oui-gap-4",
+        props.className,
+      )}
     >
       {list?.map((item, index) => (
         <BlockItem key={`item-${index}`} {...item} />
       ))}
-    </Flex>
+    </div>
   );
 };
 /** -----------MarketsHeader start ------------ */
@@ -160,17 +138,31 @@ type BlockItemProps = {
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
   return (
-    <Box intensity={900} r="lg" px={4} py={3} width="100%">
-      <Text as="div" intensity={36} size="xs" weight="semibold">
+    <Box
+      r="lg"
+      className={cn(
+        "oui-flex oui-w-full oui-flex-col oui-justify-between",
+        "oui-min-h-[clamp(6.5rem,8vw,8.25rem)] oui-p-[clamp(1rem,1.75vw,1.75rem)]",
+        "oui-bg-primary-darken oui-text-primary-contrast",
+      )}
+    >
+      <Text
+        as="div"
+        weight="semibold"
+        className="oui-text-[length:clamp(0.75rem,0.9vw,0.875rem)] oui-leading-5 oui-text-primary-contrast/80"
+      >
         {props.label}
       </Text>
 
       <Text.numeral
-        size="base"
         currency="$"
         dp={props.dp || 0}
         rm={Decimal.ROUND_DOWN}
         rule={props.rule as any}
+        className={cn(
+          "oui-text-[length:clamp(1.5rem,2.25vw,2.75rem)] oui-font-semibold",
+          "oui-tabular-nums oui-tracking-[-0.025em] oui-leading-none",
+        )}
       >
         {props.value!}
       </Text.numeral>
@@ -187,14 +179,7 @@ type CardItemProps = {
 
 const CardItem: React.FC<CardItemProps> = (props) => {
   return (
-    <Box
-      intensity={900}
-      r="lg"
-      py={4}
-      pb={2}
-      height={236}
-      className={props.className}
-    >
+    <Box intensity={900} r="lg" py={4} pb={2} className={props.className}>
       <Box px={4}>
         <Text.gradient color="brand" size="sm" weight="semibold">
           {props.title}
@@ -272,51 +257,3 @@ const ListItem: React.FC<ListItemProps> = (props) => {
     </Box>
   );
 };
-
-interface ScrollIndicatorProps {
-  scrollIndex: number;
-  scrollPrev?: () => void;
-  scrollNext?: () => void;
-}
-
-const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
-  const { scrollIndex, scrollPrev, scrollNext } = props;
-
-  return (
-    <Flex gapX={1} justify="center" className="3xl:oui-hidden">
-      {[0, 1].map((item) => {
-        return (
-          <Box
-            key={item}
-            py={1}
-            pl={item === 0 ? 1 : 0}
-            pr={item === 1 ? 1 : 0}
-            onClick={() => {
-              if (scrollIndex === 0 && item === 1) {
-                scrollNext?.();
-              } else if (scrollIndex === 1 && item === 0) {
-                scrollPrev?.();
-              }
-            }}
-            className="oui-cursor-pointer"
-          >
-            <Box
-              key={item}
-              width={8}
-              height={4}
-              r="full"
-              className={cn(
-                "oui-transition-all oui-duration-300",
-                scrollIndex === item
-                  ? "oui-w-4 oui-bg-base-contrast-36"
-                  : "oui-bg-base-contrast-20",
-              )}
-            />
-          </Box>
-        );
-      })}
-    </Flex>
-  );
-};
-
-export default ScrollIndicator;

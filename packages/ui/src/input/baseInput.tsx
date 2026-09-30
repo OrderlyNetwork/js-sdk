@@ -10,11 +10,10 @@ import { InputHTMLAttributes } from "react";
 import { findLongestCommonSubString } from "@orderly.network/utils";
 import { InputFormatter } from "./formatter/inputFormatter";
 
-export interface BaseInputProps<T = string>
-  extends Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    "size" | "prefix" | "disabled" | "inputMode" | "color"
-  > {
+export interface BaseInputProps<T = string> extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "size" | "prefix" | "disabled" | "inputMode" | "color"
+> {
   disabled?: boolean;
 
   clearable?: boolean;
@@ -23,6 +22,10 @@ export interface BaseInputProps<T = string>
   helpText?: string;
   loading?: boolean;
   inputMode?: "decimal" | "numeric" | "amount";
+  // TODO: "containerClassName" is accepted but never applied to any DOM node, so
+  // classes passed by consumers (affiliate editReferralRate, ui-share sharePnL)
+  // have no effect. Implement it (e.g. forward to the root wrapper) or remove it
+  // together with its usages.
   containerClassName?: string;
 
   formatters?: InputFormatter[];

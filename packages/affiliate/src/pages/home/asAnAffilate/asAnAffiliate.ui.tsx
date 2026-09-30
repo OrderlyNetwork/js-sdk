@@ -11,14 +11,13 @@ export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
   return (
     <Flex
       id="oui-affiliate-home-asAnAffiliate"
-      gradient="primary"
       r={"2xl"}
       p={6}
       gap={6}
       direction={"column"}
-      angle={180}
       width={"100%"}
       justify={"between"}
+      className="oui-bg-primary-darken oui-text-primary-contrast"
     >
       <Flex
         direction={"row"}

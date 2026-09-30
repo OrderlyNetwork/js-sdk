@@ -3,6 +3,8 @@ import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { MarketsTabName } from "../../type";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
+import { useLowVolumeMarketFilter } from "../shared/lowVolumeMarketFilter";
+import { filterMarketsByLowVolume } from "../shared/marketVolumeFilter";
 import { type MarketsListWidgetProps } from "./marketsList.widget";
 
 export type MarketsListScriptOptions = MarketsListWidgetProps;
@@ -30,19 +32,28 @@ export const useMarketsListScript = (options: MarketsListScriptOptions) => {
   const { favorites, selectedFavoriteTab } = favorite;
 
   const { searchValue } = useMarketsContext();
+  const { showLowVolume } = useLowVolumeMarketFilter();
 
   const { onSort, getSortedList } = useSort(
     options.initialSort,
     options.onSort,
   );
 
-  const dataSource = useMemo(() => {
+  const { dataSource, isHiddenByLowVolumeFilter } = useMemo(() => {
     const filterList =
       typeof options.dataFilter === "function"
         ? options.dataFilter(data, { favorites, selectedFavoriteTab })
         : data;
     const searchResults = searchBySymbol(filterList, searchValue, "base");
-    return getSortedList(searchResults);
+    const { visibleMarkets, allHidden } = filterMarketsByLowVolume(
+      searchResults,
+      showLowVolume,
+    );
+
+    return {
+      dataSource: getSortedList(visibleMarkets),
+      isHiddenByLowVolumeFilter: allHidden,
+    };
   }, [
     data,
     getSortedList,
@@ -50,6 +61,7 @@ export const useMarketsListScript = (options: MarketsListScriptOptions) => {
     options.dataFilter,
     favorites,
     selectedFavoriteTab,
+    showLowVolume,
   ]);
 
   useEffect(() => {
@@ -61,6 +73,7 @@ export const useMarketsListScript = (options: MarketsListScriptOptions) => {
   return {
     loading,
     dataSource,
+    isHiddenByLowVolumeFilter,
     favorite,
     onSort,
     isFavoritesList,

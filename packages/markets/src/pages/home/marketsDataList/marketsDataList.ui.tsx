@@ -1,12 +1,13 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, TabPanel, Tabs } from "@orderly.network/ui";
+import { Box, Flex, TabPanel, Tabs } from "@orderly.network/ui";
 import { CommunityBrokerTabs } from "../../../components/communityBrokerTabs";
 import { FavoritesEmpty } from "../../../components/favoritesEmpty";
 import type { MarketsListFullType } from "../../../components/marketsListFull/marketsListFull.script";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { RwaSubcategoryTabs } from "../../../components/rwaSubcategoryTabs";
 import { RwaIconTab } from "../../../components/rwaTab";
+import { ShowLowVolumeFilter } from "../../../components/shared/showLowVolumeFilter";
 import {
   composeTabTitle,
   isBuiltInMarketTab,
@@ -114,16 +115,29 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   );
 
   return (
-    <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
+    <Box
+      id="oui-markets-list"
+      intensity={900}
+      p={6}
+      r="2xl"
+      className="oui-mt-6"
+    >
       <Tabs
         variant="contained"
         size="xl"
         value={activeTab}
         onValueChange={onTabChange}
         trailing={
-          <React.Suspense fallback={null}>
-            <LazySearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
-          </React.Suspense>
+          <Flex className="oui-my-1 oui-min-w-0 oui-items-center oui-gap-x-3">
+            <React.Suspense fallback={null}>
+              <LazySearchInput
+                classNames={{
+                  root: "oui-min-w-0 oui-w-[240px]",
+                }}
+              />
+            </React.Suspense>
+            <ShowLowVolumeFilter />
+          </Flex>
         }
         classNames={{
           tabsList: "oui-tabs-markets-list",

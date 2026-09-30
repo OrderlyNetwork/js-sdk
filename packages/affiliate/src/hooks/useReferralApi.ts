@@ -24,6 +24,17 @@ export const useMaxRebateRate = () => {
   );
 };
 
+/** Get the trader's multi-level fee kickback rate. The endpoint wraps the payload in `rows`, which the fetcher unwraps into an array. */
+export const useRefereeKickbackInfo = (enabled: boolean) => {
+  return usePrivateQuery<API.Referral.RefereeKickbackInfo[]>(
+    enabled ? "/v1/referral/multi_level/referee_kickback_info" : null,
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
+    },
+  );
+};
+
 /** Generate Referral Code */
 export const useMultiLevelRebateInfo = () => {
   return usePrivateQuery<API.Referral.MultiLevelRebateInfo>(

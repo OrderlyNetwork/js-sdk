@@ -20,7 +20,7 @@ Main package barrel for `@orderly.network/ui`. Re-exports all public components 
 | tv                                                                                                       | function                | Styling           | From utils/tv                                                                                            |
 | toast                                                                                                    | function                | Notifications     | default from react-hot-toast                                                                             |
 | utils, hooks                                                                                             | namespace               | Utils & hooks     | From utils, hooks                                                                                        |
-| OUITailwind, DARK_THEME_CSS_VARS, LIGHT_THEME_CSS_VARS, ThemeCssVars                                     | namespace / vars / type | Tailwind & theme  | From tailwind                                                                                            |
+| OUITailwind, DARK_THEME_CSS_VARS, PURPLE_DARK_THEME_CSS_VARS, LIGHT_THEME_CSS_VARS, ThemeCssVars         | namespace / vars / type | Tailwind & theme  | From tailwind                                                                                            |
 | ButtonProps, BoxProps, FlexProps, InputProps, TextFieldProps, …                                          | type                    | Prop types        | Various                                                                                                  |
 
 ## index.ts 依赖与调用关系

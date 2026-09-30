@@ -1,4 +1,4 @@
-export const CUSTOM_THEME_CSS_VARS = {
+export const BLUE_DARK_THEME_CSS_VARS = {
   "--oui-font-family":
     '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 

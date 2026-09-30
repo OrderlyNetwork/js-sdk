@@ -22,6 +22,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { RwaSubcategoryTabs } from "../rwaSubcategoryTabs";
 import { RwaIconTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import { ShowLowVolumeFilter } from "../shared/showLowVolumeFilter";
 import {
   isBuiltInMarketTab,
   tabKey,
@@ -227,10 +228,15 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
       )}
       height="100%"
     >
-      <Box className="oui-p-1">
+      <Box className="oui-flex oui-min-w-0 oui-items-center oui-gap-x-2 oui-p-1">
         <React.Suspense fallback={null}>
-          <LazySearchInput />
+          <LazySearchInput
+            classNames={{
+              root: "oui-min-w-0 oui-flex-1",
+            }}
+          />
         </React.Suspense>
+        <ShowLowVolumeFilter />
       </Box>
       <Tabs
         variant="contained"

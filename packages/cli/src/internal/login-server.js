@@ -1,5 +1,4 @@
 const http = require("http");
-const { MARKETPLACE_WEB_BASE_URL } = require("./constants");
 
 const SUCCESS_HTML = `<!DOCTYPE html>
 <html>
@@ -24,14 +23,6 @@ const ERROR_HTML = (msg) => `<!DOCTYPE html>
   </div>
 </body>
 </html>`;
-
-function setCorsHeaders(res) {
-  // Allow configured marketplace web origin and keep localhost fallback for local dev login pages.
-  const allowedOrigin = MARKETPLACE_WEB_BASE_URL || "http://localhost:3030";
-  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
 
 function startCallbackServer({ port, state }) {
   let settled = false;
@@ -70,22 +61,12 @@ function startCallbackServer({ port, state }) {
       return;
     }
 
-    // CORS preflight
-    if (req.method === "OPTIONS") {
-      setCorsHeaders(res);
-      res.writeHead(204);
-      res.end();
-      return;
-    }
-
     // Only accept GET
     if (req.method !== "GET") {
       res.writeHead(405, { "Content-Type": "text/plain" });
       res.end("Method Not Allowed");
       return;
     }
-
-    setCorsHeaders(res);
 
     // Read token and state from URL query parameters
     // Support both "token" and "access_token" for compatibility
@@ -137,7 +118,22 @@ function startCallbackServer({ port, state }) {
     server.close();
   });
 
-  return { server, waitForToken, cancel };
+  /**
+   * Listen on the loopback interface only. The browser delivers the OAuth
+   * callback via top-level navigation to http://localhost:<port>, so no other
+   * network interface needs to reach this server.
+   * @returns {Promise<number>} resolves with the bound port
+   */
+  function listen() {
+    return new Promise((resolve, reject) => {
+      server.once("error", reject);
+      server.listen(port, "127.0.0.1", () => {
+        resolve(server.address().port);
+      });
+    });
+  }
+
+  return { server, waitForToken, cancel, listen };
 }
 
 module.exports = { startCallbackServer };

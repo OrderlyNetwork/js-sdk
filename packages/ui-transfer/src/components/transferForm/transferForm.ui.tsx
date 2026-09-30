@@ -117,13 +117,12 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
           />
           <Flex
             className={cn(
-              "oui-mt-[2px] oui-h-[31px] oui-text-base-contrast-54",
+              "oui-mt-[2px] oui-h-[31px] oui-text-base-contrast-54 oui-bg-base-6",
               "oui-rounded-b-xl oui-rounded-t-sm",
             )}
             justify="between"
             itemAlign="center"
             px={3}
-            intensity={600}
           >
             <Text size="2xs">
               {t("transfer.internalTransfer.currentAssetValue")}

@@ -74,9 +74,8 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
 
   const trigger = (
     <Flex
-      intensity={500}
       className={cn(
-        "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
+        "oui-rounded-t-xl oui-rounded-b-sm oui-bg-base-6",
         disabled
           ? "oui-cursor-not-allowed"
           : selectable
@@ -166,7 +165,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
             width={4}
             height={4}
             r="full"
-            className="oui-deposit-network-select-active-dot oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)]"
+            className="oui-deposit-network-select-active-dot oui-gradient-brand"
           />
         )}
       </Flex>

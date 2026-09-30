@@ -88,8 +88,8 @@ export const RwaSubcategoryTabs: React.FC<RwaSubcategoryTabsProps> = (
   // TODO: Pass available market sessions from the parent list to avoid recalculating RWA markets here.
   const [rwaMarkets] = useMarkets(MarketsType.RWA);
 
-  const visibleTabs = useMemo(() => {
-    const sessions = new Set(
+  const availableSessions = useMemo(() => {
+    return new Set(
       rwaMarkets
         .map(
           (item) =>
@@ -98,20 +98,33 @@ export const RwaSubcategoryTabs: React.FC<RwaSubcategoryTabsProps> = (
         )
         .filter(Boolean),
     );
+  }, [rwaMarkets, rwaSymbolsInfo]);
 
+  const visibleTabs = useMemo(() => {
     return RWA_SUBCATEGORY_CONFIGS.filter((tab) => {
       if (!tab.marketSession) {
         return true;
       }
-      return sessions.has(tab.marketSession);
+      // Keep the persisted selection visible while market sessions are still loading,
+      // otherwise remounting ExpandMarkets can briefly only show "all" and wipe storage.
+      if (tab.value === subcategory) {
+        return true;
+      }
+      return availableSessions.has(tab.marketSession);
     });
-  }, [rwaMarkets, rwaSymbolsInfo]);
+  }, [availableSessions, subcategory]);
 
   useEffect(() => {
-    if (!visibleTabs.some((tab) => tab.value === subcategory)) {
+    // Wait until RWA markets have loaded; an empty session set on remount would
+    // incorrectly treat a valid stored subcategory (e.g. FX) as missing.
+    if (rwaMarkets.length === 0) {
+      return;
+    }
+    const targetSession = RWA_SUBCATEGORY_SESSION_MAP[subcategory];
+    if (targetSession && !availableSessions.has(targetSession)) {
       setSubcategory("all");
     }
-  }, [subcategory, setSubcategory, visibleTabs]);
+  }, [availableSessions, rwaMarkets.length, setSubcategory, subcategory]);
 
   return (
     <Tabs

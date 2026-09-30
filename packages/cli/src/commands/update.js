@@ -6,38 +6,41 @@ const {
   warn,
   error,
   input,
-  getErrorMessage,
+  getApiErrorInfo,
 } = require("../shared");
 const { requireAuth, authenticatedFetch } = require("../internal/auth");
 const { MARKETPLACE_API_PLUGINS_URL } = require("../internal/constants");
 const { resolvePluginManifest } = require("../internal/manifest");
 const {
+  resolveCoverImageUrls,
+  validateCoverSources,
+  rememberCoverImageUrls,
+  isRemoteCoverSource,
+} = require("../internal/coverUpload");
+const {
   VALID_TAGS,
   partitionTags,
   validateUpdatePayload,
 } = require("../internal/marketplaceSchema");
+const { printMarketplaceFailure } = require("../internal/marketplaceErrors");
 
 /**
- * Include only user-editable fields supported by PATCH /plugins/{id}.
- * Undefined/null/empty values are skipped to avoid accidental field clearing.
+ * Include only user-editable fields supported by PATCH /plugins/{id}
+ * (@dex-creator/schemas MarketplaceUpdateSchema). Undefined values are
+ * omitted; an explicit null/empty usagePrompt clears the server-side value.
  * @param {object} manifest
  * @returns {object}
  */
 function buildUpdatePayload(manifest) {
   const payload = {};
 
-  const directFields = [
-    "name",
-    "description",
-    "coverImages",
-    "storybookUrl",
-    "storybookTooltip",
-    "usagePrompt",
-  ];
+  const directFields = ["name", "description", "usagePrompt"];
 
   directFields.forEach((field) => {
     const value = manifest[field];
-    if (value !== undefined && value !== null && value !== "") {
+    if (field === "usagePrompt" && (value === null || value === "")) {
+      payload[field] = null;
+    } else if (value !== undefined && value !== null && value !== "") {
       payload[field] = value;
     }
   });
@@ -56,6 +59,9 @@ function buildUpdatePayload(manifest) {
     }
   }
 
+  if (Array.isArray(manifest.coverImages) && manifest.coverImages.length > 0) {
+    payload.coverImages = manifest.coverImages;
+  }
   return payload;
 }
 
@@ -111,6 +117,20 @@ module.exports = {
       return;
     }
 
+    try {
+      validateCoverSources({
+        pluginDir: resolvedPath,
+        coverSources: manifest.coverImages ?? [],
+        // Check local files before upload: the server would reject them
+        // anyway, and cover uploads are rate-limited per hour.
+        validateImageContents: true,
+      });
+    } catch (coverError) {
+      error(`Cover image preparation failed: ${coverError.message}`);
+      process.exitCode = 1;
+      return;
+    }
+
     const payload = buildUpdatePayload(manifest);
     const validation = validateUpdatePayload(payload);
 
@@ -126,7 +146,7 @@ module.exports = {
     if (Object.keys(payload).length === 0) {
       warn("No updatable fields found in manifest.");
       info(
-        "Supported fields: name, description, tags, coverImages, storybookUrl, storybookTooltip, usagePrompt.",
+        "Supported fields: name, description, tags, coverImages, usagePrompt.",
       );
       process.exitCode = 1;
       return;
@@ -138,9 +158,41 @@ module.exports = {
       success("Dry-run completed. Update payload is valid.");
       info("PATCH target:");
       console.log(apiUrl);
-      info("\nPayload:");
+      info(
+        "\nPayload (local cover images will be uploaded only on a real update):",
+      );
       console.log(JSON.stringify(payload, null, 2));
       return;
+    }
+
+    const coverSources = payload.coverImages;
+    if (coverSources) {
+      // The cover-images endpoint keys uploads by npmName; sending an empty
+      // one would fail server-side with an unhelpful 400.
+      const hasLocalCovers = coverSources.some(
+        (source) => !isRemoteCoverSource(source),
+      );
+      if (hasLocalCovers && !String(manifest.npmName || "").trim()) {
+        error("npmName is required in the manifest to upload cover images.");
+        info(
+          "Set npmName in .orderly-manifest.json (usually copied from package.json) and rerun.",
+        );
+        process.exitCode = 1;
+        return;
+      }
+
+      try {
+        payload.coverImages = await resolveCoverImageUrls({
+          pluginDir: resolvedPath,
+          npmName: String(manifest.npmName || ""),
+          coverSources,
+        });
+      } catch (coverError) {
+        const cause = coverError?.message || String(coverError);
+        error(`Cover image preparation failed: ${cause}`);
+        process.exitCode = 1;
+        return;
+      }
     }
 
     info("Submitting update request...");
@@ -158,8 +210,17 @@ module.exports = {
       const responseData = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const serverMessage = getErrorMessage(responseData, response.status);
-        error(`Update failed: ${serverMessage}`);
+        const { code, message } = getApiErrorInfo(
+          responseData,
+          response.status,
+        );
+        printMarketplaceFailure({
+          command: "update",
+          status: response.status,
+          code,
+          message,
+          responseData,
+        });
         process.exitCode = 1;
         return;
       }
@@ -167,6 +228,18 @@ module.exports = {
       success("Plugin updated successfully!");
       info(`Plugin ID: ${responseData?.id || pluginId}`);
       info(`Status: ${responseData?.status || "N/A"}`);
+      if (
+        coverSources &&
+        rememberCoverImageUrls({
+          pluginDir: resolvedPath,
+          coverSources,
+          coverImageUrls: payload.coverImages,
+        })
+      ) {
+        info(
+          "Manifest coverImages now point at the uploaded URLs, so later runs skip re-uploading.",
+        );
+      }
     } catch (requestError) {
       const cause = requestError?.message || String(requestError);
       error(`Request failed while calling ${apiUrl}: ${cause}`);

@@ -630,13 +630,13 @@ export class Assets {
   }
 
   /**
-   * Convert non-USDC asset to USDC manually
+   * Convert assets to or from USDC manually
    */
   async convert(inputs: {
     slippage: number;
     amount: number;
-    /** must NOT be USDC */
     converted_asset: string;
+    received_asset?: string;
   }) {
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
@@ -645,16 +645,22 @@ export class Assets {
       throw new Error("account address is required");
     }
 
-    const { slippage, amount, converted_asset } = inputs;
+    const { slippage, amount, converted_asset, received_asset } = inputs;
 
-    if (!converted_asset || converted_asset.toUpperCase() === "USDC") {
-      throw new Error("converted_asset cannot be USDC");
+    const from = converted_asset?.trim().toUpperCase();
+    const to =
+      received_asset === undefined
+        ? "USDC"
+        : received_asset.trim().toUpperCase();
+    if (!from || !to || from === to || (from !== "USDC" && to !== "USDC")) {
+      throw new Error("Invalid conversion pair");
     }
 
     const payload = {
       slippage,
       amount,
-      converted_asset,
+      converted_asset: from,
+      ...(received_asset ? { received_asset: to } : {}),
     };
 
     const url = "/v1/asset/manual_convert";

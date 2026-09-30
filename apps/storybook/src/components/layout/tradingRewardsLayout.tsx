@@ -6,6 +6,7 @@ import {
 import { footerConfig, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";
+import { useCustomRender } from "./useCustomRender";
 
 type TradingRewardsLayoutProps = {
   children: ReactNode;
@@ -14,6 +15,7 @@ type TradingRewardsLayoutProps = {
 
 export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
   const mainNavProps = useMainNav();
+  const customRender = useCustomRender();
 
   const { onRouteChange } = useRouteContext();
 
@@ -23,6 +25,7 @@ export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
       mainNavProps={{
         ...mainNavProps,
         initialMenu: PathEnum.RewardsAffiliate,
+        customRender,
       }}
       routerAdapter={{
         onRouteChange,

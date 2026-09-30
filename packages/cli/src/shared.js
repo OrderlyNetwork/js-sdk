@@ -100,22 +100,26 @@ function getErrorMessage(responseData, status) {
 }
 
 /**
- * Extract a stable error code/message pair from backend payloads.
- * Supports legacy `{ message }` and structured `{ error: { code, message } }`.
+ * Extract a stable error code/message pair from backend payloads. Supports
+ * structured `{ error: { code, message } }` and the flat `{ error, code }`
+ * shape the marketplace rate limiter returns.
  *
  * @param {unknown} responseData
  * @param {number} status
  * @returns {{ code: string | null, message: string }}
  */
 function getApiErrorInfo(responseData, status) {
-  const codeCandidate = responseData?.error?.code;
-  const normalizedCode =
-    typeof codeCandidate === "string" && codeCandidate.trim()
-      ? codeCandidate.trim()
-      : null;
+  const nestedCode = responseData?.error?.code;
+  const flatCode = responseData?.code;
+  const codeCandidate =
+    typeof nestedCode === "string" && nestedCode.trim()
+      ? nestedCode
+      : typeof flatCode === "string" && flatCode.trim()
+        ? flatCode
+        : null;
 
   return {
-    code: normalizedCode,
+    code: codeCandidate ? codeCandidate.trim() : null,
     message: getErrorMessage(responseData, status),
   };
 }

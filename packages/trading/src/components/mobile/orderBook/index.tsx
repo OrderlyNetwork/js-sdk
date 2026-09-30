@@ -120,6 +120,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
             className="oui-px-0 oui-text-[8px] oui-h-6 oui-mt-2"
           />
         )}
+        {/* TODO(theme): "oui-bg-base-800/70" is an invalid token (the base scale only defines 1-10) and generates no CSS, so this loading overlay has no background. Remove it or replace with "oui-bg-base-8/70" after visual comparison. */}
         {isLoading && (
           <div className="oui-bg-base-800/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-h-full oui-min-h-[420px] oui-items-center oui-justify-center">
             <Spinner />

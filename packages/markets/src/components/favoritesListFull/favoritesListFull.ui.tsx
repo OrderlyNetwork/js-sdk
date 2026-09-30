@@ -1,10 +1,11 @@
 import { FC, ReactNode } from "react";
 import { Trans } from "@orderly.network/i18n";
 import { cn, Flex, DataTable } from "@orderly.network/ui";
-import { FavoritesTabWidget } from "../../components/favoritesTabs";
-import { useMarketsContext } from "../../components/marketsProvider";
 import { UnFavoritesIcon } from "../../icons";
+import { FavoritesTabWidget } from "../favoritesTabs";
 import { useMarketsListFullColumns } from "../marketsListFull/column";
+import { useMarketsContext } from "../marketsProvider";
+import { LowVolumeEmptyView } from "../shared/lowVolumeEmptyView";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 
 export type FavoritesListFullProps = UseFavoritesListFullReturn & {
@@ -12,7 +13,14 @@ export type FavoritesListFullProps = UseFavoritesListFullReturn & {
 };
 
 export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
-  const { dataSource, favorite, onSort, loading, pagination } = props;
+  const {
+    dataSource,
+    isHiddenByLowVolumeFilter,
+    favorite,
+    onSort,
+    loading,
+    pagination,
+  } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
@@ -39,9 +47,13 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         // minHeight={187.5}
         columns={columns}
         dataSource={dataSource}
-        emptyView={emptyView}
+        emptyView={
+          isHiddenByLowVolumeFilter ? <LowVolumeEmptyView /> : emptyView
+        }
         classNames={{
-          empty: "oui-items-start oui-mt-6",
+          empty: isHiddenByLowVolumeFilter
+            ? "oui-items-start oui-pt-16"
+            : "oui-items-start oui-mt-6",
         }}
         loading={loading}
         onRow={(record, index) => {

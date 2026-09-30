@@ -1,14 +1,17 @@
 import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useReferralContext } from "../../../../provider";
 import { ReferralCodeFormField, ReferralCodeFormType } from "../../../../types";
 import { generateReferralLink } from "../../../../utils/utils";
 import { ReferralCodeFormDialogId } from "../referralCodeForm/modal";
+import { TradingFeeRebateDialogId } from "../tradingFeeRebate/modal";
 
 export type ReferralInfoReturns = ReturnType<typeof useReferralInfoScript>;
 
 export const useReferralInfoScript = () => {
+  const { t } = useTranslation();
   const {
     referralLinkUrl,
     multiLevelRebateInfo,
@@ -59,6 +62,32 @@ export const useReferralInfoScript = () => {
       .toNumber();
   }, [multiLevelRebateInfo]);
 
+  const showTradingFeeRebate =
+    multiLevelRebateInfo?.can_configure_kickback === true &&
+    (multiLevelRebateInfo.max_referee_kickback_ratio ?? 0) > 0;
+
+  const tradingFeeRebateRate = new Decimal(
+    multiLevelRebateInfo?.bonus_max_rebate_rate ?? 0,
+  )
+    .add(multiLevelRebateInfo?.base_rebate_rate ?? 0)
+    .mul(multiLevelRebateInfo?.default_referee_kickback_ratio ?? 0)
+    .mul(100)
+    .toString();
+
+  const onSetTradingFeeRebate = () => {
+    if (!multiLevelRebateInfo || !showTradingFeeRebate) return;
+
+    modal.show(TradingFeeRebateDialogId, {
+      title: t("affiliate.tradingFeeRebate.modal.title"),
+      defaultRefereeKickbackRatio:
+        multiLevelRebateInfo.default_referee_kickback_ratio ?? 0,
+      maxRefereeKickbackRatio:
+        multiLevelRebateInfo.max_referee_kickback_ratio ?? 0,
+      directTradesRate,
+      onSuccess: () => multiLevelRebateInfoMutate(),
+    });
+  };
+
   const onEdit = (focusField?: ReferralCodeFormField) => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Edit,
@@ -88,5 +117,8 @@ export const useReferralInfoScript = () => {
     showIndirectTrades,
     showConfigureButton,
     directBonusRebateRate,
+    showTradingFeeRebate,
+    tradingFeeRebateRate,
+    onSetTradingFeeRebate,
   };
 };

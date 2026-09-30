@@ -72,8 +72,6 @@ export const AccountMenu = (props: AccountMenuProps) => {
       <Button
         data-testid="oui-testid-nav-bar-connectWallet-btn"
         size="md"
-        variant={disabled ? undefined : "gradient"}
-        angle={45}
         className="wallet-connect-button"
         loading={state.validating}
         disabled={disabled}
@@ -182,11 +180,10 @@ const WalletMenu = (props: {
       <DropdownMenuTrigger asChild>
         <Button
           size="md"
-          variant="gradient"
-          angle={45}
+          variant="contained"
           data-testid="oui-testid-nav-bar-address-btn"
         >
-          <Text.formatted rule="address" className="oui-text-base-10">
+          <Text.formatted rule="address" className="oui-text-primary-contrast">
             {address}
           </Text.formatted>
         </Button>

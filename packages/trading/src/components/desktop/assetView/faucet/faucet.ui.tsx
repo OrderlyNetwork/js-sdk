@@ -16,7 +16,7 @@ export function FaucetUi(props: FaucetState) {
       size="md"
       onClick={props.getFaucet}
       loading={props.loading}
-      className="oui-faucet-btn oui-rounded oui-border-primary-light oui-text-primary-light"
+      className="oui-faucet-btn oui-rounded oui-border-primary oui-text-primary"
       data-testid="oui-testid-assetView-getFaucet-button"
     >
       {t("trading.faucet.getTestUSDC")}

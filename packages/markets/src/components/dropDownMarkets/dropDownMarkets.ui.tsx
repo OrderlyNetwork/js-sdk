@@ -20,6 +20,7 @@ import { RwaSubcategoryTabs } from "../rwaSubcategoryTabs";
 import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import { ShowLowVolumeFilter } from "../shared/showLowVolumeFilter";
 import {
   isBuiltInMarketTab,
   tabKey,
@@ -68,12 +69,19 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   const builtInTitles = useBuiltInTitles();
 
   const search = (
-    <Flex className="oui-dropDownMarkets-search" mx={3} gapX={3} pt={3} pb={2}>
+    <Flex
+      className="oui-dropDownMarkets-search oui-items-center"
+      mx={3}
+      gapX={3}
+      pt={3}
+      pb={2}
+    >
       <SearchInput
         classNames={{
-          root: "oui-w-full",
+          root: "oui-min-w-0 oui-flex-1",
         }}
       />
+      <ShowLowVolumeFilter />
       <CloseIcon
         size={12}
         className="oui-dropDownMarkets-close-btn oui-cursor-pointer oui-text-base-contrast-80"

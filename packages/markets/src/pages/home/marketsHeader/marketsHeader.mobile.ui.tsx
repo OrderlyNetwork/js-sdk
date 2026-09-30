@@ -111,23 +111,17 @@ const BlockList: React.FC<BlockListProps> = (props) => {
   }, [t, total24Amount, totalOpenInterest, tvl]);
 
   return (
-    <Flex
-      intensity={900}
-      r="xl"
-      width="100%"
-      py={3}
-      className={props.className}
+    <div
+      className={cn(
+        "oui-grid oui-grid-cols-3",
+        "oui-gap-[clamp(0.375rem,2vw,1rem)]",
+        props.className,
+      )}
     >
       {list?.map((item, index) => (
-        <BlockItem
-          key={`item-${index}`}
-          {...item}
-          className={cn(
-            index !== list.length - 1 && "oui-border-e oui-border-line-6",
-          )}
-        />
+        <BlockItem key={`item-${index}`} {...item} />
       ))}
-    </Flex>
+    </div>
   );
 };
 
@@ -141,17 +135,32 @@ type BlockItemProps = {
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
   return (
-    <Box px={3} width="100%" className={props.className}>
-      <Text as="div" intensity={36} size="2xs" weight="semibold">
+    <Box
+      r="xl"
+      className={cn(
+        "oui-flex oui-min-w-0 oui-flex-col oui-justify-between",
+        "oui-min-h-[clamp(6.5rem,15vw,8.25rem)] oui-p-[clamp(0.75rem,2.5vw,1.5rem)]",
+        "oui-bg-primary-darken oui-text-primary-contrast",
+        props.className,
+      )}
+    >
+      <Text
+        as="div"
+        weight="semibold"
+        className="oui-text-[length:clamp(0.625rem,1.5vw,0.875rem)] oui-leading-[1.15] oui-text-primary-contrast/80"
+      >
         {props.label}
       </Text>
 
       <Text.numeral
-        size="base"
         currency="$"
         dp={props.dp || 2}
         rm={Decimal.ROUND_DOWN}
         rule={(props.rule as any) || "human"}
+        className={cn(
+          "oui-text-[length:clamp(1.25rem,3.5vw,2.25rem)] oui-font-semibold",
+          "oui-tabular-nums oui-tracking-[-0.025em] oui-leading-none",
+        )}
       >
         {props.value!}
       </Text.numeral>

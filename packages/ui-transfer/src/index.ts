@@ -20,3 +20,5 @@ export * from "./types";
 export * from "./constants/yieldBearingAssets";
 
 export * from "./components/depostiStatus";
+
+export * from "./components/reverseConvert";

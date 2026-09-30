@@ -180,7 +180,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         {shouldShowJoinButton && (
           <Button
             size={isMobile ? "md" : "lg"}
-            variant="gradient"
+            variant="contained"
             color="primary"
             loading={isJoining}
             disabled={isJoining}
@@ -195,7 +195,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         {!shouldShowJoinButton && canTrade && (
           <Button
             size={isMobile ? "md" : "lg"}
-            variant="gradient"
+            variant="contained"
             color="primary"
             className={cn([isMobile ? "oui-flex-1" : "oui-w-[140px]"])}
             onClick={onTradeNow}

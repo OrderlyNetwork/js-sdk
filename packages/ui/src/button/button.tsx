@@ -25,6 +25,8 @@ const buttonVariants = tv(
         text: "oui-bg-transparent",
         outlined: "oui-border",
         contained: "oui-text-base-contrast",
+        // Token-driven brand gradient: real gradient in themes that define
+        // gradient values, flat brand fill under flattened presets (ODS).
         gradient: "oui-gradient-brand oui-text-base-10",
       },
       size: {
@@ -66,7 +68,7 @@ const buttonVariants = tv(
       {
         variant: "contained",
         color: "secondary",
-        className: ["oui-bg-base-4", "oui-text-secondary-contrast"],
+        className: ["oui-bg-base-4"],
       },
       {
         variant: "contained",
@@ -156,7 +158,7 @@ const buttonVariants = tv(
       {
         variant: "outlined",
         color: "gray",
-        className: ["oui-border-base-2", "oui-text-base"],
+        className: ["oui-border-base-2"],
       },
       // outlined end
       // {
@@ -188,7 +190,7 @@ const buttonVariants = tv(
       {
         variant: "text",
         color: "gray",
-        className: ["oui-text-base hover:oui-bg-base-2/10"],
+        className: ["hover:oui-bg-base-2/10"],
       },
       {
         variant: "text",

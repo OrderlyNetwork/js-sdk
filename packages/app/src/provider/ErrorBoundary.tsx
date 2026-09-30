@@ -93,7 +93,7 @@ export class ErrorBoundary extends Component<
                   }
                 }}
                 className="oui-mt-4 oui-font-semibold"
-                variant="gradient"
+                variant="contained"
                 size="md"
               >
                 <RefreshIcon className="oui-me-1" />

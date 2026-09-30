@@ -14,7 +14,7 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
     <div
       className={cn(
         "oui-flex oui-items-center",
-        "oui-bg-gradient-to-b oui-from-[rgb(var(--oui-gradient-neutral-start))] oui-to-[rgb(var(--oui-gradient-neutral-end))]",
+        "oui-bg-primary-darken",
         isMobile
           ? "oui-gap-3 oui-rounded-xl oui-p-3"
           : "oui-gap-6 oui-rounded-2xl oui-p-6",
@@ -67,7 +67,7 @@ const VaultsIntroductionItem: FC<{
     >
       <div
         className={cn(
-          "oui-font-normal oui-text-base-contrast-54",
+          "oui-font-normal oui-text-primary-contrast",
           isMobile ? "oui-text-2xs" : "oui-text-base",
         )}
       >
@@ -75,8 +75,10 @@ const VaultsIntroductionItem: FC<{
       </div>
       <Text.numeral
         className={cn(
-          "oui-font-semibold",
-          isMobile ? "oui-text-base" : "oui-text-xl",
+          "oui-font-semibold oui-text-primary-contrast",
+          isMobile
+            ? "oui-text-base"
+            : "oui-text-[length:clamp(28px,2.2vw,38px)] oui-tracking-[-0.02em] oui-leading-none",
         )}
         dp={0}
         {...textProps}

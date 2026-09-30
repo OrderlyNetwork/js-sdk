@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useMemo } from "react";
+import {
+  useLocalStorage,
+  useRwaSymbolsInfoStore,
+} from "@orderly.network/hooks";
 import { Box, cn } from "@orderly.network/ui";
+import { createCommunityBrokerFilter } from "../../hooks/useCommunityTabs";
 import { MarketsTabName } from "../../type";
 import { ExpandMarketsWidget } from "../expandMarkets";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
-import { RwaSubcategoryTabs } from "../rwaSubcategoryTabs";
+import {
+  createRwaSubcategoryFilter,
+  type RwaSubcategory,
+} from "../rwaSubcategoryTabs";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import type { SideMarketsScriptReturn } from "./sideMarkets.script";
+
+const EXPAND_RWA_SUB_TAB_KEY = "orderly_expand_markets_rwa_sel_sub_tab";
+const EXPAND_COMMUNITY_SUB_TAB_KEY =
+  "orderly_expand_markets_community_sel_sub_tab";
 
 export type SideMarketsProps = SideMarketsScriptReturn & {
   className?: string;
@@ -16,8 +28,27 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
   const { activeTab, onTabChange, className, tabSort, panelSize } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
-
   const { getFavoritesProps } = useFavoritesProps();
+
+  // Reuse expand-mode subcategory selection; collapsed UI has no secondary tabs.
+  const [rwaSubcategory] = useLocalStorage<RwaSubcategory>(
+    EXPAND_RWA_SUB_TAB_KEY,
+    "all",
+  );
+  const [communitySubTab] = useLocalStorage<string>(
+    EXPAND_COMMUNITY_SUB_TAB_KEY,
+    "all",
+  );
+  const rwaSymbolsInfo = useRwaSymbolsInfoStore();
+
+  const rwaDataFilter = useMemo(
+    () => createRwaSubcategoryFilter(rwaSubcategory, rwaSymbolsInfo),
+    [rwaSubcategory, rwaSymbolsInfo],
+  );
+  const communityDataFilter = useMemo(
+    () => createCommunityBrokerFilter(communitySubTab),
+    [communitySubTab],
+  );
 
   const renderContent = () => {
     if (panelSize === "large") {
@@ -30,25 +61,25 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
         />
       );
     }
+
+    // Apply persisted show-low-vol preference without rendering the toggle UI.
     if (activeTab === MarketsTabName.Rwa) {
       return (
-        <RwaSubcategoryTabs
-          storageKey="orderly_side_markets_rwa_sel_sub_tab"
-          classNames={{
-            tabsList: "oui-px-1 oui-pt-1 oui-pb-2",
-            tabsContent: "oui-h-full",
-            scrollIndicator: "oui-mx-1",
-          }}
-          className="oui-sideMarkets-rwa-tabs oui-h-full"
-          showScrollIndicator
-          renderPanel={(_, dataFilter) => (
-            <MarketsListWidget
-              type={activeTab}
-              dataFilter={dataFilter}
-              initialSort={tabSort[activeTab]}
-              panelSize={"middle"}
-            />
-          )}
+        <MarketsListWidget
+          type={activeTab}
+          dataFilter={rwaDataFilter}
+          initialSort={tabSort[activeTab]}
+          panelSize={"middle"}
+        />
+      );
+    }
+    if (activeTab === MarketsTabName.Community) {
+      return (
+        <MarketsListWidget
+          type={MarketsTabName.All}
+          dataFilter={communityDataFilter}
+          initialSort={tabSort[MarketsTabName.Community]}
+          panelSize={"middle"}
         />
       );
     }
@@ -73,19 +104,4 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       {renderContent()}
     </Box>
   );
-
-  // return (
-  //   <Flex
-  //     id="oui-side-markets"
-  //     className={cn("oui-relative oui-font-semibold", className)}
-  //     direction="column"
-  //     gapY={5}
-  //     height="100%"
-  //     width="100%"
-  //   >
-  //     <Box width="100%" height="100%">
-  //       {renderContent()}
-  //     </Box>
-  //   </Flex>
-  // );
 };

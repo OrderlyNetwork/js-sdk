@@ -2,6 +2,7 @@ import { FC, useCallback, useState, useEffect } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  cn,
   useEmblaCarousel,
 } from "@orderly.network/ui";
 import { DefaultCampaign } from "../DefaultCampaign";
@@ -102,17 +103,28 @@ export const CampaignsHeaderUI: FC<{
     ? campaigns.length <= 4
     : campaigns.length <= 3;
 
+  const hasCampaigns = !!campaigns?.length;
+
   return (
-    <div className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-6">
+    <div
+      className={cn(
+        "oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-6",
+        // Without campaigns the heading stands alone, so center it.
+        !hasCampaigns && "oui-justify-center",
+      )}
+    >
       <div className="oui-shrink-0">
         <DefaultCampaign
           currentCampaignId={currentCampaignId}
           onCampaignChange={onCampaignChange}
+          campaigns={campaigns}
           className="oui-min-w-[322px]"
         />
       </div>
 
-      <div className="oui-h-[78px] oui-w-px oui-bg-base-contrast-16" />
+      {hasCampaigns && (
+        <div className="oui-h-[78px] oui-w-px oui-bg-base-contrast-16" />
+      )}
 
       <button
         onClick={scrollPrev}
@@ -126,7 +138,13 @@ export const CampaignsHeaderUI: FC<{
         />
       </button>
 
-      <div className="oui-min-w-0 oui-flex-1 oui-overflow-hidden">
+      <div
+        className={cn(
+          "oui-min-w-0 oui-flex-1 oui-overflow-hidden",
+          // Hide the campaign slot entirely when there are no campaigns.
+          !hasCampaigns && "oui-hidden",
+        )}
+      >
         <div ref={emblaRef}>
           <div className="oui-flex oui-gap-2">
             {campaigns?.map((campaign) => (

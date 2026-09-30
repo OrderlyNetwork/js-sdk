@@ -38,7 +38,7 @@ export const HowItWorks = () => {
   return (
     <Box
       id="oui-affiliate-landing-how-it-works"
-      className="oui-affiliate-howItWorks"
+      className="oui-affiliate-howItWorks oui-mb-[clamp(4rem,6vw,6rem)]"
     >
       {/* Title and subtitle */}
       <Flex direction="column" itemAlign="start">

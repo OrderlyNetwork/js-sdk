@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ReferralProvider,
   MultiLevelAffiliatePage,
+  ReferralContext,
+  TabTypes,
+  useReferralContext,
 } from "@orderly.network/affiliate";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
 import { TradingRewardsLayout } from "../../../../components/layout";
@@ -40,6 +43,26 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
+
+const TraderTabPreview = () => {
+  const context = useReferralContext();
+  return (
+    <ReferralContext.Provider
+      value={{
+        ...context,
+        tab: TabTypes.trader,
+        refereeKickbackInfo: { referee_kickback_rate: 0.3 },
+      }}
+    >
+      <MultiLevelAffiliatePage />
+    </ReferralContext.Provider>
+  );
+};
+
+export const TraderTab: Story = {
+  parameters: { layout: "fullscreen" },
+  render: () => <TraderTabPreview />,
+};
 
 export const LayoutPage: Story = {
   parameters: {

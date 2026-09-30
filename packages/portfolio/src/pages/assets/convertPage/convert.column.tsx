@@ -200,15 +200,18 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         },
       },
       {
-        title: t("portfolio.overview.column.convert.usdcAmount"),
+        title: t("portfolio.overview.column.convert.receivedAmount"),
         dataIndex: "received_qty",
         align: "left",
         width: 150,
-        render(qty: number) {
+        render(qty: number, record: ConvertRecord) {
           return (
-            <Text.numeral dp={6} padding={false}>
-              {qty}
-            </Text.numeral>
+            <span>
+              <Text.numeral dp={6} padding={false}>
+                {qty}
+              </Text.numeral>{" "}
+              {record.received_asset}
+            </span>
           );
         },
       },
@@ -217,15 +220,18 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         dataIndex: "details",
         align: "left",
         width: 120,
-        render(details: ConvertRecord["details"]) {
+        render(details: ConvertRecord["details"], record: ConvertRecord) {
           const totalHaircut = details.reduce(
             (sum, detail) => sum + detail.haircut,
             0,
           );
           return (
-            <Text.numeral dp={6} padding={false}>
-              {totalHaircut}
-            </Text.numeral>
+            <span>
+              <Text.numeral dp={6} padding={false}>
+                {totalHaircut}
+              </Text.numeral>{" "}
+              {record.received_asset}
+            </span>
           );
         },
       },
@@ -293,7 +299,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
   return columns;
 };
 
-// Converted asset， Qty., USDC amount, Fee, TxID, Network, Status
+// Converted asset, Qty., Received amount, Fee, TxID, Network, Status
 export const useConvertDetailColumns = (
   options: ConvertDetailColumnsOptions,
 ) => {
@@ -309,7 +315,7 @@ export const useConvertDetailColumns = (
         title: t("portfolio.overview.column.convert.convertedAsset"),
         dataIndex: "converted_asset",
         align: "left",
-        width: 150,
+        width: 120,
         render(asset: string) {
           return (
             <Flex itemAlign="center" gap={2}>
@@ -323,7 +329,7 @@ export const useConvertDetailColumns = (
         title: t("common.qty"),
         dataIndex: "converted_qty",
         align: "left",
-        width: 100,
+        width: 90,
         render(qty: number) {
           return (
             <Text.numeral dp={6} padding={false}>
@@ -333,15 +339,18 @@ export const useConvertDetailColumns = (
         },
       },
       {
-        title: t("portfolio.overview.column.convert.usdcAmount"),
+        title: t("portfolio.overview.column.convert.receivedAmount"),
         dataIndex: "received_qty",
         align: "left",
-        width: 100,
-        render(qty: number) {
+        width: 150,
+        render(qty: number, detail: ConvertTransaction) {
           return (
-            <Text.numeral dp={6} padding={false}>
-              {qty}
-            </Text.numeral>
+            <span>
+              <Text.numeral dp={6} padding={false}>
+                {qty}
+              </Text.numeral>{" "}
+              {detail.received_asset}
+            </span>
           );
         },
       },
@@ -349,12 +358,15 @@ export const useConvertDetailColumns = (
         title: t("common.fee"),
         dataIndex: "haircut",
         align: "left",
-        width: 100,
-        render(haircut: number) {
+        width: 120,
+        render(haircut: number, detail: ConvertTransaction) {
           return (
-            <Text.numeral dp={6} padding={false}>
-              {haircut}
-            </Text.numeral>
+            <span>
+              <Text.numeral dp={6} padding={false}>
+                {haircut}
+              </Text.numeral>{" "}
+              {detail.received_asset}
+            </span>
           );
         },
       },
@@ -362,7 +374,7 @@ export const useConvertDetailColumns = (
         title: t("common.txId"),
         dataIndex: "tx_id",
         align: "left",
-        width: 150,
+        width: 130,
         render(txId: string, record: ConvertTransaction) {
           if (!txId) return <Text intensity={54}>-</Text>;
           const chainInfo = (options.chainsInfo as any[])?.find(
@@ -388,7 +400,7 @@ export const useConvertDetailColumns = (
         title: t("transfer.network"),
         dataIndex: "chain_id",
         align: "left",
-        width: 150,
+        width: 130,
         render(venue: string, record: ConvertTransaction) {
           return (
             <Text>
@@ -403,7 +415,7 @@ export const useConvertDetailColumns = (
         title: t("common.result"),
         dataIndex: "result",
         align: "left",
-        width: 100,
+        width: 90,
         render(result: string) {
           return <ConvertStatusBadge status={result} />;
         },

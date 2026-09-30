@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
-import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
 import {
   Button,
   cn,
@@ -33,7 +31,6 @@ type AssetMobileItemProps = {
 const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
-  const { namespace } = useWalletConnector();
   return (
     <div className="oui-flex oui-flex-col oui-gap-2 oui-rounded-xl oui-bg-base-9 oui-p-2">
       <Flex
@@ -176,7 +173,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
         </Flex>
       </Flex>
       <Flex justify={"between"} itemAlign={"center"} gap={2}>
-        {item.token !== "USDC" && namespace !== ChainNamespace.solana && (
+        {item.token !== "USDC" && (
           <Button
             fullWidth
             variant="outlined"

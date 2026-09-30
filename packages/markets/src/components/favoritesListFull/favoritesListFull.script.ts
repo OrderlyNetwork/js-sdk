@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
+import { useMarketsContext } from "../marketsProvider";
+import { useLowVolumeMarketFilter } from "../shared/lowVolumeMarketFilter";
+import { filterMarketsByLowVolume } from "../shared/marketVolumeFilter";
 
 export type UseFavoritesListFullReturn = ReturnType<
   typeof useFavoritesListFullScript
@@ -18,6 +20,7 @@ export const useFavoritesListFullScript = () => {
   const { favorites, selectedFavoriteTab } = favorite;
 
   const { searchValue } = useMarketsContext();
+  const { showLowVolume } = useLowVolumeMarketFilter();
 
   const { onSort, getSortedList } = useSort();
 
@@ -40,10 +43,17 @@ export const useFavoritesListFullScript = () => {
     return searchBySymbol(filterList, searchValue, "base-type");
   }, [data, selectedFavoriteTab, favorites, searchValue]);
 
-  const dataSource = useMemo(
-    () => getSortedList(filterData),
-    [filterData, getSortedList],
-  );
+  const { dataSource, isHiddenByLowVolumeFilter } = useMemo(() => {
+    const { visibleMarkets, allHidden } = filterMarketsByLowVolume(
+      filterData,
+      showLowVolume,
+    );
+
+    return {
+      dataSource: getSortedList(visibleMarkets),
+      isHiddenByLowVolumeFilter: allHidden,
+    };
+  }, [filterData, getSortedList, showLowVolume]);
 
   useEffect(() => {
     setLoading(false);
@@ -51,11 +61,12 @@ export const useFavoritesListFullScript = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [searchValue]);
+  }, [searchValue, showLowVolume]);
 
   return {
     loading,
     dataSource,
+    isHiddenByLowVolumeFilter,
     favorite,
     onSort,
     pagination,

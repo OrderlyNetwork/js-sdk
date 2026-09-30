@@ -1,5 +1,15 @@
-import { LIGHT_THEME_CSS_VARS, type ThemeConfig } from "@orderly.network/ui";
-import { CUSTOM_THEME_CSS_VARS, ROUNDLESS_THEME_CSS_VARS } from "../theme";
+import {
+  LIGHT_THEME_CSS_VARS,
+  PURPLE_DARK_THEME_CSS_VARS,
+  type ThemeConfig,
+} from "@orderly.network/ui";
+import {
+  BLUE_DARK_THEME_CSS_VARS,
+  CYAN_DARK_THEME_CSS_VARS,
+  MINT_DARK_THEME_CSS_VARS,
+  SQUARE_DARK_THEME_CSS_VARS,
+  TEAL_DARK_THEME_CSS_VARS,
+} from "../theme";
 
 export const themes: ThemeConfig[] = [
   {
@@ -27,10 +37,22 @@ export const themes: ThemeConfig[] = [
     // },
   },
   {
-    id: "custom",
-    displayName: "Custom",
+    id: "square-dark",
+    displayName: "Dark (Square)",
     mode: "dark",
-    cssVars: CUSTOM_THEME_CSS_VARS,
+    cssVars: SQUARE_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "purple-dark",
+    displayName: "Dark (Purple)",
+    mode: "dark",
+    cssVars: PURPLE_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "blue-dark",
+    displayName: "Dark (Blue)",
+    mode: "dark",
+    cssVars: BLUE_DARK_THEME_CSS_VARS,
     // tradingViewColorConfig: {
     //   chartBG: "#131519",
     //   upColor: "#00B49E",
@@ -45,9 +67,27 @@ export const themes: ThemeConfig[] = [
     // },
   },
   {
-    id: "roundless",
-    displayName: "Roundless",
+    id: "mint-dark",
+    displayName: "Dark (Mint)",
     mode: "dark",
-    cssVars: ROUNDLESS_THEME_CSS_VARS,
+    cssVars: MINT_DARK_THEME_CSS_VARS,
+    tradingViewColorConfig: {
+      upColor: "#0FB276",
+      downColor: "#F5464B",
+      pnlUpColor: "#0FB276",
+      pnlDownColor: "#F5464B",
+    },
+  },
+  {
+    id: "cyan-dark",
+    displayName: "Dark (Cyan)",
+    mode: "dark",
+    cssVars: CYAN_DARK_THEME_CSS_VARS,
+  },
+  {
+    id: "teal-dark",
+    displayName: "Dark (Teal)",
+    mode: "dark",
+    cssVars: TEAL_DARK_THEME_CSS_VARS,
   },
 ];

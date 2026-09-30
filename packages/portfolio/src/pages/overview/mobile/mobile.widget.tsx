@@ -33,7 +33,6 @@ export const MobileOverview: FC<MobileOverviewProps> = (props) => {
     unrealPnL,
     unrealROI,
     visible,
-    namespace,
     toggleVisible,
     onTransfer,
     isMainAccount,
@@ -83,7 +82,6 @@ export const MobileOverview: FC<MobileOverviewProps> = (props) => {
             unrealROI={unrealROI}
             visible={visible}
             canTrade={canTrade}
-            namespace={namespace}
             routerAdapter={layoutContext?.routerAdapter}
           />
           <DepositStatusWidget onClick={navigateToPortfolioHistory} />

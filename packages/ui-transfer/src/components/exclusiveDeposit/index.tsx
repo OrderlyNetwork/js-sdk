@@ -113,7 +113,7 @@ export const ExclusiveDeposit: FC<ExclusiveDepositProps> = ({ active }) => {
           </Text>
           <Text
             size="xs"
-            className={confirmed ? "oui-text-[#FF7D00]" : ""}
+            className={confirmed ? "oui-text-warning-darken" : ""}
             intensity={confirmed ? undefined : 98}
           >
             {minText}

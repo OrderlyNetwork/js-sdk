@@ -2,6 +2,7 @@ import { FC } from "react";
 import { cn, DataTable } from "@orderly.network/ui";
 import { CollapseMarkets } from "../collapseMarkets";
 import { useMarketsContext } from "../marketsProvider";
+import { LowVolumeEmptyView } from "../shared/lowVolumeEmptyView";
 import { useSideMarketsColumns } from "../sideMarkets/column";
 import { type MarketsListScriiptReturn } from "./marketsList.script";
 import { type MarketsListWidgetProps } from "./marketsList.widget";
@@ -22,6 +23,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
   const {
     loading,
     dataSource,
+    isHiddenByLowVolumeFilter,
     favorite,
     onSort,
     initialSort,
@@ -58,7 +60,9 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
           body: props.tableClassNames?.body,
           header: cn("oui-h-9", props.tableClassNames?.header),
           scroll: props.tableClassNames?.scroll,
-          empty: "oui-items-start oui-mt-6",
+          empty: isHiddenByLowVolumeFilter
+            ? "oui-items-start oui-pt-16"
+            : "oui-items-start oui-mt-6",
         }}
         columns={columns}
         loading={loading}
@@ -81,7 +85,9 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
             : undefined
         }
         manualSorting
-        emptyView={emptyView}
+        emptyView={
+          isHiddenByLowVolumeFilter ? <LowVolumeEmptyView /> : emptyView
+        }
       />
     </>
   );

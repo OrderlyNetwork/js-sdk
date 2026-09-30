@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { TableSort } from "@orderly.network/ui";
 import { formatSymbol } from "@orderly.network/utils";
 import { SortType } from "./type";
@@ -69,7 +69,20 @@ export function sortList(list: any[], sort?: SortType) {
   if (sortKey && sortOrder) {
     // sort list
     sortedList.sort((a: any, b: any) => {
-      const comparison = compareValues(a[sortKey], b[sortKey]);
+      const aValue = a[sortKey];
+      const bValue = b[sortKey];
+      const aMissing =
+        aValue == null ||
+        (typeof aValue === "number" && !Number.isFinite(aValue));
+      const bMissing =
+        bValue == null ||
+        (typeof bValue === "number" && !Number.isFinite(bValue));
+
+      if (aMissing && bMissing) return 0;
+      if (aMissing) return 1;
+      if (bMissing) return -1;
+
+      const comparison = compareValues(aValue, bValue);
       // Handle sort order: desc means reverse the comparison result
       return sortOrder === "desc" ? -comparison : comparison;
     });
@@ -176,30 +189,4 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
 
   // Combine results with prioritized matches first
   return [...exactMatches, ...startsWithMatches, ...otherMatches];
-}
-
-export function useSize() {
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
-
-  useEffect(() => {
-    setWidth(window.innerWidth);
-    setHeight(window.innerHeight);
-
-    const handleResize = () => {
-      setHeight(window.innerHeight);
-      setWidth(window.innerWidth);
-    };
-
-    window?.addEventListener("resize", handleResize);
-
-    return () => {
-      window?.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  return {
-    width,
-    height,
-  };
 }

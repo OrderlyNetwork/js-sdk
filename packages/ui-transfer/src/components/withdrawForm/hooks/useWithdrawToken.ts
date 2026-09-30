@@ -7,6 +7,7 @@ import {
 import { API } from "@orderly.network/types";
 import { CurrentChain, WithdrawTo } from "../../../types";
 import { getUSDCToken } from "../../../utils";
+import { isRobinhoodChain } from "../../reverseConvert/policy";
 import { useToken } from "../hooks/useToken";
 
 export function useWithdrawToken(params: {
@@ -134,11 +135,27 @@ export function useWithdrawToken(params: {
     syncToken,
   ]);
 
+  const robinhoodTokens = useMemo(() => {
+    const usdg = currentChain?.info?.token_infos?.find(
+      (item) => item.symbol === "USDG",
+    );
+    return usdg ? [{ ...usdg, precision: usdg.token_decimal }] : [];
+  }, [currentChain?.info?.token_infos]);
+
   if (withdrawTo === WithdrawTo.Account) {
     return {
       sourceToken: token,
       onSourceTokenChange: setToken,
       sourceTokens: tokens,
+      isTokenSupportedOnChain,
+    };
+  }
+
+  if (isRobinhoodChain(currentChain?.id)) {
+    return {
+      sourceToken: robinhoodTokens[0],
+      sourceTokens: robinhoodTokens,
+      onSourceTokenChange: handleSourceTokenChange,
       isTokenSupportedOnChain,
     };
   }
