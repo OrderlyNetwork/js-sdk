@@ -20,7 +20,7 @@ import { DateRange } from "../../../utils/types";
 import {
   calendarDate,
   calendarDateString,
-  calendarMonthDateRange,
+  calendarDayDateRange,
   joinRebateVolume,
   rebateChartData,
   RebateTableRow,
@@ -33,7 +33,7 @@ import { useTraderRebates, useTraderVolume } from "./useTraderData";
 
 type ChartPeriod = "7" | "30" | "90";
 
-const MAX_TABLE_RANGE_MONTHS = 3;
+const MAX_TABLE_RANGE_DAYS = 90;
 
 const money = (value?: number, digits = 2) =>
   value === undefined
@@ -57,7 +57,7 @@ export const MultiLevelTraderPage = () => {
   const chartRange = utcDayWindow(Number(chartPeriod), yesterday);
   const chartRebates = useTraderRebates(chartRange);
   const [dateRange, setDateRange] = useState<DateRange>(() =>
-    calendarMonthDateRange(yesterday, MAX_TABLE_RANGE_MONTHS),
+    calendarDayDateRange(yesterday, MAX_TABLE_RANGE_DAYS),
   );
   const tableRange = {
     startDate: calendarDateString(dateRange.from!),
@@ -265,7 +265,7 @@ export const MultiLevelTraderPage = () => {
             <DatePicker.range
               size="xs"
               value={dateRange}
-              maxCalendarMonths={MAX_TABLE_RANGE_MONTHS}
+              maxDays={MAX_TABLE_RANGE_DAYS}
               disabled={{ after: calendarDate(yesterday) }}
               onChange={(range) => setDateRange(range)}
             />

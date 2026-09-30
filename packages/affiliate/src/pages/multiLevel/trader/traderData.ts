@@ -1,4 +1,4 @@
-import { addDays, addMonths, isAfter } from "date-fns";
+import { addDays } from "date-fns";
 import { Decimal } from "@orderly.network/utils";
 
 export type RebateRow = {
@@ -43,14 +43,9 @@ export function calendarDateString(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function calendarMonthDateRange(endDate: string, months: number) {
+export function calendarDayDateRange(endDate: string, days: number) {
   const to = calendarDate(endDate);
-  let from = addMonths(to, -months);
-
-  // Subtracting months may clamp a month-end date, making the reverse span too long.
-  while (isAfter(to, addMonths(from, months))) {
-    from = addDays(from, 1);
-  }
+  const from = addDays(to, -(days - 1));
 
   return { from, to };
 }

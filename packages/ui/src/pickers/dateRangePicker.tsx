@@ -7,7 +7,7 @@ import { CaretDownIcon } from "../icon/caretDown";
 import { useLocale } from "../locale";
 import { Popover } from "../popover/popover";
 import { selectVariants } from "../select/selectPrimitive";
-import { isWithinCalendarMonths } from "./calendarRange";
+import { isWithinCalendarMonths, isWithinDays } from "./calendarRange";
 import { Calendar, CalendarProps } from "./date/calendar";
 
 export type DateRangePickerProps = {
@@ -22,6 +22,8 @@ export type DateRangePickerProps = {
   formatString?: string;
   /** Maximum span between the selected dates, measured in calendar months. */
   maxCalendarMonths?: number;
+  /** Maximum span between the selected dates, measured in days, inclusive. */
+  maxDays?: number;
 } & Omit<DayPickerRangeProps, "mode">;
 
 const DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
@@ -37,6 +39,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     className,
     formatString = DEFAULT_DATE_FORMAT,
     maxCalendarMonths,
+    maxDays,
     ...calendarProps
   } = props;
   const [locale] = useLocale("picker");
@@ -91,16 +94,26 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     return `${arr.join(" - ")}`;
   }, [dateRange, placeholder, locale]);
 
+  const isWithinMaxSpan = (from: Date, to: Date) => {
+    if (
+      maxCalendarMonths &&
+      !isWithinCalendarMonths(from, to, maxCalendarMonths)
+    ) {
+      return false;
+    }
+    if (maxDays && !isWithinDays(from, to, maxDays)) {
+      return false;
+    }
+    return true;
+  };
+
   const onOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && dateRange?.from) {
       const nextRange = {
         from: dateRange.from,
         to: dateRange.to ?? dateRange.from,
       };
-      if (
-        !maxCalendarMonths ||
-        isWithinCalendarMonths(nextRange.from, nextRange.to, maxCalendarMonths)
-      ) {
+      if (isWithinMaxSpan(nextRange.from, nextRange.to)) {
         setDateRange(nextRange);
         onChange?.(nextRange);
       }
@@ -114,12 +127,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
         from: date,
       });
     } else {
-      if (
-        maxCalendarMonths &&
-        range.from &&
-        range.to &&
-        !isWithinCalendarMonths(range.from, range.to, maxCalendarMonths)
-      ) {
+      if (range.from && range.to && !isWithinMaxSpan(range.from, range.to)) {
         return;
       }
       setDateRange(range);
@@ -132,11 +140,10 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
       : [calendarProps.disabled]
     : [];
   const disabled =
-    maxCalendarMonths && dateRange?.from && !dateRange.to
+    (maxCalendarMonths || maxDays) && dateRange?.from && !dateRange.to
       ? [
           ...disabledMatchers,
-          (date: Date) =>
-            !isWithinCalendarMonths(dateRange.from!, date, maxCalendarMonths),
+          (date: Date) => !isWithinMaxSpan(dateRange.from!, date),
         ]
       : calendarProps.disabled;
 

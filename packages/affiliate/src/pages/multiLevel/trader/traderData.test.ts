@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   calendarDateString,
-  calendarMonthDateRange,
+  calendarDayDateRange,
   joinRebateVolume,
   rebateChartData,
   resolveRebateRows,
@@ -29,19 +29,18 @@ test("UTC settlement windows end yesterday and include exactly the selected days
   });
 });
 
-test("default table range respects three calendar months at month ends", () => {
+test("default table range covers exactly 90 days ending at the end date", () => {
   const cases = [
-    ["2026-09-27", "2026-06-27"],
-    ["2026-05-31", "2026-03-01"],
-    ["2024-05-31", "2024-03-01"],
-    ["2024-02-29", "2023-11-29"],
-    ["2026-01-31", "2025-10-31"],
+    ["2026-09-29", "2026-07-02"],
+    ["2024-03-01", "2023-12-03"],
+    ["2026-01-31", "2025-11-03"],
   ];
 
   cases.forEach(([endDate, expectedStart]) => {
-    const range = calendarMonthDateRange(endDate, 3);
+    const range = calendarDayDateRange(endDate, 90);
     assert.equal(calendarDateString(range.from), expectedStart);
     assert.equal(calendarDateString(range.to), endDate);
+    assert.equal(utcDayWindow(90, endDate).startDate, expectedStart);
   });
 });
 
