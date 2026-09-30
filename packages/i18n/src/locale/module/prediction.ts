@@ -4,7 +4,9 @@ export const prediction = {
   "prediction.prototype": "Prototype",
   "prediction.prototypeDisclaimer":
     "Prototype only. Orders and balances are simulated locally.",
-  "prediction.btcUpDown": "BTC UP/DOWN 5M",
+  "prediction.marketName": "{{base}} UP/DOWN {{period}}",
+  "prediction.chart.indexPrice": "{{base}} index price",
+  "prediction.chart.marketAriaLabel": "{{base}} price chart",
   "prediction.question":
     "Will the BTC index price finish above the opening price?",
   "prediction.up": "Up",
@@ -100,6 +102,8 @@ export const prediction = {
     "This round could not be resolved. Eligible positions will be refunded.",
   "prediction.tab.filled": "Filled",
   "prediction.tab.predictionHistory": "Position history",
+  "prediction.history.perps": "Perp history",
+  "prediction.history.prediction": "Prediction history",
   "prediction.countdownStatus": "Countdown / Status",
   "prediction.filledQuantity": "Filled quantity",
   "prediction.avgFillPrice": "Avg. fill price",
@@ -113,6 +117,12 @@ export const prediction = {
   "prediction.closed": "Closed",
   "prediction.invalidOrder": "Enter a valid price and available quantity.",
   "prediction.message.orderUpdated": "Order updated.",
+  "prediction.message.orderFailed": "Order was not accepted. Please try again.",
+  "prediction.rounds.unavailable":
+    "No prediction rounds are available right now. Please try again later.",
+  "prediction.estimatedFee": "Est. fee",
+  "prediction.requiredFrozen": "Required frozen",
+  "prediction.notInSnapshot": "This round is no longer in the recent records.",
   "prediction.tab.openOrders": "Pending",
   "prediction.tab.positions": "Positions",
   "prediction.tab.predictions": "Positions",
@@ -162,7 +172,6 @@ export const prediction = {
   "prediction.message.sellFailed": "Unable to sell position.",
   "prediction.message.slippageExceeded":
     "Estimated slippage exceeds your max slippage.",
-  "prediction.message.orderPlaced": "Order opened.",
   "prediction.message.orderFilled": "Order filled.",
   "prediction.message.orderCanceled": "Order canceled.",
   "prediction.message.ordersCanceled": "All orders canceled.",

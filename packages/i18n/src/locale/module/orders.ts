@@ -1,5 +1,6 @@
 export const orders = {
   "orders.orderHistory": "Order history",
+  "orders.loadMore": "Load more",
 
   "orders.status.pending": "Pending",
   "orders.status.filled": "Filled",
