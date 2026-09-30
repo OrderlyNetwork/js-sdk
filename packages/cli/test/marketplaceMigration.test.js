@@ -32,6 +32,15 @@ function fixture(t, command, options = {}) {
   }
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "marketplace-test-"));
   writeValidCoverImage(path.join(dir, "cover.png"));
+  // submit derives install metadata from the package.json on disk; the
+  // repository field is required before a real submission.
+  fs.writeFileSync(
+    path.join(dir, "package.json"),
+    JSON.stringify({
+      name: "demo",
+      repository: "https://github.com/test/demo.git",
+    }),
+  );
   const output = [];
   const calls = [];
   const selections = [];

@@ -32,6 +32,13 @@ const {
   validateSubmission,
 } = require("../internal/marketplaceSchema");
 const {
+  deriveInstallMetadata,
+  formatHostPeerSuggestions,
+  formatRepositorySuggestion,
+  readConfigSchemaFile,
+  writeDerivedSchema,
+} = require("../internal/pluginConfigSchema");
+const {
   maybePrintOrderlyDevEnvironmentHints,
 } = require("../internal/orderlySdkDocsMcpDetect");
 const { printMarketplaceFailure } = require("../internal/marketplaceErrors");
@@ -80,6 +87,12 @@ module.exports = {
         type: "boolean",
         describe:
           "boolean; validate the submission payload and print it without calling the marketplace API",
+        default: false,
+      })
+      .option("write-schema", {
+        type: "boolean",
+        describe:
+          "boolean; write the derived plugin config schema to configSchema.json when the file is missing",
         default: false,
       })
       .example(
@@ -194,6 +207,76 @@ module.exports = {
       return;
     }
 
+    printProgress(5, "Resolving plugin config schema...");
+    const checkedIn = readConfigSchemaFile(resolvedPath);
+    if (checkedIn.status === "invalid") {
+      error("\nconfigSchema.json is invalid. Please fix the following issues:");
+      checkedIn.errors.forEach((e) => info(`  - ${e}`));
+      process.exitCode = 1;
+      return;
+    }
+    const installMetadata = deriveInstallMetadata(resolvedPath);
+    installMetadata.warnings.forEach((w) => warn(w));
+    if (installMetadata.registerExport) {
+      info(`Register export: ${installMetadata.registerExport}`);
+    }
+    if (installMetadata.repositoryUrl) {
+      info(`Repository: ${installMetadata.repositoryUrl}`);
+    }
+    if (installMetadata.slots.length > 0) {
+      info(`Interceptor slots: ${installMetadata.slots.join(", ")}`);
+    }
+    if (checkedIn.status === "missing" && argv["write-schema"]) {
+      // Writing finalizes the plugin for submission; a missing repository in
+      // the published package makes the Marketplace reject it, so fail here
+      // instead of after a publish.
+      if (!installMetadata.repositoryUrl) {
+        error(
+          [
+            "Cannot write: package.json has no repository field.",
+            "Add this to package.json:",
+            `  ${formatRepositorySuggestion(manifest.repoUrl)}`,
+            "then publish a new version before submitting.",
+          ].join("\n"),
+        );
+        process.exitCode = 1;
+        return;
+      }
+      if (installMetadata.pinnedHostPeers.length > 0) {
+        error(
+          [
+            "Cannot write: host-provided peers are pinned to exact versions.",
+            "Use ranges instead:",
+            ...formatHostPeerSuggestions(installMetadata.pinnedHostPeers),
+            "then publish a new version before submitting.",
+          ].join("\n"),
+        );
+        process.exitCode = 1;
+        return;
+      }
+      if (installMetadata.configSchema) {
+        const written = writeDerivedSchema(
+          resolvedPath,
+          installMetadata.configSchema,
+        );
+        if (written.written) {
+          success("Wrote derived schema to configSchema.json");
+          if (written.filesUpdated) {
+            info("Added configSchema.json to package.json files.");
+          }
+        } else {
+          warn(written.reason);
+        }
+      } else {
+        warn("No configurable options detected, nothing to write.");
+      }
+    } else if (checkedIn.status === "missing") {
+      info(
+        "No configSchema.json found; options were derived from source. " +
+          "Re-run with --write-schema to commit it.",
+      );
+    }
+
     try {
       validateCoverSources({
         pluginDir: resolvedPath,
@@ -228,6 +311,54 @@ module.exports = {
         dryRunPayload.usagePrompt = usagePrompt;
       }
       console.log(JSON.stringify(dryRunPayload, null, 2));
+      info(`\nDerived install metadata (validated locally):`);
+      console.log(
+        JSON.stringify(
+          {
+            orderlyVersion: installMetadata.orderlyVersion,
+            hasStyles: installMetadata.hasStyles,
+            registerExport: installMetadata.registerExport,
+            slots: installMetadata.slots,
+            peerDependencies: installMetadata.peerDependencies,
+            devDependencies: installMetadata.devDependencies,
+            configSchema: installMetadata.configSchema,
+          },
+          null,
+          2,
+        ),
+      );
+      return;
+    }
+
+    // The Marketplace rejects submissions whose npm package does not declare
+    // the submitted GitHub repository — fail before the API call with the
+    // actionable fix instead of surfacing a server error.
+    if (!installMetadata.repositoryUrl) {
+      error(
+        [
+          "package.json has no repository field.",
+          "Add this to package.json:",
+          `  ${formatRepositorySuggestion(manifest.repoUrl)}`,
+          "then publish a new version and submit again.",
+        ].join("\n"),
+      );
+      process.exitCode = 1;
+      return;
+    }
+
+    // Exact pins on host-provided peers make the DEX deploy merge fail closed
+    // (the host supplies its own SDK version) — surface it before the API call
+    // instead of after the plugin is listed.
+    if (installMetadata.pinnedHostPeers.length > 0) {
+      error(
+        [
+          "Host-provided peers are pinned to exact versions.",
+          "Use ranges instead:",
+          ...formatHostPeerSuggestions(installMetadata.pinnedHostPeers),
+          "then publish a new version and submit again.",
+        ].join("\n"),
+      );
+      process.exitCode = 1;
       return;
     }
 
@@ -260,6 +391,26 @@ module.exports = {
       `Submitting request to Orderly Marketplace (${MARKETPLACE_API_PLUGINS_SUBMIT_URL})...`,
     );
 
+    // Install metadata is advisory: the audit pipeline re-derives and
+    // re-validates everything from the published package. It covers the window
+    // where unpkg still serves the previous version right after publish.
+    const installMetadataPayload = {
+      configSchema: installMetadata.configSchema ?? undefined,
+      orderlyVersion: installMetadata.orderlyVersion ?? undefined,
+      hasStyles: installMetadata.hasStyles ?? undefined,
+      registerExport: installMetadata.registerExport ?? undefined,
+      slots:
+        installMetadata.slots.length > 0 ? installMetadata.slots : undefined,
+      peerDependencies:
+        Object.keys(installMetadata.peerDependencies).length > 0
+          ? installMetadata.peerDependencies
+          : undefined,
+      devDependencies:
+        Object.keys(installMetadata.devDependencies).length > 0
+          ? installMetadata.devDependencies
+          : undefined,
+    };
+
     const payload = {
       npmName: manifest.npmName,
       repoUrl: manifest.repoUrl,
@@ -267,6 +418,11 @@ module.exports = {
       description,
       tags,
       coverImages: coverImageUrls,
+      ...(Object.values(installMetadataPayload).some(
+        (value) => value !== undefined,
+      )
+        ? { installMetadata: installMetadataPayload }
+        : {}),
     };
 
     if (manifest.pluginId) {
