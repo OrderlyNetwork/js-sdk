@@ -100,6 +100,19 @@ componentName/
 - Styling: Tailwind CSS with `tailwind-merge` and `tailwind-variants`; prefer `@orderly.network/ui` components
 - Never hardcode colors - use `oui-*` Tailwind classes or theme variables from `apps/storybook/src/theme/customTheme.ts` (see the `replace-hardcoded-colors` skill)
 
+### API Response Envelopes (rows unwrap)
+
+The net layer `get()` (behind `useQuery`/`usePrivateQuery`/`fetcher`; see `packages/net/src/fetch/index.ts`) unwraps success envelopes before SWR sees the data:
+
+- `{ success, data: { rows: [...] } }` → returns the bare `rows` array; `meta` is silently dropped.
+- Any other `data` shape (object without a top-level `rows`, or a bare array) → returned as-is.
+- Passing `formatter: (data) => data` bypasses the unwrap and keeps the full `data` object - use this when you need `meta`.
+
+Rules:
+
+- Type rows endpoints as arrays: `useQuery<API.MarketInfo[]>("/v1/public/futures")` - never `useQuery<{ rows: ... }>`. The runtime mismatch is invisible to TypeScript: `data?.rows` is silently `undefined` and the feature renders empty.
+- API-doc envelope examples (`{ success, data: ... }`) describe the HTTP response only; the hook never sees `success`/`data`.
+
 ## Key Packages
 
 Non-exhaustive list of the most commonly used packages:
