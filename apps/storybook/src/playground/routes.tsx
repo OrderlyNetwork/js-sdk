@@ -143,6 +143,10 @@ const AppRoute: React.FC = () => {
       element: <PredictionPage />,
     },
     {
+      path: "prediction/:marketId",
+      element: <PredictionPage />,
+    },
+    {
       path: "perp-grid",
       children: [
         {
