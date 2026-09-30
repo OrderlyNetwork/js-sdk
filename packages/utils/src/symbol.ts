@@ -1,6 +1,19 @@
 import { numberToHumanStyle } from "./decimal";
 
 /**
+ * Round-specific binary option symbol, e.g. `PERP_BTC5M2608271200_USDC`.
+ * Legal periods are 5M/10M/15M; the timestamp segment is yymmddHHMM in UTC.
+ * Primary classification should be data-driven (membership in
+ * /v1/public/binary/info); this pattern is the fallback for records whose
+ * round already fell out of the 300-row snapshot (api-spec §3.1).
+ */
+export const BINARY_SYMBOL_PATTERN =
+  /^PERP_([A-Z0-9]+?)(5M|10M|15M)(\d{10})_USDC$/;
+
+export const isBinarySymbol = (symbol: string) =>
+  BINARY_SYMBOL_PATTERN.test(symbol);
+
+/**
  * Format trading pair symbol *
  * Format symbols like "PERP_BTC_USDT" according to the specified format
  *
