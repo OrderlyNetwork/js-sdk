@@ -62,6 +62,10 @@ export const DesktopOrderList: FC<
   OrdersBuilderState & {
     testIds?: { tableBody?: string };
     supplementalRows?: SupplementalOrderRow[];
+    mergeProducts?: boolean;
+    mergedTotal?: number;
+    onMergedPageChange?: (page: number) => void;
+    mergeResetKey?: string;
     useClientTable?: boolean;
     cancelAllDisabled?: boolean;
     additionalFilterItems?: DataFilterItem[];
@@ -70,7 +74,8 @@ export const DesktopOrderList: FC<
 > = (props) => {
   // An empty supplemental array must not switch the table into client-side
   // merged mode; only non-empty supplemental rows do.
-  const hasSupplementalRows = (props.supplementalRows?.length ?? 0) > 0;
+  const hasSupplementalRows =
+    props.mergeProducts || (props.supplementalRows?.length ?? 0) > 0;
   const { sharePnLConfig, ...rest } = props;
   const baseColumns = useOrderColumn({
     _type: props.type,
@@ -94,7 +99,7 @@ export const DesktopOrderList: FC<
     if (!hasSupplementalRows) return props.dataSource ?? [];
     return [
       ...(props.dataSource ?? []),
-      ...props.supplementalRows!.map((row) => ({
+      ...(props.supplementalRows ?? []).map((row) => ({
         __supplemental: row,
         created_time: row.timestamp,
         order_id: row.id,
@@ -102,10 +107,7 @@ export const DesktopOrderList: FC<
     ].sort((a, b) => Number(b.created_time ?? 0) - Number(a.created_time ?? 0));
   }, [hasSupplementalRows, props.dataSource, props.supplementalRows]);
 
-  useEffect(
-    () => setPage(1),
-    [props.type, props.filterItems, props.supplementalRows?.length],
-  );
+  useEffect(() => setPage(1), [props.type, props.mergeResetKey]);
 
   const mergedColumns = useMemo<Column<MergedOrderRow>[]>(() => {
     if (!hasSupplementalRows) return columns;
@@ -215,8 +217,11 @@ export const DesktopOrderList: FC<
               ? {
                   page,
                   pageSize: 20,
-                  count: mergedRows?.length ?? 0,
-                  onPageChange: setPage,
+                  count: props.mergedTotal ?? mergedRows?.length ?? 0,
+                  onPageChange: (nextPage) => {
+                    setPage(nextPage);
+                    props.onMergedPageChange?.(nextPage);
+                  },
                 }
               : props.pagination
           }

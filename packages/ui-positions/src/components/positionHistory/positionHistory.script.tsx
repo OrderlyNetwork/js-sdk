@@ -50,6 +50,7 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
   const {
     onSymbolChange,
     symbol,
+    productType,
     pnlNotionalDecimalPrecision,
     enableSortingStorage = true,
   } = props;
@@ -69,10 +70,11 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
       : undefined,
   );
 
+  const historySearch = new URLSearchParams({ limit: "1000" });
+  if (symbol) historySearch.set("symbol", symbol);
+  if (productType) historySearch.set("product_type", productType);
   const { data, isLoading } = usePrivateQuery<PositionHistoryExt[]>(
-    symbol
-      ? `/v1/position_history?symbol=${symbol}&limit=1000`
-      : "/v1/position_history?limit=1000",
+    `/v1/position_history?${historySearch.toString()}`,
     {
       formatter(data) {
         return (data.rows ?? null)?.map((item: API.PositionHistory) => {

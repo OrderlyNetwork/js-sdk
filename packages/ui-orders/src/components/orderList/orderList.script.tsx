@@ -36,7 +36,13 @@ export type useOrderListScriptOptions = {
   type: TabType;
   ordersStatus?: OrderStatus;
   symbol?: string;
+  /**
+   * Product filter forwarded to the orders query ("PERP"/"BINARY"); omit to
+   * query all products.
+   */
+  productType?: string;
   enableLoadMore?: boolean;
+  onCancelAllAfter?: () => Promise<unknown>;
   onSymbolChange?: (symbol: API.Symbol) => void;
   sharePnLConfig?: SharePnLConfig;
   filterConfig?: {
@@ -120,6 +126,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     data,
     {
       isLoading,
+      isValidating,
       loadMore,
       cancelOrder,
       updateOrder,
@@ -132,6 +139,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     },
   ] = useOrderStream({
     symbol: props.symbol,
+    productType: props.productType,
     status: orderStatus,
     side: ordersSide,
     page: enableLoadMore || !manualPagination ? undefined : page,
@@ -170,6 +178,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
           } else {
             await cancelAllPendingOrders(props.symbol);
           }
+          await props.onCancelAllAfter?.();
           refresh();
           return Promise.resolve(true);
         } catch (error) {
@@ -184,7 +193,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
         }
       },
     });
-  }, [type, t, props.symbol]);
+  }, [type, t, props.symbol, props.onCancelAllAfter]);
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
@@ -216,7 +225,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     type,
     dataSource,
     isLoading,
+    isValidating,
     loadMore,
+    meta,
     cancelOrder,
     updateOrder,
     cancelAlgoOrder,
@@ -237,6 +248,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     symbolsInfo,
     filterDays,
     updateFilterDays,
+    orderStatus,
+    ordersSide,
+    dateRange,
 
     symbol: props.symbol,
   };

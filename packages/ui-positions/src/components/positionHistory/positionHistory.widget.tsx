@@ -8,6 +8,7 @@ import { MobilePositionHistory, PositionHistory } from "./positionHistory.ui";
 export type PositionHistoryProps = {
   onSymbolChange?: (symbol: API.Symbol) => void;
   symbol?: string;
+  productType?: "PERP" | "BINARY";
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
   enableSortingStorage?: boolean; // Controls whether to persist sorting preferences
