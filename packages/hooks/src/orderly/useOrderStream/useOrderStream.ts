@@ -48,6 +48,11 @@ export const useOrderStream = (
      * @default []
      */
     excludes?: CombineOrderType[];
+    /**
+     * Filter orders by product type. Only uppercase "PERP"/"BINARY" are
+     * accepted by the API; omit to query all products.
+     */
+    productType?: string;
     dateRange?: {
       from?: Date;
       to?: Date;
@@ -72,6 +77,7 @@ export const useOrderStream = (
     page,
     dateRange,
     sourceTypeAll,
+    productType,
   } = params;
 
   const [includes, setIncludes] = useState<CombineOrderType[]>(
@@ -118,11 +124,14 @@ export const useOrderStream = (
       page,
       dateRange,
       sourceTypeAll,
+      productType,
     });
-  }, [status, symbol, side, size, page, dateRange]);
+  }, [status, symbol, side, size, page, dateRange, sourceTypeAll, productType]);
 
   const algoOrderKeyFn = useMemo(() => {
-    return sourceTypeAll
+    // Binary filtering keeps the ordinary-order SQL branch only (no binary
+    // algo orders exist), same as sourceTypeAll.
+    return sourceTypeAll || productType === "BINARY"
       ? null
       : generateKeyFun("/v1/algo/orders", {
           status,
@@ -132,13 +141,13 @@ export const useOrderStream = (
           page,
           dateRange,
         });
-  }, [status, symbol, side, dateRange, size]);
+  }, [status, symbol, side, dateRange, size, sourceTypeAll, productType]);
 
   useEffect(() => {
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side,
-    )}${formatKey(size.toString())}`;
+    )}${formatKey(size.toString())}${formatKey(productType)}`;
 
     registerKeyHandler?.(key, normalOrderKeyFn);
 
@@ -181,7 +190,7 @@ export const useOrderStream = (
   const flattenOrders = useMemo(() => {
     if (
       !normalOrdersResponse.data ||
-      (!algoOrdersResponse.data && !sourceTypeAll)
+      (!algoOrdersResponse.data && !sourceTypeAll && algoOrderKeyFn)
     ) {
       return null;
     }
@@ -198,7 +207,17 @@ export const useOrderStream = (
       orders = [...orders, ...algoOrders];
     }
 
-    orders = orders?.map((order) => withTPSLProvenance(order));
+    const seen = new Set<string>();
+    orders = orders
+      ?.filter((order) => {
+        const id = order.algo_order_id
+          ? `algo:${order.algo_order_id}`
+          : `order:${order.order_id}`;
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      })
+      .map((order) => withTPSLProvenance(order));
 
     if (includes.includes("ALL") && excludes.length === 0) {
       return orders;
@@ -513,9 +532,16 @@ export const useOrderStream = (
     return _cancelOrder(orderId, "algoOrder", symbol);
   }, []);
 
-  const loadMore = () => {
-    // ordersResponse.setSize(ordersResponse.size + 1);
-  };
+  const loadMore = useCallback(() => {
+    void normalOrdersResponse.setSize((size) => size + 1);
+    if (algoOrderKeyFn) {
+      void algoOrdersResponse.setSize((size) => size + 1);
+    }
+  }, [
+    normalOrdersResponse.setSize,
+    algoOrdersResponse.setSize,
+    algoOrderKeyFn,
+  ]);
 
   // const cancelTPSLOrder = useCallback((orderId:number, symbol:string)=>{
   //   return
@@ -609,6 +635,8 @@ export const useOrderStream = (
     {
       total,
       isLoading: normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
+      isValidating:
+        normalOrdersResponse.isValidating || algoOrdersResponse.isValidating,
       refresh,
       loadMore,
       cancelAllOrders,

@@ -22,7 +22,15 @@ export function formatPositions(
     totalUnsettledCrossPnl = zero;
 
   const rows = data.rows.map((item) => {
-    const info = symbolsInfo[item.symbol];
+    // The shared symbolsInfo is a createGetter proxy whose get trap
+    // returns a function for ANY symbol (missing ones included), so the
+    // raw record must be resolved by calling the getter before the
+    // existence check.
+    const info = symbolsInfo[item.symbol]?.();
+
+    // Rows without symbol config (e.g. BINARY symbols, which never appear
+    // in /v1/public/info) cannot run the perps formulas — pass through.
+    if (!info) return item;
 
     const notional = positions.notional(item.position_qty, item.mark_price);
     const unrealPnl = positions.unrealizedPnL({
@@ -38,7 +46,7 @@ export function formatPositions(
 
     const imr = account.IMR({
       maxLeverage,
-      baseIMR: info?.("base_imr"),
+      baseIMR: info.base_imr,
       IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
       positionNotional: notional,
       ordersNotional: 0,
@@ -77,12 +85,12 @@ export function formatPositions(
         "sum_unitary_funding",
         fundingRates?.[item.symbol],
       ),
-      lastSumUnitaryFunding: item.last_sum_unitary_funding,
+      lastSumUnitaryFunding: item.last_sum_unitary_funding ?? 0,
     });
 
     const MMR = positions.MMR({
-      baseMMR: info?.("base_mmr"),
-      baseIMR: info?.("base_imr"),
+      baseMMR: info.base_mmr,
+      baseIMR: info.base_imr,
       IMRFactor: accountInfo.imr_factor[item.symbol] as number,
       positionNotional: notional,
       IMR_factor_power: 4 / 5,

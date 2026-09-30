@@ -32,6 +32,13 @@ export type AppState = {
   symbolsInfo?: Record<string, API.SymbolExt>;
   tokensInfo?: API.Token[];
   rwaSymbolsInfo?: Record<string, API.RwaSymbol>;
+  /**
+   * Binary symbol config derived from /v1/public/binary/info with the
+   * PRD-fixed margin params (base_imr=1, base_mmr=0). Kept separate from
+   * `symbolsInfo`: only the calculator context composes the two, so binary
+   * symbols never leak into symbol pickers and other plain consumers.
+   */
+  binarySymbolsInfo?: Record<string, API.SymbolExt>;
   fundingRates?: Record<string, API.FundingRate>;
   portfolio: Portfolio;
   appState: AppStatus;
@@ -44,6 +51,9 @@ export type AppActions = {
   // setPositions: (positions: API.PositionExt[]) => void;
   setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => void;
   setRwaSymbolsInfo: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => void;
+  setBinarySymbolsInfo: (
+    binarySymbolsInfo: Record<string, API.SymbolExt>,
+  ) => void;
   setFundingRates: (fundingRates: Record<string, API.FundingRate>) => void;
   updateAppStatus: (key: keyof AppStatus, value: boolean) => void;
   updatePortfolio: (
@@ -137,6 +147,17 @@ export const useAppStore = create<
           },
           false,
           // "setRwaSymbolsInfo"
+        );
+      },
+      setBinarySymbolsInfo: (
+        binarySymbolsInfo: Record<string, API.SymbolExt>,
+      ) => {
+        set(
+          (state) => {
+            state.binarySymbolsInfo = binarySymbolsInfo;
+          },
+          false,
+          // "setBinarySymbolsInfo"
         );
       },
       setFundingRates: (fundingRates: Record<string, API.FundingRate>) => {

@@ -152,6 +152,11 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     let rows = data.rows.map((item) => {
       const info = symbolsInfo[item.symbol];
+
+      // Rows without symbol config (e.g. BINARY symbols, which never appear
+      // in /v1/public/info) cannot run the perps formulas — pass through.
+      if (!info) return item;
+
       const sum_unitary_funding =
         fundingRates?.[item.symbol]?.["sum_unitary_funding"] ?? 0;
 
@@ -208,7 +213,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
           "sum_unitary_funding",
           fundingRates[item.symbol],
         ),
-        lastSumUnitaryFunding: item.last_sum_unitary_funding,
+        lastSumUnitaryFunding: item.last_sum_unitary_funding ?? 0,
       });
 
       const MMR = positions.MMR({
@@ -234,7 +239,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       }
 
       const fundingFee = new Decimal(sum_unitary_funding)
-        .sub(item.last_sum_unitary_funding)
+        .sub(item.last_sum_unitary_funding ?? 0)
         .mul(item.position_qty)
         .negated()
         .toNumber();
@@ -269,6 +274,9 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
       rows = rows.map((item) => {
         const info = symbolsInfo[item.symbol];
+
+        if (!info) return item;
+
         // NOTE: Calculate totalCollateral based on marginMode.
         // If margin mode is ISOLATED, use isolated margin plus unsettlementPnL;
         // otherwise (CROSS margin), use account total collateral value.

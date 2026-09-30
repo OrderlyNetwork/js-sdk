@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { type API } from "@orderly.network/types";
 import { getPrecisionByNumber } from "@orderly.network/utils";
+import { useOrderlyContext } from "../orderlyContext";
 import { useSymbolStore } from "../provider/store/symbolStore";
 import { getSymbolDisplayName } from "../useBadgeBySymbol";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
+import { useBinaryInfoObserver } from "./binaryInfo";
 import { RWA_SYMBOLS_INFO_QUERY_KEY } from "./rwaSymbolsInfoRevalidator";
 import { useFutures } from "./useFutures";
 import { useMarketStore } from "./useMarket/market.store";
@@ -30,6 +32,10 @@ export const usePublicDataObserver = () => {
   const { setSymbolsInfo, setFundingRates, setRwaSymbolsInfo } = useAppStore(
     (state) => state.actions,
   );
+  const { enableBinaryInfo = true } = useOrderlyContext();
+
+  // Binary symbol config for the calculator context (see binaryInfo.ts).
+  useBinaryInfoObserver(enableBinaryInfo);
 
   // const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
 

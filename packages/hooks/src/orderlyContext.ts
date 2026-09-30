@@ -28,6 +28,13 @@ export interface OrderlyConfigContextState {
   /** enable swap deposit, default is false */
   enableSwapDeposit?: boolean;
   /**
+   * Poll `/v1/public/binary/info` so binary symbol config (PRD-fixed
+   * imr=1/mmr=0) reaches the calculators — protects the perps position
+   * pipeline from binary rows it cannot price. Default is true; deployments
+   * without any Binary Option exposure can opt out.
+   */
+  enableBinaryInfo?: boolean;
+  /**
    * Custom orderbook default tick sizes.
    */
   defaultOrderbookTickSizes?: Record<PropertyKey, string>;

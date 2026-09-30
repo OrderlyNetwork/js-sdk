@@ -16,6 +16,7 @@ export const generateKeyFun =
       size?: number;
       page?: number;
       sourceTypeAll?: boolean;
+      productType?: string;
       dateRange?: {
         from?: Date;
         to?: Date;
@@ -64,6 +65,10 @@ export const generateKeyFun =
 
     if (side) {
       search.set(`side`, side);
+    }
+
+    if (args.productType) {
+      search.set("product_type", args.productType);
     }
 
     return `${url}?${search.toString()}`;
