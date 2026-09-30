@@ -67,8 +67,10 @@ export const useReferralInfoScript = () => {
     (multiLevelRebateInfo.max_referee_kickback_ratio ?? 0) > 0;
 
   const tradingFeeRebateRate = new Decimal(
-    multiLevelRebateInfo?.default_referee_kickback_ratio ?? 0,
+    multiLevelRebateInfo?.bonus_max_rebate_rate ?? 0,
   )
+    .add(multiLevelRebateInfo?.base_rebate_rate ?? 0)
+    .mul(multiLevelRebateInfo?.default_referee_kickback_ratio ?? 0)
     .mul(100)
     .toString();
 
