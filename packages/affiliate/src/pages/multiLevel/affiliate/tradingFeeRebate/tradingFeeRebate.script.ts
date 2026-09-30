@@ -37,6 +37,16 @@ export const useTradingFeeRebateScript = (
   const isChanged = isValid && !new Decimal(percentage).eq(initialPercentage);
   const buttonDisabled = !isChanged || isMutating || isRefreshing;
   const showError = percentage !== "" && !isValid;
+  const tradingFeeRebateRate = useMemo(() => {
+    if (!PERCENT_INPUT_PATTERN.test(percentage)) return undefined;
+
+    const value = new Decimal(percentage);
+    const cappedPercentage = value.gt(maxPercentage) ? maxPercentage : value;
+    return new Decimal(options.directTradesRate)
+      .mul(cappedPercentage)
+      .div(100)
+      .toNumber();
+  }, [percentage, maxPercentage, options.directTradesRate]);
 
   const onChange = (value: string) => {
     if (PERCENT_EDIT_PATTERN.test(value)) {
@@ -72,6 +82,7 @@ export const useTradingFeeRebateScript = (
 
   return {
     percentage,
+    tradingFeeRebateRate,
     maxPercentage: maxPercentage.toString(),
     showError,
     buttonDisabled,

@@ -1,5 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, Flex, Input, Text, cn } from "@orderly.network/ui";
+import { Button, Flex, Input, Text, Tooltip, cn } from "@orderly.network/ui";
 import type { TradingFeeRebateReturns } from "./tradingFeeRebate.script";
 import type { TradingFeeRebateWidgetProps } from "./tradingFeeRebate.widget";
 
@@ -27,7 +27,7 @@ export const TradingFeeRebate = (props: TradingFeeRebateProps) => {
           intensity={54}
           className="oui-w-full oui-leading-[18px]"
         >
-          {t("affiliate.tradingFeeRebate.description")}
+          {t("affiliate.tradingFeeRebate.modal.description")}
         </Text>
 
         <Flex direction="column" itemAlign="start" gap={1} width="100%">
@@ -36,7 +36,7 @@ export const TradingFeeRebate = (props: TradingFeeRebateProps) => {
             htmlFor="oui-trading-fee-rebate-rate"
             size="2xs"
             intensity={54}
-            className="oui-leading-[18px]"
+            className="oui-w-full oui-break-words oui-leading-[18px]"
           >
             {t("affiliate.tradingFeeRebate.rate")}
           </Text>
@@ -57,26 +57,44 @@ export const TradingFeeRebate = (props: TradingFeeRebateProps) => {
               </Text>
             }
           />
-          <Flex width="100%" itemAlign="center" gap={1} className="oui-pl-1">
-            <span
-              aria-hidden="true"
-              className={cn(
-                "oui-size-1 oui-shrink-0 oui-rounded-full",
-                props.showError ? "oui-bg-danger" : "oui-bg-base-contrast-54",
-              )}
-            />
-            <Text
-              size="2xs"
-              intensity={54}
-              className={cn(
-                "oui-leading-[18px]",
-                props.showError && "oui-text-danger",
-              )}
-            >
-              {t("affiliate.tradingFeeRebate.maximumAllowed", {
-                rate: props.maxPercentage,
-              })}
+          <Text
+            size="2xs"
+            intensity={54}
+            className={cn(
+              "oui-w-full oui-break-words oui-leading-[18px]",
+              props.showError && "oui-text-danger",
+            )}
+          >
+            {t("affiliate.tradingFeeRebate.maximumAllowed", {
+              rate: props.maxPercentage,
+            })}
+          </Text>
+          <Flex
+            direction="column"
+            itemAlign="start"
+            className="oui-affiliate-tradingFeeRebate-preview oui-mt-2 oui-w-full oui-gap-[2px] oui-break-words oui-leading-[18px]"
+            aria-live="polite"
+          >
+            <Text size="2xs" intensity={54}>
+              {t("affiliate.tradingFeeRebate.preview.receive")}
             </Text>
+            <Tooltip
+              className="oui-max-w-[280px]"
+              content={t("affiliate.tradingFeeRebate.preview.basis", {
+                commissionRate: props.directTradesRate,
+              })}
+            >
+              <Text
+                size="2xs"
+                intensity={98}
+                tabIndex={0}
+                className="oui-cursor-help oui-underline oui-decoration-dotted oui-underline-offset-[6px]"
+              >
+                {t("affiliate.tradingFeeRebate.preview.rebate", {
+                  rate: props.tradingFeeRebateRate ?? "-",
+                })}
+              </Text>
+            </Tooltip>
           </Flex>
         </Flex>
       </Flex>

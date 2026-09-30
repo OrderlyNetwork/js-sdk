@@ -83,6 +83,7 @@ export const useReferralInfoScript = () => {
         multiLevelRebateInfo.default_referee_kickback_ratio ?? 0,
       maxRefereeKickbackRatio:
         multiLevelRebateInfo.max_referee_kickback_ratio ?? 0,
+      directTradesRate,
       onSuccess: () => multiLevelRebateInfoMutate(),
     });
   };

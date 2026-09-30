@@ -4,6 +4,7 @@ import { TradingFeeRebate } from "./tradingFeeRebate.ui";
 export type TradingFeeRebateWidgetProps = {
   defaultRefereeKickbackRatio: number;
   maxRefereeKickbackRatio: number;
+  directTradesRate: number;
   close?: () => void;
   onSuccess?: () => void | Promise<unknown>;
 };
