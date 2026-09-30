@@ -24,6 +24,7 @@ import {
   TriangleDownIcon,
   UnFavoritesIcon2,
 } from "../../icons";
+import type { DropDownMarketsExtensionProps } from "../dropDownMarkets";
 import { FundingRateHintWidget } from "../fundingRateHint";
 import type { MarketsProviderProps } from "../marketsProvider";
 import { SymbolBadge } from "../symbolBadge";
@@ -177,6 +178,7 @@ export type SymbolInfoBarFullProps = Pick<
     trailing?: ReactNode;
     closeCountdown?: () => void;
     showCountdown?: boolean;
+    marketsDropdown?: DropDownMarketsExtensionProps;
   };
 
 export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
@@ -244,7 +246,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
         className="oui-shrink-0 oui-gap-y-[2px]"
       >
         <LazyDropDownMarketsWidget
-          contentClassName="oui-w-[620px] oui-h-[496px]"
+          {...props.marketsDropdown}
           symbol={props.symbol}
           onSymbolChange={props.onSymbolChange}
         >

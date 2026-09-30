@@ -13,6 +13,14 @@ export type DropDownMarketsWidgetProps = MarketsProviderProps &
     | "renderTabAfterContent"
   >;
 
+export type DropDownMarketsExtensionProps = Pick<
+  DropDownMarketsWidgetProps,
+  | "tabs"
+  | "renderTabContent"
+  | "renderTabBeforeContent"
+  | "renderTabAfterContent"
+>;
+
 export const DropDownMarketsWidget: React.FC<
   PropsWithChildren<DropDownMarketsWidgetProps>
 > = (props) => {
@@ -23,7 +31,10 @@ export const DropDownMarketsWidget: React.FC<
   return (
     <MarketsProvider
       symbol={props.symbol}
-      onSymbolChange={props.onSymbolChange}
+      onSymbolChange={(symbol) => {
+        state.hide();
+        props.onSymbolChange?.(symbol);
+      }}
       tabs={tabs}
     >
       <DropDownMarkets

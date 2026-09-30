@@ -67,7 +67,7 @@ export const DropDownMarkets: React.FC<
           alignOffset={-32}
           sideOffset={20}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-bg-base-8 oui-p-0",
+            "oui-markets-dropdown-menu-content oui-h-[496px] oui-max-h-[calc(100vh-24px)] oui-w-[620px] oui-max-w-[calc(100vw-24px)] oui-bg-base-8 oui-p-0",
             props.contentClassName,
           )}
         >

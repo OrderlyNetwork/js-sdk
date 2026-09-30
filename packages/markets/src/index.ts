@@ -48,3 +48,4 @@ export type {
   MarketCategoryContext,
 } from "./type";
 export { builtInTabs } from "./registry/builtInTabRegistry";
+export { useMarketCategories } from "./components/shared/hooks/useMarketCategories";

@@ -8,7 +8,7 @@ import {
 import { SymbolInfoBarFullProps } from "./symbolInfoBarFull.ui";
 
 export type SymbolInfoBarFullWidgetPros = UseSymbolInfoBarFullScriptOptions &
-  Pick<SymbolInfoBarFullProps, "className" | "trailing"> &
+  Pick<SymbolInfoBarFullProps, "className" | "trailing" | "marketsDropdown"> &
   Pick<MarketsProviderProps, "onSymbolChange"> & {
     closeCountdown?: () => void;
     showCountdown?: boolean;
