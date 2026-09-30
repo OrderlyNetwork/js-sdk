@@ -74,6 +74,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   const {
     volumePrerequisite,
     multiLevelRebateInfo,
+    refereeKickbackInfo,
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
@@ -209,6 +210,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       splashPage,
       volumePrerequisite,
       multiLevelRebateInfo,
+      refereeKickbackInfo,
       isMultiLevelEnabled,
       isMultiLevelReferralUnlocked,
       multiLevelRebateInfoMutate,
@@ -243,6 +245,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     memoMutate,
     volumePrerequisite,
     multiLevelRebateInfo,
+    refereeKickbackInfo,
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,

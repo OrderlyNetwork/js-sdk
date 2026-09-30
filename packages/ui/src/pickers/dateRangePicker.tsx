@@ -7,6 +7,7 @@ import { CaretDownIcon } from "../icon/caretDown";
 import { useLocale } from "../locale";
 import { Popover } from "../popover/popover";
 import { selectVariants } from "../select/selectPrimitive";
+import { isWithinCalendarMonths, isWithinDays } from "./calendarRange";
 import { Calendar, CalendarProps } from "./date/calendar";
 
 export type DateRangePickerProps = {
@@ -19,6 +20,10 @@ export type DateRangePickerProps = {
   size?: SizeType;
   className?: string;
   formatString?: string;
+  /** Maximum span between the selected dates, measured in calendar months. */
+  maxCalendarMonths?: number;
+  /** Maximum span between the selected dates, measured in days, inclusive. */
+  maxDays?: number;
 } & Omit<DayPickerRangeProps, "mode">;
 
 const DEFAULT_DATE_FORMAT = "yyyy/MM/dd";
@@ -33,6 +38,8 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     size,
     className,
     formatString = DEFAULT_DATE_FORMAT,
+    maxCalendarMonths,
+    maxDays,
     ...calendarProps
   } = props;
   const [locale] = useLocale("picker");
@@ -87,19 +94,29 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     return `${arr.join(" - ")}`;
   }, [dateRange, placeholder, locale]);
 
-  const onOpenChange = (nextOpen: boolean) => {
-    // console.log(dateRange);
+  const isWithinMaxSpan = (from: Date, to: Date) => {
     if (
-      typeof dateRange?.to === "undefined" &&
-      typeof dateRange?.from !== "undefined"
+      maxCalendarMonths &&
+      !isWithinCalendarMonths(from, to, maxCalendarMonths)
     ) {
-      setDateRange({
-        ...dateRange,
-        to: dateRange.from,
-      });
+      return false;
     }
-    if (!nextOpen && dateRange) {
-      onChange?.(dateRange);
+    if (maxDays && !isWithinDays(from, to, maxDays)) {
+      return false;
+    }
+    return true;
+  };
+
+  const onOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen && dateRange?.from) {
+      const nextRange = {
+        from: dateRange.from,
+        to: dateRange.to ?? dateRange.from,
+      };
+      if (isWithinMaxSpan(nextRange.from, nextRange.to)) {
+        setDateRange(nextRange);
+        onChange?.(nextRange);
+      }
     }
     setOpen(nextOpen);
   };
@@ -110,9 +127,25 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
         from: date,
       });
     } else {
+      if (range.from && range.to && !isWithinMaxSpan(range.from, range.to)) {
+        return;
+      }
       setDateRange(range);
     }
   };
+
+  const disabledMatchers = calendarProps.disabled
+    ? Array.isArray(calendarProps.disabled)
+      ? calendarProps.disabled
+      : [calendarProps.disabled]
+    : [];
+  const disabled =
+    (maxCalendarMonths || maxDays) && dateRange?.from && !dateRange.to
+      ? [
+          ...disabledMatchers,
+          (date: Date) => !isWithinMaxSpan(dateRange.from!, date),
+        ]
+      : calendarProps.disabled;
 
   return (
     <Popover
@@ -126,6 +159,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
         <Calendar
           numberOfMonths={isMobileView ? 1 : 2}
           {...calendarProps}
+          disabled={disabled}
           mode={"range"}
           // @ts-ignore
           selected={dateRange}

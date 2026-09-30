@@ -1,8 +1,6 @@
 import React from "react";
 import { useAppStore } from "@orderly.network/hooks";
-import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
 import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 
@@ -25,7 +23,6 @@ interface EnhancedHolding {
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
   const tokensInfo = useAppStore((state) => state.tokensInfo);
-  const { namespace } = useWalletConnector();
   const { onTransfer, onConvert } = options;
   const columns = React.useMemo<Column[]>(() => {
     return [
@@ -120,18 +117,16 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
           const { token } = record;
           return (
             <Flex itemAlign="center" justify="end" gap={3}>
-              {token !== "USDC" &&
-                namespace !== ChainNamespace.solana &&
-                typeof onConvert === "function" && (
-                  <Button
-                    size={"sm"}
-                    variant={"outlined"}
-                    color={"secondary"}
-                    onClick={() => onConvert?.(id, token)}
-                  >
-                    {t("transfer.convert")}
-                  </Button>
-                )}
+              {token !== "USDC" && typeof onConvert === "function" && (
+                <Button
+                  size={"sm"}
+                  variant={"outlined"}
+                  color={"secondary"}
+                  onClick={() => onConvert?.(id, token)}
+                >
+                  {t("transfer.convert")}
+                </Button>
+              )}
               {typeof onTransfer === "function" && (
                 <Button
                   size={"sm"}
@@ -147,6 +142,6 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
     ];
-  }, [t, tokensInfo, onTransfer, onConvert, namespace]);
+  }, [t, tokensInfo, onTransfer, onConvert]);
   return columns;
 };

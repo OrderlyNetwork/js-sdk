@@ -18,6 +18,9 @@ export const useReferralCode = () => {
   const [doResetRebateRate, { isMutating: isResetRebateRateMutating }] =
     useMutation("/v1/referral/multi_level/rebate_rate/set_default");
 
+  const [doUpdateKickbackRatio, { isMutating: isUpdateKickbackRatioMutating }] =
+    useMutation("/v1/referral/multi_level/kickback_ratio/update");
+
   const createReferralCode = async (params: {
     referral_code: string;
     referee_rebate_rate: number;
@@ -43,6 +46,13 @@ export const useReferralCode = () => {
     return doUpdateRebateRate(params);
   };
 
+  const updateKickbackRatio = async (params: {
+    referee_kickback_ratio: number;
+    account_ids?: string[];
+  }) => {
+    return doUpdateKickbackRatio(params);
+  };
+
   const resetRebateRate = async (params: { account_ids: string[] }) => {
     return doResetRebateRate(params);
   };
@@ -52,13 +62,15 @@ export const useReferralCode = () => {
     isCreateMutating ||
     isEditMutating ||
     isUpdateRebateRateMutating ||
-    isResetRebateRateMutating;
+    isResetRebateRateMutating ||
+    isUpdateKickbackRatioMutating;
 
   return {
     bindReferralCode,
     createReferralCode,
     editReferralCode,
     updateRebateRate,
+    updateKickbackRatio,
     resetRebateRate,
     isMutating,
   } as const;

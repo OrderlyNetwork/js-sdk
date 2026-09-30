@@ -731,11 +731,19 @@ export declare namespace API {
       base_rebate_rate?: number;
     }
 
+    /** /v1/referral/multi_level/referee_kickback_info */
+    export interface RefereeKickbackInfo {
+      referee_kickback_rate: number;
+    }
+
     /** /v1/referral/multi_level/rebate_info */
     export interface MultiLevelRebateInfo {
       referral_code: string;
       max_rebate_rate: number;
       default_referee_rebate_rate: number;
+      default_referee_kickback_ratio?: number;
+      max_referee_kickback_ratio?: number;
+      can_configure_kickback?: boolean;
       bonus_max_rebate_rate?: number;
       base_rebate_rate?: number;
       default_bonus_referee_rebate_rate?: number;

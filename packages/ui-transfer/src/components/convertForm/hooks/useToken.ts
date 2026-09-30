@@ -43,12 +43,10 @@ export const useToken = (options: Options) => {
 
   const tokensInfo = useMainTokenStore((state) => state.data);
 
+  // Tokens with on_chain_swap=false route through CeFi swap on the backend,
+  // so every /v1/public/token entry is a valid convert source.
   const newTokensInfo = useMemo(() => {
-    const filteredTokensInfo = (tokensInfo ?? []).filter(
-      (item) => item.on_chain_swap,
-    );
-
-    return filteredTokensInfo.reduce<ConvertTokenInfo[]>((result, item) => {
+    return (tokensInfo ?? []).reduce<ConvertTokenInfo[]>((result, item) => {
       result.push(getConvertTokenInfo(item));
 
       return result;
