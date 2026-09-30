@@ -222,6 +222,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props) => {
             symbol={props.symbol}
             className="oui-mx-1 oui-rounded-xl"
             sharePnLConfig={props.sharePnLConfig}
+            dataListProductContent={props.dataListProductContent}
           />
         </React.Suspense>
       </main>

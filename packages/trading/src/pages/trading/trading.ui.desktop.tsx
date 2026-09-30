@@ -460,6 +460,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       <SymbolInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
+        marketsDropdown={props.marketsDropdown}
         closeCountdown={closeCountdown}
         showCountdown={showCountdown}
         trailing={

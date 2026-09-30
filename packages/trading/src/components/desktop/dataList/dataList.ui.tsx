@@ -177,11 +177,17 @@ export const DataList: React.FC<DataListState> = (props) => {
     setUnPnlPriceBasic,
     setPnlNotionalDecimalPrecision,
   } = props;
+  const visiblePositionCount =
+    props.dataListProductContent?.counts?.positions ?? positionCount;
+  const visiblePendingCount =
+    props.dataListProductContent?.counts?.pending === null
+      ? 0
+      : (props.dataListProductContent?.counts?.pending ?? pendingOrderCount);
 
   const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
       value: DataListTabType.positions,
-      title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
+      title: `${t("common.positions")}${visiblePositionCount > 0 ? ` (${visiblePositionCount})` : ""}`,
       content: resolvePositionsContent(
         props.dataListProductContent?.positions,
         <PositionsView {...props} />,
@@ -189,7 +195,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     },
     {
       value: DataListTabType.pending,
-      title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
+      title: `${t("orders.status.pending")}${visiblePendingCount > 0 ? ` (${visiblePendingCount})` : ""}`,
       content: props.dataListProductContent?.pending ?? (
         <DesktopOrderListWidget
           type={TabType.pending}
@@ -235,6 +241,7 @@ export const DataList: React.FC<DataListState> = (props) => {
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           sharePnLConfig={sharePnLConfig}
         />

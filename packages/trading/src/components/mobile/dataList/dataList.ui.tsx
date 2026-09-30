@@ -162,6 +162,7 @@ const HistoryTab: React.FC<DataListState> = (props) => {
         >
           <MobilePositionHistoryWidget
             symbol={props.showAllSymbol ? undefined : props.symbol}
+            productType="PERP"
             onSymbolChange={props.onSymbolChange}
             classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
             sharePnLConfig={props.sharePnLConfig}
@@ -192,17 +193,29 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     setTab,
     className,
   } = props;
+  const visiblePositionCount =
+    props.dataListProductContent?.counts?.positions ?? positionCount;
+  const visiblePendingCount =
+    props.dataListProductContent?.counts?.pending === null
+      ? 0
+      : (props.dataListProductContent?.counts?.pending ?? pendingOrderCount);
+  const mobileContent = props.dataListProductContent?.mobile;
+  const perpsPositions = <PositionsView {...props} />;
+  const positionsContent =
+    typeof mobileContent?.positions === "function"
+      ? mobileContent.positions(perpsPositions)
+      : (mobileContent?.positions ?? perpsPositions);
 
   const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
-      title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
+      title: `${t("common.positions")}${visiblePositionCount > 0 ? ` (${visiblePositionCount})` : ""}`,
       value: DataListTabType.position,
-      content: <PositionsView {...props} />,
+      content: positionsContent,
     },
     {
-      title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
+      title: `${t("orders.status.pending")}${visiblePendingCount > 0 ? ` (${visiblePendingCount})` : ""}`,
       value: DataListTabType.pending,
-      content: (
+      content: mobileContent?.pending ?? (
         <OrdersView
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
@@ -224,7 +237,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     {
       title: t("trading.history"),
       value: DataListTabType.history,
-      content: <HistoryTab {...props} />,
+      content: mobileContent?.history ?? <HistoryTab {...props} />,
     },
     {
       title: t("positions.liquidation"),

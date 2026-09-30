@@ -9,12 +9,14 @@ export const TradingPage: React.FC<TradingPageProps> = (props) => {
       symbol={props.symbol}
       tradingViewConfig={props.tradingViewConfig}
       onSymbolChange={props.onSymbolChange}
+      marketsDropdown={props.marketsDropdown}
       disableFeatures={props.disableFeatures}
       overrideFeatures={props.overrideFeatures}
       referral={props.referral}
       tradingRewards={props.tradingRewards}
       bottomSheetLeading={props.bottomSheetLeading}
       sharePnLConfig={props.sharePnLConfig}
+      dataListProductContent={props.dataListProductContent}
     >
       <TradingWidget />
     </TradingPageProvider>

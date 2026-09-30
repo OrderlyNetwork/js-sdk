@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
@@ -149,6 +150,7 @@ type BaseTradingPageProps = {
   symbol: string;
   tradingViewConfig: TradingViewConfigInterface;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  marketsDropdown?: DropDownMarketsExtensionProps;
   // enableFeatures?: TradingFeatures[];
   // for trading page features, not for tradingView chart features
   disableFeatures?: TradingFeatures[];
@@ -168,5 +170,11 @@ export type TradingPageProps = BaseTradingPageProps & {
     filled: ReactNode;
     positionHistory: ReactNode;
     orderHistory: ReactNode;
+    counts: { positions?: number; pending?: number | null };
+    mobile: Partial<{
+      positions: ReactNode | ((perpsContent: ReactNode) => ReactNode);
+      pending: ReactNode;
+      history: ReactNode;
+    }>;
   }>;
 };
