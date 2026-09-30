@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Badge, cn, Text } from "@orderly.network/ui";
+import { parseBinaryRoundSymbol } from "../binary/binaryMarkets";
 import type { PredictionOutcome, PredictionState } from "../prediction.script";
 import { usePredictionFormatters } from "../predictionShared";
 
@@ -37,12 +38,15 @@ export const TableNumber: React.FC<{
 export const RoundSymbol = ({
   round,
   outcome,
+  symbol,
 }: {
   round: number;
   outcome: PredictionOutcome;
+  symbol?: string;
 }) => {
   const { t } = useTranslation();
   const { formatRoundBadge } = usePredictionFormatters();
+  const market = parseBinaryRoundSymbol(symbol);
   return (
     <div className="oui-flex oui-items-center oui-gap-2 oui-py-1 oui-whitespace-nowrap">
       <span
@@ -53,9 +57,11 @@ export const RoundSymbol = ({
         )}
       />
       <div>
-        <div>{t("prediction.btcUpDown")}</div>
+        <div>
+          {market ? t("prediction.marketName", market) : t("prediction.title")}
+        </div>
         <div className="oui-mt-1 oui-text-base-contrast-54 oui-tabular-nums">
-          {formatRoundBadge(round)}
+          {formatRoundBadge(round, market?.intervalSeconds)}
         </div>
       </div>
     </div>
@@ -69,6 +75,7 @@ export const PredictionOrderSymbol = ({
 }) => {
   const { t } = useTranslation();
   const { formatRoundBadge } = usePredictionFormatters();
+  const market = parseBinaryRoundSymbol(order.symbol);
   return (
     <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
       <span
@@ -80,13 +87,15 @@ export const PredictionOrderSymbol = ({
         )}
       />
       <div className="oui-min-w-0 oui-text-base-contrast">
-        <div className="oui-whitespace-nowrap">{t("prediction.btcUpDown")}</div>
+        <div className="oui-whitespace-nowrap">
+          {market ? t("prediction.marketName", market) : t("prediction.title")}
+        </div>
         <div className="oui-mt-1 oui-flex oui-items-center oui-gap-1 oui-whitespace-nowrap">
           <Badge color="neutral" size="xs">
             {t(`common.${order.type}`)}
           </Badge>
           <span className="oui-whitespace-nowrap oui-text-base-contrast-54 oui-tabular-nums">
-            {formatRoundBadge(order.round)}
+            {formatRoundBadge(order.round, market?.intervalSeconds)}
           </span>
         </div>
       </div>

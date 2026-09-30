@@ -1,26 +1,19 @@
 import React, { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 import {
-  builtInTabs,
   FavoritesIcon2,
   UnFavoritesIcon2,
+  useMarketCategories,
   useMarketsContext,
 } from "@orderly.network/markets";
 import type { MarketTabConfig } from "@orderly.network/markets";
-import { cn, DataTable, Text, TokenIcon } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import type { PredictionState } from "./prediction.script";
-import {
-  PREDICTION_MARKET_ID,
-  PREDICTION_MARKET_VOLUME,
-} from "./predictionMockData.script";
-import {
-  formatContractPrice,
-  formatCountdown,
-  formatPercent,
-  toIntlLocale,
-  usePredictionFormatters,
-} from "./predictionShared";
+import { cn, Spinner, Text, TokenIcon } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import type { BinaryMarket } from "./binary/binaryMarkets";
+import type { BinaryBbo } from "./binary/useBinaryBbo";
+import { useBinaryBboMap } from "./binary/useBinaryBbo";
+import { useRoundCountdown } from "./hooks/useRoundCountdown";
+import { formatCountdown, formatPercent } from "./predictionShared";
 
 const predictionMarketTab = (name: string): MarketTabConfig => ({
   id: "prediction",
@@ -30,160 +23,197 @@ const predictionMarketTab = (name: string): MarketTabConfig => ({
 
 export const usePredictionMarketTabs = (): MarketTabConfig[] => {
   const { t } = useTranslation();
-  return useMemo(
-    () => [
-      builtInTabs.favorites,
-      builtInTabs.all,
-      builtInTabs.crypto,
-      predictionMarketTab(t("prediction.title")),
-      builtInTabs.rwa,
-      builtInTabs.community,
-      builtInTabs.newListing,
-      builtInTabs.recent,
-      builtInTabs.preTge,
-    ],
-    [t],
-  );
+  const defaultTabs = useMarketCategories("dropDownMarkets");
+  return useMemo(() => {
+    const tabs = defaultTabs.filter(
+      (tab) => !("id" in tab && tab.id === "prediction"),
+    );
+    const cryptoIndex = tabs.findIndex(
+      (tab) => "type" in tab && tab.type === "crypto",
+    );
+    tabs.splice(cryptoIndex + 1, 0, predictionMarketTab(t("prediction.title")));
+    return tabs;
+  }, [defaultTabs, t]);
 };
 
-export type PredictionMarketRowProps = Pick<
-  PredictionState,
-  "countdown" | "isRoundTradable" | "outcomePrices" | "round" | "upChance"
-> & {
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
-  onSelect: () => void;
-  showFavoriteControl?: boolean;
+export const formatPredictionMarketName = (market: BinaryMarket) =>
+  i18n.t("prediction.marketName", { base: market.base, period: market.period });
+
+type PredictionMarketRowProps = {
+  market: BinaryMarket;
+  /** Live UP-coordinate BBO from the panel's @bbo subscriptions. */
+  bbo: BinaryBbo | undefined;
+  favorite: boolean;
+  onToggleFavorite: (id: string) => void;
+  onSelect: (id: string) => void;
 };
 
-export const PredictionMarketPanel: React.FC<
-  PredictionMarketRowProps & { className?: string }
-> = ({ className, ...props }) => {
+const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
+  market,
+  bbo,
+  favorite,
+  onToggleFavorite,
+  onSelect,
+}) => {
   const { t } = useTranslation();
-  const { locale } = usePredictionFormatters();
-  const { searchValue } = useMarketsContext();
-  const searchableText = `${t("prediction.btcUpDown")} BTC UP DOWN 5M`;
-  const matchesSearch =
-    !searchValue ||
-    searchableText.toLowerCase().includes(searchValue.trim().toLowerCase());
-
-  type PredictionMarketRecord = {
-    symbol: string;
-    chance: number;
-    lastPrice: number;
-    volume: number;
-    time: string;
-  };
-
-  const columns = useMemo<Column<PredictionMarketRecord>[]>(
-    () => [
-      {
-        title: t("common.symbol"),
-        dataIndex: "symbol",
-        width: 190,
-        onSort: true,
-        render: () => (
-          <div className="oui-flex oui-min-w-0 oui-items-center oui-gap-2">
-            {props.showFavoriteControl !== false && (
-              <button
-                type="button"
-                aria-label={t("markets.favorites")}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  props.onToggleFavorite();
-                }}
-                className="oui-prediction-market-favorite-btn oui-me-1 oui-flex oui-size-3 oui-flex-none oui-cursor-pointer oui-items-center oui-justify-center"
-              >
-                {props.isFavorite ? (
-                  <FavoritesIcon2 className="oui-size-3" />
-                ) : (
-                  <UnFavoritesIcon2 className="oui-size-3" />
-                )}
-              </button>
+  // Row-local tick: the shared state no longer re-renders the dropdown every
+  // second, so the countdown column drives its own per-second update.
+  const seconds = useRoundCountdown(market.currentRow.expire_at);
+  // Mid = UP win probability; both sides must be present to derive it.
+  const price =
+    bbo?.bestBid != null && bbo?.bestAsk != null
+      ? new Decimal(bbo.bestBid).add(bbo.bestAsk).div(2).toNumber()
+      : undefined;
+  return (
+    <tr
+      className="oui-prediction-market-row oui-h-[34px] oui-cursor-pointer hover:oui-bg-base-7"
+      onClick={() => onSelect(market.id)}
+    >
+      <td className="oui-px-2 oui-text-start">
+        <div className="oui-flex oui-items-center oui-gap-2">
+          <button
+            type="button"
+            aria-label={t("markets.favorites")}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite(market.id);
+            }}
+            className="oui-flex oui-size-4 oui-flex-none oui-items-center oui-justify-center"
+          >
+            {favorite ? <FavoritesIcon2 /> : <UnFavoritesIcon2 />}
+          </button>
+          <TokenIcon name={market.base} className="oui-size-[18px]" />
+          <Text
+            size="2xs"
+            className="oui-whitespace-nowrap oui-text-base-contrast"
+          >
+            {formatPredictionMarketName(market)}
+          </Text>
+        </div>
+      </td>
+      <td className="oui-px-2 oui-text-end oui-text-xs">
+        {price == null
+          ? "--"
+          : price.toFixed(
+              new Decimal(market.currentRow.quote_tick ?? 0.01).decimalPlaces(),
             )}
-            <TokenIcon name="BTC" className="oui-size-[18px]" />
-            <Text
-              size="2xs"
-              className="oui-whitespace-nowrap oui-text-base-contrast"
-            >
-              {t("prediction.btcUpDown")}
-            </Text>
-          </div>
-        ),
-      },
-      {
-        title: t("markets.column.last"),
-        dataIndex: "lastPrice",
-        width: 100,
-        align: "right",
-        onSort: true,
-        render: (value) => <Text size="2xs">{formatContractPrice(value)}</Text>,
-      },
-      {
-        title: t("prediction.chance"),
-        dataIndex: "chance",
-        width: 80,
-        align: "right",
-        onSort: true,
-        render: (value) => <Text size="2xs">{formatPercent(value)}</Text>,
-      },
-      {
-        title: t("prediction.volumeShort"),
-        dataIndex: "volume",
-        width: 80,
-        align: "right",
-        onSort: true,
-        render: (value) => (
-          <Text size="2xs">${value.toLocaleString(toIntlLocale(locale))}</Text>
-        ),
-      },
-      {
-        title: t("common.time"),
-        dataIndex: "time",
-        width: 80,
-        align: "right",
-        onSort: true,
-        render: (value) => <Text size="2xs">{value}</Text>,
-      },
-    ],
-    [locale, props.isFavorite, props.onToggleFavorite, t],
+      </td>
+      <td className="oui-px-2 oui-text-end oui-text-xs">
+        {price == null ? "--" : formatPercent(price * 100)}
+      </td>
+      <td className="oui-px-2 oui-text-end oui-text-xs">--</td>
+      <td className="oui-px-2 oui-text-end oui-text-xs">
+        {formatCountdown(seconds)}
+      </td>
+    </tr>
+  );
+};
+
+export type PredictionMarketPanelProps = {
+  markets: BinaryMarket[];
+  /** Live BBO per round symbol (supplied by PredictionMarketPanelWidget). */
+  bbos: Record<string, BinaryBbo>;
+  loading?: boolean;
+  favoriteMarketIds: string[];
+  onToggleFavorite: (id: string) => void;
+  onSelect: (id: string) => void;
+  className?: string;
+};
+
+export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
+  markets,
+  bbos,
+  loading,
+  favoriteMarketIds,
+  onToggleFavorite,
+  onSelect,
+  className,
+}) => {
+  const { t } = useTranslation();
+  const { searchValue } = useMarketsContext();
+  const search = searchValue?.trim().toLowerCase() ?? "";
+  const visibleMarkets = markets.filter((market) =>
+    `${formatPredictionMarketName(market)} ${market.id} ${market.indexPriceSymbol}`
+      .toLowerCase()
+      .includes(search),
   );
 
-  const dataSource: PredictionMarketRecord[] = matchesSearch
-    ? [
-        {
-          symbol: PREDICTION_MARKET_ID,
-          chance: props.upChance,
-          lastPrice: props.outcomePrices.up,
-          volume: PREDICTION_MARKET_VOLUME,
-          time: props.isRoundTradable
-            ? formatCountdown(props.countdown)
-            : "00:00",
-        },
-      ]
-    : [];
+  if (visibleMarkets.length === 0) {
+    return (
+      <div
+        className={cn(
+          "oui-flex oui-h-full oui-items-center oui-justify-center oui-bg-base-8",
+          className,
+        )}
+      >
+        {loading ? (
+          <Spinner />
+        ) : (
+          <Text intensity={54} size="sm">
+            {t("ui.empty.description")}
+          </Text>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div
       className={cn(
-        "oui-relative oui-z-[3] oui-overflow-hidden oui-bg-base-8 oui-px-1 oui-pb-2",
+        "oui-h-full oui-overflow-auto oui-bg-base-8 oui-px-1",
         className,
       )}
     >
-      <DataTable
-        columns={columns}
-        dataSource={dataSource}
-        generatedRowKey={(record) => record.symbol}
-        classNames={{
-          root: "!oui-h-auto !oui-bg-base-8",
-          scroll: "!oui-h-auto !oui-min-h-0",
-          header: "oui-h-9",
-        }}
-        onRow={() => ({
-          className: "oui-prediction-market-row !oui-h-[34px]",
-          onClick: props.onSelect,
-        })}
-      />
+      <table className="oui-w-full oui-table-fixed oui-text-base-contrast">
+        <colgroup>
+          <col className="oui-w-[34%]" />
+          <col className="oui-w-[16%]" />
+          <col className="oui-w-[16%]" />
+          <col className="oui-w-[16%]" />
+          <col className="oui-w-[18%]" />
+        </colgroup>
+        <thead className="oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-text-xs oui-text-base-contrast-54">
+          <tr className="oui-h-9">
+            <th className="oui-px-2 oui-text-start">{t("common.symbol")}</th>
+            <th className="oui-px-2 oui-text-end">
+              {t("markets.column.last")}
+            </th>
+            <th className="oui-px-2 oui-text-end">{t("prediction.chance")}</th>
+            <th className="oui-px-2 oui-text-end">
+              {t("prediction.volumeShort")}
+            </th>
+            <th className="oui-px-2 oui-text-end">{t("common.time")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleMarkets.map((market) => (
+            <PredictionMarketRow
+              key={market.currentRow.symbol}
+              market={market}
+              bbo={bbos[market.currentRow.symbol]}
+              favorite={favoriteMarketIds.includes(market.id)}
+              onToggleFavorite={onToggleFavorite}
+              onSelect={onSelect}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
+};
+
+/**
+ * Widget layer for the dropdown panel: owns the light `${symbol}@bbo`
+ * subscriptions while the panel itself stays pure presentation. Mounts only
+ * while the dropdown tab is open, so the topics live with its visibility.
+ */
+export const PredictionMarketPanelWidget: React.FC<
+  Omit<PredictionMarketPanelProps, "bbos">
+> = (props) => {
+  const symbols = useMemo(
+    () => props.markets.map((market) => market.currentRow.symbol),
+    [props.markets],
+  );
+  const bbos = useBinaryBboMap(symbols);
+  return <PredictionMarketPanel {...props} bbos={bbos} />;
 };

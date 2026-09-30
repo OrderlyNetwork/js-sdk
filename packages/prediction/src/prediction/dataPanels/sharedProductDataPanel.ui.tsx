@@ -19,6 +19,7 @@ import {
   type ProductDataType,
   type ProductType,
 } from "./sharedProductDataPanel.script";
+import { useScopedPredictionState } from "./useScopedPredictionState";
 
 export type SharedProductDataPanelProps = {
   state: PredictionState;
@@ -26,6 +27,7 @@ export type SharedProductDataPanelProps = {
   /** The product shown when this panel first opens on a page. */
   initialProduct: ProductType;
   perpsSymbol?: string;
+  predictionUnderlyingSymbol?: string;
   /** Content rendered before the Perps / Prediction control, such as account filters. */
   beforeProductSelector?: React.ReactNode;
   perpsPositionsContent?: React.ReactNode;
@@ -43,6 +45,7 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   type,
   initialProduct,
   perpsSymbol,
+  predictionUnderlyingSymbol,
   beforeProductSelector,
   perpsPositionsContent,
   perpsPositionHistoryContent,
@@ -50,6 +53,10 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   mobile = false,
 }) => {
   const { t } = useTranslation();
+  const scopedState = useScopedPredictionState(
+    state,
+    predictionUnderlyingSymbol,
+  );
   const {
     product,
     selectProduct,
@@ -57,7 +64,8 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
     predictionPositionCount,
   } = useSharedProductDataPanelScript({
     initialProduct,
-    predictionPositionCount: state.positions.length,
+    predictionPositionCount: scopedState.positions.length,
+    perpsSymbol,
     onProductChange,
   });
 
@@ -65,14 +73,14 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
     product === "prediction" ? (
       type === "positions" ? (
         mobile ? (
-          <MobilePredictionPositions state={state} />
+          <MobilePredictionPositions state={scopedState} />
         ) : (
-          <HoldingsTable state={state} />
+          <HoldingsTable state={scopedState} />
         )
       ) : mobile ? (
-        <MobilePredictionHistory state={state} />
+        <MobilePredictionHistory state={scopedState} />
       ) : (
-        <PredictionHistoryTable state={state} />
+        <PredictionHistoryTable state={scopedState} />
       )
     ) : type === "positions" ? (
       (perpsPositionsContent ??
@@ -84,9 +92,9 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
     ) : (
       (perpsPositionHistoryContent ??
       (mobile ? (
-        <MobilePositionHistoryWidget symbol={perpsSymbol} />
+        <MobilePositionHistoryWidget symbol={perpsSymbol} productType="PERP" />
       ) : (
-        <PositionHistoryWidget />
+        <PositionHistoryWidget symbol={perpsSymbol} productType="PERP" />
       )))
     );
 

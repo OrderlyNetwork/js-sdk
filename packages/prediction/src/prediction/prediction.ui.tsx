@@ -6,9 +6,11 @@ import {
   DropDownMarketsWidget,
   TriangleDownIcon,
 } from "@orderly.network/markets";
+import type { API } from "@orderly.network/types";
 import {
   ChevronUpIcon,
   cn,
+  Spinner,
   TabPanel,
   Tabs,
   Text,
@@ -20,18 +22,14 @@ import {
 import { PredictionDataPanel } from "./dataPanels";
 import type { PredictionState } from "./prediction.script";
 import { PriceChart } from "./predictionChart.ui";
-import {
-  PredictionMarketPanel,
-  usePredictionMarketTabs,
-  type PredictionMarketRowProps,
-} from "./predictionMarketPanel.ui";
-import { usePredictionFavorites } from "./predictionMockData.script";
+import { formatPredictionMarketName } from "./predictionMarketPanel.ui";
 import {
   PredictionOrderBook,
   RoundOrderStatusCard,
   TradePanel,
 } from "./predictionOrderEntry.ui";
 import { formatPercent, usePredictionFormatters } from "./predictionShared";
+import { usePredictionMarketsDropdown } from "./usePredictionMarketsDropdown";
 
 // Re-exported here so the package entry keeps importing every public
 // prediction surface from one module.
@@ -41,6 +39,9 @@ export {
   PredictionOrdersTable,
   SharedProductDataPanel,
   SharedProductOrdersPanel,
+  MobileSharedProductOrdersPanel,
+  MobileSharedProductHistory,
+  useSharedProductCounts,
 } from "./dataPanels";
 export type { PredictionDataPanelProps } from "./dataPanels";
 
@@ -81,13 +82,17 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
     >
       <TabPanel title={t("trading.tabs.chart")} value="chart">
         <PriceChart
+          key={state.marketId}
+          intervalSeconds={state.market?.intervalSeconds ?? 300}
+          base={state.market?.base ?? ""}
           selectedRound={state.selectedRound}
           onSelectRound={state.selectMarketRound}
           points={state.priceHistory}
+          candles={state.candles}
+          roundOutcome={state.roundOutcomeLookup}
           openingPrice={state.openingPrice}
           currentPrice={state.currentPrice}
           round={state.round}
-          countdown={state.countdown}
           roundPhase={state.roundPhase}
           onGoToLiveMarket={state.goToLiveRound}
         />
@@ -95,7 +100,11 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
       <TabPanel title={t("trading.tabs.data")} value="data">
         <div className="oui-h-[360px] oui-space-y-2 oui-rounded-b-xl oui-bg-base-9 oui-px-4 oui-pb-4">
           <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
-            <Text intensity={36}>{t("prediction.chart.btcPrice")}</Text>
+            <Text intensity={36}>
+              {t("prediction.chart.indexPrice", {
+                base: state.market?.base ?? "",
+              })}
+            </Text>
             <Text.numeral dp={2} intensity={80}>
               {state.currentPrice}
             </Text.numeral>
@@ -116,13 +125,19 @@ export const Prediction: React.FC<
     orderEntryAccountReady?: boolean;
     orderEntryFunded?: boolean;
     orderEntryRestricted?: boolean;
+    onPerpSymbolChange?: (symbol: API.Symbol) => void;
+    requestedMarketId?: string;
+    onPredictionMarketChange?: (marketId: string, replace?: boolean) => void;
   }
 > = (state) => {
   const { t } = useTranslation();
   const { formatRoundWindow } = usePredictionFormatters();
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
   const { isMobile } = useScreen();
-  const predictionMarketTabs = usePredictionMarketTabs();
+  const marketsDropdown = usePredictionMarketsDropdown(
+    state,
+    state.onPredictionMarketChange,
+  );
 
   useEffect(() => {
     if (!state.notification) return;
@@ -139,30 +154,82 @@ export const Prediction: React.FC<
     state.clearNotification();
   }, [state.notification, t]);
 
-  const { isFavorite: isPredictionFavorite, toggleFavorite } =
-    usePredictionFavorites();
-  const predictionMarketRowProps: PredictionMarketRowProps = {
-    countdown: state.countdown,
-    isRoundTradable: state.isRoundTradable,
-    outcomePrices: state.outcomePrices,
-    round: state.round,
-    upChance: state.upChance,
-    isFavorite: isPredictionFavorite,
-    onToggleFavorite: toggleFavorite,
-    onSelect: () => undefined,
-  };
-  // TODO: Wire cross-market navigation before the prototype is promoted.
-  const handleDropdownSymbolChange = () => undefined;
-
-  // Prediction favorites render as a separate section because they are not
-  // part of the current Perps markets data source.
-
   const orderEntryAccountReady = state.orderEntryRestricted
     ? false
     : (state.orderEntryAccountReady ?? false);
   const orderEntryFunded = state.orderEntryRestricted
     ? false
     : (state.orderEntryFunded ?? false);
+
+  const isRequestedMarketUnavailable =
+    state.requestedMarketId != null &&
+    !state.markets.some((market) => market.id === state.requestedMarketId);
+  const isSwitchingMarket =
+    state.requestedMarketId != null &&
+    state.requestedMarketId !== state.marketId &&
+    !isRequestedMarketUnavailable;
+  const marketName = isRequestedMarketUnavailable
+    ? (state.requestedMarketId ?? t("prediction.title"))
+    : state.market
+      ? formatPredictionMarketName(state.market)
+      : t("prediction.title");
+  const marketSelector = (
+    <DropDownMarketsWidget
+      {...marketsDropdown}
+      contentClassName={
+        isMobile
+          ? "oui-h-[560px] oui-w-[920px] oui-max-w-[calc(100vw-24px)]"
+          : undefined
+      }
+      symbol={
+        isRequestedMarketUnavailable
+          ? undefined
+          : state.market?.indexPriceSymbol
+      }
+      onSymbolChange={state.onPerpSymbolChange}
+    >
+      <button
+        type="button"
+        className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
+      >
+        {!isRequestedMarketUnavailable && state.market && (
+          <TokenIcon name={state.market.base} size="lg" />
+        )}
+        <div className="oui-min-w-0 oui-flex-1">
+          <h1 className="oui-flex oui-items-center oui-gap-1 oui-truncate oui-text-base oui-font-semibold oui-text-base-contrast">
+            <span className="oui-truncate">{marketName}</span>
+            <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
+          </h1>
+          {!isRequestedMarketUnavailable && state.market && (
+            <div className="oui-mt-0.5 oui-truncate oui-text-xs oui-font-normal oui-text-base-contrast-54">
+              {formatRoundWindow(state.round, state.market.intervalSeconds)}
+            </div>
+          )}
+        </div>
+      </button>
+    </DropDownMarketsWidget>
+  );
+  if (
+    !state.isRoundsReady ||
+    isRequestedMarketUnavailable ||
+    isSwitchingMarket
+  ) {
+    return (
+      <main
+        id="oui-prediction-page"
+        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-flex-col oui-items-center oui-justify-center oui-gap-6 oui-bg-base-10 oui-p-3 lg:oui-p-4"
+      >
+        {marketSelector}
+        {state.isRoundsLoading || isSwitchingMarket ? (
+          <Spinner size="lg" color="primary" />
+        ) : (
+          <p className="oui-max-w-72 oui-text-center oui-text-sm oui-font-normal oui-text-base-contrast-54">
+            {t("prediction.rounds.unavailable")}
+          </p>
+        )}
+      </main>
+    );
+  }
 
   return (
     <main
@@ -174,54 +241,15 @@ export const Prediction: React.FC<
           theme's 1280px screen and must match isDesktopLayout below. */}
       <div className="oui-grid oui-grid-cols-[4fr_6fr] oui-items-stretch oui-gap-3 2xl:oui-grid-cols-[minmax(0,1fr)_280px_360px] 2xl:oui-grid-rows-[auto_auto_auto]">
         <header className="oui-col-span-2 oui-col-start-1 oui-row-start-1 oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 2xl:oui-col-span-1 2xl:oui-col-start-1 2xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
-          <DropDownMarketsWidget
-            symbol="PERP_BTC_USDC"
-            tabs={predictionMarketTabs}
-            contentClassName="oui-h-[560px] oui-w-[920px] oui-max-w-[calc(100vw-24px)]"
-            onSymbolChange={handleDropdownSymbolChange}
-            renderTabContent={(_, key, hide) =>
-              key === "prediction" ? (
-                <PredictionMarketPanel
-                  {...predictionMarketRowProps}
-                  onSelect={hide}
-                />
-              ) : undefined
-            }
-            renderTabAfterContent={(_, key, hide) =>
-              key === "favorites" && isPredictionFavorite ? (
-                <PredictionMarketPanel
-                  {...predictionMarketRowProps}
-                  className="oui-flex-none oui-border-t oui-border-line-12 oui-pt-2"
-                  showFavoriteControl={false}
-                  onSelect={hide}
-                />
-              ) : null
-            }
-          >
-            <button
-              type="button"
-              className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
-            >
-              <TokenIcon name="BTC" size="lg" />
-              <div className="oui-min-w-0 oui-flex-1">
-                <h1 className="oui-flex oui-items-center oui-gap-1 oui-truncate oui-text-base oui-font-semibold oui-text-base-contrast">
-                  <span className="oui-truncate">
-                    {t("prediction.btcUpDown")}
-                  </span>
-                  <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
-                </h1>
-                <div className="oui-mt-0.5 oui-truncate oui-text-xs oui-font-normal oui-text-base-contrast-54">
-                  {formatRoundWindow(state.round)}
-                </div>
-              </div>
-            </button>
-          </DropDownMarketsWidget>
+          {marketSelector}
 
           <div className="oui-hidden oui-h-12 oui-w-px oui-flex-shrink-0 oui-bg-line-12 2xl:oui-block" />
 
           <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 xl:oui-grid 2xl:oui-flex 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
             <DataItem
-              label={t("prediction.chart.btcPrice")}
+              label={t("prediction.chart.indexPrice", {
+                base: state.market?.base ?? "",
+              })}
               value={<Text.numeral dp={2}>{state.currentPrice}</Text.numeral>}
             />
             <DataItem
@@ -239,13 +267,17 @@ export const Prediction: React.FC<
               per-second work. */}
           {isDesktopLayout ? (
             <PriceChart
+              key={state.marketId}
+              intervalSeconds={state.market?.intervalSeconds ?? 300}
+              base={state.market?.base ?? ""}
               selectedRound={state.selectedRound}
               onSelectRound={state.selectMarketRound}
               points={state.priceHistory}
+              candles={state.candles}
+              roundOutcome={state.roundOutcomeLookup}
               openingPrice={state.openingPrice}
               currentPrice={state.currentPrice}
               round={state.round}
-              countdown={state.countdown}
               roundPhase={state.roundPhase}
               onGoToLiveMarket={state.goToLiveRound}
             />
@@ -255,6 +287,8 @@ export const Prediction: React.FC<
         </div>
         <div className="oui-col-start-1 oui-row-start-3 oui-min-w-0 2xl:oui-col-start-2 2xl:oui-row-span-2 2xl:oui-row-start-1">
           <PredictionOrderBook
+            selectedRow={state.selectedRow}
+            market={state.market}
             orderBook={state.orderBook}
             selectedOutcome={state.selectedOutcome}
             selectedPrice={state.selectedPrice}
@@ -279,8 +313,11 @@ export const Prediction: React.FC<
           )}
           {state.isRegionRestricted || state.orderEntryRestricted ? (
             <RoundOrderStatusCard
+              marketName={marketName}
+              intervalSeconds={state.market?.intervalSeconds ?? 300}
               round={state.selectedRound}
               roundPhase={state.roundPhase}
+              isRoundInSnapshot={state.isRoundInSnapshot}
               restricted
             />
           ) : state.isRoundTradable ? (
@@ -291,8 +328,11 @@ export const Prediction: React.FC<
             />
           ) : (
             <RoundOrderStatusCard
+              marketName={marketName}
+              intervalSeconds={state.market?.intervalSeconds ?? 300}
               round={state.round}
               roundPhase={state.roundPhase}
+              isRoundInSnapshot={state.isRoundInSnapshot}
             />
           )}
         </div>

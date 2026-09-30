@@ -40,8 +40,14 @@ export const PendingValue = ({
           size="xs"
           disabled={!state.isRoundTradable || state.isRegionRestricted}
         >
-          {field === "quantity" ? "0 / " : ""}
-          <TableNumber value={order[field]} />
+          {field === "quantity" ? (
+            <>
+              <TableNumber value={order.filledQuantity} /> /{" "}
+              <TableNumber value={order.quantity} />
+            </>
+          ) : (
+            <TableNumber value={order[field]} />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent side="top" align="end" className="oui-w-64 oui-p-4">
@@ -58,15 +64,13 @@ export const PendingValue = ({
           </Button>
           <Button
             size="sm"
-            onClick={() => {
-              if (
-                state.editPendingOrder(
-                  order.id,
-                  field === "price" ? Number(value) : order.price,
-                  field === "quantity" ? Number(value) : order.quantity,
-                )
-              )
-                setOpen(false);
+            onClick={async () => {
+              const updated = await state.editPendingOrder(
+                order.id,
+                field === "price" ? Number(value) : order.price,
+                field === "quantity" ? Number(value) : order.quantity,
+              );
+              if (updated) setOpen(false);
               else setError(true);
             }}
           >

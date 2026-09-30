@@ -1,30 +1,15 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Decimal } from "@orderly.network/utils";
+import {
+  useBinaryOrderbook,
+  type BinaryBookLevel,
+  type BinaryOrderBook,
+} from "../binary/useBinaryOrderbook";
 import type {
   PredictionOrderBookLevel,
   PredictionOrderSide,
   PredictionOutcome,
 } from "../prediction.types";
-import { clamp } from "../prediction.types";
-
-export const createBook = (midPrice: number) => {
-  const asks: PredictionOrderBookLevel[] = [];
-  const bids: PredictionOrderBookLevel[] = [];
-
-  for (let index = 0; index < 7; index += 1) {
-    const step = (index + 1) * 0.01;
-    asks.push({
-      price: clamp(midPrice + step, 0.0001, 0.9999),
-      quantity: 180 + index * 73 + ((index * 37) % 90),
-    });
-    bids.push({
-      price: clamp(midPrice - step, 0.0001, 0.9999),
-      quantity: 210 + index * 61 + ((index * 29) % 110),
-    });
-  }
-
-  return { asks: asks.reverse(), bids };
-};
 
 export const estimateMarketSlippage = (
   side: PredictionOrderSide,
@@ -59,9 +44,65 @@ export const estimateMarketSlippage = (
   return notional.div(filled).sub(bestPrice).abs().div(bestPrice).toNumber();
 };
 
+const toLevels = (levels: BinaryBookLevel[]) =>
+  levels.map(([price, quantity]) => ({ price, quantity }));
+
 export type UsePredictionOrderBookArgs = {
-  selectedMarketPrice: number;
-  outcomePrices: Record<PredictionOutcome, number>;
+  /** Round-specific binary symbol driving the WS subscription. */
+  symbol: string | undefined;
+  active: boolean;
+};
+
+/**
+ * Live orderbook data for the selected round: BBO-derived outcome display
+ * prices (stale-while-empty, reset per symbol) in both coordinates.
+ */
+export const usePredictionOrderBook = ({
+  symbol,
+  active,
+}: UsePredictionOrderBookArgs) => {
+  const { book, bbo, isLoading } = useBinaryOrderbook(symbol, active);
+
+  const [lastPrices, setLastPrices] = useState<{
+    symbol?: string;
+    up: number;
+    down: number;
+  }>({
+    symbol,
+    up: 0.5,
+    down: 0.5,
+  });
+
+  useEffect(() => {
+    setLastPrices({ symbol, up: 0.5, down: 0.5 });
+  }, [symbol]);
+
+  useEffect(() => {
+    if (bbo.mid == null) return;
+    setLastPrices({
+      symbol,
+      up: bbo.mid,
+      down: new Decimal(1).sub(bbo.mid).toNumber(),
+    });
+  }, [bbo.mid, symbol]);
+
+  const outcomePrices =
+    lastPrices.symbol === symbol
+      ? { up: lastPrices.up, down: lastPrices.down }
+      : { up: 0.5, down: 0.5 };
+
+  return {
+    book,
+    bbo,
+    /** Display prices per outcome (0–1 fraction), stale-while-empty. */
+    outcomePrices,
+    upChance: outcomePrices.up * 100,
+    isBookLoading: isLoading,
+  };
+};
+
+export type UsePredictionOrderBookViewArgs = {
+  book: BinaryOrderBook;
   selectedOutcome: PredictionOutcome;
   orderSide: PredictionOrderSide;
   orderQuantity: number;
@@ -69,32 +110,50 @@ export type UsePredictionOrderBookArgs = {
   slippage: string;
 };
 
-export const usePredictionOrderBook = ({
-  selectedMarketPrice,
-  outcomePrices,
+/**
+ * Presentation layer over the live book: renders the side matching the
+ * selected outcome (ladder wants asks best-last / bids best-first) and
+ * estimates slippage against the outcome's own coordinate.
+ */
+export const usePredictionOrderBookView = ({
+  book,
   selectedOutcome,
   orderSide,
   orderQuantity,
   orderType,
   slippage,
-}: UsePredictionOrderBookArgs) => {
-  const orderBook = useMemo(
-    () => createBook(selectedMarketPrice),
-    [selectedMarketPrice],
-  );
+}: UsePredictionOrderBookViewArgs) => {
+  const orderBook = useMemo(() => {
+    if (selectedOutcome === "down") {
+      return {
+        // API down asks arrive ascending best-first; the ladder renders
+        // best-last, so reverse (mirrors the UP asks handling).
+        asks: toLevels([...book.downAsks].reverse()),
+        bids: toLevels(book.downBids),
+      };
+    }
+    return {
+      asks: toLevels([...book.asks].reverse()),
+      bids: toLevels(book.bids),
+    };
+  }, [book, selectedOutcome]);
 
   const estimateOrderSlippage = useCallback(
     (
       side: PredictionOrderSide,
       quantity: number,
       outcome: PredictionOutcome = selectedOutcome,
-    ) =>
-      estimateMarketSlippage(
-        side,
-        quantity,
-        createBook(outcomePrices[outcome]),
-      ),
-    [outcomePrices, selectedOutcome],
+    ) => {
+      const levels =
+        outcome === "down"
+          ? { asks: book.downAsks, bids: book.downBids }
+          : { asks: book.asks, bids: book.bids };
+      return estimateMarketSlippage(side, quantity, {
+        asks: toLevels(levels.asks),
+        bids: toLevels(levels.bids),
+      });
+    },
+    [book, selectedOutcome],
   );
 
   const estimatedSlippage = useMemo(
@@ -114,3 +173,7 @@ export const usePredictionOrderBook = ({
     isSlippageExceeded,
   };
 };
+
+export type UsePredictionOrderBookReturn = ReturnType<
+  typeof usePredictionOrderBook
+>;

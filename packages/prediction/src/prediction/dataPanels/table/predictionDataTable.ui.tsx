@@ -8,7 +8,19 @@ export const PredictionDataTable: React.FC<{
   columns: PredictionTableColumn[];
   rows: PredictionTableRow[];
   toolbar?: React.ReactNode;
-}> = ({ columns, rows, toolbar }) => {
+  totalCount?: number;
+  onPageChange?: (page: number) => void;
+  preservePageOnDataChange?: boolean;
+  resetKey?: string;
+}> = ({
+  columns,
+  rows,
+  toolbar,
+  totalCount,
+  onPageChange,
+  preservePageOnDataChange,
+  resetKey,
+}) => {
   // Perp parity: 20 rows per page, matching the merged DesktopOrderList view.
   const { pagination, setPage } = usePagination({ pageSize: 20 });
   const dataColumns = useMemo<Column<PredictionTableRow>[]>(
@@ -45,8 +57,12 @@ export const PredictionDataTable: React.FC<{
   );
 
   useEffect(() => {
+    if (!preservePageOnDataChange) setPage(1);
+  }, [dataSource.length, setPage, preservePageOnDataChange]);
+
+  useEffect(() => {
     setPage(1);
-  }, [dataSource.length, setPage]);
+  }, [resetKey, setPage]);
 
   // Always hand pagination to the table: the DataTable hides the bar itself
   // when there are no rows (useShowPagination), so empty and auth states stay
@@ -54,7 +70,11 @@ export const PredictionDataTable: React.FC<{
   const tablePagination = {
     ...pagination,
     pageSize: 20,
-    count: dataSource.length,
+    count: totalCount ?? dataSource.length,
+    onPageChange: (page: number) => {
+      setPage(page);
+      onPageChange?.(page);
+    },
   };
 
   // Perp parity (DesktopOrderList): toolbar sits above the table; the table

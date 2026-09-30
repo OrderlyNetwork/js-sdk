@@ -68,7 +68,11 @@ export const PredictionHistoryTableUI = ({
             record.settledAt,
           ],
           cells: [
-            <RoundSymbol round={record.round} outcome={record.outcome} />,
+            <RoundSymbol
+              round={record.round}
+              outcome={record.outcome}
+              symbol={record.symbol}
+            />,
             <OutcomeBadge outcome={record.outcome} />,
             <TableNumber value={record.quantity} />,
             <TableNumber value={record.averagePrice} />,
@@ -87,10 +91,20 @@ export const PredictionHistoryTableUI = ({
             ) : (
               <OutcomeBadge outcome={record.result ?? record.outcome} />
             ),
-            <Text.pnl dp={2} coloring>
-              {record.pnl}
-            </Text.pnl>,
-            formatTableTime(record.settledAt),
+            // Final PnL/time only once the system close finished
+            // (api-spec §6.3); pending expiry rows show placeholders.
+            record.pnl != null ? (
+              <Text.pnl dp={2} coloring>
+                {record.pnl}
+              </Text.pnl>
+            ) : (
+              <Text intensity={36}>--</Text>
+            ),
+            record.settledAt != null ? (
+              formatTableTime(record.settledAt)
+            ) : (
+              <Text intensity={36}>--</Text>
+            ),
           ],
         }))}
     />

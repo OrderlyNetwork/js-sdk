@@ -4,6 +4,7 @@ import { Text } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
+import { useRoundCountdown } from "../../hooks/useRoundCountdown";
 import { SellPosition } from "../../orderEntry/sellPosition";
 import type { PredictionState } from "../../prediction.script";
 import { formatCountdown } from "../../predictionShared";
@@ -26,6 +27,7 @@ export const HoldingsTableUI = ({
   onLeadingFilter,
 }: HoldingsTableUIProps) => {
   const { t } = useTranslation();
+  const countdown = useRoundCountdown(state.selectedRow?.expire_at);
   return (
     <PredictionDataTable
       toolbar={
@@ -47,39 +49,76 @@ export const HoldingsTableUI = ({
         tableColumn(t("prediction.countdownStatus"), 150),
         tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
       ]}
-      rows={state.positions.filter(filters.matches).map((position) => ({
-        id: position.outcome,
-        sortValues: [
-          undefined,
-          undefined,
-          position.quantity,
-          state.availableQuantity(position.outcome),
-          position.averagePrice,
-          state.outcomePrices[position.outcome],
-          new Decimal(state.outcomePrices[position.outcome])
-            .sub(position.averagePrice)
-            .mul(position.quantity)
-            .toNumber(),
-        ],
-        cells: [
-          <RoundSymbol round={state.round} outcome={position.outcome} />,
-          <OutcomeBadge outcome={position.outcome} />,
-          <TableNumber value={position.quantity} />,
-          <TableNumber value={state.availableQuantity(position.outcome)} />,
-          <TableNumber value={position.averagePrice} />,
-          <TableNumber value={state.outcomePrices[position.outcome]} />,
-          <Text.pnl dp={2} coloring>
-            {new Decimal(state.outcomePrices[position.outcome])
-              .sub(position.averagePrice)
-              .mul(position.quantity)
-              .toNumber()}
-          </Text.pnl>,
-          state.isRoundTradable
-            ? formatCountdown(state.countdown)
-            : t(`prediction.phase.${state.roundPhase}`),
-          <SellPosition state={state} outcome={position.outcome} />,
-        ],
-      }))}
+      rows={state.positions.filter(filters.matches).map((position) => {
+        // Only the selected round has a subscribed book; other rounds' rows
+        // stay readable but without live valuation.
+        const isSelectedRound = position.symbol === state.selectedRow?.symbol;
+        const lastPrice = isSelectedRound
+          ? state.outcomePrices[position.outcome]
+          : undefined;
+        const uPnL =
+          lastPrice != null
+            ? new Decimal(lastPrice)
+                .sub(position.averagePrice)
+                .mul(position.quantity)
+                .toNumber()
+            : undefined;
+        return {
+          id: `${position.symbol ?? ""}-${position.outcome}`,
+          sortValues: [
+            undefined,
+            undefined,
+            position.quantity,
+            state.availableQuantity(
+              position.outcome,
+              undefined,
+              position.symbol,
+            ),
+            position.averagePrice,
+            lastPrice,
+            uPnL,
+          ],
+          cells: [
+            <RoundSymbol
+              round={position.round ?? state.round}
+              outcome={position.outcome}
+              symbol={position.symbol}
+            />,
+            <OutcomeBadge outcome={position.outcome} />,
+            <TableNumber value={position.quantity} />,
+            <TableNumber
+              value={state.availableQuantity(
+                position.outcome,
+                undefined,
+                position.symbol,
+              )}
+            />,
+            <TableNumber value={position.averagePrice} />,
+            lastPrice != null ? (
+              <TableNumber value={lastPrice} />
+            ) : (
+              <Text intensity={36}>--</Text>
+            ),
+            uPnL != null ? (
+              <Text.pnl dp={2} coloring>
+                {uPnL}
+              </Text.pnl>
+            ) : (
+              <Text intensity={36}>--</Text>
+            ),
+            isSelectedRound
+              ? state.isRoundTradable
+                ? formatCountdown(countdown)
+                : t(`prediction.phase.${state.roundPhase}`)
+              : "--",
+            <SellPosition
+              state={state}
+              outcome={position.outcome}
+              symbol={position.symbol}
+            />,
+          ],
+        };
+      })}
     />
   );
 };

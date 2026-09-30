@@ -20,14 +20,17 @@ import { useSellPositionScript } from "./sellPosition.script";
 export type SellPositionProps = {
   state: PredictionState;
   outcome: PredictionOutcome;
+  /** Round symbol of the position row; defaults to the selected round. */
+  symbol?: string;
 };
 
 export const SellPosition: React.FC<SellPositionProps> = ({
   state,
   outcome,
+  symbol,
 }) => {
   const { t } = useTranslation();
-  const sell = useSellPositionScript({ state, outcome });
+  const sell = useSellPositionScript({ state, outcome, symbol });
 
   return (
     <PopoverRoot open={sell.open} onOpenChange={sell.onOpenChange}>

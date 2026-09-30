@@ -1,12 +1,17 @@
 import { useCallback, useState } from "react";
-import { usePredictionMarketSimulation } from "./hooks/usePredictionMarketSimulation";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { Decimal } from "@orderly.network/utils";
+import { useBinaryRegionRestricted } from "./binary/useBinaryRegion";
+import { useBinaryRounds } from "./binary/useBinaryRounds";
+import { useBinaryUnderlying } from "./binary/useBinaryUnderlying";
 import { usePredictionNotifications } from "./hooks/usePredictionNotifications";
-import { usePredictionOrderBook } from "./hooks/usePredictionOrderBook";
+import {
+  usePredictionOrderBook,
+  usePredictionOrderBookView,
+} from "./hooks/usePredictionOrderBook";
 import { usePredictionOrderForm } from "./hooks/usePredictionOrderForm";
 import { usePredictionPortfolio } from "./hooks/usePredictionPortfolio";
-import { usePredictionRoundLifecycle } from "./hooks/usePredictionRoundLifecycle";
-import type { PredictionDataTab, PredictionOutcome } from "./prediction.types";
-import type { PredictionOrderPolicy } from "./predictionExecution";
+import type { PredictionDataTab } from "./prediction.types";
 
 export type {
   PredictionOutcome,
@@ -20,35 +25,44 @@ export type {
   PredictionOpenOrder,
   PredictionTrade,
   PredictionSettlement,
-  PredictionMockPerpPosition,
-  PredictionMockTransaction,
   PredictionChartPoint,
   PredictionOrderBookLevel,
 } from "./prediction.types";
 
 export const usePredictionScript = (
   regionRestricted = false,
-  // When false the per-second simulation stays suspended; the shared provider
-  // toggles it so unrelated routes do not tick the prototype market.
+  // While false the polling/subscriptions stay suspended; the shared provider
+  // toggles it so unrelated routes do not keep the market streams alive.
   active = true,
+  // Live market streams (orderbook/index WS) are only kept by the prediction
+  // page itself; base consumers (perp/portfolio dropdowns, shared panels)
+  // retain the cheap rounds polling but not the per-tick subscriptions.
+  activeLive = true,
 ) => {
-  const isRegionRestricted = regionRestricted;
+  const binaryRegionRestricted = useBinaryRegionRestricted();
+  const isRegionRestricted = regionRestricted || binaryRegionRestricted;
   const [activeTab, setActiveTab] = useState<PredictionDataTab>("predictions");
-  const orderPolicy: PredictionOrderPolicy = "gtc";
+  const [slippage, setSlippage] = useLocalStorage(
+    "orderly-prediction-slippage",
+    "1",
+  );
 
   const { notification, notify, clearNotification } =
     usePredictionNotifications();
 
-  const round = usePredictionRoundLifecycle({
-    onClearNotification: clearNotification,
+  const rounds = useBinaryRounds({ active });
+  const selectedSymbol = rounds.selectedRow?.symbol;
+
+  const underlying = useBinaryUnderlying({
+    indexSymbol: rounds.underlyingSymbol,
+    roundStartSec: rounds.selectedRound,
+    expireAtMs: rounds.selectedRow?.expire_at,
+    active: active && activeLive,
   });
 
-  const market = usePredictionMarketSimulation({
-    active,
-    roundPhase: round.roundPhase,
-    openingPrice: round.openingPrice,
-    countdown: round.countdown,
-    onTradingSecond: round.tickCountdown,
+  const orderbook = usePredictionOrderBook({
+    symbol: selectedSymbol,
+    active: active && activeLive,
   });
 
   const onActiveTab = useCallback((tab: PredictionDataTab) => {
@@ -56,60 +70,73 @@ export const usePredictionScript = (
   }, []);
 
   const portfolio = usePredictionPortfolio({
+    active,
+    binaryRows: rounds.rows,
     notify,
     isRegionRestricted,
-    isRoundTradable: round.isRoundTradable,
-    selectedRound: round.selectedRound,
-    round: round.round,
-    currentPrice: market.currentPrice,
-    openingPrice: round.openingPrice,
-    outcomePrices: market.outcomePrices,
+    isRoundTradable: rounds.isRoundTradable,
+    selectedRound: rounds.selectedRound,
+    selectedSymbol,
+    bbo: {
+      bestAsk: orderbook.bbo.bestAsk,
+      bestBid: orderbook.bbo.bestBid,
+    },
+    slippage,
     onActiveTab,
-    onAdvanceAfterSettle: round.advanceAfterSettle,
   });
 
   const form = usePredictionOrderForm({
-    outcomePrices: market.outcomePrices,
+    marketId: rounds.marketId,
+    quoteTick: rounds.selectedRow?.quote_tick,
+    quoteMin: rounds.selectedRow?.quote_min,
+    quoteMax: rounds.selectedRow?.quote_max,
+    baseTick: rounds.selectedRow?.base_tick,
+    baseMin: rounds.selectedRow?.base_min,
+    minNotional: rounds.selectedRow?.min_notional,
+    outcomePrices: orderbook.outcomePrices,
+    marketPrice: portfolio.protectionPrice,
     balance: portfolio.balance,
-    positions: portfolio.positions,
+    // The form prices sells off the SELECTED round's cost basis; other
+    // rounds' positions stay visible only in the holdings panel.
+    positions: portfolio.positions.filter(
+      (position) => position.symbol === selectedSymbol,
+    ),
     availableQuantity: portfolio.availableQuantity,
-    isRoundTradable: round.isRoundTradable,
+    isRoundTradable: rounds.isRoundTradable,
     isRegionRestricted,
   });
 
-  const book = usePredictionOrderBook({
-    selectedMarketPrice: form.selectedMarketPrice,
-    outcomePrices: market.outcomePrices,
+  const bookView = usePredictionOrderBookView({
+    book: orderbook.book,
     selectedOutcome: form.selectedOutcome,
     orderSide: form.orderSide,
     orderQuantity: form.orderQuantity,
     orderType: form.orderType,
-    slippage: portfolio.slippage,
+    slippage,
   });
 
-  const canPlaceOrder = form.canPlaceOrder && !book.isSlippageExceeded;
+  const canPlaceOrder =
+    form.canPlaceOrder &&
+    !bookView.isSlippageExceeded &&
+    // Fail closed without a valid binary fee config (never "free").
+    portfolio.hasFeeConfig;
 
   const goToLiveRound = useCallback(() => {
-    round.goToLiveRound(market.currentPrice);
-    market.resetPriceHistory(market.currentPrice);
-  }, [market.currentPrice, market.resetPriceHistory, round.goToLiveRound]);
+    rounds.goToLiveRound();
+  }, [rounds]);
 
   const placeOrder = useCallback(() => {
     portfolio.placeOrder({
       canPlaceOrder,
       orderSide: form.orderSide,
       orderType: form.orderType,
-      orderPolicy,
       selectedOutcome: form.selectedOutcome,
       selectedPrice: form.selectedPrice,
       orderQuantity: form.orderQuantity,
-      orderBook: book.orderBook,
-      selectedPosition: form.selectedPosition,
       onResetAmountAfterFill: form.resetAmountAfterFill,
       clearNotification,
     });
   }, [
-    book.orderBook,
     canPlaceOrder,
     clearNotification,
     form.orderQuantity,
@@ -117,32 +144,85 @@ export const usePredictionScript = (
     form.orderType,
     form.resetAmountAfterFill,
     form.selectedOutcome,
-    form.selectedPosition,
     form.selectedPrice,
-    orderPolicy,
     portfolio.placeOrder,
   ]);
 
   const placeOneTapOrder = useCallback(
-    (outcome: PredictionOutcome, quoteAmount: number) => {
+    (
+      outcome: Parameters<typeof portfolio.placeOneTapOrder>[0],
+      quoteAmount: number,
+    ) => {
       portfolio.placeOneTapOrder(outcome, quoteAmount, clearNotification);
     },
     [clearNotification, portfolio.placeOneTapOrder],
   );
 
+  /**
+   * One-tap mirrors the form's composed gate: the portfolio checks price,
+   * funds and min_notional on the submitted protection price, and the book
+   * walk (executable levels, not the mid) rejects sizes that would cross the
+   * user's slippage setting — the mid-based estimate previously disabled
+   * every two-sided book because protection ≥ mid by construction.
+   */
+  const canPlaceOneTapOrder = useCallback(
+    (
+      outcome: Parameters<typeof portfolio.canPlaceOneTapOrder>[0],
+      quoteAmount: number,
+    ) => {
+      if (!portfolio.canPlaceOneTapOrder(outcome, quoteAmount)) return false;
+      const quantity = portfolio.oneTapPayout(outcome, quoteAmount);
+      if (quantity <= 0) return false;
+      const estimated = bookView.estimateOrderSlippage(
+        "buy",
+        quantity,
+        outcome,
+      );
+      return (
+        estimated == null ||
+        estimated <= new Decimal(slippage || 0).div(100).toNumber()
+      );
+    },
+    [
+      bookView.estimateOrderSlippage,
+      portfolio.canPlaceOneTapOrder,
+      portfolio.oneTapPayout,
+      slippage,
+    ],
+  );
+
   return {
-    round: round.round,
-    countdown: round.countdown,
-    roundPhase: round.roundPhase,
-    selectedRound: round.selectedRound,
-    selectMarketRound: round.selectMarketRound,
+    rounds,
+    markets: rounds.markets,
+    market: rounds.market,
+    marketId: rounds.marketId,
+    marketInput: rounds.marketInput,
+    selectMarket: rounds.selectMarket,
+    isRoundsLoading: rounds.isLoading,
+    /** True once the binary info snapshot produced at least one round. */
+    isRoundsReady: rounds.round != null,
+    // Round lifecycle. Components only mount after isRoundsReady, so the 0
+    // fallbacks below never render.
+    round: rounds.round ?? 0,
+    roundPhase: rounds.roundPhase,
+    selectedRound: rounds.selectedRound ?? rounds.round ?? 0,
+    selectedRow: rounds.selectedRow,
+    isRoundInSnapshot: rounds.isRoundInSnapshot,
+    selectMarketRound: rounds.selectMarketRound,
     goToLiveRound,
-    isRoundTradable: round.isRoundTradable,
-    openingPrice: round.openingPrice,
-    currentPrice: market.currentPrice,
-    priceHistory: market.priceHistory,
-    upChance: market.upChance,
-    outcomePrices: market.outcomePrices,
+    isRoundTradable: rounds.isRoundTradable,
+    roundOutcomeLookup: rounds.roundOutcomeLookup,
+    underlyingSymbol: rounds.underlyingSymbol,
+    // Market data
+    openingPrice: rounds.openingPrice ?? underlying.currentPrice,
+    currentPrice: underlying.currentPrice,
+    priceHistory: underlying.priceHistory,
+    candles: underlying.candles,
+    upChance: orderbook.upChance,
+    outcomePrices: orderbook.outcomePrices,
+    isBookLoading: orderbook.isBookLoading,
+    hasBookQuote: orderbook.bbo.mid != null,
+    // Order form
     selectedOutcome: form.selectedOutcome,
     setSelectedOutcome: form.setSelectedOutcome,
     orderSide: form.orderSide,
@@ -155,24 +235,6 @@ export const usePredictionScript = (
     setAmount: form.setAmount,
     limitPrice: form.limitPrice,
     setLimitPrice: form.setLimitPrice,
-    balance: portfolio.balance,
-    positions: portfolio.positions,
-    openOrders: portfolio.openOrders,
-    history: portfolio.history,
-    settlements: portfolio.settlements,
-    mockPerpPositions: portfolio.mockPerpPositions,
-    closeMockPerpPosition: portfolio.closeMockPerpPosition,
-    reverseMockPerpPosition: portfolio.reverseMockPerpPosition,
-    mockTransactions: portfolio.mockTransactions,
-    isRegionRestricted,
-    activeTab,
-    setActiveTab,
-    orderBook: book.orderBook,
-    estimateOrderSlippage: book.estimateOrderSlippage,
-    slippage: portfolio.slippage,
-    setSlippage: portfolio.setSlippage,
-    estimatedSlippage: book.estimatedSlippage,
-    isSlippageExceeded: book.isSlippageExceeded,
     selectedPrice: form.selectedPrice,
     selectedPosition: form.selectedPosition,
     estimatedContracts: form.estimatedContracts,
@@ -185,21 +247,41 @@ export const usePredictionScript = (
     maxQuoteAmount: form.maxQuoteAmount,
     maxOutcomeAmount: form.maxOutcomeAmount,
     orderPercentage: form.orderPercentage,
+    setMaxAmount: form.setMaxAmount,
+    setOrderPercentage: form.setOrderPercentage,
     canPlaceOrder,
+    // Account domain
+    balance: portfolio.balance,
+    positions: portfolio.positions,
+    openOrders: portfolio.openOrders,
+    history: portfolio.history,
+    settlements: portfolio.settlements,
+    feeRates: portfolio.feeRates,
+    estimateFee: portfolio.estimateFee,
+    estimateFrozen: portfolio.estimateFrozen,
+    isRegionRestricted,
+    activeTab,
+    setActiveTab,
+    // Order book view
+    orderBook: bookView.orderBook,
+    estimateOrderSlippage: bookView.estimateOrderSlippage,
+    estimatedSlippage: bookView.estimatedSlippage,
+    isSlippageExceeded: bookView.isSlippageExceeded,
+    slippage,
+    setSlippage,
+    // Actions
     notification,
     clearNotification,
     placeOrder,
     oneTapPayout: portfolio.oneTapPayout,
-    canPlaceOneTapOrder: portfolio.canPlaceOneTapOrder,
+    canPlaceOneTapOrder,
     placeOneTapOrder,
     availableQuantity: portfolio.availableQuantity,
     sellPosition: portfolio.sellPosition,
     editPendingOrder: portfolio.editPendingOrder,
     cancelOrder: portfolio.cancelOrder,
     cancelAllOrders: portfolio.cancelAllOrders,
-    setMaxAmount: form.setMaxAmount,
-    setOrderPercentage: form.setOrderPercentage,
-    settleRound: portfolio.settleRound,
+    pendingOrdersComplete: portfolio.pendingOrdersComplete,
   };
 };
 

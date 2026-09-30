@@ -7,6 +7,7 @@ import { MobileOrderList } from "@orderly.network/ui-orders";
 import type { PredictionState } from "../prediction.script";
 import { usePredictionFilters } from "../predictionFilters.script";
 import { PredictionFilters } from "./filters/predictionFilters.ui";
+import { matchesPredictionOrderFilters } from "./orders/matchesPredictionOrderFilters";
 import { MobilePredictionOrderCard } from "./predictionMobileCards.ui";
 import {
   toOrderSide,
@@ -15,19 +16,35 @@ import {
   useSharedProductOrdersPanelScript,
   type ProductOrderMode,
 } from "./sharedProductOrdersPanel.script";
+import { useScopedPredictionState } from "./useScopedPredictionState";
 
 export const MobileSharedProductOrdersPanel: React.FC<{
   state: PredictionState;
   mode: ProductOrderMode;
-}> = ({ state, mode }) => {
+  perpsSymbol?: string;
+  predictionUnderlyingSymbol?: string;
+}> = ({ state, mode, perpsSymbol, predictionUnderlyingSymbol }) => {
   const { t } = useTranslation();
+  const scopedState = useScopedPredictionState(
+    state,
+    predictionUnderlyingSymbol,
+  );
   const authorized = useAuthGuard();
   const { instrument, onProductFilter } = useSharedProductOrdersPanelScript();
   const filters = usePredictionFilters(mode === "history");
-  const { orderListState, predictionOrders } = useAllProductOrdersTableScript({
-    state,
+  const {
+    orderListState,
+    predictionOrders,
+    binary,
+    perpsHasMore,
+    loadMorePerps,
+  } = useAllProductOrdersTableScript({
+    state: scopedState,
     mode,
     mobile: true,
+    includePrediction: instrument !== "perps",
+    perpsSymbol,
+    predictionUnderlyingSymbol,
   });
   const productFilterItems: DataFilterItem[] = [
     {
@@ -42,10 +59,7 @@ export const MobileSharedProductOrdersPanel: React.FC<{
     },
   ];
   const filteredPredictionOrders = predictionOrders.filter((order) =>
-    filters.matches({
-      ...order,
-      status: "status" in order ? String(order.status) : "pending",
-    }),
+    matchesPredictionOrderFilters(filters, order),
   );
   const supplementalRows =
     instrument === "perps"
@@ -54,10 +68,20 @@ export const MobileSharedProductOrdersPanel: React.FC<{
           id: `prediction-${order.id}`,
           timestamp: order.timestamp,
           renderItem: () => (
-            <MobilePredictionOrderCard state={state} order={order} />
+            <MobilePredictionOrderCard state={scopedState} order={order} />
           ),
         }));
   const predictionOnly = instrument === "prediction";
+  const loadMore = () => {
+    if (instrument !== "prediction" && perpsHasMore) loadMorePerps();
+    if (instrument !== "perps" && binary.hasMore) binary.loadMore();
+  };
+  const canLoadMore =
+    (instrument !== "prediction" && perpsHasMore) ||
+    (instrument !== "perps" && binary.hasMore);
+  const clientFiltered = Boolean(
+    predictionUnderlyingSymbol || filters.outcome !== "all",
+  );
   const perpsOrderCount =
     (orderListState.dataSource as unknown[] | undefined)?.length ?? 0;
   const perpsCancelAll = orderListState.onCancelAll as () => void;
@@ -104,26 +128,22 @@ export const MobileSharedProductOrdersPanel: React.FC<{
     }
     onProductFilter(filter);
   };
-  // Single Cancel All whose scope follows the instrument filter; All cancels
-  // both products. Perps keeps its confirm dialog while the prediction
-  // cancel-all stays immediate, matching each side's behavior elsewhere.
+  // The shared view waits for the Perps confirmation before cancelling Binary.
   const predictionCancellable =
-    state.openOrders.length > 0 && !state.isRegionRestricted;
+    scopedState.openOrders.length > 0 &&
+    scopedState.pendingOrdersComplete &&
+    !scopedState.isRegionRestricted;
   const cancelAllDisabled =
+    // DELETE /v1/orders cannot target only Perps without a symbol.
     instrument === "perps"
-      ? perpsOrderCount === 0
+      ? !perpsSymbol || perpsOrderCount === 0
       : instrument === "prediction"
         ? !predictionCancellable
-        : perpsOrderCount === 0 && !predictionCancellable;
+        : (perpsOrderCount === 0 && !predictionCancellable) ||
+          (scopedState.openOrders.length > 0 &&
+            !scopedState.pendingOrdersComplete);
   const onCancelAllClick =
-    instrument === "perps"
-      ? perpsCancelAll
-      : instrument === "prediction"
-        ? state.cancelAllOrders
-        : () => {
-            if (perpsOrderCount > 0) perpsCancelAll();
-            if (predictionCancellable) state.cancelAllOrders();
-          };
+    instrument === "prediction" ? scopedState.cancelAllOrders : perpsCancelAll;
 
   return (
     <div className="oui-w-full">
@@ -165,12 +185,13 @@ export const MobileSharedProductOrdersPanel: React.FC<{
                   typeof MobileOrderList
                 >["dataSource"])
           }
-          isLoading={predictionOnly ? false : Boolean(orderListState.isLoading)}
-          loadMore={
-            predictionOnly
-              ? () => undefined
-              : (orderListState.loadMore as () => void)
-          }
+          isLoading={Boolean(
+            orderListState.isLoading ||
+            orderListState.isValidating ||
+            binary.isLoading ||
+            binary.isValidating,
+          )}
+          loadMore={loadMore}
           supplementalRows={supplementalRows}
           showFilter={false}
           classNames={{
@@ -179,6 +200,16 @@ export const MobileSharedProductOrdersPanel: React.FC<{
             cell: "oui-rounded-xl oui-bg-base-9 oui-p-3",
           }}
         />
+      )}
+      {authorized && clientFiltered && canLoadMore && (
+        <Button
+          size="sm"
+          variant="outlined"
+          onClick={loadMore}
+          disabled={Boolean(orderListState.isValidating || binary.isValidating)}
+        >
+          {t("orders.loadMore")}
+        </Button>
       )}
     </div>
   );

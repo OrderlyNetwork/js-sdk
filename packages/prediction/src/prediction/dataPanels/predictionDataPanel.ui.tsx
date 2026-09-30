@@ -6,8 +6,10 @@ import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
 import type { PredictionDataTab, PredictionState } from "../prediction.script";
 import type { ProductType } from "./sharedProductDataPanel.script";
 import { SharedProductDataPanel } from "./sharedProductDataPanel.ui";
+import { MobileSharedProductHistory } from "./sharedProductHistory.mobile.ui";
 import { MobileSharedProductOrdersPanel } from "./sharedProductOrdersPanel.mobile.ui";
 import { SharedProductOrdersPanel } from "./sharedProductOrdersPanel.ui";
+import { useSharedProductCounts } from "./useSharedProductCounts";
 
 export type PredictionDataPanelProps = {
   state: PredictionState;
@@ -22,6 +24,12 @@ const defaultTabs: PredictionDataTab[] = [
   "filled",
   "predictionHistory",
   "orderHistory",
+  "assets",
+];
+const defaultMobileTabs: PredictionDataTab[] = [
+  "predictions",
+  "openOrders",
+  "history",
   "assets",
 ];
 
@@ -43,9 +51,16 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
 }) => {
   const { t } = useTranslation();
-  const tabCount: Partial<Record<PredictionDataTab, number>> = {
-    openOrders: state.openOrders.length,
-    predictions: state.positions.length,
+  const counts = useSharedProductCounts(state);
+  const mobileTabs = tabs === defaultTabs ? defaultMobileTabs : tabs;
+  const activeTab = mobileTabs.includes(state.activeTab)
+    ? state.activeTab
+    : ["filled", "predictionHistory", "orderHistory"].includes(state.activeTab)
+      ? "history"
+      : "predictions";
+  const tabCount: Partial<Record<PredictionDataTab, number | null>> = {
+    openOrders: counts.pending,
+    predictions: counts.positions,
   };
   const content: Record<PredictionDataTab, React.ReactNode> = {
     predictions: (
@@ -69,6 +84,9 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     orderHistory: (
       <MobileSharedProductOrdersPanel state={state} mode="history" />
     ),
+    history: (
+      <MobileSharedProductHistory state={state} initialProduct="prediction" />
+    ),
     assets: <AssetsModule.AssetsWidget />,
   };
   return (
@@ -79,7 +97,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
       )}
     >
       <Tabs
-        value={state.activeTab}
+        value={activeTab}
         onValueChange={(value) =>
           state.setActiveTab(value as PredictionDataTab)
         }
@@ -91,13 +109,15 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           ),
         }}
       >
-        {tabs.map((tab) => (
+        {mobileTabs.map((tab) => (
           <TabPanel
             key={tab}
             value={tab}
             title={
               <>
-                {t(`prediction.tab.${tab}`)}
+                {tab === "history"
+                  ? t("trading.history")
+                  : t(`prediction.tab.${tab}`)}
                 {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
               </>
             }
@@ -117,12 +137,18 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
 }) => {
   const { t } = useTranslation();
+  const counts = useSharedProductCounts(state);
+  const activeTab = tabs.includes(state.activeTab)
+    ? state.activeTab
+    : state.activeTab === "history"
+      ? "predictionHistory"
+      : "predictions";
   const [positionProduct, setPositionProduct] =
     useState<ProductType>("prediction");
 
-  const tabCount: Partial<Record<PredictionDataTab, number>> = {
-    openOrders: state.openOrders.length,
-    predictions: state.positions.length,
+  const tabCount: Partial<Record<PredictionDataTab, number | null>> = {
+    openOrders: counts.pending,
+    predictions: counts.positions,
   };
 
   const tabContent: Record<PredictionDataTab, React.ReactNode> = {
@@ -145,6 +171,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     ),
     assets: <AssetsModule.AssetsTabWidget />,
     orderHistory: <SharedProductOrdersPanel state={state} mode="history" />,
+    history: null,
   };
 
   return (
@@ -160,7 +187,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     >
       <Tabs
         className="oui-prediction-dataPanel-tabs oui-h-full oui-min-h-0"
-        value={state.activeTab}
+        value={activeTab}
         onValueChange={(value) =>
           state.setActiveTab(value as PredictionDataTab)
         }
@@ -183,7 +210,9 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
             value={tab}
             title={
               <>
-                {t(`prediction.tab.${tab}`)}
+                {tab === "history"
+                  ? t("trading.history")
+                  : t(`prediction.tab.${tab}`)}
                 {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
               </>
             }

@@ -1,452 +1,490 @@
-import { useCallback, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { useCallback, useEffect, useMemo } from "react";
 import {
-  INITIAL_BALANCE,
-  INITIAL_ROUND,
-  type PredictionMockPerpPosition,
-  type PredictionMockTransaction,
+  useCollateral,
+  useMutation,
+  useOrderStream,
+  usePositionStream,
+  usePrivateQuery,
+} from "@orderly.network/hooks";
+import {
+  OrderSide,
+  OrderStatus,
+  OrderType,
+  type API,
+} from "@orderly.network/types";
+import { Decimal, getTimestamp } from "@orderly.network/utils";
+import {
+  binaryRoundFromSymbol,
+  isBinaryRowTradable,
+  isBinarySymbol,
+} from "../binary/binaryInfo";
+import type { BinaryInfoRow } from "../binary/binaryInfo";
+import { useBinaryFeeRates } from "../binary/useBinaryFeeRates";
+import {
   type PredictionOpenOrder,
-  type PredictionOrderBookLevel,
+  type PredictionOutcome,
   type PredictionOrderSide,
   type PredictionOrderType,
-  type PredictionOutcome,
   type PredictionPosition,
   type PredictionSettlement,
   type PredictionTrade,
 } from "../prediction.types";
-import {
-  planPredictionExecution,
-  type PredictionOrderPolicy,
-} from "../predictionExecution";
-import { ROUND_INTERVAL_SECONDS } from "../predictionShared";
-import { createBook, estimateMarketSlippage } from "./usePredictionOrderBook";
+import { floorToTickDecimal } from "../predictionShared";
+
+/** ISO buffer applied on top of the order notional when freezing collateral. */
+export const ISO_ORDER_FROZEN_BUFFER = 0.0006;
 
 export type PlaceOrderInput = {
   canPlaceOrder: boolean;
   orderSide: PredictionOrderSide;
   orderType: PredictionOrderType;
-  orderPolicy: PredictionOrderPolicy;
   selectedOutcome: PredictionOutcome;
   selectedPrice: number;
   orderQuantity: number;
-  orderBook: {
-    asks: PredictionOrderBookLevel[];
-    bids: PredictionOrderBookLevel[];
-  };
-  selectedPosition?: PredictionPosition;
   onResetAmountAfterFill: () => void;
   clearNotification: () => void;
 };
 
 export type UsePredictionPortfolioArgs = {
+  active?: boolean;
+  binaryRows: BinaryInfoRow[];
   notify: (message: string, tone?: "success" | "danger") => void;
   isRegionRestricted: boolean;
   isRoundTradable: boolean;
-  selectedRound: number;
-  round: number;
-  currentPrice: number;
-  openingPrice: number;
-  outcomePrices: Record<PredictionOutcome, number>;
+  selectedRound: number | undefined;
+  /** Symbol of the selected round. */
+  selectedSymbol: string | undefined;
+  /** UP-coordinate BBO of the selected round's book. */
+  bbo: {
+    bestAsk: number | undefined;
+    bestBid: number | undefined;
+  };
+  /**
+   * User slippage setting (percent as a string), owned by the script root —
+   * the value drives the MARKET protection price below.
+   */
+  slippage: string;
   onActiveTab: (
     tab: "openOrders" | "predictions" | "orderHistory" | "predictionHistory",
   ) => void;
-  onAdvanceAfterSettle: (currentPrice: number) => void;
+};
+
+const TERMINAL_ORDER_STATUSES = new Set([
+  OrderStatus.FILLED,
+  OrderStatus.CANCELLED,
+  OrderStatus.REJECTED,
+]);
+
+// decimal.js-light has no floor(); the shared core keeps sizing and
+// submission exactly aligned (see predictionShared.floorToTickDecimal).
+const toTickQuantity = (quantity: number, tick: number) =>
+  floorToTickDecimal(quantity, tick).toString();
+
+const toDisplayPrice = (upPrice: number) =>
+  new Decimal(1).sub(upPrice).toNumber();
+
+/**
+ * UP-book request coordinates from the user's outcome view (api-spec §5.2):
+ * buying DOWN @n is SELL UP @(1-n); selling a DOWN position (closing a short)
+ * is BUY UP @(1-n).
+ */
+const toUpBookRequest = (
+  outcome: PredictionOutcome,
+  side: PredictionOrderSide,
+  displayPrice: number,
+) => {
+  const upSide =
+    side === "buy"
+      ? outcome === "up"
+        ? OrderSide.BUY
+        : OrderSide.SELL
+      : outcome === "up"
+        ? OrderSide.SELL
+        : OrderSide.BUY;
+  const upPrice =
+    outcome === "up" ? displayPrice : toDisplayPrice(displayPrice);
+  return { upSide, upPrice };
+};
+
+const toProtectionPrice = (
+  price: number,
+  roundAway: boolean,
+  config?: BinaryInfoRow,
+  outcome: PredictionOutcome = "up",
+) => {
+  const tick = config?.quote_tick ?? 0.01;
+  const upMin = config?.quote_min ?? tick;
+  const upMax = config?.quote_max ?? 1 - tick;
+  const min = outcome === "up" ? upMin : new Decimal(1).sub(upMax).toNumber();
+  const max = outcome === "up" ? upMax : new Decimal(1).sub(upMin).toNumber();
+  const stepped = new Decimal(price)
+    .div(tick)
+    .toDecimalPlaces(0, roundAway ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
+    .mul(tick);
+  // decimal.js-light exposes no clamp; compare on the tick grid.
+  if (stepped.lt(min)) return min;
+  if (stepped.gt(max)) return max;
+  return stepped.toNumber();
+};
+
+export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
+  id: order.order_id,
+  outcome: order.side === OrderSide.BUY ? "up" : "down",
+  side: order.side === OrderSide.BUY ? "buy" : "sell",
+  type: order.type === OrderType.LIMIT ? "limit" : "market",
+  price: Number(order.price ?? 0),
+  quantity: Number(order.quantity ?? 0),
+  filledQuantity: Number(order.total_executed_quantity ?? 0),
+  averagePrice:
+    order.average_executed_price > 0 ? order.average_executed_price : undefined,
+  reduceOnly: order.reduce_only,
+  symbol: order.symbol,
+  round: binaryRoundFromSymbol(order.symbol, order.created_time) ?? 0,
+  timestamp: order.created_time,
+});
+
+const toPredictionSettlement = (
+  row: API.PositionHistory,
+): PredictionSettlement => {
+  const isUp = row.side === "LONG";
+  const expiryOutcome =
+    row.outcome === "UP" ? "up" : row.outcome === "DOWN" ? "down" : undefined;
+  // Display prices live in the position's own coordinate: a DOWN row shows
+  // 1-p for both entry and exit so a winning DOWN settles at 1.
+  const displayEntry = isUp
+    ? row.avg_open_price
+    : toDisplayPrice(row.avg_open_price);
+  const settlementPrice = expiryOutcome
+    ? isUp
+      ? Number(row.settlement_price_per_share ?? 0)
+      : toDisplayPrice(Number(row.settlement_price_per_share ?? 0))
+    : isUp
+      ? row.avg_close_price
+      : toDisplayPrice(row.avg_close_price);
+  const quantity = Math.abs(row.closed_position_qty);
+  // api-spec §6.3: an expiry row only counts as settled once settled_at is
+  // non-null AND a valid outcome/R is present. Until then the row must not
+  // present final PnL or a settlement time (result_committed_at ≠ settled_at:
+  // the round outcome is public, personal funds may still be in flight).
+  const settling =
+    expiryOutcome != null &&
+    (row.settled_at == null || row.settlement_price_per_share == null);
+  return {
+    id: row.position_id,
+    symbol: row.symbol,
+    round: binaryRoundFromSymbol(row.symbol, row.open_timestamp) ?? 0,
+    outcome: isUp ? "up" : "down",
+    quantity,
+    averagePrice: displayEntry,
+    settlementPrice,
+    result: expiryOutcome ?? "closed",
+    payout: new Decimal(quantity).mul(settlementPrice).toNumber(),
+    pnl: settling
+      ? undefined
+      : new Decimal(row.realized_pnl ?? 0).sub(row.trading_fee ?? 0).toNumber(),
+    settledAt: settling
+      ? undefined
+      : expiryOutcome != null
+        ? (row.settled_at ?? undefined)
+        : row.close_timestamp,
+    settling,
+  };
 };
 
 export const usePredictionPortfolio = ({
+  active = true,
+  binaryRows,
   notify,
   isRegionRestricted,
   isRoundTradable,
-  selectedRound,
-  round,
-  currentPrice,
-  openingPrice,
-  outcomePrices,
+  selectedSymbol,
+  bbo,
+  slippage,
   onActiveTab,
-  onAdvanceAfterSettle,
 }: UsePredictionPortfolioArgs) => {
-  const [slippage, setSlippage] = useLocalStorage(
-    "orderly-prediction-slippage",
-    "1",
+  const configBySymbol = useMemo(
+    () => new Map(binaryRows.map((row) => [row.symbol, row])),
+    [binaryRows],
   );
-  const [balance, setBalance] = useState(INITIAL_BALANCE);
-  const [positions, setPositions] = useState<PredictionPosition[]>([
-    { outcome: "up", quantity: 24, averagePrice: 0.4625 },
-    { outcome: "down", quantity: 8, averagePrice: 0.4175 },
+  const selectedConfig = selectedSymbol
+    ? configBySymbol.get(selectedSymbol)
+    : undefined;
+  const feeRates = useBinaryFeeRates();
+
+  const { freeCollateral } = useCollateral({ dp: 6 });
+  // Available collateral in USDC, including account-level funding constraints.
+  const balance = Number.isFinite(freeCollateral)
+    ? Math.max(0, freeCollateral)
+    : 0;
+
+  // Binary orders only (api-spec §5.1.1). executionreport WS deltas keep both
+  // streams fresh; the key prefix contract is unchanged.
+  const [pendingOrdersData, pendingOrdersStream] = useOrderStream(
+    { status: OrderStatus.INCOMPLETE, size: 100, productType: "BINARY" },
+    { keeplive: true },
+  );
+  const pendingTotal = pendingOrdersStream.meta?.total;
+  const pendingOrdersComplete =
+    pendingTotal !== undefined &&
+    (pendingOrdersData?.length ?? 0) >= pendingTotal;
+  useEffect(() => {
+    if (
+      active &&
+      pendingTotal !== undefined &&
+      (pendingOrdersData?.length ?? 0) < pendingTotal &&
+      !pendingOrdersStream.isValidating
+    ) {
+      pendingOrdersStream.loadMore();
+    }
+  }, [
+    active,
+    pendingTotal,
+    pendingOrdersData?.length,
+    pendingOrdersStream.isValidating,
+    pendingOrdersStream.loadMore,
   ]);
-  const [openOrders, setOpenOrders] = useState<PredictionOpenOrder[]>([
-    {
-      id: -1,
-      outcome: "up",
-      side: "buy",
-      type: "limit",
-      price: 0.48,
-      quantity: 12,
-      round: INITIAL_ROUND,
-      timestamp: Date.now() - 2 * 60 * 1_000,
-    },
-    {
-      id: -2,
-      outcome: "down",
-      side: "sell",
-      type: "limit",
-      price: 0.44,
-      quantity: 5,
-      round: INITIAL_ROUND,
-      timestamp: Date.now() - 4 * 60 * 1_000,
-    },
-  ]);
-  const [history, setHistory] = useState<PredictionTrade[]>(() => [
-    {
-      id: -3,
-      outcome: "up",
-      side: "buy",
-      type: "market",
-      price: 0.455,
-      quantity: 20,
-      round: INITIAL_ROUND - ROUND_INTERVAL_SECONDS,
-      status: "filled",
-      timestamp: Date.now() - 8 * 60 * 1_000,
-    },
-    {
-      id: -4,
-      outcome: "down",
-      side: "buy",
-      type: "limit",
-      price: 0.42,
-      quantity: 10,
-      round: INITIAL_ROUND - ROUND_INTERVAL_SECONDS,
-      status: "cancelled",
-      timestamp: Date.now() - 14 * 60 * 1_000,
-    },
-  ]);
-  const [settlements, setSettlements] = useState<PredictionSettlement[]>(() => [
-    {
-      id: -5,
-      round: INITIAL_ROUND - ROUND_INTERVAL_SECONDS,
-      outcome: "up",
-      quantity: 18,
-      averagePrice: 0.46,
-      settlementPrice: 1,
-      payout: 18,
-      pnl: 9.72,
-      result: "up",
-      settledAt: Date.now() - 22 * 60 * 1_000,
-    },
-  ]);
-  const [mockPerpPositions, setMockPerpPositions] = useState<
-    PredictionMockPerpPosition[]
-  >([
-    {
-      symbol: "PERP_ETH_USDC",
-      side: "long",
-      quantity: 0.35,
-      averagePrice: 2_462.8,
-      markPrice: 2_504.11,
-      pnl: 14.46,
-      leverage: 10,
-      liquidationPrice: 2_216.52,
-      margin: 86.2,
-    },
-    {
-      symbol: "PERP_BTC_USDC",
-      side: "short",
-      quantity: 0.012,
-      averagePrice: 64_520.4,
-      markPrice: 64_358.02,
-      pnl: 1.95,
-      leverage: 20,
-      liquidationPrice: 67_746.42,
-      margin: 38.71,
-    },
-  ]);
-  const mockTransactions: PredictionMockTransaction[] = [
-    {
-      id: -6,
-      timestamp: Date.now() - 35 * 60 * 1_000,
-      type: "deposit",
-      asset: "USDC",
-      amount: 500,
-      status: "completed",
-    },
-    {
-      id: -7,
-      timestamp: Date.now() - 22 * 60 * 1_000,
-      type: "settlement",
-      asset: "USDC",
-      amount: 28.25,
-      status: "completed",
-    },
-  ];
-  const nextIdRef = useRef(1);
+  const [allOrdersData] = useOrderStream(
+    { size: 100, productType: "BINARY" },
+    { keeplive: true },
+  );
+
+  const openOrders = useMemo(
+    () =>
+      (pendingOrdersData ?? [])
+        .filter((order) => !order.algo_order_id && isBinarySymbol(order.symbol))
+        .map(toPredictionOrder),
+    [pendingOrdersData],
+  );
+
+  const history = useMemo<PredictionTrade[]>(
+    () =>
+      (allOrdersData ?? [])
+        .filter(
+          (order) =>
+            !order.algo_order_id &&
+            isBinarySymbol(order.symbol) &&
+            TERMINAL_ORDER_STATUSES.has(order.status),
+        )
+        .map((order) => ({
+          ...toPredictionOrder(order),
+          status:
+            order.status === OrderStatus.FILLED
+              ? ("filled" as const)
+              : ("cancelled" as const),
+        })),
+    [allOrdersData],
+  );
+
+  const [positionData] = usePositionStream();
+
+  /**
+   * Every open binary position across rounds (TASK-38: the frontend keeps the
+   * symbol↔product map — the positions response carries no product_type).
+   */
+  const positions = useMemo<PredictionPosition[]>(
+    () =>
+      (positionData?.rows ?? [])
+        .filter(
+          (row) =>
+            isBinarySymbol(row.symbol) &&
+            typeof row.position_qty === "number" &&
+            row.position_qty !== 0,
+        )
+        .map((row) => ({
+          outcome: row.position_qty > 0 ? ("up" as const) : ("down" as const),
+          quantity: Math.abs(row.position_qty),
+          averagePrice:
+            row.position_qty > 0
+              ? row.average_open_price
+              : toDisplayPrice(row.average_open_price),
+          symbol: row.symbol,
+          round: binaryRoundFromSymbol(row.symbol) ?? undefined,
+        })),
+    [positionData],
+  );
 
   const availableQuantity = useCallback(
-    (outcome: PredictionOutcome, excludeId?: number) =>
-      Math.max(
+    (outcome: PredictionOutcome, excludeId?: number, symbol?: string) => {
+      const targetSymbol = symbol ?? selectedSymbol;
+      const row = (positionData?.rows ?? []).find(
+        (item) => item.symbol === targetSymbol,
+      );
+      if (!row) return 0;
+      const isUp = row.position_qty > 0;
+      if ((outcome === "up") !== isUp) return 0;
+
+      // Closing an UP position rests on SELL orders; closing a DOWN short
+      // rests on BUY orders. Netting means ANY resting closing-side order
+      // consumes the position when filled — not only reduce_only ones — so
+      // all of them reserve availability.
+      const closingSide = isUp ? "sell" : "buy";
+      const reserved = openOrders
+        .filter(
+          (order) =>
+            order.symbol === targetSymbol &&
+            order.side === closingSide &&
+            order.id !== excludeId,
+        )
+        .reduce((sum, order) => sum.add(order.quantity), new Decimal(0));
+
+      return Math.max(
         0,
-        new Decimal(positions.find((p) => p.outcome === outcome)?.quantity ?? 0)
-          .sub(
-            openOrders
-              .filter(
-                (o) =>
-                  o.side === "sell" &&
-                  o.outcome === outcome &&
-                  o.id !== excludeId,
-              )
-              .reduce((sum, o) => sum.add(o.quantity), new Decimal(0)),
-          )
-          .toNumber(),
-      ),
-    [openOrders, positions],
-  );
-
-  const closeMockPerpPosition = useCallback(
-    (symbol: string) => {
-      setMockPerpPositions((previous) =>
-        previous.filter((position) => position.symbol !== symbol),
+        new Decimal(Math.abs(row.position_qty)).sub(reserved).toNumber(),
       );
-      notify("prediction.message.positionClosed");
     },
-    [notify],
+    [openOrders, positionData, selectedSymbol],
   );
 
-  const reverseMockPerpPosition = useCallback(
-    (symbol: string) => {
-      setMockPerpPositions((previous) =>
-        previous.map((position) =>
-          position.symbol === symbol
-            ? {
-                ...position,
-                side: position.side === "long" ? "short" : "long",
-                pnl: -position.pnl,
-              }
-            : position,
-        ),
-      );
-      notify("prediction.message.positionReversed");
-    },
-    [notify],
+  const { data: settlementRows } = usePrivateQuery<{
+    rows: API.PositionHistory[];
+  }>("/v1/position_history?product_type=BINARY&limit=1000", {
+    formatter: (data) => data,
+    revalidateOnFocus: false,
+  });
+
+  const settlements = useMemo(
+    () => (settlementRows?.rows ?? []).map(toPredictionSettlement),
+    [settlementRows],
   );
 
-  const settleRound = useCallback(() => {
-    const winningOutcome: PredictionOutcome =
-      currentPrice >= openingPrice ? "up" : "down";
-    const payout = positions
-      .filter((position) => position.outcome === winningOutcome)
-      .reduce((total, position) => total.add(position.quantity), new Decimal(0))
-      .toNumber();
+  const [doCreateOrder] = useMutation("/v1/order", "POST");
+  const [doUpdateOrder] = useMutation("/v1/order", "PUT");
+  const [doCancelOrder] = useMutation("/v1/order", "DELETE");
+  const [doCancelAllOrders] = useMutation("/v1/orders", "DELETE");
 
-    setBalance((previous) => new Decimal(previous).add(payout).toNumber());
-    setSettlements((previous) => [
-      ...positions.map((position) => {
-        const settlementPrice = position.outcome === winningOutcome ? 1 : 0;
-        const positionPayout = new Decimal(position.quantity)
-          .mul(settlementPrice)
-          .toNumber();
-        return {
-          id: nextIdRef.current++,
-          round,
-          outcome: position.outcome,
-          quantity: position.quantity,
-          averagePrice: position.averagePrice,
-          settlementPrice,
-          payout: positionPayout,
-          pnl: new Decimal(settlementPrice)
-            .sub(position.averagePrice)
-            .mul(position.quantity)
-            .toNumber(),
-          settledAt: Date.now(),
-          result: winningOutcome,
-        };
-      }),
-      ...previous,
-    ]);
-    setPositions([]);
-    // History writes stay outside the setOpenOrders updater: updater functions
-    // must be pure, or StrictMode double-invocation duplicates the entries.
-    if (openOrders.length > 0) {
-      setHistory((previous) => [
-        ...openOrders.map((order) => ({
-          ...order,
-          status: "cancelled" as const,
-          timestamp: Date.now(),
-        })),
-        ...previous,
-      ]);
-    }
-    setOpenOrders([]);
-    onAdvanceAfterSettle(currentPrice);
-    onActiveTab("predictionHistory");
-    notify("prediction.message.settled");
-  }, [
-    currentPrice,
-    notify,
-    onActiveTab,
-    onAdvanceAfterSettle,
-    openingPrice,
-    openOrders,
-    positions,
-    round,
-  ]);
-
-  const sellPosition = useCallback(
-    (
-      outcome: PredictionOutcome,
-      quantity: number,
-      type: PredictionOrderType,
-      limit: number,
-    ) => {
-      const price = type === "market" ? outcomePrices[outcome] : limit;
-      const estimatedSellSlippage =
-        type === "market"
-          ? estimateMarketSlippage(
-              "sell",
-              quantity,
-              createBook(outcomePrices[outcome]),
-            )
-          : null;
-      const maxSlippage = new Decimal(slippage || 0).div(100).toNumber();
-      const position = positions.find((p) => p.outcome === outcome);
-      const slippageExceeded =
-        estimatedSellSlippage !== null && estimatedSellSlippage > maxSlippage;
-      if (
-        !isRoundTradable ||
-        isRegionRestricted ||
-        !position ||
-        !Number.isFinite(quantity) ||
-        quantity <= 0 ||
-        quantity > availableQuantity(outcome) ||
-        !Number.isFinite(price) ||
-        price <= 0 ||
-        price >= 1 ||
-        slippageExceeded
-      ) {
-        notify(
-          slippageExceeded
-            ? "prediction.message.slippageExceeded"
-            : !position ||
-                quantity <= 0 ||
-                quantity > availableQuantity(outcome)
-              ? "prediction.message.insufficientContracts"
-              : "prediction.message.sellFailed",
-          "danger",
-        );
-        return false;
-      }
-      const order: PredictionOpenOrder = {
-        id: nextIdRef.current++,
-        outcome,
-        side: "sell",
-        type,
-        price,
-        quantity,
-        round: selectedRound,
-        timestamp: Date.now(),
-      };
-      if (type === "limit") {
-        setOpenOrders((previous) => [order, ...previous]);
-        onActiveTab("openOrders");
-        notify("prediction.message.orderPlaced");
-      } else {
-        const payout = new Decimal(quantity).mul(price).toNumber();
-        setBalance((previous) => new Decimal(previous).add(payout).toNumber());
-        setPositions((previous) =>
-          previous
-            .map((p) =>
-              p.outcome === outcome
-                ? {
-                    ...p,
-                    quantity: new Decimal(p.quantity).sub(quantity).toNumber(),
-                  }
-                : p,
-            )
-            .filter((p) => p.quantity > 0),
-        );
-        setHistory((previous) => [{ ...order, status: "filled" }, ...previous]);
-        setSettlements((previous) => [
-          {
-            id: nextIdRef.current++,
-            round: selectedRound,
+  /** Protection price for a MARKET (→ IOC) order in the outcome coordinate. */
+  const protectionPrice = useCallback(
+    (outcome: PredictionOutcome, side: PredictionOrderSide) => {
+      const slip = new Decimal(slippage || 0).div(100);
+      if (outcome === "up") {
+        if (side === "buy") {
+          if (bbo.bestAsk == null) return undefined;
+          return toProtectionPrice(
+            new Decimal(bbo.bestAsk).mul(slip.add(1)).toNumber(),
+            true,
+            selectedConfig,
             outcome,
-            quantity,
-            averagePrice: position.averagePrice,
-            settlementPrice: price,
-            payout,
-            pnl: new Decimal(price)
-              .sub(position.averagePrice)
-              .mul(quantity)
-              .toNumber(),
-            settledAt: Date.now(),
-            result: "closed",
-          },
-          ...previous,
-        ]);
-        notify("prediction.message.orderFilled");
+          );
+        }
+        if (bbo.bestBid == null) return undefined;
+        return toProtectionPrice(
+          new Decimal(bbo.bestBid).mul(new Decimal(1).sub(slip)).toNumber(),
+          false,
+          selectedConfig,
+          outcome,
+        );
       }
-      return true;
+      // DOWN view mirrors the UP BBO: ask = 1 - bestBid, bid = 1 - bestAsk.
+      if (side === "buy") {
+        if (bbo.bestBid == null) return undefined;
+        return toProtectionPrice(
+          new Decimal(1).sub(bbo.bestBid).mul(slip.add(1)).toNumber(),
+          true,
+          selectedConfig,
+          outcome,
+        );
+      }
+      if (bbo.bestAsk == null) return undefined;
+      return toProtectionPrice(
+        new Decimal(1)
+          .sub(bbo.bestAsk)
+          .mul(new Decimal(1).sub(slip))
+          .toNumber(),
+        false,
+        selectedConfig,
+        outcome,
+      );
     },
-    [
-      availableQuantity,
-      isRegionRestricted,
-      isRoundTradable,
-      notify,
-      onActiveTab,
-      outcomePrices,
-      positions,
-      selectedRound,
-      slippage,
-    ],
+    [bbo.bestAsk, bbo.bestBid, selectedConfig, slippage],
   );
 
-  const editPendingOrder = useCallback(
-    (id: number, price: number, quantity: number) => {
-      const order = openOrders.find((o) => o.id === id);
+  const submitOrder = useCallback(
+    async (input: {
+      symbol: string | undefined;
+      outcome: PredictionOutcome;
+      side: PredictionOrderSide;
+      type: PredictionOrderType;
+      displayPrice: number;
+      quantity: number;
+      reduceOnly: boolean;
+    }): Promise<boolean> => {
+      const {
+        symbol,
+        outcome,
+        side,
+        type,
+        displayPrice,
+        quantity,
+        reduceOnly,
+      } = input;
+      if (!symbol) {
+        notify("prediction.message.orderFailed", "danger");
+        return false;
+      }
+      const config = configBySymbol.get(symbol);
+      if (!config) {
+        notify("prediction.message.orderFailed", "danger");
+        return false;
+      }
       if (
-        !order ||
-        !isRoundTradable ||
-        isRegionRestricted ||
-        !Number.isFinite(price) ||
-        !Number.isFinite(quantity) ||
-        price <= 0 ||
-        price >= 1 ||
-        quantity <= 0
-      )
+        !Number.isFinite(displayPrice) ||
+        displayPrice <= 0 ||
+        displayPrice >= 1
+      ) {
+        notify("prediction.invalidOrder", "danger");
         return false;
+      }
+      const { upSide, upPrice } = toUpBookRequest(outcome, side, displayPrice);
       if (
-        order.side === "sell" &&
-        quantity > availableQuantity(order.outcome, id)
-      )
+        upPrice < (config.quote_min ?? config.quote_tick ?? 0.01) ||
+        upPrice > (config.quote_max ?? 0.99)
+      ) {
+        notify("prediction.invalidOrder", "danger");
         return false;
-      if (order.side === "buy" && new Decimal(price).mul(quantity).gt(balance))
+      }
+      // min_notional is validated on the UP-book price for both sides and
+      // reduce-only exits alike (api-spec §5.2); reject early instead of
+      // letting the server bounce the order.
+      if (new Decimal(quantity).mul(upPrice).lt(config.min_notional ?? 5)) {
+        notify("prediction.invalidOrder", "danger");
         return false;
-      setOpenOrders((previous) =>
-        previous.map((o) => (o.id === id ? { ...o, price, quantity } : o)),
-      );
-      notify("prediction.message.orderUpdated");
-      return true;
+      }
+
+      try {
+        const response = await doCreateOrder({
+          symbol,
+          side: upSide,
+          // MARKET is expressed as an IOC carrying an explicit protection
+          // price (api-spec §5.2).
+          order_type: type === "limit" ? OrderType.LIMIT : OrderType.IOC,
+          order_price: upPrice.toFixed(
+            new Decimal(config.quote_tick ?? 0.01).decimalPlaces(),
+          ),
+          order_quantity: toTickQuantity(quantity, config.base_tick ?? 0.01),
+          margin_mode: "ISOLATED",
+          ...(reduceOnly ? { reduce_only: true } : {}),
+        });
+        if (response?.success === false) {
+          throw new Error(response?.message ?? "order rejected");
+        }
+        return true;
+      } catch (error) {
+        console.error("prediction order rejected", error);
+        notify("prediction.message.orderFailed", "danger");
+        return false;
+      }
     },
-    [
-      availableQuantity,
-      balance,
-      isRegionRestricted,
-      isRoundTradable,
-      notify,
-      openOrders,
-    ],
+    [configBySymbol, doCreateOrder, notify],
   );
 
   const placeOrder = useCallback(
-    ({
+    async ({
       canPlaceOrder,
       orderSide,
       orderType,
-      orderPolicy,
       selectedOutcome,
       selectedPrice,
       orderQuantity,
-      orderBook,
-      selectedPosition,
       onResetAmountAfterFill,
       clearNotification,
     }: PlaceOrderInput) => {
@@ -461,292 +499,324 @@ export const usePredictionPortfolio = ({
         return;
       }
 
-      const policy = orderType === "limit" ? orderPolicy : "gtc";
-      const execution =
+      const displayPrice =
         orderType === "limit"
-          ? planPredictionExecution(
-              policy,
-              orderSide,
-              selectedPrice,
-              orderQuantity,
-              orderSide === "buy" ? orderBook.asks : orderBook.bids,
-            )
-          : {
-              filled: orderQuantity,
-              cancelled: 0,
-              pending: 0,
-              price: selectedPrice,
-            };
-      const price = execution.price;
-      const quantity = execution.filled;
-      const order: PredictionOpenOrder = {
-        id: nextIdRef.current++,
+          ? selectedPrice
+          : protectionPrice(selectedOutcome, orderSide);
+      if (displayPrice == null) {
+        notify("prediction.message.orderFailed", "danger");
+        return;
+      }
+
+      const placed = await submitOrder({
+        symbol: selectedSymbol,
         outcome: selectedOutcome,
         side: orderSide,
         type: orderType,
-        price: selectedPrice,
+        displayPrice,
         quantity: orderQuantity,
-        policy,
-        round: selectedRound,
-        timestamp: Date.now(),
-      };
+        reduceOnly: orderSide === "sell",
+      });
+      if (!placed) return;
 
-      if (execution.pending > 0) {
-        setOpenOrders((previous) => [order, ...previous]);
-        onActiveTab("openOrders");
-        notify("prediction.message.orderPlaced");
-        return;
-      }
-
-      if (execution.cancelled > 0) {
-        setHistory((previous) => [
-          {
-            ...order,
-            id: nextIdRef.current++,
-            quantity: execution.cancelled,
-            status: "cancelled",
-          },
-          ...previous,
-        ]);
-      }
-      if (quantity === 0) {
-        onActiveTab("orderHistory");
-        notify("prediction.message.orderCanceled");
-        return;
-      }
-
-      if (orderSide === "buy") {
-        setBalance((previous) =>
-          new Decimal(previous)
-            .sub(new Decimal(quantity).mul(price))
-            .toNumber(),
-        );
-        setPositions((previous) => {
-          const existing = previous.find(
-            (position) => position.outcome === selectedOutcome,
-          );
-          if (!existing) {
-            return [
-              ...previous,
-              { outcome: selectedOutcome, quantity, averagePrice: price },
-            ];
-          }
-          const nextQuantity = new Decimal(existing.quantity)
-            .add(quantity)
-            .toNumber();
-          const nextAverage = new Decimal(existing.quantity)
-            .mul(existing.averagePrice)
-            .add(new Decimal(quantity).mul(price))
-            .div(nextQuantity)
-            .toNumber();
-          return previous.map((position) =>
-            position.outcome === selectedOutcome
-              ? {
-                  ...position,
-                  quantity: nextQuantity,
-                  averagePrice: nextAverage,
-                }
-              : position,
-          );
-        });
-      } else {
-        const proceeds = new Decimal(quantity).mul(price).toNumber();
-        setBalance((previous) =>
-          new Decimal(previous).add(proceeds).toNumber(),
-        );
-        setPositions((previous) =>
-          previous
-            .map((position) =>
-              position.outcome === selectedOutcome
-                ? {
-                    ...position,
-                    quantity: new Decimal(position.quantity)
-                      .sub(quantity)
-                      .toNumber(),
-                  }
-                : position,
-            )
-            .filter((position) => position.quantity > 0),
-        );
-        const averagePrice = selectedPosition?.averagePrice ?? 0;
-        setSettlements((previous) => [
-          {
-            id: nextIdRef.current++,
-            round: selectedRound,
-            outcome: selectedOutcome,
-            quantity,
-            averagePrice,
-            settlementPrice: price,
-            payout: proceeds,
-            pnl: new Decimal(price).sub(averagePrice).mul(quantity).toNumber(),
-            settledAt: Date.now(),
-            result: "closed",
-          },
-          ...previous,
-        ]);
-      }
-
-      setHistory((previous) => [
-        { ...order, price, quantity, status: "filled", timestamp: Date.now() },
-        ...previous,
-      ]);
       onResetAmountAfterFill();
-      onActiveTab("predictions");
-      notify("prediction.message.orderFilled");
+      onActiveTab("openOrders");
     },
-    [notify, onActiveTab, selectedRound],
+    [notify, onActiveTab, protectionPrice, selectedSymbol, submitOrder],
   );
 
+  const sellPosition = useCallback(
+    async (
+      outcome: PredictionOutcome,
+      quantity: number,
+      type: PredictionOrderType,
+      limit: number,
+      symbol?: string,
+    ): Promise<boolean> => {
+      const targetSymbol = symbol ?? selectedSymbol;
+      // Selling uses the selected round's book/protection prices; exits on
+      // other rounds must switch the chart to that round first.
+      if (targetSymbol !== selectedSymbol) {
+        notify("prediction.message.sellFailed", "danger");
+        return false;
+      }
+      const price =
+        type === "market" ? protectionPrice(outcome, "sell") : limit;
+      if (
+        !isRoundTradable ||
+        isRegionRestricted ||
+        !Number.isFinite(quantity) ||
+        quantity <= 0 ||
+        quantity > availableQuantity(outcome, undefined, targetSymbol) ||
+        price == null ||
+        !Number.isFinite(price) ||
+        price <= 0 ||
+        price >= 1
+      ) {
+        notify("prediction.message.sellFailed", "danger");
+        return false;
+      }
+
+      const placed = await submitOrder({
+        symbol: targetSymbol,
+        outcome,
+        side: "sell",
+        type,
+        displayPrice: price,
+        quantity,
+        reduceOnly: true,
+      });
+      if (!placed) return false;
+
+      return true;
+    },
+    [
+      availableQuantity,
+      isRegionRestricted,
+      isRoundTradable,
+      notify,
+      protectionPrice,
+      selectedSymbol,
+      submitOrder,
+    ],
+  );
+
+  const editPendingOrder = useCallback(
+    async (id: number, price: number, quantity: number): Promise<boolean> => {
+      const order = openOrders.find((item) => item.id === id);
+      const config = order?.symbol
+        ? configBySymbol.get(order.symbol)
+        : selectedConfig;
+      if (
+        !config ||
+        !isBinaryRowTradable(config, getTimestamp()) ||
+        isRegionRestricted ||
+        !Number.isFinite(price) ||
+        !Number.isFinite(quantity) ||
+        price < (config.quote_min ?? config.quote_tick ?? 0.01) ||
+        price > (config.quote_max ?? 0.99) ||
+        quantity < (config.base_min ?? config.base_tick ?? 0.01)
+      )
+        return false;
+
+      if (!order) return false;
+
+      try {
+        const response = await doUpdateOrder({
+          order_id: id,
+          symbol: order.symbol ?? selectedSymbol,
+          // The table edits UP-book prices directly (single coordinate).
+          order_price: price.toFixed(
+            new Decimal(config.quote_tick ?? 0.01).decimalPlaces(),
+          ),
+          order_quantity: toTickQuantity(quantity, config.base_tick ?? 0.01),
+        });
+        if (response?.success === false) {
+          throw new Error(response?.message ?? "order update rejected");
+        }
+        notify("prediction.message.orderUpdated");
+        return true;
+      } catch (error) {
+        console.error("prediction order update rejected", error);
+        notify("prediction.message.orderFailed", "danger");
+        return false;
+      }
+    },
+    [
+      configBySymbol,
+      doUpdateOrder,
+      isRegionRestricted,
+      notify,
+      openOrders,
+      selectedConfig,
+      selectedSymbol,
+    ],
+  );
+
+  const cancelOrder = useCallback(
+    async (id: number, orderSymbol?: string) => {
+      if (isRegionRestricted) return;
+      const order = openOrders.find((item) => item.id === id);
+      const symbol = orderSymbol ?? order?.symbol;
+      if (!symbol) return;
+
+      try {
+        const response = await doCancelOrder(null, {
+          order_id: id,
+          symbol,
+        });
+        if (response?.success === false) {
+          throw new Error(response?.message ?? "cancel rejected");
+        }
+        notify("prediction.message.orderCanceled");
+      } catch (error) {
+        console.error("prediction cancel rejected", error);
+        notify("prediction.message.orderFailed", "danger");
+      }
+    },
+    [doCancelOrder, isRegionRestricted, notify, openOrders, selectedSymbol],
+  );
+
+  const cancelAllOrders = useCallback(async () => {
+    if (isRegionRestricted || openOrders.length === 0) return;
+
+    const symbols = Array.from(
+      new Set(openOrders.map((order) => order.symbol).filter(Boolean)),
+    ) as string[];
+    const results = await Promise.allSettled(
+      symbols.map((symbol) => doCancelAllOrders(null, { symbol })),
+    );
+    if (results.some((result) => result.status === "rejected")) {
+      console.error("prediction cancel-all partially rejected");
+      notify("prediction.message.orderFailed", "danger");
+      return;
+    }
+    notify("prediction.message.ordersCanceled");
+  }, [doCancelAllOrders, isRegionRestricted, notify, openOrders]);
+
+  /**
+   * Contracts a one-tap quote amount buys: PRD §6.2 sizes on the price the
+   * IOC actually carries (the protection price), floored to the base tick so
+   * the displayed payout matches the submitted quantity.
+   */
   const oneTapPayout = useCallback(
     (outcome: PredictionOutcome, quoteAmount: number) => {
-      const price = outcomePrices[outcome];
-      return price > 0 && price < 1
-        ? new Decimal(quoteAmount).div(price).toNumber()
+      const price = protectionPrice(outcome, "buy");
+      return price != null && price > 0 && price < 1
+        ? new Decimal(
+            toTickQuantity(
+              new Decimal(quoteAmount).div(price).toNumber(),
+              selectedConfig?.base_tick ?? 0.01,
+            ),
+          ).toNumber()
         : 0;
     },
-    [outcomePrices],
+    [protectionPrice, selectedConfig],
   );
 
+  /**
+   * One-tap gate priced entirely on the submitted protection price: the
+   * user's slippage setting is already encoded in that price (PRD §6.4), so
+   * there is no separate mid-based slippage estimate here; book-depth gating
+   * composes in the script layer via estimateOrderSlippage.
+   */
   const canPlaceOneTapOrder = useCallback(
     (outcome: PredictionOutcome, quoteAmount: number) => {
-      const price = outcomePrices[outcome];
+      const price = protectionPrice(outcome, "buy");
+      // No executable ask side → the IOC cannot fill; fail closed.
+      if (price == null) return false;
       const quantity = oneTapPayout(outcome, quoteAmount);
-      const estimated = estimateMarketSlippage(
-        "buy",
-        quantity,
-        createBook(price),
+      // min_notional on the UP-book protection price (api-spec §5.2): for
+      // DOWN this is (1-n)*qty.
+      const upNotional = new Decimal(quantity).mul(
+        outcome === "up" ? price : 1 - price,
       );
+      // Frozen at submit = price*qty*(1+b) ≤ quoteAmount*(1+b) (PRD §7.2).
       return (
         isRoundTradable &&
         !isRegionRestricted &&
+        feeRates.takerRate != null &&
         Number.isFinite(quoteAmount) &&
         quoteAmount > 0 &&
-        quoteAmount <= balance &&
-        price > 0 &&
-        price < 1 &&
-        (estimated === null ||
-          estimated <= new Decimal(slippage || 0).div(100).toNumber())
+        new Decimal(quoteAmount)
+          .mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER))
+          .lte(balance) &&
+        quantity > 0 &&
+        upNotional.gte(selectedConfig?.min_notional ?? 5)
       );
     },
     [
       balance,
+      feeRates.takerRate,
       isRegionRestricted,
       isRoundTradable,
       oneTapPayout,
-      outcomePrices,
-      slippage,
+      protectionPrice,
+      selectedConfig,
     ],
   );
 
   const placeOneTapOrder = useCallback(
-    (
+    async (
       outcome: PredictionOutcome,
       quoteAmount: number,
       clearNotification: () => void,
     ) => {
       if (!canPlaceOneTapOrder(outcome, quoteAmount)) return;
 
-      const price = outcomePrices[outcome];
+      const price = protectionPrice(outcome, "buy");
+      if (price == null) return;
       const quantity = oneTapPayout(outcome, quoteAmount);
-      const order: PredictionTrade = {
-        id: nextIdRef.current++,
+
+      clearNotification();
+      const placed = await submitOrder({
+        symbol: selectedSymbol,
         outcome,
         side: "buy",
         type: "market",
-        price,
+        displayPrice: price,
         quantity,
-        round: selectedRound,
-        status: "filled",
-        timestamp: Date.now(),
-      };
-
-      clearNotification();
-      setBalance((previous) =>
-        new Decimal(previous).sub(quoteAmount).toNumber(),
-      );
-      setPositions((previous) => {
-        const existing = previous.find(
-          (position) => position.outcome === outcome,
-        );
-        if (!existing) {
-          return [...previous, { outcome, quantity, averagePrice: price }];
-        }
-        const nextQuantity = new Decimal(existing.quantity)
-          .add(quantity)
-          .toNumber();
-        const nextAverage = new Decimal(existing.quantity)
-          .mul(existing.averagePrice)
-          .add(new Decimal(quantity).mul(price))
-          .div(nextQuantity)
-          .toNumber();
-        return previous.map((position) =>
-          position.outcome === outcome
-            ? { ...position, quantity: nextQuantity, averagePrice: nextAverage }
-            : position,
-        );
+        reduceOnly: false,
       });
-      setHistory((previous) => [order, ...previous]);
+      if (!placed) return;
       onActiveTab("predictions");
-      notify("prediction.message.orderFilled");
     },
     [
       canPlaceOneTapOrder,
-      notify,
       onActiveTab,
       oneTapPayout,
-      outcomePrices,
-      selectedRound,
+      protectionPrice,
+      selectedSymbol,
+      submitOrder,
     ],
   );
 
-  const cancelOrder = useCallback(
-    (id: number) => {
-      if (isRegionRestricted) return;
-      const order = openOrders.find((item) => item.id === id);
-      if (!order) return;
-
-      setHistory((historyItems) => [
-        { ...order, status: "cancelled" },
-        ...historyItems,
-      ]);
-      setOpenOrders((previous) => previous.filter((item) => item.id !== id));
-      notify("prediction.message.orderCanceled");
+  /**
+   * Curve fee estimate C*r*p*(1-p) with the UP price p; undefined while the
+   * account has no valid binary config (never free).
+   */
+  const estimateFee = useCallback(
+    (quantity: number, upPrice: number, taker: boolean) => {
+      const rate = taker ? feeRates.takerRate : feeRates.makerRate;
+      if (rate == null || upPrice <= 0 || upPrice >= 1) return undefined;
+      return new Decimal(quantity)
+        .mul(rate)
+        .mul(upPrice)
+        .mul(new Decimal(1).sub(upPrice))
+        .toNumber();
     },
-    [notify, openOrders, isRegionRestricted],
+    [feeRates.makerRate, feeRates.takerRate],
   );
 
-  const cancelAllOrders = useCallback(() => {
-    if (isRegionRestricted) return;
-    if (openOrders.length === 0) return;
-
-    // Reads the closure `openOrders` instead of writing history inside the
-    // setOpenOrders updater: updater functions must be pure, or StrictMode
-    // double-invocation duplicates the entries.
-    setHistory((previous) => [
-      ...openOrders.map((order) => ({
-        ...order,
-        status: "cancelled" as const,
-      })),
-      ...previous,
-    ]);
-    setOpenOrders([]);
-    notify("prediction.message.ordersCanceled");
-  }, [notify, openOrders, isRegionRestricted]);
+  /**
+   * Collateral frozen when opening a position: the price of the outcome being
+   * bought × qty × (1 + ISO buffer). Buying DOWN @n is SELL UP @(1-n), which
+   * freezes (1-n)×qty×(1+b) — i.e. the DISPLAY price in both cases (PRD §7.2
+   * fixture: 100@0.1 BUY freezes 10.006, SELL 90.054).
+   */
+  const estimateFrozen = useCallback(
+    (quantity: number, displayPrice: number) =>
+      new Decimal(quantity)
+        .mul(displayPrice)
+        .mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER))
+        .toNumber(),
+    [],
+  );
 
   return {
     balance,
     positions,
     openOrders,
+    pendingOrdersComplete,
     history,
     settlements,
-    mockPerpPositions,
-    mockTransactions,
     availableQuantity,
-    slippage,
-    setSlippage,
-    closeMockPerpPosition,
-    reverseMockPerpPosition,
-    settleRound,
+    /**
+     * Fail-closed gate: with no valid binary fee config the account must not
+     * trade through this UI (missing config is never "free", api-spec §6.4).
+     */
+    hasFeeConfig: feeRates.takerBps != null && feeRates.makerBps != null,
+    protectionPrice,
     sellPosition,
     editPendingOrder,
     placeOrder,
@@ -755,5 +825,8 @@ export const usePredictionPortfolio = ({
     placeOneTapOrder,
     cancelOrder,
     cancelAllOrders,
+    feeRates,
+    estimateFee,
+    estimateFrozen,
   };
 };

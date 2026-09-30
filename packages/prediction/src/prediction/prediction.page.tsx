@@ -1,6 +1,9 @@
 import React from "react";
-import { PredictionWidget } from "./prediction.widget";
+import {
+  PredictionWidget,
+  type PredictionWidgetProps,
+} from "./prediction.widget";
 
-export const PredictionPage: React.FC = () => {
-  return <PredictionWidget />;
+export const PredictionPage: React.FC<PredictionWidgetProps> = (props) => {
+  return <PredictionWidget {...props} />;
 };

@@ -15,6 +15,7 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useRoundCountdown } from "./hooks/useRoundCountdown";
 import type {
   PredictionChartPoint,
   PredictionOutcome,
@@ -24,15 +25,13 @@ import {
   CANDLE_INTERVAL_MS,
   CANDLE_TICK_INTERVAL_MS,
   CANDLE_WINDOW_MS,
-  createMockCandleHistory,
-  getHistoricalRoundOutcome,
   usePredictionCandles,
   type PredictionCandle,
+  type RoundOutcomeLookup,
 } from "./predictionChart.script";
 import {
   formatCountdown,
   formatCountdownWithHours,
-  ROUND_INTERVAL_SECONDS,
   toIntlLocale,
   usePredictionFormatters,
 } from "./predictionShared";
@@ -40,7 +39,7 @@ import {
 type PredictionChartMode = "price" | "candles";
 
 /** Rounds listed in the "Past" menu (≈24h of history, excluding the live round). */
-const PAST_MENU_ROUNDS = 287;
+const MAX_PAST_MENU_ROUNDS = 287;
 
 const LiveIndicator = () => (
   <span className="oui-prediction-liveIndicator oui-relative oui-inline-flex oui-size-3 oui-flex-none oui-items-center oui-justify-center">
@@ -86,9 +85,10 @@ const formatRoundLabel = (
   todayLabel: string,
   liveRound: number,
   chart: ChartFormatters,
+  intervalSeconds: number,
 ) => {
-  const resolutionTime = new Date((round + ROUND_INTERVAL_SECONDS) * 1_000);
-  const today = new Date((liveRound + ROUND_INTERVAL_SECONDS) * 1_000);
+  const resolutionTime = new Date((round + intervalSeconds) * 1_000);
+  const today = new Date((liveRound + intervalSeconds) * 1_000);
   const isToday =
     resolutionTime.getFullYear() === today.getFullYear() &&
     resolutionTime.getMonth() === today.getMonth() &&
@@ -98,61 +98,70 @@ const formatRoundLabel = (
   }`;
 };
 
-const formatRoundTime = (round: number, chart: ChartFormatters) =>
-  chart.roundTimeFormatter.format(
-    new Date((round + ROUND_INTERVAL_SECONDS) * 1_000),
-  );
+const formatRoundTime = (
+  round: number,
+  chart: ChartFormatters,
+  intervalSeconds: number,
+) =>
+  chart.roundTimeFormatter.format(new Date((round + intervalSeconds) * 1_000));
 
 const RoundNavigator: React.FC<{
   round: number;
+  intervalSeconds: number;
   countdown: number;
   roundPhase: PredictionRoundPhase;
   selectedRound: number;
   onRoundChange: (round: number) => void;
   chartMode: PredictionChartMode;
   onChartModeChange: (mode: PredictionChartMode) => void;
+  roundOutcome: RoundOutcomeLookup;
 }> = ({
   round,
+  intervalSeconds,
   countdown,
   roundPhase,
   selectedRound,
   onRoundChange,
   chartMode,
   onChartModeChange,
+  roundOutcome,
 }) => {
   const { t } = useTranslation();
   const { chart } = usePredictionFormatters();
   const [menu, setMenu] = useState<"past" | "more" | null>(null);
   const pastMenuRef = useRef<HTMLDivElement>(null);
+  const pastMenuRounds = Math.min(
+    MAX_PAST_MENU_ROUNDS,
+    Math.floor(86_400 / intervalSeconds) - 1,
+  );
 
   const recentRounds = [5, 4, 3, 2].map(
-    (multiplier) => round - multiplier * ROUND_INTERVAL_SECONDS,
+    (multiplier) => round - multiplier * intervalSeconds,
   );
   // Keep the live market centred by default. Once a historical or upcoming
   // market is selected, anchor the visible sequence to that selection so the
   // selected market is always the first round in chronological order.
   const visibleRounds =
     selectedRound === round
-      ? [round - ROUND_INTERVAL_SECONDS, round, round + ROUND_INTERVAL_SECONDS]
+      ? [round - intervalSeconds, round, round + intervalSeconds]
       : [
           selectedRound,
-          selectedRound + ROUND_INTERVAL_SECONDS,
-          selectedRound + 2 * ROUND_INTERVAL_SECONDS,
+          selectedRound + intervalSeconds,
+          selectedRound + 2 * intervalSeconds,
         ];
   const menuRounds = useMemo(() => {
     if (menu === "past") {
       return Array.from(
-        { length: PAST_MENU_ROUNDS },
-        (_, index) =>
-          round - (PAST_MENU_ROUNDS + 1 - index) * ROUND_INTERVAL_SECONDS,
+        { length: pastMenuRounds },
+        (_, index) => round - (pastMenuRounds + 1 - index) * intervalSeconds,
       );
     }
 
     return Array.from(
       { length: 8 },
-      (_, index) => round + (index + 2) * ROUND_INTERVAL_SECONDS,
+      (_, index) => round + (index + 2) * intervalSeconds,
     );
-  }, [menu, round]);
+  }, [intervalSeconds, menu, pastMenuRounds, round]);
 
   useEffect(() => {
     if (menu !== "past") return;
@@ -164,27 +173,25 @@ const RoundNavigator: React.FC<{
     if (itemRound < round) return "ended";
     if (itemRound === round) {
       return selectedRound === round &&
-        (roundPhase === "resolvedUp" ||
-          roundPhase === "resolvedDown" ||
-          roundPhase === "void")
+        (roundPhase === "resolvedUp" || roundPhase === "resolvedDown")
         ? "ended"
         : "live";
     }
     return "upcoming";
   };
 
-  const result = (itemRound: number): PredictionOutcome => {
+  const result = (itemRound: number): PredictionOutcome | undefined => {
     if (itemRound === selectedRound && roundPhase === "resolvedUp") return "up";
     if (itemRound === selectedRound && roundPhase === "resolvedDown")
       return "down";
-    return getHistoricalRoundOutcome(itemRound);
+    return roundOutcome(itemRound);
   };
 
   const renderRoundTooltip = (itemRound: number) => {
     const itemStatus = status(itemRound);
     const itemResult = result(itemRound);
     const upcomingCountdown =
-      countdown + Math.max(itemRound - round - ROUND_INTERVAL_SECONDS, 0);
+      countdown + Math.max(itemRound - round - intervalSeconds, 0);
     return (
       <div className="oui-w-64 oui-p-2">
         <div className="oui-flex oui-items-center oui-justify-between oui-text-sm oui-font-semibold oui-text-base-contrast">
@@ -193,30 +200,35 @@ const RoundNavigator: React.FC<{
             {t(`prediction.rounds.${itemStatus}`)}
           </span>
           {itemStatus === "ended" ? (
-            <span
-              className={cn(
-                "oui-flex oui-items-center oui-gap-1",
-                itemResult === "up"
-                  ? "oui-text-trade-profit"
-                  : "oui-text-trade-loss",
-              )}
-            >
+            itemResult ? (
               <span
                 className={cn(
-                  "oui-flex oui-size-5 oui-items-center oui-justify-center oui-rounded-full",
+                  "oui-flex oui-items-center oui-gap-1",
                   itemResult === "up"
-                    ? "oui-bg-trade-profit/15"
-                    : "oui-bg-trade-loss/15",
+                    ? "oui-text-trade-profit"
+                    : "oui-text-trade-loss",
                 )}
               >
-                {itemResult === "up" ? (
-                  <CaretUpIcon size={12} color="inherit" opacity={1} />
-                ) : (
-                  <CaretDownIcon size={12} color="inherit" opacity={1} />
-                )}
+                <span
+                  className={cn(
+                    "oui-flex oui-size-5 oui-items-center oui-justify-center oui-rounded-full",
+                    itemResult === "up"
+                      ? "oui-bg-trade-profit/15"
+                      : "oui-bg-trade-loss/15",
+                  )}
+                >
+                  {itemResult === "up" ? (
+                    <CaretUpIcon size={12} color="inherit" opacity={1} />
+                  ) : (
+                    <CaretDownIcon size={12} color="inherit" opacity={1} />
+                  )}
+                </span>
+                {t(`prediction.${itemResult}`)}
               </span>
-              {t(`prediction.${itemResult}`)}
-            </span>
+            ) : (
+              // Ended round outside the 300-row snapshot: no known result.
+              <span className="oui-text-base-contrast-36">--</span>
+            )
           ) : (
             <span className="oui-tabular-nums">
               {formatCountdownWithHours(
@@ -234,13 +246,13 @@ const RoundNavigator: React.FC<{
           </span>
           <span className="oui-text-end oui-text-base-contrast">
             {chart.resolutionLocalFormatter.format(
-              new Date((itemRound + ROUND_INTERVAL_SECONDS) * 1_000),
+              new Date((itemRound + intervalSeconds) * 1_000),
             )}
           </span>
           <span className="oui-text-base-contrast-54">UTC</span>
           <span className="oui-text-end oui-text-base-contrast">
             {chart.resolutionUtcFormatter.format(
-              new Date((itemRound + ROUND_INTERVAL_SECONDS) * 1_000),
+              new Date((itemRound + intervalSeconds) * 1_000),
             )}
           </span>
         </div>
@@ -275,20 +287,26 @@ const RoundNavigator: React.FC<{
             )}
           >
             {itemStatus === "ended" ? (
-              <span
-                className={cn(
-                  "oui-flex oui-h-5 oui-w-5 oui-items-center oui-justify-center oui-rounded-full oui-text-3xs",
-                  itemResult === "up"
-                    ? "oui-bg-trade-profit/15 oui-text-trade-profit"
-                    : "oui-bg-trade-loss/15 oui-text-trade-loss",
-                )}
-              >
-                {itemResult === "up" ? (
-                  <CaretUpIcon size={12} color="inherit" opacity={1} />
-                ) : (
-                  <CaretDownIcon size={12} color="inherit" opacity={1} />
-                )}
-              </span>
+              itemResult ? (
+                <span
+                  className={cn(
+                    "oui-flex oui-h-5 oui-w-5 oui-items-center oui-justify-center oui-rounded-full oui-text-3xs",
+                    itemResult === "up"
+                      ? "oui-bg-trade-profit/15 oui-text-trade-profit"
+                      : "oui-bg-trade-loss/15 oui-text-trade-loss",
+                  )}
+                >
+                  {itemResult === "up" ? (
+                    <CaretUpIcon size={12} color="inherit" opacity={1} />
+                  ) : (
+                    <CaretDownIcon size={12} color="inherit" opacity={1} />
+                  )}
+                </span>
+              ) : (
+                <span className="oui-flex oui-h-5 oui-w-5 oui-items-center oui-justify-center oui-text-3xs oui-text-base-contrast-36">
+                  --
+                </span>
+              )
             ) : (
               <span className="oui-h-1.5 oui-w-1.5 oui-rounded-full oui-bg-base-contrast-36" />
             )}
@@ -297,6 +315,7 @@ const RoundNavigator: React.FC<{
               t("prediction.rounds.today"),
               round,
               chart,
+              intervalSeconds,
             )}
           </button>
         </Tooltip>
@@ -365,7 +384,7 @@ const RoundNavigator: React.FC<{
             align="start"
             side="top"
             sideOffset={8}
-            className="oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
+            className="oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-custom-scrollbar oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
           >
             {renderMenuRounds()}
           </PopoverContent>
@@ -402,7 +421,7 @@ const RoundNavigator: React.FC<{
                   )}
                 >
                   {itemStatus === "live" && <LiveIndicator />}
-                  {formatRoundTime(itemRound, chart)}
+                  {formatRoundTime(itemRound, chart, intervalSeconds)}
                 </button>
               </Tooltip>
             </div>
@@ -432,7 +451,7 @@ const RoundNavigator: React.FC<{
             align="end"
             side="top"
             sideOffset={8}
-            className="oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
+            className="oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-custom-scrollbar oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
           >
             {renderMenuRounds()}
           </PopoverContent>
@@ -474,30 +493,45 @@ const RoundNavigator: React.FC<{
 };
 
 export const PriceChart: React.FC<{
+  intervalSeconds: number;
+  base: string;
   selectedRound: number;
   onSelectRound: (round: number) => void;
   points: PredictionChartPoint[];
+  /** Real minute-candle seeds from the public index-price history. */
+  candles: PredictionCandle[];
+  /** Round outcome lookup from the binary info snapshot. */
+  roundOutcome: RoundOutcomeLookup;
   openingPrice: number;
   currentPrice: number;
   round: number;
-  countdown: number;
   roundPhase: PredictionRoundPhase;
   onGoToLiveMarket: () => void;
 }> = ({
+  intervalSeconds,
+  base,
   selectedRound,
   onSelectRound,
   points,
+  candles,
+  roundOutcome,
   openingPrice,
   currentPrice,
   round,
-  countdown,
   roundPhase,
   onGoToLiveMarket,
 }) => {
   const { t } = useTranslation();
   const { chart: intl, formatUsd, locale } = usePredictionFormatters();
+  // Seconds until the selected round ends, ticking locally so the shared
+  // prediction state stays off the per-second heartbeat.
+  // (selectedRound + intervalSeconds) * 1_000 is exactly the selected row's
+  // expire_at.
+  const countdown = useRoundCountdown(
+    (selectedRound + intervalSeconds) * 1_000,
+  );
   const [chartMode, setChartMode] = useState<PredictionChartMode>("price");
-  const liveCandles = usePredictionCandles(currentPrice, round);
+  const liveCandles = usePredictionCandles(candles, currentPrice);
   const [frozenChart, setFrozenChart] = useState<{
     points: PredictionChartPoint[];
     candles: PredictionCandle[];
@@ -546,28 +580,24 @@ export const PriceChart: React.FC<{
 
   useEffect(() => {
     if (selectedRound < round) {
-      const endTimestamp = (selectedRound + ROUND_INTERVAL_SECONDS) * 1_000;
-      const historicalCandles = createMockCandleHistory(
-        currentPrice,
-        endTimestamp,
-      );
       setFrozenChart({
-        points: historicalCandles.map((candle) => ({
+        points: candles.map((candle) => ({
           timestamp: candle.timestamp,
           price: candle.close,
         })),
-        candles: historicalCandles,
+        candles,
         openingPrice,
-        currentPrice,
+        // Past rounds freeze on their last historical close.
+        currentPrice: candles.at(-1)?.close ?? currentPrice,
       });
     } else {
       setFrozenChart(null);
     }
-  }, [selectedRound, round]);
+  }, [selectedRound, round, candles, openingPrice]);
 
   const isPastRound = selectedRound < round;
   const isFutureRound = selectedRound > round;
-  const liveTimestamp = (round + ROUND_INTERVAL_SECONDS - countdown) * 1_000;
+  const liveTimestamp = (round + intervalSeconds - countdown) * 1_000;
   const alignedLiveCandles = useMemo(() => {
     // Keep candles on whole minutes so the axis labels don't flicker when
     // the round clock drifts a few hundred ms from the wall clock.
@@ -609,11 +639,11 @@ export const PriceChart: React.FC<{
   const chartCurrentPrice =
     isPastRound && frozenChart ? frozenChart.currentPrice : currentPrice;
   const futureCountdown =
-    countdown + Math.max(selectedRound - round - ROUND_INTERVAL_SECONDS, 0);
+    countdown + Math.max(selectedRound - round - intervalSeconds, 0);
 
   const chart = useMemo(() => {
     const isCandleMode = chartMode === "candles";
-    const roundEnd = (selectedRound + ROUND_INTERVAL_SECONDS) * 1_000;
+    const roundEnd = (selectedRound + intervalSeconds) * 1_000;
     // Candle charts pin the latest candle to the right edge (one candle of
     // padding) and label ticks backwards from it, so the axis only shifts
     // when a new candle opens.
@@ -631,7 +661,7 @@ export const PriceChart: React.FC<{
     const tickInterval = isCandleMode
       ? CANDLE_TICK_INTERVAL_MS
       : isPastRound
-        ? 300_000
+        ? intervalSeconds * 1_000
         : 10_000;
     const firstTick = isCandleMode
       ? candleAnchor -
@@ -991,7 +1021,7 @@ export const PriceChart: React.FC<{
         viewBox={`0 0 ${width} ${height}`}
         preserveAspectRatio="none"
         role="img"
-        aria-label={t("prediction.chart.ariaLabel")}
+        aria-label={t("prediction.chart.marketAriaLabel", { base })}
       >
         {chart.yTicks.map(({ ratio }) => (
           <line
@@ -1221,6 +1251,7 @@ export const PriceChart: React.FC<{
         ))}
       </div>
       <RoundNavigator
+        intervalSeconds={intervalSeconds}
         round={round}
         countdown={countdown}
         roundPhase={roundPhase}
@@ -1231,6 +1262,7 @@ export const PriceChart: React.FC<{
           setChartMode(mode);
           setHoveredPoint(null);
         }}
+        roundOutcome={roundOutcome}
       />
     </div>
   );

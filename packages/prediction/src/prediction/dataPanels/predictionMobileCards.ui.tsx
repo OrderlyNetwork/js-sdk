@@ -9,6 +9,7 @@ import {
   RoundSymbol,
   TableNumber,
 } from "../cells";
+import { useRoundCountdown } from "../hooks/useRoundCountdown";
 import { SellPosition } from "../orderEntry/sellPosition";
 import type { PredictionState } from "../prediction.script";
 import { formatCountdown, usePredictionFormatters } from "../predictionShared";
@@ -49,23 +50,36 @@ export const MobilePredictionPositions: React.FC<{
 }> = ({ state }) => {
   const { t } = useTranslation();
   const { filters } = useHoldingsTableScript();
+  const countdown = useRoundCountdown(state.selectedRow?.expire_at);
   const positions = state.positions.filter(filters.matches);
   return (
     <>
       <PredictionFilters filters={filters} mode="holdings" />
       <Cards empty={positions.length === 0}>
         {positions.map((position) => {
-          const pnl = new Decimal(state.outcomePrices[position.outcome])
-            .sub(position.averagePrice)
-            .mul(position.quantity)
-            .toNumber();
+          // Only the selected round has a subscribed book for live valuation.
+          const isSelectedRound = position.symbol === state.selectedRow?.symbol;
+          const lastPrice = isSelectedRound
+            ? state.outcomePrices[position.outcome]
+            : undefined;
+          const pnl =
+            lastPrice != null
+              ? new Decimal(lastPrice)
+                  .sub(position.averagePrice)
+                  .mul(position.quantity)
+                  .toNumber()
+              : undefined;
           return (
             <div
-              key={position.outcome}
+              key={`${position.symbol ?? ""}-${position.outcome}`}
               className="oui-rounded-xl oui-bg-base-9 oui-p-3"
             >
               <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
-                <RoundSymbol round={state.round} outcome={position.outcome} />
+                <RoundSymbol
+                  round={position.round ?? state.round}
+                  outcome={position.outcome}
+                  symbol={position.symbol}
+                />
                 <OutcomeBadge outcome={position.outcome} />
               </div>
               <Divider intensity={6} className="oui-my-2 oui-w-full" />
@@ -75,28 +89,46 @@ export const MobilePredictionPositions: React.FC<{
                 </Field>
                 <Field label={t("common.available")}>
                   <TableNumber
-                    value={state.availableQuantity(position.outcome)}
+                    value={state.availableQuantity(
+                      position.outcome,
+                      undefined,
+                      position.symbol,
+                    )}
                   />
                 </Field>
                 <Field label={t("prediction.entryPrice")}>
                   <TableNumber value={position.averagePrice} />
                 </Field>
                 <Field label={t("prediction.lastPrice")}>
-                  <TableNumber value={state.outcomePrices[position.outcome]} />
+                  {lastPrice != null ? (
+                    <TableNumber value={lastPrice} />
+                  ) : (
+                    <Text intensity={36}>--</Text>
+                  )}
                 </Field>
                 <Field label={t("common.unrealizedPnl")}>
-                  <Text.pnl dp={2} coloring>
-                    {pnl}
-                  </Text.pnl>
+                  {pnl != null ? (
+                    <Text.pnl dp={2} coloring>
+                      {pnl}
+                    </Text.pnl>
+                  ) : (
+                    <Text intensity={36}>--</Text>
+                  )}
                 </Field>
                 <Field label={t("prediction.countdownStatus")}>
-                  {state.isRoundTradable
-                    ? formatCountdown(state.countdown)
-                    : t(`prediction.phase.${state.roundPhase}`)}
+                  {isSelectedRound
+                    ? state.isRoundTradable
+                      ? formatCountdown(countdown)
+                      : t(`prediction.phase.${state.roundPhase}`)
+                    : "--"}
                 </Field>
               </div>
               <div className="oui-mt-3 oui-flex oui-justify-end">
-                <SellPosition state={state} outcome={position.outcome} />
+                <SellPosition
+                  state={state}
+                  outcome={position.outcome}
+                  symbol={position.symbol}
+                />
               </div>
             </div>
           );
@@ -126,7 +158,11 @@ export const MobilePredictionHistory: React.FC<{ state: PredictionState }> = ({
         {records.map((record) => (
           <div key={record.id} className="oui-rounded-xl oui-bg-base-9 oui-p-3">
             <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
-              <RoundSymbol round={record.round} outcome={record.outcome} />
+              <RoundSymbol
+                round={record.round}
+                outcome={record.outcome}
+                symbol={record.symbol}
+              />
               <OutcomeBadge outcome={record.outcome} />
             </div>
             <Divider intensity={6} className="oui-my-2 oui-w-full" />
@@ -148,12 +184,20 @@ export const MobilePredictionHistory: React.FC<{ state: PredictionState }> = ({
                 )}
               </Field>
               <Field label={t("positions.history.column.netPnl")}>
-                <Text.pnl dp={2} coloring>
-                  {record.pnl}
-                </Text.pnl>
+                {record.pnl != null ? (
+                  <Text.pnl dp={2} coloring>
+                    {record.pnl}
+                  </Text.pnl>
+                ) : (
+                  <Text intensity={36}>--</Text>
+                )}
               </Field>
               <Field label={t("prediction.closedSettledTime")}>
-                {formatTableTime(record.settledAt)}
+                {record.settledAt != null ? (
+                  formatTableTime(record.settledAt)
+                ) : (
+                  <Text intensity={36}>--</Text>
+                )}
               </Field>
             </div>
           </div>
@@ -165,9 +209,7 @@ export const MobilePredictionHistory: React.FC<{ state: PredictionState }> = ({
 
 export const MobilePredictionOrderCard: React.FC<{
   state: PredictionState;
-  order: PredictionState["openOrders"][number] & {
-    status?: "filled" | "cancelled";
-  };
+  order: PredictionState["openOrders"][number];
 }> = ({ state, order }) => {
   const { t } = useTranslation();
   const { formatTableTime } = usePredictionFormatters();
@@ -202,7 +244,9 @@ export const MobilePredictionOrderCard: React.FC<{
           <PredictionOrderCell state={state} order={order} field="status" />
         </Field>
       </div>
-      {!order.status && (
+      {(!order.status ||
+        order.status === "pending" ||
+        order.status === "partialFilled") && (
         <div className="oui-mt-3 oui-flex oui-justify-end">
           <PredictionOrderCell state={state} order={order} field="action" />
         </div>

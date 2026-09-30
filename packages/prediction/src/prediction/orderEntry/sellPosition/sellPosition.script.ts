@@ -13,18 +13,24 @@ import {
 export type UseSellPositionScriptArgs = {
   state: PredictionState;
   outcome: PredictionOutcome;
+  /** Round symbol of the position row; defaults to the selected round. */
+  symbol?: string;
 };
 
 export const useSellPositionScript = ({
   state,
   outcome,
+  symbol,
 }: UseSellPositionScriptArgs) => {
   const [open, setOpen] = useState(false);
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [type, setType] = useState<PredictionOrderType>("market");
 
-  const available = state.availableQuantity(outcome);
+  // Only the selected round's book drives protection prices; exits on other
+  // rounds stay read-only until the user switches the chart to that round.
+  const sellable = symbol == null || symbol === state.selectedRow?.symbol;
+  const available = state.availableQuantity(outcome, undefined, symbol);
   const estimatedSlippage = useMemo(
     () => state.estimateOrderSlippage("sell", Number(quantity), outcome),
     [outcome, quantity, state],
@@ -38,7 +44,8 @@ export const useSellPositionScript = ({
   const selectPercentage = (value: number) =>
     setQuantity(quantityFromPercentage(available, value, 4));
 
-  const tradable = state.isRoundTradable && !state.isRegionRestricted;
+  const tradable =
+    sellable && state.isRoundTradable && !state.isRegionRestricted;
   const valid =
     tradable &&
     Number(quantity) > 0 &&
@@ -50,12 +57,19 @@ export const useSellPositionScript = ({
     setOpen(value);
     if (value) {
       setQuantity(String(available));
-      setPrice(state.outcomePrices[outcome].toFixed(4));
+      setPrice(state.outcomePrices[outcome].toFixed(2));
     }
   };
 
-  const confirm = () => {
-    if (state.sellPosition(outcome, Number(quantity), type, Number(price))) {
+  const confirm = async () => {
+    const placed = await state.sellPosition(
+      outcome,
+      Number(quantity),
+      type,
+      Number(price),
+      symbol,
+    );
+    if (placed) {
       setOpen(false);
     }
   };

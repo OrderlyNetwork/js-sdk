@@ -1,5 +1,3 @@
-import type { PredictionOrderPolicy } from "./predictionExecution";
-
 export type PredictionOutcome = "up" | "down";
 export type PredictionOrderSide = "buy" | "sell";
 export type PredictionOrderType = "market" | "limit";
@@ -8,17 +6,16 @@ export type PredictionRoundPhase =
   | "trading"
   | "closingSoon"
   | "closed"
-  | "resolving"
   | "resolvedUp"
-  | "resolvedDown"
-  | "void";
+  | "resolvedDown";
 export type PredictionDataTab =
   | "openOrders"
   | "predictions"
   | "assets"
   | "orderHistory"
   | "filled"
-  | "predictionHistory";
+  | "predictionHistory"
+  | "history";
 
 export type PredictionNotification = {
   id: number;
@@ -30,18 +27,31 @@ export type PredictionPosition = {
   outcome: PredictionOutcome;
   quantity: number;
   averagePrice: number;
+  /** Round-specific binary symbol of the position. */
+  symbol?: string;
+  /** Round start (epoch seconds) of the position's round. */
+  round?: number;
 };
 
 export type PredictionOpenOrder = {
-  policy?: PredictionOrderPolicy;
   id: number;
+  /** UP-book side badge: BUY = UP side, SELL = DOWN side (TASK-22 mapping). */
   outcome: PredictionOutcome;
   side: PredictionOrderSide;
   type: PredictionOrderType;
+  /** UP-book price. */
   price: number;
   quantity: number;
+  /** Executed quantity so far (backend total_executed_quantity); 0 while resting. */
+  filledQuantity: number;
+  /** Average executed price in the UP coordinate, once partially filled. */
+  averagePrice?: number;
+  reduceOnly?: boolean;
+  /** Round-specific binary symbol. */
+  symbol?: string;
   round: number;
   timestamp: number;
+  status?: "pending" | "partialFilled" | "filled" | "cancelled" | "rejected";
 };
 
 export type PredictionTrade = PredictionOpenOrder & {
@@ -50,6 +60,7 @@ export type PredictionTrade = PredictionOpenOrder & {
 
 export type PredictionSettlement = {
   id: number;
+  symbol?: string;
   round: number;
   outcome: PredictionOutcome;
   quantity: number;
@@ -57,8 +68,15 @@ export type PredictionSettlement = {
   settlementPrice: number;
   result?: PredictionOutcome | "closed";
   payout: number;
-  pnl: number;
-  settledAt: number;
+  /**
+   * Final net PnL; undefined while an expiry settlement is still pending
+   * (settled_at null, api-spec §6.3 — do not present final numbers before it).
+   */
+  pnl?: number;
+  /** Settlement (expiry) / close (early exit) time in epoch ms. */
+  settledAt?: number;
+  /** Expiry row whose system close has not completed yet. */
+  settling?: boolean;
 };
 
 export type PredictionMockPerpPosition = {
@@ -91,11 +109,6 @@ export type PredictionOrderBookLevel = {
   price: number;
   quantity: number;
 };
-
-export const CHART_WINDOW_MS = 65 * 1_000;
-export const INITIAL_BALANCE = 1_000;
-export const INITIAL_BTC_PRICE = 64_280.4;
-export const INITIAL_ROUND = 1_787_541_000;
 
 export const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);

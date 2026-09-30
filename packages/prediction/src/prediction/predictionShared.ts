@@ -8,6 +8,20 @@ import { Decimal } from "@orderly.network/utils";
  */
 export const ROUND_INTERVAL_SECONDS = 300;
 
+/**
+ * decimal.js-light has no floor(); step a value onto the tick grid by
+ * rounding the tick count down on the integer grid. Number and string
+ * wrappers share this core so sizing and submission agree exactly.
+ */
+export const floorToTickDecimal = (value: number, tick: number) =>
+  new Decimal(value)
+    .div(tick)
+    .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
+    .mul(tick);
+
+export const floorToTick = (value: number, tick: number) =>
+  floorToTickDecimal(value, tick).toNumber();
+
 /** Map Orderly locale codes to BCP-47 tags that Intl understands. */
 export function toIntlLocale(locale?: string): string | undefined {
   const code = locale || i18n.language || undefined;
@@ -86,10 +100,14 @@ export function getLocalTimeZoneOffsetLabel(
   return name.replace(/^GMT/, "UTC") || "Local";
 }
 
-export function formatRoundWindow(round: number, locale?: string) {
+export function formatRoundWindow(
+  round: number,
+  locale?: string,
+  intervalSeconds = ROUND_INTERVAL_SECONDS,
+) {
   const intlLocale = toIntlLocale(locale);
   const start = new Date(round * 1_000);
-  const end = new Date(start.getTime() + ROUND_INTERVAL_SECONDS * 1_000);
+  const end = new Date(start.getTime() + intervalSeconds * 1_000);
   const startText = new Intl.DateTimeFormat(intlLocale, {
     month: "short",
     day: "numeric",
@@ -115,9 +133,13 @@ export function formatRoundWindow(round: number, locale?: string) {
     : `${startText} – ${endTime}`;
 }
 
-export function formatRoundBadge(round: number, locale?: string) {
+export function formatRoundBadge(
+  round: number,
+  locale?: string,
+  intervalSeconds = ROUND_INTERVAL_SECONDS,
+) {
   const intlLocale = toIntlLocale(locale);
-  const end = new Date((round + ROUND_INTERVAL_SECONDS) * 1_000);
+  const end = new Date((round + intervalSeconds) * 1_000);
   const dateText = new Intl.DateTimeFormat(intlLocale, {
     month: "2-digit",
     day: "2-digit",
@@ -202,8 +224,10 @@ export function usePredictionFormatters() {
       locale,
       formatUsd: (value: number) => formatUsd(value, locale),
       formatContracts: (value: number) => formatContracts(value, locale),
-      formatRoundWindow: (round: number) => formatRoundWindow(round, locale),
-      formatRoundBadge: (round: number) => formatRoundBadge(round, locale),
+      formatRoundWindow: (round: number, intervalSeconds?: number) =>
+        formatRoundWindow(round, locale, intervalSeconds),
+      formatRoundBadge: (round: number, intervalSeconds?: number) =>
+        formatRoundBadge(round, locale, intervalSeconds),
       formatTableTime: (timestamp: number) =>
         formatTableTime(timestamp, locale),
       formatPercent,

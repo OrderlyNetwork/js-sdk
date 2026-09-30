@@ -9,5 +9,8 @@ export {
   PredictionOrderCell,
   SharedProductDataPanel,
   SharedProductOrdersPanel,
+  MobileSharedProductOrdersPanel,
+  MobileSharedProductHistory,
+  useSharedProductCounts,
 } from "./prediction/prediction.ui";
 export * as PredictionPortfolioModule from "./portfolio";

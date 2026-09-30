@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { TabType, useOrderListScript } from "@orderly.network/ui-orders";
+import { isBinarySymbol } from "../binary/binaryInfo";
 import type { PredictionState } from "../prediction.script";
+import { useBinaryOrderRows } from "./orders/useBinaryOrderRows";
 
 export type ProductOrderMode = "pending" | "filled" | "history";
 export type ProductOrderInstrument = "all" | "perps" | "prediction";
@@ -63,12 +65,18 @@ export type UseAllProductOrdersTableScriptArgs = {
   state: PredictionState;
   mode: ProductOrderMode;
   mobile?: boolean;
+  includePrediction?: boolean;
+  perpsSymbol?: string;
+  predictionUnderlyingSymbol?: string;
 };
 
 export const useAllProductOrdersTableScript = ({
   state,
   mode,
   mobile = false,
+  includePrediction = true,
+  perpsSymbol,
+  predictionUnderlyingSymbol,
 }: UseAllProductOrdersTableScriptArgs) => {
   const pending = mode === "pending";
   const type = pending
@@ -77,20 +85,74 @@ export const useAllProductOrdersTableScript = ({
       ? TabType.filled
       : TabType.orderHistory;
   // Widen so package DTS does not leak ui-share internal paths.
-  const orderListState = useOrderListScript({
+  const rawOrderListState = useOrderListScript({
     type,
-    enableLoadMore: mobile,
+    enableLoadMore: mobile || includePrediction,
+    // The perps stream must exclude binary rows: this panel appends the
+    // binary rows itself as supplementalRows, so an unfiltered query would
+    // show every binary order twice in the "all" view.
+    productType: "PERP",
+    symbol: perpsSymbol,
+    onCancelAllAfter:
+      pending && includePrediction && perpsSymbol
+        ? state.cancelAllOrders
+        : undefined,
     ordersStatus: pending
       ? OrderStatus.INCOMPLETE
       : mode === "filled"
         ? OrderStatus.FILLED
         : undefined,
-  }) as Record<string, unknown>;
-  const predictionOrders = pending
-    ? state.openOrders
-    : mode === "filled"
-      ? state.history.filter((order) => order.status === "filled")
-      : [...state.openOrders, ...state.history];
+  }) as Record<string, unknown> & {
+    dataSource?: { symbol?: string }[] | null;
+  };
+  // The product_type query only filters the REST fetch; executionreport WS
+  // inserts into every orders* cache key regardless of product, and those
+  // mutations skip revalidation — so binary rows can linger in the perps
+  // list. Filter them out client-side as a belt-and-braces guard.
+  const pollutedRows = rawOrderListState.dataSource?.filter((order) =>
+    isBinarySymbol(order.symbol ?? ""),
+  );
+  const orderListState =
+    pollutedRows && pollutedRows.length > 0
+      ? {
+          ...rawOrderListState,
+          dataSource: rawOrderListState.dataSource?.filter(
+            (order) => !isBinarySymbol(order.symbol ?? ""),
+          ),
+        }
+      : rawOrderListState;
+  const binary = useBinaryOrderRows({
+    mode,
+    status:
+      rawOrderListState.orderStatus === "all"
+        ? undefined
+        : (rawOrderListState.orderStatus as OrderStatus | undefined),
+    side:
+      rawOrderListState.ordersSide === "all"
+        ? undefined
+        : (rawOrderListState.ordersSide as OrderSide | undefined),
+    dateRange: rawOrderListState.dateRange as
+      | { from?: Date; to?: Date }
+      | undefined,
+    underlyingSymbol: predictionUnderlyingSymbol,
+  });
+  const perpsCount = rawOrderListState.dataSource?.length ?? 0;
+  const normalLoaded =
+    rawOrderListState.dataSource?.filter(
+      (order) => !(order as { algo_order_id?: number }).algo_order_id,
+    ).length ?? 0;
+  const algoLoaded = perpsCount - normalLoaded;
+  const normalTotal =
+    (rawOrderListState.meta as { total?: number } | undefined)?.total ??
+    normalLoaded;
+  const perpsTotal = normalTotal + algoLoaded;
 
-  return { orderListState, predictionOrders };
+  return {
+    orderListState,
+    predictionOrders: binary.rows,
+    binary,
+    perpsTotal,
+    perpsHasMore: normalLoaded < normalTotal,
+    loadMorePerps: rawOrderListState.loadMore as () => void,
+  };
 };

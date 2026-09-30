@@ -27,6 +27,7 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { SlippageUI } from "@orderly.network/ui-order-entry";
+import { Decimal } from "@orderly.network/utils";
 import { PercentageControls } from "./orderEntry/form";
 import type { PredictionOutcome, PredictionState } from "./prediction.script";
 import {
@@ -97,14 +98,22 @@ const alignOneTapAmounts = (up: number[], down: number[]): OneTapAmounts => {
   };
 };
 
-// Prediction books quote in USDC with two-decimal, 0.01-tick prices.
-const predictionSymbolInfo = (base: string) => ({
-  base_dp: 2,
-  quote_dp: 2,
-  base_tick: 0.01,
+const predictionSymbolInfo = (
+  base: string,
+  quote: string,
+  baseTick: number,
+  quoteTick: number,
+) => ({
+  base_dp: new Decimal(baseTick).decimalPlaces(),
+  quote_dp: new Decimal(quoteTick).decimalPlaces(),
+  base_tick: baseTick,
   base,
-  quote: "USDC",
+  quote,
 });
+
+/** Render a bps coefficient as a percent; missing config is never "free". */
+const formatFeeBps = (bps: number | undefined) =>
+  bps == null ? "--%" : `${(bps / 100).toFixed(2)}%`;
 
 export const PredictionOrderBook: React.FC<
   Pick<
@@ -116,6 +125,8 @@ export const PredictionOrderBook: React.FC<
     | "setOrderType"
     | "isRoundTradable"
     | "roundPhase"
+    | "selectedRow"
+    | "market"
   >
 > = ({
   orderBook,
@@ -125,11 +136,16 @@ export const PredictionOrderBook: React.FC<
   setOrderType,
   isRoundTradable,
   roundPhase,
+  selectedRow,
+  market,
 }) => {
   const { t } = useTranslation();
+  const quoteTick = selectedRow?.quote_tick ?? 0.01;
+  const baseTick = selectedRow?.base_tick ?? 0.01;
+  const quote = market?.quote ?? "USDC";
   const selectPrice = (price: number) => {
     setOrderType("limit");
-    setLimitPrice(price.toFixed(2));
+    setLimitPrice(price.toFixed(new Decimal(quoteTick).decimalPlaces()));
   };
 
   const asks = useMemo(
@@ -145,10 +161,8 @@ export const PredictionOrderBook: React.FC<
 
   const isPastRound =
     roundPhase === "closed" ||
-    roundPhase === "resolving" ||
     roundPhase === "resolvedUp" ||
-    roundPhase === "resolvedDown" ||
-    roundPhase === "void";
+    roundPhase === "resolvedDown";
   const emptyLevels = useMemo(
     () =>
       Array.from({ length: 7 }, () => [
@@ -173,11 +187,11 @@ export const PredictionOrderBook: React.FC<
     markPrice: displayedPrice,
     lastPrice: isPastRound
       ? [Number.NaN, Number.NaN]
-      : [Math.max(selectedPrice - 0.01, 0), selectedPrice],
-    depths: ["0.01"],
+      : [Math.max(selectedPrice - quoteTick, 0), selectedPrice],
+    depths: [String(quoteTick)],
     base,
-    quote: "USDC",
-    symbolInfo: predictionSymbolInfo(base),
+    quote,
+    symbolInfo: predictionSymbolInfo(base, quote, baseTick, quoteTick),
     onItemClick: (item: number[]) => selectPrice(item[0]),
     showMarkPrice: false,
     cellHeight: 20,
@@ -207,11 +221,24 @@ export const PredictionOrderBook: React.FC<
 };
 
 export const RoundOrderStatusCard: React.FC<
-  Pick<PredictionState, "round" | "roundPhase"> & { restricted?: boolean }
-> = ({ round, roundPhase, restricted }) => {
+  Pick<PredictionState, "round" | "roundPhase" | "isRoundInSnapshot"> & {
+    restricted?: boolean;
+    marketName: string;
+    intervalSeconds: number;
+  }
+> = ({
+  round,
+  roundPhase,
+  isRoundInSnapshot,
+  restricted,
+  marketName,
+  intervalSeconds,
+}) => {
   const { t } = useTranslation();
   const { formatRoundWindow } = usePredictionFormatters();
-  const isResolving = roundPhase === "closed" || roundPhase === "resolving";
+  // "closed" covers both waiting-for-result and out-of-snapshot rounds —
+  // deriveBinaryPhase never produces any other pre-resolution terminal.
+  const isResolving = roundPhase === "closed";
   const resolvedOutcome =
     roundPhase === "resolvedUp"
       ? "up"
@@ -238,16 +265,31 @@ export const RoundOrderStatusCard: React.FC<
       )}
       {!restricted && isResolving && (
         <>
-          <Spinner size="lg" color="primary" />
-          <h2 className="oui-mt-6 oui-text-lg oui-font-semibold oui-text-base-contrast">
-            {t("prediction.resolution.determiningWinner")}
-          </h2>
-          <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.btcUpDown")} · {formatRoundWindow(round)}
-          </p>
-          <p className="oui-mt-5 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.resolution.pendingDescription")}
-          </p>
+          {isRoundInSnapshot ? (
+            <>
+              <Spinner size="lg" color="primary" />
+              <h2 className="oui-mt-6 oui-text-lg oui-font-semibold oui-text-base-contrast">
+                {t("prediction.resolution.determiningWinner")}
+              </h2>
+              <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+                {marketName} · {formatRoundWindow(round, intervalSeconds)}
+              </p>
+              <p className="oui-mt-5 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+                {t("prediction.resolution.pendingDescription")}
+              </p>
+            </>
+          ) : (
+            // Round outside the 300-row snapshot: per the API spec this means
+            // "not queryable right now", not that settlement finished.
+            <div role="status">
+              <h2 className="oui-text-lg oui-font-semibold oui-text-base-contrast">
+                {marketName}
+              </h2>
+              <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+                {t("prediction.notInSnapshot")}
+              </p>
+            </div>
+          )}
         </>
       )}
 
@@ -280,24 +322,7 @@ export const RoundOrderStatusCard: React.FC<
             })}
           </h2>
           <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.btcUpDown")} · {formatRoundWindow(round)}
-          </p>
-        </>
-      )}
-
-      {!restricted && roundPhase === "void" && (
-        <>
-          <div className="oui-flex oui-size-16 oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 oui-text-2xl oui-text-base-contrast-54">
-            —
-          </div>
-          <h2 className="oui-mt-5 oui-text-lg oui-font-semibold oui-text-base-contrast">
-            {t("prediction.resolution.voided")}
-          </h2>
-          <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.btcUpDown")} · {formatRoundWindow(round)}
-          </p>
-          <p className="oui-mt-5 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.resolution.voidDescription")}
+            {marketName} · {formatRoundWindow(round, intervalSeconds)}
           </p>
         </>
       )}
@@ -474,6 +499,17 @@ export const TradePanel: React.FC<
   const oneTapEstimatedSlippage = Math.max(
     0,
     ...oneTapSlippages.filter((value): value is number => value !== null),
+  );
+  // The fee curve always prices in the UP coordinate: p or 1-p.
+  const selectedUpPrice =
+    state.selectedOutcome === "up"
+      ? state.selectedPrice
+      : 1 - state.selectedPrice;
+  const estimatedFee = state.estimateFee(
+    state.orderQuantity,
+    selectedUpPrice,
+    // MARKET crosses the book (taker); a resting LIMIT fills as maker.
+    state.orderType === "market",
   );
   const selectTradeMode = (mode: TradeMode) => {
     setTradeMode(mode);
@@ -1033,15 +1069,50 @@ export const TradePanel: React.FC<
                 <span className="oui-text-base-contrast-54">
                   {t("dmm.taker")}:{" "}
                 </span>
-                <span className="oui-text-base-contrast-80">--% / </span>
+                <span className="oui-text-base-contrast-80">
+                  {formatFeeBps(state.feeRates.takerBps)} /{" "}
+                </span>
                 <span className="oui-text-base-contrast-54">
                   {t("dmm.maker")}:{" "}
                 </span>
-                <span className="oui-text-base-contrast-80">0%</span>
+                <span className="oui-text-base-contrast-80">
+                  {formatFeeBps(state.feeRates.makerBps)}
+                </span>
               </>
             }
             valueClassName="oui-font-normal"
           />
+          {/* One-tap presets each size off their own protection price; the
+            estimates below price the form, which that mode does not show. */}
+          {!isOneTap &&
+            state.orderSide === "buy" &&
+            state.orderQuantity > 0 && (
+              <>
+                {/* Curve estimate C*r*p*(1-p); hidden (not zero) when the
+                  account has no valid binary fee config. */}
+                <InfoRow
+                  label={t("prediction.estimatedFee")}
+                  value={
+                    estimatedFee != null
+                      ? `${formatUsd(estimatedFee)} USDC`
+                      : "-- USDC"
+                  }
+                  dashed
+                />
+                <InfoRow
+                  label={t("prediction.requiredFrozen")}
+                  value={`${formatUsd(
+                    // Frozen = display price × qty × (1+b): opening DOWN @n
+                    // freezes n, not 1-n (PRD §7.2).
+                    state.estimateFrozen(
+                      state.orderQuantity,
+                      state.selectedPrice,
+                    ),
+                  )} USDC`}
+                  dashed
+                />
+              </>
+            )}
         </div>
       </div>
     </aside>
