@@ -542,6 +542,8 @@ module.exports = {
   validateConfigSchema,
   deriveConfigSchema,
   deriveInstallMetadata,
+  diffConfigSchemas,
+  checkConfigSchema,
   findPinnedHostPeers,
   formatHostPeerSuggestions,
   formatRepositorySuggestion,
@@ -555,18 +557,20 @@ module.exports = {
 
 /**
  * Write a derived schema to `configSchema.json`. Refuses to overwrite an
- * existing file so hand-tuned schemas are never clobbered. Also ensures the
- * file is published by adding it to `package.json` `files` when that
- * allow-list exists (without it, npm publishes everything by default).
+ * existing file unless `force` is set, so hand-tuned schemas are never
+ * clobbered. Also ensures the file is published by adding it to `package.json`
+ * `files` when that allow-list exists (without it, npm publishes everything by
+ * default).
  * @param {string} pluginDir
  * @param {object} schema
+ * @param {{ force?: boolean }} [options]
  * @returns {{ written: boolean, reason?: string, filesUpdated?: boolean }}
  */
-function writeDerivedSchema(pluginDir, schema) {
+function writeDerivedSchema(pluginDir, schema, options = {}) {
   const path = require("path");
   const fs = require("fs");
   const file = path.join(pluginDir, "configSchema.json");
-  if (fs.existsSync(file)) {
+  if (fs.existsSync(file) && !options.force) {
     return { written: false, reason: "configSchema.json already exists" };
   }
   fs.writeFileSync(file, `${JSON.stringify(schema, null, 2)}\n`);
@@ -955,4 +959,131 @@ function readCheckedInSchema(pluginDir, warnings) {
     return null;
   }
   return result.schema;
+}
+
+/**
+ * Human-readable, property-level diff between a checked-in schema and the
+ * schema derived from source. The derived schema is the reference; an empty
+ * array means the checked-in file matches it.
+ * @param {unknown} checkedIn
+ * @param {unknown} derived
+ * @returns {string[]}
+ */
+function diffConfigSchemas(checkedIn, derived) {
+  const diffs = [];
+  walk(derived, checkedIn, "");
+  return diffs;
+
+  /**
+   * @param {unknown} expected derived value
+   * @param {unknown} actual checked-in value
+   * @param {string} path JSON path for messages
+   */
+  function walk(expected, actual, path) {
+    if (isRecord(expected) && isRecord(actual)) {
+      const keys = [
+        ...Object.keys(expected),
+        ...Object.keys(actual).filter((key) => !(key in expected)),
+      ];
+      for (const key of keys) {
+        const childPath = path ? `${path}.${key}` : key;
+        if (!(key in expected)) {
+          diffs.push(
+            `${childPath}: not derived from source (extra in configSchema.json)`,
+          );
+        } else if (!(key in actual)) {
+          diffs.push(
+            `${childPath}: missing from configSchema.json (derived: ${short(expected[key])})`,
+          );
+        } else {
+          walk(expected[key], actual[key], childPath);
+        }
+      }
+      return;
+    }
+    if (Array.isArray(expected) && Array.isArray(actual)) {
+      const length = Math.max(expected.length, actual.length);
+      for (let i = 0; i < length; i += 1) {
+        if (i >= expected.length) {
+          diffs.push(
+            `${path}[${i}]: not derived from source (extra in configSchema.json)`,
+          );
+        } else if (i >= actual.length) {
+          diffs.push(
+            `${path}[${i}]: missing from configSchema.json (derived: ${short(expected[i])})`,
+          );
+        } else {
+          walk(expected[i], actual[i], `${path}[${i}]`);
+        }
+      }
+      return;
+    }
+    if (JSON.stringify(expected) !== JSON.stringify(actual)) {
+      diffs.push(`${path}: has ${short(actual)}, derived ${short(expected)}`);
+    }
+  }
+}
+
+/**
+ * @param {unknown} value
+ * @returns {string} compact JSON for diff messages
+ */
+function short(value) {
+  const text = value === undefined ? "undefined" : JSON.stringify(value);
+  return text.length > 120 ? `${text.slice(0, 117)}...` : text;
+}
+
+/**
+ * Verify the checked-in `configSchema.json` against the schema derived from
+ * the plugin's register function source. Backs `orderly-devkit schema --check`
+ * so CI can fail when the committed schema has drifted.
+ * @param {string} pluginDir
+ * @returns {{
+ *   status: "match" | "drift" | "missing" | "no-options" | "invalid" | "unavailable",
+ *   diffs: string[],
+ *   errors: string[],
+ *   derived: object | null,
+ *   warnings: string[],
+ * }}
+ */
+function checkConfigSchema(pluginDir) {
+  const checkedIn = readConfigSchemaFile(pluginDir);
+  const derived = deriveConfigSchema(pluginDir);
+  const base = {
+    diffs: [],
+    errors: [],
+    derived: derived.schema,
+    warnings: derived.warnings,
+  };
+
+  if (checkedIn.status === "invalid") {
+    return { ...base, status: "invalid", errors: checkedIn.errors };
+  }
+  if (!derived.schema) {
+    // Without a derivable schema there is nothing to compare against; an
+    // existing hand-written file cannot be verified.
+    return {
+      ...base,
+      status: checkedIn.status === "missing" ? "no-options" : "unavailable",
+    };
+  }
+  if (checkedIn.status === "missing") {
+    const properties = Object.keys(derived.schema.properties ?? {});
+    if (properties.length === 0) {
+      return { ...base, status: "no-options" };
+    }
+    return {
+      ...base,
+      status: "missing",
+      diffs: properties.map(
+        (key) => `properties.${key}: missing from configSchema.json`,
+      ),
+    };
+  }
+  const diffs = diffConfigSchemas(checkedIn.schema, derived.schema);
+  return {
+    ...base,
+    status: diffs.length === 0 ? "match" : "drift",
+    diffs,
+  };
 }

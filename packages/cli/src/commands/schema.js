@@ -2,6 +2,8 @@ const path = require("path");
 const fs = require("fs");
 const { heading, info, success, warn, error } = require("../shared");
 const {
+  checkConfigSchema,
+  deriveConfigSchema,
   deriveInstallMetadata,
   formatHostPeerSuggestions,
   formatRepositorySuggestion,
@@ -9,6 +11,20 @@ const {
   writeDerivedSchema,
 } = require("../internal/pluginConfigSchema");
 const { getRepoUrl } = require("../internal/manifest");
+const { CLI_BIN_NAME } = require("../internal/constants");
+
+/** Cap printed diff lines so long schemas stay readable. */
+const MAX_PRINTED_DIFFS = 20;
+
+/**
+ * @param {string[]} diffs
+ */
+function printSchemaDiffs(diffs) {
+  diffs.slice(0, MAX_PRINTED_DIFFS).forEach((diff) => info(`  - ${diff}`));
+  if (diffs.length > MAX_PRINTED_DIFFS) {
+    info(`  ... and ${diffs.length - MAX_PRINTED_DIFFS} more`);
+  }
+}
 
 module.exports = {
   command: "schema",
@@ -30,6 +46,18 @@ module.exports = {
           "boolean; write the derived schema to configSchema.json when the file is missing",
         default: false,
       })
+      .option("check", {
+        type: "boolean",
+        describe:
+          "boolean; verify configSchema.json against source and exit non-zero on missing/drift (for CI)",
+        default: false,
+      })
+      .option("force", {
+        type: "boolean",
+        describe:
+          "boolean; with --write, regenerate configSchema.json from source even when it already exists",
+        default: false,
+      })
       .example(
         "orderly-devkit schema --path ./my-plugin",
         "Print the derived config schema and install metadata",
@@ -37,6 +65,14 @@ module.exports = {
       .example(
         "orderly-devkit schema --path ./my-plugin --write",
         "Write the derived schema to configSchema.json",
+      )
+      .example(
+        "orderly-devkit schema --path ./my-plugin --write --force",
+        "Regenerate an existing configSchema.json from source",
+      )
+      .example(
+        "orderly-devkit schema --path ./my-plugin --check",
+        "Fail when configSchema.json is missing or out of sync (CI)",
       );
   },
   handler: async (argv) => {
@@ -51,12 +87,69 @@ module.exports = {
       return;
     }
 
+    if (argv.check) {
+      if (argv.write || argv.force) {
+        error("Choose either --check or --write; they cannot be combined.");
+        process.exitCode = 1;
+        return;
+      }
+      const result = checkConfigSchema(resolvedPath);
+      result.warnings.forEach((w) => warn(w));
+      switch (result.status) {
+        case "match":
+          success("configSchema.json is in sync with source.");
+          return;
+        case "no-options":
+          info("No configurable options detected; nothing to check.");
+          return;
+        case "unavailable":
+          warn(
+            "configSchema.json exists but no register*Plugin options were found in src/; it cannot be verified against source.",
+          );
+          return;
+        case "invalid":
+          error(
+            "configSchema.json is invalid. Please fix the following issues:",
+          );
+          result.errors.forEach((e) => info(`  - ${e}`));
+          process.exitCode = 1;
+          return;
+        case "missing":
+          error(
+            "configSchema.json is missing but options are derivable from source:",
+          );
+          printSchemaDiffs(result.diffs);
+          info(
+            `Run '${CLI_BIN_NAME} schema --path <plugin> --write' and commit the file.`,
+          );
+          process.exitCode = 1;
+          return;
+        case "drift":
+          error("configSchema.json is out of sync with source:");
+          printSchemaDiffs(result.diffs);
+          info(
+            `Run '${CLI_BIN_NAME} schema --path <plugin> --write --force' to regenerate it, or update the file manually.`,
+          );
+          process.exitCode = 1;
+          return;
+        default:
+          return;
+      }
+    }
+
+    if (argv.force && !argv.write) {
+      warn("--force only applies together with --write.");
+    }
+
     const checkedIn = readConfigSchemaFile(resolvedPath);
-    if (checkedIn.status === "invalid") {
+    if (checkedIn.status === "invalid" && !(argv.write && argv.force)) {
       error("configSchema.json is invalid. Please fix the following issues:");
       checkedIn.errors.forEach((e) => info(`  - ${e}`));
       process.exitCode = 1;
       return;
+    }
+    if (checkedIn.status === "invalid" && argv.write && argv.force) {
+      warn("configSchema.json is invalid; regenerating from source.");
     }
 
     const meta = deriveInstallMetadata(resolvedPath);
@@ -130,20 +223,36 @@ module.exports = {
         process.exitCode = 1;
         return;
       }
-      if (checkedIn.status === "valid") {
-        info("configSchema.json already exists and is valid, nothing to do.");
-      } else if (meta.configSchema) {
-        const written = writeDerivedSchema(resolvedPath, meta.configSchema);
+      if (checkedIn.status === "valid" && !argv.force) {
+        info(
+          "configSchema.json already exists and is valid, nothing to do. Use --write --force to regenerate it from source.",
+        );
+        return;
+      }
+      let schema = meta.configSchema;
+      if (argv.force) {
+        const derived = deriveConfigSchema(resolvedPath);
+        derived.warnings.forEach((w) => warn(w));
+        schema = derived.schema;
+      }
+      if (!schema) {
+        warn("No configurable options detected, nothing to write.");
+      } else {
+        const written = writeDerivedSchema(resolvedPath, schema, {
+          force: argv.force === true,
+        });
         if (written.written) {
-          success("Wrote derived schema to configSchema.json");
+          success(
+            argv.force
+              ? "Regenerated configSchema.json from source"
+              : "Wrote derived schema to configSchema.json",
+          );
           if (written.filesUpdated) {
             info("Added configSchema.json to package.json files.");
           }
         } else {
           warn(written.reason);
         }
-      } else {
-        warn("No configurable options detected, nothing to write.");
       }
       return;
     }
