@@ -657,6 +657,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               {extraButton}
             </Flex>
           )}
+          {/* keep the additional config button reachable when neither row above is rendered */}
+          {!showReduceOnlySection && !showSoundSection && extraButton && (
+            <Flex
+              justify={"end"}
+              itemAlign={"center"}
+              className="oui-additionalConfig-container"
+            >
+              {extraButton}
+            </Flex>
+          )}
           {/* Additional info （fok，ioc、post only， order confirm hidden） */}
           {pinned && (
             <Box
