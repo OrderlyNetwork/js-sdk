@@ -10,7 +10,6 @@ import {
   type PredictionPosition,
 } from "../prediction.types";
 import { floorToTick } from "../predictionShared";
-import { ISO_ORDER_FROZEN_BUFFER } from "./usePredictionPortfolio";
 
 const isOnTick = (value: number, tick: number) =>
   Number.isFinite(value) &&
@@ -25,6 +24,7 @@ export type UsePredictionOrderFormArgs = {
   quoteMax?: number;
   baseTick?: number;
   baseMin?: number;
+  baseMax?: number;
   minNotional?: number;
   outcomePrices: Record<PredictionOutcome, number>;
   /** Protection price a MARKET order submits as its IOC limit (PRD §6.4). */
@@ -33,6 +33,15 @@ export type UsePredictionOrderFormArgs = {
     side: PredictionOrderSide,
   ) => number | undefined;
   balance: number;
+  estimateAdditionalFrozen: (
+    outcome: PredictionOutcome,
+    quantity: number,
+    displayPrice: number,
+  ) => number | undefined;
+  maxOpeningQuantity: (
+    outcome: PredictionOutcome,
+    displayPrice: number,
+  ) => number;
   positions: PredictionPosition[];
   availableQuantity: (outcome: PredictionOutcome, excludeId?: number) => number;
   isRoundTradable: boolean;
@@ -46,10 +55,13 @@ export const usePredictionOrderForm = ({
   quoteMax = 1 - quoteTick,
   baseTick = 0.01,
   baseMin = baseTick,
+  baseMax = 10000,
   minNotional = 5,
   outcomePrices,
   marketPrice,
   balance,
+  estimateAdditionalFrozen,
+  maxOpeningQuantity,
   availableQuantity,
   isRoundTradable,
   isRegionRestricted,
@@ -87,10 +99,13 @@ export const usePredictionOrderForm = ({
   // actually submits (PRD §6.2/§6.4); LIMIT keeps the user-picked price.
   // Without an executable side the book cannot fill the order, so the
   // missing price fails the canPlaceOrder gates below.
-  const selectedPrice =
+  const rawSelectedPrice =
     orderType === "limit"
       ? Number(limitPrice) || 0
       : (marketPrice(selectedOutcome, orderSide) ?? 0);
+  const selectedPrice = Number.isFinite(rawSelectedPrice)
+    ? rawSelectedPrice
+    : 0;
   const displayMin =
     selectedOutcome === "up"
       ? quoteMin
@@ -104,10 +119,10 @@ export const usePredictionOrderForm = ({
     (position) => position.outcome === selectedOutcome,
   );
 
-  const numericAmount = Number(amount) || 0;
+  const numericAmount = Number.isFinite(Number(amount)) ? Number(amount) : 0;
   const orderQuantity = useMemo(() => {
     if (amountUnit === "outcome") return floorToTick(numericAmount, baseTick);
-    if (selectedPrice <= 0) return 0;
+    if (!Number.isFinite(selectedPrice) || selectedPrice <= 0) return 0;
     return floorToTick(
       new Decimal(numericAmount).div(selectedPrice).toNumber(),
       baseTick,
@@ -134,41 +149,34 @@ export const usePredictionOrderForm = ({
     selectedPrice > 0 ? new Decimal(1).div(selectedPrice).toNumber() : 0;
 
   const selectedTokenBalance = availableQuantity(selectedOutcome);
-  const maxQuoteAmount = useMemo(() => {
-    if (orderSide === "buy") {
-      // Frozen = price*qty*(1+ISO buffer); solve for the tick-floor max qty.
-      if (selectedPrice <= 0) return 0;
-      const maxQty = floorToTick(
-        new Decimal(balance)
-          .div(
-            new Decimal(selectedPrice).mul(
-              new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER),
-            ),
-          )
-          .toNumber(),
+  const maxOutcomeAmount = useMemo(
+    () =>
+      floorToTick(
+        Math.min(
+          baseMax,
+          orderSide === "buy"
+            ? maxOpeningQuantity(selectedOutcome, selectedPrice)
+            : selectedTokenBalance,
+        ),
         baseTick,
-      );
-      return new Decimal(maxQty).mul(selectedPrice).toNumber();
-    }
-    return new Decimal(floorToTick(selectedTokenBalance, baseTick))
-      .mul(selectedPrice)
-      .toNumber();
-  }, [balance, baseTick, orderSide, selectedPrice, selectedTokenBalance]);
-  const maxOutcomeAmount =
+      ),
+    [
+      baseMax,
+      baseTick,
+      maxOpeningQuantity,
+      orderSide,
+      selectedOutcome,
+      selectedPrice,
+      selectedTokenBalance,
+    ],
+  );
+  const maxQuoteAmount = new Decimal(maxOutcomeAmount)
+    .mul(selectedPrice)
+    .toNumber();
+  const requiredFrozen =
     orderSide === "buy"
-      ? selectedPrice > 0
-        ? floorToTick(
-            new Decimal(balance)
-              .div(
-                new Decimal(selectedPrice).mul(
-                  new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER),
-                ),
-              )
-              .toNumber(),
-            baseTick,
-          )
-        : 0
-      : floorToTick(selectedTokenBalance, baseTick);
+      ? estimateAdditionalFrozen(selectedOutcome, orderQuantity, selectedPrice)
+      : 0;
   const maxAmount = amountUnit === "quote" ? maxQuoteAmount : maxOutcomeAmount;
   const orderPercentage =
     maxAmount > 0 ? clamp((numericAmount / maxAmount) * 100, 0, 100) : 0;
@@ -183,7 +191,12 @@ export const usePredictionOrderForm = ({
     ) {
       return false;
     }
-    if (orderQuantity < baseMin) return false;
+    if (
+      orderQuantity < baseMin ||
+      orderQuantity > baseMax ||
+      !Number.isFinite(selectedPrice)
+    )
+      return false;
     if (orderType === "limit" && !isOnTick(selectedPrice, quoteTick))
       return false;
     // min_notional is validated on the UP-book order price for both sides,
@@ -194,14 +207,13 @@ export const usePredictionOrderForm = ({
     );
     if (!upNotional.gte(minNotional)) return false;
     if (orderSide === "buy") {
-      return new Decimal(orderNotional)
-        .mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER))
-        .lte(balance);
+      return requiredFrozen != null && requiredFrozen <= balance;
     }
     return orderQuantity <= selectedTokenBalance + 1e-9;
   }, [
     balance,
     baseMin,
+    baseMax,
     baseTick,
     displayMax,
     displayMin,
@@ -213,6 +225,7 @@ export const usePredictionOrderForm = ({
     numericAmount,
     orderNotional,
     orderQuantity,
+    requiredFrozen,
     orderSide,
     orderType,
     quoteTick,
@@ -243,7 +256,7 @@ export const usePredictionOrderForm = ({
   const selectAmountUnit = useCallback(
     (unit: PredictionAmountUnit) => {
       if (unit === amountUnit) return;
-      const value = Number(amount) || 0;
+      const value = Number.isFinite(Number(amount)) ? Number(amount) : 0;
       const converted =
         unit === "outcome"
           ? selectedPrice > 0
@@ -312,6 +325,7 @@ export const usePredictionOrderForm = ({
     selectedPosition,
     orderQuantity,
     orderNotional,
+    requiredFrozen,
     estimatedContracts,
     estimatedPayout,
     estimatedProfit,

@@ -1434,6 +1434,9 @@ importers:
       '@orderly.network/markets':
         specifier: workspace:*
         version: link:../markets
+      '@orderly.network/perp':
+        specifier: workspace:*
+        version: link:../perp
       '@orderly.network/portfolio':
         specifier: workspace:*
         version: link:../portfolio

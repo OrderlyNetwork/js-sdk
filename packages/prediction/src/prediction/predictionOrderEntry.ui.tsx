@@ -1101,14 +1101,11 @@ export const TradePanel: React.FC<
                 />
                 <InfoRow
                   label={t("prediction.requiredFrozen")}
-                  value={`${formatUsd(
-                    // Frozen = display price × qty × (1+b): opening DOWN @n
-                    // freezes n, not 1-n (PRD §7.2).
-                    state.estimateFrozen(
-                      state.orderQuantity,
-                      state.selectedPrice,
-                    ),
-                  )} USDC`}
+                  value={
+                    state.requiredFrozen == null
+                      ? "-- USDC"
+                      : `${state.fundingEstimateMode === "approximate" ? "≈ " : ""}${formatUsd(state.requiredFrozen)} USDC`
+                  }
                   dashed
                 />
               </>

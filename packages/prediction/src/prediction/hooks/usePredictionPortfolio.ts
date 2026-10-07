@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import {
   useCollateral,
+  useMarkPricesStream,
   useMutation,
   useOrderStream,
   usePositionStream,
@@ -13,6 +14,13 @@ import {
   type API,
 } from "@orderly.network/types";
 import { Decimal, getTimestamp } from "@orderly.network/utils";
+import {
+  availableBinaryCloseQuantity,
+  estimateBinaryOrderFrozen,
+  ISO_ORDER_FROZEN_BUFFER,
+  maxBinaryOrderQuantity,
+  resolveBinaryCollateral,
+} from "../binary/binaryCollateral";
 import {
   binaryRoundFromSymbol,
   isBinaryRowTradable,
@@ -31,8 +39,7 @@ import {
 } from "../prediction.types";
 import { floorToTickDecimal } from "../predictionShared";
 
-/** ISO buffer applied on top of the order notional when freezing collateral. */
-export const ISO_ORDER_FROZEN_BUFFER = 0.0006;
+export { ISO_ORDER_FROZEN_BUFFER } from "../binary/binaryCollateral";
 
 export type PlaceOrderInput = {
   canPlaceOrder: boolean;
@@ -276,6 +283,67 @@ export const usePredictionPortfolio = ({
   );
 
   const [positionData] = usePositionStream();
+  // Share the account-scoped observer cache without dropping pending-only rows.
+  const { data: accountPositions } = usePrivateQuery<API.PositionInfo>(
+    "/v1/positions",
+    { formatter: (data) => data },
+  );
+  const { data: markPrices } = useMarkPricesStream();
+  const getCollateralSnapshot = useCallback(
+    (symbol = selectedSymbol) =>
+      resolveBinaryCollateral({
+        symbol,
+        positions: accountPositions?.rows,
+        orders: pendingOrdersData,
+        ordersComplete: pendingOrdersComplete,
+        markPrice: symbol ? markPrices?.[symbol] : undefined,
+      }),
+    [
+      accountPositions,
+      markPrices,
+      pendingOrdersComplete,
+      pendingOrdersData,
+      selectedSymbol,
+    ],
+  );
+  const fundingEstimateMode = getCollateralSnapshot()?.mode ?? "unavailable";
+  const estimateAdditionalFrozen = useCallback(
+    (
+      outcome: PredictionOutcome,
+      quantity: number,
+      displayPrice: number,
+      symbol = selectedSymbol,
+    ) => {
+      const { upSide, upPrice } = toUpBookRequest(outcome, "buy", displayPrice);
+      return estimateBinaryOrderFrozen(
+        getCollateralSnapshot(symbol),
+        upSide,
+        upPrice,
+        quantity,
+      )?.toNumber();
+    },
+    [getCollateralSnapshot, selectedSymbol],
+  );
+  const maxOpeningQuantity = useCallback(
+    (
+      outcome: PredictionOutcome,
+      displayPrice: number,
+      symbol = selectedSymbol,
+    ) => {
+      const config = symbol ? configBySymbol.get(symbol) : undefined;
+      if (!config) return 0;
+      const { upSide, upPrice } = toUpBookRequest(outcome, "buy", displayPrice);
+      return maxBinaryOrderQuantity({
+        snapshot: getCollateralSnapshot(symbol),
+        side: upSide,
+        upPrice,
+        balance,
+        baseTick: config.base_tick,
+        baseMax: config.base_max,
+      });
+    },
+    [balance, configBySymbol, getCollateralSnapshot, selectedSymbol],
+  );
 
   /**
    * Every open binary position across rounds (TASK-38: the frontend keeps the
@@ -305,34 +373,13 @@ export const usePredictionPortfolio = ({
 
   const availableQuantity = useCallback(
     (outcome: PredictionOutcome, excludeId?: number, symbol?: string) => {
-      const targetSymbol = symbol ?? selectedSymbol;
-      const row = (positionData?.rows ?? []).find(
-        (item) => item.symbol === targetSymbol,
-      );
-      if (!row) return 0;
-      const isUp = row.position_qty > 0;
-      if ((outcome === "up") !== isUp) return 0;
-
-      // Closing an UP position rests on SELL orders; closing a DOWN short
-      // rests on BUY orders. Netting means ANY resting closing-side order
-      // consumes the position when filled — not only reduce_only ones — so
-      // all of them reserve availability.
-      const closingSide = isUp ? "sell" : "buy";
-      const reserved = openOrders
-        .filter(
-          (order) =>
-            order.symbol === targetSymbol &&
-            order.side === closingSide &&
-            order.id !== excludeId,
-        )
-        .reduce((sum, order) => sum.add(order.quantity), new Decimal(0));
-
-      return Math.max(
-        0,
-        new Decimal(Math.abs(row.position_qty)).sub(reserved).toNumber(),
+      return availableBinaryCloseQuantity(
+        getCollateralSnapshot(symbol ?? selectedSymbol),
+        outcome === "up" ? OrderSide.SELL : OrderSide.BUY,
+        excludeId,
       );
     },
-    [openOrders, positionData, selectedSymbol],
+    [getCollateralSnapshot, selectedSymbol],
   );
 
   const { data: settlementRows } = usePrivateQuery<{
@@ -429,7 +476,10 @@ export const usePredictionPortfolio = ({
       if (
         !Number.isFinite(displayPrice) ||
         displayPrice <= 0 ||
-        displayPrice >= 1
+        displayPrice >= 1 ||
+        !Number.isFinite(quantity) ||
+        quantity < (config.base_min ?? config.base_tick ?? 0.01) ||
+        quantity > (config.base_max ?? 10000)
       ) {
         notify("prediction.invalidOrder", "danger");
         return false;
@@ -448,6 +498,26 @@ export const usePredictionPortfolio = ({
       if (new Decimal(quantity).mul(upPrice).lt(config.min_notional ?? 5)) {
         notify("prediction.invalidOrder", "danger");
         return false;
+      }
+
+      // Recheck the current protection price and snapshot immediately before
+      // submission; a caller's canPlaceOrder flag may be stale.
+      if (reduceOnly) {
+        if (quantity > availableQuantity(outcome, undefined, symbol)) {
+          notify("prediction.message.insufficientContracts", "danger");
+          return false;
+        }
+      } else {
+        const requiredFrozen = estimateAdditionalFrozen(
+          outcome,
+          quantity,
+          displayPrice,
+          symbol,
+        );
+        if (requiredFrozen == null || requiredFrozen > balance) {
+          notify("prediction.message.insufficientBalance", "danger");
+          return false;
+        }
       }
 
       try {
@@ -474,7 +544,14 @@ export const usePredictionPortfolio = ({
         return false;
       }
     },
-    [configBySymbol, doCreateOrder, notify],
+    [
+      availableQuantity,
+      balance,
+      configBySymbol,
+      doCreateOrder,
+      estimateAdditionalFrozen,
+      notify,
+    ],
   );
 
   const placeOrder = useCallback(
@@ -601,6 +678,32 @@ export const usePredictionPortfolio = ({
 
       if (!order) return false;
 
+      const remaining = new Decimal(quantity).sub(order.filledQuantity);
+      // PERP-style quantity envelope only; backend checks repricing funds.
+      const maxTotal = order.reduceOnly
+        ? new Decimal(order.filledQuantity).add(
+            availableQuantity(
+              order.side === "sell" ? "up" : "down",
+              id,
+              order.symbol,
+            ),
+          )
+        : new Decimal(order.quantity).add(
+            maxOpeningQuantity(
+              order.outcome,
+              order.outcome === "up"
+                ? order.price
+                : toDisplayPrice(order.price),
+              order.symbol,
+            ),
+          );
+      if (
+        remaining.lt(0) ||
+        new Decimal(quantity).gt(maxTotal) ||
+        quantity > (config.base_max ?? 10000)
+      )
+        return false;
+
       try {
         const response = await doUpdateOrder({
           order_id: id,
@@ -626,6 +729,8 @@ export const usePredictionPortfolio = ({
       configBySymbol,
       doUpdateOrder,
       isRegionRestricted,
+      availableQuantity,
+      maxOpeningQuantity,
       notify,
       openOrders,
       selectedConfig,
@@ -681,6 +786,7 @@ export const usePredictionPortfolio = ({
    */
   const oneTapPayout = useCallback(
     (outcome: PredictionOutcome, quoteAmount: number) => {
+      if (!Number.isFinite(quoteAmount) || quoteAmount <= 0) return 0;
       const price = protectionPrice(outcome, "buy");
       return price != null && price > 0 && price < 1
         ? new Decimal(
@@ -706,27 +812,29 @@ export const usePredictionPortfolio = ({
       // No executable ask side → the IOC cannot fill; fail closed.
       if (price == null) return false;
       const quantity = oneTapPayout(outcome, quoteAmount);
+      const requiredFrozen = estimateAdditionalFrozen(outcome, quantity, price);
       // min_notional on the UP-book protection price (api-spec §5.2): for
       // DOWN this is (1-n)*qty.
       const upNotional = new Decimal(quantity).mul(
         outcome === "up" ? price : 1 - price,
       );
-      // Frozen at submit = price*qty*(1+b) ≤ quoteAmount*(1+b) (PRD §7.2).
+      // Only incremental opening risk requires additional free collateral.
       return (
         isRoundTradable &&
         !isRegionRestricted &&
         feeRates.takerRate != null &&
         Number.isFinite(quoteAmount) &&
         quoteAmount > 0 &&
-        new Decimal(quoteAmount)
-          .mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER))
-          .lte(balance) &&
+        requiredFrozen != null &&
+        requiredFrozen <= balance &&
+        quantity <= (selectedConfig?.base_max ?? 10000) &&
         quantity > 0 &&
         upNotional.gte(selectedConfig?.min_notional ?? 5)
       );
     },
     [
       balance,
+      estimateAdditionalFrozen,
       feeRates.takerRate,
       isRegionRestricted,
       isRoundTradable,
@@ -805,6 +913,9 @@ export const usePredictionPortfolio = ({
 
   return {
     balance,
+    fundingEstimateMode,
+    estimateAdditionalFrozen,
+    maxOpeningQuantity,
     positions,
     openOrders,
     pendingOrdersComplete,

@@ -92,10 +92,13 @@ export const usePredictionScript = (
     quoteMax: rounds.selectedRow?.quote_max,
     baseTick: rounds.selectedRow?.base_tick,
     baseMin: rounds.selectedRow?.base_min,
+    baseMax: rounds.selectedRow?.base_max,
     minNotional: rounds.selectedRow?.min_notional,
     outcomePrices: orderbook.outcomePrices,
     marketPrice: portfolio.protectionPrice,
     balance: portfolio.balance,
+    estimateAdditionalFrozen: portfolio.estimateAdditionalFrozen,
+    maxOpeningQuantity: portfolio.maxOpeningQuantity,
     // The form prices sells off the SELECTED round's cost basis; other
     // rounds' positions stay visible only in the holdings panel.
     positions: portfolio.positions.filter(
@@ -243,6 +246,8 @@ export const usePredictionScript = (
     odds: form.odds,
     orderQuantity: form.orderQuantity,
     orderNotional: form.orderNotional,
+    requiredFrozen: form.requiredFrozen,
+    fundingEstimateMode: portfolio.fundingEstimateMode,
     maxAmount: form.maxAmount,
     maxQuoteAmount: form.maxQuoteAmount,
     maxOutcomeAmount: form.maxOutcomeAmount,
