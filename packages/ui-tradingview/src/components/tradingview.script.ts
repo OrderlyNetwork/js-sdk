@@ -50,6 +50,7 @@ import {
   getOverridesConfigHash,
 } from "../utils/chart.util";
 import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
+import { getDisplayControlSetting } from "../utils/displayControlSetting";
 
 const getChartLocalStorageKey = (suffix: string, isMobile?: boolean) => {
   return isMobile
@@ -150,24 +151,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   );
   const { marginMode } = useMarginModeBySymbol(symbol ?? "");
   const [displayControlState, setDisplayControlState] =
-    useState<DisplayControlSettingInterface>(() => {
-      const displaySettingInfo = localStorage.getItem(
-        TradingViewSDKLocalstorageKey.displayControlSetting,
-      );
-      if (displaySettingInfo) {
-        return JSON.parse(displaySettingInfo) as DisplayControlSettingInterface;
-      }
-      return {
-        position: true,
-        buySell: true,
-        limitOrders: true,
-        stopOrders: true,
-        tpsl: true,
-        positionTpsl: true,
-        trailingStop: true,
-        liquidationPrice: true,
-      };
-    });
+    useState<DisplayControlSettingInterface>(getDisplayControlSetting);
 
   const [interval, setInterval] = useState<string>(() => {
     const lastUsedInterval = localStorage.getItem(
