@@ -37,7 +37,10 @@ import {
   type PredictionSettlement,
   type PredictionTrade,
 } from "../prediction.types";
-import { floorToTickDecimal } from "../predictionShared";
+import {
+  EMPTY_BOOK_FALLBACK_PRICE,
+  floorToTickDecimal,
+} from "../predictionShared";
 
 export { ISO_ORDER_FROZEN_BUFFER } from "../binary/binaryCollateral";
 
@@ -399,13 +402,17 @@ export const usePredictionPortfolio = ({
   const [doCancelOrder] = useMutation("/v1/order", "DELETE");
   const [doCancelAllOrders] = useMutation("/v1/orders", "DELETE");
 
-  /** Protection price for a MARKET (→ IOC) order in the outcome coordinate. */
+  /**
+   * IOC protection price in outcome coordinates. Live quotes include slippage
+   * and tick rounding; a missing executable side uses exactly 0.5. Both the
+   * preview and submission share this price, including on a one-sided book.
+   */
   const protectionPrice = useCallback(
     (outcome: PredictionOutcome, side: PredictionOrderSide) => {
       const slip = new Decimal(slippage || 0).div(100);
       if (outcome === "up") {
         if (side === "buy") {
-          if (bbo.bestAsk == null) return undefined;
+          if (bbo.bestAsk == null) return EMPTY_BOOK_FALLBACK_PRICE;
           return toProtectionPrice(
             new Decimal(bbo.bestAsk).mul(slip.add(1)).toNumber(),
             true,
@@ -413,7 +420,7 @@ export const usePredictionPortfolio = ({
             outcome,
           );
         }
-        if (bbo.bestBid == null) return undefined;
+        if (bbo.bestBid == null) return EMPTY_BOOK_FALLBACK_PRICE;
         return toProtectionPrice(
           new Decimal(bbo.bestBid).mul(new Decimal(1).sub(slip)).toNumber(),
           false,
@@ -423,7 +430,7 @@ export const usePredictionPortfolio = ({
       }
       // DOWN view mirrors the UP BBO: ask = 1 - bestBid, bid = 1 - bestAsk.
       if (side === "buy") {
-        if (bbo.bestBid == null) return undefined;
+        if (bbo.bestBid == null) return EMPTY_BOOK_FALLBACK_PRICE;
         return toProtectionPrice(
           new Decimal(1).sub(bbo.bestBid).mul(slip.add(1)).toNumber(),
           true,
@@ -431,7 +438,7 @@ export const usePredictionPortfolio = ({
           outcome,
         );
       }
-      if (bbo.bestAsk == null) return undefined;
+      if (bbo.bestAsk == null) return EMPTY_BOOK_FALLBACK_PRICE;
       return toProtectionPrice(
         new Decimal(1)
           .sub(bbo.bestAsk)
@@ -525,7 +532,8 @@ export const usePredictionPortfolio = ({
           symbol,
           side: upSide,
           // MARKET is expressed as an IOC carrying an explicit protection
-          // price (api-spec §5.2).
+          // price (api-spec §5.2). This also applies to One-tap and empty-book
+          // fallback orders: any unfilled quantity is immediately cancelled.
           order_type: type === "limit" ? OrderType.LIMIT : OrderType.IOC,
           order_price: upPrice.toFixed(
             new Decimal(config.quote_tick ?? 0.01).decimalPlaces(),
@@ -537,6 +545,8 @@ export const usePredictionPortfolio = ({
         if (response?.success === false) {
           throw new Error(response?.message ?? "order rejected");
         }
+        // REST success means accepted, not filled. Execution reports determine
+        // whether the IOC trades, partially trades, or is entirely cancelled.
         return true;
       } catch (error) {
         console.error("prediction order rejected", error);
@@ -780,9 +790,8 @@ export const usePredictionPortfolio = ({
   }, [doCancelAllOrders, isRegionRestricted, notify, openOrders]);
 
   /**
-   * Contracts a one-tap quote amount buys: PRD §6.2 sizes on the price the
-   * IOC actually carries (the protection price), floored to the base tick so
-   * the displayed payout matches the submitted quantity.
+   * Size on the submitted IOC protection price, including the empty-book
+   * fallback, floored to the base tick.
    */
   const oneTapPayout = useCallback(
     (outcome: PredictionOutcome, quoteAmount: number) => {
@@ -802,14 +811,13 @@ export const usePredictionPortfolio = ({
 
   /**
    * One-tap gate priced entirely on the submitted protection price: the
-   * user's slippage setting is already encoded in that price (PRD §6.4), so
-   * there is no separate mid-based slippage estimate here; book-depth gating
-   * composes in the script layer via estimateOrderSlippage.
+   * live protection prices already include the user's slippage setting
+   * (PRD §6.4), while an empty side uses the fixed fallback price. Book-depth
+   * gating composes in the script layer via estimateOrderSlippage.
    */
   const canPlaceOneTapOrder = useCallback(
     (outcome: PredictionOutcome, quoteAmount: number) => {
       const price = protectionPrice(outcome, "buy");
-      // No executable ask side → the IOC cannot fill; fail closed.
       if (price == null) return false;
       const quantity = oneTapPayout(outcome, quoteAmount);
       const requiredFrozen = estimateAdditionalFrozen(outcome, quantity, price);

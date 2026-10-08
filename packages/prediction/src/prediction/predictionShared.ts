@@ -9,6 +9,13 @@ import { Decimal } from "@orderly.network/utils";
 export const ROUND_INTERVAL_SECONDS = 300;
 
 /**
+ * Fixed outcome price for sizing and IOC submission when the corresponding
+ * book side is empty. This allows submission without a live quote; matching
+ * immediately cancels any unfilled quantity instead of leaving a resting order.
+ */
+export const EMPTY_BOOK_FALLBACK_PRICE = 0.5;
+
+/**
  * decimal.js-light has no floor(); step a value onto the tick grid by
  * rounding the tick count down on the integer grid. Number and string
  * wrappers share this core so sizing and submission agree exactly.

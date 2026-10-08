@@ -9,7 +9,7 @@ import {
   type PredictionOutcome,
   type PredictionPosition,
 } from "../prediction.types";
-import { floorToTick } from "../predictionShared";
+import { EMPTY_BOOK_FALLBACK_PRICE, floorToTick } from "../predictionShared";
 
 const isOnTick = (value: number, tick: number) =>
   Number.isFinite(value) &&
@@ -95,14 +95,13 @@ export const usePredictionOrderForm = ({
   }, [formMarketId, marketId]);
 
   const selectedMarketPrice = outcomePrices[selectedOutcome];
-  // MARKET validates, sizes and freezes on the protection price the IOC
-  // actually submits (PRD §6.2/§6.4); LIMIT keeps the user-picked price.
-  // Without an executable side the book cannot fill the order, so the
-  // missing price fails the canPlaceOrder gates below.
+  // MARKET uses the submitted IOC protection price, including the 0.5
+  // fallback on an empty executable side. LIMIT keeps the user-picked price.
+  // Max, percentage amounts and funds validation must use this same price.
   const rawSelectedPrice =
     orderType === "limit"
       ? Number(limitPrice) || 0
-      : (marketPrice(selectedOutcome, orderSide) ?? 0);
+      : (marketPrice(selectedOutcome, orderSide) ?? EMPTY_BOOK_FALLBACK_PRICE);
   const selectedPrice = Number.isFinite(rawSelectedPrice)
     ? rawSelectedPrice
     : 0;
