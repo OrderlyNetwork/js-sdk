@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/prediction",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Prediction market UI prototype for Orderly",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
