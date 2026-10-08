@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Ordem atualizada.",
   "prediction.message.orderFailed": "A ordem não foi aceita. Tente novamente.",
   "prediction.rounds.unavailable": "Não há rodadas de previsão disponíveis no momento. Tente novamente mais tarde.",
+  "prediction.rounds.emptyTitle": "Nenhuma rodada de previsão disponível",
+  "prediction.rounds.emptyDescription": "Não há rodadas para negociar no momento. Volte a verificar mais tarde.",
   "prediction.estimatedFee": "Taxa est.",
   "prediction.requiredFrozen": "Fundos a congelar",
   "prediction.notInSnapshot": "Esta rodada não está mais nos registros recentes.",

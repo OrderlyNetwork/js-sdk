@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Order diperbarui.",
   "prediction.message.orderFailed": "Pesanan tidak diterima. Silakan coba lagi.",
   "prediction.rounds.unavailable": "Saat ini tidak ada ronde prediksi yang tersedia. Silakan coba lagi nanti.",
+  "prediction.rounds.emptyTitle": "Tidak ada ronde prediksi yang tersedia",
+  "prediction.rounds.emptyDescription": "Saat ini tidak ada ronde untuk diperdagangkan. Silakan periksa kembali nanti.",
   "prediction.estimatedFee": "Perkiraan biaya",
   "prediction.requiredFrozen": "Dana yang dibekukan",
   "prediction.notInSnapshot": "Ronde ini sudah tidak ada dalam catatan terbaru.",

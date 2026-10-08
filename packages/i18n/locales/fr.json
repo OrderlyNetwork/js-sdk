@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Ordre mis à jour.",
   "prediction.message.orderFailed": "L'ordre n'a pas été accepté. Veuillez réessayer.",
   "prediction.rounds.unavailable": "Aucun tour de prédiction n'est disponible pour le moment. Veuillez réessayer plus tard.",
+  "prediction.rounds.emptyTitle": "Aucun tour de prédiction disponible",
+  "prediction.rounds.emptyDescription": "Il n'y a aucun tour à trader pour le moment. Veuillez revenir plus tard.",
   "prediction.estimatedFee": "Frais est.",
   "prediction.requiredFrozen": "Fonds à geler",
   "prediction.notInSnapshot": "Ce tour n'apparaît plus dans les enregistrements récents.",

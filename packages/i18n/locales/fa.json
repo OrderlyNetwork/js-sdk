@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "سفارش به‌روزرسانی شد.",
   "prediction.message.orderFailed": "سفارش پذیرفته نشد. لطفاً دوباره تلاش کنید.",
   "prediction.rounds.unavailable": "در حال حاضر هیچ دور پیش‌بینی در دسترس نیست. لطفاً بعداً دوباره تلاش کنید.",
+  "prediction.rounds.emptyTitle": "هیچ دور پیش‌بینی در دسترس نیست",
+  "prediction.rounds.emptyDescription": "در حال حاضر دوری برای معامله وجود ندارد. لطفاً بعداً دوباره بررسی کنید.",
   "prediction.estimatedFee": "کارمزد تخمینی",
   "prediction.requiredFrozen": "مبلغ مسدود موردنیاز",
   "prediction.notInSnapshot": "این دور دیگر در سوابق اخیر نیست.",

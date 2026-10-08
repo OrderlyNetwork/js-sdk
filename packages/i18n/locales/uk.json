@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Ордер оновлено.",
   "prediction.message.orderFailed": "Ордер не було прийнято. Спробуйте ще раз.",
   "prediction.rounds.unavailable": "Наразі немає доступних раундів прогнозу. Спробуйте пізніше.",
+  "prediction.rounds.emptyTitle": "Немає доступних раундів прогнозування",
+  "prediction.rounds.emptyDescription": "Наразі немає раундів для торгівлі. Будь ласка, перевірте пізніше.",
   "prediction.estimatedFee": "Орієнтовна комісія",
   "prediction.requiredFrozen": "Необхідно заморозити",
   "prediction.notInSnapshot": "Цей раунд більше не входить до останніх записів.",

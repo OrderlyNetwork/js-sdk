@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Ордер обновлён.",
   "prediction.message.orderFailed": "Ордер не был принят. Повторите попытку.",
   "prediction.rounds.unavailable": "Сейчас нет доступных раундов прогноза. Повторите попытку позже.",
+  "prediction.rounds.emptyTitle": "Нет доступных раундов прогнозирования",
+  "prediction.rounds.emptyDescription": "Сейчас нет раундов для торговли. Пожалуйста, зайдите позже.",
   "prediction.estimatedFee": "Примерная комиссия",
   "prediction.requiredFrozen": "Требуется заморозить",
   "prediction.notInSnapshot": "Этот раунд больше не входит в последние записи.",

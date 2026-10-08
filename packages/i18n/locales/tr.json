@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Emir güncellendi.",
   "prediction.message.orderFailed": "Emir kabul edilmedi. Lütfen tekrar deneyin.",
   "prediction.rounds.unavailable": "Şu anda kullanılabilir tahmin turu yok. Lütfen daha sonra tekrar deneyin.",
+  "prediction.rounds.emptyTitle": "Kullanılabilir tahmin turu yok",
+  "prediction.rounds.emptyDescription": "Şu anda işlem yapılacak tur bulunmuyor. Lütfen daha sonra tekrar kontrol edin.",
   "prediction.estimatedFee": "Tahmini ücret",
   "prediction.requiredFrozen": "Gerekli dondurulan tutar",
   "prediction.notInSnapshot": "Bu tur artık son kayıtlarda yer almıyor.",

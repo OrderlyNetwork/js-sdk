@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "주문이 업데이트되었습니다.",
   "prediction.message.orderFailed": "주문이 접수되지 않았습니다. 다시 시도해 주세요.",
   "prediction.rounds.unavailable": "현재 이용 가능한 예측 라운드가 없습니다. 잠시 후 다시 시도해 주세요.",
+  "prediction.rounds.emptyTitle": "이용 가능한 예측 라운드가 없습니다",
+  "prediction.rounds.emptyDescription": "현재 거래할 라운드가 없습니다. 잠시 후 다시 확인해 주세요.",
   "prediction.estimatedFee": "예상 수수료",
   "prediction.requiredFrozen": "필요 고정 금액",
   "prediction.notInSnapshot": "이 라운드는 최근 기록에 더 이상 없습니다.",

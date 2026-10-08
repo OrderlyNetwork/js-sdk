@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "تم تحديث الأمر.",
   "prediction.message.orderFailed": "لم يتم قبول الطلب. يرجى المحاولة مرة أخرى.",
   "prediction.rounds.unavailable": "لا توجد جولات تنبؤ متاحة حاليًا. يرجى المحاولة لاحقًا.",
+  "prediction.rounds.emptyTitle": "لا توجد جولات تنبؤ متاحة",
+  "prediction.rounds.emptyDescription": "لا توجد جولات للتداول الآن. يرجى التحقق مرة أخرى لاحقًا.",
   "prediction.estimatedFee": "رسوم تقديرية",
   "prediction.requiredFrozen": "المجمّدة المطلوبة",
   "prediction.notInSnapshot": "هذه الجولة لم تعد ضمن السجلات الأخيرة.",

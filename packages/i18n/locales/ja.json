@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "注文が更新されました。",
   "prediction.message.orderFailed": "注文は受け付けられませんでした。もう一度お試しください。",
   "prediction.rounds.unavailable": "現在利用できる予測ラウンドがありません。しばらくしてからもう一度お試しください。",
+  "prediction.rounds.emptyTitle": "予測ラウンドはありません",
+  "prediction.rounds.emptyDescription": "現在取引できるラウンドがありません。後ほど再度ご確認ください。",
   "prediction.estimatedFee": "推定手数料",
   "prediction.requiredFrozen": "必要凍結額",
   "prediction.notInSnapshot": "このラウンドは最新の記録には含まれていません。",

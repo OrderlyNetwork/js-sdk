@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Orden actualizada.",
   "prediction.message.orderFailed": "La orden no fue aceptada. Inténtalo de nuevo.",
   "prediction.rounds.unavailable": "No hay rondas de predicción disponibles en este momento. Inténtalo de nuevo más tarde.",
+  "prediction.rounds.emptyTitle": "No hay rondas de predicción disponibles",
+  "prediction.rounds.emptyDescription": "No hay rondas para operar en este momento. Vuelve a consultar más tarde.",
   "prediction.estimatedFee": "Comisión est.",
   "prediction.requiredFrozen": "Fondos a congelar",
   "prediction.notInSnapshot": "Esta ronda ya no está en los registros recientes.",

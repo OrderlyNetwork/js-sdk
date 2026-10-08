@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Đã cập nhật lệnh.",
   "prediction.message.orderFailed": "Lệnh chưa được chấp nhận. Vui lòng thử lại.",
   "prediction.rounds.unavailable": "Hiện không có vòng dự đoán nào khả dụng. Vui lòng thử lại sau.",
+  "prediction.rounds.emptyTitle": "Không có vòng dự đoán nào",
+  "prediction.rounds.emptyDescription": "Hiện không có vòng nào để giao dịch. Vui lòng quay lại sau.",
   "prediction.estimatedFee": "Phí ước tính",
   "prediction.requiredFrozen": "Số tiền cần đóng băng",
   "prediction.notInSnapshot": "Vòng này không còn trong các bản ghi gần đây.",

@@ -120,6 +120,9 @@ export const prediction = {
   "prediction.message.orderFailed": "Order was not accepted. Please try again.",
   "prediction.rounds.unavailable":
     "No prediction rounds are available right now. Please try again later.",
+  "prediction.rounds.emptyTitle": "No prediction rounds available",
+  "prediction.rounds.emptyDescription":
+    "There are no rounds to trade right now. Please check back later.",
   "prediction.estimatedFee": "Est. fee",
   "prediction.requiredFrozen": "Required frozen",
   "prediction.notInSnapshot": "This round is no longer in the recent records.",

@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Ordine aggiornato.",
   "prediction.message.orderFailed": "L'ordine non è stato accettato. Riprova.",
   "prediction.rounds.unavailable": "Al momento non ci sono round di previsione disponibili. Riprova più tardi.",
+  "prediction.rounds.emptyTitle": "Nessun round di previsione disponibile",
+  "prediction.rounds.emptyDescription": "Al momento non ci sono round su cui fare trading. Ricontrolla più tardi.",
   "prediction.estimatedFee": "Commissione stimata",
   "prediction.requiredFrozen": "Fondi da congelare",
   "prediction.notInSnapshot": "Questo round non è più presente nei record recenti.",

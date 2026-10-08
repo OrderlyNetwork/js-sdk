@@ -217,16 +217,28 @@ export const Prediction: React.FC<
     return (
       <main
         id="oui-prediction-page"
-        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-flex-col oui-items-center oui-justify-center oui-gap-6 oui-bg-base-10 oui-p-3 lg:oui-p-4"
+        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-flex-col oui-gap-3 oui-bg-base-10 oui-p-3 lg:oui-p-4"
       >
-        {marketSelector}
-        {state.isRoundsLoading || isSwitchingMarket ? (
-          <Spinner size="lg" color="primary" />
-        ) : (
-          <p className="oui-max-w-72 oui-text-center oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.rounds.unavailable")}
-          </p>
-        )}
+        <header className="oui-flex oui-items-center oui-rounded-2xl oui-bg-base-9 oui-p-4">
+          {marketSelector}
+        </header>
+        <div
+          role="status"
+          className="oui-prediction-emptyState oui-flex oui-min-h-[320px] oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-rounded-2xl oui-bg-base-9 oui-px-6 oui-py-12 sm:oui-min-h-[400px]"
+        >
+          {state.isRoundsLoading || isSwitchingMarket ? (
+            <Spinner size="lg" color="primary" />
+          ) : (
+            <>
+              <h2 className="oui-text-center oui-text-base oui-font-semibold oui-text-base-contrast-80 sm:oui-text-lg">
+                {t("prediction.rounds.emptyTitle")}
+              </h2>
+              <p className="oui-mt-2 oui-max-w-72 oui-text-center oui-text-sm oui-font-normal oui-leading-relaxed oui-text-base-contrast-54">
+                {t("prediction.rounds.emptyDescription")}
+              </p>
+            </>
+          )}
+        </div>
       </main>
     );
   }

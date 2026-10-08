@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "订单已更新。",
   "prediction.message.orderFailed": "订单未通过，请重试。",
   "prediction.rounds.unavailable": "当前没有可用的预测轮次，请稍后再试。",
+  "prediction.rounds.emptyTitle": "暂无可用的预测轮次",
+  "prediction.rounds.emptyDescription": "当前没有可交易的轮次，请稍后再来查看。",
   "prediction.estimatedFee": "预估费用",
   "prediction.requiredFrozen": "所需冻结",
   "prediction.notInSnapshot": "该轮次已不在最近记录中。",

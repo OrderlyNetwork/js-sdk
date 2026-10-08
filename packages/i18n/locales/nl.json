@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Order bijgewerkt.",
   "prediction.message.orderFailed": "Order is niet geaccepteerd. Probeer het opnieuw.",
   "prediction.rounds.unavailable": "Er zijn momenteel geen voorspellingsronden beschikbaar. Probeer het later opnieuw.",
+  "prediction.rounds.emptyTitle": "Geen voorspellingsronden beschikbaar",
+  "prediction.rounds.emptyDescription": "Er zijn momenteel geen ronden om te handelen. Kom later terug.",
   "prediction.estimatedFee": "Geschatte kosten",
   "prediction.requiredFrozen": "Vereiste bevroren middelen",
   "prediction.notInSnapshot": "Deze ronde staat niet langer in de recente records.",

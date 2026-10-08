@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Order aktualisiert.",
   "prediction.message.orderFailed": "Order wurde nicht angenommen. Bitte versuchen Sie es erneut.",
   "prediction.rounds.unavailable": "Derzeit sind keine Vorhersagerunden verfügbar. Bitte versuchen Sie es später erneut.",
+  "prediction.rounds.emptyTitle": "Keine Prognoserunden verfügbar",
+  "prediction.rounds.emptyDescription": "Derzeit gibt es keine Runden zum Handeln. Bitte schauen Sie später erneut vorbei.",
   "prediction.estimatedFee": "Geschätzte Gebühr",
   "prediction.requiredFrozen": "Erforderliche Sperrsumme",
   "prediction.notInSnapshot": "Diese Runde ist nicht mehr in den letzten Datensätzen enthalten.",

@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "הפקודה עודכנה.",
   "prediction.message.orderFailed": "ההזמנה לא התקבלה. נסה שוב.",
   "prediction.rounds.unavailable": "אין כרגע סבבי חיזוי זמינים. נסה שוב מאוחר יותר.",
+  "prediction.rounds.emptyTitle": "אין סבבי חיזוי זמינים",
+  "prediction.rounds.emptyDescription": "אין כרגע סבבים למסחר. נא לבדוק שוב מאוחר יותר.",
   "prediction.estimatedFee": "עמלה משוערת",
   "prediction.requiredFrozen": "הקפאה נדרשת",
   "prediction.notInSnapshot": "הסבב הזה כבר לא ברשומות האחרונות.",

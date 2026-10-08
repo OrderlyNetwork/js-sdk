@@ -393,6 +393,8 @@
   "prediction.message.orderUpdated": "Zlecenie zaktualizowane.",
   "prediction.message.orderFailed": "Zlecenie nie zostało zaakceptowane. Spróbuj ponownie.",
   "prediction.rounds.unavailable": "Obecnie brak dostępnych rund przewidywań. Spróbuj ponownie później.",
+  "prediction.rounds.emptyTitle": "Brak dostępnych rund przewidywań",
+  "prediction.rounds.emptyDescription": "Obecnie nie ma rund do handlu. Sprawdź ponownie później.",
   "prediction.estimatedFee": "Szac. opłata",
   "prediction.requiredFrozen": "Wymagane zamrożenie",
   "prediction.notInSnapshot": "Ta runda nie jest już w ostatnich zapisach.",
