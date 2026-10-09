@@ -10,7 +10,8 @@
     "build": "tsup && pnpm run build:css",
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
     "lint": "eslint src --max-warnings=0",
-    "test": "find src -name '*.test.ts' -print0 | xargs -0 tsx --test"
+    "test": "find src -name '*.test.ts' -print0 | xargs -0 tsx --test",
+    "typecheck": "tsc --noEmit -p tsconfig.build.json 2>&1 | grep '^src/' && exit 1 || exit 0"
   },
   "keywords": [
     "Orderly",

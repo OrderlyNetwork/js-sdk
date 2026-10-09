@@ -21,14 +21,14 @@ import {
 } from "@orderly.network/ui";
 import { PredictionAccountPanel } from "./dataPanels/predictionAccountPanel.widget";
 import { usePredictionPanelMarketView } from "./hooks/usePredictionPanelMarketView";
-import type { PredictionState } from "./prediction.script";
-import { PriceChart } from "./predictionChart.ui";
-import { formatPredictionMarketName } from "./predictionMarketPanel.ui";
 import {
   PredictionOrderBook,
   RoundOrderStatusCard,
   TradePanel,
-} from "./predictionOrderEntry.ui";
+} from "./orderEntry";
+import type { PredictionState } from "./prediction.script";
+import { PriceChart } from "./predictionChart.ui";
+import { formatPredictionMarketName } from "./predictionMarketPanel.ui";
 import { formatPercent, usePredictionFormatters } from "./predictionShared";
 import { RoundResultWidget } from "./roundResult";
 import { usePredictionMarketsDropdown } from "./usePredictionMarketsDropdown";

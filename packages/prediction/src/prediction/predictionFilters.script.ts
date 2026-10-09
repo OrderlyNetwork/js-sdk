@@ -21,13 +21,14 @@ export const usePredictionFilters = (withDate = false) => {
     setDays(value);
     setDateRange(predictionDateRange(value));
   };
-  const onFilter = ({ name, value }: { name: string; value: any }) => {
-    if (name === "side") setSide(value);
-    if (name === "outcome") setOutcome(value);
-    if (name === "status") setStatus(value);
-    if (name === "dateRange") {
-      const from = value?.from ? new Date(value.from) : undefined;
-      const to = value?.to ? new Date(value.to) : undefined;
+  const onFilter = ({ name, value }: { name: string; value: unknown }) => {
+    if (name === "side" && typeof value === "string") setSide(value);
+    if (name === "outcome" && typeof value === "string") setOutcome(value);
+    if (name === "status" && typeof value === "string") setStatus(value);
+    if (name === "dateRange" && value !== null && typeof value === "object") {
+      const range = value as { from?: Date | string; to?: Date | string };
+      const from = range.from ? new Date(range.from) : undefined;
+      const to = range.to ? new Date(range.to) : undefined;
       from?.setHours(0, 0, 0, 0);
       to?.setHours(23, 59, 59, 999);
       setDateRange({ from, to });

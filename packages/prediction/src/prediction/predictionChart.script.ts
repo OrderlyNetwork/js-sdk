@@ -20,3 +20,6 @@ export const CANDLE_TICK_INTERVAL_MS = 7 * 60_000;
 export type RoundOutcomeLookup = (
   round: number,
 ) => PredictionOutcome | undefined;
+
+/** Chart rendering mode toggled by the RoundNavigator toolbar. */
+export type PredictionChartMode = "price" | "candles";

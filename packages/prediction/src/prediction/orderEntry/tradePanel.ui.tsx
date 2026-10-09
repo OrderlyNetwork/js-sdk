@@ -1,15 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation, type LocaleMessages } from "@orderly.network/i18n";
 import {
-  MobileOrderBookLadder,
-  OrderBookLadder,
-} from "@orderly.network/trading";
-import {
   AddCircleIcon,
   Button,
-  CaretDownIcon,
-  CaretUpIcon,
   CloseIcon,
   cn,
   EditIcon,
@@ -20,332 +14,32 @@ import {
   PopoverRoot,
   PopoverTrigger,
   Select,
-  Spinner,
   Text,
   Tips,
   Tooltip,
   useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { binaryOutcomeMarkPrice } from "./binary/binaryMarkPrice";
-import { PercentageControls } from "./orderEntry/form";
-import { BinarySlippage } from "./orderEntry/form/binarySlippage.ui";
-import type { PredictionOutcome, PredictionState } from "./prediction.script";
+import type { PredictionOutcome, PredictionState } from "../prediction.script";
 import {
-  accumulateOrderBookLevels,
   formatContractPrice,
   usePredictionFormatters,
-} from "./predictionShared";
+} from "../predictionShared";
+import { PercentageControls } from "./form";
+import { BinarySlippage } from "./form/binarySlippage.ui";
+import {
+  DEFAULT_ONE_TAP_AMOUNTS,
+  alignOneTapAmounts,
+  resolveOneTapAmounts,
+  validOneTapAmounts,
+  type OneTapAmounts,
+} from "./oneTapAmounts";
 
 type TradeMode = "limit" | "market" | "oneTap";
-type OneTapAmounts = Record<PredictionOutcome, number[]>;
-
-const DEFAULT_ONE_TAP_AMOUNTS: OneTapAmounts = {
-  up: [10],
-  down: [10],
-};
-const MIN_ONE_TAP_AMOUNT = 1;
-const MAX_ONE_TAP_AMOUNT = 99999.99;
-const PREVIOUS_ONE_TAP_DEFAULT = [10, 50, 100];
-const LEGACY_ONE_TAP_DEFAULT = [10, 100, 1000];
-
-const validOneTapAmounts = (amounts: unknown): amounts is number[] =>
-  Array.isArray(amounts) &&
-  amounts.length >= 1 &&
-  amounts.length <= 3 &&
-  amounts.every(
-    (amount: number) =>
-      Number.isFinite(amount) &&
-      amount >= MIN_ONE_TAP_AMOUNT &&
-      amount <= MAX_ONE_TAP_AMOUNT,
-  );
-
-const matchesOneTapPreset = (amounts: number[], preset: number[]) =>
-  amounts.length === preset.length &&
-  amounts.every((amount, index) => amount === preset[index]);
-
-const resolveOneTapAmounts = (
-  stored: OneTapAmounts | number[],
-  outcome: PredictionOutcome,
-): number[] => {
-  // Only the legacy flat-array storage ever held the factory presets; values
-  // saved through the editor keep the object shape and must survive reload
-  // even when they happen to match a former default.
-  if (Array.isArray(stored)) {
-    return validOneTapAmounts(stored) &&
-      !matchesOneTapPreset(stored, PREVIOUS_ONE_TAP_DEFAULT) &&
-      !matchesOneTapPreset(stored, LEGACY_ONE_TAP_DEFAULT)
-      ? stored
-      : DEFAULT_ONE_TAP_AMOUNTS[outcome];
-  }
-  return validOneTapAmounts(stored?.[outcome])
-    ? stored[outcome]
-    : DEFAULT_ONE_TAP_AMOUNTS[outcome];
-};
-
-const alignOneTapAmounts = (up: number[], down: number[]): OneTapAmounts => {
-  const rowCount = Math.max(up.length, down.length);
-  const fillRows = (amounts: number[], opposite: number[]) => {
-    const aligned = [...amounts];
-    while (aligned.length < rowCount) {
-      const index = aligned.length;
-      aligned.push(opposite[index] ?? aligned[index - 1] ?? 10);
-    }
-    return aligned;
-  };
-  return {
-    up: fillRows(up, down),
-    down: fillRows(down, up),
-  };
-};
-
-const predictionSymbolInfo = (
-  base: string,
-  quote: string,
-  baseTick: number,
-  quoteTick: number,
-) => ({
-  base_dp: new Decimal(baseTick).decimalPlaces(),
-  quote_dp: new Decimal(quoteTick).decimalPlaces(),
-  base_tick: baseTick,
-  base,
-  quote,
-});
 
 /** Render a bps coefficient as a percent; missing config is never "free". */
 const formatFeeBps = (bps: number | undefined) =>
   bps == null ? "--%" : `${(bps / 100).toFixed(2)}%`;
-
-export const PredictionOrderBook: React.FC<
-  Pick<
-    PredictionState,
-    | "orderBook"
-    | "selectedOutcome"
-    | "markPrice"
-    | "setLimitPrice"
-    | "setOrderType"
-    | "isRoundTradable"
-    | "roundPhase"
-    | "selectedRow"
-    | "market"
-  >
-> = ({
-  orderBook,
-  selectedOutcome,
-  markPrice,
-  setLimitPrice,
-  setOrderType,
-  isRoundTradable,
-  roundPhase,
-  selectedRow,
-  market,
-}) => {
-  const { t } = useTranslation();
-  const quoteTick = selectedRow?.quote_tick ?? 0.01;
-  const baseTick = selectedRow?.base_tick ?? 0.01;
-  const quote = market?.quote ?? "USDC";
-  const selectPrice = (price: number) => {
-    setOrderType("limit");
-    setLimitPrice(price.toFixed(new Decimal(quoteTick).decimalPlaces()));
-  };
-
-  const asks = useMemo(
-    // Asks render best-last, so cumulative totals grow from the last level.
-    () => accumulateOrderBookLevels(orderBook.asks, "backward"),
-    [orderBook.asks],
-  );
-
-  const bids = useMemo(
-    () => accumulateOrderBookLevels(orderBook.bids, "forward"),
-    [orderBook.bids],
-  );
-
-  const isPastRound =
-    roundPhase === "closed" ||
-    roundPhase === "resolvedUp" ||
-    roundPhase === "resolvedDown";
-  const emptyLevels = useMemo(
-    () =>
-      Array.from({ length: 7 }, () => [
-        Number.NaN,
-        Number.NaN,
-        Number.NaN,
-        Number.NaN,
-      ]),
-    [],
-  );
-  const displayedAsks = isPastRound ? emptyLevels : asks;
-  const displayedBids = isPastRound ? emptyLevels : bids;
-  const displayedPrice = isPastRound
-    ? undefined
-    : binaryOutcomeMarkPrice(markPrice, selectedOutcome);
-  const base = selectedOutcome.toUpperCase();
-  const { isMobile } = useScreen();
-
-  // Shared by the desktop and mobile ladders; the mobile variant swaps the
-  // three-column header for the perps mobile two-column picker header.
-  const ladderProps = {
-    asks: displayedAsks,
-    bids: displayedBids,
-    middlePriceContent: (
-      <Tooltip content={t("prediction.markPrice.tooltip")}>
-        <span className="oui-prediction-orderBook-markPrice oui-cursor-pointer oui-text-base oui-text-base-contrast oui-underline oui-decoration-dashed oui-underline-offset-4">
-          {displayedPrice == null ? (
-            "--"
-          ) : (
-            <Text.numeral
-              dp={new Decimal(quoteTick).decimalPlaces()}
-              intensity={98}
-            >
-              {displayedPrice}
-            </Text.numeral>
-          )}
-        </span>
-      </Tooltip>
-    ),
-    markPrice: displayedPrice ?? Number.NaN,
-    lastPrice: [Number.NaN, Number.NaN],
-    depths: [String(quoteTick)],
-    base,
-    quote,
-    symbolInfo: predictionSymbolInfo(base, quote, baseTick, quoteTick),
-    onItemClick: (item: number[]) => selectPrice(item[0]),
-    showMarkPrice: false,
-    cellHeight: 20,
-  };
-
-  return (
-    <section
-      className={cn(
-        "oui-prediction-orderBook oui-flex oui-h-full oui-min-h-[300px] oui-flex-col oui-overflow-hidden oui-rounded-xl oui-bg-base-9 xl:oui-min-h-[420px]",
-        !isRoundTradable && "oui-pointer-events-none",
-      )}
-    >
-      <div className="oui-flex oui-items-center oui-px-3 oui-pt-3">
-        <span className="oui-text-sm oui-font-semibold oui-text-base-contrast">
-          {t("prediction.orderBook")}
-        </span>
-      </div>
-      <div className="oui-min-h-0 oui-flex-1 oui-pb-3">
-        {isMobile ? (
-          <MobileOrderBookLadder {...ladderProps} />
-        ) : (
-          <OrderBookLadder {...ladderProps} />
-        )}
-      </div>
-    </section>
-  );
-};
-
-export const RoundOrderStatusCard: React.FC<
-  Pick<PredictionState, "round" | "roundPhase" | "isRoundInSnapshot"> & {
-    restricted?: boolean;
-    marketName: string;
-    intervalSeconds: number;
-  }
-> = ({
-  round,
-  roundPhase,
-  isRoundInSnapshot,
-  restricted,
-  marketName,
-  intervalSeconds,
-}) => {
-  const { t } = useTranslation();
-  const { formatRoundWindow } = usePredictionFormatters();
-  // "closed" covers both waiting-for-result and out-of-snapshot rounds —
-  // deriveBinaryPhase never produces any other pre-resolution terminal.
-  const isResolving = roundPhase === "closed";
-  const resolvedOutcome =
-    roundPhase === "resolvedUp"
-      ? "up"
-      : roundPhase === "resolvedDown"
-        ? "down"
-        : null;
-
-  return (
-    <section
-      className={cn(
-        "oui-flex oui-h-full oui-min-h-[360px] oui-flex-col oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9 oui-p-6 oui-text-center md:oui-h-auto",
-        restricted && "oui-flex-1 2xl:oui-flex-none",
-      )}
-    >
-      {restricted && (
-        <div role="status">
-          <h2 className="oui-text-lg oui-font-semibold oui-text-base-contrast">
-            {t("prediction.region.restrictedTitle")}
-          </h2>
-          <p className="oui-mt-4 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {t("prediction.region.restrictedDescription")}
-          </p>
-        </div>
-      )}
-      {!restricted && isResolving && (
-        <>
-          {isRoundInSnapshot ? (
-            <>
-              <Spinner size="lg" color="primary" />
-              <h2 className="oui-mt-6 oui-text-lg oui-font-semibold oui-text-base-contrast">
-                {t("prediction.resolution.determiningWinner")}
-              </h2>
-              <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-                {marketName} · {formatRoundWindow(round, intervalSeconds)}
-              </p>
-              <p className="oui-mt-5 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-                {t("prediction.resolution.pendingDescription")}
-              </p>
-            </>
-          ) : (
-            // Round outside the 300-row snapshot: per the API spec this means
-            // "not queryable right now", not that settlement finished.
-            <div role="status">
-              <h2 className="oui-text-lg oui-font-semibold oui-text-base-contrast">
-                {marketName}
-              </h2>
-              <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-                {t("prediction.notInSnapshot")}
-              </p>
-            </div>
-          )}
-        </>
-      )}
-
-      {!restricted && resolvedOutcome && (
-        <>
-          <div
-            className={cn(
-              "oui-flex oui-size-16 oui-items-center oui-justify-center oui-rounded-full",
-              resolvedOutcome === "up"
-                ? "oui-bg-trade-profit/15 oui-text-trade-profit"
-                : "oui-bg-trade-loss/15 oui-text-trade-loss",
-            )}
-          >
-            {resolvedOutcome === "up" ? (
-              <CaretUpIcon size={32} color="inherit" opacity={1} />
-            ) : (
-              <CaretDownIcon size={32} color="inherit" opacity={1} />
-            )}
-          </div>
-          <h2
-            className={cn(
-              "oui-mt-5 oui-text-lg oui-font-semibold",
-              resolvedOutcome === "up"
-                ? "oui-text-trade-profit"
-                : "oui-text-trade-loss",
-            )}
-          >
-            {t("prediction.resolution.outcome", {
-              outcome: t(`prediction.${resolvedOutcome}`),
-            })}
-          </h2>
-          <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
-            {marketName} · {formatRoundWindow(round, intervalSeconds)}
-          </p>
-        </>
-      )}
-    </section>
-  );
-};
 
 const PredictionOrderInput: React.FC<{
   id: string;

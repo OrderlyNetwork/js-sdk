@@ -6,8 +6,8 @@ import {
   registerSimpleDialog,
   registerSimpleSheet,
 } from "@orderly.network/ui";
+import { RoundOrderStatusCard } from "../orderEntry";
 import type { PredictionState } from "../prediction.script";
-import { RoundOrderStatusCard } from "../predictionOrderEntry.ui";
 import {
   BinaryEvidenceDialogId,
   BinaryEvidenceSheetId,
