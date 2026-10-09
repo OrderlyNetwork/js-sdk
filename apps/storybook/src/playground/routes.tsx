@@ -73,9 +73,6 @@ const PortfolioPage = lazyImportPage(() => import("./pages/portfolio/page"));
 const PositionsPage = lazyImportPage(
   () => import("./pages/portfolio/positions/page"),
 );
-const PredictionsPage = lazyImportPage(
-  () => import("./pages/portfolio/predictions/page"),
-);
 const SettingsPage = lazyImportPage(
   () => import("./pages/portfolio/setting/page"),
 );
@@ -183,10 +180,6 @@ const AppRoute: React.FC = () => {
         {
           path: "positions",
           element: <PositionsPage />,
-        },
-        {
-          path: "predictions",
-          element: <PredictionsPage />,
         },
         {
           path: "orders",

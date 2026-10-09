@@ -19,7 +19,6 @@ export type {
   ProductOrderInstrument,
   BinaryCancelAllOptions,
 } from "./prediction/dataPanels/productOrderCancellation";
-export * as PredictionPortfolioModule from "./portfolio";
 
 export {
   normalizeBinaryHistory,

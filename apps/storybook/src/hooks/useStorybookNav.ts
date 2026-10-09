@@ -21,7 +21,6 @@ const routeMap = {
   [PortfolioLeftSidebarPath.FeeTier]: "Package/portfolio/FeeTier",
   [PortfolioLeftSidebarPath.ApiKey]: "Package/portfolio/ApiKey",
   [PortfolioLeftSidebarPath.Positions]: "Package/portfolio/Positions",
-  [PortfolioLeftSidebarPath.Predictions]: "Package/portfolio/Predictions",
   [PortfolioLeftSidebarPath.Orders]: "Package/portfolio/Orders",
   [PortfolioLeftSidebarPath.Assets]: "Package/portfolio/Assets",
   [PortfolioLeftSidebarPath.Setting]: "Package/portfolio/Setting",
