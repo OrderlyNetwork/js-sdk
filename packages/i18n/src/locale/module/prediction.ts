@@ -1,13 +1,4 @@
 export const prediction = {
-  "prediction.cancelAll.all.description":
-    "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
-  "prediction.cancelAll.perps.description":
-    "Cancel all PERP pending orders in your account, including orders hidden by display filters?",
-  "prediction.cancelAll.binary.description":
-    "Cancel all cancellable Binary pending orders in your account, including orders hidden by display filters?",
-  "prediction.cancelAll.scoped.description":
-    "Cancel all cancellable pending orders in the selected scope ({{scope}}), including orders hidden by display filters?",
-
   "prediction.title": "Prediction",
   "prediction.description": "Trade outcomes with real-time odds",
   "prediction.prototype": "Prototype",
@@ -21,6 +12,14 @@ export const prediction = {
   "prediction.up": "Up",
   "prediction.filter.allInstruments": "All instruments",
   "prediction.filter.perps": "Perps",
+  "prediction.cancelAll.all.description":
+    "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.perps.description":
+    "Cancel all PERP pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.binary.description":
+    "Cancel all cancellable Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.scoped.description":
+    "Cancel all cancellable pending orders in the selected scope ({{scope}}), including orders hidden by display filters?",
   "prediction.region.restrictedTitle": "Region restricted",
   "prediction.region.restrictedDescription":
     "Prediction trading is not available in your region.",
@@ -29,6 +28,14 @@ export const prediction = {
   "prediction.down": "Down",
   "prediction.trade": "Trade",
   "prediction.oneTap": "One-tap",
+  "prediction.slippageTicks": "Slippage (ticks)",
+  "prediction.slippageTicksHint":
+    "Maximum price movement: 0–10 ticks. One tick is the market price increment.",
+  "prediction.invalidSlippageTicks": "Enter a whole number from 0 to 10.",
+  "prediction.message.batchResult":
+    "Orders accepted: {{accepted}}; failed: {{failed}}; unconfirmed: {{unknown}}; not sent: {{unsent}}.",
+  "prediction.message.acceptanceUnknown":
+    "Order acceptance is unconfirmed. Check your orders before placing another order.",
   "prediction.oneTapBuy": "One-tap buy",
   "prediction.oneTapAddPreset": "Add preset",
   "prediction.oneTapRemoveRow": "Remove row",
@@ -49,6 +56,8 @@ export const prediction = {
   "prediction.roundChangeHint":
     "BTC index price change from the round opening price.",
   "prediction.marketPrice": "Market price",
+  "prediction.markPrice.tooltip":
+    "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0 or 1. DOWN displays 1 minus the UP mark price.",
   "prediction.orderBook": "Order book",
   "prediction.contracts": "Contracts",
   "prediction.outcome": "Outcome",
@@ -86,12 +95,15 @@ export const prediction = {
   "prediction.rounds.past": "Past",
   "prediction.rounds.today": "Today",
   "prediction.rounds.more": "More",
+  "prediction.rounds.previousPage": "Previous",
+  "prediction.rounds.nextPage": "Next",
   "prediction.rounds.ended": "Ended",
   "prediction.rounds.live": "Live",
   "prediction.rounds.upcoming": "Upcoming",
   "prediction.rounds.resolutionTime": "Resolution time",
   "prediction.rounds.endsIn": "Ends in",
   "prediction.rounds.startsIn": "Starts in",
+  "prediction.rounds.notOpenYet": "This round has not opened for trading yet.",
   "prediction.rounds.goToLiveMarket": "Go to live market",
   "prediction.restrictedRegion.description":
     "You are accessing this market from an IP address associated with a restricted country.",
@@ -104,7 +116,26 @@ export const prediction = {
   "prediction.phase.void": "Void",
   "prediction.resolution.determiningWinner": "Hold on, determining winner...",
   "prediction.resolution.pendingDescription":
-    "This market has ended. Final resolution will appear automatically as soon as it is available on-chain.",
+    "This market has ended. The final outcome will appear automatically when it is published.",
+  "prediction.resolution.fundsProcessing": "Funds are being credited",
+  "prediction.resolution.segmentComplete": "Position segment settled",
+  "prediction.resolution.settlementDetails": "Settlement details",
+  "prediction.resolution.priceEvidence": "Price evidence",
+  "prediction.resolution.evidenceUnavailable":
+    "Price evidence is not available yet.",
+  "prediction.resolution.historyUnavailable":
+    "Unable to load personal settlement records.",
+  "prediction.resolution.historyLoading":
+    "Loading personal settlement records…",
+  "prediction.resolution.dataIncomplete": "Settlement data is incomplete.",
+  "prediction.resolution.investment": "Investment",
+  "prediction.resolution.indexSymbol": "Index price symbol",
+  "prediction.resolution.source": "Source",
+  "prediction.resolution.retry": "Retry",
+  "prediction.resolution.nextRound": "Go to next round",
+  "prediction.strikePending": "Strike has not been determined yet.",
+  "prediction.rounds.startTime": "Start time",
+  "prediction.rounds.endTime": "End time",
   "prediction.resolution.outcome": "Outcome: {{outcome}}",
   "prediction.resolution.voided": "Round voided",
   "prediction.resolution.voidDescription":
@@ -178,9 +209,15 @@ export const prediction = {
   "prediction.payout": "Payout",
   "prediction.status.filled": "Filled",
   "prediction.status.cancelled": "Cancelled",
-  "prediction.message.insufficientBalance": "Insufficient simulated balance.",
+  "prediction.message.insufficientBalance": "Insufficient available balance.",
   "prediction.message.insufficientContracts":
     "You do not hold enough contracts to sell.",
+  "prediction.message.noExecutableQuotes":
+    "No executable quotes right now. Please try again in a moment.",
+  "prediction.message.orderNotFound": "Order not found or no longer active.",
+  "prediction.message.roundNotTradable": "This round is no longer tradable.",
+  "prediction.message.regionRestricted":
+    "Trading is not available in your region.",
   "prediction.message.sellFailed": "Unable to sell position.",
   "prediction.message.slippageExceeded":
     "Estimated slippage exceeds your max slippage.",
