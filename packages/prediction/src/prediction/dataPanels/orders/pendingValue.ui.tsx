@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
@@ -6,31 +6,36 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-  Text,
 } from "@orderly.network/ui";
+import { binaryOrderDisplayPrice } from "../../binary/binaryOrderDisplay";
 import { TableNumber } from "../../cells";
-import type { PredictionState } from "../../prediction.script";
+import type {
+  PredictionAccountActions,
+  PredictionOpenOrder,
+} from "../../prediction.types";
 
 export const PendingValue = ({
   state,
   order,
   field,
 }: {
-  state: PredictionState;
-  order: PredictionState["openOrders"][number];
+  state: PredictionAccountActions & { isRegionRestricted: boolean };
+  order: PredictionOpenOrder;
   field: "price" | "quantity";
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(String(order[field]));
-  const [error, setError] = useState(false);
+  const displayValue =
+    field === "price"
+      ? binaryOrderDisplayPrice(order, order.price)
+      : order.quantity;
+  const [value, setValue] = useState(String(displayValue));
   return (
     <PopoverRoot
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
-        setValue(String(order[field]));
-        setError(false);
+        setValue(String(displayValue));
       }}
     >
       <PopoverTrigger asChild>
@@ -38,7 +43,9 @@ export const PendingValue = ({
           variant="text"
           color="secondary"
           size="xs"
-          disabled={!state.isRoundTradable || state.isRegionRestricted}
+          disabled={
+            !state.isOrderTradable(order.symbol) || state.isRegionRestricted
+          }
         >
           {field === "quantity" ? (
             <>
@@ -46,13 +53,14 @@ export const PendingValue = ({
               <TableNumber value={order.quantity} />
             </>
           ) : (
-            <TableNumber value={order[field]} />
+            <TableNumber value={displayValue} />
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent side="top" align="end" className="oui-w-64 oui-p-4">
         <Input value={value} onValueChange={setValue} />
-        {error && <Text color="danger">{t("prediction.invalidOrder")}</Text>}
+        {/* Rejections toast their specific reason via editPendingOrder; the
+            popover stays open so the input can be adjusted. */}
         <div className="oui-mt-3 oui-flex oui-justify-end oui-gap-2">
           <Button
             size="sm"
@@ -65,13 +73,17 @@ export const PendingValue = ({
           <Button
             size="sm"
             onClick={async () => {
-              const updated = await state.editPendingOrder(
-                order.id,
-                field === "price" ? Number(value) : order.price,
-                field === "quantity" ? Number(value) : order.quantity,
-              );
-              if (updated) setOpen(false);
-              else setError(true);
+              // The edit stays open on failure; the toast explains why.
+              if (
+                await state.editPendingOrder(
+                  order.id,
+                  field === "price"
+                    ? binaryOrderDisplayPrice(order, Number(value))
+                    : order.price,
+                  field === "quantity" ? Number(value) : order.quantity,
+                )
+              )
+                setOpen(false);
             }}
           >
             {t("common.confirm")}

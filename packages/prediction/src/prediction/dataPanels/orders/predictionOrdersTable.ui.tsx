@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
@@ -7,7 +6,7 @@ import {
   TabType,
   useOrderColumn,
 } from "@orderly.network/ui-orders";
-import type { PredictionState } from "../../prediction.script";
+import type { PredictionAccountPanelState } from "../../prediction.types";
 import type {
   PredictionOpenOrder,
   PredictionTrade,
@@ -22,7 +21,7 @@ import type {
 } from "./predictionOrdersTable.script";
 
 export type PredictionOrdersTableUIProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   mode: PredictionOrdersTableMode;
   filters: PredictionOrdersTableScript["filters"];
   status?: "cancelled" | "unsupported";
@@ -34,6 +33,8 @@ export type PredictionOrdersTableUIProps = {
   hasMore?: boolean;
   loadMore?: () => void;
   predictionUnderlyingSymbol?: string;
+  cancelAllDisabled?: boolean;
+  onCancelAll?: () => Promise<boolean>;
 };
 
 export const PredictionOrdersTableUI = ({
@@ -49,6 +50,8 @@ export const PredictionOrdersTableUI = ({
   hasMore,
   loadMore,
   predictionUnderlyingSymbol,
+  cancelAllDisabled = true,
+  onCancelAll,
 }: PredictionOrdersTableUIProps) => {
   const { t } = useTranslation();
   const pending = mode === "pending";
@@ -62,12 +65,16 @@ export const PredictionOrdersTableUI = ({
   // Rows here render through PredictionOrderCell by field — the same shape as
   // DesktopOrderList supplemental rows — so reuse that column layout.
   const orderColumns = adaptColumnsForSupplementalRows(baseOrderColumns);
+  // "Filled" means "has executions", not terminal FILLED: MARKET submits a
+  // protected-price IOC whose unfilled remainder terminates the order as
+  // CANCELLED, so filtering by status === "filled" would hide executed records
+  // (manual QA case: a partial-fill market order must keep its fill visible).
   const records =
     orders ??
     (pending
       ? state.openOrders
       : mode === "filled"
-        ? state.history.filter((order) => order.status === "filled")
+        ? state.history.filter((order) => order.filledQuantity > 0)
         : [...state.openOrders, ...state.history]);
   const resetKey = [
     filters.side,
@@ -104,12 +111,8 @@ export const PredictionOrdersTableUI = ({
                   size="xs"
                   variant="outlined"
                   color="secondary"
-                  disabled={
-                    !state.openOrders.length ||
-                    !state.pendingOrdersComplete ||
-                    state.isRegionRestricted
-                  }
-                  onClick={state.cancelAllOrders}
+                  disabled={cancelAllDisabled}
+                  onClick={onCancelAll}
                 >
                   {t("orders.cancelAll")}
                 </Button>

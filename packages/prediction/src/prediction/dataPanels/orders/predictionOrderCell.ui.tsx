@@ -1,9 +1,15 @@
-import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import {
+  binaryOrderDisplayPrice,
+  binaryOrderExecutedValue,
+} from "../../binary/binaryOrderDisplay";
 import { OutcomeBadge, PredictionOrderSymbol, TableNumber } from "../../cells";
-import type { PredictionState } from "../../prediction.script";
+import type {
+  PredictionAccountActions,
+  PredictionOpenOrder,
+} from "../../prediction.types";
 import { usePredictionFormatters } from "../../predictionShared";
 import { PendingValue } from "./pendingValue.ui";
 
@@ -12,8 +18,8 @@ export const PredictionOrderCell = ({
   order,
   field,
 }: {
-  state: PredictionState;
-  order: PredictionState["openOrders"][number];
+  state: PredictionAccountActions & { isRegionRestricted: boolean };
+  order: PredictionOpenOrder;
   field: string;
 }) => {
   const { t } = useTranslation();
@@ -56,23 +62,54 @@ export const PredictionOrderCell = ({
       ) : order.type === "market" ? (
         t("common.market")
       ) : (
-        <TableNumber value={order.price} />
+        <TableNumber value={binaryOrderDisplayPrice(order, order.price)} />
       );
     case "average_executed_price":
       return order.averagePrice != null && order.filledQuantity > 0 ? (
-        <TableNumber value={order.averagePrice} />
+        <TableNumber
+          value={binaryOrderDisplayPrice(order, order.averagePrice)}
+        />
       ) : (
         "--"
       );
     case "executed":
+      return binaryOrderExecutedValue(order) == null ? (
+        "--"
+      ) : (
+        <TableNumber
+          value={binaryOrderExecutedValue(order)!}
+          dp={2}
+          suffix="USDC"
+        />
+      );
     case "notional":
+      if (!pending)
+        return binaryOrderExecutedValue(order) == null ? (
+          "--"
+        ) : (
+          <TableNumber
+            value={binaryOrderExecutedValue(order)!}
+            dp={2}
+            suffix="USDC"
+          />
+        );
       return (
         <TableNumber
-          value={new Decimal(pending || filled ? order.quantity : 0)
-            .mul(order.price)
+          value={new Decimal(order.quantity)
+            .mul(binaryOrderDisplayPrice(order, order.price))
             .toNumber()}
           dp={2}
           suffix="USDC"
+        />
+      );
+    case "total_fee":
+      return order.totalFee == null ? (
+        "--"
+      ) : (
+        <TableNumber
+          value={order.totalFee}
+          dp={6}
+          suffix={order.feeAsset ?? "USDC"}
         />
       );
     case "status":
@@ -95,7 +132,9 @@ export const PredictionOrderCell = ({
           size="sm"
           variant="outlined"
           color="secondary"
-          disabled={state.isRegionRestricted}
+          disabled={
+            state.isRegionRestricted || !state.isOrderTradable(order.symbol)
+          }
           onClick={() => state.cancelOrder(order.id, order.symbol)}
         >
           {t("common.cancel")}

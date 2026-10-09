@@ -9,13 +9,6 @@ import { Decimal } from "@orderly.network/utils";
 export const ROUND_INTERVAL_SECONDS = 300;
 
 /**
- * Fixed outcome price for sizing and IOC submission when the corresponding
- * book side is empty. This allows submission without a live quote; matching
- * immediately cancels any unfilled quantity instead of leaving a resting order.
- */
-export const EMPTY_BOOK_FALLBACK_PRICE = 0.5;
-
-/**
  * decimal.js-light has no floor(); step a value onto the tick grid by
  * rounding the tick count down on the integer grid. Number and string
  * wrappers share this core so sizing and submission agree exactly.
@@ -91,7 +84,8 @@ export const formatCountdownWithHours = (seconds: number) => {
     .join(":");
 };
 
-export const formatPercent = (value: number) => `${value.toFixed(1)}%`;
+export const formatPercent = (value?: number) =>
+  value == null ? "--" : `${value.toFixed(1)}%`;
 
 export const formatContractPrice = (value: number) => value.toFixed(2);
 
@@ -111,10 +105,11 @@ export function formatRoundWindow(
   round: number,
   locale?: string,
   intervalSeconds = ROUND_INTERVAL_SECONDS,
+  expireAtMs?: number,
 ) {
   const intlLocale = toIntlLocale(locale);
   const start = new Date(round * 1_000);
-  const end = new Date(start.getTime() + intervalSeconds * 1_000);
+  const end = new Date(expireAtMs ?? start.getTime() + intervalSeconds * 1_000);
   const startText = new Intl.DateTimeFormat(intlLocale, {
     month: "short",
     day: "numeric",
@@ -231,8 +226,11 @@ export function usePredictionFormatters() {
       locale,
       formatUsd: (value: number) => formatUsd(value, locale),
       formatContracts: (value: number) => formatContracts(value, locale),
-      formatRoundWindow: (round: number, intervalSeconds?: number) =>
-        formatRoundWindow(round, locale, intervalSeconds),
+      formatRoundWindow: (
+        round: number,
+        intervalSeconds?: number,
+        expireAtMs?: number,
+      ) => formatRoundWindow(round, locale, intervalSeconds, expireAtMs),
       formatRoundBadge: (round: number, intervalSeconds?: number) =>
         formatRoundBadge(round, locale, intervalSeconds),
       formatTableTime: (timestamp: number) =>

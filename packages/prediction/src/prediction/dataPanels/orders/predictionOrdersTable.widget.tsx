@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import type { DataFilterItem } from "@orderly.network/ui";
-import type { PredictionState } from "../../prediction.script";
+import type { PredictionAccountPanelState } from "../../prediction.types";
+import { useProductOrderCancelAll } from "../useProductOrderCancelAll";
 import {
   usePredictionOrdersTableScript,
   type PredictionOrdersTableMode,
@@ -10,7 +11,7 @@ import { PredictionOrdersTableUI } from "./predictionOrdersTable.ui";
 import { useBinaryOrderRows } from "./useBinaryOrderRows";
 
 export type PredictionOrdersTableProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   mode: PredictionOrdersTableMode;
   status?: "cancelled" | "unsupported";
   leadingFilterItems?: DataFilterItem[];
@@ -23,6 +24,12 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
   ...props
 }) => {
   const { filters } = usePredictionOrdersTableScript(mode);
+  const cancellation = useProductOrderCancelAll({
+    binary: props.state,
+    enabled: mode === "pending",
+    instrument: "prediction",
+    predictionUnderlyingSymbol: props.predictionUnderlyingSymbol,
+  });
   const [requestedPage, setRequestedPage] = useState(1);
   const binary = useBinaryOrderRows({
     mode,
@@ -80,6 +87,8 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
       {...props}
       mode={mode}
       filters={filters}
+      cancelAllDisabled={cancellation.disabled}
+      onCancelAll={cancellation.onCancelAll}
       orders={binary.rows}
       totalCount={clientFiltered ? undefined : binary.total}
       onPageChange={setRequestedPage}

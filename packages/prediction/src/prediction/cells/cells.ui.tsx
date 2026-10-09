@@ -2,7 +2,10 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Badge, cn, Text } from "@orderly.network/ui";
 import { parseBinaryRoundSymbol } from "../binary/binaryMarkets";
-import type { PredictionOutcome, PredictionState } from "../prediction.script";
+import type {
+  PredictionOutcome,
+  PredictionAccountState,
+} from "../prediction.types";
 import { usePredictionFormatters } from "../predictionShared";
 
 export const OutcomeBadge: React.FC<{ outcome: PredictionOutcome }> = ({
@@ -71,7 +74,7 @@ export const RoundSymbol = ({
 export const PredictionOrderSymbol = ({
   order,
 }: {
-  order: PredictionState["openOrders"][number];
+  order: PredictionAccountState["openOrders"][number];
 }) => {
   const { t } = useTranslation();
   const { formatRoundBadge } = usePredictionFormatters();

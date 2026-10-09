@@ -3,11 +3,12 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Button } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
 import { DesktopOrderList } from "@orderly.network/ui-orders";
-import type { PredictionState } from "../prediction.script";
+import type { PredictionAccountPanelState } from "../prediction.types";
 import { usePredictionFilters } from "../predictionFilters.script";
 import { matchesPredictionOrderFilters } from "./orders/matchesPredictionOrderFilters";
 import { PredictionOrderCell } from "./orders/predictionOrderCell.ui";
 import { PredictionOrdersTable } from "./orders/predictionOrdersTable.widget";
+import { shouldLoadMoreProductOrders } from "./productOrderPagination";
 import {
   toPredictionSide,
   toPredictionStatus,
@@ -15,10 +16,10 @@ import {
   useSharedProductOrdersPanelScript,
   type ProductOrderMode,
 } from "./sharedProductOrdersPanel.script";
-import { useScopedPredictionState } from "./useScopedPredictionState";
+import { useScopedPredictionAccount } from "./useScopedPredictionAccount";
 
 const AllProductOrdersTable: React.FC<{
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   mode: ProductOrderMode;
   includePrediction: boolean;
   productFilterItems: DataFilterItem[];
@@ -43,6 +44,7 @@ const AllProductOrdersTable: React.FC<{
     perpsTotal,
     perpsHasMore,
     loadMorePerps,
+    cancelAllDisabled,
   } = useAllProductOrdersTableScript({
     state,
     mode,
@@ -77,14 +79,23 @@ const AllProductOrdersTable: React.FC<{
     (orderListState.dataSource as unknown[] | undefined)?.length ?? 0;
   useEffect(() => {
     if (!includePrediction || predictionUnderlyingSymbol) return;
-    const needed = requestedPage * 20;
-    if (perpsHasMore && perpsLoaded < needed && !orderListState.isValidating) {
+    if (
+      shouldLoadMoreProductOrders({
+        loaded: perpsLoaded,
+        page: requestedPage,
+        hasMore: perpsHasMore,
+        isValidating: Boolean(orderListState.isValidating),
+      })
+    ) {
       loadMorePerps();
     }
     if (
-      binary.hasMore &&
-      predictionOrders.length < needed &&
-      !binary.isValidating
+      shouldLoadMoreProductOrders({
+        loaded: predictionOrders.length,
+        page: requestedPage,
+        hasMore: binary.hasMore,
+        isValidating: binary.isValidating,
+      })
     ) {
       binary.loadMore();
     }
@@ -112,22 +123,15 @@ const AllProductOrdersTable: React.FC<{
       <DesktopOrderList
         {...(orderListState as React.ComponentProps<typeof DesktopOrderList>)}
         onFilter={onSharedFilter}
-        cancelAllDisabled={
-          mode !== "pending"
-            ? undefined
-            : !includePrediction && !perpsSymbol
-              ? true
-              : includePrediction
-                ? (perpsLoaded === 0 && predictionOrders.length === 0) ||
-                  (predictionOrders.length > 0 && !state.pendingOrdersComplete)
-                : undefined
-        }
+        cancelAllDisabled={cancelAllDisabled}
         additionalFilterItems={productFilterItems}
         onAdditionalFilter={onProductFilter}
         mergeProducts={includePrediction}
+        // Rows-based on both sides; binary.total is meta-based and shares the
+        // WS cross-product leak, so the footer could exceed the rendered rows.
         mergedTotal={
           includePrediction && !predictionUnderlyingSymbol
-            ? perpsTotal + binary.total
+            ? perpsTotal + predictionOrders.length
             : undefined
         }
         onMergedPageChange={setRequestedPage}
@@ -176,13 +180,13 @@ const AllProductOrdersTable: React.FC<{
 };
 
 export const SharedProductOrdersPanel: React.FC<{
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   mode: ProductOrderMode;
   perpsSymbol?: string;
   predictionUnderlyingSymbol?: string;
 }> = ({ state, mode, perpsSymbol, predictionUnderlyingSymbol }) => {
   const { t } = useTranslation();
-  const scopedState = useScopedPredictionState(
+  const scopedState = useScopedPredictionAccount(
     state,
     predictionUnderlyingSymbol,
   );

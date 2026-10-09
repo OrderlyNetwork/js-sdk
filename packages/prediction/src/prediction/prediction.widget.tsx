@@ -5,10 +5,6 @@ import type { API } from "@orderly.network/types";
 import { usePredictionScript } from "./prediction.script";
 import type { PredictionState } from "./prediction.script";
 import { Prediction } from "./prediction.ui";
-import {
-  useSharedPredictionLive,
-  useSharedPredictionState,
-} from "./predictionProvider";
 
 export type PredictionWidgetProps = {
   onPerpSymbolChange?: (symbol: API.Symbol) => void;
@@ -17,14 +13,6 @@ export type PredictionWidgetProps = {
 };
 
 export const PredictionWidget: React.FC<PredictionWidgetProps> = (props) => {
-  const state = useSharedPredictionState();
-  return state ? (
-    <PredictionWithState state={state} {...props} />
-  ) : (
-    <StandalonePrediction {...props} />
-  );
-};
-const StandalonePrediction = (props: PredictionWidgetProps) => {
   const { disabledConnect } = useAppContext();
   const state = usePredictionScript(disabledConnect);
   return <PredictionWithState state={state} {...props} />;
@@ -38,9 +26,6 @@ const PredictionWithState = ({
   const canTrade = useCanTrade();
   const isFirstTimeDeposit = useFirstTimeDeposit();
   const isRegionRestricted = state.isRegionRestricted;
-  // The page keeps the per-tick market streams alive while it is mounted;
-  // dropdown/panel consumers on other routes do not.
-  useSharedPredictionLive();
 
   useEffect(() => {
     if (!state.markets.length) return;

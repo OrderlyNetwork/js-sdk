@@ -1,16 +1,18 @@
 import { useCallback, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { parseSlippageTicks } from "./binary/binaryOrderRules";
+import { useBinaryMarkPrice } from "./binary/useBinaryMarkPrice";
 import { useBinaryRegionRestricted } from "./binary/useBinaryRegion";
 import { useBinaryRounds } from "./binary/useBinaryRounds";
 import { useBinaryUnderlying } from "./binary/useBinaryUnderlying";
+import { usePredictionAccountResources } from "./hooks/usePredictionAccountResources";
 import { usePredictionNotifications } from "./hooks/usePredictionNotifications";
 import {
   usePredictionOrderBook,
   usePredictionOrderBookView,
 } from "./hooks/usePredictionOrderBook";
 import { usePredictionOrderForm } from "./hooks/usePredictionOrderForm";
-import { usePredictionPortfolio } from "./hooks/usePredictionPortfolio";
+import { usePredictionTradingActions } from "./hooks/usePredictionTradingActions";
 import type { PredictionDataTab } from "./prediction.types";
 
 export type {
@@ -31,20 +33,28 @@ export type {
 
 export const usePredictionScript = (
   regionRestricted = false,
-  // While false the polling/subscriptions stay suspended; the shared provider
-  // toggles it so unrelated routes do not keep the market streams alive.
+  // Page-scoped polling can be suspended by its caller.
   active = true,
   // Live market streams (orderbook/index WS) are only kept by the prediction
   // page itself; base consumers (perp/portfolio dropdowns, shared panels)
   // retain the cheap rounds polling but not the per-tick subscriptions.
   activeLive = true,
 ) => {
-  const binaryRegionRestricted = useBinaryRegionRestricted();
+  const binaryRegionRestricted = useBinaryRegionRestricted(active);
   const isRegionRestricted = regionRestricted || binaryRegionRestricted;
   const [activeTab, setActiveTab] = useState<PredictionDataTab>("predictions");
-  const [slippage, setSlippage] = useLocalStorage(
-    "orderly-prediction-slippage",
-    "1",
+  const [storedSlippage, saveSlippage] = useLocalStorage(
+    "orderly-prediction-slippage-ticks",
+    "2",
+  );
+  const slippage =
+    parseSlippageTicks(storedSlippage) == null ? "2" : storedSlippage;
+  const setSlippage = useCallback(
+    (value: string) => {
+      if (parseSlippageTicks(value) != null)
+        saveSlippage(String(Number(value)));
+    },
+    [saveSlippage],
   );
 
   const { notification, notify, clearNotification } =
@@ -60,6 +70,8 @@ export const usePredictionScript = (
     active: active && activeLive,
   });
 
+  const markPrice = useBinaryMarkPrice(selectedSymbol, active && activeLive);
+
   const orderbook = usePredictionOrderBook({
     symbol: selectedSymbol,
     active: active && activeLive,
@@ -69,23 +81,28 @@ export const usePredictionScript = (
     setActiveTab(tab);
   }, []);
 
-  const portfolio = usePredictionPortfolio({
+  const resources = usePredictionAccountResources({
+    enabled: active,
+    nowMs: rounds.now,
+  });
+  const portfolio = usePredictionTradingActions({
     active,
+    resources,
     binaryRows: rounds.rows,
     notify,
     isRegionRestricted,
-    isRoundTradable: rounds.isRoundTradable,
-    selectedRound: rounds.selectedRound,
     selectedSymbol,
     bbo: {
       bestAsk: orderbook.bbo.bestAsk,
       bestBid: orderbook.bbo.bestBid,
     },
     slippage,
+    book: orderbook.book,
     onActiveTab,
   });
 
   const form = usePredictionOrderForm({
+    markPrice,
     marketId: rounds.marketId,
     quoteTick: rounds.selectedRow?.quote_tick,
     quoteMin: rounds.selectedRow?.quote_min,
@@ -94,7 +111,7 @@ export const usePredictionScript = (
     baseMin: rounds.selectedRow?.base_min,
     baseMax: rounds.selectedRow?.base_max,
     minNotional: rounds.selectedRow?.min_notional,
-    outcomePrices: orderbook.outcomePrices,
+    executablePrices: orderbook.executablePrices,
     marketPrice: portfolio.protectionPrice,
     balance: portfolio.balance,
     estimateAdditionalFrozen: portfolio.estimateAdditionalFrozen,
@@ -116,17 +133,40 @@ export const usePredictionScript = (
     orderQuantity: form.orderQuantity,
     orderType: form.orderType,
     slippage,
+    quoteTick: rounds.selectedRow?.quote_tick,
   });
 
   const canPlaceOrder =
     form.canPlaceOrder &&
     !bookView.isSlippageExceeded &&
     // Fail closed without a valid binary fee config (never "free").
-    portfolio.hasFeeConfig;
+    portfolio.hasFeeConfig &&
+    portfolio.accountReady &&
+    !portfolio.isSubmitting;
 
   const goToLiveRound = useCallback(() => {
     rounds.goToLiveRound();
   }, [rounds]);
+  // Rounds outside their trading window are rejected by the rounds hook;
+  // surface that instead of silently dropping the click.
+  const selectMarketRound = useCallback(
+    (round: number) => {
+      if (rounds.selectMarketRound(round)) return;
+      notify("prediction.rounds.notOpenYet", "danger");
+    },
+    [rounds.selectMarketRound, notify],
+  );
+  const goToNextRound = useCallback(() => {
+    if (!rounds.goToNextRound()) return;
+    form.resetAmountAfterFill();
+    form.setLimitPrice("");
+    clearNotification();
+  }, [
+    rounds,
+    form.resetAmountAfterFill,
+    form.setLimitPrice,
+    clearNotification,
+  ]);
 
   const placeOrder = useCallback(() => {
     portfolio.placeOrder({
@@ -151,46 +191,80 @@ export const usePredictionScript = (
     portfolio.placeOrder,
   ]);
 
-  const placeOneTapOrder = useCallback(
-    (
-      outcome: Parameters<typeof portfolio.placeOneTapOrder>[0],
-      quoteAmount: number,
-    ) => {
-      portfolio.placeOneTapOrder(outcome, quoteAmount, clearNotification);
-    },
-    [clearNotification, portfolio.placeOneTapOrder],
-  );
-
   /**
    * One-tap mirrors the form's composed gate: the portfolio checks price,
    * funds and min_notional on the submitted protection price, and the book
    * walk (executable levels, not the mid) rejects sizes that would cross the
    * user's slippage setting — the mid-based estimate previously disabled
    * every two-sided book because protection ≥ mid by construction.
+   * The reason variant powers the disabled-preset tooltip and the
+   * click-fallback toast, so a blocked preset is never silent.
    */
-  const canPlaceOneTapOrder = useCallback(
+  const oneTapBlockReason = useCallback(
     (
       outcome: Parameters<typeof portfolio.canPlaceOneTapOrder>[0],
       quoteAmount: number,
-    ) => {
-      if (!portfolio.canPlaceOneTapOrder(outcome, quoteAmount)) return false;
-      const quantity = portfolio.oneTapPayout(outcome, quoteAmount);
-      if (quantity <= 0) return false;
+    ): string | undefined => {
+      const reason = portfolio.oneTapBlockReason(outcome, quoteAmount);
+      if (reason != null) return reason;
+      if (!portfolio.canPlaceOneTapOrder(outcome, quoteAmount))
+        // Transient isSubmitting: no reason while a submission is in flight.
+        return undefined;
+      // The gate above already guarantees a positive quantity.
       const estimated = bookView.estimateOrderSlippage(
         "buy",
-        quantity,
+        portfolio.oneTapPayout(outcome, quoteAmount),
         outcome,
       );
-      return (
-        estimated == null ||
-        estimated <= new Decimal(slippage || 0).div(100).toNumber()
-      );
+      if (estimated == null) return "prediction.message.noExecutableQuotes";
+      return estimated <= (parseSlippageTicks(slippage) ?? -1)
+        ? undefined
+        : "prediction.message.slippageExceeded";
     },
     [
       bookView.estimateOrderSlippage,
       portfolio.canPlaceOneTapOrder,
+      portfolio.oneTapBlockReason,
       portfolio.oneTapPayout,
       slippage,
+    ],
+  );
+
+  const canPlaceOneTapOrder = useCallback(
+    (
+      outcome: Parameters<typeof portfolio.canPlaceOneTapOrder>[0],
+      quoteAmount: number,
+    ) =>
+      portfolio.canPlaceOneTapOrder(outcome, quoteAmount) &&
+      oneTapBlockReason(outcome, quoteAmount) == null,
+    [oneTapBlockReason, portfolio.canPlaceOneTapOrder],
+  );
+
+  const placeOneTapOrder = useCallback(
+    (
+      outcome: Parameters<typeof portfolio.placeOneTapOrder>[0],
+      quoteAmount: number,
+    ) => {
+      const reason = oneTapBlockReason(outcome, quoteAmount);
+      if (reason != null) {
+        notify(reason, "danger");
+        return;
+      }
+      // Only the transient isSubmitting race is still silent here; the
+      // buttons are disabled during submission.
+      if (!portfolio.canPlaceOneTapOrder(outcome, quoteAmount)) return;
+      return portfolio.placeOneTapOrder(
+        outcome,
+        quoteAmount,
+        clearNotification,
+      );
+    },
+    [
+      clearNotification,
+      notify,
+      oneTapBlockReason,
+      portfolio.canPlaceOneTapOrder,
+      portfolio.placeOneTapOrder,
     ],
   );
 
@@ -210,19 +284,28 @@ export const usePredictionScript = (
     roundPhase: rounds.roundPhase,
     selectedRound: rounds.selectedRound ?? rounds.round ?? 0,
     selectedRow: rounds.selectedRow,
+    roundDetailError: rounds.detailError,
+    roundDetailLoading: rounds.detailLoading,
+    refreshRoundDetail: rounds.refreshDetail,
+    nextTradableRow: rounds.nextTradableRow,
+    goToNextRound,
+    marketRows: rounds.marketRows,
     isRoundInSnapshot: rounds.isRoundInSnapshot,
-    selectMarketRound: rounds.selectMarketRound,
+    selectMarketRound,
     goToLiveRound,
     isRoundTradable: rounds.isRoundTradable,
     roundOutcomeLookup: rounds.roundOutcomeLookup,
     underlyingSymbol: rounds.underlyingSymbol,
     // Market data
-    openingPrice: rounds.openingPrice ?? underlying.currentPrice,
+    openingPrice: rounds.openingPrice,
+    chartIndexPrice: underlying.chartIndexPrice,
     currentPrice: underlying.currentPrice,
     priceHistory: underlying.priceHistory,
     candles: underlying.candles,
+    markPrice,
     upChance: orderbook.upChance,
     outcomePrices: orderbook.outcomePrices,
+    executablePrices: orderbook.executablePrices,
     isBookLoading: orderbook.isBookLoading,
     hasBookQuote: orderbook.bbo.mid != null,
     // Order form
@@ -230,6 +313,8 @@ export const usePredictionScript = (
     setSelectedOutcome: form.setSelectedOutcome,
     orderSide: form.orderSide,
     setOrderSide: form.setOrderSide,
+    tradeMode: form.tradeMode,
+    setTradeMode: form.setTradeMode,
     orderType: form.orderType,
     setOrderType: form.setOrderType,
     amountUnit: form.amountUnit,
@@ -249,6 +334,8 @@ export const usePredictionScript = (
     requiredFrozen: form.requiredFrozen,
     fundingEstimateMode: portfolio.fundingEstimateMode,
     maxAmount: form.maxAmount,
+    maxAmountPrice: form.maxAmountPrice,
+    hasMaxAmountEstimate: form.hasMaxAmountEstimate,
     maxQuoteAmount: form.maxQuoteAmount,
     maxOutcomeAmount: form.maxOutcomeAmount,
     orderPercentage: form.orderPercentage,
@@ -256,15 +343,30 @@ export const usePredictionScript = (
     setOrderPercentage: form.setOrderPercentage,
     canPlaceOrder,
     // Account domain
+    ordersLoading: resources.ordersLoading,
+    ordersError: resources.ordersError,
+    positionsLoading: resources.positionsLoading,
+    positionsError: resources.positionsError,
     balance: portfolio.balance,
     positions: portfolio.positions,
     openOrders: portfolio.openOrders,
     history: portfolio.history,
     settlements: portfolio.settlements,
+    historyRecords: portfolio.historyRecords,
+    historyCompleteness: portfolio.historyCompleteness,
+    historyLoading: portfolio.historyLoading,
+    historyError: portfolio.historyError,
+    pendingSettlementSymbols: portfolio.pendingSettlementSymbols,
+    accountId: portfolio.accountId,
     feeRates: portfolio.feeRates,
     estimateFee: portfolio.estimateFee,
     estimateFrozen: portfolio.estimateFrozen,
     isRegionRestricted,
+    accountReady: portfolio.accountReady,
+    hasFeeConfig: portfolio.hasFeeConfig,
+    protectionPrice: portfolio.protectionPrice,
+    isSubmitting: portfolio.isSubmitting,
+    isOrderTradable: portfolio.isOrderTradable,
     activeTab,
     setActiveTab,
     // Order book view
@@ -280,6 +382,7 @@ export const usePredictionScript = (
     placeOrder,
     oneTapPayout: portfolio.oneTapPayout,
     canPlaceOneTapOrder,
+    oneTapBlockReason,
     placeOneTapOrder,
     availableQuantity: portfolio.availableQuantity,
     sellPosition: portfolio.sellPosition,

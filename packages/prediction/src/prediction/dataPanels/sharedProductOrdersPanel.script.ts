@@ -2,11 +2,14 @@ import { useState } from "react";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { TabType, useOrderListScript } from "@orderly.network/ui-orders";
 import { isBinarySymbol } from "../binary/binaryInfo";
-import type { PredictionState } from "../prediction.script";
+import type { PredictionAccountPanelState } from "../prediction.types";
 import { useBinaryOrderRows } from "./orders/useBinaryOrderRows";
+import type { ProductOrderInstrument } from "./productOrderCancellation";
+import { useProductOrderCancelAll } from "./useProductOrderCancelAll";
 
 export type ProductOrderMode = "pending" | "filled" | "history";
-export type ProductOrderInstrument = "all" | "perps" | "prediction";
+
+export type { ProductOrderInstrument } from "./productOrderCancellation";
 
 // The shared filter bar drives both the perps OrderList (OrderStatus/OrderSide
 // enums) and the prediction tables (plain strings); these maps translate the
@@ -62,10 +65,11 @@ export const useSharedProductOrdersPanelScript = () => {
 };
 
 export type UseAllProductOrdersTableScriptArgs = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   mode: ProductOrderMode;
   mobile?: boolean;
   includePrediction?: boolean;
+  instrument?: ProductOrderInstrument;
   perpsSymbol?: string;
   predictionUnderlyingSymbol?: string;
 };
@@ -75,10 +79,18 @@ export const useAllProductOrdersTableScript = ({
   mode,
   mobile = false,
   includePrediction = true,
+  instrument = includePrediction ? "all" : "perps",
   perpsSymbol,
   predictionUnderlyingSymbol,
 }: UseAllProductOrdersTableScriptArgs) => {
   const pending = mode === "pending";
+  const cancellation = useProductOrderCancelAll({
+    binary: state,
+    enabled: pending,
+    instrument,
+    perpsSymbol,
+    predictionUnderlyingSymbol,
+  });
   const type = pending
     ? TabType.pending
     : mode === "filled"
@@ -93,10 +105,7 @@ export const useAllProductOrdersTableScript = ({
     // show every binary order twice in the "all" view.
     productType: "PERP",
     symbol: perpsSymbol,
-    onCancelAllAfter:
-      pending && includePrediction && perpsSymbol
-        ? state.cancelAllOrders
-        : undefined,
+    cancelAllDisabled: cancellation.disabled,
     ordersStatus: pending
       ? OrderStatus.INCOMPLETE
       : mode === "filled"
@@ -112,7 +121,7 @@ export const useAllProductOrdersTableScript = ({
   const pollutedRows = rawOrderListState.dataSource?.filter((order) =>
     isBinarySymbol(order.symbol ?? ""),
   );
-  const orderListState =
+  const filteredOrderListState =
     pollutedRows && pollutedRows.length > 0
       ? {
           ...rawOrderListState,
@@ -121,6 +130,11 @@ export const useAllProductOrdersTableScript = ({
           ),
         }
       : rawOrderListState;
+  const orderListState: typeof rawOrderListState &
+    typeof cancellation.orderListProps = {
+    ...filteredOrderListState,
+    ...cancellation.orderListProps,
+  };
   const binary = useBinaryOrderRows({
     mode,
     status:
@@ -136,19 +150,23 @@ export const useAllProductOrdersTableScript = ({
       | undefined,
     underlyingSymbol: predictionUnderlyingSymbol,
   });
-  const perpsCount = rawOrderListState.dataSource?.length ?? 0;
+  // Footer totals count the rows actually rendered: meta.total is not
+  // product-isolated under WS inserts (a binary executionreport bumps PERP-key
+  // meta too), so meta-based totals can overcount the merged footer.
+  const perpsTotal = orderListState.dataSource?.length ?? 0;
   const normalLoaded =
     rawOrderListState.dataSource?.filter(
       (order) => !(order as { algo_order_id?: number }).algo_order_id,
     ).length ?? 0;
-  const algoLoaded = perpsCount - normalLoaded;
+  // hasMore compares the pre-filter length against meta so leaked binary rows
+  // inflate both sides equally; the filtered length would spin loadMore.
   const normalTotal =
     (rawOrderListState.meta as { total?: number } | undefined)?.total ??
     normalLoaded;
-  const perpsTotal = normalTotal + algoLoaded;
 
   return {
     orderListState,
+    cancelAllDisabled: cancellation.disabled,
     predictionOrders: binary.rows,
     binary,
     perpsTotal,

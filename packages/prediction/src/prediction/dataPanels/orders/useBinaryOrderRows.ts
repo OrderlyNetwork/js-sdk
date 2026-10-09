@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { isBinarySymbol } from "../../binary/binaryInfo";
+import { toPredictionOrder } from "../../binary/binaryOrderDisplay";
 import { matchesPredictionUnderlying } from "../../binary/productScope";
-import { toPredictionOrder } from "../../hooks/usePredictionPortfolio";
 import type {
   PredictionOpenOrder,
   PredictionTrade,
@@ -38,6 +38,9 @@ export const useBinaryOrderRows = ({
   dateRange?: { from?: Date; to?: Date };
   underlyingSymbol?: string;
 }) => {
+  // Filled mirrors the perps tab's server-side FILLED filter; partially filled
+  // IOC orders (terminal CANCELLED with executions) are therefore excluded
+  // here but included in the prediction panel's Filled tab (filledQuantity > 0).
   const [rawOrders, stream] = useOrderStream({
     productType: "BINARY",
     sourceTypeAll: mode !== "pending",

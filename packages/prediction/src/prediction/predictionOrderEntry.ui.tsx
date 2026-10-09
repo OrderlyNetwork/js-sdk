@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation, type LocaleMessages } from "@orderly.network/i18n";
 import {
   MobileOrderBookLadder,
   OrderBookLadder,
@@ -26,9 +26,10 @@ import {
   Tooltip,
   useScreen,
 } from "@orderly.network/ui";
-import { SlippageUI } from "@orderly.network/ui-order-entry";
 import { Decimal } from "@orderly.network/utils";
+import { binaryOutcomeMarkPrice } from "./binary/binaryMarkPrice";
 import { PercentageControls } from "./orderEntry/form";
+import { BinarySlippage } from "./orderEntry/form/binarySlippage.ui";
 import type { PredictionOutcome, PredictionState } from "./prediction.script";
 import {
   accumulateOrderBookLevels,
@@ -120,7 +121,7 @@ export const PredictionOrderBook: React.FC<
     PredictionState,
     | "orderBook"
     | "selectedOutcome"
-    | "selectedPrice"
+    | "markPrice"
     | "setLimitPrice"
     | "setOrderType"
     | "isRoundTradable"
@@ -131,7 +132,7 @@ export const PredictionOrderBook: React.FC<
 > = ({
   orderBook,
   selectedOutcome,
-  selectedPrice,
+  markPrice,
   setLimitPrice,
   setOrderType,
   isRoundTradable,
@@ -175,7 +176,9 @@ export const PredictionOrderBook: React.FC<
   );
   const displayedAsks = isPastRound ? emptyLevels : asks;
   const displayedBids = isPastRound ? emptyLevels : bids;
-  const displayedPrice = isPastRound ? Number.NaN : selectedPrice;
+  const displayedPrice = isPastRound
+    ? undefined
+    : binaryOutcomeMarkPrice(markPrice, selectedOutcome);
   const base = selectedOutcome.toUpperCase();
   const { isMobile } = useScreen();
 
@@ -184,10 +187,24 @@ export const PredictionOrderBook: React.FC<
   const ladderProps = {
     asks: displayedAsks,
     bids: displayedBids,
-    markPrice: displayedPrice,
-    lastPrice: isPastRound
-      ? [Number.NaN, Number.NaN]
-      : [Math.max(selectedPrice - quoteTick, 0), selectedPrice],
+    middlePriceContent: (
+      <Tooltip content={t("prediction.markPrice.tooltip")}>
+        <span className="oui-prediction-orderBook-markPrice oui-cursor-pointer oui-text-base oui-text-base-contrast oui-underline oui-decoration-dashed oui-underline-offset-4">
+          {displayedPrice == null ? (
+            "--"
+          ) : (
+            <Text.numeral
+              dp={new Decimal(quoteTick).decimalPlaces()}
+              intensity={98}
+            >
+              {displayedPrice}
+            </Text.numeral>
+          )}
+        </span>
+      </Tooltip>
+    ),
+    markPrice: displayedPrice ?? Number.NaN,
+    lastPrice: [Number.NaN, Number.NaN],
     depths: [String(quoteTick)],
     base,
     quote,
@@ -435,8 +452,8 @@ export const TradePanel: React.FC<
   }
 > = (state) => {
   const { t } = useTranslation();
-  const { formatUsd, formatContracts } = usePredictionFormatters();
-  const [tradeMode, setTradeMode] = useState<TradeMode>("oneTap");
+  const { formatUsd, formatContracts, chart } = usePredictionFormatters();
+  const tradeMode = state.tradeMode;
   const [storedOneTapAmounts, setStoredOneTapAmounts] = useLocalStorage<
     OneTapAmounts | number[]
   >("orderly-prediction-one-tap-amounts", DEFAULT_ONE_TAP_AMOUNTS);
@@ -467,19 +484,16 @@ export const TradePanel: React.FC<
     : isBuyContext
       ? `${formatUsd(state.balance)} USDC`
       : `${formatContracts(state.availableQuantity(state.selectedOutcome))} ${outcomeLabel}`;
-  const amountUnitOptions = [
-    { label: "USDC", value: "quote" },
-    { label: outcomeLabel, value: "outcome" },
-  ];
   const maxDisplayValue = orderEntryFunded
-    ? `${state.amountUnit === "quote" ? formatUsd(state.maxAmount) : formatContracts(state.maxAmount)} ${inputUnit}`
+    ? state.hasMaxAmountEstimate
+      ? `${state.amountUnit === "quote" ? formatUsd(state.maxAmount) : formatContracts(state.maxAmount)} ${inputUnit}`
+      : `-- ${inputUnit}`
     : `0 ${inputUnit}`;
   const canAdjustAmount =
     orderEntryAccountReady &&
     orderEntryFunded &&
     state.maxAmount > 0 &&
-    state.selectedPrice > 0 &&
-    state.selectedPrice < 1 &&
+    (state.orderSide === "sell" || state.hasMaxAmountEstimate) &&
     state.isRoundTradable &&
     !state.isRegionRestricted;
   const sliderColor = canAdjustAmount
@@ -496,15 +510,17 @@ export const TradePanel: React.FC<
       ),
     ),
   );
-  const oneTapEstimatedSlippage = Math.max(
-    0,
-    ...oneTapSlippages.filter((value): value is number => value !== null),
+  const validOneTapSlippages = oneTapSlippages.filter(
+    (value): value is number => value !== null,
   );
+  const oneTapEstimatedSlippage = validOneTapSlippages.length
+    ? Math.max(...validOneTapSlippages)
+    : null;
   // The fee curve always prices in the UP coordinate: p or 1-p.
   const selectedUpPrice =
     state.selectedOutcome === "up"
       ? state.selectedPrice
-      : 1 - state.selectedPrice;
+      : new Decimal(1).sub(state.selectedPrice).toNumber();
   const estimatedFee = state.estimateFee(
     state.orderQuantity,
     selectedUpPrice,
@@ -512,8 +528,7 @@ export const TradePanel: React.FC<
     state.orderType === "market",
   );
   const selectTradeMode = (mode: TradeMode) => {
-    setTradeMode(mode);
-    state.setOrderType(mode === "oneTap" ? "market" : mode);
+    state.setTradeMode(mode);
   };
   const saveOneTapAmounts = () => {
     const amounts: OneTapAmounts = {
@@ -780,7 +795,9 @@ export const TradePanel: React.FC<
               >
                 <span>{t(`prediction.${outcome}`)}</span>
                 <span className="oui-mt-0.5 oui-tabular-nums">
-                  ${formatContractPrice(state.outcomePrices[outcome])}
+                  {state.executablePrices.buy[outcome] == null
+                    ? "--"
+                    : `$${formatContractPrice(state.executablePrices.buy[outcome]!)}`}
                 </span>
               </div>
             ))}
@@ -807,11 +824,31 @@ export const TradePanel: React.FC<
                 >
                   <span>{t(`prediction.${outcome}`)}</span>
                   <span className="oui-mt-0.5 oui-tabular-nums">
-                    ${formatContractPrice(state.outcomePrices[outcome])}
+                    {state.executablePrices[state.orderSide][outcome] == null
+                      ? "--"
+                      : `$${formatContractPrice(state.executablePrices[state.orderSide][outcome]!)}`}
                   </span>
                 </button>
               );
             })}
+          </div>
+        )}
+
+        {state.selectedRow && state.selectedRow.s0 == null && (
+          <div className="oui-prediction-strikePending oui-mt-2 oui-space-y-1 oui-rounded-lg oui-bg-base-8 oui-p-2 oui-text-2xs oui-font-normal oui-leading-normal oui-text-base-contrast-54">
+            <p>{t("prediction.strikePending")}</p>
+            <p>
+              {t("prediction.rounds.startTime")} ({chart.localOffsetLabel}):{" "}
+              {chart.resolutionLocalFormatter.format(
+                new Date(state.selectedRow.observation_start_at),
+              )}
+            </p>
+            <p>
+              {t("prediction.rounds.endTime")} ({chart.localOffsetLabel}):{" "}
+              {chart.resolutionLocalFormatter.format(
+                new Date(state.selectedRow.expire_at),
+              )}
+            </p>
           </div>
         )}
 
@@ -868,15 +905,29 @@ export const TradePanel: React.FC<
               <React.Fragment key={index}>
                 {(["up", "down"] as const).map((outcome) => {
                   const quoteAmount = oneTapAmounts[outcome][index];
+                  // Explain a disabled preset instead of leaving it silent.
+                  // Reason + isSubmitting together equal the composed
+                  // canPlaceOneTapOrder gate, without evaluating the frozen
+                  // estimate twice per preset on every book tick.
+                  const blockReason = state.oneTapBlockReason(
+                    outcome,
+                    quoteAmount,
+                  );
                   return (
                     <button
                       key={outcome}
                       type="button"
+                      title={
+                        blockReason != null
+                          ? String(t(blockReason as keyof LocaleMessages))
+                          : undefined
+                      }
                       disabled={
                         oneTapEditorOpen ||
                         !orderEntryAccountReady ||
                         !orderEntryFunded ||
-                        !state.canPlaceOneTapOrder(outcome, quoteAmount)
+                        state.isSubmitting ||
+                        blockReason != null
                       }
                       onClick={() =>
                         state.placeOneTapOrder(outcome, quoteAmount)
@@ -921,7 +972,14 @@ export const TradePanel: React.FC<
                   id="prediction-order-amount"
                   label={t("common.amount")}
                   value={state.amount}
-                  suffix={outcomeLabel}
+                  suffix={inputUnit}
+                  dp={
+                    state.amountUnit === "quote"
+                      ? 2
+                      : new Decimal(
+                          state.selectedRow?.base_tick ?? 0.01,
+                        ).decimalPlaces()
+                  }
                   onChange={state.setAmount}
                   position="middle"
                 />
@@ -945,26 +1003,15 @@ export const TradePanel: React.FC<
                 id="prediction-order-amount"
                 label={t("common.amount")}
                 value={state.amount}
-                suffix={
-                  <Select.options
-                    size="xs"
-                    showCaret
-                    value={state.amountUnit}
-                    options={amountUnitOptions}
-                    valueFormatter={(value) =>
-                      amountUnitOptions.find((option) => option.value === value)
-                        ?.label
-                    }
-                    classNames={{
-                      trigger:
-                        "oui-w-auto oui-border-none oui-bg-transparent oui-p-0 oui-shadow-none oui-text-base-contrast",
-                    }}
-                    contentProps={{ className: "oui-min-w-[112px]" }}
-                    onValueChange={state.setAmountUnit}
-                  />
-                }
+                suffix={inputUnit}
                 onChange={state.setAmount}
-                dp={state.amountUnit === "quote" ? 2 : 4}
+                dp={
+                  state.amountUnit === "quote"
+                    ? 2
+                    : new Decimal(
+                        state.selectedRow?.base_tick ?? 0.01,
+                      ).decimalPlaces()
+                }
                 position="single"
               />
             )}
@@ -1002,6 +1049,22 @@ export const TradePanel: React.FC<
         {!isOneTap && (
           <>
             <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
+              <InfoRow
+                label={t("prediction.contracts")}
+                value={
+                  state.orderQuantity > 0
+                    ? formatContracts(state.orderQuantity)
+                    : "--"
+                }
+              />
+              <InfoRow
+                label={t("prediction.orderValue")}
+                value={
+                  state.orderQuantity > 0
+                    ? `${formatUsd(state.orderNotional)} USDC`
+                    : "-- USDC"
+                }
+              />
               <InfoRow
                 label={t("prediction.odds")}
                 hint={t("prediction.oddsHint")}
@@ -1052,10 +1115,11 @@ export const TradePanel: React.FC<
 
         <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
           {state.orderType === "market" && (
-            <SlippageUI
+            <BinarySlippage
               slippage={state.slippage}
               setSlippage={state.setSlippage}
-              estSlippage={
+              quoteTick={state.selectedRow?.quote_tick}
+              estimated={
                 isOneTap ? oneTapEstimatedSlippage : state.estimatedSlippage
               }
             />

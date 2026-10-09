@@ -3,6 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Divider, EmptyDataState, Text } from "@orderly.network/ui";
 import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
 import { Decimal } from "@orderly.network/utils";
+import { binaryHistoryDisplayRows } from "../binary/binarySettlement";
 import {
   OutcomeBadge,
   PredictionOrderSymbol,
@@ -11,7 +12,7 @@ import {
 } from "../cells";
 import { useRoundCountdown } from "../hooks/useRoundCountdown";
 import { SellPosition } from "../orderEntry/sellPosition";
-import type { PredictionState } from "../prediction.script";
+import type { PredictionAccountPanelState } from "../prediction.types";
 import { formatCountdown, usePredictionFormatters } from "../predictionShared";
 import { PredictionFilters } from "./filters/predictionFilters.ui";
 import { usePredictionHistoryTableScript } from "./history/predictionHistoryTable.script";
@@ -46,11 +47,11 @@ const Cards: React.FC<{ children: React.ReactNode; empty: boolean }> = ({
 };
 
 export const MobilePredictionPositions: React.FC<{
-  state: PredictionState;
+  state: PredictionAccountPanelState;
 }> = ({ state }) => {
   const { t } = useTranslation();
   const { filters } = useHoldingsTableScript();
-  const countdown = useRoundCountdown(state.selectedRow?.expire_at);
+  const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
   const positions = state.positions.filter(filters.matches);
   return (
     <>
@@ -58,9 +59,10 @@ export const MobilePredictionPositions: React.FC<{
       <Cards empty={positions.length === 0}>
         {positions.map((position) => {
           // Only the selected round has a subscribed book for live valuation.
-          const isSelectedRound = position.symbol === state.selectedRow?.symbol;
+          const isSelectedRound =
+            position.symbol === state.marketView?.selectedRow?.symbol;
           const lastPrice = isSelectedRound
-            ? state.outcomePrices[position.outcome]
+            ? state.marketView?.outcomePrices[position.outcome]
             : undefined;
           const pnl =
             lastPrice != null
@@ -76,7 +78,7 @@ export const MobilePredictionPositions: React.FC<{
             >
               <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
                 <RoundSymbol
-                  round={position.round ?? state.round}
+                  round={position.round ?? state.marketView?.round ?? 0}
                   outcome={position.outcome}
                   symbol={position.symbol}
                 />
@@ -117,9 +119,11 @@ export const MobilePredictionPositions: React.FC<{
                 </Field>
                 <Field label={t("prediction.countdownStatus")}>
                   {isSelectedRound
-                    ? state.isRoundTradable
+                    ? state.marketView?.isRoundTradable
                       ? formatCountdown(countdown)
-                      : t(`prediction.phase.${state.roundPhase}`)
+                      : t(
+                          `prediction.phase.${state.marketView?.roundPhase ?? "closed"}`,
+                        )
                     : "--"}
                 </Field>
               </div>
@@ -138,32 +142,44 @@ export const MobilePredictionPositions: React.FC<{
   );
 };
 
-export const MobilePredictionHistory: React.FC<{ state: PredictionState }> = ({
-  state,
-}) => {
+export const MobilePredictionHistory: React.FC<{
+  state: PredictionAccountPanelState;
+}> = ({ state }) => {
   const { t } = useTranslation();
   const { formatTableTime } = usePredictionFormatters();
   const { filters } = usePredictionHistoryTableScript();
-  const records = state.settlements.filter((record) =>
-    filters.matches({
-      outcome: record.outcome,
-      status: record.result === "closed" ? "closed" : "settled",
-      timestamp: record.settledAt,
-    }),
+  const records = binaryHistoryDisplayRows(state.historyRecords).filter(
+    (record) =>
+      filters.matches({
+        outcome: record.outcome ?? "",
+        status: record.result === "closed" ? "closed" : "settled",
+        timestamp: record.filterTime,
+      }),
   );
   return (
     <>
       <PredictionFilters filters={filters} mode="settlements" />
       <Cards empty={records.length === 0}>
         {records.map((record) => (
-          <div key={record.id} className="oui-rounded-xl oui-bg-base-9 oui-p-3">
+          <div
+            key={record.recordKey}
+            className="oui-rounded-xl oui-bg-base-9 oui-p-3"
+          >
             <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
-              <RoundSymbol
-                round={record.round}
-                outcome={record.outcome}
-                symbol={record.symbol}
-              />
-              <OutcomeBadge outcome={record.outcome} />
+              {record.outcome ? (
+                <RoundSymbol
+                  round={record.round}
+                  outcome={record.outcome}
+                  symbol={record.symbol}
+                />
+              ) : (
+                <Text>{record.symbol}</Text>
+              )}
+              {record.outcome ? (
+                <OutcomeBadge outcome={record.outcome} />
+              ) : (
+                <Text intensity={36}>--</Text>
+              )}
             </div>
             <Divider intensity={6} className="oui-my-2 oui-w-full" />
             <div className="oui-grid oui-grid-cols-2 oui-gap-3">
@@ -179,8 +195,10 @@ export const MobilePredictionHistory: React.FC<{ state: PredictionState }> = ({
               <Field label={t("prediction.result")}>
                 {record.result === "closed" ? (
                   t("prediction.closed")
+                ) : record.result ? (
+                  <OutcomeBadge outcome={record.result} />
                 ) : (
-                  <OutcomeBadge outcome={record.result ?? record.outcome} />
+                  <Text intensity={36}>--</Text>
                 )}
               </Field>
               <Field label={t("positions.history.column.netPnl")}>
@@ -208,8 +226,8 @@ export const MobilePredictionHistory: React.FC<{ state: PredictionState }> = ({
 };
 
 export const MobilePredictionOrderCard: React.FC<{
-  state: PredictionState;
-  order: PredictionState["openOrders"][number];
+  state: PredictionAccountPanelState;
+  order: PredictionAccountPanelState["openOrders"][number];
 }> = ({ state, order }) => {
   const { t } = useTranslation();
   const { formatTableTime } = usePredictionFormatters();
@@ -239,6 +257,16 @@ export const MobilePredictionOrderCard: React.FC<{
         </Field>
         <Field label={t("prediction.orderValue")}>
           <PredictionOrderCell state={state} order={order} field="notional" />
+        </Field>
+        <Field label={t("prediction.avgFillPrice")}>
+          <PredictionOrderCell
+            state={state}
+            order={order}
+            field="average_executed_price"
+          />
+        </Field>
+        <Field label={t("common.fee")}>
+          <PredictionOrderCell state={state} order={order} field="total_fee" />
         </Field>
         <Field label={t("common.status")}>
           <PredictionOrderCell state={state} order={order} field="status" />

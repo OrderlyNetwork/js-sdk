@@ -1,11 +1,11 @@
 import React from "react";
 import type { DataFilterItem } from "@orderly.network/ui";
-import type { PredictionState } from "../../prediction.script";
+import type { PredictionAccountPanelState } from "../../prediction.types";
 import { usePredictionHistoryTableScript } from "./predictionHistoryTable.script";
 import { PredictionHistoryTableUI } from "./predictionHistoryTable.ui";
 
 export type PredictionHistoryTableProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
 };

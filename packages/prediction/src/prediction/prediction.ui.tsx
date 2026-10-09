@@ -19,7 +19,8 @@ import {
   useMediaQuery,
   useScreen,
 } from "@orderly.network/ui";
-import { PredictionDataPanel } from "./dataPanels";
+import { PredictionAccountPanel } from "./dataPanels/predictionAccountPanel.widget";
+import { usePredictionPanelMarketView } from "./hooks/usePredictionPanelMarketView";
 import type { PredictionState } from "./prediction.script";
 import { PriceChart } from "./predictionChart.ui";
 import { formatPredictionMarketName } from "./predictionMarketPanel.ui";
@@ -29,6 +30,7 @@ import {
   TradePanel,
 } from "./predictionOrderEntry.ui";
 import { formatPercent, usePredictionFormatters } from "./predictionShared";
+import { RoundResultWidget } from "./roundResult";
 import { usePredictionMarketsDropdown } from "./usePredictionMarketsDropdown";
 
 // Re-exported here so the package entry keeps importing every public
@@ -90,10 +92,10 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
           points={state.priceHistory}
           candles={state.candles}
           roundOutcome={state.roundOutcomeLookup}
-          openingPrice={state.openingPrice}
-          currentPrice={state.currentPrice}
+          selectedRow={state.selectedRow}
+          rows={state.marketRows}
+          currentPrice={state.chartIndexPrice}
           round={state.round}
-          roundPhase={state.roundPhase}
           onGoToLiveMarket={state.goToLiveRound}
         />
       </TabPanel>
@@ -134,8 +136,8 @@ export const Prediction: React.FC<
   const { formatRoundWindow } = usePredictionFormatters();
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
   const { isMobile } = useScreen();
+  const panelMarketView = usePredictionPanelMarketView(state);
   const marketsDropdown = usePredictionMarketsDropdown(
-    state,
     state.onPredictionMarketChange,
   );
 
@@ -163,7 +165,8 @@ export const Prediction: React.FC<
 
   const isRequestedMarketUnavailable =
     state.requestedMarketId != null &&
-    !state.markets.some((market) => market.id === state.requestedMarketId);
+    !state.markets.some((market) => market.id === state.requestedMarketId) &&
+    state.marketId !== state.requestedMarketId;
   const isSwitchingMarket =
     state.requestedMarketId != null &&
     state.requestedMarketId !== state.marketId &&
@@ -202,7 +205,13 @@ export const Prediction: React.FC<
           </h1>
           {!isRequestedMarketUnavailable && state.market && (
             <div className="oui-mt-0.5 oui-truncate oui-text-xs oui-font-normal oui-text-base-contrast-54">
-              {formatRoundWindow(state.round, state.market.intervalSeconds)}
+              {formatRoundWindow(
+                state.selectedRow?.observation_start_at != null
+                  ? state.selectedRow.observation_start_at / 1_000
+                  : state.selectedRound,
+                state.market.intervalSeconds,
+                state.selectedRow?.expire_at,
+              )}
             </div>
           )}
         </div>
@@ -230,11 +239,8 @@ export const Prediction: React.FC<
             <Spinner size="lg" color="primary" />
           ) : (
             <>
-              <h2 className="oui-text-center oui-text-base oui-font-semibold oui-text-base-contrast-80 sm:oui-text-lg">
-                {t("prediction.rounds.emptyTitle")}
-              </h2>
-              <p className="oui-mt-2 oui-max-w-72 oui-text-center oui-text-sm oui-font-normal oui-leading-relaxed oui-text-base-contrast-54">
-                {t("prediction.rounds.emptyDescription")}
+              <p className="oui-max-w-sm oui-text-center oui-text-sm oui-font-normal oui-leading-relaxed oui-text-base-contrast-54">
+                {t("prediction.rounds.unavailable")}
               </p>
             </>
           )}
@@ -257,7 +263,7 @@ export const Prediction: React.FC<
 
           <div className="oui-hidden oui-h-12 oui-w-px oui-flex-shrink-0 oui-bg-line-12 2xl:oui-block" />
 
-          <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 xl:oui-grid 2xl:oui-flex 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
+          <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 2xl:oui-grid 2xl:oui-flex 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
             <DataItem
               label={t("prediction.chart.indexPrice", {
                 base: state.market?.base ?? "",
@@ -274,9 +280,7 @@ export const Prediction: React.FC<
         </header>
 
         <div className="oui-col-span-2 oui-col-start-1 oui-row-start-2 oui-min-w-0 2xl:oui-col-span-1 2xl:oui-col-start-1 2xl:oui-row-start-2">
-          {/* Mount a single chart per breakpoint: each PriceChart runs its own
-              candle-simulation interval, so keeping both alive doubles the
-              per-second work. */}
+          {/* Keep a single chart and leaf clock mounted per breakpoint. */}
           {isDesktopLayout ? (
             <PriceChart
               key={state.marketId}
@@ -287,10 +291,10 @@ export const Prediction: React.FC<
               points={state.priceHistory}
               candles={state.candles}
               roundOutcome={state.roundOutcomeLookup}
-              openingPrice={state.openingPrice}
-              currentPrice={state.currentPrice}
+              selectedRow={state.selectedRow}
+              rows={state.marketRows}
+              currentPrice={state.chartIndexPrice}
               round={state.round}
-              roundPhase={state.roundPhase}
               onGoToLiveMarket={state.goToLiveRound}
             />
           ) : (
@@ -303,7 +307,7 @@ export const Prediction: React.FC<
             market={state.market}
             orderBook={state.orderBook}
             selectedOutcome={state.selectedOutcome}
-            selectedPrice={state.selectedPrice}
+            markPrice={state.markPrice}
             setLimitPrice={state.setLimitPrice}
             setOrderType={state.setOrderType}
             isRoundTradable={state.isRoundTradable}
@@ -339,17 +343,21 @@ export const Prediction: React.FC<
               orderEntryFunded={orderEntryFunded}
             />
           ) : (
-            <RoundOrderStatusCard
+            <RoundResultWidget
+              state={state}
               marketName={marketName}
               intervalSeconds={state.market?.intervalSeconds ?? 300}
-              round={state.round}
-              roundPhase={state.roundPhase}
-              isRoundInSnapshot={state.isRoundInSnapshot}
             />
           )}
         </div>
         <div className="oui-col-span-2 oui-col-start-1 oui-row-start-4 oui-min-h-0 oui-min-w-0 lg:oui-h-[min(800px,max(420px,42vh))] lg:oui-overflow-hidden 2xl:oui-row-start-3">
-          <PredictionDataPanel state={state} />
+          <PredictionAccountPanel
+            activeTab={state.activeTab}
+            setActiveTab={state.setActiveTab}
+            marketView={panelMarketView}
+            isSubmitting={state.isSubmitting}
+            isRegionRestricted={state.isRegionRestricted}
+          />
         </div>
       </div>
     </main>

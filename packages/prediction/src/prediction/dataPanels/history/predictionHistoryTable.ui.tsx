@@ -1,9 +1,9 @@
-import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
+import { binaryHistoryDisplayRows } from "../../binary/binarySettlement";
 import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
-import type { PredictionState } from "../../prediction.script";
+import type { PredictionAccountPanelState } from "../../prediction.types";
 import { usePredictionFormatters } from "../../predictionShared";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
@@ -11,7 +11,7 @@ import type { PredictionHistoryTableScript } from "./predictionHistoryTable.scri
 
 /* eslint-disable react/jsx-key -- DataTable cells are positional arrays keyed by their parent row. */
 export type PredictionHistoryTableUIProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   filters: PredictionHistoryTableScript["filters"];
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
@@ -47,16 +47,16 @@ export const PredictionHistoryTableUI = ({
         }),
         tableColumn(t("prediction.closedSettledTime"), 180, { sortable: true }),
       ]}
-      rows={state.settlements
+      rows={binaryHistoryDisplayRows(state.historyRecords)
         .filter((record) =>
           filters.matches({
-            outcome: record.outcome,
+            outcome: record.outcome ?? "",
             status: record.result === "closed" ? "closed" : "settled",
-            timestamp: record.settledAt,
+            timestamp: record.filterTime,
           }),
         )
         .map((record) => ({
-          id: String(record.id),
+          id: record.recordKey,
           sortValues: [
             undefined,
             undefined,
@@ -68,12 +68,20 @@ export const PredictionHistoryTableUI = ({
             record.settledAt,
           ],
           cells: [
-            <RoundSymbol
-              round={record.round}
-              outcome={record.outcome}
-              symbol={record.symbol}
-            />,
-            <OutcomeBadge outcome={record.outcome} />,
+            record.outcome ? (
+              <RoundSymbol
+                round={record.round}
+                outcome={record.outcome}
+                symbol={record.symbol}
+              />
+            ) : (
+              <Text>{record.symbol}</Text>
+            ),
+            record.outcome ? (
+              <OutcomeBadge outcome={record.outcome} />
+            ) : (
+              <Text intensity={36}>--</Text>
+            ),
             <TableNumber value={record.quantity} />,
             <TableNumber value={record.averagePrice} />,
             <div>
@@ -88,8 +96,10 @@ export const PredictionHistoryTableUI = ({
             </div>,
             record.result === "closed" ? (
               t("prediction.closed")
+            ) : record.result ? (
+              <OutcomeBadge outcome={record.result} />
             ) : (
-              <OutcomeBadge outcome={record.result ?? record.outcome} />
+              <Text intensity={36}>--</Text>
             ),
             // Final PnL/time only once the system close finished
             // (api-spec §6.3); pending expiry rows show placeholders.

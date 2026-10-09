@@ -6,7 +6,7 @@ import { Decimal } from "@orderly.network/utils";
 import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
 import { useRoundCountdown } from "../../hooks/useRoundCountdown";
 import { SellPosition } from "../../orderEntry/sellPosition";
-import type { PredictionState } from "../../prediction.script";
+import type { PredictionAccountPanelState } from "../../prediction.types";
 import { formatCountdown } from "../../predictionShared";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
@@ -14,7 +14,7 @@ import type { HoldingsTableScript } from "./holdingsTable.script";
 
 /* eslint-disable react/jsx-key -- DataTable cells are positional arrays keyed by their parent row. */
 export type HoldingsTableUIProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   filters: HoldingsTableScript["filters"];
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
@@ -27,7 +27,7 @@ export const HoldingsTableUI = ({
   onLeadingFilter,
 }: HoldingsTableUIProps) => {
   const { t } = useTranslation();
-  const countdown = useRoundCountdown(state.selectedRow?.expire_at);
+  const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
   return (
     <PredictionDataTable
       toolbar={
@@ -52,9 +52,10 @@ export const HoldingsTableUI = ({
       rows={state.positions.filter(filters.matches).map((position) => {
         // Only the selected round has a subscribed book; other rounds' rows
         // stay readable but without live valuation.
-        const isSelectedRound = position.symbol === state.selectedRow?.symbol;
+        const isSelectedRound =
+          position.symbol === state.marketView?.selectedRow?.symbol;
         const lastPrice = isSelectedRound
-          ? state.outcomePrices[position.outcome]
+          ? state.marketView?.outcomePrices[position.outcome]
           : undefined;
         const uPnL =
           lastPrice != null
@@ -80,7 +81,7 @@ export const HoldingsTableUI = ({
           ],
           cells: [
             <RoundSymbol
-              round={position.round ?? state.round}
+              round={position.round ?? state.marketView?.round ?? 0}
               outcome={position.outcome}
               symbol={position.symbol}
             />,
@@ -107,9 +108,11 @@ export const HoldingsTableUI = ({
               <Text intensity={36}>--</Text>
             ),
             isSelectedRound
-              ? state.isRoundTradable
+              ? state.marketView?.isRoundTradable
                 ? formatCountdown(countdown)
-                : t(`prediction.phase.${state.roundPhase}`)
+                : t(
+                    `prediction.phase.${state.marketView?.roundPhase ?? "closed"}`,
+                  )
               : "--",
             <SellPosition
               state={state}

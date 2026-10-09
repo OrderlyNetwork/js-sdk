@@ -12,13 +12,13 @@ import {
 import { OutcomeBadge } from "../../cells";
 import type {
   PredictionOutcome,
-  PredictionState,
-} from "../../prediction.script";
+  PredictionAccountState,
+} from "../../prediction.types";
 import { MarketLimitPriceInput, PercentageControls } from "../form";
 import { useSellPositionScript } from "./sellPosition.script";
 
 export type SellPositionProps = {
-  state: PredictionState;
+  state: PredictionAccountState;
   outcome: PredictionOutcome;
   /** Round symbol of the position row; defaults to the selected round. */
   symbol?: string;
@@ -63,7 +63,7 @@ export const SellPosition: React.FC<SellPositionProps> = ({
               autoComplete="off"
               formatters={[
                 inputFormatter.numberFormatter,
-                inputFormatter.dpFormatter(4),
+                inputFormatter.dpFormatter(sell.quantityDp),
               ]}
               triggerClassName="oui-min-w-0 oui-flex-1"
               classNames={{
@@ -90,6 +90,7 @@ export const SellPosition: React.FC<SellPositionProps> = ({
             slippage={sell.slippage}
             setSlippage={sell.setSlippage}
             estimatedSlippage={sell.estimatedSlippage}
+            quoteTick={sell.quoteTick}
           />
           <div className="oui-mt-3 oui-flex oui-w-full oui-gap-2 oui-pb-1">
             <Button

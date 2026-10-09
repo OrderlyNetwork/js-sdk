@@ -1,11 +1,6 @@
-import { usePredictionScript } from "../prediction/prediction.script";
+import { usePredictionAccountData } from "../prediction/hooks/usePredictionAccountData";
 
-/**
- * Portfolio and trading-page prediction tables intentionally share one state
- * source so their records, statuses, and actions cannot drift apart.
- */
-export const usePredictionPortfolioScript = usePredictionScript;
-
+export const usePredictionPortfolioScript = usePredictionAccountData;
 export type PredictionPortfolioState = ReturnType<
   typeof usePredictionPortfolioScript
 >;

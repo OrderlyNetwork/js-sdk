@@ -5,6 +5,7 @@ import {
   useProductOrderCancelAll,
   type ProductOrderCancelAllOptions,
 } from "@orderly.network/prediction/src/prediction/dataPanels/useProductOrderCancelAll";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
   accountId: "account-1",
@@ -27,7 +28,12 @@ vi.mock("@orderly.network/hooks", async () => ({
   ...(await vi.importActual<any>(
     "@orderly.network/hooks/src/utils/orderCancellation",
   )),
-  useAccount: () => ({ state: { accountId: mocks.accountId } }),
+  useAccount: () => ({
+    state: {
+      accountId: mocks.accountId,
+      status: AccountStatusEnum.EnableTrading,
+    },
+  }),
   useMemoizedFn: (
     await vi.importActual<any>(
       "@orderly.network/hooks/src/shared/useMemoizedFn",
@@ -90,17 +96,10 @@ function predictionState(patch: Record<string, unknown> = {}) {
   } as any;
 }
 let renderer: ReactTestRenderer;
-function mount(options: ProductOrderCancelAllOptions, legacy = false) {
+function mount(options: ProductOrderCancelAllOptions) {
   let result!: ReturnType<typeof useProductOrderCancelAll>;
   function Harness({ options }: { options: ProductOrderCancelAllOptions }) {
-    result = legacy
-      ? useProductOrderCancelAll(
-          options.state,
-          options.enabled ?? true,
-          options.instrument !== "perps",
-          options.perpsSymbol,
-        )
-      : useProductOrderCancelAll(options);
+    result = useProductOrderCancelAll(options);
     return null;
   }
   act(() => {
@@ -158,43 +157,44 @@ describe("SDK product cancellation", () => {
   it("blocks cancellation when the account has no ID", async () => {
     mocks.accountId = "";
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "prediction",
     });
     expect(harness.result.disabled).toBe(true);
     expect(await execute(harness)).toBe(false);
     expect(mocks.cancelOrders).not.toHaveBeenCalled();
   });
-  it.each(["all", "perps"] as const)(
-    "preserves native %s fallback without a provider",
-    (instrument) => {
-      const { result } = mount({ state: null, instrument });
-      expect(result.cancelAll).toBeUndefined();
-      expect(result.onCancelAll).toBeUndefined();
-      expect(result.disabled).toBeUndefined();
-      expect(result.orderListProps).toEqual({});
-      expect(mocks.query).toHaveBeenLastCalledWith(
-        null,
-        expect.objectContaining({ refreshInterval: 0 }),
-      );
-    },
-  );
-  it("keeps trading guards during native fallback", () => {
-    mocks.canTrade = false;
-    const { result } = mount({ state: null, instrument: "perps" });
-    expect(result.orderListProps.cancelAllDisabled).toBe(true);
+  it("preserves native PERPs fallback without a Binary capability", () => {
+    const instrument = "perps";
+    const { result } = mount({ binary: undefined, instrument });
+    expect(result.cancelAll).toBeUndefined();
+    expect(result.onCancelAll).toBeUndefined();
+    expect(result.disabled).toBeUndefined();
+    expect(result.orderListProps).toEqual({});
+    expect(mocks.query).toHaveBeenLastCalledWith(
+      null,
+      expect.objectContaining({ refreshInterval: 0 }),
+    );
   });
-  it("disables Prediction without a provider", async () => {
-    const harness = mount({ state: null, instrument: "prediction" });
+  it("blocks mixed scope without a Binary capability", async () => {
+    const harness = mount({ instrument: "all" });
     expect(harness.result.disabled).toBe(true);
     expect(await execute(harness)).toBe(false);
     expect(mocks.cancelOrders).not.toHaveBeenCalled();
   });
-  it("retains legacy positional calls and PERP algo types", async () => {
-    const harness = mount(
-      { state: predictionState(), instrument: "perps" },
-      true,
-    );
+  it("keeps trading guards during native fallback", () => {
+    mocks.canTrade = false;
+    const { result } = mount({ binary: undefined, instrument: "perps" });
+    expect(result.orderListProps.cancelAllDisabled).toBe(true);
+  });
+  it("disables Prediction without a provider", async () => {
+    const harness = mount({ binary: undefined, instrument: "prediction" });
+    expect(harness.result.disabled).toBe(true);
+    expect(await execute(harness)).toBe(false);
+    expect(mocks.cancelOrders).not.toHaveBeenCalled();
+  });
+  it("uses options calls and preserves PERP algo types", async () => {
+    const harness = mount({ binary: predictionState(), instrument: "perps" });
     expect(await execute(harness)).toBe(true);
     expect(mocks.cancelOrders).toHaveBeenCalledExactlyOnceWith(null, {
       symbol: "PERP_BTC_USDC",
@@ -207,7 +207,7 @@ describe("SDK product cancellation", () => {
   it("Binary-only never queries or waits for PERP and respects underlying scope", async () => {
     mocks.pages = undefined;
     const harness = mount({
-      state: predictionState({
+      binary: predictionState({
         openOrders: [{ symbol: live }, { symbol: other }],
       }),
       instrument: "prediction",
@@ -233,7 +233,7 @@ describe("SDK product cancellation", () => {
     { isOrderTradable: () => false },
   ])("blocks unavailable Binary snapshots: %o", async (patch) => {
     const harness = mount({
-      state: predictionState(patch),
+      binary: predictionState(patch),
       instrument: "prediction",
     });
     expect(harness.result.disabled).toBe(true);
@@ -244,7 +244,7 @@ describe("SDK product cancellation", () => {
     mocks.pages[0].rows.push({ order_id: 2, symbol: "PERP_ETH_USDC" });
     mocks.pages[0].meta.total = 2;
     const harness = mount({
-      state: predictionState({
+      binary: predictionState({
         openOrders: [{ symbol: live }, { symbol: other }],
       }),
       instrument: "all",
@@ -263,12 +263,12 @@ describe("SDK product cancellation", () => {
   });
   it("requires complete PERP coverage and preserves region-restricted PERP-only cancellation", async () => {
     mocks.pages[0].meta.total = 2;
-    let harness = mount({ state: predictionState(), instrument: "perps" });
+    let harness = mount({ binary: predictionState(), instrument: "perps" });
     expect(await execute(harness)).toBe(false);
     act(() => renderer.unmount());
     mocks.pages[0].meta.total = 1;
     harness = mount({
-      state: predictionState({ isRegionRestricted: true }),
+      binary: predictionState({ isRegionRestricted: true }),
       instrument: "perps",
     });
     expect(await execute(harness)).toBe(true);
@@ -283,7 +283,7 @@ describe("SDK product cancellation", () => {
         });
       else mocks.cancelOrders.mockRejectedValue(new Error("CANCEL_REJECTED"));
       const harness = mount({
-        state: predictionState(),
+        binary: predictionState(),
         instrument: "prediction",
       });
       expect(await execute(harness)).toBe(false);
@@ -297,7 +297,7 @@ describe("SDK product cancellation", () => {
       .mockResolvedValueOnce({ success: true })
       .mockResolvedValueOnce({ success: false, message: "SECOND_FAILED" });
     const harness = mount({
-      state: predictionState({
+      binary: predictionState({
         openOrders: [
           { symbol: live },
           { symbol: other },
@@ -313,7 +313,7 @@ describe("SDK product cancellation", () => {
   it("refresh failure preserves the cancellation result", async () => {
     mocks.refresh.mockRejectedValue(new Error("refresh failed"));
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "prediction",
     });
     expect(await execute(harness)).toBe(true);
@@ -323,7 +323,7 @@ describe("SDK product cancellation", () => {
     mocks.pages[0].rows.push({ order_id: 2, symbol: "PERP_ETH_USDC" });
     mocks.pages[0].meta.total = 2;
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "perps",
       perpsSymbol: "PERP_BTC_USDC",
     });
@@ -337,7 +337,7 @@ describe("SDK product cancellation", () => {
 describe("real hook confirmation updates", () => {
   it("confirms before sending a request and prevents duplicate dialogs", async () => {
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "prediction",
     });
     const promise = open(harness);
@@ -350,7 +350,7 @@ describe("real hook confirmation updates", () => {
   });
   it("cancelling the dialog sends no mutation", async () => {
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "prediction",
     });
     const promise = open(harness);
@@ -362,12 +362,12 @@ describe("real hook confirmation updates", () => {
   });
   it("account switching while a dialog is open cannot cancel the new account", async () => {
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "prediction",
     });
     const promise = open(harness);
     mocks.accountId = "account-2";
-    harness.update({ state: predictionState(), instrument: "prediction" });
+    harness.update({ binary: predictionState(), instrument: "prediction" });
     expect(await confirm()).toBe(false);
     expect(await promise).toBe(false);
     expect(mocks.cancelOrders).not.toHaveBeenCalled();
@@ -375,22 +375,22 @@ describe("real hook confirmation updates", () => {
   });
   it("scope switching, even away and back, invalidates the original confirmation", async () => {
     const state = predictionState();
-    const harness = mount({ state, instrument: "prediction" });
+    const harness = mount({ binary: state, instrument: "prediction" });
     const promise = open(harness);
-    harness.update({ state, instrument: "all" });
-    harness.update({ state, instrument: "prediction" });
+    harness.update({ binary: state, instrument: "all" });
+    harness.update({ binary: state, instrument: "prediction" });
     expect(await confirm()).toBe(false);
     expect(await promise).toBe(false);
     expect(mocks.cancelOrders).not.toHaveBeenCalled();
   });
   it("new restrictions block an already-open confirmation", async () => {
     const harness = mount({
-      state: predictionState(),
+      binary: predictionState(),
       instrument: "prediction",
     });
     const promise = open(harness);
     harness.update({
-      state: predictionState({ isRegionRestricted: true }),
+      binary: predictionState({ isRegionRestricted: true }),
       instrument: "prediction",
     });
     expect(await confirm()).toBe(false);
@@ -406,7 +406,7 @@ describe("real hook confirmation updates", () => {
         }),
     );
     const harness = mount({
-      state: predictionState({
+      binary: predictionState({
         openOrders: [{ symbol: live }, { symbol: other }],
       }),
       instrument: "prediction",
@@ -418,7 +418,7 @@ describe("real hook confirmation updates", () => {
     expect(harness.result.isCancelling).toBe(true);
     expect(await harness.result.cancelAll!()).toBe(false);
     mocks.accountId = "account-2";
-    harness.update({ state: predictionState(), instrument: "prediction" });
+    harness.update({ binary: predictionState(), instrument: "prediction" });
     await act(async () => {
       release({ success: true });
       expect(await promise).toBe(false);

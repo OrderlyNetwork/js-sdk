@@ -1,5 +1,6 @@
+import { useLocalStorage } from "@orderly.network/hooks";
 import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
-import type { PredictionState } from "./prediction.script";
+import { usePredictionMarkets } from "./hooks/usePredictionMarkets";
 import { usePredictionFavorites } from "./predictionFavorites";
 import {
   PredictionMarketPanelWidget,
@@ -8,13 +9,17 @@ import {
 
 /** Adds the prediction market to the existing Perps market dropdown. */
 export const usePredictionMarketsDropdown = (
-  state: PredictionState | null,
   onPredictionSelect?: (marketId: string) => void,
 ): DropDownMarketsExtensionProps => {
+  const { markets, isLoading } = usePredictionMarkets();
+  const [, saveMarket] = useLocalStorage<string | null>(
+    "orderly_prediction_selected_market",
+    null,
+  );
   const tabs = usePredictionMarketTabs();
   const { favoriteMarketIds, toggleFavorite } = usePredictionFavorites();
   const selectMarket = (marketId: string, hide: () => void) => {
-    state?.selectMarket(marketId);
+    saveMarket(marketId);
     hide();
     onPredictionSelect?.(marketId);
   };
@@ -24,8 +29,8 @@ export const usePredictionMarketsDropdown = (
     renderTabContent: (_, key, hide) =>
       key === "prediction" ? (
         <PredictionMarketPanelWidget
-          markets={state?.markets ?? []}
-          loading={state?.isRoundsLoading}
+          markets={markets}
+          loading={isLoading}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
           onSelect={(id) => selectMarket(id, hide)}
@@ -33,9 +38,9 @@ export const usePredictionMarketsDropdown = (
       ) : undefined,
     renderTabAfterContent: (_, key, hide) =>
       key === "favorites" &&
-      state?.markets.some((market) => favoriteMarketIds.includes(market.id)) ? (
+      markets.some((market) => favoriteMarketIds.includes(market.id)) ? (
         <PredictionMarketPanelWidget
-          markets={state.markets.filter((market) =>
+          markets={markets.filter((market) =>
             favoriteMarketIds.includes(market.id),
           )}
           favoriteMarketIds={favoriteMarketIds}

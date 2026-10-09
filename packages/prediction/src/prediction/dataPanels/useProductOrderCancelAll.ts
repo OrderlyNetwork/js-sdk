@@ -8,11 +8,15 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useCanTrade } from "@orderly.network/react-app";
-import { OrderStatus, type API } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  OrderStatus,
+  type API,
+} from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useCancelAllConfirmation } from "@orderly.network/ui-orders";
 import { formatSymbol } from "@orderly.network/utils";
-import type { PredictionState } from "../prediction.script";
+import type { BinaryOrderCancellationCapability } from "../prediction.types";
 import {
   cancelProductTargets,
   cancellationOrdersSnapshot,
@@ -20,15 +24,8 @@ import {
   type ProductOrderInstrument,
 } from "./productOrderCancellation";
 
-type CancellationState = Pick<PredictionState, "openOrders" | "pendingOrdersComplete"> & {
-  accountId?: string;
-  accountReady: boolean;
-  isRegionRestricted: boolean;
-  isOrderTradable: (symbol?: string) => boolean;
-};
-
 export type ProductOrderCancelAllOptions = {
-  state: CancellationState | null;
+  binary?: BinaryOrderCancellationCapability;
   enabled?: boolean;
   instrument?: ProductOrderInstrument;
   perpsSymbol?: string;
@@ -49,47 +46,26 @@ export type ProductOrderCancelAllState = {
   };
 };
 
-export function useProductOrderCancelAll(
-  options: ProductOrderCancelAllOptions,
-): ProductOrderCancelAllState;
-/** @deprecated Use the options object to select All, Perps or Prediction explicitly. */
-export function useProductOrderCancelAll(
-  state: CancellationState | null,
-  enabled: boolean,
-  includePrediction: boolean,
-  perpsSymbol?: string,
-): ProductOrderCancelAllState;
 /** Account-wide pending cancellation, independent of display filters. */
-export function useProductOrderCancelAll(
-  optionsOrState: ProductOrderCancelAllOptions | CancellationState | null,
-  legacyEnabled?: boolean,
-  legacyIncludePrediction?: boolean,
-  legacyPerpsSymbol?: string,
-): ProductOrderCancelAllState {
-  const options: ProductOrderCancelAllOptions =
-    optionsOrState && "state" in optionsOrState
-      ? (optionsOrState as ProductOrderCancelAllOptions)
-      : {
-          state: optionsOrState as CancellationState | null,
-          enabled: legacyEnabled,
-          instrument: legacyIncludePrediction ? "all" : "perps",
-          perpsSymbol: legacyPerpsSymbol,
-        };
-  const {
-    state,
-    enabled = true,
-    instrument = "all",
-    perpsSymbol,
-    predictionUnderlyingSymbol,
-  } = options;
+export function useProductOrderCancelAll({
+  binary,
+  enabled = true,
+  instrument = "all",
+  perpsSymbol,
+  predictionUnderlyingSymbol,
+}: ProductOrderCancelAllOptions): ProductOrderCancelAllState {
   const { state: account } = useAccount();
   const canTrade = useCanTrade();
   const { t } = useTranslation();
   const refreshOrders = useRefreshOrderCaches();
   const includePerps = instrument !== "prediction";
   const includePrediction = instrument !== "perps";
-  const nativeFallback = state === null && includePerps;
-  const queryEnabled = enabled && !!state && includePerps;
+  const accountReady =
+    account.status >= AccountStatusEnum.EnableTrading ||
+    account.status === AccountStatusEnum.EnableTradingWithoutConnected;
+  const nativeFallback = instrument === "perps" && !binary;
+  const queryEnabled =
+    enabled && accountReady && includePerps && !nativeFallback;
   const pending = usePrivateInfiniteQuery<API.OrderResponse>(
     queryEnabled
       ? (index: number, previous?: API.OrderResponse) => {
@@ -145,7 +121,7 @@ export function useProductOrderCancelAll(
     instrument,
     perpsSymbol,
     predictionUnderlyingSymbol,
-    !!state,
+    !!binary,
   ]);
   const context = useRef({
     accountId: account.accountId,
@@ -167,19 +143,20 @@ export function useProductOrderCancelAll(
       enabled &&
       canTrade &&
       account.accountId &&
-      state?.accountReady &&
-      state.accountId === account.accountId
+      accountReady &&
+      (!includePrediction ||
+        (binary?.accountReady && binary.accountId === account.accountId))
         ? productCancellationTargets({
             perps: orders,
             perpsComplete: ready,
             includePerps,
             perpsSymbol,
-            binary: state.openOrders,
-            binaryComplete: state.pendingOrdersComplete,
+            binary: binary?.openOrders ?? [],
+            binaryComplete: binary?.pendingOrdersComplete ?? false,
             includePrediction,
             predictionUnderlyingSymbol,
-            regionRestricted: state.isRegionRestricted,
-            isBinaryTradable: state.isOrderTradable,
+            regionRestricted: binary?.isRegionRestricted ?? false,
+            isBinaryTradable: binary?.isOrderTradable ?? (() => false),
           })
         : undefined,
   );
@@ -265,7 +242,10 @@ export function useProductOrderCancelAll(
     execute: cancelAll,
   });
   const disabled = blocked || isCancelling || confirmation.isConfirming;
-  const fallbackDisabled = !enabled || !canTrade ? true : undefined;
+  const fallbackDisabled =
+    !enabled || !canTrade || !accountReady || !account.accountId
+      ? true
+      : undefined;
   return {
     cancelAll: nativeFallback ? undefined : cancelAll,
     onCancelAll: nativeFallback ? undefined : confirmation.onCancelAll,

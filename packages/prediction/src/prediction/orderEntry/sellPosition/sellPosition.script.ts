@@ -1,19 +1,33 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { type LocaleMessages, i18n } from "@orderly.network/i18n";
+import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import {
+  parseSlippageTicks,
+  splitBinaryQuantity,
+} from "../../binary/binaryOrderRules";
+import { usePredictionAccountResources } from "../../hooks/usePredictionAccountResources";
+import { usePredictionMarkets } from "../../hooks/usePredictionMarkets";
+import {
+  usePredictionOrderBook,
+  usePredictionOrderBookView,
+} from "../../hooks/usePredictionOrderBook";
+import { usePredictionTradingActions } from "../../hooks/usePredictionTradingActions";
 import type {
   PredictionOutcome,
   PredictionOrderType,
-  PredictionState,
-} from "../../prediction.script";
+  PredictionAccountState,
+} from "../../prediction.types";
 import {
   percentageFromQuantity,
   quantityFromPercentage,
 } from "../form/quantityPercentage";
 
 export type UseSellPositionScriptArgs = {
-  state: PredictionState;
+  state: PredictionAccountState;
   outcome: PredictionOutcome;
-  /** Round symbol of the position row; defaults to the selected round. */
+  /** Round symbol of the position being sold. */
   symbol?: string;
 };
 
@@ -27,42 +41,121 @@ export const useSellPositionScript = ({
   const [price, setPrice] = useState("");
   const [type, setType] = useState<PredictionOrderType>("market");
 
-  // Only the selected round's book drives protection prices; exits on other
-  // rounds stay read-only until the user switches the chart to that round.
-  const sellable = symbol == null || symbol === state.selectedRow?.symbol;
-  const available = state.availableQuantity(outcome, undefined, symbol);
-  const estimatedSlippage = useMemo(
-    () => state.estimateOrderSlippage("sell", Number(quantity), outcome),
-    [outcome, quantity, state],
+  const openingContext = useRef<{ accountId?: string; symbol?: string }>({});
+  const markets = usePredictionMarkets({ enabled: open });
+  const row = symbol ? markets.configBySymbol.get(symbol) : undefined;
+  const orderbook = usePredictionOrderBook({ symbol, active: open });
+  const resources = usePredictionAccountResources({
+    enabled: open,
+    includeHistory: false,
+  });
+  const [storedSlippage, saveSlippage] = useLocalStorage(
+    "orderly-prediction-slippage-ticks",
+    "2",
   );
-  const isSlippageExceeded =
-    type === "market" &&
-    estimatedSlippage !== null &&
-    estimatedSlippage > new Decimal(state.slippage || 0).div(100).toNumber();
+  const slippage =
+    parseSlippageTicks(storedSlippage) == null ? "2" : storedSlippage;
+  const setSlippage = useCallback(
+    (value: string) => {
+      if (parseSlippageTicks(value) != null)
+        saveSlippage(String(Number(value)));
+    },
+    [saveSlippage],
+  );
+  const notify = useCallback(
+    (message: string) =>
+      toast.error(String(i18n.t(message as keyof LocaleMessages))),
+    [],
+  );
+  const actions = usePredictionTradingActions({
+    active: open,
+    resources,
+    binaryRows: markets.rows,
+    notify,
+    isRegionRestricted: state.isRegionRestricted,
+    selectedSymbol: symbol,
+    bbo: orderbook.bbo,
+    book: orderbook.book,
+    slippage,
+    onActiveTab: () => {},
+  });
+  const available = open
+    ? actions.availableQuantity(outcome, undefined, symbol)
+    : state.availableQuantity(outcome, undefined, symbol);
+  const view = usePredictionOrderBookView({
+    book: orderbook.book,
+    selectedOutcome: outcome,
+    orderSide: "sell",
+    orderQuantity: Number(quantity),
+    orderType: type,
+    slippage,
+    quoteTick: row?.quote_tick,
+  });
+  const estimatedSlippage = view.estimatedSlippage;
+  const isSlippageExceeded = view.isSlippageExceeded;
+  useEffect(() => {
+    if (
+      open &&
+      (!symbol ||
+        openingContext.current.accountId !== actions.accountId ||
+        openingContext.current.symbol !== symbol ||
+        state.accountId !== actions.accountId)
+    )
+      setOpen(false);
+  }, [open, symbol, state.accountId, actions.accountId]);
   const percentage = percentageFromQuantity(Number(quantity) || 0, available);
 
+  const quantityDp = new Decimal(row?.base_tick ?? 0.01).decimalPlaces();
   const selectPercentage = (value: number) =>
-    setQuantity(quantityFromPercentage(available, value, 4));
+    setQuantity(quantityFromPercentage(available, value, quantityDp));
 
   const tradable =
-    sellable && state.isRoundTradable && !state.isRegionRestricted;
+    state.isOrderTradable(symbol) &&
+    !state.isRegionRestricted &&
+    state.accountReady &&
+    state.hasFeeConfig &&
+    !state.isSubmitting &&
+    !actions.isSubmitting;
+  const displayPrice =
+    type === "market"
+      ? actions.protectionPrice(outcome, "sell", symbol)
+      : Number(price);
+  const upPrice =
+    displayPrice == null
+      ? 0
+      : outcome === "up"
+        ? displayPrice
+        : new Decimal(1).sub(displayPrice).toNumber();
   const valid =
+    open &&
+    !!row &&
+    actions.accountReady &&
+    actions.accountId === state.accountId &&
     tradable &&
     Number(quantity) > 0 &&
     Number(quantity) <= available &&
+    splitBinaryQuantity(Number(quantity), upPrice, row!) != null &&
+    (type === "market" ||
+      new Decimal(Number(price)).div(row?.quote_tick ?? 0.01).isInteger()) &&
     !isSlippageExceeded &&
     (type === "market" || (Number(price) > 0 && Number(price) < 1));
 
   const onOpenChange = (value: boolean) => {
     setOpen(value);
     if (value) {
+      openingContext.current = { accountId: state.accountId, symbol };
       setQuantity(String(available));
-      setPrice(state.outcomePrices[outcome].toFixed(2));
+      setPrice(
+        orderbook.executablePrices.sell[outcome]?.toFixed(
+          new Decimal(row?.quote_tick ?? 0.01).decimalPlaces(),
+        ) ?? "",
+      );
     }
   };
 
   const confirm = async () => {
-    const placed = await state.sellPosition(
+    if (!valid) return;
+    const placed = await actions.sellPosition(
       outcome,
       Number(quantity),
       type,
@@ -85,14 +178,16 @@ export const useSellPositionScript = ({
     setType,
     available,
     percentage,
+    quantityDp,
     selectPercentage,
     estimatedSlippage,
     tradable,
     valid,
     confirm,
     outcome,
-    slippage: state.slippage,
-    setSlippage: state.setSlippage,
+    slippage,
+    setSlippage,
+    quoteTick: row?.quote_tick,
   };
 };
 

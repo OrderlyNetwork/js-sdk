@@ -1,8 +1,9 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Input, inputFormatter, Select } from "@orderly.network/ui";
-import { SlippageUI } from "@orderly.network/ui-order-entry";
+import { Decimal } from "@orderly.network/utils";
 import type { PredictionOrderType } from "../../prediction.script";
+import { BinarySlippage } from "./binarySlippage.ui";
 
 export type MarketLimitPriceInputProps = {
   type: PredictionOrderType;
@@ -13,6 +14,7 @@ export type MarketLimitPriceInputProps = {
   setSlippage?: (value: string) => void;
   estimatedSlippage?: number | null;
   showSlippage?: boolean;
+  quoteTick?: number;
 };
 
 export const MarketLimitPriceInput: React.FC<MarketLimitPriceInputProps> = ({
@@ -24,6 +26,7 @@ export const MarketLimitPriceInput: React.FC<MarketLimitPriceInputProps> = ({
   setSlippage,
   estimatedSlippage,
   showSlippage = true,
+  quoteTick = 0.01,
 }) => {
   const { t } = useTranslation();
   return (
@@ -35,7 +38,7 @@ export const MarketLimitPriceInput: React.FC<MarketLimitPriceInputProps> = ({
         triggerClassName="oui-w-full"
         formatters={[
           inputFormatter.numberFormatter,
-          inputFormatter.dpFormatter(4),
+          inputFormatter.dpFormatter(new Decimal(quoteTick).decimalPlaces()),
         ]}
         value={type === "market" ? "" : price}
         onValueChange={onPriceChange}
@@ -72,10 +75,11 @@ export const MarketLimitPriceInput: React.FC<MarketLimitPriceInputProps> = ({
         slippage !== undefined &&
         setSlippage && (
           <div className="oui-mt-2">
-            <SlippageUI
+            <BinarySlippage
               slippage={slippage}
               setSlippage={setSlippage}
-              estSlippage={estimatedSlippage ?? null}
+              estimated={estimatedSlippage ?? null}
+              quoteTick={quoteTick}
             />
           </div>
         )}

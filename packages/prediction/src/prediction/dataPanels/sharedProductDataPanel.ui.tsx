@@ -7,7 +7,7 @@ import {
   MobilePositionsWidget,
   PositionHistoryWidget,
 } from "@orderly.network/ui-positions";
-import type { PredictionState } from "../prediction.script";
+import type { PredictionAccountPanelState } from "../prediction.types";
 import { PredictionHistoryTable } from "./history/predictionHistoryTable.widget";
 import { HoldingsTable } from "./holdings/holdingsTable.widget";
 import {
@@ -19,10 +19,10 @@ import {
   type ProductDataType,
   type ProductType,
 } from "./sharedProductDataPanel.script";
-import { useScopedPredictionState } from "./useScopedPredictionState";
+import { useScopedPredictionAccount } from "./useScopedPredictionAccount";
 
 export type SharedProductDataPanelProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   type: ProductDataType;
   /** The product shown when this panel first opens on a page. */
   initialProduct: ProductType;
@@ -53,7 +53,7 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   mobile = false,
 }) => {
   const { t } = useTranslation();
-  const scopedState = useScopedPredictionState(
+  const scopedState = useScopedPredictionAccount(
     state,
     predictionUnderlyingSymbol,
   );

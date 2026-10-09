@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { TabPanel, Tabs } from "@orderly.network/ui";
 import { MobilePositionHistoryWidget } from "@orderly.network/ui-positions";
-import type { PredictionState } from "../prediction.script";
+import type { PredictionAccountPanelState } from "../prediction.types";
 import { MobilePredictionHistory } from "./predictionMobileCards.ui";
 import { MobileSharedProductOrdersPanel } from "./sharedProductOrdersPanel.mobile.ui";
-import { useScopedPredictionState } from "./useScopedPredictionState";
+import { useScopedPredictionAccount } from "./useScopedPredictionAccount";
 
 type HistoryTab = "perps" | "prediction" | "orders";
 
 export const MobileSharedProductHistory: React.FC<{
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   initialProduct: "perps" | "prediction";
   perpsSymbol?: string;
   predictionUnderlyingSymbol?: string;
 }> = ({ state, initialProduct, perpsSymbol, predictionUnderlyingSymbol }) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<HistoryTab>(initialProduct);
-  const scopedState = useScopedPredictionState(
+  const scopedState = useScopedPredictionAccount(
     state,
     predictionUnderlyingSymbol,
   );

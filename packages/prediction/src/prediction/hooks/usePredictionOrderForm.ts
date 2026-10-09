@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Decimal } from "@orderly.network/utils";
+import { binaryOutcomeMarkPrice } from "../binary/binaryMarkPrice";
+import {
+  binaryMaxQuoteInput,
+  quoteToBinaryQuantity,
+  splitBinaryQuantity,
+} from "../binary/binaryOrderRules";
 import { amountFromPercentage } from "../orderEntry/form/quantityPercentage";
 import {
   clamp,
@@ -9,7 +15,7 @@ import {
   type PredictionOutcome,
   type PredictionPosition,
 } from "../prediction.types";
-import { EMPTY_BOOK_FALLBACK_PRICE, floorToTick } from "../predictionShared";
+import { floorToTick } from "../predictionShared";
 
 const isOnTick = (value: number, tick: number) =>
   Number.isFinite(value) &&
@@ -19,6 +25,8 @@ const isOnTick = (value: number, tick: number) =>
 
 export type UsePredictionOrderFormArgs = {
   marketId?: string;
+  /** UP-coordinate mark price used only to estimate capacity for an empty limit input. */
+  markPrice?: number;
   quoteTick?: number;
   quoteMin?: number;
   quoteMax?: number;
@@ -26,7 +34,10 @@ export type UsePredictionOrderFormArgs = {
   baseMin?: number;
   baseMax?: number;
   minNotional?: number;
-  outcomePrices: Record<PredictionOutcome, number>;
+  executablePrices: Record<
+    PredictionOrderSide,
+    Record<PredictionOutcome, number | undefined>
+  >;
   /** Protection price a MARKET order submits as its IOC limit (PRD §6.4). */
   marketPrice: (
     outcome: PredictionOutcome,
@@ -50,14 +61,15 @@ export type UsePredictionOrderFormArgs = {
 
 export const usePredictionOrderForm = ({
   marketId,
+  markPrice,
   quoteTick = 0.01,
   quoteMin = quoteTick,
-  quoteMax = 1 - quoteTick,
+  quoteMax = new Decimal(1).sub(quoteTick).toNumber(),
   baseTick = 0.01,
   baseMin = baseTick,
   baseMax = 10000,
   minNotional = 5,
-  outcomePrices,
+  executablePrices,
   marketPrice,
   balance,
   estimateAdditionalFrozen,
@@ -71,15 +83,19 @@ export const usePredictionOrderForm = ({
     useState<PredictionOutcome>("up");
   const [orderSide, setOrderSide] = useState<PredictionOrderSide>("buy");
   const [orderType, setOrderType] = useState<PredictionOrderType>("market");
-  const [amountUnit, setAmountUnit] = useState<PredictionAmountUnit>("quote");
-  const [amount, setAmount] = useState("100");
+  const amountUnit: PredictionAmountUnit =
+    orderSide === "buy" ? "quote" : "outcome";
+  const [tradeMode, setTradeMode] = useState<"oneTap" | "market" | "limit">(
+    "oneTap",
+  );
+  const [amount, setAmount] = useState("");
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(
     null,
   );
-  const [limitPrice, setLimitPrice] = useState("0.50");
+  const [limitPrice, setLimitPrice] = useState("");
   const priceDp = new Decimal(quoteTick).decimalPlaces();
   const amountDp =
-    amountUnit === "quote" ? priceDp : new Decimal(baseTick).decimalPlaces();
+    amountUnit === "quote" ? 2 : new Decimal(baseTick).decimalPlaces();
   const [formMarketId, setFormMarketId] = useState(marketId);
 
   useEffect(() => {
@@ -88,20 +104,17 @@ export const usePredictionOrderForm = ({
     setSelectedOutcome("up");
     setOrderSide("buy");
     setOrderType("market");
-    setAmountUnit("quote");
+    setTradeMode("oneTap");
     setAmount("");
     setSelectedPercentage(null);
-    setLimitPrice("0.50");
+    setLimitPrice("");
   }, [formMarketId, marketId]);
 
-  const selectedMarketPrice = outcomePrices[selectedOutcome];
-  // MARKET uses the submitted IOC protection price, including the 0.5
-  // fallback on an empty executable side. LIMIT keeps the user-picked price.
-  // Max, percentage amounts and funds validation must use this same price.
+  const selectedMarketPrice = executablePrices[orderSide][selectedOutcome];
   const rawSelectedPrice =
     orderType === "limit"
       ? Number(limitPrice) || 0
-      : (marketPrice(selectedOutcome, orderSide) ?? EMPTY_BOOK_FALLBACK_PRICE);
+      : (marketPrice(selectedOutcome, orderSide) ?? 0);
   const selectedPrice = Number.isFinite(rawSelectedPrice)
     ? rawSelectedPrice
     : 0;
@@ -114,6 +127,18 @@ export const usePredictionOrderForm = ({
       ? quoteMax
       : new Decimal(1).sub(quoteMin).toNumber();
 
+  // Capacity preview must not supply a price to the submitted order.
+  const maxAmountPrice =
+    orderType === "limit" && limitPrice.trim() === ""
+      ? binaryOutcomeMarkPrice(markPrice, selectedOutcome)
+      : selectedPrice;
+  const hasMaxAmountEstimate =
+    orderSide === "sell" ||
+    (maxAmountPrice != null &&
+      Number.isFinite(maxAmountPrice) &&
+      maxAmountPrice > 0 &&
+      maxAmountPrice < 1);
+
   const selectedPosition = positions.find(
     (position) => position.outcome === selectedOutcome,
   );
@@ -122,11 +147,8 @@ export const usePredictionOrderForm = ({
   const orderQuantity = useMemo(() => {
     if (amountUnit === "outcome") return floorToTick(numericAmount, baseTick);
     if (!Number.isFinite(selectedPrice) || selectedPrice <= 0) return 0;
-    return floorToTick(
-      new Decimal(numericAmount).div(selectedPrice).toNumber(),
-      baseTick,
-    );
-  }, [amountUnit, baseTick, numericAmount, selectedPrice]);
+    return quoteToBinaryQuantity(amount, selectedPrice, baseTick);
+  }, [amount, amountUnit, baseTick, numericAmount, selectedPrice]);
 
   const orderNotional = useMemo(
     () => new Decimal(orderQuantity).mul(selectedPrice).toNumber(),
@@ -151,27 +173,28 @@ export const usePredictionOrderForm = ({
   const maxOutcomeAmount = useMemo(
     () =>
       floorToTick(
-        Math.min(
-          baseMax,
-          orderSide === "buy"
-            ? maxOpeningQuantity(selectedOutcome, selectedPrice)
-            : selectedTokenBalance,
-        ),
+        orderSide === "buy"
+          ? hasMaxAmountEstimate
+            ? maxOpeningQuantity(selectedOutcome, maxAmountPrice!)
+            : 0
+          : selectedTokenBalance,
         baseTick,
       ),
     [
-      baseMax,
       baseTick,
       maxOpeningQuantity,
       orderSide,
       selectedOutcome,
-      selectedPrice,
+      maxAmountPrice,
+      hasMaxAmountEstimate,
       selectedTokenBalance,
     ],
   );
-  const maxQuoteAmount = new Decimal(maxOutcomeAmount)
-    .mul(selectedPrice)
-    .toNumber();
+  const maxQuoteAmount = binaryMaxQuoteInput(
+    maxOutcomeAmount,
+    maxAmountPrice ?? 0,
+    baseTick,
+  );
   const requiredFrozen =
     orderSide === "buy"
       ? estimateAdditionalFrozen(selectedOutcome, orderQuantity, selectedPrice)
@@ -190,11 +213,7 @@ export const usePredictionOrderForm = ({
     ) {
       return false;
     }
-    if (
-      orderQuantity < baseMin ||
-      orderQuantity > baseMax ||
-      !Number.isFinite(selectedPrice)
-    )
+    if (orderQuantity < baseMin || !Number.isFinite(selectedPrice))
       return false;
     if (orderType === "limit" && !isOnTick(selectedPrice, quoteTick))
       return false;
@@ -202,14 +221,38 @@ export const usePredictionOrderForm = ({
     // entries and reduce-only exits alike (api-spec §5.2); a DOWN order at
     // display n checks (1-n)*qty, not n*qty.
     const upNotional = new Decimal(orderQuantity).mul(
-      selectedOutcome === "up" ? selectedPrice : 1 - selectedPrice,
+      selectedOutcome === "up"
+        ? selectedPrice
+        : new Decimal(1).sub(selectedPrice).toNumber(),
     );
-    if (!upNotional.gte(minNotional)) return false;
+    if (
+      !upNotional.gte(minNotional) ||
+      !splitBinaryQuantity(
+        orderQuantity,
+        selectedOutcome === "up"
+          ? selectedPrice
+          : new Decimal(1).sub(selectedPrice).toNumber(),
+        {
+          base_tick: baseTick,
+          base_min: baseMin,
+          base_max: baseMax,
+          min_notional: minNotional,
+        },
+      )
+    )
+      return false;
+    if (
+      !/^\d+(\.\d+)?$/.test(amount) ||
+      new Decimal(amount).decimalPlaces() > amountDp
+    )
+      return false;
     if (orderSide === "buy") {
       return requiredFrozen != null && requiredFrozen <= balance;
     }
     return orderQuantity <= selectedTokenBalance + 1e-9;
   }, [
+    amount,
+    amountDp,
     balance,
     baseMin,
     baseMax,
@@ -233,49 +276,61 @@ export const usePredictionOrderForm = ({
     selectedTokenBalance,
   ]);
 
+  const setDefaultLimit = useCallback(
+    (outcome: PredictionOutcome, side: PredictionOrderSide) => {
+      const price = executablePrices[side][outcome];
+      setLimitPrice(price == null ? "" : price.toFixed(priceDp));
+    },
+    [executablePrices, priceDp],
+  );
+
   const selectOutcome = useCallback(
     (outcome: PredictionOutcome) => {
       setSelectedOutcome(outcome);
-      setLimitPrice(outcomePrices[outcome].toFixed(priceDp));
+      setSelectedPercentage(null);
+      setDefaultLimit(outcome, orderSide);
     },
-    [outcomePrices, priceDp],
+    [orderSide, setDefaultLimit],
+  );
+
+  const selectOrderSide = useCallback(
+    (side: PredictionOrderSide) => {
+      if (side === orderSide) return;
+      setOrderSide(side);
+      setAmount("");
+      setSelectedPercentage(null);
+      setDefaultLimit(selectedOutcome, side);
+    },
+    [orderSide, selectedOutcome, setDefaultLimit],
   );
 
   const selectOrderType = useCallback(
     (type: PredictionOrderType) => {
       setOrderType(type);
-      if (type === "limit") {
-        setAmountUnit("outcome");
-        setLimitPrice(outcomePrices[selectedOutcome].toFixed(priceDp));
-      }
+      setTradeMode(type);
+      if (type === "limit") setDefaultLimit(selectedOutcome, orderSide);
     },
-    [outcomePrices, priceDp, selectedOutcome],
+    [orderSide, selectedOutcome, setDefaultLimit],
   );
 
-  const selectAmountUnit = useCallback(
-    (unit: PredictionAmountUnit) => {
-      if (unit === amountUnit) return;
-      const value = Number.isFinite(Number(amount)) ? Number(amount) : 0;
-      const converted =
-        unit === "outcome"
-          ? selectedPrice > 0
-            ? new Decimal(value).div(selectedPrice).toNumber()
-            : 0
-          : new Decimal(value).mul(selectedPrice).toNumber();
-      // Both units live on the 0.01 tick grid (USDC quote / share count).
-      setAmountUnit(unit);
-      setAmount(
-        value > 0
-          ? converted.toFixed(
-              unit === "quote"
-                ? priceDp
-                : new Decimal(baseTick).decimalPlaces(),
-            )
-          : "",
-      );
+  const selectTradeMode = useCallback(
+    (mode: "oneTap" | "market" | "limit") => {
+      setTradeMode(mode);
+      setOrderType(mode === "oneTap" ? "market" : mode);
+      if (mode === "oneTap") {
+        setOrderSide("buy");
+        setAmount("");
+        setSelectedPercentage(null);
+      }
+      if (mode === "limit") setDefaultLimit(selectedOutcome, orderSide);
     },
-    [amount, amountUnit, baseTick, priceDp, selectedPrice],
+    [orderSide, selectedOutcome, setDefaultLimit],
   );
+
+  // Kept for callers using the previous public state; the side owns the unit.
+  const selectAmountUnit = useCallback((unit: PredictionAmountUnit) => {
+    void unit;
+  }, []);
 
   const setOrderPercentage = useCallback(
     (percentage: number) => {
@@ -310,7 +365,9 @@ export const usePredictionOrderForm = ({
     selectedOutcome,
     setSelectedOutcome: selectOutcome,
     orderSide,
-    setOrderSide,
+    setOrderSide: selectOrderSide,
+    tradeMode,
+    setTradeMode: selectTradeMode,
     orderType,
     setOrderType: selectOrderType,
     amountUnit,
@@ -330,6 +387,8 @@ export const usePredictionOrderForm = ({
     estimatedProfit,
     odds,
     maxAmount,
+    maxAmountPrice,
+    hasMaxAmountEstimate,
     maxQuoteAmount,
     maxOutcomeAmount,
     orderPercentage: selectedPercentage ?? orderPercentage,

@@ -3,7 +3,10 @@ import { useTranslation } from "@orderly.network/i18n";
 import { AssetsModule } from "@orderly.network/portfolio";
 import { PerpsPositionsSettings } from "@orderly.network/trading";
 import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
-import type { PredictionDataTab, PredictionState } from "../prediction.script";
+import type {
+  PredictionDataTab,
+  PredictionAccountPanelState,
+} from "../prediction.types";
 import type { ProductType } from "./sharedProductDataPanel.script";
 import { SharedProductDataPanel } from "./sharedProductDataPanel.ui";
 import { MobileSharedProductHistory } from "./sharedProductHistory.mobile.ui";
@@ -12,7 +15,7 @@ import { SharedProductOrdersPanel } from "./sharedProductOrdersPanel.ui";
 import { useSharedProductCounts } from "./useSharedProductCounts";
 
 export type PredictionDataPanelProps = {
-  state: PredictionState;
+  state: PredictionAccountPanelState;
   tabs?: PredictionDataTab[];
   className?: string;
   embedded?: boolean;
@@ -37,10 +40,16 @@ export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = (
   props,
 ) => {
   const { isMobile } = useScreen();
+  const [activeTab, setActiveTab] = useState<PredictionDataTab>("predictions");
+  const state = {
+    ...props.state,
+    activeTab: props.state.activeTab ?? activeTab,
+    setActiveTab: props.state.setActiveTab ?? setActiveTab,
+  };
   return isMobile ? (
-    <MobilePredictionDataPanel {...props} />
+    <MobilePredictionDataPanel {...props} state={state} />
   ) : (
-    <DesktopPredictionDataPanel {...props} />
+    <DesktopPredictionDataPanel {...props} state={state} />
   );
 };
 
@@ -51,11 +60,13 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
 }) => {
   const { t } = useTranslation();
-  const counts = useSharedProductCounts(state);
+  const counts = useSharedProductCounts({ product: "all" });
   const mobileTabs = tabs === defaultTabs ? defaultMobileTabs : tabs;
-  const activeTab = mobileTabs.includes(state.activeTab)
+  const activeTab = mobileTabs.includes(state.activeTab ?? "predictions")
     ? state.activeTab
-    : ["filled", "predictionHistory", "orderHistory"].includes(state.activeTab)
+    : ["filled", "predictionHistory", "orderHistory"].includes(
+          state.activeTab ?? "predictions",
+        )
       ? "history"
       : "predictions";
   const tabCount: Partial<Record<PredictionDataTab, number | null>> = {
@@ -99,7 +110,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
       <Tabs
         value={activeTab}
         onValueChange={(value) =>
-          state.setActiveTab(value as PredictionDataTab)
+          state.setActiveTab?.(value as PredictionDataTab)
         }
         size="lg"
         classNames={{
@@ -137,8 +148,8 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
 }) => {
   const { t } = useTranslation();
-  const counts = useSharedProductCounts(state);
-  const activeTab = tabs.includes(state.activeTab)
+  const counts = useSharedProductCounts({ product: "all" });
+  const activeTab = tabs.includes(state.activeTab ?? "predictions")
     ? state.activeTab
     : state.activeTab === "history"
       ? "predictionHistory"
@@ -189,7 +200,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
         className="oui-prediction-dataPanel-tabs oui-h-full oui-min-h-0"
         value={activeTab}
         onValueChange={(value) =>
-          state.setActiveTab(value as PredictionDataTab)
+          state.setActiveTab?.(value as PredictionDataTab)
         }
         variant={embedded ? undefined : "contained"}
         size={embedded ? undefined : "lg"}
