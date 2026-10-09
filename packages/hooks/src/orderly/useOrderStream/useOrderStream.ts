@@ -64,12 +64,15 @@ export const useOrderStream = (
      * Keep the state update alive
      */
     keeplive?: boolean;
+    /** Suspend private queries and cache registration. Defaults to true. */
+    enabled?: boolean;
     /**
      * Stop the state update when the component unmount
      */
     stopOnUnmount?: boolean;
   },
 ) => {
+  const enabled = options?.enabled !== false;
   const {
     status,
     symbol,
@@ -145,6 +148,7 @@ export const useOrderStream = (
   }, [status, symbol, side, dateRange, size, sourceTypeAll, productType]);
 
   useEffect(() => {
+    if (!enabled) return;
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side,
@@ -165,10 +169,10 @@ export const useOrderStream = (
         unregisterKeyHandler(key.replace("orders", "algoOrders"));
       }
     };
-  }, [normalOrderKeyFn, options?.keeplive]);
+  }, [enabled, normalOrderKeyFn, options?.keeplive]);
 
   const normalOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
-    normalOrderKeyFn,
+    enabled ? normalOrderKeyFn : null,
     {
       initialSize: 1,
       formatter: (data) => data,
@@ -179,7 +183,7 @@ export const useOrderStream = (
   // console.log("ordersResponse", ordersResponse);
 
   const algoOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
-    algoOrderKeyFn,
+    enabled ? algoOrderKeyFn : null,
     {
       formatter: (data) => data,
       revalidateOnFocus: false,
@@ -635,6 +639,8 @@ export const useOrderStream = (
     orders,
     {
       total,
+      error: normalOrdersResponse.error || algoOrdersResponse.error,
+      hasMore: (normalOrdersResponse.data?.at(-1)?.rows.length ?? 0) > 0,
       isLoading: normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
       isValidating:
         normalOrdersResponse.isValidating || algoOrdersResponse.isValidating,

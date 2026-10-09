@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, type ReactNode } from "react";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { cn, Flex, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
@@ -22,6 +22,8 @@ export interface OrderBookLadderProps {
   bids: number[][];
   /** `[previous, current]` middle price; drives the arrow in the price row. */
   lastPrice: number[];
+  /** Overrides the middle-price display while preserving the rest of the price row. */
+  middlePriceContent?: ReactNode;
   /** Mark price for the price row; defaults to the current middle price. */
   markPrice?: number;
   /** Renders the flagged mark-price label. @default true */
@@ -50,6 +52,7 @@ export const OrderBookLadder: FC<OrderBookLadderProps> = (props) => {
     asks,
     bids,
     lastPrice,
+    middlePriceContent,
     markPrice,
     showMarkPrice = true,
     showSpread = true,
@@ -120,6 +123,7 @@ export const OrderBookLadder: FC<OrderBookLadderProps> = (props) => {
           />
         </div>
         <DesktopMarkPrice
+          middlePriceContent={middlePriceContent}
           lastPrice={lastPrice}
           markPrice={markPrice ?? lastPrice?.[1] ?? 0}
           // Shallow copy so consumers never have their arrays mutated inside

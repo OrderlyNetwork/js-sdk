@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, type ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Text, Tooltip } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -10,6 +10,8 @@ import { useOrderBookContext } from "../../base/orderBook/orderContext";
 interface DesktopMarkPriceProps {
   markPrice: number;
   lastPrice: number[];
+  /** Overrides the middle-price display while preserving the rest of the price row. */
+  middlePriceContent?: ReactNode;
   asks: number[][];
   bids: number[][];
   symbolInfo: BasicSymbolInfo;
@@ -39,12 +41,14 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
           showTotal && "oui-basis-5/12",
         )}
       >
-        <MiddlePriceView
-          markPrice={markPrice}
-          lastPrice={lastPrice}
-          quote_dp={symbolInfo.quote_dp}
-          className="oui-text-base"
-        />
+        {props.middlePriceContent ?? (
+          <MiddlePriceView
+            markPrice={markPrice}
+            lastPrice={lastPrice}
+            quote_dp={symbolInfo.quote_dp}
+            className="oui-text-base"
+          />
+        )}
         {showMarkPrice && (
           <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
         )}

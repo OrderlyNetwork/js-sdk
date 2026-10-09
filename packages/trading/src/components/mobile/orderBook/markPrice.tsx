@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, type ReactNode } from "react";
 import { Flex } from "@orderly.network/ui";
 import { MarkPriceView } from "../../base/orderBook/markPrice";
 import { MiddlePriceView } from "../../base/orderBook/midPriceView";
@@ -7,6 +7,8 @@ import { useOrderBookContext } from "../../base/orderBook/orderContext";
 interface MarkPriceProps {
   markPrice: number;
   lastPrice: number[];
+  /** Overrides the middle-price display while preserving the rest of the price row. */
+  middlePriceContent?: ReactNode;
   /** Renders the flagged mark-price label on the right. @default true */
   showMarkPrice?: boolean;
 }
@@ -23,13 +25,15 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
       width={"100%"}
       justify={"between"}
     >
-      <MiddlePriceView
-        markPrice={props.markPrice}
-        lastPrice={props.lastPrice}
-        quote_dp={quote_dp}
-        className="oui-text-sm"
-        iconSize={14}
-      />
+      {props.middlePriceContent ?? (
+        <MiddlePriceView
+          markPrice={props.markPrice}
+          lastPrice={props.lastPrice}
+          quote_dp={quote_dp}
+          className="oui-text-sm"
+          iconSize={14}
+        />
+      )}
       {showMarkPrice && (
         <MarkPriceView
           markPrice={props.markPrice}

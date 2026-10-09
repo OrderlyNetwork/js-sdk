@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, type ReactNode } from "react";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
@@ -25,6 +25,8 @@ export interface MobileOrderBookLadderProps {
   bids: number[][];
   /** `[previous, current]` middle price; drives the arrow in the price row. */
   lastPrice: number[];
+  /** Overrides the middle-price display while preserving the rest of the price row. */
+  middlePriceContent?: ReactNode;
   /** Mark price for the price row; defaults to the current middle price. */
   markPrice?: number;
   /** Renders the flagged mark-price label. @default true */
@@ -51,6 +53,7 @@ export const MobileOrderBookLadder: FC<MobileOrderBookLadderProps> = (
     asks,
     bids,
     lastPrice,
+    middlePriceContent,
     markPrice,
     showMarkPrice = true,
     base,
@@ -92,6 +95,7 @@ export const MobileOrderBookLadder: FC<MobileOrderBookLadderProps> = (
         <Header quote={quote} base={base} />
         <Asks data={asks} />
         <MarkPrice
+          middlePriceContent={middlePriceContent}
           lastPrice={lastPrice}
           markPrice={markPrice ?? lastPrice?.[1] ?? 0}
           showMarkPrice={showMarkPrice}
