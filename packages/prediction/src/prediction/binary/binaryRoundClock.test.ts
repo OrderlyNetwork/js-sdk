@@ -6,7 +6,10 @@ import {
   type BinaryInfoRow,
 } from "./binaryInfo";
 import { deriveBinaryMarkets } from "./binaryMarkets";
-import { startBinaryRoundClock } from "./binaryRoundClock";
+import {
+  BINARY_RESULT_POLL_DELAY_MS,
+  startBinaryRoundClock,
+} from "./binaryRoundClock";
 
 const start = Date.UTC(2026, 8, 30);
 const current: BinaryInfoRow = {
@@ -81,10 +84,33 @@ test("closes a round and follows the next round without a new snapshot", () => {
   assert.equal(isBinaryRowTradable(current, now), false);
   assert.equal(deriveBinaryMarkets(rows, now)[0].currentRow, upcoming);
 
-  clock.advanceTo(upcoming.expire_at + 5);
+  clock.advanceTo(upcoming.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
   assert.equal(isBinaryRowTradable(upcoming, now), false);
   assert.deepEqual(deriveBinaryMarkets(rows, now), []);
   assert.equal(clock.pending(), 0);
+  stop();
+});
+
+test("schedules a result-poll grace tick 5s after expiry", () => {
+  const clock = createClock(start + 60_000);
+  const ticks: number[] = [];
+  const stop = startBinaryRoundClock(
+    [current],
+    (time) => ticks.push(time),
+    clock,
+  );
+
+  clock.advanceTo(current.expire_at + 5);
+  const ticksAtExpiry = ticks.length;
+  // Only the grace boundary remains scheduled after T1 itself fired.
+  assert.equal(clock.pending(), 1);
+
+  clock.advanceTo(current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
+  assert.equal(ticks.length, ticksAtExpiry + 1);
+  assert.equal(
+    ticks[ticks.length - 1],
+    current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5,
+  );
   stop();
 });
 

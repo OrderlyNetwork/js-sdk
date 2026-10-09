@@ -150,7 +150,7 @@ test("Max preserves pure closing with zero collateral and caps extra opening", (
     upPrice: 0.6,
     balance: 8.0048,
   });
-  assert.ok(max >= 79 && max < 80);
+  assert.equal(max, 80);
   assert.ok(
     estimateBinaryOrderFrozen(state, OrderSide.SELL, 0.6, max)!.lte(8.0048),
   );

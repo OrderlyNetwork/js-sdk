@@ -6,10 +6,10 @@ import {
   type API,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { splitBinaryQuantity } from "./binaryOrderRules";
+import type { BinarySizeRules } from "./binaryOrderRules";
 
 export const ISO_ORDER_FROZEN_BUFFER = 0.0006;
-const MAX_QTY_SAFETY_FACTOR = 0.995;
-const MAX_SEARCH_ITERATIONS = 20;
 
 export type BinaryFundingEstimateMode =
   | "detailed"
@@ -182,19 +182,18 @@ export function estimateBinaryOrderFrozen(
   side: OrderSide,
   upPrice: number,
   quantity: number,
+  quantities: number[] = [quantity],
 ): Decimal | undefined {
   if (!snapshot || !isPrice(upPrice) || !isQuantity(quantity)) return undefined;
   return account.additionalIsolatedOrderFrozenByOrders({
     positionQty: snapshot.positionQty,
     pendingOrders: snapshot.orders,
-    newOrders: [
-      {
-        side,
-        referencePrice: upPrice,
-        quantity,
-        createdTime: Number.MAX_SAFE_INTEGER,
-      },
-    ],
+    newOrders: quantities.map((size, index) => ({
+      side,
+      referencePrice: upPrice,
+      quantity: size,
+      createdTime: Number.MAX_SAFE_INTEGER - quantities.length + index,
+    })),
     leverage: 1,
     isoTakerFeeBuffer: ISO_ORDER_FROZEN_BUFFER,
     getMarginPrice: binaryMarginPrice,
@@ -227,9 +226,8 @@ export function availableBinaryCloseQuantity(
 }
 
 /**
- * Bounded Max estimate. Preserve the funding model's pure closing budget and
- * apply PERP's safety factor only to extra opening size, then floor to tick.
- * This does not model backend RO resizing or seek the last affordable tick.
+ * Find the last affordable integer tick, retaining the pure closing budget.
+ * Split sizing accounts for each child's rounding and shared closing capacity.
  */
 export function maxBinaryOrderQuantity(inputs: {
   snapshot: BinaryCollateralSnapshot | undefined;
@@ -238,6 +236,7 @@ export function maxBinaryOrderQuantity(inputs: {
   balance: number;
   baseTick?: number;
   baseMax?: number;
+  splitRules?: BinarySizeRules;
 }): number {
   const {
     snapshot,
@@ -246,6 +245,7 @@ export function maxBinaryOrderQuantity(inputs: {
     balance,
     baseTick = 0.01,
     baseMax = 10000,
+    splitRules,
   } = inputs;
   if (
     !snapshot ||
@@ -267,30 +267,49 @@ export function maxBinaryOrderQuantity(inputs: {
     reverse && unreserved.gt(0)
       ? floorQuantity(unreserved, baseTick)
       : new Decimal(0);
-  const upper = floorQuantity(new Decimal(baseMax), baseTick);
-  const closeMax = closing.lt(upper) ? closing : upper;
-  let left = closeMax;
-  let right = upper;
-  if (
-    estimateBinaryOrderFrozen(snapshot, side, upPrice, right.toNumber())!.lte(
-      balance,
+  const marginPrice =
+    side === OrderSide.BUY ? upPrice : new Decimal(1).sub(upPrice).toNumber();
+  const fundedUpper = new Decimal(balance)
+    .div(
+      new Decimal(marginPrice).mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER)),
     )
-  )
-    left = right;
-  else {
-    for (let i = 0; i < MAX_SEARCH_ITERATIONS; i++) {
-      const mid = left.add(right).div(2);
-      if (
-        estimateBinaryOrderFrozen(snapshot, side, upPrice, mid.toNumber())!.lte(
-          balance,
-        )
-      )
-        left = mid;
-      else right = mid;
-    }
-  }
-  return floorQuantity(
-    closeMax.add(left.sub(closeMax).mul(MAX_QTY_SAFETY_FACTOR)),
+    .add(new Decimal(snapshot.positionQty).abs())
+    .add(pendingQty);
+  const upper = floorQuantity(
+    splitRules ? fundedUpper : new Decimal(baseMax),
     baseTick,
-  ).toNumber();
+  );
+  const closeMax = closing.lt(upper) ? closing : upper;
+  const affordable = (ticks: Decimal) => {
+    const quantity = ticks.mul(baseTick).toNumber();
+    const quantities = splitRules
+      ? splitBinaryQuantity(quantity, upPrice, {
+          ...splitRules,
+          min_notional: 0,
+          base_min: baseTick,
+        })
+      : [quantity];
+    return (
+      quantities != null &&
+      estimateBinaryOrderFrozen(
+        snapshot,
+        side,
+        upPrice,
+        quantity,
+        quantities,
+      )!.lte(balance)
+    );
+  };
+  let left = closeMax.div(baseTick);
+  let right = upper.div(baseTick);
+  while (left.lt(right)) {
+    const mid = left
+      .add(right)
+      .add(1)
+      .div(2)
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR);
+    if (affordable(mid)) left = mid;
+    else right = mid.sub(1);
+  }
+  return left.mul(baseTick).toNumber();
 }

@@ -14,6 +14,17 @@ export { BINARY_SYMBOL_PATTERN, isBinarySymbol } from "@orderly.network/utils";
  */
 export type BinaryInfoRow = API.BinaryInfoRow;
 
+export type BinaryPriceEvidence = {
+  s0: { price: number; timestamp: number; source: "live" };
+  s1: { price: number; timestamp: number; source: "live" };
+};
+
+/** Evidence is only returned by the single-symbol detail endpoint. */
+export type BinaryInfoDetail = BinaryInfoRow & {
+  price_evidence?: BinaryPriceEvidence | null;
+  manual_correction?: null;
+};
+
 /**
  * Round-specific binary symbol, e.g. `PERP_BTC5M2608271200_USDC`.
  * Legal periods per the spec are 5M/10M/15M; the timestamp segment is
@@ -62,7 +73,10 @@ export const deriveBinaryPhase = (
   row: BinaryInfoRow,
   nowMs: number,
 ): PredictionRoundPhase => {
-  if (row.result_committed_at != null) {
+  if (
+    row.result_committed_at != null &&
+    (row.outcome === "UP" || row.outcome === "DOWN")
+  ) {
     return row.outcome === "DOWN" ? "resolvedDown" : "resolvedUp";
   }
   if (nowMs >= row.expire_at) return "closed";

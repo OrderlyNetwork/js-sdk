@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { useAccountInfo } from "@orderly.network/hooks";
+import { Decimal } from "@orderly.network/utils";
+import { validBinaryFee } from "./binaryOrderRules";
 
 export type BinaryFeeRates = {
   /** Coefficient r in fee = C*r*p*(1-p); undefined when no valid config. */
@@ -19,18 +21,22 @@ export const useBinaryFeeRates = (): BinaryFeeRates => {
   const { data } = useAccountInfo();
 
   return useMemo(() => {
-    const takerBps = data?.binary_taker_fee_rate;
-    const makerBps = data?.binary_maker_fee_rate;
+    const takerBps = validBinaryFee(data?.binary_taker_fee_rate)
+      ? data.binary_taker_fee_rate
+      : undefined;
+    const makerBps = validBinaryFee(data?.binary_maker_fee_rate)
+      ? data.binary_maker_fee_rate
+      : undefined;
     return {
       takerBps,
       makerBps,
       takerRate:
-        typeof takerBps === "number" && takerBps >= 0
-          ? takerBps / 10_000
+        takerBps != null
+          ? new Decimal(takerBps).div(10_000).toNumber()
           : undefined,
       makerRate:
-        typeof makerBps === "number" && makerBps >= 0
-          ? makerBps / 10_000
+        makerBps != null
+          ? new Decimal(makerBps).div(10_000).toNumber()
           : undefined,
     };
   }, [data]);
