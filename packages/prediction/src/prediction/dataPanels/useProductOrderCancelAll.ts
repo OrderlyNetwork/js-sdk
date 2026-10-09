@@ -63,7 +63,8 @@ export function useProductOrderCancelAll({
   const accountReady =
     account.status >= AccountStatusEnum.EnableTrading ||
     account.status === AccountStatusEnum.EnableTradingWithoutConnected;
-  const nativeFallback = instrument === "perps" && !binary;
+  // Unscoped PERP cancellation must enumerate symbols to exclude Binary orders.
+  const nativeFallback = instrument === "perps" && !binary && !!perpsSymbol;
   const queryEnabled =
     enabled && accountReady && includePerps && !nativeFallback;
   const pending = usePrivateInfiniteQuery<API.OrderResponse>(

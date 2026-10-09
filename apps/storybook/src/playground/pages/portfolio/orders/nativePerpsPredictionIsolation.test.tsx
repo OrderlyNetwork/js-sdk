@@ -118,7 +118,10 @@ vi.mock("@orderly.network/ui-orders/src/components/orders.widget", () => ({
 let root: ReactTestRenderer | undefined, state: any;
 function Native({ enableBinaryInfo = true }: { enableBinaryInfo?: boolean }) {
   useBinaryInfoObserver(enableBinaryInfo);
-  const cancellation = useProductOrderCancelAll({ instrument: "perps" });
+  const cancellation = useProductOrderCancelAll({
+    instrument: "perps",
+    perpsSymbol: "PERP_BTC_USDC",
+  });
   state = useOrderListScript({
     type: "pending" as any,
     ordersStatus: OrderStatus.INCOMPLETE,

@@ -164,9 +164,13 @@ describe("SDK product cancellation", () => {
     expect(await execute(harness)).toBe(false);
     expect(mocks.cancelOrders).not.toHaveBeenCalled();
   });
-  it("preserves native PERPs fallback without a Binary capability", () => {
+  it("preserves symbol-scoped native PERPs fallback without a Binary capability", () => {
     const instrument = "perps";
-    const { result } = mount({ binary: undefined, instrument });
+    const { result } = mount({
+      binary: undefined,
+      instrument,
+      perpsSymbol: "PERP_BTC_USDC",
+    });
     expect(result.cancelAll).toBeUndefined();
     expect(result.onCancelAll).toBeUndefined();
     expect(result.disabled).toBeUndefined();
@@ -176,6 +180,72 @@ describe("SDK product cancellation", () => {
       expect.objectContaining({ refreshInterval: 0 }),
     );
   });
+  it("confirms unscoped PERPs cancellation without Binary state and only cancels PERP symbols across pages", async () => {
+    mocks.pages = [
+      {
+        rows: [
+          { order_id: 1, symbol: "PERP_BTC_USDC" },
+          { order_id: 2, symbol: live },
+        ],
+        meta: { total: 3 },
+      },
+      {
+        rows: [
+          {
+            algo_order_id: 3,
+            algo_type: "STOP",
+            symbol: "PERP_ETH_USDC",
+          },
+        ],
+        meta: { total: 3 },
+      },
+    ];
+    const harness = mount({ instrument: "perps" });
+    expect(harness.result.disabled).toBe(false);
+    const loader = mocks.query.mock.calls.at(-1)![0];
+    const params = new URL(loader(0), "https://example.com").searchParams;
+    expect(params.get("product_type")).toBe("PERP");
+    expect(params.get("source_type")).toBe("ALL");
+    expect(params.has("symbol")).toBe(false);
+    expect(
+      new URL(loader(1), "https://example.com").searchParams.get("page"),
+    ).toBe("2");
+    const promise = open(harness);
+    expect(mocks.cancelOrders).not.toHaveBeenCalled();
+    expect(await confirm()).toBe(true);
+    expect(await promise).toBe(true);
+    expect(mocks.mutate).toHaveBeenCalledOnce();
+    expect(mocks.cancelOrders.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC" }],
+      [null, { symbol: "PERP_ETH_USDC" }],
+    ]);
+    expect(mocks.cancelAlgoOrders.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC", algo_type: "STOP" }],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: "TRAILING_STOP" }],
+      [null, { symbol: "PERP_ETH_USDC", algo_type: "STOP" }],
+      [null, { symbol: "PERP_ETH_USDC", algo_type: "TRAILING_STOP" }],
+    ]);
+    expect(mocks.refresh).toHaveBeenCalledExactlyOnceWith(mocks.accountId);
+  });
+  it("waits for complete PERP pages before enabling unscoped cancellation without Binary state", async () => {
+    mocks.pages[0].meta.total = 2;
+    const harness = mount({ instrument: "perps" });
+    expect(harness.result.disabled).toBe(true);
+    expect(mocks.setSize).toHaveBeenCalledOnce();
+    expect(await execute(harness)).toBe(false);
+    expect(mocks.cancelOrders).not.toHaveBeenCalled();
+    mocks.pages = [
+      ...mocks.pages,
+      { rows: [{ order_id: 2, symbol: "PERP_ETH_USDC" }], meta: { total: 2 } },
+    ];
+    harness.update({ instrument: "perps" });
+    expect(harness.result.disabled).toBe(false);
+    expect(await execute(harness)).toBe(true);
+    expect(mocks.cancelOrders.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC" }],
+      [null, { symbol: "PERP_ETH_USDC" }],
+    ]);
+  });
   it("blocks mixed scope without a Binary capability", async () => {
     const harness = mount({ instrument: "all" });
     expect(harness.result.disabled).toBe(true);
@@ -184,7 +254,11 @@ describe("SDK product cancellation", () => {
   });
   it("keeps trading guards during native fallback", () => {
     mocks.canTrade = false;
-    const { result } = mount({ binary: undefined, instrument: "perps" });
+    const { result } = mount({
+      binary: undefined,
+      instrument: "perps",
+      perpsSymbol: "PERP_BTC_USDC",
+    });
     expect(result.orderListProps.cancelAllDisabled).toBe(true);
   });
   it("disables Prediction without a provider", async () => {
