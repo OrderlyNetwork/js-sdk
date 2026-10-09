@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "تحديث عام",
   "notification.maintenanceTitle": "صيانة النظام",
   "notification.empty": "لا توجد إعلانات",
-  "tradingPoints.points": "النقاط"
+  "tradingPoints.points": "النقاط",
+  "prediction.cancelAll.all.description": "إلغاء جميع الأوامر المعلقة القابلة للإلغاء لعقود دائمة والتوقعات في حسابك، بما في ذلك الأوامر المخفية بواسطة عوامل تصفية العرض؟",
+  "prediction.cancelAll.perps.description": "إلغاء جميع الأوامر المعلقة لعقود دائمة في حسابك، بما في ذلك الأوامر المخفية بواسطة عوامل تصفية العرض؟",
+  "prediction.cancelAll.binary.description": "إلغاء جميع الأوامر المعلقة القابلة للإلغاء للتوقعات في حسابك، بما في ذلك الأوامر المخفية بواسطة عوامل تصفية العرض؟",
+  "prediction.cancelAll.scoped.description": "إلغاء جميع الأوامر المعلقة القابلة للإلغاء في النطاق المحدد ({{scope}})، بما في ذلك الأوامر المخفية بواسطة عوامل تصفية العرض؟",
+  "orders.cancelAll.contextChanged": "لقد تغير حسابك أو نطاق الإلغاء. يرجى التأكيد مرة أخرى.",
+  "orders.cancelAll.failed": "تعذر إلغاء الأوامر. يرجى المحاولة مرة أخرى.",
+  "orders.cancelAll.hiddenOrders": "يشمل ذلك الأوامر المخفية بواسطة عوامل تصفية العرض."
 }

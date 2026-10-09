@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "常规更新",
   "notification.maintenanceTitle": "系统维护",
   "notification.empty": "暂无公告",
-  "tradingPoints.points": "积分"
+  "tradingPoints.points": "积分",
+  "prediction.cancelAll.all.description": "取消账户中所有可取消的合约与预测挂单（包括被显示筛选隐藏的订单）？",
+  "prediction.cancelAll.perps.description": "取消账户中所有合约挂单（包括被显示筛选隐藏的订单）？",
+  "prediction.cancelAll.binary.description": "取消账户中所有可取消的预测挂单（包括被显示筛选隐藏的订单）？",
+  "prediction.cancelAll.scoped.description": "取消所选范围（{{scope}}）内所有可取消的挂单（包括被显示筛选隐藏的订单）？",
+  "orders.cancelAll.contextChanged": "账户或撤单范围已变化，请重新确认。",
+  "orders.cancelAll.failed": "撤单失败，请重试。",
+  "orders.cancelAll.hiddenOrders": "其中包括被显示筛选隐藏的订单。"
 }

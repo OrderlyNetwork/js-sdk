@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Общее обновление",
   "notification.maintenanceTitle": "Обслуживание системы",
   "notification.empty": "Нет объявлений",
-  "tradingPoints.points": "Баллы"
+  "tradingPoints.points": "Баллы",
+  "prediction.cancelAll.all.description": "Отменить все отменяемые ожидающие ордера по бессрочным контрактам и Прогнозу в вашем аккаунте, включая скрытые фильтрами отображения?",
+  "prediction.cancelAll.perps.description": "Отменить все ожидающие ордера по бессрочным контрактам в вашем аккаунте, включая скрытые фильтрами отображения?",
+  "prediction.cancelAll.binary.description": "Отменить все отменяемые ожидающие ордера Прогноза в вашем аккаунте, включая скрытые фильтрами отображения?",
+  "prediction.cancelAll.scoped.description": "Отменить все отменяемые ожидающие ордера в выбранной области ({{scope}}), включая скрытые фильтрами отображения?",
+  "orders.cancelAll.contextChanged": "Ваш аккаунт или область отмены изменились. Подтвердите действие ещё раз.",
+  "orders.cancelAll.failed": "Не удалось отменить ордера. Повторите попытку.",
+  "orders.cancelAll.hiddenOrders": "Сюда входят ордера, скрытые фильтрами отображения."
 }

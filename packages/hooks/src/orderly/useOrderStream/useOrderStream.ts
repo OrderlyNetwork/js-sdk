@@ -18,6 +18,7 @@ import {
 import { validateTPSLChild } from "../../services/orderCreator/validateTPSLChild";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
+import { settleOrderCancellations } from "../../utils/orderCancellation";
 import { generateKeyFun } from "../../utils/swr";
 import version from "../../version";
 import { useMarkPricesStream } from "../useMarkPricesStream";
@@ -304,7 +305,7 @@ export const useOrderStream = (
 
     // TODO: order type check
 
-    return Promise.all(
+    return settleOrderCancellations(
       types.map((type) => {
         return doCancelAllAlgoOrders(null, {
           algo_type: type,
@@ -318,7 +319,7 @@ export const useOrderStream = (
    * cancel all orders
    */
   const cancelAllOrders = useCallback(() => {
-    return Promise.all([
+    return settleOrderCancellations([
       doCancelAllOrders(null),
       doCancelAllAlgoOrders(null, { algo_type: AlgoOrderRootType.STOP }),
       doCancelAllAlgoOrders(null, {
@@ -329,7 +330,7 @@ export const useOrderStream = (
 
   const cancelAllPendingOrders = useCallback(
     (symbol?: string) => {
-      return Promise.all([
+      return settleOrderCancellations([
         doCancelAllOrders(null, { ...(symbol && { symbol }) }),
         doCancelAllAlgoOrders(null, {
           algo_type: AlgoOrderRootType.STOP,

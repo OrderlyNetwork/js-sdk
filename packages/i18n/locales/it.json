@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Aggiornamento generale",
   "notification.maintenanceTitle": "Manutenzione sistema",
   "notification.empty": "Nessun annuncio",
-  "tradingPoints.points": "Punti"
+  "tradingPoints.points": "Punti",
+  "prediction.cancelAll.all.description": "Annullare tutti gli ordini in attesa annullabili Perps e Previsione del tuo account, inclusi quelli nascosti dai filtri di visualizzazione?",
+  "prediction.cancelAll.perps.description": "Annullare tutti gli ordini in attesa Perps del tuo account, inclusi quelli nascosti dai filtri di visualizzazione?",
+  "prediction.cancelAll.binary.description": "Annullare tutti gli ordini in attesa annullabili di Previsione del tuo account, inclusi quelli nascosti dai filtri di visualizzazione?",
+  "prediction.cancelAll.scoped.description": "Annullare tutti gli ordini in attesa annullabili nell'ambito selezionato ({{scope}}), inclusi quelli nascosti dai filtri di visualizzazione?",
+  "orders.cancelAll.contextChanged": "Il tuo account o l'ambito di annullamento è cambiato. Conferma di nuovo.",
+  "orders.cancelAll.failed": "Impossibile annullare gli ordini. Riprova.",
+  "orders.cancelAll.hiddenOrders": "Sono inclusi gli ordini nascosti dai filtri di visualizzazione."
 }

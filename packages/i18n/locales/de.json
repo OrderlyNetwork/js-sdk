@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Allgemeines Update",
   "notification.maintenanceTitle": "Systemwartung",
   "notification.empty": "Keine Ankündigungen",
-  "tradingPoints.points": "Punkte"
+  "tradingPoints.points": "Punkte",
+  "prediction.cancelAll.all.description": "Alle abbrechbaren offenen Perps- und Prognose-Aufträge in deinem Konto stornieren, auch die durch Anzeigefilter ausgeblendeten?",
+  "prediction.cancelAll.perps.description": "Alle offenen Perps-Aufträge in deinem Konto stornieren, auch die durch Anzeigefilter ausgeblendeten?",
+  "prediction.cancelAll.binary.description": "Alle abbrechbaren offenen Prognose-Aufträge in deinem Konto stornieren, auch die durch Anzeigefilter ausgeblendeten?",
+  "prediction.cancelAll.scoped.description": "Alle abbrechbaren offenen Aufträge im ausgewählten Bereich ({{scope}}) stornieren, auch die durch Anzeigefilter ausgeblendeten?",
+  "orders.cancelAll.contextChanged": "Dein Konto oder der Stornierungsbereich hat sich geändert. Bitte erneut bestätigen.",
+  "orders.cancelAll.failed": "Aufträge konnten nicht storniert werden. Bitte erneut versuchen.",
+  "orders.cancelAll.hiddenOrders": "Dies umfasst auch Aufträge, die durch Anzeigefilter ausgeblendet sind."
 }

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useSWRConfig } from "swr";
 import useSWRInfinite, {
   type SWRInfiniteKeyLoader,
   type SWRInfiniteConfiguration,
@@ -6,6 +8,7 @@ import { get } from "@orderly.network/net";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { useAccount } from "./useAccount";
+import { registerOrderQueryRefresh } from "./utils/orderQueryRefresh";
 
 export const usePrivateInfiniteQuery = <T>(
   getKey: SWRInfiniteKeyLoader | null,
@@ -15,6 +18,7 @@ export const usePrivateInfiniteQuery = <T>(
 ) => {
   const { formatter, ...restOptions } = options || {};
   const { state } = useAccount();
+  const { cache } = useSWRConfig();
 
   const middleware = Array.isArray(restOptions?.use)
     ? (restOptions?.use ?? [])
@@ -44,5 +48,17 @@ export const usePrivateInfiniteQuery = <T>(
     },
   );
 
+  useEffect(() => {
+    let firstKey: unknown;
+    try {
+      firstKey = getKey?.(0, null);
+    } catch {
+      // SWR treats throwing key loaders as dependencies that are not ready.
+      return;
+    }
+    return registerOrderQueryRefresh(cache, firstKey, state.accountId, () =>
+      result.mutate(),
+    );
+  }, [cache, getKey, state.accountId, result.mutate]);
   return result;
 };

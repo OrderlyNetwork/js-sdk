@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "一般更新",
   "notification.maintenanceTitle": "系統維護",
   "notification.empty": "暫無公告",
-  "tradingPoints.points": "積分"
+  "tradingPoints.points": "積分",
+  "prediction.cancelAll.all.description": "取消帳戶中所有可取消的合約與預測掛單（包括被顯示篩選隱藏的訂單）？",
+  "prediction.cancelAll.perps.description": "取消帳戶中所有合約掛單（包括被顯示篩選隱藏的訂單）？",
+  "prediction.cancelAll.binary.description": "取消帳戶中所有可取消的預測掛單（包括被顯示篩選隱藏的訂單）？",
+  "prediction.cancelAll.scoped.description": "取消所選範圍（{{scope}}）內所有可取消的掛單（包括被顯示篩選隱藏的訂單）？",
+  "orders.cancelAll.contextChanged": "帳戶或取消範圍已變更，請重新確認。",
+  "orders.cancelAll.failed": "無法取消訂單，請再試一次。",
+  "orders.cancelAll.hiddenOrders": "其中包括被顯示篩選隱藏的訂單。"
 }

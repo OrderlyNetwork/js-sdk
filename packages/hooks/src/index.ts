@@ -32,6 +32,11 @@ export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
 export { useUpdatedRef } from "./shared/useUpdatedRef";
 export { useMemoizedFn } from "./shared/useMemoizedFn";
+export { useRefreshOrderCaches } from "./useRefreshOrderCaches";
+export {
+  assertCancelAllSucceeded,
+  settleOrderCancellations,
+} from "./utils/orderCancellation";
 export { useAudioPlayer } from "./shared/useAudio";
 export { useReferralInfo, type RefferalAPI } from "./referral";
 

@@ -41,6 +41,11 @@ export const orders = {
     "Are you sure you want to cancel your pending order.",
 
   "orders.cancelAll": "Cancel all",
+  "orders.cancelAll.contextChanged":
+    "Your account or cancellation scope has changed. Please confirm again.",
+  "orders.cancelAll.failed": "Unable to cancel orders. Please try again.",
+  "orders.cancelAll.hiddenOrders":
+    "This includes orders hidden by display filters.",
   "orders.pending.cancelAll": "Cancel all pending orders",
   "orders.pending.cancelAll.description":
     "Are you sure you want to cancel all of your pending orders?",

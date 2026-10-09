@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Aktualizacja ogólna",
   "notification.maintenanceTitle": "Konserwacja systemu",
   "notification.empty": "Brak ogłoszeń",
-  "tradingPoints.points": "Punkty"
+  "tradingPoints.points": "Punkty",
+  "prediction.cancelAll.all.description": "Anulować wszystkie anulowalne oczekujące zlecenia Perps i Prognozy na Twoim koncie, w tym ukryte przez filtry wyświetlania?",
+  "prediction.cancelAll.perps.description": "Anulować wszystkie oczekujące zlecenia Perps na Twoim koncie, w tym ukryte przez filtry wyświetlania?",
+  "prediction.cancelAll.binary.description": "Anulować wszystkie anulowalne oczekujące zlecenia Prognozy na Twoim koncie, w tym ukryte przez filtry wyświetlania?",
+  "prediction.cancelAll.scoped.description": "Anulować wszystkie anulowalne oczekujące zlecenia w wybranym zakresie ({{scope}}), w tym ukryte przez filtry wyświetlania?",
+  "orders.cancelAll.contextChanged": "Twoje konto lub zakres anulowania uległ zmianie. Potwierdź ponownie.",
+  "orders.cancelAll.failed": "Nie udało się anulować zleceń. Spróbuj ponownie.",
+  "orders.cancelAll.hiddenOrders": "Obejmuje to zlecenia ukryte przez filtry wyświetlania."
 }

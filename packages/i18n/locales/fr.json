@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Mise à jour générale",
   "notification.maintenanceTitle": "Maintenance système",
   "notification.empty": "Aucune annonce",
-  "tradingPoints.points": "Points"
+  "tradingPoints.points": "Points",
+  "prediction.cancelAll.all.description": "Annuler tous les ordres en attente annulables Perps et Prédiction de votre compte, y compris ceux masqués par les filtres d'affichage ?",
+  "prediction.cancelAll.perps.description": "Annuler tous les ordres en attente Perps de votre compte, y compris ceux masqués par les filtres d'affichage ?",
+  "prediction.cancelAll.binary.description": "Annuler tous les ordres en attente annulables Prédiction de votre compte, y compris ceux masqués par les filtres d'affichage ?",
+  "prediction.cancelAll.scoped.description": "Annuler tous les ordres en attente annulables de la portée sélectionnée ({{scope}}), y compris ceux masqués par les filtres d'affichage ?",
+  "orders.cancelAll.contextChanged": "Votre compte ou la portée d'annulation a changé. Veuillez confirmer à nouveau.",
+  "orders.cancelAll.failed": "Impossible d'annuler les ordres. Veuillez réessayer.",
+  "orders.cancelAll.hiddenOrders": "Cela inclut les ordres masqués par les filtres d'affichage."
 }

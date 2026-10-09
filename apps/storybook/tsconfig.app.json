@@ -68,6 +68,9 @@
       "@orderly.network/portfolio": [
         "../../packages/portfolio/src"
       ],
+      "@orderly.network/prediction": [
+        "../../packages/prediction/src"
+      ],
       "@orderly.network/react-app": [
         "../../packages/app/src"
       ],

@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "一般アップデート",
   "notification.maintenanceTitle": "システムメンテナンス",
   "notification.empty": "お知らせはありません",
-  "tradingPoints.points": "ポイント"
+  "tradingPoints.points": "ポイント",
+  "prediction.cancelAll.all.description": "アカウント内のキャンセル可能な無期限および予測の未決済注文をすべてキャンセルしますか（表示フィルターで非表示の注文を含む）？",
+  "prediction.cancelAll.perps.description": "アカウント内のすべての無期限の未決済注文をキャンセルしますか（表示フィルターで非表示の注文を含む）？",
+  "prediction.cancelAll.binary.description": "アカウント内のキャンセル可能な予測の未決済注文をすべてキャンセルしますか（表示フィルターで非表示の注文を含む）？",
+  "prediction.cancelAll.scoped.description": "選択した範囲（{{scope}}）内のキャンセル可能な未決済注文をすべてキャンセルしますか（表示フィルターで非表示の注文を含む）？",
+  "orders.cancelAll.contextChanged": "アカウントまたはキャンセル範囲が変更されました。もう一度確認してください。",
+  "orders.cancelAll.failed": "注文をキャンセルできませんでした。もう一度お試しください。",
+  "orders.cancelAll.hiddenOrders": "表示フィルターで非表示になっている注文も含まれます。"
 }

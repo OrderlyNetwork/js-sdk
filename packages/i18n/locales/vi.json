@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Cập nhật chung",
   "notification.maintenanceTitle": "Bảo trì hệ thống",
   "notification.empty": "Không có thông báo",
-  "tradingPoints.points": "Điểm"
+  "tradingPoints.points": "Điểm",
+  "prediction.cancelAll.all.description": "Hủy tất cả lệnh đang chờ có thể hủy của Vĩnh viễn và Dự đoán trong tài khoản của bạn, bao gồm cả lệnh bị ẩn bởi bộ lọc hiển thị?",
+  "prediction.cancelAll.perps.description": "Hủy tất cả lệnh đang chờ của Vĩnh viễn trong tài khoản của bạn, bao gồm cả lệnh bị ẩn bởi bộ lọc hiển thị?",
+  "prediction.cancelAll.binary.description": "Hủy tất cả lệnh đang chờ có thể hủy của Dự đoán trong tài khoản của bạn, bao gồm cả lệnh bị ẩn bởi bộ lọc hiển thị?",
+  "prediction.cancelAll.scoped.description": "Hủy tất cả lệnh đang chờ có thể hủy trong phạm vi đã chọn ({{scope}}), bao gồm cả lệnh bị ẩn bởi bộ lọc hiển thị?",
+  "orders.cancelAll.contextChanged": "Tài khoản hoặc phạm vi hủy lệnh đã thay đổi. Vui lòng xác nhận lại.",
+  "orders.cancelAll.failed": "Không thể hủy lệnh. Vui lòng thử lại.",
+  "orders.cancelAll.hiddenOrders": "Điều này bao gồm các lệnh bị ẩn bởi bộ lọc hiển thị."
 }

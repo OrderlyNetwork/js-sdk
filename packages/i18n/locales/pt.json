@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Atualização geral",
   "notification.maintenanceTitle": "Manutenção do sistema",
   "notification.empty": "Sem anúncios",
-  "tradingPoints.points": "Pontos"
+  "tradingPoints.points": "Pontos",
+  "prediction.cancelAll.all.description": "Cancelar todas as ordens pendentes canceláveis de Perps e Previsão da sua conta, incluindo as ocultas pelos filtros de exibição?",
+  "prediction.cancelAll.perps.description": "Cancelar todas as ordens pendentes de Perps da sua conta, incluindo as ocultas pelos filtros de exibição?",
+  "prediction.cancelAll.binary.description": "Cancelar todas as ordens pendentes canceláveis de Previsão da sua conta, incluindo as ocultas pelos filtros de exibição?",
+  "prediction.cancelAll.scoped.description": "Cancelar todas as ordens pendentes canceláveis no âmbito selecionado ({{scope}}), incluindo as ocultas pelos filtros de exibição?",
+  "orders.cancelAll.contextChanged": "A sua conta ou o âmbito de cancelamento mudou. Confirme novamente.",
+  "orders.cancelAll.failed": "Não foi possível cancelar as ordens. Tente novamente.",
+  "orders.cancelAll.hiddenOrders": "Isso inclui ordens ocultas pelos filtros de exibição."
 }

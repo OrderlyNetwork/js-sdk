@@ -9,23 +9,29 @@ import {
 } from "react";
 import { differenceInDays, setHours, subDays, format } from "date-fns";
 import {
+  useAccount,
   useLocalStorage,
   useOrderStream,
+  useRefreshOrderCaches,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
+import { useCanTrade, useDataTap } from "@orderly.network/react-app";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
   API,
 } from "@orderly.network/types";
-import { modal, usePagination, Text, Table } from "@orderly.network/ui";
+import { usePagination, Table } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { formatSymbol } from "@orderly.network/utils";
 import { areDatesEqual } from "../../utils/util";
 import { TabType } from "../orders.widget";
+import {
+  assertCancelAllSucceeded,
+  useCancelAllConfirmation,
+} from "./useCancelAllConfirmation";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export type OrderListInstance = {
@@ -42,6 +48,8 @@ export type useOrderListScriptOptions = {
    */
   productType?: string;
   enableLoadMore?: boolean;
+  /** Blocks bulk cancellation, including confirmation dialogs already open. */
+  cancelAllDisabled?: boolean;
   onCancelAllAfter?: () => Promise<unknown>;
   onSymbolChange?: (symbol: API.Symbol) => void;
   sharePnLConfig?: SharePnLConfig;
@@ -67,6 +75,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     sharePnLConfig,
   } = props;
   const { t } = useTranslation();
+  const canTrade = useCanTrade();
+  const { state: account } = useAccount();
+  const refreshOrders = useRefreshOrderCaches();
   const symbolsInfo = useSymbolsInfo();
 
   const manualPagination = useMemo(() => {
@@ -135,7 +146,6 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
       cancelAllPendingOrders,
       cancelAllTPSLOrders,
       meta,
-      refresh,
     },
   ] = useOrderStream({
     symbol: props.symbol,
@@ -163,37 +173,32 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     }
   }, [pageSize, typePageSize]);
 
-  const onCancelAll = useCallback(() => {
-    const { title, content } = getDialogInfo(type, t, props.symbol);
-
-    modal.confirm({
-      title: title,
-      content: <Text size="sm">{content}</Text>,
-      onCancel: async () => {},
-      onOk: async () => {
-        try {
-          // await cancelAll(null, { source_type: "ALL" });
-          if (type === TabType.tp_sl) {
-            await cancelAllTPSLOrders(props.symbol);
-          } else {
-            await cancelAllPendingOrders(props.symbol);
-          }
-          await props.onCancelAllAfter?.();
-          refresh();
-          return Promise.resolve(true);
-        } catch (error) {
-          // @ts-ignore
-          if (error?.message !== undefined) {
-            // @ts-ignore
-            toast.error(error.message);
-          }
-          return Promise.resolve(false);
-        } finally {
-          Promise.resolve();
-        }
-      },
-    });
-  }, [type, t, props.symbol, props.onCancelAllAfter]);
+  const dialog = getDialogInfo(type, t, props.symbol);
+  const { onCancelAll } = useCancelAllConfirmation({
+    scopeKey: JSON.stringify([type, props.symbol, props.productType]),
+    disabled: props.cancelAllDisabled || !canTrade,
+    ...dialog,
+    content: `${dialog.content} ${t("orders.cancelAll.hiddenOrders")}`,
+    execute: async (isCurrent) => {
+      if (!isCurrent()) return false;
+      const accountId = account.accountId;
+      try {
+        const responses =
+          type === TabType.tp_sl
+            ? await cancelAllTPSLOrders(props.symbol)
+            : await cancelAllPendingOrders(props.symbol);
+        assertCancelAllSucceeded(responses);
+        return isCurrent();
+      } finally {
+        await Promise.resolve()
+          .then(() => refreshOrders(accountId))
+          .catch(() => undefined);
+      }
+    },
+    onSuccess: async () => {
+      await props.onCancelAllAfter?.();
+    },
+  });
 
   const formattedData = useFormatOrderHistory(data ?? []);
 

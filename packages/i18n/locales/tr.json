@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Genel güncelleme",
   "notification.maintenanceTitle": "Sistem bakımı",
   "notification.empty": "Duyuru yok",
-  "tradingPoints.points": "Puanlar"
+  "tradingPoints.points": "Puanlar",
+  "prediction.cancelAll.all.description": "Görünüm filtreleriyle gizlenen emirler dahil, hesabınızdaki iptal edilebilir tüm Perps ve Tahmin bekleyen emirlerini iptal etmek ister misiniz?",
+  "prediction.cancelAll.perps.description": "Görünüm filtreleriyle gizlenen emirler dahil, hesabınızdaki tüm Perps bekleyen emirlerini iptal etmek ister misiniz?",
+  "prediction.cancelAll.binary.description": "Görünüm filtreleriyle gizlenen emirler dahil, hesabınızdaki iptal edilebilir tüm Tahmin bekleyen emirlerini iptal etmek ister misiniz?",
+  "prediction.cancelAll.scoped.description": "Görünüm filtreleriyle gizlenen emirler dahil, seçilen kapsam ({{scope}}) içindeki iptal edilebilir tüm bekleyen emirleri iptal etmek ister misiniz?",
+  "orders.cancelAll.contextChanged": "Hesabınız veya iptal kapsamı değişti. Lütfen tekrar onaylayın.",
+  "orders.cancelAll.failed": "Emirler iptal edilemedi. Lütfen tekrar deneyin.",
+  "orders.cancelAll.hiddenOrders": "Buna görünüm filtreleriyle gizlenen emirler dahildir."
 }

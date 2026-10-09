@@ -1,4 +1,13 @@
 export const prediction = {
+  "prediction.cancelAll.all.description":
+    "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.perps.description":
+    "Cancel all PERP pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.binary.description":
+    "Cancel all cancellable Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.scoped.description":
+    "Cancel all cancellable pending orders in the selected scope ({{scope}}), including orders hidden by display filters?",
+
   "prediction.title": "Prediction",
   "prediction.description": "Trade outcomes with real-time odds",
   "prediction.prototype": "Prototype",

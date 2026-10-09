@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Pembaruan umum",
   "notification.maintenanceTitle": "Pemeliharaan sistem",
   "notification.empty": "Tidak ada pengumuman",
-  "tradingPoints.points": "Poin"
+  "tradingPoints.points": "Poin",
+  "prediction.cancelAll.all.description": "Batalkan semua pesanan tertunda yang dapat dibatalkan untuk Perps dan Prediksi di akun Anda, termasuk pesanan yang disembunyikan oleh filter tampilan?",
+  "prediction.cancelAll.perps.description": "Batalkan semua pesanan tertunda Perps di akun Anda, termasuk pesanan yang disembunyikan oleh filter tampilan?",
+  "prediction.cancelAll.binary.description": "Batalkan semua pesanan tertunda Prediksi yang dapat dibatalkan di akun Anda, termasuk pesanan yang disembunyikan oleh filter tampilan?",
+  "prediction.cancelAll.scoped.description": "Batalkan semua pesanan tertunda yang dapat dibatalkan dalam cakupan yang dipilih ({{scope}}), termasuk pesanan yang disembunyikan oleh filter tampilan?",
+  "orders.cancelAll.contextChanged": "Akun atau cakupan pembatalan Anda telah berubah. Silakan konfirmasi kembali.",
+  "orders.cancelAll.failed": "Tidak dapat membatalkan pesanan. Silakan coba lagi.",
+  "orders.cancelAll.hiddenOrders": "Ini termasuk pesanan yang disembunyikan oleh filter tampilan."
 }

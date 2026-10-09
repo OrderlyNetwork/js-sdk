@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "עדכון כללי",
   "notification.maintenanceTitle": "תחזוקת מערכת",
   "notification.empty": "אין הודעות",
-  "tradingPoints.points": "נקודות"
+  "tradingPoints.points": "נקודות",
+  "prediction.cancelAll.all.description": "לבטל את כל פקודות הפרפים והחיזוי הממתינות שניתן לבטל בחשבונך, לרבות פקודות שהוסתרו על ידי מסנני תצוגה?",
+  "prediction.cancelAll.perps.description": "לבטל את כל פקודות הפרפים הממתינות בחשבונך, לרבות פקודות שהוסתרו על ידי מסנני תצוגה?",
+  "prediction.cancelAll.binary.description": "לבטל את כל פקודות החיזוי הממתינות שניתן לבטל בחשבונך, לרבות פקודות שהוסתרו על ידי מסנני תצוגה?",
+  "prediction.cancelAll.scoped.description": "לבטל את כל הפקודות הממתינות שניתן לבטל בטווח שנבחר ({{scope}}), לרבות פקודות שהוסתרו על ידי מסנני תצוגה?",
+  "orders.cancelAll.contextChanged": "החשבון או טווח הביטול שלך השתנו. נא לאשר שוב.",
+  "orders.cancelAll.failed": "לא ניתן לבטל את הפקודות. נסה שוב.",
+  "orders.cancelAll.hiddenOrders": "זה כולל פקודות שהוסתרו על ידי מסנני תצוגה."
 }

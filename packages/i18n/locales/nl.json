@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "Algemene update",
   "notification.maintenanceTitle": "Systeemonderhoud",
   "notification.empty": "Geen aankondigingen",
-  "tradingPoints.points": "Punten"
+  "tradingPoints.points": "Punten",
+  "prediction.cancelAll.all.description": "Alle annuleerbare openstaande Perps- en Voorspelling-orders in je account annuleren, ook de orders die door weergavefilters zijn verborgen?",
+  "prediction.cancelAll.perps.description": "Alle openstaande Perps-orders in je account annuleren, ook de orders die door weergavefilters zijn verborgen?",
+  "prediction.cancelAll.binary.description": "Alle annuleerbare openstaande Voorspelling-orders in je account annuleren, ook de orders die door weergavefilters zijn verborgen?",
+  "prediction.cancelAll.scoped.description": "Alle annuleerbare openstaande orders in het geselecteerde bereik ({{scope}}) annuleren, ook de orders die door weergavefilters zijn verborgen?",
+  "orders.cancelAll.contextChanged": "Je account of het annuleringsbereik is gewijzigd. Bevestig opnieuw.",
+  "orders.cancelAll.failed": "Orders konden niet worden geannuleerd. Probeer het opnieuw.",
+  "orders.cancelAll.hiddenOrders": "Dit omvat ook orders die door weergavefilters zijn verborgen."
 }

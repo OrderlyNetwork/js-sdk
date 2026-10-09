@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "به‌روزرسانی عمومی",
   "notification.maintenanceTitle": "نگهداری سیستم",
   "notification.empty": "اعلامی‌ای نیست",
-  "tradingPoints.points": "امتیاز"
+  "tradingPoints.points": "امتیاز",
+  "prediction.cancelAll.all.description": "همه سفارش‌های در انتظار قابل لغو پرپ‌ها و پیش‌بینی در حساب شما، از جمله سفارش‌های پنهان‌شده توسط فیلترهای نمایش، لغو شود؟",
+  "prediction.cancelAll.perps.description": "همه سفارش‌های در انتظار پرپ‌ها در حساب شما، از جمله سفارش‌های پنهان‌شده توسط فیلترهای نمایش، لغو شود؟",
+  "prediction.cancelAll.binary.description": "همه سفارش‌های در انتظار قابل لغو پیش‌بینی در حساب شما، از جمله سفارش‌های پنهان‌شده توسط فیلترهای نمایش، لغو شود؟",
+  "prediction.cancelAll.scoped.description": "همه سفارش‌های در انتظار قابل لغو در محدوده انتخاب‌شده ({{scope}})، از جمله سفارش‌های پنهان‌شده توسط فیلترهای نمایش، لغو شود؟",
+  "orders.cancelAll.contextChanged": "حساب یا محدوده لغو شما تغییر کرده است. لطفاً دوباره تأیید کنید.",
+  "orders.cancelAll.failed": "لغو سفارش‌ها ممکن نشد. لطفاً دوباره تلاش کنید.",
+  "orders.cancelAll.hiddenOrders": "این شامل سفارش‌های پنهان‌شده توسط فیلترهای نمایش می‌شود."
 }

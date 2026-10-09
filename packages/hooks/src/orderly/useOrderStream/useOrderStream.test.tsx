@@ -56,9 +56,82 @@ const createOrder = (fullPosition = false) => ({
   ],
 });
 
+describe("useOrderStream bulk cancellation", () => {
+  beforeEach(() => {
+    mockUpdateAlgoOrder.mockReset().mockResolvedValue({ success: true });
+    mockOrders = [createOrder()];
+    mockMarkPrice = 4000;
+  });
+
+  it("keeps pending cancellation scoped to symbol and independent of display filters", async () => {
+    const { result } = renderHook(() =>
+      useOrderStream({ side: OrderSide.BUY }),
+    );
+    await result.current[1].cancelAllPendingOrders("PERP_BTC_USDC");
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC" }],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.STOP }],
+      [
+        null,
+        { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
+      ],
+    ]);
+  });
+
+  it("preserves the two independent TP/SL cancellation types", async () => {
+    const { result } = renderHook(() => useOrderStream({}));
+    await result.current[1].cancelAllTPSLOrders("PERP_BTC_USDC");
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [
+        null,
+        {
+          symbol: "PERP_BTC_USDC",
+          algo_type: AlgoOrderRootType.POSITIONAL_TP_SL,
+        },
+      ],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TP_SL }],
+    ]);
+  });
+
+  it("rejects backend failures rather than returning a fulfilled batch", async () => {
+    mockUpdateAlgoOrder.mockResolvedValueOnce({
+      success: false,
+      message: "CANCEL_REJECTED",
+    });
+    const { result } = renderHook(() => useOrderStream({}));
+    await expect(result.current[1].cancelAllPendingOrders()).rejects.toThrow(
+      "CANCEL_REJECTED",
+    );
+    expect(mockUpdateAlgoOrder).toHaveBeenCalledTimes(3);
+  });
+
+  it("awaits other submitted requests before rejecting a partial failure", async () => {
+    let finish!: () => void;
+    mockUpdateAlgoOrder
+      .mockRejectedValueOnce(new Error("FAILED"))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finish = () => resolve({ success: true });
+          }),
+      );
+    const { result } = renderHook(() => useOrderStream({}));
+    const rejected = jest.fn();
+    const pending = result.current[1]
+      .cancelAllPendingOrders()
+      .catch((error) => rejected(error.message));
+    await Promise.resolve();
+    expect(rejected).not.toHaveBeenCalled();
+    finish();
+    await pending;
+    expect(rejected).toHaveBeenCalledWith("FAILED");
+  });
+});
+
 describe("useOrderStream TP/SL updates", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUpdateAlgoOrder.mockReset().mockResolvedValue({ success: true });
     mockOrders = [createOrder()];
     mockMarkPrice = 4000;
   });

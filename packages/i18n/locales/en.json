@@ -1504,5 +1504,12 @@
   "notification.generalTitle": "General Update",
   "notification.maintenanceTitle": "System Maintenance",
   "notification.empty": "No announcements",
-  "tradingPoints.points": "Points"
+  "tradingPoints.points": "Points",
+  "prediction.cancelAll.all.description": "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.perps.description": "Cancel all PERP pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.binary.description": "Cancel all cancellable Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.scoped.description": "Cancel all cancellable pending orders in the selected scope ({{scope}}), including orders hidden by display filters?",
+  "orders.cancelAll.contextChanged": "Your account or cancellation scope has changed. Please confirm again.",
+  "orders.cancelAll.failed": "Unable to cancel orders. Please try again.",
+  "orders.cancelAll.hiddenOrders": "This includes orders hidden by display filters."
 }

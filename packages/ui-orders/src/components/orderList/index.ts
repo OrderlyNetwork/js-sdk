@@ -8,3 +8,8 @@ export {
   MobileOrderListWidget,
 } from "./orderList.widget";
 export { useOrderListScript, type OrderListInstance } from "./orderList.script";
+export {
+  useCancelAllConfirmation,
+  assertCancelAllSucceeded,
+  type CancelAllConfirmationOptions,
+} from "./useCancelAllConfirmation";
