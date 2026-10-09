@@ -4,7 +4,7 @@ import { generatePath } from "@orderly.network/i18n";
 import { PositionsModule } from "@orderly.network/portfolio";
 import {
   SharedProductDataPanel,
-  useSharedPredictionState,
+  usePredictionAccountData,
 } from "@orderly.network/prediction";
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { API } from "@orderly.network/types";
@@ -16,7 +16,7 @@ import { updateSymbol } from "../../../storage";
 export default function PositionsPage() {
   const local = useTradingLocalStorage();
   const navigate = useNavigate();
-  const predictionState = useSharedPredictionState();
+  const predictionState = usePredictionAccountData();
 
   const onSymbolChange = useCallback(
     (data: API.Symbol) => {

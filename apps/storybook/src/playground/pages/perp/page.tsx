@@ -9,7 +9,7 @@ import {
   SharedProductOrdersPanel,
   usePredictionMarketsDropdown,
   useSharedProductCounts,
-  useSharedPredictionState,
+  usePredictionAccountData,
 } from "@orderly.network/prediction";
 import {
   TradingPage,
@@ -30,14 +30,14 @@ export default function PerpPage() {
   const [symbol, setSymbol] = useState(params.symbol!);
   const { search } = useLocation();
   const navigate = useNavigate();
-  const predictionState = useSharedPredictionState();
+  const predictionState = usePredictionAccountData();
   const { showAllSymbol } = useTradingLocalStorage();
   const scopedSymbol = showAllSymbol ? undefined : symbol;
-  const counts = useSharedProductCounts(
-    predictionState,
-    scopedSymbol,
-    scopedSymbol,
-  );
+  const counts = useSharedProductCounts({
+    product: "all",
+    perpsSymbol: scopedSymbol,
+    predictionUnderlyingSymbol: scopedSymbol,
+  });
   const onPredictionSelect = useCallback(
     (marketId: string) => {
       navigate(
@@ -46,10 +46,7 @@ export default function PerpPage() {
     },
     [navigate, search],
   );
-  const marketsDropdown = usePredictionMarketsDropdown(
-    predictionState,
-    onPredictionSelect,
-  );
+  const marketsDropdown = usePredictionMarketsDropdown(onPredictionSelect);
 
   useEffect(() => {
     updateSymbol(symbol);

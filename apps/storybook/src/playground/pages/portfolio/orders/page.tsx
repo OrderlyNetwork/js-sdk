@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   PredictionOrderCell,
-  useSharedPredictionState,
+  useProductOrderCancelAll,
+  usePredictionAccountData,
 } from "@orderly.network/prediction";
 import { useCanTrade } from "@orderly.network/react-app";
 import { OrderStatus } from "@orderly.network/types";
@@ -14,7 +15,6 @@ import {
   Tabs,
   TabPanel,
   Text,
-  modal,
 } from "@orderly.network/ui";
 import {
   DesktopOrderList,
@@ -22,9 +22,9 @@ import {
   TabType,
   OrderListInstance,
 } from "@orderly.network/ui-orders";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, isBinarySymbol } from "@orderly.network/utils";
 
-function MixedOrders({
+export function MixedOrders({
   type,
   ordersStatus,
   product,
@@ -35,10 +35,25 @@ function MixedOrders({
   product: string;
   ordersRef: React.RefObject<OrderListInstance>;
 }) {
-  const state = useSharedPredictionState();
+  const state = usePredictionAccountData({
+    enabled: product !== "perps",
+    includeHistory: type !== TabType.pending,
+  });
   const canTrade = useCanTrade();
   const { t } = useTranslation();
-  const perps = useOrderListScript({ type, ordersStatus, ref: ordersRef });
+  const pendingTab = type === TabType.pending;
+  const cancellation = useProductOrderCancelAll({
+    binary: product === "perps" ? undefined : state,
+    enabled: pendingTab,
+    instrument: product as "all" | "perps" | "prediction",
+  });
+  const perps = useOrderListScript({
+    type,
+    ordersStatus,
+    ref: ordersRef,
+    productType: "PERP",
+    cancelAllDisabled: pendingTab ? cancellation.disabled : undefined,
+  });
   const [outcome, setOutcome] = useState("all");
   const showOutcome =
     product !== "perps" &&
@@ -104,11 +119,16 @@ function MixedOrders({
   useEffect(() => {
     requested.current = 0;
   }, [queryKey]);
-  const perpRows = perps.manualPagination
+  const loadedPerpRows = perps.manualPagination
     ? pages.key === queryKey
       ? Object.values(pages.rows).flat()
       : []
     : (perps.dataSource ?? []);
+  // Execution reports can insert Binary orders into a PERP-filtered cache.
+  // Keep them out of Perps row actions, which have no Binary region guard.
+  const perpRows = loadedPerpRows.filter(
+    (order) => !isBinarySymbol(order.symbol),
+  );
   const predictionOrders = useMemo(() => {
     if (
       !state ||
@@ -185,32 +205,6 @@ function MixedOrders({
   );
   const visiblePerps =
     product === "prediction" || activeOutcome !== "all" ? [] : perpRows;
-  const cancelablePrediction = predictionOrders.filter(
-    (order) => !("status" in order),
-  );
-  const onCancelAll = () => {
-    if (
-      product === "perps" ||
-      !cancelablePrediction.length ||
-      state?.isRegionRestricted
-    ) {
-      perps.onCancelAll();
-      return;
-    }
-    modal.confirm({
-      title: t("orders.cancelAll"),
-      onCancel: async () => {},
-      onOk: async () => {
-        for (const order of visiblePerps) {
-          if (order.algo_order_id)
-            await perps.cancelAlgoOrder(order.algo_order_id, order.symbol);
-          else await perps.cancelOrder(order.order_id, order.symbol);
-        }
-        cancelablePrediction.forEach((order) => state?.cancelOrder(order.id));
-        return true;
-      },
-    });
-  };
   return (
     <DesktopOrderList
       key={product}
@@ -223,11 +217,7 @@ function MixedOrders({
       dataSource={visiblePerps}
       supplementalRows={supplementalRows}
       useClientTable={canTrade}
-      onCancelAll={onCancelAll}
-      cancelAllDisabled={
-        !visiblePerps.length &&
-        (!cancelablePrediction.length || state?.isRegionRestricted)
-      }
+      {...(pendingTab ? cancellation.orderListProps : {})}
     />
   );
 }

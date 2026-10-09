@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { LocaleCode, removeLangPrefix } from "@orderly.network/i18n";
-import { PredictionProvider } from "@orderly.network/prediction";
 import { OrderlyAppRootProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
 import { OrderlyLocaleProvider } from "../../../components/orderlyProvider/orderlyLocaleProvider";
 import { RouteProvider } from "../../../components/orderlyProvider/rounteProvider";
@@ -44,9 +43,7 @@ export const OrderlyProvider: React.FC = () => {
           >
             <ScrollToTop />
             {/* because the portfolio layout is used in route layout, we need to render the outlet */}
-            <PredictionProvider>
-              <Outlet />
-            </PredictionProvider>
+            <Outlet />
           </OrderlyAppRootProvider>
         </WalletConnectorProvider>
       </OrderlyLocaleProvider>
