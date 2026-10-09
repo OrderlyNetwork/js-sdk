@@ -39,6 +39,10 @@ export type PredictionOpenOrder = {
   outcome: PredictionOutcome;
   side: PredictionOrderSide;
   type: PredictionOrderType;
+  /** Original API type, retained verbatim when editing. */
+  orderType?: string;
+  clientOrderId?: string;
+  orderTag?: string;
   /** UP-book price. */
   price: number;
   quantity: number;
@@ -46,6 +50,9 @@ export type PredictionOpenOrder = {
   filledQuantity: number;
   /** Average executed price in the UP coordinate, once partially filled. */
   averagePrice?: number;
+  /** Historical confirmed fees, never recomputed from the current coefficient. */
+  totalFee?: number;
+  feeAsset?: string;
   reduceOnly?: boolean;
   /** Round-specific binary symbol. */
   symbol?: string;
@@ -112,3 +119,71 @@ export type PredictionOrderBookLevel = {
 
 export const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
+
+/** Narrow Binary cancellation capability, independent of any Prediction page. */
+export type BinaryOrderCancellationCapability = {
+  accountId?: string;
+  accountReady: boolean;
+  openOrders: PredictionOpenOrder[];
+  pendingOrdersComplete: boolean;
+  isRegionRestricted: boolean;
+  isOrderTradable: (symbol?: string) => boolean;
+};
+
+/** Independent actions for account tables; trade forms own their market inputs. */
+export type PredictionAccountActions = Pick<
+  ReturnType<
+    typeof import("./hooks/usePredictionTradingActions").usePredictionTradingActions
+  >,
+  | "availableQuantity"
+  | "isOrderTradable"
+  | "cancelOrder"
+  | "cancelAllOrders"
+  | "editPendingOrder"
+  | "estimateFee"
+  | "estimateFrozen"
+>;
+
+/** Account data and actions contain no selected round, chart, form or orderbook. */
+export type PredictionAccountState = Pick<
+  ReturnType<
+    typeof import("./hooks/usePredictionTradingActions").usePredictionTradingActions
+  >,
+  | "accountId"
+  | "accountReady"
+  | "balance"
+  | "positions"
+  | "openOrders"
+  | "pendingOrdersComplete"
+  | "history"
+  | "settlements"
+  | "historyRecords"
+  | "historyCompleteness"
+  | "historyLoading"
+  | "historyError"
+  | "pendingSettlementSymbols"
+  | "hasFeeConfig"
+  | "isSubmitting"
+  | "feeRates"
+> &
+  PredictionAccountActions & {
+    isRegionRestricted: boolean;
+    ordersLoading: boolean;
+    ordersError?: unknown;
+    positionsLoading: boolean;
+    positionsError?: unknown;
+  };
+
+/** Only a mounted trading page supplies live valuation to account tables. */
+export type PredictionHoldingsMarketView = {
+  selectedRow?: import("./binary/binaryInfo").BinaryInfoDetail;
+  outcomePrices: Record<PredictionOutcome, number | undefined>;
+  round?: number;
+  roundPhase: PredictionRoundPhase;
+  isRoundTradable: boolean;
+};
+export type PredictionAccountPanelState = PredictionAccountState & {
+  activeTab?: PredictionDataTab;
+  setActiveTab?: (tab: PredictionDataTab) => void;
+  marketView?: PredictionHoldingsMarketView;
+};
