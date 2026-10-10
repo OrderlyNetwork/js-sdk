@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   alignOneTapAmounts,
-  DEFAULT_ONE_TAP_AMOUNTS,
   resolveOneTapAmounts,
   validOneTapAmounts,
 } from "./oneTapAmounts";

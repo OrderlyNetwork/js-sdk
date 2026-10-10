@@ -35,12 +35,6 @@ export {
   binaryHistoryCsv,
   type BinaryHistoryCsvResult,
 } from "./prediction/binary/binaryHistoryCsv";
-export {
-  binaryAccountFunds,
-  binaryLockedFunds,
-  binaryPositionValue,
-} from "./prediction/binary/binaryAssets";
-
 export { usePredictionAccountData } from "./prediction/hooks/usePredictionAccountData";
 export { usePredictionMarkets } from "./prediction/hooks/usePredictionMarkets";
 export type {
