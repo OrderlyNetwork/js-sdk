@@ -319,3 +319,37 @@ export function accumulateOrderBookLevels(
   }
   return rows;
 }
+
+const emptyBookRow = (): [number, number, number, number] => [
+  Number.NaN,
+  Number.NaN,
+  Number.NaN,
+  Number.NaN,
+];
+
+/**
+ * Fit accumulated ladder rows to a per-side budget: shorter sides are padded
+ * with inert NaN placeholders (rendered as "-") on the side away from the
+ * price row ("before" for asks, "after" for bids, so best levels stay
+ * adjacent to it); longer sides are truncated to the best `target` levels
+ * (asks tail, bids head), mirroring the perps orderbook level window.
+ */
+export function fitOrderBookLevels(
+  levels: Array<[number, number, number, number]>,
+  target: number,
+  position: "before" | "after",
+): Array<[number, number, number, number]> {
+  if (levels.length === target) return levels;
+  if (levels.length === 0) {
+    return Array.from({ length: target }, emptyBookRow);
+  }
+  if (levels.length > target) {
+    return position === "before"
+      ? levels.slice(levels.length - target)
+      : levels.slice(0, target);
+  }
+  const padding = Array.from({ length: target - levels.length }, emptyBookRow);
+  return position === "before"
+    ? [...padding, ...levels]
+    : [...levels, ...padding];
+}
