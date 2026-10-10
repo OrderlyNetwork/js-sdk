@@ -40,6 +40,8 @@ export type OrderListInstance = {
 
 export type useOrderListScriptOptions = {
   type: TabType;
+  /** Pause this list query while its product is hidden. */
+  enabled?: boolean;
   ordersStatus?: OrderStatus;
   symbol?: string;
   /**
@@ -147,19 +149,25 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
       cancelAllTPSLOrders,
       meta,
     },
-  ] = useOrderStream({
-    symbol: props.symbol,
-    productType: props.productType,
-    status: orderStatus,
-    side: ordersSide,
-    page: enableLoadMore || !manualPagination ? undefined : page,
-    // pending and ts_sl list get all data
-    size: manualPagination ? pageSize : 500,
-    sourceTypeAll: type === TabType.orderHistory || type === TabType.filled,
-    dateRange,
-    includes,
-    excludes,
-  });
+  ] = useOrderStream(
+    {
+      symbol: props.symbol,
+      productType: props.productType,
+      status: orderStatus,
+      side: ordersSide,
+      page: enableLoadMore || !manualPagination ? undefined : page,
+      // pending and ts_sl list get all data
+      size: manualPagination ? pageSize : 500,
+      sourceTypeAll: type === TabType.orderHistory || type === TabType.filled,
+      dateRange,
+      includes,
+      excludes,
+    },
+    {
+      enabled: props.enabled ?? true,
+      stopOnUnmount: props.enabled !== undefined,
+    },
+  );
 
   const localPageSizeKey = `orderly_${type}_pageSize`;
   const [typePageSize, setTypePageSize] = useLocalStorage(
