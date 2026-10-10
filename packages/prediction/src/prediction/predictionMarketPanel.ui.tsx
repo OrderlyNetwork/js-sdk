@@ -45,8 +45,8 @@ type PredictionMarketRowProps = {
   /** Live UP-coordinate BBO from the panel's @bbo subscriptions. */
   bbo: BinaryBbo | undefined;
   favorite: boolean;
-  onToggleFavorite: (id: string) => void;
-  onSelect?: (id: string) => void;
+  onToggleFavorite: (symbol: string) => void;
+  onSelect?: (symbol: string) => void;
 };
 
 const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
@@ -72,7 +72,7 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
         onSelect && "oui-cursor-pointer hover:oui-bg-base-7",
       )}
       aria-disabled={!onSelect}
-      onClick={onSelect ? () => onSelect(market.id) : undefined}
+      onClick={onSelect ? () => onSelect(market.currentRow.symbol) : undefined}
     >
       <td className="oui-px-2 oui-text-start">
         <div className="oui-flex oui-items-center oui-gap-2">
@@ -122,8 +122,8 @@ export type PredictionMarketPanelProps = {
   bbos: Record<string, BinaryBbo>;
   loading?: boolean;
   favoriteMarketIds: string[];
-  onToggleFavorite: (id: string) => void;
-  onSelect?: (id: string) => void;
+  onToggleFavorite: (symbol: string) => void;
+  onSelect?: (symbol: string) => void;
   className?: string;
 };
 

@@ -42,7 +42,7 @@ import { TradingPage } from "@orderly.network/trading";
 />;
 ```
 
-The page reads the existing all-symbol and notional precision preferences and keeps list and count scopes in sync. Prediction selection uses the SDK app provider's existing `onRouteChange` callback with `{ href: "/prediction/" + encodeURIComponent(marketId), name: "prediction" }`. The host handles language prefixes and its own router. Configure the standard `/prediction/:marketId` route. Without `onRouteChange`, the automatic Prediction market dropdown is omitted; account panel extensions remain available.
+The page reads the existing all-symbol and notional precision preferences and keeps list and count scopes in sync. Prediction selection uses the SDK app provider's existing `onRouteChange` callback with `{ href: "/prediction/" + encodeURIComponent(symbol), name: "prediction" }`. The host handles language prefixes and its own router. Configure the standard `/prediction/:symbol` route. Without `onRouteChange`, the automatic Prediction market dropdown is omitted; account panel extensions remain available.
 
 `TradingPageProps.predictionEnabled` defaults to `true`. Set it to `false` to disable this consumer's automatic Prediction resources and restore native Perps panels. It can be toggled at runtime. Explicit `marketsDropdown` and `dataListProductContent` objects independently replace the corresponding automatic configuration as a whole, without merging nested slots. Explicit configurations remain in effect when automatic Prediction is disabled.
 
@@ -53,24 +53,26 @@ Same-product selection calls `onSymbolChange` when supplied; the host owns updat
 ```tsx
 import {
   PredictionPage,
-  type PredictionMarketSelection,
+  type PredictionSymbolSelection,
 } from "@orderly.network/prediction";
 
-// Read marketId from the host router. Navigation is configured on the app provider.
-<PredictionPage marketId={marketId} />;
+// Read the exact contract symbol from /prediction/:symbol.
+<PredictionPage symbol={symbol} />;
 
-// Optional controlled integration: the host updates marketId and optionally its URL.
+// Optional controlled integration: the host accepts the selection by updating symbol.
 <PredictionPage
-  marketId={marketId}
-  onSymbolChange={({ marketId }: PredictionMarketSelection) =>
-    setMarketId(marketId)
-  }
+  symbol={symbol}
+  onSymbolChange={({ symbol }: PredictionSymbolSelection) => setSymbol(symbol)}
 />;
 ```
 
-`onSymbolChange` receives only `{ marketId }`, without a round symbol. It takes precedence over same-product navigation. Without it, choosing another Prediction market requests `/prediction/:marketId`. Choosing a Perp market always requests `/perp/:symbol` through `onRouteChange`, without calling `onSymbolChange`. Initial selection, URL synchronization, repeated selection of the current market, and automatic round transitions do not call state callbacks. Selecting a dropdown entry only reports the selection; it does not persist or change the current market. The page persists an accepted market and resets its round only after the host updates `marketId`, so ignored or delayed selections retain the current market and historical round.
+`onSymbolChange` receives `{ symbol }`, for example `{ symbol: "PERP_BTC5M2608271200_USDC" }`. It takes precedence over same-product navigation. Without it, selection requests `/prediction/:symbol`. Market dropdowns select their current round, while chart selection, next-round, and live-round controls request an exact target contract. Selecting the current contract is a no-op. Choosing a Perp market only calls `onRouteChange` with `/perp/:symbol`.
 
-In routed mode, entering `/prediction` without a market ID fills in the default market using `onRouteChange` with `replace: true`. Hosts should forward `RouteOption.replace` to their router. Controlled mode (`onSymbolChange` supplied) does not fill in the URL. Unknown market IDs retain the unavailable-market display rather than redirecting. Cross-product dropdown entries are hidden without a router; same-product selection requires a state callback or router. Language prefixes and query parameters remain host responsibilities.
+The URL identifies a specific round: refresh, sharing, and browser history restore that round. Expiry and metadata updates do not advance it automatically. The live-round control selects the current round at click time and remains pinned to that contract. Round selection only reports a request; the host must update `symbol` before state changes. Accepted same-market round changes clear amount, percentage, and limit price; market changes reset the form. Ignored or delayed requests preserve the existing contract, form, and storage.
+
+The page first resolves the symbol from the Binary snapshot, then requests `/v1/public/binary/info/:symbol` when it is absent. Invalid symbols, mismatched metadata, and unavailable details retain the unavailable view without redirecting. Contracts loaded only from historical details cannot trade. Previously accepted rows remain visible after leaving the snapshot, and settlement details continue refreshing.
+
+In routed mode, entering `/prediction` selects the current round of the remembered/default market and fills the URL with `replace: true`. Hosts should forward `RouteOption.replace` to their router. Controlled mode does not fill the URL. The widget pins the initial default contract even while the host delays accepting the URL. Cross-product dropdown entries are hidden without a router; market and round selection require a callback or router. Without either, the default contract remains available for display and eligible trading, but selection is disabled and expiry does not advance the round. Language prefixes and query parameters remain host responsibilities. Market family IDs remain internal grouping and preference values; they are no longer page props or URL parameters.
 
 ### Automatic integration resources
 
@@ -100,7 +102,8 @@ function PerpPage({
   const predictionExtension = usePredictionTradingExtension({
     symbol,
     showAllSymbol,
-    onPredictionSelect: (marketId) => navigate(`/prediction/${marketId}`),
+    onPredictionSelect: (symbol) =>
+      navigate(`/prediction/${encodeURIComponent(symbol)}`),
     onSymbolChange,
     sharePnLConfig,
     pnlNotionalDecimalPrecision,

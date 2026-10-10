@@ -66,6 +66,12 @@ export function mergeBinaryDetail(
       detail.result_committed_at < row.result_committed_at)
   )
     return row;
+  if (
+    Object.entries(detail).every(
+      ([key, value]) => row[key as keyof BinaryInfoDetail] === value,
+    )
+  )
+    return row;
   return { ...row, ...detail };
 }
 

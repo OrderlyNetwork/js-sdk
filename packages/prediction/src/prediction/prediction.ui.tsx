@@ -128,8 +128,8 @@ export const Prediction: React.FC<
     orderEntryFunded?: boolean;
     orderEntryRestricted?: boolean;
     onNavigatePerp?: (symbol: API.Symbol) => void;
-    requestedMarketId?: string;
-    onSelectMarket?: (marketId: string) => void;
+    requestedSymbol?: string;
+    onSelectSymbol?: (symbol: string) => void;
   }
 > = (state) => {
   const { t } = useTranslation();
@@ -137,7 +137,7 @@ export const Prediction: React.FC<
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
   const { isMobile } = useScreen();
   const panelMarketView = usePredictionPanelMarketView(state);
-  const marketsDropdown = usePredictionMarketsDropdown(state.onSelectMarket);
+  const marketsDropdown = usePredictionMarketsDropdown(state.onSelectSymbol);
 
   useEffect(() => {
     if (!state.notification) return;
@@ -161,16 +161,11 @@ export const Prediction: React.FC<
     ? false
     : (state.orderEntryFunded ?? false);
 
-  const isRequestedMarketUnavailable =
-    state.requestedMarketId != null &&
-    !state.markets.some((market) => market.id === state.requestedMarketId) &&
-    state.marketId !== state.requestedMarketId;
-  const isSwitchingMarket =
-    state.requestedMarketId != null &&
-    state.requestedMarketId !== state.marketId &&
-    !isRequestedMarketUnavailable;
-  const marketName = isRequestedMarketUnavailable
-    ? (state.requestedMarketId ?? t("prediction.title"))
+  const isRequestedSymbolUnavailable =
+    state.requestedSymbol != null &&
+    state.selectedRow?.symbol !== state.requestedSymbol;
+  const marketName = isRequestedSymbolUnavailable
+    ? (state.requestedSymbol ?? t("prediction.title"))
     : state.market
       ? formatPredictionMarketName(state.market)
       : t("prediction.title");
@@ -190,7 +185,7 @@ export const Prediction: React.FC<
           : undefined
       }
       symbol={
-        isRequestedMarketUnavailable
+        isRequestedSymbolUnavailable
           ? undefined
           : state.market?.indexPriceSymbol
       }
@@ -198,10 +193,10 @@ export const Prediction: React.FC<
     >
       <button
         type="button"
-        disabled={!state.onSelectMarket && !state.onNavigatePerp}
+        disabled={!state.onSelectSymbol && !state.onNavigatePerp}
         className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
       >
-        {!isRequestedMarketUnavailable && state.market && (
+        {!isRequestedSymbolUnavailable && state.market && (
           <TokenIcon name={state.market.base} size="lg" />
         )}
         <div className="oui-min-w-0 oui-flex-1">
@@ -209,7 +204,7 @@ export const Prediction: React.FC<
             <span className="oui-truncate">{marketName}</span>
             <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
           </h1>
-          {!isRequestedMarketUnavailable && state.market && (
+          {!isRequestedSymbolUnavailable && state.market && (
             <div className="oui-text-xs oui-mt-0.5 oui-truncate oui-font-normal oui-text-base-contrast-54">
               {formatRoundWindow(
                 state.selectedRow?.observation_start_at != null
@@ -224,11 +219,7 @@ export const Prediction: React.FC<
       </button>
     </DropDownMarketsWidget>
   );
-  if (
-    !state.isRoundsReady ||
-    isRequestedMarketUnavailable ||
-    isSwitchingMarket
-  ) {
+  if (!state.isRoundsReady || isRequestedSymbolUnavailable) {
     return (
       <main
         id="oui-prediction-page"
@@ -241,7 +232,7 @@ export const Prediction: React.FC<
           role="status"
           className="oui-prediction-emptyState oui-flex oui-min-h-[320px] oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-rounded-2xl oui-bg-base-9 oui-px-6 oui-py-12 sm:oui-min-h-[400px]"
         >
-          {state.isRoundsLoading || isSwitchingMarket ? (
+          {state.isRoundsLoading ? (
             <Spinner size="lg" color="primary" />
           ) : (
             <>

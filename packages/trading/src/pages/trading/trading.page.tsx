@@ -12,9 +12,9 @@ export const TradingPage: React.FC<TradingPageProps> = (props) => {
   const { showAllSymbol, pnlNotionalDecimalPrecision } =
     useTradingLocalStorage();
   const defaultPredictionSelect = useCallback(
-    (marketId: string) => {
+    (symbol: string) => {
       onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(marketId)}`,
+        href: `/prediction/${encodeURIComponent(symbol)}`,
         name: "prediction",
       });
     },

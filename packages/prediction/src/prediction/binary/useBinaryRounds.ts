@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStorage, useQuery } from "@orderly.network/hooks";
-import { getTimestamp } from "@orderly.network/utils";
+import { getTimestamp, parseBinarySymbol } from "@orderly.network/utils";
 import { usePredictionMarkets } from "../hooks/usePredictionMarkets";
 import type {
   PredictionOutcome,
@@ -27,6 +27,10 @@ import {
 export type UseBinaryRoundsArgs = {
   /** Suspend polling while no consumer route is mounted. */
   active: boolean;
+  /** Controlled round contract; absent only while the widget initializes. */
+  symbol?: string;
+  /** Requests selection; the widget decides how the host receives it. */
+  onSymbolSelect: (symbol: string) => void;
 };
 
 /**
@@ -35,23 +39,25 @@ export type UseBinaryRoundsArgs = {
  * server-calibrated time (the middleware stamps the envelope timestamp offset
  * from any REST response), the waiting-result phase polls the detail endpoint
  * every 5s — starting only after a 5s post-expiry grace period
- * (BINARY_RESULT_POLL_DELAY_MS) — until `result_committed_at` shows up or the
- * round leaves the snapshot.
+ * (BINARY_RESULT_POLL_DELAY_MS). Accepted contracts remain available after
+ * leaving the snapshot, and detail polling continues until evidence arrives.
  */
-export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
+export const useBinaryRounds = ({
+  active,
+  symbol,
+  onSymbolSelect,
+}: UseBinaryRoundsArgs) => {
   const { rows, isLoading, error } = usePredictionMarkets({ enabled: active });
 
-  /** Pin the selected record so a refreshed snapshot cannot erase its chart. */
-  const [selectedRoundInput, setSelectedRoundInput] = useState<
-    { marketId: string; round: number; row: BinaryInfoRow } | undefined
-  >();
+  /** Retain only the requested contract after it leaves the snapshot. */
+  const [acceptedRow, setAcceptedRow] = useState<BinaryInfoRow>();
+  const cachedRow = acceptedRow?.symbol === symbol ? acceptedRow : undefined;
   const clockRows = useMemo(
     () =>
-      selectedRoundInput?.row &&
-      !rows.some((row) => row.symbol === selectedRoundInput.row.symbol)
-        ? [...rows, selectedRoundInput.row]
+      cachedRow && !rows.some((row) => row.symbol === cachedRow.symbol)
+        ? [...rows, cachedRow]
         : rows,
-    [rows, selectedRoundInput?.row],
+    [rows, cachedRow],
   );
 
   const [now, setNow] = useState(() => getTimestamp());
@@ -71,55 +77,37 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
     "orderly_prediction_selected_market",
     null,
   );
-  const pinnedIdentity =
-    selectedRoundInput && getBinaryMarketIdentity(selectedRoundInput.row);
-  const pinnedMarket =
-    pinnedIdentity && (marketInput == null || marketInput === pinnedIdentity.id)
-      ? { ...pinnedIdentity, currentRow: selectedRoundInput!.row }
-      : undefined;
-  const market =
-    markets.find(
-      (item) => item.id === (marketInput ?? selectedRoundInput?.marketId),
-    ) ??
-    pinnedMarket ??
-    markets[0];
-  const marketId = market?.id;
+  const parsedSymbol = symbol != null ? parseBinarySymbol(symbol) : undefined;
+  const requestedMarketId = parsedSymbol
+    ? `PERP_${parsedSymbol.base}${parsedSymbol.period}_${parsedSymbol.quote}`
+    : undefined;
+  const defaultSymbol = (
+    markets.find((item) => item.id === marketInput) ?? markets[0]
+  )?.currentRow.symbol;
   const marketRows = useMemo(
-    () => rows.filter((row) => getBinaryMarketIdentity(row)?.id === marketId),
-    [rows, marketId],
+    () =>
+      rows.filter(
+        (row) => getBinaryMarketIdentity(row)?.id === requestedMarketId,
+      ),
+    [rows, requestedMarketId],
   );
-
-  const roundByStart = useMemo(() => {
-    const map = new Map<number, BinaryInfoRow>();
-    marketRows.forEach((row) => map.set(binaryRowRoundStart(row), row));
-    return map;
-  }, [marketRows]);
-
-  const currentRow = market?.currentRow;
-  const round = currentRow ? binaryRowRoundStart(currentRow) : undefined;
-
-  const snapshotSelectedRow =
-    selectedRoundInput != null && selectedRoundInput.marketId === marketId
-      ? roundByStart.get(selectedRoundInput.round)
-      : currentRow;
-  const isRoundInSnapshot =
-    snapshotSelectedRow != null &&
-    roundByStart.has(binaryRowRoundStart(snapshotSelectedRow));
-  const listSelectedRow =
-    snapshotSelectedRow ??
-    (selectedRoundInput?.marketId === marketId
-      ? selectedRoundInput?.row
-      : undefined);
-
-  // The result is not queryable right at expiry: an immediate request would
-  // return no `result_committed_at`, so the detail poll only starts once this
-  // grace period has elapsed (the round clock schedules a tick at expire_at +
-  // BINARY_RESULT_POLL_DELAY_MS to flip this gate).
+  const roundByStart = useMemo(
+    () => new Map(marketRows.map((row) => [binaryRowRoundStart(row), row])),
+    [marketRows],
+  );
+  const snapshotSelectedRow = rows.find(
+    (row) =>
+      !!parsedSymbol &&
+      row.symbol === symbol &&
+      getBinaryMarketIdentity(row)?.id === requestedMarketId,
+  );
+  const listSelectedRow = snapshotSelectedRow ?? cachedRow;
+  const isRoundInSnapshot = !!snapshotSelectedRow;
   const waitingForResult =
     !!listSelectedRow &&
     now >= listSelectedRow.expire_at + BINARY_RESULT_POLL_DELAY_MS &&
     listSelectedRow.result_committed_at == null;
-
+  const detailSymbol = parsedSymbol ? symbol : undefined;
   const {
     data: detailData,
     error: detailError,
@@ -127,37 +115,50 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
     mutate: refreshDetail,
   } = useQuery<BinaryInfoDetail>(
     active &&
-      isRoundInSnapshot &&
-      listSelectedRow &&
-      (waitingForResult || listSelectedRow.result_committed_at != null)
-      ? `/v1/public/binary/info/${listSelectedRow.symbol}`
+      detailSymbol &&
+      (!snapshotSelectedRow ||
+        waitingForResult ||
+        listSelectedRow?.result_committed_at != null)
+      ? `/v1/public/binary/info/${encodeURIComponent(detailSymbol)}`
       : null,
-    {
-      refreshInterval: binaryDetailRefreshInterval,
-      revalidateOnFocus: false,
-    },
+    { refreshInterval: binaryDetailRefreshInterval, revalidateOnFocus: false },
   );
-
+  const validDetail =
+    !!detailData &&
+    !!detailSymbol &&
+    detailData.symbol === detailSymbol &&
+    getBinaryMarketIdentity(detailData)?.id === requestedMarketId
+      ? detailData
+      : undefined;
   const selectedRow = useMemo(
-    () => mergeBinaryDetail(listSelectedRow, detailData),
-    [listSelectedRow, detailData],
+    () =>
+      listSelectedRow
+        ? mergeBinaryDetail(listSelectedRow, validDetail)
+        : validDetail,
+    [listSelectedRow, validDetail],
   );
-
-  useEffect(() => {
-    if (!selectedRow || !isRoundInSnapshot) return;
-    setSelectedRoundInput((previous) =>
-      previous?.row.symbol === selectedRow.symbol &&
-      previous.row !== selectedRow
-        ? { ...previous, row: selectedRow }
-        : previous,
-    );
-  }, [selectedRow, isRoundInSnapshot]);
-
+  const identity = selectedRow && getBinaryMarketIdentity(selectedRow);
+  const market = identity
+    ? {
+        ...identity,
+        currentRow:
+          markets.find((item) => item.id === identity.id)?.currentRow ??
+          selectedRow!,
+      }
+    : undefined;
+  const marketId = market?.id;
+  const currentRow = market?.currentRow;
+  const round = currentRow ? binaryRowRoundStart(currentRow) : undefined;
   const selectedRound = selectedRow
     ? binaryRowRoundStart(selectedRow)
-    : selectedRoundInput != null && selectedRoundInput.marketId === marketId
-      ? selectedRoundInput.round
-      : round;
+    : undefined;
+
+  useEffect(() => {
+    setAcceptedRow((previous) =>
+      previous === selectedRow ? previous : selectedRow,
+    );
+    if (identity && marketInput !== identity.id) setMarketInput(identity.id);
+  }, [selectedRow, identity?.id, marketInput, setMarketInput]);
 
   const roundPhase: PredictionRoundPhase = useMemo(
     () =>
@@ -179,7 +180,10 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
 
   const roundOutcomeLookup = useCallback(
     (roundStart: number): PredictionOutcome | undefined => {
-      const row = roundByStart.get(roundStart);
+      const row =
+        selectedRow && binaryRowRoundStart(selectedRow) === roundStart
+          ? selectedRow
+          : roundByStart.get(roundStart);
       if (row?.result_committed_at == null) return undefined;
       return row.outcome === "DOWN"
         ? "down"
@@ -187,12 +191,14 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
           ? "up"
           : undefined;
     },
-    [roundByStart],
+    [roundByStart, selectedRow],
   );
 
   /** Returns false when the round cannot be selected (e.g. not open yet). */
   const selectMarketRound = useCallback(
     (nextRound: number) => {
+      if (selectedRow && binaryRowRoundStart(selectedRow) === nextRound)
+        return true;
       const row = roundByStart.get(nextRound);
       if (
         marketId &&
@@ -200,25 +206,19 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
         (row.expire_at <= getTimestamp() ||
           isBinaryRowTradable(row, getTimestamp()))
       ) {
-        setSelectedRoundInput({ marketId, round: nextRound, row });
+        if (row.symbol === selectedRow?.symbol) return true;
+        onSymbolSelect(row.symbol);
         return true;
       }
       return false;
     },
-    [marketId, roundByStart],
-  );
-
-  const selectMarket = useCallback(
-    (nextMarketId: string) => {
-      setMarketInput(nextMarketId);
-      setSelectedRoundInput(undefined);
-    },
-    [setMarketInput],
+    [marketId, roundByStart, selectedRow?.symbol, onSymbolSelect],
   );
 
   const goToLiveRound = useCallback(() => {
-    setSelectedRoundInput(undefined);
-  }, []);
+    if (!currentRow || currentRow.symbol === selectedRow?.symbol) return;
+    onSymbolSelect(currentRow.symbol);
+  }, [currentRow, selectedRow?.symbol, onSymbolSelect]);
 
   const nextTradableRow = useMemo(
     () => nextTradableBinaryRound(marketRows, now),
@@ -227,9 +227,10 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
   const goToNextRound = useCallback(() => {
     const row = nextTradableBinaryRound(marketRows, getTimestamp());
     if (!marketId || !row) return false;
-    setSelectedRoundInput({ marketId, round: binaryRowRoundStart(row), row });
+    if (row.symbol === selectedRow?.symbol) return true;
+    onSymbolSelect(row.symbol);
     return true;
-  }, [marketId, marketRows]);
+  }, [marketId, marketRows, selectedRow?.symbol, onSymbolSelect]);
 
   // Selected-row view of the market's rows: replace the snapshot row with the
   // detail-merged copy, or append an expired round that left the snapshot.
@@ -251,10 +252,11 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
     markets,
     market,
     marketId,
-    marketInput,
-    selectMarket,
-    isLoading,
-    error,
+    defaultSymbol,
+    isLoading:
+      isLoading ||
+      (symbol != null && !!parsedSymbol && !selectedRow && !!detailLoading),
+    error: error ?? detailError,
     round,
     selectedRound,
     selectedRow,

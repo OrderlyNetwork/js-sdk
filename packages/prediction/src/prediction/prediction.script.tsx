@@ -22,6 +22,10 @@ export const usePredictionScript = (
   // page itself; base consumers (perp/portfolio dropdowns, shared panels)
   // retain the cheap rounds polling but not the per-tick subscriptions.
   activeLive = true,
+  selection: {
+    symbol?: string;
+    onSymbolSelect: (symbol: string) => void;
+  },
 ) => {
   const binaryRegionRestricted = useBinaryRegionRestricted(active);
   const isRegionRestricted = regionRestricted || binaryRegionRestricted;
@@ -31,7 +35,7 @@ export const usePredictionScript = (
   const { notification, notify, clearNotification } =
     usePredictionNotifications();
 
-  const rounds = useBinaryRounds({ active });
+  const rounds = useBinaryRounds({ active, ...selection });
   const selectedSymbol = rounds.selectedRow?.symbol;
 
   const underlying = useBinaryUnderlying({
@@ -76,6 +80,7 @@ export const usePredictionScript = (
   const form = usePredictionOrderForm({
     markPrice,
     marketId: rounds.marketId,
+    symbol: selectedSymbol,
     quoteTick: rounds.selectedRow?.quote_tick,
     quoteMin: rounds.selectedRow?.quote_min,
     quoteMax: rounds.selectedRow?.quote_max,
@@ -128,17 +133,7 @@ export const usePredictionScript = (
     },
     [rounds.selectMarketRound, notify],
   );
-  const goToNextRound = useCallback(() => {
-    if (!rounds.goToNextRound()) return;
-    form.resetAmountAfterFill();
-    form.setLimitPrice("");
-    clearNotification();
-  }, [
-    rounds,
-    form.resetAmountAfterFill,
-    form.setLimitPrice,
-    clearNotification,
-  ]);
+  const goToNextRound = rounds.goToNextRound;
 
   const placeOrder = useCallback(() => {
     portfolio.placeOrder({
@@ -176,11 +171,10 @@ export const usePredictionScript = (
     markets: rounds.markets,
     market: rounds.market,
     marketId: rounds.marketId,
-    marketInput: rounds.marketInput,
-    selectMarket: rounds.selectMarket,
+    defaultSymbol: rounds.defaultSymbol,
     isRoundsLoading: rounds.isLoading,
     /** True once the binary info snapshot produced at least one round. */
-    isRoundsReady: rounds.round != null,
+    isRoundsReady: rounds.selectedRow != null,
     // Round lifecycle. Components only mount after isRoundsReady, so the 0
     // fallbacks below never render.
     round: rounds.round ?? 0,

@@ -26,6 +26,7 @@ import { clamp, floorToTick } from "../predictionShared";
 export type UsePredictionOrderFormArgs = {
   /** Market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds; not a tradable round symbol. */
   marketId?: string;
+  symbol?: string;
   /** UP-coordinate mark price used only to estimate capacity for an empty limit input. */
   markPrice?: number;
   quoteTick?: number;
@@ -62,6 +63,7 @@ export type UsePredictionOrderFormArgs = {
 
 export const usePredictionOrderForm = ({
   marketId,
+  symbol,
   markPrice,
   quoteTick = DEFAULT_BINARY_QUOTE_TICK,
   quoteMin = quoteTick,
@@ -97,6 +99,15 @@ export const usePredictionOrderForm = ({
   const priceDp = new Decimal(quoteTick).decimalPlaces();
   const amountDp =
     amountUnit === "quote" ? 2 : new Decimal(baseTick).decimalPlaces();
+  const [formSymbol, setFormSymbol] = useState(symbol);
+  useEffect(() => {
+    if (formSymbol === symbol) return;
+    setFormSymbol(symbol);
+    setAmount("");
+    setSelectedPercentage(null);
+    setLimitPrice("");
+  }, [formSymbol, symbol]);
+
   const [formMarketId, setFormMarketId] = useState(marketId);
 
   useEffect(() => {
@@ -197,7 +208,12 @@ export const usePredictionOrderForm = ({
     maxAmount > 0 ? clamp((numericAmount / maxAmount) * 100, 0, 100) : 0;
 
   const canPlaceOrder = useMemo(() => {
-    if (!isRoundTradable || isRegionRestricted || formMarketId !== marketId)
+    if (
+      !isRoundTradable ||
+      isRegionRestricted ||
+      formMarketId !== marketId ||
+      formSymbol !== symbol
+    )
       return false;
     // Size/config gates run in UP-book coordinates (api-spec §5.2): a DOWN
     // order at display n is validated as UP at 1-n.
@@ -246,6 +262,8 @@ export const usePredictionOrderForm = ({
     baseMax,
     baseTick,
     formMarketId,
+    formSymbol,
+    symbol,
     isRegionRestricted,
     isRoundTradable,
     marketId,
@@ -328,10 +346,21 @@ export const usePredictionOrderForm = ({
   );
 
   useEffect(() => {
-    if (formMarketId === marketId && selectedPercentage !== null) {
+    if (
+      formMarketId === marketId &&
+      formSymbol === symbol &&
+      selectedPercentage !== null
+    ) {
       setOrderPercentage(selectedPercentage);
     }
-  }, [formMarketId, marketId, selectedPercentage, setOrderPercentage]);
+  }, [
+    formMarketId,
+    marketId,
+    formSymbol,
+    symbol,
+    selectedPercentage,
+    setOrderPercentage,
+  ]);
 
   const setManualAmount = useCallback((value: string) => {
     setSelectedPercentage(null);

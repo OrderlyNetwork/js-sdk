@@ -481,3 +481,13 @@ test("conflicting revisions do not hide another verified position segment", () =
     [symbol],
   );
 });
+
+test("merging identical details retains the cached row reference", () => {
+  const row = {
+    symbol: "PERP_BTC5M2608271200_USDC",
+    s0: 100,
+  } as BinaryInfoDetail;
+  const detail = { ...row, s1: 101 };
+  const merged = mergeBinaryDetail(row, detail)!;
+  assert.equal(mergeBinaryDetail(merged, detail), merged);
+});

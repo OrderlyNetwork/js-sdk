@@ -1,50 +1,77 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useCanTrade, useAppContext } from "@orderly.network/react-app";
 import {
   AssetViewWidget,
   useFirstTimeDeposit,
 } from "@orderly.network/trading-common";
 import { usePredictionScript } from "./prediction.script";
-import type { PredictionState } from "./prediction.script";
-import type { PredictionMarketSelection } from "./prediction.types";
+import type { PredictionSymbolSelection } from "./prediction.types";
 import { Prediction } from "./prediction.ui";
 
 export type PredictionWidgetProps = {
-  /**
-   * Prediction market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds.
-   * This is not a tradable round symbol such as `PERP_BTC5M2608271200_USDC`.
-   */
-  marketId?: string;
-  /** Reports a user-selected market; the host updates marketId and optionally its URL. */
-  onSymbolChange?: (market: PredictionMarketSelection) => void;
+  /** Exact round contract, e.g. PERP_BTC5M2608271200_USDC. */
+  symbol?: string;
+  /** Requests selection; the host updates symbol and optionally its URL. */
+  onSymbolChange?: (selection: PredictionSymbolSelection) => void;
 };
 
-export const PredictionWidget: React.FC<PredictionWidgetProps> = (props) => {
-  const { disabledConnect } = useAppContext();
-  const state = usePredictionScript(disabledConnect);
-  return <PredictionWithState state={state} {...props} />;
-};
-const PredictionWithState = ({
-  state,
-  marketId,
+export const PredictionWidget: React.FC<PredictionWidgetProps> = ({
+  symbol,
   onSymbolChange,
-}: { state: PredictionState } & PredictionWidgetProps) => {
-  const { onRouteChange } = useAppContext();
-  const completedDefaultRoute = useRef<string>();
-  const selectMarket = useCallback(
-    (id: string) => {
-      if (id === (marketId ?? state.marketId)) return;
-      if (onSymbolChange) {
-        onSymbolChange({ marketId: id });
-      } else {
+}) => {
+  const { disabledConnect, onRouteChange } = useAppContext();
+  const [fallbackSymbol, setFallbackSymbol] = useState<string>();
+  const hasExternalSymbol = symbol != null;
+  const [hadExternalSymbol, setHadExternalSymbol] = useState(hasExternalSymbol);
+  // Reset before rendering the new mode so a base route cannot reuse an old fallback.
+  if (hadExternalSymbol !== hasExternalSymbol) {
+    setHadExternalSymbol(hasExternalSymbol);
+    setFallbackSymbol(undefined);
+  }
+  const effectiveSymbol = symbol ?? fallbackSymbol;
+  const selectSymbol = useCallback(
+    (nextSymbol: string) => {
+      if (nextSymbol === effectiveSymbol) return;
+      if (onSymbolChange) onSymbolChange({ symbol: nextSymbol });
+      else
         onRouteChange?.({
-          href: `/prediction/${encodeURIComponent(id)}`,
+          href: `/prediction/${encodeURIComponent(nextSymbol)}`,
           name: "prediction",
         });
-      }
     },
-    [marketId, state.marketId, onSymbolChange, onRouteChange],
+    [effectiveSymbol, onSymbolChange, onRouteChange],
   );
+  const canSelect = !!(onSymbolChange || onRouteChange);
+  const state = usePredictionScript(disabledConnect, true, true, {
+    symbol: effectiveSymbol,
+    onSymbolSelect: selectSymbol,
+  });
+  useEffect(() => {
+    if (symbol == null && fallbackSymbol == null && state.defaultSymbol) {
+      setFallbackSymbol(state.defaultSymbol);
+    }
+  }, [symbol, fallbackSymbol, state.defaultSymbol]);
+  const completedDefaultRoute = useRef(false);
+  useEffect(() => {
+    if (symbol != null) {
+      completedDefaultRoute.current = false;
+      return;
+    }
+    const defaultSymbol = fallbackSymbol;
+    if (
+      !onSymbolChange &&
+      onRouteChange &&
+      defaultSymbol &&
+      !completedDefaultRoute.current
+    ) {
+      completedDefaultRoute.current = true;
+      onRouteChange({
+        href: `/prediction/${encodeURIComponent(defaultSymbol)}`,
+        name: "prediction",
+        replace: true,
+      });
+    }
+  }, [symbol, onSymbolChange, onRouteChange, fallbackSymbol]);
   const navigatePerp = useCallback(
     (market: { symbol: string }) => {
       onRouteChange?.({
@@ -56,54 +83,25 @@ const PredictionWithState = ({
   );
   const canTrade = useCanTrade();
   const isFirstTimeDeposit = useFirstTimeDeposit();
-  const isRegionRestricted = state.isRegionRestricted;
-
-  useEffect(() => {
-    if (!state.markets.length) return;
-    if (marketId == null) {
-      if (
-        !onSymbolChange &&
-        onRouteChange &&
-        state.marketId &&
-        completedDefaultRoute.current !== state.marketId
-      ) {
-        completedDefaultRoute.current = state.marketId;
-        onRouteChange({
-          href: `/prediction/${encodeURIComponent(state.marketId)}`,
-          name: "prediction",
-          replace: true,
-        });
-      }
-    } else {
-      completedDefaultRoute.current = undefined;
-      if (
-        marketId !== state.marketId &&
-        state.markets.some((market) => market.id === marketId)
-      ) {
-        state.selectMarket(marketId);
-      }
-    }
-  }, [
-    marketId,
-    onSymbolChange,
-    onRouteChange,
-    state.marketId,
-    state.markets,
-    state.selectMarket,
-  ]);
-
   return (
     <Prediction
       {...state}
       accountPanel={<AssetViewWidget isFirstTimeDeposit={isFirstTimeDeposit} />}
       orderEntryAccountReady={canTrade}
       orderEntryFunded={canTrade && !isFirstTimeDeposit}
-      orderEntryRestricted={isRegionRestricted}
+      orderEntryRestricted={state.isRegionRestricted}
       onNavigatePerp={onRouteChange ? navigatePerp : undefined}
-      requestedMarketId={marketId}
-      onSelectMarket={
-        onSymbolChange || onRouteChange ? selectMarket : undefined
+      requestedSymbol={effectiveSymbol}
+      onSelectSymbol={
+        canSelect
+          ? (next) => {
+              if (next !== state.selectedRow?.symbol) selectSymbol(next);
+            }
+          : undefined
       }
+      selectMarketRound={canSelect ? state.selectMarketRound : () => {}}
+      goToLiveRound={canSelect ? state.goToLiveRound : () => {}}
+      goToNextRound={canSelect ? state.goToNextRound : () => false}
     />
   );
 };

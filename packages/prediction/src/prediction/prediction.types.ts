@@ -237,7 +237,7 @@ export interface PredictionAccountPanelState extends PredictionAccountState {
   marketView?: PredictionHoldingsMarketView;
 }
 
-/** Selected Prediction market family, independent of its trading round. */
-export type PredictionMarketSelection = {
-  marketId: string;
+/** Selected Prediction round contract. */
+export type PredictionSymbolSelection = {
+  symbol: string;
 };

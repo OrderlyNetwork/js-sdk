@@ -21,10 +21,10 @@ export interface PredictionTradingExtensionOptions extends PredictionPerpsPanelP
   /** Follow the host trading page's all-symbol preference. */
   showAllSymbol: boolean;
   /**
-   * Receives a market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds,
-   * rather than a tradable round symbol. The host owns navigation and URL parameters.
+   * Receives the exact round symbol, e.g. `PERP_BTC5M2608271200_USDC`.
+   * The host owns navigation and URL parameters.
    */
-  onPredictionSelect: (marketId: string) => void;
+  onPredictionSelect: (symbol: string) => void;
   /** Enable Prediction resources and extension slots; defaults to true. */
   enabled?: boolean;
   /** Enable the markets dropdown resources and slot; defaults to true. */

@@ -9,19 +9,18 @@ import {
 
 /**
  * Adds the prediction market to the existing Perps market dropdown.
- * @param onPredictionSelect Receives the market family ID (e.g. `PERP_BTC5M_USDC`),
- * shared across rounds, rather than a tradable round symbol.
+ * @param onPredictionSelect Receives the exact round symbol (e.g. `PERP_BTC5M2608271200_USDC`).
  */
 export const usePredictionMarketsDropdown = (
-  onPredictionSelect?: (marketId: string) => void,
+  onPredictionSelect?: (symbol: string) => void,
   options: UsePredictionMarketsOptions = {},
 ): DropDownMarketsExtensionProps => {
   const { markets, isLoading } = usePredictionMarkets(options);
   const tabs = usePredictionMarketTabs();
   const { favoriteMarketIds, toggleFavorite } = usePredictionFavorites();
-  const selectMarket = (marketId: string, hide: () => void) => {
+  const selectMarket = (symbol: string, hide: () => void) => {
     hide();
-    onPredictionSelect?.(marketId);
+    onPredictionSelect?.(symbol);
   };
 
   return {
