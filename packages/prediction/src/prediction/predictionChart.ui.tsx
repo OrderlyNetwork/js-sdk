@@ -17,12 +17,10 @@ import {
   getRoundStatus,
   secondsUntil,
 } from "./binary/binaryRoundView";
+import { computeChartGeometry, type CandleScale } from "./chartGeometry";
 import { useRoundNow } from "./hooks/useRoundCountdown";
 import type { PredictionChartPoint } from "./prediction.script";
 import {
-  CANDLE_INTERVAL_MS,
-  CANDLE_TICK_INTERVAL_MS,
-  CANDLE_WINDOW_MS,
   type PredictionCandle,
   type PredictionChartMode,
   type RoundOutcomeLookup,
@@ -83,12 +81,11 @@ export const PriceChart: React.FC<{
   const plotWidth = 650;
   const plotHeight = height;
   const windowDuration = 60 * 60 * 1_000;
-  const candleScaleRef = useRef<{
-    round: number;
-    minimum: number;
-    maximum: number;
-    step: number;
-  } | null>(null);
+  // Sticky candle y-axis scale kept as state: the pure geometry pass in
+  // chartGeometry decides between the cached scale and a fresh one, and the
+  // render-phase adjustment below persists its choice without touching refs
+  // during render.
+  const [candleScale, setCandleScale] = useState<CandleScale | undefined>();
   // Measured width of the tick-label strip: label density follows the real
   // card width instead of a breakpoint, so labels never collide.
   const xLabelsRef = useRef<HTMLDivElement>(null);
@@ -110,9 +107,13 @@ export const PriceChart: React.FC<{
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
+  // Reset hover via the render-phase adjustment pattern rather than an
+  // effect: clearing on round change needs no post-paint pass.
+  const [hoveredRound, setHoveredRound] = useState(selectedRound);
+  if (hoveredRound !== selectedRound) {
+    setHoveredRound(selectedRound);
     setHoveredPoint(null);
-  }, [selectedRound]);
+  }
   const liveTimestamp = now;
   const chartCandles = useMemo(
     () =>
@@ -140,175 +141,49 @@ export const PriceChart: React.FC<{
     ? secondsUntil(selectedRow.observation_start_at, now)
     : 0;
 
-  const chart = useMemo(() => {
-    const isCandleMode = chartMode === "candles";
-    const roundEnd = selectedRow?.expire_at ?? now;
-    // Candle charts pin the latest candle to the right edge (one candle of
-    // padding) and label ticks backwards from it, so the axis only shifts
-    // when a new candle opens.
-    const candleAnchor =
-      chartCandles.at(-1)?.timestamp ??
-      (isPastRound ? roundEnd : liveTimestamp);
-    const windowEnd = isCandleMode
-      ? candleAnchor + CANDLE_INTERVAL_MS
-      : isPastRound
-        ? roundEnd
-        : liveTimestamp;
-    const windowStart =
-      windowEnd -
-      (isCandleMode ? CANDLE_WINDOW_MS : isPastRound ? windowDuration : 60_000);
-    const tickInterval = isCandleMode
-      ? CANDLE_TICK_INTERVAL_MS
-      : isPastRound
-        ? intervalSeconds * 1_000
-        : 10_000;
-    const firstTick = isCandleMode
-      ? candleAnchor -
-        Math.floor((candleAnchor - windowStart) / tickInterval) * tickInterval
-      : Math.ceil(windowStart / tickInterval) * tickInterval;
-    const lastTick = isCandleMode ? candleAnchor : windowEnd;
-    const tickTimestamps = Array.from(
-      { length: Math.floor((lastTick - firstTick) / tickInterval) + 1 },
-      (_, index) => firstTick + index * tickInterval,
-    );
-    const visibleCandles = isCandleMode
-      ? chartCandles.filter(
-          (candle) =>
-            candle.timestamp >= windowStart && candle.timestamp <= windowEnd,
-        )
-      : [];
-    const visiblePoints = isCandleMode
-      ? []
-      : chartPoints.filter(
-          (point) =>
-            point.timestamp >= windowStart && point.timestamp <= windowEnd,
-        );
-    const activeWindowDuration = Math.max(windowEnd - windowStart, 1);
-    const values = [
-      ...visiblePoints.map((point) => point.price),
-      ...visibleCandles.flatMap((candle) => [candle.high, candle.low]),
-      ...(!isFutureRound && chartOpeningPrice != null
-        ? [chartOpeningPrice]
-        : []),
-      ...(chartCurrentPrice != null ? [chartCurrentPrice] : []),
-    ];
-    const rawMinimum = values.length ? Math.min(...values) : 0;
-    const rawMaximum = values.length ? Math.max(...values) : 1;
-    const padding = Math.max(
-      (rawMaximum - rawMinimum) * 0.15,
-      Math.abs(chartCurrentPrice ?? rawMaximum) * 0.0001,
-      0.000001,
-    );
-    const roughStep = (rawMaximum - rawMinimum + padding * 2) / 5;
-    const magnitude = 10 ** Math.floor(Math.log10(roughStep));
-    const step =
-      ([1, 2, 5, 10].find((value) => value * magnitude >= roughStep) ?? 10) *
-      magnitude;
-    const nextScale = {
-      round: selectedRound,
-      minimum: Math.floor((rawMinimum - padding) / step) * step,
-      maximum: Math.ceil((rawMaximum + padding) / step) * step,
-      step,
-    };
-    const cachedScale = candleScaleRef.current;
-    const keepCandleScale =
-      isCandleMode &&
-      cachedScale?.round === selectedRound &&
-      rawMinimum >= cachedScale.minimum &&
-      rawMaximum <= cachedScale.maximum;
-    const scale = keepCandleScale ? cachedScale : nextScale;
-    if (isCandleMode && !keepCandleScale) candleScaleRef.current = scale;
-    const { minimum, maximum } = scale;
-    const range = maximum - minimum;
-    const getY = (price?: number) =>
-      plotHeight -
-      (((price ?? (minimum + maximum) / 2) - minimum) / range) * plotHeight;
-    const getX = (timestamp: number) =>
-      ((timestamp - windowStart) / activeWindowDuration) * plotWidth;
-    const line = visiblePoints
-      .map((point, index) => {
-        const x = getX(point.timestamp);
-        const y = getY(point.price);
-        if (index === 0) return `M ${x},${y}`;
-        const previous = visiblePoints[index - 1];
-        const previousX = getX(previous.timestamp);
-        const previousY = getY(previous.price);
-        const middleX = (previousX + x) / 2;
-        return `C ${middleX},${previousY} ${middleX},${y} ${x},${y}`;
-      })
-      .join(" ");
-    const firstPoint = visiblePoints.at(0);
-    const lastPoint = visiblePoints.at(-1);
-    const candleWidth = Math.max(
-      Math.min((plotWidth / Math.max(visibleCandles.length, 1)) * 0.62, 8),
-      2,
-    );
-    const renderedCandles = visibleCandles.map((candle) => ({
-      ...candle,
-      x: getX(candle.timestamp),
-      openY: getY(candle.open),
-      highY: getY(candle.high),
-      lowY: getY(candle.low),
-      closeY: getY(candle.close),
-      up: candle.close >= candle.open,
-    }));
-    return {
-      line,
-      area: line
-        ? `${line} L ${lastPoint ? getX(lastPoint.timestamp) : 0},${plotHeight} L ${firstPoint ? getX(firstPoint.timestamp) : 0},${plotHeight} Z`
-        : "",
-      openingY: getY(chartOpeningPrice),
-      currentY: getY(chartCurrentPrice),
-      openingRatio: getY(chartOpeningPrice) / plotHeight,
-      endpointXRatio: (lastPoint ? getX(lastPoint.timestamp) : 0) / width,
-      endpointYRatio:
-        (lastPoint ? getY(lastPoint.price) : getY(chartCurrentPrice)) / height,
-      candles: renderedCandles,
-      candleWidth,
-      hoverPoints: isCandleMode
-        ? visibleCandles.map((candle) => ({
-            price: candle.close,
-            timestamp: candle.timestamp,
-            xRatio: getX(candle.timestamp) / plotWidth,
-            yRatio: getY(candle.close) / height,
-          }))
-        : visiblePoints.map((point) => ({
-            ...point,
-            xRatio: getX(point.timestamp) / plotWidth,
-            yRatio: getY(point.price) / height,
-          })),
-      yTicks: Array.from(
-        { length: Math.round(range / scale.step) + 1 },
-        (_, index) => {
-          const value = maximum - index * scale.step;
-          return { ratio: (maximum - value) / range, value };
-        },
-      ),
-      yDecimals: Math.max(0, -Math.floor(Math.log10(scale.step))),
-      xTicks: tickTimestamps
-        .map((timestamp) => ({
-          timestamp,
-          ratio: getX(timestamp) / plotWidth,
-        }))
-        .filter(({ ratio }) =>
-          isCandleMode
-            ? ratio >= 0.02 && ratio <= 1
-            : ratio >= 0.04 && ratio <= 0.96,
-        ),
-    };
-  }, [
-    chartCandles,
-    chartCurrentPrice,
-    chartMode,
-    chartOpeningPrice,
-    chartPoints,
-    isFutureRound,
-    selectedRound,
-    isPastRound,
-    liveTimestamp,
-    selectedRow?.expire_at,
-    intervalSeconds,
-  ]);
+  const chart = useMemo(
+    () =>
+      computeChartGeometry({
+        chartMode,
+        selectedRound,
+        selectedRow,
+        isPastRound,
+        isFutureRound,
+        intervalSeconds,
+        now: liveTimestamp,
+        candles: chartCandles,
+        points: chartPoints,
+        openingPrice: chartOpeningPrice,
+        currentPrice: chartCurrentPrice,
+        cachedScale: candleScale,
+        width,
+        height,
+        plotWidth,
+        plotHeight,
+        windowDuration,
+      }),
+    [
+      candleScale,
+      chartCandles,
+      chartCurrentPrice,
+      chartMode,
+      chartOpeningPrice,
+      chartPoints,
+      isFutureRound,
+      selectedRound,
+      isPastRound,
+      liveTimestamp,
+      selectedRow,
+      intervalSeconds,
+    ],
+  );
+  // Documented render-phase state adjustment (react.dev, "adjusting some
+  // state when a prop changes"): identity equality with the persisted scale
+  // is the no-update signal, and the keep-range logic guarantees the second
+  // pass reuses the cached object, so this converges without an effect.
+  if (chart.nextCandleScale !== candleScale) {
+    setCandleScale(chart.nextCandleScale);
+  }
 
   // Thin ticks greedily so adjacent labels keep ~88px ("11:14:50 AM" at
   // text-xs) and never collide, whatever the card's rendered width.
