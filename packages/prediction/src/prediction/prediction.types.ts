@@ -203,6 +203,7 @@ export interface UsePredictionMarketsOptions {
   enabled?: boolean;
 }
 export interface PredictionMarket {
+  /** Market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds; not a tradable round symbol. */
   id: string;
   base: string;
   quote: string;
@@ -235,3 +236,8 @@ export interface PredictionAccountPanelState extends PredictionAccountState {
   setActiveTab?: (tab: PredictionDataTab) => void;
   marketView?: PredictionHoldingsMarketView;
 }
+
+/** Selected Prediction market family, independent of its trading round. */
+export type PredictionMarketSelection = {
+  marketId: string;
+};

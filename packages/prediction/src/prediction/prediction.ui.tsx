@@ -127,9 +127,9 @@ export const Prediction: React.FC<
     orderEntryAccountReady?: boolean;
     orderEntryFunded?: boolean;
     orderEntryRestricted?: boolean;
-    onPerpSymbolChange?: (symbol: API.Symbol) => void;
+    onNavigatePerp?: (symbol: API.Symbol) => void;
     requestedMarketId?: string;
-    onPredictionMarketChange?: (marketId: string, replace?: boolean) => void;
+    onSelectMarket?: (marketId: string) => void;
   }
 > = (state) => {
   const { t } = useTranslation();
@@ -137,9 +137,7 @@ export const Prediction: React.FC<
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
   const { isMobile } = useScreen();
   const panelMarketView = usePredictionPanelMarketView(state);
-  const marketsDropdown = usePredictionMarketsDropdown(
-    state.onPredictionMarketChange,
-  );
+  const marketsDropdown = usePredictionMarketsDropdown(state.onSelectMarket);
 
   useEffect(() => {
     if (!state.notification) return;
@@ -179,6 +177,13 @@ export const Prediction: React.FC<
   const marketSelector = (
     <DropDownMarketsWidget
       {...marketsDropdown}
+      tabs={
+        state.onNavigatePerp
+          ? marketsDropdown.tabs
+          : marketsDropdown.tabs?.filter(
+              (tab) => "id" in tab && tab.id === "prediction",
+            )
+      }
       contentClassName={
         isMobile
           ? "oui-h-[560px] oui-w-[920px] oui-max-w-[calc(100vw-24px)]"
@@ -189,10 +194,11 @@ export const Prediction: React.FC<
           ? undefined
           : state.market?.indexPriceSymbol
       }
-      onSymbolChange={state.onPerpSymbolChange}
+      onSymbolChange={state.onNavigatePerp}
     >
       <button
         type="button"
+        disabled={!state.onSelectMarket && !state.onNavigatePerp}
         className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
       >
         {!isRequestedMarketUnavailable && state.market && (

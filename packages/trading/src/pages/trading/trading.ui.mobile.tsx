@@ -120,7 +120,11 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props) => {
   const symbolInfoBar = (
     <SymbolInfoBarWidget
       symbol={props.symbol}
-      onSymbol={() => props.onOpenMarketsSheetChange(true)}
+      onSymbol={
+        props.onSymbolChange
+          ? () => props.onOpenMarketsSheetChange(true)
+          : undefined
+      }
       trailing={
         <Flex
           direction={"column"}
@@ -196,10 +200,14 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props) => {
       >
         <MarketsSheetWidget
           symbol={props.symbol}
-          onSymbolChange={(symbol) => {
-            props.onOpenMarketsSheetChange(false);
-            props.onSymbolChange?.(symbol);
-          }}
+          onSymbolChange={
+            props.onSymbolChange
+              ? (symbol) => {
+                  props.onOpenMarketsSheetChange(false);
+                  props.onSymbolChange?.(symbol);
+                }
+              : undefined
+          }
         />
       </SimpleSheet>
       {rwaStatusBar}

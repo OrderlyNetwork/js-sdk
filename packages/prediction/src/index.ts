@@ -42,6 +42,7 @@ export {
   type PredictionTradingExtensionProps,
 } from "./prediction/usePredictionTradingExtension";
 export type {
+  PredictionMarketSelection,
   PredictionMarket,
   PredictionMarketsState,
   UsePredictionMarketsOptions,

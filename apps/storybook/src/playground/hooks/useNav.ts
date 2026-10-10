@@ -17,20 +17,22 @@ export const useNav = () => {
 
   const onRouteChange = useCallback(
     (option: RouteOption) => {
-      if (option?.target === "_blank") {
+      if (option.target === "_blank") {
         window.open(option.href);
         return;
       }
 
-      if (option?.href === "/") {
+      if (option.href === "/") {
         const symbol = getSymbol();
-        navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }));
+        navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }), {
+          replace: option.replace,
+        });
         return;
       }
 
-      const path = routeMap[option?.href!] || option?.href || "";
+      const path = routeMap[option.href] || option.href;
       const href = generatePath({ path });
-      navigate(href);
+      navigate(href, { replace: option.replace });
     },
     [navigate],
   );

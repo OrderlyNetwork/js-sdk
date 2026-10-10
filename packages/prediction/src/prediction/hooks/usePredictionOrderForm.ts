@@ -24,6 +24,7 @@ import type {
 import { clamp, floorToTick } from "../predictionShared";
 
 export type UsePredictionOrderFormArgs = {
+  /** Market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds; not a tradable round symbol. */
   marketId?: string;
   /** UP-coordinate mark price used only to estimate capacity for an empty limit input. */
   markPrice?: number;

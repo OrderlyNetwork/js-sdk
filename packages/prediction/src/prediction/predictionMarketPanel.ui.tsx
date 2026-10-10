@@ -46,7 +46,7 @@ type PredictionMarketRowProps = {
   bbo: BinaryBbo | undefined;
   favorite: boolean;
   onToggleFavorite: (id: string) => void;
-  onSelect: (id: string) => void;
+  onSelect?: (id: string) => void;
 };
 
 const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
@@ -67,8 +67,12 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
       : undefined;
   return (
     <tr
-      className="oui-prediction-market-row oui-h-[34px] oui-cursor-pointer hover:oui-bg-base-7"
-      onClick={() => onSelect(market.id)}
+      className={cn(
+        "oui-prediction-market-row oui-h-[34px]",
+        onSelect && "oui-cursor-pointer hover:oui-bg-base-7",
+      )}
+      aria-disabled={!onSelect}
+      onClick={onSelect ? () => onSelect(market.id) : undefined}
     >
       <td className="oui-px-2 oui-text-start">
         <div className="oui-flex oui-items-center oui-gap-2">
@@ -119,7 +123,7 @@ export type PredictionMarketPanelProps = {
   loading?: boolean;
   favoriteMarketIds: string[];
   onToggleFavorite: (id: string) => void;
-  onSelect: (id: string) => void;
+  onSelect?: (id: string) => void;
   className?: string;
 };
 

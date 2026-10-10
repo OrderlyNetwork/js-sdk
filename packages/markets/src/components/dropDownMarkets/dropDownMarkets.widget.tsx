@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 import { useMarketCategories } from "../shared/hooks/useMarketCategories";
+import { tabKey } from "../shared/tabUtils";
 import { useDropDownMarketsScript } from "./dropDownMarkets.script";
 import { DropDownMarkets, DropDownMarketsProps } from "./dropDownMarkets.ui";
 
@@ -31,14 +32,25 @@ export const DropDownMarketsWidget: React.FC<
   return (
     <MarketsProvider
       symbol={props.symbol}
-      onSymbolChange={(symbol) => {
-        state.hide();
-        props.onSymbolChange?.(symbol);
-      }}
+      onSymbolChange={
+        props.onSymbolChange
+          ? (symbol) => {
+              state.hide();
+              props.onSymbolChange?.(symbol);
+            }
+          : undefined
+      }
       tabs={tabs}
     >
       <DropDownMarkets
         {...state}
+        activeTab={
+          tabs.some((tab, index) => tabKey(tab, index) === state.activeTab)
+            ? state.activeTab
+            : tabs.length
+              ? tabKey(tabs[0], 0)
+              : state.activeTab
+        }
         contentClassName={props.contentClassName}
         renderTabContent={props.renderTabContent}
         renderTabBeforeContent={props.renderTabBeforeContent}

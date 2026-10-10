@@ -1,4 +1,3 @@
-import { useLocalStorage } from "@orderly.network/hooks";
 import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
 import { usePredictionMarkets } from "./hooks/usePredictionMarkets";
 import type { UsePredictionMarketsOptions } from "./prediction.types";
@@ -8,20 +7,19 @@ import {
   usePredictionMarketTabs,
 } from "./predictionMarketPanel.ui";
 
-/** Adds the prediction market to the existing Perps market dropdown. */
+/**
+ * Adds the prediction market to the existing Perps market dropdown.
+ * @param onPredictionSelect Receives the market family ID (e.g. `PERP_BTC5M_USDC`),
+ * shared across rounds, rather than a tradable round symbol.
+ */
 export const usePredictionMarketsDropdown = (
   onPredictionSelect?: (marketId: string) => void,
   options: UsePredictionMarketsOptions = {},
 ): DropDownMarketsExtensionProps => {
   const { markets, isLoading } = usePredictionMarkets(options);
-  const [, saveMarket] = useLocalStorage<string | null>(
-    "orderly_prediction_selected_market",
-    null,
-  );
   const tabs = usePredictionMarketTabs();
   const { favoriteMarketIds, toggleFavorite } = usePredictionFavorites();
   const selectMarket = (marketId: string, hide: () => void) => {
-    saveMarket(marketId);
     hide();
     onPredictionSelect?.(marketId);
   };
@@ -35,7 +33,9 @@ export const usePredictionMarketsDropdown = (
           loading={isLoading}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
-          onSelect={(id) => selectMarket(id, hide)}
+          onSelect={
+            onPredictionSelect ? (id) => selectMarket(id, hide) : undefined
+          }
         />
       ) : undefined,
     renderTabAfterContent: (_, key, hide) =>
@@ -47,7 +47,9 @@ export const usePredictionMarketsDropdown = (
           )}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
-          onSelect={(id) => selectMarket(id, hide)}
+          onSelect={
+            onPredictionSelect ? (id) => selectMarket(id, hide) : undefined
+          }
           className="oui-flex-none oui-border-t oui-border-line-12 oui-pt-2"
         />
       ) : null,

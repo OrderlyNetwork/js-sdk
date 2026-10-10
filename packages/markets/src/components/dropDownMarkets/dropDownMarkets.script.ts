@@ -36,7 +36,7 @@ export function useDropDownMarketsScript() {
   }, [activeTab]);
 
   return {
-    activeTab: activeTab as MarketsTabName,
+    activeTab: activeTab as string,
     onTabChange: (value: string) => setActiveTab(value as MarketsTabName),
     open,
     onOpenChange: setOpen,
