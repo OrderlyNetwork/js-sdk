@@ -139,7 +139,7 @@ const InfoRow: React.FC<{
 
 export const TradePanel: React.FC<TradePanelProps> = (state) => {
   const { t } = useTranslation();
-  const { formatUsd, formatContracts, chart } = usePredictionFormatters();
+  const { formatUsd, formatContracts } = usePredictionFormatters();
   const tradeMode = state.tradeMode;
   const [oneTapEditorOpen, setOneTapEditorOpen] = useState(false);
   const { isMobile } = useScreen();
@@ -422,24 +422,6 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                 </button>
               );
             })}
-          </div>
-        )}
-
-        {state.selectedRow && state.selectedRow.s0 == null && (
-          <div className="oui-prediction-strikePending oui-text-2xs oui-mt-2 oui-space-y-1 oui-rounded-lg oui-bg-base-8 oui-p-2 oui-font-normal oui-leading-normal oui-text-base-contrast-54">
-            <p>{t("prediction.strikePending")}</p>
-            <p>
-              {t("prediction.rounds.startTime")} ({chart.localOffsetLabel}):{" "}
-              {chart.resolutionLocalFormatter.format(
-                new Date(state.selectedRow.observation_start_at),
-              )}
-            </p>
-            <p>
-              {t("prediction.rounds.endTime")} ({chart.localOffsetLabel}):{" "}
-              {chart.resolutionLocalFormatter.format(
-                new Date(state.selectedRow.expire_at),
-              )}
-            </p>
           </div>
         )}
 
