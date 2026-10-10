@@ -191,7 +191,49 @@ it("disables each resource consumer, removes extensions, and supports re-enablin
   expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: true });
 });
 
-it("leaves navigation with the host callback while retaining selection and dropdown dismissal", () => {
+it.each([
+  [true, true],
+  [true, false],
+  [false, true],
+  [false, false],
+])(
+  "independently enables markets=%s and account panels=%s, subject to the master switch",
+  (marketsEnabled, accountPanelsEnabled) => {
+    mount();
+    for (const enabled of [true, false, true]) {
+      act(() =>
+        root!.update(
+          <Consumer
+            {...options}
+            enabled={enabled}
+            marketsEnabled={marketsEnabled}
+            accountPanelsEnabled={accountPanelsEnabled}
+          />,
+        ),
+      );
+      expect(mocks.markets).toHaveBeenLastCalledWith({
+        enabled: enabled && marketsEnabled,
+      });
+      expect(mocks.account).toHaveBeenLastCalledWith({
+        enabled: enabled && accountPanelsEnabled,
+      });
+      expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(
+        enabled && accountPanelsEnabled,
+      );
+      expect(Object.hasOwn(result, "marketsDropdown")).toBe(
+        enabled && marketsEnabled,
+      );
+      expect(Object.hasOwn(result, "dataListProductContent")).toBe(
+        enabled && accountPanelsEnabled,
+      );
+      if (!enabled || (!marketsEnabled && !accountPanelsEnabled)) {
+        expect(result).toEqual({});
+      }
+    }
+  },
+);
+
+it("reports selection to the host without persisting it and dismisses the dropdown", () => {
   mount();
   const hide = vi.fn();
   const panel = element(
@@ -203,7 +245,7 @@ it("leaves navigation with the host callback while retaining selection and dropd
   );
   const select = panel.props.onSelect as (id: string) => void;
   select("PERP_BTC5M_USDC");
-  expect(mocks.saveMarket).toHaveBeenCalledWith("PERP_BTC5M_USDC");
+  expect(mocks.saveMarket).not.toHaveBeenCalled();
   expect(hide).toHaveBeenCalledOnce();
   expect(options.onPredictionSelect).toHaveBeenCalledWith("PERP_BTC5M_USDC");
 });

@@ -1,3 +1,8 @@
+import { createElement } from "react";
+import {
+  PredictionPage,
+  type PredictionMarketSelection,
+} from "@orderly.network/prediction";
 import {
   usePredictionAccountData,
   usePredictionMarkets,
@@ -23,7 +28,52 @@ import {
   type PredictionOrdersTableProps,
   type PredictionOrderCellProps,
 } from "@orderly.network/prediction";
-import type { TradingPageProps } from "@orderly.network/trading";
+import {
+  TradingPage,
+  type TradingPageProps,
+  type TradingMarketsDropdownProps,
+  type TradingPerpsPanelProps,
+  type TradingDataListProductContent,
+  type TradingPageExtensionProps,
+} from "@orderly.network/trading";
+import type {
+  TradingMarketsDropdownProps as CommonMarketsDropdownProps,
+  TradingPerpsPanelProps as CommonPerpsPanelProps,
+  TradingDataListProductContent as CommonDataListProductContent,
+  TradingPageExtensionProps as CommonPageExtensionProps,
+} from "@orderly.network/trading-common";
+
+type Assert<T extends true> = T;
+type Compatible<A, B> = [A, B] extends [B, A] ? true : false;
+export type SharedTradingContracts = [
+  Assert<Compatible<TradingMarketsDropdownProps, CommonMarketsDropdownProps>>,
+  Assert<Compatible<TradingPerpsPanelProps, CommonPerpsPanelProps>>,
+  Assert<
+    Compatible<TradingDataListProductContent, CommonDataListProductContent>
+  >,
+  Assert<Compatible<TradingPageExtensionProps, CommonPageExtensionProps>>,
+  Assert<Compatible<PredictionPerpsPanelProps, TradingPerpsPanelProps>>,
+  Assert<
+    Compatible<PredictionTradingExtensionProps, TradingPageExtensionProps>
+  >,
+  Assert<
+    Compatible<
+      TradingPageExtensionProps,
+      Pick<TradingPageProps, "marketsDropdown" | "dataListProductContent">
+    >
+  >,
+  Assert<
+    Compatible<
+      TradingPerpsPanelProps,
+      Pick<TradingPageProps, "onSymbolChange" | "sharePnLConfig"> & {
+        pnlNotionalDecimalPrecision?: number;
+      }
+    >
+  >,
+  Assert<
+    "pnlNotionalDecimalPrecision" extends keyof TradingPageProps ? false : true
+  >,
+];
 
 /** Compile against built public declarations, with no source-path imports. */
 export function usePredictionPublicApiContract(
@@ -76,6 +126,8 @@ export function usePredictionPublicApiContract(
     onSymbolChange: () => {},
     sharePnLConfig: { backgroundImages: ["https://example.com/pnl.png"] },
     pnlNotionalDecimalPrecision: 4,
+    marketsEnabled: false,
+    accountPanelsEnabled: true,
   };
   const extension: PredictionTradingExtensionProps =
     usePredictionTradingExtension(extensionOptions);
@@ -150,7 +202,63 @@ export function usePredictionTradingPageContract(
   });
   return {
     ...extension,
+    predictionEnabled: false,
     symbol: "PERP_BTC_USDC",
     tradingViewConfig,
   };
 }
+
+/** The original TradingPage integrates Prediction with no extra required props. */
+export function automaticTradingPageContract(
+  tradingViewConfig: TradingPageProps["tradingViewConfig"],
+) {
+  const props: TradingPageProps = {
+    symbol: "PERP_BTC_USDC",
+    tradingViewConfig,
+    onSymbolChange: () => {},
+    sharePnLConfig: { backgroundImages: ["https://example.com/pnl.png"] },
+  };
+  const page = createElement(TradingPage, props);
+  const disabledPage = createElement(TradingPage, {
+    ...props,
+    predictionEnabled: false,
+  });
+  const customPage = createElement(TradingPage, {
+    ...props,
+    marketsDropdown: {},
+    dataListProductContent: { pending: "Custom pending panel" },
+  });
+  return { page, disabledPage, customPage };
+}
+
+/** Prediction exposes a market selection object without a round symbol. */
+export function predictionPageSelectionContract() {
+  const page = createElement(PredictionPage, {
+    marketId: "PERP_BTC5M_USDC",
+    onSymbolChange: (market: PredictionMarketSelection) => void market.marketId,
+  });
+  const routedPage = createElement(PredictionPage, {
+    marketId: "PERP_BTC5M_USDC",
+  });
+  const selection: PredictionMarketSelection = { marketId: "PERP_BTC5M_USDC" };
+  return { page, routedPage, selection };
+}
+
+export type NavigationContracts = [
+  Assert<Compatible<keyof PredictionMarketSelection, "marketId">>,
+  Assert<"onPredictionSelect" extends keyof TradingPageProps ? false : true>,
+  Assert<
+    "onPredictionSymbolChange" extends keyof React.ComponentProps<
+      typeof PredictionPage
+    >
+      ? false
+      : true
+  >,
+  Assert<
+    "onPerpSymbolChange" extends keyof React.ComponentProps<
+      typeof PredictionPage
+    >
+      ? false
+      : true
+  >,
+];
