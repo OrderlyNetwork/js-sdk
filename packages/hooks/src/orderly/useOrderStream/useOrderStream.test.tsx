@@ -5,6 +5,7 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
+import { createOrderKeyRegistry } from "../../provider/dataCenter/orderKeyRegistry";
 import { createMockSymbolConfig } from "../../services/orderCreator/__test__/testHelpers";
 import { useOrderStream } from "./useOrderStream";
 
@@ -12,16 +13,17 @@ const mockUpdateAlgoOrder = jest.fn().mockResolvedValue({ success: true });
 const mockSymbolInfo = createMockSymbolConfig();
 let mockOrders: any[];
 let mockMarkPrice: number;
+let mockDataCenter: any = {};
 
 jest.mock("../../provider/dataCenter/dataCenterContext", () => ({
-  useDataCenterContext: () => ({}),
+  useDataCenterContext: () => mockDataCenter,
 }));
 jest.mock("../../useMutation", () => ({
   useMutation: () => [mockUpdateAlgoOrder, {}],
 }));
 jest.mock("../../usePrivateInfiniteQuery", () => ({
-  usePrivateInfiniteQuery: (key: () => string) => ({
-    data: [{ rows: key().includes("/algo/orders") ? mockOrders : [] }],
+  usePrivateInfiniteQuery: (key: (() => string) | null) => ({
+    data: [{ rows: key?.().includes("/algo/orders") ? mockOrders : [] }],
     mutate: jest.fn(),
   }),
 }));
@@ -242,4 +244,51 @@ describe("useOrderStream TP/SL updates", () => {
       expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
     },
   );
+});
+
+describe("useOrderStream resource release", () => {
+  beforeEach(() => {
+    mockOrders = [];
+    mockMarkPrice = 4000;
+  });
+  afterEach(() => {
+    mockDataCenter = {};
+  });
+  it("keeps a shared key until its last consumer disables or unmounts", () => {
+    const registry = createOrderKeyRegistry();
+    mockDataCenter = {
+      registerKeyHandler: registry.register,
+      unregisterKeyHandler: registry.unregister,
+    };
+    const first = renderHook(
+      ({ enabled }) =>
+        useOrderStream(
+          { productType: "BINARY" },
+          { enabled, stopOnUnmount: true },
+        ),
+      { initialProps: { enabled: true } },
+    );
+    const second = renderHook(() =>
+      useOrderStream({ productType: "BINARY" }, { stopOnUnmount: true }),
+    );
+    const count = registry.handlers.size;
+    expect(count).toBeGreaterThan(0);
+    first.rerender({ enabled: false });
+    expect(registry.handlers.size).toBe(count);
+    second.unmount();
+    expect(registry.handlers.size).toBe(0);
+    first.unmount();
+  });
+  it("preserves the default cache retention after a legacy consumer unmounts", () => {
+    const registry = createOrderKeyRegistry();
+    mockDataCenter = {
+      registerKeyHandler: registry.register,
+      unregisterKeyHandler: registry.unregister,
+    };
+    const legacy = renderHook(() => useOrderStream({ productType: "PERP" }));
+    const count = registry.handlers.size;
+    legacy.unmount();
+    expect(registry.handlers.size).toBe(count);
+    expect(count).toBeGreaterThan(0);
+  });
 });

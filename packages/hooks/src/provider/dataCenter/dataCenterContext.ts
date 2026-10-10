@@ -3,7 +3,11 @@ import { createContext, useContext } from "react";
 export type getKeyFunction = (index: number, prevData: any) => string | null;
 
 export type DataCenterContextState = {
-  registerKeyHandler: (key: string, handler: getKeyFunction) => void;
+  registerKeyHandler: (
+    key: string,
+    handler: getKeyFunction,
+    keepAfterRelease?: boolean,
+  ) => void | (() => void);
   unregisterKeyHandler: (key: string) => void;
 };
 

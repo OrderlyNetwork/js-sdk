@@ -154,22 +154,36 @@ export const useOrderStream = (
       side,
     )}${formatKey(size.toString())}${formatKey(productType)}`;
 
-    registerKeyHandler?.(key, normalOrderKeyFn);
+    const keepAfterRelease = options?.stopOnUnmount !== true;
+    const releaseNormal = registerKeyHandler?.(
+      key,
+      normalOrderKeyFn,
+      keepAfterRelease,
+    );
 
-    if (algoOrderKeyFn) {
-      registerKeyHandler?.(key.replace("orders", "algoOrders"), algoOrderKeyFn);
-    }
+    const algoKey = key.replace("orders", "algoOrders");
+    const releaseAlgo = algoOrderKeyFn
+      ? registerKeyHandler?.(algoKey, algoOrderKeyFn, keepAfterRelease)
+      : undefined;
 
     return () => {
-      if (!options?.stopOnUnmount) return;
-
-      unregisterKeyHandler(key);
+      if (typeof releaseNormal === "function") releaseNormal();
+      else if (!keepAfterRelease) unregisterKeyHandler?.(key);
 
       if (algoOrderKeyFn) {
-        unregisterKeyHandler(key.replace("orders", "algoOrders"));
+        if (typeof releaseAlgo === "function") releaseAlgo();
+        else if (!keepAfterRelease) unregisterKeyHandler?.(algoKey);
       }
     };
-  }, [enabled, normalOrderKeyFn, options?.keeplive]);
+  }, [
+    enabled,
+    normalOrderKeyFn,
+    algoOrderKeyFn,
+    options?.keeplive,
+    options?.stopOnUnmount,
+    registerKeyHandler,
+    unregisterKeyHandler,
+  ]);
 
   const normalOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
     enabled ? normalOrderKeyFn : null,
