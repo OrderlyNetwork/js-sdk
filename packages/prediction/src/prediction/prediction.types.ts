@@ -211,6 +211,8 @@ export interface PredictionMarket {
   intervalSeconds: number;
   indexPriceSymbol: string;
   currentRow: API.BinaryInfoRow;
+  /** False when every snapshot round has expired or been delisted; history stays browsable. */
+  hasLiveRow: boolean;
 }
 export interface PredictionMarketsState {
   rows: API.BinaryInfoRow[];

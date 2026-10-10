@@ -70,6 +70,7 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
       className={cn(
         "oui-prediction-market-row oui-h-[34px]",
         onSelect && "oui-cursor-pointer hover:oui-bg-base-7",
+        !market.hasLiveRow && "oui-opacity-60",
       )}
       aria-disabled={!onSelect}
       onClick={onSelect ? () => onSelect(market.currentRow.symbol) : undefined}
@@ -110,7 +111,7 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
       </td>
       <td className="oui-text-xs oui-px-2 oui-text-end">--</td>
       <td className="oui-text-xs oui-px-2 oui-text-end">
-        {formatCountdown(seconds)}
+        {market.hasLiveRow ? formatCountdown(seconds) : t("prediction.closed")}
       </td>
     </tr>
   );
@@ -217,8 +218,13 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
 export const PredictionMarketPanelWidget: React.FC<
   Omit<PredictionMarketPanelProps, "bbos">
 > = (props) => {
+  // Only live rounds emit @bbo pushes; history-only markets render "--" prices
+  // and skip the dead subscription.
   const symbols = useMemo(
-    () => props.markets.map((market) => market.currentRow.symbol),
+    () =>
+      props.markets
+        .filter((market) => market.hasLiveRow)
+        .map((market) => market.currentRow.symbol),
     [props.markets],
   );
   const bbos = useBinaryBboMap(symbols);

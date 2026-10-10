@@ -72,6 +72,11 @@ export const PriceChart: React.FC<{
   const status = selectedRow ? getRoundStatus(selectedRow, now) : undefined;
   const isPastRound = status === "ended";
   const isFutureRound = status === "upcoming";
+  // "Go to live market" only makes sense while the market still has an
+  // ACTIVE unexpired round to jump to.
+  const hasLiveOrUpcomingRow = rows.some(
+    (row) => row.status === "ACTIVE" && row.expire_at > now,
+  );
 
   const [hoveredPoint, setHoveredPoint] = useState<
     (PredictionChartPoint & { xRatio: number; yRatio: number }) | null
@@ -353,7 +358,7 @@ export const PriceChart: React.FC<{
               )}
               mutedIcon={isFutureRound}
             />
-          ) : (
+          ) : hasLiveOrUpcomingRow ? (
             <button
               type="button"
               onClick={onGoToLiveMarket}
@@ -363,7 +368,7 @@ export const PriceChart: React.FC<{
               {t("prediction.rounds.goToLiveMarket")}
               <ChevronRightIcon size={14} color="inherit" />
             </button>
-          )}
+          ) : null}
         </div>
       </div>
       <>

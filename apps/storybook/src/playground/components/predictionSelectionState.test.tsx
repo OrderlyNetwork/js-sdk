@@ -446,6 +446,53 @@ it("initializes the saved market once even when another market preference arrive
   expect(mocks.route).not.toHaveBeenCalled();
 });
 
+it("anchors the default route to the newest history round when no market is live", () => {
+  snapshotRows = [history];
+  act(() => {
+    root = create(<PredictionWidget />);
+  });
+  expect(state().selectedRow?.symbol).toBe(history.symbol);
+  expect(state().isRoundInSnapshot).toBe(true);
+  expect(state().isRoundTradable).toBe(false);
+  expect(state().market?.hasLiveRow).toBe(false);
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${history.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+});
+
+it("prefers any live market over the remembered market's history", () => {
+  snapshotRows = [history, eth];
+  act(() => {
+    root = create(<PredictionWidget />);
+  });
+  expect(state().selectedRow?.symbol).toBe(eth.symbol);
+  expect(state().marketId).toBe("PERP_ETH5M_USDC");
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${eth.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+});
+
+it("does not jump between settled rounds when no live rounds remain", () => {
+  const olderHistory = {
+    ...history,
+    symbol: "PERP_BTC5M2609291025_USDC",
+    observation_start_at: now - 660_000,
+    expire_at: now - 360_000,
+  };
+  snapshotRows = [olderHistory, history];
+  act(() => {
+    root = create(<PredictionWidget symbol={olderHistory.symbol} />);
+  });
+  expect(state().selectedRow?.symbol).toBe(olderHistory.symbol);
+  act(() => state().goToLiveRound());
+  expect(mocks.route).not.toHaveBeenCalled();
+  expect(state().selectedRow?.symbol).toBe(olderHistory.symbol);
+});
+
 it("does not reuse accepted metadata while another symbol loads or on returning to the base route", () => {
   act(() => {
     root = create(<PredictionWidget symbol={live.symbol} />);

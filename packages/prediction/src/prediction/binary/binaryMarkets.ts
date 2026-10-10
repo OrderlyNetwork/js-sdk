@@ -50,33 +50,69 @@ export function getBinaryMarketIdentity(row: BinaryInfoRow) {
   };
 }
 
+/**
+ * currentRow preference tier: a started unexpired round (live) beats the
+ * nearest future round, which beats expired history. Expired rows also
+ * satisfy `observation_start_at <= now`, so tiers must be derived explicitly
+ * instead of reusing that single comparison.
+ */
+const binaryRowTier = (row: BinaryInfoRow, now: number): 0 | 1 | 2 =>
+  row.status !== "ACTIVE" || row.expire_at <= now
+    ? 0
+    : row.observation_start_at <= now
+      ? 2
+      : 1;
+
+const isBetterCurrentRow = (
+  candidate: BinaryInfoRow,
+  current: BinaryInfoRow,
+  now: number,
+) => {
+  const candidateTier = binaryRowTier(candidate, now);
+  const currentTier = binaryRowTier(current, now);
+  if (candidateTier !== currentTier) return candidateTier > currentTier;
+  switch (candidateTier) {
+    case 2:
+      return candidate.observation_start_at > current.observation_start_at;
+    case 1:
+      return candidate.observation_start_at < current.observation_start_at;
+    default:
+      return candidate.expire_at > current.expire_at;
+  }
+};
+
+/**
+ * Markets stay visible while the snapshot still carries any of their rounds —
+ * including fully expired or delisted history, which remains browsable via
+ * `currentRow` until the backend drops it from the recent-rows cache. Only
+ * markets with a live (`hasLiveRow`) round are tradable.
+ */
 export function deriveBinaryMarkets(
   rows: BinaryInfoRow[],
   now: number,
 ): BinaryMarket[] {
   const groups = new Map<string, BinaryMarket>();
   for (const row of rows) {
-    if (row.status !== "ACTIVE" || row.expire_at <= now) continue;
     const identity = getBinaryMarketIdentity(row);
     if (!identity) continue;
+    const tier = binaryRowTier(row, now);
     const previous = groups.get(identity.id);
-    const isCurrent = row.observation_start_at <= now;
-    const previousIsCurrent =
-      previous && previous.currentRow.observation_start_at <= now;
-    if (
-      !previous ||
-      (isCurrent && !previousIsCurrent) ||
-      (isCurrent === previousIsCurrent &&
-        (isCurrent
-          ? row.observation_start_at > previous.currentRow.observation_start_at
-          : row.observation_start_at <
-            previous.currentRow.observation_start_at))
-    ) {
-      groups.set(identity.id, { ...identity, currentRow: row });
+    if (!previous) {
+      groups.set(identity.id, {
+        ...identity,
+        currentRow: row,
+        hasLiveRow: tier > 0,
+      });
+      continue;
+    }
+    if (tier > 0) previous.hasLiveRow = true;
+    if (isBetterCurrentRow(row, previous.currentRow, now)) {
+      previous.currentRow = row;
     }
   }
   return [...groups.values()].sort(
     (a, b) =>
+      Number(b.hasLiveRow) - Number(a.hasLiveRow) ||
       a.base.localeCompare(b.base) ||
       a.intervalSeconds - b.intervalSeconds ||
       a.quote.localeCompare(b.quote),

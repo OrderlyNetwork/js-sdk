@@ -86,7 +86,11 @@ test("closes a round and follows the next round without a new snapshot", () => {
 
   clock.advanceTo(upcoming.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
   assert.equal(isBinaryRowTradable(upcoming, now), false);
-  assert.deepEqual(deriveBinaryMarkets(rows, now), []);
+  // Both rounds settled: the market stays browsable on the newest history row.
+  const settled = deriveBinaryMarkets(rows, now);
+  assert.equal(settled.length, 1);
+  assert.equal(settled[0].currentRow, upcoming);
+  assert.equal(settled[0].hasLiveRow, false);
   assert.equal(clock.pending(), 0);
   stop();
 });

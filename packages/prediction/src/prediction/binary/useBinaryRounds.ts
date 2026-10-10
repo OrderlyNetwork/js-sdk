@@ -81,9 +81,16 @@ export const useBinaryRounds = ({
   const requestedMarketId = parsedSymbol
     ? `PERP_${parsedSymbol.base}${parsedSymbol.period}_${parsedSymbol.quote}`
     : undefined;
-  const defaultSymbol = (
-    markets.find((item) => item.id === marketInput) ?? markets[0]
-  )?.currentRow.symbol;
+  const defaultSymbol =
+    // Prefer a tradable market (the remembered one, then any live market);
+    // fall back to the remembered market's history, then any market, so a
+    // fully expired snapshot still anchors to browsable rounds.
+    (
+      markets.find((item) => item.id === marketInput && item.hasLiveRow) ??
+      markets.find((item) => item.hasLiveRow) ??
+      markets.find((item) => item.id === marketInput) ??
+      markets[0]
+    )?.currentRow.symbol;
   const marketRows = useMemo(
     () =>
       rows.filter(
@@ -144,6 +151,8 @@ export const useBinaryRounds = ({
         currentRow:
           markets.find((item) => item.id === identity.id)?.currentRow ??
           selectedRow!,
+        hasLiveRow:
+          markets.find((item) => item.id === identity.id)?.hasLiveRow ?? false,
       }
     : undefined;
   const marketId = market?.id;
@@ -217,6 +226,9 @@ export const useBinaryRounds = ({
 
   const goToLiveRound = useCallback(() => {
     if (!currentRow || currentRow.symbol === selectedRow?.symbol) return;
+    // A market with only history left has an expired currentRow; jumping to
+    // another settled round would be misleading, so keep the selection.
+    if (currentRow.expire_at <= getTimestamp()) return;
     onSymbolSelect(currentRow.symbol);
   }, [currentRow, selectedRow?.symbol, onSymbolSelect]);
 

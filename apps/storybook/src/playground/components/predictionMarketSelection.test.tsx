@@ -34,6 +34,7 @@ it("reports the real round symbol while favorites retain the market family ID", 
     period: "5M",
     indexPriceSymbol: "PERP_BTC_USDC",
     currentRow: { symbol: "PERP_BTC5M2609291035_USDC", expire_at: 1 },
+    hasLiveRow: true,
   } as PredictionMarket;
   const onSelect = vi.fn();
   const onToggleFavorite = vi.fn();

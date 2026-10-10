@@ -102,6 +102,11 @@ export const RoundNavigator: React.FC<{
     intervalSeconds,
     now,
   );
+  // Placeholder slots and the More menu only make sense while the market's
+  // schedule still continues; a history-only market shows neither.
+  const hasLiveOrUpcomingRow = rows.some(
+    (row) => row.status === "ACTIVE" && row.expire_at > now,
+  );
   // On small screens hidden main buttons must remain reachable from More.
   const future = isWide
     ? navigation.future.filter(
@@ -314,7 +319,7 @@ export const RoundNavigator: React.FC<{
                 </button>
               </Tooltip>
             </div>
-          ) : (
+          ) : hasLiveOrUpcomingRow ? (
             <button
               key={`missing-${index}`}
               type="button"
@@ -323,34 +328,36 @@ export const RoundNavigator: React.FC<{
             >
               --
             </button>
-          ),
+          ) : null,
         )}
-        <PopoverRoot
-          open={menu === "more"}
-          onOpenChange={(open) => {
-            setMenu(open ? "more" : null);
-            setPage(0);
-          }}
-        >
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              disabled={future.length === 0}
-              className="disabled:oui-opacity-36 oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-base-contrast-54"
-            >
-              {t("prediction.rounds.more")}
-              <CaretDownIcon size={14} color="inherit" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent
-            align="end"
-            side="top"
-            sideOffset={8}
-            className="oui-custom-scrollbar oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
+        {hasLiveOrUpcomingRow && (
+          <PopoverRoot
+            open={menu === "more"}
+            onOpenChange={(open) => {
+              setMenu(open ? "more" : null);
+              setPage(0);
+            }}
           >
-            {renderMenu()}
-          </PopoverContent>
-        </PopoverRoot>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                disabled={future.length === 0}
+                className="disabled:oui-opacity-36 oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-base-contrast-54"
+              >
+                {t("prediction.rounds.more")}
+                <CaretDownIcon size={14} color="inherit" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              side="top"
+              sideOffset={8}
+              className="oui-custom-scrollbar oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
+            >
+              {renderMenu()}
+            </PopoverContent>
+          </PopoverRoot>
+        )}
       </div>
       <div className="oui-flex oui-items-center oui-gap-1 oui-rounded-lg oui-bg-base-10 oui-p-1">
         {(["price", "candles"] as const).map((mode) => (
