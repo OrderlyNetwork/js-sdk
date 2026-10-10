@@ -4,6 +4,13 @@
 import "./types/interceptorTargets";
 
 export type {
+  TradingMarketsDropdownProps,
+  TradingPerpsPanelProps,
+  TradingDataListProductContent,
+  TradingPageExtensionProps,
+} from "@orderly.network/trading-common";
+
+export type {
   ShareOptions,
   TradingPageProps,
   ReferralProps,

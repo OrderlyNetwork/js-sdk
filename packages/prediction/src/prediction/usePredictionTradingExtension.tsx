@@ -1,4 +1,7 @@
-import type { TradingPageProps } from "@orderly.network/trading-common";
+import type {
+  TradingDataListProductContent,
+  TradingPageExtensionProps,
+} from "@orderly.network/trading-common";
 import type { PredictionPerpsPanelProps } from "./dataPanels/perpsPanel.types";
 import { SharedProductDataPanel } from "./dataPanels/sharedProductDataPanel.ui";
 import { MobileSharedProductHistory } from "./dataPanels/sharedProductHistory.mobile.ui";
@@ -17,16 +20,20 @@ export interface PredictionTradingExtensionOptions extends PredictionPerpsPanelP
   symbol: string;
   /** Follow the host trading page's all-symbol preference. */
   showAllSymbol: boolean;
-  /** The host application owns navigation and URL parameters. */
+  /**
+   * Receives a market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds,
+   * rather than a tradable round symbol. The host owns navigation and URL parameters.
+   */
   onPredictionSelect: (marketId: string) => void;
   /** Enable Prediction resources and extension slots; defaults to true. */
   enabled?: boolean;
+  /** Enable the markets dropdown resources and slot; defaults to true. */
+  marketsEnabled?: boolean;
+  /** Enable account panel resources, counts, and slots; defaults to true. */
+  accountPanelsEnabled?: boolean;
 }
 
-export type PredictionTradingExtensionProps = Pick<
-  TradingPageProps,
-  "marketsDropdown" | "dataListProductContent"
->;
+export type PredictionTradingExtensionProps = TradingPageExtensionProps;
 
 /** Assemble slots without mounting their history queries until displayed. */
 function buildDataListProductContent(
@@ -34,7 +41,7 @@ function buildDataListProductContent(
   counts: SharedProductCountsState,
   scopedSymbol?: string,
   perpsProps: PredictionPerpsPanelProps = {},
-): TradingPageProps["dataListProductContent"] {
+): TradingDataListProductContent {
   const scope = {
     ...perpsProps,
     state,
@@ -83,30 +90,36 @@ export function usePredictionTradingExtension({
   showAllSymbol,
   onPredictionSelect,
   enabled = true,
+  marketsEnabled = true,
+  accountPanelsEnabled = true,
   onSymbolChange,
   sharePnLConfig,
   pnlNotionalDecimalPrecision,
 }: PredictionTradingExtensionOptions): PredictionTradingExtensionProps {
   const scopedSymbol = showAllSymbol ? undefined : symbol;
-  const state = usePredictionAccountData({ enabled });
+  const accountEnabled = enabled && accountPanelsEnabled;
+  const dropdownEnabled = enabled && marketsEnabled;
+  const state = usePredictionAccountData({ enabled: accountEnabled });
   const counts = useSharedProductCounts({
     product: "all",
     perpsSymbol: scopedSymbol,
     predictionUnderlyingSymbol: scopedSymbol,
-    enabled,
+    enabled: accountEnabled,
   });
   const marketsDropdown = usePredictionMarketsDropdown(onPredictionSelect, {
-    enabled,
+    enabled: dropdownEnabled,
   });
-  return enabled
-    ? {
-        marketsDropdown,
-        dataListProductContent: buildDataListProductContent(
-          state,
-          counts,
-          scopedSymbol,
-          { onSymbolChange, sharePnLConfig, pnlNotionalDecimalPrecision },
-        ),
-      }
-    : {};
+  return {
+    ...(dropdownEnabled ? { marketsDropdown } : {}),
+    ...(accountEnabled
+      ? {
+          dataListProductContent: buildDataListProductContent(
+            state,
+            counts,
+            scopedSymbol,
+            { onSymbolChange, sharePnLConfig, pnlNotionalDecimalPrecision },
+          ),
+        }
+      : {}),
+  };
 }

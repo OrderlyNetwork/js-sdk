@@ -1,5 +1,12 @@
 import "./interceptorTargets";
 
+export type {
+  TradingMarketsDropdownProps,
+  TradingPerpsPanelProps,
+  TradingDataListProductContent,
+  TradingPageExtensionProps,
+} from "./types/tradingExtension";
+
 export { type layoutInfo } from "./types/types";
 export { type PosterLayoutConfig } from "./types/types";
 export { type ShareOptions } from "./types/types";

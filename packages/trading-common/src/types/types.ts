@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
-import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
-import { API } from "@orderly.network/types";
-import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
+import type {
+  TradingPageExtensionProps,
+  TradingPerpsPanelProps,
+} from "./tradingExtension";
 
 export type layoutInfo = {
   width?: number;
@@ -149,8 +150,6 @@ export type TradingRewardsProps = {
 type BaseTradingPageProps = {
   symbol: string;
   tradingViewConfig: TradingViewConfigInterface;
-  onSymbolChange?: (symbol: API.Symbol) => void;
-  marketsDropdown?: DropDownMarketsExtensionProps;
   // enableFeatures?: TradingFeatures[];
   // for trading page features, not for tradingView chart features
   disableFeatures?: TradingFeatures[];
@@ -158,23 +157,12 @@ type BaseTradingPageProps = {
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
 };
 
-export type TradingPageProps = BaseTradingPageProps & {
-  sharePnLConfig?: SharePnLConfig;
-  referral?: ReferralProps;
-  tradingRewards?: TradingRewardsProps;
-  bottomSheetLeading?: React.ReactNode | string;
-  /** Optional content that supplements Perps data tabs with another product. */
-  dataListProductContent?: Partial<{
-    positions: ReactNode | ((perpsContent: ReactNode) => ReactNode);
-    pending: ReactNode;
-    filled: ReactNode;
-    positionHistory: ReactNode;
-    orderHistory: ReactNode;
-    counts: { positions?: number; pending?: number | null };
-    mobile: Partial<{
-      positions: ReactNode | ((perpsContent: ReactNode) => ReactNode);
-      pending: ReactNode;
-      history: ReactNode;
-    }>;
-  }>;
-};
+export type TradingPageProps = BaseTradingPageProps &
+  Pick<TradingPerpsPanelProps, "onSymbolChange" | "sharePnLConfig"> &
+  TradingPageExtensionProps & {
+    /** Enable automatic Prediction integration; defaults to true. */
+    predictionEnabled?: boolean;
+    referral?: ReferralProps;
+    tradingRewards?: TradingRewardsProps;
+    bottomSheetLeading?: React.ReactNode | string;
+  };

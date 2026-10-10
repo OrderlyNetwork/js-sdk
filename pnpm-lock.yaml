@@ -1605,6 +1605,9 @@ importers:
       '@orderly.network/portfolio':
         specifier: workspace:*
         version: link:../portfolio
+      '@orderly.network/prediction':
+        specifier: workspace:*
+        version: link:../prediction
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
