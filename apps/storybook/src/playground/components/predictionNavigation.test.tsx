@@ -1,18 +1,18 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { Prediction } from "@orderly.network/prediction/src/prediction/prediction.ui";
-import {
-  PredictionWidget,
-  type PredictionWidgetProps,
-} from "@orderly.network/prediction/src/prediction/prediction.widget";
+import { PredictionWidget } from "@orderly.network/prediction/src/prediction/prediction.widget";
 
 const mocks = vi.hoisted(() => ({
   route: vi.fn(),
   routeAvailable: true,
+  script: vi.fn(),
   state: {
-    marketId: "PERP_BTC5M_USDC",
-    markets: [{ id: "PERP_BTC5M_USDC" }, { id: "PERP_ETH5M_USDC" }],
-    selectMarket: vi.fn(),
+    defaultSymbol: "PERP_BTC5M2609291035_USDC",
+    selectedRow: { symbol: "PERP_BTC5M2609291035_USDC" },
+    selectMarketRound: vi.fn(),
+    goToLiveRound: vi.fn(),
+    goToNextRound: vi.fn(),
     isRegionRestricted: false,
   },
 }));
@@ -27,127 +27,119 @@ vi.mock("@orderly.network/trading-common", () => ({
   useFirstTimeDeposit: () => false,
 }));
 vi.mock("@orderly.network/prediction/src/prediction/prediction.script", () => ({
-  usePredictionScript: () => mocks.state,
+  usePredictionScript: mocks.script,
 }));
 vi.mock("@orderly.network/prediction/src/prediction/prediction.ui", () => ({
   Prediction: () => null,
 }));
 let root: ReactTestRenderer;
-function mount(
-  props: PredictionWidgetProps = { marketId: mocks.state.marketId },
-) {
-  act(() => {
-    root = create(<PredictionWidget {...props} />);
-  });
-}
 function ui() {
   return root.root.findByType(Prediction).props;
 }
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.routeAvailable = true;
-  mocks.state.marketId = "PERP_BTC5M_USDC";
-  mocks.state.markets = [{ id: "PERP_BTC5M_USDC" }, { id: "PERP_ETH5M_USDC" }];
+  mocks.script.mockReturnValue(mocks.state);
 });
 afterEach(() => act(() => root?.unmount()));
-it("uses the controlled market object, ignores repeated selection, and only routes cross-product selection", () => {
+it("reports the exact symbol object and reserves routing for cross-product selection", () => {
   const onSymbolChange = vi.fn();
-  mount({ marketId: mocks.state.marketId, onSymbolChange });
-  ui().onSelectMarket(mocks.state.marketId);
+  act(() => {
+    root = create(
+      <PredictionWidget
+        symbol={mocks.state.selectedRow.symbol}
+        onSymbolChange={onSymbolChange}
+      />,
+    );
+  });
+  ui().onSelectSymbol(mocks.state.selectedRow.symbol);
   expect(onSymbolChange).not.toHaveBeenCalled();
-  ui().onSelectMarket("PERP_ETH5M_USDC");
+  ui().onSelectSymbol("PERP_ETH5M2609291035_USDC");
   expect(onSymbolChange).toHaveBeenCalledExactlyOnceWith({
-    marketId: "PERP_ETH5M_USDC",
+    symbol: "PERP_ETH5M2609291035_USDC",
   });
   expect(mocks.route).not.toHaveBeenCalled();
   ui().onNavigatePerp({ symbol: "PERP/ETH?USDC" });
-  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+  expect(mocks.route).toHaveBeenCalledWith({
     href: "/perp/PERP%2FETH%3FUSDC",
     name: "perps",
   });
   expect(onSymbolChange).toHaveBeenCalledOnce();
 });
-it("routes a different Prediction market by default with an encoded ID", () => {
-  mount();
-  ui().onSelectMarket(mocks.state.marketId);
-  expect(mocks.route).not.toHaveBeenCalled();
-  ui().onSelectMarket("ETH/5M?round=1");
+it("encodes symbol navigation and forwards requested selection to the script", () => {
+  act(() => {
+    root = create(<PredictionWidget symbol={mocks.state.selectedRow.symbol} />);
+  });
+  ui().onSelectSymbol("ETH/5M?round=1");
   expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
     href: "/prediction/ETH%2F5M%3Fround%3D1",
     name: "prediction",
   });
+  const selection = mocks.script.mock.calls.at(-1)?.[3];
+  expect(selection.symbol).toBe(mocks.state.selectedRow.symbol);
+  expect(selection.onSymbolSelect).toBeTypeOf("function");
 });
-it("fills the default URL once with replacement and fills it again after returning from a market URL", () => {
-  mount({});
+it("fills the default symbol URL once and resets the guard after leaving the default route", () => {
+  act(() => {
+    root = create(<PredictionWidget />);
+  });
   expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
-    href: "/prediction/PERP_BTC5M_USDC",
+    href: `/prediction/${mocks.state.selectedRow.symbol}`,
     name: "prediction",
     replace: true,
   });
   act(() => root.update(<PredictionWidget />));
   expect(mocks.route).toHaveBeenCalledOnce();
-  act(() => root.update(<PredictionWidget marketId={mocks.state.marketId} />));
+  act(() =>
+    root.update(<PredictionWidget symbol={mocks.state.selectedRow.symbol} />),
+  );
   act(() => root.update(<PredictionWidget />));
   expect(mocks.route).toHaveBeenCalledTimes(2);
 });
-it("waits for metadata before filling the default URL", () => {
-  mocks.state.markets = [];
-  mount({});
-  expect(mocks.route).not.toHaveBeenCalled();
-  mocks.state.markets = [{ id: mocks.state.marketId }];
-  act(() => root.update(<PredictionWidget />));
-  expect(mocks.route).toHaveBeenCalledOnce();
-});
-it("does not fill a controlled URL or notify on initialization, URL synchronization, and state refresh", () => {
+it("does not fill a controlled URL and does not notify on parameter synchronization", () => {
   const onSymbolChange = vi.fn();
-  mount({ onSymbolChange });
+  act(() => {
+    root = create(<PredictionWidget onSymbolChange={onSymbolChange} />);
+  });
+  act(() =>
+    root.update(
+      <PredictionWidget
+        symbol="PERP_ETH5M2609291035_USDC"
+        onSymbolChange={onSymbolChange}
+      />,
+    ),
+  );
+  expect(mocks.script.mock.calls.at(-1)?.[3].symbol).toBe(
+    "PERP_ETH5M2609291035_USDC",
+  );
   expect(mocks.route).not.toHaveBeenCalled();
   expect(onSymbolChange).not.toHaveBeenCalled();
-  act(() =>
-    root.update(
-      <PredictionWidget
-        marketId="PERP_ETH5M_USDC"
-        onSymbolChange={onSymbolChange}
-      />,
-    ),
-  );
-  expect(mocks.state.selectMarket).toHaveBeenCalledWith("PERP_ETH5M_USDC");
-  mocks.state.marketId = "PERP_ETH5M_USDC";
-  act(() =>
-    root.update(
-      <PredictionWidget
-        marketId="PERP_ETH5M_USDC"
-        onSymbolChange={onSymbolChange}
-      />,
-    ),
-  );
-  act(() =>
-    root.update(
-      <PredictionWidget
-        marketId="PERP_BTC5M_USDC"
-        onSymbolChange={onSymbolChange}
-      />,
-    ),
-  );
-  expect(mocks.state.selectMarket).toHaveBeenLastCalledWith("PERP_BTC5M_USDC");
-  expect(onSymbolChange).not.toHaveBeenCalled();
-  expect(mocks.route).not.toHaveBeenCalled();
 });
-it("retains unknown URL IDs without silently changing the market or redirecting", () => {
-  mount({ marketId: "UNKNOWN" });
-  expect(ui().requestedMarketId).toBe("UNKNOWN");
-  expect(mocks.state.selectMarket).not.toHaveBeenCalled();
-  expect(mocks.route).not.toHaveBeenCalled();
-});
-it("keeps controlled selection without a router and disables cross-product navigation", () => {
+it("keeps controlled selection without a router and disables all selection without a handler", () => {
   mocks.routeAvailable = false;
   const onSymbolChange = vi.fn();
-  mount({ marketId: mocks.state.marketId, onSymbolChange });
+  act(() => {
+    root = create(
+      <PredictionWidget
+        symbol={mocks.state.selectedRow.symbol}
+        onSymbolChange={onSymbolChange}
+      />,
+    );
+  });
   expect(ui().onNavigatePerp).toBeUndefined();
-  ui().onSelectMarket("PERP_ETH5M_USDC");
-  expect(onSymbolChange).toHaveBeenCalledWith({ marketId: "PERP_ETH5M_USDC" });
-  act(() => root.update(<PredictionWidget marketId={mocks.state.marketId} />));
-  expect(ui().onSelectMarket).toBeUndefined();
-  expect(ui().onNavigatePerp).toBeUndefined();
+  act(() =>
+    root.update(<PredictionWidget symbol={mocks.state.selectedRow.symbol} />),
+  );
+  expect(ui().onSelectSymbol).toBeUndefined();
+  const select = mocks.script.mock.calls.at(-1)?.[3].onSymbolSelect;
+  expect(select).toBeTypeOf("function");
+  select("PERP_ETH5M2609291035_USDC");
+  expect(onSymbolChange).not.toHaveBeenCalled();
   expect(mocks.route).not.toHaveBeenCalled();
+  ui().selectMarketRound(123);
+  ui().goToLiveRound();
+  expect(ui().goToNextRound()).toBe(false);
+  expect(mocks.state.selectMarketRound).not.toHaveBeenCalled();
+  expect(mocks.state.goToLiveRound).not.toHaveBeenCalled();
+  expect(mocks.state.goToNextRound).not.toHaveBeenCalled();
 });

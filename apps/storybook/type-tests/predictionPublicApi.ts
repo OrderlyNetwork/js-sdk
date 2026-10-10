@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import {
   PredictionPage,
-  type PredictionMarketSelection,
+  type PredictionSymbolSelection,
 } from "@orderly.network/prediction";
 import {
   usePredictionAccountData,
@@ -231,21 +231,33 @@ export function automaticTradingPageContract(
   return { page, disabledPage, customPage };
 }
 
-/** Prediction exposes a market selection object without a round symbol. */
+/** Prediction exposes the exact selected contract symbol. */
 export function predictionPageSelectionContract() {
   const page = createElement(PredictionPage, {
-    marketId: "PERP_BTC5M_USDC",
-    onSymbolChange: (market: PredictionMarketSelection) => void market.marketId,
+    symbol: "PERP_BTC5M2608271200_USDC",
+    onSymbolChange: (market: PredictionSymbolSelection) => void market.symbol,
   });
   const routedPage = createElement(PredictionPage, {
-    marketId: "PERP_BTC5M_USDC",
+    symbol: "PERP_BTC5M2608271200_USDC",
   });
-  const selection: PredictionMarketSelection = { marketId: "PERP_BTC5M_USDC" };
+  const selection: PredictionSymbolSelection = {
+    symbol: "PERP_BTC5M2608271200_USDC",
+  };
   return { page, routedPage, selection };
 }
 
 export type NavigationContracts = [
-  Assert<Compatible<keyof PredictionMarketSelection, "marketId">>,
+  Assert<Compatible<keyof PredictionSymbolSelection, "symbol">>,
+  Assert<
+    "marketId" extends keyof React.ComponentProps<typeof PredictionPage>
+      ? false
+      : true
+  >,
+  Assert<
+    "onMarketChange" extends keyof React.ComponentProps<typeof PredictionPage>
+      ? false
+      : true
+  >,
   Assert<"onPredictionSelect" extends keyof TradingPageProps ? false : true>,
   Assert<
     "onPredictionSymbolChange" extends keyof React.ComponentProps<

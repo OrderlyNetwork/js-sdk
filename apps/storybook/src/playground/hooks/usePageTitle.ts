@@ -1,13 +1,10 @@
 import { useEffect } from "react";
 import { useParams } from "react-router";
 import { useTranslation } from "@orderly.network/i18n";
-import { formatSymbol } from "@orderly.network/utils";
+import { formatSymbol, parseBinarySymbol } from "@orderly.network/utils";
 import { PageTitleMap, PathEnum } from "../constant";
 import { generatePageTitle } from "../utils";
 import { usePathWithoutLang } from "./usePathWithoutLang";
-
-const PREDICTION_MARKET_ID_PATTERN =
-  /^PERP_([A-Z0-9]+?)(5M|10M|15M)_[A-Z0-9]+$/;
 
 /** update the page title when the path changes */
 export function usePageTitle() {
@@ -25,9 +22,12 @@ export function usePageTitle() {
     }
 
     if (path.startsWith(`${PathEnum.Prediction}/`)) {
-      const market = PREDICTION_MARKET_ID_PATTERN.exec(params.marketId ?? "");
+      const market = parseBinarySymbol(params.symbol ?? "");
       title = market
-        ? t("prediction.marketName", { base: market[1], period: market[2] })
+        ? t("prediction.marketName", {
+            base: market.base,
+            period: market.period,
+          })
         : PageTitleMap[PathEnum.Prediction];
     }
 

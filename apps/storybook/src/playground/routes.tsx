@@ -140,7 +140,7 @@ const AppRoute: React.FC = () => {
       element: <PredictionPage />,
     },
     {
-      path: "prediction/:marketId",
+      path: "prediction/:symbol",
       element: <PredictionPage />,
     },
     {

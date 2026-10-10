@@ -244,10 +244,12 @@ it("reports selection to the host without persisting it and dismisses the dropdo
     ),
   );
   const select = panel.props.onSelect as (id: string) => void;
-  select("PERP_BTC5M_USDC");
+  select("PERP_BTC5M2609291035_USDC");
   expect(mocks.saveMarket).not.toHaveBeenCalled();
   expect(hide).toHaveBeenCalledOnce();
-  expect(options.onPredictionSelect).toHaveBeenCalledWith("PERP_BTC5M_USDC");
+  expect(options.onPredictionSelect).toHaveBeenCalledWith(
+    "PERP_BTC5M2609291035_USDC",
+  );
 });
 
 it("keeps zero-argument and callback-only market dropdown consumers compatible", () => {

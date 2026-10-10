@@ -3,10 +3,10 @@ import { PredictionPage as PredictionMarketPage } from "@orderly.network/predict
 import { BaseLayout } from "../../components/layout/baseLayout";
 
 export default function PredictionPage() {
-  const { marketId } = useParams();
+  const { symbol } = useParams();
   return (
     <BaseLayout>
-      <PredictionMarketPage marketId={marketId} />
+      <PredictionMarketPage symbol={symbol} />
     </BaseLayout>
   );
 }
