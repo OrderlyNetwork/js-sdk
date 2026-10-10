@@ -47,7 +47,7 @@ vi.mock("@orderly.network/hooks", async () => ({
       refresh: mocks.refresh,
     },
   ],
-  usePositionStream: () => [{ rows: [] }],
+  usePositions: () => [],
   usePrivateQuery: () => ({ data: undefined, mutate: mocks.refresh }),
 }));
 vi.mock("@orderly.network/i18n", () => ({ i18n: { t: (key: string) => key } }));
@@ -81,7 +81,7 @@ function mount(args = defaults(), underlyingSymbol?: string) {
   }: {
     args: Omit<UsePredictionTradingActionsArgs, "resources">;
   }) {
-    const resources = usePredictionAccountResources({ enabled: false });
+    const resources = usePredictionAccountResources({ enabled: args.active });
     result = usePredictionTradingActions({ ...args, resources });
     scoped = useScopedPredictionAccount(
       { ...result, settlements: [], historyRecords: [] } as any,

@@ -4,6 +4,7 @@ import {
   PredictionOrderCell,
   useProductOrderCancelAll,
   usePredictionAccountData,
+  toPredictionOrderStatus,
 } from "@orderly.network/prediction";
 import { useCanTrade } from "@orderly.network/react-app";
 import { OrderStatus } from "@orderly.network/types";
@@ -37,7 +38,7 @@ export function MixedOrders({
 }) {
   const state = usePredictionAccountData({
     enabled: product !== "perps",
-    includeHistory: type !== TabType.pending,
+    includeOrderHistory: type !== TabType.pending,
   });
   const canTrade = useCanTrade();
   const { t } = useTranslation();
@@ -52,6 +53,7 @@ export function MixedOrders({
     ordersStatus,
     ref: ordersRef,
     productType: "PERP",
+    enabled: product !== "prediction",
     cancelAllDisabled: pendingTab ? cancellation.disabled : undefined,
   });
   const [outcome, setOutcome] = useState("all");
@@ -130,13 +132,7 @@ export function MixedOrders({
     (order) => !isBinarySymbol(order.symbol),
   );
   const predictionOrders = useMemo(() => {
-    if (
-      !state ||
-      !canTrade ||
-      product === "perps" ||
-      type === TabType.tp_sl ||
-      type === TabType.rejected
-    )
+    if (!state || !canTrade || product === "perps" || type === TabType.tp_sl)
       return [];
     const rows =
       type === TabType.pending
@@ -145,7 +141,9 @@ export function MixedOrders({
           ? state.history.filter((o) => o.status === "filled")
           : type === TabType.cancelled
             ? state.history.filter((o) => o.status === "cancelled")
-            : [...state.openOrders, ...state.history];
+            : type === TabType.rejected
+              ? state.history.filter((o) => o.status === "rejected")
+              : [...state.openOrders, ...state.history];
     return rows.filter((order) =>
       filterItems.every((filter) => {
         const value = filter.value;
@@ -154,13 +152,7 @@ export function MixedOrders({
         if (filter.name === "side")
           return order.side.toUpperCase() === String(value).toUpperCase();
         if (filter.name === "status")
-          return (
-            ("status" in order
-              ? order.status === "filled"
-                ? "FILLED"
-                : "CANCELLED"
-              : "NEW") === value
-          );
+          return (order.status ?? "pending") === toPredictionOrderStatus(value);
         if (filter.name === "dateRange") {
           const range = value as { from?: Date; to?: Date };
           return (

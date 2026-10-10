@@ -1,23 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { generatePath } from "@orderly.network/i18n";
-import { registerLayoutSplitPlugin } from "@orderly.network/layout-split";
-import {
-  MobileSharedProductHistory,
-  MobileSharedProductOrdersPanel,
-  SharedProductDataPanel,
-  SharedProductOrdersPanel,
-  usePredictionMarketsDropdown,
-  useSharedProductCounts,
-  usePredictionAccountData,
-} from "@orderly.network/prediction";
+import { usePredictionTradingExtension } from "@orderly.network/prediction";
 import {
   TradingPage,
   TradingPageProps,
   useTradingLocalStorage,
 } from "@orderly.network/trading";
 import { API } from "@orderly.network/types";
-import { OrderlyPluginProvider } from "@orderly.network/ui";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
@@ -30,14 +20,8 @@ export default function PerpPage() {
   const [symbol, setSymbol] = useState(params.symbol!);
   const { search } = useLocation();
   const navigate = useNavigate();
-  const predictionState = usePredictionAccountData();
-  const { showAllSymbol } = useTradingLocalStorage();
-  const scopedSymbol = showAllSymbol ? undefined : symbol;
-  const counts = useSharedProductCounts({
-    product: "all",
-    perpsSymbol: scopedSymbol,
-    predictionUnderlyingSymbol: scopedSymbol,
-  });
+  const { showAllSymbol, pnlNotionalDecimalPrecision } =
+    useTradingLocalStorage();
   const onPredictionSelect = useCallback(
     (marketId: string) => {
       navigate(
@@ -46,8 +30,6 @@ export default function PerpPage() {
     },
     [navigate, search],
   );
-  const marketsDropdown = usePredictionMarketsDropdown(onPredictionSelect);
-
   useEffect(() => {
     updateSymbol(symbol);
   }, [symbol]);
@@ -61,6 +43,15 @@ export default function PerpPage() {
     [navigate, search],
   );
 
+  const predictionExtension = usePredictionTradingExtension({
+    symbol,
+    showAllSymbol,
+    onPredictionSelect,
+    onSymbolChange,
+    sharePnLConfig: tradingPageConfig.sharePnLConfig,
+    pnlNotionalDecimalPrecision,
+  });
+
   useEffect(() => {
     if (params.symbol && params.symbol !== symbol) {
       setSymbol(params.symbol);
@@ -70,90 +61,11 @@ export default function PerpPage() {
   return (
     <BaseLayout>
       <TradingPage
+        {...predictionExtension}
         symbol={symbol}
         onSymbolChange={onSymbolChange}
-        marketsDropdown={marketsDropdown}
         tradingViewConfig={tradingPageConfig.tradingViewConfig}
         sharePnLConfig={tradingPageConfig.sharePnLConfig}
-        dataListProductContent={
-          predictionState
-            ? {
-                counts,
-                positions: (perpsPositionsContent) => (
-                  <SharedProductDataPanel
-                    state={predictionState}
-                    type="positions"
-                    initialProduct="perps"
-                    perpsSymbol={scopedSymbol}
-                    predictionUnderlyingSymbol={scopedSymbol}
-                    perpsPositionsContent={perpsPositionsContent}
-                  />
-                ),
-                pending: (
-                  <SharedProductOrdersPanel
-                    state={predictionState}
-                    mode="pending"
-                    perpsSymbol={scopedSymbol}
-                    predictionUnderlyingSymbol={scopedSymbol}
-                  />
-                ),
-                filled: (
-                  <SharedProductOrdersPanel
-                    state={predictionState}
-                    mode="filled"
-                    perpsSymbol={scopedSymbol}
-                    predictionUnderlyingSymbol={scopedSymbol}
-                  />
-                ),
-                positionHistory: (
-                  <SharedProductDataPanel
-                    state={predictionState}
-                    type="positionHistory"
-                    initialProduct="perps"
-                    perpsSymbol={scopedSymbol}
-                    predictionUnderlyingSymbol={scopedSymbol}
-                  />
-                ),
-                orderHistory: (
-                  <SharedProductOrdersPanel
-                    state={predictionState}
-                    mode="history"
-                    perpsSymbol={scopedSymbol}
-                    predictionUnderlyingSymbol={scopedSymbol}
-                  />
-                ),
-                mobile: {
-                  positions: (perpsPositionsContent) => (
-                    <SharedProductDataPanel
-                      state={predictionState}
-                      type="positions"
-                      initialProduct="perps"
-                      mobile
-                      perpsSymbol={scopedSymbol}
-                      predictionUnderlyingSymbol={scopedSymbol}
-                      perpsPositionsContent={perpsPositionsContent}
-                    />
-                  ),
-                  pending: (
-                    <MobileSharedProductOrdersPanel
-                      state={predictionState}
-                      mode="pending"
-                      perpsSymbol={scopedSymbol}
-                      predictionUnderlyingSymbol={scopedSymbol}
-                    />
-                  ),
-                  history: (
-                    <MobileSharedProductHistory
-                      state={predictionState}
-                      initialProduct="perps"
-                      perpsSymbol={scopedSymbol}
-                      predictionUnderlyingSymbol={scopedSymbol}
-                    />
-                  ),
-                },
-              }
-            : undefined
-        }
       />
     </BaseLayout>
   );

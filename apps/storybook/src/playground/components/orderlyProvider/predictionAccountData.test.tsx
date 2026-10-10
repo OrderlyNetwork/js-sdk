@@ -2,6 +2,7 @@ import React, { StrictMode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { usePredictionAccountData } from "@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData";
+import { usePredictionMarkets } from "@orderly.network/prediction/src/prediction/hooks/usePredictionMarkets";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 
@@ -22,6 +23,8 @@ const mocks = vi.hoisted(() => ({
   privateQuery: vi.fn(),
   orderQuery: vi.fn(),
   query: vi.fn(),
+  metadata: [] as any[],
+  mutation: vi.fn(),
   ws: {
     subscribe: vi.fn(() => () => {}),
     onceSubscribe: vi.fn(() => () => {}),
@@ -50,7 +53,10 @@ vi.mock("@orderly.network/hooks", async () => {
     useCollateral: () => ({ freeCollateral: 1000 }),
     useLocalStorage: (_key: string, initial: unknown) => useState(initial),
     useMarkPricesStream: () => ({ data: {} }),
-    useMutation: () => [vi.fn()],
+    useMutation: (url: string, method: string) => {
+      mocks.mutation(url, method);
+      return [vi.fn()];
+    },
     useOrderStream: (params: any, options: any) => {
       mocks.orderQuery(params, options);
       return [
@@ -66,9 +72,7 @@ vi.mock("@orderly.network/hooks", async () => {
       ];
     },
     // Real position wrappers are also recreated on unrelated renders.
-    usePositionStream: () => [
-      { rows: mocks.positions.map((row) => ({ ...row })) },
-    ],
+    usePositions: () => mocks.positions.map((row) => ({ ...row })),
     usePrivateQuery: (key: string | null) => {
       mocks.privateQuery(key, mocks.accountId);
       return {
@@ -82,9 +86,18 @@ vi.mock("@orderly.network/hooks", async () => {
         isLoading: false,
       };
     },
-    useQuery: (key: string | null) => {
+    useQuery: (
+      key: string | null,
+      options?: { keepPreviousData?: boolean },
+    ) => {
       mocks.query(key);
-      return { data: undefined };
+      return {
+        data:
+          key === "/v1/public/binary/info" ||
+          (key === null && options?.keepPreviousData)
+            ? mocks.metadata
+            : undefined,
+      };
     },
     useWS: () => mocks.ws,
   };
@@ -94,12 +107,18 @@ let root: ReactTestRenderer | undefined,
   renders: number;
 function Consumer({
   enabled = true,
-  includeHistory = true,
+  includeOrderHistory = false,
+  includeSettlementHistory = false,
 }: {
   enabled?: boolean;
-  includeHistory?: boolean;
+  includeOrderHistory?: boolean;
+  includeSettlementHistory?: boolean;
 }) {
-  state = usePredictionAccountData({ enabled, includeHistory });
+  state = usePredictionAccountData({
+    enabled,
+    includeOrderHistory,
+    includeSettlementHistory,
+  });
   if (++renders > 50) throw Error("Account data did not settle");
   return null;
 }
@@ -139,6 +158,7 @@ beforeEach(() => {
   mocks.restReady = true;
   mocks.history = undefined;
   mocks.orders = [];
+  mocks.metadata = [];
   mocks.total = 0;
   mocks.validating = false;
   mocks.failed = false;
@@ -152,6 +172,38 @@ afterEach(() => {
 });
 
 describe("Prediction account resources", () => {
+  it("drops retained metadata and releases the round clock when markets are disabled", () => {
+    const start = Date.UTC(2026, 9, 10, 12);
+    vi.setSystemTime(start);
+    mocks.metadata = [
+      {
+        symbol: "PERP_BTC5M2610101200_USDC",
+        product_type: "BINARY",
+        fee_model: "BINARY_PROBABILITY",
+        index_price_symbol: "PERP_BTC_USDC",
+        status: "ACTIVE",
+        observation_start_at: start,
+        expire_at: start + 300000,
+      },
+    ];
+    let markets: ReturnType<typeof usePredictionMarkets>;
+    function Markets({ enabled }: { enabled: boolean }) {
+      markets = usePredictionMarkets({ enabled });
+      return null;
+    }
+    act(() => {
+      root = create(<Markets enabled />);
+    });
+    expect(markets!.rows).toHaveLength(1);
+    expect(markets!.markets).toHaveLength(1);
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
+    act(() => root!.update(<Markets enabled={false} />));
+    expect(markets!.rows).toEqual([]);
+    expect(markets!.markets).toEqual([]);
+    expect(markets!.configBySymbol.size).toBe(0);
+    expect(markets!.isOrderTradable(mocks.metadata[0].symbol)).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
+  });
   it("settles fresh stream objects without a full page state or any orderbook subscription", () => {
     mount();
     const before = renders;
@@ -247,7 +299,11 @@ describe("Prediction account resources", () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(55000);
     });
-    expect(mocks.refresh).toHaveBeenCalledTimes(1);
+    expect(mocks.refresh).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+    expect(state.historyRecords).toHaveLength(1);
+    update();
+    expect(state.pendingSettlementSymbols).toEqual([]);
   });
   it("never seeds a switched account from the old stream or adds that unchanged stream after its REST response", () => {
     mocks.positions = [holding];
@@ -346,6 +402,8 @@ describe("Prediction account resources", () => {
     expect(state.pendingOrdersComplete).toBe(false);
   });
   it("disables private Binary and metadata queries when inactive", () => {
+    mocks.positions = [holding];
+    mocks.orders = [{ symbol: holding.symbol, order_id: 1, quantity: 10 }];
     act(() => {
       root = create(<Consumer enabled={false} />);
     });
@@ -359,15 +417,85 @@ describe("Prediction account resources", () => {
       ),
     ).toBe(true);
     expect(vi.getTimerCount()).toBe(0);
+    expect(state.balance).toBe(0);
+    expect(state.positions).toEqual([]);
+    expect(state.openOrders).toEqual([]);
+    expect(state.pendingOrdersComplete).toBe(false);
+    expect(
+      mocks.orderQuery.mock.calls.every(([, options]) => options.stopOnUnmount),
+    ).toBe(true);
   });
-  it("omits history queries and polling when only pending account data is requested", () => {
-    act(() => {
-      root = create(<Consumer includeHistory={false} />);
-    });
+  it("defaults to no historical requests, polling or submission mutations", () => {
+    mount();
     expect(mocks.privateQuery.mock.calls.map(([key]) => key)).not.toContain(
       "/v1/position_history?product_type=BINARY&limit=1000",
     );
+    expect(
+      mocks.orderQuery.mock.calls.filter(
+        ([params, options]) => !params.status && options.enabled,
+      ),
+    ).toHaveLength(0);
     expect(vi.getTimerCount()).toBe(0);
+    expect(mocks.mutation.mock.calls.map(([, method]) => method)).not.toContain(
+      "POST",
+    );
+    expect(state).not.toHaveProperty("protectionPrice");
+    expect(state).not.toHaveProperty("maxOpeningQuantity");
+  });
+  it("loads order and settlement history independently", async () => {
+    act(() => {
+      root = create(<Consumer includeOrderHistory />);
+    });
+    expect(
+      mocks.orderQuery.mock.calls.some(
+        ([params, options]) => !params.status && options.enabled,
+      ),
+    ).toBe(true);
+    expect(mocks.privateQuery.mock.calls.map(([key]) => key)).not.toContain(
+      "/v1/position_history?product_type=BINARY&limit=1000",
+    );
+    mocks.orderQuery.mockClear();
+    act(() => {
+      root!.update(<Consumer includeSettlementHistory />);
+    });
+    await flush();
+    expect(
+      mocks.orderQuery.mock.calls.filter(
+        ([params, options]) => !params.status && options.enabled,
+      ),
+    ).toHaveLength(0);
+    expect(mocks.privateQuery.mock.calls.map(([key]) => key)).toContain(
+      "/v1/position_history?product_type=BINARY&limit=1000",
+    );
+    expect(mocks.refresh).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60000);
+    });
+    expect(mocks.refresh).toHaveBeenCalledTimes(2);
+    update();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  it("starts automatic tracking at expiry without requesting order history", async () => {
+    vi.setSystemTime(Date.UTC(2026, 0, 1, 0, 4));
+    mocks.positions = [holding];
+    mount();
+    expect(state.pendingSettlementSymbols).toEqual([]);
+    expect(mocks.privateQuery.mock.calls.map(([key]) => key)).not.toContain(
+      "/v1/position_history?product_type=BINARY&limit=1000",
+    );
+    vi.setSystemTime(Date.UTC(2026, 0, 1, 0, 5));
+    update();
+    await flush();
+    expect(state.pendingSettlementSymbols).toEqual([holding.symbol]);
+    expect(mocks.privateQuery.mock.calls.map(([key]) => key)).toContain(
+      "/v1/position_history?product_type=BINARY&limit=1000",
+    );
+    expect(
+      mocks.orderQuery.mock.calls.filter(
+        ([params, options]) => !params.status && options.enabled,
+      ),
+    ).toHaveLength(0);
+    expect(vi.getTimerCount()).toBe(1);
   });
   it("inactive consumers do not retain another account's observation activation", () => {
     const other = { ...holding, symbol: "PERP_ETH5M2601010000_USDC" };

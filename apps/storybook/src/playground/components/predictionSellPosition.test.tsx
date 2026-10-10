@@ -2,6 +2,7 @@ import React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useSellPositionScript } from "@orderly.network/prediction/src/prediction/orderEntry/sellPosition/sellPosition.script";
+import { SellPosition } from "@orderly.network/prediction/src/prediction/orderEntry/sellPosition/sellPosition.ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
@@ -32,9 +33,43 @@ const ws = {
     mocks.snapshotCallbacks.set(input.params.symbol, options.onMessage);
   },
 };
-vi.mock("@orderly.network/i18n", () => ({ i18n: { t: (key: string) => key } }));
-vi.mock("@orderly.network/ui", () => ({
-  toast: { error: mocks.notify, success: vi.fn() },
+vi.mock("@orderly.network/i18n", () => ({
+  i18n: { t: (key: string) => key },
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+vi.mock("@orderly.network/ui", async () => {
+  const { createElement, Fragment } = await import("react");
+  const wrapper = ({ children }: { children?: React.ReactNode }) =>
+    createElement(Fragment, null, children);
+  return {
+    toast: { error: mocks.notify, success: vi.fn() },
+    Button: ({
+      children,
+      onClick,
+      disabled,
+    }: React.ButtonHTMLAttributes<HTMLButtonElement>) =>
+      createElement("button", { onClick, disabled }, children),
+    Divider: () => null,
+    Input: {
+      tooltip: ({ value }: { value: string }) =>
+        createElement("input", { value }),
+    },
+    inputFormatter: { numberFormatter: vi.fn(), dpFormatter: vi.fn() },
+    PopoverRoot: ({
+      children,
+      open,
+    }: React.PropsWithChildren<{ open: boolean }>) =>
+      createElement("div", { "data-popover-open": open }, children),
+    PopoverTrigger: wrapper,
+    PopoverContent: wrapper,
+  };
+});
+vi.mock("@orderly.network/prediction/src/prediction/cells", () => ({
+  OutcomeBadge: () => null,
+}));
+vi.mock("@orderly.network/prediction/src/prediction/orderEntry/form", () => ({
+  MarketLimitPriceInput: () => null,
+  PercentageControls: () => null,
 }));
 vi.mock("@orderly.network/hooks", async () => {
   const { useState } = await import("react");
@@ -70,15 +105,11 @@ vi.mock("@orderly.network/hooks", async () => {
         isValidating: false,
       },
     ],
-    usePositionStream: () => [
+    usePositions: () => [
       {
-        rows: [
-          {
-            symbol: mocks.symbol,
-            position_qty: mocks.positionQty,
-            average_open_price: 0.5,
-          },
-        ],
+        symbol: mocks.symbol,
+        position_qty: mocks.positionQty,
+        average_open_price: 0.5,
       },
     ],
     usePrivateQuery: (key: string | null) => ({
@@ -99,6 +130,20 @@ vi.mock("@orderly.network/hooks", async () => {
 let root: ReactTestRenderer | undefined;
 let sell: ReturnType<typeof useSellPositionScript>;
 const views: Record<number, ReturnType<typeof useSellPositionScript>> = {};
+function hostAccountState() {
+  return {
+    accountId: mocks.accountId,
+    accountReady: true,
+    isRegionRestricted: mocks.restricted,
+    hasFeeConfig: mocks.fee != null,
+    isSubmitting: false,
+    availableQuantity: () => Math.abs(mocks.positionQty),
+    isOrderTradable: (symbol: string) =>
+      symbol === mocks.symbol && mocks.row.expire_at > Date.now(),
+    // A page viewing BTC has no bearing on this ETH holding's exit.
+    selectedRow: { symbol: "PERP_BTC5M2610091200_USDC" },
+  } as any;
+}
 function Probe({
   outcome = "up",
   slot = 0,
@@ -109,18 +154,7 @@ function Probe({
   sell = useSellPositionScript({
     symbol: mocks.symbol,
     outcome,
-    state: {
-      accountId: mocks.accountId,
-      accountReady: true,
-      isRegionRestricted: mocks.restricted,
-      hasFeeConfig: mocks.fee != null,
-      isSubmitting: false,
-      availableQuantity: () => Math.abs(mocks.positionQty),
-      isOrderTradable: (symbol: string) =>
-        symbol === mocks.symbol && mocks.row.expire_at > Date.now(),
-      // A page viewing BTC has no bearing on this ETH holding's exit.
-      selectedRow: { symbol: "PERP_BTC5M2610091200_USDC" },
-    } as any,
+    state: hostAccountState(),
   });
   views[slot] = sell;
   return null;
@@ -181,6 +215,47 @@ afterEach(() => {
 });
 
 describe("symbol-specific sell dialog", () => {
+  it("keeps the lazy popover open after clicking sell and releases it on cancel and account switch", () => {
+    const render = () => (
+      <SellPosition
+        state={hostAccountState()}
+        outcome="up"
+        symbol={mocks.symbol}
+      />
+    );
+    const click = (label: string) => {
+      const button = root!.root
+        .findAllByType("button")
+        .find((node) => node.props.children === label)!;
+      expect(button.props.disabled).not.toBe(true);
+      act(() => button.props.onClick());
+    };
+    const openPopovers = () =>
+      root!.root.findAll(
+        (node) =>
+          node.type === "div" && node.props["data-popover-open"] === true,
+      );
+    act(() => {
+      root = create(render());
+    });
+    expect(mocks.subscriptions).not.toHaveBeenCalled();
+    click("common.sell");
+    expect(openPopovers()).toHaveLength(1);
+    expect(root!.root.findByType("input").props.value).toBe("20");
+    expect(mocks.release).not.toHaveBeenCalled();
+
+    click("common.cancel");
+    expect(openPopovers()).toHaveLength(0);
+    expect(mocks.release).toHaveBeenCalledTimes(1);
+    click("common.sell");
+    expect(openPopovers()).toHaveLength(1);
+    expect(mocks.subscriptions).toHaveBeenCalledTimes(2);
+
+    mocks.accountId = "b";
+    act(() => root!.update(render()));
+    expect(openPopovers()).toHaveLength(0);
+    expect(mocks.release).toHaveBeenCalledTimes(2);
+  });
   it("does not subscribe while closed; unlocks a non-selected holding and releases on close", async () => {
     mount();
     expect(sell.tradable).toBe(true);
