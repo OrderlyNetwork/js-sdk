@@ -70,7 +70,7 @@ const PredictionOrderInput: React.FC<{
     prefix={
       <label
         htmlFor={id}
-        className="oui-absolute oui-start-2 oui-top-[7px] oui-text-2xs oui-text-base-contrast-36"
+        className="oui-text-2xs oui-absolute oui-start-2 oui-top-[7px] oui-text-base-contrast-36"
       >
         {label}
       </label>
@@ -79,7 +79,7 @@ const PredictionOrderInput: React.FC<{
       typeof suffix === "string" ? (
         suffix
       ) : (
-        <div className="oui-absolute oui-end-0 oui-top-0 oui-flex oui-h-full oui-flex-col oui-items-end oui-justify-end oui-px-2 oui-py-2 oui-text-2xs oui-text-base-contrast-36">
+        <div className="oui-text-2xs oui-absolute oui-end-0 oui-top-0 oui-flex oui-h-full oui-flex-col oui-items-end oui-justify-end oui-p-2 oui-text-base-contrast-36">
           {suffix}
         </div>
       )
@@ -90,9 +90,9 @@ const PredictionOrderInput: React.FC<{
       root: cn(
         "oui-relative oui-h-[54px] oui-px-2 oui-py-1",
         position === "single" && "oui-rounded-xl",
-        position === "top" && "oui-rounded-t-xl oui-rounded-b",
+        position === "top" && "oui-rounded-b oui-rounded-t-xl",
         position === "middle" && "oui-rounded",
-        position === "bottom" && "oui-rounded-t oui-rounded-b-xl",
+        position === "bottom" && "oui-rounded-b-xl oui-rounded-t",
       ),
       input: "oui-mb-1 oui-mt-5 oui-h-5",
       suffix:
@@ -276,7 +276,7 @@ export const TradePanel: React.FC<
                 aria-pressed={tradeMode === type}
                 onClick={() => selectTradeMode(type)}
                 className={cn(
-                  "oui-flex oui-h-8 oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1 oui-rounded oui-px-3 oui-py-0.5 oui-text-xs oui-font-semibold disabled:oui-cursor-not-allowed",
+                  "oui-text-xs oui-flex oui-h-8 oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1 oui-rounded oui-px-3 oui-py-0.5 oui-font-semibold disabled:oui-cursor-not-allowed",
                   tradeMode === type
                     ? "oui-bg-base-5 oui-text-base-contrast"
                     : "oui-bg-base-7 oui-text-base-contrast-36",
@@ -341,7 +341,7 @@ export const TradePanel: React.FC<
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-semibold oui-text-primary hover:oui-opacity-80"
+                  className="oui-text-xs oui-flex oui-items-center oui-gap-1 oui-font-semibold oui-text-primary hover:oui-opacity-80"
                 >
                   <EditIcon size={14} color="inherit" opacity={1} />
                   {t("common.edit")}
@@ -436,7 +436,7 @@ export const TradePanel: React.FC<
                       }));
                       setOneTapEditorError(false);
                     }}
-                    className="oui-mt-3 oui-block oui-text-xs oui-text-primary hover:oui-opacity-80"
+                    className="oui-text-xs oui-mt-3 oui-block oui-text-primary hover:oui-opacity-80"
                   >
                     + {t("prediction.oneTapAddPreset")}
                   </button>
@@ -481,7 +481,7 @@ export const TradePanel: React.FC<
               <div
                 key={outcome}
                 className={cn(
-                  "oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-text-xs oui-font-semibold oui-leading-tight",
+                  "oui-text-xs oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-font-semibold oui-leading-tight",
                   outcome === "up"
                     ? "oui-bg-trade-profit/15 oui-text-trade-profit"
                     : "oui-bg-trade-loss/15 oui-text-trade-loss",
@@ -506,7 +506,7 @@ export const TradePanel: React.FC<
                   type="button"
                   onClick={() => state.setSelectedOutcome(outcome)}
                   className={cn(
-                    "oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-text-xs oui-font-semibold oui-leading-tight oui-transition-colors",
+                    "oui-text-xs oui-flex oui-h-12 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-font-semibold oui-leading-tight oui-transition-colors",
                     outcome === "up"
                       ? isActive
                         ? "oui-bg-trade-profit/15 oui-text-trade-profit"
@@ -529,7 +529,7 @@ export const TradePanel: React.FC<
         )}
 
         {state.selectedRow && state.selectedRow.s0 == null && (
-          <div className="oui-prediction-strikePending oui-mt-2 oui-space-y-1 oui-rounded-lg oui-bg-base-8 oui-p-2 oui-text-2xs oui-font-normal oui-leading-normal oui-text-base-contrast-54">
+          <div className="oui-prediction-strikePending oui-text-2xs oui-mt-2 oui-space-y-1 oui-rounded-lg oui-bg-base-8 oui-p-2 oui-font-normal oui-leading-normal oui-text-base-contrast-54">
             <p>{t("prediction.strikePending")}</p>
             <p>
               {t("prediction.rounds.startTime")} ({chart.localOffsetLabel}):{" "}
@@ -546,11 +546,11 @@ export const TradePanel: React.FC<
           </div>
         )}
 
-        <div className="oui-mt-2 oui-flex oui-items-center oui-justify-between oui-text-2xs xl:oui-mt-3">
+        <div className="oui-text-2xs oui-mt-2 oui-flex oui-items-center oui-justify-between xl:oui-mt-3">
           <Tips
             title={t("common.tips")}
             content={
-              <div className="oui-text-pretty oui-text-2xs oui-leading-normal oui-text-base-contrast-80">
+              <div className="oui-text-2xs oui-text-pretty oui-leading-normal oui-text-base-contrast-80">
                 {t(
                   isBuyContext
                     ? "prediction.available.buyHint"
@@ -627,7 +627,7 @@ export const TradePanel: React.FC<
                         state.placeOneTapOrder(outcome, quoteAmount)
                       }
                       className={cn(
-                        "oui-flex oui-min-h-12 oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-px-1 oui-py-1 oui-text-xs oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
+                        "oui-text-xs oui-flex oui-min-h-12 oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-p-1 oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
                         outcome === "up"
                           ? "oui-bg-success-darken"
                           : "oui-bg-danger-darken",
@@ -724,7 +724,7 @@ export const TradePanel: React.FC<
                   type="button"
                   disabled={!canAdjustAmount}
                   onClick={() => state.setOrderPercentage(100)}
-                  className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
+                  className="oui-text-2xs oui-flex oui-items-center oui-gap-1 oui-text-base-contrast-54 disabled:oui-cursor-not-allowed"
                 >
                   {t(
                     state.orderSide === "buy"
@@ -742,7 +742,7 @@ export const TradePanel: React.FC<
 
         {!isOneTap && (
           <>
-            <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
+            <div className="oui-text-xs oui-mt-4 oui-space-y-2">
               <InfoRow
                 label={t("prediction.contracts")}
                 value={
@@ -800,14 +800,14 @@ export const TradePanel: React.FC<
           </>
         )}
 
-        <div className="oui-mt-2 oui-text-center oui-text-2xs oui-font-normal oui-text-base-contrast-54">
+        <div className="oui-text-2xs oui-mt-2 oui-text-center oui-font-normal oui-text-base-contrast-54">
           {t("prediction.tradingAgreement")}{" "}
           <span className="oui-border-b oui-border-base-contrast-36 oui-text-base-contrast-54">
             {t("prediction.termOfUse")}
           </span>
         </div>
 
-        <div className="oui-mt-4 oui-space-y-2 oui-text-xs">
+        <div className="oui-text-xs oui-mt-4 oui-space-y-2">
           {state.orderType === "market" && (
             <BinarySlippage
               slippage={state.slippage}

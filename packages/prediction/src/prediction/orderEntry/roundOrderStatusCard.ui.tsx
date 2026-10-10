@@ -42,7 +42,7 @@ export const RoundOrderStatusCard: React.FC<
           <h2 className="oui-text-lg oui-font-semibold oui-text-base-contrast">
             {t("prediction.region.restrictedTitle")}
           </h2>
-          <p className="oui-mt-4 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+          <p className="oui-text-sm oui-mt-4 oui-max-w-72 oui-font-normal oui-text-base-contrast-54">
             {t("prediction.region.restrictedDescription")}
           </p>
         </div>
@@ -55,10 +55,10 @@ export const RoundOrderStatusCard: React.FC<
               <h2 className="oui-mt-6 oui-text-lg oui-font-semibold oui-text-base-contrast">
                 {t("prediction.resolution.determiningWinner")}
               </h2>
-              <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+              <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">
                 {marketName} · {formatRoundWindow(round, intervalSeconds)}
               </p>
-              <p className="oui-mt-5 oui-max-w-72 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+              <p className="oui-text-sm oui-mt-5 oui-max-w-72 oui-font-normal oui-text-base-contrast-54">
                 {t("prediction.resolution.pendingDescription")}
               </p>
             </>
@@ -69,7 +69,7 @@ export const RoundOrderStatusCard: React.FC<
               <h2 className="oui-text-lg oui-font-semibold oui-text-base-contrast">
                 {marketName}
               </h2>
-              <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+              <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">
                 {t("prediction.notInSnapshot")}
               </p>
             </div>
@@ -105,7 +105,7 @@ export const RoundOrderStatusCard: React.FC<
               outcome: t(`prediction.${resolvedOutcome}`),
             })}
           </h2>
-          <p className="oui-mt-4 oui-text-sm oui-font-normal oui-text-base-contrast-54">
+          <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">
             {marketName} · {formatRoundWindow(round, intervalSeconds)}
           </p>
         </>

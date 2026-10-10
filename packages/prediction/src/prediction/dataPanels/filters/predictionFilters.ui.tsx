@@ -94,7 +94,7 @@ export const PredictionFilters = ({
             type="button"
             aria-pressed={filters.days === days}
             onClick={() => filters.updateDays(days)}
-            className="oui-relative oui-rounded oui-px-2 oui-py-[2px] oui-text-sm"
+            className="oui-text-sm oui-relative oui-rounded oui-px-2 oui-py-[2px]"
           >
             <span className="oui-pointer-events-none oui-absolute oui-inset-0 oui-rounded oui-opacity-[.12] oui-gradient-primary" />
             <Text.gradient

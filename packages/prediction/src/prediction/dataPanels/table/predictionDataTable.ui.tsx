@@ -81,7 +81,7 @@ export const PredictionDataTable: React.FC<{
   // root is height-constrained so DataTable's internal `overflow-auto` scroll
   // area owns both axes. Column widths drive horizontal scroll + fixed pins.
   return (
-    <div className="oui-prediction-dataTable-container oui-flex oui-h-full oui-min-h-0 oui-w-full oui-flex-col">
+    <div className="oui-prediction-dataTable-container oui-flex oui-size-full oui-min-h-0 oui-flex-col">
       {toolbar}
       <AuthGuardDataTable
         className="oui-prediction-dataTable"

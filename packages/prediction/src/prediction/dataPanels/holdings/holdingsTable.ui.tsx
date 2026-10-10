@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";

@@ -51,7 +51,7 @@ export const RoundSymbol = ({
   const { formatRoundBadge } = usePredictionFormatters();
   const market = parseBinaryRoundSymbol(symbol);
   return (
-    <div className="oui-flex oui-items-center oui-gap-2 oui-py-1 oui-whitespace-nowrap">
+    <div className="oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap oui-py-1">
       <span
         aria-hidden="true"
         className={cn(
@@ -63,7 +63,7 @@ export const RoundSymbol = ({
         <div>
           {market ? t("prediction.marketName", market) : t("prediction.title")}
         </div>
-        <div className="oui-mt-1 oui-text-base-contrast-54 oui-tabular-nums">
+        <div className="oui-mt-1 oui-tabular-nums oui-text-base-contrast-54">
           {formatRoundBadge(round, market?.intervalSeconds)}
         </div>
       </div>
@@ -97,7 +97,7 @@ export const PredictionOrderSymbol = ({
           <Badge color="neutral" size="xs">
             {t(`common.${order.type}`)}
           </Badge>
-          <span className="oui-whitespace-nowrap oui-text-base-contrast-54 oui-tabular-nums">
+          <span className="oui-whitespace-nowrap oui-tabular-nums oui-text-base-contrast-54">
             {formatRoundBadge(order.round, market?.intervalSeconds)}
           </span>
         </div>

@@ -127,7 +127,7 @@ export const RoundNavigator: React.FC<{
     const outcome = roundOutcome(binaryRowRoundStart(row));
     return (
       <div className="oui-w-64 oui-p-2">
-        <div className="oui-flex oui-items-center oui-justify-between oui-gap-2 oui-text-sm oui-text-base-contrast">
+        <div className="oui-text-sm oui-flex oui-items-center oui-justify-between oui-gap-2 oui-text-base-contrast">
           <span className="oui-flex oui-items-center oui-gap-2">
             {status === "live" && <LiveIndicator />}
             {t(`prediction.rounds.${status}`)}
@@ -140,10 +140,10 @@ export const RoundNavigator: React.FC<{
               : formatCountdownWithHours(secondsUntil(row.expire_at, now))}
           </span>
         </div>
-        <div className="oui-mt-4 oui-text-xs oui-text-base-contrast-54">
+        <div className="oui-text-xs oui-mt-4 oui-text-base-contrast-54">
           {t("prediction.rounds.resolutionTime")}
         </div>
-        <div className="oui-mt-2 oui-grid oui-grid-cols-[56px_1fr] oui-gap-y-2 oui-text-xs oui-text-base-contrast">
+        <div className="oui-text-xs oui-mt-2 oui-grid oui-grid-cols-[56px_1fr] oui-gap-y-2 oui-text-base-contrast">
           <span>{chart.localOffsetLabel}</span>
           <span className="oui-text-end">
             {chart.resolutionLocalFormatter.format(new Date(row.expire_at))}
@@ -179,7 +179,7 @@ export const RoundNavigator: React.FC<{
             type="button"
             onClick={() => select(row)}
             className={cn(
-              "oui-flex oui-w-full oui-items-center oui-gap-2 oui-rounded-lg oui-px-3 oui-py-2.5 oui-text-start oui-text-xs hover:oui-bg-base-6",
+              "oui-text-xs oui-flex oui-w-full oui-items-center oui-gap-2 oui-rounded-lg oui-px-3 oui-py-2.5 oui-text-start hover:oui-bg-base-6",
               binaryRowRoundStart(row) === selectedRound
                 ? "oui-bg-base-6 oui-text-base-contrast"
                 : "oui-text-base-contrast-54",
@@ -201,7 +201,7 @@ export const RoundNavigator: React.FC<{
         </Tooltip>
       ))}
       {menu === "more" && pageCount > 1 && (
-        <div className="oui-flex oui-items-center oui-justify-between oui-gap-2 oui-p-2 oui-text-xs oui-text-base-contrast-54">
+        <div className="oui-text-xs oui-flex oui-items-center oui-justify-between oui-gap-2 oui-p-2 oui-text-base-contrast-54">
           <button
             type="button"
             disabled={currentPage === 0}
@@ -227,7 +227,7 @@ export const RoundNavigator: React.FC<{
   );
   return (
     <div className="oui-absolute oui-inset-x-0 oui-bottom-0 oui-z-20 oui-flex oui-h-14 oui-items-center oui-gap-2 oui-border-t oui-border-line-6 oui-bg-base-9 oui-px-3">
-      <div className="oui-flex oui-min-w-0 oui-flex-1 oui-items-center oui-gap-2 oui-overflow-x-auto oui-hide-scrollbar">
+      <div className="oui-hide-scrollbar oui-flex oui-min-w-0 oui-flex-1 oui-items-center oui-gap-2 oui-overflow-x-auto">
         <PopoverRoot
           open={menu === "past"}
           onOpenChange={(open) => setMenu(open ? "past" : null)}
@@ -236,7 +236,7 @@ export const RoundNavigator: React.FC<{
             <button
               type="button"
               disabled={navigation.past.length === 0}
-              className="oui-flex oui-shrink-0 oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-xs oui-text-base-contrast-54 disabled:oui-opacity-36"
+              className="disabled:oui-opacity-36 oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-base-contrast-54"
             >
               {t("prediction.rounds.past")}
               <CaretDownIcon size={14} color="inherit" />
@@ -279,7 +279,7 @@ export const RoundNavigator: React.FC<{
             align="start"
             side="top"
             sideOffset={8}
-            className="oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-custom-scrollbar oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
+            className="oui-custom-scrollbar oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
           >
             {renderMenu()}
           </PopoverContent>
@@ -303,7 +303,7 @@ export const RoundNavigator: React.FC<{
                   type="button"
                   onClick={() => select(row)}
                   className={cn(
-                    "oui-prediction-roundNavigator-round-btn oui-flex oui-shrink-0 oui-items-center oui-gap-2 oui-rounded-full oui-px-4 oui-py-2 oui-text-xs",
+                    "oui-prediction-roundNavigator-round-btn oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-2 oui-rounded-full oui-px-4 oui-py-2",
                     binaryRowRoundStart(row) === selectedRound
                       ? "oui-bg-base-5 oui-text-base-contrast"
                       : "oui-bg-base-7 oui-text-base-contrast-36",
@@ -319,7 +319,7 @@ export const RoundNavigator: React.FC<{
               key={`missing-${index}`}
               type="button"
               disabled
-              className="oui-hidden oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2 oui-text-xs oui-text-base-contrast-36 2xl:oui-block"
+              className="oui-text-xs oui-hidden oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2 oui-text-base-contrast-36 2xl:oui-block"
             >
               --
             </button>
@@ -336,7 +336,7 @@ export const RoundNavigator: React.FC<{
             <button
               type="button"
               disabled={future.length === 0}
-              className="oui-flex oui-shrink-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-xs oui-text-base-contrast-54 disabled:oui-opacity-36"
+              className="disabled:oui-opacity-36 oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-base-contrast-54"
             >
               {t("prediction.rounds.more")}
               <CaretDownIcon size={14} color="inherit" />
@@ -346,7 +346,7 @@ export const RoundNavigator: React.FC<{
             align="end"
             side="top"
             sideOffset={8}
-            className="oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-custom-scrollbar oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
+            className="oui-custom-scrollbar oui-max-h-72 oui-w-56 oui-overflow-y-auto oui-rounded-xl oui-bg-base-5 oui-p-2 oui-shadow-xl"
           >
             {renderMenu()}
           </PopoverContent>

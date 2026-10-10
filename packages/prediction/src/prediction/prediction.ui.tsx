@@ -101,7 +101,7 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
       </TabPanel>
       <TabPanel title={t("trading.tabs.data")} value="data">
         <div className="oui-h-[360px] oui-space-y-2 oui-rounded-b-xl oui-bg-base-9 oui-px-4 oui-pb-4">
-          <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
+          <div className="oui-text-xs oui-flex oui-w-full oui-items-center oui-justify-between">
             <Text intensity={36}>
               {t("prediction.chart.indexPrice", {
                 base: state.market?.base ?? "",
@@ -111,7 +111,7 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
               {state.currentPrice}
             </Text.numeral>
           </div>
-          <div className="oui-flex oui-w-full oui-items-center oui-justify-between oui-text-xs">
+          <div className="oui-text-xs oui-flex oui-w-full oui-items-center oui-justify-between">
             <Text intensity={36}>{t("prediction.chance")}</Text>
             <Text intensity={98}>{formatPercent(state.upChance)}</Text>
           </div>
@@ -204,7 +204,7 @@ export const Prediction: React.FC<
             <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
           </h1>
           {!isRequestedMarketUnavailable && state.market && (
-            <div className="oui-mt-0.5 oui-truncate oui-text-xs oui-font-normal oui-text-base-contrast-54">
+            <div className="oui-text-xs oui-mt-0.5 oui-truncate oui-font-normal oui-text-base-contrast-54">
               {formatRoundWindow(
                 state.selectedRow?.observation_start_at != null
                   ? state.selectedRow.observation_start_at / 1_000
@@ -239,7 +239,7 @@ export const Prediction: React.FC<
             <Spinner size="lg" color="primary" />
           ) : (
             <>
-              <p className="oui-max-w-sm oui-text-center oui-text-sm oui-font-normal oui-leading-relaxed oui-text-base-contrast-54">
+              <p className="oui-text-sm oui-max-w-sm oui-text-center oui-font-normal oui-leading-relaxed oui-text-base-contrast-54">
                 {t("prediction.rounds.unavailable")}
               </p>
             </>
@@ -263,7 +263,7 @@ export const Prediction: React.FC<
 
           <div className="oui-hidden oui-h-12 oui-w-px oui-flex-shrink-0 oui-bg-line-12 2xl:oui-block" />
 
-          <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 2xl:oui-grid 2xl:oui-flex 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
+          <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 2xl:oui-flex 2xl:oui-grid 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
             <DataItem
               label={t("prediction.chart.indexPrice", {
                 base: state.market?.base ?? "",

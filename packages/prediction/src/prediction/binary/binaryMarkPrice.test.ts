@@ -18,10 +18,13 @@ test("mark prices retain zero/one and use exact outcome complements", () => {
 });
 
 test("round subscription rejects invalid and late messages across round changes", () => {
-  const callbacks = new Map<string, (message: any) => void>();
+  const callbacks = new Map<string, (message: unknown) => void>();
   const unsubscribed: string[] = [];
   const stream = {
-    subscribe(topic: string, handlers: any) {
+    subscribe(
+      topic: string,
+      handlers: { [event: string]: (message: unknown) => void },
+    ) {
       callbacks.set(topic, handlers.onMessage);
       const envelope = { data: { symbol: "A", price: 0 } };
       assert.equal(handlers.formatter(envelope), envelope);

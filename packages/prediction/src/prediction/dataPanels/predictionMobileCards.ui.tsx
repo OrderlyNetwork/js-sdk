@@ -25,7 +25,7 @@ const Field: React.FC<{ label: string; children: React.ReactNode }> = ({
 }) => (
   <div className="oui-min-w-0">
     <div className="oui-text-2xs oui-text-base-contrast-54">{label}</div>
-    <div className="oui-mt-1 oui-text-sm oui-text-base-contrast">
+    <div className="oui-text-sm oui-mt-1 oui-text-base-contrast">
       {children}
     </div>
   </div>

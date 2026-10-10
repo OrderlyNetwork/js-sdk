@@ -91,18 +91,18 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
           </Text>
         </div>
       </td>
-      <td className="oui-px-2 oui-text-end oui-text-xs">
+      <td className="oui-text-xs oui-px-2 oui-text-end">
         {price == null
           ? "--"
           : price.toFixed(
               new Decimal(market.currentRow.quote_tick ?? 0.01).decimalPlaces(),
             )}
       </td>
-      <td className="oui-px-2 oui-text-end oui-text-xs">
+      <td className="oui-text-xs oui-px-2 oui-text-end">
         {price == null ? "--" : formatPercent(price * 100)}
       </td>
-      <td className="oui-px-2 oui-text-end oui-text-xs">--</td>
-      <td className="oui-px-2 oui-text-end oui-text-xs">
+      <td className="oui-text-xs oui-px-2 oui-text-end">--</td>
+      <td className="oui-text-xs oui-px-2 oui-text-end">
         {formatCountdown(seconds)}
       </td>
     </tr>
@@ -172,7 +172,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
           <col className="oui-w-[16%]" />
           <col className="oui-w-[18%]" />
         </colgroup>
-        <thead className="oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-text-xs oui-text-base-contrast-54">
+        <thead className="oui-text-xs oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-text-base-contrast-54">
           <tr className="oui-h-9">
             <th className="oui-px-2 oui-text-start">{t("common.symbol")}</th>
             <th className="oui-px-2 oui-text-end">

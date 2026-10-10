@@ -354,7 +354,7 @@ export const PriceChart: React.FC<{
   };
 
   return (
-    <div className="oui-prediction-priceChart oui-relative oui-h-[470px] oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-p-4 md:oui-h-[420px] lg:oui-h-[360px] 2xl:oui-h-[calc(100vh-330px)] 2xl:oui-min-h-[480px] 2xl:oui-max-h-[640px]">
+    <div className="oui-prediction-priceChart oui-relative oui-h-[470px] oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-p-4 md:oui-h-[420px] lg:oui-h-[360px] 2xl:oui-h-[calc(100vh-330px)] 2xl:oui-max-h-[640px] 2xl:oui-min-h-[480px]">
       <style>{`
         .oui-prediction-priceChart { --oui-prediction-chart-top: 180px; }
         @media (min-width: 390px) {
@@ -385,14 +385,14 @@ export const PriceChart: React.FC<{
           the chart hover layer (z-20 @ top-20) so the action remains
           clickable over the chart. */}
       <div className="oui-relative oui-z-30 oui-flex oui-flex-wrap oui-items-start oui-gap-x-3 oui-gap-y-2 min-[480px]:oui-gap-x-4 2xl:oui-items-center 2xl:oui-gap-x-8">
-        <div className="oui-w-full min-[390px]:oui-flex-none min-[390px]:oui-w-auto">
+        <div className="oui-w-full min-[390px]:oui-w-auto min-[390px]:oui-flex-none">
           <Tooltip
             content={t("prediction.chart.priceToBeatHint")}
             className="oui-max-w-[330px] oui-bg-base-6"
             arrow={{ className: "oui-fill-base-6" }}
             delayDuration={300}
           >
-            <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-xs oui-text-base-contrast-54">
+            <span className="oui-text-xs oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-base-contrast-54">
               {t("prediction.chart.priceToBeat")}
             </span>
           </Tooltip>
@@ -416,7 +416,7 @@ export const PriceChart: React.FC<{
               arrow={{ className: "oui-fill-base-6" }}
               delayDuration={300}
             >
-              <span className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-xs oui-text-base-contrast-54">
+              <span className="oui-text-xs oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-base-contrast-54">
                 {t("prediction.currentPrice")}
               </span>
             </Tooltip>
@@ -435,7 +435,7 @@ export const PriceChart: React.FC<{
             {!isFutureRound && difference && (
               <span
                 className={cn(
-                  "oui-whitespace-nowrap oui-text-2xs oui-tabular-nums min-[480px]:oui-text-xs",
+                  "oui-text-2xs oui-whitespace-nowrap oui-tabular-nums min-[480px]:oui-text-xs",
                   isUp ? "oui-text-trade-profit" : "oui-text-trade-loss",
                 )}
               >
@@ -467,7 +467,7 @@ export const PriceChart: React.FC<{
             )}
           </div>
         </div>
-        <div className="oui-order-first oui-flex oui-w-full oui-justify-end 2xl:oui-w-auto 2xl:oui-ms-auto 2xl:oui-flex-none 2xl:oui-order-none">
+        <div className="oui-order-first oui-flex oui-w-full oui-justify-end 2xl:oui-order-none 2xl:oui-ms-auto 2xl:oui-w-auto 2xl:oui-flex-none">
           {isFutureRound || status === "live" ? (
             <CountdownDisplay
               seconds={isFutureRound ? futureCountdown : countdown}
@@ -482,7 +482,7 @@ export const PriceChart: React.FC<{
             <button
               type="button"
               onClick={onGoToLiveMarket}
-              className="oui-flex oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2.5 oui-text-sm oui-text-base-contrast-80 hover:oui-bg-base-6 2xl:oui-px-3 2xl:oui-py-2 2xl:oui-text-xs"
+              className="oui-text-sm oui-flex oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2.5 oui-text-base-contrast-80 2xl:oui-text-xs hover:oui-bg-base-6 2xl:oui-px-3 2xl:oui-py-2"
             >
               <LiveIndicator />
               {t("prediction.rounds.goToLiveMarket")}
@@ -626,7 +626,7 @@ export const PriceChart: React.FC<{
                       : "translateX(12px)",
                 }}
               >
-                <div className="oui-whitespace-nowrap oui-text-sm oui-font-normal oui-tabular-nums oui-text-base-contrast-54">
+                <div className="oui-text-sm oui-whitespace-nowrap oui-font-normal oui-tabular-nums oui-text-base-contrast-54">
                   {intl.chartHoverTimeFormatter.format(
                     new Date(hoveredPoint.timestamp),
                   )}
@@ -641,7 +641,7 @@ export const PriceChart: React.FC<{
         {chartMode === "price" && chartPoints.length > 0 && (
           <span
             className={cn(
-              "oui-pointer-events-none oui-absolute oui-z-10 oui-h-3 oui-w-3 -oui-translate-x-1/2 -oui-translate-y-1/2 oui-rounded-full",
+              "oui-pointer-events-none oui-absolute oui-z-10 oui-size-3 -oui-translate-x-1/2 -oui-translate-y-1/2 oui-rounded-full",
               isPastRound
                 ? "oui-bg-base-contrast oui-shadow-[0_0_0_6px_rgb(var(--oui-color-base-foreground)/0.24)]"
                 : "oui-bg-primary oui-shadow-[0_0_0_6px_rgb(var(--oui-color-primary)/0.24)]",
@@ -656,7 +656,7 @@ export const PriceChart: React.FC<{
           ({ ratio, value }) => (
             <span
               key={ratio}
-              className="oui-pointer-events-none oui-absolute oui-end-4 oui-z-10 -oui-translate-y-1/2 oui-text-xs oui-tabular-nums oui-text-base-contrast-36"
+              className="oui-text-xs oui-pointer-events-none oui-absolute oui-end-4 oui-z-10 -oui-translate-y-1/2 oui-tabular-nums oui-text-base-contrast-36"
               style={{
                 top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${ratio})`,
               }}
@@ -671,7 +671,7 @@ export const PriceChart: React.FC<{
         )}
         {!isFutureRound && chartOpeningPrice != null && (
           <div
-            className="oui-pointer-events-none oui-absolute oui-end-3 oui-z-10 oui-flex -oui-translate-y-1/2 oui-items-center oui-rounded-e-md oui-bg-base-3 oui-px-3 oui-py-1 oui-text-xs oui-text-base-contrast"
+            className="oui-text-xs oui-pointer-events-none oui-absolute oui-end-3 oui-z-10 oui-flex -oui-translate-y-1/2 oui-items-center oui-rounded-e-md oui-bg-base-3 oui-px-3 oui-py-1 oui-text-base-contrast"
             style={{
               top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${chart.openingRatio})`,
             }}
@@ -679,7 +679,7 @@ export const PriceChart: React.FC<{
             <span className="oui-absolute -oui-start-2 oui-top-1/2 -oui-translate-y-1/2 oui-border-y-[12px] oui-border-e-[10px] oui-border-y-transparent oui-border-e-base-3" />
             {t("prediction.chart.target")}
             {liveTargetDirection && (
-              <span className="oui-prediction-target-direction oui-ms-1 oui-inline-flex oui-h-5 oui-w-5 oui-flex-col oui-items-center oui-justify-center">
+              <span className="oui-prediction-target-direction oui-ms-1 oui-inline-flex oui-size-5 oui-flex-col oui-items-center oui-justify-center">
                 {liveTargetDirection === "down" ? (
                   <>
                     <ChevronDownIcon
@@ -721,7 +721,7 @@ export const PriceChart: React.FC<{
         )}
         <div
           ref={xLabelsRef}
-          className="oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-z-10 oui-h-8 oui-text-xs oui-tabular-nums oui-text-base-contrast-36"
+          className="oui-text-xs oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-z-10 oui-h-8 oui-tabular-nums oui-text-base-contrast-36"
           style={{ width: `calc((100% - 32px) * ${plotWidth / width})` }}
         >
           {visibleXTicks.map(({ timestamp, ratio }) => (
@@ -738,7 +738,7 @@ export const PriceChart: React.FC<{
           ))}
         </div>
         {chartPoints.length === 0 && chartCandles.length === 0 && (
-          <div className="oui-pointer-events-none oui-absolute oui-inset-x-4 oui-bottom-20 oui-top-[var(--oui-prediction-chart-top)] oui-flex oui-items-center oui-justify-center oui-text-sm oui-text-base-contrast-36">
+          <div className="oui-text-sm oui-pointer-events-none oui-absolute oui-inset-x-4 oui-bottom-20 oui-top-[var(--oui-prediction-chart-top)] oui-flex oui-items-center oui-justify-center oui-text-base-contrast-36">
             {t("prediction.noData")}
           </div>
         )}

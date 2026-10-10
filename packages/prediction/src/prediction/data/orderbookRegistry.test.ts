@@ -3,8 +3,8 @@ import { test } from "node:test";
 import { EMPTY_BOOK, getOrderbookResource } from "./orderbookRegistry";
 
 function socket() {
-  const snapshots: ((message: any) => void)[] = [];
-  const updates: ((message: any) => void)[] = [];
+  const snapshots: ((message: unknown) => void)[] = [];
+  const updates: ((message: unknown) => void)[] = [];
   let subscriptions = 0,
     releases = 0;
   return {
@@ -16,14 +16,23 @@ function socket() {
     get releases() {
       return releases;
     },
-    subscribe: (_input: unknown, options: any) => {
+    subscribe: (
+      _input: unknown,
+      options: {
+        onSnapshot: (message: unknown) => void;
+        onUpdate: (message: unknown) => void;
+      },
+    ) => {
       subscriptions++;
       updates.push(options.onMessage);
       return () => {
         releases++;
       };
     },
-    onceSubscribe: (_input: unknown, options: any) => {
+    onceSubscribe: (
+      _input: unknown,
+      options: { onSnapshot: (message: unknown) => void },
+    ) => {
       snapshots.push(options.onMessage);
       return () => {};
     },
