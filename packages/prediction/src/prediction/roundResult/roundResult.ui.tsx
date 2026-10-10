@@ -2,11 +2,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn, Text } from "@orderly.network/ui";
 import type { BinaryHistoryRecord } from "../binary/binaryHistory";
-import type { BinaryInfoDetail } from "../binary/binaryInfo";
-import {
-  hasBinaryPriceEvidence,
-  isBinarySettlementComplete,
-} from "../binary/binarySettlement";
+import { isBinarySettlementComplete } from "../binary/binarySettlement";
 import { usePredictionFormatters } from "../predictionShared";
 import type { RoundResultState } from "./roundResult.script";
 
@@ -187,52 +183,6 @@ export function BinarySettlementDetailsUI({
   );
 }
 
-export function BinaryPriceEvidenceUI({ row }: { row?: BinaryInfoDetail }) {
-  const { t } = useTranslation();
-  const { formatTableTime } = usePredictionFormatters();
-  const evidence = hasBinaryPriceEvidence(row)
-    ? row?.price_evidence
-    : undefined;
-  return (
-    <div className="oui-space-y-4 oui-p-4">
-      <DetailRow label={t("common.symbol")}>{row?.symbol ?? "--"}</DetailRow>
-      <DetailRow label={t("prediction.resolution.indexSymbol")}>
-        {row?.index_price_symbol ?? "--"}
-      </DetailRow>
-      {!evidence ? (
-        <p role="status" className="oui-text-sm oui-text-base-contrast-54">
-          {t("prediction.resolution.evidenceUnavailable")}
-        </p>
-      ) : (
-        (
-          [
-            ["s0", "prediction.openingPrice"],
-            ["s1", "prediction.finalPrice"],
-          ] as const
-        ).map(([key, label]) => (
-          <div
-            key={key}
-            className="oui-space-y-3 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
-          >
-            <DetailRow label={t(label)}>
-              <Text.numeral dp={8} prefix="$">
-                {evidence[key].price}
-              </Text.numeral>
-            </DetailRow>
-            <DetailRow label={t("common.time")}>
-              {formatTableTime(evidence[key].timestamp)} (
-              {evidence[key].timestamp})
-            </DetailRow>
-            <DetailRow label={t("prediction.resolution.source")}>
-              {evidence[key].source}
-            </DetailRow>
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
-
 export function RoundResultUI(
   props: RoundResultState & { marketName: string; intervalSeconds: number },
 ) {
@@ -300,25 +250,20 @@ export function RoundResultUI(
         conflict={props.conflict}
         conflictedRecordKeys={props.conflictedRecordKeys}
       />
-      <div className="oui-flex oui-flex-wrap oui-gap-2">
-        <Button size="sm" variant="outlined" onClick={props.showEvidence}>
-          {t("prediction.resolution.priceEvidence")}
+      {props.records.length > 0 && (
+        <Button size="sm" variant="outlined" onClick={props.showSettlement}>
+          {t("prediction.resolution.settlementDetails")}
         </Button>
-        {props.records.length > 0 && (
-          <Button size="sm" variant="outlined" onClick={props.showSettlement}>
-            {t("prediction.resolution.settlementDetails")}
-          </Button>
-        )}
-      </div>
-      {!props.evidenceAvailable && (
+      )}
+      {!props.detailAvailable && (
         <div className="oui-text-xs oui-flex oui-items-center oui-justify-between oui-gap-2 oui-font-normal oui-text-base-contrast-54">
-          <span>{t("prediction.resolution.evidenceUnavailable")}</span>
-          {props.evidenceFailed && (
+          <span>{t("prediction.resolution.detailsUnavailable")}</span>
+          {props.detailFailed && (
             <Button
               size="sm"
               variant="text"
-              disabled={props.evidenceLoading}
-              onClick={props.retryEvidence}
+              disabled={props.detailLoading}
+              onClick={props.retryDetail}
             >
               {t("prediction.resolution.retry")}
             </Button>

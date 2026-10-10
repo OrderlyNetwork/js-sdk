@@ -120,17 +120,14 @@ export const prediction = {
   "prediction.resolution.fundsProcessing": "Funds are being credited",
   "prediction.resolution.segmentComplete": "Position segment settled",
   "prediction.resolution.settlementDetails": "Settlement details",
-  "prediction.resolution.priceEvidence": "Price evidence",
-  "prediction.resolution.evidenceUnavailable":
-    "Price evidence is not available yet.",
+  "prediction.resolution.detailsUnavailable":
+    "Round details are not available yet.",
   "prediction.resolution.historyUnavailable":
     "Unable to load personal settlement records.",
   "prediction.resolution.historyLoading":
     "Loading personal settlement records…",
   "prediction.resolution.dataIncomplete": "Settlement data is incomplete.",
   "prediction.resolution.investment": "Investment",
-  "prediction.resolution.indexSymbol": "Index price symbol",
-  "prediction.resolution.source": "Source",
   "prediction.resolution.retry": "Retry",
   "prediction.resolution.nextRound": "Go to next round",
   "prediction.strikePending": "Strike has not been determined yet.",

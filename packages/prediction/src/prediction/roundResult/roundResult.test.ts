@@ -6,11 +6,7 @@ import type { API } from "@orderly.network/types";
 import { normalizeBinaryHistory } from "../binary/binaryHistory";
 import type { BinaryInfoDetail } from "../binary/binaryInfo";
 import type { RoundResultState } from "./roundResult.script";
-import {
-  BinaryPriceEvidenceUI,
-  BinarySettlementDetailsUI,
-  RoundResultUI,
-} from "./roundResult.ui";
+import { BinarySettlementDetailsUI, RoundResultUI } from "./roundResult.ui";
 
 const t0 = Date.UTC(2026, 9, 9, 12);
 const row = {
@@ -51,12 +47,11 @@ const props = (overrides: Partial<RoundResultState> = {}) =>
     status: undefined,
     historyLoading: false,
     historyFailed: false,
-    evidenceAvailable: false,
-    evidenceLoading: false,
-    evidenceFailed: false,
+    detailAvailable: false,
+    detailLoading: false,
+    detailFailed: false,
     nextRoundAvailable: false,
-    retryEvidence: () => {},
-    showEvidence: () => {},
+    retryDetail: () => {},
     showSettlement: () => {},
     goToNextRound: () => {},
     ...overrides,
@@ -169,26 +164,4 @@ test("legacy whole-query conflicts still hide unverified quantities", () => {
     }),
   );
   assert.match(text(html), /Quantity--Investment--/);
-});
-
-test("evidence detail uses official projected boundaries and never fabricates missing evidence", () => {
-  const evidence = {
-    ...row,
-    price_evidence: {
-      s0: { price: 100, timestamp: t0, source: "live" as const },
-      s1: { price: 101, timestamp: t0 + 300_000, source: "live" as const },
-    },
-  };
-  const html = renderToStaticMarkup(
-    createElement(BinaryPriceEvidenceUI, { row: evidence }),
-  );
-  assert.match(text(html), new RegExp(String(t0)));
-  assert.match(text(html), new RegExp(String(t0 + 300_000)));
-  assert.match(text(html), /Source.*live/);
-  assert.match(text(html), /PERP_BTC_USDC/);
-  const missing = renderToStaticMarkup(
-    createElement(BinaryPriceEvidenceUI, { row }),
-  );
-  assert.match(text(missing), /Price evidence is not available yet/);
-  assert.doesNotMatch(text(missing), /Source.*live/);
 });

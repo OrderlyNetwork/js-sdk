@@ -9,17 +9,11 @@ import {
 import { RoundOrderStatusCard } from "../orderEntry";
 import type { PredictionState } from "../prediction.script";
 import {
-  BinaryEvidenceDialogId,
-  BinaryEvidenceSheetId,
   BinarySettlementDialogId,
   BinarySettlementSheetId,
   useRoundResultScript,
 } from "./roundResult.script";
-import {
-  BinaryPriceEvidenceUI,
-  BinarySettlementDetailsUI,
-  RoundResultUI,
-} from "./roundResult.ui";
+import { BinarySettlementDetailsUI, RoundResultUI } from "./roundResult.ui";
 
 // Modal snapshots must not expose personal records after an account switch.
 function SettlementModal(
@@ -35,13 +29,6 @@ function SettlementModal(
     <BinarySettlementDetailsUI {...props} />
   ) : null;
 }
-registerSimpleDialog(BinaryEvidenceDialogId, BinaryPriceEvidenceUI, {
-  size: "md",
-  title: () => i18n.t("prediction.resolution.priceEvidence"),
-});
-registerSimpleSheet(BinaryEvidenceSheetId, BinaryPriceEvidenceUI, {
-  title: () => i18n.t("prediction.resolution.priceEvidence"),
-});
 registerSimpleDialog(BinarySettlementDialogId, SettlementModal, {
   size: "md",
   title: () => i18n.t("prediction.resolution.settlementDetails"),
@@ -79,13 +66,13 @@ export function RoundResultWidget({
         isRoundInSnapshot={state.isRoundInSnapshot}
       />
       <div className="oui-space-y-3 oui-px-4">
-        {props.evidenceFailed && state.isRoundInSnapshot && (
+        {props.detailFailed && state.isRoundInSnapshot && (
           <Button
             fullWidth
             size="sm"
             variant="outlined"
-            disabled={props.evidenceLoading}
-            onClick={props.retryEvidence}
+            disabled={props.detailLoading}
+            onClick={props.retryDetail}
           >
             {t("prediction.resolution.retry")}
           </Button>

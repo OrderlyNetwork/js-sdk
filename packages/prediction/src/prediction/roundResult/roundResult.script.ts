@@ -8,16 +8,11 @@ import {
 } from "../binary/binarySettlement";
 import type { PredictionState } from "../prediction.script";
 
-export const BinaryEvidenceDialogId = "BinaryEvidenceDialog";
-export const BinaryEvidenceSheetId = "BinaryEvidenceSheet";
 export const BinarySettlementDialogId = "BinarySettlementDialog";
 export const BinarySettlementSheetId = "BinarySettlementSheet";
 
 export function useRoundResultScript(state: PredictionState) {
   const { isMobile } = useScreen();
-  const evidenceModal = useModal(
-    isMobile ? BinaryEvidenceSheetId : BinaryEvidenceDialogId,
-  );
   const settlementModal = useModal(
     isMobile ? BinarySettlementSheetId : BinarySettlementDialogId,
   );
@@ -33,10 +28,6 @@ export function useRoundResultScript(state: PredictionState) {
     personal.expiryRecords,
     personal.conflict,
     state.pendingSettlementSymbols.includes(state.selectedRow?.symbol ?? ""),
-  );
-  const evidenceArgs = useMemo(
-    () => ({ row: state.selectedRow }),
-    [state.selectedRow],
   );
   const settlementArgs = useMemo(
     () => ({
@@ -59,35 +50,23 @@ export function useRoundResultScript(state: PredictionState) {
 
   // Keep open details current; close them when their owner or selected round changes.
   useEffect(() => {
-    if (evidenceModal.visible) evidenceModal.updateArgs(evidenceArgs);
-  }, [evidenceModal.visible, evidenceModal.updateArgs, evidenceArgs]);
-  useEffect(() => {
     if (settlementModal.visible) settlementModal.updateArgs(settlementArgs);
   }, [settlementModal.visible, settlementModal.updateArgs, settlementArgs]);
   useEffect(
     () => () => {
-      void evidenceModal.hide();
       void settlementModal.hide();
     },
-    [
-      state.accountId,
-      state.selectedRow?.symbol,
-      evidenceModal.hide,
-      settlementModal.hide,
-    ],
+    [state.accountId, state.selectedRow?.symbol, settlementModal.hide],
   );
 
   return {
     row: state.selectedRow,
     outcome: publishedBinaryOutcome(state.selectedRow),
-    evidenceAvailable: hasBinaryPriceEvidence(state.selectedRow),
-    evidenceLoading: state.roundDetailLoading,
-    evidenceFailed: Boolean(state.roundDetailError),
-    retryEvidence: () => {
+    detailAvailable: hasBinaryPriceEvidence(state.selectedRow),
+    detailLoading: state.roundDetailLoading,
+    detailFailed: Boolean(state.roundDetailError),
+    retryDetail: () => {
       void state.refreshRoundDetail().catch(() => undefined);
-    },
-    showEvidence: () => {
-      void evidenceModal.show(evidenceArgs).catch(() => undefined);
     },
     showSettlement: () => {
       void settlementModal.show(settlementArgs).catch(() => undefined);
