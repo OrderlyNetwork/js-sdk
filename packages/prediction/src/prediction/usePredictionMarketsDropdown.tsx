@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@orderly.network/hooks";
 import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
 import { usePredictionMarkets } from "./hooks/usePredictionMarkets";
+import type { UsePredictionMarketsOptions } from "./prediction.types";
 import { usePredictionFavorites } from "./predictionFavorites";
 import {
   PredictionMarketPanelWidget,
@@ -10,8 +11,9 @@ import {
 /** Adds the prediction market to the existing Perps market dropdown. */
 export const usePredictionMarketsDropdown = (
   onPredictionSelect?: (marketId: string) => void,
+  options: UsePredictionMarketsOptions = {},
 ): DropDownMarketsExtensionProps => {
-  const { markets, isLoading } = usePredictionMarkets();
+  const { markets, isLoading } = usePredictionMarkets(options);
   const [, saveMarket] = useLocalStorage<string | null>(
     "orderly_prediction_selected_market",
     null,

@@ -8,8 +8,10 @@ import { usePredictionFilters } from "../predictionFilters.script";
 import { matchesPredictionOrderFilters } from "./orders/matchesPredictionOrderFilters";
 import { PredictionOrderCell } from "./orders/predictionOrderCell.ui";
 import { PredictionOrdersTable } from "./orders/predictionOrdersTable.widget";
+import type { PredictionPerpsPanelProps } from "./perpsPanel.types";
 import { shouldLoadMoreProductOrders } from "./productOrderPagination";
 import {
+  buildProductFilterItems,
   toPredictionSide,
   toPredictionStatus,
   useAllProductOrdersTableScript,
@@ -18,15 +20,17 @@ import {
 } from "./sharedProductOrdersPanel.script";
 import { useScopedPredictionAccount } from "./useScopedPredictionAccount";
 
-const AllProductOrdersTable: React.FC<{
-  state: PredictionAccountPanelState;
-  mode: ProductOrderMode;
-  includePrediction: boolean;
-  productFilterItems: DataFilterItem[];
-  onProductFilter: (filter: { name: string; value: unknown }) => void;
-  perpsSymbol?: string;
-  predictionUnderlyingSymbol?: string;
-}> = ({
+const AllProductOrdersTable: React.FC<
+  PredictionPerpsPanelProps & {
+    state: PredictionAccountPanelState;
+    mode: ProductOrderMode;
+    includePrediction: boolean;
+    productFilterItems: DataFilterItem[];
+    onProductFilter: (filter: { name: string; value: unknown }) => void;
+    perpsSymbol?: string;
+    predictionUnderlyingSymbol?: string;
+  }
+> = ({
   state,
   mode,
   includePrediction,
@@ -34,6 +38,9 @@ const AllProductOrdersTable: React.FC<{
   onProductFilter,
   perpsSymbol,
   predictionUnderlyingSymbol,
+  onSymbolChange,
+  sharePnLConfig,
+  pnlNotionalDecimalPrecision,
 }) => {
   const { t } = useTranslation();
   const [requestedPage, setRequestedPage] = useState(1);
@@ -51,12 +58,12 @@ const AllProductOrdersTable: React.FC<{
     perpsSymbol,
     predictionUnderlyingSymbol,
     includePrediction,
+    onSymbolChange,
+    sharePnLConfig,
+    pnlNotionalDecimalPrecision,
   });
   const filters = usePredictionFilters(mode === "history");
-  const perpsOnFilter = orderListState.onFilter as (filter: {
-    name: string;
-    value: unknown;
-  }) => void;
+  const perpsOnFilter = orderListState.onFilter;
   const onSharedFilter = (filter: { name: string; value: unknown }) => {
     setRequestedPage(1);
     perpsOnFilter(filter);
@@ -75,8 +82,7 @@ const AllProductOrdersTable: React.FC<{
     }
   };
 
-  const perpsLoaded =
-    (orderListState.dataSource as unknown[] | undefined)?.length ?? 0;
+  const perpsLoaded = orderListState.dataSource?.length ?? 0;
   useEffect(() => {
     if (!includePrediction || predictionUnderlyingSymbol) return;
     if (
@@ -121,7 +127,7 @@ const AllProductOrdersTable: React.FC<{
   return (
     <div className="oui-flex oui-h-full oui-min-h-0 oui-flex-col">
       <DesktopOrderList
-        {...(orderListState as React.ComponentProps<typeof DesktopOrderList>)}
+        {...orderListState}
         onFilter={onSharedFilter}
         cancelAllDisabled={cancelAllDisabled}
         additionalFilterItems={productFilterItems}
@@ -141,12 +147,8 @@ const AllProductOrdersTable: React.FC<{
           predictionUnderlyingSymbol,
           orderListState.orderStatus,
           orderListState.ordersSide,
-          (
-            orderListState.dateRange as { from?: Date } | undefined
-          )?.from?.getTime(),
-          (
-            orderListState.dateRange as { to?: Date } | undefined
-          )?.to?.getTime(),
+          orderListState.dateRange?.from?.getTime(),
+          orderListState.dateRange?.to?.getTime(),
         ].join(":")}
         supplementalRows={
           includePrediction
@@ -179,30 +181,34 @@ const AllProductOrdersTable: React.FC<{
   );
 };
 
-export const SharedProductOrdersPanel: React.FC<{
+export interface SharedProductOrdersPanelProps extends PredictionPerpsPanelProps {
   state: PredictionAccountPanelState;
   mode: ProductOrderMode;
   perpsSymbol?: string;
   predictionUnderlyingSymbol?: string;
-}> = ({ state, mode, perpsSymbol, predictionUnderlyingSymbol }) => {
+}
+
+export const SharedProductOrdersPanel: React.FC<
+  SharedProductOrdersPanelProps
+> = ({
+  state,
+  mode,
+  perpsSymbol,
+  predictionUnderlyingSymbol,
+  onSymbolChange,
+  sharePnLConfig,
+  pnlNotionalDecimalPrecision,
+}) => {
   const { t } = useTranslation();
   const scopedState = useScopedPredictionAccount(
     state,
     predictionUnderlyingSymbol,
   );
   const { instrument, onProductFilter } = useSharedProductOrdersPanelScript();
-  const productFilterItems: DataFilterItem[] = [
-    {
-      type: "select",
-      name: "instrument",
-      value: instrument,
-      options: [
-        { label: t("prediction.filter.allInstruments"), value: "all" },
-        { label: t("common.perps"), value: "perps" },
-        { label: t("prediction.title"), value: "prediction" },
-      ],
-    },
-  ];
+  const productFilterItems: DataFilterItem[] = buildProductFilterItems(
+    t,
+    instrument,
+  );
 
   const content =
     instrument === "prediction" ? (
@@ -215,6 +221,9 @@ export const SharedProductOrdersPanel: React.FC<{
       />
     ) : (
       <AllProductOrdersTable
+        onSymbolChange={onSymbolChange}
+        sharePnLConfig={sharePnLConfig}
+        pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
         state={scopedState}
         mode={mode}
         perpsSymbol={perpsSymbol}

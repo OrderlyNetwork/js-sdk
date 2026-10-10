@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { OrderSide, OrderStatus } from "@orderly.network/types";
+import { OrderSide } from "@orderly.network/types";
 import type { DataFilterItem } from "@orderly.network/ui";
+import { toOrderStatus } from "../../binary/binaryOrderDisplay";
 import type { PredictionAccountPanelState } from "../../prediction.types";
 import { useProductOrderCancelAll } from "../useProductOrderCancelAll";
 import {
@@ -30,7 +31,24 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
     instrument: "prediction",
     predictionUnderlyingSymbol: props.predictionUnderlyingSymbol,
   });
-  const [requestedPage, setRequestedPage] = useState(1);
+  const scope = JSON.stringify([
+    mode,
+    filters.side,
+    filters.status,
+    filters.outcome,
+    filters.dateRange.from?.getTime(),
+    filters.dateRange.to?.getTime(),
+    props.predictionUnderlyingSymbol,
+  ]);
+  const [paginationRequest, setPaginationRequest] = useState({
+    scope,
+    page: 1,
+  });
+  const requestedPage =
+    paginationRequest.scope === scope ? paginationRequest.page : 1;
+  const setRequestedPage = (page: number) =>
+    setPaginationRequest({ scope, page });
+  const apiStatus = toOrderStatus(filters.status);
   const binary = useBinaryOrderRows({
     mode,
     underlyingSymbol: props.predictionUnderlyingSymbol,
@@ -40,16 +58,7 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
         : filters.side === "sell"
           ? OrderSide.SELL
           : undefined,
-    status:
-      mode === "history"
-        ? filters.status === "pending"
-          ? OrderStatus.INCOMPLETE
-          : filters.status === "filled"
-            ? OrderStatus.FILLED
-            : filters.status === "cancelled"
-              ? OrderStatus.CANCELLED
-              : undefined
-        : undefined,
+    status: mode === "history" && apiStatus !== "all" ? apiStatus : undefined,
     dateRange: filters.dateRange,
   });
   const clientFiltered = Boolean(
@@ -72,16 +81,6 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
     clientFiltered,
     requestedPage,
   ]);
-  useEffect(
-    () => setRequestedPage(1),
-    [
-      filters.side,
-      filters.status,
-      filters.outcome,
-      filters.dateRange,
-      props.predictionUnderlyingSymbol,
-    ],
-  );
   return (
     <PredictionOrdersTableUI
       {...props}

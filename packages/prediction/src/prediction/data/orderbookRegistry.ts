@@ -1,4 +1,5 @@
 import { Decimal } from "@orderly.network/utils";
+import { complementPrice } from "../binary/binaryOrderRules";
 
 /** [price, quantity] level of the 0–1 USDC probability book. */
 export type BinaryBookLevel = [number, number];
@@ -22,10 +23,7 @@ export const EMPTY_BOOK: BinaryOrderBook = {
 };
 
 const deriveDown = (levels: BinaryBookLevel[]): BinaryBookLevel[] =>
-  levels.map(([price, quantity]) => [
-    new Decimal(1).sub(price).toNumber(),
-    quantity,
-  ]);
+  levels.map(([price, quantity]) => [complementPrice(price), quantity]);
 
 /**
  * Merge an incremental update into one side of the book: price-keyed replace,

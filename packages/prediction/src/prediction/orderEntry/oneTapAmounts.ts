@@ -1,4 +1,4 @@
-import type { PredictionOutcome } from "../prediction.script";
+import type { PredictionOutcome } from "../prediction.types";
 
 export type OneTapAmounts = Record<PredictionOutcome, number[]>;
 
@@ -63,3 +63,18 @@ export const alignOneTapAmounts = (
     down: fillRows(down, up),
   };
 };
+
+/** Validate editor text before conversion so unsupported precision is never silently rounded. */
+export function parseOneTapDraft(
+  draft: Record<PredictionOutcome, string[]>,
+): OneTapAmounts | undefined {
+  const amounts = { up: draft.up.map(Number), down: draft.down.map(Number) };
+  return amounts.up.length === amounts.down.length &&
+    (["up", "down"] as const).every(
+      (outcome) =>
+        validOneTapAmounts(amounts[outcome]) &&
+        draft[outcome].every((value) => /^\d+(\.\d{1,2})?$/.test(value.trim())),
+    )
+    ? amounts
+    : undefined;
+}

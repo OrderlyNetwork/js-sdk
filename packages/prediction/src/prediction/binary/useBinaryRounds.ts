@@ -220,7 +220,10 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
     setSelectedRoundInput(undefined);
   }, []);
 
-  const nextTradableRow = nextTradableBinaryRound(marketRows, now);
+  const nextTradableRow = useMemo(
+    () => nextTradableBinaryRound(marketRows, now),
+    [marketRows, now],
+  );
   const goToNextRound = useCallback(() => {
     const row = nextTradableBinaryRound(marketRows, getTimestamp());
     if (!marketId || !row) return false;
@@ -228,9 +231,10 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
     return true;
   }, [marketId, marketRows]);
 
-  return {
-    rows,
-    marketRows:
+  // Selected-row view of the market's rows: replace the snapshot row with the
+  // detail-merged copy, or append an expired round that left the snapshot.
+  const displayRows = useMemo(
+    () =>
       selectedRow &&
       selectedRow.expire_at <= now &&
       !roundByStart.has(binaryRowRoundStart(selectedRow))
@@ -238,6 +242,12 @@ export const useBinaryRounds = ({ active }: UseBinaryRoundsArgs) => {
         : marketRows.map((row) =>
             row.symbol === selectedRow?.symbol ? selectedRow : row,
           ),
+    [marketRows, now, roundByStart, selectedRow],
+  );
+
+  return {
+    rows,
+    marketRows: displayRows,
     markets,
     market,
     marketId,

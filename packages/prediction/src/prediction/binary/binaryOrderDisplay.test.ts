@@ -114,3 +114,34 @@ test("zero actual fees remain zero and missing historical fees never become free
     undefined,
   );
 });
+
+test("account and paginated order projections preserve terminal states and product scope", async () => {
+  const {
+    normalizePredictionOrders,
+    isPredictionTerminalOrder,
+    toPredictionStatus,
+    toOrderStatus,
+  } = await import("./binaryOrderDisplay");
+  assert.equal(toPredictionStatus(OrderStatus.NEW), "pending");
+  assert.equal(toPredictionStatus(OrderStatus.REJECTED), "rejected");
+  assert.equal(toOrderStatus("partialFilled"), OrderStatus.PARTIAL_FILLED);
+  const rows = normalizePredictionOrders(
+    [
+      order({ status: OrderStatus.REJECTED }),
+      order({ order_id: 2, status: OrderStatus.PARTIAL_FILLED }),
+      order({ order_id: 3, status: OrderStatus.CANCELLED }),
+      order({ order_id: 4, symbol: "PERP_BTC_USDC" }),
+      order({ order_id: 5, symbol: "PERP_ETH5M2610081200_USDC" }),
+    ],
+    "PERP_BTC_USDC",
+  );
+  assert.deepEqual(
+    rows.map((row) => row.status),
+    ["rejected", "partialFilled", "cancelled"],
+  );
+  assert.deepEqual(
+    rows.filter(isPredictionTerminalOrder).map((row) => row.status),
+    ["rejected", "cancelled"],
+  );
+  assert.equal(rows[1].filledQuantity, 40);
+});

@@ -9,4 +9,4 @@ export {
 } from "./form";
 export { PredictionOrderBook } from "./predictionOrderBook.ui";
 export { RoundOrderStatusCard } from "./roundOrderStatusCard.ui";
-export { TradePanel } from "./tradePanel.ui";
+export { TradePanelWidget as TradePanel } from "./tradePanel.widget";

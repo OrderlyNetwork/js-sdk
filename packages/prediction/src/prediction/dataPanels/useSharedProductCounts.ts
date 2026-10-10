@@ -1,9 +1,21 @@
-import { useEffect, useMemo } from "react";
-import { useOrderStream, usePositionStream } from "@orderly.network/hooks";
+import { useMemo } from "react";
+import { useOrderStream, usePositions } from "@orderly.network/hooks";
 import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 import { isBinarySymbol } from "../binary/binaryInfo";
 import { matchesPredictionUnderlying } from "../binary/productScope";
+import { useBinaryPendingOrders } from "../hooks/useBinaryPendingOrders";
 import type { ProductOrderInstrument } from "./productOrderCancellation";
+
+export interface UseSharedProductCountsOptions {
+  product?: ProductOrderInstrument;
+  perpsSymbol?: string;
+  predictionUnderlyingSymbol?: string;
+  enabled?: boolean;
+}
+export interface SharedProductCountsState {
+  positions: number;
+  pending: number | null;
+}
 
 /** Counts depend only on product/symbol scope, never page selection. */
 export const useSharedProductCounts = ({
@@ -11,13 +23,8 @@ export const useSharedProductCounts = ({
   perpsSymbol,
   predictionUnderlyingSymbol,
   enabled = true,
-}: {
-  product?: ProductOrderInstrument;
-  perpsSymbol?: string;
-  predictionUnderlyingSymbol?: string;
-  enabled?: boolean;
-} = {}) => {
-  const [positionData] = usePositionStream();
+}: UseSharedProductCountsOptions = {}): SharedProductCountsState => {
+  const positions = usePositions();
   const includePerps = enabled && product !== "prediction";
   const includePrediction = enabled && product !== "perps";
   const [perpsPending] = useOrderStream(
@@ -28,43 +35,13 @@ export const useSharedProductCounts = ({
       symbol: perpsSymbol,
       excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
     },
-    { enabled: includePerps },
+    { enabled: includePerps, stopOnUnmount: true },
   );
-  const [predictionPending, stream] = useOrderStream(
-    { productType: "BINARY", status: OrderStatus.INCOMPLETE, size: 100 },
-    { enabled: includePrediction },
-  );
-  const total = stream.meta?.total;
-  const loaded = predictionPending?.length ?? 0;
-  const complete =
-    Number.isInteger(total) &&
-    total! >= 0 &&
-    loaded >= total! &&
-    !stream.error &&
-    !stream.isValidating &&
-    !stream.isLoading;
-  useEffect(() => {
-    if (
-      includePrediction &&
-      total != null &&
-      loaded < total &&
-      !stream.error &&
-      stream.hasMore !== false &&
-      !stream.isValidating
-    )
-      stream.loadMore();
-  }, [
-    includePrediction,
-    total,
-    loaded,
-    stream.error,
-    stream.hasMore,
-    stream.isValidating,
-    stream.loadMore,
-  ]);
+  const { orders: predictionPending, complete } =
+    useBinaryPendingOrders(includePrediction);
   return useMemo(
     () => ({
-      positions: (positionData?.rows ?? []).filter(
+      positions: (positions ?? []).filter(
         (row) =>
           row.position_qty !== 0 &&
           (isBinarySymbol(row.symbol)
@@ -97,7 +74,7 @@ export const useSharedProductCounts = ({
               : 0),
     }),
     [
-      positionData?.rows,
+      positions,
       perpsPending,
       predictionPending,
       includePrediction,

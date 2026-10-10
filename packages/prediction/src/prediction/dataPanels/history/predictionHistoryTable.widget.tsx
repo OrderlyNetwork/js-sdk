@@ -6,6 +6,7 @@ import { PredictionHistoryTableUI } from "./predictionHistoryTable.ui";
 
 export type PredictionHistoryTableProps = {
   state: PredictionAccountPanelState;
+  predictionUnderlyingSymbol?: string;
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
 };
@@ -13,6 +14,15 @@ export type PredictionHistoryTableProps = {
 export const PredictionHistoryTable: React.FC<PredictionHistoryTableProps> = (
   props,
 ) => {
-  const { filters } = usePredictionHistoryTableScript();
-  return <PredictionHistoryTableUI {...props} filters={filters} />;
+  const { filters, historyState } = usePredictionHistoryTableScript(
+    props.state,
+    props.predictionUnderlyingSymbol,
+  );
+  return (
+    <PredictionHistoryTableUI
+      {...props}
+      state={{ ...props.state, ...historyState }}
+      filters={filters}
+    />
+  );
 };

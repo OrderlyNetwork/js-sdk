@@ -4,11 +4,15 @@ import { getTimestamp } from "@orderly.network/utils";
 import { type BinaryInfoRow, isBinaryRowTradable } from "../binary/binaryInfo";
 import { deriveBinaryMarkets } from "../binary/binaryMarkets";
 import { startBinaryRoundClock } from "../binary/binaryRoundClock";
+import type {
+  UsePredictionMarketsOptions,
+  PredictionMarketsState,
+} from "../prediction.types";
 
 /** Shared metadata; page selection and form state belong to the page. */
 export const usePredictionMarkets = ({
   enabled = true,
-}: { enabled?: boolean } = {}) => {
+}: UsePredictionMarketsOptions = {}): PredictionMarketsState => {
   const { data, error, isLoading } = useQuery<BinaryInfoRow[]>(
     enabled ? "/v1/public/binary/info" : null,
     {
@@ -17,7 +21,7 @@ export const usePredictionMarkets = ({
       keepPreviousData: true,
     },
   );
-  const rows = useMemo(() => data ?? [], [data]);
+  const rows = useMemo(() => (enabled ? (data ?? []) : []), [data, enabled]);
   const [now, setNow] = useState(getTimestamp);
   useEffect(
     () =>
@@ -39,8 +43,8 @@ export const usePredictionMarkets = ({
     rows,
     markets,
     now,
-    error,
-    isLoading,
+    error: enabled ? error : undefined,
+    isLoading: enabled && !!isLoading,
     configBySymbol,
     isOrderTradable: (symbol?: string) => {
       const row = symbol ? configBySymbol.get(symbol) : undefined;

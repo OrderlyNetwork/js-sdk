@@ -19,7 +19,7 @@ import {
 } from "./binary/binaryRoundView";
 import { computeChartGeometry, type CandleScale } from "./chartGeometry";
 import { useRoundNow } from "./hooks/useRoundCountdown";
-import type { PredictionChartPoint } from "./prediction.script";
+import type { PredictionChartPoint } from "./prediction.types";
 import {
   type PredictionCandle,
   type PredictionChartMode,

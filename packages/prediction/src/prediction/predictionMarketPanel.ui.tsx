@@ -10,6 +10,7 @@ import type { MarketTabConfig } from "@orderly.network/markets";
 import { cn, Spinner, Text, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import type { BinaryMarket } from "./binary/binaryMarkets";
+import { DEFAULT_BINARY_QUOTE_TICK } from "./binary/binaryOrderRules";
 import type { BinaryBbo } from "./binary/useBinaryBbo";
 import { useBinaryBboMap } from "./binary/useBinaryBbo";
 import { useRoundCountdown } from "./hooks/useRoundCountdown";
@@ -95,7 +96,9 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
         {price == null
           ? "--"
           : price.toFixed(
-              new Decimal(market.currentRow.quote_tick ?? 0.01).decimalPlaces(),
+              new Decimal(
+                market.currentRow.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK,
+              ).decimalPlaces(),
             )}
       </td>
       <td className="oui-text-xs oui-px-2 oui-text-end">

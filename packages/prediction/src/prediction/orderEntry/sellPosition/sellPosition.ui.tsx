@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
@@ -24,13 +24,58 @@ export type SellPositionProps = {
   symbol?: string;
 };
 
+/**
+ * Per-row shell: the full trading stack (markets, order book, account
+ * resources, trading actions) only mounts while the popover is open, so a
+ * table of N positions no longer keeps N hook trees running in the
+ * background. The disabled gate mirrors the script's tradable check for
+ * the closed state (actions.isSubmitting is always false before mounting).
+ */
 export const SellPosition: React.FC<SellPositionProps> = ({
   state,
   outcome,
   symbol,
 }) => {
   const { t } = useTranslation();
-  const sell = useSellPositionScript({ state, outcome, symbol });
+  const [mounted, setMounted] = useState(false);
+  return mounted ? (
+    <SellPositionPopover
+      state={state}
+      outcome={outcome}
+      symbol={symbol}
+      onClosed={() => setMounted(false)}
+    />
+  ) : (
+    <Button
+      size="sm"
+      variant="outlined"
+      color="secondary"
+      disabled={
+        !state.isOrderTradable(symbol) ||
+        state.isRegionRestricted ||
+        !state.accountReady ||
+        !state.hasFeeConfig ||
+        state.isSubmitting ||
+        state.availableQuantity(outcome, undefined, symbol) <= 0
+      }
+      onClick={() => setMounted(true)}
+    >
+      {t("common.sell")}
+    </Button>
+  );
+};
+
+const SellPositionPopover: React.FC<
+  SellPositionProps & { onClosed?: () => void }
+> = ({ state, outcome, symbol, onClosed }) => {
+  const { t } = useTranslation();
+  const sell = useSellPositionScript({
+    state,
+    outcome,
+    symbol,
+    initialOpen: true,
+    onClosed,
+  });
 
   return (
     <PopoverRoot open={sell.open} onOpenChange={sell.onOpenChange}>

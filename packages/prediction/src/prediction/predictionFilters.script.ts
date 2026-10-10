@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const predictionDateRange = (days: number) => {
   const from = new Date();
@@ -35,19 +35,23 @@ export const usePredictionFilters = (withDate = false) => {
       setDays(null);
     }
   };
-  const matches = (record: {
-    outcome: string;
-    side?: string;
-    status?: string;
-    timestamp?: number;
-  }) =>
-    (side === "all" || record.side === side) &&
-    (outcome === "all" || record.outcome === outcome) &&
-    (status === "all" || record.status === status) &&
-    (!withDate ||
-      (record.timestamp !== undefined &&
-        (!dateRange.from || record.timestamp >= dateRange.from.getTime()) &&
-        (!dateRange.to || record.timestamp <= dateRange.to.getTime())));
+  // Stable identity so row selectors can memoize against it.
+  const matches = useCallback(
+    (record: {
+      outcome: string;
+      side?: string;
+      status?: string;
+      timestamp?: number;
+    }) =>
+      (side === "all" || record.side === side) &&
+      (outcome === "all" || record.outcome === outcome) &&
+      (status === "all" || record.status === status) &&
+      (!withDate ||
+        (record.timestamp !== undefined &&
+          (!dateRange.from || record.timestamp >= dateRange.from.getTime()) &&
+          (!dateRange.to || record.timestamp <= dateRange.to.getTime()))),
+    [dateRange, outcome, side, status, withDate],
+  );
   return {
     side,
     outcome,

@@ -1,6 +1,4 @@
 import { useCallback, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { parseSlippageTicks } from "./binary/binaryOrderRules";
 import { useBinaryMarkPrice } from "./binary/useBinaryMarkPrice";
 import { useBinaryRegionRestricted } from "./binary/useBinaryRegion";
 import { useBinaryRounds } from "./binary/useBinaryRounds";
@@ -12,24 +10,9 @@ import {
   usePredictionOrderBookView,
 } from "./hooks/usePredictionOrderBook";
 import { usePredictionOrderForm } from "./hooks/usePredictionOrderForm";
+import { usePredictionSlippage } from "./hooks/usePredictionSlippage";
 import { usePredictionTradingActions } from "./hooks/usePredictionTradingActions";
 import type { PredictionDataTab } from "./prediction.types";
-
-export type {
-  PredictionOutcome,
-  PredictionOrderSide,
-  PredictionOrderType,
-  PredictionAmountUnit,
-  PredictionRoundPhase,
-  PredictionDataTab,
-  PredictionNotification,
-  PredictionPosition,
-  PredictionOpenOrder,
-  PredictionTrade,
-  PredictionSettlement,
-  PredictionChartPoint,
-  PredictionOrderBookLevel,
-} from "./prediction.types";
 
 export const usePredictionScript = (
   regionRestricted = false,
@@ -43,19 +26,7 @@ export const usePredictionScript = (
   const binaryRegionRestricted = useBinaryRegionRestricted(active);
   const isRegionRestricted = regionRestricted || binaryRegionRestricted;
   const [activeTab, setActiveTab] = useState<PredictionDataTab>("predictions");
-  const [storedSlippage, saveSlippage] = useLocalStorage(
-    "orderly-prediction-slippage-ticks",
-    "2",
-  );
-  const slippage =
-    parseSlippageTicks(storedSlippage) == null ? "2" : storedSlippage;
-  const setSlippage = useCallback(
-    (value: string) => {
-      if (parseSlippageTicks(value) != null)
-        saveSlippage(String(Number(value)));
-    },
-    [saveSlippage],
-  );
+  const { slippage, setSlippage } = usePredictionSlippage();
 
   const { notification, notify, clearNotification } =
     usePredictionNotifications();
@@ -83,6 +54,7 @@ export const usePredictionScript = (
 
   const resources = usePredictionAccountResources({
     enabled: active,
+    includeSettlementHistory: !rounds.isRoundTradable && !isRegionRestricted,
     nowMs: rounds.now,
   });
   const portfolio = usePredictionTradingActions({
@@ -191,81 +163,12 @@ export const usePredictionScript = (
     portfolio.placeOrder,
   ]);
 
-  /**
-   * One-tap mirrors the form's composed gate: the portfolio checks price,
-   * funds and min_notional on the submitted protection price, and the book
-   * walk (executable levels, not the mid) rejects sizes that would cross the
-   * user's slippage setting — the mid-based estimate previously disabled
-   * every two-sided book because protection ≥ mid by construction.
-   * The reason variant powers the disabled-preset tooltip and the
-   * click-fallback toast, so a blocked preset is never silent.
-   */
-  const oneTapBlockReason = useCallback(
-    (
-      outcome: Parameters<typeof portfolio.canPlaceOneTapOrder>[0],
-      quoteAmount: number,
-    ): string | undefined => {
-      const reason = portfolio.oneTapBlockReason(outcome, quoteAmount);
-      if (reason != null) return reason;
-      if (!portfolio.canPlaceOneTapOrder(outcome, quoteAmount))
-        // Transient isSubmitting: no reason while a submission is in flight.
-        return undefined;
-      // The gate above already guarantees a positive quantity.
-      const estimated = bookView.estimateOrderSlippage(
-        "buy",
-        portfolio.oneTapPayout(outcome, quoteAmount),
-        outcome,
-      );
-      if (estimated == null) return "prediction.message.noExecutableQuotes";
-      return estimated <= (parseSlippageTicks(slippage) ?? -1)
-        ? undefined
-        : "prediction.message.slippageExceeded";
-    },
-    [
-      bookView.estimateOrderSlippage,
-      portfolio.canPlaceOneTapOrder,
-      portfolio.oneTapBlockReason,
-      portfolio.oneTapPayout,
-      slippage,
-    ],
-  );
-
-  const canPlaceOneTapOrder = useCallback(
-    (
-      outcome: Parameters<typeof portfolio.canPlaceOneTapOrder>[0],
-      quoteAmount: number,
-    ) =>
-      portfolio.canPlaceOneTapOrder(outcome, quoteAmount) &&
-      oneTapBlockReason(outcome, quoteAmount) == null,
-    [oneTapBlockReason, portfolio.canPlaceOneTapOrder],
-  );
-
   const placeOneTapOrder = useCallback(
     (
       outcome: Parameters<typeof portfolio.placeOneTapOrder>[0],
       quoteAmount: number,
-    ) => {
-      const reason = oneTapBlockReason(outcome, quoteAmount);
-      if (reason != null) {
-        notify(reason, "danger");
-        return;
-      }
-      // Only the transient isSubmitting race is still silent here; the
-      // buttons are disabled during submission.
-      if (!portfolio.canPlaceOneTapOrder(outcome, quoteAmount)) return;
-      return portfolio.placeOneTapOrder(
-        outcome,
-        quoteAmount,
-        clearNotification,
-      );
-    },
-    [
-      clearNotification,
-      notify,
-      oneTapBlockReason,
-      portfolio.canPlaceOneTapOrder,
-      portfolio.placeOneTapOrder,
-    ],
+    ) => portfolio.placeOneTapOrder(outcome, quoteAmount, clearNotification),
+    [clearNotification, portfolio.placeOneTapOrder],
   );
 
   return {
@@ -381,8 +284,9 @@ export const usePredictionScript = (
     clearNotification,
     placeOrder,
     oneTapPayout: portfolio.oneTapPayout,
-    canPlaceOneTapOrder,
-    oneTapBlockReason,
+    evaluateOneTapOrder: portfolio.evaluateOneTapOrder,
+    canPlaceOneTapOrder: portfolio.canPlaceOneTapOrder,
+    oneTapBlockReason: portfolio.oneTapBlockReason,
     placeOneTapOrder,
     availableQuantity: portfolio.availableQuantity,
     sellPosition: portfolio.sellPosition,

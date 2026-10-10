@@ -6,6 +6,14 @@ import type {
 } from "../prediction.types";
 import { PredictionDataPanel } from "./predictionDataPanel.ui";
 
+export interface PredictionAccountPanelProps {
+  activeTab: PredictionDataTab;
+  setActiveTab(tab: PredictionDataTab): void;
+  marketView?: PredictionHoldingsMarketView;
+  isSubmitting: boolean;
+  isRegionRestricted: boolean;
+}
+
 /** Page-owned controls and account-owned queries are connected without broadcasting page state. */
 export const PredictionAccountPanel = React.memo(
   ({
@@ -14,13 +22,7 @@ export const PredictionAccountPanel = React.memo(
     marketView,
     isSubmitting,
     isRegionRestricted,
-  }: {
-    activeTab: PredictionDataTab;
-    setActiveTab: (tab: PredictionDataTab) => void;
-    marketView?: PredictionHoldingsMarketView;
-    isSubmitting: boolean;
-    isRegionRestricted: boolean;
-  }) => {
+  }: PredictionAccountPanelProps) => {
     const account = usePredictionAccountData();
     return (
       <PredictionDataPanel

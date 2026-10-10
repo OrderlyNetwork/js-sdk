@@ -5,6 +5,7 @@ import type {
   PredictionOrderSide,
   PredictionOutcome,
 } from "../prediction.types";
+import { floorToTickDecimal } from "../predictionShared";
 import type { BinaryInfoRow } from "./binaryInfo";
 import type { BinaryOrderBook } from "./useBinaryOrderbook";
 
@@ -25,10 +26,14 @@ export function binaryRejectionNotice(
 export const validBinaryFee = (value: unknown): value is number =>
   typeof value === "number" && Number.isFinite(value) && value >= 0;
 
+/** Display↔UP price complement (api-spec §5.2: DOWN @n is UP @1-n). */
+export const complementPrice = (price: number) =>
+  new Decimal(1).sub(price).toNumber();
+
 export function quoteToBinaryQuantity(
   amount: number | string,
   price: number,
-  tick = 0.01,
+  tick = DEFAULT_BINARY_BASE_TICK,
 ): number {
   if (
     !Number.isFinite(Number(amount)) ||
@@ -40,12 +45,7 @@ export function quoteToBinaryQuantity(
     tick <= 0
   )
     return 0;
-  return new Decimal(amount)
-    .div(price)
-    .div(tick)
-    .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
-    .mul(tick)
-    .toNumber();
+  return floorToTickDecimal(new Decimal(amount).div(price), tick).toNumber();
 }
 
 /** Choose the largest cent-denominated input that still sizes affordably. */
@@ -103,7 +103,7 @@ export function binaryProtectionPrice(
     best >= 1
   )
     return undefined;
-  const tick = config?.quote_tick ?? 0.01;
+  const tick = config?.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK;
   const min = config?.quote_min ?? tick;
   const max = config?.quote_max ?? new Decimal(1).sub(tick).toNumber();
   const offset = new Decimal(tick).mul(ticks);
@@ -125,12 +125,59 @@ export function binaryProtectionPrice(
     : new Decimal(1).sub(price).toNumber();
 }
 
+/** Book level in either the object or the native tuple format. */
+export type BinarySlippageLevel =
+  | PredictionOrderBookLevel
+  | readonly [number, number];
+
+type NormalizedSlippageLevel = { price: number; quantity: number };
+
+const slippageLevelCache = new WeakMap<
+  object,
+  { asc?: NormalizedSlippageLevel[]; desc?: NormalizedSlippageLevel[] }
+>();
+
+/** Filter, normalize and sort one side; cached per input array identity. */
+function sortedSlippageLevels(
+  levels: readonly BinarySlippageLevel[],
+  direction: "asc" | "desc",
+): NormalizedSlippageLevel[] {
+  let cached = slippageLevelCache.get(levels);
+  if (!cached) {
+    cached = {};
+    slippageLevelCache.set(levels, cached);
+  }
+  const existing = cached[direction];
+  if (existing) return existing;
+  const normalized: NormalizedSlippageLevel[] = [];
+  for (const level of levels) {
+    const price = "price" in level ? level.price : level[0];
+    const quantity = "price" in level ? level.quantity : level[1];
+    if (
+      Number.isFinite(price) &&
+      price > 0 &&
+      price < 1 &&
+      Number.isFinite(quantity) &&
+      quantity > 0
+    )
+      normalized.push({ price, quantity });
+  }
+  normalized.sort((a, b) =>
+    direction === "asc" ? a.price - b.price : b.price - a.price,
+  );
+  cached[direction] = normalized;
+  return normalized;
+}
+
 /** Absolute VWAP movement in ticks. Partial depth is permitted for IOC orders. */
 export function estimateBinarySlippage(
   side: PredictionOrderSide,
   quantity: number,
-  book: { asks: PredictionOrderBookLevel[]; bids: PredictionOrderBookLevel[] },
-  tick = 0.01,
+  book: {
+    asks: readonly BinarySlippageLevel[];
+    bids: readonly BinarySlippageLevel[];
+  },
+  tick = DEFAULT_BINARY_QUOTE_TICK,
 ): number | null {
   if (
     !Number.isFinite(quantity) ||
@@ -139,16 +186,10 @@ export function estimateBinarySlippage(
     tick <= 0
   )
     return null;
-  const levels = [...(side === "buy" ? book.asks : book.bids)]
-    .filter(
-      (row) =>
-        Number.isFinite(row.price) &&
-        row.price > 0 &&
-        row.price < 1 &&
-        Number.isFinite(row.quantity) &&
-        row.quantity > 0,
-    )
-    .sort((a, b) => (side === "buy" ? a.price - b.price : b.price - a.price));
+  const levels = sortedSlippageLevels(
+    side === "buy" ? book.asks : book.bids,
+    side === "buy" ? "asc" : "desc",
+  );
   if (!levels.length) return null;
   let remaining = new Decimal(quantity);
   let notional = new Decimal(0);
@@ -212,11 +253,8 @@ export function isBinaryMarketBatchAllowed(input: {
   const estimated = estimateBinarySlippage(
     side,
     remainingQuantity,
-    {
-      asks: levels.asks.map(([price, quantity]) => ({ price, quantity })),
-      bids: levels.bids.map(([price, quantity]) => ({ price, quantity })),
-    },
-    config.quote_tick ?? 0.01,
+    levels,
+    config.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK,
   );
   return estimated != null && estimated <= ticks;
 }
@@ -226,14 +264,128 @@ export type BinarySizeRules = Pick<
   "base_min" | "base_max" | "base_tick" | "min_notional"
 >;
 
+/** Shared fallbacks for every sparse binary config field. */
+export const DEFAULT_BINARY_QUOTE_TICK = 0.01;
+export const DEFAULT_BINARY_BASE_TICK = 0.01;
+export const DEFAULT_BINARY_BASE_MAX = 10000;
+export const DEFAULT_BINARY_MIN_NOTIONAL = 5;
+
+export type BinaryOrderLimits = {
+  quoteTick: number;
+  quoteMin: number;
+  quoteMax: number;
+  baseTick: number;
+  baseMin: number;
+  baseMax: number;
+  minNotional: number;
+};
+
+/**
+ * Normalize a (possibly sparse) binary config into full order limits.
+ * Callers must not hand-roll `?? 0.01`-style fallbacks on top of this.
+ */
+export function resolveBinaryOrderLimits(config: {
+  quote_min?: number;
+  quote_max?: number;
+  quote_tick?: number;
+  base_min?: number;
+  base_max?: number;
+  base_tick?: number;
+  min_notional?: number;
+}): BinaryOrderLimits {
+  const quoteTick = config.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK;
+  const baseTick = config.base_tick ?? DEFAULT_BINARY_BASE_TICK;
+  return {
+    quoteTick,
+    quoteMin: config.quote_min ?? quoteTick,
+    quoteMax: config.quote_max ?? new Decimal(1).sub(quoteTick).toNumber(),
+    baseTick,
+    baseMin: config.base_min ?? baseTick,
+    baseMax: config.base_max ?? DEFAULT_BINARY_BASE_MAX,
+    minNotional: config.min_notional ?? DEFAULT_BINARY_MIN_NOTIONAL,
+  };
+}
+
+export type BinaryOrderSizeRejection =
+  | "priceOutOfRange"
+  | "priceNotTickAligned"
+  | "quantityBelowMin"
+  | "quantityAboveMax"
+  | "quantityNotTickAligned"
+  | "notionalBelowMin";
+
+/**
+ * Shared size/config gate for submission, editing, one-tap and the order
+ * form. `price` must be in UP-book coordinates (api-spec §5.2: a DOWN
+ * order at display n is UP at 1-n). Returns the first failing rule, or
+ * undefined when the size is acceptable.
+ */
+export function validateBinaryOrderSize(input: {
+  price: number;
+  quantity: number;
+  limits: BinaryOrderLimits;
+  /** Limit prices must sit on the quote tick grid (default true). */
+  requirePriceTickAligned?: boolean;
+  /** Quantities must sit on the base tick grid (default false). */
+  requireQuantityTickAligned?: boolean;
+  /** Enforce limits.baseMax (default false; splitting handles it upstream). */
+  checkQuantityMax?: boolean;
+}): BinaryOrderSizeRejection | undefined {
+  const {
+    price,
+    quantity,
+    limits,
+    requirePriceTickAligned = true,
+    requireQuantityTickAligned = false,
+    checkQuantityMax = false,
+  } = input;
+  if (
+    !Number.isFinite(price) ||
+    price <= 0 ||
+    price >= 1 ||
+    price < limits.quoteMin ||
+    price > limits.quoteMax
+  )
+    return "priceOutOfRange";
+  if (
+    requirePriceTickAligned &&
+    !new Decimal(price).div(limits.quoteTick).isInteger()
+  )
+    return "priceNotTickAligned";
+  if (!Number.isFinite(quantity) || quantity < limits.baseMin)
+    return "quantityBelowMin";
+  if (checkQuantityMax && quantity > limits.baseMax) return "quantityAboveMax";
+  if (
+    requireQuantityTickAligned &&
+    !new Decimal(quantity).div(limits.baseTick).isInteger()
+  )
+    return "quantityNotTickAligned";
+  // min_notional is validated on the UP-book price for both sides and
+  // reduce-only exits alike (api-spec §5.2).
+  if (new Decimal(quantity).mul(price).lt(limits.minNotional))
+    return "notionalBelowMin";
+  return undefined;
+}
+
+/** UP-book notional of a user-facing order (DOWN @n is UP @(1-n)). */
+export function binaryUpNotional(
+  quantity: number,
+  outcome: PredictionOutcome,
+  displayPrice: number,
+): Decimal {
+  return new Decimal(quantity).mul(
+    outcome === "up" ? displayPrice : new Decimal(1).sub(displayPrice),
+  );
+}
+
 /** Balance children on the integer tick grid so the tail never becomes dust. */
 export function splitBinaryQuantity(
   quantity: number,
   upPrice: number,
   config: BinarySizeRules,
 ): number[] | undefined {
-  const tick = config.base_tick ?? 0.01;
-  const max = config.base_max ?? 10000;
+  const tick = config.base_tick ?? DEFAULT_BINARY_BASE_TICK;
+  const max = config.base_max ?? DEFAULT_BINARY_BASE_MAX;
   if (
     ![quantity, upPrice, tick, max].every(Number.isFinite) ||
     quantity <= 0 ||
@@ -248,7 +400,9 @@ export function splitBinaryQuantity(
   const maxTicks = new Decimal(max)
     .div(tick)
     .toDecimalPlaces(0, Decimal.ROUND_FLOOR);
-  const minTicks = new Decimal(config.min_notional ?? 5)
+  const minTicks = new Decimal(
+    config.min_notional ?? DEFAULT_BINARY_MIN_NOTIONAL,
+  )
     .div(upPrice)
     .div(tick)
     .toDecimalPlaces(0, Decimal.ROUND_CEIL);

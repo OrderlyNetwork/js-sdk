@@ -50,3 +50,23 @@ test("alignOneTapAmounts mirrors the opposite column for an empty side", () => {
     down: [1, 2, 3],
   });
 });
+
+test("editor text rejects invalid precision, out-of-range and mismatched rows without rounding", async () => {
+  const { parseOneTapDraft } = await import("./oneTapAmounts");
+  for (const value of [
+    "",
+    "0",
+    "1.234",
+    "1e2",
+    "Infinity",
+    "100000",
+    "-1",
+    ".5",
+  ])
+    assert.equal(parseOneTapDraft({ up: [value], down: ["10"] }), undefined);
+  assert.equal(parseOneTapDraft({ up: ["10", "20"], down: ["10"] }), undefined);
+  assert.deepEqual(parseOneTapDraft({ up: [" 12.34 "], down: ["99999.99"] }), {
+    up: [12.34],
+    down: [99999.99],
+  });
+});

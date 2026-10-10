@@ -212,3 +212,42 @@ test("a release inside a refresh skips that round's remaining pollers", async (t
   assert.equal(fast, 4);
   assert.equal(slow, 0);
 });
+
+test("retains confirmed records across missing history windows and ignores wrong-account or older snapshots", () => {
+  const cache = new Map();
+  const resource = getSettlementResource(cache, "a");
+  const rows = [
+    {
+      position_id: 1,
+      symbol,
+      side: "LONG",
+      position_status: "closed",
+      type: "trade",
+      closed_position_qty: 10,
+      avg_open_price: 0.5,
+      avg_close_price: 1,
+      realized_pnl: 5,
+      trading_fee: 0,
+      open_timestamp: Date.UTC(2026, 0, 1),
+      close_timestamp: Date.UTC(2026, 0, 1, 0, 6),
+      last_update_time: Date.UTC(2026, 0, 1, 0, 6),
+      outcome: "UP",
+      settlement_price_per_share: 1,
+      settled_at: Date.UTC(2026, 0, 1, 0, 6),
+    },
+  ];
+  const confirmed = { accountId: "a", receivedAt: 100, rows };
+  resource.rememberHistory(confirmed);
+  assert.equal(resource.getSnapshot().confirmedHistoryRecords.length, 1);
+  resource.rememberHistory({ accountId: "b", receivedAt: 200, rows: [] });
+  resource.rememberHistory({ accountId: "a", receivedAt: 50, rows: [] });
+  assert.equal(resource.getSnapshot().historySnapshot, confirmed);
+  resource.rememberHistory({ accountId: "a", receivedAt: 200, rows: [] });
+  assert.equal(resource.getSnapshot().confirmedHistoryRecords.length, 1);
+  resource.update(input("a"));
+  assert.equal(resource.getSnapshot().confirmedHistoryRecords.length, 1);
+  assert.deepEqual(
+    getSettlementResource(cache, "b").getSnapshot().confirmedHistoryRecords,
+    [],
+  );
+});

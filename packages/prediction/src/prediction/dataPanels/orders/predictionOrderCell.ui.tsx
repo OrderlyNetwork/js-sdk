@@ -13,15 +13,16 @@ import type {
 import { usePredictionFormatters } from "../../predictionShared";
 import { PendingValue } from "./pendingValue.ui";
 
+export interface PredictionOrderCellProps {
+  state: PredictionAccountActions & { isRegionRestricted: boolean };
+  order: PredictionOpenOrder;
+  field: string;
+}
 export const PredictionOrderCell = ({
   state,
   order,
   field,
-}: {
-  state: PredictionAccountActions & { isRegionRestricted: boolean };
-  order: PredictionOpenOrder;
-  field: string;
-}) => {
+}: PredictionOrderCellProps) => {
   const { t } = useTranslation();
   const { formatTableTime } = usePredictionFormatters();
   const pending =

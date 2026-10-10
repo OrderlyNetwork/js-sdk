@@ -1,5 +1,6 @@
 import { Decimal } from "@orderly.network/utils";
 import type { PredictionOutcome } from "../prediction.types";
+import { complementPrice } from "./binaryOrderRules";
 
 type MarkPriceMessage = {
   data?: { symbol?: string; price?: number };
@@ -29,7 +30,7 @@ export const binaryOutcomeMarkPrice = (
     ? undefined
     : outcome === "up"
       ? price
-      : new Decimal(1).sub(price).toNumber();
+      : complementPrice(price);
 
 /** Observe the selected round's mark price, including final zero settlements. */
 export const subscribeBinaryMarkPrice = (

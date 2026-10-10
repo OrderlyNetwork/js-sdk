@@ -1,135 +1,61 @@
-import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
-import { useSWRConfig } from "@orderly.network/hooks";
+import { useCallback, useMemo } from "react";
 import {
   useAccount,
   useCollateral,
   useMarkPricesStream,
-  useMemoizedFn,
-  useOrderStream,
-  usePositionStream,
+  usePositions,
   usePrivateQuery,
 } from "@orderly.network/hooks";
-import {
-  AccountStatusEnum,
-  OrderSide,
-  OrderStatus,
-  type API,
-} from "@orderly.network/types";
-import { Decimal, getTimestamp } from "@orderly.network/utils";
+import { AccountStatusEnum, OrderSide, type API } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import {
   availableBinaryCloseQuantity,
   resolveBinaryCollateral,
 } from "../binary/binaryCollateral";
-import {
-  binaryHistoryCompleteness,
-  binaryHistoryForAccount,
-  binaryHistorySnapshot,
-  normalizeBinaryHistory,
-  toPredictionSettlement,
-  type BinaryHistorySnapshot,
-} from "../binary/binaryHistory";
 import { binaryRoundFromSymbol, isBinarySymbol } from "../binary/binaryInfo";
-import { toPredictionOrder } from "../binary/binaryOrderDisplay";
-import {
-  pendingBinarySettlements,
-  binarySettlementRefreshInterval,
-} from "../binary/binarySettlement";
-import { getSettlementResource } from "../data/settlementRegistry";
+import { normalizePredictionOrders } from "../binary/binaryOrderDisplay";
+import { complementPrice } from "../binary/binaryOrderRules";
+import type { UsePredictionAccountDataOptions } from "../prediction.types";
 import {
   type PredictionOutcome,
   type PredictionPosition,
-  type PredictionTrade,
 } from "../prediction.types";
+import { useBinaryPendingOrders } from "./useBinaryPendingOrders";
+import { usePredictionOrderHistory } from "./usePredictionOrderHistory";
+import { usePredictionSettlementHistory } from "./usePredictionSettlementHistory";
 
-const TERMINAL_ORDER_STATUSES = new Set([
-  OrderStatus.FILLED,
-  OrderStatus.CANCELLED,
-  OrderStatus.REJECTED,
-]);
-const toDisplayPrice = (price: number) => new Decimal(1).sub(price).toNumber();
 export const usePredictionAccountResources = ({
   enabled: active = true,
-  includeHistory = true,
+  includeOrderHistory = false,
+  includeSettlementHistory = false,
   nowMs,
-}: {
-  enabled?: boolean;
-  includeHistory?: boolean;
-  nowMs?: number;
-} = {}) => {
+}: UsePredictionAccountDataOptions & { nowMs?: number } = {}) => {
   const { state: accountState } = useAccount();
   const accountReady =
-    accountState.status >= AccountStatusEnum.EnableTrading ||
-    accountState.status === AccountStatusEnum.EnableTradingWithoutConnected;
+    active &&
+    !!accountState.accountId &&
+    (accountState.status >= AccountStatusEnum.EnableTrading ||
+      accountState.status === AccountStatusEnum.EnableTradingWithoutConnected);
   const { freeCollateral } = useCollateral({ dp: 6 });
   // Available collateral in USDC, including account-level funding constraints.
-  const balance = Number.isFinite(freeCollateral)
-    ? Math.max(0, freeCollateral)
-    : 0;
-  // Binary orders only (api-spec §5.1.1). executionreport WS deltas keep both
-  // streams fresh; the key prefix contract is unchanged.
-  const [pendingOrdersData, pendingOrdersStream] = useOrderStream(
-    { status: OrderStatus.INCOMPLETE, size: 100, productType: "BINARY" },
-    { keeplive: true, enabled: active && accountReady },
-  );
-  const pendingTotal = pendingOrdersStream.meta?.total;
-  const pendingOrdersComplete =
-    pendingTotal !== undefined &&
-    Number.isInteger(pendingTotal) &&
-    pendingTotal >= 0 &&
-    !pendingOrdersStream.error &&
-    !pendingOrdersStream.isLoading &&
-    !pendingOrdersStream.isValidating &&
-    (pendingOrdersData?.length ?? 0) >= pendingTotal;
-  useEffect(() => {
-    if (
-      active &&
-      pendingTotal !== undefined &&
-      (pendingOrdersData?.length ?? 0) < pendingTotal &&
-      !pendingOrdersStream.error &&
-      pendingOrdersStream.hasMore !== false &&
-      !pendingOrdersStream.isValidating
-    ) {
-      pendingOrdersStream.loadMore();
-    }
-  }, [
-    active,
-    pendingTotal,
-    pendingOrdersData?.length,
-    pendingOrdersStream.error,
-    pendingOrdersStream.hasMore,
-    pendingOrdersStream.isValidating,
-    pendingOrdersStream.loadMore,
-  ]);
-  const [allOrdersData, allOrdersStream] = useOrderStream(
-    { size: 100, productType: "BINARY" },
-    { keeplive: true, enabled: active && accountReady && includeHistory },
+  const balance =
+    accountReady && Number.isFinite(freeCollateral)
+      ? Math.max(0, freeCollateral)
+      : 0;
+  const {
+    orders: pendingOrdersData,
+    stream: pendingOrdersStream,
+    complete: pendingOrdersComplete,
+  } = useBinaryPendingOrders(active && accountReady);
+  const { history, allOrdersStream } = usePredictionOrderHistory(
+    active && accountReady && includeOrderHistory,
   );
   const openOrders = useMemo(
     () =>
-      (pendingOrdersData ?? [])
-        .filter((order) => !order.algo_order_id && isBinarySymbol(order.symbol))
-        .map(toPredictionOrder),
-    [pendingOrdersData],
+      accountReady ? normalizePredictionOrders(pendingOrdersData ?? []) : [],
+    [pendingOrdersData, accountReady],
   );
-  const history = useMemo<PredictionTrade[]>(
-    () =>
-      (allOrdersData ?? [])
-        .filter(
-          (order) =>
-            !order.algo_order_id &&
-            isBinarySymbol(order.symbol) &&
-            TERMINAL_ORDER_STATUSES.has(order.status),
-        )
-        .map((order) => ({
-          ...toPredictionOrder(order),
-          status:
-            order.status === OrderStatus.FILLED
-              ? ("filled" as const)
-              : ("cancelled" as const),
-        })),
-    [allOrdersData],
-  );
-  const [positionData] = usePositionStream();
+  const positionRows = usePositions();
   // Share the account-scoped observer cache without dropping pending-only rows.
   const {
     data: accountPositions,
@@ -161,7 +87,7 @@ export const usePredictionAccountResources = ({
    */
   const positions = useMemo<PredictionPosition[]>(
     () =>
-      (positionData?.rows ?? [])
+      (accountReady ? (positionRows ?? []) : [])
         .filter(
           (row) =>
             isBinarySymbol(row.symbol) &&
@@ -174,11 +100,11 @@ export const usePredictionAccountResources = ({
           averagePrice:
             row.position_qty > 0
               ? row.average_open_price
-              : toDisplayPrice(row.average_open_price),
+              : complementPrice(row.average_open_price),
           symbol: row.symbol,
           round: binaryRoundFromSymbol(row.symbol) ?? undefined,
         })),
-    [positionData],
+    [positionRows, accountReady],
   );
   const availableQuantity = useCallback(
     (outcome: PredictionOutcome, excludeId?: number, symbol?: string) => {
@@ -190,115 +116,14 @@ export const usePredictionAccountResources = ({
     },
     [getCollateralSnapshot],
   );
-  const historyEnabled =
-    active && includeHistory && accountReady && !!accountState.accountId;
-  const { cache } = useSWRConfig();
-  const watch = useMemo(
-    () =>
-      getSettlementResource(
-        cache,
-        active && accountReady ? accountState.accountId : undefined,
-      ),
-    [cache, active, accountReady, accountState.accountId],
-  );
-  const observedHoldings = useSyncExternalStore(
-    watch.subscribe,
-    watch.getSnapshot,
-    watch.getSnapshot,
-  );
-  useEffect(() => {
-    if (!active || !accountReady) return;
-    watch.update({
-      accountId: accountState.accountId,
-      active: true,
-      positions,
-      seedPositions: accountPositions?.rows
-        ?.filter((row) => isBinarySymbol(row.symbol))
-        .map((row) => ({
-          symbol: row.symbol,
-          outcome: row.position_qty > 0 ? ("up" as const) : ("down" as const),
-          quantity: Math.abs(row.position_qty),
-        })),
-      now: getTimestamp(),
-    });
-  }, [
-    watch,
-    active,
-    accountReady,
-    accountState.accountId,
+  const settlementHistory = usePredictionSettlementHistory({
+    accountId: accountState.accountId,
+    enabled: active && accountReady,
+    includeSettlementHistory: includeSettlementHistory,
     positions,
+    seedPositions: accountPositions?.rows,
     nowMs,
-    accountPositions,
-  ]);
-  const accountHoldings = observedHoldings.holdings;
-  const {
-    data: historyResponse,
-    error: historyError,
-    isLoading: historyLoading,
-    mutate: refreshHistory,
-  } = usePrivateQuery<BinaryHistorySnapshot>(
-    historyEnabled
-      ? "/v1/position_history?product_type=BINARY&limit=1000"
-      : null,
-    {
-      formatter: (data) => binaryHistorySnapshot(accountState.accountId!, data),
-      keepPreviousData: false,
-      revalidateOnFocus: true,
-      refreshInterval: 0,
-    },
-  );
-  const historySnapshot = binaryHistoryForAccount(
-    historyResponse,
-    accountState.accountId,
-    historyEnabled,
-  );
-  const historyRecords = useMemo(
-    () => (historySnapshot?.rows ?? []).map(normalizeBinaryHistory),
-    [historySnapshot],
-  );
-  const historyCompleteness = binaryHistoryCompleteness({
-    loaded: historySnapshot?.rows != null,
-    failed: Boolean(historyError),
-    rowCount: historySnapshot?.rows?.length ?? 0,
-    limit: 1000,
   });
-  const settlements = useMemo(
-    () => historyRecords.map(toPredictionSettlement),
-    [historyRecords],
-  );
-  const pendingSettlementSymbols = pendingBinarySettlements(
-    historyRecords,
-    accountHoldings,
-    nowMs ?? getTimestamp(),
-  );
-  const nextHistoryRefreshInterval = binarySettlementRefreshInterval(
-    historyEnabled,
-    pendingSettlementSymbols,
-  );
-  const refreshHistoryCurrent = useMemoizedFn(
-    (expectedAccountId: string | undefined) => {
-      if (
-        !historyEnabled ||
-        accountState.accountId !== expectedAccountId ||
-        accountState.accountId !== observedHoldings.accountId
-      )
-        return Promise.resolve();
-      return refreshHistory();
-    },
-  );
-  useEffect(() => {
-    if (!historyEnabled) return;
-    const expectedAccountId = accountState.accountId;
-    return watch.retainPolling(
-      () => refreshHistoryCurrent(expectedAccountId),
-      nextHistoryRefreshInterval,
-    );
-  }, [
-    watch,
-    historyEnabled,
-    refreshHistoryCurrent,
-    nextHistoryRefreshInterval,
-  ]);
   return {
     accountState,
     accountReady,
@@ -311,12 +136,7 @@ export const usePredictionAccountResources = ({
     openOrders,
     pendingOrdersComplete,
     history,
-    settlements,
-    historyRecords,
-    historyCompleteness,
-    historyLoading,
-    historyError,
-    pendingSettlementSymbols,
+    ...settlementHistory,
     availableQuantity,
     getCollateralSnapshot,
     pendingOrdersStream,

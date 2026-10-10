@@ -96,37 +96,39 @@ export function binaryHistoryFilterTime(record: BinaryHistoryRecord) {
 
 /** Conflicting revisions only block their own position segment. */
 export function binaryHistorySegments(records: readonly BinaryHistoryRecord[]) {
+  // One full dedupe; the per-key conflict scan only revisits duplicate keys.
+  const unique = uniqueBinaryHistory(records);
   const groups = new Map<string, BinaryHistoryRecord[]>();
   for (const record of records) {
-    const group = groups.get(record.recordKey) ?? [];
-    group.push(record);
-    groups.set(record.recordKey, group);
+    const group = groups.get(record.recordKey);
+    if (group) group.push(record);
+    else groups.set(record.recordKey, [record]);
   }
-  const conflictedRecordKeys = [...groups.entries()]
-    .filter(
-      ([, group]) => group.length > 1 && uniqueBinaryHistory(group).conflict,
-    )
-    .map(([key]) => key);
-  return { ...uniqueBinaryHistory(records), conflictedRecordKeys };
+  const conflictedRecordKeys: string[] = [];
+  for (const [key, group] of groups) {
+    if (group.length > 1 && uniqueBinaryHistory(group).conflict)
+      conflictedRecordKeys.push(key);
+  }
+  return { ...unique, conflictedRecordKeys };
 }
 
 export function binaryHistoryDisplayRows(
   records: readonly BinaryHistoryRecord[],
 ) {
   const unique = binaryHistorySegments(records);
+  const conflicted = new Set(unique.conflictedRecordKeys);
   return unique.records.map((record) => ({
     ...toPredictionSettlement(record),
     recordKey: record.recordKey,
     outcome: record.outcome,
     result: record.result,
-    pnl: unique.conflictedRecordKeys.includes(record.recordKey)
+    pnl: conflicted.has(record.recordKey)
       ? undefined
       : record.issues.length === 0
         ? record.pnl
         : undefined,
     settledAt:
-      unique.conflictedRecordKeys.includes(record.recordKey) ||
-      record.issues.length > 0
+      conflicted.has(record.recordKey) || record.issues.length > 0
         ? undefined
         : record.completedAt,
     filterTime: binaryHistoryFilterTime(record),
@@ -244,6 +246,7 @@ export function pendingBinarySettlements(
   now: number,
 ) {
   const unique = binaryHistorySegments(records);
+  const conflicted = new Set(unique.conflictedRecordKeys);
   const pending = new Set(
     unique.records
       .filter(
@@ -252,21 +255,29 @@ export function pendingBinarySettlements(
           record.state !== "exit" &&
           (record.state !== "settled" ||
             record.issues.length > 0 ||
-            unique.conflictedRecordKeys.includes(record.recordKey)),
+            conflicted.has(record.recordKey)),
       )
       .map((record) => record.symbol),
   );
+  // Pre-index clean settled/exit records per (symbol, outcome) once instead
+  // of rescanning every record per holding.
+  const closedByKey = new Map<string, BinaryHistoryRecord[]>();
+  for (const record of unique.records) {
+    if (record.issues.length > 0 || conflicted.has(record.recordKey)) continue;
+    if (record.state !== "settled" && record.state !== "exit") continue;
+    const key = `${record.symbol}:${record.outcome}`;
+    const group = closedByKey.get(key);
+    if (group) group.push(record);
+    else closedByKey.set(key, [record]);
+  }
   for (const holding of holdings) {
     if ((binaryHistoryWindow(holding.symbol)?.to ?? Infinity) > now) continue;
-    const closed = unique.records.filter(
-      (record) =>
-        record.symbol === holding.symbol &&
-        record.outcome === holding.outcome &&
-        record.issues.length === 0 &&
-        !unique.conflictedRecordKeys.includes(record.recordKey) &&
-        (record.state === "settled" ||
-          (record.state === "exit" &&
-            (record.completedAt ?? 0) >= holding.observedAt)),
+    const closed = (
+      closedByKey.get(`${holding.symbol}:${holding.outcome}`) ?? []
+    ).filter((record) =>
+      record.state === "settled"
+        ? true
+        : (record.completedAt ?? 0) >= holding.observedAt,
     );
     const closedQuantity = closed.reduce(
       (sum, record) => sum.add(record.quantity ?? 0),

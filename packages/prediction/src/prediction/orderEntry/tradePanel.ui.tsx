@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation, type LocaleMessages } from "@orderly.network/i18n";
 import {
   AddCircleIcon,
@@ -20,22 +19,15 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import type { PredictionOutcome, PredictionState } from "../prediction.script";
+import { DEFAULT_BINARY_BASE_TICK } from "../binary/binaryOrderRules";
 import {
   formatContractPrice,
+  formatUsdAmount,
   usePredictionFormatters,
 } from "../predictionShared";
 import { PercentageControls } from "./form";
 import { BinarySlippage } from "./form/binarySlippage.ui";
-import {
-  DEFAULT_ONE_TAP_AMOUNTS,
-  alignOneTapAmounts,
-  resolveOneTapAmounts,
-  validOneTapAmounts,
-  type OneTapAmounts,
-} from "./oneTapAmounts";
-
-type TradeMode = "limit" | "market" | "oneTap";
+import type { TradePanelProps, PredictionTradeMode } from "./tradePanel.script";
 
 /** Render a bps coefficient as a percent; missing config is never "free". */
 const formatFeeBps = (bps: number | undefined) =>
@@ -102,6 +94,12 @@ const PredictionOrderInput: React.FC<{
   />
 );
 
+/** Filled buy/sell button tone shared by the side switch and the submit button. */
+const orderSideTone = (buy: boolean) =>
+  buy
+    ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+    : "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80";
+
 const InfoRow: React.FC<{
   label: string;
   value: React.ReactNode;
@@ -139,36 +137,23 @@ const InfoRow: React.FC<{
   </div>
 );
 
-export const TradePanel: React.FC<
-  PredictionState & {
-    orderEntryAccountReady?: boolean;
-    orderEntryFunded?: boolean;
-  }
-> = (state) => {
+export const TradePanel: React.FC<TradePanelProps> = (state) => {
   const { t } = useTranslation();
   const { formatUsd, formatContracts, chart } = usePredictionFormatters();
   const tradeMode = state.tradeMode;
-  const [storedOneTapAmounts, setStoredOneTapAmounts] = useLocalStorage<
-    OneTapAmounts | number[]
-  >("orderly-prediction-one-tap-amounts", DEFAULT_ONE_TAP_AMOUNTS);
   const [oneTapEditorOpen, setOneTapEditorOpen] = useState(false);
-  const [draftOneTapAmounts, setDraftOneTapAmounts] = useState<
-    Record<PredictionOutcome, string[]>
-  >({
-    up: DEFAULT_ONE_TAP_AMOUNTS.up.map(String),
-    down: DEFAULT_ONE_TAP_AMOUNTS.down.map(String),
-  });
-  const [oneTapEditorError, setOneTapEditorError] = useState(false);
-  const oneTapAmounts = alignOneTapAmounts(
-    resolveOneTapAmounts(storedOneTapAmounts, "up"),
-    resolveOneTapAmounts(storedOneTapAmounts, "down"),
-  );
-  const isOneTap = tradeMode === "oneTap";
-  const isBuyContext = isOneTap || state.orderSide === "buy";
-  // Fail closed: a TradePanel rendered without explicit auth flags must not
-  // default to a tradable state (matches the gating in prediction.ui.tsx).
-  const orderEntryAccountReady = state.orderEntryAccountReady ?? false;
   const { isMobile } = useScreen();
+  const {
+    oneTapAmounts,
+    draftOneTapAmounts,
+    oneTapEditorError,
+    isOneTap,
+    isBuyContext,
+    canAdjustAmount,
+    estimatedFee,
+    oneTapEstimatedSlippage,
+  } = state;
+  const orderEntryAccountReady = state.orderEntryAccountReady ?? false;
   const orderEntryFunded = state.orderEntryFunded ?? false;
   const outcomeLabel = t(`prediction.${state.selectedOutcome}`);
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
@@ -177,72 +162,20 @@ export const TradePanel: React.FC<
     ? `0 ${isBuyContext ? "USDC" : outcomeLabel}`
     : isBuyContext
       ? `${formatUsd(state.balance)} USDC`
-      : `${formatContracts(state.availableQuantity(state.selectedOutcome))} ${outcomeLabel}`;
+      : `${formatContracts(state.availablePositionQuantity)} ${outcomeLabel}`;
   const maxDisplayValue = orderEntryFunded
     ? state.hasMaxAmountEstimate
       ? `${state.amountUnit === "quote" ? formatUsd(state.maxAmount) : formatContracts(state.maxAmount)} ${inputUnit}`
       : `-- ${inputUnit}`
     : `0 ${inputUnit}`;
-  const canAdjustAmount =
-    orderEntryAccountReady &&
-    orderEntryFunded &&
-    state.maxAmount > 0 &&
-    (state.orderSide === "sell" || state.hasMaxAmountEstimate) &&
-    state.isRoundTradable &&
-    !state.isRegionRestricted;
   const sliderColor = canAdjustAmount
     ? state.orderSide === "buy"
       ? "buy"
       : "sell"
     : undefined;
-  const oneTapSlippages = (["up", "down"] as const).flatMap((outcome) =>
-    oneTapAmounts[outcome].map((quoteAmount) =>
-      state.estimateOrderSlippage(
-        "buy",
-        state.oneTapPayout(outcome, quoteAmount),
-        outcome,
-      ),
-    ),
-  );
-  const validOneTapSlippages = oneTapSlippages.filter(
-    (value): value is number => value !== null,
-  );
-  const oneTapEstimatedSlippage = validOneTapSlippages.length
-    ? Math.max(...validOneTapSlippages)
-    : null;
-  // The fee curve always prices in the UP coordinate: p or 1-p.
-  const selectedUpPrice =
-    state.selectedOutcome === "up"
-      ? state.selectedPrice
-      : new Decimal(1).sub(state.selectedPrice).toNumber();
-  const estimatedFee = state.estimateFee(
-    state.orderQuantity,
-    selectedUpPrice,
-    // MARKET crosses the book (taker); a resting LIMIT fills as maker.
-    state.orderType === "market",
-  );
-  const selectTradeMode = (mode: TradeMode) => {
-    state.setTradeMode(mode);
-  };
+  const selectTradeMode = state.setTradeMode;
   const saveOneTapAmounts = () => {
-    const amounts: OneTapAmounts = {
-      up: draftOneTapAmounts.up.map(Number),
-      down: draftOneTapAmounts.down.map(Number),
-    };
-    const valid =
-      (["up", "down"] as const).every(
-        (outcome) =>
-          validOneTapAmounts(amounts[outcome]) &&
-          draftOneTapAmounts[outcome].every((value) =>
-            /^\d+(\.\d{1,2})?$/.test(value.trim()),
-          ),
-      ) && amounts.up.length === amounts.down.length;
-    if (!valid) {
-      setOneTapEditorError(true);
-      return;
-    }
-    setStoredOneTapAmounts(amounts);
-    setOneTapEditorOpen(false);
+    if (state.saveOneTapAmounts()) setOneTapEditorOpen(false);
   };
 
   return (
@@ -260,7 +193,9 @@ export const TradePanel: React.FC<
                   : t(`common.${type}`),
             }))}
             disabled={!orderEntryAccountReady}
-            onValueChange={(type) => selectTradeMode(type as TradeMode)}
+            onValueChange={(type) =>
+              selectTradeMode(type as PredictionTradeMode)
+            }
             classNames={{
               trigger:
                 "oui-w-full oui-h-8 oui-rounded-md oui-border-line-12 oui-bg-base-8",
@@ -303,13 +238,9 @@ export const TradePanel: React.FC<
                 aria-pressed={state.orderSide === side}
                 onClick={() => state.setOrderSide(side)}
                 className={cn(
-                  side === "buy"
-                    ? state.orderSide === side && orderEntryAccountReady
-                      ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                      : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6"
-                    : state.orderSide === side && orderEntryAccountReady
-                      ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-                      : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
+                  state.orderSide === side && orderEntryAccountReady
+                    ? orderSideTone(side === "buy")
+                    : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
                 )}
               >
                 {t(`common.${side}`)}
@@ -330,12 +261,7 @@ export const TradePanel: React.FC<
               open={oneTapEditorOpen}
               onOpenChange={(open) => {
                 setOneTapEditorOpen(open);
-                setOneTapEditorError(false);
-                if (open)
-                  setDraftOneTapAmounts({
-                    up: oneTapAmounts.up.map(String),
-                    down: oneTapAmounts.down.map(String),
-                  });
+                if (open) state.beginOneTapEdit();
               }}
             >
               <PopoverTrigger asChild>
@@ -382,33 +308,16 @@ export const TradePanel: React.FC<
                           fullWidth
                           className="oui-min-w-0"
                           value={draftOneTapAmounts[outcome][index]}
-                          onValueChange={(nextValue) => {
-                            setDraftOneTapAmounts((previous) => ({
-                              ...previous,
-                              [outcome]: previous[outcome].map(
-                                (amount, position) =>
-                                  position === index ? nextValue : amount,
-                              ),
-                            }));
-                            setOneTapEditorError(false);
-                          }}
+                          onValueChange={(nextValue) =>
+                            state.updateOneTapDraft(outcome, index, nextValue)
+                          }
                         />
                       ))}
                       {draftOneTapAmounts.up.length > 1 ? (
                         <button
                           type="button"
                           aria-label={`${t("prediction.oneTapRemoveRow")} ${index + 1}`}
-                          onClick={() => {
-                            setDraftOneTapAmounts((previous) => ({
-                              up: previous.up.filter(
-                                (_, position) => position !== index,
-                              ),
-                              down: previous.down.filter(
-                                (_, position) => position !== index,
-                              ),
-                            }));
-                            setOneTapEditorError(false);
-                          }}
+                          onClick={() => state.removeOneTapRow(index)}
                           className="oui-flex oui-size-4 oui-items-center oui-justify-center oui-text-base-contrast-54 hover:oui-text-base-contrast"
                         >
                           <CloseIcon size={14} color="inherit" opacity={1} />
@@ -429,13 +338,7 @@ export const TradePanel: React.FC<
                 {draftOneTapAmounts.up.length < 3 && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setDraftOneTapAmounts((previous) => ({
-                        up: [...previous.up, ""],
-                        down: [...previous.down, ""],
-                      }));
-                      setOneTapEditorError(false);
-                    }}
+                    onClick={state.addOneTapRow}
                     className="oui-text-xs oui-mt-3 oui-block oui-text-primary hover:oui-opacity-80"
                   >
                     + {t("prediction.oneTapAddPreset")}
@@ -446,13 +349,7 @@ export const TradePanel: React.FC<
                     size="sm"
                     variant="text"
                     color="secondary"
-                    onClick={() => {
-                      setDraftOneTapAmounts({
-                        up: DEFAULT_ONE_TAP_AMOUNTS.up.map(String),
-                        down: DEFAULT_ONE_TAP_AMOUNTS.down.map(String),
-                      });
-                      setOneTapEditorError(false);
-                    }}
+                    onClick={state.resetOneTapDraft}
                   >
                     {t("common.reset")}
                   </Button>
@@ -599,14 +496,8 @@ export const TradePanel: React.FC<
               <React.Fragment key={index}>
                 {(["up", "down"] as const).map((outcome) => {
                   const quoteAmount = oneTapAmounts[outcome][index];
-                  // Explain a disabled preset instead of leaving it silent.
-                  // Reason + isSubmitting together equal the composed
-                  // canPlaceOneTapOrder gate, without evaluating the frozen
-                  // estimate twice per preset on every book tick.
-                  const blockReason = state.oneTapBlockReason(
-                    outcome,
-                    quoteAmount,
-                  );
+                  const { blockReason, disabled, payout } =
+                    state.oneTapOptions[outcome][index];
                   return (
                     <button
                       key={outcome}
@@ -616,13 +507,7 @@ export const TradePanel: React.FC<
                           ? String(t(blockReason as keyof LocaleMessages))
                           : undefined
                       }
-                      disabled={
-                        oneTapEditorOpen ||
-                        !orderEntryAccountReady ||
-                        !orderEntryFunded ||
-                        state.isSubmitting ||
-                        blockReason != null
-                      }
+                      disabled={oneTapEditorOpen || disabled}
                       onClick={() =>
                         state.placeOneTapOrder(outcome, quoteAmount)
                       }
@@ -639,7 +524,7 @@ export const TradePanel: React.FC<
                       <span className="oui-text-2xs oui-font-normal oui-tabular-nums">
                         {t("prediction.oneTapWin")}{" "}
                         <span className="oui-font-normal">
-                          ${formatUsd(state.oneTapPayout(outcome, quoteAmount))}
+                          ${formatUsd(payout)}
                         </span>
                       </span>
                     </button>
@@ -671,7 +556,8 @@ export const TradePanel: React.FC<
                     state.amountUnit === "quote"
                       ? 2
                       : new Decimal(
-                          state.selectedRow?.base_tick ?? 0.01,
+                          state.selectedRow?.base_tick ??
+                            DEFAULT_BINARY_BASE_TICK,
                         ).decimalPlaces()
                   }
                   onChange={state.setAmount}
@@ -703,7 +589,8 @@ export const TradePanel: React.FC<
                   state.amountUnit === "quote"
                     ? 2
                     : new Decimal(
-                        state.selectedRow?.base_tick ?? 0.01,
+                        state.selectedRow?.base_tick ??
+                          DEFAULT_BINARY_BASE_TICK,
                       ).decimalPlaces()
                 }
                 position="single"
@@ -753,11 +640,10 @@ export const TradePanel: React.FC<
               />
               <InfoRow
                 label={t("prediction.orderValue")}
-                value={
-                  state.orderQuantity > 0
-                    ? `${formatUsd(state.orderNotional)} USDC`
-                    : "-- USDC"
-                }
+                value={formatUsdAmount(
+                  state.orderQuantity > 0 ? state.orderNotional : null,
+                  { suffix: " USDC" },
+                )}
               />
               <InfoRow
                 label={t("prediction.odds")}
@@ -772,11 +658,10 @@ export const TradePanel: React.FC<
               <InfoRow
                 label={t("prediction.toWin")}
                 hint={t("prediction.toWinHint")}
-                value={
-                  state.orderQuantity > 0
-                    ? `${formatUsd(state.estimatedPayout)} USDC`
-                    : "-- USDC"
-                }
+                value={formatUsdAmount(
+                  state.orderQuantity > 0 ? state.estimatedPayout : null,
+                  { suffix: " USDC" },
+                )}
                 dashed
               />
             </div>
@@ -786,9 +671,7 @@ export const TradePanel: React.FC<
                 "oui-mt-4",
                 !orderEntryFunded
                   ? "oui-bg-base-5 oui-text-base-contrast-36"
-                  : state.orderSide === "buy"
-                    ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                    : "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
+                  : orderSideTone(state.orderSide === "buy"),
               )}
               fullWidth
               size="md"
@@ -850,20 +733,15 @@ export const TradePanel: React.FC<
                   account has no valid binary fee config. */}
                 <InfoRow
                   label={t("prediction.estimatedFee")}
-                  value={
-                    estimatedFee != null
-                      ? `${formatUsd(estimatedFee)} USDC`
-                      : "-- USDC"
-                  }
+                  value={formatUsdAmount(estimatedFee, { suffix: " USDC" })}
                   dashed
                 />
                 <InfoRow
                   label={t("prediction.requiredFrozen")}
-                  value={
-                    state.requiredFrozen == null
-                      ? "-- USDC"
-                      : `${state.fundingEstimateMode === "approximate" ? "≈ " : ""}${formatUsd(state.requiredFrozen)} USDC`
-                  }
+                  value={formatUsdAmount(state.requiredFrozen, {
+                    suffix: " USDC",
+                    approximate: state.fundingEstimateMode === "approximate",
+                  })}
                   dashed
                 />
               </>

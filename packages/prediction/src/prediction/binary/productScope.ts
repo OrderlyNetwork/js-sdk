@@ -1,6 +1,4 @@
-import { parseBinaryRoundSymbol } from "./binaryMarkets";
-
-const PERP_SYMBOL_PATTERN = /^PERP_([A-Z0-9]+)_([A-Z0-9]+)$/;
+import { INDEX_SYMBOL_PATTERN, parseBinaryRoundSymbol } from "./binaryMarkets";
 
 /** Match every Binary period and round for the underlying Perp market. */
 export const matchesPredictionUnderlying = (
@@ -8,7 +6,7 @@ export const matchesPredictionUnderlying = (
   underlyingPerpSymbol: string | undefined,
 ) => {
   if (!underlyingPerpSymbol) return true;
-  const underlying = PERP_SYMBOL_PATTERN.exec(underlyingPerpSymbol);
+  const underlying = INDEX_SYMBOL_PATTERN.exec(underlyingPerpSymbol);
   const prediction = parseBinaryRoundSymbol(predictionSymbol);
   return Boolean(
     underlying &&

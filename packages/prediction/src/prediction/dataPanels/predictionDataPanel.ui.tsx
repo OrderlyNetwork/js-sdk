@@ -36,6 +36,22 @@ const defaultMobileTabs: PredictionDataTab[] = [
   "assets",
 ];
 
+/** Shared tab-title JSX (label + optional count suffix) for both variants. */
+const renderTabTitle = (
+  t: (
+    key:
+      | "trading.history"
+      | `prediction.tab.${Exclude<PredictionDataTab, "history">}`,
+  ) => string,
+  tab: PredictionDataTab,
+  tabCount: Partial<Record<PredictionDataTab, number | null>>,
+) => (
+  <>
+    {tab === "history" ? t("trading.history") : t(`prediction.tab.${tab}`)}
+    {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
+  </>
+);
+
 export const PredictionDataPanel: React.FC<PredictionDataPanelProps> = (
   props,
 ) => {
@@ -124,14 +140,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           <TabPanel
             key={tab}
             value={tab}
-            title={
-              <>
-                {tab === "history"
-                  ? t("trading.history")
-                  : t(`prediction.tab.${tab}`)}
-                {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
-              </>
-            }
+            title={renderTabTitle(t, tab, tabCount)}
           >
             {content[tab]}
           </TabPanel>
@@ -219,14 +228,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           <TabPanel
             key={tab}
             value={tab}
-            title={
-              <>
-                {tab === "history"
-                  ? t("trading.history")
-                  : t(`prediction.tab.${tab}`)}
-                {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
-              </>
-            }
+            title={renderTabTitle(t, tab, tabCount)}
           >
             {tabContent[tab]}
           </TabPanel>

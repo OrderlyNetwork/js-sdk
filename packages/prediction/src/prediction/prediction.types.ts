@@ -1,3 +1,11 @@
+import type { API } from "@orderly.network/types";
+import type {
+  BinaryHistoryRecord,
+  BinaryHistoryCompleteness,
+} from "./binary/binaryHistory";
+import type { BinaryFeeRates } from "./binary/useBinaryFeeRates";
+import type { BinaryCancelAllOptions } from "./dataPanels/productOrderCancellation";
+
 export type PredictionOutcome = "up" | "down";
 export type PredictionOrderSide = "buy" | "sell";
 export type PredictionOrderType = "market" | "limit";
@@ -56,13 +64,15 @@ export type PredictionOpenOrder = {
   reduceOnly?: boolean;
   /** Round-specific binary symbol. */
   symbol?: string;
+  /** Round start in epoch seconds. */
   round: number;
+  /** Order creation time in epoch milliseconds. */
   timestamp: number;
   status?: "pending" | "partialFilled" | "filled" | "cancelled" | "rejected";
 };
 
 export type PredictionTrade = PredictionOpenOrder & {
-  status: "filled" | "cancelled";
+  status: "filled" | "cancelled" | "rejected";
 };
 
 export type PredictionSettlement = {
@@ -117,9 +127,6 @@ export type PredictionOrderBookLevel = {
   quantity: number;
 };
 
-export const clamp = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max);
-
 /** Narrow Binary cancellation capability, independent of any Prediction page. */
 export type BinaryOrderCancellationCapability = {
   accountId?: string;
@@ -130,60 +137,101 @@ export type BinaryOrderCancellationCapability = {
   isOrderTradable: (symbol?: string) => boolean;
 };
 
-/** Independent actions for account tables; trade forms own their market inputs. */
-export type PredictionAccountActions = Pick<
-  ReturnType<
-    typeof import("./hooks/usePredictionTradingActions").usePredictionTradingActions
-  >,
-  | "availableQuantity"
-  | "isOrderTradable"
-  | "cancelOrder"
-  | "cancelAllOrders"
-  | "editPendingOrder"
-  | "estimateFee"
-  | "estimateFrozen"
->;
+/** Explicit account capabilities; prices passed to editing/fees use UP coordinates. */
+export interface PredictionAccountActions {
+  availableQuantity(
+    outcome: PredictionOutcome,
+    excludeId?: number,
+    symbol?: string,
+  ): number;
+  isOrderTradable(symbol?: string): boolean;
+  cancelOrder(id: number, symbol?: string): Promise<void>;
+  cancelAllOrders(options?: BinaryCancelAllOptions): Promise<boolean>;
+  editPendingOrder(
+    id: number,
+    upPrice: number,
+    totalQuantity: number,
+  ): Promise<boolean>;
+  estimateFee(
+    quantity: number,
+    upPrice: number,
+    taker: boolean,
+  ): number | undefined;
+  /** Opening collateral in the outcome's display-price coordinate. */
+  estimateFrozen(quantity: number, displayPrice: number): number;
+}
 
-/** Account data and actions contain no selected round, chart, form or orderbook. */
-export type PredictionAccountState = Pick<
-  ReturnType<
-    typeof import("./hooks/usePredictionTradingActions").usePredictionTradingActions
-  >,
-  | "accountId"
-  | "accountReady"
-  | "balance"
-  | "positions"
-  | "openOrders"
-  | "pendingOrdersComplete"
-  | "history"
-  | "settlements"
-  | "historyRecords"
-  | "historyCompleteness"
-  | "historyLoading"
-  | "historyError"
-  | "pendingSettlementSymbols"
-  | "hasFeeConfig"
-  | "isSubmitting"
-  | "feeRates"
-> &
-  PredictionAccountActions & {
-    isRegionRestricted: boolean;
-    ordersLoading: boolean;
-    ordersError?: unknown;
-    positionsLoading: boolean;
-    positionsError?: unknown;
-  };
+export interface PredictionSettlementHistoryState {
+  settlements: PredictionSettlement[];
+  historyRecords: BinaryHistoryRecord[];
+  historyCompleteness: BinaryHistoryCompleteness;
+  historyLoading: boolean;
+  historyError?: unknown;
+  pendingSettlementSymbols: string[];
+}
+
+/** Account data has no selected market, order form, chart or orderbook. */
+export interface PredictionAccountState
+  extends PredictionAccountActions, PredictionSettlementHistoryState {
+  accountId?: string;
+  accountReady: boolean;
+  balance: number;
+  positions: PredictionPosition[];
+  openOrders: PredictionOpenOrder[];
+  pendingOrdersComplete: boolean;
+  history: PredictionTrade[];
+  hasFeeConfig: boolean;
+  isSubmitting: boolean;
+  feeRates: BinaryFeeRates;
+  isRegionRestricted: boolean;
+  ordersLoading: boolean;
+  ordersError?: unknown;
+  positionsLoading: boolean;
+  positionsError?: unknown;
+}
+
+export interface UsePredictionAccountDataOptions {
+  /** Enable this consumer's resources; true by default. */
+  enabled?: boolean;
+  /** Load terminal orders; false by default. Display tables own their pagination. */
+  includeOrderHistory?: boolean;
+  /** Request history for display; pending personal settlements are also tracked automatically. */
+  includeSettlementHistory?: boolean;
+}
+
+export interface UsePredictionMarketsOptions {
+  enabled?: boolean;
+}
+export interface PredictionMarket {
+  id: string;
+  base: string;
+  quote: string;
+  period: string;
+  intervalSeconds: number;
+  indexPriceSymbol: string;
+  currentRow: API.BinaryInfoRow;
+}
+export interface PredictionMarketsState {
+  rows: API.BinaryInfoRow[];
+  markets: PredictionMarket[];
+  /** Server-calibrated epoch milliseconds, updated at round boundaries. */
+  now: number;
+  error?: unknown;
+  isLoading: boolean;
+  configBySymbol: Map<string, API.BinaryInfoRow>;
+  isOrderTradable(symbol?: string): boolean;
+}
 
 /** Only a mounted trading page supplies live valuation to account tables. */
 export type PredictionHoldingsMarketView = {
-  selectedRow?: import("./binary/binaryInfo").BinaryInfoDetail;
+  selectedRow?: API.BinaryInfoRow;
   outcomePrices: Record<PredictionOutcome, number | undefined>;
   round?: number;
   roundPhase: PredictionRoundPhase;
   isRoundTradable: boolean;
 };
-export type PredictionAccountPanelState = PredictionAccountState & {
+export interface PredictionAccountPanelState extends PredictionAccountState {
   activeTab?: PredictionDataTab;
   setActiveTab?: (tab: PredictionDataTab) => void;
   marketView?: PredictionHoldingsMarketView;
-};
+}

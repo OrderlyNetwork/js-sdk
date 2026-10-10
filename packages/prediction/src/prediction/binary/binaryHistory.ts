@@ -1,7 +1,8 @@
 import type { API } from "@orderly.network/types";
-import { BINARY_SYMBOL_PATTERN, Decimal } from "@orderly.network/utils";
+import { Decimal, parseBinarySymbol } from "@orderly.network/utils";
 import type { PredictionSettlement } from "../prediction.types";
 import { binaryRoundFromSymbol } from "./binaryInfo";
+import { complementPrice } from "./binaryOrderRules";
 
 export type BinaryHistoryState = "exit" | "settled" | "pending" | "unknown";
 export type BinaryHistoryCompleteness = "complete" | "incomplete" | "unknown";
@@ -36,34 +37,28 @@ const unsignedPrice = (value: unknown, short: boolean) => {
   return price >= 0 && price <= 1 ? price : undefined;
 };
 
-/** Strict UTC symbol parsing also works after public metadata expires. */
+/**
+ * Strict UTC symbol parsing also works after public metadata expires.
+ * Memoized per symbol: settlement/history hot paths re-parse every record.
+ */
+const binaryHistoryWindowCache = new Map<
+  string,
+  { from: number; to: number } | undefined
+>();
 export function binaryHistoryWindow(symbol: string) {
-  const match = BINARY_SYMBOL_PATTERN.exec(symbol);
-  if (!match) return undefined;
-  const date = match[3];
-  const values = [
-    2000 + Number(date.slice(0, 2)),
-    Number(date.slice(2, 4)) - 1,
-    Number(date.slice(4, 6)),
-    Number(date.slice(6, 8)),
-    Number(date.slice(8, 10)),
-  ];
-  const start = Date.UTC(values[0], values[1], values[2], values[3], values[4]);
-  const parsed = new Date(start);
-  if (
-    parsed.getUTCFullYear() !== values[0] ||
-    parsed.getUTCMonth() !== values[1] ||
-    parsed.getUTCDate() !== values[2] ||
-    parsed.getUTCHours() !== values[3] ||
-    parsed.getUTCMinutes() !== values[4]
-  )
-    return undefined;
-  return {
-    from: start,
-    to: new Decimal(start)
-      .add(new Decimal(parseInt(match[2], 10)).mul(60_000))
-      .toNumber(),
-  };
+  if (binaryHistoryWindowCache.has(symbol))
+    return binaryHistoryWindowCache.get(symbol);
+  const parsed = parseBinarySymbol(symbol);
+  const window = parsed
+    ? {
+        from: parsed.roundStartMs,
+        to: new Decimal(parsed.roundStartMs)
+          .add(new Decimal(parsed.intervalSeconds).mul(1000))
+          .toNumber(),
+      }
+    : undefined;
+  binaryHistoryWindowCache.set(symbol, window);
+  return window;
 }
 
 /** Normalize the existing signed SHORT average-price convention, then mirror DOWN. */
@@ -75,11 +70,7 @@ export function normalizeBinaryHistory(
   const entry = unsignedPrice(row.avg_open_price, short);
   const exit = unsignedPrice(row.avg_close_price, short);
   const ownPrice = (price: number | undefined) =>
-    price == null
-      ? undefined
-      : short
-        ? new Decimal(1).sub(price).toNumber()
-        : price;
+    price == null ? undefined : short ? complementPrice(price) : price;
   const quantity = finiteBinaryNumber(row.closed_position_qty)
     ? Math.abs(row.closed_position_qty)
     : undefined;
@@ -236,12 +227,19 @@ export function uniqueBinaryHistory(records: readonly BinaryHistoryRecord[]) {
   }
   // Only the latest revision can conflict; older known revisions are superseded.
   // An unversioned record cannot be proven older, so retain its conflict check.
+  // The latest revision's identity string is computed once per key.
+  const latestIdentities = new Map<string, string>();
   const conflict = records.some((record) => {
     const latest = unique.get(record.recordKey)!;
+    let latestIdentity = latestIdentities.get(record.recordKey);
+    if (latestIdentity === undefined) {
+      latestIdentity = historyIdentity(latest);
+      latestIdentities.set(record.recordKey, latestIdentity);
+    }
     const before = latest.source.last_update_time;
     const after = record.source.last_update_time;
     return (
-      historyIdentity(latest) !== historyIdentity(record) &&
+      latestIdentity !== historyIdentity(record) &&
       (!timestamp(before) || !timestamp(after) || before === after)
     );
   });
@@ -261,13 +259,6 @@ export function binaryHistoryRange(
     throw new RangeError("Invalid binary history range");
   const from = new Date(now);
   from.setDate(from.getDate() - days + 1);
-  from.setHours(0, 0, 0, 0);
-  return { from: from.getTime(), to: now.getTime() };
-}
-
-export function binaryWeekRange(now = new Date()): BinaryHistoryRange {
-  const from = new Date(binaryHistoryRange(7, now).to);
-  from.setDate(from.getDate() - ((from.getDay() + 6) % 7));
   from.setHours(0, 0, 0, 0);
   return { from: from.getTime(), to: now.getTime() };
 }

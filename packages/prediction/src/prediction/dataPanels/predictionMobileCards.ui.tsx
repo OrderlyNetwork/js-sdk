@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Divider, EmptyDataState, Text } from "@orderly.network/ui";
 import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
-import { Decimal } from "@orderly.network/utils";
 import { binaryHistoryDisplayRows } from "../binary/binarySettlement";
 import {
   OutcomeBadge,
@@ -16,7 +15,10 @@ import type { PredictionAccountPanelState } from "../prediction.types";
 import { formatCountdown, usePredictionFormatters } from "../predictionShared";
 import { PredictionFilters } from "./filters/predictionFilters.ui";
 import { usePredictionHistoryTableScript } from "./history/predictionHistoryTable.script";
-import { useHoldingsTableScript } from "./holdings/holdingsTable.script";
+import {
+  useHoldingsPositionRows,
+  useHoldingsTableScript,
+} from "./holdings/holdingsTable.script";
 import { PredictionOrderCell } from "./orders/predictionOrderCell.ui";
 
 const Field: React.FC<{ label: string; children: React.ReactNode }> = ({
@@ -52,30 +54,21 @@ export const MobilePredictionPositions: React.FC<{
   const { t } = useTranslation();
   const { filters } = useHoldingsTableScript();
   const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
-  const positions = state.positions.filter(filters.matches);
+  const rows = useHoldingsPositionRows(state, filters.matches);
   return (
     <>
       <PredictionFilters filters={filters} mode="holdings" />
-      <Cards empty={positions.length === 0}>
-        {positions.map((position) => {
-          // Only the selected round has a subscribed book for live valuation.
-          const isSelectedRound =
-            position.symbol === state.marketView?.selectedRow?.symbol;
-          const lastPrice = isSelectedRound
-            ? state.marketView?.outcomePrices[position.outcome]
-            : undefined;
-          const pnl =
-            lastPrice != null
-              ? new Decimal(lastPrice)
-                  .sub(position.averagePrice)
-                  .mul(position.quantity)
-                  .toNumber()
-              : undefined;
-          return (
-            <div
-              key={`${position.symbol ?? ""}-${position.outcome}`}
-              className="oui-rounded-xl oui-bg-base-9 oui-p-3"
-            >
+      <Cards empty={rows.length === 0}>
+        {rows.map(
+          ({
+            id,
+            position,
+            isSelectedRound,
+            lastPrice,
+            uPnL,
+            availableQuantity,
+          }) => (
+            <div key={id} className="oui-rounded-xl oui-bg-base-9 oui-p-3">
               <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
                 <RoundSymbol
                   round={position.round ?? state.marketView?.round ?? 0}
@@ -90,13 +83,7 @@ export const MobilePredictionPositions: React.FC<{
                   <TableNumber value={position.quantity} />
                 </Field>
                 <Field label={t("common.available")}>
-                  <TableNumber
-                    value={state.availableQuantity(
-                      position.outcome,
-                      undefined,
-                      position.symbol,
-                    )}
-                  />
+                  <TableNumber value={availableQuantity} />
                 </Field>
                 <Field label={t("prediction.entryPrice")}>
                   <TableNumber value={position.averagePrice} />
@@ -109,9 +96,9 @@ export const MobilePredictionPositions: React.FC<{
                   )}
                 </Field>
                 <Field label={t("common.unrealizedPnl")}>
-                  {pnl != null ? (
+                  {uPnL != null ? (
                     <Text.pnl dp={2} coloring>
-                      {pnl}
+                      {uPnL}
                     </Text.pnl>
                   ) : (
                     <Text intensity={36}>--</Text>
@@ -135,8 +122,8 @@ export const MobilePredictionPositions: React.FC<{
                 />
               </div>
             </div>
-          );
-        })}
+          ),
+        )}
       </Cards>
     </>
   );
@@ -144,11 +131,15 @@ export const MobilePredictionPositions: React.FC<{
 
 export const MobilePredictionHistory: React.FC<{
   state: PredictionAccountPanelState;
-}> = ({ state }) => {
+  predictionUnderlyingSymbol?: string;
+}> = ({ state, predictionUnderlyingSymbol }) => {
   const { t } = useTranslation();
   const { formatTableTime } = usePredictionFormatters();
-  const { filters } = usePredictionHistoryTableScript();
-  const records = binaryHistoryDisplayRows(state.historyRecords).filter(
+  const { filters, historyState } = usePredictionHistoryTableScript(
+    state,
+    predictionUnderlyingSymbol,
+  );
+  const records = binaryHistoryDisplayRows(historyState.historyRecords).filter(
     (record) =>
       filters.matches({
         outcome: record.outcome ?? "",

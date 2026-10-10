@@ -1,5 +1,5 @@
 import type { BinaryInfoRow } from "./binary/binaryInfo";
-import type { PredictionChartPoint } from "./prediction.script";
+import type { PredictionChartPoint } from "./prediction.types";
 import {
   CANDLE_INTERVAL_MS,
   CANDLE_TICK_INTERVAL_MS,

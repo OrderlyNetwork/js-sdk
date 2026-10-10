@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { binaryRoundFromSymbol } from "./binaryInfo";
 import type { BinaryInfoRow } from "./binaryInfo";
-import { deriveBinaryMarkets, getBinaryMarketIdentity } from "./binaryMarkets";
+import {
+  deriveBinaryMarkets,
+  getBinaryMarketIdentity,
+  parseBinaryRoundSymbol,
+} from "./binaryMarkets";
 
 const now = Date.UTC(2026, 8, 29, 10, 36);
 
@@ -70,6 +74,32 @@ test("separates bases, periods and coincident round starts", () => {
   assert.equal(
     binaryRoundFromSymbol(row("BTC", 10, start).symbol),
     start / 1_000,
+  );
+});
+
+test("symbol parsing delegates to the strict canonical parser", () => {
+  const parsed = parseBinaryRoundSymbol("PERP_BTC5M2608271200_USDC");
+  assert.deepEqual(parsed, {
+    base: "BTC",
+    period: "5M",
+    quote: "USDC",
+    roundStart: Date.UTC(2026, 7, 27, 12, 0),
+    intervalSeconds: 300,
+  });
+  // Fabricated dates (Feb 30, month 13) reject instead of rolling over.
+  assert.equal(parseBinaryRoundSymbol("PERP_BTC5M2602301200_USDC"), null);
+  assert.equal(parseBinaryRoundSymbol("PERP_BTC5M2613301200_USDC"), null);
+  // The canonical pattern pins the quote currency.
+  assert.equal(parseBinaryRoundSymbol("PERP_BTC5M2608271200_USDT"), null);
+  assert.equal(parseBinaryRoundSymbol(undefined), null);
+});
+
+test("binaryRoundFromSymbol falls back to the grid for malformed symbols", () => {
+  assert.equal(binaryRoundFromSymbol("PERP_BTC5M2602301200_USDC"), undefined);
+  const fallback = Date.UTC(2026, 8, 29, 10, 3, 7);
+  assert.equal(
+    binaryRoundFromSymbol("PERP_BTC5M2602301200_USDC", fallback),
+    Math.floor(fallback / 1000 / 300) * 300,
   );
 });
 

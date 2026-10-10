@@ -7,7 +7,6 @@ import {
   binaryHistoryRange,
   binaryHistorySnapshot,
   binaryHistoryWindow,
-  binaryWeekRange,
   normalizeBinaryHistory,
   summarizeBinaryHistory,
   toPredictionSettlement,
@@ -385,7 +384,6 @@ test("calendar boundaries use local dates, Monday and an explicit snapshot time"
   start.setHours(0, 0, 0, 0);
   assert.equal(r.from, start.getTime());
   assert.equal(r.to, now.getTime());
-  assert.equal(new Date(binaryWeekRange(now).from).getDay(), 1);
   assert.throws(() => binaryHistoryRange(91, now), RangeError);
   assert.throws(() => binaryHistoryRange(90, new Date(NaN)), RangeError);
 });

@@ -6,7 +6,13 @@ import {
   type API,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { splitBinaryQuantity } from "./binaryOrderRules";
+import { floorToTickDecimal } from "../predictionShared";
+import {
+  complementPrice,
+  DEFAULT_BINARY_BASE_MAX,
+  DEFAULT_BINARY_BASE_TICK,
+  splitBinaryQuantity,
+} from "./binaryOrderRules";
 import type { BinarySizeRules } from "./binaryOrderRules";
 
 export const ISO_ORDER_FROZEN_BUFFER = 0.0006;
@@ -30,8 +36,7 @@ const isPrice = (price: number) =>
   Number.isFinite(price) && price > 0 && price < 1;
 const isQuantity = (quantity: number) =>
   Number.isFinite(quantity) && quantity >= 0;
-const floorQuantity = (quantity: Decimal, tick: number) =>
-  quantity.div(tick).toDecimalPlaces(0, Decimal.ROUND_FLOOR).mul(tick);
+const floorQuantity = floorToTickDecimal;
 
 /**
  * Prefer per-order inputs covering the position aggregates. Otherwise use
@@ -174,7 +179,7 @@ export function resolveBinaryCollateral(inputs: {
 const binaryMarginPrice = (order: account.IsolatedPendingOrder) =>
   order.side === OrderSide.BUY
     ? order.referencePrice
-    : new Decimal(1).sub(order.referencePrice).toNumber();
+    : complementPrice(order.referencePrice);
 
 /** Incremental opening risk; price priority always stays in UP coordinates. */
 export function estimateBinaryOrderFrozen(
@@ -243,8 +248,8 @@ export function maxBinaryOrderQuantity(inputs: {
     side,
     upPrice,
     balance,
-    baseTick = 0.01,
-    baseMax = 10000,
+    baseTick = DEFAULT_BINARY_BASE_TICK,
+    baseMax = DEFAULT_BINARY_BASE_MAX,
     splitRules,
   } = inputs;
   if (
@@ -268,7 +273,7 @@ export function maxBinaryOrderQuantity(inputs: {
       ? floorQuantity(unreserved, baseTick)
       : new Decimal(0);
   const marginPrice =
-    side === OrderSide.BUY ? upPrice : new Decimal(1).sub(upPrice).toNumber();
+    side === OrderSide.BUY ? upPrice : complementPrice(upPrice);
   const fundedUpper = new Decimal(balance)
     .div(
       new Decimal(marginPrice).mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER)),

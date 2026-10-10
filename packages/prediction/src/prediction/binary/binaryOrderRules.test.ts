@@ -13,13 +13,16 @@ import {
   binaryProtectionPrice,
   binaryRejectionNotice,
   binarySubmissionNotice,
+  binaryUpNotional,
   estimateBinarySlippage,
   isBinaryMarketBatchAllowed,
   parseSlippageTicks,
   quoteToBinaryQuantity,
+  resolveBinaryOrderLimits,
   splitBinaryQuantity,
   submitBinaryBatches,
   toBinaryUpRequest,
+  validateBinaryOrderSize,
   validBinaryFee,
 } from "./binaryOrderRules";
 import { getBinaryQuotes } from "./binaryQuotes";
@@ -471,4 +474,128 @@ test("batch and unknown notices retain status without exposing fallback keys or 
     ),
     "Acceptance unknown",
   );
+});
+
+test("resolveBinaryOrderLimits fills every sparse field from shared defaults", () => {
+  assert.deepEqual(resolveBinaryOrderLimits({}), {
+    quoteTick: 0.01,
+    quoteMin: 0.01,
+    quoteMax: 0.99,
+    baseTick: 0.01,
+    baseMin: 0.01,
+    baseMax: 10000,
+    minNotional: 5,
+  });
+  // quote_max falls back to 1 - quote_tick so non-default grids stay symmetric.
+  assert.deepEqual(resolveBinaryOrderLimits({ quote_tick: 0.02 }), {
+    quoteTick: 0.02,
+    quoteMin: 0.02,
+    quoteMax: 0.98,
+    baseTick: 0.01,
+    baseMin: 0.01,
+    baseMax: 10000,
+    minNotional: 5,
+  });
+  assert.deepEqual(
+    resolveBinaryOrderLimits({
+      quote_min: 0.1,
+      quote_max: 0.9,
+      quote_tick: 0.05,
+      base_min: 1,
+      base_max: 50,
+      base_tick: 0.5,
+      min_notional: 10,
+    }),
+    {
+      quoteTick: 0.05,
+      quoteMin: 0.1,
+      quoteMax: 0.9,
+      baseTick: 0.5,
+      baseMin: 1,
+      baseMax: 50,
+      minNotional: 10,
+    },
+  );
+});
+
+test("validateBinaryOrderSize reports the first failing size rule in UP coordinates", () => {
+  const limits = resolveBinaryOrderLimits(rules);
+  // 6 contracts at 0.99 has notional 5.94 >= 5.
+  assert.equal(
+    validateBinaryOrderSize({ price: 0.99, quantity: 6, limits }),
+    undefined,
+  );
+  assert.equal(
+    validateBinaryOrderSize({ price: 0.009, quantity: 6, limits }),
+    "priceOutOfRange",
+  );
+  assert.equal(
+    validateBinaryOrderSize({ price: 1, quantity: 6, limits }),
+    "priceOutOfRange",
+  );
+  assert.equal(
+    validateBinaryOrderSize({ price: Number.NaN, quantity: 6, limits }),
+    "priceOutOfRange",
+  );
+  assert.equal(
+    validateBinaryOrderSize({ price: 0.555, quantity: 6, limits }),
+    "priceNotTickAligned",
+  );
+  // Market orders ride the tick-aligned protection price; callers opt out.
+  assert.equal(
+    validateBinaryOrderSize({
+      price: 0.555,
+      quantity: 10,
+      limits,
+      requirePriceTickAligned: false,
+    }),
+    undefined,
+  );
+  assert.equal(
+    validateBinaryOrderSize({ price: 0.5, quantity: 0.009, limits }),
+    "quantityBelowMin",
+  );
+  assert.equal(
+    validateBinaryOrderSize({ price: 0.5, quantity: Number.NaN, limits }),
+    "quantityBelowMin",
+  );
+  // 6 * 0.5 = 3 < 5.
+  assert.equal(
+    validateBinaryOrderSize({ price: 0.5, quantity: 6, limits }),
+    "notionalBelowMin",
+  );
+  assert.equal(
+    validateBinaryOrderSize({
+      price: 0.5,
+      quantity: 10001,
+      limits,
+      checkQuantityMax: true,
+    }),
+    "quantityAboveMax",
+  );
+  assert.equal(
+    validateBinaryOrderSize({
+      price: 0.5,
+      quantity: 10001,
+      limits,
+      requireQuantityTickAligned: true,
+    }),
+    undefined,
+  );
+  assert.equal(
+    validateBinaryOrderSize({
+      price: 0.5,
+      quantity: 6.005,
+      limits,
+      requireQuantityTickAligned: true,
+    }),
+    "quantityNotTickAligned",
+  );
+});
+
+test("binaryUpNotional converts DOWN display prices to the UP complement", () => {
+  assert.equal(binaryUpNotional(10, "up", 0.3).toNumber(), 3);
+  // DOWN @0.3 is UP @0.7: 10 * 0.7 = 7.
+  assert.equal(binaryUpNotional(10, "down", 0.3).toNumber(), 7);
+  assert.ok(binaryUpNotional(6, "down", 0.98) instanceof Decimal);
 });

@@ -1,7 +1,6 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
 import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
 import { useRoundCountdown } from "../../hooks/useRoundCountdown";
 import { SellPosition } from "../../orderEntry/sellPosition";
@@ -10,6 +9,7 @@ import { formatCountdown } from "../../predictionShared";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
 import type { HoldingsTableScript } from "./holdingsTable.script";
+import { useHoldingsPositionRows } from "./holdingsTable.script";
 
 /* eslint-disable react/jsx-key -- DataTable cells are positional arrays keyed by their parent row. */
 export type HoldingsTableUIProps = {
@@ -27,6 +27,7 @@ export const HoldingsTableUI = ({
 }: HoldingsTableUIProps) => {
   const { t } = useTranslation();
   const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
+  const rows = useHoldingsPositionRows(state, filters.matches);
   return (
     <PredictionDataTable
       toolbar={
@@ -48,32 +49,21 @@ export const HoldingsTableUI = ({
         tableColumn(t("prediction.countdownStatus"), 150),
         tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
       ]}
-      rows={state.positions.filter(filters.matches).map((position) => {
-        // Only the selected round has a subscribed book; other rounds' rows
-        // stay readable but without live valuation.
-        const isSelectedRound =
-          position.symbol === state.marketView?.selectedRow?.symbol;
-        const lastPrice = isSelectedRound
-          ? state.marketView?.outcomePrices[position.outcome]
-          : undefined;
-        const uPnL =
-          lastPrice != null
-            ? new Decimal(lastPrice)
-                .sub(position.averagePrice)
-                .mul(position.quantity)
-                .toNumber()
-            : undefined;
-        return {
-          id: `${position.symbol ?? ""}-${position.outcome}`,
+      rows={rows.map(
+        ({
+          id,
+          position,
+          isSelectedRound,
+          lastPrice,
+          uPnL,
+          availableQuantity,
+        }) => ({
+          id,
           sortValues: [
             undefined,
             undefined,
             position.quantity,
-            state.availableQuantity(
-              position.outcome,
-              undefined,
-              position.symbol,
-            ),
+            availableQuantity,
             position.averagePrice,
             lastPrice,
             uPnL,
@@ -86,13 +76,7 @@ export const HoldingsTableUI = ({
             />,
             <OutcomeBadge outcome={position.outcome} />,
             <TableNumber value={position.quantity} />,
-            <TableNumber
-              value={state.availableQuantity(
-                position.outcome,
-                undefined,
-                position.symbol,
-              )}
-            />,
+            <TableNumber value={availableQuantity} />,
             <TableNumber value={position.averagePrice} />,
             lastPrice != null ? (
               <TableNumber value={lastPrice} />
@@ -119,8 +103,8 @@ export const HoldingsTableUI = ({
               symbol={position.symbol}
             />,
           ],
-        };
-      })}
+        }),
+      )}
     />
   );
 };

@@ -1,17 +1,11 @@
-import { useMemo, useRef } from "react";
-import { useRefreshOrderCaches } from "@orderly.network/hooks";
 import type { BinaryInfoRow } from "../binary/binaryInfo";
-import { useBinaryFeeRates } from "../binary/useBinaryFeeRates";
 import type { BinaryOrderBook } from "../binary/useBinaryOrderbook";
 import { useOneTapOrders } from "./tradingActions/useOneTapOrders";
-import { useOrderCancellation } from "./tradingActions/useOrderCancellation";
 import { useOrderSubmission } from "./tradingActions/useOrderSubmission";
 import { useTradingEstimates } from "./tradingActions/useTradingEstimates";
+import { usePredictionAccountActions } from "./usePredictionAccountActions";
 import type { PredictionAccountResources } from "./usePredictionAccountResources";
 
-export { toPredictionOrder } from "../binary/binaryOrderDisplay";
-export { ISO_ORDER_FROZEN_BUFFER } from "../binary/binaryCollateral";
-export type { PlaceOrderInput } from "./tradingActions/useOrderSubmission";
 export type UsePredictionTradingActionsArgs = {
   resources: PredictionAccountResources;
   active?: boolean;
@@ -35,8 +29,7 @@ export type UsePredictionTradingActionsArgs = {
 /**
  * Composition root for prediction trading behavior: estimators, the order
  * submission engine, cancellations, and one-tap orders. The returned object
- * is the public contract (see PredictionAccountActions/PredictionAccountState
- * Picks) — keep its shape field-for-field.
+ * is internal; account consumers use explicit account interfaces.
  */
 export const usePredictionTradingActions = ({
   resources,
@@ -50,29 +43,31 @@ export const usePredictionTradingActions = ({
   book,
   onActiveTab,
 }: UsePredictionTradingActionsArgs) => {
-  const configBySymbol = useMemo(
-    () => new Map(binaryRows.map((row) => [row.symbol, row])),
-    [binaryRows],
-  );
+  const account = usePredictionAccountActions({
+    resources,
+    binaryRows,
+    active,
+    selectedSymbol,
+    isRegionRestricted,
+    notify,
+  });
+  const {
+    configBySymbol,
+    feeRates,
+    hasFeeConfig,
+    refreshOrders,
+    bulkCancellationMounted,
+  } = account;
   const selectedConfig = selectedSymbol
     ? configBySymbol.get(selectedSymbol)
     : undefined;
-  const feeRates = useBinaryFeeRates();
-  const hasFeeConfig = feeRates.takerRate != null && feeRates.makerRate != null;
   const { accountState, accountReady } = resources;
-  const refreshOrders = useRefreshOrderCaches();
-  // Shared unmount guard for async continuations; the mount/unmount effect
-  // lives in useOrderCancellation, submission only reads the flag.
-  const bulkCancellationMounted = useRef(true);
   const estimates = useTradingEstimates({
-    resources,
-    active,
+    accountEstimates: account.estimates,
     configBySymbol,
     selectedSymbol,
     bbo,
     slippage,
-    feeRates,
-    hasFeeConfig,
   });
   const submission = useOrderSubmission({
     resources,
@@ -80,7 +75,6 @@ export const usePredictionTradingActions = ({
     notify,
     isRegionRestricted,
     selectedSymbol,
-    selectedConfig,
     bbo,
     slippage,
     book,
@@ -91,18 +85,8 @@ export const usePredictionTradingActions = ({
     bulkCancellationMounted,
     availableQuantity: estimates.availableQuantity,
     estimateAdditionalFrozen: estimates.estimateAdditionalFrozen,
-    maxOpeningQuantity: estimates.maxOpeningQuantity,
     protectionPrice: estimates.protectionPrice,
     isOrderTradable: estimates.isOrderTradable,
-  });
-  const cancellation = useOrderCancellation({
-    resources,
-    notify,
-    isRegionRestricted,
-    selectedSymbol,
-    isOrderTradable: estimates.isOrderTradable,
-    refreshOrders,
-    bulkCancellationMounted,
   });
   const oneTap = useOneTapOrders({
     protectionPrice: estimates.protectionPrice,
@@ -110,6 +94,9 @@ export const usePredictionTradingActions = ({
     estimateAdditionalFrozen: estimates.estimateAdditionalFrozen,
     submitOrder: submission.submitOrder,
     isSubmitting: submission.isSubmitting,
+    book,
+    slippage,
+    notify,
     selectedSymbol,
     selectedConfig,
     balance: resources.balance,
@@ -162,14 +149,15 @@ export const usePredictionTradingActions = ({
     isOrderTradable: estimates.isOrderTradable,
     protectionPrice: estimates.protectionPrice,
     sellPosition: submission.sellPosition,
-    editPendingOrder: submission.editPendingOrder,
+    editPendingOrder: account.actions.editPendingOrder,
     placeOrder: submission.placeOrder,
+    evaluateOneTapOrder: oneTap.evaluateOneTapOrder,
     oneTapPayout: oneTap.oneTapPayout,
     canPlaceOneTapOrder: oneTap.canPlaceOneTapOrder,
     oneTapBlockReason: oneTap.oneTapBlockReason,
     placeOneTapOrder: oneTap.placeOneTapOrder,
-    cancelOrder: cancellation.cancelOrder,
-    cancelAllOrders: cancellation.cancelAllOrders,
+    cancelOrder: account.actions.cancelOrder,
+    cancelAllOrders: account.actions.cancelAllOrders,
     feeRates,
     estimateFee: estimates.estimateFee,
     estimateFrozen: estimates.estimateFrozen,

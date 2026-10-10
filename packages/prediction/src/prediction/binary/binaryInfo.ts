@@ -1,8 +1,15 @@
 import type { API } from "@orderly.network/types";
-import { BINARY_SYMBOL_PATTERN } from "@orderly.network/utils";
+import { parseBinarySymbol } from "@orderly.network/utils";
 import type { PredictionRoundPhase } from "../prediction.types";
 
 export { BINARY_SYMBOL_PATTERN, isBinarySymbol } from "@orderly.network/utils";
+
+/**
+ * Round ids are the epoch seconds of the round start; consecutive rounds are
+ * spaced by this many seconds and each round ends one interval after its id.
+ * Also the minimum grid every legal period (5M/10M/15M) is a multiple of.
+ */
+export const ROUND_INTERVAL_SECONDS = 300;
 
 /**
  * Row of the unified Binary info snapshot
@@ -41,24 +48,20 @@ export const binaryRowRoundStart = (row: BinaryInfoRow) =>
  * Best-effort round start (epoch seconds) for a binary symbol that may no
  * longer be in the snapshot: parse yymmddHHMM from the symbol name, falling
  * back to aligning the provided timestamp down to the 5-minute grid.
+ * Parsing is strict (see parseBinarySymbol): fabricated dates such as Feb 30
+ * take the grid fallback rather than a silently rolled-over datetime.
  */
 export const binaryRoundFromSymbol = (
   symbol: string,
   fallbackTimestampMs?: number,
 ): number | undefined => {
-  const match = BINARY_SYMBOL_PATTERN.exec(symbol);
-  if (match) {
-    const [, , , datePart] = match;
-    const yy = Number(datePart.slice(0, 2));
-    const mm = Number(datePart.slice(2, 4));
-    const dd = Number(datePart.slice(4, 6));
-    const hh = Number(datePart.slice(6, 8));
-    const mi = Number(datePart.slice(8, 10));
-    const parsed = Date.UTC(2000 + yy, mm - 1, dd, hh, mi) / 1000;
-    if (Number.isFinite(parsed)) return parsed;
-  }
+  const parsed = parseBinarySymbol(symbol);
+  if (parsed) return parsed.roundStartMs / 1000;
   if (typeof fallbackTimestampMs === "number") {
-    return Math.floor(fallbackTimestampMs / 1000 / 300) * 300;
+    return (
+      Math.floor(fallbackTimestampMs / 1000 / ROUND_INTERVAL_SECONDS) *
+      ROUND_INTERVAL_SECONDS
+    );
   }
   return undefined;
 };

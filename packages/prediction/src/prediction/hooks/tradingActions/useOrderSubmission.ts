@@ -15,17 +15,17 @@ import { Decimal, getTimestamp } from "@orderly.network/utils";
 import { estimateBinaryOrderFrozen } from "../../binary/binaryCollateral";
 import { isBinaryRowTradable } from "../../binary/binaryInfo";
 import type { BinaryInfoRow } from "../../binary/binaryInfo";
-import { binaryOrderEditPayload } from "../../binary/binaryOrderDisplay";
 import {
   binaryProtectionPrice,
-  binaryRejectionNotice,
   binarySubmissionNotice,
   estimateBinarySlippage,
   isBinaryMarketBatchAllowed,
   parseSlippageTicks,
+  resolveBinaryOrderLimits,
   splitBinaryQuantity,
   submitBinaryBatches,
   toBinaryUpRequest,
+  validateBinaryOrderSize,
 } from "../../binary/binaryOrderRules";
 import type { BinaryOrderBook } from "../../binary/useBinaryOrderbook";
 import type {
@@ -54,7 +54,6 @@ export type OrderSubmissionArgs = {
   isRegionRestricted: boolean;
   /** Symbol of the selected round. */
   selectedSymbol: string | undefined;
-  selectedConfig: BinaryInfoRow | undefined;
   /** UP-coordinates BBO of the selected round's book. */
   bbo: {
     bestAsk: number | undefined;
@@ -73,7 +72,6 @@ export type OrderSubmissionArgs = {
   bulkCancellationMounted: MutableRefObject<boolean>;
   availableQuantity: TradingEstimates["availableQuantity"];
   estimateAdditionalFrozen: TradingEstimates["estimateAdditionalFrozen"];
-  maxOpeningQuantity: TradingEstimates["maxOpeningQuantity"];
   protectionPrice: TradingEstimates["protectionPrice"];
   isOrderTradable: TradingEstimates["isOrderTradable"];
 };
@@ -87,19 +85,12 @@ const toTickQuantity = (quantity: number, tick: number) =>
  * is BUY UP @(1-n).
  */
 const toUpBookRequest = toBinaryUpRequest;
-const toDisplayPrice = (upPrice: number) =>
-  new Decimal(1).sub(upPrice).toNumber();
-// The UI renders notification messages through i18next `t()`, which passes
-// unknown keys through verbatim, so raw backend rejection text displays as-is
-// (untranslated); only messages without any backend text fall back to the key.
-const rejectionNotice = binaryRejectionNotice;
 export const useOrderSubmission = ({
   resources,
   active,
   notify,
   isRegionRestricted,
   selectedSymbol,
-  selectedConfig,
   bbo,
   slippage,
   book,
@@ -110,19 +101,11 @@ export const useOrderSubmission = ({
   bulkCancellationMounted,
   availableQuantity,
   estimateAdditionalFrozen,
-  maxOpeningQuantity,
   protectionPrice,
   isOrderTradable,
 }: OrderSubmissionArgs) => {
   const { accountState, accountReady } = resources;
-  const {
-    balance,
-    openOrders,
-    getCollateralSnapshot,
-    pendingOrdersStream,
-    allOrdersStream,
-    refreshAccountPositions,
-  } = resources;
+  const { balance, getCollateralSnapshot, refreshAccountPositions } = resources;
   const submitting = useRef(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const live = useRef({
@@ -170,7 +153,6 @@ export const useOrderSubmission = ({
   }, [balance, getCollateralSnapshot, availableQuantity]);
   const [doCreateOrder] = useMutation("/v1/order", "POST");
   const [doCreateBatchOrder] = useMutation("/v1/batch-order", "POST");
-  const [doUpdateOrder] = useMutation("/v1/order", "PUT");
   const submitOrder = useCallback(
     async (input: {
       symbol: string | undefined;
@@ -209,19 +191,9 @@ export const useOrderSubmission = ({
         notify(failureFallback ?? "prediction.message.orderFailed", "danger");
         return false;
       }
-      if (
-        !Number.isFinite(displayPrice) ||
-        displayPrice <= 0 ||
-        displayPrice >= 1 ||
-        !Number.isFinite(quantity) ||
-        quantity < (config.base_min ?? config.base_tick ?? 0.01)
-      ) {
-        notify("prediction.invalidOrder", "danger");
-        return false;
-      }
+      const limits = resolveBinaryOrderLimits(config);
       const { upSide, upPrice } = toUpBookRequest(outcome, side, displayPrice);
       const quantities = splitBinaryQuantity(quantity, upPrice, config);
-      const tick = config.quote_tick ?? 0.01;
       const levels =
         outcome === "up"
           ? { asks: book.asks, bids: book.bids }
@@ -229,11 +201,8 @@ export const useOrderSubmission = ({
       const estimated = estimateBinarySlippage(
         side,
         quantity,
-        {
-          asks: levels.asks.map(([price, quantity]) => ({ price, quantity })),
-          bids: levels.bids.map(([price, quantity]) => ({ price, quantity })),
-        },
-        tick,
+        levels,
+        limits.quoteTick,
       );
       const protection = binaryProtectionPrice(
         outcome,
@@ -242,32 +211,22 @@ export const useOrderSubmission = ({
         slippage,
         config,
       );
+      // Size/config gates share one rejection key; market orders additionally
+      // recheck the protection price and the executable depth here.
+      const marketRejected =
+        type === "market" &&
+        (protection == null ||
+          estimated == null ||
+          parseSlippageTicks(slippage) == null ||
+          estimated > parseSlippageTicks(slippage)! ||
+          (side === "buy"
+            ? new Decimal(displayPrice).gt(protection)
+            : new Decimal(displayPrice).lt(protection)));
       if (
         !quantities ||
-        !new Decimal(upPrice).div(tick).isInteger() ||
-        (type === "market" &&
-          (protection == null ||
-            estimated == null ||
-            parseSlippageTicks(slippage) == null ||
-            estimated > parseSlippageTicks(slippage)! ||
-            (side === "buy"
-              ? new Decimal(displayPrice).gt(protection)
-              : new Decimal(displayPrice).lt(protection))))
+        marketRejected ||
+        validateBinaryOrderSize({ price: upPrice, quantity, limits })
       ) {
-        notify("prediction.invalidOrder", "danger");
-        return false;
-      }
-      if (
-        upPrice < (config.quote_min ?? config.quote_tick ?? 0.01) ||
-        upPrice > (config.quote_max ?? 0.99)
-      ) {
-        notify("prediction.invalidOrder", "danger");
-        return false;
-      }
-      // min_notional is validated on the UP-book price for both sides and
-      // reduce-only exits alike (api-spec §5.2); reject early instead of
-      // letting the server bounce the order.
-      if (new Decimal(quantity).mul(upPrice).lt(config.min_notional ?? 5)) {
         notify("prediction.invalidOrder", "danger");
         return false;
       }
@@ -295,9 +254,9 @@ export const useOrderSubmission = ({
         side: upSide,
         order_type: type === "limit" ? OrderType.LIMIT : OrderType.IOC,
         order_price: new Decimal(upPrice).toFixed(
-          new Decimal(tick).decimalPlaces(),
+          new Decimal(limits.quoteTick).decimalPlaces(),
         ),
-        order_quantity: toTickQuantity(size, config.base_tick ?? 0.01),
+        order_quantity: toTickQuantity(size, limits.baseTick),
         margin_mode: "ISOLATED",
         ...(reduceOnly ? { reduce_only: true } : {}),
       }));
@@ -417,8 +376,6 @@ export const useOrderSubmission = ({
       doCreateBatchOrder,
       estimateAdditionalFrozen,
       notify,
-      pendingOrdersStream.refresh,
-      allOrdersStream.refresh,
       refreshAccountPositions,
       refreshOrders,
     ],
@@ -517,113 +474,10 @@ export const useOrderSubmission = ({
       submitOrder,
     ],
   );
-  const editPendingOrder = useCallback(
-    async (id: number, price: number, quantity: number): Promise<boolean> => {
-      const order = openOrders.find((item) => item.id === id);
-      const config = order?.symbol
-        ? configBySymbol.get(order.symbol)
-        : selectedConfig;
-      // Every rejection must surface a reason; a silently no-oping edit
-      // modal looks like a broken button.
-      if (!config || !isBinaryRowTradable(config, getTimestamp())) {
-        notify("prediction.message.roundNotTradable", "danger");
-        return false;
-      }
-      if (isRegionRestricted) {
-        notify("prediction.message.regionRestricted", "danger");
-        return false;
-      }
-      if (!order) {
-        notify("prediction.message.orderNotFound", "danger");
-        return false;
-      }
-      if (
-        !Number.isFinite(price) ||
-        !Number.isFinite(quantity) ||
-        price < (config.quote_min ?? config.quote_tick ?? 0.01) ||
-        price > (config.quote_max ?? 0.99) ||
-        quantity < (config.base_min ?? config.base_tick ?? 0.01)
-      ) {
-        notify("prediction.invalidOrder", "danger");
-        return false;
-      }
-      if (
-        !new Decimal(price).div(config.quote_tick ?? 0.01).isInteger() ||
-        !new Decimal(quantity).div(config.base_tick ?? 0.01).isInteger() ||
-        new Decimal(price).mul(quantity).lt(config.min_notional ?? 5)
-      ) {
-        notify("prediction.invalidOrder", "danger");
-        return false;
-      }
-      const remaining = new Decimal(quantity).sub(order.filledQuantity);
-      // PERP-style quantity envelope only; backend checks repricing funds.
-      const maxTotal = order.reduceOnly
-        ? new Decimal(order.filledQuantity).add(
-            availableQuantity(
-              order.side === "sell" ? "up" : "down",
-              id,
-              order.symbol,
-            ),
-          )
-        : new Decimal(order.quantity).add(
-            maxOpeningQuantity(
-              order.outcome,
-              order.outcome === "up"
-                ? order.price
-                : toDisplayPrice(order.price),
-              order.symbol,
-            ),
-          );
-      if (
-        remaining.lt(0) ||
-        new Decimal(quantity).gt(maxTotal) ||
-        quantity > (config.base_max ?? 10000)
-      ) {
-        notify("prediction.invalidOrder", "danger");
-        return false;
-      }
-      try {
-        const payload = binaryOrderEditPayload(
-          order,
-          price,
-          quantity,
-          config.quote_tick ?? 0.01,
-          config.base_tick ?? 0.01,
-        );
-        if (!payload) {
-          notify("prediction.message.orderNotFound", "danger");
-          return false;
-        }
-        const response = await doUpdateOrder(payload);
-        if (response?.success === false) {
-          // Empty message falls through to the generic key in rejectionNotice.
-          throw new Error(response?.message);
-        }
-        notify("prediction.message.orderUpdated");
-        return true;
-      } catch (error) {
-        console.error("prediction order update rejected", error);
-        notify(rejectionNotice(error), "danger");
-        return false;
-      }
-    },
-    [
-      configBySymbol,
-      doUpdateOrder,
-      isRegionRestricted,
-      availableQuantity,
-      maxOpeningQuantity,
-      notify,
-      openOrders,
-      selectedConfig,
-      selectedSymbol,
-    ],
-  );
   return {
     submitOrder,
     placeOrder,
     sellPosition,
-    editPendingOrder,
     isSubmitting,
   };
 };

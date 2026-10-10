@@ -9,13 +9,16 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { parseSlippageTicks } from "../../binary/binaryOrderRules";
+import {
+  DEFAULT_BINARY_QUOTE_TICK,
+  parseSlippageTicks,
+} from "../../binary/binaryOrderRules";
 
 export const BinarySlippage = ({
   slippage,
   setSlippage,
   estimated,
-  quoteTick = 0.01,
+  quoteTick = DEFAULT_BINARY_QUOTE_TICK,
 }: {
   slippage: string;
   setSlippage: (value: string) => void;

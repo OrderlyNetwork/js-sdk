@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
 import {
+  complementPrice,
+  DEFAULT_BINARY_QUOTE_TICK,
   estimateBinarySlippage,
   parseSlippageTicks,
 } from "../binary/binaryOrderRules";
@@ -15,7 +17,7 @@ import type {
   PredictionOutcome,
 } from "../prediction.types";
 
-export const estimateMarketSlippage = estimateBinarySlippage;
+const estimateMarketSlippage = estimateBinarySlippage;
 
 const toLevels = (levels: BinaryBookLevel[]) =>
   levels.map(([price, quantity]) => ({ price, quantity }));
@@ -42,7 +44,7 @@ export const usePredictionOrderBook = ({
       : new Decimal(quotes.upChance).div(100).toNumber();
   const outcomePrices = {
     up: mid,
-    down: mid == null ? undefined : new Decimal(1).sub(mid).toNumber(),
+    down: mid == null ? undefined : complementPrice(mid),
   };
 
   return {
@@ -77,7 +79,7 @@ export const usePredictionOrderBookView = ({
   orderQuantity,
   orderType,
   slippage,
-  quoteTick = 0.01,
+  quoteTick = DEFAULT_BINARY_QUOTE_TICK,
 }: UsePredictionOrderBookViewArgs) => {
   const orderBook = useMemo(() => {
     if (selectedOutcome === "down") {
@@ -104,15 +106,7 @@ export const usePredictionOrderBookView = ({
         outcome === "down"
           ? { asks: book.downAsks, bids: book.downBids }
           : { asks: book.asks, bids: book.bids };
-      return estimateMarketSlippage(
-        side,
-        quantity,
-        {
-          asks: toLevels(levels.asks),
-          bids: toLevels(levels.bids),
-        },
-        quoteTick,
-      );
+      return estimateMarketSlippage(side, quantity, levels, quoteTick);
     },
     [book, selectedOutcome, quoteTick],
   );

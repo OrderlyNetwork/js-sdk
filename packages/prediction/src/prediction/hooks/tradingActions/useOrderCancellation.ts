@@ -79,14 +79,7 @@ export const useOrderCancellation = ({
         notify(rejectionNotice(error), "danger");
       }
     },
-    [
-      doCancelOrder,
-      isOrderTradable,
-      isRegionRestricted,
-      notify,
-      openOrders,
-      selectedSymbol,
-    ],
+    [doCancelOrder, isOrderTradable, isRegionRestricted, notify, openOrders],
   );
   const bulkCancellationBusy = useRef(false);
   const bulkCancellationContext = useRef({

@@ -4,26 +4,33 @@ import { Button, EmptyDataState } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
 import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
 import { MobileOrderList } from "@orderly.network/ui-orders";
-import type { PredictionAccountPanelState } from "../prediction.types";
 import { usePredictionFilters } from "../predictionFilters.script";
 import { PredictionFilters } from "./filters/predictionFilters.ui";
 import { matchesPredictionOrderFilters } from "./orders/matchesPredictionOrderFilters";
 import { MobilePredictionOrderCard } from "./predictionMobileCards.ui";
 import {
+  buildProductFilterItems,
   toOrderSide,
   toOrderStatus,
   useAllProductOrdersTableScript,
   useSharedProductOrdersPanelScript,
-  type ProductOrderMode,
 } from "./sharedProductOrdersPanel.script";
+import type { SharedProductOrdersPanelProps } from "./sharedProductOrdersPanel.ui";
 import { useScopedPredictionAccount } from "./useScopedPredictionAccount";
 
-export const MobileSharedProductOrdersPanel: React.FC<{
-  state: PredictionAccountPanelState;
-  mode: ProductOrderMode;
-  perpsSymbol?: string;
-  predictionUnderlyingSymbol?: string;
-}> = ({ state, mode, perpsSymbol, predictionUnderlyingSymbol }) => {
+export type { SharedProductOrdersPanelProps } from "./sharedProductOrdersPanel.ui";
+
+export const MobileSharedProductOrdersPanel: React.FC<
+  SharedProductOrdersPanelProps
+> = ({
+  state,
+  mode,
+  perpsSymbol,
+  predictionUnderlyingSymbol,
+  onSymbolChange,
+  sharePnLConfig,
+  pnlNotionalDecimalPrecision,
+}) => {
   const { t } = useTranslation();
   const scopedState = useScopedPredictionAccount(
     state,
@@ -43,23 +50,18 @@ export const MobileSharedProductOrdersPanel: React.FC<{
     state: scopedState,
     mode,
     mobile: true,
+    onSymbolChange,
+    sharePnLConfig,
+    pnlNotionalDecimalPrecision,
     includePrediction: instrument !== "perps",
     instrument,
     perpsSymbol,
     predictionUnderlyingSymbol,
   });
-  const productFilterItems: DataFilterItem[] = [
-    {
-      type: "select",
-      name: "instrument",
-      value: instrument,
-      options: [
-        { label: t("prediction.filter.allInstruments"), value: "all" },
-        { label: t("common.perps"), value: "perps" },
-        { label: t("prediction.title"), value: "prediction" },
-      ],
-    },
-  ];
+  const productFilterItems: DataFilterItem[] = buildProductFilterItems(
+    t,
+    instrument,
+  );
   const filteredPredictionOrders = predictionOrders.filter((order) =>
     matchesPredictionOrderFilters(filters, order),
   );
@@ -92,10 +94,7 @@ export const MobileSharedProductOrdersPanel: React.FC<{
     { label: t("orders.status.canceled"), value: "cancelled" },
     { label: t("orders.status.rejected"), value: "rejected" },
   ];
-  const perpsOnFilter = orderListState.onFilter as (filter: {
-    name: string;
-    value: unknown;
-  }) => void;
+  const perpsOnFilter = orderListState.onFilter;
   const onSharedFilter = ({
     name,
     value,
@@ -128,7 +127,7 @@ export const MobileSharedProductOrdersPanel: React.FC<{
     onProductFilter(filter);
   };
   const cancelAllDisabled = sharedCancelAllDisabled;
-  const onCancelAllClick = orderListState.onCancelAll as () => Promise<boolean>;
+  const onCancelAllClick = orderListState.onCancelAll;
 
   return (
     <div className="oui-w-full">
@@ -162,14 +161,8 @@ export const MobileSharedProductOrdersPanel: React.FC<{
         </div>
       ) : (
         <MobileOrderList
-          {...(orderListState as React.ComponentProps<typeof MobileOrderList>)}
-          dataSource={
-            predictionOnly
-              ? []
-              : (orderListState.dataSource as React.ComponentProps<
-                  typeof MobileOrderList
-                >["dataSource"])
-          }
+          {...orderListState}
+          dataSource={predictionOnly ? [] : orderListState.dataSource}
           isLoading={Boolean(
             orderListState.isLoading ||
             orderListState.isValidating ||

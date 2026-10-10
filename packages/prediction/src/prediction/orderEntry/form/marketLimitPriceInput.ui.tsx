@@ -2,7 +2,8 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Input, inputFormatter, Select } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import type { PredictionOrderType } from "../../prediction.script";
+import { DEFAULT_BINARY_QUOTE_TICK } from "../../binary/binaryOrderRules";
+import type { PredictionOrderType } from "../../prediction.types";
 import { BinarySlippage } from "./binarySlippage.ui";
 
 export type MarketLimitPriceInputProps = {
@@ -26,7 +27,7 @@ export const MarketLimitPriceInput: React.FC<MarketLimitPriceInputProps> = ({
   setSlippage,
   estimatedSlippage,
   showSlippage = true,
-  quoteTick = 0.01,
+  quoteTick = DEFAULT_BINARY_QUOTE_TICK,
 }) => {
   const { t } = useTranslation();
   return (

@@ -3,25 +3,25 @@ import { Decimal } from "@orderly.network/utils";
 import { binaryOutcomeMarkPrice } from "../binary/binaryMarkPrice";
 import {
   binaryMaxQuoteInput,
+  complementPrice,
+  DEFAULT_BINARY_BASE_MAX,
+  DEFAULT_BINARY_BASE_TICK,
+  DEFAULT_BINARY_MIN_NOTIONAL,
+  DEFAULT_BINARY_QUOTE_TICK,
   quoteToBinaryQuantity,
+  resolveBinaryOrderLimits,
   splitBinaryQuantity,
+  validateBinaryOrderSize,
 } from "../binary/binaryOrderRules";
 import { amountFromPercentage } from "../orderEntry/form/quantityPercentage";
-import {
-  clamp,
-  type PredictionAmountUnit,
-  type PredictionOrderSide,
-  type PredictionOrderType,
-  type PredictionOutcome,
-  type PredictionPosition,
+import type {
+  PredictionAmountUnit,
+  PredictionOrderSide,
+  PredictionOrderType,
+  PredictionOutcome,
+  PredictionPosition,
 } from "../prediction.types";
-import { floorToTick } from "../predictionShared";
-
-const isOnTick = (value: number, tick: number) =>
-  Number.isFinite(value) &&
-  new Decimal(value).div(tick).isInteger() &&
-  value > 0 &&
-  value < 1;
+import { clamp, floorToTick } from "../predictionShared";
 
 export type UsePredictionOrderFormArgs = {
   marketId?: string;
@@ -62,13 +62,13 @@ export type UsePredictionOrderFormArgs = {
 export const usePredictionOrderForm = ({
   marketId,
   markPrice,
-  quoteTick = 0.01,
+  quoteTick = DEFAULT_BINARY_QUOTE_TICK,
   quoteMin = quoteTick,
-  quoteMax = new Decimal(1).sub(quoteTick).toNumber(),
-  baseTick = 0.01,
+  quoteMax = complementPrice(quoteTick),
+  baseTick = DEFAULT_BINARY_BASE_TICK,
   baseMin = baseTick,
-  baseMax = 10000,
-  minNotional = 5,
+  baseMax = DEFAULT_BINARY_BASE_MAX,
+  minNotional = DEFAULT_BINARY_MIN_NOTIONAL,
   executablePrices,
   marketPrice,
   balance,
@@ -118,14 +118,6 @@ export const usePredictionOrderForm = ({
   const selectedPrice = Number.isFinite(rawSelectedPrice)
     ? rawSelectedPrice
     : 0;
-  const displayMin =
-    selectedOutcome === "up"
-      ? quoteMin
-      : new Decimal(1).sub(quoteMax).toNumber();
-  const displayMax =
-    selectedOutcome === "up"
-      ? quoteMax
-      : new Decimal(1).sub(quoteMin).toNumber();
 
   // Capacity preview must not supply a price to the submitted order.
   const maxAmountPrice =
@@ -206,39 +198,34 @@ export const usePredictionOrderForm = ({
   const canPlaceOrder = useMemo(() => {
     if (!isRoundTradable || isRegionRestricted || formMarketId !== marketId)
       return false;
+    // Size/config gates run in UP-book coordinates (api-spec §5.2): a DOWN
+    // order at display n is validated as UP at 1-n.
+    const limits = resolveBinaryOrderLimits({
+      quote_tick: quoteTick,
+      quote_min: quoteMin,
+      quote_max: quoteMax,
+      base_tick: baseTick,
+      base_min: baseMin,
+      base_max: baseMax,
+      min_notional: minNotional,
+    });
+    const upPrice =
+      selectedOutcome === "up" ? selectedPrice : complementPrice(selectedPrice);
+    // Market orders ride the tick-aligned protection price; only manually
+    // typed limit prices need the quote-tick grid check.
     if (
-      numericAmount <= 0 ||
-      selectedPrice < displayMin ||
-      selectedPrice > displayMax
-    ) {
-      return false;
-    }
-    if (orderQuantity < baseMin || !Number.isFinite(selectedPrice))
-      return false;
-    if (orderType === "limit" && !isOnTick(selectedPrice, quoteTick))
-      return false;
-    // min_notional is validated on the UP-book order price for both sides,
-    // entries and reduce-only exits alike (api-spec §5.2); a DOWN order at
-    // display n checks (1-n)*qty, not n*qty.
-    const upNotional = new Decimal(orderQuantity).mul(
-      selectedOutcome === "up"
-        ? selectedPrice
-        : new Decimal(1).sub(selectedPrice).toNumber(),
-    );
-    if (
-      !upNotional.gte(minNotional) ||
-      !splitBinaryQuantity(
-        orderQuantity,
-        selectedOutcome === "up"
-          ? selectedPrice
-          : new Decimal(1).sub(selectedPrice).toNumber(),
-        {
-          base_tick: baseTick,
-          base_min: baseMin,
-          base_max: baseMax,
-          min_notional: minNotional,
-        },
-      )
+      validateBinaryOrderSize({
+        price: upPrice,
+        quantity: orderQuantity,
+        limits,
+        requirePriceTickAligned: orderType === "limit",
+      }) ||
+      !splitBinaryQuantity(orderQuantity, upPrice, {
+        base_tick: limits.baseTick,
+        base_min: limits.baseMin,
+        base_max: limits.baseMax,
+        min_notional: limits.minNotional,
+      })
     )
       return false;
     if (
@@ -257,20 +244,18 @@ export const usePredictionOrderForm = ({
     baseMin,
     baseMax,
     baseTick,
-    displayMax,
-    displayMin,
     formMarketId,
     isRegionRestricted,
     isRoundTradable,
     marketId,
     minNotional,
-    numericAmount,
-    orderNotional,
     orderQuantity,
+    quoteMin,
+    quoteMax,
+    quoteTick,
     requiredFrozen,
     orderSide,
     orderType,
-    quoteTick,
     selectedOutcome,
     selectedPrice,
     selectedTokenBalance,

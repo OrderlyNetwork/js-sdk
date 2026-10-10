@@ -1,5 +1,11 @@
 import {
+  normalizeBinaryHistory,
+  type BinaryHistorySnapshot,
+  type BinaryHistoryRecord,
+} from "../binary/binaryHistory";
+import {
   updateBinarySettlementWatch,
+  binaryHistorySegments,
   type BinarySettlementWatch,
 } from "../binary/binarySettlement";
 
@@ -10,10 +16,14 @@ type Cache = {
 
 /** Account-scoped observations live in the same cache as private query snapshots. */
 export function createSettlementResource(accountId?: string) {
-  let state: BinarySettlementWatch = {
+  let state: BinarySettlementWatch & {
+    historySnapshot?: BinaryHistorySnapshot;
+    confirmedHistoryRecords: BinaryHistoryRecord[];
+  } = {
     accountId,
     holdings: [],
     initialized: false,
+    confirmedHistoryRecords: [],
   };
   let streamFingerprint: string | undefined;
   let needsRestValidation = true;
@@ -55,6 +65,33 @@ export function createSettlementResource(accountId?: string) {
   };
   return {
     getSnapshot: () => state,
+    rememberHistory: (snapshot: BinaryHistorySnapshot) => {
+      if (
+        snapshot.accountId !== accountId ||
+        snapshot === state.historySnapshot
+      )
+        return;
+      if (
+        state.historySnapshot &&
+        snapshot.receivedAt < state.historySnapshot.receivedAt
+      )
+        return;
+      const segments = binaryHistorySegments([
+        ...state.confirmedHistoryRecords,
+        ...(snapshot.rows ?? []).map(normalizeBinaryHistory),
+      ]);
+      state = {
+        ...state,
+        historySnapshot: snapshot,
+        confirmedHistoryRecords: segments.records.filter(
+          (record) =>
+            record.issues.length === 0 &&
+            !segments.conflictedRecordKeys.includes(record.recordKey) &&
+            (record.state === "settled" || record.state === "exit"),
+        ),
+      };
+      listeners.forEach((listener) => listener());
+    },
     subscribe: (listener: () => void) => {
       // Cached observations survive account changes, stream ownership does not.
       if (!listeners.size) needsRestValidation = true;
@@ -85,7 +122,13 @@ export function createSettlementResource(accountId?: string) {
       );
       needsRestValidation = false;
       if (next === state) return;
-      state = next;
+      state = {
+        ...next,
+        confirmedHistoryRecords: state.confirmedHistoryRecords,
+        ...(state.historySnapshot
+          ? { historySnapshot: state.historySnapshot }
+          : {}),
+      };
       listeners.forEach((listener) => listener());
     },
     retainPolling: (refresh: () => Promise<unknown>, interval: number) => {

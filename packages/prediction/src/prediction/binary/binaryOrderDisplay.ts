@@ -5,8 +5,31 @@ import {
   type API,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import type { PredictionOpenOrder } from "../prediction.types";
-import { binaryRoundFromSymbol } from "./binaryInfo";
+import type { PredictionOpenOrder, PredictionTrade } from "../prediction.types";
+import { binaryRoundFromSymbol, isBinarySymbol } from "./binaryInfo";
+import { complementPrice } from "./binaryOrderRules";
+import { matchesPredictionUnderlying } from "./productScope";
+
+type PredictionStatus = NonNullable<PredictionOpenOrder["status"]>;
+const statusByApiStatus: Record<string, PredictionStatus> = {
+  [OrderStatus.INCOMPLETE]: "pending",
+  [OrderStatus.NEW]: "pending",
+  [OrderStatus.FILLED]: "filled",
+  [OrderStatus.PARTIAL_FILLED]: "partialFilled",
+  [OrderStatus.CANCELLED]: "cancelled",
+  [OrderStatus.REJECTED]: "rejected",
+};
+const apiStatusByPredictionStatus: Record<PredictionStatus, OrderStatus> = {
+  pending: OrderStatus.INCOMPLETE,
+  filled: OrderStatus.FILLED,
+  partialFilled: OrderStatus.PARTIAL_FILLED,
+  cancelled: OrderStatus.CANCELLED,
+  rejected: OrderStatus.REJECTED,
+};
+export const toPredictionStatus = (value: unknown): PredictionStatus | "all" =>
+  statusByApiStatus[String(value)] ?? "all";
+export const toOrderStatus = (value: unknown): OrderStatus | "all" =>
+  apiStatusByPredictionStatus[String(value) as PredictionStatus] ?? "all";
 
 export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
   id: order.order_id,
@@ -37,16 +60,7 @@ export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
   symbol: order.symbol,
   round: binaryRoundFromSymbol(order.symbol, order.created_time) ?? 0,
   timestamp: order.created_time,
-  status:
-    order.status === OrderStatus.FILLED
-      ? "filled"
-      : order.status === OrderStatus.CANCELLED
-        ? "cancelled"
-        : order.status === OrderStatus.REJECTED
-          ? "rejected"
-          : order.status === OrderStatus.PARTIAL_FILLED
-            ? "partialFilled"
-            : "pending",
+  status: statusByApiStatus[String(order.status)] ?? "pending",
 });
 
 /** Echo immutable API attributes; only the UP price and quantity are changed. */
@@ -81,8 +95,7 @@ export const binaryOrderEditPayload = (
 export const binaryOrderDisplayPrice = (
   order: PredictionOpenOrder,
   upPrice: number,
-) =>
-  order.outcome === "up" ? upPrice : new Decimal(1).sub(upPrice).toNumber();
+) => (order.outcome === "up" ? upPrice : complementPrice(upPrice));
 
 export const binaryOrderExecutedValue = (order: PredictionOpenOrder) => {
   if (order.filledQuantity <= 0) return 0;
@@ -91,3 +104,23 @@ export const binaryOrderExecutedValue = (order: PredictionOpenOrder) => {
     .mul(binaryOrderDisplayPrice(order, order.averagePrice))
     .toNumber();
 };
+
+/** Shared account/list projection. Product filtering also guards cross-product WS cache inserts. */
+export const normalizePredictionOrders = (
+  orders: readonly API.Order[],
+  underlyingSymbol?: string,
+): PredictionOpenOrder[] =>
+  orders
+    .filter(
+      (order) =>
+        !order.algo_order_id &&
+        isBinarySymbol(order.symbol) &&
+        matchesPredictionUnderlying(order.symbol, underlyingSymbol),
+    )
+    .map(toPredictionOrder);
+export const isPredictionTerminalOrder = (
+  order: PredictionOpenOrder,
+): order is PredictionTrade =>
+  order.status === "filled" ||
+  order.status === "cancelled" ||
+  order.status === "rejected";

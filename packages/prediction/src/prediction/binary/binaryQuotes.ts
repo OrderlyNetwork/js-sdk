@@ -1,4 +1,5 @@
 import { Decimal } from "@orderly.network/utils";
+import { complementPrice } from "./binaryOrderRules";
 
 export const getBinaryQuotes = (bestBid?: number, bestAsk?: number) => {
   const valid = (price?: number) =>
@@ -8,7 +9,7 @@ export const getBinaryQuotes = (bestBid?: number, bestAsk?: number) => {
   const bid = valid(bestBid);
   const ask = valid(bestAsk);
   const complement = (price?: number) =>
-    price == null ? undefined : new Decimal(1).sub(price).toNumber();
+    price == null ? undefined : complementPrice(price);
   return {
     executablePrices: {
       buy: { up: ask, down: complement(bid) },

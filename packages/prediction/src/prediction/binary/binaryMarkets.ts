@@ -1,42 +1,23 @@
+import { parseBinarySymbol } from "@orderly.network/utils";
+import type { PredictionMarket } from "../prediction.types";
 import type { BinaryInfoRow } from "./binaryInfo";
 
-export type BinaryMarket = {
-  id: string;
-  base: string;
-  quote: string;
-  period: string;
-  intervalSeconds: number;
-  indexPriceSymbol: string;
-  currentRow: BinaryInfoRow;
-};
+export type BinaryMarket = PredictionMarket;
 
-const INDEX_SYMBOL_PATTERN = /^PERP_([A-Z0-9]+)_([A-Z0-9]+)$/;
-const ROUND_SYMBOL_PATTERN =
-  /^PERP_([A-Z0-9]+?)(5M|10M|15M)(\d{10})_([A-Z0-9]+)$/;
+/** Underlying index symbol such as `PERP_BTC_USDC`; shared with productScope. */
+export const INDEX_SYMBOL_PATTERN = /^PERP_([A-Z0-9]+)_([A-Z0-9]+)$/;
+
 const PERIODS = new Set([5, 10, 15]);
 
 export function parseBinaryRoundSymbol(symbol?: string) {
-  const match = symbol ? ROUND_SYMBOL_PATTERN.exec(symbol) : null;
-  if (!match) return null;
-  const datePart = match[3];
-  const roundStart = Date.UTC(
-    2000 + Number(datePart.slice(0, 2)),
-    Number(datePart.slice(2, 4)) - 1,
-    Number(datePart.slice(4, 6)),
-    Number(datePart.slice(6, 8)),
-    Number(datePart.slice(8, 10)),
-  );
-  const normalized = new Date(roundStart)
-    .toISOString()
-    .replace(/[-:T]/g, "")
-    .slice(2, 12);
-  if (normalized !== datePart) return null;
+  const parsed = symbol ? parseBinarySymbol(symbol) : undefined;
+  if (!parsed) return null;
   return {
-    base: match[1],
-    period: match[2],
-    quote: match[4],
-    roundStart,
-    intervalSeconds: Number(match[2].slice(0, -1)) * 60,
+    base: parsed.base,
+    period: parsed.period,
+    quote: parsed.quote,
+    roundStart: parsed.roundStartMs,
+    intervalSeconds: parsed.intervalSeconds,
   };
 }
 

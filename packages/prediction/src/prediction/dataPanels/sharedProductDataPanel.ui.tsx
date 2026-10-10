@@ -10,6 +10,7 @@ import {
 import type { PredictionAccountPanelState } from "../prediction.types";
 import { PredictionHistoryTable } from "./history/predictionHistoryTable.widget";
 import { HoldingsTable } from "./holdings/holdingsTable.widget";
+import type { PredictionPerpsPanelProps } from "./perpsPanel.types";
 import {
   MobilePredictionHistory,
   MobilePredictionPositions,
@@ -21,7 +22,7 @@ import {
 } from "./sharedProductDataPanel.script";
 import { useScopedPredictionAccount } from "./useScopedPredictionAccount";
 
-export type SharedProductDataPanelProps = {
+export type SharedProductDataPanelProps = PredictionPerpsPanelProps & {
   state: PredictionAccountPanelState;
   type: ProductDataType;
   /** The product shown when this panel first opens on a page. */
@@ -51,6 +52,9 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   perpsPositionHistoryContent,
   onProductChange,
   mobile = false,
+  onSymbolChange,
+  sharePnLConfig,
+  pnlNotionalDecimalPrecision,
 }) => {
   const { t } = useTranslation();
   const scopedState = useScopedPredictionAccount(
@@ -69,6 +73,12 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
     onProductChange,
   });
 
+  const perpsProps = {
+    onSymbolChange,
+    sharePnLConfig,
+    pnlNotionalDecimalPrecision,
+  };
+
   const content =
     product === "prediction" ? (
       type === "positions" ? (
@@ -78,23 +88,37 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
           <HoldingsTable state={scopedState} />
         )
       ) : mobile ? (
-        <MobilePredictionHistory state={scopedState} />
+        <MobilePredictionHistory
+          state={scopedState}
+          predictionUnderlyingSymbol={predictionUnderlyingSymbol}
+        />
       ) : (
-        <PredictionHistoryTable state={scopedState} />
+        <PredictionHistoryTable
+          state={scopedState}
+          predictionUnderlyingSymbol={predictionUnderlyingSymbol}
+        />
       )
     ) : type === "positions" ? (
       (perpsPositionsContent ??
       (mobile ? (
-        <MobilePositionsWidget symbol={perpsSymbol} />
+        <MobilePositionsWidget {...perpsProps} symbol={perpsSymbol} />
       ) : (
-        <PerpsPositionsPanel symbol={perpsSymbol} />
+        <PerpsPositionsPanel {...perpsProps} symbol={perpsSymbol} />
       )))
     ) : (
       (perpsPositionHistoryContent ??
       (mobile ? (
-        <MobilePositionHistoryWidget symbol={perpsSymbol} productType="PERP" />
+        <MobilePositionHistoryWidget
+          {...perpsProps}
+          symbol={perpsSymbol}
+          productType="PERP"
+        />
       ) : (
-        <PositionHistoryWidget symbol={perpsSymbol} productType="PERP" />
+        <PositionHistoryWidget
+          {...perpsProps}
+          symbol={perpsSymbol}
+          productType="PERP"
+        />
       )))
     );
 

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
 import { type LocaleMessages, i18n } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
-  parseSlippageTicks,
+  complementPrice,
+  DEFAULT_BINARY_BASE_TICK,
+  DEFAULT_BINARY_QUOTE_TICK,
   splitBinaryQuantity,
 } from "../../binary/binaryOrderRules";
 import { usePredictionAccountResources } from "../../hooks/usePredictionAccountResources";
@@ -13,6 +14,7 @@ import {
   usePredictionOrderBook,
   usePredictionOrderBookView,
 } from "../../hooks/usePredictionOrderBook";
+import { usePredictionSlippage } from "../../hooks/usePredictionSlippage";
 import { usePredictionTradingActions } from "../../hooks/usePredictionTradingActions";
 import type {
   PredictionOutcome,
@@ -29,39 +31,50 @@ export type UseSellPositionScriptArgs = {
   outcome: PredictionOutcome;
   /** Round symbol of the position being sold. */
   symbol?: string;
+  /** Mount with the popover open; hosts use this for lazy per-row mounting. */
+  initialOpen?: boolean;
+  /** Called when the popover closes; initialOpen hosts unmount on it. */
+  onClosed?: () => void;
 };
 
 export const useSellPositionScript = ({
   state,
   outcome,
   symbol,
+  initialOpen = false,
+  onClosed,
 }: UseSellPositionScriptArgs) => {
-  const [open, setOpen] = useState(false);
-  const [quantity, setQuantity] = useState("");
+  const [open, setOpen] = useState(initialOpen);
+  const [quantity, setQuantity] = useState(() =>
+    initialOpen
+      ? String(state.availableQuantity(outcome, undefined, symbol))
+      : "",
+  );
   const [price, setPrice] = useState("");
   const [type, setType] = useState<PredictionOrderType>("market");
 
-  const openingContext = useRef<{ accountId?: string; symbol?: string }>({});
+  // Seed before any effect runs: the account guard below executes earlier
+  // in declaration order than the mount-seeding effect, and an empty
+  // openingContext would close (and lazily unmount) the popover at mount.
+  const openingContext = useRef<{ accountId?: string; symbol?: string }>(
+    initialOpen ? { accountId: state.accountId, symbol } : {},
+  );
+  const onClosedRef = useRef(onClosed);
+  useEffect(() => {
+    onClosedRef.current = onClosed;
+  }, [onClosed]);
+  const close = useCallback(() => {
+    setOpen(false);
+    onClosedRef.current?.();
+  }, []);
   const markets = usePredictionMarkets({ enabled: open });
   const row = symbol ? markets.configBySymbol.get(symbol) : undefined;
   const orderbook = usePredictionOrderBook({ symbol, active: open });
   const resources = usePredictionAccountResources({
     enabled: open,
-    includeHistory: false,
+    includeOrderHistory: false,
   });
-  const [storedSlippage, saveSlippage] = useLocalStorage(
-    "orderly-prediction-slippage-ticks",
-    "2",
-  );
-  const slippage =
-    parseSlippageTicks(storedSlippage) == null ? "2" : storedSlippage;
-  const setSlippage = useCallback(
-    (value: string) => {
-      if (parseSlippageTicks(value) != null)
-        saveSlippage(String(Number(value)));
-    },
-    [saveSlippage],
-  );
+  const { slippage, setSlippage } = usePredictionSlippage();
   const notify = useCallback(
     (message: string) =>
       toast.error(String(i18n.t(message as keyof LocaleMessages))),
@@ -101,11 +114,13 @@ export const useSellPositionScript = ({
         openingContext.current.symbol !== symbol ||
         state.accountId !== actions.accountId)
     )
-      setOpen(false);
-  }, [open, symbol, state.accountId, actions.accountId]);
+      close();
+  }, [open, symbol, state.accountId, actions.accountId, close]);
   const percentage = percentageFromQuantity(Number(quantity) || 0, available);
 
-  const quantityDp = new Decimal(row?.base_tick ?? 0.01).decimalPlaces();
+  const quantityDp = new Decimal(
+    row?.base_tick ?? DEFAULT_BINARY_BASE_TICK,
+  ).decimalPlaces();
   const selectPercentage = (value: number) =>
     setQuantity(quantityFromPercentage(available, value, quantityDp));
 
@@ -125,7 +140,7 @@ export const useSellPositionScript = ({
       ? 0
       : outcome === "up"
         ? displayPrice
-        : new Decimal(1).sub(displayPrice).toNumber();
+        : complementPrice(displayPrice);
   const valid =
     open &&
     !!row &&
@@ -136,22 +151,47 @@ export const useSellPositionScript = ({
     Number(quantity) <= available &&
     splitBinaryQuantity(Number(quantity), upPrice, row!) != null &&
     (type === "market" ||
-      new Decimal(Number(price)).div(row?.quote_tick ?? 0.01).isInteger()) &&
+      new Decimal(Number(price))
+        .div(row?.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK)
+        .isInteger()) &&
     !isSlippageExceeded &&
     (type === "market" || (Number(price) > 0 && Number(price) < 1));
 
+  // Seeding reads the host panel's live values (the closed popover always
+  // seeded from them); this stack's own copies activate with the popover.
+  const seedOnOpen = useCallback(() => {
+    openingContext.current = { accountId: state.accountId, symbol };
+    setQuantity(String(state.availableQuantity(outcome, undefined, symbol)));
+    setPrice(
+      orderbook.executablePrices.sell[outcome]?.toFixed(
+        new Decimal(
+          row?.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK,
+        ).decimalPlaces(),
+      ) ?? "",
+    );
+  }, [
+    state.accountId,
+    state.availableQuantity,
+    symbol,
+    outcome,
+    orderbook.executablePrices.sell,
+    row?.quote_tick,
+  ]);
   const onOpenChange = (value: boolean) => {
-    setOpen(value);
-    if (value) {
-      openingContext.current = { accountId: state.accountId, symbol };
-      setQuantity(String(available));
-      setPrice(
-        orderbook.executablePrices.sell[outcome]?.toFixed(
-          new Decimal(row?.quote_tick ?? 0.01).decimalPlaces(),
-        ) ?? "",
-      );
+    if (!value) {
+      close();
+      return;
     }
+    setOpen(true);
+    seedOnOpen();
   };
+  const seededMount = useRef(false);
+  useEffect(() => {
+    if (!initialOpen || seededMount.current) return;
+    seededMount.current = true;
+    seedOnOpen();
+    // Mount-only seeding; SWR caches shared with the host page are warm.
+  }, [initialOpen, seedOnOpen]);
 
   const confirm = async () => {
     if (!valid) return;
@@ -163,7 +203,8 @@ export const useSellPositionScript = ({
       symbol,
     );
     if (placed) {
-      setOpen(false);
+      // Route through close() so lazy hosts unmount the trading stack.
+      close();
     }
   };
 

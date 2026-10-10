@@ -33,6 +33,45 @@ const Amount = ({ value }: { value?: number }) =>
     <>--</>
   );
 
+/** Status line + card skeleton shared by both settlement record views. */
+const SegmentCard = ({
+  record,
+  segmentConflict,
+  compact,
+  children,
+}: {
+  record: BinaryHistoryRecord;
+  segmentConflict: boolean;
+  /** Segment list cards are tighter (space-y-2) than detail cards (space-y-3). */
+  compact?: boolean;
+  children: (completed: boolean) => ReactNode;
+}) => {
+  const { t } = useTranslation();
+  const completed = isBinarySettlementComplete(record, segmentConflict);
+  return (
+    <div
+      className={
+        compact
+          ? "oui-space-y-2 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
+          : "oui-space-y-3 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
+      }
+    >
+      <DetailRow
+        label={record.outcome ? t(`prediction.${record.outcome}`) : "--"}
+      >
+        {t(
+          completed
+            ? "prediction.resolution.segmentComplete"
+            : record.state === "pending" || record.state === "unknown"
+              ? "prediction.resolution.fundsProcessing"
+              : "prediction.resolution.dataIncomplete",
+        )}
+      </DetailRow>
+      {children(completed)}
+    </div>
+  );
+};
+
 export function SettlementSegments({
   records,
   conflict,
@@ -46,35 +85,27 @@ export function SettlementSegments({
   const { formatTableTime } = usePredictionFormatters();
   return (
     <div className="oui-space-y-3">
-      {records.map((record) => {
-        const segmentConflict =
-          conflictedRecordKeys?.includes(record.recordKey) ?? conflict;
-        const completed = isBinarySettlementComplete(record, segmentConflict);
-        return (
-          <div
-            key={record.recordKey}
-            className="oui-space-y-2 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
-          >
-            <DetailRow
-              label={record.outcome ? t(`prediction.${record.outcome}`) : "--"}
-            >
-              {t(
-                completed
-                  ? "prediction.resolution.segmentComplete"
-                  : record.state === "pending" || record.state === "unknown"
-                    ? "prediction.resolution.fundsProcessing"
-                    : "prediction.resolution.dataIncomplete",
-              )}
-            </DetailRow>
-            <DetailRow label={t("positions.history.column.netPnl")}>
-              <Amount value={completed ? record.pnl : undefined} />
-            </DetailRow>
-            <DetailRow label={t("prediction.settledTime")}>
-              {completed ? formatTableTime(record.completedAt!) : "--"}
-            </DetailRow>
-          </div>
-        );
-      })}
+      {records.map((record) => (
+        <SegmentCard
+          key={record.recordKey}
+          record={record}
+          compact
+          segmentConflict={
+            conflictedRecordKeys?.includes(record.recordKey) ?? conflict
+          }
+        >
+          {(completed) => (
+            <>
+              <DetailRow label={t("positions.history.column.netPnl")}>
+                <Amount value={completed ? record.pnl : undefined} />
+              </DetailRow>
+              <DetailRow label={t("prediction.settledTime")}>
+                {completed ? formatTableTime(record.completedAt!) : "--"}
+              </DetailRow>
+            </>
+          )}
+        </SegmentCard>
+      ))}
     </div>
   );
 }
@@ -107,58 +138,51 @@ export function BinarySettlementDetailsUI({
       {failed && (
         <p role="status">{t("prediction.resolution.historyUnavailable")}</p>
       )}
-      {records.map((record) => {
-        const segmentConflict =
-          conflictedRecordKeys?.includes(record.recordKey) ?? conflict;
-        const completed = isBinarySettlementComplete(record, segmentConflict);
-        return (
-          <div
-            key={record.recordKey}
-            className="oui-space-y-3 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
-          >
-            <DetailRow
-              label={record.outcome ? t(`prediction.${record.outcome}`) : "--"}
-            >
-              {t(
-                completed
-                  ? "prediction.resolution.segmentComplete"
-                  : record.state === "pending" || record.state === "unknown"
-                    ? "prediction.resolution.fundsProcessing"
-                    : "prediction.resolution.dataIncomplete",
-              )}
-            </DetailRow>
-            <DetailRow label={t("common.time")}>
-              {record.openedAt != null
-                ? formatTableTime(record.openedAt)
-                : "--"}
-            </DetailRow>
-            <DetailRow label={t("common.quantity")}>
-              {record.quantity != null &&
-              record.issues.length === 0 &&
-              !segmentConflict ? (
-                <Text.numeral dp={4}>{record.quantity}</Text.numeral>
-              ) : (
-                "--"
-              )}
-            </DetailRow>
-            <DetailRow label={t("prediction.resolution.investment")}>
-              <Amount value={completed ? record.investment : undefined} />
-            </DetailRow>
-            <DetailRow label={t("positions.history.netPnl.tradingFee")}>
-              <Amount value={completed ? record.tradingFee : undefined} />
-            </DetailRow>
-            <DetailRow label={t("prediction.payout")}>
-              <Amount value={completed ? record.payout : undefined} />
-            </DetailRow>
-            <DetailRow label={t("positions.history.column.netPnl")}>
-              <Amount value={completed ? record.pnl : undefined} />
-            </DetailRow>
-            <DetailRow label={t("prediction.settledTime")}>
-              {completed ? formatTableTime(record.completedAt!) : "--"}
-            </DetailRow>
-          </div>
-        );
-      })}
+      {records.map((record) => (
+        <SegmentCard
+          key={record.recordKey}
+          record={record}
+          segmentConflict={
+            conflictedRecordKeys?.includes(record.recordKey) ?? conflict
+          }
+        >
+          {(completed) => (
+            <>
+              <DetailRow label={t("common.time")}>
+                {record.openedAt != null
+                  ? formatTableTime(record.openedAt)
+                  : "--"}
+              </DetailRow>
+              <DetailRow label={t("common.quantity")}>
+                {record.quantity != null &&
+                record.issues.length === 0 &&
+                !(
+                  conflictedRecordKeys?.includes(record.recordKey) ?? conflict
+                ) ? (
+                  <Text.numeral dp={4}>{record.quantity}</Text.numeral>
+                ) : (
+                  "--"
+                )}
+              </DetailRow>
+              <DetailRow label={t("prediction.resolution.investment")}>
+                <Amount value={completed ? record.investment : undefined} />
+              </DetailRow>
+              <DetailRow label={t("positions.history.netPnl.tradingFee")}>
+                <Amount value={completed ? record.tradingFee : undefined} />
+              </DetailRow>
+              <DetailRow label={t("prediction.payout")}>
+                <Amount value={completed ? record.payout : undefined} />
+              </DetailRow>
+              <DetailRow label={t("positions.history.column.netPnl")}>
+                <Amount value={completed ? record.pnl : undefined} />
+              </DetailRow>
+              <DetailRow label={t("prediction.settledTime")}>
+                {completed ? formatTableTime(record.completedAt!) : "--"}
+              </DetailRow>
+            </>
+          )}
+        </SegmentCard>
+      ))}
     </div>
   );
 }

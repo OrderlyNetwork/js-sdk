@@ -1,19 +1,19 @@
 import { useMemo } from "react";
 import { i18n, useLocaleCode } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
+import { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
 
-/**
- * Round ids are the epoch seconds of the round start; consecutive rounds are
- * spaced by this many seconds and each round ends one interval after its id.
- */
-export const ROUND_INTERVAL_SECONDS = 300;
+export { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
 
 /**
  * decimal.js-light has no floor(); step a value onto the tick grid by
- * rounding the tick count down on the integer grid. Number and string
- * wrappers share this core so sizing and submission agree exactly.
+ * rounding the tick count down on the integer grid. Number, string and
+ * Decimal inputs share this core so sizing and submission agree exactly.
  */
-export const floorToTickDecimal = (value: number, tick: number) =>
+export const floorToTickDecimal = (
+  value: number | string | Decimal,
+  tick: number,
+) =>
   new Decimal(value)
     .div(tick)
     .toDecimalPlaces(0, Decimal.ROUND_FLOOR)
@@ -21,6 +21,9 @@ export const floorToTickDecimal = (value: number, tick: number) =>
 
 export const floorToTick = (value: number, tick: number) =>
   floorToTickDecimal(value, tick).toNumber();
+
+export const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
 
 /** Map Orderly locale codes to BCP-47 tags that Intl understands. */
 export function toIntlLocale(locale?: string): string | undefined {
@@ -31,15 +34,47 @@ export function toIntlLocale(locale?: string): string | undefined {
   return code;
 }
 
+// Intl formatter construction costs 10-100x a format() call, and these
+// helpers run inside table row loops that re-render on every tick and
+// countdown; cache instances per resolved locale and options.
+const numberFormatterCache = new Map<string, Intl.NumberFormat>();
+const dateTimeFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+function cachedNumberFormat(
+  intlLocale: string | undefined,
+  options: Intl.NumberFormatOptions,
+): Intl.NumberFormat {
+  const key = `${intlLocale ?? ""}|${JSON.stringify(options)}`;
+  let formatter = numberFormatterCache.get(key);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(intlLocale, options);
+    numberFormatterCache.set(key, formatter);
+  }
+  return formatter;
+}
+
+function cachedDateTimeFormat(
+  intlLocale: string | undefined,
+  options: Intl.DateTimeFormatOptions,
+): Intl.DateTimeFormat {
+  const key = `${intlLocale ?? ""}|${JSON.stringify(options)}`;
+  let formatter = dateTimeFormatterCache.get(key);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(intlLocale, options);
+    dateTimeFormatterCache.set(key, formatter);
+  }
+  return formatter;
+}
+
 export function createUsdFormatter(locale?: string) {
-  return new Intl.NumberFormat(toIntlLocale(locale), {
+  return cachedNumberFormat(toIntlLocale(locale), {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 }
 
 export function createContractFormatter(locale?: string) {
-  return new Intl.NumberFormat(toIntlLocale(locale), {
+  return cachedNumberFormat(toIntlLocale(locale), {
     minimumFractionDigits: 0,
     maximumFractionDigits: 4,
   });
@@ -53,15 +88,29 @@ export function formatContracts(value: number, locale?: string) {
   return createContractFormatter(locale).format(value);
 }
 
-/** @deprecated Prefer formatUsd(); kept for gradual call-site migration. */
-export const usdFormatter = {
-  format: (value: number) => formatUsd(value),
-};
-
-/** @deprecated Prefer formatContracts(); kept for gradual call-site migration. */
-export const contractFormatter = {
-  format: (value: number) => formatContracts(value),
-};
+/**
+ * Shared "$1.23 USDC" assembly: callers keep their own validity condition
+ * and pass null/undefined to get the placeholder (suffix still appended).
+ */
+export function formatUsdAmount(
+  value: number | null | undefined,
+  options: {
+    prefix?: string;
+    suffix?: string;
+    placeholder?: string;
+    approximate?: boolean;
+  } = {},
+) {
+  const {
+    prefix = "",
+    suffix = "",
+    placeholder = "--",
+    approximate = false,
+  } = options;
+  return value == null || !Number.isFinite(value)
+    ? `${placeholder}${suffix}`
+    : `${approximate ? "≈ " : ""}${prefix}${formatUsd(value)}${suffix}`;
+}
 
 /** "MM:SS"; minutes may exceed 59 ("75:30") — for compact two-box countdowns. */
 export const formatCountdown = (seconds: number) => {
@@ -94,7 +143,7 @@ export function getLocalTimeZoneOffsetLabel(
   locale?: string,
   date: Date = new Date(),
 ) {
-  const parts = new Intl.DateTimeFormat(toIntlLocale(locale), {
+  const parts = cachedDateTimeFormat(toIntlLocale(locale), {
     timeZoneName: "shortOffset",
   }).formatToParts(date);
   const name = parts.find((part) => part.type === "timeZoneName")?.value ?? "";
@@ -110,13 +159,13 @@ export function formatRoundWindow(
   const intlLocale = toIntlLocale(locale);
   const start = new Date(round * 1_000);
   const end = new Date(expireAtMs ?? start.getTime() + intervalSeconds * 1_000);
-  const startText = new Intl.DateTimeFormat(intlLocale, {
+  const startText = cachedDateTimeFormat(intlLocale, {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   }).format(start);
-  const endParts = new Intl.DateTimeFormat(intlLocale, {
+  const endParts = cachedDateTimeFormat(intlLocale, {
     hour: "numeric",
     minute: "2-digit",
     timeZoneName: "shortOffset",
@@ -142,11 +191,11 @@ export function formatRoundBadge(
 ) {
   const intlLocale = toIntlLocale(locale);
   const end = new Date((round + intervalSeconds) * 1_000);
-  const dateText = new Intl.DateTimeFormat(intlLocale, {
+  const dateText = cachedDateTimeFormat(intlLocale, {
     month: "2-digit",
     day: "2-digit",
   }).format(end);
-  const timeText = new Intl.DateTimeFormat(intlLocale, {
+  const timeText = cachedDateTimeFormat(intlLocale, {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -156,7 +205,7 @@ export function formatRoundBadge(
 }
 
 export function formatTableTime(timestamp: number, locale?: string) {
-  return new Intl.DateTimeFormat(toIntlLocale(locale), {
+  return cachedDateTimeFormat(toIntlLocale(locale), {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

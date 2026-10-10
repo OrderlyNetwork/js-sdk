@@ -7,6 +7,10 @@ import {
 import { Text, Tooltip, cn, useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { binaryOutcomeMarkPrice } from "../binary/binaryMarkPrice";
+import {
+  DEFAULT_BINARY_BASE_TICK,
+  DEFAULT_BINARY_QUOTE_TICK,
+} from "../binary/binaryOrderRules";
 import type { PredictionState } from "../prediction.script";
 import { accumulateOrderBookLevels } from "../predictionShared";
 
@@ -48,8 +52,8 @@ export const PredictionOrderBook: React.FC<
   market,
 }) => {
   const { t } = useTranslation();
-  const quoteTick = selectedRow?.quote_tick ?? 0.01;
-  const baseTick = selectedRow?.base_tick ?? 0.01;
+  const quoteTick = selectedRow?.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK;
+  const baseTick = selectedRow?.base_tick ?? DEFAULT_BINARY_BASE_TICK;
   const quote = market?.quote ?? "USDC";
   const selectPrice = (price: number) => {
     setOrderType("limit");
