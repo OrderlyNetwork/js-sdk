@@ -6,12 +6,57 @@ import { numberToHumanStyle } from "./decimal";
  * Primary classification should be data-driven (membership in
  * /v1/public/binary/info); this pattern is the fallback for records whose
  * round already fell out of the 300-row snapshot (api-spec §3.1).
+ * Capture groups: base, period, yymmddHHMM, quote.
  */
 export const BINARY_SYMBOL_PATTERN =
-  /^PERP_([A-Z0-9]+?)(5M|10M|15M)(\d{10})_USDC$/;
+  /^PERP_([A-Z0-9]+?)(5M|10M|15M)(\d{10})_(USDC)$/;
 
 export const isBinarySymbol = (symbol: string) =>
   BINARY_SYMBOL_PATTERN.test(symbol);
+
+/** Parsed parts of a round binary option symbol (see BINARY_SYMBOL_PATTERN). */
+export type ParsedBinarySymbol = {
+  base: string;
+  period: string;
+  quote: string;
+  /** Round start (T0) in epoch milliseconds, as encoded by yymmddHHMM. */
+  roundStartMs: number;
+  /** Round length in seconds derived from the period segment. */
+  intervalSeconds: number;
+};
+
+/**
+ * Parse a round binary option symbol such as `PERP_BTC5M2608271200_USDC`.
+ * Strict: the yymmddHHMM segment must encode a real UTC datetime (checked
+ * by formatting the parsed date back), so fabricated dates (e.g. Feb 30)
+ * return undefined instead of silently rolling over into a wrong round.
+ */
+export const parseBinarySymbol = (
+  symbol: string,
+): ParsedBinarySymbol | undefined => {
+  const match = BINARY_SYMBOL_PATTERN.exec(symbol);
+  if (!match) return undefined;
+  const [, base, period, datePart, quote] = match;
+  const roundStartMs = Date.UTC(
+    2000 + Number(datePart.slice(0, 2)),
+    Number(datePart.slice(2, 4)) - 1,
+    Number(datePart.slice(4, 6)),
+    Number(datePart.slice(6, 8)),
+    Number(datePart.slice(8, 10)),
+  );
+  const normalized = new Date(roundStartMs)
+    .toISOString()
+    .replace(/[-:T]/g, "")
+    .slice(2, 12);
+  if (normalized !== datePart) return undefined;
+  return {
+    base,
+    period,
+    quote,
+    intervalSeconds: Number(period.slice(0, -1)) * 60,
+    roundStartMs,
+  };
+};
 
 /**
  * Format trading pair symbol *
