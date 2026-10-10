@@ -3,7 +3,10 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn, Text } from "@orderly.network/ui";
 import type { BinaryHistoryRecord } from "../binary/binaryHistory";
 import { isBinarySettlementComplete } from "../binary/binarySettlement";
-import { usePredictionFormatters } from "../predictionShared";
+import {
+  useIndexPriceFormatter,
+  usePredictionFormatters,
+} from "../predictionShared";
 import type { RoundResultState } from "./roundResult.script";
 
 const DetailRow = ({
@@ -188,6 +191,7 @@ export function RoundResultUI(
 ) {
   const { t } = useTranslation();
   const { formatRoundWindow } = usePredictionFormatters();
+  const indexPrice = useIndexPriceFormatter(props.row?.index_price_symbol);
   const { row, outcome } = props;
   return (
     <section className="oui-prediction-roundResult oui-space-y-4 oui-rounded-xl oui-bg-base-9 oui-p-4">
@@ -211,14 +215,14 @@ export function RoundResultUI(
       </p>
       <DetailRow label={t("common.symbol")}>{row?.symbol ?? "--"}</DetailRow>
       <DetailRow label={t("prediction.openingPrice")}>
-        <Text.numeral dp={8} prefix="$">
-          {row?.s0 ?? "--"}
-        </Text.numeral>
+        {row?.s0 != null && Number.isFinite(row.s0)
+          ? `$${indexPrice.format(row.s0)}`
+          : "--"}
       </DetailRow>
       <DetailRow label={t("prediction.finalPrice")}>
-        <Text.numeral dp={8} prefix="$">
-          {row?.s1 ?? "--"}
-        </Text.numeral>
+        {row?.s1 != null && Number.isFinite(row.s1)
+          ? `$${indexPrice.format(row.s1)}`
+          : "--"}
       </DetailRow>
       {props.historyLoading && (
         <p role="status" className="oui-text-xs oui-text-base-contrast-54">

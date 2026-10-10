@@ -3,6 +3,10 @@ import { test } from "node:test";
 import {
   accumulateOrderBookLevels,
   fitOrderBookLevels,
+  formatContracts,
+  formatUsd,
+  INDEX_PRICE_DP_OVERRIDES,
+  resolveIndexPriceDp,
 } from "./predictionShared";
 
 type BookRow = [number, number, number, number];
@@ -120,4 +124,43 @@ test("truncated asks keep cumulative totals scoped to the visible window", () =>
   // Worst visible row (first) accumulates from the best ask backward:
   // 1 + 2 = 3, NOT the whole-book 15.
   assert.equal(rows[0][2], 3);
+});
+
+test("resolveIndexPriceDp derives dp from the underlying perp quote_tick", () => {
+  assert.equal(resolveIndexPriceDp("PERP_SOL_USDC", 0.001), 3);
+  assert.equal(resolveIndexPriceDp("PERP_DOGE_USDC", 0.00001), 5);
+  assert.equal(resolveIndexPriceDp(undefined, 0.1), 1);
+});
+
+test("resolveIndexPriceDp lets the override constants win over the tick", () => {
+  assert.equal(
+    resolveIndexPriceDp("PERP_BTC_USDC", 0.1),
+    INDEX_PRICE_DP_OVERRIDES.PERP_BTC_USDC,
+  );
+  assert.equal(INDEX_PRICE_DP_OVERRIDES.PERP_BTC_USDC, 2);
+});
+
+test("resolveIndexPriceDp falls back to 2 dp without tick or override", () => {
+  assert.equal(resolveIndexPriceDp("PERP_ETH_USDC", undefined), 2);
+  assert.equal(resolveIndexPriceDp(undefined, undefined), 2);
+  assert.equal(resolveIndexPriceDp("PERP_X_USDC", Number.NaN), 2);
+  assert.equal(resolveIndexPriceDp("PERP_X_USDC", 0), 2);
+});
+
+test("formatUsd renders grouped two-dp amounts via parseNumber truncation", () => {
+  assert.equal(formatUsd(1234.567), "1,234.56");
+  assert.equal(formatUsd(0), "0.00");
+  assert.equal(formatUsd(-0.996), "-0.99");
+});
+
+test("formatUsd maps non-finite values to the placeholder", () => {
+  assert.equal(formatUsd(Number.NaN), "--");
+  assert.equal(formatUsd(Number.POSITIVE_INFINITY), "--");
+});
+
+test("formatContracts keeps up to 4 dp without zero padding", () => {
+  assert.equal(formatContracts(1234567.89123), "1,234,567.8912");
+  assert.equal(formatContracts(0.5), "0.5");
+  assert.equal(formatContracts(2), "2");
+  assert.equal(formatContracts(Number.NaN), "--");
 });

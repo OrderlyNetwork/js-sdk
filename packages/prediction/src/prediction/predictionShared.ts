@@ -1,5 +1,7 @@
 import { useMemo } from "react";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 import { i18n, useLocaleCode } from "@orderly.network/i18n";
+import { parseNumber } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
 
@@ -37,21 +39,7 @@ export function toIntlLocale(locale?: string): string | undefined {
 // Intl formatter construction costs 10-100x a format() call, and these
 // helpers run inside table row loops that re-render on every tick and
 // countdown; cache instances per resolved locale and options.
-const numberFormatterCache = new Map<string, Intl.NumberFormat>();
 const dateTimeFormatterCache = new Map<string, Intl.DateTimeFormat>();
-
-function cachedNumberFormat(
-  intlLocale: string | undefined,
-  options: Intl.NumberFormatOptions,
-): Intl.NumberFormat {
-  const key = `${intlLocale ?? ""}|${JSON.stringify(options)}`;
-  let formatter = numberFormatterCache.get(key);
-  if (!formatter) {
-    formatter = new Intl.NumberFormat(intlLocale, options);
-    numberFormatterCache.set(key, formatter);
-  }
-  return formatter;
-}
 
 function cachedDateTimeFormat(
   intlLocale: string | undefined,
@@ -66,26 +54,76 @@ function cachedDateTimeFormat(
   return formatter;
 }
 
-export function createUsdFormatter(locale?: string) {
-  return cachedNumberFormat(toIntlLocale(locale), {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+/**
+ * Display-dp overrides for underlying index prices, keyed by the binary
+ * row's index_price_symbol. They win over the tick-derived dp: BTC's 0.1
+ * tick would collapse to 1 dp, but the index feed carries 2 decimals and
+ * the product wants them shown.
+ */
+export const INDEX_PRICE_DP_OVERRIDES: Record<string, number> = {
+  PERP_BTC_USDC: 2,
+};
+
+/**
+ * Decimal places for underlying index prices, mirroring the perp display
+ * convention (dp = decimals of the underlying perp's quote_tick) with the
+ * constants above taking precedence. Falls back to 2 when neither the
+ * symbol's config nor an override is available.
+ */
+export function resolveIndexPriceDp(
+  indexPriceSymbol?: string | null,
+  quoteTick?: number | null,
+): number {
+  if (indexPriceSymbol) {
+    const override = INDEX_PRICE_DP_OVERRIDES[indexPriceSymbol];
+    if (typeof override === "number") return override;
+  }
+  if (quoteTick != null && Number.isFinite(quoteTick) && quoteTick > 0) {
+    return new Decimal(quoteTick).decimalPlaces();
+  }
+  return 2;
 }
 
-export function createContractFormatter(locale?: string) {
-  return cachedNumberFormat(toIntlLocale(locale), {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
-  });
+/**
+ * Underlying-index-price formatter for a binary row: resolves dp from the
+ * index symbol's perp quote_tick via symbolsInfo (override constants win)
+ * and formats with the shared parseNumber engine (perp orderbook style).
+ */
+export function useIndexPriceFormatter(indexPriceSymbol?: string | null) {
+  const symbolsInfo = useSymbolsInfo();
+  return useMemo(() => {
+    const quoteTick = indexPriceSymbol
+      ? symbolsInfo[indexPriceSymbol]?.("quote_tick")
+      : undefined;
+    const dp = resolveIndexPriceDp(
+      indexPriceSymbol,
+      typeof quoteTick === "number" ? quoteTick : undefined,
+    );
+    return {
+      dp,
+      format: (value: number) =>
+        Number.isFinite(value)
+          ? parseNumber(value, { rule: "price", dp })
+          : "--",
+    };
+  }, [indexPriceSymbol, symbolsInfo]);
 }
 
-export function formatUsd(value: number, locale?: string) {
-  return createUsdFormatter(locale).format(value);
+/**
+ * Two-dp USDC amounts ("1,234.56"). parseNumber truncates beyond the dp
+ * (Decimal ROUND_DOWN), matching the perp display convention everywhere.
+ */
+export function formatUsd(value: number) {
+  return Number.isFinite(value)
+    ? parseNumber(value, { rule: "price", dp: 2 })
+    : "--";
 }
 
-export function formatContracts(value: number, locale?: string) {
-  return createContractFormatter(locale).format(value);
+/** Contract counts: up to 4 dp, no zero padding ("0.5", "1,234.5678"). */
+export function formatContracts(value: number) {
+  return Number.isFinite(value)
+    ? parseNumber(value, { rule: "price", dp: 4, padding: false })
+    : "--";
 }
 
 /**
@@ -233,10 +271,6 @@ export function createPredictionChartFormatters(locale?: string) {
       minute: "2-digit",
       second: "2-digit",
     }),
-    chartHoverPriceFormatter: new Intl.NumberFormat(intlLocale, {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 2,
-    }),
     chartHoverTimeFormatter: new Intl.DateTimeFormat(intlLocale, {
       month: "2-digit",
       day: "2-digit",
@@ -273,8 +307,8 @@ export function usePredictionFormatters() {
     const locale = String(localeCode);
     return {
       locale,
-      formatUsd: (value: number) => formatUsd(value, locale),
-      formatContracts: (value: number) => formatContracts(value, locale),
+      formatUsd,
+      formatContracts,
       formatRoundWindow: (
         round: number,
         intervalSeconds?: number,

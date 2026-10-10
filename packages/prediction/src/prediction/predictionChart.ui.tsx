@@ -7,6 +7,7 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   cn,
+  parseNumber,
   Tooltip,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -25,7 +26,10 @@ import {
   type PredictionChartMode,
   type RoundOutcomeLookup,
 } from "./predictionChart.script";
-import { toIntlLocale, usePredictionFormatters } from "./predictionShared";
+import {
+  useIndexPriceFormatter,
+  usePredictionFormatters,
+} from "./predictionShared";
 import {
   CountdownDisplay,
   LiveIndicator,
@@ -62,7 +66,8 @@ export const PriceChart: React.FC<{
   onGoToLiveMarket,
 }) => {
   const { t } = useTranslation();
-  const { chart: intl, formatUsd, locale } = usePredictionFormatters();
+  const { chart: intl } = usePredictionFormatters();
+  const indexPrice = useIndexPriceFormatter(selectedRow?.index_price_symbol);
   // All visible round clocks use one calibrated leaf-local heartbeat.
   const now = useRoundNow(
     Math.max(selectedRow?.expire_at ?? 0, ...rows.map((row) => row.expire_at)),
@@ -281,7 +286,7 @@ export const PriceChart: React.FC<{
               ? isFutureRound
                 ? t("prediction.strikePending")
                 : "--"
-              : `$${formatUsd(chartOpeningPrice)}`}
+              : `$${indexPrice.format(chartOpeningPrice)}`}
           </div>
         </div>
         <div className="oui-min-w-0 oui-flex-1 2xl:oui-flex-none">
@@ -310,7 +315,7 @@ export const PriceChart: React.FC<{
             >
               {chartCurrentPrice == null
                 ? "--"
-                : `$${formatUsd(chartCurrentPrice)}`}
+                : `$${indexPrice.format(chartCurrentPrice)}`}
             </span>
             {!isFutureRound && difference && (
               <span
@@ -332,7 +337,7 @@ export const PriceChart: React.FC<{
                     color="inherit"
                   />
                 )}{" "}
-                {`${difference.amount > 0 ? "+" : difference.amount < 0 ? "−" : ""}$${formatUsd(Math.abs(difference.amount))}`}
+                {`${difference.amount > 0 ? "+" : difference.amount < 0 ? "−" : ""}$${indexPrice.format(Math.abs(difference.amount))}`}
                 {" ("}
                 {difference.percent == null
                   ? "--"
@@ -512,7 +517,7 @@ export const PriceChart: React.FC<{
                   )}
                 </div>
                 <div className="oui-mt-2 oui-whitespace-nowrap oui-text-base oui-font-semibold oui-tabular-nums oui-text-base-contrast">
-                  ${intl.chartHoverPriceFormatter.format(hoveredPoint.price)}
+                  ${indexPrice.format(hoveredPoint.price)}
                 </div>
               </div>
             </>
@@ -542,9 +547,9 @@ export const PriceChart: React.FC<{
               }}
             >
               $
-              {value.toLocaleString(toIntlLocale(locale), {
-                minimumFractionDigits: chart.yDecimals,
-                maximumFractionDigits: chart.yDecimals,
+              {parseNumber(value, {
+                rule: "price",
+                dp: chart.yDecimals,
               })}
             </span>
           ),
