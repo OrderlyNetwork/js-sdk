@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from "react";
 import { type API } from "@orderly.network/types";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useQuery } from "../useQuery";
@@ -72,10 +73,19 @@ export const useBinaryInfoObserver = (enabled = true) => {
     (state) => state.actions.setBinarySymbolsInfo,
   );
 
-  useQuery<API.BinaryInfoRow[]>(enabled ? BINARY_INFO_QUERY_KEY : null, {
-    ...binaryInfoQueryOptions,
-    onSuccess(rows) {
-      setBinarySymbolsInfo(toBinarySymbolsInfo(rows));
-    },
-  });
+  const { data } = useQuery<API.BinaryInfoRow[]>(
+    enabled ? BINARY_INFO_QUERY_KEY : null,
+    binaryInfoQueryOptions,
+  );
+  const binarySymbolsInfo = useMemo(
+    () => (Array.isArray(data) ? toBinarySymbolsInfo(data) : undefined),
+    [data],
+  );
+
+  // Observe shared cache data even when another consumer owns the request.
+  useEffect(() => {
+    if (enabled && binarySymbolsInfo !== undefined) {
+      setBinarySymbolsInfo(binarySymbolsInfo);
+    }
+  }, [enabled, binarySymbolsInfo, setBinarySymbolsInfo]);
 };
