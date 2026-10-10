@@ -283,9 +283,7 @@ export const PriceChart: React.FC<{
           </Tooltip>
           <div className="oui-mt-1 oui-text-base oui-font-semibold oui-tabular-nums oui-text-base-contrast-54 min-[430px]:oui-text-xl">
             {chartOpeningPrice == null
-              ? isFutureRound
-                ? t("prediction.strikePending")
-                : "--"
+              ? "--"
               : `$${indexPrice.format(chartOpeningPrice)}`}
           </div>
         </div>
