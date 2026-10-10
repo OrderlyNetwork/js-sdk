@@ -18,8 +18,6 @@ import {
   PositionHistoryWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import type { PositionsProps } from "@orderly.network/ui-positions";
-import { useTradingLocalStorage } from "../../../hooks";
 import { InjectableDataListDesktopTabs } from "./dataList.injectable";
 import { DataListState, DataListTabType } from "./dataList.script";
 
@@ -73,57 +71,10 @@ const resolvePositionsContent = (
     ? content(perpsContent)
     : (content ?? perpsContent);
 
-/** A standalone Perps positions panel for surfaces that embed it outside DataList. */
-export const PerpsPositionsPanel: React.FC<PositionsProps> = (props) => {
-  const localStorage = useTradingLocalStorage({
-    pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
-  });
-  const symbol = localStorage.showAllSymbol ? undefined : props.symbol;
-
-  return (
-    <Flex direction="column" width="100%" height="100%">
-      <React.Suspense fallback={null}>
-        <LazyPositionHeaderWidget
-          setPnlNotionalDecimalPrecision={
-            localStorage.setPnlNotionalDecimalPrecision
-          }
-          pnlNotionalDecimalPrecision={localStorage.pnlNotionalDecimalPrecision}
-          symbol={symbol}
-          setUnPnlPriceBasic={localStorage.setUnPnlPriceBasic}
-          unPnlPriceBasis={localStorage.unPnlPriceBasis}
-        />
-      </React.Suspense>
-      <Divider className="oui-w-full" />
-      <Box className="oui-min-h-0 oui-flex-1" width="100%">
-        <PositionsWidget
-          {...props}
-          symbol={symbol}
-          pnlNotionalDecimalPrecision={localStorage.pnlNotionalDecimalPrecision}
-          calcMode={localStorage.unPnlPriceBasis}
-        />
-      </Box>
-    </Flex>
-  );
-};
-
-export const PerpsPositionsSettings: React.FC = () => {
-  const localStorage = useTradingLocalStorage();
-
-  return (
-    <React.Suspense fallback={null}>
-      <LazySettingWidget
-        pnlNotionalDecimalPrecision={localStorage.pnlNotionalDecimalPrecision}
-        setPnlNotionalDecimalPrecision={
-          localStorage.setPnlNotionalDecimalPrecision
-        }
-        unPnlPriceBasis={localStorage.unPnlPriceBasis}
-        setUnPnlPriceBasic={localStorage.setUnPnlPriceBasic}
-        hideOtherSymbols={!localStorage.showAllSymbol}
-        setHideOtherSymbols={(value) => localStorage.setShowAllSymbol(!value)}
-      />
-    </React.Suspense>
-  );
-};
+export {
+  PerpsPositionsPanel,
+  PerpsPositionsSettings,
+} from "@orderly.network/trading-common";
 
 export const LiquidationTab: React.FC = () => {
   const { t } = useTranslation();

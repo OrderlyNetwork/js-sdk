@@ -194,6 +194,12 @@ const page: Package[] = [
     includeCSS: true,
   },
   {
+    package: "@orderly.network/trading-common",
+    path: "../../packages/trading-common/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/trading-leaderboard",
     path: "../../packages/trading-leaderboard/src",
     watch: true,

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { PerpsPositionsPanel } from "@orderly.network/trading";
+import { PerpsPositionsPanel } from "@orderly.network/trading-common";
 import { cn } from "@orderly.network/ui";
 import {
   MobilePositionHistoryWidget,

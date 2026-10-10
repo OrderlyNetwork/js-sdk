@@ -3,7 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   MobileOrderBookLadder,
   OrderBookLadder,
-} from "@orderly.network/trading";
+} from "@orderly.network/trading-common";
 import { Text, Tooltip, cn, useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { binaryOutcomeMarkPrice } from "../binary/binaryMarkPrice";

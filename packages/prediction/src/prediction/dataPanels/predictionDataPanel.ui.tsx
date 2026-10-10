@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetsModule } from "@orderly.network/portfolio";
-import { PerpsPositionsSettings } from "@orderly.network/trading";
+import { PerpsPositionsSettings } from "@orderly.network/trading-common";
 import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
 import type {
   PredictionDataTab,

@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useCanTrade, useAppContext } from "@orderly.network/react-app";
-import { AssetViewWidget, useFirstTimeDeposit } from "@orderly.network/trading";
+import {
+  AssetViewWidget,
+  useFirstTimeDeposit,
+} from "@orderly.network/trading-common";
 import type { API } from "@orderly.network/types";
 import { usePredictionScript } from "./prediction.script";
 import type { PredictionState } from "./prediction.script";

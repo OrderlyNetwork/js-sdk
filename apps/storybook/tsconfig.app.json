@@ -80,6 +80,9 @@
       "@orderly.network/trading": [
         "../../packages/trading/src"
       ],
+      "@orderly.network/trading-common": [
+        "../../packages/trading-common/src"
+      ],
       "@orderly.network/trading-leaderboard": [
         "../../packages/trading-leaderboard/src"
       ],

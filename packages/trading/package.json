@@ -32,6 +32,7 @@
     "@orderly.network/markets": "workspace:*",
     "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/trading-common": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",

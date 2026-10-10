@@ -1,4 +1,4 @@
-import type { TradingPageProps } from "@orderly.network/trading";
+import type { TradingPageProps } from "@orderly.network/trading-common";
 import type { PredictionPerpsPanelProps } from "./dataPanels/perpsPanel.types";
 import { SharedProductDataPanel } from "./dataPanels/sharedProductDataPanel.ui";
 import { MobileSharedProductHistory } from "./dataPanels/sharedProductHistory.mobile.ui";

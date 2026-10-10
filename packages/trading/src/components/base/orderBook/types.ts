@@ -1,7 +1,5 @@
-export type QtyMode = "quantity" | "amount";
-export type TotalMode = "quantity" | "amount";
-
-export enum OrderBookCellType {
-  BID = "bid",
-  ASK = "ask",
-}
+export {
+  type QtyMode,
+  type TotalMode,
+  OrderBookCellType,
+} from "@orderly.network/trading-common";
