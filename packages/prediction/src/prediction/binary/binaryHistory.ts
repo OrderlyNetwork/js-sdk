@@ -40,7 +40,10 @@ const unsignedPrice = (value: unknown, short: boolean) => {
 /**
  * Strict UTC symbol parsing also works after public metadata expires.
  * Memoized per symbol: settlement/history hot paths re-parse every record.
+ * Every round mints a new symbol, so the cache is FIFO-bounded to keep a long
+ * session from growing it without limit; entries are immutable per symbol.
  */
+export const BINARY_HISTORY_WINDOW_CACHE_LIMIT = 2_000;
 const binaryHistoryWindowCache = new Map<
   string,
   { from: number; to: number } | undefined
@@ -57,9 +60,16 @@ export function binaryHistoryWindow(symbol: string) {
           .toNumber(),
       }
     : undefined;
+  if (binaryHistoryWindowCache.size >= BINARY_HISTORY_WINDOW_CACHE_LIMIT) {
+    const oldest = binaryHistoryWindowCache.keys().next().value;
+    if (oldest !== undefined) binaryHistoryWindowCache.delete(oldest);
+  }
   binaryHistoryWindowCache.set(symbol, window);
   return window;
 }
+
+/** Test-only probe: current number of cached symbol windows. */
+export const binaryHistoryWindowCacheSize = () => binaryHistoryWindowCache.size;
 
 /** Normalize the existing signed SHORT average-price convention, then mirror DOWN. */
 export function normalizeBinaryHistory(

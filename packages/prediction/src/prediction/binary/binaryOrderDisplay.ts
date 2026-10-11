@@ -11,25 +11,27 @@ import { complementPrice } from "./binaryOrderRules";
 import { matchesPredictionUnderlying } from "./productScope";
 
 type PredictionStatus = NonNullable<PredictionOpenOrder["status"]>;
-const statusByApiStatus: Record<string, PredictionStatus> = {
-  [OrderStatus.INCOMPLETE]: "pending",
-  [OrderStatus.NEW]: "pending",
-  [OrderStatus.FILLED]: "filled",
-  [OrderStatus.PARTIAL_FILLED]: "partialFilled",
-  [OrderStatus.CANCELLED]: "cancelled",
-  [OrderStatus.REJECTED]: "rejected",
-};
-const apiStatusByPredictionStatus: Record<PredictionStatus, OrderStatus> = {
-  pending: OrderStatus.INCOMPLETE,
-  filled: OrderStatus.FILLED,
-  partialFilled: OrderStatus.PARTIAL_FILLED,
-  cancelled: OrderStatus.CANCELLED,
-  rejected: OrderStatus.REJECTED,
-};
+// Maps (not object literals) so lookups with unexpected keys can never hit
+// inherited properties like "constructor" or "toString".
+const statusByApiStatus = new Map<string, PredictionStatus>([
+  [OrderStatus.INCOMPLETE, "pending"],
+  [OrderStatus.NEW, "pending"],
+  [OrderStatus.FILLED, "filled"],
+  [OrderStatus.PARTIAL_FILLED, "partialFilled"],
+  [OrderStatus.CANCELLED, "cancelled"],
+  [OrderStatus.REJECTED, "rejected"],
+]);
+const apiStatusByPredictionStatus = new Map<PredictionStatus, OrderStatus>([
+  ["pending", OrderStatus.INCOMPLETE],
+  ["filled", OrderStatus.FILLED],
+  ["partialFilled", OrderStatus.PARTIAL_FILLED],
+  ["cancelled", OrderStatus.CANCELLED],
+  ["rejected", OrderStatus.REJECTED],
+]);
 export const toPredictionStatus = (value: unknown): PredictionStatus | "all" =>
-  statusByApiStatus[String(value)] ?? "all";
+  statusByApiStatus.get(String(value)) ?? "all";
 export const toOrderStatus = (value: unknown): OrderStatus | "all" =>
-  apiStatusByPredictionStatus[String(value) as PredictionStatus] ?? "all";
+  apiStatusByPredictionStatus.get(String(value) as PredictionStatus) ?? "all";
 
 export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
   id: order.order_id,
@@ -60,7 +62,7 @@ export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
   symbol: order.symbol,
   round: binaryRoundFromSymbol(order.symbol, order.created_time) ?? 0,
   timestamp: order.created_time,
-  status: statusByApiStatus[String(order.status)] ?? "pending",
+  status: statusByApiStatus.get(String(order.status)) ?? "pending",
 });
 
 /** Echo immutable API attributes; only the UP price and quantity are changed. */

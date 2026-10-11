@@ -50,15 +50,17 @@ export type { ProductOrderInstrument } from "./productOrderCancellation";
 // The shared filter bar drives both the perps OrderList (OrderStatus/OrderSide
 // enums) and the prediction tables (plain strings); these maps translate the
 // two vocabularies in either direction. Keep the two directions in sync.
-const predictionSideByOrderSide: Record<string, string> = {
-  [OrderSide.BUY]: "buy",
-  [OrderSide.SELL]: "sell",
-};
+// Maps (not object literals) so unexpected keys can never hit inherited
+// properties like "constructor" or "toString".
+const predictionSideByOrderSide = new Map<string, string>([
+  [OrderSide.BUY, "buy"],
+  [OrderSide.SELL, "sell"],
+]);
 
-const orderSideByPredictionSide: Record<string, OrderSide | "all"> = {
-  buy: OrderSide.BUY,
-  sell: OrderSide.SELL,
-};
+const orderSideByPredictionSide = new Map<string, OrderSide | "all">([
+  ["buy", OrderSide.BUY],
+  ["sell", OrderSide.SELL],
+]);
 
 export {
   toPredictionStatus,
@@ -66,10 +68,10 @@ export {
 } from "../binary/binaryOrderDisplay";
 
 export const toPredictionSide = (value: unknown) =>
-  predictionSideByOrderSide[String(value)] ?? "all";
+  predictionSideByOrderSide.get(String(value)) ?? "all";
 
 export const toOrderSide = (value: unknown) =>
-  orderSideByPredictionSide[String(value)] ?? "all";
+  orderSideByPredictionSide.get(String(value)) ?? "all";
 
 export const useSharedProductOrdersPanelScript = () => {
   const [instrument, setInstrument] = useState<ProductOrderInstrument>("all");

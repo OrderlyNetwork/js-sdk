@@ -67,6 +67,9 @@ export const useOrderEditing = ({
   const [doUpdateOrder] = useMutation("/v1/order", "PUT");
   const editPendingOrder = useCallback(
     async (id: number, price: number, quantity: number): Promise<boolean> => {
+      // Unlike the rejections below, this guard covers states with no live UI
+      // left to notify (the modal is unmounting, or the session/instrument
+      // context is already gone), so a silent false is correct here.
       if (
         !active ||
         !accountReady ||

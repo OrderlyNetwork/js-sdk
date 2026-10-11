@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { API } from "@orderly.network/types";
 import {
+  BINARY_HISTORY_WINDOW_CACHE_LIMIT,
   binaryHistoryCompleteness,
   binaryHistoryForAccount,
   binaryHistoryRange,
   binaryHistorySnapshot,
   binaryHistoryWindow,
+  binaryHistoryWindowCacheSize,
   normalizeBinaryHistory,
   summarizeBinaryHistory,
   toPredictionSettlement,
@@ -436,4 +438,36 @@ test("identical duplicated segments need no revision timestamp to deduplicate sa
   assert.equal(summary.completeness, "complete");
   assert.equal(summary.count, 1);
   assert.equal(summary.pnl, 9.98);
+});
+
+test("symbol window cache is FIFO-bounded and evicted entries recompute", () => {
+  const firstStart = Date.UTC(2026, 9, 12);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  const slotSymbol = (index: number) => {
+    const date = new Date(firstStart + index * 5 * 60_000);
+    return `PERP_BTC5M${String(date.getUTCFullYear()).slice(2)}${pad(
+      date.getUTCMonth() + 1,
+    )}${pad(date.getUTCDate())}${pad(date.getUTCHours())}${pad(
+      date.getUTCMinutes(),
+    )}_USDC`;
+  };
+  const symbols = Array.from(
+    { length: BINARY_HISTORY_WINDOW_CACHE_LIMIT + 10 },
+    (_, index) => slotSymbol(index),
+  );
+  // Fail fast on a malformed generated symbol before the mass insert.
+  assert.deepEqual(binaryHistoryWindow(symbols[0]), {
+    from: firstStart,
+    to: firstStart + 5 * 60_000,
+  });
+  for (const symbol of symbols) binaryHistoryWindow(symbol);
+  assert.equal(
+    binaryHistoryWindowCacheSize(),
+    BINARY_HISTORY_WINDOW_CACHE_LIMIT,
+  );
+  // symbols[0] was evicted by the overflow; reading it recomputes the same window.
+  assert.deepEqual(binaryHistoryWindow(symbols[0]), {
+    from: firstStart,
+    to: firstStart + 5 * 60_000,
+  });
 });
