@@ -327,6 +327,8 @@
   "prediction.chance": "احتمال الصعود",
   "prediction.lastPrice": "آخر سعر",
   "prediction.volumeShort": "الحجم",
+  "prediction.column.last&chance": "الأخير/الاحتمالية",
+  "prediction.column.time&volume": "الوقت/الحجم",
   "prediction.chanceHint": "الاحتمال الضمني الحالي لنتيجة الصعود.",
   "prediction.roundChange": "تغيّر الجولة",
   "prediction.roundChangeHint": "تغيّر سعر مؤشر BTC عن سعر افتتاح الجولة.",

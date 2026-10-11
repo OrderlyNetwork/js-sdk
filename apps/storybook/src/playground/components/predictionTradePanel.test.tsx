@@ -195,3 +195,78 @@ it("evaluates each preset once and uses the returned eligibility even without a 
   });
   expect(state.oneTapEstimatedSlippage).toBe(1);
 });
+
+it("validates on click and submits only after correction", () => {
+  const props = input();
+  props.tradeMode = "limit";
+  props.canPlaceOrder = false;
+  props.orderValidationError = {
+    field: "total",
+    key: "orderEntry.total.error.min",
+    value: 5,
+  };
+  mount(props);
+  expect(state.submitDisabled).toBe(false);
+  expect(state.visibleOrderError).toBeUndefined();
+  act(() => state.placeOrder());
+  expect(state.visibleOrderError).toEqual(props.orderValidationError);
+  expect(props.placeOrder).not.toHaveBeenCalled();
+  act(() =>
+    root!.update(
+      <Consumer
+        props={{
+          ...props,
+          canPlaceOrder: true,
+          orderValidationError: undefined,
+        }}
+      />,
+    ),
+  );
+  expect(state.visibleOrderError).toBeUndefined();
+  act(() => state.placeOrder());
+  expect(props.placeOrder).toHaveBeenCalledOnce();
+  act(() =>
+    root!.update(
+      <Consumer
+        props={{
+          ...props,
+          amount: "",
+          orderValidationError: {
+            field: "amount",
+            key: "orderEntry.orderQuantity.error.required",
+          },
+        }}
+      />,
+    ),
+  );
+  expect(state.visibleOrderError).toBeUndefined();
+});
+
+it.each([
+  { orderEntryAccountReady: false },
+  { orderEntryFunded: false },
+  { isRoundTradable: false },
+  { isRegionRestricted: true },
+  { isSubmitting: true },
+])("keeps submission blocked when trading is unavailable: %j", (gate) => {
+  const props = { ...input(), ...gate, tradeMode: "limit" as const };
+  mount(props);
+  expect(state.submitDisabled).toBe(true);
+  act(() => state.placeOrder());
+  expect(props.placeOrder).not.toHaveBeenCalled();
+});
+
+it("clears validation feedback when changing outcome", () => {
+  const props = {
+    ...input(),
+    tradeMode: "limit" as const,
+    canPlaceOrder: false,
+  };
+  mount(props);
+  act(() => state.placeOrder());
+  expect(state.visibleOrderError).toBeDefined();
+  act(() =>
+    root!.update(<Consumer props={{ ...props, selectedOutcome: "up" }} />),
+  );
+  expect(state.visibleOrderError).toBeUndefined();
+});

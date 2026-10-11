@@ -40,10 +40,23 @@ const PredictionOrderInput: React.FC<{
   suffix: React.ReactNode;
   onChange?: (value: string) => void;
   readOnly?: boolean;
+  error?: string;
   dp?: number;
   position: "top" | "middle" | "bottom" | "single";
-}> = ({ id, label, value, suffix, onChange, readOnly, dp = 4, position }) => (
-  <Input
+}> = ({
+  id,
+  label,
+  value,
+  suffix,
+  onChange,
+  readOnly,
+  error,
+  dp = 4,
+  position,
+}) => (
+  <Input.tooltip
+    tooltip={error}
+    color={error ? "danger" : undefined}
     id={id}
     name={id}
     fullWidth
@@ -155,6 +168,12 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
   } = state;
   const orderEntryAccountReady = state.orderEntryAccountReady ?? false;
   const orderEntryFunded = state.orderEntryFunded ?? false;
+  const getOrderError = (field: "price" | "amount" | "total") => {
+    const error = state.visibleOrderError;
+    if (!error) return undefined;
+    const target = state.orderType === "market" ? "amount" : error.field;
+    return target === field ? t(error.key, { value: error.value }) : undefined;
+  };
   const outcomeLabel = t(`prediction.${state.selectedOutcome}`);
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
   const buttonLabel = `${t(`common.${state.orderSide}`)} ${t(`prediction.${state.selectedOutcome}`)}`;
@@ -523,6 +542,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
               <>
                 <PredictionOrderInput
                   id="prediction-limit-price"
+                  error={getOrderError("price")}
                   label={t("common.price")}
                   value={state.limitPrice}
                   suffix="USDC"
@@ -531,6 +551,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                 />
                 <PredictionOrderInput
                   id="prediction-order-amount"
+                  error={getOrderError("amount")}
                   label={t("common.amount")}
                   value={state.amount}
                   suffix={inputUnit}
@@ -547,6 +568,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                 />
                 <PredictionOrderInput
                   id="prediction-total-value"
+                  error={getOrderError("total")}
                   label={t("common.totalValue")}
                   value={
                     state.orderQuantity > 0
@@ -563,6 +585,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
             {state.orderType === "market" && (
               <PredictionOrderInput
                 id="prediction-order-amount"
+                error={getOrderError("amount")}
                 label={t("common.amount")}
                 value={state.amount}
                 suffix={inputUnit}
@@ -657,7 +680,8 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
               )}
               fullWidth
               size="md"
-              disabled={!orderEntryFunded || !state.canPlaceOrder}
+              disabled={state.submitDisabled}
+              loading={state.isSubmitting}
               onClick={state.placeOrder}
             >
               {buttonLabel}

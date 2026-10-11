@@ -327,6 +327,8 @@
   "prediction.chance": "Chance auf Steigen",
   "prediction.lastPrice": "Letzter Preis",
   "prediction.volumeShort": "Vol",
+  "prediction.column.last&chance": "Letzter/Chance",
+  "prediction.column.time&volume": "Zeit/Volumen",
   "prediction.chanceHint": "Aktuelle implizite Wahrscheinlichkeit für den Ausgang Steigen.",
   "prediction.roundChange": "Rundenänderung",
   "prediction.roundChangeHint": "Änderung des BTC-Indexpreises gegenüber dem Eröffnungspreis der Runde.",

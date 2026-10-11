@@ -327,6 +327,8 @@
   "prediction.chance": "Khả năng Lên",
   "prediction.lastPrice": "Giá gần nhất",
   "prediction.volumeShort": "KL",
+  "prediction.column.last&chance": "Gần nhất/Xác suất",
+  "prediction.column.time&volume": "Thời gian/Khối lượng",
   "prediction.chanceHint": "Xác suất ngầm định hiện tại của kết quả Lên.",
   "prediction.roundChange": "Biến động phiên",
   "prediction.roundChangeHint": "Mức thay đổi giá chỉ số BTC so với giá mở cửa của phiên.",

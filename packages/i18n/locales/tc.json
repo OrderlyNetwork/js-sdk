@@ -327,6 +327,8 @@
   "prediction.chance": "上漲機率",
   "prediction.lastPrice": "最新價",
   "prediction.volumeShort": "成交量",
+  "prediction.column.last&chance": "最新/概率",
+  "prediction.column.time&volume": "時間/成交量",
   "prediction.chanceHint": "上漲結果的目前隱含機率。",
   "prediction.roundChange": "本輪漲跌",
   "prediction.roundChangeHint": "BTC 指數價格相對本輪開盤價的變動。",

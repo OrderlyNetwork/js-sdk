@@ -13,6 +13,7 @@ import {
 } from "./dataPanels/useSharedProductCounts";
 import { usePredictionAccountData } from "./hooks/usePredictionAccountData";
 import type { PredictionAccountPanelState } from "./prediction.types";
+import { usePredictionMarketTabs } from "./predictionMarketPanel.ui";
 import { usePredictionMarketsDropdown } from "./usePredictionMarketsDropdown";
 
 export interface PredictionTradingExtensionOptions extends PredictionPerpsPanelProps {
@@ -109,8 +110,26 @@ export function usePredictionTradingExtension({
   const marketsDropdown = usePredictionMarketsDropdown(onPredictionSelect, {
     enabled: dropdownEnabled,
   });
+  // One shared data pipeline (above) feeds every surface; only the default tab
+  // set differs per surface, so each slot reuses the surface-agnostic
+  // renderers and just swaps in its own tabs.
+  const sheetTabs = usePredictionMarketTabs("marketsSheet");
+  const sideMarketsTabs = usePredictionMarketTabs("expandMarkets");
   return {
-    ...(dropdownEnabled ? { marketsDropdown } : {}),
+    ...(dropdownEnabled
+      ? {
+          marketsDropdown,
+          marketsSheet: {
+            tabs: sheetTabs,
+            renderTabContent: marketsDropdown.renderTabContent,
+            renderTabAfterContent: marketsDropdown.renderTabAfterContent,
+          },
+          sideMarkets: {
+            tabs: sideMarketsTabs,
+            renderTabContent: marketsDropdown.renderTabContent,
+          },
+        }
+      : {}),
     ...(accountEnabled
       ? {
           dataListProductContent: buildDataListProductContent(

@@ -23,6 +23,21 @@ import type {
 } from "../prediction.types";
 import { clamp, floorToTick } from "../predictionShared";
 
+export type PredictionOrderValidationError = {
+  field: "price" | "amount" | "total";
+  key:
+    | "prediction.invalidOrder"
+    | "orderEntry.total.error.min"
+    | "orderEntry.orderPrice.error.required"
+    | "orderEntry.orderQuantity.error.required"
+    | "orderEntry.orderQuantity.error.min"
+    | "prediction.message.noExecutableQuotes"
+    | "prediction.message.insufficientBalance"
+    | "prediction.message.insufficientContracts"
+    | "prediction.message.slippageExceeded";
+  value?: number;
+};
+
 export type UsePredictionOrderFormArgs = {
   /** Market family ID, e.g. `PERP_BTC5M_USDC`, shared across rounds; not a tradable round symbol. */
   marketId?: string;
@@ -207,14 +222,27 @@ export const usePredictionOrderForm = ({
   const orderPercentage =
     maxAmount > 0 ? clamp((numericAmount / maxAmount) * 100, 0, 100) : 0;
 
-  const canPlaceOrder = useMemo(() => {
-    if (
-      !isRoundTradable ||
-      isRegionRestricted ||
-      formMarketId !== marketId ||
-      formSymbol !== symbol
-    )
-      return false;
+  const orderValidationError = useMemo<
+    PredictionOrderValidationError | undefined
+  >(() => {
+    if (selectedPrice <= 0) {
+      return {
+        field: "price",
+        key:
+          orderType === "limit"
+            ? "orderEntry.orderPrice.error.required"
+            : "prediction.message.noExecutableQuotes",
+      };
+    }
+    if (!/^\d+(\.\d+)?$/.test(amount) || numericAmount <= 0) {
+      return {
+        field: "amount",
+        key: "orderEntry.orderQuantity.error.required",
+      };
+    }
+    if (new Decimal(amount).decimalPlaces() > amountDp) {
+      return { field: "amount", key: "prediction.invalidOrder" };
+    }
     // Size/config gates run in UP-book coordinates (api-spec §5.2): a DOWN
     // order at display n is validated as UP at 1-n.
     const limits = resolveBinaryOrderLimits({
@@ -230,13 +258,28 @@ export const usePredictionOrderForm = ({
       selectedOutcome === "up" ? selectedPrice : complementPrice(selectedPrice);
     // Market orders ride the tick-aligned protection price; only manually
     // typed limit prices need the quote-tick grid check.
+    const rejection = validateBinaryOrderSize({
+      price: upPrice,
+      quantity: orderQuantity,
+      limits,
+      requirePriceTickAligned: orderType === "limit",
+    });
+    if (rejection === "notionalBelowMin") {
+      return {
+        field: "total",
+        key: "orderEntry.total.error.min",
+        value: limits.minNotional,
+      };
+    }
+    if (rejection === "quantityBelowMin") {
+      return {
+        field: "amount",
+        key: "orderEntry.orderQuantity.error.min",
+        value: limits.baseMin,
+      };
+    }
+    if (rejection) return { field: "price", key: "prediction.invalidOrder" };
     if (
-      validateBinaryOrderSize({
-        price: upPrice,
-        quantity: orderQuantity,
-        limits,
-        requirePriceTickAligned: orderType === "limit",
-      }) ||
       !splitBinaryQuantity(orderQuantity, upPrice, {
         base_tick: limits.baseTick,
         base_min: limits.baseMin,
@@ -244,29 +287,31 @@ export const usePredictionOrderForm = ({
         min_notional: limits.minNotional,
       })
     )
-      return false;
+      return { field: "amount", key: "prediction.invalidOrder" };
     if (
-      !/^\d+(\.\d+)?$/.test(amount) ||
-      new Decimal(amount).decimalPlaces() > amountDp
-    )
-      return false;
-    if (orderSide === "buy") {
-      return requiredFrozen != null && requiredFrozen <= balance;
+      orderSide === "buy" &&
+      (requiredFrozen == null || !(requiredFrozen <= balance))
+    ) {
+      return { field: "amount", key: "prediction.message.insufficientBalance" };
     }
-    return orderQuantity <= selectedTokenBalance + 1e-9;
+    if (
+      orderSide === "sell" &&
+      !(orderQuantity <= selectedTokenBalance + 1e-9)
+    ) {
+      return {
+        field: "amount",
+        key: "prediction.message.insufficientContracts",
+      };
+    }
+    return undefined;
   }, [
     amount,
     amountDp,
+    numericAmount,
     balance,
     baseMin,
     baseMax,
     baseTick,
-    formMarketId,
-    formSymbol,
-    symbol,
-    isRegionRestricted,
-    isRoundTradable,
-    marketId,
     minNotional,
     orderQuantity,
     quoteMin,
@@ -279,6 +324,13 @@ export const usePredictionOrderForm = ({
     selectedPrice,
     selectedTokenBalance,
   ]);
+
+  const canPlaceOrder =
+    isRoundTradable &&
+    !isRegionRestricted &&
+    formMarketId === marketId &&
+    formSymbol === symbol &&
+    !orderValidationError;
 
   const setDefaultLimit = useCallback(
     (outcome: PredictionOutcome, side: PredictionOrderSide) => {
@@ -410,6 +462,7 @@ export const usePredictionOrderForm = ({
     setOrderPercentage,
     setMaxAmount,
     canPlaceOrder,
+    orderValidationError,
     resetAmountAfterFill,
   };
 };

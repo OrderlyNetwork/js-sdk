@@ -4,6 +4,7 @@ import type { API } from "@orderly.network/types";
 import { toBinaryUpRequest } from "../binary/binaryOrderRules";
 import type { BinaryFeeRates } from "../binary/useBinaryFeeRates";
 import type { OneTapOrderEvaluation } from "../hooks/tradingActions/useOneTapOrders";
+import type { PredictionOrderValidationError } from "../hooks/usePredictionOrderForm";
 import type {
   PredictionAmountUnit,
   PredictionOrderSide,
@@ -52,6 +53,7 @@ export interface TradePanelFormProps {
   odds: number;
   estimatedPayout: number;
   canPlaceOrder: boolean;
+  orderValidationError?: PredictionOrderValidationError;
   placeOrder(): void;
   slippage: string;
   setSlippage(value: string): void;
@@ -77,6 +79,8 @@ export interface TradePanelScriptInput extends TradePanelFormProps {
 }
 export interface TradePanelProps extends TradePanelFormProps {
   isOneTap: boolean;
+  visibleOrderError?: PredictionOrderValidationError;
+  submitDisabled: boolean;
   isBuyContext: boolean;
   canAdjustAmount: boolean;
   availablePositionQuantity: number;
@@ -108,6 +112,27 @@ const toDraft = (amounts: OneTapAmounts) => ({
 export function useTradePanelScript(
   input: TradePanelScriptInput,
 ): TradePanelProps {
+  const validationContext = JSON.stringify([
+    input.selectedRow?.symbol,
+    input.tradeMode,
+    input.orderSide,
+    input.selectedOutcome,
+  ]);
+  const [validation, setValidation] = useState({
+    context: validationContext,
+    validated: false,
+  });
+  if (validation.context !== validationContext) {
+    setValidation({ context: validationContext, validated: false });
+  }
+  const validated =
+    validation.context === validationContext && validation.validated;
+  const submitDisabled =
+    !input.orderEntryAccountReady ||
+    !input.orderEntryFunded ||
+    !input.isRoundTradable ||
+    input.isRegionRestricted ||
+    input.isSubmitting;
   const [stored, saveStored] = useLocalStorage<OneTapAmounts | number[]>(
     "orderly-prediction-one-tap-amounts",
     DEFAULT_ONE_TAP_AMOUNTS,
@@ -174,7 +199,23 @@ export function useTradePanelScript(
     odds: input.odds,
     estimatedPayout: input.estimatedPayout,
     canPlaceOrder: input.canPlaceOrder,
-    placeOrder: input.placeOrder,
+    submitDisabled,
+    orderValidationError: input.orderValidationError,
+    visibleOrderError:
+      validated && !input.canPlaceOrder
+        ? (input.orderValidationError ?? {
+            field: "amount",
+            key: "prediction.invalidOrder",
+          })
+        : undefined,
+    placeOrder: () => {
+      if (submitDisabled) return;
+      setValidation({
+        context: validationContext,
+        validated: !input.canPlaceOrder,
+      });
+      if (input.canPlaceOrder) input.placeOrder();
+    },
     slippage: input.slippage,
     setSlippage: input.setSlippage,
     estimatedSlippage: input.estimatedSlippage,

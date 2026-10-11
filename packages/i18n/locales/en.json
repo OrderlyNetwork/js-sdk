@@ -327,6 +327,8 @@
   "prediction.chance": "Up chance",
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
+  "prediction.column.last&chance": "Last/Chance",
+  "prediction.column.time&volume": "Time/Vol",
   "prediction.chanceHint": "Current implied probability of the Up outcome.",
   "prediction.roundChange": "Round change",
   "prediction.roundChangeHint": "BTC index price change from the round opening price.",

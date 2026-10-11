@@ -52,3 +52,45 @@ it("retains inputs for the accepted symbol and clears them only when another rou
   expect(state!.canPlaceOrder).toBe(false);
   act(() => root!.unmount());
 });
+
+it("reports the minimum notional for the screenshot order", () => {
+  let state: ReturnType<typeof usePredictionOrderForm>;
+  function Probe() {
+    state = usePredictionOrderForm({
+      marketId: "PERP_BTC5M_USDC",
+      symbol: "PERP_BTC5M2609291035_USDC",
+      executablePrices: {
+        buy: { up: 0.29, down: 0.73 },
+        sell: { up: 0.27, down: 0.71 },
+      },
+      marketPrice: () => 0.29,
+      balance: 100,
+      estimateAdditionalFrozen: (_outcome, quantity, price) => quantity * price,
+      maxOpeningQuantity: () => 300,
+      availableQuantity: () => 100,
+      positions: [],
+      isRoundTradable: true,
+      isRegionRestricted: false,
+    });
+    return null;
+  }
+  let root: ReturnType<typeof create>;
+  act(() => {
+    root = create(<Probe />);
+  });
+  act(() => {
+    state!.setTradeMode("limit");
+    state!.setAmount("1.88");
+  });
+  expect(state!.orderQuantity).toBe(6.48);
+  expect(state!.canPlaceOrder).toBe(false);
+  expect(state!.orderValidationError).toEqual({
+    field: "total",
+    key: "orderEntry.total.error.min",
+    value: 5,
+  });
+  act(() => state!.setAmount("5.01"));
+  expect(state!.canPlaceOrder).toBe(true);
+  expect(state!.orderValidationError).toBeUndefined();
+  act(() => root!.unmount());
+});

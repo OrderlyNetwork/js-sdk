@@ -327,6 +327,8 @@
   "prediction.chance": "احتمال صعود",
   "prediction.lastPrice": "آخرین قیمت",
   "prediction.volumeShort": "حجم",
+  "prediction.column.last&chance": "آخر/شانس",
+  "prediction.column.time&volume": "زمان/حجم",
   "prediction.chanceHint": "احتمال ضمنی فعلی برای نتیجه صعودی.",
   "prediction.roundChange": "تغییر دور",
   "prediction.roundChangeHint": "تغییر قیمت شاخص BTC نسبت به قیمت آغازین دور.",

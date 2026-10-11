@@ -206,6 +206,14 @@ export const usePredictionScript = (
     isBookLoading: orderbook.isBookLoading,
     hasBookQuote: orderbook.bbo.mid != null,
     // Order form
+    orderValidationError:
+      form.orderValidationError ??
+      (bookView.isSlippageExceeded
+        ? {
+            field: "amount" as const,
+            key: "prediction.message.slippageExceeded" as const,
+          }
+        : undefined),
     selectedOutcome: form.selectedOutcome,
     setSelectedOutcome: form.setSelectedOutcome,
     orderSide: form.orderSide,

@@ -51,6 +51,9 @@ export const prediction = {
   "prediction.chance": "Up chance",
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
+  /** Combined compact-panel headers, perps `Last/24h %` style. */
+  "prediction.column.last&chance": "Last/Chance",
+  "prediction.column.time&volume": "Time/Vol",
   "prediction.chanceHint": "Current implied probability of the Up outcome.",
   "prediction.roundChange": "Round change",
   "prediction.roundChangeHint":

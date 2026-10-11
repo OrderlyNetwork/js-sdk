@@ -327,6 +327,8 @@
   "prediction.chance": "Prob. de alza",
   "prediction.lastPrice": "Último precio",
   "prediction.volumeShort": "Vol",
+  "prediction.column.last&chance": "Último/Probabilidad",
+  "prediction.column.time&volume": "Hora/Volumen",
   "prediction.chanceHint": "Probabilidad implícita actual del resultado al alza.",
   "prediction.roundChange": "Variación de la ronda",
   "prediction.roundChangeHint": "Variación del precio índice de BTC respecto al precio de apertura de la ronda.",

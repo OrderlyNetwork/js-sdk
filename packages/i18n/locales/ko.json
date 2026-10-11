@@ -327,6 +327,8 @@
   "prediction.chance": "상승 확률",
   "prediction.lastPrice": "최근 가격",
   "prediction.volumeShort": "거래량",
+  "prediction.column.last&chance": "현재가/확률",
+  "prediction.column.time&volume": "시간/거래량",
   "prediction.chanceHint": "상승 결과의 현재 암시적 확률.",
   "prediction.roundChange": "라운드 변동",
   "prediction.roundChangeHint": "BTC 지수 가격의 라운드 시가 대비 변동.",

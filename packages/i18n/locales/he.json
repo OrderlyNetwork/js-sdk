@@ -327,6 +327,8 @@
   "prediction.chance": "סיכוי לעלייה",
   "prediction.lastPrice": "מחיר אחרון",
   "prediction.volumeShort": "נפח",
+  "prediction.column.last&chance": "אחרון/סיכוי",
+  "prediction.column.time&volume": "זמן/נפח",
   "prediction.chanceHint": "ההסתברות המשתמעת הנוכחית לתוצאת עלייה.",
   "prediction.roundChange": "שינוי הסבב",
   "prediction.roundChangeHint": "שינוי מדד ה-BTC ביחס למחיר הפתיחה של הסבב.",

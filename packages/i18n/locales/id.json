@@ -327,6 +327,8 @@
   "prediction.chance": "Peluang Naik",
   "prediction.lastPrice": "Harga terakhir",
   "prediction.volumeShort": "Vol",
+  "prediction.column.last&chance": "Terakhir/Peluang",
+  "prediction.column.time&volume": "Waktu/Volume",
   "prediction.chanceHint": "Probabilitas implisit saat ini untuk hasil Naik.",
   "prediction.roundChange": "Perubahan ronde",
   "prediction.roundChangeHint": "Perubahan harga indeks BTC dari harga pembukaan ronde.",

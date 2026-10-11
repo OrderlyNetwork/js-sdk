@@ -51,7 +51,9 @@ vi.mock(
 vi.mock(
   "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui",
   () => ({
-    usePredictionMarketTabs: () => [],
+    usePredictionMarketTabs: (key = "dropDownMarkets") => [
+      { id: `tabs-${key}` },
+    ],
     PredictionMarketPanelWidget: () => null,
   }),
 );
@@ -224,6 +226,12 @@ it.each([
       expect(Object.hasOwn(result, "marketsDropdown")).toBe(
         enabled && marketsEnabled,
       );
+      expect(Object.hasOwn(result, "marketsSheet")).toBe(
+        enabled && marketsEnabled,
+      );
+      expect(Object.hasOwn(result, "sideMarkets")).toBe(
+        enabled && marketsEnabled,
+      );
       expect(Object.hasOwn(result, "dataListProductContent")).toBe(
         enabled && accountPanelsEnabled,
       );
@@ -258,6 +266,28 @@ it("reports selection to the host without persisting it and dismisses the dropdo
   expect(options.onPredictionSelect).toHaveBeenCalledWith(
     "PERP_BTC5M2609291035_USDC",
   );
+});
+
+it("exposes sheet and side-panel slots that reuse the dropdown renderers with their own tabs", () => {
+  mount();
+  expect(result.marketsSheet).toBeDefined();
+  expect(result.sideMarkets).toBeDefined();
+  // One data pipeline: the renderers are shared identities across surfaces.
+  expect(result.marketsSheet!.renderTabContent).toBe(
+    result.marketsDropdown!.renderTabContent,
+  );
+  expect(result.marketsSheet!.renderTabAfterContent).toBe(
+    result.marketsDropdown!.renderTabAfterContent,
+  );
+  expect(result.sideMarkets!.renderTabContent).toBe(
+    result.marketsDropdown!.renderTabContent,
+  );
+  // Tabs are derived per surface's default category set.
+  expect(result.marketsDropdown!.tabs).toEqual([
+    { id: "tabs-dropDownMarkets" },
+  ]);
+  expect(result.marketsSheet!.tabs).toEqual([{ id: "tabs-marketsSheet" }]);
+  expect(result.sideMarkets!.tabs).toEqual([{ id: "tabs-expandMarkets" }]);
 });
 
 it("keeps zero-argument and callback-only market dropdown consumers compatible", () => {
