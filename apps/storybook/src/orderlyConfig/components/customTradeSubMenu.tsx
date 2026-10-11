@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { generatePath, useTranslation } from "@orderly.network/i18n";
 import { SubMenuMarketsWidget } from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
@@ -14,7 +14,11 @@ import {
 } from "@orderly.network/ui";
 import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../playground/constant";
-import { DEFAULT_SYMBOL, updateSymbol } from "../../playground/storage";
+import {
+  DEFAULT_SYMBOL,
+  getSymbol,
+  updateSymbol,
+} from "../../playground/storage";
 import { MenuItemRow } from "./SubMenuComponents";
 
 const RIGHT_SECTION_WRAPPER_CLASSNAME = [
@@ -130,17 +134,35 @@ const LeftSection = (props: {
   );
 };
 
+/** Routes whose `:symbol` param is a perps market symbol. */
+const PERPS_SYMBOL_ROUTE_PREFIXES = [
+  PathEnum.Perp,
+  PathEnum.Rwa,
+  PathEnum.PerpGrid,
+  PathEnum.PerpSplit,
+];
+
 const RightSection = (props: { className?: string }) => {
   const { className } = props;
   const params = useParams();
+  const { pathname } = useLocation();
 
   const { onRouteChange } = useRouteContext();
-  const [symbol, setSymbol] = useState<string>(params.symbol || DEFAULT_SYMBOL);
+  // `:symbol` also exists on /prediction (a round contract, not a perps
+  // market); only perps-family routes may mirror their param into storage,
+  // other routes fall back to the remembered symbol.
+  const isPerpsSymbolRoute = PERPS_SYMBOL_ROUTE_PREFIXES.some((prefix) =>
+    pathname.includes(`${prefix}/`),
+  );
+  const [symbol, setSymbol] = useState<string>(() =>
+    isPerpsSymbolRoute ? params.symbol || DEFAULT_SYMBOL : getSymbol(),
+  );
 
   useEffect(() => {
+    if (!isPerpsSymbolRoute) return;
     const next = params.symbol || DEFAULT_SYMBOL;
     if (next !== symbol) setSymbol(next);
-  }, [params.symbol]);
+  }, [params.symbol, isPerpsSymbolRoute, symbol]);
 
   useEffect(() => {
     updateSymbol(symbol);
