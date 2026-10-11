@@ -157,6 +157,9 @@ importers:
       '@orderly.network/markets':
         specifier: workspace:*
         version: link:../../packages/markets
+      '@orderly.network/markets-core':
+        specifier: workspace:*
+        version: link:../../packages/markets-core
       '@orderly.network/plugin-core':
         specifier: workspace:*
         version: link:../../packages/plugin-core
@@ -1138,6 +1141,55 @@ importers:
 
   packages/markets:
     dependencies:
+      '@orderly.network/markets-core':
+        specifier: workspace:*
+        version: link:../markets-core
+      '@orderly.network/prediction':
+        specifier: workspace:*
+        version: link:../prediction
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.29.7
+        version: 7.29.7
+      '@babel/preset-env':
+        specifier: ^7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-typescript':
+        specifier: ^7.22.5
+        version: 7.27.1(@babel/core@7.29.7)
+      '@types/ramda':
+        specifier: ^0.29.3
+        version: 0.29.12
+      '@types/react':
+        specifier: ^18.3.2
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.23)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      tailwindcss:
+        specifier: ^3.4.19
+        version: 3.4.19(tsx@4.21.0)(yaml@2.9.0)
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(@swc/core@1.13.2(@swc/helpers@0.5.17))(jiti@2.7.0)(postcss@8.5.26)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.9.0)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.8.3
+
+  packages/markets-core:
+    dependencies:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -1446,9 +1498,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/markets':
+      '@orderly.network/markets-core':
         specifier: workspace:*
-        version: link:../markets
+        version: link:../markets-core
       '@orderly.network/perp':
         specifier: workspace:*
         version: link:../perp
@@ -1696,9 +1748,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/markets':
+      '@orderly.network/markets-core':
         specifier: workspace:*
-        version: link:../markets
+        version: link:../markets-core
       '@orderly.network/plugin-core':
         specifier: workspace:*
         version: link:../plugin-core
@@ -1857,6 +1909,9 @@ importers:
       '@orderly.network/portfolio':
         specifier: workspace:*
         version: link:../portfolio
+      '@orderly.network/prediction':
+        specifier: workspace:*
+        version: link:../prediction
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app

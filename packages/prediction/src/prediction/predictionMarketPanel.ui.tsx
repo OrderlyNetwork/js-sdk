@@ -5,8 +5,8 @@ import {
   UnFavoritesIcon2,
   useMarketCategories,
   useMarketsContext,
-} from "@orderly.network/markets";
-import type { MarketTabConfig } from "@orderly.network/markets";
+} from "@orderly.network/markets-core";
+import type { MarketTabConfig } from "@orderly.network/markets-core";
 import { cn, Spinner, Text, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import type { BinaryMarket } from "./binary/binaryMarkets";

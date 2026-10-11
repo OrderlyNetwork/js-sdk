@@ -1,28 +1,28 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
-import { DropDownMarkets } from "@orderly.network/markets/src/components/dropDownMarkets/dropDownMarkets.ui";
-import { DropDownMarketsWidget } from "@orderly.network/markets/src/components/dropDownMarkets/dropDownMarkets.widget";
-import { MarketsProvider } from "@orderly.network/markets/src/components/marketsProvider";
+import { DropDownMarkets } from "@orderly.network/markets-core/src/components/dropDownMarkets/dropDownMarkets.ui";
+import { DropDownMarketsWidget } from "@orderly.network/markets-core/src/components/dropDownMarkets/dropDownMarkets.widget";
+import { MarketsProvider } from "@orderly.network/markets-core/src/components/marketsProvider";
 
 const mocks = vi.hoisted(() => ({ hide: vi.fn() }));
 vi.mock(
-  "@orderly.network/markets/src/components/dropDownMarkets/dropDownMarkets.script",
+  "@orderly.network/markets-core/src/components/dropDownMarkets/dropDownMarkets.script",
   () => ({
     useDropDownMarketsScript: () => ({ activeTab: "all", hide: mocks.hide }),
   }),
 );
 vi.mock(
-  "@orderly.network/markets/src/components/shared/hooks/useMarketCategories",
+  "@orderly.network/markets-core/src/components/shared/hooks/useMarketCategories",
   () => ({ useMarketCategories: () => [] }),
 );
-vi.mock("@orderly.network/markets/src/components/shared/tabUtils", () => ({
+vi.mock("@orderly.network/markets-core/src/components/shared/tabUtils", () => ({
   tabKey: (tab: { id?: string; type?: string }) => tab.id ?? tab.type,
 }));
 vi.mock(
-  "@orderly.network/markets/src/components/dropDownMarkets/dropDownMarkets.ui",
+  "@orderly.network/markets-core/src/components/dropDownMarkets/dropDownMarkets.ui",
   () => ({ DropDownMarkets: () => null }),
 );
-vi.mock("@orderly.network/markets/src/components/marketsProvider", () => ({
+vi.mock("@orderly.network/markets-core/src/components/marketsProvider", () => ({
   MarketsProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 let root: ReactTestRenderer;

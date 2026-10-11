@@ -5,7 +5,7 @@ import {
   DataItem,
   DropDownMarketsWidget,
   TriangleDownIcon,
-} from "@orderly.network/markets";
+} from "@orderly.network/markets-core";
 import type { API } from "@orderly.network/types";
 import {
   ChevronUpIcon,

@@ -170,6 +170,12 @@ const page: Package[] = [
     includeCSS: true,
   },
   {
+    package: "@orderly.network/markets-core",
+    path: "../../packages/markets-core/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/markets",
     path: "../../packages/markets/src",
     watch: true,

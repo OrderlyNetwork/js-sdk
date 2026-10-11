@@ -7,16 +7,23 @@ vi.mock("@orderly.network/i18n", () => ({
   i18n: { t: (key: string) => key },
   useTranslation: () => ({ t: (key: string) => key }),
 }));
-vi.mock("@orderly.network/markets", () => ({
+const context = vi.hoisted(() => ({ searchValue: "" }));
+vi.mock("@orderly.network/markets-core", () => ({
   FavoritesIcon2: () => null,
   UnFavoritesIcon2: () => null,
   useMarketCategories: () => [],
-  useMarketsContext: () => ({ searchValue: "" }),
+  useMarketsContext: () => context,
 }));
 vi.mock("@orderly.network/ui", () => ({
   cn: (...args: unknown[]) => args.filter(Boolean).join(" "),
   Spinner: () => null,
-  Text: ({ children }: { children: React.ReactNode }) => children,
+  Text: Object.assign(
+    ({ children }: { children: React.ReactNode }) => children,
+    {
+      numeral: ({ children }: { children?: React.ReactNode }) =>
+        children ?? null,
+    },
+  ),
   TokenIcon: () => null,
 }));
 vi.mock(
@@ -55,4 +62,42 @@ it("reports the real round symbol while favorites retain the market family ID", 
   root!.root.findByType("button").props.onClick({ stopPropagation: () => {} });
   expect(onToggleFavorite).toHaveBeenCalledExactlyOnceWith(market.id);
   act(() => root!.unmount());
+});
+
+it("filters Prediction rows by the shared market search value", () => {
+  const markets = ["BTC", "ETH"].map((base) => ({
+    id: `PERP_${base}5M_USDC`,
+    base,
+    period: "5M",
+    indexPriceSymbol: `PERP_${base}_USDC`,
+    currentRow: { symbol: `${base}_ROUND`, expire_at: 1 },
+    hasLiveRow: true,
+  }));
+  context.searchValue = "eth";
+  let root;
+  act(() => {
+    root = create(
+      <PredictionMarketPanel
+        markets={markets as any}
+        bbos={{}}
+        favoriteMarketIds={[]}
+        onToggleFavorite={vi.fn()}
+      />,
+    );
+  });
+  expect(root.root.findAllByType("button")).toHaveLength(1);
+  context.searchValue = "no matching market";
+  act(() => {
+    root.update(
+      <PredictionMarketPanel
+        markets={markets as any}
+        bbos={{}}
+        favoriteMarketIds={[]}
+        onToggleFavorite={vi.fn()}
+      />,
+    );
+  });
+  expect(root.root.findAllByType("button")).toHaveLength(0);
+  act(() => root.unmount());
+  context.searchValue = "";
 });

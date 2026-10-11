@@ -1,4 +1,4 @@
-import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
+import type { DropDownMarketsExtensionProps } from "@orderly.network/markets-core";
 import { usePredictionMarkets } from "./hooks/usePredictionMarkets";
 import type { UsePredictionMarketsOptions } from "./prediction.types";
 import { PredictionDropdownPanel } from "./predictionDropdownPanel";

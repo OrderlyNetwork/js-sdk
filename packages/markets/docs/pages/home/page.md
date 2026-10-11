@@ -2,24 +2,29 @@
 
 ## page.tsx Responsibilities
 
-Exports `MarketsHomePage`, the main markets page component. It wraps content in `MarketsProvider`, renders a tabbed layout (Markets / Funding), and lazy-loads the markets header, markets data list, and funding widgets. Desktop and mobile layouts differ (Box + Tabs vs Tabs with leading nav).
+Exports `MarketsHomePage`, the main markets page component with built-in Prediction markets. Its base layout comes from `@orderly.network/markets-core`. It wraps content in `MarketsProvider`, renders a tabbed layout (Markets / Funding), and lazy-loads the markets header, markets data list, and funding widgets. Desktop and mobile layouts differ (Box + Tabs vs Tabs with leading nav).
 
 ## page.tsx Exports
 
-| Name | Type | Role | Description |
-|------|------|------|-------------|
-| MarketsHomePageProps | type | Props | Extends MarketsProviderProps; adds className |
-| MarketsHomePage | FC | Page component | Root markets page |
+| Name                 | Type | Role           | Description                                  |
+| -------------------- | ---- | -------------- | -------------------------------------------- |
+| MarketsHomePageProps | type | Props          | Extends MarketsProviderProps; adds className |
+| MarketsHomePage      | FC   | Page component | Root markets page                            |
 
 ## MarketsHomePage Props
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| symbol | string | No | Current symbol (passed to MarketsProvider) |
-| onSymbolChange | (symbol: API.Symbol) => void | No | Symbol change callback |
-| navProps | object | No | Mobile: logo, routerAdapter, leftNav |
-| comparisonProps | object | No | exchangesName, exchangesIconSrc |
-| className | string | No | Root div class |
+| Property              | Type                         | Required | Description                                                                  |
+| --------------------- | ---------------------------- | -------- | ---------------------------------------------------------------------------- |
+| symbol                | string                       | No       | Current symbol (passed to MarketsProvider)                                   |
+| onSymbolChange        | (symbol: API.Symbol) => void | No       | Symbol change callback                                                       |
+| navProps              | object                       | No       | Mobile: logo, routerAdapter, leftNav                                         |
+| comparisonProps       | object                       | No       | exchangesName, exchangesIconSrc                                              |
+| className             | string                       | No       | Root div class                                                               |
+| predictionEnabled     | boolean                      | No       | Defaults to true; requires application navigation or onPredictionSelect      |
+| onPredictionSelect    | (symbol: string) => void     | No       | Receives the exact Prediction round symbol; overrides application navigation |
+| tabs                  | MarketTabConfig[]            | No       | Overrides the default categories without automatic insertion                 |
+| renderTabContent      | MarketTabContentRenderer     | No       | Custom content; undefined falls back to built-in Prediction, null hides it   |
+| renderTabAfterContent | MarketTabContentRenderer     | No       | Overrides the appended content, including Prediction favorites               |
 
 ## MarketsHomePage Input/Output
 
@@ -48,5 +53,11 @@ import { MarketsHomePage } from "@orderly.network/markets";
   symbol={symbol}
   onSymbolChange={setSymbol}
   className="oui-min-h-screen"
-/>
+/>;
 ```
+
+## Built-in Prediction
+
+With application navigation available, Prediction is inserted after Crypto and selection routes to `/prediction/<encoded-round-symbol>`. Pass `predictionEnabled={false}` to disable the built-in tab, favorites, metadata request, and round clock. A custom `onPredictionSelect` also enables this integration without application navigation.
+
+Prediction favorites are appended below the existing Perps favorites on desktop and mobile. They retain their own family-based storage and appear in every Perps favorite group. Both products share the search field. Existing exports such as `MarketsProvider` and `useMarketsContext` refer to the same Core implementations.
