@@ -49,7 +49,7 @@ type PredictionMarketRowProps = {
   onSelect?: (symbol: string) => void;
 };
 
-const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
+const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
   market,
   bbo,
   favorite,
@@ -57,8 +57,8 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
   onSelect,
 }) => {
   const { t } = useTranslation();
-  // Row-local tick: the shared state no longer re-renders the dropdown every
-  // second, so the countdown column drives its own per-second update.
+  // Shared heartbeat tick: rows update their own countdown each second
+  // without re-rendering the whole panel.
   const seconds = useRoundCountdown(market.currentRow.expire_at);
   // Mid = UP win probability; both sides must be present to derive it.
   const price =
@@ -116,6 +116,11 @@ const PredictionMarketRow: React.FC<PredictionMarketRowProps> = ({
     </tr>
   );
 };
+
+// Memoized so a BBO push on one market only re-renders that row: `market`
+// identities stay stable between round-boundary clock jumps, and the BBO map
+// update preserves untouched symbols' object identities.
+const PredictionMarketRow = React.memo(PredictionMarketRowImpl);
 
 export type PredictionMarketPanelProps = {
   markets: BinaryMarket[];

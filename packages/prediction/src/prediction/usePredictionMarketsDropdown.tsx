@@ -1,11 +1,9 @@
 import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
 import { usePredictionMarkets } from "./hooks/usePredictionMarkets";
 import type { UsePredictionMarketsOptions } from "./prediction.types";
+import { PredictionDropdownPanel } from "./predictionDropdownPanel";
 import { usePredictionFavorites } from "./predictionFavorites";
-import {
-  PredictionMarketPanelWidget,
-  usePredictionMarketTabs,
-} from "./predictionMarketPanel.ui";
+import { usePredictionMarketTabs } from "./predictionMarketPanel.ui";
 
 /**
  * Adds the prediction market to the existing Perps market dropdown.
@@ -18,37 +16,31 @@ export const usePredictionMarketsDropdown = (
   const { markets, isLoading } = usePredictionMarkets(options);
   const tabs = usePredictionMarketTabs();
   const { favoriteMarketIds, toggleFavorite } = usePredictionFavorites();
-  const selectMarket = (symbol: string, hide: () => void) => {
-    hide();
-    onPredictionSelect?.(symbol);
-  };
 
   return {
     tabs,
     renderTabContent: (_, key, hide) =>
       key === "prediction" ? (
-        <PredictionMarketPanelWidget
+        <PredictionDropdownPanel
           markets={markets}
           loading={isLoading}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
-          onSelect={
-            onPredictionSelect ? (id) => selectMarket(id, hide) : undefined
-          }
+          hide={hide}
+          onPredictionSelect={onPredictionSelect}
         />
       ) : undefined,
     renderTabAfterContent: (_, key, hide) =>
       key === "favorites" &&
       markets.some((market) => favoriteMarketIds.includes(market.id)) ? (
-        <PredictionMarketPanelWidget
+        <PredictionDropdownPanel
           markets={markets.filter((market) =>
             favoriteMarketIds.includes(market.id),
           )}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
-          onSelect={
-            onPredictionSelect ? (id) => selectMarket(id, hide) : undefined
-          }
+          hide={hide}
+          onPredictionSelect={onPredictionSelect}
           className="oui-flex-none oui-border-t oui-border-line-12 oui-pt-2"
         />
       ) : null,

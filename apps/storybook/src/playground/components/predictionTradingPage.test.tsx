@@ -1,6 +1,7 @@
 import React, { isValidElement, type ReactElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { PredictionMarketPanelWidget } from "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui";
 import type { TradingPageProps } from "@orderly.network/trading-common";
 import { TradingPage } from "@orderly.network/trading/src/pages/trading/trading.page";
 import { TradingPageProvider } from "@orderly.network/trading/src/provider/tradingPageProvider";
@@ -236,13 +237,20 @@ it("starts disabled and supports dynamic enable, disable, and re-enable", () => 
 it("routes Prediction selection through the current app callback with an encoded market ID", () => {
   mount();
   const hide = vi.fn();
-  const panel = element(
+  const bridge = element(
     pageProps().marketsDropdown!.renderTabContent!(
       { id: "prediction", name: "Prediction", match: () => false },
       "prediction",
       hide,
     ),
   );
+  // The dropdown routes through the bridge component; select from the panel
+  // it renders so the hide + routing chain stays covered end to end.
+  let bridgeRoot: ReactTestRenderer | undefined;
+  act(() => {
+    bridgeRoot = create(bridge);
+  });
+  const panel = bridgeRoot!.root.findByType(PredictionMarketPanelWidget);
   (panel.props.onSelect as (marketId: string) => void)("BTC/5M?round=1");
   expect(mocks.onRouteChange).toHaveBeenCalledWith({
     href: "/prediction/BTC%2F5M%3Fround%3D1",

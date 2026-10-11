@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWS } from "@orderly.network/hooks";
+import { complementPrice } from "./binaryOrderRules";
 
 /** Best UP-coordinate bid/ask of one binary round. */
 export type BinaryBbo = {
@@ -31,6 +32,12 @@ const scalar = (value: number | undefined) =>
     ? value
     : undefined;
 
+/** Mirror a validated `down_*` scalar into UP coordinates via Decimal. */
+const scalarComplement = (value: number | undefined) => {
+  const parsed = scalar(value);
+  return parsed != null ? complementPrice(parsed) : undefined;
+};
+
 /**
  * Parse a `${symbol}@bbo` payload (api-spec §8) into the UP-coordinate best
  * bid/ask. Both payload shapes are accepted; the mirrored `down_*` scalars
@@ -40,15 +47,11 @@ export const toBinaryBbo = (payload: RawBboPayload): BinaryBbo => {
   const bestBid =
     firstPrice(payload.bids) ??
     scalar(payload.bid) ??
-    (scalar(payload.down_ask) != null
-      ? 1 - (payload.down_ask as number)
-      : undefined);
+    scalarComplement(payload.down_ask);
   const bestAsk =
     firstPrice(payload.asks) ??
     scalar(payload.ask) ??
-    (scalar(payload.down_bid) != null
-      ? 1 - (payload.down_bid as number)
-      : undefined);
+    scalarComplement(payload.down_bid);
   return { bestBid, bestAsk };
 };
 
@@ -71,7 +74,17 @@ export const useBinaryBboMap = (symbols: string[], active = true) => {
       return;
     }
     const symbolList = symbolsKey.split(",");
-    setBbos({});
+    // Retain the last-known BBO of symbols that stay subscribed: a round
+    // rollover on one market must not blank every other row while each topic
+    // waits for its resubscribe snapshot.
+    setBbos((previous) => {
+      if (Object.keys(previous).length === 0) return previous;
+      const retained: Record<string, BinaryBbo> = {};
+      for (const symbol of symbolList) {
+        if (previous[symbol] != null) retained[symbol] = previous[symbol];
+      }
+      return retained;
+    });
 
     const unsubscribers = symbolList.map((symbol) =>
       ws.subscribe(

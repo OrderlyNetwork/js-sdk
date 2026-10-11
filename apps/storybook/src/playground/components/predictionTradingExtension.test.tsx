@@ -1,6 +1,7 @@
 import React, { isValidElement, type ReactElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { PredictionMarketPanelWidget } from "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui";
 import { usePredictionMarketsDropdown } from "@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown";
 import {
   usePredictionTradingExtension,
@@ -236,14 +237,21 @@ it.each([
 it("reports selection to the host without persisting it and dismisses the dropdown", () => {
   mount();
   const hide = vi.fn();
-  const panel = element(
+  const bridge = element(
     result.marketsDropdown!.renderTabContent!(
       { id: "prediction", name: "Prediction", match: () => false },
       "prediction",
       hide,
     ),
   );
-  const select = panel.props.onSelect as (id: string) => void;
+  // The dropdown routes through the bridge component; select from the panel
+  // it renders so the hide + report chain stays covered end to end.
+  let bridgeRoot: ReactTestRenderer | undefined;
+  act(() => {
+    bridgeRoot = create(bridge);
+  });
+  const select = bridgeRoot!.root.findByType(PredictionMarketPanelWidget).props
+    .onSelect as (id: string) => void;
   select("PERP_BTC5M2609291035_USDC");
   expect(mocks.saveMarket).not.toHaveBeenCalled();
   expect(hide).toHaveBeenCalledOnce();

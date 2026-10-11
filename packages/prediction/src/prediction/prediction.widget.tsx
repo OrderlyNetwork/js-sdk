@@ -46,6 +46,15 @@ export const PredictionWidget: React.FC<PredictionWidgetProps> = ({
     symbol: effectiveSymbol,
     onSymbolSelect: selectSymbol,
   });
+  // Stable identity so the memoized market rows in the dropdown are not
+  // re-rendered on every page tick.
+  const selectedRowSymbol = state.selectedRow?.symbol;
+  const selectRoundSymbol = useCallback(
+    (next: string) => {
+      if (next !== selectedRowSymbol) selectSymbol(next);
+    },
+    [selectedRowSymbol, selectSymbol],
+  );
   useEffect(() => {
     if (symbol == null && fallbackSymbol == null && state.defaultSymbol) {
       setFallbackSymbol(state.defaultSymbol);
@@ -92,13 +101,7 @@ export const PredictionWidget: React.FC<PredictionWidgetProps> = ({
       orderEntryRestricted={state.isRegionRestricted}
       onNavigatePerp={onRouteChange ? navigatePerp : undefined}
       requestedSymbol={effectiveSymbol}
-      onSelectSymbol={
-        canSelect
-          ? (next) => {
-              if (next !== state.selectedRow?.symbol) selectSymbol(next);
-            }
-          : undefined
-      }
+      onSelectSymbol={canSelect ? selectRoundSymbol : undefined}
       selectMarketRound={canSelect ? state.selectMarketRound : () => {}}
       goToLiveRound={canSelect ? state.goToLiveRound : () => {}}
       goToNextRound={canSelect ? state.goToNextRound : () => false}
