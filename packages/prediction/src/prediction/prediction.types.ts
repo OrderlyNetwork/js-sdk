@@ -1,8 +1,5 @@
 import type { API } from "@orderly.network/types";
-import type {
-  BinaryHistoryRecord,
-  BinaryHistoryCompleteness,
-} from "./binary/binaryHistory";
+import type { BinaryHistoryRecord } from "./binary/binaryHistory";
 import type { BinaryFeeRates } from "./binary/useBinaryFeeRates";
 import type { BinaryCancelAllOptions } from "./dataPanels/productOrderCancellation";
 
@@ -157,14 +154,11 @@ export interface PredictionAccountActions {
     upPrice: number,
     taker: boolean,
   ): number | undefined;
-  /** Opening collateral in the outcome's display-price coordinate. */
-  estimateFrozen(quantity: number, displayPrice: number): number;
 }
 
 export interface PredictionSettlementHistoryState {
   settlements: PredictionSettlement[];
   historyRecords: BinaryHistoryRecord[];
-  historyCompleteness: BinaryHistoryCompleteness;
   historyLoading: boolean;
   historyError?: unknown;
   pendingSettlementSymbols: string[];

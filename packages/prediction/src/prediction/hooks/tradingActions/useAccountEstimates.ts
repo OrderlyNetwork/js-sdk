@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { Decimal, getTimestamp } from "@orderly.network/utils";
 import {
   estimateBinaryOrderFrozen,
-  ISO_ORDER_FROZEN_BUFFER,
   maxBinaryOrderQuantity,
   type BinaryFundingEstimateMode,
 } from "../../binary/binaryCollateral";
@@ -126,20 +125,6 @@ export const useAccountEstimates = ({
     },
     [hasFeeConfig, feeRates.makerRate, feeRates.takerRate],
   );
-  /**
-   * Collateral frozen when opening a position: the price of the outcome being
-   * bought × qty × (1 + ISO buffer). Buying DOWN @n is SELL UP @(1-n), which
-   * freezes (1-n)×qty×(1+b) — i.e. the DISPLAY price in both cases (PRD §7.2
-   * fixture: 100@0.1 BUY freezes 10.006, SELL 90.054).
-   */
-  const estimateFrozen = useCallback(
-    (quantity: number, displayPrice: number) =>
-      new Decimal(quantity)
-        .mul(displayPrice)
-        .mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER))
-        .toNumber(),
-    [],
-  );
   return {
     availableQuantity,
     fundingEstimateMode,
@@ -147,7 +132,6 @@ export const useAccountEstimates = ({
     maxOpeningQuantity,
     isOrderTradable,
     estimateFee,
-    estimateFrozen,
   };
 };
 

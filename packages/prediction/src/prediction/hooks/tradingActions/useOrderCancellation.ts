@@ -23,8 +23,6 @@ export type OrderCancellationArgs = {
   resources: PredictionAccountResources;
   notify: (message: string, tone?: "success" | "danger") => void;
   isRegionRestricted: boolean;
-  /** Symbol of the selected round. */
-  selectedSymbol: string | undefined;
   isOrderTradable: TradingEstimates["isOrderTradable"];
   refreshOrders: ReturnType<typeof useRefreshOrderCaches>;
   /** Shared unmount guard; false stops async continuations mid-flight. */
@@ -40,7 +38,6 @@ export const useOrderCancellation = ({
   resources,
   notify,
   isRegionRestricted,
-  selectedSymbol,
   isOrderTradable,
   refreshOrders,
   bulkCancellationMounted,

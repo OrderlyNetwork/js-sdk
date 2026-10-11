@@ -144,21 +144,6 @@ export const useOneTapOrders = ({
       selectedSymbol,
     ],
   );
-  const oneTapPayout = useCallback(
-    (outcome: PredictionOutcome, quoteAmount: number) =>
-      evaluateOneTapOrder(outcome, quoteAmount).quantity,
-    [evaluateOneTapOrder],
-  );
-  const oneTapBlockReason = useCallback(
-    (outcome: PredictionOutcome, quoteAmount: number) =>
-      evaluateOneTapOrder(outcome, quoteAmount).blockReason,
-    [evaluateOneTapOrder],
-  );
-  const canPlaceOneTapOrder = useCallback(
-    (outcome: PredictionOutcome, quoteAmount: number) =>
-      evaluateOneTapOrder(outcome, quoteAmount).canPlace,
-    [evaluateOneTapOrder],
-  );
   const placeOneTapOrder = useCallback(
     async (
       outcome: PredictionOutcome,
@@ -188,9 +173,6 @@ export const useOneTapOrders = ({
   );
   return {
     evaluateOneTapOrder,
-    oneTapPayout,
-    oneTapBlockReason,
-    canPlaceOneTapOrder,
     placeOneTapOrder,
   };
 };

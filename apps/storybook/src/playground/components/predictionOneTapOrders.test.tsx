@@ -107,7 +107,7 @@ it.each([
   ["below one tick", {}, 0.001, "invalidOrder"],
   ["below UP notional", {}, 1, "invalidOrder"],
 ] satisfies [string, Partial<OneTapOrdersArgs>, number, string][])(
-  "uses the same rejection for the %s gate, button and submission",
+  "uses the same rejection for the %s gate and submission",
   async (_label, overrides, amount, suffix) => {
     const props = mount({ ...input(), ...overrides });
     const reason =
@@ -118,8 +118,6 @@ it.each([
       blockReason: reason,
       canPlace: false,
     });
-    expect(state.oneTapBlockReason("up", amount)).toBe(reason);
-    expect(state.canPlaceOneTapOrder("up", amount)).toBe(false);
     const clear = vi.fn();
     await act(async () => state.placeOneTapOrder("up", amount, clear));
     expect(props.notify).toHaveBeenCalledWith(reason, "danger");

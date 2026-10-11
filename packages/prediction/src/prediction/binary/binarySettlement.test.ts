@@ -10,7 +10,7 @@ import {
   binaryPersonalSettlementStatus,
   binaryRoundPersonalRecords,
   binarySettlementRefreshInterval,
-  hasBinaryPriceEvidence,
+  hasBinarySettledDetail,
   isBinarySettlementComplete,
   mergeBinaryDetail,
   nextTradableBinaryRound,
@@ -91,15 +91,15 @@ test("detail evidence is validated against official prices and boundary timestam
       s1: { price: 101, timestamp: t0 + 300_000, source: "live" },
     },
   });
-  assert.equal(hasBinaryPriceEvidence(row), true);
+  assert.equal(hasBinarySettledDetail(row), true);
   assert.equal(binaryDetailRefreshInterval(row), 0);
   assert.equal(binaryDetailRefreshInterval(info()), 5000);
   assert.equal(binaryDetailRefreshInterval(undefined), 5000);
   assert.equal(binaryDetailRefreshInterval({ ...row, s1: 102 }), 5000);
-  assert.equal(hasBinaryPriceEvidence(info()), false);
-  assert.equal(hasBinaryPriceEvidence({ ...row, s1: 102 }), false);
+  assert.equal(hasBinarySettledDetail(info()), false);
+  assert.equal(hasBinarySettledDetail({ ...row, s1: 102 }), false);
   assert.equal(
-    hasBinaryPriceEvidence({ ...row, expire_at: t0 + 301_000 }),
+    hasBinarySettledDetail({ ...row, expire_at: t0 + 301_000 }),
     false,
   );
   assert.equal(

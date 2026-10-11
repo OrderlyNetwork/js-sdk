@@ -214,7 +214,7 @@ Confirmed records for the same account are kept in the provider's account cache 
 
 ## Public data semantics
 
-- `PredictionAccountActions` defines account operations independently; order edit parameters are the UP-coordinate price and the order's total quantity, including the filled quantity. Fee estimation likewise takes an UP-coordinate price, and `estimateFrozen` takes the outcome's display price.
+- `PredictionAccountActions` defines account operations independently; order edit parameters are the UP-coordinate price and the order's total quantity, including the filled quantity. Fee estimation likewise takes an UP-coordinate price.
 - `estimateFee` returns `undefined` when the fee configuration is missing. The UI should display an unknown value and must not treat it as a zero fee.
 - `pendingOrdersComplete` provides the completeness status for funding and cancellation protection; an open-order set that has not finished loading must not be used as a complete snapshot.
 - Order `timestamp`, settlement `settledAt`, and market `now` are in milliseconds; `round` on positions and orders is in seconds. Order history preserves the `rejected` terminal state.

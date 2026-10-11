@@ -7,7 +7,6 @@ import {
 import type { API } from "@orderly.network/types";
 import { getTimestamp } from "@orderly.network/utils";
 import {
-  binaryHistoryCompleteness,
   binaryHistoryForAccount,
   binaryHistorySnapshot,
   normalizeBinaryHistory,
@@ -146,12 +145,6 @@ export function usePredictionSettlementHistory({
       () => historyRecords.map(toPredictionSettlement),
       [historyRecords],
     ),
-    historyCompleteness: binaryHistoryCompleteness({
-      loaded: snapshot?.rows != null,
-      failed: Boolean(historyError),
-      rowCount: snapshot?.rows?.length ?? 0,
-      limit: 1000,
-    }),
     historyLoading: historyEnabled && !!isLoading,
     historyError: historyEnabled ? historyError : undefined,
     pendingSettlementSymbols,

@@ -3,7 +3,7 @@ import { useModal, useScreen } from "@orderly.network/ui";
 import {
   binaryPersonalSettlementStatus,
   binaryRoundPersonalRecords,
-  hasBinaryPriceEvidence,
+  hasBinarySettledDetail,
   publishedBinaryOutcome,
 } from "../binary/binarySettlement";
 import type { PredictionState } from "../prediction.script";
@@ -62,7 +62,7 @@ export function useRoundResultScript(state: PredictionState) {
   return {
     row: state.selectedRow,
     outcome: publishedBinaryOutcome(state.selectedRow),
-    detailAvailable: hasBinaryPriceEvidence(state.selectedRow),
+    detailAvailable: hasBinarySettledDetail(state.selectedRow),
     detailLoading: state.roundDetailLoading,
     detailFailed: Boolean(state.roundDetailError),
     retryDetail: () => {

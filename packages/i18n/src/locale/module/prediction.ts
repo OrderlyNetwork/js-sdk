@@ -131,8 +131,6 @@ export const prediction = {
   "prediction.resolution.retry": "Retry",
   "prediction.resolution.nextRound": "Go to next round",
   "prediction.strikePending": "Strike has not been determined yet.",
-  "prediction.rounds.startTime": "Start time",
-  "prediction.rounds.endTime": "End time",
   "prediction.resolution.outcome": "Outcome: {{outcome}}",
   "prediction.resolution.voided": "Round voided",
   "prediction.resolution.voidDescription":
@@ -185,7 +183,6 @@ export const prediction = {
   "prediction.transaction.settlement": "Settlement",
   "prediction.transaction.completed": "Completed",
   "prediction.transaction.pending": "Pending",
-  "prediction.allInstruments": "All instruments",
   "prediction.filledAmount": "Filled amount",
   "prediction.totalAmount": "Total amount",
   "prediction.orderValue": "Order value",

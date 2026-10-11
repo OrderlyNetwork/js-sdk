@@ -7,7 +7,6 @@ import {
   usePrivateQuery,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum, OrderSide, type API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
 import {
   availableBinaryCloseQuantity,
   resolveBinaryCollateral,

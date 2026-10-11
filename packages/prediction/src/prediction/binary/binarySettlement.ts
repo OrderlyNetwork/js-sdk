@@ -32,7 +32,7 @@ export function publishedBinaryOutcome(row?: BinaryInfoRow) {
   return undefined;
 }
 
-export function hasBinaryPriceEvidence(row?: BinaryInfoDetail) {
+export function hasBinarySettledDetail(row?: BinaryInfoDetail) {
   const evidence = row?.price_evidence;
   return !!(
     row &&
@@ -49,7 +49,7 @@ export function hasBinaryPriceEvidence(row?: BinaryInfoDetail) {
 
 /** Keep the SWR callback stable across market-driven renders. */
 export function binaryDetailRefreshInterval(detail?: BinaryInfoDetail) {
-  return hasBinaryPriceEvidence(detail) ? 0 : 5_000;
+  return hasBinarySettledDetail(detail) ? 0 : 5_000;
 }
 
 /** Do not let an older unpublished detail erase an already published snapshot. */

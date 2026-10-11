@@ -1,4 +1,3 @@
-import { Decimal } from "@orderly.network/utils";
 import type { PredictionOutcome } from "../prediction.types";
 import { complementPrice } from "./binaryOrderRules";
 

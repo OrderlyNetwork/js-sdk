@@ -51,7 +51,6 @@ export const usePredictionAccountData = ({
     history: resources.history,
     settlements: resources.settlements,
     historyRecords: resources.historyRecords,
-    historyCompleteness: resources.historyCompleteness,
     historyLoading: resources.historyLoading,
     historyError: resources.historyError,
     pendingSettlementSymbols: resources.pendingSettlementSymbols,
