@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Divider, EmptyDataState, Text } from "@orderly.network/ui";
 import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
-import { binaryHistoryDisplayRows } from "../binary/binarySettlement";
 import {
   OutcomeBadge,
   PredictionOrderSymbol,
@@ -139,14 +138,7 @@ export const MobilePredictionHistory: React.FC<{
     state,
     predictionUnderlyingSymbol,
   );
-  const records = binaryHistoryDisplayRows(historyState.historyRecords).filter(
-    (record) =>
-      filters.matches({
-        outcome: record.outcome ?? "",
-        status: record.result === "closed" ? "closed" : "settled",
-        timestamp: record.filterTime,
-      }),
-  );
+  const records = historyState.displayRecords;
   return (
     <>
       <PredictionFilters filters={filters} mode="settlements" />

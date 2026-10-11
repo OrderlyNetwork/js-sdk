@@ -11,18 +11,20 @@ export type PredictionHistoryTableProps = {
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
 };
 
-export const PredictionHistoryTable: React.FC<PredictionHistoryTableProps> = (
-  props,
-) => {
+export const PredictionHistoryTable: React.FC<PredictionHistoryTableProps> = ({
+  state,
+  predictionUnderlyingSymbol,
+  ...rest
+}) => {
   const { filters, historyState } = usePredictionHistoryTableScript(
-    props.state,
-    props.predictionUnderlyingSymbol,
+    state,
+    predictionUnderlyingSymbol,
   );
   return (
     <PredictionHistoryTableUI
-      {...props}
-      state={{ ...props.state, ...historyState }}
+      {...rest}
       filters={filters}
+      displayRecords={historyState.displayRecords}
     />
   );
 };

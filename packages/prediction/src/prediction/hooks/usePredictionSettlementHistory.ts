@@ -24,6 +24,13 @@ import type {
   PredictionSettlementHistoryState,
 } from "../prediction.types";
 
+/**
+ * Pending scans only cross round-expiry boundaries, which the settlement poll
+ * (5s fast tier) already bounds; quantize the clock so the 1s round tick does
+ * not re-run the O(records) history dedupe every second.
+ */
+const PENDING_SETTLEMENT_TICK_MS = 5_000;
+
 interface SettlementHistoryArgs {
   accountId?: string;
   enabled: boolean;
@@ -72,10 +79,24 @@ export function usePredictionSettlementHistory({
     () => (observed.historySnapshot?.rows ?? []).map(normalizeBinaryHistory),
     [observed.historySnapshot],
   );
-  const pendingObserved = pendingBinarySettlements(
-    [...cachedRecords, ...observed.confirmedHistoryRecords],
-    observed.holdings,
-    nowMs ?? getTimestamp(),
+  const pendingNowMs =
+    nowMs == null
+      ? undefined
+      : Math.floor(nowMs / PENDING_SETTLEMENT_TICK_MS) *
+        PENDING_SETTLEMENT_TICK_MS;
+  const pendingObserved = useMemo(
+    () =>
+      pendingBinarySettlements(
+        [...cachedRecords, ...observed.confirmedHistoryRecords],
+        observed.holdings,
+        pendingNowMs ?? getTimestamp(),
+      ),
+    [
+      cachedRecords,
+      observed.confirmedHistoryRecords,
+      observed.holdings,
+      pendingNowMs,
+    ],
   );
   const historyEnabled =
     enabled &&
@@ -93,7 +114,12 @@ export function usePredictionSettlementHistory({
     {
       formatter: (data) => binaryHistorySnapshot(accountId!, data),
       keepPreviousData: false,
-      revalidateOnFocus: true,
+      // revalidateOnFocus is redundant here: while this query is enabled the
+      // settlement registry poller already refreshes it (5s while settlements
+      // are pending, 60s heartbeat otherwise), so focus would only re-pull
+      // the 1000-row payload. Perp positionHistory keeps focus refresh
+      // because it has no poller; do not copy that setting here.
+      revalidateOnFocus: false,
       refreshInterval: 0,
     },
   );
@@ -114,10 +140,19 @@ export function usePredictionSettlementHistory({
     () => (snapshot?.rows ?? []).map(normalizeBinaryHistory),
     [snapshot],
   );
-  const pendingSettlementSymbols = pendingBinarySettlements(
-    [...historyRecords, ...observed.confirmedHistoryRecords],
-    observed.holdings,
-    nowMs ?? getTimestamp(),
+  const pendingSettlementSymbols = useMemo(
+    () =>
+      pendingBinarySettlements(
+        [...historyRecords, ...observed.confirmedHistoryRecords],
+        observed.holdings,
+        pendingNowMs ?? getTimestamp(),
+      ),
+    [
+      historyRecords,
+      observed.confirmedHistoryRecords,
+      observed.holdings,
+      pendingNowMs,
+    ],
   );
   const pollingEnabled =
     historyEnabled &&
@@ -139,14 +174,27 @@ export function usePredictionSettlementHistory({
     if (!pollingEnabled) return;
     return watch.retainPolling(() => refreshCurrent(accountId), interval);
   }, [watch, pollingEnabled, refreshCurrent, accountId, interval]);
-  return {
-    historyRecords,
-    settlements: useMemo(
-      () => historyRecords.map(toPredictionSettlement),
-      [historyRecords],
-    ),
-    historyLoading: historyEnabled && !!isLoading,
-    historyError: historyEnabled ? historyError : undefined,
-    pendingSettlementSymbols,
-  };
+  const settlements = useMemo(
+    () => historyRecords.map(toPredictionSettlement),
+    [historyRecords],
+  );
+  // Stable identity: parent renders (orderbook ticks, round clock) otherwise
+  // bust every consumer memo keyed on this state.
+  return useMemo(
+    () => ({
+      historyRecords,
+      settlements,
+      historyLoading: historyEnabled && !!isLoading,
+      historyError: historyEnabled ? historyError : undefined,
+      pendingSettlementSymbols,
+    }),
+    [
+      historyRecords,
+      settlements,
+      historyEnabled,
+      isLoading,
+      historyError,
+      pendingSettlementSymbols,
+    ],
+  );
 }
