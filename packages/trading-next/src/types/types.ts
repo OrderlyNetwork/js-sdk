@@ -1,5 +1,10 @@
 import { ReactNode } from "react";
 import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
+import type {
+  DropDownMarketsExtensionProps,
+  ExpandMarketsExtensionProps,
+  MarketsSheetExtensionProps,
+} from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
@@ -175,4 +180,12 @@ export type TradingPageProps = BaseTradingPageProps & {
   layoutStrategy?: LayoutStrategy;
   /** Optional factory for initial layout; called with desktop options. If omitted, strategy.defaultLayout(panelIds) is used. */
   getInitialLayout?: (options: DesktopLayoutInitialOptions) => LayoutModel;
+  /** Custom tabs for the desktop markets dropdown (e.g. Prediction). */
+  marketsDropdown?: DropDownMarketsExtensionProps;
+  /** Custom tabs for the mobile markets sheet; hosts also pass onRequestClose. */
+  marketsSheet?: MarketsSheetExtensionProps;
+  /** Custom tabs for the desktop side markets panel (expanded mode). */
+  sideMarkets?: ExpandMarketsExtensionProps;
+  /** Enable automatic Prediction market-list integration; defaults to true. */
+  predictionEnabled?: boolean;
 };

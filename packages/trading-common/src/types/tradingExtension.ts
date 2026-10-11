@@ -1,9 +1,15 @@
 import type { ReactNode } from "react";
-import type { DropDownMarketsExtensionProps } from "@orderly.network/markets";
+import type {
+  DropDownMarketsExtensionProps,
+  ExpandMarketsExtensionProps,
+  MarketsSheetExtensionProps,
+} from "@orderly.network/markets-core";
 import type { API } from "@orderly.network/types";
 import type { SharePnLConfig } from "@orderly.network/ui-share";
 
 export type TradingMarketsDropdownProps = DropDownMarketsExtensionProps;
+export type TradingMarketsSheetProps = MarketsSheetExtensionProps;
+export type TradingSideMarketsProps = ExpandMarketsExtensionProps;
 
 /** Host-owned behavior and presentation for shared Perps panels. */
 export type TradingPerpsPanelProps = {
@@ -35,5 +41,9 @@ export type TradingDataListProductContent = Partial<{
 /** Extension slots independent of the trading page's layout and chart props. */
 export type TradingPageExtensionProps = {
   marketsDropdown?: TradingMarketsDropdownProps;
+  /** Mobile markets sheet (host supplies onRequestClose to close the sheet). */
+  marketsSheet?: TradingMarketsSheetProps;
+  /** Desktop side markets panel (expanded mode). */
+  sideMarkets?: TradingSideMarketsProps;
   dataListProductContent?: TradingDataListProductContent;
 };

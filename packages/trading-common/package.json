@@ -19,7 +19,7 @@
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/markets": "workspace:*",
+    "@orderly.network/markets-core": "workspace:*",
     "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",

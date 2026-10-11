@@ -44,7 +44,11 @@ export const TradingPage: React.FC<TradingPageProps> = (props) => {
       props.onSymbolChange || onRouteChange ? onSymbolChange : undefined,
     sharePnLConfig: props.sharePnLConfig,
     enabled: props.predictionEnabled ?? true,
-    marketsEnabled: hasPredictionNavigation && props.marketsDropdown == null,
+    marketsEnabled:
+      hasPredictionNavigation &&
+      (props.marketsDropdown == null ||
+        props.marketsSheet == null ||
+        props.sideMarkets == null),
     accountPanelsEnabled: props.dataListProductContent == null,
   });
 
@@ -60,6 +64,14 @@ export const TradingPage: React.FC<TradingPageProps> = (props) => {
         (hasPredictionNavigation
           ? predictionExtension.marketsDropdown
           : undefined)
+      }
+      marketsSheet={
+        props.marketsSheet ??
+        (hasPredictionNavigation ? predictionExtension.marketsSheet : undefined)
+      }
+      sideMarkets={
+        props.sideMarkets ??
+        (hasPredictionNavigation ? predictionExtension.sideMarkets : undefined)
       }
       disableFeatures={props.disableFeatures}
       overrideFeatures={props.overrideFeatures}

@@ -208,6 +208,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props) => {
                 }
               : undefined
           }
+          onRequestClose={() => props.onOpenMarketsSheetChange(false)}
+          {...props.marketsSheet}
         />
       </SimpleSheet>
       {rwaStatusBar}

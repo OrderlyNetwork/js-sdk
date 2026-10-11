@@ -1,5 +1,9 @@
 import { createElement } from "react";
 import {
+  MarketsHomePage,
+  type MarketsHomePageProps,
+} from "@orderly.network/markets";
+import {
   PredictionPage,
   type PredictionSymbolSelection,
 } from "@orderly.network/prediction";
@@ -274,3 +278,12 @@ export type NavigationContracts = [
       : true
   >,
 ];
+
+export function marketsPredictionContracts() {
+  const props: MarketsHomePageProps = {
+    predictionEnabled: true,
+    onPredictionSelect: (symbol: string) => void symbol,
+    renderTabAfterContent: () => null,
+  };
+  return createElement(MarketsHomePage, props);
+}

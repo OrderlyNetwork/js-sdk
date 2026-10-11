@@ -176,6 +176,11 @@ const props: TradingPageProps = {
   tradingViewConfig: { library_path: "/tradingview/" },
 };
 const customMarkets = {};
+const customMarketSlots = {
+  marketsDropdown: customMarkets,
+  marketsSheet: customMarkets,
+  sideMarkets: customMarkets,
+};
 const customAccount = {};
 const expiredHolding = {
   symbol: "PERP_BTC5M2601010000_USDC",
@@ -226,9 +231,9 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-it("starts no Prediction queries, order registration, or clock when both slots are overridden", () => {
+it("starts no Prediction queries, order registration, or clock when all market slots and account content are overridden", () => {
   update({
-    marketsDropdown: customMarkets,
+    ...customMarketSlots,
     dataListProductContent: customAccount,
   });
   expect(mocks.query.mock.calls.every(([key]) => key === null)).toBe(true);
@@ -240,9 +245,9 @@ it("starts no Prediction queries, order registration, or clock when both slots a
   expect(vi.getTimerCount()).toBe(0);
 });
 
-it("retains account metadata without a dropdown and releases private resources when account content is overridden", async () => {
+it("retains account metadata without automatic market surfaces and releases private resources when account content is overridden", async () => {
   mocks.positions = [expiredHolding];
-  update({ marketsDropdown: customMarkets });
+  update(customMarketSlots);
   await act(async () => {});
   expect(mocks.query.mock.calls.map(([key]) => key)).toContain(
     "/v1/public/binary/info",
@@ -268,19 +273,19 @@ it("retains account metadata without a dropdown and releases private resources w
   expect(vi.getTimerCount()).toBe(1);
   clearQueries();
   update({
-    marketsDropdown: customMarkets,
+    ...customMarketSlots,
     dataListProductContent: customAccount,
   });
   expect(mocks.query.mock.calls.every(([key]) => key === null)).toBe(true);
   expect(vi.getTimerCount()).toBe(0);
-  update({ marketsDropdown: customMarkets });
+  update(customMarketSlots);
   await act(async () => {});
   expect(registry.handlers.size).toBe(3);
   expect(vi.getTimerCount()).toBe(2);
   mocks.accountId = "b";
   mocks.positions = [];
   clearQueries();
-  update({ marketsDropdown: customMarkets });
+  update(customMarketSlots);
   await act(async () => {});
   expect(mocks.privateQuery.mock.calls.every(([, id]) => id === "b")).toBe(
     true,
@@ -298,7 +303,7 @@ it("keeps a second consumer's order keys, market clock, and settlement polling w
     root = create(
       <>
         <TradingPage key="a" {...props} />
-        <TradingPage key="b" {...props} marketsDropdown={customMarkets} />
+        <TradingPage key="b" {...props} {...customMarketSlots} />
       </>,
     );
   });
@@ -311,10 +316,10 @@ it("keeps a second consumer's order keys, market clock, and settlement polling w
         <TradingPage
           key="a"
           {...props}
-          marketsDropdown={customMarkets}
+          {...customMarketSlots}
           dataListProductContent={customAccount}
         />
-        <TradingPage key="b" {...props} marketsDropdown={customMarkets} />
+        <TradingPage key="b" {...props} {...customMarketSlots} />
       </>,
     ),
   );
@@ -329,5 +334,21 @@ it("keeps a second consumer's order keys, market clock, and settlement polling w
   act(() => root!.unmount());
   root = undefined;
   expect(registry.handlers.size).toBe(0);
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+it("keeps market queries and the round clock when only the dropdown is overridden", async () => {
+  update({
+    marketsDropdown: customMarkets,
+    dataListProductContent: customAccount,
+  });
+  await act(async () => {});
+  expect(mocks.query.mock.lastCall?.[0]).toBe("/v1/public/binary/info");
+  expect(registry.handlers.size).toBe(0);
+  expect(vi.getTimerCount()).toBe(1);
+
+  clearQueries();
+  update({ ...customMarketSlots, dataListProductContent: customAccount });
+  expect(mocks.query.mock.calls.every(([key]) => key === null)).toBe(true);
   expect(vi.getTimerCount()).toBe(0);
 });

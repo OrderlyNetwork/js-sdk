@@ -371,6 +371,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
       panelSize={panelSize}
+      {...props.sideMarkets}
     />
   );
 
