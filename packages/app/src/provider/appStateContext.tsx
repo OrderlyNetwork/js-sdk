@@ -49,6 +49,10 @@ export type AppContextState = {
   restrictedInfo: RestrictedInfoReturns;
   showAnnouncement: boolean;
   setShowAnnouncement: (show: boolean) => void;
+  /**
+   * Host navigation callback bridging SDK route changes to the app router.
+   * See `RouterAdapter` for the option shape and `href` conventions.
+   */
   onRouteChange?: (option: RouteOption) => void;
   widgetConfigs?: WidgetConfigs;
   initialized: boolean;
