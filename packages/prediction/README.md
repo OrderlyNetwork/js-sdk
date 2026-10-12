@@ -42,6 +42,8 @@ import { TradingPage } from "@orderly.network/trading";
 />;
 ```
 
+Upgrading alone is not a zero-action change: `predictionEnabled` defaults to `true`, and hosts that already pass `onRouteChange` (most do, for portfolio and footer links) show Prediction entries in the markets dropdown immediately. Selecting one navigates to `/prediction/:symbol`; until that route exists the host serves a 404. Either configure the route as described below or set `predictionEnabled={false}` to keep Prediction off.
+
 The page reads the existing all-symbol and notional precision preferences and keeps list and count scopes in sync. Prediction selection uses the SDK app provider's existing `onRouteChange` callback with `{ href: "/prediction/" + encodeURIComponent(symbol), name: "prediction" }`. The host handles language prefixes and its own router. Configure the standard `/prediction/:symbol` route. Without `onRouteChange`, the automatic Prediction market dropdown is omitted; account panel extensions remain available.
 
 `TradingPageProps.predictionEnabled` defaults to `true`. Set it to `false` to disable this consumer's automatic Prediction resources and restore native Perps panels. It can be toggled at runtime. Explicit `marketsDropdown` and `dataListProductContent` objects independently replace the corresponding automatic configuration as a whole, without merging nested slots. Explicit configurations remain in effect when automatic Prediction is disabled.
@@ -78,7 +80,7 @@ In routed mode, entering `/prediction` selects the current round of the remember
 
 Automatic resources follow the slots in use. A non-nullish `marketsDropdown` (including `{}`), or navigation being unavailable (no `onRouteChange`), disables the automatic dropdown's metadata query and round clock. A non-nullish `dataListProductContent` (including `{}`) disables automatic account resources and counts. Removing an override resumes that part of the extension. Account panels retain their own market metadata when the dropdown is disabled; other consumers' shared resources and the native Perps account caches remain available.
 
-Existing account and SWR providers and SDK stylesheet setup are still required. The UI and Prediction stylesheet builds include the shared components. Shared Perps components, trading preferences, and contracts now live in `@orderly.network/trading-common`; their original Trading exports remain available. The shared package is installed as an SDK dependency and does not require consumer setup.
+Existing account and SWR providers are still required; see [Stylesheet](#stylesheet) for the stylesheet options. Shared Perps components, trading preferences, and contracts now live in `@orderly.network/trading-common`; their original Trading exports remain available. The shared package is installed as an SDK dependency and does not require consumer setup.
 
 ### Advanced integration and custom slots
 
@@ -183,6 +185,43 @@ This customization applies when the adapter is enabled; when disabled, use the o
 The public types are `PredictionTradingExtensionOptions` and `PredictionTradingExtensionProps`; the return value maps to the `marketsDropdown` and `dataListProductContent` props of `TradingPageProps`. The existing `usePredictionMarketsDropdown(callback)` stays compatible and also accepts a second argument `{ enabled: false }` to control the markets query.
 
 The independent contracts `TradingMarketsDropdownProps`, `TradingPerpsPanelProps`, `TradingDataListProductContent`, and `TradingPageExtensionProps` are exported by both `@orderly.network/trading-common` and `@orderly.network/trading`. Prediction's existing panel and extension type names reuse these contracts without depending on the full trading page type. Panel precision remains a panel option, not a new `TradingPage` prop.
+
+## Host symbol persistence
+
+The SDK does not persist the current symbol. Hosts that store it themselves (the common `localStorage` pattern behind symbol-less `/perp` redirects) must keep Prediction round contracts out of that storage. A round symbol such as `PERP_BTC5M2608271200_USDC` stored as the perps symbol hijacks every later symbol-less `/perp` redirect and surfaces as an invalid market on Perps pages. Upgrading the package does not repair host-side storage; the guard is a host obligation.
+
+Use `isBinarySymbol` from `@orderly.network/utils` on both sides of the storage:
+
+```tsx
+import { isBinarySymbol } from "@orderly.network/utils";
+
+const FALLBACK = "PERP_ETH_USDC";
+
+export function readStoredSymbol() {
+  const symbol = localStorage.getItem("orderly-current-symbol") || FALLBACK;
+  // A round stored before the write guard existed is not a perps market.
+  return isBinarySymbol(symbol) ? FALLBACK : symbol;
+}
+
+export function writeStoredSymbol(symbol: string) {
+  // Never persist a Prediction round contract as the perps symbol.
+  if (isBinarySymbol(symbol)) return;
+  localStorage.setItem("orderly-current-symbol", symbol || FALLBACK);
+}
+```
+
+Hosts that mirror the current symbol across pages (for example, a header bound to the active route) should apply the same filter to what Perps views read, not only to what is written.
+
+## Stylesheet
+
+Existing stylesheet setup is enough: `@orderly.network/ui/dist/styles.css`, which hosts already import, is built from the whole workspace and already contains the Prediction and shared `@orderly.network/trading-common` styles:
+
+```css
+/* the existing import already covers Prediction; do not add a prediction line */
+@import "@orderly.network/ui/dist/styles.css";
+```
+
+Keep the UI and Prediction packages on the same release line; an older UI stylesheet paired with a newer Prediction package can miss newer classes. The package also ships its own prebuilt `dist/styles.css` for hosts that consume Prediction without the UI stylesheet. Hosts running their own Tailwind build with the SDK preset can skip both imports and point their `content` globs at the SDK packages instead; the class strings are present in the published JavaScript.
 
 ## Load options
 
