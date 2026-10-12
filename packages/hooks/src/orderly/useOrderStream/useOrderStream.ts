@@ -724,7 +724,11 @@ export const useOrderStream = (
     {
       total,
       error: normalOrdersResponse.error || algoOrdersResponse.error,
-      hasMore: (normalOrdersResponse.data?.at(-1)?.rows.length ?? 0) > 0,
+      // Either stream may outlive the other, especially algo-only portfolios.
+      hasMore:
+        (normalOrdersResponse.data?.at(-1)?.rows.length ?? 0) > 0 ||
+        (Boolean(algoOrderKeyFn) &&
+          (algoOrdersResponse.data?.at(-1)?.rows.length ?? 0) > 0),
       isLoading: normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
       isValidating:
         normalOrdersResponse.isValidating || algoOrdersResponse.isValidating,
