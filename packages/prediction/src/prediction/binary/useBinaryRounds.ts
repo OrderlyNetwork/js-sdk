@@ -81,6 +81,16 @@ export const useBinaryRounds = ({
   const requestedMarketId = parsedSymbol
     ? `PERP_${parsedSymbol.base}${parsedSymbol.period}_${parsedSymbol.quote}`
     : undefined;
+  const requestedMarket = parsedSymbol
+    ? {
+        id: requestedMarketId!,
+        base: parsedSymbol.base,
+        quote: parsedSymbol.quote,
+        period: parsedSymbol.period,
+        intervalSeconds: parsedSymbol.intervalSeconds,
+        indexPriceSymbol: `PERP_${parsedSymbol.base}_${parsedSymbol.quote}`,
+      }
+    : undefined;
   const defaultSymbol =
     // Prefer a tradable market (the remembered one, then any live market);
     // fall back to the remembered market's history, then any market, so a
@@ -155,12 +165,26 @@ export const useBinaryRounds = ({
           markets.find((item) => item.id === identity.id)?.hasLiveRow ?? false,
       }
     : undefined;
-  const marketId = market?.id;
-  const currentRow = market?.currentRow;
+  const marketId = market?.id ?? requestedMarketId;
+  const currentRow =
+    markets.find((item) => item.id === requestedMarketId)?.currentRow ??
+    market?.currentRow;
   const round = currentRow ? binaryRowRoundStart(currentRow) : undefined;
   const selectedRound = selectedRow
     ? binaryRowRoundStart(selectedRow)
-    : undefined;
+    : parsedSymbol
+      ? parsedSymbol.roundStartMs / 1_000
+      : undefined;
+  const isMissingHistoricalRound =
+    !!parsedSymbol &&
+    parsedSymbol.roundStartMs + parsedSymbol.intervalSeconds * 1_000 <= now &&
+    !selectedRow &&
+    !isLoading &&
+    !detailLoading;
+  const canGoToLiveRound =
+    !!currentRow &&
+    currentRow.status === "ACTIVE" &&
+    currentRow.expire_at > now;
 
   useEffect(() => {
     setAcceptedRow((previous) =>
@@ -228,7 +252,11 @@ export const useBinaryRounds = ({
     if (!currentRow || currentRow.symbol === selectedRow?.symbol) return;
     // A market with only history left has an expired currentRow; jumping to
     // another settled round would be misleading, so keep the selection.
-    if (currentRow.expire_at <= getTimestamp()) return;
+    if (
+      currentRow.status !== "ACTIVE" ||
+      currentRow.expire_at <= getTimestamp()
+    )
+      return;
     onSymbolSelect(currentRow.symbol);
   }, [currentRow, selectedRow?.symbol, onSymbolSelect]);
 
@@ -263,6 +291,9 @@ export const useBinaryRounds = ({
     marketRows: displayRows,
     markets,
     market,
+    requestedMarket,
+    isMissingHistoricalRound,
+    canGoToLiveRound,
     marketId,
     defaultSymbol,
     isLoading:

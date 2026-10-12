@@ -47,7 +47,9 @@ export {
 } from "./dataPanels";
 export type { PredictionDataPanelProps } from "./dataPanels";
 
-const MobileMarketPanel: React.FC<PredictionState> = (state) => {
+const MobileMarketPanel: React.FC<
+  PredictionState & { onSelectSymbol?: (symbol: string) => void }
+> = (state) => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<"chart" | "data">("chart");
   const [contentVisible, setContentVisible] = useState(true);
@@ -85,8 +87,10 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
       <TabPanel title={t("trading.tabs.chart")} value="chart">
         <PriceChart
           key={state.marketId}
-          intervalSeconds={state.market?.intervalSeconds ?? 300}
-          base={state.market?.base ?? ""}
+          intervalSeconds={
+            (state.market ?? state.requestedMarket)?.intervalSeconds ?? 300
+          }
+          base={(state.market ?? state.requestedMarket)?.base ?? ""}
           selectedRound={state.selectedRound}
           onSelectRound={state.selectMarketRound}
           points={state.priceHistory}
@@ -97,6 +101,8 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
           currentPrice={state.chartIndexPrice}
           round={state.round}
           onGoToLiveMarket={state.goToLiveRound}
+          isRoundUnavailable={state.isMissingHistoricalRound}
+          canGoToLiveMarket={state.canGoToLiveRound && !!state.onSelectSymbol}
         />
       </TabPanel>
       <TabPanel title={t("trading.tabs.data")} value="data">
@@ -104,16 +110,24 @@ const MobileMarketPanel: React.FC<PredictionState> = (state) => {
           <div className="oui-text-xs oui-flex oui-w-full oui-items-center oui-justify-between">
             <Text intensity={36}>
               {t("prediction.chart.indexPrice", {
-                base: state.market?.base ?? "",
+                base: (state.market ?? state.requestedMarket)?.base ?? "",
               })}
             </Text>
-            <Text.numeral dp={2} intensity={80}>
-              {state.currentPrice}
-            </Text.numeral>
+            {state.isMissingHistoricalRound ? (
+              <Text intensity={80}>--</Text>
+            ) : (
+              <Text.numeral dp={2} intensity={80}>
+                {state.currentPrice}
+              </Text.numeral>
+            )}
           </div>
           <div className="oui-text-xs oui-flex oui-w-full oui-items-center oui-justify-between">
             <Text intensity={36}>{t("prediction.chance")}</Text>
-            <Text intensity={98}>{formatPercent(state.upChance)}</Text>
+            <Text intensity={98}>
+              {state.isMissingHistoricalRound
+                ? "--"
+                : formatPercent(state.upChance)}
+            </Text>
           </div>
         </div>
       </TabPanel>
@@ -161,13 +175,15 @@ export const Prediction: React.FC<
     ? false
     : (state.orderEntryFunded ?? false);
 
+  const displayMarket = state.market ?? state.requestedMarket;
   const isRequestedSymbolUnavailable =
     state.requestedSymbol != null &&
-    state.selectedRow?.symbol !== state.requestedSymbol;
+    state.selectedRow?.symbol !== state.requestedSymbol &&
+    !state.isMissingHistoricalRound;
   const marketName = isRequestedSymbolUnavailable
     ? (state.requestedSymbol ?? t("prediction.title"))
-    : state.market
-      ? formatPredictionMarketName(state.market)
+    : displayMarket
+      ? formatPredictionMarketName(displayMarket)
       : t("prediction.title");
   const marketSelector = (
     <DropDownMarketsWidget
@@ -187,7 +203,7 @@ export const Prediction: React.FC<
       symbol={
         isRequestedSymbolUnavailable
           ? undefined
-          : state.market?.indexPriceSymbol
+          : displayMarket?.indexPriceSymbol
       }
       onSymbolChange={state.onNavigatePerp}
     >
@@ -196,21 +212,21 @@ export const Prediction: React.FC<
         disabled={!state.onSelectSymbol && !state.onNavigatePerp}
         className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
       >
-        {!isRequestedSymbolUnavailable && state.market && (
-          <TokenIcon name={state.market.base} size="lg" />
+        {!isRequestedSymbolUnavailable && displayMarket && (
+          <TokenIcon name={displayMarket.base} size="lg" />
         )}
         <div className="oui-min-w-0 oui-flex-1">
           <h1 className="oui-flex oui-items-center oui-gap-1 oui-truncate oui-text-base oui-font-semibold oui-text-base-contrast">
             <span className="oui-truncate">{marketName}</span>
             <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
           </h1>
-          {!isRequestedSymbolUnavailable && state.market && (
+          {!isRequestedSymbolUnavailable && displayMarket && (
             <div className="oui-text-xs oui-mt-0.5 oui-truncate oui-font-normal oui-text-base-contrast-54">
               {formatRoundWindow(
                 state.selectedRow?.observation_start_at != null
                   ? state.selectedRow.observation_start_at / 1_000
                   : state.selectedRound,
-                state.market.intervalSeconds,
+                displayMarket.intervalSeconds,
                 state.selectedRow?.expire_at,
               )}
             </div>
@@ -263,14 +279,24 @@ export const Prediction: React.FC<
           <div className="oui-hidden oui-min-w-0 oui-flex-1 oui-grid-cols-2 oui-items-center oui-gap-x-6 oui-gap-y-3 sm:oui-grid-cols-3 2xl:oui-flex 2xl:oui-grid 2xl:oui-flex-wrap 2xl:oui-gap-x-8">
             <DataItem
               label={t("prediction.chart.indexPrice", {
-                base: state.market?.base ?? "",
+                base: (state.market ?? state.requestedMarket)?.base ?? "",
               })}
-              value={<Text.numeral dp={2}>{state.currentPrice}</Text.numeral>}
+              value={
+                state.isMissingHistoricalRound ? (
+                  <Text>--</Text>
+                ) : (
+                  <Text.numeral dp={2}>{state.currentPrice}</Text.numeral>
+                )
+              }
             />
             <DataItem
               label={t("prediction.chance")}
               value={
-                <Text intensity={98}>{formatPercent(state.upChance)}</Text>
+                <Text intensity={98}>
+                  {state.isMissingHistoricalRound
+                    ? "--"
+                    : formatPercent(state.upChance)}
+                </Text>
               }
             />
           </div>
@@ -281,8 +307,10 @@ export const Prediction: React.FC<
           {isDesktopLayout ? (
             <PriceChart
               key={state.marketId}
-              intervalSeconds={state.market?.intervalSeconds ?? 300}
-              base={state.market?.base ?? ""}
+              intervalSeconds={
+                (state.market ?? state.requestedMarket)?.intervalSeconds ?? 300
+              }
+              base={(state.market ?? state.requestedMarket)?.base ?? ""}
               selectedRound={state.selectedRound}
               onSelectRound={state.selectMarketRound}
               points={state.priceHistory}
@@ -293,6 +321,10 @@ export const Prediction: React.FC<
               currentPrice={state.chartIndexPrice}
               round={state.round}
               onGoToLiveMarket={state.goToLiveRound}
+              isRoundUnavailable={state.isMissingHistoricalRound}
+              canGoToLiveMarket={
+                state.canGoToLiveRound && !!state.onSelectSymbol
+              }
             />
           ) : (
             <MobileMarketPanel {...state} />
@@ -327,7 +359,9 @@ export const Prediction: React.FC<
           {state.isRegionRestricted || state.orderEntryRestricted ? (
             <RoundOrderStatusCard
               marketName={marketName}
-              intervalSeconds={state.market?.intervalSeconds ?? 300}
+              intervalSeconds={
+                (state.market ?? state.requestedMarket)?.intervalSeconds ?? 300
+              }
               round={state.selectedRound}
               roundPhase={state.roundPhase}
               isRoundInSnapshot={state.isRoundInSnapshot}
@@ -343,7 +377,9 @@ export const Prediction: React.FC<
             <RoundResultWidget
               state={state}
               marketName={marketName}
-              intervalSeconds={state.market?.intervalSeconds ?? 300}
+              intervalSeconds={
+                (state.market ?? state.requestedMarket)?.intervalSeconds ?? 300
+              }
             />
           )}
         </div>

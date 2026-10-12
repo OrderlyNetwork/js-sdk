@@ -1,7 +1,9 @@
 import { i18n } from "@orderly.network/i18n";
 import type { BinaryMarket } from "./binary/binaryMarkets";
 
-export const formatPredictionMarketName = (market: BinaryMarket) =>
+export const formatPredictionMarketName = (
+  market: Pick<BinaryMarket, "base" | "period">,
+) =>
   i18n.t("prediction.marketName", { base: market.base, period: market.period });
 
 /** Match the same fields in dedicated and supplemental Prediction lists. */

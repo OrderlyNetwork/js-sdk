@@ -40,9 +40,9 @@ export const usePredictionScript = (
 
   const underlying = useBinaryUnderlying({
     indexSymbol: rounds.underlyingSymbol,
-    roundStartSec: rounds.selectedRound,
+    roundStartSec: rounds.selectedRow ? rounds.selectedRound : undefined,
     expireAtMs: rounds.selectedRow?.expire_at,
-    active: active && activeLive,
+    active: active && activeLive && !!rounds.selectedRow,
   });
 
   const markPrice = useBinaryMarkPrice(selectedSymbol, active && activeLive);
@@ -170,14 +170,17 @@ export const usePredictionScript = (
     rounds,
     markets: rounds.markets,
     market: rounds.market,
+    requestedMarket: rounds.requestedMarket,
+    isMissingHistoricalRound: rounds.isMissingHistoricalRound,
+    canGoToLiveRound: rounds.canGoToLiveRound,
     marketId: rounds.marketId,
     defaultSymbol: rounds.defaultSymbol,
     isRoundsLoading: rounds.isLoading,
-    /** True once the binary info snapshot produced at least one round. */
-    isRoundsReady: rounds.selectedRow != null,
-    // Round lifecycle. Components only mount after isRoundsReady, so the 0
-    // fallbacks below never render.
-    round: rounds.round ?? 0,
+    /** A real round or an identifiable missing historical round can render. */
+    isRoundsReady:
+      rounds.selectedRow != null || rounds.isMissingHistoricalRound,
+    // Missing historical rounds retain their timestamp from the route symbol.
+    round: rounds.round ?? rounds.selectedRound ?? 0,
     roundPhase: rounds.roundPhase,
     selectedRound: rounds.selectedRound ?? rounds.round ?? 0,
     selectedRow: rounds.selectedRow,
