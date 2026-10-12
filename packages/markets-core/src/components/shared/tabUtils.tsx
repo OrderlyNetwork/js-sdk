@@ -18,11 +18,14 @@ export function isBuiltInMarketTab(
  * Renders a custom panel when the tab is not backed by the markets data
  * source; shared by the market-list extension slots (dropdown, sheet, side
  * panel, markets page). `hide` closes the host surface, when it has one.
+ * Supplemental renderers receive the current search in `context` so they can
+ * return null when no product rows match, keeping the host empty state accurate.
  */
 export type MarketTabContentRenderer = (
   tab: MarketTabConfig,
   key: string,
   hide: () => void,
+  context?: { searchValue?: string },
 ) => React.ReactNode | undefined;
 
 export function isCustomMarketTab(

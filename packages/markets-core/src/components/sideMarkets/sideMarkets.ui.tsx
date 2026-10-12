@@ -25,6 +25,7 @@ export type SideMarketsProps = SideMarketsScriptReturn & {
   className?: string;
   /** Forwarded to the expanded panel so hosts can add custom tabs (e.g. Prediction). */
   renderTabContent?: ExpandMarketsWidgetProps["renderTabContent"];
+  renderTabAfterContent?: ExpandMarketsWidgetProps["renderTabAfterContent"];
   tabs?: ExpandMarketsWidgetProps["tabs"];
 } & { panelSize?: "small" | "middle" | "large" };
 
@@ -66,6 +67,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
           onSymbolChange={onSymbolChange}
           tabs={props.tabs}
           renderTabContent={props.renderTabContent}
+          renderTabAfterContent={props.renderTabAfterContent}
         />
       );
     }

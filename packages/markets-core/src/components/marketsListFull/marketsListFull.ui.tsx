@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, DataTable } from "@orderly.network/ui";
+import { cn, DataTable, type DataTableClassNames } from "@orderly.network/ui";
 import { useMarketsContext } from "../marketsProvider";
 import { LowVolumeEmptyView } from "../shared/lowVolumeEmptyView";
 import { useMarketsListFullColumns } from "./column";
@@ -10,6 +10,8 @@ import {
 
 export type MarketsListFullProps = UseMarketsListFullReturn & {
   type?: MarketsListFullType;
+  hideEmptyTable?: boolean;
+  tableClassNames?: DataTableClassNames;
 };
 
 export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
@@ -27,6 +29,10 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
   const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useMarketsListFullColumns(favorite, false);
+
+  if (props.hideEmptyTable && !loading && !dataSource?.length) {
+    return null;
+  }
 
   return (
     <DataTable
@@ -58,6 +64,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       initialSort={initialSort}
       pagination={pagination}
       classNames={{
+        ...props.tableClassNames,
         header: "oui-h-12",
         empty: isHiddenByLowVolumeFilter
           ? "oui-items-start oui-pt-16"

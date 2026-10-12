@@ -50,6 +50,7 @@ export type DropDownMarketsProps = DropDownMarketsScriptReturn & {
     tab: MarketTabConfig,
     key: string,
     hide: () => void,
+    context?: { searchValue?: string },
   ) => ReactNode;
 };
 
@@ -67,7 +68,7 @@ export const DropDownMarkets: React.FC<
           alignOffset={-32}
           sideOffset={20}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-h-[496px] oui-max-h-[calc(100vh-24px)] oui-w-[620px] oui-max-w-[calc(100vw-24px)] oui-bg-base-8 oui-p-0",
+            "oui-markets-dropdown-menu-content oui-h-[496px] oui-max-h-[calc(100vh-24px)] oui-w-[720px] oui-max-w-[calc(100vw-24px)] oui-bg-base-8 oui-p-0",
             props.contentClassName,
           )}
         >
@@ -112,7 +113,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   const cls = "oui-h-[calc(100%_-_36px)]";
 
   const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
-  const { tabs } = useMarketsContext();
+  const { tabs, searchValue } = useMarketsContext();
   const tabDataFilters = useCustomTabDataFilters(tabs);
 
   const renderBuiltInContent = (
@@ -151,21 +152,28 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
     }
 
     const beforeContent = props.renderTabBeforeContent?.(tab, key, props.hide);
-    const afterContent = props.renderTabAfterContent?.(tab, key, props.hide);
+    const afterContent = props.renderTabAfterContent?.(tab, key, props.hide, {
+      searchValue,
+    });
     const hasSupplementalContent = Boolean(beforeContent || afterContent);
+    const useParentScroll =
+      tabType === MarketsTabName.All && hasSupplementalContent;
 
     return (
       <div
         className={cn(
           cls,
           "oui-flex oui-flex-col",
-          hasSupplementalContent ? "oui-overflow-auto" : "oui-overflow-hidden",
+          hasSupplementalContent
+            ? "oui-custom-scrollbar oui-overflow-auto"
+            : "oui-overflow-hidden",
         )}
       >
         {beforeContent}
         <div
           className={cn(
-            "oui-min-h-0 oui-overflow-hidden",
+            "oui-min-h-0",
+            useParentScroll ? "oui-overflow-visible" : "oui-overflow-hidden",
             hasSupplementalContent ? "oui-flex-none" : "oui-flex-1",
           )}
         >
@@ -183,10 +191,12 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               scroll: cn(
                 "oui-pb-5 oui-px-1",
                 hasSupplementalContent && "!oui-h-auto !oui-min-h-0",
+                useParentScroll && "!oui-overflow-visible",
               ),
             }}
             rowClassName="!oui-h-[34px]"
             {...getFavoritesProps(tabType)}
+            hideEmptyTable={tabType === MarketsTabName.All && !!afterContent}
             emptyView={renderEmptyView({
               type: tabType,
               onClick: () => {

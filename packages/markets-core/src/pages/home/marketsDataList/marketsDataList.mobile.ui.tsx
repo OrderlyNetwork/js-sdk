@@ -67,7 +67,7 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
 ) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
   const { t } = useTranslation();
-  const { tabs } = useMarketsContext();
+  const { tabs, searchValue } = useMarketsContext();
   const tabDataFilters = useCustomTabDataFilters(tabs);
 
   const getColumns = useCallback(
@@ -137,6 +137,14 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
         rowClassName={TWO_LINE_MARKET_ROW_CLASS}
         {...getFavoritesProps(type)}
         hideEmptyTable={hideEmptyTable}
+        tableClassNames={
+          type === MarketsTabName.All && hideEmptyTable
+            ? {
+                root: "!oui-h-auto",
+                scroll: "!oui-h-auto !oui-overflow-visible",
+              }
+            : undefined
+        }
       />
     );
 
@@ -209,7 +217,9 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
           // Built-in tab
           const meta = isBuiltIn ? builtInMeta[tab.type] : undefined;
           if (isBuiltIn && meta) {
-            const afterContent = props.renderTabAfterContent?.(tab, key, noop);
+            const afterContent = props.renderTabAfterContent?.(tab, key, noop, {
+              searchValue,
+            });
             const title =
               tab.type === "favorites"
                 ? composeTabTitle(tab.name, {
@@ -252,7 +262,8 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
                 ) : (
                   renderTab(
                     meta.tabName!,
-                    tab.type === "favorites" && !!afterContent,
+                    (tab.type === "favorites" || tab.type === "all") &&
+                      !!afterContent,
                   )
                 )}
                 {afterContent}

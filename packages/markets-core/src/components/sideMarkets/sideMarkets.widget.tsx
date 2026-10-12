@@ -11,7 +11,12 @@ const LazySideMarkets = React.lazy(() =>
 );
 
 export type SideMarketsWidgetProps = MarketsProviderProps &
-  Partial<Pick<SideMarketsProps, "className" | "renderTabContent">> & {
+  Partial<
+    Pick<
+      SideMarketsProps,
+      "className" | "renderTabContent" | "renderTabAfterContent"
+    >
+  > & {
     panelSize?: "small" | "middle" | "large";
     collapsed?: boolean;
   };
@@ -27,6 +32,7 @@ export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
           className={props.className}
           tabs={props.tabs}
           renderTabContent={props.renderTabContent}
+          renderTabAfterContent={props.renderTabAfterContent}
         />
       </React.Suspense>
     </MarketsProvider>

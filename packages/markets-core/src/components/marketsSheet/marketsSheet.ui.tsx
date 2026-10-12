@@ -39,7 +39,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   const { t } = useTranslation();
 
   const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
-  const { tabs } = useMarketsContext();
+  const { tabs, searchValue } = useMarketsContext();
   const builtInTitles = useBuiltInTitles();
   const tabDataFilters = useCustomTabDataFilters(tabs);
 
@@ -84,15 +84,19 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     }
 
     const hide = props.hide ?? noop;
-    const afterContent = props.renderTabAfterContent?.(tab, key, hide);
+    const afterContent = props.renderTabAfterContent?.(tab, key, hide, {
+      searchValue,
+    });
     const hasSupplementalContent = Boolean(afterContent);
+    const useParentScroll =
+      tabType === MarketsTabName.All && hasSupplementalContent;
 
     return (
       <div
         className={cn(
           "oui-flex oui-h-full oui-flex-col",
           hasSupplementalContent
-            ? "oui-overflow-y-auto"
+            ? "oui-custom-scrollbar oui-overflow-y-auto"
             : "oui-overflow-hidden",
         )}
       >
@@ -120,6 +124,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
                   : isFavorites
                     ? "oui-h-[calc(100%_-_70px)]"
                     : "oui-h-[calc(100%_-_40px)]",
+                useParentScroll && "!oui-overflow-visible",
               ),
             }}
             emptyView={renderEmptyView({
@@ -129,7 +134,10 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
               },
             })}
             {...getFavoritesProps(tabType)}
-            hideEmptyTable={isFavorites && hasSupplementalContent}
+            hideEmptyTable={
+              (isFavorites || tabType === MarketsTabName.All) &&
+              hasSupplementalContent
+            }
           />
         </div>
         {afterContent}

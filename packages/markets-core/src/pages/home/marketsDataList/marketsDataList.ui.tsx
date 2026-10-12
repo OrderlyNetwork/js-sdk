@@ -162,7 +162,9 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           // Built-in tab
           const meta = isBuiltIn ? builtInMeta[tab.type] : undefined;
           if (isBuiltIn && meta) {
-            const afterContent = props.renderTabAfterContent?.(tab, key, noop);
+            const afterContent = props.renderTabAfterContent?.(tab, key, noop, {
+              searchValue,
+            });
             const title =
               tab.type === "favorites"
                 ? composeTabTitle(tab.name, {
@@ -246,6 +248,15 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
                   ) : (
                     <LazyMarketsListFullWidget
                       type={meta.listType!}
+                      hideEmptyTable={tab.type === "all" && !!afterContent}
+                      tableClassNames={
+                        tab.type === "all" && afterContent
+                          ? {
+                              root: "!oui-h-auto",
+                              scroll: "!oui-h-auto !oui-overflow-visible",
+                            }
+                          : undefined
+                      }
                       initialSort={meta.initialSort}
                     />
                   )}

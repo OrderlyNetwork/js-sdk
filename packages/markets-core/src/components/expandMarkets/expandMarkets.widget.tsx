@@ -11,12 +11,14 @@ import { ExpandMarkets, ExpandMarketsProps } from "./expandMarkets.ui";
 
 export type ExpandMarketsWidgetProps = MarketsProviderProps &
   ExpandMarketsScriptOptions &
-  Partial<Pick<ExpandMarketsProps, "renderTabContent">>;
+  Partial<
+    Pick<ExpandMarketsProps, "renderTabContent" | "renderTabAfterContent">
+  >;
 
 /** Slots a host can use to add custom tabs (e.g. Prediction) to the panel. */
 export type ExpandMarketsExtensionProps = Pick<
   ExpandMarketsWidgetProps,
-  "tabs" | "renderTabContent"
+  "tabs" | "renderTabContent" | "renderTabAfterContent"
 >;
 
 export const ExpandMarketsWidget: React.FC<ExpandMarketsWidgetProps> = (
@@ -48,6 +50,7 @@ export const ExpandMarketsWidget: React.FC<ExpandMarketsWidgetProps> = (
         {...state}
         activeTab={activeTab}
         renderTabContent={props.renderTabContent}
+        renderTabAfterContent={props.renderTabAfterContent}
       />
     </MarketsProvider>
   );

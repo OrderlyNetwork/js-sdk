@@ -1,3 +1,4 @@
+import type { DataTableClassNames } from "@orderly.network/ui";
 import { SortType } from "../../type";
 import {
   MarketsListFullType,
@@ -9,6 +10,9 @@ export type MarketsListFullWidgetProps = {
   type?: MarketsListFullType;
   initialSort?: SortType;
   dataFilter?: (data: any[]) => any[];
+  /** Hide an empty Perps table when another product supplies results. */
+  hideEmptyTable?: boolean;
+  tableClassNames?: DataTableClassNames;
 };
 
 export const MarketsListFullWidget: React.FC<MarketsListFullWidgetProps> = (
@@ -16,5 +20,12 @@ export const MarketsListFullWidget: React.FC<MarketsListFullWidgetProps> = (
 ) => {
   const state = useMarketsListFullScript(props);
 
-  return <MarketsListFull {...state} type={props.type} />;
+  return (
+    <MarketsListFull
+      {...state}
+      type={props.type}
+      hideEmptyTable={props.hideEmptyTable}
+      tableClassNames={props.tableClassNames}
+    />
+  );
 };

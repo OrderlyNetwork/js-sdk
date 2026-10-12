@@ -175,17 +175,20 @@ describe("ExpandMarketsWidget", () => {
 
   it("keeps the active tab and threads renderers when the tab still exists", () => {
     const renderTabContent = vi.fn();
+    const renderTabAfterContent = vi.fn();
     act(() => {
       root = create(
         <ExpandMarketsWidget
           tabs={[{ type: "all" }, predictionTab]}
           renderTabContent={renderTabContent}
+          renderTabAfterContent={renderTabAfterContent}
         />,
       );
     });
     const expandProps = mocks.ExpandMarkets.mock.calls[0][0];
     expect(expandProps.activeTab).toBe("prediction");
     expect(expandProps.renderTabContent).toBe(renderTabContent);
+    expect(expandProps.renderTabAfterContent).toBe(renderTabAfterContent);
     expect(root!.root.findByType(MarketsProvider).props.tabs).toEqual([
       { type: "all" },
       predictionTab,
@@ -196,17 +199,20 @@ describe("ExpandMarketsWidget", () => {
 describe("SideMarketsWidget", () => {
   it("forwards extension tabs and renderers to the side markets UI", async () => {
     const renderTabContent = vi.fn();
+    const renderTabAfterContent = vi.fn();
     await mount(
       <SideMarketsWidget
         symbol="PERP_BTC_USDC"
         panelSize="large"
         tabs={[{ type: "all" }, predictionTab]}
         renderTabContent={renderTabContent}
+        renderTabAfterContent={renderTabAfterContent}
       />,
     );
     const sideProps = mocks.SideMarkets.mock.calls[0][0];
     expect(sideProps.tabs).toEqual([{ type: "all" }, predictionTab]);
     expect(sideProps.renderTabContent).toBe(renderTabContent);
+    expect(sideProps.renderTabAfterContent).toBe(renderTabAfterContent);
     expect(sideProps.panelSize).toBe("large");
   });
 });

@@ -37,6 +37,8 @@ export type ExpandMarketsProps = ExpandMarketsScriptReturn & {
    * signature parity with the other market-list extensions.
    */
   renderTabContent?: MarketTabContentRenderer;
+  /** Appends product content to a built-in tab, including Prediction favorites. */
+  renderTabAfterContent?: MarketTabContentRenderer;
 };
 
 const noop = () => {};
@@ -70,11 +72,17 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
 
   const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
   const builtInTitles = useBuiltInTitles();
-  const { tabs } = useMarketsContext();
+  const { tabs, searchValue } = useMarketsContext();
   const tabDataFilters = useCustomTabDataFilters(tabs);
 
-  const renderBuiltInContent = (type: string) => {
+  const renderBuiltInContent = (
+    type: string,
+    afterContent?: React.ReactNode,
+  ) => {
     const tabType = type as MarketsTabName;
+    const hasSupplementalContent = Boolean(afterContent);
+    const useParentScroll =
+      tabType === MarketsTabName.All && hasSupplementalContent;
 
     if (tabType === MarketsTabName.Rwa) {
       return (
@@ -116,30 +124,60 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
     }
 
     return (
-      <ExpandMarketsListPanel>
-        <React.Suspense fallback={null}>
-          <LazyMarketsListWidget
-            type={tabType}
-            initialSort={tabSort[type]}
-            onSort={onTabSort(tabType)}
-            tableClassNames={{
-              root: expandListTableClassNames.root,
-              scroll: cn(
-                expandListTableClassNames.scroll,
-                "oui-px-1",
-                tabType === MarketsTabName.Favorites ? "oui-pb-9" : "oui-pb-2",
-              ),
-            }}
-            {...getFavoritesProps(tabType)}
-            emptyView={renderEmptyView({
-              type: tabType,
-              onClick: () => {
-                onTabChange(MarketsTabName.All);
-              },
-            })}
-          />
-        </React.Suspense>
-      </ExpandMarketsListPanel>
+      <div
+        className={cn(
+          "oui-flex oui-size-full oui-min-h-0 oui-min-w-0 oui-flex-col",
+          hasSupplementalContent
+            ? "oui-custom-scrollbar oui-overflow-auto"
+            : "oui-overflow-hidden",
+        )}
+      >
+        <div
+          className={cn(
+            "oui-flex oui-min-h-0 oui-w-full oui-min-w-0 oui-flex-col",
+            hasSupplementalContent
+              ? "oui-flex-none"
+              : "oui-flex-1 oui-overflow-hidden",
+          )}
+        >
+          <React.Suspense fallback={null}>
+            <LazyMarketsListWidget
+              type={tabType}
+              initialSort={tabSort[type]}
+              onSort={onTabSort(tabType)}
+              tableClassNames={{
+                root: cn(
+                  expandListTableClassNames.root,
+                  hasSupplementalContent && "!oui-h-auto oui-flex-none",
+                ),
+                scroll: cn(
+                  expandListTableClassNames.scroll,
+                  hasSupplementalContent &&
+                    "!oui-h-auto !oui-min-h-0 oui-flex-none",
+                  useParentScroll && "!oui-overflow-visible",
+                  "oui-px-1",
+                  tabType === MarketsTabName.Favorites
+                    ? "oui-pb-9"
+                    : "oui-pb-2",
+                ),
+              }}
+              {...getFavoritesProps(tabType)}
+              hideEmptyTable={
+                (tabType === MarketsTabName.Favorites ||
+                  tabType === MarketsTabName.All) &&
+                hasSupplementalContent
+              }
+              emptyView={renderEmptyView({
+                type: tabType,
+                onClick: () => {
+                  onTabChange(MarketsTabName.All);
+                },
+              })}
+            />
+          </React.Suspense>
+        </div>
+        {afterContent}
+      </div>
     );
   };
 
@@ -270,7 +308,12 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
                 : isCommunity
                   ? renderCommunityContent()
                   : isBuiltIn
-                    ? renderBuiltInContent(tab.type)
+                    ? renderBuiltInContent(
+                        tab.type,
+                        props.renderTabAfterContent?.(tab, key, noop, {
+                          searchValue,
+                        }),
+                      )
                     : renderCustomContent(key)}
             </TabPanel>
           );
