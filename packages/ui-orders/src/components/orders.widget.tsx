@@ -15,6 +15,8 @@ export enum TabType {
 }
 
 export type OrdersWidgetProps = {
+  /** Optional read-side product filter, forwarded to every status tab. */
+  productType?: string;
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;

@@ -142,9 +142,11 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const [
     data,
     {
+      error,
       isLoading,
       isValidating,
       loadMore,
+      hasMore,
       cancelOrder,
       updateOrder,
       cancelAlgoOrder,
@@ -254,9 +256,11 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   return {
     type,
     dataSource,
+    error,
     isLoading,
     isValidating,
     loadMore,
+    hasMore,
     meta,
     cancelOrder,
     updateOrder,
