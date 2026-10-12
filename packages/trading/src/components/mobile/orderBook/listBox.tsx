@@ -1,1 +1,1 @@
-export { ListBox } from "@orderly.network/trading-common";
+export { ListBox } from "@orderly.network/trading-shared";

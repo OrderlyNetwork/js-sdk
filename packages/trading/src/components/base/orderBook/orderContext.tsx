@@ -5,4 +5,4 @@ export {
   ORDERBOOK_COIN_TYPE_KEY,
   ORDERBOOK_MOBILE_COIN_TYPE_KEY,
   OrderBookProvider,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

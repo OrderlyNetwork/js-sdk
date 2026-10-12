@@ -1,1 +1,1 @@
-export { useTradingLocalStorage } from "@orderly.network/trading-common";
+export { useTradingLocalStorage } from "@orderly.network/trading-shared";

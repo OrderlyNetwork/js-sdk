@@ -1,1 +1,1 @@
-export { DesktopListBox } from "@orderly.network/trading-common";
+export { DesktopListBox } from "@orderly.network/trading-shared";

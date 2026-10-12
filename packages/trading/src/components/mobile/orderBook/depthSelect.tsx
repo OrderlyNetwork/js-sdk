@@ -1,1 +1,1 @@
-export { DepthSelect } from "@orderly.network/trading-common";
+export { DepthSelect } from "@orderly.network/trading-shared";

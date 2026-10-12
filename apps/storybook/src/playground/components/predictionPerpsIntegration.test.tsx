@@ -114,7 +114,7 @@ vi.mock("@orderly.network/ui-positions", () => ({
   },
   MobilePositionsWidget: () => null,
 }));
-vi.mock("@orderly.network/trading-common", () => ({
+vi.mock("@orderly.network/trading-shared", () => ({
   PerpsPositionsPanel: () => null,
 }));
 vi.mock(

@@ -3,7 +3,7 @@ import { useCanTrade, useAppContext } from "@orderly.network/react-app";
 import {
   AssetViewWidget,
   useFirstTimeDeposit,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";
 import { usePredictionScript } from "./prediction.script";
 import type { PredictionSymbolSelection } from "./prediction.types";
 import { Prediction } from "./prediction.ui";

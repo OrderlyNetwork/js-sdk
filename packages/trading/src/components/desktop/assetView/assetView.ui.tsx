@@ -1,1 +1,1 @@
-export { TooltipContent, AssetView } from "@orderly.network/trading-common";
+export { TooltipContent, AssetView } from "@orderly.network/trading-shared";

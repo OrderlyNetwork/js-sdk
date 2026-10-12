@@ -200,8 +200,8 @@ const page: Package[] = [
     includeCSS: true,
   },
   {
-    package: "@orderly.network/trading-common",
-    path: "../../packages/trading-common/src",
+    package: "@orderly.network/trading-shared",
+    path: "../../packages/trading-shared/src",
     watch: true,
     includeCSS: true,
   },

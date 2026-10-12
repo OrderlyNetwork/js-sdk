@@ -33,7 +33,7 @@ module.exports = withTV({
     "../chart/src/**/*.{ts,js,tsx,jsx}",
     "../ui-transfer/src/**/*.{ts,js,tsx,jsx}",
     "../trading/src/**/*.{ts,js,tsx,jsx}",
-    "../trading-common/src/**/*.{ts,js,tsx,jsx}",
+    "../trading-shared/src/**/*.{ts,js,tsx,jsx}",
     "../ui-order-entry/src/**/*.{ts,js,tsx,jsx}",
     "../ui-tpsl/src/**/*.{ts,js,tsx,jsx}",
     "../ui-tradingview/src/**/*.{ts,js,tsx,jsx}",

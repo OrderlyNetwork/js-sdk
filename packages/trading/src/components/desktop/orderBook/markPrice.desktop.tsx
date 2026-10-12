@@ -1,1 +1,1 @@
-export { DesktopMarkPrice } from "@orderly.network/trading-common";
+export { DesktopMarkPrice } from "@orderly.network/trading-shared";

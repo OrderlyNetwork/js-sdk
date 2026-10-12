@@ -1,1 +1,1 @@
-export { AssetViewWidget } from "@orderly.network/trading-common";
+export { AssetViewWidget } from "@orderly.network/trading-shared";

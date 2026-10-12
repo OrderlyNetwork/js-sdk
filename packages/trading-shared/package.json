@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/trading-common",
+  "name": "@orderly.network/trading-shared",
   "version": "3.2.2",
   "description": "Shared trading panels, order book primitives, preferences, and contracts",
   "main": "dist/index.js",

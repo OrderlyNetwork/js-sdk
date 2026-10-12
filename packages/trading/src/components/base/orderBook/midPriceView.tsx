@@ -1,1 +1,1 @@
-export { MiddlePriceView } from "@orderly.network/trading-common";
+export { MiddlePriceView } from "@orderly.network/trading-shared";

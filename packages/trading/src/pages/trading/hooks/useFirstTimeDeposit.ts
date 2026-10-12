@@ -1,1 +1,1 @@
-export { useFirstTimeDeposit } from "@orderly.network/trading-common";
+export { useFirstTimeDeposit } from "@orderly.network/trading-shared";

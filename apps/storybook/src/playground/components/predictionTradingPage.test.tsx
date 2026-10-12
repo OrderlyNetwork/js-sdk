@@ -2,9 +2,9 @@ import React, { isValidElement, type ReactElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PredictionMarketPanelWidget } from "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui";
-import type { TradingPageProps } from "@orderly.network/trading-common";
 import { TradingPage as NextTradingPage } from "@orderly.network/trading-next/src/pages/trading/trading.page";
 import { TradingPageProvider as NextTradingPageProvider } from "@orderly.network/trading-next/src/provider/tradingPageProvider";
+import type { TradingPageProps } from "@orderly.network/trading-shared";
 import { TradingPage } from "@orderly.network/trading/src/pages/trading/trading.page";
 import { TradingPageProvider } from "@orderly.network/trading/src/provider/tradingPageProvider";
 

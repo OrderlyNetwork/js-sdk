@@ -1,1 +1,1 @@
-export { PositionHeader } from "@orderly.network/trading-common";
+export { PositionHeader } from "@orderly.network/trading-shared";

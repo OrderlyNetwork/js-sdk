@@ -1,4 +1,4 @@
 export {
   type SettingWidgetProps,
   SettingWidget,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

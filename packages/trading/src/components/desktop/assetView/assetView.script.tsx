@@ -1,4 +1,4 @@
 export {
   useAssetViewScript,
   type AssetViewState,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

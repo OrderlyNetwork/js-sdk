@@ -10,4 +10,4 @@ export {
   type ReferralProps,
   type TradingRewardsProps,
   type TradingPageProps,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

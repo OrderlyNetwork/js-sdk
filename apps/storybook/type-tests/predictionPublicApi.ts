@@ -45,7 +45,7 @@ import type {
   TradingPerpsPanelProps as CommonPerpsPanelProps,
   TradingDataListProductContent as CommonDataListProductContent,
   TradingPageExtensionProps as CommonPageExtensionProps,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";
 
 type Assert<T extends true> = T;
 type Compatible<A, B> = [A, B] extends [B, A] ? true : false;

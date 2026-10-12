@@ -53,7 +53,7 @@
       "@orderly.network/react-app": ["../../packages/app/src"],
       "@orderly.network/trading-next": ["../../packages/trading-next/src"],
       "@orderly.network/trading": ["../../packages/trading/src"],
-      "@orderly.network/trading-common": ["../../packages/trading-common/src"],
+      "@orderly.network/trading-shared": ["../../packages/trading-shared/src"],
       "@orderly.network/trading-leaderboard": [
         "../../packages/trading-leaderboard/src"
       ],

@@ -1,1 +1,1 @@
-export { DesktopDepthSelect } from "@orderly.network/trading-common";
+export { DesktopDepthSelect } from "@orderly.network/trading-shared";

@@ -1,4 +1,4 @@
 export {
   useSettingScript,
   type SettingState,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

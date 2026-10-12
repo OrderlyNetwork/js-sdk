@@ -3,7 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   MobileOrderBookLadder,
   OrderBookLadder,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";
 import {
   Text,
   Tooltip,

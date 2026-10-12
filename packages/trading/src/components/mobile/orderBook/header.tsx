@@ -1,1 +1,1 @@
-export { Header } from "@orderly.network/trading-common";
+export { Header } from "@orderly.network/trading-shared";

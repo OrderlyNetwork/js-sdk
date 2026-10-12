@@ -8,7 +8,7 @@ export type {
   TradingPerpsPanelProps,
   TradingDataListProductContent,
   TradingPageExtensionProps,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";
 
 export type {
   ShareOptions,

@@ -1,1 +1,1 @@
-export { FaucetWidget } from "@orderly.network/trading-common";
+export { FaucetWidget } from "@orderly.network/trading-shared";

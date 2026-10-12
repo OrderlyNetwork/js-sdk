@@ -50,7 +50,7 @@ vi.mock("@orderly.network/react-app", () => ({
   }),
   useCanTrade: () => false,
 }));
-vi.mock("@orderly.network/trading-common", () => ({
+vi.mock("@orderly.network/trading-shared", () => ({
   AssetViewWidget: () => null,
   useFirstTimeDeposit: () => false,
 }));

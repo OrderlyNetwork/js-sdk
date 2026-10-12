@@ -1,1 +1,1 @@
-export { useOrderBookDisplayOptions } from "@orderly.network/trading-common";
+export { useOrderBookDisplayOptions } from "@orderly.network/trading-shared";

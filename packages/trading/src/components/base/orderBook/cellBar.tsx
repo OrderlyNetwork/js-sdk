@@ -1,1 +1,1 @@
-export { CellBarDirection, CellBar } from "@orderly.network/trading-common";
+export { CellBarDirection, CellBar } from "@orderly.network/trading-shared";

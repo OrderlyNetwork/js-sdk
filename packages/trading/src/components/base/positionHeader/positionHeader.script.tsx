@@ -1,4 +1,4 @@
 export {
   usePositionHeaderScript,
   type PositionHeaderState,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

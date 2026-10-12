@@ -74,7 +74,7 @@ const resolvePositionsContent = (
 export {
   PerpsPositionsPanel,
   PerpsPositionsSettings,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";
 
 export const LiquidationTab: React.FC = () => {
   const { t } = useTranslation();

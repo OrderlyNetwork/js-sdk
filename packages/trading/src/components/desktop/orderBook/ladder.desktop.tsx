@@ -1,4 +1,4 @@
 export {
   type OrderBookLadderProps,
   OrderBookLadder,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

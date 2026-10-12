@@ -1,1 +1,1 @@
-export { Setting } from "@orderly.network/trading-common";
+export { Setting } from "@orderly.network/trading-shared";

@@ -1,4 +1,4 @@
 export {
   type OrderBookCellProps,
   OrderBookCell,
-} from "@orderly.network/trading-common";
+} from "@orderly.network/trading-shared";

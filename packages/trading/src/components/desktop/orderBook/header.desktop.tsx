@@ -1,1 +1,1 @@
-export { DesktopHeader } from "@orderly.network/trading-common";
+export { DesktopHeader } from "@orderly.network/trading-shared";

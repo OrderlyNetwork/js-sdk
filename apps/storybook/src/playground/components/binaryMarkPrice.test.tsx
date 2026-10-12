@@ -2,8 +2,8 @@ import React from "react";
 import { act, create } from "react-test-renderer";
 import { describe, expect, it, vi } from "vitest";
 import { useBinaryMarkPrice } from "@orderly.network/prediction/src/prediction/binary/useBinaryMarkPrice";
-import { DesktopMarkPrice } from "@orderly.network/trading-common/src/components/desktop/orderBook/markPrice.desktop";
-import { MarkPrice as MobileMarkPrice } from "@orderly.network/trading-common/src/components/mobile/orderBook/markPrice";
+import { DesktopMarkPrice } from "@orderly.network/trading-shared/src/components/desktop/orderBook/markPrice.desktop";
+import { MarkPrice as MobileMarkPrice } from "@orderly.network/trading-shared/src/components/mobile/orderBook/markPrice";
 
 const mocks = vi.hoisted(() => ({
   callbacks: new Map<string, (message: any) => void>(),
@@ -23,7 +23,7 @@ vi.mock("@orderly.network/ui", () => ({
   Tooltip: ({ children }: any) => <div>{children}</div>,
 }));
 vi.mock(
-  "@orderly.network/trading-common/src/components/base/orderBook/orderContext",
+  "@orderly.network/trading-shared/src/components/base/orderBook/orderContext",
   () => ({
     useOrderBookContext: () => ({
       showTotal: false,
@@ -32,13 +32,13 @@ vi.mock(
   }),
 );
 vi.mock(
-  "@orderly.network/trading-common/src/components/base/orderBook/midPriceView",
+  "@orderly.network/trading-shared/src/components/base/orderBook/midPriceView",
   () => ({
     MiddlePriceView: () => <span>default-price</span>,
   }),
 );
 vi.mock(
-  "@orderly.network/trading-common/src/components/base/orderBook/markPrice",
+  "@orderly.network/trading-shared/src/components/base/orderBook/markPrice",
   () => ({
     MarkPriceView: () => <span>flagged-mark</span>,
   }),

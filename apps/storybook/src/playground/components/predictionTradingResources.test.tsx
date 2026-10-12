@@ -1,7 +1,7 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { createOrderKeyRegistry } from "@orderly.network/hooks/src/provider/dataCenter/orderKeyRegistry";
-import type { TradingPageProps } from "@orderly.network/trading-common";
+import type { TradingPageProps } from "@orderly.network/trading-shared";
 import { TradingPage } from "@orderly.network/trading/src/pages/trading/trading.page";
 import { AccountStatusEnum, type API } from "@orderly.network/types";
 
