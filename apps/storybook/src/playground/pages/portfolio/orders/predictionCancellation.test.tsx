@@ -36,6 +36,8 @@ vi.mock("@orderly.network/hooks", async () => ({
   }),
   useCollateral: () => ({ freeCollateral: 100 }),
   useMarkPricesStream: () => ({ data: {} }),
+  useSubAccountQuery: () => ({ mutate: mocks.refresh }),
+  useSubAccountMutation: () => [vi.fn(), {}],
   useMutation: () => [mocks.cancel],
   useRefreshOrderCaches: () => mocks.refresh,
   useOrderStream: (params: any) => [

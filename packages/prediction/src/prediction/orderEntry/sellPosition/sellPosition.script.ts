@@ -31,6 +31,8 @@ export type UseSellPositionScriptArgs = {
   outcome: PredictionOutcome;
   /** Round symbol of the position being sold. */
   symbol?: string;
+  accountId?: string;
+  onSubmitted?: () => Promise<unknown>;
   /** Mount with the popover open; hosts use this for lazy per-row mounting. */
   initialOpen?: boolean;
   /** Called when the popover closes; initialOpen hosts unmount on it. */
@@ -41,6 +43,8 @@ export const useSellPositionScript = ({
   state,
   outcome,
   symbol,
+  accountId,
+  onSubmitted,
   initialOpen = false,
   onClosed,
 }: UseSellPositionScriptArgs) => {
@@ -56,8 +60,14 @@ export const useSellPositionScript = ({
   // Seed before any effect runs: the account guard below executes earlier
   // in declaration order than the mount-seeding effect, and an empty
   // openingContext would close (and lazily unmount) the popover at mount.
-  const openingContext = useRef<{ accountId?: string; symbol?: string }>(
-    initialOpen ? { accountId: state.accountId, symbol } : {},
+  const openingContext = useRef<{
+    accountId?: string;
+    targetAccountId?: string;
+    symbol?: string;
+  }>(
+    initialOpen
+      ? { accountId: state.accountId, targetAccountId: accountId, symbol }
+      : {},
   );
   const onClosedRef = useRef(onClosed);
   useEffect(() => {
@@ -73,6 +83,7 @@ export const useSellPositionScript = ({
   const resources = usePredictionAccountResources({
     enabled: open,
     includeOrderHistory: false,
+    accountId,
   });
   const { slippage, setSlippage } = usePredictionSlippage();
   const notify = useCallback(
@@ -81,6 +92,7 @@ export const useSellPositionScript = ({
     [],
   );
   const actions = usePredictionTradingActions({
+    onSubmitted,
     active: open,
     resources,
     binaryRows: markets.rows,
@@ -110,12 +122,23 @@ export const useSellPositionScript = ({
     if (
       open &&
       (!symbol ||
-        openingContext.current.accountId !== actions.accountId ||
+        openingContext.current.accountId !== state.accountId ||
         openingContext.current.symbol !== symbol ||
-        state.accountId !== actions.accountId)
+        openingContext.current.targetAccountId !== accountId ||
+        (!resources.targetAccountId && state.accountId !== actions.accountId) ||
+        !resources.targetAuthorized)
     )
       close();
-  }, [open, symbol, state.accountId, actions.accountId, close]);
+  }, [
+    open,
+    symbol,
+    accountId,
+    state.accountId,
+    actions.accountId,
+    resources.targetAccountId,
+    resources.targetAuthorized,
+    close,
+  ]);
   const percentage = percentageFromQuantity(Number(quantity) || 0, available);
 
   const quantityDp = new Decimal(
@@ -128,7 +151,7 @@ export const useSellPositionScript = ({
     state.isOrderTradable(symbol) &&
     !state.isRegionRestricted &&
     state.accountReady &&
-    state.hasFeeConfig &&
+    actions.hasFeeConfig &&
     !state.isSubmitting &&
     !actions.isSubmitting;
   const displayPrice =
@@ -145,7 +168,7 @@ export const useSellPositionScript = ({
     open &&
     !!row &&
     actions.accountReady &&
-    actions.accountId === state.accountId &&
+    actions.accountId === (accountId ?? state.accountId) &&
     tradable &&
     Number(quantity) > 0 &&
     Number(quantity) <= available &&
@@ -160,7 +183,11 @@ export const useSellPositionScript = ({
   // Seeding reads the host panel's live values (the closed popover always
   // seeded from them); this stack's own copies activate with the popover.
   const seedOnOpen = useCallback(() => {
-    openingContext.current = { accountId: state.accountId, symbol };
+    openingContext.current = {
+      accountId: state.accountId,
+      targetAccountId: accountId,
+      symbol,
+    };
     setQuantity(String(state.availableQuantity(outcome, undefined, symbol)));
     setPrice(
       orderbook.executablePrices.sell[outcome]?.toFixed(
@@ -171,6 +198,7 @@ export const useSellPositionScript = ({
     );
   }, [
     state.accountId,
+    accountId,
     state.availableQuantity,
     symbol,
     outcome,
@@ -229,6 +257,8 @@ export const useSellPositionScript = ({
     slippage,
     setSlippage,
     quoteTick: row?.quote_tick,
+    loading: resources.ordersLoading || resources.positionsLoading,
+    error: resources.ordersError || resources.positionsError,
   };
 };
 

@@ -35,6 +35,10 @@ export {
   type BinaryHistoryCsvResult,
 } from "./prediction/binary/binaryHistoryCsv";
 export { usePredictionAccountData } from "./prediction/hooks/usePredictionAccountData";
+export {
+  ManagedPredictionPositions,
+  type ManagedPredictionPositionsProps,
+} from "./prediction/dataPanels/holdings/managedPositions.widget";
 export { usePredictionMarkets } from "./prediction/hooks/usePredictionMarkets";
 export {
   usePredictionTradingExtension,
@@ -75,6 +79,14 @@ export type { ProductOrderMode } from "./prediction/dataPanels/sharedProductOrde
 export {
   toPredictionStatus as toPredictionOrderStatus,
   toOrderStatus as toApiPredictionOrderStatus,
+  hasPredictionExecutions,
 } from "./prediction/binary/binaryOrderDisplay";
 export type { PredictionOrderCellProps } from "./prediction/dataPanels/orders/predictionOrderCell.ui";
 export type { PredictionAccountPanelProps } from "./prediction/dataPanels/predictionAccountPanel.widget";
+
+export {
+  useBinaryOrderRows,
+  type BinaryOrderRowsOptions,
+  type BinaryOrderRowsState,
+} from "./prediction/dataPanels/orders/useBinaryOrderRows";
+export { binaryOrderPlainText } from "./prediction/binary/binaryOrderPlainText";

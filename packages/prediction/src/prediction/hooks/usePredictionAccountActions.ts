@@ -29,10 +29,11 @@ export const usePredictionAccountActions = ({
     () => new Map(binaryRows.map((row) => [row.symbol, row])),
     [binaryRows],
   );
-  const feeRates = useBinaryFeeRates();
+  const feeRates = useBinaryFeeRates(resources.feeRates);
   const hasFeeConfig = feeRates.takerRate != null && feeRates.makerRate != null;
   const bulkCancellationMounted = useRef(true);
-  const refreshOrders = useRefreshOrderCaches();
+  const refreshCurrentOrders = useRefreshOrderCaches();
+  const refreshOrders = resources.refreshOrders ?? refreshCurrentOrders;
   const estimates = useAccountEstimates({
     resources,
     active,
@@ -64,9 +65,15 @@ export const usePredictionAccountActions = ({
     availableQuantity: estimates.availableQuantity,
     isOrderTradable: estimates.isOrderTradable,
     estimateFee: estimates.estimateFee,
-    cancelOrder: cancellation.cancelOrder,
-    cancelAllOrders: cancellation.cancelAllOrders,
-    editPendingOrder: editing.editPendingOrder,
+    cancelOrder: resources.targetAccountId
+      ? async () => {}
+      : cancellation.cancelOrder,
+    cancelAllOrders: resources.targetAccountId
+      ? async () => false
+      : cancellation.cancelAllOrders,
+    editPendingOrder: resources.targetAccountId
+      ? async () => false
+      : editing.editPendingOrder,
   };
   return {
     actions,

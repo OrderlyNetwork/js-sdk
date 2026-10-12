@@ -9,6 +9,7 @@ import type { PredictionAccountResources } from "./usePredictionAccountResources
 export type UsePredictionTradingActionsArgs = {
   resources: PredictionAccountResources;
   active?: boolean;
+  onSubmitted?: () => Promise<unknown>;
   binaryRows: BinaryInfoRow[];
   notify: (message: string, tone?: "success" | "danger") => void;
   isRegionRestricted: boolean;
@@ -34,6 +35,7 @@ export type UsePredictionTradingActionsArgs = {
 export const usePredictionTradingActions = ({
   resources,
   active = true,
+  onSubmitted,
   binaryRows,
   notify,
   isRegionRestricted,
@@ -70,6 +72,7 @@ export const usePredictionTradingActions = ({
     slippage,
   });
   const submission = useOrderSubmission({
+    onSubmitted,
     resources,
     active,
     notify,

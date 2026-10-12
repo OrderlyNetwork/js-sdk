@@ -33,8 +33,11 @@ export type SharedProductDataPanelProps = PredictionPerpsPanelProps & {
   beforeProductSelector?: React.ReactNode;
   perpsPositionsContent?: React.ReactNode;
   perpsPositionHistoryContent?: React.ReactNode;
+  predictionPositionsContent?: React.ReactNode;
   onProductChange?: (product: ProductType) => void;
   mobile?: boolean;
+  /** Hide counts when the supplied Perps content has a different account scope. */
+  showPositionCounts?: boolean;
 };
 
 /**
@@ -50,8 +53,10 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   beforeProductSelector,
   perpsPositionsContent,
   perpsPositionHistoryContent,
+  predictionPositionsContent,
   onProductChange,
   mobile = false,
+  showPositionCounts = true,
   onSymbolChange,
   sharePnLConfig,
   pnlNotionalDecimalPrecision,
@@ -82,11 +87,12 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
   const content =
     product === "prediction" ? (
       type === "positions" ? (
-        mobile ? (
+        (predictionPositionsContent ??
+        (mobile ? (
           <MobilePredictionPositions state={scopedState} />
         ) : (
           <HoldingsTable state={scopedState} />
-        )
+        )))
       ) : mobile ? (
         <MobilePredictionHistory
           state={scopedState}
@@ -152,7 +158,8 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
               {item === "perps"
                 ? t("common.perps")
                 : t("prediction.filter.predictions")}
-              {type === "positions" &&
+              {showPositionCounts &&
+                type === "positions" &&
                 ` (${item === "perps" ? perpsPositionCount : predictionPositionCount})`}
             </button>
           );

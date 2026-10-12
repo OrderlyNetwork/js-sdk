@@ -126,3 +126,13 @@ export const isPredictionTerminalOrder = (
   order.status === "filled" ||
   order.status === "cancelled" ||
   order.status === "rejected";
+
+/**
+ * "Filled" means "has executions", not terminal FILLED: MARKET submits a
+ * protected-price IOC whose unfilled remainder terminates the order as
+ * CANCELLED, so filtering by status === "filled" would hide executed records.
+ * One predicate for every surface (portfolio page, merged panel, prediction
+ * panel); perps rows keep the stock server-side FILLED semantics.
+ */
+export const hasPredictionExecutions = (order: PredictionOpenOrder) =>
+  isPredictionTerminalOrder(order) && (order.filledQuantity ?? 0) > 0;

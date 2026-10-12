@@ -1,4 +1,11 @@
 export const prediction = {
+  "prediction.loadingAccountResources": "Loading account resources…",
+  "prediction.message.targetResourcesFailed":
+    "Unable to load this account's positions, orders or fee rates. Please reopen and try again.",
+  "prediction.message.aggregatePositionsFailed":
+    "Unable to load sub-account positions. Please try again.",
+  "prediction.orders.loadError": "Unable to load orders. Please try again.",
+  "prediction.currentAccount": "Current account",
   "prediction.title": "Prediction",
   "prediction.description": "Trade outcomes with real-time odds",
   "prediction.prototype": "Prototype",

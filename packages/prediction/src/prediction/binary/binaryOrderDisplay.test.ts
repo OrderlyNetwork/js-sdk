@@ -10,6 +10,7 @@ import {
   binaryOrderDisplayPrice,
   binaryOrderExecutedValue,
   binaryOrderEditPayload,
+  hasPredictionExecutions,
   toPredictionOrder,
 } from "./binaryOrderDisplay";
 
@@ -112,6 +113,47 @@ test("zero actual fees remain zero and missing historical fees never become free
       toPredictionOrder(order({ average_executed_price: NaN })),
     ),
     undefined,
+  );
+});
+
+test("filled means has executions: terminal with fills, never working or empty", () => {
+  // Partially filled IOC whose remainder cancelled: the manual-QA case.
+  assert.equal(hasPredictionExecutions(toPredictionOrder(order())), true);
+  assert.equal(
+    hasPredictionExecutions(
+      toPredictionOrder(order({ status: OrderStatus.FILLED })),
+    ),
+    true,
+  );
+  // Working orders never count, even with partial fills on the book.
+  assert.equal(
+    hasPredictionExecutions(
+      toPredictionOrder(order({ status: OrderStatus.PARTIAL_FILLED })),
+    ),
+    false,
+  );
+  assert.equal(
+    hasPredictionExecutions(
+      toPredictionOrder(order({ status: OrderStatus.NEW })),
+    ),
+    false,
+  );
+  // Terminal without executions never counts.
+  assert.equal(
+    hasPredictionExecutions(
+      toPredictionOrder(
+        order({ status: OrderStatus.CANCELLED, total_executed_quantity: 0 }),
+      ),
+    ),
+    false,
+  );
+  assert.equal(
+    hasPredictionExecutions(
+      toPredictionOrder(
+        order({ status: OrderStatus.REJECTED, total_executed_quantity: 0 }),
+      ),
+    ),
+    false,
   );
 });
 

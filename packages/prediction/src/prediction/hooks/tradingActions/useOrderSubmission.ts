@@ -7,6 +7,7 @@ import {
 } from "react";
 import {
   useMutation,
+  useSubAccountMutation,
   type useRefreshOrderCaches,
 } from "@orderly.network/hooks";
 import { i18n } from "@orderly.network/i18n";
@@ -49,6 +50,7 @@ export type PlaceOrderInput = {
 };
 export type OrderSubmissionArgs = {
   resources: PredictionAccountResources;
+  onSubmitted?: () => Promise<unknown>;
   active: boolean;
   notify: (message: string, tone?: "success" | "danger") => void;
   isRegionRestricted: boolean;
@@ -87,6 +89,7 @@ const toTickQuantity = (quantity: number, tick: number) =>
 const toUpBookRequest = toBinaryUpRequest;
 export const useOrderSubmission = ({
   resources,
+  onSubmitted,
   active,
   notify,
   isRegionRestricted,
@@ -153,6 +156,29 @@ export const useOrderSubmission = ({
   }, [balance, getCollateralSnapshot, availableQuantity]);
   const [doCreateOrder] = useMutation("/v1/order", "POST");
   const [doCreateBatchOrder] = useMutation("/v1/batch-order", "POST");
+  const canSendTargetOrder = useCallback(() => {
+    const current = live.current;
+    const config = current.selectedSymbol
+      ? current.configBySymbol.get(current.selectedSymbol)
+      : undefined;
+    return (
+      !!resources.canSubmit?.() &&
+      bulkCancellationMounted.current &&
+      current.accountReady &&
+      current.hasFeeConfig &&
+      !current.isRegionRestricted &&
+      !!config &&
+      isBinaryRowTradable(config, getTimestamp())
+    );
+  }, [resources.canSubmit, bulkCancellationMounted]);
+  const [createTargetOrder] = useSubAccountMutation("/v1/order", "POST", {
+    accountId: resources.targetAccountId,
+    shouldExecute: canSendTargetOrder,
+  });
+  const [createTargetBatch] = useSubAccountMutation("/v1/batch-order", "POST", {
+    accountId: resources.targetAccountId,
+    shouldExecute: canSendTargetOrder,
+  });
   const submitOrder = useCallback(
     async (input: {
       symbol: string | undefined;
@@ -186,6 +212,8 @@ export const useOrderSubmission = ({
         !hasFeeConfig ||
         isRegionRestricted ||
         !isBinaryRowTradable(config, getTimestamp()) ||
+        (resources.canSubmit && !resources.canSubmit()) ||
+        (resources.targetAccountId && !reduceOnly) ||
         submitting.current
       ) {
         notify(failureFallback ?? "prediction.message.orderFailed", "danger");
@@ -264,12 +292,29 @@ export const useOrderSubmission = ({
       submitting.current = true;
       setIsSubmitting(true);
       try {
+        if (resources.refreshForSubmission) {
+          try {
+            liveFunds.current = await resources.refreshForSubmission();
+          } catch {
+            notify(
+              failureFallback ?? "prediction.message.sellFailed",
+              "danger",
+            );
+            return false;
+          }
+        }
         const result = await submitBinaryBatches(
           orders,
           async (batch) => {
+            const createOrder = resources.targetAccountId
+              ? createTargetOrder
+              : doCreateOrder;
+            const createBatch = resources.targetAccountId
+              ? createTargetBatch
+              : doCreateBatchOrder;
             const response = await (batch.length === 1
-              ? doCreateOrder(batch[0])
-              : doCreateBatchOrder({ orders: batch }));
+              ? createOrder(batch[0])
+              : createBatch({ orders: batch }));
             remainingQuantity = batch.reduce(
               (remaining, order) => remaining.sub(String(order.order_quantity)),
               remainingQuantity,
@@ -282,6 +327,7 @@ export const useOrderSubmission = ({
             if (
               !bulkCancellationMounted.current ||
               !current.accountReady ||
+              (resources.canSubmit && !resources.canSubmit()) ||
               current.accountId !== accountState.accountId ||
               (type === "market" && current.selectedSymbol !== symbol) ||
               !current.hasFeeConfig ||
@@ -347,10 +393,19 @@ export const useOrderSubmission = ({
           );
         }
         // Refresh even on ambiguity. Never infer a fill from REST acceptance.
-        if (live.current.accountId === accountState.accountId) {
+        if (
+          bulkCancellationMounted.current &&
+          live.current.accountId === accountState.accountId &&
+          (resources.canSubmit
+            ? resources.canSubmit()
+            : live.current.accountReady)
+        ) {
           await Promise.allSettled([
             refreshOrders(accountState.accountId),
             refreshAccountPositions(),
+            ...(result.accepted > 0 || result.unknown > 0
+              ? [onSubmitted?.()]
+              : []),
           ]);
         }
         // Clear ambiguous input too, preventing accidental full resubmission.
@@ -378,6 +433,12 @@ export const useOrderSubmission = ({
       notify,
       refreshAccountPositions,
       refreshOrders,
+      onSubmitted,
+      resources.targetAccountId,
+      resources.refreshForSubmission,
+      resources.canSubmit,
+      createTargetOrder,
+      createTargetBatch,
     ],
   );
   const placeOrder = useCallback(

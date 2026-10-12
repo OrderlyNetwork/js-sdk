@@ -4,7 +4,10 @@ import type { DataFilterItem } from "@orderly.network/ui";
 import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
 import { useRoundCountdown } from "../../hooks/useRoundCountdown";
 import { SellPosition } from "../../orderEntry/sellPosition";
-import type { PredictionAccountPanelState } from "../../prediction.types";
+import type {
+  PredictionAccountPanelState,
+  PredictionPosition,
+} from "../../prediction.types";
 import { formatCountdown } from "../../predictionShared";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
@@ -17,6 +20,12 @@ export type HoldingsTableUIProps = {
   filters: HoldingsTableScript["filters"];
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
+  getPositionState?: (
+    position: PredictionPosition,
+  ) => PredictionAccountPanelState;
+  groups?: Array<{ id: string; label: React.ReactNode }>;
+  onSubmitted?: () => Promise<unknown>;
+  loading?: boolean;
 };
 
 export const HoldingsTableUI = ({
@@ -24,12 +33,22 @@ export const HoldingsTableUI = ({
   filters,
   leadingFilterItems,
   onLeadingFilter,
+  getPositionState,
+  groups,
+  onSubmitted,
+  loading,
 }: HoldingsTableUIProps) => {
   const { t } = useTranslation();
   const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
-  const rows = useHoldingsPositionRows(state, filters.matches);
+  const rows = useHoldingsPositionRows(
+    state,
+    filters.matches,
+    getPositionState,
+  );
   return (
     <PredictionDataTable
+      groups={groups}
+      loading={loading}
       toolbar={
         <PredictionFilters
           filters={filters}
@@ -59,6 +78,7 @@ export const HoldingsTableUI = ({
           availableQuantity,
         }) => ({
           id,
+          groupId: position.accountId,
           sortValues: [
             undefined,
             undefined,
@@ -98,7 +118,9 @@ export const HoldingsTableUI = ({
                   )
               : "--",
             <SellPosition
-              state={state}
+              state={getPositionState?.(position) ?? state}
+              accountId={position.accountId}
+              onSubmitted={onSubmitted}
               outcome={position.outcome}
               symbol={position.symbol}
             />,

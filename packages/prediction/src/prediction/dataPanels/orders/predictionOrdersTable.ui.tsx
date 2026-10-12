@@ -6,6 +6,7 @@ import {
   TabType,
   useOrderColumn,
 } from "@orderly.network/ui-orders";
+import { hasPredictionExecutions } from "../../binary/binaryOrderDisplay";
 import type { PredictionAccountPanelState } from "../../prediction.types";
 import type {
   PredictionOpenOrder,
@@ -74,7 +75,7 @@ export const PredictionOrdersTableUI = ({
     (pending
       ? state.openOrders
       : mode === "filled"
-        ? state.history.filter((order) => order.filledQuantity > 0)
+        ? state.history.filter(hasPredictionExecutions)
         : [...state.openOrders, ...state.history]);
   const resetKey = [
     filters.side,

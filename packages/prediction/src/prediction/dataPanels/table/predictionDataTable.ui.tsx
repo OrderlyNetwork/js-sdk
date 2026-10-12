@@ -12,6 +12,8 @@ export const PredictionDataTable: React.FC<{
   onPageChange?: (page: number) => void;
   preservePageOnDataChange?: boolean;
   resetKey?: string;
+  groups?: Array<{ id: string; label: React.ReactNode }>;
+  loading?: boolean;
 }> = ({
   columns,
   rows,
@@ -20,6 +22,8 @@ export const PredictionDataTable: React.FC<{
   onPageChange,
   preservePageOnDataChange,
   resetKey,
+  groups,
+  loading,
 }) => {
   // Perp parity: 20 rows per page, matching the merged DesktopOrderList view.
   const { pagination, setPage } = usePagination({ pageSize: 20 });
@@ -55,6 +59,21 @@ export const PredictionDataTable: React.FC<{
       ),
     [rows],
   );
+  const groupedRows = useMemo(
+    () =>
+      new Map(
+        (groups ?? []).map((group) => [
+          group.id,
+          dataSource.filter((row) => row.groupId === group.id),
+        ]),
+      ),
+    [groups, dataSource],
+  );
+  const tableRows = groups
+    ? groups
+        .filter((group) => groupedRows.get(group.id)?.length)
+        .map((group) => ({ id: group.id, cells: [group.label] }))
+    : dataSource;
 
   useEffect(() => {
     if (!preservePageOnDataChange) setPage(1);
@@ -86,7 +105,20 @@ export const PredictionDataTable: React.FC<{
       <AuthGuardDataTable
         className="oui-prediction-dataTable"
         columns={dataColumns}
-        dataSource={dataSource}
+        dataSource={tableRows}
+        loading={loading}
+        expanded={groups ? true : undefined}
+        getSubRows={groups ? (row) => groupedRows.get(row.id) : undefined}
+        onCell={
+          groups
+            ? (column, record) =>
+                groupedRows.has(record.id)
+                  ? {
+                      children: column.id === "cell_0" ? record.cells[0] : null,
+                    }
+                  : undefined
+            : undefined
+        }
         bordered
         ignoreLoadingCheck
         classNames={{

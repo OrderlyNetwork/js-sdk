@@ -71,6 +71,14 @@ vi.mock("@orderly.network/hooks", async () => {
         },
       ];
     },
+    // Target-account resources stay inert unless a foreign accountId is passed.
+    useSubAccountQuery: () => ({
+      data: undefined,
+      error: undefined,
+      isLoading: false,
+      mutate: mocks.refresh,
+    }),
+    useSubAccountMutation: () => [vi.fn(), {}],
     // Real position wrappers are also recreated on unrelated renders.
     usePositions: () => mocks.positions.map((row) => ({ ...row })),
     usePrivateQuery: (key: string | null) => {

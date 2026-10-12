@@ -61,9 +61,12 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
     status: mode === "history" && apiStatus !== "all" ? apiStatus : undefined,
     dateRange: filters.dateRange,
   });
-  const clientFiltered = Boolean(
-    props.predictionUnderlyingSymbol || filters.outcome !== "all",
-  );
+  // Filled rows are client-filtered (has-executions semantics over an
+  // all-status query), so the server total no longer matches the visible rows:
+  // fall back to the load-more pattern instead of counted pagination.
+  const clientFiltered =
+    mode === "filled" ||
+    Boolean(props.predictionUnderlyingSymbol || filters.outcome !== "all");
   useEffect(() => {
     if (
       !clientFiltered &&

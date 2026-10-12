@@ -12,8 +12,8 @@ import {
   resolveBinaryCollateral,
 } from "../binary/binaryCollateral";
 import { binaryRoundFromSymbol, isBinarySymbol } from "../binary/binaryInfo";
+import { toPredictionPosition } from "../binary/binaryManagedPositions";
 import { normalizePredictionOrders } from "../binary/binaryOrderDisplay";
-import { complementPrice } from "../binary/binaryOrderRules";
 import type { UsePredictionAccountDataOptions } from "../prediction.types";
 import {
   type PredictionOutcome,
@@ -22,16 +22,28 @@ import {
 import { useBinaryPendingOrders } from "./useBinaryPendingOrders";
 import { usePredictionOrderHistory } from "./usePredictionOrderHistory";
 import { usePredictionSettlementHistory } from "./usePredictionSettlementHistory";
+import { usePredictionTargetResources } from "./usePredictionTargetResources";
 
 export const usePredictionAccountResources = ({
   enabled: active = true,
   includeOrderHistory = false,
   includeSettlementHistory = false,
   nowMs,
-}: UsePredictionAccountDataOptions & { nowMs?: number } = {}) => {
+  accountId: targetAccountId,
+}: UsePredictionAccountDataOptions & {
+  nowMs?: number;
+  accountId?: string;
+} = {}) => {
   const { state: accountState } = useAccount();
+  const foreign =
+    !!targetAccountId && targetAccountId !== accountState.accountId;
+  const target = usePredictionTargetResources(
+    foreign ? targetAccountId : undefined,
+    active && foreign,
+  );
+  const currentActive = active && !foreign;
   const accountReady =
-    active &&
+    currentActive &&
     !!accountState.accountId &&
     (accountState.status >= AccountStatusEnum.EnableTrading ||
       accountState.status === AccountStatusEnum.EnableTradingWithoutConnected);
@@ -45,9 +57,9 @@ export const usePredictionAccountResources = ({
     orders: pendingOrdersData,
     stream: pendingOrdersStream,
     complete: pendingOrdersComplete,
-  } = useBinaryPendingOrders(active && accountReady);
+  } = useBinaryPendingOrders(currentActive && accountReady);
   const { history, allOrdersStream } = usePredictionOrderHistory(
-    active && accountReady && includeOrderHistory,
+    currentActive && accountReady && includeOrderHistory,
   );
   const openOrders = useMemo(
     () =>
@@ -62,7 +74,7 @@ export const usePredictionAccountResources = ({
     isLoading: positionsLoading,
     error: positionsError,
   } = usePrivateQuery<API.PositionInfo>(
-    active && accountReady ? "/v1/positions" : null,
+    currentActive && accountReady ? "/v1/positions" : null,
     {
       formatter: (data) => data,
       keepPreviousData: false,
@@ -93,17 +105,8 @@ export const usePredictionAccountResources = ({
             typeof row.position_qty === "number" &&
             row.position_qty !== 0,
         )
-        .map((row) => ({
-          outcome: row.position_qty > 0 ? ("up" as const) : ("down" as const),
-          quantity: Math.abs(row.position_qty),
-          averagePrice:
-            row.position_qty > 0
-              ? row.average_open_price
-              : complementPrice(row.average_open_price),
-          symbol: row.symbol,
-          round: binaryRoundFromSymbol(row.symbol) ?? undefined,
-        })),
-    [positionRows, accountReady],
+        .map((row) => toPredictionPosition(row, accountState.accountId)),
+    [positionRows, accountReady, accountState.accountId],
   );
   const availableQuantity = useCallback(
     (outcome: PredictionOutcome, excludeId?: number, symbol?: string) => {
@@ -117,7 +120,7 @@ export const usePredictionAccountResources = ({
   );
   const settlementHistory = usePredictionSettlementHistory({
     accountId: accountState.accountId,
-    enabled: active && accountReady,
+    enabled: currentActive && accountReady,
     includeSettlementHistory: includeSettlementHistory,
     positions,
     seedPositions: accountPositions?.rows,
@@ -141,6 +144,15 @@ export const usePredictionAccountResources = ({
     pendingOrdersStream,
     allOrdersStream,
     refreshAccountPositions,
+    targetAccountId: undefined as string | undefined,
+    targetAuthorized: true,
+    feeRates: undefined as typeof target.feeRates | undefined,
+    refreshForSubmission: undefined as
+      | typeof target.refreshForSubmission
+      | undefined,
+    canSubmit: undefined as typeof target.canSubmit | undefined,
+    refreshOrders: undefined as typeof target.refreshOrders | undefined,
+    ...(foreign ? target : {}),
   };
 };
 export type PredictionAccountResources = ReturnType<

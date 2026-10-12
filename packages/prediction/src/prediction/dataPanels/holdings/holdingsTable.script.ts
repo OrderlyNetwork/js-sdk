@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
+import { predictionPositionKey } from "../../binary/binaryManagedPositions";
 import type {
   PredictionAccountPanelState,
   PredictionPosition,
@@ -37,6 +38,9 @@ export const useHoldingsPositionRows = (
     status?: string;
     timestamp?: number;
   }) => boolean,
+  getPositionState?: (
+    position: PredictionPosition,
+  ) => PredictionAccountPanelState,
 ): HoldingsPositionRow[] =>
   useMemo(
     () =>
@@ -45,9 +49,9 @@ export const useHoldingsPositionRows = (
           position.symbol === state.marketView?.selectedRow?.symbol;
         const lastPrice = isSelectedRound
           ? state.marketView?.outcomePrices[position.outcome]
-          : undefined;
+          : position.markPrice;
         return {
-          id: `${position.symbol ?? ""}-${position.outcome}`,
+          id: predictionPositionKey(position),
           position,
           isSelectedRound,
           lastPrice,
@@ -58,11 +62,9 @@ export const useHoldingsPositionRows = (
                   .mul(position.quantity)
                   .toNumber()
               : undefined,
-          availableQuantity: state.availableQuantity(
-            position.outcome,
-            undefined,
-            position.symbol,
-          ),
+          availableQuantity: (
+            getPositionState?.(position) ?? state
+          ).availableQuantity(position.outcome, undefined, position.symbol),
         };
       }),
     [
@@ -71,5 +73,6 @@ export const useHoldingsPositionRows = (
       state.marketView?.selectedRow?.symbol,
       state.marketView?.outcomePrices,
       state.availableQuantity,
+      getPositionState,
     ],
   );

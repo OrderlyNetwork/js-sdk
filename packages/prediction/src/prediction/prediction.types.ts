@@ -29,6 +29,11 @@ export type PredictionNotification = {
 };
 
 export type PredictionPosition = {
+  /** Owning account; omitted for legacy single-account consumers. */
+  accountId?: string;
+  marginMode?: API.Position["margin_mode"];
+  /** UP-book mark converted to the outcome's coordinates. */
+  markPrice?: number;
   outcome: PredictionOutcome;
   quantity: number;
   averagePrice: number;

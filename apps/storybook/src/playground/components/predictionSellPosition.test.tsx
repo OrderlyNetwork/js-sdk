@@ -94,6 +94,8 @@ vi.mock("@orderly.network/hooks", async () => {
     useMarkPricesStream: () => ({ data: {} }),
     useLocalStorage: (_key: string, value: unknown) => useState(value),
     useRefreshOrderCaches: () => mocks.refresh,
+    useSubAccountQuery: () => ({ mutate: mocks.refresh }),
+    useSubAccountMutation: () => [vi.fn(), {}],
     useMutation: () => [mocks.submit],
     useOrderStream: () => [
       [],

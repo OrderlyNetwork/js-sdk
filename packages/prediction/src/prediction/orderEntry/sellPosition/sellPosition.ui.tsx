@@ -3,6 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
   Divider,
+  Text,
   Input,
   inputFormatter,
   PopoverContent,
@@ -22,6 +23,10 @@ export type SellPositionProps = {
   outcome: PredictionOutcome;
   /** Round symbol of the position row; defaults to the selected round. */
   symbol?: string;
+  /** Owning account. The global login remains unchanged. */
+  accountId?: string;
+  /** Refresh the host list after REST acceptance, without inferring a fill. */
+  onSubmitted?: () => Promise<unknown>;
 };
 
 /**
@@ -35,6 +40,8 @@ export const SellPosition: React.FC<SellPositionProps> = ({
   state,
   outcome,
   symbol,
+  accountId,
+  onSubmitted,
 }) => {
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
@@ -43,6 +50,8 @@ export const SellPosition: React.FC<SellPositionProps> = ({
       state={state}
       outcome={outcome}
       symbol={symbol}
+      accountId={accountId}
+      onSubmitted={onSubmitted}
       onClosed={() => setMounted(false)}
     />
   ) : (
@@ -54,7 +63,8 @@ export const SellPosition: React.FC<SellPositionProps> = ({
         !state.isOrderTradable(symbol) ||
         state.isRegionRestricted ||
         !state.accountReady ||
-        !state.hasFeeConfig ||
+        ((!accountId || accountId === state.accountId) &&
+          !state.hasFeeConfig) ||
         state.isSubmitting ||
         state.availableQuantity(outcome, undefined, symbol) <= 0
       }
@@ -67,12 +77,14 @@ export const SellPosition: React.FC<SellPositionProps> = ({
 
 const SellPositionPopover: React.FC<
   SellPositionProps & { onClosed?: () => void }
-> = ({ state, outcome, symbol, onClosed }) => {
+> = ({ state, outcome, symbol, accountId, onSubmitted, onClosed }) => {
   const { t } = useTranslation();
   const sell = useSellPositionScript({
     state,
     outcome,
     symbol,
+    accountId,
+    onSubmitted,
     initialOpen: true,
     onClosed,
   });
@@ -96,6 +108,15 @@ const SellPositionPopover: React.FC<
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <div className="oui-flex oui-flex-col oui-gap-2">
+          {(sell.loading || sell.error) && (
+            <Text size="xs" color="neutral">
+              {t(
+                sell.error
+                  ? "prediction.message.targetResourcesFailed"
+                  : "prediction.loadingAccountResources",
+              )}
+            </Text>
+          )}
           <div>
             <OutcomeBadge outcome={outcome} />
           </div>

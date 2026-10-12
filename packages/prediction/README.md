@@ -80,7 +80,7 @@ In routed mode, entering `/prediction` selects the current round of the remember
 
 Automatic resources follow the slots in use. A non-nullish `marketsDropdown` (including `{}`), or navigation being unavailable (no `onRouteChange`), disables the automatic dropdown's metadata query and round clock. A non-nullish `dataListProductContent` (including `{}`) disables automatic account resources and counts. Removing an override resumes that part of the extension. Account panels retain their own market metadata when the dropdown is disabled; other consumers' shared resources and the native Perps account caches remain available.
 
-Existing account and SWR providers are still required; see [Stylesheet](#stylesheet) for the stylesheet options. Shared Perps components, trading preferences, and contracts now live in `@orderly.network/trading-common`; their original Trading exports remain available. The shared package is installed as an SDK dependency and does not require consumer setup.
+Existing account and SWR providers are still required; see [Stylesheet](#stylesheet) for the stylesheet options. Shared Perps components, trading preferences, and contracts now live in `@orderly.network/trading-shared`; their original Trading exports remain available. The shared package is installed as an SDK dependency and does not require consumer setup.
 
 ### Advanced integration and custom slots
 
@@ -184,7 +184,7 @@ This customization applies when the adapter is enabled; when disabled, use the o
 
 The public types are `PredictionTradingExtensionOptions` and `PredictionTradingExtensionProps`; the return value maps to the `marketsDropdown` and `dataListProductContent` props of `TradingPageProps`. The existing `usePredictionMarketsDropdown(callback)` stays compatible and also accepts a second argument `{ enabled: false }` to control the markets query.
 
-The independent contracts `TradingMarketsDropdownProps`, `TradingPerpsPanelProps`, `TradingDataListProductContent`, and `TradingPageExtensionProps` are exported by both `@orderly.network/trading-common` and `@orderly.network/trading`. Prediction's existing panel and extension type names reuse these contracts without depending on the full trading page type. Panel precision remains a panel option, not a new `TradingPage` prop.
+The independent contracts `TradingMarketsDropdownProps`, `TradingPerpsPanelProps`, `TradingDataListProductContent`, and `TradingPageExtensionProps` are exported by both `@orderly.network/trading-shared` and `@orderly.network/trading`. Prediction's existing panel and extension type names reuse these contracts without depending on the full trading page type. Panel precision remains a panel option, not a new `TradingPage` prop.
 
 ## Host symbol persistence
 
@@ -214,7 +214,7 @@ Hosts that mirror the current symbol across pages (for example, a header bound t
 
 ## Stylesheet
 
-Existing stylesheet setup is enough: `@orderly.network/ui/dist/styles.css`, which hosts already import, is built from the whole workspace and already contains the Prediction and shared `@orderly.network/trading-common` styles:
+Existing stylesheet setup is enough: `@orderly.network/ui/dist/styles.css`, which hosts already import, is built from the whole workspace and already contains the Prediction and shared `@orderly.network/trading-shared` styles:
 
 ```css
 /* the existing import already covers Prediction; do not add a prediction line */

@@ -34,6 +34,8 @@ vi.mock(
   }),
 );
 vi.mock("@orderly.network/hooks/src/useMutation", () => ({
+  useSubAccountQuery: () => ({ mutate: vi.fn() }),
+  useSubAccountMutation: () => [vi.fn(), {}],
   useMutation: () => [vi.fn(), {}],
 }));
 vi.mock("@orderly.network/hooks/src/orderly/useMarkPricesStream", () => ({
