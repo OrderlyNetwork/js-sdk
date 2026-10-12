@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MixedOrders } from "./page";
+import { ProductOrdersWidget as MixedOrders } from "@orderly.network/portfolio/src/pages/orders/productOrders.widget";
 
 const mocks = vi.hoisted(() => ({
   state: null as any,
@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   script: vi.fn(),
   table: vi.fn(),
   cancellation: vi.fn(),
+  perpsDataSource: [] as any[],
 }));
 vi.mock("react", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react")>();
@@ -21,20 +22,47 @@ vi.mock("react", async (importOriginal) => {
       actual.useState(initial === "all" ? "up" : initial),
   };
 });
+vi.mock("@orderly.network/hooks", () => ({
+  useAccount: () => ({ state: { accountId: "account-1" } }),
+}));
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
-vi.mock("@orderly.network/prediction", () => ({
-  PredictionOrderCell: () => null,
-  usePredictionAccountData: () => mocks.state,
-  useProductOrderCancelAll: (options: unknown) => {
-    mocks.cancellation(options);
-    return {
-      disabled: mocks.cancelAllDisabled,
-      orderListProps: mocks.orderListProps,
-    };
-  },
-}));
+vi.mock("@orderly.network/prediction", async () => {
+  const { hasPredictionExecutions } =
+    await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
+  const { binaryOrderPlainText } =
+    await import("@orderly.network/prediction/src/prediction/binary/binaryOrderPlainText");
+  const { toPredictionStatus } =
+    await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
+  return {
+    binaryOrderPlainText,
+    toPredictionOrderStatus: toPredictionStatus,
+    useBinaryOrderRows: ({ enabled, mode }: any) => ({
+      rows: !enabled
+        ? []
+        : mode === "pending"
+          ? (mocks.state?.openOrders ?? [])
+          : mode === "filled"
+            ? (mocks.state?.history ?? []).filter(hasPredictionExecutions)
+            : [
+                ...(mocks.state?.openOrders ?? []),
+                ...(mocks.state?.history ?? []),
+              ],
+      hasMore: false,
+    }),
+    PredictionOrderCell: () => null,
+    usePredictionAccountData: () => mocks.state,
+    hasPredictionExecutions,
+    useProductOrderCancelAll: (options: unknown) => {
+      mocks.cancellation(options);
+      return {
+        disabled: mocks.cancelAllDisabled,
+        orderListProps: mocks.orderListProps,
+      };
+    },
+  };
+});
 vi.mock("@orderly.network/react-app", () => ({ useCanTrade: () => true }));
 vi.mock("@orderly.network/ui", () => ({
   Box: () => null,
@@ -62,7 +90,7 @@ vi.mock("@orderly.network/ui-orders", () => ({
     mocks.script(options);
     return {
       filterItems: [{ name: "side", value: "BUY" }],
-      dataSource: [],
+      dataSource: mocks.perpsDataSource,
       pagination: { page: 1, pageSize: 50, count: 0 },
       manualPagination: false,
       onCancelAll: mocks.nativeCancel,
@@ -86,6 +114,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.cancelAllDisabled = false;
   mocks.sdkCancel.mockResolvedValue(true);
+  mocks.perpsDataSource = [];
   mocks.orderListProps = {
     cancelAllDisabled: false,
     onCancelAll: mocks.sdkCancel,
@@ -151,5 +180,80 @@ describe("SDK cancellation wiring", () => {
     });
     expect(script.cancelAllDisabled).toBeUndefined();
     expect(table.onCancelAll).toBe(mocks.nativeCancel);
+  });
+});
+
+describe("outcome filter scope", () => {
+  it("shows the outcome select only in the prediction instrument view", () => {
+    const all = render("all").table;
+    expect(
+      all.filterItems?.some(
+        (item: { name: string }) => item.name === "outcome",
+      ),
+    ).toBe(false);
+    const prediction = render("prediction").table;
+    expect(
+      prediction.filterItems?.some(
+        (item: { name: string }) => item.name === "outcome",
+      ),
+    ).toBe(true);
+  });
+  it("keeps perps rows visible in the merged view and hidden in prediction", () => {
+    mocks.perpsDataSource = [{ symbol: "PERP_BTC_USDC", order_id: 1 }];
+    expect(render("all").table.dataSource).toEqual([
+      { symbol: "PERP_BTC_USDC", order_id: 1 },
+    ]);
+    expect(render("prediction").table.dataSource).toEqual([]);
+  });
+  it("filled keeps executed market orders that terminated cancelled", () => {
+    mocks.state = {
+      openOrders: [],
+      history: [
+        {
+          id: "ioc-partial",
+          symbol: "PERP_BTC5M2610091200_USDC",
+          outcome: "up",
+          side: "buy",
+          status: "cancelled",
+          filledQuantity: 40,
+          quantity: 100,
+          timestamp: 3,
+        },
+        {
+          id: "full",
+          symbol: "PERP_BTC5M2610091200_USDC",
+          outcome: "up",
+          side: "buy",
+          status: "filled",
+          filledQuantity: 100,
+          quantity: 100,
+          timestamp: 2,
+        },
+        {
+          id: "no-fill",
+          symbol: "PERP_BTC5M2610091200_USDC",
+          outcome: "down",
+          side: "buy",
+          status: "cancelled",
+          filledQuantity: 0,
+          quantity: 100,
+          timestamp: 4,
+        },
+        {
+          id: "working",
+          symbol: "PERP_BTC5M2610091200_USDC",
+          outcome: "up",
+          side: "buy",
+          status: "partialFilled",
+          filledQuantity: 10,
+          quantity: 100,
+          timestamp: 1,
+        },
+      ],
+    };
+    const { table } = render("all", "filled");
+    expect(
+      table.supplementalRows?.map((row: { id: string }) => row.id),
+    ).toEqual(["prediction-ioc-partial", "prediction-full"]);
   });
 });

@@ -2,10 +2,6 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router";
 import { generatePath } from "@orderly.network/i18n";
 import { PositionsModule } from "@orderly.network/portfolio";
-import {
-  SharedProductDataPanel,
-  usePredictionAccountData,
-} from "@orderly.network/prediction";
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { API } from "@orderly.network/types";
 import { Box } from "@orderly.network/ui";
@@ -16,7 +12,6 @@ import { updateSymbol } from "../../../storage";
 export default function PositionsPage() {
   const local = useTradingLocalStorage();
   const navigate = useNavigate();
-  const predictionState = usePredictionAccountData();
 
   const onSymbolChange = useCallback(
     (data: API.Symbol) => {
@@ -47,30 +42,6 @@ export default function PositionsPage() {
         pnlNotionalDecimalPrecision={local.pnlNotionalDecimalPrecision}
         calcMode={local.unPnlPriceBasis}
         onSymbolChange={onSymbolChange}
-        positionProductContent={(perpsContent) =>
-          predictionState ? (
-            <SharedProductDataPanel
-              state={predictionState}
-              type="positions"
-              initialProduct="perps"
-              perpsPositionsContent={perpsContent}
-            />
-          ) : (
-            perpsContent
-          )
-        }
-        positionHistoryProductContent={(perpsContent) =>
-          predictionState ? (
-            <SharedProductDataPanel
-              state={predictionState}
-              type="positionHistory"
-              initialProduct="perps"
-              perpsPositionHistoryContent={perpsContent}
-            />
-          ) : (
-            perpsContent
-          )
-        }
       />
     </Box>
   );

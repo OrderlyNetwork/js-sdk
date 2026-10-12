@@ -8,6 +8,10 @@ import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
 import { useOrderListScript } from "@orderly.network/ui-orders/src/components/orderList/orderList.script";
 
 const mocks = vi.hoisted(() => ({
+  ordinaryPages: [{ rows: [], meta: { total: 0 } }] as any[],
+  algoPages: [{ rows: [], meta: { total: 0 } }] as any[],
+  setOrdinarySize: vi.fn(),
+  setAlgoSize: vi.fn(),
   publicQuery: vi.fn(),
   privateQuery: vi.fn(),
   mutation: vi.fn(),
@@ -36,9 +40,15 @@ vi.mock("@orderly.network/hooks/src/usePrivateInfiniteQuery", () => ({
   usePrivateInfiniteQuery: (loader: any) => {
     if (loader) mocks.privateQuery(loader(0));
     return {
-      data: loader ? [{ rows: [], meta: { total: 0 } }] : undefined,
+      data: loader
+        ? loader(0).startsWith("/v1/algo/")
+          ? mocks.algoPages
+          : mocks.ordinaryPages
+        : undefined,
       mutate: mocks.refresh,
-      setSize: vi.fn(),
+      setSize: loader?.(0).startsWith("/v1/algo/")
+        ? mocks.setAlgoSize
+        : mocks.setOrdinarySize,
       isLoading: false,
       isValidating: false,
     };
@@ -134,6 +144,8 @@ function Native({ enableBinaryInfo = true }: { enableBinaryInfo?: boolean }) {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.ordinaryPages = [{ rows: [], meta: { total: 0 } }];
+  mocks.algoPages = [{ rows: [], meta: { total: 0 } }];
   mocks.mutation.mockResolvedValue({ success: true });
   mocks.refresh.mockResolvedValue(undefined);
 });
@@ -174,3 +186,27 @@ it.each([true, false])(
     ]);
   },
 );
+
+it("continues algo-only pages after ordinary orders are exhausted and stops after both streams end", () => {
+  mocks.ordinaryPages = [{ rows: [], meta: { total: 99 } }];
+  mocks.algoPages = [
+    {
+      rows: [{ algo_order_id: 1, symbol: "PERP_BTC_USDC" }],
+      meta: { total: 101 },
+    },
+  ];
+  let stream: any;
+  function Harness() {
+    [, stream] = useOrderStream({ productType: "PERP" });
+    return null;
+  }
+  act(() => {
+    root = create(<Harness />);
+  });
+  expect(stream.hasMore).toBe(true);
+  act(() => stream.loadMore());
+  expect(mocks.setAlgoSize).toHaveBeenCalledOnce();
+  mocks.algoPages = [...mocks.algoPages, { rows: [] }];
+  act(() => root!.update(<Harness />));
+  expect(stream.hasMore).toBe(false);
+});

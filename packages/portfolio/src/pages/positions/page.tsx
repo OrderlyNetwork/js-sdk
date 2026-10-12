@@ -14,6 +14,7 @@ import {
   Tooltip,
   InfoCircleIcon,
 } from "@orderly.network/ui";
+import type { SelectOption } from "@orderly.network/ui";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
@@ -21,8 +22,8 @@ import {
   CombinePositionsWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { AccountType } from "../assets/assetsPage/assets.ui.desktop";
+import { PortfolioProductPositionsPanel } from "./productPanel.widget";
 
 enum TabsType {
   positions = "Positions",
@@ -31,9 +32,10 @@ enum TabsType {
 }
 
 export type PortfolioPositionsPageProps = PositionsProps & {
+  /** Enable automatic Prediction integration; defaults to true. */
+  predictionEnabled?: boolean;
   /**
-   * Allows an app to place a separate product selector and table next to the
-   * default Perps positions table without coupling Portfolio to that product.
+   * Overrides the built-in product panel; receives the original Perps table.
    */
   positionProductContent?: (perpsContent: React.ReactNode) => React.ReactNode;
   /** Equivalent extension point for Position history. */
@@ -43,6 +45,7 @@ export type PortfolioPositionsPageProps = PositionsProps & {
 };
 
 export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
+  predictionEnabled = true,
   positionProductContent,
   positionHistoryProductContent,
   ...positionsProps
@@ -113,8 +116,14 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
     <PositionsWidget {...positionsProps} enableSortingStorage={false} />
   );
 
+  // Binary rows share /v1/position_history (api-spec §6.2); history is
+  // server-paginated, so the Perps view must filter via product_type.
   const perpsPositionHistoryContent = (
-    <PositionHistoryWidget {...positionsProps} enableSortingStorage={false} />
+    <PositionHistoryWidget
+      {...positionsProps}
+      enableSortingStorage={false}
+      productType="PERP"
+    />
   );
 
   return (
@@ -144,17 +153,40 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
-            {renderAccountFilter()}
-            {positionProductContent?.(perpsPositionsContent) ??
-              perpsPositionsContent}
+            {positionProductContent || !predictionEnabled ? (
+              <>
+                {renderAccountFilter()}
+                {positionProductContent?.(perpsPositionsContent) ??
+                  perpsPositionsContent}
+              </>
+            ) : (
+              <PortfolioProductPositionsPanel
+                key={state.accountId}
+                type="positions"
+                selectedAccount={selectedAccount}
+                perpsContent={perpsPositionsContent}
+                accountFilter={renderAccountFilter()}
+              />
+            )}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}
             title={t("positions.positionHistory")}
           >
-            {renderAccountFilter()}
-            {positionHistoryProductContent?.(perpsPositionHistoryContent) ??
-              perpsPositionHistoryContent}
+            {positionHistoryProductContent || !predictionEnabled ? (
+              <>
+                {renderAccountFilter()}
+                {positionHistoryProductContent?.(perpsPositionHistoryContent) ??
+                  perpsPositionHistoryContent}
+              </>
+            ) : (
+              <PortfolioProductPositionsPanel
+                key={state.accountId}
+                type="positionHistory"
+                perpsContent={perpsPositionHistoryContent}
+                accountFilter={renderAccountFilter()}
+              />
+            )}
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
             {renderAccountFilter()}
