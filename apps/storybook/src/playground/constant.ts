@@ -46,5 +46,5 @@ export const PageTitleMap = {
   [PathEnum.Vaults]: "Vaults",
   [PathEnum.Points]: "Points",
   [PathEnum.Swap]: "Spot",
-  [PathEnum.Prediction]: "Prediction",
+  [PathEnum.Prediction]: "Predictions",
 };

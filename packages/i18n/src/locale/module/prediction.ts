@@ -128,8 +128,6 @@ export const prediction = {
   "prediction.resolution.historyLoading":
     "Loading personal settlement records…",
   "prediction.resolution.dataIncomplete": "Settlement data is incomplete.",
-  "prediction.resolution.retry": "Retry",
-  "prediction.resolution.nextRound": "Go to next round",
   "prediction.strikePending": "Strike has not been determined yet.",
   "prediction.resolution.outcome": "Outcome: {{outcome}}",
   "prediction.resolution.voided": "Round voided",
@@ -163,7 +161,6 @@ export const prediction = {
   "prediction.notInSnapshot": "This round is no longer in the recent records.",
   "prediction.tab.openOrders": "Pending",
   "prediction.tab.positions": "Positions",
-  "prediction.tab.predictions": "Positions",
   "prediction.tab.assets": "Assets",
   "prediction.tab.orderHistory": "Order history",
   "prediction.tab.tradeHistory": "Trade history",

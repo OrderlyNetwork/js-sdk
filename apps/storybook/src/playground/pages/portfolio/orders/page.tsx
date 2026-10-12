@@ -278,7 +278,7 @@ export default function OrdersPage() {
                   },
                   { label: t("prediction.filter.perps"), value: "perps" },
                   {
-                    label: t("prediction.tab.predictions"),
+                    label: t("prediction.filter.predictions"),
                     value: "prediction",
                   },
                 ]}
@@ -299,9 +299,11 @@ export default function OrdersPage() {
           value={tab}
           onValueChange={setTab}
           variant="contained"
-          className="oui-min-h-0 oui-flex-1"
+          className="oui-min-h-0 oui-min-w-0 oui-flex-1"
           classNames={{
-            tabsContent: "oui-h-[calc(100%_-_40px)] oui-overflow-auto",
+            // Keep scrolling inside DataTable, below the filters and above pagination.
+            tabsContent:
+              "oui-h-[calc(100%_-_40px)] oui-min-h-0 oui-overflow-hidden",
           }}
         >
           {tabs.map((item) => (

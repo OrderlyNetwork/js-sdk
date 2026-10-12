@@ -50,9 +50,6 @@ const props = (overrides: Partial<RoundResultState> = {}) =>
     detailAvailable: false,
     detailLoading: false,
     detailFailed: false,
-    nextRoundAvailable: false,
-    retryDetail: () => {},
-    goToNextRound: () => {},
     ...overrides,
     marketName: "BTC",
     intervalSeconds: 300,
@@ -68,7 +65,6 @@ test("published result restores the centered outcome card without details or act
           outcome,
           records: [record],
           status: "processing",
-          nextRoundAvailable: true,
         }),
       ),
     );

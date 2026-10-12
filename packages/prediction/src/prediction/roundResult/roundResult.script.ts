@@ -28,17 +28,12 @@ export function useRoundResultScript(state: PredictionState) {
     detailAvailable: hasBinarySettledDetail(state.selectedRow),
     detailLoading: state.roundDetailLoading,
     detailFailed: Boolean(state.roundDetailError),
-    retryDetail: () => {
-      void state.refreshRoundDetail().catch(() => undefined);
-    },
     records: personal.expiryRecords,
     conflict: personal.conflict,
     conflictedRecordKeys: personal.conflictedRecordKeys,
     status,
     historyLoading: !!state.accountId && state.historyLoading,
     historyFailed: !!state.accountId && Boolean(state.historyError),
-    nextRoundAvailable: !!state.nextTradableRow,
-    goToNextRound: state.goToNextRound,
   };
 }
 
