@@ -122,7 +122,6 @@ export const prediction = {
     "This market has ended. The final outcome will appear automatically when it is published.",
   "prediction.resolution.fundsProcessing": "Funds are being credited",
   "prediction.resolution.segmentComplete": "Position segment settled",
-  "prediction.resolution.settlementDetails": "Settlement details",
   "prediction.resolution.detailsUnavailable":
     "Round details are not available yet.",
   "prediction.resolution.historyUnavailable":
@@ -130,7 +129,6 @@ export const prediction = {
   "prediction.resolution.historyLoading":
     "Loading personal settlement records…",
   "prediction.resolution.dataIncomplete": "Settlement data is incomplete.",
-  "prediction.resolution.investment": "Investment",
   "prediction.resolution.retry": "Retry",
   "prediction.resolution.nextRound": "Go to next round",
   "prediction.strikePending": "Strike has not been determined yet.",
@@ -203,7 +201,6 @@ export const prediction = {
   "prediction.details": "Details",
   "prediction.settlementPrice": "Settlement price",
   "prediction.settledTime": "Settled time",
-  "prediction.payout": "Payout",
   "prediction.status.filled": "Filled",
   "prediction.status.cancelled": "Cancelled",
   "prediction.message.insufficientBalance": "Insufficient available balance.",

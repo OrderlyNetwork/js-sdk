@@ -1,41 +1,9 @@
-import { useAccount } from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
-import {
-  Button,
-  registerSimpleDialog,
-  registerSimpleSheet,
-} from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
+import { Button } from "@orderly.network/ui";
 import { RoundOrderStatusCard } from "../orderEntry";
 import type { PredictionState } from "../prediction.script";
-import {
-  BinarySettlementDialogId,
-  BinarySettlementSheetId,
-  useRoundResultScript,
-} from "./roundResult.script";
-import { BinarySettlementDetailsUI, RoundResultUI } from "./roundResult.ui";
-
-// Modal snapshots must not expose personal records after an account switch.
-function SettlementModal(
-  props: Parameters<typeof BinarySettlementDetailsUI>[0] & {
-    accountId?: string;
-  },
-) {
-  const { state } = useAccount();
-  const ready =
-    state.status >= AccountStatusEnum.EnableTrading ||
-    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
-  return ready && props.accountId && state.accountId === props.accountId ? (
-    <BinarySettlementDetailsUI {...props} />
-  ) : null;
-}
-registerSimpleDialog(BinarySettlementDialogId, SettlementModal, {
-  size: "md",
-  title: () => i18n.t("prediction.resolution.settlementDetails"),
-});
-registerSimpleSheet(BinarySettlementSheetId, SettlementModal, {
-  title: () => i18n.t("prediction.resolution.settlementDetails"),
-});
+import { useRoundResultScript } from "./roundResult.script";
+import { RoundResultUI } from "./roundResult.ui";
 
 export function RoundResultWidget({
   state,

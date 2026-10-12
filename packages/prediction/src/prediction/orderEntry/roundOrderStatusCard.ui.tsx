@@ -9,6 +9,7 @@ export const RoundOrderStatusCard: React.FC<
     restricted?: boolean;
     marketName: string;
     intervalSeconds: number;
+    expireAt?: number;
   }
 > = ({
   round,
@@ -17,6 +18,7 @@ export const RoundOrderStatusCard: React.FC<
   restricted,
   marketName,
   intervalSeconds,
+  expireAt,
 }) => {
   const { t } = useTranslation();
   const { formatRoundWindow } = usePredictionFormatters();
@@ -56,7 +58,8 @@ export const RoundOrderStatusCard: React.FC<
                 {t("prediction.resolution.determiningWinner")}
               </h2>
               <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">
-                {marketName} · {formatRoundWindow(round, intervalSeconds)}
+                {marketName} ·{" "}
+                {formatRoundWindow(round, intervalSeconds, expireAt)}
               </p>
               <p className="oui-text-sm oui-mt-5 oui-max-w-72 oui-font-normal oui-text-base-contrast-54">
                 {t("prediction.resolution.pendingDescription")}
@@ -106,7 +109,7 @@ export const RoundOrderStatusCard: React.FC<
             })}
           </h2>
           <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">
-            {marketName} · {formatRoundWindow(round, intervalSeconds)}
+            {marketName} · {formatRoundWindow(round, intervalSeconds, expireAt)}
           </p>
         </>
       )}

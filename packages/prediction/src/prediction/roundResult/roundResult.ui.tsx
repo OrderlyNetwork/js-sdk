@@ -1,12 +1,10 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Text } from "@orderly.network/ui";
+import { Text } from "@orderly.network/ui";
 import type { BinaryHistoryRecord } from "../binary/binaryHistory";
 import { isBinarySettlementComplete } from "../binary/binarySettlement";
-import {
-  useIndexPriceFormatter,
-  usePredictionFormatters,
-} from "../predictionShared";
+import { RoundOrderStatusCard } from "../orderEntry/roundOrderStatusCard.ui";
+import { usePredictionFormatters } from "../predictionShared";
 import type { RoundResultState } from "./roundResult.script";
 
 const DetailRow = ({
@@ -32,29 +30,20 @@ const Amount = ({ value }: { value?: number }) =>
     <>--</>
   );
 
-/** Status line + card skeleton shared by both settlement record views. */
+/** Status line + card skeleton for a settled position segment. */
 const SegmentCard = ({
   record,
   segmentConflict,
-  compact,
   children,
 }: {
   record: BinaryHistoryRecord;
   segmentConflict: boolean;
-  /** Segment list cards are tighter (space-y-2) than detail cards (space-y-3). */
-  compact?: boolean;
   children: (completed: boolean) => ReactNode;
 }) => {
   const { t } = useTranslation();
   const completed = isBinarySettlementComplete(record, segmentConflict);
   return (
-    <div
-      className={
-        compact
-          ? "oui-space-y-2 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
-          : "oui-space-y-3 oui-rounded-lg oui-border oui-border-line-12 oui-p-3"
-      }
-    >
+    <div className="oui-space-y-2 oui-rounded-lg oui-border oui-border-line-12 oui-p-3">
       <DetailRow
         label={record.outcome ? t(`prediction.${record.outcome}`) : "--"}
       >
@@ -88,90 +77,12 @@ export function SettlementSegments({
         <SegmentCard
           key={record.recordKey}
           record={record}
-          compact
           segmentConflict={
             conflictedRecordKeys?.includes(record.recordKey) ?? conflict
           }
         >
           {(completed) => (
             <>
-              <DetailRow label={t("positions.history.column.netPnl")}>
-                <Amount value={completed ? record.pnl : undefined} />
-              </DetailRow>
-              <DetailRow label={t("prediction.settledTime")}>
-                {completed ? formatTableTime(record.completedAt!) : "--"}
-              </DetailRow>
-            </>
-          )}
-        </SegmentCard>
-      ))}
-    </div>
-  );
-}
-
-export function BinarySettlementDetailsUI({
-  symbol,
-  records,
-  conflict,
-  conflictedRecordKeys,
-  loading,
-  failed,
-}: {
-  symbol?: string;
-  records: readonly BinaryHistoryRecord[];
-  conflict: boolean;
-  conflictedRecordKeys?: readonly string[];
-  loading: boolean;
-  failed: boolean;
-}) {
-  const { t } = useTranslation();
-  const { formatTableTime } = usePredictionFormatters();
-  return (
-    <div className="oui-max-h-[70vh] oui-space-y-3 oui-overflow-y-auto oui-p-4">
-      <p className="oui-text-xs oui-break-all oui-text-base-contrast-54">
-        {symbol}
-      </p>
-      {loading && (
-        <p role="status">{t("prediction.resolution.historyLoading")}</p>
-      )}
-      {failed && (
-        <p role="status">{t("prediction.resolution.historyUnavailable")}</p>
-      )}
-      {records.map((record) => (
-        <SegmentCard
-          key={record.recordKey}
-          record={record}
-          segmentConflict={
-            conflictedRecordKeys?.includes(record.recordKey) ?? conflict
-          }
-        >
-          {(completed) => (
-            <>
-              <DetailRow label={t("common.time")}>
-                {record.openedAt != null
-                  ? formatTableTime(record.openedAt)
-                  : "--"}
-              </DetailRow>
-              <DetailRow label={t("common.quantity")}>
-                {record.quantity != null &&
-                record.issues.length === 0 &&
-                !(
-                  conflictedRecordKeys?.includes(record.recordKey) ?? conflict
-                ) ? (
-                  <Text.numeral dp={4}>{record.quantity}</Text.numeral>
-                ) : (
-                  "--"
-                )}
-              </DetailRow>
-              <DetailRow label={t("prediction.resolution.investment")}>
-                <Amount value={completed ? record.investment : undefined} />
-              </DetailRow>
-              <DetailRow label={t("positions.history.netPnl.tradingFee")}>
-                <Amount value={completed ? record.tradingFee : undefined} />
-              </DetailRow>
-              <DetailRow label={t("prediction.payout")}>
-                <Amount value={completed ? record.payout : undefined} />
-              </DetailRow>
               <DetailRow label={t("positions.history.column.netPnl")}>
                 <Amount value={completed ? record.pnl : undefined} />
               </DetailRow>
@@ -189,99 +100,16 @@ export function BinarySettlementDetailsUI({
 export function RoundResultUI(
   props: RoundResultState & { marketName: string; intervalSeconds: number },
 ) {
-  const { t } = useTranslation();
-  const { formatRoundWindow } = usePredictionFormatters();
-  const indexPrice = useIndexPriceFormatter(props.row?.index_price_symbol);
-  const { row, outcome } = props;
   return (
-    <section className="oui-prediction-roundResult oui-space-y-4 oui-rounded-xl oui-bg-base-9 oui-p-4">
-      <h2
-        className={cn(
-          "oui-text-center oui-text-lg oui-font-semibold",
-          outcome === "up" ? "oui-text-trade-profit" : "oui-text-trade-loss",
-        )}
-      >
-        {t("prediction.resolution.outcome", {
-          outcome: outcome ? t(`prediction.${outcome}`) : "--",
-        })}
-      </h2>
-      <p className="oui-text-xs oui-text-center oui-font-normal oui-text-base-contrast-54">
-        {props.marketName} ·{" "}
-        {formatRoundWindow(
-          (row?.observation_start_at ?? 0) / 1000,
-          props.intervalSeconds,
-          row?.expire_at,
-        )}
-      </p>
-      <DetailRow label={t("common.symbol")}>{row?.symbol ?? "--"}</DetailRow>
-      <DetailRow label={t("prediction.openingPrice")}>
-        {row?.s0 != null && Number.isFinite(row.s0)
-          ? `$${indexPrice.format(row.s0)}`
-          : "--"}
-      </DetailRow>
-      <DetailRow label={t("prediction.finalPrice")}>
-        {row?.s1 != null && Number.isFinite(row.s1)
-          ? `$${indexPrice.format(row.s1)}`
-          : "--"}
-      </DetailRow>
-      {props.historyLoading && (
-        <p role="status" className="oui-text-xs oui-text-base-contrast-54">
-          {t("prediction.resolution.historyLoading")}
-        </p>
-      )}
-      {props.historyFailed && (
-        <p role="status" className="oui-text-xs oui-text-base-contrast-54">
-          {t("prediction.resolution.historyUnavailable")}
-        </p>
-      )}
-      {props.status && (
-        <p role="status" className="oui-text-xs oui-text-base-contrast-54">
-          {t(
-            props.status === "processing"
-              ? "prediction.resolution.fundsProcessing"
-              : "prediction.resolution.dataIncomplete",
-          )}
-        </p>
-      )}
-      {props.status && props.records.length === 0 && (
-        <div className="oui-space-y-2">
-          <DetailRow label={t("positions.history.column.netPnl")}>--</DetailRow>
-          <DetailRow label={t("prediction.settledTime")}>--</DetailRow>
-        </div>
-      )}
-      <SettlementSegments
-        records={props.records}
-        conflict={props.conflict}
-        conflictedRecordKeys={props.conflictedRecordKeys}
+    <div className="oui-prediction-roundResult">
+      <RoundOrderStatusCard
+        marketName={props.marketName}
+        intervalSeconds={props.intervalSeconds}
+        round={(props.row?.observation_start_at ?? 0) / 1000}
+        expireAt={props.row?.expire_at}
+        roundPhase={props.outcome === "up" ? "resolvedUp" : "resolvedDown"}
+        isRoundInSnapshot
       />
-      {props.records.length > 0 && (
-        <Button size="sm" variant="outlined" onClick={props.showSettlement}>
-          {t("prediction.resolution.settlementDetails")}
-        </Button>
-      )}
-      {!props.detailAvailable && (
-        <div className="oui-text-xs oui-flex oui-items-center oui-justify-between oui-gap-2 oui-font-normal oui-text-base-contrast-54">
-          <span>{t("prediction.resolution.detailsUnavailable")}</span>
-          {props.detailFailed && (
-            <Button
-              size="sm"
-              variant="text"
-              disabled={props.detailLoading}
-              onClick={props.retryDetail}
-            >
-              {t("prediction.resolution.retry")}
-            </Button>
-          )}
-        </div>
-      )}
-      <Button
-        fullWidth
-        size="md"
-        disabled={!props.nextRoundAvailable}
-        onClick={props.goToNextRound}
-      >
-        {t("prediction.resolution.nextRound")}
-      </Button>
-    </section>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import type { API } from "@orderly.network/types";
 import { normalizeBinaryHistory } from "../binary/binaryHistory";
 import type { BinaryInfoDetail } from "../binary/binaryInfo";
 import type { RoundResultState } from "./roundResult.script";
-import { BinarySettlementDetailsUI, RoundResultUI } from "./roundResult.ui";
+import { RoundResultUI, SettlementSegments } from "./roundResult.ui";
 
 const t0 = Date.UTC(2026, 9, 9, 12);
 const row = {
@@ -52,7 +52,6 @@ const props = (overrides: Partial<RoundResultState> = {}) =>
     detailFailed: false,
     nextRoundAvailable: false,
     retryDetail: () => {},
-    showSettlement: () => {},
     goToNextRound: () => {},
     ...overrides,
     marketName: "BTC",
@@ -60,108 +59,42 @@ const props = (overrides: Partial<RoundResultState> = {}) =>
   }) as RoundResultState & { marketName: string; intervalSeconds: number };
 const text = (html: string) => html.replace(/<[^>]+>/g, "");
 
-test("published card shows public data without inventing personal completion or net PnL", () => {
-  const html = renderToStaticMarkup(createElement(RoundResultUI, props()));
-  assert.match(text(html), /Outcome: Up/);
-  assert.match(text(html), /PERP_BTC5M2610091200_USDC/);
-  assert.match(text(html), /Opening price.*100.*Final price.*101/);
-  assert.doesNotMatch(text(html), /Position segment settled|Net PnL/);
-  assert.match(html, /<button[^>]* disabled=""[^>]*>Go to next round/);
+test("published result restores the centered outcome card without details or actions", () => {
+  for (const outcome of ["up", "down"] as const) {
+    const html = renderToStaticMarkup(
+      createElement(
+        RoundResultUI,
+        props({
+          outcome,
+          records: [record],
+          status: "processing",
+          nextRoundAvailable: true,
+        }),
+      ),
+    );
+    assert.match(
+      text(html),
+      outcome === "up" ? /Outcome: Up/ : /Outcome: Down/,
+    );
+    assert.match(text(html), /BTC ·/);
+    assert.match(html, /<svg/);
+    assert.match(html, /oui-rounded-full/);
+    assert.match(
+      html,
+      outcome === "up" ? /oui-bg-trade-profit\/15/ : /oui-bg-trade-loss\/15/,
+    );
+    assert.doesNotMatch(
+      text(html),
+      /Symbol|Opening price|Final price|Net PnL|Funds are being credited|Go to next round/,
+    );
+    assert.doesNotMatch(html, /<button/);
+  }
 });
-test("known participation with delayed history renders pending amounts, completed segment shows verified facts", () => {
-  const pending = renderToStaticMarkup(
-    createElement(RoundResultUI, props({ status: "processing" })),
-  );
-  assert.match(text(pending), /Funds are being credited/);
-  assert.match(text(pending), /Net PnL--Settled time--/);
-  assert.doesNotMatch(text(pending), /Position segment settled/);
+
+test("settlement segments retain verified personal completion facts", () => {
   const completed = renderToStaticMarkup(
-    createElement(
-      RoundResultUI,
-      props({ records: [record], nextRoundAvailable: true }),
-    ),
+    createElement(SettlementSegments, { records: [record], conflict: false }),
   );
   assert.match(text(completed), /Position segment settled/);
   assert.match(text(completed), /59\.99994/);
-  assert.match(text(completed), /Settlement details/);
-  assert.doesNotMatch(
-    completed,
-    /<button[^>]* disabled=""[^>]*>Go to next round/,
-  );
-});
-test("settlement detail consumes normalized amounts, tiny actual fee and zero payout; invalid fields stay missing", () => {
-  const html = renderToStaticMarkup(
-    createElement(BinarySettlementDetailsUI, {
-      symbol: row.symbol,
-      records: [record],
-      conflict: false,
-      loading: false,
-      failed: false,
-    }),
-  );
-  assert.match(text(html), /Investment40/);
-  assert.match(text(html), /Trading fee0\.00006/);
-  assert.match(text(html), /Payout100/);
-  const zero = normalizeBinaryHistory({
-    ...record.source,
-    outcome: "DOWN",
-    settlement_price_per_share: 0,
-    avg_close_price: 0,
-    realized_pnl: -40,
-  });
-  const loss = renderToStaticMarkup(
-    createElement(BinarySettlementDetailsUI, {
-      records: [zero],
-      conflict: false,
-      loading: false,
-      failed: false,
-    }),
-  );
-  assert.match(text(loss), /Payout0/);
-  assert.match(text(loss), /-40\.00006/);
-  const invalid = {
-    ...record,
-    issues: ["missing_actual_fee"],
-    tradingFee: undefined,
-  };
-  const missing = renderToStaticMarkup(
-    createElement(BinarySettlementDetailsUI, {
-      records: [invalid],
-      conflict: false,
-      loading: false,
-      failed: true,
-    }),
-  );
-  assert.match(text(missing), /Unable to load personal settlement records/);
-  assert.match(text(missing), /Trading fee--/);
-  assert.match(text(missing), /Net PnL--Settled time--/);
-  assert.doesNotMatch(text(missing), /Position segment settled/);
-});
-test("a conflicting segment does not hide another verified segment's quantity", () => {
-  const valid = normalizeBinaryHistory({ ...record.source, position_id: 2 });
-  const html = renderToStaticMarkup(
-    createElement(BinarySettlementDetailsUI, {
-      records: [record, valid],
-      conflict: true,
-      conflictedRecordKeys: [record.recordKey],
-      loading: false,
-      failed: false,
-    }),
-  );
-  const segments = text(html).split("Time");
-  assert.match(segments[1], /Quantity--Investment--/);
-  assert.match(segments[2], /Quantity100\.0000Investment40/);
-  assert.match(segments[2], /Net PnL59\.99994/);
-});
-
-test("legacy whole-query conflicts still hide unverified quantities", () => {
-  const html = renderToStaticMarkup(
-    createElement(BinarySettlementDetailsUI, {
-      records: [record],
-      conflict: true,
-      loading: false,
-      failed: false,
-    }),
-  );
-  assert.match(text(html), /Quantity--Investment--/);
 });
