@@ -282,6 +282,9 @@ it("exposes sheet and side-panel slots that reuse the dropdown renderers with th
   expect(result.sideMarkets!.renderTabContent).toBe(
     result.marketsDropdown!.renderTabContent,
   );
+  expect(result.sideMarkets!.renderTabAfterContent).toBe(
+    result.marketsDropdown!.renderTabAfterContent,
+  );
   // Tabs are derived per surface's default category set.
   expect(result.marketsDropdown!.tabs).toEqual([
     { id: "tabs-dropDownMarkets" },

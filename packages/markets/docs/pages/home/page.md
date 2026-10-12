@@ -24,7 +24,7 @@ Exports `MarketsHomePage`, the main markets page component with built-in Predict
 | onPredictionSelect    | (symbol: string) => void     | No       | Receives the exact Prediction round symbol; overrides application navigation |
 | tabs                  | MarketTabConfig[]            | No       | Overrides the default categories without automatic insertion                 |
 | renderTabContent      | MarketTabContentRenderer     | No       | Custom content; undefined falls back to built-in Prediction, null hides it   |
-| renderTabAfterContent | MarketTabContentRenderer     | No       | Overrides the appended content, including Prediction favorites               |
+| renderTabAfterContent | MarketTabContentRenderer     | No       | Overrides the appended content in All and favorites                          |
 
 ## MarketsHomePage Input/Output
 
@@ -58,6 +58,10 @@ import { MarketsHomePage } from "@orderly.network/markets";
 
 ## Built-in Prediction
 
-With application navigation available, Prediction is inserted after Crypto and selection routes to `/prediction/<encoded-round-symbol>`. Pass `predictionEnabled={false}` to disable the built-in tab, favorites, metadata request, and round clock. A custom `onPredictionSelect` also enables this integration without application navigation.
+With application navigation available, Prediction is inserted after Crypto and selection routes to `/prediction/<encoded-round-symbol>`. Pass `predictionEnabled={false}` to disable the built-in tab, appended All/favorites content, metadata request, and round clock. A custom `onPredictionSelect` also enables this integration without application navigation.
 
 Prediction favorites are appended below the existing Perps favorites on desktop and mobile. They retain their own family-based storage and appear in every Perps favorite group. Both products share the search field. Existing exports such as `MarketsProvider` and `useMarketsContext` refer to the same Core implementations.
+
+All markets appends Prediction below Perps even when search is empty. Search matches Prediction display names, family IDs, and underlying index symbols, ignoring case and surrounding whitespace. When only Prediction matches, the empty Perps table is hidden; when neither product matches, the existing empty state is shown.
+
+The optional fourth argument to `renderTabAfterContent(tab, key, hide, context)` contains `{ searchValue?: string }`. Return `null` when no supplemental rows match so the host can retain its normal empty state. Existing three-argument callbacks remain compatible.

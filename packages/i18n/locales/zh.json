@@ -327,7 +327,7 @@
   "prediction.chance": "上涨概率",
   "prediction.lastPrice": "最新价",
   "prediction.volumeShort": "成交量",
-  "prediction.column.last&chance": "最新/概率",
+  "prediction.column.last&chance": "最新/上涨概率",
   "prediction.column.time&volume": "时间/成交量",
   "prediction.chanceHint": "上涨结果的当前隐含概率。",
   "prediction.roundChange": "本轮涨跌",

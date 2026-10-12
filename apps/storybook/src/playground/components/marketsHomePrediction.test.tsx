@@ -45,7 +45,12 @@ vi.mock(
   }),
 );
 vi.mock("@orderly.network/i18n", () => ({
-  i18n: { t: (key: string) => key },
+  i18n: {
+    t: (key: string, values?: { base: string; period: string }) =>
+      key === "prediction.marketName"
+        ? `${values?.base} ${values?.period} Up/Down`
+        : key,
+  },
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
@@ -55,8 +60,20 @@ const predictionTab: MarketTabConfig = {
   match: () => false,
 };
 const markets = [
-  { id: "PERP_BTC5M_USDC", currentRow: { symbol: "BTC round/1" } },
-  { id: "PERP_ETH5M_USDC", currentRow: { symbol: "ETH round/1" } },
+  {
+    id: "PERP_BTC5M_USDC",
+    base: "BTC",
+    period: "5M",
+    indexPriceSymbol: "PERP_BTC_USDC",
+    currentRow: { symbol: "BTC round/1" },
+  },
+  {
+    id: "PERP_ETH5M_USDC",
+    base: "ETH",
+    period: "5M",
+    indexPriceSymbol: "PERP_ETH_USDC",
+    currentRow: { symbol: "ETH round/1" },
+  },
 ];
 let root: ReactTestRenderer | undefined;
 function mount(props: MarketsHomePageProps = {}) {
@@ -183,4 +200,61 @@ describe("built-in Markets Prediction", () => {
     mount({ renderTabAfterContent });
     expect(pageProps().renderTabAfterContent).toBe(renderTabAfterContent);
   });
+});
+
+it.each([
+  [undefined, markets],
+  ["", markets],
+  ["  5m  ", markets],
+  ["btc 5m up/down", [markets[0]]],
+  ["perp_btc5m_usdc", [markets[0]]],
+  ["perp_eth_usdc", [markets[1]]],
+  ["nonexistent", []],
+])("filters All Prediction markets for %s", (searchValue, expected) => {
+  mount();
+  const content = pageProps().renderTabAfterContent!(
+    { type: "all" },
+    "all",
+    vi.fn(),
+    { searchValue },
+  );
+  if (!expected.length) {
+    expect(content).toBeNull();
+  } else {
+    expect(panel(content).markets).toEqual(expected);
+    expect(panel(content).onToggleFavorite).toBe(mocks.toggleFavorite);
+  }
+});
+
+it("preserves All selection routing and the host close callback", () => {
+  mount();
+  const hide = vi.fn();
+  const content = panel(
+    pageProps().renderTabAfterContent!({ type: "all" }, "all", hide),
+  );
+  expect(content.hide).toBe(hide);
+  content.onPredictionSelect("BTC round/1");
+  expect(mocks.navigate).toHaveBeenCalledWith({
+    href: "/prediction/BTC%20round%2F1",
+    name: "prediction",
+  });
+});
+
+it("does not append Prediction to other categories or unmatched favorites", () => {
+  mocks.favorites = [markets[0].id];
+  mount();
+  const render = pageProps().renderTabAfterContent!;
+  for (const type of [
+    "crypto",
+    "rwa",
+    "recent",
+    "newListing",
+    "preTge",
+    "community",
+  ] as const) {
+    expect(render({ type }, type, vi.fn())).toBeNull();
+  }
+  expect(
+    render({ type: "favorites" }, "favorites", vi.fn(), { searchValue: "ETH" }),
+  ).toBeNull();
 });

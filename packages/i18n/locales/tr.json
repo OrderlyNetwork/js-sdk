@@ -327,7 +327,7 @@
   "prediction.chance": "Yükseliş şansı",
   "prediction.lastPrice": "Son fiyat",
   "prediction.volumeShort": "Hacim",
-  "prediction.column.last&chance": "Son/Şans",
+  "prediction.column.last&chance": "Son/Yükseliş şansı",
   "prediction.column.time&volume": "Zaman/Hacim",
   "prediction.chanceHint": "Yukarı sonucunun güncel ima edilen olasılığı.",
   "prediction.roundChange": "Tur değişimi",

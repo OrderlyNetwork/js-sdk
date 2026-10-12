@@ -327,7 +327,7 @@
   "prediction.chance": "Szansa na wzrost",
   "prediction.lastPrice": "Ostatnia cena",
   "prediction.volumeShort": "Wol.",
-  "prediction.column.last&chance": "Ostatni/Szansa",
+  "prediction.column.last&chance": "Ostatni/Szansa wzrostu",
   "prediction.column.time&volume": "Czas/Wolumen",
   "prediction.chanceHint": "Bieżące implikowane prawdopodobieństwo wyniku Wzrost.",
   "prediction.roundChange": "Zmiana w rundzie",

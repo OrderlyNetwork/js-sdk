@@ -127,6 +127,7 @@ export function usePredictionTradingExtension({
           sideMarkets: {
             tabs: sideMarketsTabs,
             renderTabContent: marketsDropdown.renderTabContent,
+            renderTabAfterContent: marketsDropdown.renderTabAfterContent,
           },
         }
       : {}),

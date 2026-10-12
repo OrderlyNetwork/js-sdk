@@ -43,6 +43,7 @@ const TradingPageInner: React.FC<TradingPageProps> = (props) => {
   const sideMarkets = {
     tabs: sideMarketsTabs,
     renderTabContent: dropdown.renderTabContent,
+    renderTabAfterContent: dropdown.renderTabAfterContent,
   };
 
   return (

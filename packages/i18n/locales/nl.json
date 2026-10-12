@@ -327,7 +327,7 @@
   "prediction.chance": "Kans op omhoog",
   "prediction.lastPrice": "Laatste prijs",
   "prediction.volumeShort": "Vol.",
-  "prediction.column.last&chance": "Laatste/Kans",
+  "prediction.column.last&chance": "Laatste/Kans op omhoog",
   "prediction.column.time&volume": "Tijd/Volume",
   "prediction.chanceHint": "Huidige impliciete kans op de uitkomst Omhoog.",
   "prediction.roundChange": "Rondewijziging",

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   FavoritesIcon2,
   UnFavoritesIcon2,
@@ -18,6 +18,10 @@ import type { BinaryBbo } from "./binary/useBinaryBbo";
 import { useBinaryBboMap } from "./binary/useBinaryBbo";
 import { useBinaryTickerAmounts } from "./binary/useBinaryTickerAmounts";
 import { useRoundCountdown } from "./hooks/useRoundCountdown";
+import {
+  filterPredictionMarkets,
+  formatPredictionMarketName,
+} from "./predictionMarketSearch";
 import { formatCountdown, formatPercent } from "./predictionShared";
 
 const predictionMarketTab = (name: string): MarketTabConfig => ({
@@ -38,13 +42,16 @@ export const usePredictionMarketTabs = (
     const cryptoIndex = tabs.findIndex(
       (tab) => "type" in tab && tab.type === "crypto",
     );
-    tabs.splice(cryptoIndex + 1, 0, predictionMarketTab(t("prediction.title")));
+    tabs.splice(
+      cryptoIndex + 1,
+      0,
+      predictionMarketTab(t("prediction.filter.predictions")),
+    );
     return tabs;
   }, [defaultTabs, t]);
 };
 
-export const formatPredictionMarketName = (market: BinaryMarket) =>
-  i18n.t("prediction.marketName", { base: market.base, period: market.period });
+export { formatPredictionMarketName } from "./predictionMarketSearch";
 
 type PredictionMarketRowProps = {
   market: BinaryMarket;
@@ -85,7 +92,13 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
             market.currentRow.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK,
           ).decimalPlaces(),
         );
-  const chance = price == null ? "--" : formatPercent(price * 100);
+  // Chance derives from the tick-rounded last price so both cells read as the
+  // same number; a half-tick mid like 0.505 would otherwise split into
+  // Last 0.51 vs Chance 50.5%.
+  const chance =
+    price == null
+      ? "--"
+      : formatPercent(new Decimal(lastPrice).mul(100).toNumber());
   const countdown = market.hasLiveRow
     ? formatCountdown(seconds)
     : t("prediction.closed");
@@ -137,16 +150,7 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
         </td>
         <td className="oui-px-2 oui-py-1.5 oui-text-end oui-align-middle">
           <div className="oui-text-xs oui-leading-4">{lastPrice}</div>
-          {/* Chance doubles as the up/down tint, like the perps 24h% second line. */}
-          <div
-            className={cn(
-              "oui-text-2xs oui-leading-4",
-              price != null &&
-                (price >= 0.5 ? "oui-text-success" : "oui-text-danger"),
-            )}
-          >
-            {chance}
-          </div>
+          <div className="oui-text-2xs oui-leading-4">{chance}</div>
         </td>
         <td className="oui-px-2 oui-py-1.5 oui-text-end oui-align-middle">
           <div className="oui-text-xs oui-leading-4">{countdown}</div>
@@ -226,12 +230,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
   const { t } = useTranslation();
   const { searchValue } = useMarketsContext();
   const { ref, compact } = useCompactPanelWidth();
-  const search = searchValue?.trim().toLowerCase() ?? "";
-  const visibleMarkets = markets.filter((market) =>
-    `${formatPredictionMarketName(market)} ${market.id} ${market.indexPriceSymbol}`
-      .toLowerCase()
-      .includes(search),
-  );
+  const visibleMarkets = filterPredictionMarkets(markets, searchValue);
 
   if (visibleMarkets.length === 0) {
     return (
@@ -257,7 +256,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
     <div
       ref={ref}
       className={cn(
-        "oui-h-full oui-overflow-auto oui-bg-base-8 oui-px-1",
+        "oui-custom-scrollbar oui-h-full oui-overflow-auto oui-bg-base-8 oui-px-1",
         className,
       )}
     >
@@ -277,7 +276,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
             <col className="oui-w-[18%]" />
           </colgroup>
         )}
-        <thead className="oui-text-xs oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-text-base-contrast-54">
+        <thead className="oui-text-xs oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-text-base-contrast-36">
           <tr className="oui-h-9">
             <th className="oui-px-2 oui-text-start">{t("common.symbol")}</th>
             {compact ? (

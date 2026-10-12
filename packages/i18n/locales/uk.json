@@ -327,7 +327,7 @@
   "prediction.chance": "Шанс на ріст",
   "prediction.lastPrice": "Остання ціна",
   "prediction.volumeShort": "Обсяг",
-  "prediction.column.last&chance": "Остання/Ймовірність",
+  "prediction.column.last&chance": "Остання/Шанс на ріст",
   "prediction.column.time&volume": "Час/Обсяг",
   "prediction.chanceHint": "Поточна неявна ймовірність результату «Вгору».",
   "prediction.roundChange": "Зміна за раунд",

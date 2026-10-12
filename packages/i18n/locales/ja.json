@@ -327,7 +327,7 @@
   "prediction.chance": "上昇確率",
   "prediction.lastPrice": "最新価格",
   "prediction.volumeShort": "出来高",
-  "prediction.column.last&chance": "最終/確率",
+  "prediction.column.last&chance": "最終/上昇確率",
   "prediction.column.time&volume": "時間/出来高",
   "prediction.chanceHint": "上昇結果の現在のインプライド確率。",
   "prediction.roundChange": "ラウンド変動",

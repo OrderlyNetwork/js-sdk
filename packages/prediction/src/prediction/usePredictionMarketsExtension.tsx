@@ -8,6 +8,7 @@ import type { UsePredictionMarketsOptions } from "./prediction.types";
 import { PredictionDropdownPanel } from "./predictionDropdownPanel";
 import { usePredictionFavorites } from "./predictionFavorites";
 import { usePredictionMarketTabs } from "./predictionMarketPanel.ui";
+import { filterPredictionMarkets } from "./predictionMarketSearch";
 
 /**
  * Extension slots shared by the market-list surfaces (dropdown, sheet, side
@@ -25,12 +26,13 @@ export type PredictionMarketsExtensionProps = {
     tab: MarketTabConfig,
     key: string,
     hide: () => void,
+    context?: { searchValue?: string },
   ) => ReactNode;
 };
 
 /**
  * Adds the prediction markets to a market-list surface: a custom tab after
- * `crypto` plus a favorites section appended to the built-in favorites tab
+ * `crypto` plus sections appended to the built-in All and favorites tabs
  * (renderTabAfterContent is only consumed by surfaces that support it).
  *
  * @param componentKey Selects the host surface's default tab set (e.g.
@@ -59,19 +61,27 @@ export const usePredictionMarketsExtension = (
           onPredictionSelect={onPredictionSelect}
         />
       ) : undefined,
-    renderTabAfterContent: (_, key, hide) =>
-      key === "favorites" &&
-      markets.some((market) => favoriteMarketIds.includes(market.id)) ? (
+    renderTabAfterContent: (_, key, hide, context) => {
+      if (key !== "all" && key !== "favorites") return null;
+      const candidates =
+        key === "favorites"
+          ? markets.filter((market) => favoriteMarketIds.includes(market.id))
+          : markets;
+      const visibleMarkets = filterPredictionMarkets(
+        candidates,
+        context?.searchValue,
+      );
+      if (!visibleMarkets.length) return null;
+      return (
         <PredictionDropdownPanel
-          markets={markets.filter((market) =>
-            favoriteMarketIds.includes(market.id),
-          )}
+          markets={visibleMarkets}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
           hide={hide}
           onPredictionSelect={onPredictionSelect}
-          className="oui-flex-none oui-border-t oui-border-line-12 oui-pt-2"
+          className={`!oui-h-auto oui-flex-none oui-border-t oui-border-line-12 oui-pt-2${key === "all" ? " !oui-overflow-visible" : ""}`}
         />
-      ) : null,
+      );
+    },
   };
 };

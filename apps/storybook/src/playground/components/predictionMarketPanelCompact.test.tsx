@@ -130,20 +130,18 @@ it("switches to the 3-column two-line layout in narrow containers", () => {
   expect(headers).toHaveLength(3);
   expect(headers[1].textContent).toBe("prediction.column.last&chance");
   expect(headers[2].textContent).toBe("prediction.column.time&volume");
-  // Chance rides under the last price as the tinted second line (UP >= 50%),
-  // volume rides under the countdown in the trailing column.
+  // Chance rides under the last price as the untinted second line (no
+  // up/down coloring), volume rides under the countdown in the trailing column.
   const secondLines = Array.from(
     container!.querySelectorAll<HTMLElement>("tbody [class*='oui-text-2xs']"),
   );
   expect(secondLines).toHaveLength(2);
-  const chanceLine = secondLines.find((el) =>
-    el.className.includes("oui-text-success"),
-  );
-  expect(chanceLine?.textContent).toBe("53.0%");
-  const volumeLine = secondLines.find(
-    (el) => !el.className.includes("oui-text-success"),
-  );
-  expect(volumeLine?.textContent).toBe("1234");
+  const chanceLine = secondLines.find((el) => el.textContent === "53.0%");
+  expect(chanceLine).toBeDefined();
+  expect(chanceLine!.className).not.toContain("oui-text-success");
+  expect(chanceLine!.className).not.toContain("oui-text-danger");
+  const volumeLine = secondLines.find((el) => el.textContent === "1234");
+  expect(volumeLine).toBeDefined();
 });
 
 it("observes an initially loading panel and uses compact columns when markets arrive", () => {

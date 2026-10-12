@@ -327,7 +327,7 @@
   "prediction.chance": "Chance auf Steigen",
   "prediction.lastPrice": "Letzter Preis",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&chance": "Letzter/Chance",
+  "prediction.column.last&chance": "Letzter/Up-Chance",
   "prediction.column.time&volume": "Zeit/Volumen",
   "prediction.chanceHint": "Aktuelle implizite Wahrscheinlichkeit für den Ausgang Steigen.",
   "prediction.roundChange": "Rundenänderung",

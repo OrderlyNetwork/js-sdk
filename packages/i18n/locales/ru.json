@@ -327,7 +327,7 @@
   "prediction.chance": "Шанс на рост",
   "prediction.lastPrice": "Последняя цена",
   "prediction.volumeShort": "Объём",
-  "prediction.column.last&chance": "Последняя/Вероятность",
+  "prediction.column.last&chance": "Последняя/Вероят. роста",
   "prediction.column.time&volume": "Время/Объем",
   "prediction.chanceHint": "Текущая подразумеваемая вероятность исхода «Вверх».",
   "prediction.roundChange": "Изменение за раунд",

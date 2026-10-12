@@ -327,7 +327,7 @@
   "prediction.chance": "Prob. de hausse",
   "prediction.lastPrice": "Dernier prix",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&chance": "Dernier/Probabilité",
+  "prediction.column.last&chance": "Dernier/Prob. hausse",
   "prediction.column.time&volume": "Heure/Volume",
   "prediction.chanceHint": "Probabilité implicite actuelle du résultat à la hausse.",
   "prediction.roundChange": "Variation du tour",

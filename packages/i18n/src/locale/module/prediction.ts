@@ -12,6 +12,7 @@ export const prediction = {
   "prediction.up": "Up",
   "prediction.filter.allInstruments": "All instruments",
   "prediction.filter.perps": "Perps",
+  "prediction.filter.predictions": "Predictions",
   "prediction.cancelAll.all.description":
     "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
   "prediction.cancelAll.perps.description":
@@ -52,7 +53,7 @@ export const prediction = {
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
   /** Combined compact-panel headers, perps `Last/24h %` style. */
-  "prediction.column.last&chance": "Last/Chance",
+  "prediction.column.last&chance": "Last/Up chance",
   "prediction.column.time&volume": "Time/Vol",
   "prediction.chanceHint": "Current implied probability of the Up outcome.",
   "prediction.roundChange": "Round change",
