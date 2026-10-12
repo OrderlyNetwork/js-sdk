@@ -12,7 +12,7 @@ import { useConfig } from "../useConfig";
 import { fetcher } from "../utils/fetcher";
 
 type QueryOptions<T> = SWRConfiguration & {
-  formatter?: (data: any) => T;
+  formatter?: (data: any) => T | Promise<T>;
   accountId?: string;
 };
 
