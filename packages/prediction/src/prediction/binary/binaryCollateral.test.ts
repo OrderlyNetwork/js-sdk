@@ -192,20 +192,27 @@ test("detailed inputs deduplicate and use remaining quantity; RO counts toward c
   })!;
   assert.equal(state.mode, "detailed");
   assert.equal(state.pendingSellQty, 90);
-  assert.equal(state.orders.length, 1);
+  assert.equal(state.orders.length, 2);
   assert.equal(state.orders[0].quantity, 60);
+  assert.equal(state.orders[1].quantity, 30);
+  assert.equal(state.orders[1].reduceOnly, true);
   assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 8.0048);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL), 10);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL, 1), 70);
 });
 
-test("RO compatibility is explicit: ordinary Max and funding exclude RO, explicit exit reserves it", () => {
+test("RO joins the allocation at zero frozen; priority decides who is displaced", () => {
+  // The RO sell sits at a worse UP price than the new order: the new order
+  // closes first, the displaced RO excess freezes nothing, so the ordinary
+  // Max and funding numbers are unchanged by the RO order's presence.
   const state = resolveBinaryCollateral({
     symbol,
     positions: [position({ pending_short_qty: 60 })],
     orders: [order({ reduce_only: true })],
     ordersComplete: true,
   })!;
+  assert.equal(state.orders.length, 1);
+  assert.equal(state.orders[0].reduceOnly, true);
   assert.equal(frozen(state, OrderSide.SELL, 0.6, 100), 0);
   assert.equal(
     maxBinaryOrderQuantity({
@@ -220,9 +227,269 @@ test("RO compatibility is explicit: ordinary Max and funding exclude RO, explici
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL), 40);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.BUY), 0);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL, 1), 100);
+
+  // A better-priority RO sell claims the holding first (SELL: lower UP price
+  // wins): only the unclaimed remainder stays free, the rest of the new
+  // order opens and freezes — the RO gap fix.
+  const claimed = resolveBinaryCollateral({
+    symbol,
+    positions: [position({ pending_short_qty: 60 })],
+    orders: [order({ reduce_only: true, price: 0.4 })],
+    ordersComplete: true,
+  })!;
+  assert.equal(frozen(claimed, OrderSide.SELL, 0.6, 100), 24.0144);
+  assert.equal(
+    maxBinaryOrderQuantity({
+      snapshot: claimed,
+      side: OrderSide.SELL,
+      upPrice: 0.6,
+      balance: 0,
+    }),
+    40,
+  );
+
+  // An over-sized RO claim never freezes itself, even when a better-priority
+  // order displaces its excess beyond the holding.
+  const overClaimed = resolveBinaryCollateral({
+    symbol,
+    positions: [position({ pending_short_qty: 120 })],
+    orders: [order({ reduce_only: true, price: 0.4, quantity: 120 })],
+    ordersComplete: true,
+  })!;
+  assert.equal(frozen(overClaimed, OrderSide.SELL, 0.3, 10), 0);
 });
 
-test("incomplete coverage uses aggregate at Mark without adding loaded orders twice", () => {
+test("fallback retains observed prices and aggregates only unobserved quantities", () => {
+  const state = resolveBinaryCollateral({
+    symbol,
+    positions: [position({ pending_short_qty: 60 })],
+    orders: [
+      order({ quantity: 20 }),
+      order({ order_id: 2, quantity: 30, reduce_only: true }),
+    ],
+    ordersComplete: false,
+    markPrice: 0.5,
+  })!;
+  assert.equal(state.mode, "approximate");
+  assert.equal(state.orders.length, 3);
+  assert.equal(state.orders[0].reduceOnly, undefined);
+  assert.equal(state.orders[0].quantity, 20);
+  assert.equal(state.orders[0].referencePrice, 0.8);
+  assert.equal(state.orders[1].reduceOnly, true);
+  assert.equal(state.orders[1].quantity, 30);
+  assert.equal(state.orders[1].referencePrice, 0.8);
+  assert.equal(state.orders[2].quantity, 10);
+  assert.equal(state.orders[2].referencePrice, 0.5);
+  // The aggregate closes 10, the new order closes 80, and 10 of the known
+  // ordinary order opens at DOWN 0.2. The displaced RO remainder stays free.
+  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 2.0012);
+});
+
+test("fallback preserves known RO price priority when order metadata is missing", () => {
+  for (const [positionQty, side, roPrice, upPrice] of [
+    [100, OrderSide.SELL, 0.4, 0.45],
+    [-100, OrderSide.BUY, 0.6, 0.55],
+  ] as const) {
+    for (const missing of [{ created_time: NaN }, { margin_mode: undefined }]) {
+      const state = resolveBinaryCollateral({
+        symbol,
+        positions: [
+          position({
+            position_qty: positionQty,
+            pending_long_qty: side === OrderSide.BUY ? 60 : 0,
+            pending_short_qty: side === OrderSide.SELL ? 60 : 0,
+          }),
+        ],
+        orders: [
+          order({
+            side,
+            price: roPrice,
+            quantity: 80,
+            total_executed_quantity: 20,
+            reduce_only: true,
+            ...missing,
+          }),
+        ],
+        ordersComplete: true,
+      })!;
+      assert.equal(state.mode, "approximate");
+      assert.equal(state.orders[0].referencePrice, roPrice);
+      assert.equal(state.orders[0].quantity, 60);
+      assert.equal(frozen(state, side, upPrice, 100), 33.0198);
+      assert.equal(
+        maxBinaryOrderQuantity({ snapshot: state, side, upPrice, balance: 0 }),
+        40,
+      );
+    }
+  }
+});
+
+test("fallback reserves RO closing capacity conservatively when price is missing", () => {
+  for (const [positionQty, side, upPrice] of [
+    [100, OrderSide.SELL, 0.45],
+    [-100, OrderSide.BUY, 0.55],
+  ] as const) {
+    const state = resolveBinaryCollateral({
+      symbol,
+      positions: [
+        position({
+          position_qty: positionQty,
+          pending_long_qty: side === OrderSide.BUY ? 60 : 0,
+          pending_short_qty: side === OrderSide.SELL ? 60 : 0,
+        }),
+      ],
+      orders: [order({ side, price: null, reduce_only: true })],
+      ordersComplete: true,
+    })!;
+    assert.equal(state.mode, "approximate");
+    assert.equal(frozen(state, side, upPrice, 100), 33.0198);
+    assert.equal(
+      maxBinaryOrderQuantity({ snapshot: state, side, upPrice, balance: 0 }),
+      40,
+    );
+  }
+});
+
+test("fallback keeps existing RO orders ahead of new orders at equal prices", () => {
+  const state = resolveBinaryCollateral({
+    symbol,
+    positions: [position({ pending_short_qty: 60 })],
+    orders: [order({ price: 0.5, reduce_only: true, created_time: NaN })],
+    ordersComplete: true,
+  })!;
+  assert.equal(frozen(state, OrderSide.SELL, 0.5, 100), 30.018);
+  assert.equal(
+    maxBinaryOrderQuantity({
+      snapshot: state,
+      side: OrderSide.SELL,
+      upPrice: 0.5,
+      balance: 0,
+    }),
+    40,
+  );
+});
+
+test("fallback preserves ordinary and RO FIFO when another order lacks timing", () => {
+  for (const [positionQty, side, upPrice, otherSide, otherPrice] of [
+    [100, OrderSide.SELL, 0.4, OrderSide.BUY, 0.6],
+    [-100, OrderSide.BUY, 0.6, OrderSide.SELL, 0.4],
+  ] as const) {
+    for (const ordinaryFirst of [true, false]) {
+      const rows = [
+        order({
+          order_id: 1,
+          side,
+          price: 0.5,
+          quantity: 100,
+          created_time: ordinaryFirst ? 100 : 200,
+        }),
+        order({
+          order_id: 2,
+          side,
+          price: 0.5,
+          quantity: 100,
+          created_time: ordinaryFirst ? 200 : 100,
+          reduce_only: true,
+        }),
+        order({
+          order_id: 3,
+          side: otherSide,
+          price: otherPrice,
+          quantity: 1,
+          created_time: 300,
+        }),
+      ];
+      const inputs = {
+        symbol,
+        positions: [
+          position({
+            position_qty: positionQty,
+            pending_long_qty: side === OrderSide.BUY ? 200 : 1,
+            pending_short_qty: side === OrderSide.SELL ? 200 : 1,
+          }),
+        ],
+        ordersComplete: true,
+      };
+      const detailed = resolveBinaryCollateral({ ...inputs, orders: rows })!;
+      const fallback = resolveBinaryCollateral({
+        ...inputs,
+        orders: [rows[0], rows[1], { ...rows[2], created_time: NaN }],
+      })!;
+      assert.equal(detailed.mode, "detailed");
+      assert.equal(fallback.mode, "approximate");
+      assert.equal(
+        frozen(fallback, side, upPrice, 50),
+        ordinaryFirst ? 25.015 : 0,
+      );
+      assert.equal(
+        frozen(fallback, side, upPrice, 50),
+        frozen(detailed, side, upPrice, 50),
+      );
+      assert.equal(
+        maxBinaryOrderQuantity({
+          snapshot: fallback,
+          side,
+          upPrice,
+          balance: 1,
+        }),
+        ordinaryFirst ? 1.99 : 101.66,
+      );
+      assert.equal(
+        maxBinaryOrderQuantity({
+          snapshot: fallback,
+          side,
+          upPrice,
+          balance: 1,
+        }),
+        maxBinaryOrderQuantity({
+          snapshot: detailed,
+          side,
+          upPrice,
+          balance: 1,
+        }),
+      );
+      assert.equal(fallback.orders[0].createdTime, rows[0].created_time);
+      assert.equal(fallback.orders[1].createdTime, rows[1].created_time);
+      assert.equal(fallback.orders[2].referencePrice, otherPrice);
+    }
+  }
+});
+
+test("fallback decimal quantities preserve frozen rounding and affordable Max", () => {
+  for (const [positionQty, side, markPrice, upPrice] of [
+    [0.75, OrderSide.SELL, 0.4, 0.3],
+    [-0.75, OrderSide.BUY, 0.6, 0.7],
+  ] as const) {
+    const state = resolveBinaryCollateral({
+      symbol,
+      positions: [
+        position({
+          position_qty: positionQty,
+          pending_long_qty: side === OrderSide.BUY ? 0.8 : 0,
+          pending_short_qty: side === OrderSide.SELL ? 0.8 : 0,
+        }),
+      ],
+      orders: [
+        order({ side, price: markPrice, quantity: 0.1, reduce_only: true }),
+      ],
+      ordersComplete: false,
+      markPrice,
+    })!;
+    assert.equal(state.mode, "approximate");
+    assert.equal(state.orders.find((item) => !item.reduceOnly)?.quantity, 0.7);
+    assert.equal(frozen(state, side, upPrice, 0.02), 0.012008);
+    const max = maxBinaryOrderQuantity({
+      snapshot: state,
+      side,
+      upPrice,
+      balance: 0.012007,
+    });
+    assert.equal(max, 0.01);
+    assert.ok(frozen(state, side, upPrice, max) <= 0.012007);
+  }
+});
+
+test("incomplete coverage prices only the missing remainder at Mark", () => {
   const inputs = {
     symbol,
     positions: [position({ pending_short_qty: 60 })],
@@ -232,9 +499,14 @@ test("incomplete coverage uses aggregate at Mark without adding loaded orders tw
   const low = resolveBinaryCollateral({ ...inputs, markPrice: 0.5 })!;
   const high = resolveBinaryCollateral({ ...inputs, markPrice: 0.9 })!;
   assert.equal(low.mode, "approximate");
-  assert.equal(low.orders.length, 1);
-  assert.equal(low.orders[0].quantity, 60);
-  assert.equal(frozen(low, OrderSide.SELL, 0.6, 80), 16.0096);
+  assert.equal(low.orders.length, 2);
+  assert.equal(low.orders[0].quantity, 20);
+  assert.equal(low.orders[0].referencePrice, 0.8);
+  assert.equal(low.orders[1].quantity, 40);
+  assert.equal(low.orders[1].referencePrice, 0.5);
+  // 20 of the new order opens at DOWN 0.4, and all 20 known pending shares
+  // are displaced into opening at DOWN 0.2.
+  assert.equal(frozen(low, OrderSide.SELL, 0.6, 80), 12.0072);
   assert.equal(frozen(high, OrderSide.SELL, 0.6, 80), 4.0024);
   assert.equal(availableBinaryCloseQuantity(low, OrderSide.SELL), 40);
   const detailed = resolveBinaryCollateral({ ...inputs, orders: [order()] })!;

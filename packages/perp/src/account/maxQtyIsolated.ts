@@ -74,6 +74,13 @@ export type IsolatedPendingOrder = {
   quantity: number;
   /** Creation time in ms; the earlier order wins when prices are equal. */
   createdTime?: number;
+  /**
+   * Informational reduce-only marker: such orders freeze no margin, but still
+   * consume closing budget by allocation priority. Pricing callbacks
+   * (`getMarginPrice`) use it to zero the order's frozen contribution; the
+   * simulation itself gives it no special treatment.
+   */
+  reduceOnly?: boolean;
 };
 
 /**

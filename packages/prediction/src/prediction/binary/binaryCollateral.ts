@@ -25,7 +25,11 @@ export type BinaryCollateralSnapshot = {
   positionQty: number;
   pendingBuyQty: number;
   pendingSellQty: number;
-  /** PERP-compatible funding inputs exclude reduce-only orders. */
+  /**
+   * Per-order funding inputs, reduce-only included: RO orders freeze nothing
+   * (binaryMarginPrice) but still offset the holding by allocation priority,
+   * matching the risk engine's one-holding-one-offset netting (Risk §6.2).
+   */
   orders: account.IsolatedPendingOrder[];
   /** Explicit RO exits reserve every closing-side order, including RO. */
   reservations: Array<{ orderId: number; side: OrderSide; quantity: number }>;
@@ -39,9 +43,10 @@ const isQuantity = (quantity: number) =>
 const floorQuantity = floorToTickDecimal;
 
 /**
- * Prefer per-order inputs covering the position aggregates. Otherwise use
- * aggregate quantities at UP Mark, like PERP. A fallback is an estimate,
- * not an upper bound on backend frozen margin or a ReduceOnlyBo simulation.
+ * Prefer per-order inputs covering the position aggregates. Otherwise keep
+ * known order prices and timing and estimate the remainder at UP Mark.
+ * A fallback is an estimate, not an upper bound on backend frozen margin or
+ * a ReduceOnlyBo simulation.
  */
 export function resolveBinaryCollateral(inputs: {
   symbol: string | undefined;
@@ -87,6 +92,7 @@ export function resolveBinaryCollateral(inputs: {
   let streamBuyQty = new Decimal(0);
   let streamSellQty = new Decimal(0);
   const pending: account.IsolatedPendingOrder[] = [];
+  const observedOrders: account.IsolatedPendingOrder[] = [];
   const reservations: BinaryCollateralSnapshot["reservations"] = [];
   for (const order of [...uniqueOrders.values()].sort(
     (a, b) => a.order_id - b.order_id,
@@ -113,9 +119,23 @@ export function resolveBinaryCollateral(inputs: {
       side,
       quantity: remaining.toNumber(),
     });
-    if (side === OrderSide.BUY) streamBuyQty = streamBuyQty.add(remaining);
-    else streamSellQty = streamSellQty.add(remaining);
+    if (side === OrderSide.BUY) {
+      streamBuyQty = streamBuyQty.add(remaining);
+    } else {
+      streamSellQty = streamSellQty.add(remaining);
+    }
     const price = Number(order.price);
+    const pendingOrder: account.IsolatedPendingOrder = {
+      side,
+      referencePrice: price,
+      quantity: remaining.toNumber(),
+      createdTime: Number.isFinite(order.created_time)
+        ? order.created_time
+        : undefined,
+      // RO freezes nothing but still participates in closing allocation.
+      ...(order.reduce_only ? { reduceOnly: true } : {}),
+    };
+    observedOrders.push(pendingOrder);
     if (
       order.margin_mode !== MarginMode.ISOLATED ||
       !isPrice(price) ||
@@ -124,13 +144,7 @@ export function resolveBinaryCollateral(inputs: {
       valid = false;
       continue;
     }
-    if (order.reduce_only) continue;
-    pending.push({
-      side,
-      referencePrice: price,
-      quantity: remaining.toNumber(),
-      createdTime: order.created_time,
-    });
+    pending.push(pendingOrder);
   }
 
   const covered =
@@ -160,26 +174,61 @@ export function resolveBinaryCollateral(inputs: {
     : position?.mark_price;
   if ((buyQty > 0 || sellQty > 0) && !isPrice(markPrice ?? NaN))
     return undefined;
-  const aggregate: account.IsolatedPendingOrder[] = [];
-  if (buyQty > 0)
-    aggregate.push({
-      side: OrderSide.BUY,
-      referencePrice: markPrice!,
-      quantity: buyQty,
-    });
-  if (sellQty > 0)
-    aggregate.push({
-      side: OrderSide.SELL,
-      referencePrice: markPrice!,
-      quantity: sellQty,
-    });
+  const latestCreatedTime = observedOrders.reduce(
+    (latest, order) => Math.max(latest, order.createdTime ?? 0),
+    0,
+  );
+  // Preserve every observed price and timestamp: forcing RO ahead of an older
+  // ordinary order can inflate frozenBefore and understate additional frozen.
+  // Unknown timing is estimated at the latest known creation time; it does
+  // not establish backend FIFO. Only quantities absent from the stream are
+  // aggregated, after the observed orders on equal-price/time ties.
+  const aggregate: account.IsolatedPendingOrder[] = observedOrders.map(
+    (order) => ({
+      ...order,
+      referencePrice: isPrice(order.referencePrice)
+        ? order.referencePrice
+        : order.reduceOnly
+          ? order.side === OrderSide.BUY
+            ? 1
+            : 0
+          : markPrice!,
+      createdTime: order.createdTime ?? latestCreatedTime,
+    }),
+  );
+  // Unknown RO prices use allocation sentinels (BUY 1 / SELL 0), keeping
+  // their closing claim ahead of new orders without freezing margin.
+  const aggregateSide = (
+    side: OrderSide,
+    total: number,
+    observedQty: Decimal,
+  ) => {
+    const remainder = new Decimal(total).sub(observedQty);
+    if (remainder.gt(0)) {
+      aggregate.push({
+        side,
+        referencePrice: markPrice!,
+        quantity: remainder.toNumber(),
+        createdTime: latestCreatedTime,
+      });
+    }
+  };
+  aggregateSide(OrderSide.BUY, buyQty, streamBuyQty);
+  aggregateSide(OrderSide.SELL, sellQty, streamSellQty);
   return { ...snapshot, orders: aggregate, mode: "approximate" };
 }
 
+/**
+ * Margin price of a pending order: BUY freezes p, SELL freezes 1-p; a
+ * reduce-only order freezes nothing (PRD §7.2) yet still consumes closing
+ * budget through its referencePrice priority.
+ */
 const binaryMarginPrice = (order: account.IsolatedPendingOrder) =>
-  order.side === OrderSide.BUY
-    ? order.referencePrice
-    : complementPrice(order.referencePrice);
+  order.reduceOnly
+    ? 0
+    : order.side === OrderSide.BUY
+      ? order.referencePrice
+      : complementPrice(order.referencePrice);
 
 /** Incremental opening risk; price priority always stays in UP coordinates. */
 export function estimateBinaryOrderFrozen(
