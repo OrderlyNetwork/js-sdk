@@ -98,8 +98,6 @@ export const prediction = {
   "prediction.rounds.past": "Past",
   "prediction.rounds.today": "Today",
   "prediction.rounds.more": "More",
-  "prediction.rounds.previousPage": "Previous",
-  "prediction.rounds.nextPage": "Next",
   "prediction.rounds.ended": "Ended",
   "prediction.rounds.live": "Live",
   "prediction.rounds.upcoming": "Upcoming",

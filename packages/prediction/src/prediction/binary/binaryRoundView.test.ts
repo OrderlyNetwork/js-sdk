@@ -100,8 +100,32 @@ test("historical selections remain visible as the default live round advances", 
     300,
     t0 + 300_001,
   );
-  assert.equal(navigation.visible[0]?.symbol, live.symbol);
+  assert.ok(navigation.visible.some((item) => item?.symbol === live.symbol));
   assert.equal(getRoundStatus(live, t0 + 300_001), "ended");
+});
+
+test("navigation fills three real rounds at the end of the schedule", () => {
+  const rows = [row(t0 - 900_000), row(t0 - 600_000), row(t0 - 300_000), row()];
+  for (const selectedRound of [t0 / 1000, (t0 - 300_000) / 1000]) {
+    const navigation = getRoundNavigation(
+      [...rows].reverse(),
+      t0 / 1000,
+      selectedRound,
+      300,
+      t0 + 1,
+    );
+    assert.deepEqual(navigation.visible, rows.slice(-3));
+    assert.equal(navigation.future.length, 0);
+  }
+  const navigation = getRoundNavigation(
+    [row()],
+    t0 / 1000,
+    t0 / 1000,
+    300,
+    t0 + 1,
+  );
+  assert.equal(navigation.visible.length, 1);
+  assert.equal(navigation.visible[0]?.observation_start_at, t0);
 });
 
 test("official S0 and S1 are the sole target and final prices", () => {

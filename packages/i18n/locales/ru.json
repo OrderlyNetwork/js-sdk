@@ -366,8 +366,6 @@
   "prediction.rounds.past": "Прошлые",
   "prediction.rounds.today": "Сегодня",
   "prediction.rounds.more": "Ещё",
-  "prediction.rounds.previousPage": "Назад",
-  "prediction.rounds.nextPage": "Далее",
   "prediction.rounds.ended": "Завершённые",
   "prediction.rounds.live": "Активные",
   "prediction.rounds.upcoming": "Предстоящие",

@@ -44,8 +44,16 @@ export const getRoundNavigation = (
           selectedRound + intervalSeconds,
           selectedRound + 2 * intervalSeconds,
         ];
+  // At the end of the schedule, fill the main slots with the latest real rounds.
+  const lastAvailable = available.at(-1);
+  const visible =
+    lastAvailable &&
+    starts[2] > binaryRowRoundStart(lastAvailable) &&
+    byStart.has(selectedRound)
+      ? available.slice(-3)
+      : starts.map((start) => byStart.get(start));
   return {
-    visible: starts.map((start) => byStart.get(start)),
+    visible,
     past: available.filter((row) => getRoundStatus(row, now) === "ended"),
     future: available.filter((row) => getRoundStatus(row, now) === "upcoming"),
   };

@@ -350,8 +350,19 @@ export const PriceChart: React.FC<{
             )}
           </div>
         </div>
-        <div className="oui-order-first oui-flex oui-w-full oui-justify-end 2xl:oui-order-none 2xl:oui-ms-auto 2xl:oui-w-auto 2xl:oui-flex-none">
-          {isFutureRound || status === "live" ? (
+        <div className="oui-order-first oui-flex oui-w-full oui-items-center oui-justify-end oui-gap-2 min-[480px]:oui-gap-3 2xl:oui-order-none 2xl:oui-ms-auto 2xl:oui-w-auto 2xl:oui-flex-none">
+          {status !== "live" && hasLiveOrUpcomingRow && (
+            <button
+              type="button"
+              onClick={onGoToLiveMarket}
+              className="oui-text-2xs oui-flex oui-min-w-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-p-2 oui-text-base-contrast-80 min-[480px]:oui-text-sm 2xl:oui-text-xs hover:oui-bg-base-6 min-[480px]:oui-gap-2 min-[480px]:oui-px-4 min-[480px]:oui-py-2.5 2xl:oui-px-3 2xl:oui-py-2"
+            >
+              <LiveIndicator />
+              {t("prediction.rounds.goToLiveMarket")}
+              <ChevronRightIcon size={14} color="inherit" />
+            </button>
+          )}
+          {(isFutureRound || status === "live") && (
             <CountdownDisplay
               seconds={isFutureRound ? futureCountdown : countdown}
               label={t(
@@ -360,18 +371,9 @@ export const PriceChart: React.FC<{
                   : "prediction.rounds.endsIn",
               )}
               mutedIcon={isFutureRound}
+              compact={isFutureRound && hasLiveOrUpcomingRow}
             />
-          ) : hasLiveOrUpcomingRow ? (
-            <button
-              type="button"
-              onClick={onGoToLiveMarket}
-              className="oui-text-sm oui-flex oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2.5 oui-text-base-contrast-80 2xl:oui-text-xs hover:oui-bg-base-6 2xl:oui-px-3 2xl:oui-py-2"
-            >
-              <LiveIndicator />
-              {t("prediction.rounds.goToLiveMarket")}
-              <ChevronRightIcon size={14} color="inherit" />
-            </button>
-          ) : null}
+          )}
         </div>
       </div>
       <>

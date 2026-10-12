@@ -18,6 +18,7 @@ import {
   getRoundStatus,
   secondsUntil,
 } from "./binary/binaryRoundView";
+import type { PredictionOutcome } from "./prediction.types";
 import type {
   PredictionChartMode,
   RoundOutcomeLookup,
@@ -39,29 +40,80 @@ export const LiveIndicator = () => (
   </span>
 );
 
+const RoundOutcomeIcon: React.FC<{ outcome?: PredictionOutcome }> = ({
+  outcome,
+}) => (
+  <span
+    className={cn(
+      "oui-flex oui-size-5 oui-shrink-0 oui-items-center oui-justify-center oui-rounded-full",
+      outcome === "up"
+        ? "oui-bg-trade-profit/15 oui-text-trade-profit"
+        : outcome === "down"
+          ? "oui-bg-trade-loss/15 oui-text-trade-loss"
+          : "oui-text-base-contrast-36",
+    )}
+  >
+    {outcome === "up" ? (
+      <CaretUpIcon size={12} color="inherit" />
+    ) : outcome === "down" ? (
+      <CaretDownIcon size={12} color="inherit" />
+    ) : (
+      "--"
+    )}
+  </span>
+);
+
 export const CountdownDisplay: React.FC<{
   seconds: number;
   label: string;
   mutedIcon?: boolean;
-}> = ({ seconds, label, mutedIcon = false }) => {
+  compact?: boolean;
+}> = ({ seconds, label, mutedIcon = false, compact = false }) => {
   const [minutes, remainingSeconds] = formatCountdown(seconds).split(":");
 
   return (
-    <span className="oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap">
+    <span
+      className={cn(
+        "oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap",
+        compact && "oui-gap-1 min-[480px]:oui-gap-2",
+      )}
+    >
       {mutedIcon ? (
         <span className="oui-prediction-countdown-dot oui-size-2 oui-flex-none oui-rounded-full oui-bg-base-contrast-36" />
       ) : (
         <LiveIndicator />
       )}
-      <span className="oui-prediction-countdown-label oui-text-xs oui-font-medium oui-text-base-contrast-54">
+      <span
+        className={cn(
+          "oui-prediction-countdown-label oui-text-xs oui-font-medium oui-text-base-contrast-54",
+          compact && "oui-text-2xs min-[480px]:oui-text-xs",
+        )}
+      >
         {label}
       </span>
-      <span className="oui-flex oui-items-center oui-gap-1 oui-text-xl oui-font-semibold oui-tabular-nums oui-text-base-contrast">
-        <span className="oui-min-w-10 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center">
+      <span
+        className={cn(
+          "oui-flex oui-items-center oui-gap-1 oui-text-xl oui-font-semibold oui-tabular-nums oui-text-base-contrast",
+          compact && "oui-text-base min-[480px]:oui-text-xl",
+        )}
+      >
+        <span
+          className={cn(
+            "oui-min-w-10 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center",
+            compact &&
+              "oui-min-w-7 oui-px-1 min-[480px]:oui-min-w-10 min-[480px]:oui-px-2",
+          )}
+        >
           {minutes}
         </span>
         <span className="oui-text-base-contrast">:</span>
-        <span className="oui-min-w-10 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center">
+        <span
+          className={cn(
+            "oui-min-w-10 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1 oui-text-center",
+            compact &&
+              "oui-min-w-7 oui-px-1 min-[480px]:oui-min-w-10 min-[480px]:oui-px-2",
+          )}
+        >
           {remainingSeconds}
         </span>
       </span>
@@ -94,18 +146,12 @@ export const RoundNavigator: React.FC<{
   const { chart } = usePredictionFormatters();
   const isWide = useMediaQuery("(min-width: 1280px)");
   const [menu, setMenu] = useState<"past" | "more" | null>(null);
-  const [page, setPage] = useState(0);
   const navigation = getRoundNavigation(
     rows,
     round,
     selectedRound,
     intervalSeconds,
     now,
-  );
-  // Placeholder slots and the More menu only make sense while the market's
-  // schedule still continues; a history-only market shows neither.
-  const hasLiveOrUpcomingRow = rows.some(
-    (row) => row.status === "ACTIVE" && row.expire_at > now,
   );
   // On small screens hidden main buttons must remain reachable from More.
   const future = isWide
@@ -114,12 +160,7 @@ export const RoundNavigator: React.FC<{
           !navigation.visible.some((visible) => visible?.symbol === row.symbol),
       )
     : navigation.future;
-  const pageCount = Math.max(1, Math.ceil(future.length / 8));
-  const currentPage = Math.min(page, pageCount - 1);
-  const menuRows =
-    menu === "past"
-      ? navigation.past
-      : future.slice(currentPage * 8, currentPage * 8 + 8);
+  const menuRows = menu === "past" ? [...navigation.past].reverse() : future;
   const liveRow = rows.find((row) => binaryRowRoundStart(row) === round);
   const today = new Date(liveRow?.expire_at ?? now);
   const formatLabel = (row: BinaryInfoRow) => {
@@ -191,13 +232,9 @@ export const RoundNavigator: React.FC<{
             )}
           >
             {getRoundStatus(row, now) === "ended" ? (
-              roundOutcome(binaryRowRoundStart(row)) === "up" ? (
-                <CaretUpIcon size={12} color="inherit" />
-              ) : roundOutcome(binaryRowRoundStart(row)) === "down" ? (
-                <CaretDownIcon size={12} color="inherit" />
-              ) : (
-                <span>--</span>
-              )
+              <RoundOutcomeIcon
+                outcome={roundOutcome(binaryRowRoundStart(row))}
+              />
             ) : (
               <span className="oui-size-1.5 oui-rounded-full oui-bg-base-contrast-36" />
             )}
@@ -205,29 +242,6 @@ export const RoundNavigator: React.FC<{
           </button>
         </Tooltip>
       ))}
-      {menu === "more" && pageCount > 1 && (
-        <div className="oui-text-xs oui-flex oui-items-center oui-justify-between oui-gap-2 oui-p-2 oui-text-base-contrast-54">
-          <button
-            type="button"
-            disabled={currentPage === 0}
-            onClick={() => setPage(currentPage - 1)}
-            className="disabled:oui-opacity-36"
-          >
-            {t("prediction.rounds.previousPage")}
-          </button>
-          <span>
-            {currentPage + 1}/{pageCount}
-          </span>
-          <button
-            type="button"
-            disabled={currentPage === pageCount - 1}
-            onClick={() => setPage(currentPage + 1)}
-            className="disabled:oui-opacity-36"
-          >
-            {t("prediction.rounds.nextPage")}
-          </button>
-        </div>
-      )}
     </>
   );
   return (
@@ -237,49 +251,41 @@ export const RoundNavigator: React.FC<{
           open={menu === "past"}
           onOpenChange={(open) => setMenu(open ? "past" : null)}
         >
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              disabled={navigation.past.length === 0}
-              className="disabled:oui-opacity-36 oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-base-contrast-54"
-            >
-              {t("prediction.rounds.past")}
-              <CaretDownIcon size={14} color="inherit" />
-              <span className="oui-hidden oui-items-center oui-gap-1.5 2xl:oui-flex">
-                {Array.from({ length: 4 }, (_, index) => {
-                  const row = recent[index];
-                  const result = row && roundOutcome(binaryRowRoundStart(row));
-                  const icon = (
-                    <span
-                      className={cn(
-                        "oui-flex oui-size-5 oui-items-center oui-justify-center oui-rounded-full",
-                        result === "up"
-                          ? "oui-bg-trade-profit/15 oui-text-trade-profit"
-                          : result === "down"
-                            ? "oui-bg-trade-loss/15 oui-text-trade-loss"
-                            : "oui-text-base-contrast-36",
-                      )}
+          <div className="oui-text-xs oui-flex oui-shrink-0 oui-items-center oui-gap-2 oui-rounded-full oui-bg-base-7 oui-px-3 oui-py-2 oui-text-base-contrast-54">
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                disabled={navigation.past.length === 0}
+                className="disabled:oui-opacity-36 oui-flex oui-items-center oui-gap-2"
+              >
+                {t("prediction.rounds.past")}
+                <CaretDownIcon size={14} color="inherit" />
+              </button>
+            </PopoverTrigger>
+            <div className="oui-hidden oui-items-center oui-gap-1.5 2xl:oui-flex">
+              {recent.map((row) => {
+                const result = roundOutcome(binaryRowRoundStart(row));
+                const icon = <RoundOutcomeIcon outcome={result} />;
+                return (
+                  <Tooltip
+                    key={row.symbol}
+                    content={tooltip(row)}
+                    className="oui-rounded-xl oui-bg-base-5 oui-p-2"
+                  >
+                    <button
+                      type="button"
+                      aria-label={formatLabel(row)}
+                      aria-pressed={binaryRowRoundStart(row) === selectedRound}
+                      onClick={() => select(row)}
+                      className="oui-prediction-roundNavigator-result-btn oui-rounded-full hover:oui-bg-base-6"
                     >
-                      {result === "up" ? (
-                        <CaretUpIcon size={12} color="inherit" />
-                      ) : result === "down" ? (
-                        <CaretDownIcon size={12} color="inherit" />
-                      ) : (
-                        "--"
-                      )}
-                    </span>
-                  );
-                  return row ? (
-                    <Tooltip key={row.symbol} content={tooltip(row)}>
                       {icon}
-                    </Tooltip>
-                  ) : (
-                    <React.Fragment key={index}>{icon}</React.Fragment>
-                  );
-                })}
-              </span>
-            </button>
-          </PopoverTrigger>
+                    </button>
+                  </Tooltip>
+                );
+              })}
+            </div>
+          </div>
           <PopoverContent
             align="start"
             side="top"
@@ -289,7 +295,7 @@ export const RoundNavigator: React.FC<{
             {renderMenu()}
           </PopoverContent>
         </PopoverRoot>
-        {navigation.visible.map((row, index) =>
+        {navigation.visible.map((row) =>
           row ? (
             <div
               key={row.symbol}
@@ -319,24 +325,12 @@ export const RoundNavigator: React.FC<{
                 </button>
               </Tooltip>
             </div>
-          ) : hasLiveOrUpcomingRow ? (
-            <button
-              key={`missing-${index}`}
-              type="button"
-              disabled
-              className="oui-text-xs oui-hidden oui-rounded-full oui-bg-base-7 oui-px-4 oui-py-2 oui-text-base-contrast-36 2xl:oui-block"
-            >
-              --
-            </button>
           ) : null,
         )}
-        {hasLiveOrUpcomingRow && (
+        {future.length > 0 && (
           <PopoverRoot
             open={menu === "more"}
-            onOpenChange={(open) => {
-              setMenu(open ? "more" : null);
-              setPage(0);
-            }}
+            onOpenChange={(open) => setMenu(open ? "more" : null)}
           >
             <PopoverTrigger asChild>
               <button
