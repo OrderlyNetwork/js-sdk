@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
 import { PerpsPositionsSettings } from "@orderly.network/trading-shared";
 import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
+import { AssetsWidget, AssetsTabWidget } from "@orderly.network/ui-assets";
 import type {
   PredictionDataTab,
   PredictionAccountPanelState,
@@ -120,7 +120,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     history: (
       <MobileSharedProductHistory state={state} initialProduct="prediction" />
     ),
-    assets: <AssetsModule.AssetsWidget />,
+    assets: <AssetsWidget />,
   };
   return (
     <div
@@ -195,7 +195,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
         initialProduct="prediction"
       />
     ),
-    assets: <AssetsModule.AssetsTabWidget />,
+    assets: <AssetsTabWidget />,
     orderHistory: <SharedProductOrdersPanel state={state} mode="history" />,
     history: null,
   };

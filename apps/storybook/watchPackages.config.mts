@@ -72,6 +72,12 @@ const base: Package[] = [
 
 const ui: Package[] = [
   {
+    package: "@orderly.network/ui-assets",
+    path: "../../packages/ui-assets/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/ui/dist",
     path: "../../packages/ui/dist",
     watch: true,

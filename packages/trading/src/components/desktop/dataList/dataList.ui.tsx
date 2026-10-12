@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Box,
@@ -12,6 +11,7 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import type { TabPanelProps } from "@orderly.network/ui";
+import { AssetsTabWidget } from "@orderly.network/ui-assets";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   LiquidationWidget,
@@ -225,7 +225,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.assets,
       title: t("common.assets"),
-      content: <AssetsModule.AssetsTabWidget />,
+      content: <AssetsTabWidget />,
     },
   ];
 

@@ -3,6 +3,8 @@ import {
   MarketsHomePage,
   type MarketsHomePageProps,
 } from "@orderly.network/markets";
+// Asset extraction keeps the public Portfolio and Trading wrappers compatible.
+import { AssetsModule } from "@orderly.network/portfolio";
 import {
   PredictionPage,
   type PredictionSymbolSelection,
@@ -40,12 +42,22 @@ import {
   type TradingDataListProductContent,
   type TradingPageExtensionProps,
 } from "@orderly.network/trading";
+import {
+  AssetViewWidget as TradingAssetViewWidget,
+  useFirstTimeDeposit as tradingFirstDeposit,
+} from "@orderly.network/trading";
 import type {
   TradingMarketsDropdownProps as CommonMarketsDropdownProps,
   TradingPerpsPanelProps as CommonPerpsPanelProps,
   TradingDataListProductContent as CommonDataListProductContent,
   TradingPageExtensionProps as CommonPageExtensionProps,
 } from "@orderly.network/trading-shared";
+import {
+  AssetsWidget,
+  AssetsTabWidget,
+  AssetViewWidget,
+  useFirstTimeDeposit,
+} from "@orderly.network/ui-assets";
 
 type Assert<T extends true> = T;
 type Compatible<A, B> = [A, B] extends [B, A] ? true : false;
@@ -287,3 +299,12 @@ export function marketsPredictionContracts() {
   };
   return createElement(MarketsHomePage, props);
 }
+
+export type SharedAssetContracts = [
+  Assert<Compatible<typeof AssetsModule.AssetsWidget, typeof AssetsWidget>>,
+  Assert<
+    Compatible<typeof AssetsModule.AssetsTabWidget, typeof AssetsTabWidget>
+  >,
+  Assert<Compatible<typeof TradingAssetViewWidget, typeof AssetViewWidget>>,
+  Assert<Compatible<typeof tradingFirstDeposit, typeof useFirstTimeDeposit>>,
+];

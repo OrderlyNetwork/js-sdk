@@ -30,7 +30,6 @@
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets-core": "workspace:*",
     "@orderly.network/perp": "workspace:*",
-    "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/trading-shared": "workspace:*",
     "@orderly.network/types": "workspace:*",
@@ -40,7 +39,8 @@
     "@orderly.network/ui-orders": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/ui-assets": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

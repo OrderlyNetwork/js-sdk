@@ -20,17 +20,14 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets-core": "workspace:*",
-    "@orderly.network/plugin-core": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/ui-tradingview": "workspace:*",
-    "@orderly.network/ui-transfer": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/plugin-core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

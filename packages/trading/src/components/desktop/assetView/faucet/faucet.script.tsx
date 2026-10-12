@@ -1,4 +1,1 @@
-export {
-  useFaucetScript,
-  type FaucetState,
-} from "@orderly.network/trading-shared";
+export { useFaucetScript, type FaucetState } from "@orderly.network/ui-assets";

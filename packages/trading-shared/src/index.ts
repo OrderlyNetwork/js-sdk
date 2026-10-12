@@ -28,16 +28,6 @@ export { SettingWidget } from "./components/desktop/dataList/setting/setting.wid
 export { usePositionHeaderScript } from "./components/base/positionHeader/positionHeader.script";
 export { type PositionHeaderState } from "./components/base/positionHeader/positionHeader.script";
 export { PositionHeaderWidget } from "./components/base/positionHeader/positionHeader.widget";
-export { TooltipContent } from "./components/desktop/assetView/assetView.ui";
-export { AssetView } from "./components/desktop/assetView/assetView.ui";
-export { useAssetViewScript } from "./components/desktop/assetView/assetView.script";
-export { type AssetViewState } from "./components/desktop/assetView/assetView.script";
-export { FaucetWidget } from "./components/desktop/assetView/faucet/faucet.widget";
-export { FaucetUi } from "./components/desktop/assetView/faucet/faucet.ui";
-export { useFaucetScript } from "./components/desktop/assetView/faucet/faucet.script";
-export { type FaucetState } from "./components/desktop/assetView/faucet/faucet.script";
-export { AssetViewWidget } from "./components/desktop/assetView/assetView.widget";
-export { useFirstTimeDeposit } from "./pages/trading/hooks/useFirstTimeDeposit";
 export { type OrderBookLadderProps } from "./components/desktop/orderBook/ladder.desktop";
 export { OrderBookLadder } from "./components/desktop/orderBook/ladder.desktop";
 export { type OrderBookContextValue } from "./components/base/orderBook/orderContext";

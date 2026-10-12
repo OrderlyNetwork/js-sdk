@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Button,
@@ -14,6 +13,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import type { TabPanelProps } from "@orderly.network/ui";
+import { AssetsWidget } from "@orderly.network/ui-assets";
 import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   MobileLiquidationWidget,
@@ -263,7 +263,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     {
       title: t("common.assets"),
       value: DataListTabType.assets,
-      content: <AssetsModule.AssetsWidget />,
+      content: <AssetsWidget />,
     },
   ];
 

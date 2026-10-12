@@ -1,1 +1,1 @@
-export { FaucetWidget } from "@orderly.network/trading-shared";
+export { FaucetWidget } from "@orderly.network/ui-assets";

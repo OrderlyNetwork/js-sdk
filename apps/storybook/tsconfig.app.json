@@ -54,6 +54,7 @@
       "@orderly.network/trading-next": ["../../packages/trading-next/src"],
       "@orderly.network/trading": ["../../packages/trading/src"],
       "@orderly.network/trading-shared": ["../../packages/trading-shared/src"],
+      "@orderly.network/ui-assets": ["../../packages/ui-assets/src"],
       "@orderly.network/trading-leaderboard": [
         "../../packages/trading-leaderboard/src"
       ],
