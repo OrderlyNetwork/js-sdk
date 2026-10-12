@@ -36,18 +36,24 @@ const defaultMobileTabs: PredictionDataTab[] = [
   "assets",
 ];
 
+const tabTitleKeys = {
+  predictions: "prediction.tab.positions",
+  openOrders: "prediction.tab.openOrders",
+  filled: "prediction.tab.filled",
+  predictionHistory: "prediction.tab.predictionHistory",
+  orderHistory: "prediction.tab.orderHistory",
+  assets: "prediction.tab.assets",
+  history: "trading.history",
+} as const satisfies Record<PredictionDataTab, string>;
+
 /** Shared tab-title JSX (label + optional count suffix) for both variants. */
 const renderTabTitle = (
-  t: (
-    key:
-      | "trading.history"
-      | `prediction.tab.${Exclude<PredictionDataTab, "history">}`,
-  ) => string,
+  title: string,
   tab: PredictionDataTab,
   tabCount: Partial<Record<PredictionDataTab, number | null>>,
 ) => (
   <>
-    {tab === "history" ? t("trading.history") : t(`prediction.tab.${tab}`)}
+    {title}
     {(tabCount[tab] ?? 0) > 0 && ` (${tabCount[tab]})`}
   </>
 );
@@ -140,7 +146,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           <TabPanel
             key={tab}
             value={tab}
-            title={renderTabTitle(t, tab, tabCount)}
+            title={renderTabTitle(t(tabTitleKeys[tab]), tab, tabCount)}
           >
             {content[tab]}
           </TabPanel>
@@ -228,7 +234,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           <TabPanel
             key={tab}
             value={tab}
-            title={renderTabTitle(t, tab, tabCount)}
+            title={renderTabTitle(t(tabTitleKeys[tab]), tab, tabCount)}
           >
             {tabContent[tab]}
           </TabPanel>
