@@ -11,6 +11,14 @@ export type DesktopOrderListWidgetProps = {
   ordersStatus?: OrderStatus;
   /** if has value, will be fetch current symbol orders*/
   symbol?: string;
+  /**
+   * Read-side product filter ("PERP"/"BINARY"). PERP also strips Binary WS
+   * inserts and cancels pending orders by symbols in the loaded display stream;
+   * filtered or incomplete streams can miss symbols. DELETE has no product
+   * filter: BINARY without a symbol still cancels account-wide, including PERP.
+   * Do not rely on this prop alone for BINARY cancellation isolation.
+   */
+  productType?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
@@ -42,6 +50,14 @@ export const MobileOrderListWidget: React.FC<{
   ordersStatus?: OrderStatus;
   /** if has value, will be fetch current symbol orders*/
   symbol?: string;
+  /**
+   * Read-side product filter ("PERP"/"BINARY"). PERP also strips Binary WS
+   * inserts and cancels pending orders by symbols in the loaded display stream;
+   * filtered or incomplete streams can miss symbols. DELETE has no product
+   * filter: BINARY without a symbol still cancels account-wide, including PERP.
+   * Do not rely on this prop alone for BINARY cancellation isolation.
+   */
+  productType?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
   sharePnLConfig?: SharePnLConfig;
   classNames?: { root?: string; cell?: string; content?: string };

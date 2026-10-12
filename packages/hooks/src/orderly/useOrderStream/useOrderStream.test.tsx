@@ -3,6 +3,7 @@ import {
   AlgoOrderRootType,
   OrderEntity,
   OrderSide,
+  OrderStatus,
   OrderType,
 } from "@orderly.network/types";
 import { createOrderKeyRegistry } from "../../provider/dataCenter/orderKeyRegistry";
@@ -12,6 +13,7 @@ import { useOrderStream } from "./useOrderStream";
 const mockUpdateAlgoOrder = jest.fn().mockResolvedValue({ success: true });
 const mockSymbolInfo = createMockSymbolConfig();
 let mockOrders: any[];
+let mockNormalOrders: any[];
 let mockMarkPrice: number;
 let mockDataCenter: any = {};
 
@@ -23,7 +25,11 @@ jest.mock("../../useMutation", () => ({
 }));
 jest.mock("../../usePrivateInfiniteQuery", () => ({
   usePrivateInfiniteQuery: (key: (() => string) | null) => ({
-    data: [{ rows: key?.().includes("/algo/orders") ? mockOrders : [] }],
+    data: [
+      {
+        rows: key?.().includes("/algo/orders") ? mockOrders : mockNormalOrders,
+      },
+    ],
     mutate: jest.fn(),
   }),
 }));
@@ -62,6 +68,7 @@ describe("useOrderStream bulk cancellation", () => {
   beforeEach(() => {
     mockUpdateAlgoOrder.mockReset().mockResolvedValue({ success: true });
     mockOrders = [createOrder()];
+    mockNormalOrders = [];
     mockMarkPrice = 4000;
   });
 
@@ -77,6 +84,48 @@ describe("useOrderStream bulk cancellation", () => {
         null,
         { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
       ],
+    ]);
+  });
+
+  it("scopes a PERP unscoped cancel-all to perp symbols only, symbol by symbol", async () => {
+    mockOrders = [];
+    mockNormalOrders = [
+      { order_id: 1, symbol: "PERP_BTC_USDC" },
+      { order_id: 2, symbol: "PERP_ETH_USDC" },
+      { order_id: 3, symbol: "PERP_ETH_USDC" },
+      { order_id: 4, symbol: "PERP_BTC5M2608271200_USDC" },
+    ];
+    const { result } = renderHook(() =>
+      useOrderStream({
+        status: OrderStatus.INCOMPLETE,
+        productType: "PERP",
+        size: 500,
+      }),
+    );
+    await result.current[1].cancelAllPendingOrders();
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC" }],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.STOP }],
+      [
+        null,
+        { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
+      ],
+      [null, { symbol: "PERP_ETH_USDC" }],
+      [null, { symbol: "PERP_ETH_USDC", algo_type: AlgoOrderRootType.STOP }],
+      [
+        null,
+        { symbol: "PERP_ETH_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
+      ],
+    ]);
+  });
+
+  it("keeps the legacy unscoped cancel-all for streams without a product filter", async () => {
+    const { result } = renderHook(() => useOrderStream({}));
+    await result.current[1].cancelAllPendingOrders();
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [null, {}],
+      [null, { algo_type: AlgoOrderRootType.STOP }],
+      [null, { algo_type: AlgoOrderRootType.TRAILING_STOP }],
     ]);
   });
 

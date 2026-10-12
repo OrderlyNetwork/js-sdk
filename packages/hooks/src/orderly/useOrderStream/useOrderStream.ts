@@ -8,7 +8,11 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
-import { withTPSLProvenance, isPositionalTPSL } from "@orderly.network/utils";
+import {
+  withTPSLProvenance,
+  isPositionalTPSL,
+  isBinarySymbol,
+} from "@orderly.network/utils";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
 import {
   normalizeTPSLChildType,
@@ -52,6 +56,9 @@ export const useOrderStream = (
     /**
      * Filter orders by product type. Only uppercase "PERP"/"BINARY" are
      * accepted by the API; omit to query all products.
+     * This is a read-side filter, not a DELETE parameter. Unscoped PERP
+     * cancellation uses loaded symbols; unscoped BINARY cancellation still
+     * uses the legacy account-wide path and can cancel PERP orders too.
      */
     productType?: string;
     dateRange?: {
@@ -334,9 +341,54 @@ export const useOrderStream = (
   };
 
   /**
-   * cancel all orders
+   * Cancel PERP orders symbol by symbol.
+   *
+   * Binary API spec §2.9 adds product_type to GET /v1/orders only; DELETE
+   * /v1/orders retains the existing optional symbol parameter. An account-wide
+   * DELETE would also cancel tradable Binary orders, so enumerate PERP symbols.
+   *
+   * Known limitation: flattenOrders is a display snapshot, already constrained
+   * by query filters, includes/excludes and loaded pages. A symbol absent from
+   * that snapshot is missed; orders on a discovered symbol are cancelled by
+   * the server even if those individual orders are hidden or not loaded.
+   * A null/empty snapshot submits no requests and resolves to an empty array;
+   * a fulfilled result does not prove all account PERP orders were cancelled.
+   *
+   * TODO: Discover targets from a separate, unfiltered pending-order snapshot
+   * and verify completeness for both ordinary and algo orders before enabling
+   * cancel-all. A larger page size alone does not establish completeness.
+   */
+  const cancelPerpOrdersBySymbol = useCallback(() => {
+    const symbols = [
+      ...new Set(
+        (flattenOrders ?? [])
+          .map((order) => order.symbol)
+          .filter((symbol) => !!symbol && !isBinarySymbol(symbol)),
+      ),
+    ];
+    return settleOrderCancellations(
+      symbols.flatMap((symbol) => [
+        doCancelAllOrders(null, { symbol }),
+        doCancelAllAlgoOrders(null, {
+          algo_type: AlgoOrderRootType.STOP,
+          symbol,
+        }),
+        doCancelAllAlgoOrders(null, {
+          algo_type: AlgoOrderRootType.TRAILING_STOP,
+          symbol,
+        }),
+      ]),
+    );
+  }, [flattenOrders]);
+
+  /**
+   * Cancel pending orders. Only PERP has symbol-based product isolation here;
+   * BINARY and an omitted product filter retain legacy account-wide behavior.
    */
   const cancelAllOrders = useCallback(() => {
+    if (productType === "PERP") {
+      return cancelPerpOrdersBySymbol();
+    }
     return settleOrderCancellations([
       doCancelAllOrders(null),
       doCancelAllAlgoOrders(null, { algo_type: AlgoOrderRootType.STOP }),
@@ -344,23 +396,41 @@ export const useOrderStream = (
         algo_type: AlgoOrderRootType.TRAILING_STOP,
       }),
     ]);
-  }, [normalOrdersResponse.data, algoOrdersResponse.data]);
+  }, [cancelPerpOrdersBySymbol, productType]);
 
+  /**
+   * An explicit symbol scopes cancellation independently of display filters.
+   * Without a symbol, PERP uses the limited snapshot described above; BINARY
+   * still falls back to account-wide cancellation. TODO: Isolate BINARY targets
+   * before treating this method as product-scoped cancel-all for that product.
+   */
   const cancelAllPendingOrders = useCallback(
     (symbol?: string) => {
+      if (symbol) {
+        return settleOrderCancellations([
+          doCancelAllOrders(null, { symbol }),
+          doCancelAllAlgoOrders(null, {
+            algo_type: AlgoOrderRootType.STOP,
+            symbol,
+          }),
+          doCancelAllAlgoOrders(null, {
+            algo_type: AlgoOrderRootType.TRAILING_STOP,
+            symbol,
+          }),
+        ]);
+      }
+      if (productType === "PERP") {
+        return cancelPerpOrdersBySymbol();
+      }
       return settleOrderCancellations([
-        doCancelAllOrders(null, { ...(symbol && { symbol }) }),
-        doCancelAllAlgoOrders(null, {
-          algo_type: AlgoOrderRootType.STOP,
-          ...(symbol && { symbol }),
-        }),
+        doCancelAllOrders(null, {}),
+        doCancelAllAlgoOrders(null, { algo_type: AlgoOrderRootType.STOP }),
         doCancelAllAlgoOrders(null, {
           algo_type: AlgoOrderRootType.TRAILING_STOP,
-          ...(symbol && { symbol }),
         }),
       ]);
     },
-    [symbol],
+    [cancelPerpOrdersBySymbol, productType],
   );
 
   const cancelPostionOrdersByTypes = useCallback(

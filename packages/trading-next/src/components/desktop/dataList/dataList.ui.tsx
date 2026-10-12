@@ -126,6 +126,7 @@ export const DataList: React.FC<DataListState> = (props) => {
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           testIds={{ tableBody: "oui-testid-dataList-pending-table-body" }}
         />
@@ -153,6 +154,7 @@ export const DataList: React.FC<DataListState> = (props) => {
           symbol={showAllSymbol ? undefined : symbol}
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           ordersStatus={OrderStatus.FILLED}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           testIds={{ tableBody: "oui-testid-dataList-filled-table-body" }}
           sharePnLConfig={sharePnLConfig}
@@ -166,6 +168,7 @@ export const DataList: React.FC<DataListState> = (props) => {
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           sharePnLConfig={sharePnLConfig}
         />
@@ -179,6 +182,7 @@ export const DataList: React.FC<DataListState> = (props) => {
           type={TabType.orderHistory}
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           testIds={{ tableBody: "oui-testid-dataList-orderHistory-table-body" }}
           sharePnLConfig={sharePnLConfig}

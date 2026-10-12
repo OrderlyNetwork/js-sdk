@@ -25,7 +25,7 @@ import {
 } from "@orderly.network/types";
 import { usePagination, Table } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
-import { formatSymbol } from "@orderly.network/utils";
+import { formatSymbol, isBinarySymbol } from "@orderly.network/utils";
 import { areDatesEqual } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import {
@@ -47,6 +47,10 @@ export type useOrderListScriptOptions = {
   /**
    * Product filter forwarded to the orders query ("PERP"/"BINARY"); omit to
    * query all products.
+   * This does not add a product filter to DELETE. PERP cancel-all enumerates
+   * loaded display symbols and may miss hidden symbols; BINARY cancel-all
+   * without a symbol remains account-wide. Callers needing complete product
+   * isolation must provide a separate cancellation workflow.
    */
   productType?: string;
   enableLoadMore?: boolean;
@@ -213,14 +217,27 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   // Filter by symbol if symbol prop is provided (hide other symbols)
   const filteredData = useMemo(() => {
     const rawData = type !== TabType.tp_sl ? formattedData : data;
-    if (!props.symbol || !rawData) {
+    if (!rawData) {
       return rawData;
     }
-    return rawData.filter(
+    // The product_type query only filters the REST fetch; executionreport WS
+    // inserts into every orders* cache key regardless of product, so Binary
+    // rows can leak into a PERP-scoped list. Strip them client-side.
+    const rows =
+      props.productType?.toUpperCase() === "PERP"
+        ? rawData.filter(
+            (order: API.AlgoOrder | API.AlgoOrderExt) =>
+              !isBinarySymbol(order.symbol ?? ""),
+          )
+        : rawData;
+    if (!props.symbol) {
+      return rows;
+    }
+    return rows.filter(
       (order: API.AlgoOrder | API.AlgoOrderExt) =>
         order.symbol === props.symbol,
     );
-  }, [type, formattedData, data, props.symbol]);
+  }, [type, formattedData, data, props.symbol, props.productType]);
 
   const dataSource =
     useDataTap(filteredData, {

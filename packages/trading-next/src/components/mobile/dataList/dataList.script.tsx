@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderStatus } from "@orderly.network/types";
 import { modal, Text } from "@orderly.network/ui";
 import { TabType } from "@orderly.network/ui-orders";
 import { SharePnLConfig } from "@orderly.network/ui-share";
@@ -41,9 +42,17 @@ export const useDataListScript = (props: {
   const { onSymbolChange } = useTradingPageContext();
   const localStorage = useTradingLocalStorage();
 
-  const [_, { cancelAllPendingOrders, cancelAllTPSLOrders }] = useOrderStream(
-    {},
-  );
+  // Scoped to PERP pending orders: unscoped cancel-all would also cancel
+  // Binary prediction orders (DELETE /v1/orders has no product filter), so
+  // the hook enumerates per-symbol targets from this stream.
+  // Known limitation: size=500 does not prove all symbols are loaded (algo
+  // queries use size=100). TODO: Verify both streams are complete before
+  // enabling all-symbol cancellation; unloaded streams currently resolve empty.
+  const [_, { cancelAllPendingOrders, cancelAllTPSLOrders }] = useOrderStream({
+    status: OrderStatus.INCOMPLETE,
+    productType: "PERP",
+    size: 500,
+  });
   const { positionCount } = usePositionsCount(symbol);
   const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(symbol);
 

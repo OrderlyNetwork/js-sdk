@@ -95,7 +95,11 @@ const SymbolControlHeader: React.FC<
 };
 
 const OrdersView: React.FC<
-  DataListState & { type: TabType; ordersStatus?: OrderStatus }
+  DataListState & {
+    type: TabType;
+    ordersStatus?: OrderStatus;
+    productType?: string;
+  }
 > = (props) => {
   return (
     <Flex direction={"column"} pb={2} width={"100%"}>
@@ -105,6 +109,7 @@ const OrdersView: React.FC<
       )}
       <MobileOrderListWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
+        productType={props.productType}
         onSymbolChange={props.onSymbolChange}
         type={props.type}
         ordersStatus={props.ordersStatus}
@@ -161,8 +166,11 @@ const HistoryTab: React.FC<DataListState> = (props) => {
         >
           <MobilePositionHistoryWidget
             symbol={props.showAllSymbol ? undefined : props.symbol}
+            productType="PERP"
             onSymbolChange={props.onSymbolChange}
-            classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
+            classNames={{
+              cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl",
+            }}
             sharePnLConfig={props.sharePnLConfig}
           />
         </TabPanel>
@@ -170,7 +178,11 @@ const HistoryTab: React.FC<DataListState> = (props) => {
           title={t("orders.orderHistory")}
           value={DataListTabSubType.orderHistory}
         >
-          <OrdersView type={TabType.orderHistory} {...props} />
+          <OrdersView
+            type={TabType.orderHistory}
+            productType="PERP"
+            {...props}
+          />
         </TabPanel>
       </Tabs>
     </div>
@@ -205,6 +217,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
         <OrdersView
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
+          productType="PERP"
           {...props}
         />
       ),
