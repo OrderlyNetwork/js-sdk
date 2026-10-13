@@ -8,14 +8,18 @@ import type {
 } from "../prediction.types";
 import { usePredictionFormatters } from "../predictionShared";
 
-export const OutcomeBadge: React.FC<{ outcome: PredictionOutcome }> = ({
-  outcome,
-}) => {
+export const OutcomeBadge: React.FC<{
+  outcome: PredictionOutcome;
+  muted?: boolean;
+}> = ({ outcome, muted }) => {
   const { t } = useTranslation();
   return (
     <Badge
-      className="oui-prediction-outcomeBadge oui-uppercase"
-      color={outcome === "up" ? "buy" : "sell"}
+      className={cn(
+        "oui-prediction-outcomeBadge oui-uppercase",
+        muted && "oui-text-base-contrast-20",
+      )}
+      color={muted ? "neutral" : outcome === "up" ? "buy" : "sell"}
       size="xs"
     >
       {t(`prediction.${outcome}`)}
@@ -130,7 +134,14 @@ export const PredictionOrderSymbol = ({
           order.side === "buy" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
         )}
       />
-      <div className="oui-min-w-0 oui-text-base-contrast">
+      <div
+        className={cn(
+          "oui-min-w-0",
+          order.status === "cancelled"
+            ? "oui-text-base-contrast-20"
+            : "oui-text-base-contrast",
+        )}
+      >
         <div className="oui-whitespace-nowrap">
           {market ? t("prediction.marketName", market) : t("prediction.title")}
         </div>
@@ -138,7 +149,14 @@ export const PredictionOrderSymbol = ({
           <Badge color="neutral" size="xs">
             {t(`common.${order.type}`)}
           </Badge>
-          <span className="oui-whitespace-nowrap oui-tabular-nums oui-text-base-contrast-54">
+          <span
+            className={cn(
+              "oui-whitespace-nowrap oui-tabular-nums",
+              order.status === "cancelled"
+                ? "oui-text-base-contrast-20"
+                : "oui-text-base-contrast-54",
+            )}
+          >
             {formatRoundBadge(order.round, market?.intervalSeconds)}
           </span>
         </div>

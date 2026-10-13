@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderStatus } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
 import { DesktopOrderList } from "@orderly.network/ui-orders";
@@ -159,6 +160,10 @@ const AllProductOrdersTable: React.FC<
                 .map((order) => ({
                   id: `prediction-${order.id}`,
                   timestamp: order.timestamp,
+                  status:
+                    order.status === "cancelled"
+                      ? OrderStatus.CANCELLED
+                      : undefined,
                   renderCell: (field) => (
                     <PredictionOrderCell
                       state={state}

@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import type { API } from "@orderly.network/types";
+import type { API, OrderStatus } from "@orderly.network/types";
 import {
   Flex,
   ListView,
@@ -36,6 +36,7 @@ const getOrderRowKey = <T extends API.Order | API.AlgoOrder>(item: T) =>
 export type SupplementalOrderRow = {
   id: string;
   timestamp: number;
+  status?: OrderStatus;
   renderCell: (field: string) => ReactNode;
   plainText?: (field: string) => string;
 };
@@ -48,7 +49,7 @@ export type SupplementalMobileOrderRow = {
 
 /**
  * A supplemental row only carries the fields the merged table reads (row key
- * and sort timestamp); every cell renders through renderCell.
+ * and sort timestamp) and cancellation status; every cell renders through renderCell.
  */
 type MergedOrderRow =
   | NonNullable<OrdersBuilderState["dataSource"]>[number]
@@ -56,6 +57,7 @@ type MergedOrderRow =
       __supplemental: SupplementalOrderRow;
       created_time: number;
       order_id: string;
+      status?: OrderStatus;
     };
 
 export const DesktopOrderList: FC<
@@ -103,6 +105,7 @@ export const DesktopOrderList: FC<
         __supplemental: row,
         created_time: row.timestamp,
         order_id: row.id,
+        status: row.status,
       })),
     ].sort((a, b) => Number(b.created_time ?? 0) - Number(a.created_time ?? 0));
   }, [hasSupplementalRows, props.dataSource, props.supplementalRows]);

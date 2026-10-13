@@ -1,5 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { Button } from "@orderly.network/ui";
+import { Button, cn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   binaryOrderDisplayPrice,
@@ -46,9 +46,19 @@ export const PredictionOrderCell = ({
       // exits get an extra label instead of a flipped badge.
       return (
         <span className="oui-flex oui-items-center oui-gap-1">
-          <OutcomeBadge outcome={order.outcome} />
+          <OutcomeBadge
+            outcome={order.outcome}
+            muted={order.status === "cancelled"}
+          />
           {order.reduceOnly && (
-            <span className="oui-text-3xs oui-text-base-contrast-54">
+            <span
+              className={cn(
+                "oui-text-3xs",
+                order.status === "cancelled"
+                  ? "oui-text-base-contrast-20"
+                  : "oui-text-base-contrast-54",
+              )}
+            >
               {t("orderEntry.reduceOnly")}
             </span>
           )}
