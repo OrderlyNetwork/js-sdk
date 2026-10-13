@@ -75,6 +75,8 @@ vi.mock("@orderly.network/hooks", async () => ({
       isLoading: false,
     };
   },
+  // The region gate is not under test here; unrestricted keeps it inert.
+  useProductRegionRestricted: () => false,
 }));
 vi.mock(
   "@orderly.network/hooks/src/provider/dataCenter/dataCenterContext",

@@ -107,6 +107,8 @@ vi.mock("@orderly.network/hooks", async () => {
             : undefined,
       };
     },
+    // The region gate is not under test here; unrestricted keeps it inert.
+    useProductRegionRestricted: () => false,
     useWS: () => mocks.ws,
   };
 });
