@@ -1,4 +1,4 @@
-import { API, WSMessage } from "@orderly.network/types";
+import { API, OrderStatus, WSMessage } from "@orderly.network/types";
 import { object2underscore } from "../../utils/ws";
 import { BaseMergeHandler } from "./baseMergeHandler";
 
@@ -33,6 +33,49 @@ export class RegularOrderMergeHandler extends BaseMergeHandler<
       "total_executed_quantity" in this.data &&
       this.data.total_executed_quantity === this.data.quantity
     );
+  }
+
+  merge(
+    key: string,
+    message: WSMessage.Order,
+    prevData: API.OrderResponse[],
+  ): API.OrderResponse[] {
+    // Without a status filter, the next key segment is a symbol, side or size.
+    const segment = key.split(":")[1] as OrderStatus;
+    const listStatus = Object.values(OrderStatus).includes(segment)
+      ? segment
+      : undefined;
+
+    // All-order caches retain completed records for history and executions.
+    if (!listStatus && this.status === OrderStatus.FILLED) {
+      return this.insetOrUpdate(prevData);
+    }
+
+    if (
+      listStatus === OrderStatus.PARTIAL_FILLED &&
+      (this.status === OrderStatus.CANCELLED ||
+        this.status === OrderStatus.REJECTED ||
+        (this.status === OrderStatus.FILLED && this.isFullFilled()))
+    ) {
+      return this.remove(prevData);
+    }
+
+    if (this.status === OrderStatus.PARTIAL_FILLED) {
+      switch (listStatus) {
+        case OrderStatus.NEW:
+          return this.remove(prevData);
+        case OrderStatus.FILLED:
+        case OrderStatus.CANCELLED:
+        case OrderStatus.REJECTED:
+        case OrderStatus.COMPLETED:
+        case OrderStatus.REPLACED:
+          return prevData;
+        default:
+          return this.insetOrUpdate(prevData);
+      }
+    }
+
+    return super.merge(key, message, prevData);
   }
 
   update(prevData: API.OrderResponse[]): API.OrderResponse[] {
