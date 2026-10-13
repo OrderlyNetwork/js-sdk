@@ -761,6 +761,21 @@ export declare namespace API {
     checked: boolean;
   }
 
+  /** GET /v1/product_restricted_areas?product_type=... — platform-side list. */
+  export interface ProductRestrictedAreasResponse {
+    product_type: string;
+    countries: {
+      rows: { name: string; visibility: "visible" | "hidden" }[];
+    };
+    cities: {
+      rows: {
+        name: string;
+        country_name: string;
+        visibility: "visible" | "hidden";
+      }[];
+    };
+  }
+
   export interface LeverageInfo {
     symbol: string;
     leverage: number;

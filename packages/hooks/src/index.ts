@@ -154,6 +154,15 @@ export {
   type RestrictedInfoOptions,
 } from "./useRestrictedInfo";
 
+export {
+  useProductRegionRestricted,
+  type UseProductRegionRestrictedOptions,
+} from "./region/useProductRegionRestricted";
+export {
+  isProductRegionRestricted,
+  type ProductRegionIpInfo,
+} from "./region/productRegion";
+
 export * from "./subAccount";
 
 export { usePositionClose } from "./next/positions/usePositionClose";

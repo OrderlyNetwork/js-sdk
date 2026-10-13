@@ -10,6 +10,12 @@ export interface RestrictedInfoOptions {
   customRestrictedIps?: string[];
   customRestrictedRegions?: string[];
   customUnblockRegions?: string[];
+  /**
+   * Broker-side extra restricted regions for Prediction trading, unioned
+   * with its platform list. Does not affect site-wide `restrictedOpen` or
+   * wallet connections. Omitted or empty means no extra Broker restrictions.
+   */
+  customPredictionRestrictedRegions?: string[];
   content?:
     | ReactNode
     | ((data: { ip: string; brokerName: string }) => ReactNode);
@@ -26,6 +32,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     customRestrictedIps = defaultRestrictedIps,
     customRestrictedRegions = defaultRestrictedRegions,
     customUnblockRegions = defaultUnblockRegions,
+    customPredictionRestrictedRegions,
     content,
   } = options || {};
   const [ip, setIp] = useState<string>("");
@@ -131,6 +138,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     canUnblock,
     accessRestricted,
     setAccessRestricted,
+    customPredictionRestrictedRegions,
   };
 };
 
