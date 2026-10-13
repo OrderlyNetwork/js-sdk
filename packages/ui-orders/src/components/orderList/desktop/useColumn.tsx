@@ -774,7 +774,7 @@ function estTotal(option?: {
 }): Column<API.Order> {
   return {
     title: i18n.t("common.notional"),
-    dataIndex: "executed",
+    dataIndex: option?.isPending ? "notional" : "executed",
     width: option?.width,
     className: option?.className,
     onSort:
