@@ -87,6 +87,48 @@ test("edits retain the original type, reduce-only flag and client metadata", () 
   );
 });
 
+test("edits omit absent or empty client order IDs", () => {
+  for (const clientOrderId of [undefined, null, ""]) {
+    // REST can return null even though the API type only declares a string.
+    const row = toPredictionOrder({
+      ...order({ price: 0.53, quantity: 11.77 }),
+      client_order_id: clientOrderId,
+    } as API.Order);
+    const payload = binaryOrderEditPayload(row, 0.51, 11.77, 0.01, 0.01)!;
+    assert.equal(Object.hasOwn(payload, "client_order_id"), false);
+    assert.equal(payload.order_id, row.id);
+  }
+});
+
+test("edits omit absent or empty order tags", () => {
+  for (const orderTag of [undefined, ""]) {
+    const row = toPredictionOrder(order({ order_tag: orderTag }));
+    const payload = binaryOrderEditPayload(row, 0.55, 80, 0.01, 0.01)!;
+    assert.equal(Object.hasOwn(payload, "order_tag"), false);
+  }
+});
+
+test("edits preserve explicit reduce-only booleans and omit an absent flag", () => {
+  for (const reduceOnly of [false, true]) {
+    const row = toPredictionOrder(order({ reduce_only: reduceOnly }));
+    const payload = binaryOrderEditPayload(row, 0.55, 80, 0.01, 0.01)!;
+    assert.equal(payload.reduce_only, reduceOnly);
+  }
+  const row = toPredictionOrder(order({ reduce_only: undefined }));
+  const payload = binaryOrderEditPayload(row, 0.55, 80, 0.01, 0.01)!;
+  assert.equal(Object.hasOwn(payload, "reduce_only"), false);
+});
+
+test("edits require a nonempty symbol and original order type", () => {
+  const row = toPredictionOrder(order());
+  for (const changes of [{ symbol: "" }, { orderType: "" }]) {
+    assert.equal(
+      binaryOrderEditPayload({ ...row, ...changes }, 0.55, 80, 0.01, 0.01),
+      undefined,
+    );
+  }
+});
+
 test("DOWN display complements raw UP prices without modifying request fields", () => {
   const row = toPredictionOrder(
     order({ side: OrderSide.SELL, price: 0.7, average_executed_price: 0.6 }),

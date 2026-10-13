@@ -84,10 +84,10 @@ export const binaryOrderEditPayload = (
     side: order.side === "buy" ? OrderSide.BUY : OrderSide.SELL,
     order_type: order.orderType,
     ...(order.reduceOnly !== undefined && { reduce_only: order.reduceOnly }),
-    ...(order.clientOrderId !== undefined && {
+    ...(order.clientOrderId && {
       client_order_id: order.clientOrderId,
     }),
-    ...(order.orderTag !== undefined && { order_tag: order.orderTag }),
+    ...(order.orderTag && { order_tag: order.orderTag }),
     order_price: new Decimal(price).toFixed(
       new Decimal(quoteTick).decimalPlaces(),
     ),
