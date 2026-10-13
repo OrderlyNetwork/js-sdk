@@ -69,6 +69,10 @@ export const prediction = {
     "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0 or 1. DOWN displays 1 minus the UP mark price.",
   "prediction.orderBook": "Order book",
   "prediction.contracts": "Contracts",
+  "prediction.editOrder.confirm.price":
+    "You agree changing the price of this prediction order to <0>{{value}}</0>.",
+  "prediction.editOrder.confirm.quantity":
+    "You agree changing the quantity of this prediction order to <0>{{value}}</0>.",
   "prediction.outcome": "Outcome",
   "prediction.estFillPrice": "Est. fill price",
   "prediction.odds": "Odds",

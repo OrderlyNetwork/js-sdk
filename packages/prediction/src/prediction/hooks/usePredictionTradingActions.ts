@@ -151,6 +151,7 @@ export const usePredictionTradingActions = ({
     protectionPrice: estimates.protectionPrice,
     sellPosition: submission.sellPosition,
     editPendingOrder: account.actions.editPendingOrder,
+    getOrderEditQuantityLimits: account.actions.getOrderEditQuantityLimits,
     placeOrder: submission.placeOrder,
     evaluateOneTapOrder: oneTap.evaluateOneTapOrder,
     placeOneTapOrder: oneTap.placeOneTapOrder,

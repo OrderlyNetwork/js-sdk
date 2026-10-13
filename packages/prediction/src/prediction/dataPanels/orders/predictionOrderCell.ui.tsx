@@ -1,5 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn } from "@orderly.network/ui";
+import { Button, cn, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   binaryOrderDisplayPrice,
@@ -10,7 +10,6 @@ import type {
   PredictionAccountActions,
   PredictionOpenOrder,
 } from "../../prediction.types";
-import { usePredictionFormatters } from "../../predictionShared";
 import { PendingValue } from "./pendingValue.ui";
 
 export interface PredictionOrderCellProps {
@@ -27,7 +26,6 @@ export const PredictionOrderCell = ({
   field,
 }: PredictionOrderCellProps) => {
   const { t } = useTranslation();
-  const { formatTableTime } = usePredictionFormatters();
   const pending =
     !order.status ||
     order.status === "pending" ||
@@ -97,31 +95,25 @@ export const PredictionOrderCell = ({
       return binaryOrderExecutedValue(order) == null ? (
         "--"
       ) : (
-        <TableNumber
-          value={binaryOrderExecutedValue(order)!}
-          dp={2}
-          suffix="USDC"
-        />
+        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
+          {binaryOrderExecutedValue(order)!}
+        </Text.numeral>
       );
     case "notional":
       if (!pending)
         return binaryOrderExecutedValue(order) == null ? (
           "--"
         ) : (
-          <TableNumber
-            value={binaryOrderExecutedValue(order)!}
-            dp={2}
-            suffix="USDC"
-          />
+          <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
+            {binaryOrderExecutedValue(order)!}
+          </Text.numeral>
         );
       return (
-        <TableNumber
-          value={new Decimal(order.quantity)
+        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
+          {new Decimal(order.quantity)
             .mul(binaryOrderDisplayPrice(order, order.price))
             .toNumber()}
-          dp={2}
-          suffix="USDC"
-        />
+        </Text.numeral>
       );
     case "total_fee":
       return order.totalFee == null ? (
@@ -146,7 +138,15 @@ export const PredictionOrderCell = ({
                 : "prediction.status.cancelled",
       );
     case "created_time":
-      return formatTableTime(order.timestamp);
+      return (
+        <Text.formatted
+          rule="date"
+          formatString="yyyy-MM-dd HH:mm:ss"
+          className="oui-whitespace-nowrap oui-break-normal oui-font-semibold"
+        >
+          {order.timestamp}
+        </Text.formatted>
+      );
     case "action":
       return pending ? (
         <Button

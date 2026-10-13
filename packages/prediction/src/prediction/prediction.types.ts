@@ -154,6 +154,10 @@ export interface PredictionAccountActions {
     upPrice: number,
     totalQuantity: number,
   ): Promise<boolean>;
+  /** Total quantity ceiling and tick for the order's own round. */
+  getOrderEditQuantityLimits?(
+    id: number,
+  ): { maxQuantity: number; quantityTick: number } | undefined;
   estimateFee(
     quantity: number,
     upPrice: number,

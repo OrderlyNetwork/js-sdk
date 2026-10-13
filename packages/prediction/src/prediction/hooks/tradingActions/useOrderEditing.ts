@@ -65,6 +65,47 @@ export const useOrderEditing = ({
     ? configBySymbol.get(selectedSymbol)
     : undefined;
   const [doUpdateOrder] = useMutation("/v1/order", "PUT");
+  const getOrderEditQuantityLimits = useCallback(
+    (id: number) => {
+      const order = openOrders.find((item) => item.id === id);
+      const config = order?.symbol
+        ? configBySymbol.get(order.symbol)
+        : undefined;
+      if (!order || !config) return undefined;
+      const limits = resolveBinaryOrderLimits(config);
+      const maxTotal = order.reduceOnly
+        ? new Decimal(order.filledQuantity).add(
+            availableQuantity(
+              order.side === "sell" ? "up" : "down",
+              id,
+              order.symbol,
+            ),
+          )
+        : new Decimal(order.quantity).add(
+            maxOpeningQuantity(
+              order.outcome,
+              order.outcome === "up"
+                ? order.price
+                : complementPrice(order.price),
+              order.symbol,
+            ),
+          );
+      const boundedMax = maxTotal.lt(0)
+        ? new Decimal(0)
+        : maxTotal.gt(limits.baseMax)
+          ? new Decimal(limits.baseMax)
+          : maxTotal;
+      return {
+        maxQuantity: boundedMax
+          .div(limits.baseTick)
+          .toDecimalPlaces(0, Decimal.ROUND_DOWN)
+          .mul(limits.baseTick)
+          .toNumber(),
+        quantityTick: limits.baseTick,
+      };
+    },
+    [openOrders, configBySymbol, availableQuantity, maxOpeningQuantity],
+  );
   const editPendingOrder = useCallback(
     async (id: number, price: number, quantity: number): Promise<boolean> => {
       // Unlike the rejections below, this guard covers states with no live UI
@@ -112,25 +153,13 @@ export const useOrderEditing = ({
         return false;
       }
       const remaining = new Decimal(quantity).sub(order.filledQuantity);
-      // PERP-style quantity envelope only; backend checks repricing funds.
-      const maxTotal = order.reduceOnly
-        ? new Decimal(order.filledQuantity).add(
-            availableQuantity(
-              order.side === "sell" ? "up" : "down",
-              id,
-              order.symbol,
-            ),
-          )
-        : new Decimal(order.quantity).add(
-            maxOpeningQuantity(
-              order.outcome,
-              order.outcome === "up"
-                ? order.price
-                : complementPrice(order.price),
-              order.symbol,
-            ),
-          );
-      if (remaining.lt(0) || new Decimal(quantity).gt(maxTotal)) {
+      // UI percentages and submission share the same total-quantity envelope.
+      const quantityLimits = getOrderEditQuantityLimits(id);
+      if (
+        !quantityLimits ||
+        remaining.lt(0) ||
+        new Decimal(quantity).gt(quantityLimits.maxQuantity)
+      ) {
         notify("prediction.invalidOrder", "danger");
         return false;
       }
@@ -152,7 +181,7 @@ export const useOrderEditing = ({
           // Empty message falls through to the generic key in rejectionNotice.
           throw new Error(response?.message);
         }
-        notify("prediction.message.orderUpdated");
+        // The SDK execution report owns the successful edit notification.
         return true;
       } catch (error) {
         if (!isCurrent()) return false;
@@ -169,12 +198,11 @@ export const useOrderEditing = ({
       configBySymbol,
       doUpdateOrder,
       isRegionRestricted,
-      availableQuantity,
-      maxOpeningQuantity,
+      getOrderEditQuantityLimits,
       notify,
       openOrders,
       selectedConfig,
     ],
   );
-  return { editPendingOrder };
+  return { editPendingOrder, getOrderEditQuantityLimits };
 };

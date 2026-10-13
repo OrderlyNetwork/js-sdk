@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { PredictionOpenOrder } from "@orderly.network/prediction";
@@ -50,14 +50,21 @@ type Props = {
   active?: boolean;
   restricted?: boolean;
   expired?: boolean;
+  orderChanges?: Partial<PredictionOpenOrder>;
+  configChanges?: Partial<API.BinaryInfoRow>;
 };
 let root: ReactTestRenderer | undefined;
 let edit: ReturnType<typeof useOrderEditing>["editPendingOrder"];
+let getQuantityLimits: ReturnType<
+  typeof useOrderEditing
+>["getOrderEditQuantityLimits"];
 function Consumer({
   accountId = "A",
   active = true,
   restricted = false,
   expired = false,
+  orderChanges,
+  configChanges,
 }: Props) {
   const mounted = useRef(true);
   useEffect(
@@ -66,22 +73,29 @@ function Consumer({
     },
     [],
   );
-  edit = useOrderEditing({
+  const editing = useOrderEditing({
     resources: {
-      openOrders: [order],
+      openOrders: [{ ...order, ...orderChanges }],
       accountState: { accountId },
       accountReady: true,
     } as PredictionAccountResources,
     active,
     mounted,
     configBySymbol: new Map([
-      [symbol, expired ? { ...config, expire_at: 0 } : config],
+      [
+        symbol,
+        { ...config, ...configChanges, ...(expired ? { expire_at: 0 } : {}) },
+      ],
     ]),
     isRegionRestricted: restricted,
     notify: mocks.notify,
     availableQuantity: mocks.available,
     maxOpeningQuantity: mocks.max,
-  }).editPendingOrder;
+  });
+  useLayoutEffect(() => {
+    edit = editing.editPendingOrder;
+    getQuantityLimits = editing.getOrderEditQuantityLimits;
+  }, [editing.editPendingOrder, editing.getOrderEditQuantityLimits]);
   return null;
 }
 function mount(props: Props = {}) {
@@ -98,11 +112,33 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root?.unmount());
   root = undefined;
+  vi.restoreAllMocks();
 });
 
+it("exposes reduce-only totals using filled and available quantities for the order's own round", () => {
+  mount();
+  expect(getQuantityLimits(42)).toEqual({
+    maxQuantity: 20,
+    quantityTick: 0.01,
+  });
+  expect(mocks.available).toHaveBeenCalledWith("up", 42, symbol);
+  expect(getQuantityLimits(999)).toBeUndefined();
+});
+it("exposes opening totals using the DOWN display price and rounds market ceilings to ticks", () => {
+  mount({
+    orderChanges: { reduceOnly: false },
+    configChanges: { base_tick: 0.05, base_max: 20.039 },
+  });
+  expect(getQuantityLimits(42)).toEqual({
+    maxQuantity: 20,
+    quantityTick: 0.05,
+  });
+  expect(mocks.max).toHaveBeenCalledWith("down", 0.2, symbol);
+});
 it("edits in UP coordinates and preserves immutable API attributes and reduce-only quantity limits", async () => {
   mount();
   await expect(edit(42, 0.75, 20)).resolves.toBe(true);
+  expect(mocks.notify).not.toHaveBeenCalled();
   expect(mocks.update).toHaveBeenCalledWith({
     order_id: 42,
     symbol,
@@ -117,6 +153,16 @@ it("edits in UP coordinates and preserves immutable API attributes and reduce-on
   expect(mocks.available).toHaveBeenCalledWith("up", 42, symbol);
   await expect(edit(42, 0.75, 21)).resolves.toBe(false);
   expect(mocks.update).toHaveBeenCalledTimes(1);
+});
+it("still reports failed edits as errors", async () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  mount();
+  mocks.update.mockResolvedValue({ success: false, message: "Edit rejected" });
+  await expect(edit(42, 0.75, 20)).resolves.toBe(false);
+  expect(mocks.notify).toHaveBeenLastCalledWith("Edit rejected", "danger");
+  mocks.update.mockRejectedValue(new Error("Network failure"));
+  await expect(edit(42, 0.75, 20)).resolves.toBe(false);
+  expect(mocks.notify).toHaveBeenLastCalledWith("Network failure", "danger");
 });
 it("rejects invalid precision, below-executed totals, restricted regions, expired rounds and disabled accounts", async () => {
   mount();

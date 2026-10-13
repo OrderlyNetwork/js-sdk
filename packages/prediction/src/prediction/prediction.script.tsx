@@ -305,6 +305,7 @@ export const usePredictionScript = (
     availableQuantity: portfolio.availableQuantity,
     sellPosition: portfolio.sellPosition,
     editPendingOrder: portfolio.editPendingOrder,
+    getOrderEditQuantityLimits: portfolio.getOrderEditQuantityLimits,
     cancelOrder: portfolio.cancelOrder,
     cancelAllOrders: portfolio.cancelAllOrders,
     pendingOrdersComplete: portfolio.pendingOrdersComplete,

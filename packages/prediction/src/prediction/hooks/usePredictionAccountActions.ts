@@ -74,6 +74,7 @@ export const usePredictionAccountActions = ({
     editPendingOrder: resources.targetAccountId
       ? async () => false
       : editing.editPendingOrder,
+    getOrderEditQuantityLimits: editing.getOrderEditQuantityLimits,
   };
   return {
     actions,

@@ -9,7 +9,7 @@ import { usePredictionAccountActions } from "./usePredictionAccountActions";
 import { usePredictionAccountResources } from "./usePredictionAccountResources";
 import { usePredictionMarkets } from "./usePredictionMarkets";
 
-const notify = (message: string, tone?: "success" | "danger") =>
+const notify = (message: string, tone: "success" | "danger" = "success") =>
   tone === "success"
     ? toast.success(String(i18n.t(message as keyof LocaleMessages)))
     : toast.error(String(i18n.t(message as keyof LocaleMessages)));
