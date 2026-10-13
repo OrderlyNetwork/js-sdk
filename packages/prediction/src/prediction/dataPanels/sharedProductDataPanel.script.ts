@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { usePositionStream } from "@orderly.network/hooks";
+import { useAccount, usePositionStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { isBinarySymbol } from "../binary/binaryInfo";
 
 export type ProductDataType = "positions" | "positionHistory";
@@ -20,17 +21,25 @@ export const useSharedProductDataPanelScript = ({
   onProductChange,
 }: UseSharedProductDataPanelScriptArgs) => {
   const [product, setProduct] = useState<ProductType>(initialProduct);
+  const { state: account } = useAccount();
+  const accountReady =
+    account.status >= AccountStatusEnum.EnableTrading ||
+    account.status === AccountStatusEnum.EnableTradingWithoutConnected;
   const [perpsPositions] = usePositionStream();
   // Binary rows ride the same position stream (api-spec §6.2) but belong to
   // the prediction tab's own count.
+  // The store may retain rows after disconnect (OR-7457); keep the count at 0
+  // until private data is reachable again.
   const perpsPositionCount =
     useDataTap(
-      perpsPositions.rows?.filter(
-        (row) =>
-          !isBinarySymbol(row.symbol) &&
-          row.position_qty !== 0 &&
-          (!perpsSymbol || row.symbol === perpsSymbol),
-      ).length,
+      accountReady
+        ? perpsPositions.rows?.filter(
+            (row) =>
+              !isBinarySymbol(row.symbol) &&
+              row.position_qty !== 0 &&
+              (!perpsSymbol || row.symbol === perpsSymbol),
+          ).length
+        : 0,
     ) ?? 0;
 
   const selectProduct = (next: ProductType) => {

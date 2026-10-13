@@ -5,10 +5,13 @@ import {
   useSharedProductCounts,
   type UseSharedProductCountsOptions,
 } from "@orderly.network/prediction/src/prediction/dataPanels/useSharedProductCounts";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
   context: {} as Record<string, unknown>,
   query: vi.fn(),
+  // Assigned in beforeEach; vi.hoisted runs before imports resolve.
+  status: undefined as AccountStatusEnum | undefined,
   positions: [
     { symbol: "PERP_BTC_USDC", position_qty: 1 },
     { symbol: "PERP_ETH_USDC", position_qty: 2 },
@@ -17,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   ],
 }));
 vi.mock("@orderly.network/hooks", async () => ({
+  useAccount: () => ({ state: { status: mocks.status } }),
   useOrderStream: (
     await vi.importActual<
       typeof import("@orderly.network/hooks/src/orderly/useOrderStream/useOrderStream")
@@ -69,6 +73,7 @@ function Consumer(props: UseSharedProductCountsOptions) {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.status = AccountStatusEnum.EnableTrading;
   registry = createOrderKeyRegistry();
   mocks.context = {
     registerKeyHandler: registry.register,
@@ -141,4 +146,19 @@ it("preserves a shared consumer's keys until its own unmount", () => {
   });
   root = undefined;
   expect(registry.handlers.size).toBe(0);
+});
+it("hides residual position-store rows while the account is disconnected (OR-7457)", () => {
+  // Disconnected first: counts must stay at zero even though the mocked
+  // position store still holds rows from a previous session.
+  mocks.status = AccountStatusEnum.NotConnected;
+  act(() => {
+    root = create(<Consumer />);
+  });
+  expect(result).toEqual({ positions: 0, pending: 0 });
+  // Reconnecting restores the real counts.
+  mocks.status = AccountStatusEnum.EnableTrading;
+  act(() => {
+    root!.update(<Consumer />);
+  });
+  expect(result.positions).toBe(3);
 });

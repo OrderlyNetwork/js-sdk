@@ -5,6 +5,7 @@ import {
   usePredictionTradingExtension,
   type PredictionTradingExtensionOptions,
 } from "@orderly.network/prediction/src/prediction/usePredictionTradingExtension";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
   orders: vi.fn(),
@@ -36,6 +37,9 @@ vi.mock(
   }),
 );
 vi.mock("@orderly.network/hooks", () => ({
+  useAccount: () => ({
+    state: { status: AccountStatusEnum.EnableTrading },
+  }),
   usePositionStream: () => [{ rows: [] }],
   useOrderStream: () => [[], { meta: { total: 0 }, loadMore: vi.fn() }],
   useBadgeBySymbol: () => ({}),

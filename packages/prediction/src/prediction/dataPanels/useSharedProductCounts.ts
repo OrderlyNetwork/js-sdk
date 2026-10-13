@@ -1,6 +1,14 @@
 import { useMemo } from "react";
-import { useOrderStream, usePositions } from "@orderly.network/hooks";
-import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
+import {
+  useAccount,
+  useOrderStream,
+  usePositions,
+} from "@orderly.network/hooks";
+import {
+  AccountStatusEnum,
+  AlgoOrderRootType,
+  OrderStatus,
+} from "@orderly.network/types";
 import { isBinarySymbol } from "../binary/binaryInfo";
 import { matchesPredictionUnderlying } from "../binary/productScope";
 import { useBinaryPendingOrders } from "../hooks/useBinaryPendingOrders";
@@ -24,6 +32,10 @@ export const useSharedProductCounts = ({
   predictionUnderlyingSymbol,
   enabled = true,
 }: UseSharedProductCountsOptions = {}): SharedProductCountsState => {
+  const { state: account } = useAccount();
+  const accountReady =
+    account.status >= AccountStatusEnum.EnableTrading ||
+    account.status === AccountStatusEnum.EnableTradingWithoutConnected;
   const positions = usePositions();
   const includePerps = enabled && product !== "prediction";
   const includePrediction = enabled && product !== "perps";
@@ -39,8 +51,13 @@ export const useSharedProductCounts = ({
   );
   const { orders: predictionPending, complete } =
     useBinaryPendingOrders(includePrediction);
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    // The position store may retain rows after disconnect (OR-7457); counts
+    // only exist once private data is reachable again.
+    if (!accountReady) {
+      return { positions: 0, pending: 0 };
+    }
+    return {
       positions: (positions ?? []).filter(
         (row) =>
           row.position_qty !== 0 &&
@@ -72,16 +89,16 @@ export const useSharedProductCounts = ({
                     ),
                 ).length
               : 0),
-    }),
-    [
-      positions,
-      perpsPending,
-      predictionPending,
-      includePrediction,
-      includePerps,
-      complete,
-      perpsSymbol,
-      predictionUnderlyingSymbol,
-    ],
-  );
+    };
+  }, [
+    accountReady,
+    positions,
+    perpsPending,
+    predictionPending,
+    includePrediction,
+    includePerps,
+    complete,
+    perpsSymbol,
+    predictionUnderlyingSymbol,
+  ]);
 };
