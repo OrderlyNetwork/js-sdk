@@ -64,9 +64,6 @@ export type OrderSubmissionArgs = {
   /** Maximum absolute price movement in quote ticks. */
   slippage: string;
   book: BinaryOrderBook;
-  onActiveTab: (
-    tab: "openOrders" | "predictions" | "orderHistory" | "predictionHistory",
-  ) => void;
   configBySymbol: Map<string, BinaryInfoRow>;
   hasFeeConfig: boolean;
   refreshOrders: ReturnType<typeof useRefreshOrderCaches>;
@@ -97,7 +94,6 @@ export const useOrderSubmission = ({
   bbo,
   slippage,
   book,
-  onActiveTab,
   configBySymbol,
   hasFeeConfig,
   refreshOrders,
@@ -481,9 +477,8 @@ export const useOrderSubmission = ({
       });
       if (!placed) return;
       onResetAmountAfterFill();
-      onActiveTab("openOrders");
     },
-    [notify, onActiveTab, protectionPrice, selectedSymbol, submitOrder],
+    [notify, protectionPrice, selectedSymbol, submitOrder],
   );
   const sellPosition = useCallback(
     async (

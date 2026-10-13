@@ -81,7 +81,6 @@ export const usePredictionTradingActions = ({
     bbo,
     slippage,
     book,
-    onActiveTab,
     configBySymbol,
     hasFeeConfig,
     refreshOrders,

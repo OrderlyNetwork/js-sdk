@@ -154,7 +154,6 @@ function Target({ target = "sub", enabled = true }) {
       downBids: [[0.4, 100]],
     } as any,
     onSubmitted: mocks.refreshAggregate,
-    onActiveTab: () => {},
     configBySymbol: new Map([[symbol, row]]),
     hasFeeConfig: accountActions.hasFeeConfig,
     refreshOrders: resources.refreshOrders,
