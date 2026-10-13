@@ -343,6 +343,8 @@
   "prediction.contracts": "Контракти",
   "prediction.editOrder.confirm.price": "Ви погоджуєтеся змінити ціну цього прогнозного ордера на <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "Ви погоджуєтеся змінити кількість цього прогнозного ордера на <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "Максимальний загальний обсяг — {{maxQuantity}} контрактів.",
+  "prediction.editOrder.error.tick": "Введіть значення з кроком {{tick}}.",
   "prediction.outcome": "Результат",
   "prediction.estFillPrice": "Оцін. ціна виконання",
   "prediction.odds": "Коефіцієнт",

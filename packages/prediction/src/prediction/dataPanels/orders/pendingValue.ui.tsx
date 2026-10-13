@@ -23,6 +23,7 @@ import {
 } from "@orderly.network/ui-orders";
 import { commify, Decimal } from "@orderly.network/utils";
 import { binaryOrderDisplayPrice } from "../../binary/binaryOrderDisplay";
+import { validatePendingOrderDraft } from "../../binary/binaryOrderRules";
 import { TableNumber } from "../../cells";
 import type {
   PredictionAccountActions,
@@ -54,12 +55,15 @@ export const PendingValue = ({
   const previewRef = useRef<HTMLButtonElement>(null);
   const quantityControlsRef = useRef<HTMLDivElement>(null);
   const restorePreviewFocusRef = useRef(false);
-  const quantityLimits =
-    field === "quantity" && editing && !disabled && !open
+  // Drafts are validated against the same envelope the submission path
+  // enforces, so over-limit or off-tick values error inline and never
+  // reach the confirmation popover.
+  const editLimits =
+    editing && !disabled
       ? state.getOrderEditQuantityLimits?.(order.id)
       : undefined;
-  const showQuantityControls =
-    editing && !disabled && !open && quantityLimits != null;
+  const quantityLimits = field === "quantity" && !open ? editLimits : undefined;
+  const showQuantityControls = quantityLimits != null;
   // A live order update or permission change invalidates the current draft.
   const editorKey = `${order.id}:${field}:${displayValue}:${disabled}`;
   const [previousKey, setPreviousKey] = useState(editorKey);
@@ -100,18 +104,25 @@ export const PendingValue = ({
   }, [editing, open, cancelEditing]);
 
   const numericValue = Number(value);
-  const validValue =
-    value.trim() !== "" &&
-    Number.isFinite(numericValue) &&
-    numericValue > 0 &&
-    (field === "price"
-      ? numericValue < 1
-      : numericValue >= order.filledQuantity);
-  const error = validValue ? undefined : t("prediction.invalidOrder");
+  const draftRejection = validatePendingOrderDraft({
+    order,
+    field,
+    value: numericValue,
+    limits: editLimits,
+  });
+  const error = !draftRejection
+    ? undefined
+    : draftRejection.key === "prediction.editOrder.error.quantityMax"
+      ? t(draftRejection.key, {
+          maxQuantity: commify(draftRejection.maxQuantity),
+        })
+      : "tick" in draftRejection
+        ? t(draftRejection.key, { tick: draftRejection.tick })
+        : t(draftRejection.key);
   const requestConfirmation = (event: SyntheticEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    if (disabled || submittingRef.current || !validValue) return;
+    if (disabled || submittingRef.current || draftRejection) return;
     if (new Decimal(value).eq(displayValue)) {
       restorePreviewFocusRef.current = true;
       cancelEditing();
@@ -147,7 +158,7 @@ export const PendingValue = ({
     containerRef.current?.querySelector("input")?.focus();
 
   const confirmEdit = async () => {
-    if (disabled || submittingRef.current || !validValue) return;
+    if (disabled || submittingRef.current || draftRejection) return;
     submittingRef.current = true;
     setSubmitting(true);
     try {

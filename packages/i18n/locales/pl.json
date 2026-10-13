@@ -343,6 +343,8 @@
   "prediction.contracts": "Kontrakty",
   "prediction.editOrder.confirm.price": "Zgadzasz się zmienić cenę tego zlecenia predykcyjnego na <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "Zgadzasz się zmienić ilość tego zlecenia predykcyjnego na <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "Maksymalna łączna ilość to {{maxQuantity}} kontraktów.",
+  "prediction.editOrder.error.tick": "Wprowadź wartość w krokach co {{tick}}.",
   "prediction.outcome": "Wynik",
   "prediction.estFillPrice": "Szac. cena realizacji",
   "prediction.odds": "Kurs",

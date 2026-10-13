@@ -120,6 +120,7 @@ it("exposes reduce-only totals using filled and available quantities for the ord
   expect(getQuantityLimits(42)).toEqual({
     maxQuantity: 20,
     quantityTick: 0.01,
+    priceTick: 0.01,
   });
   expect(mocks.available).toHaveBeenCalledWith("up", 42, symbol);
   expect(getQuantityLimits(999)).toBeUndefined();
@@ -132,6 +133,7 @@ it("exposes opening totals using the DOWN display price and rounds market ceilin
   expect(getQuantityLimits(42)).toEqual({
     maxQuantity: 20,
     quantityTick: 0.05,
+    priceTick: 0.01,
   });
   expect(mocks.max).toHaveBeenCalledWith("down", 0.2, symbol);
 });

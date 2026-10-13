@@ -343,6 +343,8 @@
   "prediction.contracts": "قراردادها",
   "prediction.editOrder.confirm.price": "شما با تغییر قیمت این سفارش پیش‌بینی به <0>{{value}}</0> موافقت می‌کنید.",
   "prediction.editOrder.confirm.quantity": "شما با تغییر مقدار این سفارش پیش‌بینی به <0>{{value}}</0> موافقت می‌کنید.",
+  "prediction.editOrder.error.quantityMax": "حداکثر مقدار کل {{maxQuantity}} قرارداد است.",
+  "prediction.editOrder.error.tick": "مقداری بر حسب مضارب {{tick}} وارد کنید.",
   "prediction.outcome": "نتیجه",
   "prediction.estFillPrice": "قیمت اجرای تقریبی",
   "prediction.odds": "احتمالات",

@@ -343,6 +343,8 @@
   "prediction.contracts": "Contratti",
   "prediction.editOrder.confirm.price": "Accetti di modificare il prezzo di questo ordine di previsione a <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "Accetti di modificare la quantità di questo ordine di previsione a <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "La quantità totale massima è {{maxQuantity}} contratti.",
+  "prediction.editOrder.error.tick": "Inserisci un valore in incrementi di {{tick}}.",
   "prediction.outcome": "Esito",
   "prediction.estFillPrice": "Prezzo di esecuzione stim.",
   "prediction.odds": "Quota",

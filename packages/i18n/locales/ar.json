@@ -343,6 +343,8 @@
   "prediction.contracts": "العقود",
   "prediction.editOrder.confirm.price": "أنت توافق على تغيير سعر أمر التوقع هذا إلى <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "أنت توافق على تغيير كمية أمر التوقع هذا إلى <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "الحد الأقصى للكمية الإجمالية هو {{maxQuantity}} عقود.",
+  "prediction.editOrder.error.tick": "أدخل قيمة بمضاعفات {{tick}}.",
   "prediction.outcome": "النتيجة",
   "prediction.estFillPrice": "سعر التنفيذ التقديري",
   "prediction.odds": "الاحتمالات",

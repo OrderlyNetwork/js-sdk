@@ -343,6 +343,8 @@
   "prediction.contracts": "Hợp đồng",
   "prediction.editOrder.confirm.price": "Bạn đồng ý thay đổi giá của lệnh dự đoán này thành <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "Bạn đồng ý thay đổi số lượng của lệnh dự đoán này thành <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "Tổng số lượng tối đa là {{maxQuantity}} hợp đồng.",
+  "prediction.editOrder.error.tick": "Nhập giá trị theo bước nhảy {{tick}}.",
   "prediction.outcome": "Kết quả",
   "prediction.estFillPrice": "Giá khớp ước tính",
   "prediction.odds": "Tỷ lệ cược",

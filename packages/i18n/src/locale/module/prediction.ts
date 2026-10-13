@@ -73,6 +73,9 @@ export const prediction = {
     "You agree changing the price of this prediction order to <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity":
     "You agree changing the quantity of this prediction order to <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax":
+    "Maximum total quantity is {{maxQuantity}} contracts.",
+  "prediction.editOrder.error.tick": "Enter a value in {{tick}} increments.",
   "prediction.outcome": "Outcome",
   "prediction.estFillPrice": "Est. fill price",
   "prediction.odds": "Odds",

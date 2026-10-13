@@ -343,6 +343,8 @@
   "prediction.contracts": "계약 수",
   "prediction.editOrder.confirm.price": "이 예측 주문의 가격을 <0>{{value}}</0>(으)로 변경하는 데 동의합니다.",
   "prediction.editOrder.confirm.quantity": "이 예측 주문의 수량을 <0>{{value}}</0>(으)로 변경하는 데 동의합니다.",
+  "prediction.editOrder.error.quantityMax": "최대 총 수량은 {{maxQuantity}}계약 수입니다.",
+  "prediction.editOrder.error.tick": "{{tick}} 단위로 값을 입력하세요.",
   "prediction.outcome": "결과",
   "prediction.estFillPrice": "예상 체결 가격",
   "prediction.odds": "배당률",

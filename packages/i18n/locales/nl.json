@@ -343,6 +343,8 @@
   "prediction.contracts": "Contracten",
   "prediction.editOrder.confirm.price": "U gaat akkoord met het wijzigen van de prijs van deze voorspellingsorder naar <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "U gaat akkoord met het wijzigen van de hoeveelheid van deze voorspellingsorder naar <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "De maximale totale hoeveelheid is {{maxQuantity}} contracten.",
+  "prediction.editOrder.error.tick": "Voer een waarde in stappen van {{tick}} in.",
   "prediction.outcome": "Uitkomst",
   "prediction.estFillPrice": "Geschatte executieprijs",
   "prediction.odds": "Odds",

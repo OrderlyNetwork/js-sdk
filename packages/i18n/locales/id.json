@@ -343,6 +343,8 @@
   "prediction.contracts": "Kontrak",
   "prediction.editOrder.confirm.price": "Anda setuju mengubah harga order prediksi ini menjadi <0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "Anda setuju mengubah jumlah order prediksi ini menjadi <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "Jumlah total maksimum adalah {{maxQuantity}} kontrak.",
+  "prediction.editOrder.error.tick": "Masukkan nilai dalam kelipatan {{tick}}.",
   "prediction.outcome": "Hasil",
   "prediction.estFillPrice": "Perkiraan harga eksekusi",
   "prediction.odds": "Odds",

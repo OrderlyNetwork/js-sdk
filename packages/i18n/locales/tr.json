@@ -343,6 +343,8 @@
   "prediction.contracts": "Kontratlar",
   "prediction.editOrder.confirm.price": "Bu tahmin emrinin fiyatını <0>{{value}}</0> olarak değiştirmeyi kabul ediyorsunuz.",
   "prediction.editOrder.confirm.quantity": "Bu tahmin emrinin miktarını <0>{{value}}</0> olarak değiştirmeyi kabul ediyorsunuz.",
+  "prediction.editOrder.error.quantityMax": "Maksimum toplam miktar {{maxQuantity}} kontrattır.",
+  "prediction.editOrder.error.tick": "Değeri {{tick}} artışlarla girin.",
   "prediction.outcome": "Sonuç",
   "prediction.estFillPrice": "Tah. gerçekleşme fiyatı",
   "prediction.odds": "Oran",

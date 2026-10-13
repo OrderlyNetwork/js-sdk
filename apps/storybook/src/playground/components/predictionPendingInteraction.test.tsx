@@ -6,6 +6,7 @@ import type {
   PredictionAccountActions,
   PredictionOpenOrder,
 } from "@orderly.network/prediction/src/prediction/prediction.types";
+import { EditableCellInput } from "@orderly.network/ui-orders";
 
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -142,6 +143,7 @@ const state = {
   getOrderEditQuantityLimits: () => ({
     maxQuantity: 20.02,
     quantityTick: 0.01,
+    priceTick: 0.01,
   }),
 } as unknown as PredictionAccountActions & { isRegionRestricted: boolean };
 let root: ReactTestRenderer;
@@ -198,8 +200,12 @@ afterEach(() => {
   vi.mocked(state.editPendingOrder).mockResolvedValue(true);
 });
 
-it("does not calculate quantity limits while previewing or confirming", () => {
-  const getLimits = vi.fn(() => ({ maxQuantity: 20.02, quantityTick: 0.01 }));
+it("does not calculate quantity limits while previewing", () => {
+  const getLimits = vi.fn(() => ({
+    maxQuantity: 20.02,
+    quantityTick: 0.01,
+    priceTick: 0.01,
+  }));
   const nextState = { ...state, getOrderEditQuantityLimits: getLimits };
   mount("quantity", nextState);
   act(() =>
@@ -218,16 +224,27 @@ it("does not calculate quantity limits while previewing or confirming", () => {
   getLimits.mockClear();
   pressKey("Enter");
   expect(confirmationIsOpen()).toBe(true);
-  expect(getLimits).not.toHaveBeenCalled();
+  // The confirmation popover keeps validating the draft against live limits.
+  expect(getLimits).toHaveBeenCalled();
   act(() => confirmationButton("common.cancel").props.onClick(event()));
+  getLimits.mockClear();
+  expect(confirmationIsOpen()).toBe(false);
   expect(getLimits).not.toHaveBeenCalled();
 });
 it("refreshes quantity limits while editing when account data changes", () => {
-  const getLimits = vi.fn(() => ({ maxQuantity: 20.02, quantityTick: 0.01 }));
+  const getLimits = vi.fn(() => ({
+    maxQuantity: 20.02,
+    quantityTick: 0.01,
+    priceTick: 0.01,
+  }));
   const nextState = { ...state, getOrderEditQuantityLimits: getLimits };
   mount("quantity", nextState);
   startEditing();
-  getLimits.mockReturnValue({ maxQuantity: 10, quantityTick: 0.01 });
+  getLimits.mockReturnValue({
+    maxQuantity: 10,
+    quantityTick: 0.01,
+    priceTick: 0.01,
+  });
   act(() =>
     root.update(
       <PendingValue state={nextState} order={order} field="quantity" />,
@@ -264,6 +281,25 @@ it("opens confirmation with the check button and preserves DOWN coordinates", as
   expect(root.root.findAllByType("input")).toHaveLength(0);
   expect(confirmationIsOpen()).toBe(false);
 });
+it.each([
+  ["price", "0.305", "prediction.editOrder.error.tick"],
+  ["quantity", "25", "prediction.editOrder.error.quantityMax"],
+  ["quantity", "15.005", "prediction.editOrder.error.tick"],
+] as const)(
+  "errors an over-limit or off-tick %s draft inline without confirmation",
+  (field, draft, errorKey) => {
+    mount(field);
+    startEditing();
+    changeValue(draft);
+    expect(root.root.findByType(EditableCellInput).props.error).toBe(errorKey);
+    expect(root.root.findAllByType("button")[0].props.disabled).toBe(true);
+    clickCheck();
+    expect(confirmationIsOpen()).toBe(false);
+    pressKey("Enter");
+    expect(confirmationIsOpen()).toBe(false);
+    expect(state.editPendingOrder).not.toHaveBeenCalled();
+  },
+);
 it.each([
   ["25%", "5"],
   ["50%", "10.01"],

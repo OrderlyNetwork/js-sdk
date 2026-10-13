@@ -102,6 +102,7 @@ export const useOrderEditing = ({
           .mul(limits.baseTick)
           .toNumber(),
         quantityTick: limits.baseTick,
+        priceTick: limits.quoteTick,
       };
     },
     [openOrders, configBySymbol, availableQuantity, maxOpeningQuantity],

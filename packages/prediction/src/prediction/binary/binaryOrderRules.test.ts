@@ -26,6 +26,7 @@ import {
   toBinaryUpRequest,
   totalToBinaryAmount,
   validateBinaryOrderSize,
+  validatePendingOrderDraft,
   validBinaryFee,
 } from "./binaryOrderRules";
 import { getBinaryQuotes } from "./binaryQuotes";
@@ -650,4 +651,60 @@ test("minimum DOWN input rounds contracts to ticks and cost up to cents", () => 
         .lt(minNotional) || new Decimal(quantity).sub(baseTick).lt(baseMin),
     );
   }
+});
+
+test("pending order drafts reject over-limit and off-tick values inline", () => {
+  const limits = { maxQuantity: 20.02, quantityTick: 0.01, priceTick: 0.01 };
+  const down = { outcome: "down" as const, filledQuantity: 2.25 };
+  const up = { outcome: "up" as const, filledQuantity: 0 };
+  const draft = (
+    order: { outcome: "up" | "down"; filledQuantity: number },
+    field: "price" | "quantity",
+    value: number,
+    withLimits = true,
+  ) =>
+    validatePendingOrderDraft({
+      order,
+      field,
+      value,
+      limits: withLimits ? limits : undefined,
+    });
+
+  // Price drafts validate the submitted UP coordinate.
+  assert.deepEqual(draft(down, "price", 0.3), undefined);
+  assert.deepEqual(draft(down, "price", 0.305), {
+    key: "prediction.editOrder.error.tick",
+    tick: 0.01,
+  });
+  assert.deepEqual(draft(up, "price", 0.55), undefined);
+  assert.deepEqual(draft(up, "price", 0.555), {
+    key: "prediction.editOrder.error.tick",
+    tick: 0.01,
+  });
+  assert.deepEqual(draft(up, "price", 1), { key: "prediction.invalidOrder" });
+  assert.deepEqual(draft(up, "price", Number.NaN), {
+    key: "prediction.invalidOrder",
+  });
+
+  // Quantity drafts validate the envelope and the tick grid.
+  assert.deepEqual(draft(down, "quantity", 15), undefined);
+  assert.deepEqual(draft(down, "quantity", 20.02), undefined);
+  assert.deepEqual(draft(down, "quantity", 25), {
+    key: "prediction.editOrder.error.quantityMax",
+    maxQuantity: 20.02,
+  });
+  assert.deepEqual(draft(down, "quantity", 15.005), {
+    key: "prediction.editOrder.error.tick",
+    tick: 0.01,
+  });
+  assert.deepEqual(draft(down, "quantity", 2.24), {
+    key: "prediction.invalidOrder",
+  });
+
+  // Without limits only the structural checks run.
+  assert.deepEqual(draft(down, "quantity", 25, false), undefined);
+  assert.deepEqual(draft(down, "price", 0.305, false), undefined);
+  assert.deepEqual(draft(down, "price", 1, false), {
+    key: "prediction.invalidOrder",
+  });
 });

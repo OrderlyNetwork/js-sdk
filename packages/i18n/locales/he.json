@@ -343,6 +343,8 @@
   "prediction.contracts": "חוזים",
   "prediction.editOrder.confirm.price": "אתה מסכים לשנות את המחיר של פקודת התחזית הזו ל-<0>{{value}}</0>.",
   "prediction.editOrder.confirm.quantity": "אתה מסכים לשנות את הכמות של פקודת התחזית הזו ל-<0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax": "הכמות הכוללת המרבית היא {{maxQuantity}} חוזים.",
+  "prediction.editOrder.error.tick": "הזן ערך בכפולות של {{tick}}.",
   "prediction.outcome": "תוצאה",
   "prediction.estFillPrice": "מחיר ביצוע משוער",
   "prediction.odds": "יחסי זכייה",

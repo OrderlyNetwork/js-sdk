@@ -343,6 +343,8 @@
   "prediction.contracts": "合约数",
   "prediction.editOrder.confirm.price": "您同意将此预测订单的价格修改为 <0>{{value}}</0>。",
   "prediction.editOrder.confirm.quantity": "您同意将此预测订单的数量修改为 <0>{{value}}</0>。",
+  "prediction.editOrder.error.quantityMax": "最大总数量为 {{maxQuantity}} 合约数。",
+  "prediction.editOrder.error.tick": "请输入 {{tick}} 的整数倍。",
   "prediction.outcome": "结果",
   "prediction.estFillPrice": "预计成交价",
   "prediction.odds": "赔率",

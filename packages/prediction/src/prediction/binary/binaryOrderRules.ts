@@ -413,6 +413,58 @@ export function validateBinaryOrderSize(input: {
   return undefined;
 }
 
+/** Draft envelope shared by the inline editor UI and the submission path. */
+export type BinaryOrderEditLimits = {
+  /** Total-quantity ceiling (filled + remaining allowance), tick-aligned. */
+  maxQuantity: number;
+  quantityTick: number;
+  /** Quote tick of the order's round. */
+  priceTick: number;
+};
+
+export type PendingOrderDraftRejection =
+  | { key: "prediction.invalidOrder" }
+  | { key: "prediction.editOrder.error.quantityMax"; maxQuantity: number }
+  | { key: "prediction.editOrder.error.tick"; tick: number };
+
+/**
+ * Inline validation for the pending-order editor. Mirrors the submission
+ * checks in `editPendingOrder` so drafts are rejected as they are typed,
+ * not after the confirmation popover. Without `limits` (order or round
+ * config missing) only the structural checks run; the submission path
+ * still validates every draft.
+ */
+export function validatePendingOrderDraft(input: {
+  order: { outcome: PredictionOutcome; filledQuantity: number };
+  field: "price" | "quantity";
+  value: number;
+  limits?: BinaryOrderEditLimits;
+}): PendingOrderDraftRejection | undefined {
+  const { order, field, value, limits } = input;
+  if (!Number.isFinite(value) || value <= 0)
+    return { key: "prediction.invalidOrder" };
+  if (field === "price") {
+    if (value >= 1) return { key: "prediction.invalidOrder" };
+    if (!limits) return undefined;
+    // DOWN drafts are submitted as their UP complement (api-spec §5.2).
+    const submittedPrice =
+      order.outcome === "up" ? value : complementPrice(value);
+    return new Decimal(submittedPrice).div(limits.priceTick).isInteger()
+      ? undefined
+      : { key: "prediction.editOrder.error.tick", tick: limits.priceTick };
+  }
+  if (value < order.filledQuantity) return { key: "prediction.invalidOrder" };
+  if (!limits) return undefined;
+  if (value > limits.maxQuantity)
+    return {
+      key: "prediction.editOrder.error.quantityMax",
+      maxQuantity: limits.maxQuantity,
+    };
+  return new Decimal(value).div(limits.quantityTick).isInteger()
+    ? undefined
+    : { key: "prediction.editOrder.error.tick", tick: limits.quantityTick };
+}
+
 /** UP-book notional of a user-facing order (DOWN @n is UP @(1-n)). */
 export function binaryUpNotional(
   quantity: number,

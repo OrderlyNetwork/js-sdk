@@ -343,6 +343,8 @@
   "prediction.contracts": "契約数",
   "prediction.editOrder.confirm.price": "この予測注文の価格を <0>{{value}}</0> に変更することに同意します。",
   "prediction.editOrder.confirm.quantity": "この予測注文の数量を <0>{{value}}</0> に変更することに同意します。",
+  "prediction.editOrder.error.quantityMax": "最大合計数量は {{maxQuantity}} 契約数です。",
+  "prediction.editOrder.error.tick": "{{tick}} 刻みで値を入力してください。",
   "prediction.outcome": "結果",
   "prediction.estFillPrice": "推定約定価格",
   "prediction.odds": "オッズ",
