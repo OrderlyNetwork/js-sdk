@@ -213,6 +213,7 @@ export const usePredictionScript = (
     currentPrice: underlying.currentPrice,
     priceHistory: underlying.priceHistory,
     candles: underlying.candles,
+    historyStatus: underlying.historyStatus,
     markPrice,
     upChance: orderbook.upChance,
     outcomePrices: orderbook.outcomePrices,

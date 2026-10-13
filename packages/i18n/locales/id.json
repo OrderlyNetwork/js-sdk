@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "Dengan berdagang, Anda menyetujui",
   "prediction.termOfUse": "Ketentuan Penggunaan",
   "prediction.potentialProfit": "Potensi keuntungan",
+  "prediction.chart.historyError": "Gagal memuat. Mencoba ulang…",
   "prediction.noData": "Belum ada data",
   "prediction.demoSettle": "Selesaikan demo",
   "prediction.chart.btcPrice": "Harga indeks BTC",

@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "בביצוע מסחר, הינך מסכים ל",
   "prediction.termOfUse": "תנאי השימוש",
   "prediction.potentialProfit": "רווח פוטנציאלי",
+  "prediction.chart.historyError": "הטעינה נכשלה. מנסה שוב…",
   "prediction.noData": "אין נתונים עדיין",
   "prediction.demoSettle": "סליקת הדגמה",
   "prediction.chart.btcPrice": "מדד BTC",

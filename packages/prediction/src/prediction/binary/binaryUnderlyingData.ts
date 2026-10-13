@@ -83,6 +83,8 @@ export const aggregateMinuteCandles = (
   return candles;
 };
 
+export type BinaryHistoryStatus = "idle" | "loading" | "ready" | "error";
+
 type HistoryClock = {
   now: () => number;
   setTimeout: (callback: () => void, delay: number) => number;
@@ -104,11 +106,13 @@ export const startBinaryHistoryLoader = (
     expireAtMs,
     load,
     onLoad,
+    onStatus,
   }: {
     roundStartMs: number;
     expireAtMs: number | undefined;
     load: (startT: number, endT: number) => Promise<PredictionChartPoint[]>;
     onLoad: (points: PredictionChartPoint[]) => void;
+    onStatus?: (status: BinaryHistoryStatus) => void;
   },
   clock: HistoryClock,
 ) => {
@@ -135,14 +139,17 @@ export const startBinaryHistoryLoader = (
         0,
       );
       const endT = Math.min(expireAtMs ?? now, now);
+      onStatus?.("loading");
       try {
         const points = await load(startT, endT);
         if (stopped) return;
         onLoad(points);
+        onStatus?.("ready");
         loadedPhase = phase;
         failedPhase = undefined;
       } catch {
         if (stopped) return;
+        onStatus?.("error");
         failedPhase = phase;
         retryAfter = clock.now() + HISTORY_RETRY_DELAY_MS;
       }

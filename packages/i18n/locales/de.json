@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "Mit dem Handeln akzeptieren Sie die",
   "prediction.termOfUse": "Nutzungsbedingungen",
   "prediction.potentialProfit": "Potenzieller Gewinn",
+  "prediction.chart.historyError": "Laden fehlgeschlagen. Neuer Versuch…",
   "prediction.noData": "Noch keine Daten",
   "prediction.demoSettle": "Demo abrechnen",
   "prediction.chart.btcPrice": "BTC-Indexpreis",

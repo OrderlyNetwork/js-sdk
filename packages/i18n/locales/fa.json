@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "با انجام معامله، موافقت خود را با",
   "prediction.termOfUse": "شرایط استفاده",
   "prediction.potentialProfit": "سود احتمالی",
+  "prediction.chart.historyError": "بارگذاری ناموفق بود. در حال تلاش مجدد…",
   "prediction.noData": "هنوز داده‌ای وجود ندارد",
   "prediction.demoSettle": "تسویه نمایشی",
   "prediction.chart.btcPrice": "قیمت شاخص BTC",

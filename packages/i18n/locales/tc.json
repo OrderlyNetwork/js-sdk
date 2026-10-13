@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "交易即表示您同意",
   "prediction.termOfUse": "使用條款",
   "prediction.potentialProfit": "潛在收益",
+  "prediction.chart.historyError": "載入失敗，正在重試…",
   "prediction.noData": "暫無資料",
   "prediction.demoSettle": "模擬結算",
   "prediction.chart.btcPrice": "BTC 指數價格",

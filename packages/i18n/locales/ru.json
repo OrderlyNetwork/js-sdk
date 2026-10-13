@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "Совершая сделки, вы соглашаетесь с",
   "prediction.termOfUse": "условиями использования",
   "prediction.potentialProfit": "Потенциальная прибыль",
+  "prediction.chart.historyError": "Не удалось загрузить. Повторная попытка…",
   "prediction.noData": "Данных пока нет",
   "prediction.demoSettle": "Демо-расчёт",
   "prediction.chart.btcPrice": "Индексная цена BTC",

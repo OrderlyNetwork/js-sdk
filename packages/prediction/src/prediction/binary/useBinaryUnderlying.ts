@@ -4,6 +4,7 @@ import { getTimestamp } from "@orderly.network/utils";
 import type { PredictionChartPoint } from "../prediction.types";
 import { mergeIndexPoints } from "./binaryRoundView";
 import {
+  type BinaryHistoryStatus,
   aggregateMinuteCandles,
   startBinaryHistoryLoader,
   subscribeBinaryIndexPrices,
@@ -92,7 +93,20 @@ export const useBinaryUnderlying = ({
     symbol: string;
     points: PredictionChartPoint[];
   } | null>(null);
-  const roundKey = `${indexSymbol}:${roundStartSec ?? ""}`;
+  const [historyStatusState, setHistoryStatusState] = useState<{
+    key: string;
+    status: BinaryHistoryStatus;
+  } | null>(null);
+  const roundKey = `${apiBaseUrl}:${indexSymbol}:${roundStartSec ?? ""}:${expireAtMs ?? ""}`;
+  // A completed history remains readable during later phase refreshes and retries.
+  const historyStatus: BinaryHistoryStatus =
+    !active || roundStartSec == null
+      ? "idle"
+      : historyState?.key === roundKey
+        ? "ready"
+        : historyStatusState?.key === roundKey
+          ? historyStatusState.status
+          : "loading";
   const history =
     historyState?.key === roundKey ? historyState.points : EMPTY_POINTS;
   const trailing =
@@ -101,6 +115,7 @@ export const useBinaryUnderlying = ({
   useEffect(() => {
     if (!active || roundStartSec == null) {
       setHistoryState(null);
+      setHistoryStatusState(null);
       return;
     }
     return startBinaryHistoryLoader(
@@ -110,6 +125,7 @@ export const useBinaryUnderlying = ({
         load: (startT, endT) =>
           fetchIndexPriceRange(apiBaseUrl, indexSymbol, startT, endT),
         onLoad: (points) => setHistoryState({ key: roundKey, points }),
+        onStatus: (status) => setHistoryStatusState({ key: roundKey, status }),
       },
       {
         now: getTimestamp,
@@ -150,10 +166,12 @@ export const useBinaryUnderlying = ({
         : mergeIndexPoints(history, trailing, expireAtMs),
     [history, trailing, roundStartSec, expireAtMs],
   );
-  // Aggregate actual ticks only; no synthetic minute rollovers or historical live updates.
+  // An empty successful history must not expose the short WS tail as a full
+  // candle chart. Keep live points available to the line chart and price stats.
+  const isHistoryEmpty = historyState?.key === roundKey && history.length === 0;
   const candles = useMemo(
-    () => aggregateMinuteCandles(priceHistory),
-    [priceHistory],
+    () => aggregateMinuteCandles(isHistoryEmpty ? EMPTY_POINTS : priceHistory),
+    [isHistoryEmpty, priceHistory],
   );
   const chartIndexPrice = trailing.at(-1)?.price ?? history.at(-1)?.price;
   const currentPrice = chartIndexPrice ?? 0;
@@ -162,6 +180,7 @@ export const useBinaryUnderlying = ({
     currentPrice,
     chartIndexPrice,
     priceHistory,
+    historyStatus,
     /** Minute candles including the pre-T0 context, bounded at T1. */
     candles,
   };

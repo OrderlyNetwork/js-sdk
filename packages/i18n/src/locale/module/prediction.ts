@@ -93,6 +93,7 @@ export const prediction = {
   "prediction.tradingAgreement": "By trading, you agree to the",
   "prediction.termOfUse": "Term of Use",
   "prediction.potentialProfit": "Potential profit",
+  "prediction.chart.historyError": "Load failed. Retrying…",
   "prediction.noData": "No data yet",
   "prediction.demoSettle": "Settle demo",
   "prediction.chart.btcPrice": "BTC index price",

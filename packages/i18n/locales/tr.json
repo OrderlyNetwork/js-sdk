@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "İşlem yaparak aşağıdakini kabul etmiş olursunuz:",
   "prediction.termOfUse": "Kullanım Koşulları",
   "prediction.potentialProfit": "Potansiyel kâr",
+  "prediction.chart.historyError": "Yükleme başarısız. Yeniden deneniyor…",
   "prediction.noData": "Henüz veri yok",
   "prediction.demoSettle": "Demo uzlaşma",
   "prediction.chart.btcPrice": "BTC endeks fiyatı",

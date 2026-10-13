@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "Здійснюючи угоди, ви погоджуєтеся з",
   "prediction.termOfUse": "умовами використання",
   "prediction.potentialProfit": "Потенційний прибуток",
+  "prediction.chart.historyError": "Не вдалося завантажити. Повторна спроба…",
   "prediction.noData": "Даних ще немає",
   "prediction.demoSettle": "Демо-розрахунок",
   "prediction.chart.btcPrice": "Індексна ціна BTC",

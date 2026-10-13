@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "거래 시 다음에 동의하는 것으로 간주됩니다:",
   "prediction.termOfUse": "이용약관",
   "prediction.potentialProfit": "잠재 수익",
+  "prediction.chart.historyError": "로드에 실패했습니다. 재시도 중…",
   "prediction.noData": "아직 데이터가 없습니다",
   "prediction.demoSettle": "데모 정산",
   "prediction.chart.btcPrice": "BTC 지수 가격",

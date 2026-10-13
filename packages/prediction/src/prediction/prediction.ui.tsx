@@ -95,6 +95,7 @@ const MobileMarketPanel: React.FC<
           onSelectRound={state.selectMarketRound}
           points={state.priceHistory}
           candles={state.candles}
+          historyStatus={state.historyStatus}
           roundOutcome={state.roundOutcomeLookup}
           selectedRow={state.selectedRow}
           rows={state.marketRows}
@@ -315,6 +316,7 @@ export const Prediction: React.FC<
               onSelectRound={state.selectMarketRound}
               points={state.priceHistory}
               candles={state.candles}
+              historyStatus={state.historyStatus}
               roundOutcome={state.roundOutcomeLookup}
               selectedRow={state.selectedRow}
               rows={state.marketRows}

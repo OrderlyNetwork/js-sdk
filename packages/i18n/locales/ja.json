@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "取引を行うと、以下に同意したことになります：",
   "prediction.termOfUse": "利用規約",
   "prediction.potentialProfit": "潜在利益",
+  "prediction.chart.historyError": "読み込みに失敗しました。再試行中…",
   "prediction.noData": "データはまだありません",
   "prediction.demoSettle": "デモ決済",
   "prediction.chart.btcPrice": "BTC指数価格",

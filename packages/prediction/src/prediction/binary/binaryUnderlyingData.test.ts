@@ -265,3 +265,56 @@ test("in-flight loads do not overlap or update history after round cleanup", asy
   await settle();
   assert.equal(clock.pending(), 0);
 });
+
+test("history status distinguishes pending, failed retry, and successful empty history", async () => {
+  const clock = createClock(t0 + 301_000);
+  const statuses: string[] = [];
+  let attempts = 0;
+  let loaded = false;
+  const stop = startBinaryHistoryLoader(
+    {
+      roundStartMs: t0,
+      expireAtMs: t0 + 300_000,
+      load: async () => {
+        if (++attempts === 1) throw new Error("Offline");
+        return [];
+      },
+      onLoad: () => {
+        loaded = true;
+      },
+      onStatus: (status) => statuses.push(status),
+    },
+    clock,
+  );
+  assert.deepEqual(statuses, ["loading"]);
+  await settle();
+  assert.deepEqual(statuses, ["loading", "error"]);
+  assert.equal(loaded, false);
+  await clock.advanceTo(t0 + 306_000);
+  assert.deepEqual(statuses, ["loading", "error", "loading", "ready"]);
+  assert.equal(loaded, true);
+  stop();
+});
+
+test("stopped history requests cannot publish completion status", async () => {
+  const clock = createClock(t0 + 1_000);
+  const statuses: string[] = [];
+  let resolve!: (points: PredictionChartPoint[]) => void;
+  const stop = startBinaryHistoryLoader(
+    {
+      roundStartMs: t0,
+      expireAtMs: t0 + 300_000,
+      load: () =>
+        new Promise((done) => {
+          resolve = done;
+        }),
+      onLoad: () => assert.fail("Stopped request published history"),
+      onStatus: (status) => statuses.push(status),
+    },
+    clock,
+  );
+  stop();
+  resolve([]);
+  await settle();
+  assert.deepEqual(statuses, ["loading"]);
+});

@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "Khi giao dịch, bạn đồng ý với",
   "prediction.termOfUse": "Điều khoản sử dụng",
   "prediction.potentialProfit": "Lợi nhuận tiềm năng",
+  "prediction.chart.historyError": "Tải không thành công. Đang thử lại…",
   "prediction.noData": "Chưa có dữ liệu",
   "prediction.demoSettle": "Quyết toán demo",
   "prediction.chart.btcPrice": "Giá chỉ số BTC",

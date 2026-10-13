@@ -8,6 +8,7 @@ import {
   ChevronUpIcon,
   cn,
   parseNumber,
+  Spinner,
   Tooltip,
 } from "@orderly.network/ui";
 import type { BinaryInfoRow } from "./binary/binaryInfo";
@@ -17,6 +18,7 @@ import {
   getRoundStatus,
   secondsUntil,
 } from "./binary/binaryRoundView";
+import type { BinaryHistoryStatus } from "./binary/binaryUnderlyingData";
 import { computeChartGeometry, type CandleScale } from "./chartGeometry";
 import { formatChartPriceDifferencePercent } from "./chartPriceDifferenceFormat";
 import { useRoundNow } from "./hooks/useRoundCountdown";
@@ -44,6 +46,8 @@ export const PriceChart: React.FC<{
   points: PredictionChartPoint[];
   /** Real minute-candle seeds from the public index-price history. */
   candles: PredictionCandle[];
+  /** Initial history readiness; loaded rounds remain ready during refreshes. */
+  historyStatus?: BinaryHistoryStatus;
   /** Round outcome lookup from the binary info snapshot. */
   roundOutcome: RoundOutcomeLookup;
   selectedRow: BinaryInfoRow | undefined;
@@ -60,6 +64,7 @@ export const PriceChart: React.FC<{
   onSelectRound,
   points,
   candles,
+  historyStatus,
   roundOutcome,
   selectedRow,
   rows,
@@ -159,7 +164,14 @@ export const PriceChart: React.FC<{
     ? secondsUntil(selectedRow.observation_start_at, now)
     : 0;
 
-  const chart = useMemo(
+  const liveTargetDirection =
+    status !== "live" || !difference || difference.amount === 0
+      ? null
+      : difference.amount > 0
+        ? "down"
+        : "up";
+
+  const computedChart = useMemo(
     () =>
       computeChartGeometry({
         chartMode,
@@ -195,12 +207,73 @@ export const PriceChart: React.FC<{
       intervalSeconds,
     ],
   );
-  // Documented render-phase state adjustment (react.dev, "adjusting some
-  // state when a prop changes"): identity equality with the persisted scale
-  // is the no-update signal, and the keep-range logic guarantees the second
-  // pass reuses the cached object, so this converges without an effect.
-  if (chart.nextCandleScale !== candleScale) {
-    setCandleScale(chart.nextCandleScale);
+  // Every mode waits for initial history; ready rounds keep streaming during refreshes.
+  // Retain a separate complete plot for each mode during round transitions.
+  const chartPending = historyStatus === "loading" || historyStatus === "error";
+  const canDisplayChart = historyStatus == null || historyStatus === "ready";
+  const snapshot = useMemo(
+    () => ({
+      chart: computedChart,
+      hasData:
+        chartMode === "candles"
+          ? chartCandles.length > 0
+          : chartPoints.length > 0,
+      openingPrice: chartOpeningPrice,
+      currentPrice: chartCurrentPrice,
+      isFutureRound,
+      isPastRound,
+      liveTargetDirection,
+    }),
+    [
+      computedChart,
+      chartMode,
+      chartPoints.length,
+      chartCandles.length,
+      chartOpeningPrice,
+      chartCurrentPrice,
+      isFutureRound,
+      isPastRound,
+      liveTargetDirection,
+    ],
+  );
+  const [lastCandleSnapshot, setLastCandleSnapshot] =
+    useState<typeof snapshot>();
+  if (
+    chartMode === "candles" &&
+    canDisplayChart &&
+    lastCandleSnapshot !== snapshot
+  ) {
+    setLastCandleSnapshot(snapshot);
+  }
+  const [lastPriceSnapshot, setLastPriceSnapshot] = useState<typeof snapshot>();
+  if (
+    chartMode === "price" &&
+    canDisplayChart &&
+    lastPriceSnapshot !== snapshot
+  ) {
+    setLastPriceSnapshot(snapshot);
+  }
+  const previousSnapshot =
+    chartMode === "candles" ? lastCandleSnapshot : lastPriceSnapshot;
+  const plot = chartPending
+    ? previousSnapshot
+    : canDisplayChart
+      ? snapshot
+      : undefined;
+  const chart = plot?.chart ?? computedChart;
+  const plotHasData = !!plot?.hasData;
+  const plotOpeningPrice = plot?.openingPrice;
+  const plotCurrentPrice = plot?.currentPrice;
+  const plotFuture = plot?.isFutureRound ?? true;
+  const plotPast = plot?.isPastRound ?? false;
+  const plotDirection = plot?.liveTargetDirection;
+  // Keeping the selected scale object makes this render-phase update converge.
+  if (
+    !chartPending &&
+    canDisplayChart &&
+    computedChart.nextCandleScale !== candleScale
+  ) {
+    setCandleScale(computedChart.nextCandleScale);
   }
 
   // Thin ticks greedily so adjacent labels keep ~88px ("11:14:50 AM" at
@@ -220,12 +293,6 @@ export const PriceChart: React.FC<{
   }, [chart.xTicks, xLabelsWidth]);
 
   const isUp = difference?.isUp ?? false;
-  const liveTargetDirection =
-    status !== "live" || !difference || difference.amount === 0
-      ? null
-      : difference.amount > 0
-        ? "down"
-        : "up";
 
   const handleChartPointerMove = (
     event: React.PointerEvent<HTMLDivElement>,
@@ -388,7 +455,7 @@ export const PriceChart: React.FC<{
         <svg
           className={cn(
             "oui-absolute oui-inset-x-4 oui-w-[calc(100%-2rem)]",
-            isPastRound ? "oui-text-base-contrast-54" : "oui-text-primary",
+            plotPast ? "oui-text-base-contrast-54" : "oui-text-primary",
           )}
           style={{
             top: "var(--oui-prediction-chart-top)",
@@ -399,22 +466,20 @@ export const PriceChart: React.FC<{
           role="img"
           aria-label={t("prediction.chart.marketAriaLabel", { base })}
         >
-          {(chartPoints.length || chartCandles.length ? chart.yTicks : []).map(
-            ({ ratio }) => (
-              <line
-                key={ratio}
-                x1="0"
-                x2={plotWidth}
-                y1={height * ratio}
-                y2={height * ratio}
-                className="oui-text-line-6"
-                stroke="currentColor"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-              />
-            ),
-          )}
-          {!isFutureRound && chartOpeningPrice != null && (
+          {(plotHasData ? chart.yTicks : []).map(({ ratio }) => (
+            <line
+              key={ratio}
+              x1="0"
+              x2={plotWidth}
+              y1={height * ratio}
+              y2={height * ratio}
+              className="oui-text-line-6"
+              stroke="currentColor"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+          {!plotFuture && plotOpeningPrice != null && (
             <line
               x1="0"
               x2={width}
@@ -427,7 +492,7 @@ export const PriceChart: React.FC<{
               vectorEffect="non-scaling-stroke"
             />
           )}
-          {!isFutureRound && chartCurrentPrice != null && (
+          {!plotFuture && plotCurrentPrice != null && (
             <line
               x1="0"
               x2={width}
@@ -442,9 +507,13 @@ export const PriceChart: React.FC<{
           )}
           {chartMode === "price" ? (
             <>
-              <path d={chart.area} fill="currentColor" fillOpacity="0.08" />
               <path
-                d={chart.line}
+                d={plotHasData ? chart.area : ""}
+                fill="currentColor"
+                fillOpacity="0.08"
+              />
+              <path
+                d={plotHasData ? chart.line : ""}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -452,7 +521,7 @@ export const PriceChart: React.FC<{
               />
             </>
           ) : (
-            chart.candles.map((candle) => {
+            (plotHasData ? chart.candles : []).map((candle) => {
               const bodyY = Math.min(candle.openY, candle.closeY);
               const bodyHeight = Math.max(
                 Math.abs(candle.closeY - candle.openY),
@@ -493,10 +562,12 @@ export const PriceChart: React.FC<{
             height: "calc(100% - var(--oui-prediction-chart-top) - 88px)",
             width: `calc((100% - 32px) * ${plotWidth / width})`,
           }}
-          onPointerMove={handleChartPointerMove}
+          onPointerMove={
+            chartPending || !plotHasData ? undefined : handleChartPointerMove
+          }
           onPointerLeave={() => setHoveredPoint(null)}
         >
-          {hoveredPoint && (
+          {!chartPending && hoveredPoint && (
             <>
               <span
                 className="oui-pointer-events-none oui-absolute oui-inset-y-0 oui-border-s oui-border-dashed oui-border-base-contrast-54"
@@ -531,11 +602,11 @@ export const PriceChart: React.FC<{
             </>
           )}
         </div>
-        {chartMode === "price" && chartPoints.length > 0 && (
+        {chartMode === "price" && plotHasData && (
           <span
             className={cn(
               "oui-pointer-events-none oui-absolute oui-z-10 oui-size-3 -oui-translate-x-1/2 -oui-translate-y-1/2 oui-rounded-full",
-              isPastRound
+              plotPast
                 ? "oui-bg-base-contrast oui-shadow-[0_0_0_6px_rgb(var(--oui-color-base-foreground)/0.24)]"
                 : "oui-bg-primary oui-shadow-[0_0_0_6px_rgb(var(--oui-color-primary)/0.24)]",
             )}
@@ -545,24 +616,22 @@ export const PriceChart: React.FC<{
             }}
           />
         )}
-        {(chartPoints.length || chartCandles.length ? chart.yTicks : []).map(
-          ({ ratio, value }) => (
-            <span
-              key={ratio}
-              className="oui-text-xs oui-pointer-events-none oui-absolute oui-end-4 oui-z-10 -oui-translate-y-1/2 oui-tabular-nums oui-text-base-contrast-36"
-              style={{
-                top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${ratio})`,
-              }}
-            >
-              $
-              {parseNumber(value, {
-                rule: "price",
-                dp: chart.yDecimals,
-              })}
-            </span>
-          ),
-        )}
-        {!isFutureRound && chartOpeningPrice != null && (
+        {(plotHasData ? chart.yTicks : []).map(({ ratio, value }) => (
+          <span
+            key={ratio}
+            className="oui-text-xs oui-pointer-events-none oui-absolute oui-end-4 oui-z-10 -oui-translate-y-1/2 oui-tabular-nums oui-text-base-contrast-36"
+            style={{
+              top: `calc(var(--oui-prediction-chart-top) + (100% - var(--oui-prediction-chart-top) - 88px) * ${ratio})`,
+            }}
+          >
+            $
+            {parseNumber(value, {
+              rule: "price",
+              dp: chart.yDecimals,
+            })}
+          </span>
+        ))}
+        {!plotFuture && plotOpeningPrice != null && (
           <div
             className="oui-text-xs oui-pointer-events-none oui-absolute oui-end-3 oui-z-10 oui-flex -oui-translate-y-1/2 oui-items-center oui-rounded-e-md oui-bg-base-3 oui-px-3 oui-py-1 oui-text-base-contrast"
             style={{
@@ -571,9 +640,9 @@ export const PriceChart: React.FC<{
           >
             <span className="oui-absolute -oui-start-2 oui-top-1/2 -oui-translate-y-1/2 oui-border-y-[12px] oui-border-e-[10px] oui-border-y-transparent oui-border-e-base-3" />
             {t("prediction.chart.target")}
-            {liveTargetDirection && (
+            {plotDirection && (
               <span className="oui-prediction-target-direction oui-ms-1 oui-inline-flex oui-size-5 oui-flex-col oui-items-center oui-justify-center">
-                {liveTargetDirection === "down" ? (
+                {plotDirection === "down" ? (
                   <>
                     <ChevronDownIcon
                       className="oui-prediction-target-direction-muted -oui-mb-1"
@@ -617,22 +686,36 @@ export const PriceChart: React.FC<{
           className="oui-text-xs oui-pointer-events-none oui-absolute oui-bottom-14 oui-start-4 oui-z-10 oui-h-8 oui-tabular-nums oui-text-base-contrast-36"
           style={{ width: `calc((100% - 32px) * ${plotWidth / width})` }}
         >
-          {visibleXTicks.map(({ timestamp, ratio }) => (
+          {(plot ? visibleXTicks : []).map(({ timestamp, ratio }) => (
             <span
               key={timestamp}
               className="oui-absolute oui-top-2 -oui-translate-x-1/2 oui-whitespace-nowrap"
               style={{ left: `${ratio * 100}%` }}
             >
-              {(isPastRound || chartMode === "candles"
+              {(plotPast || chartMode === "candles"
                 ? intl.roundTimeFormatter
                 : intl.chartTimeFormatter
               ).format(new Date(timestamp))}
             </span>
           ))}
         </div>
-        {chartPoints.length === 0 && chartCandles.length === 0 && (
+        {!chartPending && !plotHasData && (
           <div className="oui-text-sm oui-pointer-events-none oui-absolute oui-inset-x-4 oui-bottom-20 oui-top-[var(--oui-prediction-chart-top)] oui-flex oui-items-center oui-justify-center oui-text-base-contrast-36">
             {t("prediction.noData")}
+          </div>
+        )}
+        {chartPending && (
+          <div
+            className="oui-text-sm oui-absolute oui-inset-x-4 oui-bottom-14 oui-z-20 oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-3 oui-rounded-lg oui-bg-base-9/80 oui-p-4 oui-text-center oui-text-base-contrast-80"
+            style={{ top: "var(--oui-prediction-chart-top)" }}
+            role="status"
+            aria-live="polite"
+            aria-busy={historyStatus === "loading"}
+          >
+            <Spinner size="lg" color="primary" />
+            {historyStatus === "error" && (
+              <span>{t("prediction.chart.historyError")}</span>
+            )}
           </div>
         )}
       </>

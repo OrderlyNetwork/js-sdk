@@ -360,6 +360,7 @@
   "prediction.tradingAgreement": "Door te handelen ga je akkoord met de",
   "prediction.termOfUse": "Gebruiksvoorwaarden",
   "prediction.potentialProfit": "Potentiële winst",
+  "prediction.chart.historyError": "Laden mislukt. Opnieuw proberen…",
   "prediction.noData": "Nog geen gegevens",
   "prediction.demoSettle": "Demo vereffenen",
   "prediction.chart.btcPrice": "BTC-indexprijs",
