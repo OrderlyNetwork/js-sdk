@@ -54,6 +54,8 @@ export const PredictionOrderCell = ({
           )}
         </span>
       );
+    case "reduce_only":
+      return t(order.reduceOnly ? "common.yes" : "common.no");
     case "fill_quantity":
       return pending ? (
         <PendingValue state={state} order={order} field="quantity" />
