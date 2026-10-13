@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { binaryPendingOrderPrices } from "./binary/binaryOrderDisplay";
 import { useBinaryMarkPrice } from "./binary/useBinaryMarkPrice";
 import { useBinaryRegionRestricted } from "./binary/useBinaryRegion";
 import { useBinaryRounds } from "./binary/useBinaryRounds";
@@ -112,6 +113,16 @@ export const usePredictionScript = (
     slippage,
     quoteTick: rounds.selectedRow?.quote_tick,
   });
+
+  const pendingOrderPrices = useMemo(
+    () =>
+      binaryPendingOrderPrices(
+        portfolio.openOrders,
+        selectedSymbol,
+        form.selectedOutcome,
+      ),
+    [portfolio.openOrders, selectedSymbol, form.selectedOutcome],
+  );
 
   const canPlaceOrder =
     form.canPlaceOrder &&
@@ -279,6 +290,7 @@ export const usePredictionScript = (
     setActiveTab,
     // Order book view
     orderBook: bookView.orderBook,
+    pendingOrderPrices,
     estimateOrderSlippage: bookView.estimateOrderSlippage,
     estimatedSlippage: bookView.estimatedSlippage,
     isSlippageExceeded: bookView.isSlippageExceeded,

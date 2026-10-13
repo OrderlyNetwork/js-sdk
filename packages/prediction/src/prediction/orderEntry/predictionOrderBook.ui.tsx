@@ -53,6 +53,7 @@ export const PredictionOrderBook: React.FC<
   Pick<
     PredictionState,
     | "orderBook"
+    | "pendingOrderPrices"
     | "selectedOutcome"
     | "markPrice"
     | "setLimitPrice"
@@ -64,6 +65,7 @@ export const PredictionOrderBook: React.FC<
   >
 > = ({
   orderBook,
+  pendingOrderPrices,
   selectedOutcome,
   markPrice,
   setLimitPrice,
@@ -155,6 +157,9 @@ export const PredictionOrderBook: React.FC<
     ),
     markPrice: displayedPrice ?? Number.NaN,
     lastPrice: [Number.NaN, Number.NaN],
+    // Without an explicit depth the ladder falls back to base_tick, which
+    // would format and match prices at the quantity precision.
+    depth: String(quoteTick),
     depths: [String(quoteTick)],
     base,
     quote,
@@ -180,7 +185,10 @@ export const PredictionOrderBook: React.FC<
         {isMobile ? (
           <MobileOrderBookLadder {...ladderProps} />
         ) : (
-          <OrderBookLadder {...ladderProps} />
+          <OrderBookLadder
+            {...ladderProps}
+            pendingOrders={isPastRound ? undefined : pendingOrderPrices}
+          />
         )}
       </div>
     </section>

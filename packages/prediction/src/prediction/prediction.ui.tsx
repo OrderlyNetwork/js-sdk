@@ -335,6 +335,7 @@ export const Prediction: React.FC<
             selectedRow={state.selectedRow}
             market={state.market}
             orderBook={state.orderBook}
+            pendingOrderPrices={state.pendingOrderPrices}
             selectedOutcome={state.selectedOutcome}
             markPrice={state.markPrice}
             setLimitPrice={state.setLimitPrice}

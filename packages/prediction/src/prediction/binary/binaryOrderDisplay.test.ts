@@ -10,6 +10,7 @@ import {
   binaryOrderDisplayPrice,
   binaryOrderExecutedValue,
   binaryOrderEditPayload,
+  binaryPendingOrderPrices,
   hasPredictionExecutions,
   toPredictionOrder,
 } from "./binaryOrderDisplay";
@@ -186,4 +187,33 @@ test("account and paginated order projections preserve terminal states and produ
     ["rejected", "cancelled"],
   );
   assert.equal(rows[1].filledQuantity, 40);
+});
+
+test("pending order prices follow the selected round and outcome book", () => {
+  const symbol = "PERP_BTC5M2610081200_USDC";
+  const rows = [
+    order({ status: OrderStatus.NEW, price: 0.37 }),
+    order({
+      order_id: 2,
+      side: OrderSide.SELL,
+      status: OrderStatus.PARTIAL_FILLED,
+      price: 0.62,
+    }),
+    order({ order_id: 3, status: OrderStatus.CANCELLED, price: 0.4 }),
+    order({ order_id: 4, status: OrderStatus.FILLED, price: 0.41 }),
+    order({
+      order_id: 5,
+      symbol: "PERP_BTC5M2610081205_USDC",
+      status: OrderStatus.NEW,
+      price: 0.5,
+    }),
+    order({ order_id: 6, status: OrderStatus.NEW, price: undefined }),
+  ].map(toPredictionOrder);
+
+  assert.deepEqual(binaryPendingOrderPrices(rows, symbol, "up"), [0.37, 0.62]);
+  assert.deepEqual(
+    binaryPendingOrderPrices(rows, symbol, "down"),
+    [0.63, 0.38],
+  );
+  assert.deepEqual(binaryPendingOrderPrices(rows, undefined, "up"), []);
 });

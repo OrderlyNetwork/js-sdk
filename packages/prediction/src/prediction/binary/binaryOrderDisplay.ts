@@ -5,7 +5,11 @@ import {
   type API,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import type { PredictionOpenOrder, PredictionTrade } from "../prediction.types";
+import type {
+  PredictionOpenOrder,
+  PredictionOutcome,
+  PredictionTrade,
+} from "../prediction.types";
 import { binaryRoundFromSymbol, isBinarySymbol } from "./binaryInfo";
 import { complementPrice } from "./binaryOrderRules";
 import { matchesPredictionUnderlying } from "./productScope";
@@ -126,6 +130,25 @@ export const isPredictionTerminalOrder = (
   order.status === "filled" ||
   order.status === "cancelled" ||
   order.status === "rejected";
+
+/** Open-order prices of one round, in the selected outcome's book coordinate. */
+export const binaryPendingOrderPrices = (
+  orders: readonly PredictionOpenOrder[],
+  symbol: string | undefined,
+  outcome: PredictionOutcome,
+): number[] =>
+  symbol
+    ? orders
+        .filter(
+          (order) =>
+            order.symbol === symbol &&
+            !isPredictionTerminalOrder(order) &&
+            order.price > 0,
+        )
+        .map((order) =>
+          outcome === "up" ? order.price : complementPrice(order.price),
+        )
+    : [];
 
 /**
  * "Filled" means "has executions", not terminal FILLED: MARKET submits a
