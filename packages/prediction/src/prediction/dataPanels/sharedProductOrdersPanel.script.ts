@@ -27,7 +27,7 @@ export const buildProductFilterItems = (
     key:
       | "prediction.filter.allInstruments"
       | "common.perps"
-      | "prediction.filter.predictions",
+      | "common.predictions",
   ) => string,
   instrument: ProductOrderInstrument,
 ): DataFilterItem[] => [
@@ -38,7 +38,7 @@ export const buildProductFilterItems = (
     options: [
       { label: t("prediction.filter.allInstruments"), value: "all" },
       { label: t("common.perps"), value: "perps" },
-      { label: t("prediction.filter.predictions"), value: "prediction" },
+      { label: t("common.predictions"), value: "prediction" },
     ],
   },
 ];

@@ -88,7 +88,7 @@ const LeftSection = (props: {
       key: "prediction",
       activeIcon: <PredictionIcon active size={20} />,
       inactiveIcon: <PredictionIcon size={20} />,
-      title: t("prediction.filter.predictions"),
+      title: t("common.predictions"),
       description: t("prediction.description"),
       onClick: () => {
         onSelect("prediction");

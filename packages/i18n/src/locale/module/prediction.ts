@@ -18,8 +18,6 @@ export const prediction = {
     "Will the BTC index price finish above the opening price?",
   "prediction.up": "Up",
   "prediction.filter.allInstruments": "All instruments",
-  "prediction.filter.perps": "Perps",
-  "prediction.filter.predictions": "Predictions",
   "prediction.cancelAll.all.description":
     "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
   "prediction.cancelAll.perps.description":

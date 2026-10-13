@@ -45,7 +45,7 @@ export const usePredictionMarketTabs = (
     tabs.splice(
       cryptoIndex + 1,
       0,
-      predictionMarketTab(t("prediction.filter.predictions")),
+      predictionMarketTab(t("common.predictions")),
     );
     return tabs;
   }, [defaultTabs, t]);
