@@ -127,6 +127,23 @@ export const useBinaryRounds = ({
     now >= listSelectedRow.expire_at + BINARY_RESULT_POLL_DELAY_MS &&
     listSelectedRow.result_committed_at == null;
   const detailSymbol = parsedSymbol ? symbol : undefined;
+  const waitingForOpeningPrice =
+    !!listSelectedRow &&
+    now >= listSelectedRow.observation_start_at &&
+    now < listSelectedRow.expire_at &&
+    listSelectedRow.s0 == null;
+  const detailRefreshInterval = useCallback(
+    (detail?: BinaryInfoDetail) =>
+      waitingForOpeningPrice
+        ? detail != null &&
+          detail.symbol === detailSymbol &&
+          detail.s0 != null &&
+          Number.isFinite(detail.s0)
+          ? 0
+          : 2_000
+        : binaryDetailRefreshInterval(detail),
+    [waitingForOpeningPrice, detailSymbol],
+  );
   const {
     data: detailData,
     error: detailError,
@@ -136,11 +153,17 @@ export const useBinaryRounds = ({
     active &&
       detailSymbol &&
       (!snapshotSelectedRow ||
+        waitingForOpeningPrice ||
         waitingForResult ||
         listSelectedRow?.result_committed_at != null)
       ? `/v1/public/binary/info/${encodeURIComponent(detailSymbol)}`
       : null,
-    { refreshInterval: binaryDetailRefreshInterval, revalidateOnFocus: false },
+    {
+      refreshInterval: detailRefreshInterval,
+      // A long provider-level dedupe window must not suppress opening polls.
+      dedupingInterval: 1_000,
+      revalidateOnFocus: false,
+    },
   );
   const validDetail =
     !!detailData &&
@@ -149,13 +172,15 @@ export const useBinaryRounds = ({
     getBinaryMarketIdentity(detailData)?.id === requestedMarketId
       ? detailData
       : undefined;
-  const selectedRow = useMemo(
-    () =>
-      listSelectedRow
-        ? mergeBinaryDetail(listSelectedRow, validDetail)
-        : validDetail,
-    [listSelectedRow, validDetail],
-  );
+  const selectedRow = useMemo(() => {
+    const merged = listSelectedRow
+      ? mergeBinaryDetail(listSelectedRow, validDetail)
+      : validDetail;
+    // Retain S0 when the detail key pauses at T1 or the snapshot lags behind.
+    return merged && merged.s0 == null && cachedRow?.s0 != null
+      ? { ...merged, s0: cachedRow.s0 }
+      : merged;
+  }, [listSelectedRow, validDetail, cachedRow?.s0]);
   const identity = selectedRow && getBinaryMarketIdentity(selectedRow);
   const market = identity
     ? {

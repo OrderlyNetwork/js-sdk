@@ -66,13 +66,19 @@ export function mergeBinaryDetail(
       detail.result_committed_at < row.result_committed_at)
   )
     return row;
+  const merged = {
+    ...row,
+    ...detail,
+    // An older detail response must not erase the fixed opening price.
+    s0: detail.s0 ?? row.s0,
+  };
   if (
-    Object.entries(detail).every(
+    Object.entries(merged).every(
       ([key, value]) => row[key as keyof BinaryInfoDetail] === value,
     )
   )
     return row;
-  return { ...row, ...detail };
+  return merged;
 }
 
 export function nextTradableBinaryRound(

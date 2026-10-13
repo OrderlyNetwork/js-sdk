@@ -491,3 +491,26 @@ test("merging identical details retains the cached row reference", () => {
   const merged = mergeBinaryDetail(row, detail)!;
   assert.equal(mergeBinaryDetail(merged, detail), merged);
 });
+
+test("an older detail cannot erase an already published opening price", () => {
+  const row = info({ result_committed_at: null, s0: 100 });
+  const detail = info({ result_committed_at: null, s0: null });
+  assert.equal(mergeBinaryDetail(row, detail)?.s0, 100);
+  assert.equal(mergeBinaryDetail(detail, row)?.s0, 100);
+});
+
+test("preserving S0 in an unchanged detail retains the cached row reference", () => {
+  const row = info({ result_committed_at: null, s0: 100 });
+  const detail = { ...row, s0: null };
+  assert.equal(mergeBinaryDetail(row, detail), row);
+});
+
+test("a stale S0 still merges other updates and stabilizes on repeated merges", () => {
+  const row = info({ result_committed_at: null, s0: 100, s1: null });
+  const detail = { ...row, s0: null, s1: 101 };
+  const merged = mergeBinaryDetail(row, detail)!;
+  assert.notEqual(merged, row);
+  assert.equal(merged.s0, 100);
+  assert.equal(merged.s1, 101);
+  assert.equal(mergeBinaryDetail(merged, detail), merged);
+});
