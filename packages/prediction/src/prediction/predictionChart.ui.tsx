@@ -10,7 +10,6 @@ import {
   parseNumber,
   Tooltip,
 } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
 import type { BinaryInfoRow } from "./binary/binaryInfo";
 import {
   getPriceDifference,
@@ -19,6 +18,7 @@ import {
   secondsUntil,
 } from "./binary/binaryRoundView";
 import { computeChartGeometry, type CandleScale } from "./chartGeometry";
+import { formatChartPriceDifferencePercent } from "./chartPriceDifferenceFormat";
 import { useRoundNow } from "./hooks/useRoundCountdown";
 import type { PredictionChartPoint } from "./prediction.types";
 import {
@@ -345,9 +345,7 @@ export const PriceChart: React.FC<{
                 )}{" "}
                 {`${difference.amount > 0 ? "+" : difference.amount < 0 ? "−" : ""}$${indexPrice.format(Math.abs(difference.amount))}`}
                 {" ("}
-                {difference.percent == null
-                  ? "--"
-                  : `${difference.percent > 0 ? "+" : ""}${new Decimal(difference.percent).toFixed(2)}%`}
+                {formatChartPriceDifferencePercent(difference.percent)}
                 {")"}
               </span>
             )}{" "}
