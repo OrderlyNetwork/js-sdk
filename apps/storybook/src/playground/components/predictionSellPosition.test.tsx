@@ -449,3 +449,38 @@ describe("symbol-specific sell dialog", () => {
     expect(mocks.refresh).not.toHaveBeenCalled();
   });
 });
+
+it.each(
+  (["up", "down"] as const).flatMap((outcome) =>
+    (["market", "limit"] as const).flatMap((type) =>
+      [12.26, 1].map((quantity) => [outcome, type, quantity] as const),
+    ),
+  ),
+)(
+  "allows small %s %s sell dialog quantities of %s",
+  async (outcome, type, quantity) => {
+    mocks.row = {
+      ...mocks.row,
+      base_tick: 0.01,
+      base_min: 0.01,
+      min_notional: 5,
+    };
+    mocks.positionQty = outcome === "up" ? 12.26 : -12.26;
+    mount(outcome);
+    act(() => sell.onOpenChange(true));
+    book();
+    act(() => {
+      sell.setType(type);
+      sell.setPrice("0.36");
+      sell.setQuantity(String(quantity));
+    });
+    expect(sell.valid).toBe(true);
+    await confirm();
+    expect(mocks.submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reduce_only: true,
+        order_quantity: String(quantity),
+      }),
+    );
+  },
+);

@@ -172,7 +172,7 @@ export const useSellPositionScript = ({
     tradable &&
     Number(quantity) > 0 &&
     Number(quantity) <= available &&
-    splitBinaryQuantity(Number(quantity), upPrice, row!) != null &&
+    splitBinaryQuantity(Number(quantity), upPrice, row!, true) != null &&
     (type === "market" ||
       new Decimal(Number(price))
         .div(row?.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK)

@@ -708,3 +708,57 @@ test("pending order drafts reject over-limit and off-tick values inline", () => 
     key: "prediction.invalidOrder",
   });
 });
+
+test("reduce-only sizing exempts notional but retains all other size gates", () => {
+  const limits = resolveBinaryOrderLimits(rules);
+  for (const price of [0.36, 0.2]) {
+    for (const quantity of [12.26, 1]) {
+      assert.equal(
+        validateBinaryOrderSize({ price, quantity, limits }),
+        "notionalBelowMin",
+      );
+      assert.equal(
+        validateBinaryOrderSize({ price, quantity, limits, reduceOnly: false }),
+        "notionalBelowMin",
+      );
+      assert.equal(
+        validateBinaryOrderSize({ price, quantity, limits, reduceOnly: true }),
+        undefined,
+      );
+      assert.equal(splitBinaryQuantity(quantity, price, rules), undefined);
+      assert.deepEqual(splitBinaryQuantity(quantity, price, rules, true), [
+        quantity,
+      ]);
+    }
+  }
+  for (const [price, quantity, rejection] of [
+    [0, 1, "priceOutOfRange"],
+    [0.361, 1, "priceNotTickAligned"],
+    [0.36, 0.001, "quantityBelowMin"],
+    [0.36, 1.001, "quantityNotTickAligned"],
+    [0.36, 10001, "quantityAboveMax"],
+  ] as const) {
+    assert.equal(
+      validateBinaryOrderSize({
+        price,
+        quantity,
+        limits,
+        reduceOnly: true,
+        requireQuantityTickAligned: true,
+        checkQuantityMax: true,
+      }),
+      rejection,
+    );
+  }
+  assert.equal(splitBinaryQuantity(0.001, 0.36, rules, true), undefined);
+  assert.equal(splitBinaryQuantity(1.001, 0.36, rules, true), undefined);
+  assert.equal(splitBinaryQuantity(1, 0, rules, true), undefined);
+  assert.deepEqual(
+    splitBinaryQuantity(12.26, 0.36, { ...rules, base_max: 5 }, true),
+    [4.09, 4.09, 4.08],
+  );
+  assert.equal(
+    splitBinaryQuantity(0.01, 0.36, { ...rules, base_min: 0.02 }, true),
+    undefined,
+  );
+});

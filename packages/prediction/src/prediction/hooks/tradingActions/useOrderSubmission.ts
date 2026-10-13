@@ -217,7 +217,12 @@ export const useOrderSubmission = ({
       }
       const limits = resolveBinaryOrderLimits(config);
       const { upSide, upPrice } = toUpBookRequest(outcome, side, displayPrice);
-      const quantities = splitBinaryQuantity(quantity, upPrice, config);
+      const quantities = splitBinaryQuantity(
+        quantity,
+        upPrice,
+        config,
+        reduceOnly,
+      );
       const levels =
         outcome === "up"
           ? { asks: book.asks, bids: book.bids }
@@ -249,7 +254,12 @@ export const useOrderSubmission = ({
       if (
         !quantities ||
         marketRejected ||
-        validateBinaryOrderSize({ price: upPrice, quantity, limits })
+        validateBinaryOrderSize({
+          price: upPrice,
+          quantity,
+          limits,
+          reduceOnly,
+        })
       ) {
         notify("prediction.invalidOrder", "danger");
         return false;

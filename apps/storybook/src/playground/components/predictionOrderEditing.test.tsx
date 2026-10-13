@@ -200,3 +200,22 @@ it.each(["account", "disable", "unmount"])(
     expect(mocks.notify).not.toHaveBeenCalled();
   },
 );
+
+it.each(["up", "down"] as const)(
+  "edits small %s reduce-only orders but rejects small opening orders",
+  async (outcome) => {
+    const orderChanges = { outcome, filledQuantity: 0, quantity: 1 };
+    mount({ orderChanges });
+    await expect(edit(42, 0.36, 1)).resolves.toBe(true);
+    expect(mocks.update).toHaveBeenCalledWith(
+      expect.objectContaining({ reduce_only: true, order_quantity: "1.00" }),
+    );
+    act(() =>
+      root!.update(
+        <Consumer orderChanges={{ ...orderChanges, reduceOnly: false }} />,
+      ),
+    );
+    await expect(edit(42, 0.36, 1)).resolves.toBe(false);
+    expect(mocks.update).toHaveBeenCalledTimes(1);
+  },
+);

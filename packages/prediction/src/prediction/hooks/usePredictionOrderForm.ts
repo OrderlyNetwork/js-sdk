@@ -271,6 +271,7 @@ export const usePredictionOrderForm = ({
       price: upPrice,
       quantity: orderQuantity,
       limits,
+      reduceOnly: orderSide === "sell",
       requirePriceTickAligned: orderType === "limit",
     });
     if (rejection === "notionalBelowMin") {
@@ -301,12 +302,17 @@ export const usePredictionOrderForm = ({
     }
     if (rejection) return { field: "price", key: "prediction.invalidOrder" };
     if (
-      !splitBinaryQuantity(orderQuantity, upPrice, {
-        base_tick: limits.baseTick,
-        base_min: limits.baseMin,
-        base_max: limits.baseMax,
-        min_notional: limits.minNotional,
-      })
+      !splitBinaryQuantity(
+        orderQuantity,
+        upPrice,
+        {
+          base_tick: limits.baseTick,
+          base_min: limits.baseMin,
+          base_max: limits.baseMax,
+          min_notional: limits.minNotional,
+        },
+        orderSide === "sell",
+      )
     )
       return { field: "amount", key: "prediction.invalidOrder" };
     if (

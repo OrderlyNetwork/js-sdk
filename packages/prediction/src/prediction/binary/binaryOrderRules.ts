@@ -370,6 +370,8 @@ export function validateBinaryOrderSize(input: {
   price: number;
   quantity: number;
   limits: BinaryOrderLimits;
+  /** Reduce-only orders are exempt from minNotional (default false). */
+  reduceOnly?: boolean;
   /** Limit prices must sit on the quote tick grid (default true). */
   requirePriceTickAligned?: boolean;
   /** Quantities must sit on the base tick grid (default false). */
@@ -381,6 +383,7 @@ export function validateBinaryOrderSize(input: {
     price,
     quantity,
     limits,
+    reduceOnly = false,
     requirePriceTickAligned = true,
     requireQuantityTickAligned = false,
     checkQuantityMax = false,
@@ -406,9 +409,8 @@ export function validateBinaryOrderSize(input: {
     !new Decimal(quantity).div(limits.baseTick).isInteger()
   )
     return "quantityNotTickAligned";
-  // min_notional is validated on the UP-book price for both sides and
-  // reduce-only exits alike (api-spec §5.2).
-  if (new Decimal(quantity).mul(price).lt(limits.minNotional))
+  // Opening orders use UP-book notional; reduce-only exits are exempt.
+  if (!reduceOnly && new Decimal(quantity).mul(price).lt(limits.minNotional))
     return "notionalBelowMin";
   return undefined;
 }
@@ -476,11 +478,12 @@ export function binaryUpNotional(
   );
 }
 
-/** Balance children on the integer tick grid so the tail never becomes dust. */
+/** Balance tick-aligned children; reduce-only exits only require base_min. */
 export function splitBinaryQuantity(
   quantity: number,
   upPrice: number,
   config: BinarySizeRules,
+  reduceOnly = false,
 ): number[] | undefined {
   const tick = config.base_tick ?? DEFAULT_BINARY_BASE_TICK;
   const max = config.base_max ?? DEFAULT_BINARY_BASE_MAX;
@@ -499,7 +502,7 @@ export function splitBinaryQuantity(
     .div(tick)
     .toDecimalPlaces(0, Decimal.ROUND_FLOOR);
   const minTicks = new Decimal(
-    config.min_notional ?? DEFAULT_BINARY_MIN_NOTIONAL,
+    reduceOnly ? 0 : (config.min_notional ?? DEFAULT_BINARY_MIN_NOTIONAL),
   )
     .div(upPrice)
     .div(tick)

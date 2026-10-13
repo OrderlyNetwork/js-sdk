@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   onSubmitted: vi.fn(),
   notify: vi.fn(),
   onActiveTab: vi.fn(),
+  available: 100,
 }));
 vi.mock("@orderly.network/hooks", () => ({
   useMutation: () => [mocks.createOrder, {}],
@@ -39,10 +40,10 @@ vi.mock(
   "@orderly.network/prediction/src/prediction/hooks/tradingActions/useTradingEstimates",
   () => ({
     useTradingEstimates: () => ({
-      availableQuantity: () => 100,
+      availableQuantity: () => mocks.available,
       estimateAdditionalFrozen: () => 10,
       protectionPrice: (_outcome: string, side: string) =>
-        side === "buy" ? 0.62 : 0.38,
+        side === "buy" ? 0.64 : 0.36,
       isOrderTradable: () => true,
     }),
   }),
@@ -75,22 +76,22 @@ function Consumer({ initialTab }: { initialTab: PredictionDataTab }) {
         symbol,
         status: "ACTIVE",
         expire_at: Date.now() + 60000,
-        base_tick: 1,
-        base_min: 1,
+        base_tick: 0.01,
+        base_min: 0.01,
         base_max: 10000,
         quote_tick: 0.01,
-        min_notional: 1,
+        min_notional: 5,
       } as BinaryInfoRow,
     ],
     selectedSymbol: symbol,
-    bbo: { bestAsk: 0.6, bestBid: 0.4 },
+    bbo: { bestAsk: 0.59, bestBid: 0.41 },
     book: {
-      asks: [[0.6, 100]],
-      bids: [[0.4, 100]],
-      downAsks: [[0.6, 100]],
-      downBids: [[0.4, 100]],
+      asks: [[0.59, 100]],
+      bids: [[0.41, 100]],
+      downAsks: [[0.59, 100]],
+      downBids: [[0.41, 100]],
     },
-    slippage: "2",
+    slippage: "5",
     isRegionRestricted: false,
     notify: mocks.notify,
     onSubmitted: mocks.onSubmitted,
@@ -121,6 +122,7 @@ const input = (
 });
 beforeEach(() => {
   vi.resetAllMocks();
+  mocks.available = 100;
   mocks.createOrder.mockResolvedValue({ success: true, data: { order_id: 1 } });
 });
 afterEach(() => {
@@ -218,4 +220,42 @@ it("keeps the selected tab through consecutive limit and market submissions", as
   expect(mocks.createOrder).toHaveBeenCalledTimes(2);
   expect(mocks.refreshOrders).toHaveBeenCalledTimes(2);
   expect(mocks.refreshPositions).toHaveBeenCalledTimes(2);
+});
+
+it.each(
+  (["up", "down"] as const).flatMap((outcome) =>
+    (["market", "limit"] as const).flatMap((type) =>
+      [12.26, 1].map((quantity) => [outcome, type, quantity] as const),
+    ),
+  ),
+)(
+  "submits small %s %s reduce-only sells of %s shares",
+  async (outcome, type, quantity) => {
+    mocks.available = 12.26;
+    mount();
+    const order = {
+      ...input(type, "sell"),
+      selectedOutcome: outcome,
+      orderQuantity: quantity,
+    };
+    await act(async () => actions.placeOrder(order));
+    expect(mocks.createOrder).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reduce_only: true,
+        order_quantity: String(quantity),
+      }),
+    );
+    expect(mocks.notify).not.toHaveBeenCalled();
+  },
+);
+it("rejects small opening and oversized reduce-only orders at submission", async () => {
+  mocks.available = 12.26;
+  mount();
+  await act(async () =>
+    actions.placeOrder({ ...input("limit"), orderQuantity: 1 }),
+  );
+  await act(async () =>
+    actions.placeOrder({ ...input("limit", "sell"), orderQuantity: 13.26 }),
+  );
+  expect(mocks.createOrder).not.toHaveBeenCalled();
 });

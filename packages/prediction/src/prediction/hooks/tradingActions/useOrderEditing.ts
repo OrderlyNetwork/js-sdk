@@ -146,6 +146,7 @@ export const useOrderEditing = ({
           price,
           quantity,
           limits,
+          reduceOnly: order.reduceOnly,
           requireQuantityTickAligned: true,
           checkQuantityMax: true,
         })
