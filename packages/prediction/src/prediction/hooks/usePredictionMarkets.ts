@@ -3,7 +3,10 @@ import { useQuery } from "@orderly.network/hooks";
 import { getTimestamp } from "@orderly.network/utils";
 import { type BinaryInfoRow, isBinaryRowTradable } from "../binary/binaryInfo";
 import { deriveBinaryMarkets } from "../binary/binaryMarkets";
-import { startBinaryRoundClock } from "../binary/binaryRoundClock";
+import {
+  startBinaryRoundClock,
+  subscribeBinaryTime,
+} from "../binary/binaryRoundClock";
 import type {
   UsePredictionMarketsOptions,
   PredictionMarketsState,
@@ -30,6 +33,7 @@ export const usePredictionMarkets = ({
             now: getTimestamp,
             setTimeout: (callback, delay) => window.setTimeout(callback, delay),
             clearTimeout: (timer) => window.clearTimeout(timer),
+            subscribe: subscribeBinaryTime,
           })
         : undefined,
     [enabled, rows],

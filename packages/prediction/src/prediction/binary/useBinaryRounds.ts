@@ -17,6 +17,7 @@ import { deriveBinaryMarkets, getBinaryMarketIdentity } from "./binaryMarkets";
 import {
   BINARY_RESULT_POLL_DELAY_MS,
   startBinaryRoundClock,
+  subscribeBinaryTime,
 } from "./binaryRoundClock";
 import {
   binaryDetailRefreshInterval,
@@ -69,6 +70,7 @@ export const useBinaryRounds = ({
       now: getTimestamp,
       setTimeout: (callback, delay) => window.setTimeout(callback, delay),
       clearTimeout: (timer) => window.clearTimeout(timer),
+      subscribe: subscribeBinaryTime,
     });
   }, [active, clockRows]);
 

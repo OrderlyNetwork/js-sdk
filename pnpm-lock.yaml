@@ -1510,6 +1510,9 @@ importers:
       '@orderly.network/markets-core':
         specifier: workspace:*
         version: link:../markets-core
+      '@orderly.network/net':
+        specifier: workspace:*
+        version: link:../net
       '@orderly.network/perp':
         specifier: workspace:*
         version: link:../perp

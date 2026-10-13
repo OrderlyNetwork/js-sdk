@@ -1,4 +1,5 @@
 import { del, get, post, put } from "../src";
+import { subscribeTimestampOffset } from "../src";
 import { request } from "../src/fetch";
 
 const url = "https://api.example.com/v1/test";
@@ -66,6 +67,7 @@ describe("fetch request headers", () => {
 
 describe("timestamp offset calibration", () => {
   const OFFSET_KEY = "__ORDERLY_timestamp_offset";
+  const LISTENERS_KEY = "__ORDERLY_timestamp_offset_listeners";
 
   const offset = () =>
     (globalThis as unknown as Record<string, unknown>)[OFFSET_KEY];
@@ -100,8 +102,14 @@ describe("timestamp offset calibration", () => {
     }) as typeof fetch;
   };
 
+  beforeEach(() => {
+    jest.spyOn(Date, "now").mockReturnValue(500_000);
+    jest.spyOn(performance, "now").mockReturnValue(0);
+  });
+
   afterEach(() => {
     delete (globalThis as unknown as Record<string, unknown>)[OFFSET_KEY];
+    delete (globalThis as unknown as Record<string, unknown>)[LISTENERS_KEY];
     globalThis.fetch = originalFetch;
     jest.restoreAllMocks();
   });
@@ -219,5 +227,69 @@ describe("timestamp offset calibration", () => {
     await get(url);
 
     expect(offset()).toBe(0);
+  });
+
+  it("notifies first calibration and actual changes without broadcasting latency jitter", async () => {
+    const first = jest.fn();
+    const second = jest.fn();
+    const unsubscribeFirst = subscribeTimestampOffset(first);
+    const unsubscribeSecond = subscribeTimestampOffset(second);
+    mockEnvelope(500_000);
+    await get(url);
+    expect(first).toHaveBeenCalledTimes(1);
+    expect(second).toHaveBeenCalledTimes(1);
+
+    mockTimedEnvelope({
+      timestamp: 500_100,
+      receivedAt: 504_000,
+      transitMs: 4_000,
+    });
+    await get(url);
+    expect(first).toHaveBeenCalledTimes(1);
+    expect(second).toHaveBeenCalledTimes(1);
+    unsubscribeFirst();
+    mockEnvelope(800_000);
+    await get(url);
+    expect(first).toHaveBeenCalledTimes(1);
+    expect(second).toHaveBeenCalledTimes(2);
+    unsubscribeSecond();
+    mockEnvelope(1_000_000);
+    await get(url);
+    expect(second).toHaveBeenCalledTimes(2);
+  });
+
+  it("isolates failed subscribers and shares listeners across module instances", async () => {
+    jest.spyOn(console, "error").mockImplementation(() => undefined);
+    subscribeTimestampOffset(() => {
+      throw new Error("consumer failure");
+    });
+    const listener = jest.fn();
+    subscribeTimestampOffset(listener);
+    jest.isolateModules(() => {
+      const other =
+        require("../src/fetch/timestampOffset") as typeof import("../src/fetch/timestampOffset");
+      other.calibrateTimestampOffset({ success: true, timestamp: 500_000 }, 0);
+    });
+    expect(offset()).toBe(0);
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    mockEnvelope(800_000);
+    await expect(get(url)).resolves.toEqual([]);
+    expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not notify subscribers for rejected calibration samples", async () => {
+    const listener = jest.fn();
+    subscribeTimestampOffset(listener);
+    mockEnvelope(NaN);
+    await get(url);
+    mockTimedEnvelope({
+      timestamp: 500_100,
+      receivedAt: 530_000,
+      transitMs: 30_000,
+    });
+    await get(url);
+    expect(listener).not.toHaveBeenCalled();
+    expect(offset()).toBeUndefined();
   });
 });

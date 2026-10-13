@@ -1,4 +1,30 @@
+import { subscribeTimestampOffset } from "@orderly.network/net";
 import type { BinaryInfoRow } from "./binaryInfo";
+
+/** Offset changes and page wakeups both invalidate locally scheduled boundaries. */
+export function subscribeBinaryTime(listener: () => void): () => void {
+  const unsubscribeOffset = subscribeTimestampOffset(listener);
+  if (
+    typeof window === "undefined" ||
+    typeof document === "undefined" ||
+    typeof window.addEventListener !== "function" ||
+    typeof document.addEventListener !== "function"
+  ) {
+    return unsubscribeOffset;
+  }
+  const onWake = () => {
+    if (document.visibilityState === "visible") listener();
+  };
+  // Restoring the device clock can restore the old offset as well. Wake the
+  // observer even when its next valid response leaves that offset unchanged.
+  window.addEventListener("focus", onWake);
+  document.addEventListener("visibilitychange", onWake);
+  return () => {
+    unsubscribeOffset();
+    window.removeEventListener("focus", onWake);
+    document.removeEventListener("visibilitychange", onWake);
+  };
+}
 
 /**
  * Grace period after T1 before the waiting-result detail poll may start. The
@@ -12,6 +38,7 @@ type RoundClock = {
   now: () => number;
   setTimeout: (callback: () => void, delay: number) => number;
   clearTimeout: (timer: number) => void;
+  subscribe?: (listener: () => void) => () => void;
 };
 
 /** Keep round time current at lifecycle boundaries until the observer stops. */
@@ -25,6 +52,10 @@ export const startBinaryRoundClock = (
 
   const tick = () => {
     if (stopped) return;
+    if (timer !== undefined) {
+      clock.clearTimeout(timer);
+      timer = undefined;
+    }
     const now = clock.now();
     onTick(now);
     const next = Math.min(
@@ -45,9 +76,12 @@ export const startBinaryRoundClock = (
 
   // New snapshots and reactivation must catch up even with no future boundary.
   tick();
+  // Keep listening even with no future boundary: calibration can revive a round.
+  const unsubscribe = clock.subscribe?.(tick);
 
   return () => {
     stopped = true;
+    unsubscribe?.();
     if (timer !== undefined) clock.clearTimeout(timer);
   };
 };

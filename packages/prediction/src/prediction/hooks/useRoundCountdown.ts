@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getTimestamp } from "@orderly.network/utils";
+import { subscribeBinaryTime } from "../binary/binaryRoundClock";
 import { secondsUntil } from "../binary/binaryRoundView";
 
 type HeartbeatClock = {
@@ -52,18 +53,21 @@ export const useRoundNow = (untilMs?: number) => {
   useEffect(() => {
     setNow(getTimestamp());
     if (untilMs == null) return;
-    // Stay subscribed for the leaf's whole lifetime: the calibrated clock can
-    // jump when the device clock changes after load and later be re-calibrated
-    // from server responses (OR-7483), so an expired-looking reading must not
-    // permanently stop the countdown. While steadily past the deadline the
-    // functional update keeps the previous value, so expired leaves cost one
-    // no-op tick per second and no re-render.
-    const unsubscribe = sharedHeartbeat.subscribe((timestamp) => {
+    // Keep expired leaves subscribed so a genuine server correction can revive
+    // them, but skip renders while steadily past their deadline.
+    const updateNow = (timestamp: number) => {
       setNow((previous) =>
         timestamp >= untilMs && previous >= untilMs ? previous : timestamp,
       );
-    });
-    return unsubscribe;
+    };
+    const unsubscribeHeartbeat = sharedHeartbeat.subscribe(updateNow);
+    const unsubscribeClock = subscribeBinaryTime(() =>
+      updateNow(getTimestamp()),
+    );
+    return () => {
+      unsubscribeHeartbeat();
+      unsubscribeClock();
+    };
   }, [untilMs]);
   return now;
 };

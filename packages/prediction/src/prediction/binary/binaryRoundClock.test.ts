@@ -34,6 +34,7 @@ const createClock = (initialTime: number) => {
   let time = initialTime;
   let id = 0;
   const timers = new Map<number, { at: number; callback: () => void }>();
+  const listeners = new Set<() => void>();
   return {
     now: () => time,
     setTimeout: (callback: () => void, delay: number) => {
@@ -44,6 +45,17 @@ const createClock = (initialTime: number) => {
     clearTimeout: (timer: number) => {
       timers.delete(timer);
     },
+    subscribe: (listener: () => void) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    calibrateTo: (target: number) => {
+      time = target;
+      listeners.forEach((listener) => listener());
+    },
+    subscriptions: () => listeners.size,
     advanceTo: (target: number) => {
       let next = [...timers].sort((a, b) => a[1].at - b[1].at)[0];
       while (next && next[1].at <= target) {
@@ -180,4 +192,56 @@ test("stopping or replacing a snapshot cancels the old boundary timer", () => {
   clock.advanceTo(current.expire_at + 5);
   assert.deepEqual(ticks, [start + 60_000, start + 60_000]);
   stopReplacement();
+});
+
+test("calibration revives an expired-looking round without replacing its snapshot", () => {
+  const clock = createClock(current.expire_at + 300_000);
+  const rows = [current];
+  let now = 0;
+  const stop = startBinaryRoundClock(rows, (time) => (now = time), clock);
+  assert.equal(isBinaryRowTradable(current, now), false);
+  assert.equal(clock.pending(), 0);
+  assert.equal(clock.subscriptions(), 1);
+
+  clock.calibrateTo(start + 60_000);
+  assert.equal(deriveBinaryPhase(current, now), "trading");
+  assert.equal(isBinaryRowTradable(current, now), true);
+  assert.equal(clock.pending(), 1);
+  clock.advanceTo(current.expire_at + 5);
+  assert.equal(isBinaryRowTradable(current, now), false);
+  assert.equal(clock.pending(), 1);
+  clock.advanceTo(current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
+  assert.equal(clock.pending(), 0);
+  stop();
+  assert.equal(clock.subscriptions(), 0);
+});
+
+test("calibration replaces pending timers and respects independent consumer lifetimes", () => {
+  const clock = createClock(start + 60_000);
+  const first: number[] = [];
+  const second: number[] = [];
+  const stopFirst = startBinaryRoundClock(
+    [current],
+    (time) => first.push(time),
+    clock,
+  );
+  const stopSecond = startBinaryRoundClock(
+    [current],
+    (time) => second.push(time),
+    clock,
+  );
+  assert.equal(clock.pending(), 2);
+  clock.calibrateTo(start + 120_000);
+  assert.equal(clock.pending(), 2);
+  assert.equal(first.at(-1), start + 120_000);
+  assert.equal(second.at(-1), start + 120_000);
+  stopFirst();
+  assert.equal(clock.pending(), 1);
+  assert.equal(clock.subscriptions(), 1);
+  clock.calibrateTo(current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
+  assert.equal(first.at(-1), start + 120_000);
+  assert.equal(isBinaryRowTradable(current, second.at(-1)!), false);
+  assert.equal(clock.pending(), 0);
+  stopSecond();
+  assert.equal(clock.subscriptions(), 0);
 });
