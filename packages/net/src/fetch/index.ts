@@ -1,4 +1,5 @@
 import { ApiError } from "../errors/apiError";
+import { calibrateTimestampOffset } from "./timestampOffset";
 
 async function request(url: string, options: RequestInit) {
   //
@@ -6,6 +7,8 @@ async function request(url: string, options: RequestInit) {
     throw new Error("url must start with http(s)");
   }
   // const urlInstance = new URL(url);
+  // Wall-clock adjustments must not look like slow requests.
+  const sentAt = performance.now();
   const response = await fetch(url, {
     ...options,
     // mode: "cors",
@@ -15,6 +18,7 @@ async function request(url: string, options: RequestInit) {
 
   if (response.ok) {
     const res = await response.json();
+    calibrateTimestampOffset(res, performance.now() - sentAt);
     return res;
     // if (res.success) {
     //   return res;

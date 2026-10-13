@@ -51,12 +51,17 @@ export const useRoundNow = (untilMs?: number) => {
   const [now, setNow] = useState(getTimestamp);
   useEffect(() => {
     setNow(getTimestamp());
-    if (untilMs == null || untilMs <= getTimestamp()) return;
-    // Join the shared heartbeat; leave on unmount or once this leaf's own
-    // deadline passes, mirroring the old self-clearing row-local timer.
+    if (untilMs == null) return;
+    // Stay subscribed for the leaf's whole lifetime: the calibrated clock can
+    // jump when the device clock changes after load and later be re-calibrated
+    // from server responses (OR-7483), so an expired-looking reading must not
+    // permanently stop the countdown. While steadily past the deadline the
+    // functional update keeps the previous value, so expired leaves cost one
+    // no-op tick per second and no re-render.
     const unsubscribe = sharedHeartbeat.subscribe((timestamp) => {
-      setNow(timestamp);
-      if (timestamp >= untilMs) unsubscribe();
+      setNow((previous) =>
+        timestamp >= untilMs && previous >= untilMs ? previous : timestamp,
+      );
     });
     return unsubscribe;
   }, [untilMs]);
