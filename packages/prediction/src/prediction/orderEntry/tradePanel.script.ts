@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import type { API } from "@orderly.network/types";
 import { toBinaryUpRequest } from "../binary/binaryOrderRules";
@@ -83,6 +83,8 @@ export interface TradePanelScriptInput extends TradePanelFormProps {
 export interface TradePanelProps extends TradePanelFormProps {
   isOneTap: boolean;
   visibleOrderError?: PredictionOrderValidationError;
+  errorMsgVisible: boolean;
+  submitButtonRef: RefObject<HTMLButtonElement>;
   submitDisabled: boolean;
   isBuyContext: boolean;
   canAdjustAmount: boolean;
@@ -124,12 +126,36 @@ export function useTradePanelScript(
   const [validation, setValidation] = useState({
     context: validationContext,
     validated: false,
+    errorMsgVisible: false,
   });
   if (validation.context !== validationContext) {
-    setValidation({ context: validationContext, validated: false });
+    setValidation({
+      context: validationContext,
+      validated: false,
+      errorMsgVisible: false,
+    });
   }
   const validated =
     validation.context === validationContext && validation.validated;
+  const errorMsgVisible = validated && validation.errorMsgVisible;
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!errorMsgVisible) return;
+
+    const handleClick = (event: MouseEvent) => {
+      if (
+        event.target instanceof Node &&
+        submitButtonRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      setValidation((current) => ({ ...current, errorMsgVisible: false }));
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [errorMsgVisible]);
   const submitDisabled =
     !input.orderEntryAccountReady ||
     !input.orderEntryFunded ||
@@ -205,6 +231,8 @@ export function useTradePanelScript(
     estimatedPayout: input.estimatedPayout,
     canPlaceOrder: input.canPlaceOrder,
     submitDisabled,
+    submitButtonRef,
+    errorMsgVisible,
     orderValidationError: input.orderValidationError,
     visibleOrderError:
       validated && !input.canPlaceOrder
@@ -218,6 +246,7 @@ export function useTradePanelScript(
       setValidation({
         context: validationContext,
         validated: !input.canPlaceOrder,
+        errorMsgVisible: !input.canPlaceOrder,
       });
       if (input.canPlaceOrder) input.placeOrder();
     },

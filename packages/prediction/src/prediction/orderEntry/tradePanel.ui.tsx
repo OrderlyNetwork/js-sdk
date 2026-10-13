@@ -40,11 +40,22 @@ const PredictionOrderInput: React.FC<{
   suffix: React.ReactNode;
   onChange?: (value: string) => void;
   error?: string;
+  errorMsgVisible: boolean;
   dp?: number;
   position: "top" | "middle" | "bottom" | "single";
-}> = ({ id, label, value, suffix, onChange, error, dp = 4, position }) => (
+}> = ({
+  id,
+  label,
+  value,
+  suffix,
+  onChange,
+  error,
+  errorMsgVisible,
+  dp = 4,
+  position,
+}) => (
   <Input.tooltip
-    tooltip={error}
+    tooltip={errorMsgVisible ? error : undefined}
     tooltipProps={{
       content: {
         className:
@@ -159,6 +170,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
     canAdjustAmount,
     estimatedFee,
     oneTapEstimatedSlippage,
+    submitButtonRef,
   } = state;
   const orderEntryAccountReady = state.orderEntryAccountReady ?? false;
   const orderEntryFunded = state.orderEntryFunded ?? false;
@@ -547,6 +559,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
             {state.orderType === "limit" && (
               <>
                 <PredictionOrderInput
+                  errorMsgVisible={state.errorMsgVisible}
                   id="prediction-limit-price"
                   error={getOrderError("price")}
                   label={t("common.price")}
@@ -556,6 +569,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                   position="top"
                 />
                 <PredictionOrderInput
+                  errorMsgVisible={state.errorMsgVisible}
                   id="prediction-order-amount"
                   error={getOrderError("amount")}
                   label={t("common.amount")}
@@ -573,6 +587,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                   position="middle"
                 />
                 <PredictionOrderInput
+                  errorMsgVisible={state.errorMsgVisible}
                   id="prediction-total-value"
                   error={getOrderError("total")}
                   label={t("common.totalValue")}
@@ -592,6 +607,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
 
             {state.orderType === "market" && (
               <PredictionOrderInput
+                errorMsgVisible={state.errorMsgVisible}
                 id="prediction-order-amount"
                 error={getOrderError("amount")}
                 label={t("common.amount")}
@@ -680,6 +696,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
             </div>
 
             <Button
+              ref={submitButtonRef}
               className={cn(
                 "oui-mt-4",
                 !orderEntryFunded

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
@@ -28,6 +29,7 @@ vi.mock("@orderly.network/hooks", async () => {
 });
 let root: ReactTestRenderer | undefined;
 let state: TradePanelProps;
+let submitButton: HTMLButtonElement;
 const input = (): TradePanelScriptInput => ({
   tradeMode: "oneTap",
   setTradeMode: vi.fn(),
@@ -84,11 +86,16 @@ const input = (): TradePanelScriptInput => ({
 });
 function Consumer({ props }: { props: TradePanelScriptInput }) {
   state = useTradePanelScript(props);
-  return null;
+  return <button ref={state.submitButtonRef} />;
 }
 function mount(props = input()) {
   act(() => {
-    root = create(<Consumer props={props} />);
+    root = create(<Consumer props={props} />, {
+      createNodeMock: () => {
+        submitButton = document.createElement("button");
+        return submitButton;
+      },
+    });
   });
   return props;
 }
@@ -271,4 +278,46 @@ it("clears validation feedback when changing outcome", () => {
     root!.update(<Consumer props={{ ...props, selectedOutcome: "up" }} />),
   );
   expect(state.visibleOrderError).toBeUndefined();
+  expect(state.errorMsgVisible).toBe(false);
+});
+
+it("dismisses error bubbles on other clicks, preserves validation and reopens on invalid submission", () => {
+  const props = mount({
+    ...input(),
+    tradeMode: "limit",
+    canPlaceOrder: false,
+    orderValidationError: {
+      field: "amount",
+      key: "orderEntry.orderQuantity.error.required",
+    },
+  });
+  act(() => state.placeOrder());
+  expect(state.errorMsgVisible).toBe(true);
+
+  document.body.append(submitButton);
+  const buttonLabel = document.createElement("span");
+  submitButton.append(buttonLabel);
+  act(() => buttonLabel.click());
+  expect(state.errorMsgVisible).toBe(true);
+
+  const otherInput = document.createElement("input");
+  document.body.append(otherInput);
+  act(() => otherInput.click());
+  expect(state.errorMsgVisible).toBe(false);
+  expect(state.visibleOrderError).toEqual(props.orderValidationError);
+  expect(state.canPlaceOrder).toBe(false);
+  expect(props.placeOrder).not.toHaveBeenCalled();
+
+  act(() => state.placeOrder());
+  expect(state.errorMsgVisible).toBe(true);
+  expect(props.placeOrder).not.toHaveBeenCalled();
+  act(() => document.body.click());
+  expect(state.errorMsgVisible).toBe(false);
+
+  act(() => state.placeOrder());
+  act(() => root!.unmount());
+  root = undefined;
+  expect(() => document.body.click()).not.toThrow();
+  submitButton.remove();
+  otherInput.remove();
 });
