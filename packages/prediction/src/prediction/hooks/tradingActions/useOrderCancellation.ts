@@ -70,7 +70,7 @@ export const useOrderCancellation = ({
           // Empty message falls through to the generic key in rejectionNotice.
           throw new Error(response?.message);
         }
-        notify("prediction.message.orderCanceled");
+        // The SDK execution report owns the successful cancellation notification.
       } catch (error) {
         console.error("prediction cancel rejected", error);
         notify(rejectionNotice(error), "danger");
@@ -146,7 +146,7 @@ export const useOrderCancellation = ({
           async () => undefined,
         );
         if (!success || !isCurrent()) return false;
-        notify("prediction.message.ordersCanceled");
+        // Successful cancellations are reported by the SDK execution stream.
         return true;
       } catch (error) {
         if (isCurrent()) {

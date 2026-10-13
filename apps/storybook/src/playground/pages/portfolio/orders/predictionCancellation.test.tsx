@@ -130,12 +130,63 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+describe("PredictionState.cancelOrder notifications", () => {
+  it("does not add a success toast alongside the SDK execution report", async () => {
+    await mount().result.cancelOrder(1);
+    expect(mocks.cancel).toHaveBeenCalledExactlyOnceWith(null, {
+      order_id: 1,
+      symbol: btc,
+    });
+    expect(mocks.notify).not.toHaveBeenCalled();
+  });
+
+  it("reports explicit backend cancellation failures as errors", async () => {
+    mocks.cancel.mockResolvedValue({
+      success: false,
+      message: "Cancellation rejected",
+    });
+    await mount().result.cancelOrder(1);
+    expect(mocks.notify).toHaveBeenCalledExactlyOnceWith(
+      "Cancellation rejected",
+      "danger",
+    );
+  });
+
+  it("reports failed cancellation requests as errors", async () => {
+    mocks.cancel.mockRejectedValue(new Error("Network failure"));
+    await mount().result.cancelOrder(1);
+    expect(mocks.notify).toHaveBeenCalledExactlyOnceWith(
+      "Network failure",
+      "danger",
+    );
+  });
+
+  it("reports a missing order without sending a cancellation request", async () => {
+    await mount().result.cancelOrder(999);
+    expect(mocks.cancel).not.toHaveBeenCalled();
+    expect(mocks.notify).toHaveBeenCalledExactlyOnceWith(
+      "prediction.message.orderNotFound",
+      "danger",
+    );
+  });
+
+  it("reports an untradable round without sending a cancellation request", async () => {
+    await mount({ ...defaults(), binaryRows: [] }).result.cancelOrder(1);
+    expect(mocks.cancel).not.toHaveBeenCalled();
+    expect(mocks.notify).toHaveBeenCalledExactlyOnceWith(
+      "prediction.message.roundNotTradable",
+      "danger",
+    );
+  });
+});
+
 describe("PredictionState.cancelAllOrders boolean contract", () => {
   it("scopes underlying symbols and preserves the scoped method's boolean result", async () => {
     const harness = mount(defaults(), "PERP_BTC_USDC");
     expect(await harness.scoped.cancelAllOrders()).toBe(true);
     expect(mocks.cancel).toHaveBeenCalledExactlyOnceWith(null, { symbol: btc });
     expect(mocks.refresh).toHaveBeenCalledWith("a");
+    expect(mocks.notify).not.toHaveBeenCalled();
     mocks.cancel.mockResolvedValue({ success: false, message: "REJECTED" });
     expect(await harness.scoped.cancelAllOrders()).toBe(false);
     expect(mocks.notify).toHaveBeenLastCalledWith("REJECTED", "danger");
@@ -176,9 +227,7 @@ describe("PredictionState.cancelAllOrders boolean contract", () => {
   it("keeps a successful cancellation successful if refresh fails", async () => {
     mocks.refresh.mockRejectedValue(new Error("REFRESH_FAILED"));
     expect(await mount().result.cancelAllOrders()).toBe(true);
-    expect(mocks.notify).toHaveBeenCalledExactlyOnceWith(
-      "prediction.message.ordersCanceled",
-    );
+    expect(mocks.notify).not.toHaveBeenCalled();
   });
 
   it("rejects duplicate calls and stops subsequent symbols after an account change", async () => {

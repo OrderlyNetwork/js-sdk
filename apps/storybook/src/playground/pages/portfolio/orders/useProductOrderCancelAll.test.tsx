@@ -226,6 +226,8 @@ describe("SDK product cancellation", () => {
       [null, { symbol: "PERP_ETH_USDC", algo_type: "TRAILING_STOP" }],
     ]);
     expect(mocks.refresh).toHaveBeenCalledExactlyOnceWith(mocks.accountId);
+    expect(mocks.success).not.toHaveBeenCalled();
+    expect(mocks.error).not.toHaveBeenCalled();
   });
   it("waits for complete PERP pages before enabling unscoped cancellation without Binary state", async () => {
     mocks.pages[0].meta.total = 2;
@@ -298,6 +300,8 @@ describe("SDK product cancellation", () => {
     expect(mocks.cancelOrders).toHaveBeenCalledExactlyOnceWith(null, {
       symbol: live,
     });
+    expect(mocks.success).not.toHaveBeenCalled();
+    expect(mocks.error).not.toHaveBeenCalled();
   });
   it.each([
     { accountReady: false },
@@ -334,6 +338,8 @@ describe("SDK product cancellation", () => {
       [null, { symbol: "PERP_ETH_USDC" }],
       [null, { symbol: live }],
     ]);
+    expect(mocks.success).not.toHaveBeenCalled();
+    expect(mocks.error).not.toHaveBeenCalled();
   });
   it("requires complete PERP coverage and preserves region-restricted PERP-only cancellation", async () => {
     mocks.pages[0].meta.total = 2;
@@ -392,6 +398,7 @@ describe("SDK product cancellation", () => {
     });
     expect(await execute(harness)).toBe(true);
     expect(mocks.error).not.toHaveBeenCalled();
+    expect(mocks.success).not.toHaveBeenCalled();
   });
   it("PERP symbol scope excludes unrelated cached rows", async () => {
     mocks.pages[0].rows.push({ order_id: 2, symbol: "PERP_ETH_USDC" });

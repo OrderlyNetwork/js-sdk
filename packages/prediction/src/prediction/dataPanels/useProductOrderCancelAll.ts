@@ -197,7 +197,7 @@ export function useProductOrderCancelAll({
         (symbol, algo_type) => cancelAlgoOrders(null, { symbol, algo_type }),
       );
       if (!success || !isCurrent()) return false;
-      toast.success(t("prediction.message.ordersCanceled"));
+      // Successful cancellations are reported by the SDK execution stream.
       return true;
     } catch (error) {
       if (isCurrent())
