@@ -607,7 +607,7 @@ describe("PositionCalculator", () => {
   describe("binary position rows (never in /v1/public/info)", () => {
     const BINARY_SYMBOL = "PERP_BTC5M2609290635_USDC";
 
-    test("passes a row without symbol config through untouched", () => {
+    test("passes a row without symbol config through with mm stamped 0", () => {
       const row = createMockPosition(BINARY_SYMBOL, {
         margin_mode: "ISOLATED",
         last_sum_unitary_funding: null,
@@ -623,8 +623,9 @@ describe("PositionCalculator", () => {
         ) as API.PositionsTPSLExt;
       }).not.toThrow();
 
-      // No perps metrics computed; the raw row survives untouched.
-      expect(result?.rows[0]).toEqual(row);
+      // No perps metrics computed; the raw row survives except the PRD-fixed
+      // mm=0 stamp, so mm consumers (useMarginRatio) never see undefined.
+      expect(result?.rows[0]).toEqual({ ...row, mm: 0 });
       expect(result?.total_unreal_pnl).toBe(0);
       expect(result?.notional).toBe(0);
     });

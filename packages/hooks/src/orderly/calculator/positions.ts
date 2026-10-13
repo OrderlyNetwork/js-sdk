@@ -155,7 +155,10 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
       // Rows without symbol config (e.g. BINARY symbols, which never appear
       // in /v1/public/info) cannot run the perps formulas — pass through.
-      if (!info) return item;
+      // mm is stamped 0 (PRD fixes binary mmr=0, never liquidates) so the
+      // row honours the PositionExt contract instead of carrying undefined
+      // into mm consumers like useMarginRatio.
+      if (!info) return { ...item, mm: 0 };
 
       const sum_unitary_funding =
         fundingRates?.[item.symbol]?.["sum_unitary_funding"] ?? 0;
