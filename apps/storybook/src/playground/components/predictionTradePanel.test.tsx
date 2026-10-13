@@ -52,6 +52,8 @@ const input = (): TradePanelScriptInput => ({
   setLimitPrice: vi.fn(),
   amount: "10",
   setAmount: vi.fn(),
+  totalInput: null,
+  setTotal: vi.fn(),
   orderQuantity: 10,
   orderNotional: 2,
   orderPercentage: 10,

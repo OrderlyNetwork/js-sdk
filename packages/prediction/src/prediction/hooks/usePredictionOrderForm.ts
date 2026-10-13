@@ -11,6 +11,7 @@ import {
   quoteToBinaryQuantity,
   resolveBinaryOrderLimits,
   splitBinaryQuantity,
+  totalToBinaryAmount,
   validateBinaryOrderSize,
 } from "../binary/binaryOrderRules";
 import { amountFromPercentage } from "../orderEntry/form/quantityPercentage";
@@ -111,6 +112,8 @@ export const usePredictionOrderForm = ({
     null,
   );
   const [limitPrice, setLimitPrice] = useState("");
+  /** Raw Total-value draft while the total input is the edit anchor; null = derived display. */
+  const [totalInput, setTotalInput] = useState<string | null>(null);
   const priceDp = new Decimal(quoteTick).decimalPlaces();
   const amountDp =
     amountUnit === "quote" ? 2 : new Decimal(baseTick).decimalPlaces();
@@ -121,6 +124,7 @@ export const usePredictionOrderForm = ({
     setAmount("");
     setSelectedPercentage(null);
     setLimitPrice("");
+    setTotalInput(null);
   }, [formSymbol, symbol]);
 
   const [formMarketId, setFormMarketId] = useState(marketId);
@@ -135,6 +139,7 @@ export const usePredictionOrderForm = ({
     setAmount("");
     setSelectedPercentage(null);
     setLimitPrice("");
+    setTotalInput(null);
   }, [formMarketId, marketId]);
 
   const selectedMarketPrice = executablePrices[orderSide][selectedOutcome];
@@ -355,6 +360,7 @@ export const usePredictionOrderForm = ({
       setOrderSide(side);
       setAmount("");
       setSelectedPercentage(null);
+      setTotalInput(null);
       setDefaultLimit(selectedOutcome, side);
     },
     [orderSide, selectedOutcome, setDefaultLimit],
@@ -377,6 +383,7 @@ export const usePredictionOrderForm = ({
         setOrderSide("buy");
         setAmount("");
         setSelectedPercentage(null);
+        setTotalInput(null);
       }
       if (mode === "limit") setDefaultLimit(selectedOutcome, orderSide);
     },
@@ -392,6 +399,7 @@ export const usePredictionOrderForm = ({
     (percentage: number) => {
       const nextPercentage = clamp(percentage, 0, 100);
       setSelectedPercentage(nextPercentage);
+      setTotalInput(null);
       setAmount(amountFromPercentage(maxAmount, nextPercentage, amountDp));
     },
     [amountDp, maxAmount],
@@ -416,8 +424,46 @@ export const usePredictionOrderForm = ({
 
   const setManualAmount = useCallback((value: string) => {
     setSelectedPercentage(null);
+    setTotalInput(null);
     setAmount(value);
   }, []);
+
+  const setTotal = useCallback(
+    (value: string) => {
+      setSelectedPercentage(null);
+      setTotalInput(value);
+      setAmount(
+        totalToBinaryAmount(value, amountUnit, selectedPrice, baseTick),
+      );
+    },
+    [amountUnit, selectedPrice, baseTick],
+  );
+
+  // While the total input is the edit anchor, price/unit changes re-derive the
+  // amount from the typed total (perp order-entry lastChangedField semantics).
+  useEffect(() => {
+    // Reset effects above clear drafts when the selection changes. Do not
+    // write a total captured from the previous selection back after that reset.
+    if (
+      totalInput == null ||
+      formMarketId !== marketId ||
+      formSymbol !== symbol
+    ) {
+      return;
+    }
+    setAmount(
+      totalToBinaryAmount(totalInput, amountUnit, selectedPrice, baseTick),
+    );
+  }, [
+    totalInput,
+    amountUnit,
+    selectedPrice,
+    baseTick,
+    formMarketId,
+    marketId,
+    formSymbol,
+    symbol,
+  ]);
 
   const setMaxAmount = useCallback(() => {
     setOrderPercentage(100);
@@ -425,6 +471,7 @@ export const usePredictionOrderForm = ({
 
   const resetAmountAfterFill = useCallback(() => {
     setSelectedPercentage(null);
+    setTotalInput(null);
     setAmount("");
   }, []);
 
@@ -441,6 +488,8 @@ export const usePredictionOrderForm = ({
     setAmountUnit: selectAmountUnit,
     amount,
     setAmount: setManualAmount,
+    totalInput,
+    setTotal,
     limitPrice,
     setLimitPrice,
     selectedMarketPrice,

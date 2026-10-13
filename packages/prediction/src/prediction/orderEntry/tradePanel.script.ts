@@ -46,6 +46,9 @@ export interface TradePanelFormProps {
   setLimitPrice(value: string): void;
   amount: string;
   setAmount(value: string): void;
+  /** Raw Total-value draft while the total input is the edit anchor; null = derived display. */
+  totalInput: string | null;
+  setTotal(value: string): void;
   orderQuantity: number;
   orderNotional: number;
   orderPercentage: number;
@@ -192,6 +195,8 @@ export function useTradePanelScript(
     setLimitPrice: input.setLimitPrice,
     amount: input.amount,
     setAmount: input.setAmount,
+    totalInput: input.totalInput,
+    setTotal: input.setTotal,
     orderQuantity: input.orderQuantity,
     orderNotional: input.orderNotional,
     orderPercentage: input.orderPercentage,

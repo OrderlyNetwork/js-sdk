@@ -39,21 +39,10 @@ const PredictionOrderInput: React.FC<{
   value: string;
   suffix: React.ReactNode;
   onChange?: (value: string) => void;
-  readOnly?: boolean;
   error?: string;
   dp?: number;
   position: "top" | "middle" | "bottom" | "single";
-}> = ({
-  id,
-  label,
-  value,
-  suffix,
-  onChange,
-  readOnly,
-  error,
-  dp = 4,
-  position,
-}) => (
+}> = ({ id, label, value, suffix, onChange, error, dp = 4, position }) => (
   <Input.tooltip
     tooltip={error}
     color={error ? "danger" : undefined}
@@ -65,7 +54,6 @@ const PredictionOrderInput: React.FC<{
     inputMode="decimal"
     placeholder="0"
     value={value}
-    readOnly={readOnly}
     formatters={[
       inputFormatter.dpFormatter(dp),
       inputFormatter.numberFormatter,
@@ -571,12 +559,14 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                   error={getOrderError("total")}
                   label={t("common.totalValue")}
                   value={
-                    state.orderQuantity > 0
+                    state.totalInput ??
+                    (state.orderQuantity > 0
                       ? formatUsd(state.orderNotional)
-                      : ""
+                      : "")
                   }
                   suffix="USDC"
-                  readOnly
+                  dp={2}
+                  onChange={state.setTotal}
                   position="bottom"
                 />
               </>

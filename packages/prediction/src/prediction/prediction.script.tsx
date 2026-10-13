@@ -229,6 +229,8 @@ export const usePredictionScript = (
     setAmountUnit: form.setAmountUnit,
     amount: form.amount,
     setAmount: form.setAmount,
+    totalInput: form.totalInput,
+    setTotal: form.setTotal,
     limitPrice: form.limitPrice,
     setLimitPrice: form.setLimitPrice,
     selectedPrice: form.selectedPrice,

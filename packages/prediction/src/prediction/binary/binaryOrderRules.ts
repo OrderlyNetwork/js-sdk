@@ -1,6 +1,7 @@
 import { OrderSide } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import type {
+  PredictionAmountUnit,
   PredictionOrderBookLevel,
   PredictionOrderSide,
   PredictionOutcome,
@@ -67,6 +68,23 @@ export function binaryMaxQuoteInput(
   return quoteToBinaryQuantity(rounded.toString(), price, tick) <= quantity
     ? rounded.toNumber()
     : principal.toDecimalPlaces(2, Decimal.ROUND_FLOOR).toNumber();
+}
+
+/**
+ * Map a Total-value input string back to the form's amount string for the
+ * current unit. Quote unit (buy): the total IS the quote spend. Outcome unit
+ * (sell): back-compute tick-floored shares from the USDC total.
+ */
+export function totalToBinaryAmount(
+  total: string,
+  amountUnit: PredictionAmountUnit,
+  price: number,
+  tick = DEFAULT_BINARY_BASE_TICK,
+): string {
+  if (amountUnit === "quote") return total;
+  const quantity = quoteToBinaryQuantity(total, price, tick);
+  if (!(quantity > 0)) return "";
+  return new Decimal(quantity).toFixed(new Decimal(tick).decimalPlaces());
 }
 
 export const parseSlippageTicks = (value: string): number | undefined => {

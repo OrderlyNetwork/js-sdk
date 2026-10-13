@@ -22,6 +22,7 @@ import {
   splitBinaryQuantity,
   submitBinaryBatches,
   toBinaryUpRequest,
+  totalToBinaryAmount,
   validateBinaryOrderSize,
   validBinaryFee,
 } from "./binaryOrderRules";
@@ -196,6 +197,22 @@ test("USDC sizing floors shares without consuming the rounding remainder", () =>
   assert.equal(quoteToBinaryQuantity("100", 0.5), 200);
   assert.equal(quoteToBinaryQuantity("1.00", 0.9, 0.1), 1.1);
   assert.equal(quoteToBinaryQuantity("10", 0), 0);
+});
+
+test("total input maps back to the amount string for each side's unit", () => {
+  // Buy: the amount is already quote-denominated, the total passes through.
+  assert.equal(totalToBinaryAmount("10.5", "quote", 0.31), "10.5");
+  assert.equal(totalToBinaryAmount("", "quote", 0.31), "");
+  // Sell: back-compute tick-floored shares from the USDC total.
+  assert.equal(totalToBinaryAmount("10", "outcome", 0.31), "32.25");
+  assert.equal(totalToBinaryAmount("1", "outcome", 0.3), "3.33");
+  assert.equal(totalToBinaryAmount("10", "outcome", 0.31, 0.001), "32.258");
+  // Non-sizable inputs clear the amount instead of guessing a quantity.
+  assert.equal(totalToBinaryAmount("", "outcome", 0.31), "");
+  assert.equal(totalToBinaryAmount("0", "outcome", 0.31), "");
+  assert.equal(totalToBinaryAmount("0.", "outcome", 0.31), "");
+  assert.equal(totalToBinaryAmount("10", "outcome", 0), "");
+  assert.equal(totalToBinaryAmount("10", "outcome", 1), "");
 });
 
 test("MAX cent inputs avoid a second truncation and never buy beyond affordable shares", () => {
