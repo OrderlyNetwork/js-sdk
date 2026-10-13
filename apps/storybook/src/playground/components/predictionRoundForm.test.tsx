@@ -320,3 +320,73 @@ it("reports the minimum notional for the screenshot order", () => {
   expect(state!.orderValidationError).toBeUndefined();
   act(() => root!.unmount());
 });
+
+it("explains the DOWN limit minimum and accepts the suggested USDC input", () => {
+  const view = mountTotalForm(0.86);
+  try {
+    act(() => {
+      view.current().setTradeMode("limit");
+      view.current().setSelectedOutcome("down");
+    });
+    act(() => {
+      view.current().setLimitPrice("0.86");
+      view.current().setAmount("11");
+    });
+    expect(view.current().orderQuantity).toBe(12.79);
+    expect(view.current().orderNotional).toBe(10.9994);
+    expect(view.current().canPlaceOrder).toBe(false);
+    expect(view.current().orderValidationError).toEqual({
+      field: "total",
+      key: "prediction.message.downMinimumOrder",
+      value: 5,
+      minQuantity: 35.72,
+      minTotal: 30.72,
+    });
+    act(() => view.current().setTotal("30.71"));
+    expect(view.current().orderValidationError?.key).toBe(
+      "prediction.message.downMinimumOrder",
+    );
+    act(() => view.current().setTotal("30.72"));
+    expect(view.current().orderValidationError).toBeUndefined();
+    expect(view.current().canPlaceOrder).toBe(true);
+    act(() => {
+      view.current().setTotal("1");
+      view.current().setLimitPrice("0.5");
+    });
+    expect(view.current().orderValidationError).toMatchObject({
+      minQuantity: 10,
+      minTotal: 5,
+    });
+  } finally {
+    view.unmount();
+  }
+});
+
+it.each([
+  ["limit", "buy", "up"],
+  ["limit", "sell", "down"],
+  ["market", "buy", "down"],
+] as const)(
+  "keeps the existing minimum error for %s / %s / %s",
+  (mode, side, outcome) => {
+    const view = mountTotalForm(0.5);
+    try {
+      act(() => {
+        view.current().setTradeMode(mode);
+        view.current().setOrderSide(side);
+        view.current().setSelectedOutcome(outcome);
+      });
+      act(() => {
+        view.current().setLimitPrice("0.5");
+        view.current().setAmount("1");
+      });
+      expect(view.current().orderValidationError).toEqual({
+        field: "total",
+        key: "orderEntry.total.error.min",
+        value: 5,
+      });
+    } finally {
+      view.unmount();
+    }
+  },
+);

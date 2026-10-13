@@ -464,6 +464,7 @@
   "prediction.status.filled": "Exécuté",
   "prediction.status.cancelled": "Annulé",
   "prediction.message.insufficientBalance": "Solde disponible insuffisant.",
+  "prediction.message.downMinimumOrder": "La taille minimale d’ordre est de {{minQuantity}} contrats DOWN ({{minTotal}} USDC à ce prix). Le minimum de {{value}} USDC est calculé à partir du prix UP (1 − prix DOWN).",
   "prediction.message.insufficientContracts": "Vous ne disposez pas d'assez de contrats pour vendre.",
   "prediction.message.noExecutableQuotes": "Aucune cotation exécutable pour le moment. Veuillez réessayer dans un instant.",
   "prediction.message.orderNotFound": "Ordre introuvable ou plus actif.",

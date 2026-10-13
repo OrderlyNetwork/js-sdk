@@ -10,6 +10,8 @@ import {
 import type { BinaryInfoRow } from "./binaryInfo";
 import {
   binaryMaxQuoteInput,
+  binaryMinimumOrderInput,
+  complementPrice,
   binaryProtectionPrice,
   binaryRejectionNotice,
   binarySubmissionNotice,
@@ -615,4 +617,37 @@ test("binaryUpNotional converts DOWN display prices to the UP complement", () =>
   // DOWN @0.3 is UP @0.7: 10 * 0.7 = 7.
   assert.equal(binaryUpNotional(10, "down", 0.3).toNumber(), 7);
   assert.ok(binaryUpNotional(6, "down", 0.98) instanceof Decimal);
+});
+
+test("minimum DOWN input rounds contracts to ticks and cost up to cents", () => {
+  for (const [price, baseTick, baseMin, minNotional, quantity, total] of [
+    [0.86, 0.01, 0.01, 5, 35.72, 30.72],
+    [0.5, 0.01, 0.01, 5, 10, 5],
+    [0.86, 0.1, 0.01, 5, 35.8, 30.79],
+    [0.86, 0.00001, 0.01, 5, 35.71429, 30.72],
+    [0.5, 0.1, 12.03, 5, 12.1, 6.05],
+  ]) {
+    const limits = resolveBinaryOrderLimits({
+      base_tick: baseTick,
+      base_min: baseMin,
+      min_notional: minNotional,
+    });
+    const minimum = binaryMinimumOrderInput(price, "down", limits);
+    assert.deepEqual(minimum, { minQuantity: quantity, minTotal: total });
+    assert.equal(
+      validateBinaryOrderSize({
+        price: complementPrice(price),
+        quantity: quoteToBinaryQuantity(total, price, baseTick),
+        limits,
+        requireQuantityTickAligned: true,
+      }),
+      undefined,
+    );
+    assert.ok(
+      new Decimal(quantity)
+        .sub(baseTick)
+        .mul(complementPrice(price))
+        .lt(minNotional) || new Decimal(quantity).sub(baseTick).lt(baseMin),
+    );
+  }
 });

@@ -464,6 +464,7 @@
   "prediction.status.filled": "منفَّذ",
   "prediction.status.cancelled": "ملغى",
   "prediction.message.insufficientBalance": "الرصيد المتاح غير كافٍ.",
+  "prediction.message.downMinimumOrder": "الحد الأدنى لحجم الأمر هو {{minQuantity}} عقد DOWN ({{minTotal}} USDC بهذا السعر). يُحسب الحد الأدنى البالغ {{value}} USDC باستخدام سعر UP (1 − سعر DOWN).",
   "prediction.message.insufficientContracts": "لا تملك عقودًا كافية للبيع.",
   "prediction.message.noExecutableQuotes": "لا توجد عروض أسعار قابلة للتنفيذ حاليًا. يرجى المحاولة مرة أخرى بعد لحظات.",
   "prediction.message.orderNotFound": "لم يتم العثور على الطلب أو لم يعد نشطًا.",

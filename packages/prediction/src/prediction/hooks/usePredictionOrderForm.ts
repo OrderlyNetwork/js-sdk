@@ -3,6 +3,7 @@ import { Decimal } from "@orderly.network/utils";
 import { binaryOutcomeMarkPrice } from "../binary/binaryMarkPrice";
 import {
   binaryMaxQuoteInput,
+  binaryMinimumOrderInput,
   complementPrice,
   DEFAULT_BINARY_BASE_MAX,
   DEFAULT_BINARY_BASE_TICK,
@@ -29,6 +30,7 @@ export type PredictionOrderValidationError = {
   key:
     | "prediction.invalidOrder"
     | "orderEntry.total.error.min"
+    | "prediction.message.downMinimumOrder"
     | "orderEntry.orderPrice.error.required"
     | "orderEntry.orderQuantity.error.required"
     | "orderEntry.orderQuantity.error.min"
@@ -37,6 +39,8 @@ export type PredictionOrderValidationError = {
     | "prediction.message.insufficientContracts"
     | "prediction.message.slippageExceeded";
   value?: number;
+  minQuantity?: number;
+  minTotal?: number;
 };
 
 export type UsePredictionOrderFormArgs = {
@@ -270,6 +274,18 @@ export const usePredictionOrderForm = ({
       requirePriceTickAligned: orderType === "limit",
     });
     if (rejection === "notionalBelowMin") {
+      if (
+        orderType === "limit" &&
+        orderSide === "buy" &&
+        selectedOutcome === "down"
+      ) {
+        return {
+          field: "total",
+          key: "prediction.message.downMinimumOrder",
+          value: limits.minNotional,
+          ...binaryMinimumOrderInput(selectedPrice, selectedOutcome, limits),
+        };
+      }
       return {
         field: "total",
         key: "orderEntry.total.error.min",

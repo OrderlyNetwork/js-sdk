@@ -298,6 +298,34 @@ export type BinaryOrderLimits = {
   minNotional: number;
 };
 
+/** Minimum tick-aligned quantity and cent-denominated input at a display price. */
+export function binaryMinimumOrderInput(
+  displayPrice: number,
+  outcome: PredictionOutcome,
+  limits: BinaryOrderLimits,
+): { minQuantity: number; minTotal: number } {
+  const upPrice =
+    outcome === "up"
+      ? new Decimal(displayPrice)
+      : new Decimal(1).sub(displayPrice);
+  const notionalQuantity = new Decimal(limits.minNotional).div(upPrice);
+  const minQuantity = (
+    notionalQuantity.gte(limits.baseMin)
+      ? notionalQuantity
+      : new Decimal(limits.baseMin)
+  )
+    .div(limits.baseTick)
+    .toDecimalPlaces(0, Decimal.ROUND_CEIL)
+    .mul(limits.baseTick);
+  return {
+    minQuantity: minQuantity.toNumber(),
+    minTotal: minQuantity
+      .mul(displayPrice)
+      .toDecimalPlaces(2, Decimal.ROUND_CEIL)
+      .toNumber(),
+  };
+}
+
 /**
  * Normalize a (possibly sparse) binary config into full order limits.
  * Callers must not hand-roll `?? 0.01`-style fallbacks on top of this.

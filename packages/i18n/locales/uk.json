@@ -464,6 +464,7 @@
   "prediction.status.filled": "Виконано",
   "prediction.status.cancelled": "Скасовано",
   "prediction.message.insufficientBalance": "Недостатньо доступного балансу.",
+  "prediction.message.downMinimumOrder": "Мінімальний розмір ордера — {{minQuantity}} контрактів DOWN ({{minTotal}} USDC за цією ціною). Мінімум {{value}} USDC розраховується за ціною UP (1 − ціна DOWN).",
   "prediction.message.insufficientContracts": "У вас недостатньо контрактів для продажу.",
   "prediction.message.noExecutableQuotes": "Наразі немає виконуваних котирувань. Спробуйте ще раз за мить.",
   "prediction.message.orderNotFound": "Ордер не знайдено або він більше не активний.",

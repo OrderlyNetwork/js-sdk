@@ -464,6 +464,7 @@
   "prediction.status.filled": "Đã khớp",
   "prediction.status.cancelled": "Đã hủy",
   "prediction.message.insufficientBalance": "Số dư khả dụng không đủ.",
+  "prediction.message.downMinimumOrder": "Khối lượng lệnh tối thiểu là {{minQuantity}} hợp đồng DOWN ({{minTotal}} USDC ở mức giá này). Mức tối thiểu {{value}} USDC được tính theo giá UP (1 − giá DOWN).",
   "prediction.message.insufficientContracts": "Bạn không nắm đủ hợp đồng để bán.",
   "prediction.message.noExecutableQuotes": "Hiện không có báo giá khả thi. Vui lòng thử lại sau ít phút.",
   "prediction.message.orderNotFound": "Không tìm thấy lệnh hoặc lệnh không còn hiệu lực.",

@@ -464,6 +464,7 @@
   "prediction.status.filled": "Uitgevoerd",
   "prediction.status.cancelled": "Geannuleerd",
   "prediction.message.insufficientBalance": "Onvoldoende beschikbaar saldo.",
+  "prediction.message.downMinimumOrder": "De minimale ordergrootte is {{minQuantity}} DOWN-contracten ({{minTotal}} USDC tegen deze prijs). Het minimum van {{value}} USDC wordt berekend op basis van de UP-prijs (1 − DOWN-prijs).",
   "prediction.message.insufficientContracts": "Je hebt niet genoeg contracten om te verkopen.",
   "prediction.message.noExecutableQuotes": "Er zijn momenteel geen uitvoerbare koersen. Probeer het zo opnieuw.",
   "prediction.message.orderNotFound": "Order niet gevonden of niet langer actief.",

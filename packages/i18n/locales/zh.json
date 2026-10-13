@@ -464,6 +464,7 @@
   "prediction.status.filled": "已成交",
   "prediction.status.cancelled": "已取消",
   "prediction.message.insufficientBalance": "可用余额不足。",
+  "prediction.message.downMinimumOrder": "最小下单数量为 {{minQuantity}} 张 DOWN 合约（按当前价格为 {{minTotal}} USDC）。{{value}} USDC 的最低金额按 UP 价格（1 − DOWN 价格）计算。",
   "prediction.message.insufficientContracts": "可卖出的合约数量不足。",
   "prediction.message.noExecutableQuotes": "当前无可成交报价，请稍后再试。",
   "prediction.message.orderNotFound": "订单不存在或已不再有效。",

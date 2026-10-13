@@ -45,6 +45,12 @@ const PredictionOrderInput: React.FC<{
 }> = ({ id, label, value, suffix, onChange, error, dp = 4, position }) => (
   <Input.tooltip
     tooltip={error}
+    tooltipProps={{
+      content: {
+        className:
+          "oui-max-w-[min(320px,calc(100vw-32px))] oui-whitespace-normal",
+      },
+    }}
     color={error ? "danger" : undefined}
     id={id}
     name={id}
@@ -160,7 +166,19 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
     const error = state.visibleOrderError;
     if (!error) return undefined;
     const target = state.orderType === "market" ? "amount" : error.field;
-    return target === field ? t(error.key, { value: error.value }) : undefined;
+    return target === field
+      ? t(error.key, {
+          value: error.value,
+          minQuantity:
+            error.minQuantity == null
+              ? undefined
+              : new Decimal(error.minQuantity).toFixed(),
+          minTotal:
+            error.minTotal == null
+              ? undefined
+              : new Decimal(error.minTotal).toFixed(2),
+        })
+      : undefined;
   };
   const outcomeLabel = t(`prediction.${state.selectedOutcome}`);
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
