@@ -14,7 +14,10 @@ import { usePredictionFormatters } from "../../predictionShared";
 import { PendingValue } from "./pendingValue.ui";
 
 export interface PredictionOrderCellProps {
-  state: PredictionAccountActions & { isRegionRestricted: boolean };
+  state: PredictionAccountActions & {
+    isRegionRestricted: boolean;
+    onSelectRoundSymbol?: (symbol: string) => void;
+  };
   order: PredictionOpenOrder;
   field: string;
 }
@@ -32,7 +35,12 @@ export const PredictionOrderCell = ({
   const filled = order.status === "filled";
   switch (field) {
     case "symbol":
-      return <PredictionOrderSymbol order={order} />;
+      return (
+        <PredictionOrderSymbol
+          order={order}
+          onSelectRoundSymbol={state.onSelectRoundSymbol}
+        />
+      );
     case "side":
       // Badge stays UP-book-side based (BUY=UP/SELL=DOWN, TASK-22); reduce-only
       // exits get an extra label instead of a flipped badge.

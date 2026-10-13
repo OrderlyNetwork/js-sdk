@@ -12,6 +12,7 @@ export interface PredictionAccountPanelProps {
   marketView?: PredictionHoldingsMarketView;
   isSubmitting: boolean;
   isRegionRestricted: boolean;
+  onSelectRoundSymbol?: (symbol: string) => void;
 }
 
 /** Page-owned controls and account-owned queries are connected without broadcasting page state. */
@@ -22,6 +23,7 @@ export const PredictionAccountPanel = React.memo(
     marketView,
     isSubmitting,
     isRegionRestricted,
+    onSelectRoundSymbol,
   }: PredictionAccountPanelProps) => {
     const account = usePredictionAccountData();
     return (
@@ -33,6 +35,7 @@ export const PredictionAccountPanel = React.memo(
           marketView,
           isSubmitting: isSubmitting || account.isSubmitting,
           isRegionRestricted: isRegionRestricted || account.isRegionRestricted,
+          onSelectRoundSymbol,
         }}
       />
     );

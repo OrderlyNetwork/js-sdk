@@ -93,6 +93,7 @@ export const HoldingsTableUI = ({
               round={position.round ?? state.marketView?.round ?? 0}
               outcome={position.outcome}
               symbol={position.symbol}
+              onSelectRoundSymbol={state.onSelectRoundSymbol}
             />,
             <OutcomeBadge outcome={position.outcome} />,
             <TableNumber value={position.quantity} />,

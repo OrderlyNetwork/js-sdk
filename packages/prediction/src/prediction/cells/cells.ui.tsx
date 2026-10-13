@@ -42,16 +42,36 @@ export const RoundSymbol = ({
   round,
   outcome,
   symbol,
+  onSelectRoundSymbol,
 }: {
   round: number;
   outcome: PredictionOutcome;
   symbol?: string;
+  /** Selects the record's market and round; absent or unparseable symbol renders plain display. */
+  onSelectRoundSymbol?: (symbol: string) => void;
 }) => {
   const { t } = useTranslation();
   const { formatRoundBadge } = usePredictionFormatters();
   const market = parseBinaryRoundSymbol(symbol);
+  const onClick =
+    symbol && onSelectRoundSymbol
+      ? () => onSelectRoundSymbol(symbol)
+      : undefined;
   return (
-    <div className="oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap oui-py-1">
+    <div
+      className={cn(
+        "oui-flex oui-items-center oui-gap-2 oui-whitespace-nowrap oui-py-1",
+        onClick && "oui-cursor-pointer",
+      )}
+      onClick={
+        onClick
+          ? (e) => {
+              e.stopPropagation();
+              onClick();
+            }
+          : undefined
+      }
+    >
       <span
         aria-hidden="true"
         className={cn(
@@ -73,14 +93,35 @@ export const RoundSymbol = ({
 
 export const PredictionOrderSymbol = ({
   order,
+  onSelectRoundSymbol,
 }: {
   order: PredictionAccountState["openOrders"][number];
+  /** Selects the record's market and round; absent symbol renders plain display. */
+  onSelectRoundSymbol?: (symbol: string) => void;
 }) => {
   const { t } = useTranslation();
   const { formatRoundBadge } = usePredictionFormatters();
   const market = parseBinaryRoundSymbol(order.symbol);
+  const { symbol } = order;
+  const onClick =
+    symbol && onSelectRoundSymbol
+      ? () => onSelectRoundSymbol(symbol)
+      : undefined;
   return (
-    <div className="oui-flex oui-items-center oui-gap-2 oui-py-1">
+    <div
+      className={cn(
+        "oui-flex oui-items-center oui-gap-2 oui-py-1",
+        onClick && "oui-cursor-pointer",
+      )}
+      onClick={
+        onClick
+          ? (e) => {
+              e.stopPropagation();
+              onClick();
+            }
+          : undefined
+      }
+    >
       <span
         aria-label={t(`common.${order.side}`)}
         title={t(`common.${order.side}`)}

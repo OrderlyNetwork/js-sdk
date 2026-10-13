@@ -134,7 +134,9 @@ export function usePredictionTradingExtension({
     ...(accountEnabled
       ? {
           dataListProductContent: buildDataListProductContent(
-            state,
+            // Prediction rows navigate to their round via the host's
+            // prediction route (same channel as the markets dropdown).
+            { ...state, onSelectRoundSymbol: onPredictionSelect },
             counts,
             scopedSymbol,
             { onSymbolChange, sharePnLConfig, pnlNotionalDecimalPrecision },

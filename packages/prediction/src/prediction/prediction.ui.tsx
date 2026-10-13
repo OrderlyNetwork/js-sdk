@@ -390,6 +390,7 @@ export const Prediction: React.FC<
             marketView={panelMarketView}
             isSubmitting={state.isSubmitting}
             isRegionRestricted={state.isRegionRestricted}
+            onSelectRoundSymbol={state.onSelectSymbol}
           />
         </div>
       </div>

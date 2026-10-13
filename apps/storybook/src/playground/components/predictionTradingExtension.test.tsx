@@ -148,7 +148,12 @@ it("assembles all desktop/mobile slots and preserves native positions and incomp
     "history",
   ]);
   for (const slot of slots) {
-    expect(slot.props.state).toBe(mocks.state);
+    // Panels receive the account state extended with round navigation
+    // (OR-7482: row symbol clicks route through onPredictionSelect).
+    expect(slot.props.state).toEqual({
+      ...mocks.state,
+      onSelectRoundSymbol: options.onPredictionSelect,
+    });
     expect(slot.props.perpsSymbol).toBe(options.symbol);
     expect(slot.props.predictionUnderlyingSymbol).toBe(options.symbol);
   }

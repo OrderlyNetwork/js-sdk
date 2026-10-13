@@ -73,6 +73,7 @@ export const MobilePredictionPositions: React.FC<{
                   round={position.round ?? state.marketView?.round ?? 0}
                   outcome={position.outcome}
                   symbol={position.symbol}
+                  onSelectRoundSymbol={state.onSelectRoundSymbol}
                 />
                 <OutcomeBadge outcome={position.outcome} />
               </div>
@@ -154,6 +155,7 @@ export const MobilePredictionHistory: React.FC<{
                   round={record.round}
                   outcome={record.outcome}
                   symbol={record.symbol}
+                  onSelectRoundSymbol={state.onSelectRoundSymbol}
                 />
               ) : (
                 <Text>{record.symbol}</Text>
@@ -217,7 +219,10 @@ export const MobilePredictionOrderCard: React.FC<{
   return (
     <div className="oui-rounded-xl oui-bg-base-9 oui-p-3">
       <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
-        <PredictionOrderSymbol order={order} />
+        <PredictionOrderSymbol
+          order={order}
+          onSelectRoundSymbol={state.onSelectRoundSymbol}
+        />
         <span className="oui-text-2xs oui-text-base-contrast-54">
           {formatTableTime(order.timestamp)}
         </span>

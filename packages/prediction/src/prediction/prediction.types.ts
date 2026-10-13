@@ -236,6 +236,12 @@ export interface PredictionAccountPanelState extends PredictionAccountState {
   activeTab?: PredictionDataTab;
   setActiveTab?: (tab: PredictionDataTab) => void;
   marketView?: PredictionHoldingsMarketView;
+  /**
+   * Selects the record's round contract (round-specific symbol) from a data
+   * panel row click — positions, orders, and history alike, matching the
+   * Perps symbol-click affordance; absent when the host cannot navigate.
+   */
+  onSelectRoundSymbol?: (symbol: string) => void;
 }
 
 /** Selected Prediction round contract. */

@@ -25,6 +25,7 @@ export const PredictionHistoryTable: React.FC<PredictionHistoryTableProps> = ({
       {...rest}
       filters={filters}
       displayRecords={historyState.displayRecords}
+      onSelectRoundSymbol={state.onSelectRoundSymbol}
     />
   );
 };

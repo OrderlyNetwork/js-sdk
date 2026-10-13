@@ -14,6 +14,7 @@ export type PredictionHistoryTableUIProps = {
   filters: PredictionHistoryTableScript["filters"];
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
+  onSelectRoundSymbol?: (symbol: string) => void;
 };
 
 export const PredictionHistoryTableUI = ({
@@ -21,6 +22,7 @@ export const PredictionHistoryTableUI = ({
   filters,
   leadingFilterItems,
   onLeadingFilter,
+  onSelectRoundSymbol,
 }: PredictionHistoryTableUIProps) => {
   const { t } = useTranslation();
   const { formatTableTime } = usePredictionFormatters();
@@ -59,6 +61,7 @@ export const PredictionHistoryTableUI = ({
               round={record.round}
               outcome={record.outcome}
               symbol={record.symbol}
+              onSelectRoundSymbol={onSelectRoundSymbol}
             />
           ) : (
             <Text>{record.symbol}</Text>
@@ -103,7 +106,7 @@ export const PredictionHistoryTableUI = ({
           ),
         ],
       })),
-    [displayRecords, t, formatTableTime],
+    [displayRecords, t, formatTableTime, onSelectRoundSymbol],
   );
   return (
     <PredictionDataTable
