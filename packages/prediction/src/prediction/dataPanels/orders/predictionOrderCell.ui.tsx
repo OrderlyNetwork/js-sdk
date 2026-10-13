@@ -10,6 +10,7 @@ import type {
   PredictionAccountActions,
   PredictionOpenOrder,
 } from "../../prediction.types";
+import { formatUsd } from "../../predictionShared";
 import { PendingValue } from "./pendingValue.ui";
 
 export interface PredictionOrderCellProps {
@@ -95,25 +96,27 @@ export const PredictionOrderCell = ({
       return binaryOrderExecutedValue(order) == null ? (
         "--"
       ) : (
-        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
-          {binaryOrderExecutedValue(order)!}
-        </Text.numeral>
+        <Text dir="ltr" className="oui-break-all oui-tabular-nums">
+          {formatUsd(binaryOrderExecutedValue(order)!)}
+        </Text>
       );
     case "notional":
       if (!pending)
         return binaryOrderExecutedValue(order) == null ? (
           "--"
         ) : (
-          <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
-            {binaryOrderExecutedValue(order)!}
-          </Text.numeral>
+          <Text dir="ltr" className="oui-break-all oui-tabular-nums">
+            {formatUsd(binaryOrderExecutedValue(order)!)}
+          </Text>
         );
       return (
-        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
-          {new Decimal(order.quantity)
-            .mul(binaryOrderDisplayPrice(order, order.price))
-            .toNumber()}
-        </Text.numeral>
+        <Text dir="ltr" className="oui-break-all oui-tabular-nums">
+          {formatUsd(
+            new Decimal(order.quantity)
+              .mul(binaryOrderDisplayPrice(order, order.price))
+              .toNumber(),
+          )}
+        </Text>
       );
     case "total_fee":
       return order.totalFee == null ? (

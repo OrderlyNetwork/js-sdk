@@ -6,7 +6,10 @@ import type {
   PredictionOutcome,
   PredictionAccountState,
 } from "../prediction.types";
-import { usePredictionFormatters } from "../predictionShared";
+import {
+  formatPredictionPnl,
+  usePredictionFormatters,
+} from "../predictionShared";
 
 export const OutcomeBadge: React.FC<{
   outcome: PredictionOutcome;
@@ -40,6 +43,25 @@ export const TableNumber: React.FC<{
     </Text.numeral>
     {suffix && ` ${suffix}`}
   </span>
+);
+
+/** Format from the original PnL so small profits and losses retain their value. */
+export const PredictionPnl: React.FC<{ value: number }> = ({ value }) => (
+  <Text
+    dir="ltr"
+    className="oui-break-all oui-tabular-nums"
+    color={
+      !Number.isFinite(value)
+        ? "inherit"
+        : value === 0
+          ? "neutral"
+          : value < 0
+            ? "lose"
+            : "profit"
+    }
+  >
+    {formatPredictionPnl(value)}
+  </Text>
 );
 
 export const RoundSymbol = ({

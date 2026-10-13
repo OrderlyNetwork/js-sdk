@@ -1,7 +1,12 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
-import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
+import {
+  OutcomeBadge,
+  PredictionPnl,
+  RoundSymbol,
+  TableNumber,
+} from "../../cells";
 import { useRoundCountdown } from "../../hooks/useRoundCountdown";
 import { SellPosition } from "../../orderEntry/sellPosition";
 import type {
@@ -105,9 +110,7 @@ export const HoldingsTableUI = ({
               <Text intensity={36}>--</Text>
             ),
             uPnL != null ? (
-              <Text.pnl dp={2} coloring>
-                {uPnL}
-              </Text.pnl>
+              <PredictionPnl value={uPnL} />
             ) : (
               <Text intensity={36}>--</Text>
             ),

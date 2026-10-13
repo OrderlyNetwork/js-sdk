@@ -2,7 +2,12 @@ import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
-import { OutcomeBadge, RoundSymbol, TableNumber } from "../../cells";
+import {
+  OutcomeBadge,
+  PredictionPnl,
+  RoundSymbol,
+  TableNumber,
+} from "../../cells";
 import { usePredictionFormatters } from "../../predictionShared";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
@@ -93,9 +98,7 @@ export const PredictionHistoryTableUI = ({
           // Final PnL/time only once the system close finished
           // (api-spec §6.3); pending expiry rows show placeholders.
           record.pnl != null ? (
-            <Text.pnl dp={2} coloring>
-              {record.pnl}
-            </Text.pnl>
+            <PredictionPnl value={record.pnl} />
           ) : (
             <Text intensity={36}>--</Text>
           ),

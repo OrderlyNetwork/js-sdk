@@ -4,6 +4,7 @@
 export {
   OutcomeBadge,
   TableNumber,
+  PredictionPnl,
   RoundSymbol,
   PredictionOrderSymbol,
 } from "./cells.ui";

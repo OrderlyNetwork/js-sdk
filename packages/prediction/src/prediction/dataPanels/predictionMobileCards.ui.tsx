@@ -5,6 +5,7 @@ import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
 import {
   OutcomeBadge,
   PredictionOrderSymbol,
+  PredictionPnl,
   RoundSymbol,
   TableNumber,
 } from "../cells";
@@ -97,9 +98,7 @@ export const MobilePredictionPositions: React.FC<{
                 </Field>
                 <Field label={t("common.unrealizedPnl")}>
                   {uPnL != null ? (
-                    <Text.pnl dp={2} coloring>
-                      {uPnL}
-                    </Text.pnl>
+                    <PredictionPnl value={uPnL} />
                   ) : (
                     <Text intensity={36}>--</Text>
                   )}
@@ -188,9 +187,7 @@ export const MobilePredictionHistory: React.FC<{
               </Field>
               <Field label={t("positions.history.column.netPnl")}>
                 {record.pnl != null ? (
-                  <Text.pnl dp={2} coloring>
-                    {record.pnl}
-                  </Text.pnl>
+                  <PredictionPnl value={record.pnl} />
                 ) : (
                   <Text intensity={36}>--</Text>
                 )}

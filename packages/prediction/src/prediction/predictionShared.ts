@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { i18n, useLocaleCode } from "@orderly.network/i18n";
 import { parseNumber } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, formatNum } from "@orderly.network/utils";
 import { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
 
 export { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
@@ -109,14 +109,24 @@ export function useIndexPriceFormatter(indexPriceSymbol?: string | null) {
   }, [indexPriceSymbol, symbolsInfo]);
 }
 
-/**
- * Two-dp USDC amounts ("1,234.56"). parseNumber truncates beyond the dp
- * (Decimal ROUND_DOWN), matching the perp display convention everywhere.
- */
+/** Preserve nonzero sub-cent amounts; otherwise keep two-dp truncation. */
 export function formatUsd(value: number) {
-  return Number.isFinite(value)
-    ? parseNumber(value, { rule: "price", dp: 2 })
-    : "--";
+  if (!Number.isFinite(value)) return "--";
+  if (value === 0) return "0.00";
+  const amount = new Decimal(value);
+  return amount.abs().lt(0.01)
+    ? amount.toFixed()
+    : parseNumber(value, { rule: "price", dp: 2 });
+}
+
+/** Preserve raw sub-cent PnL before the normal PnL rounding step. */
+export function formatPredictionPnl(value: number) {
+  if (!Number.isFinite(value)) return "--";
+  if (value === 0 || new Decimal(value).abs().lt(0.01)) return formatUsd(value);
+  return parseNumber(formatNum.pnl(value)!.toString(), {
+    rule: "price",
+    dp: 2,
+  });
 }
 
 /** Contract counts: up to 4 dp, no zero padding ("0.5", "1,234.5678"). */

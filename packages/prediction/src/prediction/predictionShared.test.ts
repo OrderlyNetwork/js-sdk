@@ -5,6 +5,8 @@ import {
   fitOrderBookLevels,
   formatContracts,
   formatUsd,
+  formatUsdAmount,
+  formatPredictionPnl,
   INDEX_PRICE_DP_OVERRIDES,
   resolveIndexPriceDp,
 } from "./predictionShared";
@@ -163,4 +165,51 @@ test("formatContracts keeps up to 4 dp without zero padding", () => {
   assert.equal(formatContracts(0.5), "0.5");
   assert.equal(formatContracts(2), "2");
   assert.equal(formatContracts(Number.NaN), "--");
+});
+
+test("USDC sub-cent amounts preserve the complete value without exponential notation", () => {
+  for (const [value, expected] of [
+    [0, "0.00"],
+    [-0, "0.00"],
+    [0.001485, "0.001485"],
+    [-0.001485, "-0.001485"],
+    [0.00000123, "0.00000123"],
+    [-0.00000123, "-0.00000123"],
+    [1e-12, "0.000000000001"],
+    [-1e-12, "-0.000000000001"],
+    [0.0099999, "0.0099999"],
+    [-0.0099999, "-0.0099999"],
+    [0.01, "0.01"],
+    [-0.01, "-0.01"],
+  ] as const) {
+    assert.equal(formatUsd(value), expected);
+  }
+});
+
+test("USDC assembly preserves validity, prefixes, suffixes and approximation", () => {
+  assert.equal(
+    formatUsdAmount(0.001485, {
+      prefix: "$",
+      suffix: " USDC",
+      approximate: true,
+    }),
+    "≈ $0.001485 USDC",
+  );
+  for (const value of [null, undefined, NaN, Infinity, -Infinity]) {
+    assert.equal(formatUsdAmount(value, { suffix: " USDC" }), "-- USDC");
+  }
+  assert.equal(formatUsdAmount(null, { placeholder: "N/A" }), "N/A");
+});
+
+test("PnL keeps small profits and losses raw and preserves ordinary PnL rounding", () => {
+  for (const value of [
+    0, -0, 0.001, -0.001, 0.001485, -0.00000123, 1e-12, -1e-12, 0.01, -0.01,
+  ]) {
+    assert.equal(formatPredictionPnl(value), formatUsd(value));
+  }
+  assert.equal(formatPredictionPnl(1.239), "1.23");
+  assert.equal(formatPredictionPnl(-1.231), "-1.24");
+  assert.equal(formatPredictionPnl(1234.567), "1,234.56");
+  for (const value of [NaN, Infinity, -Infinity])
+    assert.equal(formatPredictionPnl(value), "--");
 });

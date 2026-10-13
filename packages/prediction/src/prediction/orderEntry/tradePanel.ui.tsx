@@ -42,6 +42,7 @@ const PredictionOrderInput: React.FC<{
   error?: string;
   errorMsgVisible: boolean;
   dp?: number;
+  displayDp?: number;
   position: "top" | "middle" | "bottom" | "single";
 }> = ({
   id,
@@ -52,6 +53,7 @@ const PredictionOrderInput: React.FC<{
   error,
   errorMsgVisible,
   dp = 4,
+  displayDp,
   position,
 }) => (
   <Input.tooltip
@@ -72,7 +74,11 @@ const PredictionOrderInput: React.FC<{
     placeholder="0"
     value={value}
     formatters={[
-      inputFormatter.dpFormatter(dp),
+      {
+        onRenderBefore: inputFormatter.dpFormatter(displayDp ?? dp)
+          .onRenderBefore,
+        onSendBefore: inputFormatter.dpFormatter(dp).onSendBefore,
+      },
       inputFormatter.numberFormatter,
       inputFormatter.currencyFormatter,
       inputFormatter.decimalPointFormatter,
@@ -135,7 +141,7 @@ const InfoRow: React.FC<{
     >
       <span
         className={cn(
-          "oui-text-base-contrast-54",
+          "oui-shrink-0 oui-text-base-contrast-54",
           hint && "oui-cursor-pointer",
           dashed &&
             "oui-border-b oui-border-dashed oui-border-line-12 oui-leading-4",
@@ -146,7 +152,7 @@ const InfoRow: React.FC<{
     </Tooltip>
     <span
       className={cn(
-        "oui-text-end oui-font-medium oui-text-base-contrast",
+        "oui-min-w-0 oui-break-words oui-text-end oui-font-medium oui-text-base-contrast",
         valueClassName,
       )}
     >
@@ -599,6 +605,14 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                   }
                   suffix="USDC"
                   dp={2}
+                  displayDp={
+                    state.totalInput == null &&
+                    Number.isFinite(state.orderNotional) &&
+                    state.orderNotional > 0 &&
+                    new Decimal(state.orderNotional).lt(0.01)
+                      ? new Decimal(state.orderNotional).decimalPlaces()
+                      : 2
+                  }
                   onChange={state.setTotal}
                   position="bottom"
                 />
