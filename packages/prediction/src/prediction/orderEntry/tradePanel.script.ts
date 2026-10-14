@@ -6,6 +6,7 @@ import type { BinaryFeeRates } from "../binary/useBinaryFeeRates";
 import type { OneTapOrderEvaluation } from "../hooks/tradingActions/useOneTapOrders";
 import type { PredictionOrderValidationError } from "../hooks/usePredictionOrderForm";
 import type {
+  OneTapBlockReason,
   PredictionAmountUnit,
   PredictionOrderSide,
   PredictionOrderType,
@@ -94,7 +95,11 @@ export interface TradePanelProps extends TradePanelFormProps {
   oneTapAmounts: OneTapAmounts;
   oneTapOptions: Record<
     PredictionOutcome,
-    { payout: number; blockReason: string | null; disabled: boolean }[]
+    {
+      payout: number;
+      blockReason: OneTapBlockReason | null;
+      disabled: boolean;
+    }[]
   >;
   draftOneTapAmounts: Record<PredictionOutcome, string[]>;
   oneTapEditorError: boolean;

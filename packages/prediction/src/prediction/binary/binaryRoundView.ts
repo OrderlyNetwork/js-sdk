@@ -3,7 +3,9 @@ import type { PredictionChartPoint } from "../prediction.types";
 import { binaryRowRoundStart, type BinaryInfoRow } from "./binaryInfo";
 import { getBinaryMarketIdentity } from "./binaryMarkets";
 
-export const getRoundStatus = (row: BinaryInfoRow, now: number) =>
+export type RoundStatus = "ended" | "upcoming" | "live";
+
+export const getRoundStatus = (row: BinaryInfoRow, now: number): RoundStatus =>
   now >= row.expire_at
     ? "ended"
     : now < row.observation_start_at

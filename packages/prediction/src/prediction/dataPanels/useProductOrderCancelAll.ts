@@ -219,7 +219,6 @@ export function useProductOrderCancelAll({
     }
   });
   const blocked = !getTargets()?.length;
-  const product = instrument === "prediction" ? "binary" : instrument;
   const scopes: string[] = [];
   if (includePerps)
     scopes.push(
@@ -229,12 +228,19 @@ export function useProductOrderCancelAll({
     scopes.push(
       `${t("prediction.title")}: ${predictionUnderlyingSymbol ? formatSymbol(predictionUnderlyingSymbol, "base") : t("common.all")}`,
     );
+  // The "prediction" instrument covers this module's UP/DOWN round orders,
+  // matching the established `prediction.rounds.*` key namespace.
+  const descriptions: Record<ProductOrderInstrument, string> = {
+    all: t("prediction.cancelAll.all.description"),
+    perps: t("prediction.cancelAll.perps.description"),
+    prediction: t("prediction.cancelAll.rounds.description"),
+  };
   const content =
     perpsSymbol || predictionUnderlyingSymbol
       ? t("prediction.cancelAll.scoped.description", {
           scope: scopes.join("; "),
         })
-      : t(`prediction.cancelAll.${product}.description`);
+      : descriptions[instrument];
   const confirmation = useCancelAllConfirmation({
     scopeKey,
     disabled: blocked || isCancelling || nativeFallback,

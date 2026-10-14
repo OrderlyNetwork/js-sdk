@@ -126,15 +126,6 @@ export function resolveTabTriggerIcon(
   return isValidElement(resolvedIcon) ? resolvedIcon : undefined;
 }
 
-export const BUILT_IN_TITLE_MAP: Record<string, string> = {
-  community: "markets.community",
-  all: "common.all",
-  crypto: "markets.crypto",
-  preTge: "markets.preTge",
-  newListing: "markets.newListings",
-  recent: "markets.recent",
-};
-
 /**
  * Resolve tab title for TabPanel.
  * @param titleOverrides - pre-resolved i18n strings keyed by built-in type (e.g. { all: "All", newListing: "New Listings" })
@@ -163,17 +154,18 @@ export function resolveTabTitle(
   });
 }
 
-/** Pre-resolve built-in title i18n strings */
+/** Pre-resolve built-in title i18n strings (literal keys for extraction) */
 export function useBuiltInTitles(): Record<string, string> {
   const { t } = useTranslation();
   return useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(BUILT_IN_TITLE_MAP).map(([key, i18nKey]) => [
-          key,
-          t(i18nKey as any) as string,
-        ]),
-      ),
+    () => ({
+      community: t("markets.community"),
+      all: t("common.all"),
+      crypto: t("markets.crypto"),
+      preTge: t("markets.preTge"),
+      newListing: t("markets.newListings"),
+      recent: t("markets.recent"),
+    }),
     [t],
   );
 }

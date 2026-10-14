@@ -5,6 +5,7 @@ import {
   type MutableRefObject,
 } from "react";
 import { useMutation } from "@orderly.network/hooks";
+import { i18n } from "@orderly.network/i18n";
 import { Decimal, getTimestamp } from "@orderly.network/utils";
 import {
   isBinaryRowTradable,
@@ -137,7 +138,7 @@ export const useOrderEditing = ({
         return false;
       }
       if (!order) {
-        notify("prediction.message.orderNotFound", "danger");
+        notify(i18n.t("prediction.message.orderNotFound"), "danger");
         return false;
       }
       const limits = resolveBinaryOrderLimits(config);
@@ -174,7 +175,7 @@ export const useOrderEditing = ({
           limits.baseTick,
         );
         if (!payload) {
-          notify("prediction.message.orderNotFound", "danger");
+          notify(i18n.t("prediction.message.orderNotFound"), "danger");
           return false;
         }
         const response = await doUpdateOrder(payload);

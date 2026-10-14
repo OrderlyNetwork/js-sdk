@@ -303,7 +303,7 @@ export const useOrderSubmission = ({
             liveFunds.current = await resources.refreshForSubmission();
           } catch {
             notify(
-              failureFallback ?? "prediction.message.sellFailed",
+              i18n.t(failureFallback ?? "prediction.message.sellFailed"),
               "danger",
             );
             return false;
@@ -514,7 +514,7 @@ export const useOrderSubmission = ({
         price <= 0 ||
         price >= 1
       ) {
-        notify("prediction.message.sellFailed", "danger");
+        notify(i18n.t("prediction.message.sellFailed"), "danger");
         return false;
       }
       const placed = await submitOrder({

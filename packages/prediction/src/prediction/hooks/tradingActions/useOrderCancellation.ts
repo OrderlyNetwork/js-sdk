@@ -10,6 +10,7 @@ import {
   useMutation,
   type useRefreshOrderCaches,
 } from "@orderly.network/hooks";
+import { i18n } from "@orderly.network/i18n";
 import { binaryRejectionNotice } from "../../binary/binaryOrderRules";
 import {
   cancelProductTargets,
@@ -54,7 +55,7 @@ export const useOrderCancellation = ({
       const order = openOrders.find((item) => item.id === id);
       const symbol = orderSymbol ?? order?.symbol;
       if (!symbol) {
-        notify("prediction.message.orderNotFound", "danger");
+        notify(i18n.t("prediction.message.orderNotFound"), "danger");
         return;
       }
       if (!isOrderTradable(symbol)) {

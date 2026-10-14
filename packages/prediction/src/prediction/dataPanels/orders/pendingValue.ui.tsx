@@ -113,12 +113,14 @@ export const PendingValue = ({
   const error = !draftRejection
     ? undefined
     : draftRejection.key === "prediction.editOrder.error.quantityMax"
-      ? t(draftRejection.key, {
+      ? t("prediction.editOrder.error.quantityMax", {
           maxQuantity: commify(draftRejection.maxQuantity),
         })
-      : "tick" in draftRejection
-        ? t(draftRejection.key, { tick: draftRejection.tick })
-        : t(draftRejection.key);
+      : draftRejection.key === "prediction.editOrder.error.tick"
+        ? t("prediction.editOrder.error.tick", {
+            tick: draftRejection.tick,
+          })
+        : t("prediction.invalidOrder");
   const requestConfirmation = (event: SyntheticEvent) => {
     event.stopPropagation();
     event.preventDefault();

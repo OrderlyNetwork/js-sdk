@@ -72,9 +72,6 @@ export const SymbolInfoBarRiskNotice: React.FC<{
 }) => {
   const { t } = useTranslation();
   if (!visible) return null;
-  const contentKey = isPreTge
-    ? "markets.symbolInfoBar.riskNotice.preLaunch.content"
-    : "markets.symbolInfoBar.riskNotice.content";
   return (
     <a
       href={RISK_NOTICE_LEARN_MORE_URL}
@@ -94,10 +91,15 @@ export const SymbolInfoBarRiskNotice: React.FC<{
       >
         <WarningIcon className="oui-shrink-0 oui-size-4 oui-text-warning-darken" />
         <Text size="xs" className="oui-text-warning-darken oui-flex-1">
-          {t(contentKey, {
-            symbolWithBroker,
-            brokerName,
-          })}{" "}
+          {t(
+            isPreTge
+              ? "markets.symbolInfoBar.riskNotice.preLaunch.content"
+              : "markets.symbolInfoBar.riskNotice.content",
+            {
+              symbolWithBroker,
+              brokerName,
+            },
+          )}{" "}
           <span className="oui-underline">{t("common.learnMore")}</span>
         </Text>
       </Flex>

@@ -8,7 +8,10 @@ import {
   resolveBinaryOrderLimits,
 } from "../../binary/binaryOrderRules";
 import type { BinaryOrderBook } from "../../binary/useBinaryOrderbook";
-import type { PredictionOutcome } from "../../prediction.types";
+import type {
+  OneTapBlockReason,
+  PredictionOutcome,
+} from "../../prediction.types";
 import type { OrderSubmission } from "./useOrderSubmission";
 import type { TradingEstimates } from "./useTradingEstimates";
 
@@ -38,7 +41,7 @@ export interface OneTapOrderEvaluation {
   quantity: number;
   requiredFrozen: number | undefined;
   estimatedSlippage: number | null;
-  blockReason: string | undefined;
+  blockReason: OneTapBlockReason | undefined;
   canPlace: boolean;
 }
 

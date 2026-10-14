@@ -63,6 +63,7 @@ const holdingsRows = vi.hoisted(
 
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: stableI18n.t }),
+  i18n: { t: stableI18n.t },
 }));
 vi.mock("@orderly.network/ui", async () => {
   const { createElement } = await import("react");

@@ -4,6 +4,7 @@ import { Text } from "@orderly.network/ui";
 import type { BinaryHistoryRecord } from "../binary/binaryHistory";
 import { isBinarySettlementComplete } from "../binary/binarySettlement";
 import { RoundOrderStatusCard } from "../orderEntry/roundOrderStatusCard.ui";
+import { outcomeLabels } from "../predictionLabels";
 import { usePredictionFormatters } from "../predictionShared";
 import type { RoundResultState } from "./roundResult.script";
 
@@ -45,7 +46,7 @@ const SegmentCard = ({
   return (
     <div className="oui-space-y-2 oui-rounded-lg oui-border oui-border-line-12 oui-p-3">
       <DetailRow
-        label={record.outcome ? t(`prediction.${record.outcome}`) : "--"}
+        label={record.outcome ? outcomeLabels()[record.outcome] : "--"}
       >
         {t(
           completed

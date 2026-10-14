@@ -25,6 +25,7 @@ vi.mock("@orderly.network/hooks", () => ({
 }));
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
+  i18n: { t: (key: string) => key },
 }));
 vi.mock("@orderly.network/markets-core", () => ({
   DataItem: () => null,

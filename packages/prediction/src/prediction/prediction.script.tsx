@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { i18n } from "@orderly.network/i18n";
 import { binaryPendingOrderPrices } from "./binary/binaryOrderDisplay";
 import { useBinaryMarkPrice } from "./binary/useBinaryMarkPrice";
 import { useBinaryRegionRestricted } from "./binary/useBinaryRegion";
@@ -140,7 +141,7 @@ export const usePredictionScript = (
   const selectMarketRound = useCallback(
     (round: number) => {
       if (rounds.selectMarketRound(round)) return;
-      notify("prediction.rounds.notOpenYet", "danger");
+      notify(i18n.t("prediction.rounds.notOpenYet"), "danger");
     },
     [rounds.selectMarketRound, notify],
   );

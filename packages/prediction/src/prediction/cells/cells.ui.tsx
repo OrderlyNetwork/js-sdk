@@ -10,6 +10,11 @@ import type {
   PredictionAccountState,
 } from "../prediction.types";
 import {
+  orderTypeLabels,
+  outcomeLabels,
+  phaseLabels,
+} from "../predictionLabels";
+import {
   formatCountdown,
   formatPredictionPnl,
   usePredictionFormatters,
@@ -19,7 +24,7 @@ export const OutcomeBadge: React.FC<{
   outcome: PredictionOutcome;
   muted?: boolean;
 }> = ({ outcome, muted }) => {
-  const { t } = useTranslation();
+  useTranslation();
   return (
     <Badge
       className={cn(
@@ -29,7 +34,7 @@ export const OutcomeBadge: React.FC<{
       color={muted ? "neutral" : outcome === "up" ? "buy" : "sell"}
       size="xs"
     >
-      {t(`prediction.${outcome}`)}
+      {outcomeLabels()[outcome]}
     </Badge>
   );
 };
@@ -173,7 +178,7 @@ export const PredictionOrderSymbol = ({
         </div>
         <div className="oui-mt-1 oui-flex oui-items-center oui-gap-1 oui-whitespace-nowrap">
           <Badge color="neutral" size="xs">
-            {t(`common.${order.type}`)}
+            {orderTypeLabels()[order.type]}
           </Badge>
           <span
             className={cn(
@@ -195,11 +200,11 @@ export const PredictionOrderSymbol = ({
 export const RoundCountdown: React.FC<{
   roundInfo: BinaryInfoRow | undefined;
 }> = ({ roundInfo }) => {
-  const { t } = useTranslation();
+  useTranslation();
   const now = useRoundNow(roundInfo?.expire_at);
   if (!roundInfo) return <Text intensity={36}>--</Text>;
   const phase = deriveBinaryPhase(roundInfo, now);
   return phase === "trading" || phase === "closingSoon"
     ? formatCountdown(secondsUntil(roundInfo.expire_at, now))
-    : t(`prediction.phase.${phase}`);
+    : phaseLabels()[phase];
 };

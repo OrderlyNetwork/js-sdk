@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { CaretDownIcon, CaretUpIcon, Spinner, cn } from "@orderly.network/ui";
 import type { PredictionState } from "../prediction.script";
+import { outcomeLabels } from "../predictionLabels";
 import { usePredictionFormatters } from "../predictionShared";
 
 export const RoundOrderStatusCard: React.FC<
@@ -105,7 +106,7 @@ export const RoundOrderStatusCard: React.FC<
             )}
           >
             {t("prediction.resolution.outcome", {
-              outcome: t(`prediction.${resolvedOutcome}`),
+              outcome: outcomeLabels()[resolvedOutcome],
             })}
           </h2>
           <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">

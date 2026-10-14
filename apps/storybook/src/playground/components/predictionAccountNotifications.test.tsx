@@ -62,9 +62,9 @@ afterEach(() => {
 
 it("uses success styling for notifications with no explicit tone", () => {
   const notify = mountNotify();
-  notify("prediction.message.orderCanceled");
+  notify("prediction.message.insufficientBalance");
   expect(mocks.success).toHaveBeenCalledWith(
-    "prediction.message.orderCanceled",
+    "prediction.message.insufficientBalance",
   );
   expect(mocks.error).not.toHaveBeenCalled();
 });

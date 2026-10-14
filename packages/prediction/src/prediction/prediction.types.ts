@@ -13,6 +13,15 @@ export type PredictionRoundPhase =
   | "closed"
   | "resolvedUp"
   | "resolvedDown";
+/** i18n keys for one-tap preset blockers; consumed via `blockReasonLabels`. */
+export type OneTapBlockReason =
+  | "prediction.invalidOrder"
+  | "prediction.message.noExecutableQuotes"
+  | "prediction.message.roundNotTradable"
+  | "prediction.message.regionRestricted"
+  | "prediction.message.orderFailed"
+  | "prediction.message.insufficientBalance"
+  | "prediction.message.slippageExceeded";
 export type PredictionDataTab =
   | "openOrders"
   | "predictions"

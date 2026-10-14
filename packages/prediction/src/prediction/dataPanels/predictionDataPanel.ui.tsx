@@ -7,6 +7,7 @@ import type {
   PredictionDataTab,
   PredictionAccountPanelState,
 } from "../prediction.types";
+import { dataTabTitles } from "../predictionLabels";
 import type { PredictionPerpsPanelProps } from "./perpsPanel.types";
 import type { ProductType } from "./sharedProductDataPanel.script";
 import { SharedProductDataPanel } from "./sharedProductDataPanel.ui";
@@ -39,16 +40,6 @@ const defaultMobileTabs: PredictionDataTab[] = [
   "history",
   "assets",
 ];
-
-const tabTitleKeys = {
-  predictions: "prediction.tab.positions",
-  openOrders: "prediction.tab.openOrders",
-  filled: "prediction.tab.filled",
-  predictionHistory: "prediction.tab.predictionHistory",
-  orderHistory: "prediction.tab.orderHistory",
-  assets: "prediction.tab.assets",
-  history: "trading.history",
-} as const satisfies Record<PredictionDataTab, string>;
 
 /** Shared tab-title JSX (label + optional count suffix) for both variants. */
 const renderTabTitle = (
@@ -86,7 +77,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
   onSymbolChange,
 }) => {
-  const { t } = useTranslation();
+  useTranslation();
   const counts = useSharedProductCounts({ product: "all" });
   const mobileTabs = tabs === defaultTabs ? defaultMobileTabs : tabs;
   const activeTab = mobileTabs.includes(state.activeTab ?? "predictions")
@@ -173,7 +164,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           <TabPanel
             key={tab}
             value={tab}
-            title={renderTabTitle(t(tabTitleKeys[tab]), tab, tabCount)}
+            title={renderTabTitle(dataTabTitles()[tab], tab, tabCount)}
           >
             {content[tab]}
           </TabPanel>
@@ -190,7 +181,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   embedded = false,
   onSymbolChange,
 }) => {
-  const { t } = useTranslation();
+  useTranslation();
   const counts = useSharedProductCounts({ product: "all" });
   const activeTab = tabs.includes(state.activeTab ?? "predictions")
     ? state.activeTab
@@ -282,7 +273,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
           <TabPanel
             key={tab}
             value={tab}
-            title={renderTabTitle(t(tabTitleKeys[tab]), tab, tabCount)}
+            title={renderTabTitle(dataTabTitles()[tab], tab, tabCount)}
           >
             {tabContent[tab]}
           </TabPanel>

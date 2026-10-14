@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation, type LocaleMessages } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   AddCircleIcon,
   Button,
@@ -21,6 +21,12 @@ import {
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { DEFAULT_BINARY_BASE_TICK } from "../binary/binaryOrderRules";
+import {
+  blockReasonLabels,
+  orderTypeLabels,
+  outcomeLabels,
+  sideLabels,
+} from "../predictionLabels";
 import {
   formatContractPrice,
   formatUsdAmount,
@@ -185,8 +191,22 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
     const error = state.visibleOrderError;
     if (!error) return undefined;
     const target = state.orderType === "market" ? "amount" : error.field;
-    return target === field
-      ? t(error.key, {
+    if (target !== field) return undefined;
+    // Exhaustive over the validation key union so every key stays a literal
+    // `t("key")` call; interpolation options match each key's en text.
+    switch (error.key) {
+      case "orderEntry.orderPrice.error.required":
+        return t("orderEntry.orderPrice.error.required");
+      case "orderEntry.orderQuantity.error.required":
+        return t("orderEntry.orderQuantity.error.required");
+      case "orderEntry.orderQuantity.error.min":
+        return t("orderEntry.orderQuantity.error.min", {
+          value: error.value,
+        });
+      case "orderEntry.total.error.min":
+        return t("orderEntry.total.error.min", { value: error.value });
+      case "prediction.message.downMinimumOrder":
+        return t("prediction.message.downMinimumOrder", {
           value: error.value,
           upPrice:
             error.upPrice == null
@@ -200,12 +220,22 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
             error.minTotal == null
               ? undefined
               : new Decimal(error.minTotal).toFixed(2),
-        })
-      : undefined;
+        });
+      case "prediction.message.noExecutableQuotes":
+        return t("prediction.message.noExecutableQuotes");
+      case "prediction.message.insufficientBalance":
+        return t("prediction.message.insufficientBalance");
+      case "prediction.message.insufficientContracts":
+        return t("prediction.message.insufficientContracts");
+      case "prediction.message.slippageExceeded":
+        return t("prediction.message.slippageExceeded");
+      case "prediction.invalidOrder":
+        return t("prediction.invalidOrder");
+    }
   };
-  const outcomeLabel = t(`prediction.${state.selectedOutcome}`);
+  const outcomeLabel = outcomeLabels()[state.selectedOutcome];
   const inputUnit = state.amountUnit === "quote" ? "USDC" : outcomeLabel;
-  const buttonLabel = `${t(`common.${state.orderSide}`)} ${t(`prediction.${state.selectedOutcome}`)}`;
+  const buttonLabel = `${sideLabels()[state.orderSide]} ${outcomeLabel}`;
   const availableValue = !orderEntryFunded
     ? `0 ${isBuyContext ? "USDC" : outcomeLabel}`
     : isBuyContext
@@ -238,7 +268,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
               label:
                 type === "oneTap"
                   ? t("prediction.oneTap")
-                  : t(`common.${type}`),
+                  : orderTypeLabels()[type],
             }))}
             disabled={!orderEntryAccountReady}
             onValueChange={(type) =>
@@ -268,7 +298,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                 <Text size="xs">
                   {type === "oneTap"
                     ? t("prediction.oneTap")
-                    : t(`common.${type}`)}
+                    : orderTypeLabels()[type]}
                 </Text>
               </button>
             ))}
@@ -291,7 +321,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                     : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
                 )}
               >
-                {t(`common.${side}`)}
+                {sideLabels()[side]}
               </Button>
             ))}
           </div>
@@ -342,7 +372,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                           : "oui-text-trade-loss",
                       )}
                     >
-                      {t(`prediction.${outcome}`)} · USDC
+                      {outcomeLabels()[outcome]} · USDC
                     </Text>
                   ))}
                   <span />
@@ -432,7 +462,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                     : "oui-bg-trade-loss/15 oui-text-trade-loss",
                 )}
               >
-                <span>{t(`prediction.${outcome}`)}</span>
+                <span>{outcomeLabels()[outcome]}</span>
                 <span className="oui-mt-0.5 oui-tabular-nums">
                   {state.executablePrices.buy[outcome] == null
                     ? "--"
@@ -461,7 +491,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                         : "oui-text-base-contrast-54 hover:oui-bg-trade-loss/10",
                   )}
                 >
-                  <span>{t(`prediction.${outcome}`)}</span>
+                  <span>{outcomeLabels()[outcome]}</span>
                   <span className="oui-mt-0.5 oui-tabular-nums">
                     {state.executablePrices[state.orderSide][outcome] == null
                       ? "--"
@@ -534,7 +564,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                       type="button"
                       title={
                         blockReason != null
-                          ? String(t(blockReason as keyof LocaleMessages))
+                          ? blockReasonLabels()[blockReason]
                           : undefined
                       }
                       disabled={oneTapEditorOpen || disabled}

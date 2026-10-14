@@ -24,6 +24,7 @@ import type {
   PredictionChartMode,
   RoundOutcomeLookup,
 } from "./predictionChart.script";
+import { outcomeLabels, roundStatusLabels } from "./predictionLabels";
 import {
   formatCountdown,
   formatCountdownWithHours,
@@ -178,12 +179,12 @@ export const RoundNavigator: React.FC<{
         <div className="oui-text-sm oui-flex oui-items-center oui-justify-between oui-gap-2 oui-text-base-contrast">
           <span className="oui-flex oui-items-center oui-gap-2">
             {status === "live" && <LiveIndicator />}
-            {t(`prediction.rounds.${status}`)}
+            {roundStatusLabels()[status]}
           </span>
           <span className="oui-tabular-nums">
             {status === "ended"
               ? outcome
-                ? t(`prediction.${outcome}`)
+                ? outcomeLabels()[outcome]
                 : "--"
               : formatCountdownWithHours(secondsUntil(row.expire_at, now))}
           </span>
