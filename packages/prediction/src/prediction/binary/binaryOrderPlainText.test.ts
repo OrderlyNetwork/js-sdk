@@ -49,3 +49,16 @@ test("CSV distinguishes unfilled, missing average price and partial pending exec
     new Date(order.timestamp).toISOString(),
   );
 });
+
+test("CSV keeps reduce-only distinguishable with the shared Yes/No wording", () => {
+  assert.equal(
+    binaryOrderPlainText({ ...order, reduceOnly: true }, "reduce_only"),
+    "Yes",
+  );
+  assert.equal(
+    binaryOrderPlainText({ ...order, reduceOnly: false }, "reduce_only"),
+    "No",
+  );
+  // A missing attribute reads as No, matching the page cell and perp CSV rows.
+  assert.equal(binaryOrderPlainText(order, "reduce_only"), "No");
+});

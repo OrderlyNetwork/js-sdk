@@ -4,6 +4,7 @@ import { OrderStatus } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
 import { DesktopOrderList } from "@orderly.network/ui-orders";
+import { binaryOrderPlainText } from "../binary/binaryOrderPlainText";
 import type { PredictionAccountPanelState } from "../prediction.types";
 import { usePredictionFilters } from "../predictionFilters.script";
 import { matchesPredictionOrderFilters } from "./orders/matchesPredictionOrderFilters";
@@ -173,6 +174,7 @@ const AllProductOrdersTable: React.FC<
                     order.status === "cancelled"
                       ? OrderStatus.CANCELLED
                       : undefined,
+                  plainText: (field) => binaryOrderPlainText(order, field),
                   renderCell: (field) => (
                     <PredictionOrderCell
                       state={state}

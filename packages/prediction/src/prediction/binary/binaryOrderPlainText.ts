@@ -1,3 +1,4 @@
+import { i18n } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
 import type { PredictionOpenOrder } from "../prediction.types";
 import {
@@ -37,6 +38,10 @@ export function binaryOrderPlainText(
       order.totalFee == null
         ? "--"
         : `${order.totalFee} ${order.feeAsset ?? "USDC"}`,
+    // Merged CSVs mix perp rows (rendered by ui-orders reduceOnly column) with
+    // these rows; both must go through i18n "common.yes"/"common.no" so one
+    // column never shows two different words.
+    reduce_only: order.reduceOnly ? i18n.t("common.yes") : i18n.t("common.no"),
     status: order.status ?? "pending",
     created_time: new Date(order.timestamp).toISOString(),
     action: "",
