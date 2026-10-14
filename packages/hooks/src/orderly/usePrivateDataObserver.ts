@@ -1,14 +1,10 @@
 import { useEffect, useRef } from "react";
-import { mutate } from "swr";
-import { unstable_serialize } from "swr/infinite";
+import { useSWRConfig } from "swr";
 import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 import { API, MarginMode, WSMessage } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
-import {
-  AlgoOrderFieldChanges,
-  AlgoOrderMergeHandler,
-} from "../services/orderMerge/algoOrderMergeHandler";
+import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { CalculatorScope } from "../types";
 import { useAccount } from "../useAccount";
 import { useCalculatorService } from "../useCalculatorService";
@@ -16,7 +12,7 @@ import { useEventEmitter } from "../useEventEmitter";
 import { useLocalStorage } from "../useLocalStorage";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWS } from "../useWS";
-import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
+import { updateOrderCaches } from "../utils/orderCacheUpdate";
 import { object2underscore } from "../utils/ws";
 import { useAppStore } from "./appStore";
 import { usePositionActions } from "./orderlyHooks";
@@ -25,7 +21,7 @@ export const usePrivateDataObserver = (options: {
   getKeysMap: (type: string) => Map<string, getKeyFunction>;
 }) => {
   const ws = useWS();
-  // const { mutate } = useSWRConfig();
+  const { cache, mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state, account } = useAccount();
   const { setAccountInfo, restoreHolding, cleanAll } = useAppStore(
@@ -163,52 +159,31 @@ export const usePrivateDataObserver = (options: {
   }, [holding]);
 
   const [subOrder] = useLocalStorage("orderly_subscribe_order", true);
+  const orderSubscription = useRef({ accountId: state.accountId, subOrder });
+  orderSubscription.current = { accountId: state.accountId, subOrder };
+  useEffect(() => {
+    orderSubscription.current = { accountId: state.accountId, subOrder };
+    return () => {
+      orderSubscription.current = { accountId: undefined, subOrder: false };
+    };
+  }, [state.accountId, subOrder]);
 
   const updateOrders = (
     data: WSMessage.AlgoOrder[] | WSMessage.Order,
     isAlgoOrder: boolean,
   ) => {
-    const keysMap = options.getKeysMap("orders");
-
-    const filteredKeys = new Map();
-    const keyStartWith = isAlgoOrder ? "algoOrders" : "orders";
-
-    const keys = keysMap.keys();
-
-    for (const key of keys) {
-      if (key.startsWith(keyStartWith)) {
-        filteredKeys.set(key, keysMap.get(key));
-      }
-    }
-
-    let fieldChanges: AlgoOrderFieldChanges = {};
-
-    filteredKeys.forEach((getKey, key) => {
-      mutate(
-        unstable_serialize((index, prevData) => [
-          getKey(index, prevData),
-          state.accountId,
-        ]),
-        (prevData?: any[]) => {
-          try {
-            if (isAlgoOrder) {
-              const res = updateAlgoOrdersHandler(
-                key,
-                data as WSMessage.AlgoOrder[],
-                prevData!,
-              );
-              fieldChanges = res?.fieldChanges || {};
-              return res?.mergedOrders;
-            }
-            return updateOrdersHandler(key, data as WSMessage.Order, prevData);
-          } catch (error) {
-            return prevData;
-          }
-        },
-        {
-          revalidate: false,
-        },
-      );
+    const accountId = state.accountId;
+    if (!accountId) return;
+    const { fieldChanges } = updateOrderCaches({
+      keys: options.getKeysMap("orders"),
+      cache,
+      mutate,
+      accountId,
+      message: data,
+      isAlgoOrder,
+      isCurrent: () =>
+        orderSubscription.current.accountId === accountId &&
+        orderSubscription.current.subOrder === true,
     });
 
     //  emit events;

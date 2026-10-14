@@ -157,9 +157,10 @@ export const useOrderStream = (
   useEffect(() => {
     if (!enabled) return;
     const formatKey = (value?: string) => (value ? `:${value}` : "");
-    const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
+    const scope = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side,
     )}${formatKey(size.toString())}${formatKey(productType)}`;
+    const key = `${scope}#${normalOrderKeyFn(0, null)}`;
 
     const keepAfterRelease = options?.stopOnUnmount !== true;
     const releaseNormal = registerKeyHandler?.(
@@ -168,7 +169,7 @@ export const useOrderStream = (
       keepAfterRelease,
     );
 
-    const algoKey = key.replace("orders", "algoOrders");
+    const algoKey = `${scope.replace("orders", "algoOrders")}#${algoOrderKeyFn?.(0, null)}`;
     const releaseAlgo = algoOrderKeyFn
       ? registerKeyHandler?.(algoKey, algoOrderKeyFn, keepAfterRelease)
       : undefined;
@@ -198,6 +199,7 @@ export const useOrderStream = (
       initialSize: 1,
       formatter: (data) => data,
       revalidateOnFocus: false,
+      revalidateOnMount: true,
     },
   );
 
@@ -208,6 +210,7 @@ export const useOrderStream = (
     {
       formatter: (data) => data,
       revalidateOnFocus: false,
+      revalidateOnMount: true,
     },
   );
 
