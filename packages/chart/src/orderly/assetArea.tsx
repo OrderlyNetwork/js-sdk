@@ -108,7 +108,7 @@ export const AssetAreaChart: React.FC<PnlAreaChartProps> = (props) => {
             </linearGradient>
           </defs>
           <Area
-            type="natural"
+            type="monotoneX"
             dataKey="account_value"
             stroke={colors.profit}
             strokeWidth={isMobile ? 1.5 : 2}

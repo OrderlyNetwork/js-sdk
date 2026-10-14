@@ -105,7 +105,7 @@ export const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
             </linearGradient>
           </defs>
           <Area
-            type="natural"
+            type="monotoneX"
             dataKey="account_value"
             stroke={colors.profit}
             strokeWidth={isMobile ? 1.5 : 2}
@@ -156,7 +156,7 @@ export const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
       {/* <Legend />  */}
       {!props.invisible && (
         <Line
-          type="natural"
+          type="monotoneX"
           dataKey="account_value"
           stroke={colors.profit}
           strokeWidth={isMobile ? 1.5 : 2}

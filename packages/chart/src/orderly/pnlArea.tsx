@@ -114,7 +114,7 @@ export const PnlAreaChart: React.FC<PnlAreaChartProps> = (props) => {
             </linearGradient>
           </defs>
           <Area
-            type="natural"
+            type="monotoneX"
             dataKey="pnl"
             stroke={colors.primary}
             strokeWidth={isMobile ? 1.5 : 2}
