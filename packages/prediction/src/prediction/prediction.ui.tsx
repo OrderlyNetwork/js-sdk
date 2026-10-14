@@ -240,7 +240,7 @@ export const Prediction: React.FC<
     return (
       <main
         id="oui-prediction-page"
-        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-flex-col oui-gap-3 oui-bg-base-10 oui-p-3 lg:oui-p-4"
+        className="oui-flex oui-min-h-[calc(100vh-64px)] oui-flex-col oui-gap-3 oui-bg-base-10 oui-px-1 oui-py-3 lg:oui-py-4 2xl:oui-px-4"
       >
         <header className="oui-flex oui-items-center oui-rounded-2xl oui-bg-base-9 oui-p-4">
           {marketSelector}
@@ -266,12 +266,12 @@ export const Prediction: React.FC<
   return (
     <main
       id="oui-prediction-page"
-      className="oui-min-h-[calc(100vh-64px)] oui-bg-base-10 oui-p-3 oui-font-semibold lg:oui-p-4"
+      className="oui-min-h-[calc(100vh-64px)] oui-bg-base-10 oui-px-1 oui-py-3 oui-font-semibold lg:oui-py-4 2xl:oui-px-4"
     >
       {/* Order book | trade sit side-by-side below 2xl with the same 4fr/6fr
           split as the perps mobile page (orderBookAndEntry). 2xl is the
           theme's 1280px screen and must match isDesktopLayout below. */}
-      <div className="oui-grid oui-grid-cols-[4fr_6fr] oui-items-stretch oui-gap-3 2xl:oui-grid-cols-[minmax(0,1fr)_280px_280px] 2xl:oui-grid-rows-[auto_auto_auto]">
+      <div className="oui-grid oui-grid-cols-[4fr_6fr] oui-items-stretch oui-gap-x-1 oui-gap-y-3 2xl:oui-grid-cols-[minmax(0,1fr)_280px_280px] 2xl:oui-grid-rows-[auto_auto_auto] 2xl:oui-gap-x-3">
         <header className="oui-col-span-2 oui-col-start-1 oui-row-start-1 oui-flex oui-flex-col oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-p-4 2xl:oui-col-span-1 2xl:oui-col-start-1 2xl:oui-row-start-1 2xl:oui-flex-row 2xl:oui-items-center">
           {marketSelector}
 

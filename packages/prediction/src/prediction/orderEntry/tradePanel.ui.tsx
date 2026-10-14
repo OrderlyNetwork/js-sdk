@@ -6,6 +6,7 @@ import {
   CloseIcon,
   cn,
   EditIcon,
+  Flex,
   Input,
   inputFormatter,
   modal,
@@ -223,7 +224,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
 
   return (
     <aside className="oui-overflow-hidden oui-rounded-xl oui-bg-base-9">
-      <div className="oui-prediction-orderEntry-form oui-min-w-0 oui-p-3 oui-text-base-contrast-54">
+      <div className="oui-prediction-orderEntry-form oui-min-w-0 oui-p-2 oui-text-base-contrast-54">
         {isMobile ? (
           <Select.options
             size="md"
@@ -746,28 +747,26 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
               }
             />
           )}
-          <InfoRow
-            label={t("common.fees")}
-            // Same muted coloring as the perps order entry fee row
-            // (regularFees.ui.tsx): labels contrast-54, values contrast-80.
-            value={
-              <>
-                <span className="oui-text-base-contrast-54">
-                  {t("dmm.taker")}:{" "}
-                </span>
-                <span className="oui-text-base-contrast-80">
-                  {formatFeeBps(state.feeRates.takerBps)} /{" "}
-                </span>
-                <span className="oui-text-base-contrast-54">
-                  {t("dmm.maker")}:{" "}
-                </span>
-                <span className="oui-text-base-contrast-80">
-                  {formatFeeBps(state.feeRates.makerBps)}
-                </span>
-              </>
-            }
-            valueClassName="oui-font-normal"
-          />
+          <Flex itemAlign="center" justify="between" width="100%">
+            <Text className="oui-truncate" size="2xs">
+              {t("common.fees")}
+            </Text>
+            <Flex gap={1} className="oui-whitespace-nowrap oui-font-normal">
+              <Text className="oui-truncate" size="2xs">
+                {t("dmm.taker")}:
+              </Text>
+              <Text size="2xs" className="oui-text-base-contrast-80">
+                {formatFeeBps(state.feeRates.takerBps)}
+              </Text>
+              <Text size="2xs">/</Text>
+              <Text className="oui-truncate" size="2xs">
+                {t("dmm.maker")}:
+              </Text>
+              <Text size="2xs" className="oui-text-base-contrast-80">
+                {formatFeeBps(state.feeRates.makerBps)}
+              </Text>
+            </Flex>
+          </Flex>
           {/* One-tap presets each size off their own protection price; the
             estimates below price the form, which that mode does not show. */}
           {!isOneTap &&
