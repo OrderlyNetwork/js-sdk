@@ -4,16 +4,15 @@ import type { DataFilterItem } from "@orderly.network/ui";
 import {
   OutcomeBadge,
   PredictionPnl,
+  RoundCountdown,
   RoundSymbol,
   TableNumber,
 } from "../../cells";
-import { useRoundCountdown } from "../../hooks/useRoundCountdown";
 import { SellPosition } from "../../orderEntry/sellPosition";
 import type {
   PredictionAccountPanelState,
   PredictionPosition,
 } from "../../prediction.types";
-import { formatCountdown } from "../../predictionShared";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
 import type { HoldingsTableScript } from "./holdingsTable.script";
@@ -44,7 +43,6 @@ export const HoldingsTableUI = ({
   loading,
 }: HoldingsTableUIProps) => {
   const { t } = useTranslation();
-  const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
   const rows = useHoldingsPositionRows(
     state,
     filters.matches,
@@ -74,14 +72,7 @@ export const HoldingsTableUI = ({
         tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
       ]}
       rows={rows.map(
-        ({
-          id,
-          position,
-          isSelectedRound,
-          lastPrice,
-          uPnL,
-          availableQuantity,
-        }) => ({
+        ({ id, position, lastPrice, uPnL, availableQuantity, roundInfo }) => ({
           id,
           groupId: position.accountId,
           sortValues: [
@@ -114,13 +105,7 @@ export const HoldingsTableUI = ({
             ) : (
               <Text intensity={36}>--</Text>
             ),
-            isSelectedRound
-              ? state.marketView?.isRoundTradable
-                ? formatCountdown(countdown)
-                : t(
-                    `prediction.phase.${state.marketView?.roundPhase ?? "closed"}`,
-                  )
-              : "--",
+            <RoundCountdown roundInfo={roundInfo} />,
             <SellPosition
               state={getPositionState?.(position) ?? state}
               accountId={position.accountId}

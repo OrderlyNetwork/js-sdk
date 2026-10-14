@@ -195,6 +195,13 @@ export interface PredictionAccountState
   ordersError?: unknown;
   positionsLoading: boolean;
   positionsError?: unknown;
+  /**
+   * Round metadata by round-specific symbol. Per-row countdown cells read each
+   * position's own round from it, independent of any page-selected round.
+   */
+  roundBySymbol?(symbol?: string): API.BinaryInfoRow | undefined;
+  /** Server-calibrated valuation time refreshed at round boundaries. */
+  roundNow?: number;
 }
 
 export interface UsePredictionAccountDataOptions {

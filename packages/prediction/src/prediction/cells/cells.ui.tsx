@@ -1,12 +1,16 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Badge, cn, Text } from "@orderly.network/ui";
+import { deriveBinaryPhase, type BinaryInfoRow } from "../binary/binaryInfo";
 import { parseBinaryRoundSymbol } from "../binary/binaryMarkets";
+import { secondsUntil } from "../binary/binaryRoundView";
+import { useRoundNow } from "../hooks/useRoundCountdown";
 import type {
   PredictionOutcome,
   PredictionAccountState,
 } from "../prediction.types";
 import {
+  formatCountdown,
   formatPredictionPnl,
   usePredictionFormatters,
 } from "../predictionShared";
@@ -185,4 +189,17 @@ export const PredictionOrderSymbol = ({
       </div>
     </div>
   );
+};
+
+/** Per-row calibrated clock keeps countdown and terminal state independent of selection. */
+export const RoundCountdown: React.FC<{
+  roundInfo: BinaryInfoRow | undefined;
+}> = ({ roundInfo }) => {
+  const { t } = useTranslation();
+  const now = useRoundNow(roundInfo?.expire_at);
+  if (!roundInfo) return <Text intensity={36}>--</Text>;
+  const phase = deriveBinaryPhase(roundInfo, now);
+  return phase === "trading" || phase === "closingSoon"
+    ? formatCountdown(secondsUntil(roundInfo.expire_at, now))
+    : t(`prediction.phase.${phase}`);
 };

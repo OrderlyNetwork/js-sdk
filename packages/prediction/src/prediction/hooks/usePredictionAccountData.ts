@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { type LocaleMessages, i18n } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { useBinaryRegionRestricted } from "../binary/useBinaryRegion";
@@ -27,6 +28,12 @@ export const usePredictionAccountData = ({
     nowMs: markets.now,
   });
   const isRegionRestricted = useBinaryRegionRestricted(enabled);
+  // Stable identity: row view models keep this in their memo dependencies.
+  const roundBySymbol = useMemo(
+    () => (symbol?: string) =>
+      symbol ? markets.configBySymbol.get(symbol) : undefined,
+    [markets.configBySymbol],
+  );
   const actions = usePredictionAccountActions({
     resources,
     binaryRows: markets.rows,
@@ -54,6 +61,8 @@ export const usePredictionAccountData = ({
     historyLoading: resources.historyLoading,
     historyError: resources.historyError,
     pendingSettlementSymbols: resources.pendingSettlementSymbols,
+    roundBySymbol,
+    roundNow: markets.now,
     ...actions.actions,
     hasFeeConfig: actions.hasFeeConfig,
     isSubmitting: false,

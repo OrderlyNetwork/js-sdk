@@ -6,13 +6,13 @@ import {
   OutcomeBadge,
   PredictionOrderSymbol,
   PredictionPnl,
+  RoundCountdown,
   RoundSymbol,
   TableNumber,
 } from "../cells";
-import { useRoundCountdown } from "../hooks/useRoundCountdown";
 import { SellPosition } from "../orderEntry/sellPosition";
 import type { PredictionAccountPanelState } from "../prediction.types";
-import { formatCountdown, usePredictionFormatters } from "../predictionShared";
+import { usePredictionFormatters } from "../predictionShared";
 import { PredictionFilters } from "./filters/predictionFilters.ui";
 import { usePredictionHistoryTableScript } from "./history/predictionHistoryTable.script";
 import {
@@ -53,21 +53,13 @@ export const MobilePredictionPositions: React.FC<{
 }> = ({ state }) => {
   const { t } = useTranslation();
   const { filters } = useHoldingsTableScript();
-  const countdown = useRoundCountdown(state.marketView?.selectedRow?.expire_at);
   const rows = useHoldingsPositionRows(state, filters.matches);
   return (
     <>
       <PredictionFilters filters={filters} mode="holdings" />
       <Cards empty={rows.length === 0}>
         {rows.map(
-          ({
-            id,
-            position,
-            isSelectedRound,
-            lastPrice,
-            uPnL,
-            availableQuantity,
-          }) => (
+          ({ id, position, lastPrice, uPnL, availableQuantity, roundInfo }) => (
             <div key={id} className="oui-rounded-xl oui-bg-base-9 oui-p-3">
               <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
                 <RoundSymbol
@@ -104,13 +96,7 @@ export const MobilePredictionPositions: React.FC<{
                   )}
                 </Field>
                 <Field label={t("prediction.countdownStatus")}>
-                  {isSelectedRound
-                    ? state.marketView?.isRoundTradable
-                      ? formatCountdown(countdown)
-                      : t(
-                          `prediction.phase.${state.marketView?.roundPhase ?? "closed"}`,
-                        )
-                    : "--"}
+                  <RoundCountdown roundInfo={roundInfo} />
                 </Field>
               </div>
               <div className="oui-mt-3 oui-flex oui-justify-end">

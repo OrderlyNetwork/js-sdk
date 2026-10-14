@@ -6,5 +6,6 @@ export {
   TableNumber,
   PredictionPnl,
   RoundSymbol,
+  RoundCountdown,
   PredictionOrderSymbol,
 } from "./cells.ui";
