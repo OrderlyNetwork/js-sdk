@@ -11,6 +11,7 @@ import { useTrack } from "../useTrack";
 import { useChains } from "./useChains";
 import { useCollateral } from "./useCollateral";
 import { useMaxWithdrawal } from "./useMaxWithdrawal";
+import { usePerpUnsettledPnL } from "./usePerpUnsettledPnL";
 
 export type UseWithdrawOptions = {
   srcChainId?: number;
@@ -23,7 +24,8 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
   const { srcChainId, token = "", decimals } = options;
   const { account, state } = useAccount();
 
-  const { unsettledPnL, availableBalance, freeCollateral } = useCollateral();
+  const { availableBalance, freeCollateral } = useCollateral();
+  const unsettledPnL = usePerpUnsettledPnL();
 
   const networkId = useConfig("networkId");
 

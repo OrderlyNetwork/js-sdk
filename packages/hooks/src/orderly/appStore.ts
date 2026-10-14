@@ -22,6 +22,8 @@ export type Portfolio = {
   totalValue: Decimal | null;
   availableBalance: number;
   unsettledPnL: number;
+  /** Ordinary Perp PnL used by balance, withdrawal and borrowing calculations. */
+  perpUnsettledPnL?: number;
   totalUnrealizedROI: number;
   usdcHolding: number;
 };
@@ -92,6 +94,7 @@ export const useAppStore = create<
       freeCollateralUSDCOnly: zero,
       availableBalance: 0,
       unsettledPnL: 0,
+      perpUnsettledPnL: 0,
       totalUnrealizedROI: 0,
       usdcHolding: 0,
     },
@@ -117,6 +120,7 @@ export const useAppStore = create<
             freeCollateralUSDCOnly: zero,
             availableBalance: 0,
             unsettledPnL: 0,
+            perpUnsettledPnL: 0,
             totalUnrealizedROI: 0,
             usdcHolding: 0,
           };

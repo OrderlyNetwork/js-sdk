@@ -7,6 +7,7 @@ import { MarketCalculatorName } from "./markPrice";
 export class CalculatorContext implements CalculatorCtx {
   accountInfo?: API.AccountInfo;
   symbolsInfo?: Record<string, API.SymbolExt>;
+  perpSymbolsInfo?: Record<string, API.SymbolExt>;
   fundingRates?: Record<string, API.FundingRate>;
   // holding: API.Holding[];
   // portfolio — dynamic getter to always read the latest output from PortfolioCalculator
@@ -86,6 +87,7 @@ export class CalculatorContext implements CalculatorCtx {
 
   private setCtxData() {
     const state = useAppStore.getState();
+    this.perpSymbolsInfo = state.symbolsInfo;
     this.fundingRates = state.fundingRates as Record<string, API.FundingRate>;
     this.tokensInfo = state.tokensInfo || [];
 

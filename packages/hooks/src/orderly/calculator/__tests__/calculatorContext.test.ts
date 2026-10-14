@@ -60,6 +60,8 @@ describe("CalculatorContext.setCtxData composition memo", () => {
     const ctx = tick();
     const symbolsInfo = ctx.symbolsInfo;
     const accountInfo = ctx.accountInfo;
+    expect(ctx.perpSymbolsInfo?.PERP_BTC5M2609291200_USDC).toBeUndefined();
+    expect(ctx.perpSymbolsInfo?.PERP_BTC_USDC).toBeDefined();
 
     // The next tick must reuse the composed objects instead of re-spreading
     // the ~800-key records on every calculator update.
@@ -141,6 +143,7 @@ describe("CalculatorContext.setCtxData composition memo", () => {
     const ctx = tick();
 
     expect(ctx.symbolsInfo).toBe(state.symbolsInfo);
+    expect(ctx.perpSymbolsInfo).toBe(state.symbolsInfo);
   });
 
   test("rehydrates accountInfo after clearCache on the next update", () => {

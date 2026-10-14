@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useSubAccountMutation } from "../subAccount/useSubAccountMutation";
 import { useCollateral } from "./useCollateral";
 import { useMaxWithdrawal } from "./useMaxWithdrawal";
+import { usePerpUnsettledPnL } from "./usePerpUnsettledPnL";
 
 export type TransferReturn = ReturnType<typeof useTransfer>;
 
@@ -19,7 +20,8 @@ type TransferOptions = {
 export const useTransfer = (options?: TransferOptions) => {
   const { fromAccountId, token = "" } = options || {};
 
-  const { unsettledPnL, holding } = useCollateral();
+  const { holding } = useCollateral();
+  const unsettledPnL = usePerpUnsettledPnL();
 
   const [doTransfer, { isMutating: submitting }] = useSubAccountMutation(
     "/v1/internal_transfer",

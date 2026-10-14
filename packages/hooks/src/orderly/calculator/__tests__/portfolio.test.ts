@@ -67,6 +67,12 @@ function createMockContext(): CalculatorContext {
       } as API.SymbolExt,
     },
     tokensInfo: [],
+    perpSymbolsInfo: {
+      PERP_ETH_USDC: {
+        base_imr: 0.05,
+        base_mmr: 0.02,
+      } as API.SymbolExt,
+    },
     portfolio: {
       holding: [],
       totalCollateral: zero,
@@ -502,6 +508,7 @@ describe("PortfolioCalculator", () => {
         availableBalance: 100,
         totalUnrealizedROI: 0.1,
         unsettledPnL: 50,
+        perpUnsettledPnL: 20,
         holding: [createMockHolding("USDC")],
         usdcHolding: 1000,
       };
@@ -518,6 +525,7 @@ describe("PortfolioCalculator", () => {
         availableBalance: data.availableBalance,
         totalUnrealizedROI: data.totalUnrealizedROI,
         unsettledPnL: data.unsettledPnL,
+        perpUnsettledPnL: data.perpUnsettledPnL,
         holding: data.holding as API.Holding[],
         usdcHolding: 1000,
       });

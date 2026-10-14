@@ -614,18 +614,22 @@ describe("PositionCalculator", () => {
       } as unknown as Partial<API.Position>);
       const positionData = { rows: [row] } as unknown as API.PositionInfo;
 
-      let result: API.PositionsTPSLExt | null = null;
-      expect(() => {
-        result = calculator.calc(
-          CalculatorScope.POSITION,
-          positionData,
-          mockCtx,
-        ) as API.PositionsTPSLExt;
-      }).not.toThrow();
+      const result = calculator.calc(
+        CalculatorScope.POSITION,
+        positionData,
+        mockCtx,
+      );
 
-      // No perps metrics computed; the raw row survives except the PRD-fixed
-      // mm=0 stamp, so mm consumers (useMarginRatio) never see undefined.
-      expect(result?.rows[0]).toEqual({ ...row, mm: 0 });
+      // Equity PnL is computed even when risk configuration is unavailable.
+      expect(result?.rows[0]).toEqual({
+        ...row,
+        mm: 0,
+        notional: 2000,
+        unsettled_pnl: 100,
+        unsettlement_pnl: 100,
+      });
+      expect(result?.total_unsettled_pnl).toBe(100);
+      expect(result?.total_unsettled_isolated_pnl).toBe(100);
       expect(result?.total_unreal_pnl).toBe(0);
       expect(result?.notional).toBe(0);
     });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { mutate } from "swr";
 import { API, WSMessage } from "@orderly.network/types";
 import { useAppStore } from "../orderly/appStore";
@@ -88,15 +88,8 @@ export const useSubAccountDataObserver = (accountId?: string) => {
       fundingRates,
     );
 
-    setPositions({
-      ..._positions,
-      rows: _positions.rows.filter(
-        (item) =>
-          item.position_qty !== 0 ||
-          item.pending_long_qty !== 0 ||
-          item.pending_short_qty !== 0,
-      ),
-    });
+    // Equity must retain zero-quantity rows until margin and cost converge.
+    setPositions(_positions);
   }, [
     positionsInfo,
     accountInfo,
@@ -197,5 +190,19 @@ export const useSubAccountDataObserver = (accountId?: string) => {
     return () => unsubscribe?.();
   }, [accountId]);
 
-  return { portfolio, positions };
+  const visiblePositions = useMemo(
+    () => ({
+      ...positions,
+      rows:
+        positions.rows?.filter(
+          (item) =>
+            item.position_qty !== 0 ||
+            item.pending_long_qty !== 0 ||
+            item.pending_short_qty !== 0,
+        ) ?? [],
+    }),
+    [positions],
+  );
+
+  return { portfolio, positions: visiblePositions };
 };
