@@ -46,8 +46,11 @@ export class RegularOrderMergeHandler extends BaseMergeHandler<
       ? segment
       : undefined;
 
-    // All-order caches retain completed records for history and executions.
-    if (!listStatus && this.status === OrderStatus.FILLED) {
+    // All-order and filled caches retain completed records for history and executions.
+    if (
+      (!listStatus || listStatus === OrderStatus.FILLED) &&
+      this.status === OrderStatus.FILLED
+    ) {
       return this.insetOrUpdate(prevData);
     }
 

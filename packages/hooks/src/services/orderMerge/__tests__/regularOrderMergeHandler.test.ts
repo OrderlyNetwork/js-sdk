@@ -273,6 +273,80 @@ describe("Regular order partial-fill lifecycle", () => {
     expect(partial[0].rows[0].status).toBe(OrderStatus.PARTIAL_FILLED);
   });
 
+  it.each([
+    "orders:FILLED",
+    "orders:FILLED:BUY:50:PERP",
+    `orders:FILLED:${symbol}:BUY:50:BINARY`,
+  ])(
+    "updates filled records without removing or duplicating them in %s",
+    (key) => {
+      const full = report({
+        symbol: key.endsWith(":PERP") ? "PERP_BTC_USDC" : symbol,
+        side: "BUY" as WSMessage.Order["side"],
+        status: OrderStatus.FILLED,
+        totalExecutedQuantity: 43.54,
+        timestamp: 300,
+      });
+      const initial = merge(key, empty(), full);
+      const snapshot = JSON.parse(JSON.stringify(initial));
+      const updatedReport = { ...full, timestamp: 400, executedPrice: 123 };
+      const updated = merge(key, initial, updatedReport);
+
+      expect(updated[0].rows).toHaveLength(1);
+      expect(updated[0].rows[0]).toMatchObject({
+        order_id: 1,
+        status: OrderStatus.FILLED,
+        total_executed_quantity: 43.54,
+        executed_price: 123,
+        created_time: 300,
+        updated_time: 400,
+      });
+      expect(updated[0].meta.total).toBe(1);
+      expect(merge(key, updated, updatedReport)).toEqual(updated);
+      expect(initial).toEqual(snapshot);
+    },
+  );
+
+  it("updates a filled record on the second page without changing either page's count", () => {
+    const key = "orders:FILLED:BUY:50:PERP";
+    const full = report({
+      symbol: "PERP_BTC_USDC",
+      status: OrderStatus.FILLED,
+      totalExecutedQuantity: 43.54,
+    });
+    const previous = [
+      {
+        meta: { total: 2 },
+        rows: [
+          { ...existing()[0].rows[0], order_id: 2, status: OrderStatus.FILLED },
+        ],
+      },
+      { ...merge(key, empty(), full)[0], meta: { total: 2 } },
+    ] as API.OrderResponse[];
+    const snapshot = JSON.parse(JSON.stringify(previous));
+    const updated = merge(key, previous, { ...full, timestamp: 400 });
+
+    expect(updated.map((page) => page.meta.total)).toEqual([2, 2]);
+    expect(updated.map((page) => page.rows.length)).toEqual([1, 1]);
+    expect(updated[0]).toEqual(previous[0]);
+    expect(updated[1].rows[0]).toMatchObject({
+      order_id: 1,
+      updated_time: 400,
+    });
+    expect(previous).toEqual(snapshot);
+  });
+
+  it.each(["orders:NEW:BUY:50:PERP", "orders:INCOMPLETE:BUY:50:PERP"])(
+    "removes a fully filled order from the pending list %s",
+    (key) => {
+      const full = report({
+        status: OrderStatus.FILLED,
+        totalExecutedQuantity: 43.54,
+      });
+      expect(merge(key, existing(), full)).toEqual(empty());
+    },
+  );
+
   it.each([OrderStatus.FILLED, OrderStatus.CANCELLED, OrderStatus.REJECTED])(
     "removes %s orders from the partial-only list",
     (status) => {
