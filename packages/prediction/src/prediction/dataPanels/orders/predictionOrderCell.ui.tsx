@@ -11,6 +11,7 @@ import type {
   PredictionAccountActions,
   PredictionOpenOrder,
 } from "../../prediction.types";
+import { sideLabels } from "../../predictionLabels";
 import { formatUsd } from "../../predictionShared";
 import { PendingValue } from "./pendingValue.ui";
 
@@ -44,7 +45,7 @@ export const PredictionOrderCell = ({
     case "side":
       return (
         <span className="oui-flex oui-items-center oui-gap-1">
-          <span>{t(`common.${binaryOrderDisplaySide(order)}`)}</span>
+          <span>{sideLabels()[binaryOrderDisplaySide(order)]}</span>
           <OutcomeBadge
             outcome={order.outcome}
             muted={order.status === "cancelled"}

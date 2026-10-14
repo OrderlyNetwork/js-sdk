@@ -3,6 +3,7 @@ import test from "node:test";
 import { i18n } from "@orderly.network/i18n";
 import { OrderSide, OrderStatus, type API } from "@orderly.network/types";
 import type { PredictionOpenOrder } from "../prediction.types";
+import { outcomeLabels, sideLabels } from "../predictionLabels";
 import { toPredictionOrder } from "./binaryOrderDisplay";
 import { binaryOrderPlainText } from "./binaryOrderPlainText";
 
@@ -55,7 +56,7 @@ test("CSV matches opening and closing share direction, price and executed amount
     } as API.Order);
     assert.equal(
       binaryOrderPlainText(row, "side"),
-      `${i18n.t(`common.${action}`)} ${i18n.t(`prediction.${outcome}`)}`,
+      `${sideLabels()[action]} ${outcomeLabels()[outcome]}`,
     );
     assert.equal(
       binaryOrderPlainText(row, "symbol"),
