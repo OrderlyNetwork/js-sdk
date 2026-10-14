@@ -92,6 +92,7 @@ componentName/
 3. Key format: `module.keyName` (e.g., `common.cancel`)
 4. Only add to `.ts` module files, never edit the JSON translation files in `packages/i18n/locales/` - they are generated via the `translate-locales` skill
 5. Use i18n in the UI layer for displayed text; script handlers may translate interaction feedback such as Toast and modal messages
+6. Never compose i18n keys dynamically (template literals or variables). Static key extraction only sees literal keys - ``t(`common.${side}`)`` silently loses translations while tests (identity-mocked i18n) still pass, and an ESLint `no-restricted-syntax` rule in the root `eslint.config.mjs` rejects interpolated keys. When labels are keyed by a domain union (outcome/side/status/phase), use the label-map pattern from `packages/prediction/src/prediction/predictionLabels.ts`: a `Record<Union, string>` whose values are literal `i18n.t("key")` calls, so a missing entry becomes a compile error instead of a runtime gap.
 
 ## Utilities & Conventions
 
