@@ -5,6 +5,8 @@ import { OrdersPage } from "@orderly.network/portfolio/src/pages/orders/page";
 import { PositionsPage } from "@orderly.network/portfolio/src/pages/positions/page";
 
 const mocks = vi.hoisted(() => ({
+  route: vi.fn(),
+  routeAvailable: true,
   accountId: "main-1",
   main: true,
   prediction: vi.fn(),
@@ -13,6 +15,11 @@ const mocks = vi.hoisted(() => ({
   legacyOrders: vi.fn(),
   positions: vi.fn(),
   history: vi.fn(),
+}));
+vi.mock("@orderly.network/react-app", () => ({
+  useAppContext: () => ({
+    onRouteChange: mocks.routeAvailable ? mocks.route : undefined,
+  }),
 }));
 vi.mock("@orderly.network/hooks", () => ({
   useAccount: () => ({
@@ -148,6 +155,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.accountId = "main-1";
   mocks.main = true;
+  mocks.routeAvailable = true;
 });
 afterEach(() => {
   if (renderer) act(() => renderer.unmount());
@@ -287,4 +295,95 @@ describe("Portfolio SDK default integration", () => {
     clickProduct("prediction");
     expect(JSON.stringify(renderer.toJSON())).toContain("sub-1");
   });
+});
+
+it.each(["all", "pending", "tp_sl", "filled", "cancelled", "rejected"])(
+  "routes both products from Portfolio orders tab %s",
+  (status) => {
+    mount(OrdersPage);
+    tab(status);
+    const props = mocks.orders.mock.calls.at(-1)![0];
+    props.onSymbolChange({ symbol: "PERP_ETH_USDC" });
+    expect(mocks.route).toHaveBeenLastCalledWith({
+      href: "/perp/PERP_ETH_USDC",
+      name: "perps",
+    });
+    props.onPredictionSelect("PERP_ETH5M2610141200_USDC");
+    expect(mocks.route).toHaveBeenLastCalledWith({
+      href: "/prediction/PERP_ETH5M2610141200_USDC",
+      name: "prediction",
+    });
+  },
+);
+it("routes legacy Perps orders and encodes symbols", () => {
+  mount(OrdersPage, { predictionEnabled: false });
+  mocks.legacyOrders.mock.calls
+    .at(-1)![0]
+    .onSymbolChange({ symbol: "PERP/ETH?USDC" });
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: "/perp/PERP%2FETH%3FUSDC",
+    name: "perps",
+  });
+});
+it("preserves host callbacks and leaves navigation absent without a router", () => {
+  const onSymbolChange = vi.fn();
+  const onPredictionSelect = vi.fn();
+  mount(OrdersPage, { onSymbolChange, onPredictionSelect });
+  expect(mocks.orders.mock.calls.at(-1)![0]).toEqual(
+    expect.objectContaining({ onSymbolChange, onPredictionSelect }),
+  );
+  mocks.routeAvailable = false;
+  act(() => renderer.update(<OrdersPage />));
+  expect(mocks.orders.mock.calls.at(-1)![0].onSymbolChange).toBeUndefined();
+  expect(mocks.orders.mock.calls.at(-1)![0].onPredictionSelect).toBeUndefined();
+});
+
+it("routes both products from Portfolio positions", () => {
+  mount(PositionsPage);
+  mocks.positions.mock.calls
+    .at(-1)![0]
+    .onSymbolChange({ symbol: "PERP_ETH_USDC" });
+  expect(mocks.route).toHaveBeenLastCalledWith({
+    href: "/perp/PERP_ETH_USDC",
+    name: "perps",
+  });
+  mocks.panels.mock.calls
+    .at(-1)![0]
+    .state.onSelectRoundSymbol("PERP_ETH5M2610141200_USDC");
+  expect(mocks.route).toHaveBeenLastCalledWith({
+    href: "/prediction/PERP_ETH5M2610141200_USDC",
+    name: "prediction",
+  });
+  tab("Position history");
+  mocks.history.mock.calls
+    .at(-1)![0]
+    .onSymbolChange({ symbol: "PERP/ETH?USDC" });
+  expect(mocks.route).toHaveBeenLastCalledWith({
+    href: "/perp/PERP%2FETH%3FUSDC",
+    name: "perps",
+  });
+  mocks.panels.mock.calls
+    .at(-1)![0]
+    .state.onSelectRoundSymbol("PERP_BTC5M2610141200_USDC");
+  expect(mocks.route).toHaveBeenLastCalledWith({
+    href: "/prediction/PERP_BTC5M2610141200_USDC",
+    name: "prediction",
+  });
+});
+it("preserves host positions callbacks and leaves navigation absent without a router", () => {
+  const onSymbolChange = vi.fn();
+  const onPredictionSelect = vi.fn();
+  mount(PositionsPage, { onSymbolChange, onPredictionSelect });
+  expect(mocks.positions.mock.calls.at(-1)![0].onSymbolChange).toBe(
+    onSymbolChange,
+  );
+  expect(mocks.panels.mock.calls.at(-1)![0].state.onSelectRoundSymbol).toBe(
+    onPredictionSelect,
+  );
+  mocks.routeAvailable = false;
+  act(() => renderer.update(<PositionsPage />));
+  expect(mocks.positions.mock.calls.at(-1)![0].onSymbolChange).toBeUndefined();
+  expect(
+    mocks.panels.mock.calls.at(-1)![0].state.onSelectRoundSymbol,
+  ).toBeUndefined();
 });

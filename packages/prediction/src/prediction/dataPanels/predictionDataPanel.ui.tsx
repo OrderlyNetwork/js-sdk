@@ -7,6 +7,7 @@ import type {
   PredictionDataTab,
   PredictionAccountPanelState,
 } from "../prediction.types";
+import type { PredictionPerpsPanelProps } from "./perpsPanel.types";
 import type { ProductType } from "./sharedProductDataPanel.script";
 import { SharedProductDataPanel } from "./sharedProductDataPanel.ui";
 import { MobileSharedProductHistory } from "./sharedProductHistory.mobile.ui";
@@ -14,7 +15,10 @@ import { MobileSharedProductOrdersPanel } from "./sharedProductOrdersPanel.mobil
 import { SharedProductOrdersPanel } from "./sharedProductOrdersPanel.ui";
 import { useSharedProductCounts } from "./useSharedProductCounts";
 
-export type PredictionDataPanelProps = {
+export type PredictionDataPanelProps = Pick<
+  PredictionPerpsPanelProps,
+  "onSymbolChange"
+> & {
   state: PredictionAccountPanelState;
   tabs?: PredictionDataTab[];
   className?: string;
@@ -80,6 +84,7 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   tabs = defaultTabs,
   className,
   embedded = false,
+  onSymbolChange,
 }) => {
   const { t } = useTranslation();
   const counts = useSharedProductCounts({ product: "all" });
@@ -99,26 +104,48 @@ const MobilePredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
     predictions: (
       <SharedProductDataPanel
         state={state}
+        onSymbolChange={onSymbolChange}
         type="positions"
         initialProduct="prediction"
         mobile
       />
     ),
-    openOrders: <MobileSharedProductOrdersPanel state={state} mode="pending" />,
-    filled: <MobileSharedProductOrdersPanel state={state} mode="filled" />,
+    openOrders: (
+      <MobileSharedProductOrdersPanel
+        state={state}
+        mode="pending"
+        onSymbolChange={onSymbolChange}
+      />
+    ),
+    filled: (
+      <MobileSharedProductOrdersPanel
+        state={state}
+        mode="filled"
+        onSymbolChange={onSymbolChange}
+      />
+    ),
     predictionHistory: (
       <SharedProductDataPanel
         state={state}
+        onSymbolChange={onSymbolChange}
         type="positionHistory"
         initialProduct="prediction"
         mobile
       />
     ),
     orderHistory: (
-      <MobileSharedProductOrdersPanel state={state} mode="history" />
+      <MobileSharedProductOrdersPanel
+        state={state}
+        mode="history"
+        onSymbolChange={onSymbolChange}
+      />
     ),
     history: (
-      <MobileSharedProductHistory state={state} initialProduct="prediction" />
+      <MobileSharedProductHistory
+        state={state}
+        initialProduct="prediction"
+        onSymbolChange={onSymbolChange}
+      />
     ),
     assets: <AssetsWidget />,
   };
@@ -161,6 +188,7 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   tabs = defaultTabs,
   className,
   embedded = false,
+  onSymbolChange,
 }) => {
   const { t } = useTranslation();
   const counts = useSharedProductCounts({ product: "all" });
@@ -178,25 +206,45 @@ const DesktopPredictionDataPanel: React.FC<PredictionDataPanelProps> = ({
   };
 
   const tabContent: Record<PredictionDataTab, React.ReactNode> = {
-    openOrders: <SharedProductOrdersPanel state={state} mode="pending" />,
+    openOrders: (
+      <SharedProductOrdersPanel
+        state={state}
+        mode="pending"
+        onSymbolChange={onSymbolChange}
+      />
+    ),
     predictions: (
       <SharedProductDataPanel
         state={state}
+        onSymbolChange={onSymbolChange}
         type="positions"
         initialProduct="prediction"
         onProductChange={setPositionProduct}
       />
     ),
-    filled: <SharedProductOrdersPanel state={state} mode="filled" />,
+    filled: (
+      <SharedProductOrdersPanel
+        state={state}
+        mode="filled"
+        onSymbolChange={onSymbolChange}
+      />
+    ),
     predictionHistory: (
       <SharedProductDataPanel
         state={state}
+        onSymbolChange={onSymbolChange}
         type="positionHistory"
         initialProduct="prediction"
       />
     ),
     assets: <AssetsTabWidget />,
-    orderHistory: <SharedProductOrdersPanel state={state} mode="history" />,
+    orderHistory: (
+      <SharedProductOrdersPanel
+        state={state}
+        mode="history"
+        onSymbolChange={onSymbolChange}
+      />
+    ),
     history: null,
   };
 

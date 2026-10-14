@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
+import type { API } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -31,9 +32,22 @@ enum TabsType {
   liquidation = "Liquidation",
 }
 
-export type PortfolioPositionsPageProps = PositionsProps & {
+export type PortfolioPositionsPageProps = Omit<
+  PositionsProps,
+  "onSymbolChange"
+> & {
   /** Enable automatic Prediction integration; defaults to true. */
   predictionEnabled?: boolean;
+  /**
+   * Overrides navigation to the selected Perps market; defaults to opening
+   * `/perp/<symbol>` through `onRouteChange` when omitted.
+   */
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  /**
+   * Overrides navigation to the exact Prediction round contract; defaults to
+   * opening `/prediction/<symbol>` through `onRouteChange` when omitted.
+   */
+  onPredictionSelect?: (symbol: string) => void;
   /**
    * Overrides the built-in product panel; receives the original Perps table.
    */
@@ -46,6 +60,8 @@ export type PortfolioPositionsPageProps = PositionsProps & {
 
 export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
   predictionEnabled = true,
+  onSymbolChange: hostOnSymbolChange,
+  onPredictionSelect,
   positionProductContent,
   positionHistoryProductContent,
   ...positionsProps
@@ -53,6 +69,31 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
   const { state, isMainAccount } = useAccount();
+  const { onRouteChange } = useAppContext();
+  const navigatePerp = useCallback(
+    (market: API.Symbol) => {
+      onRouteChange?.({
+        href: `/perp/${encodeURIComponent(market.symbol)}`,
+        name: "perps",
+      });
+    },
+    [onRouteChange],
+  );
+  const navigatePrediction = useCallback(
+    (symbol: string) => {
+      onRouteChange?.({
+        href: `/prediction/${encodeURIComponent(symbol)}`,
+        name: "prediction",
+      });
+    },
+    [onRouteChange],
+  );
+  // Host callbacks win; otherwise navigate through the app router when present.
+  const onSymbolChange =
+    hostOnSymbolChange ?? (onRouteChange ? navigatePerp : undefined);
+  const selectRoundSymbol =
+    onPredictionSelect ?? (onRouteChange ? navigatePrediction : undefined);
+  const perpsProps = { ...positionsProps, onSymbolChange };
 
   const subAccounts = state.subAccounts ?? [];
 
@@ -108,19 +149,16 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
     ) : null;
 
   const perpsPositionsContent = isMainAccount ? (
-    <CombinePositionsWidget
-      selectedAccount={selectedAccount}
-      {...positionsProps}
-    />
+    <CombinePositionsWidget selectedAccount={selectedAccount} {...perpsProps} />
   ) : (
-    <PositionsWidget {...positionsProps} enableSortingStorage={false} />
+    <PositionsWidget {...perpsProps} enableSortingStorage={false} />
   );
 
   // Binary rows share /v1/position_history (api-spec §6.2); history is
   // server-paginated, so the Perps view must filter via product_type.
   const perpsPositionHistoryContent = (
     <PositionHistoryWidget
-      {...positionsProps}
+      {...perpsProps}
       enableSortingStorage={false}
       productType="PERP"
     />
@@ -166,6 +204,7 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
                 selectedAccount={selectedAccount}
                 perpsContent={perpsPositionsContent}
                 accountFilter={renderAccountFilter()}
+                onPredictionSelect={selectRoundSymbol}
               />
             )}
           </TabPanel>
@@ -185,6 +224,7 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
                 type="positionHistory"
                 perpsContent={perpsPositionHistoryContent}
                 accountFilter={renderAccountFilter()}
+                onPredictionSelect={selectRoundSymbol}
               />
             )}
           </TabPanel>

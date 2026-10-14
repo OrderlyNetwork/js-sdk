@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { ProductOrderInstrument } from "@orderly.network/prediction";
-import { OrderStatus } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
+import { OrderStatus, type API } from "@orderly.network/types";
 import {
   Button,
   Divider,
@@ -19,6 +20,10 @@ import { ProductOrdersWidget } from "./productOrders.widget";
 
 export type PortfolioOrdersPageProps = {
   sharePnLConfig?: SharePnLConfig;
+  /** Overrides navigation to the selected Perps market. */
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  /** Overrides navigation to the exact Prediction round contract. */
+  onPredictionSelect?: (symbol: string) => void;
   /** Enable automatic Prediction integration; defaults to true. */
   predictionEnabled?: boolean;
 };
@@ -26,15 +31,46 @@ export type PortfolioOrdersPageProps = {
 export const OrdersPage: React.FC<PortfolioOrdersPageProps> = ({
   predictionEnabled = true,
   ...props
-}) =>
-  predictionEnabled ? (
-    <ProductOrdersPage {...props} />
-  ) : (
-    <PerpsOrdersPage {...props} />
+}) => {
+  const { onRouteChange } = useAppContext();
+  const navigatePerp = useCallback(
+    (market: API.Symbol) => {
+      onRouteChange?.({
+        href: `/perp/${encodeURIComponent(market.symbol)}`,
+        name: "perps",
+      });
+    },
+    [onRouteChange],
   );
+  const navigatePrediction = useCallback(
+    (symbol: string) => {
+      onRouteChange?.({
+        href: `/prediction/${encodeURIComponent(symbol)}`,
+        name: "prediction",
+      });
+    },
+    [onRouteChange],
+  );
+  const onSymbolChange =
+    props.onSymbolChange ?? (onRouteChange ? navigatePerp : undefined);
+  const onPredictionSelect =
+    props.onPredictionSelect ??
+    (onRouteChange ? navigatePrediction : undefined);
+  return predictionEnabled ? (
+    <ProductOrdersPage
+      {...props}
+      onSymbolChange={onSymbolChange}
+      onPredictionSelect={onPredictionSelect}
+    />
+  ) : (
+    <PerpsOrdersPage {...props} onSymbolChange={onSymbolChange} />
+  );
+};
 
 const ProductOrdersPage: React.FC<PortfolioOrdersPageProps> = ({
   sharePnLConfig,
+  onSymbolChange,
+  onPredictionSelect,
 }) => {
   const { state: account } = useAccount();
   const { t } = useTranslation();
@@ -123,6 +159,8 @@ const ProductOrdersPage: React.FC<PortfolioOrdersPageProps> = ({
           <TabPanel key={item.value} value={item.value} title={item.label}>
             <ProductOrdersWidget
               key={`${account.accountId}:${product}`}
+              onSymbolChange={onSymbolChange}
+              onPredictionSelect={onPredictionSelect}
               sharePnLConfig={sharePnLConfig}
               type={item.value}
               ordersStatus={item.status}

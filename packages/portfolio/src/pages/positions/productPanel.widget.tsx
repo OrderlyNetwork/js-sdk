@@ -12,10 +12,21 @@ export const PortfolioProductPositionsPanel: React.FC<{
   perpsContent: React.ReactNode;
   accountFilter: React.ReactNode;
   selectedAccount?: string;
-}> = ({ type, perpsContent, accountFilter, selectedAccount }) => {
+  /** Selects the record's market and round when a Prediction row is clicked. */
+  onPredictionSelect?: (symbol: string) => void;
+}> = ({
+  type,
+  perpsContent,
+  accountFilter,
+  selectedAccount,
+  onPredictionSelect,
+}) => {
   const { t } = useTranslation();
   const [product, setProduct] = useState<"perps" | "prediction">("perps");
-  const state = usePredictionAccountData();
+  const accountState = usePredictionAccountData();
+  // Prediction rows navigate to their round the same way the prediction page
+  // injects the callback; Perps rows navigate through the injected perpsContent.
+  const state = { ...accountState, onSelectRoundSymbol: onPredictionSelect };
 
   return (
     <SharedProductDataPanel

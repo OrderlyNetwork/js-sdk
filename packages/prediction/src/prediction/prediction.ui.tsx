@@ -394,6 +394,7 @@ export const Prediction: React.FC<
             isSubmitting={state.isSubmitting}
             isRegionRestricted={state.isRegionRestricted}
             onSelectRoundSymbol={state.onSelectSymbol}
+            onSymbolChange={state.onNavigatePerp}
           />
         </div>
       </div>

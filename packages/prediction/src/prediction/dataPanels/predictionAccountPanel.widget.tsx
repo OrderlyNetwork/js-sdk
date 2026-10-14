@@ -4,9 +4,13 @@ import type {
   PredictionDataTab,
   PredictionHoldingsMarketView,
 } from "../prediction.types";
+import type { PredictionPerpsPanelProps } from "./perpsPanel.types";
 import { PredictionDataPanel } from "./predictionDataPanel.ui";
 
-export interface PredictionAccountPanelProps {
+export interface PredictionAccountPanelProps extends Pick<
+  PredictionPerpsPanelProps,
+  "onSymbolChange"
+> {
   activeTab: PredictionDataTab;
   setActiveTab(tab: PredictionDataTab): void;
   marketView?: PredictionHoldingsMarketView;
@@ -24,10 +28,12 @@ export const PredictionAccountPanel = React.memo(
     isSubmitting,
     isRegionRestricted,
     onSelectRoundSymbol,
+    onSymbolChange,
   }: PredictionAccountPanelProps) => {
     const account = usePredictionAccountData();
     return (
       <PredictionDataPanel
+        onSymbolChange={onSymbolChange}
         state={{
           ...account,
           activeTab,

@@ -1,6 +1,7 @@
 import React, { Children, isValidElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { PredictionAccountPanel } from "@orderly.network/prediction/src/prediction/dataPanels/predictionAccountPanel.widget";
 import {
   usePredictionTradingExtension,
   type PredictionTradingExtensionOptions,
@@ -8,6 +9,7 @@ import {
 import { AccountStatusEnum } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
+  mobile: false,
   orders: vi.fn(),
   history: vi.fn(),
   state: {
@@ -55,6 +57,8 @@ vi.mock("@orderly.network/ui-connector", () => ({
   AuthGuardEmpty: () => null,
 }));
 vi.mock("@orderly.network/ui", () => ({
+  useScreen: () => ({ isMobile: mocks.mobile }),
+  Box: ({ children }: any) => children,
   cn: (...classes: string[]) => classes.join(" "),
   Button: () => null,
   EmptyDataState: () => null,
@@ -107,20 +111,45 @@ vi.mock("@orderly.network/ui-orders", async () => {
     MobileOrderList: Orders,
   };
 });
-vi.mock("@orderly.network/ui-positions", () => ({
-  PositionHistoryWidget: (props: any) => {
-    mocks.history(props);
-    return null;
-  },
-  MobilePositionHistoryWidget: (props: any) => {
-    mocks.history(props);
-    return null;
-  },
-  MobilePositionsWidget: () => null,
-}));
-vi.mock("@orderly.network/trading-shared", () => ({
-  PerpsPositionsPanel: () => null,
-}));
+vi.mock("@orderly.network/ui-positions", async () => {
+  const { PositionSymbolCell } = await vi.importActual<
+    typeof import("@orderly.network/ui-positions/src/components/positions/desktop/positionSymbolCell")
+  >(
+    "@orderly.network/ui-positions/src/components/positions/desktop/positionSymbolCell",
+  );
+  return {
+    PositionHistoryWidget: (props: any) => {
+      mocks.history(props);
+      return null;
+    },
+    MobilePositionHistoryWidget: (props: any) => {
+      mocks.history(props);
+      return null;
+    },
+    MobilePositionsWidget: (props: any) => (
+      <PositionSymbolCell
+        symbol="PERP_ETH_USDC"
+        onSymbolChange={props.onSymbolChange}
+      />
+    ),
+  };
+});
+vi.mock("@orderly.network/trading-shared", async () => {
+  const { PositionSymbolCell } = await vi.importActual<
+    typeof import("@orderly.network/ui-positions/src/components/positions/desktop/positionSymbolCell")
+  >(
+    "@orderly.network/ui-positions/src/components/positions/desktop/positionSymbolCell",
+  );
+  return {
+    PerpsPositionsSettings: () => null,
+    PerpsPositionsPanel: (props: any) => (
+      <PositionSymbolCell
+        symbol="PERP_ETH_USDC"
+        onSymbolChange={props.onSymbolChange}
+      />
+    ),
+  };
+});
 vi.mock(
   "@orderly.network/prediction/src/prediction/dataPanels/useProductOrderCancelAll",
   () => ({
@@ -178,7 +207,10 @@ const host: PredictionTradingExtensionOptions = {
   sharePnLConfig: { backgroundImages: ["https://example.com/pnl.png"] },
   pnlNotionalDecimalPrecision: 4,
 };
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.mobile = false;
+});
 afterEach(() => {
   act(() => root?.unmount());
   root = undefined;
@@ -251,3 +283,48 @@ it("updates mounted native panels with new host callbacks and settings", () => {
   expect(next.onSymbolChange).toHaveBeenCalledWith({ symbol: "PERP_ETH_USDC" });
   expect(host.onSymbolChange).not.toHaveBeenCalled();
 });
+
+it.each([false, true])(
+  "Prediction account positions forward Perp symbol clicks on mobile=%s",
+  (mobile) => {
+    mocks.mobile = mobile;
+    const onSymbolChange = vi.fn();
+    const onSelectRoundSymbol = vi.fn();
+    const props = {
+      activeTab: "predictions" as const,
+      setActiveTab: vi.fn(),
+      isSubmitting: false,
+      isRegionRestricted: false,
+      onSelectRoundSymbol,
+      onSymbolChange,
+    };
+    act(() => {
+      root = create(<PredictionAccountPanel {...props} />);
+    });
+    const perpsTab = root!.root
+      .findAllByProps({ role: "tab" })
+      .find((tab) => tab.children.join("").includes("common.perps"))!;
+    act(() => perpsTab.props.onClick());
+    const clickSymbol = () =>
+      root!.root.findByProps({ "data-testid": "native-symbol" }).props.onClick({
+        stopPropagation: vi.fn(),
+        preventDefault: vi.fn(),
+      });
+    act(clickSymbol);
+    expect(onSymbolChange).toHaveBeenCalledExactlyOnceWith({
+      symbol: "PERP_ETH_USDC",
+    });
+    expect(onSelectRoundSymbol).not.toHaveBeenCalled();
+    const nextHandler = vi.fn();
+    act(() =>
+      root!.update(
+        <PredictionAccountPanel {...props} onSymbolChange={nextHandler} />,
+      ),
+    );
+    act(clickSymbol);
+    expect(nextHandler).toHaveBeenCalledExactlyOnceWith({
+      symbol: "PERP_ETH_USDC",
+    });
+    expect(onSymbolChange).toHaveBeenCalledOnce();
+  },
+);

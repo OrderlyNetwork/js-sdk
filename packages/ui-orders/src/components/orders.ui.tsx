@@ -17,6 +17,7 @@ export const Orders: React.FC<OrdersBuilderState> = (props) => {
   const { pnlNotionalDecimalPrecision, orderListRef } = props;
   const commonProps: Partial<DesktopOrderListWidgetProps> = {
     productType: props.productType,
+    onSymbolChange: props.onSymbolChange,
     pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
   };
   return (

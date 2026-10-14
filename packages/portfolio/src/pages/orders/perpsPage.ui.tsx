@@ -1,13 +1,15 @@
 import { FC, SVGProps, useRef } from "react";
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import type { API } from "@orderly.network/types";
 import { Box, Button, Divider, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { OrderListInstance, OrdersWidget } from "@orderly.network/ui-orders";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 
-export const PerpsOrdersPage: React.FC<{ sharePnLConfig?: SharePnLConfig }> = (
-  props,
-) => {
+export const PerpsOrdersPage: React.FC<{
+  sharePnLConfig?: SharePnLConfig;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}> = (props) => {
   const { sharePnLConfig } = props;
   const { t } = useTranslation();
 
@@ -45,6 +47,7 @@ export const PerpsOrdersPage: React.FC<{ sharePnLConfig?: SharePnLConfig }> = (
       <Box width="100%" className="oui-h-[calc(100%_-_59px)]">
         <OrdersWidget
           ref={ordersRef}
+          onSymbolChange={props.onSymbolChange}
           sharePnLConfig={sharePnLConfig}
           productType="PERP"
         />

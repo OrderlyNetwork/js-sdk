@@ -11,7 +11,7 @@ import {
   type ProductOrderInstrument,
 } from "@orderly.network/prediction";
 import { useCanTrade } from "@orderly.network/react-app";
-import { OrderStatus } from "@orderly.network/types";
+import { OrderStatus, type API } from "@orderly.network/types";
 import {
   TabType,
   useOrderListScript,
@@ -26,6 +26,8 @@ export type ProductOrdersProps = {
   product: ProductOrderInstrument;
   ordersRef: React.RefObject<OrderListInstance>;
   sharePnLConfig?: SharePnLConfig;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  onPredictionSelect?: (symbol: string) => void;
 };
 
 export function useProductOrdersScript({
@@ -34,6 +36,8 @@ export function useProductOrdersScript({
   product,
   ordersRef,
   sharePnLConfig,
+  onSymbolChange,
+  onPredictionSelect,
 }: ProductOrdersProps) {
   const { t } = useTranslation();
   const { state: account } = useAccount();
@@ -47,6 +51,7 @@ export function useProductOrdersScript({
     instrument: product,
   });
   const perps = useOrderListScript({
+    onSymbolChange,
     type,
     ordersStatus,
     ref: ordersRef,
@@ -193,7 +198,7 @@ export function useProductOrdersScript({
   ]);
 
   return {
-    state,
+    state: { ...state, onSelectRoundSymbol: onPredictionSelect },
     orders: predictionOrders,
     plainText: binaryOrderPlainText,
     error: (product !== "prediction" && perps.error) || binary.error,

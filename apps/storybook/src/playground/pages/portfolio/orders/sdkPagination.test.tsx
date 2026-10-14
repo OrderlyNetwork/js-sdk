@@ -24,6 +24,7 @@ vi.mock("@orderly.network/hooks", () => ({
   useAccount: () => ({ state: { accountId: mocks.accountId } }),
 }));
 vi.mock("@orderly.network/i18n", () => ({
+  i18n: { t: (key: string) => key },
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 vi.mock("@orderly.network/react-app", () => ({
@@ -81,6 +82,7 @@ vi.mock("@orderly.network/ui-orders", () => ({
       loadMore: mocks.perpsMore,
       isValidating: mocks.validating,
       sharePnLConfig: (options as any).sharePnLConfig,
+      onSymbolChange: (options as any).onSymbolChange,
     };
   },
 }));
@@ -265,4 +267,19 @@ describe("SDK mixed order queries and pagination", () => {
       "prediction.orders.loadError",
     );
   });
+});
+
+it("passes separate Perps and Prediction callbacks into native and supplemental rows", () => {
+  const onSymbolChange = vi.fn();
+  const onPredictionSelect = vi.fn();
+  mocks.binaryRows = [order(1)];
+  mount({ onSymbolChange, onPredictionSelect });
+  mocks.table.onSymbolChange({ symbol: "PERP_ETH_USDC" });
+  expect(onSymbolChange).toHaveBeenCalledExactlyOnceWith({
+    symbol: "PERP_ETH_USDC",
+  });
+  const cell = mocks.table.supplementalRows[0].renderCell("symbol");
+  cell.props.state.onSelectRoundSymbol(cell.props.order.symbol);
+  expect(onPredictionSelect).toHaveBeenCalledExactlyOnceWith(order(1).symbol);
+  expect(onSymbolChange).toHaveBeenCalledOnce();
 });
