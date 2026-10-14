@@ -54,8 +54,9 @@ export type PredictionPosition = {
 
 export type PredictionOpenOrder = {
   id: number;
-  /** UP-book side badge: BUY = UP side, SELL = DOWN side (TASK-22 mapping). */
+  /** Outcome shares being bought or sold, accounting for reduce-only exits. */
   outcome: PredictionOutcome;
+  /** Original API side in UP-book coordinates; not the displayed buy/sell action. */
   side: PredictionOrderSide;
   type: PredictionOrderType;
   /** Original API type, retained verbatim when editing. */

@@ -16,19 +16,29 @@ import type {
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
-vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
-  usePredictionFormatters: () => ({}),
-}));
+vi.mock(
+  "@orderly.network/prediction/src/prediction/predictionShared",
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    usePredictionFormatters: () => ({}),
+  }),
+);
 vi.mock("@orderly.network/ui", async () => {
   const { Numeral } =
     await import("@orderly.network/ui/src/typography/numeral");
   const { FormattedText } =
     await import("@orderly.network/ui/src/typography/formatted");
+  const { parseNumber } =
+    await import("@orderly.network/ui/src/typography/utils");
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
     <>{children}</>
   );
   return {
-    Text: { numeral: Numeral, formatted: FormattedText },
+    Text: Object.assign(wrapper, {
+      numeral: Numeral,
+      formatted: FormattedText,
+    }),
+    parseNumber,
     cn: (...classes: unknown[]) => classes.filter(Boolean).join(" "),
     Button: ({
       children,

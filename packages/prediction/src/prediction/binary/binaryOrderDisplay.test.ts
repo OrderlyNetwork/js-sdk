@@ -8,6 +8,7 @@ import {
 } from "@orderly.network/types";
 import {
   binaryOrderDisplayPrice,
+  binaryOrderDisplaySide,
   binaryOrderExecutedValue,
   binaryOrderEditPayload,
   binaryPendingOrderPrices,
@@ -39,6 +40,95 @@ test("partially filled cancelled orders retain actual value, average and confirm
   assert.equal(row.quantity, 100);
   assert.equal(binaryOrderExecutedValue(row), 20);
   assert.equal(row.totalFee, 0.001234);
+});
+
+test("opening and closing outcomes use share direction while preserving API side", () => {
+  for (const [side, reduceOnly, outcome, action, price, value] of [
+    [OrderSide.BUY, false, "up", "buy", 0.7, 28],
+    [OrderSide.SELL, false, "down", "buy", 0.3, 12],
+    [OrderSide.SELL, true, "up", "sell", 0.7, 28],
+    [OrderSide.BUY, true, "down", "sell", 0.3, 12],
+    [OrderSide.BUY, undefined, "up", "buy", 0.7, 28],
+    [OrderSide.SELL, undefined, "down", "buy", 0.3, 12],
+  ] as const) {
+    const row = toPredictionOrder(
+      order({
+        side,
+        reduce_only: reduceOnly,
+        price: 0.7,
+        average_executed_price: 0.7,
+      }),
+    );
+    assert.equal(row.outcome, outcome);
+    assert.equal(row.side, side === OrderSide.BUY ? "buy" : "sell");
+    assert.equal(binaryOrderDisplaySide(row), action);
+    assert.equal(row.price, 0.7);
+    assert.equal(row.averagePrice, 0.7);
+    assert.equal(binaryOrderDisplayPrice(row, row.price), price);
+    assert.equal(binaryOrderExecutedValue(row), value);
+    assert.equal(row.status, "cancelled");
+  }
+});
+
+test("OR-7523: UP expiry close displays its actual 1 USDC price and 13.82 payout", () => {
+  const row = toPredictionOrder(
+    order({
+      order_id: 9686023012,
+      symbol: "PERP_BTC5M2610140110_USDC",
+      type: "SETTLEMENT",
+      side: OrderSide.SELL,
+      reduce_only: true,
+      price: 1,
+      quantity: 13.82,
+      total_executed_quantity: 13.82,
+      average_executed_price: 1,
+      status: OrderStatus.FILLED,
+    }),
+  );
+  assert.equal(row.outcome, "up");
+  assert.equal(binaryOrderDisplaySide(row), "sell");
+  assert.equal(binaryOrderDisplayPrice(row, row.averagePrice!), 1);
+  assert.equal(binaryOrderExecutedValue(row), 13.82);
+  assert.equal(hasPredictionExecutions(row), true);
+});
+
+test("UP and DOWN expiry closes preserve both winning and losing settlement prices", () => {
+  for (const [side, upPrice, outcome, price, value] of [
+    [OrderSide.SELL, 1, "up", 1, 13.82],
+    [OrderSide.SELL, 0, "up", 0, 0],
+    [OrderSide.BUY, 0, "down", 1, 13.82],
+    [OrderSide.BUY, 1, "down", 0, 0],
+  ] as const) {
+    const row = toPredictionOrder(
+      order({
+        side,
+        reduce_only: true,
+        price: upPrice,
+        average_executed_price: upPrice,
+        quantity: 13.82,
+        total_executed_quantity: 13.82,
+        status: OrderStatus.FILLED,
+      }),
+    );
+    assert.equal(row.outcome, outcome);
+    assert.equal(binaryOrderDisplayPrice(row, row.averagePrice!), price);
+    assert.equal(binaryOrderExecutedValue(row), value);
+  }
+});
+
+test("closing orders do not invent prices for missing averages or empty executions", () => {
+  for (const side of [OrderSide.BUY, OrderSide.SELL]) {
+    const missing = toPredictionOrder(
+      order({ side, reduce_only: true, average_executed_price: undefined }),
+    );
+    assert.equal(missing.averagePrice, undefined);
+    assert.equal(binaryOrderExecutedValue(missing), undefined);
+    const empty = toPredictionOrder(
+      order({ side, reduce_only: true, total_executed_quantity: 0 }),
+    );
+    assert.equal(empty.averagePrice, undefined);
+    assert.equal(binaryOrderExecutedValue(empty), 0);
+  }
 });
 
 test("edits retain the original type, reduce-only flag and client metadata", () => {

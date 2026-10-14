@@ -29,8 +29,11 @@ const stableI18n = vi.hoisted(() => {
 });
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: stableI18n.t }),
+  i18n: { t: stableI18n.t },
 }));
 vi.mock("@orderly.network/ui", async () => {
+  const { parseNumber } =
+    await import("@orderly.network/ui/src/typography/utils");
   const { createElement, Fragment } = await import("react");
   const wrapper = ({ children }: { children?: React.ReactNode }) =>
     createElement(Fragment, null, children);
@@ -40,6 +43,7 @@ vi.mock("@orderly.network/ui", async () => {
   Text.pnl = () => null;
   Text.symbolBadge = () => null;
   return {
+    parseNumber,
     Badge: (props: any) => createElement("span", null, props?.children),
     Button: (props: any) =>
       createElement("button", { disabled: props?.disabled }, props?.children),
@@ -61,10 +65,14 @@ const stableFormatters = vi.hoisted(() => ({
   formatRoundBadge: (round: number) => `round-${round}`,
   formatTableTime: (ms: number) => String(ms),
 }));
-vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
-  formatCountdown: () => "--",
-  usePredictionFormatters: () => stableFormatters,
-}));
+vi.mock(
+  "@orderly.network/prediction/src/prediction/predictionShared",
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    formatCountdown: () => "--",
+    usePredictionFormatters: () => stableFormatters,
+  }),
+);
 vi.mock(
   "@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData",
   () => ({ usePredictionAccountData: () => ({}) }),

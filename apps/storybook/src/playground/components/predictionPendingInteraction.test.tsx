@@ -1,11 +1,16 @@
 import React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
+import {
+  binaryOrderEditPayload,
+  toPredictionOrder,
+} from "@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay";
 import { PendingValue } from "@orderly.network/prediction/src/prediction/dataPanels/orders/pendingValue.ui";
 import type {
   PredictionAccountActions,
   PredictionOpenOrder,
 } from "@orderly.network/prediction/src/prediction/prediction.types";
+import { OrderSide, OrderStatus, type API } from "@orderly.network/types";
 import { EditableCellInput } from "@orderly.network/ui-orders";
 
 vi.mock("@orderly.network/i18n", () => ({
@@ -152,10 +157,11 @@ const event = () => ({ stopPropagation: vi.fn(), preventDefault: vi.fn() });
 function mount(
   field: "price" | "quantity" = "price",
   nextState: typeof state = state,
+  nextOrder: PredictionOpenOrder = order,
 ) {
   act(() => {
     root = create(
-      <PendingValue state={nextState} order={order} field={field} />,
+      <PendingValue state={nextState} order={nextOrder} field={field} />,
       {
         createNodeMock: (element) =>
           element.type === "button"
@@ -199,6 +205,58 @@ afterEach(() => {
   vi.resetAllMocks();
   vi.mocked(state.editPendingOrder).mockResolvedValue(true);
 });
+
+it.each([
+  [OrderSide.SELL, "up", "0.55", "0.7"],
+  [OrderSide.BUY, "down", "0.45", "0.3"],
+] as const)(
+  "edits Sell %s shares using the original API side and UP coordinates",
+  async (side, outcome, preview, draft) => {
+    const row = toPredictionOrder({
+      order_id: 7,
+      symbol: order.symbol,
+      type: "LIMIT",
+      side,
+      reduce_only: true,
+      price: 0.55,
+      quantity: 13.93,
+      total_executed_quantity: 2.25,
+      status: OrderStatus.PARTIAL_FILLED,
+      created_time: 0,
+      client_order_id: "close-7",
+      order_tag: "close",
+    } as API.Order);
+    expect(row.outcome).toBe(outcome);
+    mount("price", state, row);
+    expect(
+      root.root.findByType("button").findByType("span").children.join(""),
+    ).toBe(preview);
+    startEditing();
+    changeValue("0.305");
+    pressKey("Enter");
+    expect(confirmationIsOpen()).toBe(false);
+    expect(state.editPendingOrder).not.toHaveBeenCalled();
+    changeValue(draft);
+    pressKey("Enter");
+    expect(confirmationIsOpen()).toBe(true);
+    await act(async () => {
+      await confirmationButton("common.confirm").props.onClick(event());
+    });
+    expect(state.editPendingOrder).toHaveBeenCalledWith(7, 0.7, 13.93);
+    const [, price, quantity] = vi.mocked(state.editPendingOrder).mock.calls[0];
+    expect(binaryOrderEditPayload(row, price, quantity, 0.01, 0.01)).toEqual({
+      order_id: 7,
+      symbol: order.symbol,
+      side,
+      order_type: "LIMIT",
+      reduce_only: true,
+      client_order_id: "close-7",
+      order_tag: "close",
+      order_price: "0.70",
+      order_quantity: "13.93",
+    });
+  },
+);
 
 it("does not calculate quantity limits while previewing", () => {
   const getLimits = vi.fn(() => ({

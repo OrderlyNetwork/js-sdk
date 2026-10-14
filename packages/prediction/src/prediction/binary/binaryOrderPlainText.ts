@@ -3,6 +3,7 @@ import { Decimal } from "@orderly.network/utils";
 import type { PredictionOpenOrder } from "../prediction.types";
 import {
   binaryOrderDisplayPrice,
+  binaryOrderDisplaySide,
   binaryOrderExecutedValue,
 } from "./binaryOrderDisplay";
 
@@ -14,7 +15,7 @@ export function binaryOrderPlainText(
   const executed = binaryOrderExecutedValue(order);
   const values: Record<string, string> = {
     symbol: `${order.symbol ?? ""} (${order.outcome})`,
-    side: order.outcome,
+    side: `${i18n.t(`common.${binaryOrderDisplaySide(order)}`)} ${i18n.t(`prediction.${order.outcome}`)}`,
     fill_quantity: `${order.filledQuantity ?? 0} / ${order.quantity}`,
     quantity: String(order.quantity),
     price:

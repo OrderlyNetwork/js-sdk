@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Divider, EmptyDataState, Text } from "@orderly.network/ui";
 import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
+import { binaryOrderDisplaySide } from "../binary/binaryOrderDisplay";
 import {
   OutcomeBadge,
   PredictionOrderSymbol,
@@ -12,6 +13,7 @@ import {
 } from "../cells";
 import { SellPosition } from "../orderEntry/sellPosition";
 import type { PredictionAccountPanelState } from "../prediction.types";
+import { sideLabels } from "../predictionLabels";
 import { usePredictionFormatters } from "../predictionShared";
 import { PredictionFilters } from "./filters/predictionFilters.ui";
 import { usePredictionHistoryTableScript } from "./history/predictionHistoryTable.script";
@@ -215,7 +217,9 @@ export const MobilePredictionOrderCard: React.FC<{
         <Field label={t("prediction.outcome")}>
           <OutcomeBadge outcome={order.outcome} />
         </Field>
-        <Field label={t("common.side")}>{t(`common.${order.side}`)}</Field>
+        <Field label={t("common.side")}>
+          {sideLabels()[binaryOrderDisplaySide(order)]}
+        </Field>
         <Field label={t("prediction.filledQuantity")}>
           <PredictionOrderCell
             state={state}

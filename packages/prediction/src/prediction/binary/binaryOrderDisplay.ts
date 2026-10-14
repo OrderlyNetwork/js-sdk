@@ -7,6 +7,7 @@ import {
 import { Decimal } from "@orderly.network/utils";
 import type {
   PredictionOpenOrder,
+  PredictionOrderSide,
   PredictionOutcome,
   PredictionTrade,
 } from "../prediction.types";
@@ -39,7 +40,13 @@ export const toOrderStatus = (value: unknown): OrderStatus | "all" =>
 
 export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
   id: order.order_id,
-  outcome: order.side === OrderSide.BUY ? "up" : "down",
+  outcome: (
+    order.reduce_only
+      ? order.side === OrderSide.SELL
+      : order.side === OrderSide.BUY
+  )
+    ? "up"
+    : "down",
   side: order.side === OrderSide.BUY ? "buy" : "sell",
   type: [
     OrderType.LIMIT,
@@ -68,6 +75,11 @@ export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
   timestamp: order.created_time,
   status: statusByApiStatus.get(String(order.status)) ?? "pending",
 });
+
+/** User-facing action; API side stays in UP-book coordinates for requests. */
+export const binaryOrderDisplaySide = (
+  order: Pick<PredictionOpenOrder, "reduceOnly">,
+): PredictionOrderSide => (order.reduceOnly ? "sell" : "buy");
 
 /** Echo immutable API attributes; only the UP price and quantity are changed. */
 export const binaryOrderEditPayload = (

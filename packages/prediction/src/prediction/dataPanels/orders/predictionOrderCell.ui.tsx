@@ -3,6 +3,7 @@ import { Button, cn, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   binaryOrderDisplayPrice,
+  binaryOrderDisplaySide,
   binaryOrderExecutedValue,
 } from "../../binary/binaryOrderDisplay";
 import { OutcomeBadge, PredictionOrderSymbol, TableNumber } from "../../cells";
@@ -41,10 +42,9 @@ export const PredictionOrderCell = ({
         />
       );
     case "side":
-      // Badge stays UP-book-side based (BUY=UP/SELL=DOWN, TASK-22); reduce-only
-      // exits get an extra label instead of a flipped badge.
       return (
         <span className="oui-flex oui-items-center oui-gap-1">
+          <span>{t(`common.${binaryOrderDisplaySide(order)}`)}</span>
           <OutcomeBadge
             outcome={order.outcome}
             muted={order.status === "cancelled"}

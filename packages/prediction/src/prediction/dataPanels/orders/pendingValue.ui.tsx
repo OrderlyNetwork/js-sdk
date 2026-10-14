@@ -22,7 +22,10 @@ import {
   OrderEditConfirmation,
 } from "@orderly.network/ui-orders";
 import { commify, Decimal } from "@orderly.network/utils";
-import { binaryOrderDisplayPrice } from "../../binary/binaryOrderDisplay";
+import {
+  binaryOrderDisplayPrice,
+  binaryOrderDisplaySide,
+} from "../../binary/binaryOrderDisplay";
 import { validatePendingOrderDraft } from "../../binary/binaryOrderRules";
 import { TableNumber } from "../../cells";
 import type {
@@ -222,7 +225,7 @@ export const PendingValue = ({
               className={cn(
                 "oui-flex oui-max-w-[110px] oui-items-center oui-gap-1 oui-font-semibold",
                 field === "quantity" &&
-                  (order.side === "buy"
+                  (binaryOrderDisplaySide(order) === "buy"
                     ? "oui-text-trade-profit"
                     : "oui-text-trade-loss"),
                 disabled && "oui-text-base-contrast-20",
