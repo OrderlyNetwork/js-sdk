@@ -72,10 +72,11 @@ export type UsePredictionOrderFormArgs = {
     quantity: number,
     displayPrice: number,
   ) => number | undefined;
+  /** Returns undefined when account or round inputs are unavailable. */
   maxOpeningQuantity: (
     outcome: PredictionOutcome,
     displayPrice: number,
-  ) => number;
+  ) => number | undefined;
   positions: PredictionPosition[];
   availableQuantity: (outcome: PredictionOutcome, excludeId?: number) => number;
   isRoundTradable: boolean;
@@ -161,12 +162,11 @@ export const usePredictionOrderForm = ({
     orderType === "limit" && limitPrice.trim() === ""
       ? binaryOutcomeMarkPrice(markPrice, selectedOutcome)
       : selectedPrice;
-  const hasMaxAmountEstimate =
-    orderSide === "sell" ||
-    (maxAmountPrice != null &&
-      Number.isFinite(maxAmountPrice) &&
-      maxAmountPrice > 0 &&
-      maxAmountPrice < 1);
+  const hasMaxAmountPrice =
+    maxAmountPrice != null &&
+    Number.isFinite(maxAmountPrice) &&
+    maxAmountPrice > 0 &&
+    maxAmountPrice < 1;
 
   const selectedPosition = positions.find(
     (position) => position.outcome === selectedOutcome,
@@ -199,26 +199,29 @@ export const usePredictionOrderForm = ({
     selectedPrice > 0 ? new Decimal(1).div(selectedPrice).toNumber() : 0;
 
   const selectedTokenBalance = availableQuantity(selectedOutcome);
-  const maxOutcomeAmount = useMemo(
+  const maxOutcomeAmountEstimate = useMemo(
     () =>
-      floorToTick(
-        orderSide === "buy"
-          ? hasMaxAmountEstimate
-            ? maxOpeningQuantity(selectedOutcome, maxAmountPrice!)
-            : 0
-          : selectedTokenBalance,
-        baseTick,
-      ),
+      orderSide === "buy"
+        ? hasMaxAmountPrice
+          ? maxOpeningQuantity(selectedOutcome, maxAmountPrice!)
+          : undefined
+        : selectedTokenBalance,
     [
-      baseTick,
       maxOpeningQuantity,
       orderSide,
       selectedOutcome,
       maxAmountPrice,
-      hasMaxAmountEstimate,
+      hasMaxAmountPrice,
       selectedTokenBalance,
     ],
   );
+  const hasMaxAmountEstimate =
+    maxOutcomeAmountEstimate != null &&
+    Number.isFinite(maxOutcomeAmountEstimate) &&
+    maxOutcomeAmountEstimate >= 0;
+  const maxOutcomeAmount = hasMaxAmountEstimate
+    ? floorToTick(maxOutcomeAmountEstimate!, baseTick)
+    : 0;
   const maxQuoteAmount = binaryMaxQuoteInput(
     maxOutcomeAmount,
     maxAmountPrice ?? 0,
@@ -421,12 +424,13 @@ export const usePredictionOrderForm = ({
 
   const setOrderPercentage = useCallback(
     (percentage: number) => {
+      if (!hasMaxAmountEstimate) return;
       const nextPercentage = clamp(percentage, 0, 100);
       setSelectedPercentage(nextPercentage);
       setTotalInput(null);
       setAmount(amountFromPercentage(maxAmount, nextPercentage, amountDp));
     },
-    [amountDp, maxAmount],
+    [amountDp, hasMaxAmountEstimate, maxAmount],
   );
 
   useEffect(() => {

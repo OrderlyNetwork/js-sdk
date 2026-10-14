@@ -11,7 +11,7 @@ import {
   availableBinaryCloseQuantity,
   resolveBinaryCollateral,
 } from "../binary/binaryCollateral";
-import { binaryRoundFromSymbol, isBinarySymbol } from "../binary/binaryInfo";
+import { isBinarySymbol } from "../binary/binaryInfo";
 import { toPredictionPosition } from "../binary/binaryManagedPositions";
 import { normalizePredictionOrders } from "../binary/binaryOrderDisplay";
 import type { UsePredictionAccountDataOptions } from "../prediction.types";
@@ -47,7 +47,15 @@ export const usePredictionAccountResources = ({
     !!accountState.accountId &&
     (accountState.status >= AccountStatusEnum.EnableTrading ||
       accountState.status === AccountStatusEnum.EnableTradingWithoutConnected);
-  const { freeCollateral } = useCollateral({ dp: 6 });
+  const { freeCollateral, totalValue, accountInfo } = useCollateral({ dp: 6 });
+  // The portfolio starts at zero before its first calculation. Account
+  // permissions alone do not make that initial balance an estimate.
+  const balanceReady =
+    accountReady &&
+    accountInfo?.account_id === accountState.accountId &&
+    totalValue != null &&
+    Number.isFinite(totalValue) &&
+    Number.isFinite(freeCollateral);
   // Available collateral in USDC, including account-level funding constraints.
   const balance =
     accountReady && Number.isFinite(freeCollateral)
@@ -134,6 +142,8 @@ export const usePredictionAccountResources = ({
     positionsLoading,
     positionsError,
     balance,
+    // Foreign-account resources intentionally expose zero opening funds.
+    balanceReady: foreign ? target.accountReady : balanceReady,
     positions,
     openOrders,
     pendingOrdersComplete,

@@ -137,6 +137,21 @@ it("exposes opening totals using the DOWN display price and rounds market ceilin
   });
   expect(mocks.max).toHaveBeenCalledWith("down", 0.2, symbol);
 });
+it("keeps opening edit limits unavailable until capacity recovers and preserves valid zero", () => {
+  mocks.max.mockReturnValue(undefined);
+  mount({ orderChanges: { reduceOnly: false } });
+  expect(getQuantityLimits(42)).toBeUndefined();
+  mocks.max.mockReturnValue(0);
+  expect(getQuantityLimits(42)?.maxQuantity).toBe(20);
+  mocks.max.mockReturnValue(100);
+  expect(getQuantityLimits(42)?.maxQuantity).toBe(120);
+});
+it("does not require an opening estimate for reduce-only edit limits", () => {
+  mocks.max.mockReturnValue(undefined);
+  mount();
+  expect(getQuantityLimits(42)?.maxQuantity).toBe(20);
+  expect(mocks.max).not.toHaveBeenCalled();
+});
 it("edits in UP coordinates and preserves immutable API attributes and reduce-only quantity limits", async () => {
   mount();
   await expect(edit(42, 0.75, 20)).resolves.toBe(true);

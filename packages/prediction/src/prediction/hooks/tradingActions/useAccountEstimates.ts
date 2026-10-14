@@ -8,6 +8,7 @@ import {
 import { isBinaryRowTradable } from "../../binary/binaryInfo";
 import type { BinaryInfoRow } from "../../binary/binaryInfo";
 import {
+  resolveBinaryOrderLimits,
   splitBinaryQuantity,
   toBinaryUpRequest,
 } from "../../binary/binaryOrderRules";
@@ -39,7 +40,8 @@ export const useAccountEstimates = ({
   feeRates,
   hasFeeConfig,
 }: AccountEstimatesArgs) => {
-  const { balance, getCollateralSnapshot } = resources;
+  const { accountReady, balanceReady, balance, getCollateralSnapshot } =
+    resources;
   const availableQuantity = useCallback(
     (outcome: PredictionOutcome, excludeId?: number, symbol = selectedSymbol) =>
       resources.availableQuantity(outcome, excludeId, symbol),
@@ -70,26 +72,56 @@ export const useAccountEstimates = ({
     },
     [configBySymbol, getCollateralSnapshot, selectedSymbol],
   );
+  /** Undefined means capacity cannot be estimated; zero is a valid estimate. */
   const maxOpeningQuantity = useCallback(
     (
       outcome: PredictionOutcome,
       displayPrice: number,
       symbol = selectedSymbol,
-    ) => {
+    ): number | undefined => {
       const config = symbol ? configBySymbol.get(symbol) : undefined;
-      if (!config) return 0;
+      if (
+        !active ||
+        !accountReady ||
+        !balanceReady ||
+        !config ||
+        !Number.isFinite(displayPrice) ||
+        displayPrice <= 0 ||
+        displayPrice >= 1 ||
+        !Number.isFinite(balance) ||
+        balance < 0
+      )
+        return undefined;
+      const snapshot = getCollateralSnapshot(symbol);
+      const limits = resolveBinaryOrderLimits(config);
+      if (
+        !snapshot ||
+        !Number.isFinite(limits.baseTick) ||
+        limits.baseTick <= 0 ||
+        !Number.isFinite(limits.baseMax) ||
+        limits.baseMax <= 0
+      )
+        return undefined;
       const { upSide, upPrice } = toUpBookRequest(outcome, "buy", displayPrice);
       return maxBinaryOrderQuantity({
-        snapshot: getCollateralSnapshot(symbol),
+        snapshot,
         side: upSide,
         upPrice,
         balance,
-        baseTick: config.base_tick,
-        baseMax: config.base_max,
+        baseTick: limits.baseTick,
+        baseMax: limits.baseMax,
         splitRules: config,
       });
     },
-    [balance, configBySymbol, getCollateralSnapshot, selectedSymbol],
+    [
+      active,
+      accountReady,
+      balanceReady,
+      balance,
+      configBySymbol,
+      getCollateralSnapshot,
+      selectedSymbol,
+    ],
   );
   const isOrderTradable = useCallback(
     (symbol?: string) => {

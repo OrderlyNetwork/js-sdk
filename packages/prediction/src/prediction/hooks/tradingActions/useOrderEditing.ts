@@ -74,6 +74,14 @@ export const useOrderEditing = ({
         : undefined;
       if (!order || !config) return undefined;
       const limits = resolveBinaryOrderLimits(config);
+      const openingQuantity = order.reduceOnly
+        ? undefined
+        : maxOpeningQuantity(
+            order.outcome,
+            order.outcome === "up" ? order.price : complementPrice(order.price),
+            order.symbol,
+          );
+      if (!order.reduceOnly && openingQuantity == null) return undefined;
       const maxTotal = order.reduceOnly
         ? new Decimal(order.filledQuantity).add(
             availableQuantity(
@@ -82,15 +90,7 @@ export const useOrderEditing = ({
               order.symbol,
             ),
           )
-        : new Decimal(order.quantity).add(
-            maxOpeningQuantity(
-              order.outcome,
-              order.outcome === "up"
-                ? order.price
-                : complementPrice(order.price),
-              order.symbol,
-            ),
-          );
+        : new Decimal(order.quantity).add(openingQuantity!);
       const boundedMax = maxTotal.lt(0)
         ? new Decimal(0)
         : maxTotal.gt(limits.baseMax)

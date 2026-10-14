@@ -628,3 +628,88 @@ test("invalid balance and prices cannot create a positive Max", () => {
   );
   assert.equal(availableBinaryCloseQuantity(undefined, OrderSide.SELL), 0);
 });
+
+test("known pending prices remain usable without Mark when only metadata is missing", () => {
+  for (const overrides of [{ margin_mode: undefined }, { created_time: NaN }]) {
+    const state = resolveBinaryCollateral({
+      symbol,
+      positions: [position({ pending_short_qty: 60, mark_price: NaN })],
+      orders: [order(overrides)],
+      ordersComplete: true,
+    });
+    assert.equal(state?.mode, "approximate");
+    assert.equal(state?.orders[0].referencePrice, 0.8);
+    assert.equal(state?.orders[0].quantity, 60);
+    assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL), 40);
+    assert.ok(
+      maxBinaryOrderQuantity({
+        snapshot: state,
+        side: OrderSide.BUY,
+        upPrice: 0.65,
+        balance: 82.16,
+      }) > 0,
+    );
+  }
+});
+
+test("unknown opening prices or uncovered pending quantities still require Mark", () => {
+  for (const [pendingQty, price] of [
+    [60, NaN],
+    [80, 0.8],
+  ]) {
+    assert.equal(
+      resolveBinaryCollateral({
+        symbol,
+        positions: [
+          position({ pending_short_qty: pendingQty, mark_price: NaN }),
+        ],
+        orders: [order({ price, margin_mode: undefined })],
+        ordersComplete: true,
+      }),
+      undefined,
+    );
+  }
+  const reduceOnly = resolveBinaryCollateral({
+    symbol,
+    positions: [position({ pending_short_qty: 60, mark_price: NaN })],
+    orders: [order({ price: NaN, reduce_only: true })],
+    ordersComplete: true,
+  });
+  assert.equal(reduceOnly?.mode, "approximate");
+  assert.equal(reduceOnly?.orders[0].referencePrice, 0);
+  assert.equal(frozen(reduceOnly!, OrderSide.SELL, 0.6, 80), 16.0096);
+});
+
+test("OR-7534 UP capacity stays positive with a DOWN holding and SELL pending order", () => {
+  for (const overrides of [
+    {},
+    { margin_mode: undefined },
+    { created_time: NaN },
+  ]) {
+    const state = resolveBinaryCollateral({
+      symbol,
+      positions: [
+        position({
+          position_qty: -18.6,
+          pending_short_qty: 37.93,
+          mark_price: NaN,
+        }),
+      ],
+      orders: [order({ quantity: 37.93, price: 0.71, ...overrides })],
+      ordersComplete: true,
+    });
+    assert.ok(state);
+    const quantity = maxBinaryOrderQuantity({
+      snapshot: state,
+      side: OrderSide.BUY,
+      upPrice: 0.65,
+      balance: 82.16,
+      baseTick: 0.01,
+      baseMax: 10000,
+      splitRules: { base_tick: 0.01, base_max: 10000, min_notional: 5 },
+    });
+    assert.ok(quantity > 0);
+    assert.ok(frozen(state, OrderSide.BUY, 0.65, quantity) <= 82.16);
+    assert.ok(frozen(state, OrderSide.BUY, 0.65, quantity + 0.01) > 82.16);
+  }
+});

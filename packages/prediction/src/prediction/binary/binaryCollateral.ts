@@ -172,8 +172,15 @@ export function resolveBinaryCollateral(inputs: {
   const markPrice = isPrice(inputs.markPrice ?? NaN)
     ? inputs.markPrice!
     : position?.mark_price;
-  if ((buyQty > 0 || sellQty > 0) && !isPrice(markPrice ?? NaN))
-    return undefined;
+  // Mark is needed only for unknown opening prices or unobserved quantities.
+  // Missing order metadata alone must not discard usable observed prices.
+  const needsMarkPrice =
+    new Decimal(buyQty).gt(streamBuyQty) ||
+    new Decimal(sellQty).gt(streamSellQty) ||
+    observedOrders.some(
+      (order) => !order.reduceOnly && !isPrice(order.referencePrice),
+    );
+  if (needsMarkPrice && !isPrice(markPrice ?? NaN)) return undefined;
   const latestCreatedTime = observedOrders.reduce(
     (latest, order) => Math.max(latest, order.createdTime ?? 0),
     0,
