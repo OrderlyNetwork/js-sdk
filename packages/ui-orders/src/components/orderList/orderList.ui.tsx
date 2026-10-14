@@ -66,7 +66,9 @@ export const DesktopOrderList: FC<
     supplementalRows?: SupplementalOrderRow[];
     mergeProducts?: boolean;
     mergedTotal?: number;
+    mergedPageSize?: number;
     onMergedPageChange?: (page: number) => void;
+    onMergedPageSizeChange?: (pageSize: number) => void;
     mergeResetKey?: string;
     useClientTable?: boolean;
     cancelAllDisabled?: boolean;
@@ -97,6 +99,8 @@ export const DesktopOrderList: FC<
   );
 
   const [page, setPage] = useState(1);
+  const [localPageSize, setLocalPageSize] = useState(20);
+  const pageSize = props.mergedPageSize ?? localPageSize;
   const mergedRows = useMemo<MergedOrderRow[]>(() => {
     if (!hasSupplementalRows) return props.dataSource ?? [];
     return [
@@ -219,11 +223,17 @@ export const DesktopOrderList: FC<
             hasSupplementalRows
               ? {
                   page,
-                  pageSize: 20,
+                  pageSize,
                   count: props.mergedTotal ?? mergedRows?.length ?? 0,
                   onPageChange: (nextPage) => {
                     setPage(nextPage);
                     props.onMergedPageChange?.(nextPage);
+                  },
+                  onPageSizeChange: (nextPageSize) => {
+                    setLocalPageSize(nextPageSize);
+                    setPage(1);
+                    props.onMergedPageSizeChange?.(nextPageSize);
+                    props.onMergedPageChange?.(1);
                   },
                 }
               : props.pagination

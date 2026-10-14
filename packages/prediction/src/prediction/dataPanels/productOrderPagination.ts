@@ -2,13 +2,15 @@
 export function shouldLoadMoreProductOrders({
   loaded,
   page,
+  pageSize = 20,
   hasMore,
   isValidating,
 }: {
   loaded: number;
   page: number;
+  pageSize?: number;
   hasMore: boolean;
   isValidating: boolean;
 }) {
-  return hasMore && !isValidating && loaded <= page * 20;
+  return hasMore && !isValidating && loaded <= page * pageSize;
 }

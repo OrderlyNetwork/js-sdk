@@ -160,6 +160,29 @@ describe("SDK mixed order queries and pagination", () => {
     expect(mocks.table.supplementalRows).toHaveLength(150);
     expect(mocks.table.mergedTotal).toBe(150);
   });
+  it.each([10, 20, 50, 100])(
+    "loads both products using the selected page size %i",
+    (size) => {
+      mocks.binaryRows = Array.from({ length: 40 }, (_, id) => order(id));
+      mocks.perpsRows = Array.from({ length: 40 }, (_, id) => ({
+        order_id: id,
+        symbol: "PERP_ETH_USDC",
+      }));
+      mocks.binaryHasMore = true;
+      mocks.perpsHasMore = true;
+      mount();
+      act(() => mocks.table.onMergedPageChange(2));
+      mocks.binaryMore.mockClear();
+      mocks.perpsMore.mockClear();
+      act(() => mocks.table.onMergedPageSizeChange(size));
+      expect(mocks.table.mergedPageSize).toBe(size);
+      expect(mocks.binaryMore).toHaveBeenCalledTimes(size >= 40 ? 1 : 0);
+      expect(mocks.perpsMore).toHaveBeenCalledTimes(size >= 40 ? 1 : 0);
+      act(() => mocks.table.onMergedPageChange(5));
+      expect(mocks.binaryMore).toHaveBeenCalledTimes(size >= 40 ? 2 : 1);
+      expect(mocks.perpsMore).toHaveBeenCalledTimes(size >= 40 ? 2 : 1);
+    },
+  );
   it("continues sparse client-filtered pages and stops while validating or after exhaustion", () => {
     mocks.binaryHasMore = true;
     mount({ type: "filled" });

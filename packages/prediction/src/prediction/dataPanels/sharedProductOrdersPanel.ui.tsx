@@ -45,6 +45,7 @@ const AllProductOrdersTable: React.FC<
 }) => {
   const { t } = useTranslation();
   const [requestedPage, setRequestedPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const {
     orderListState,
     predictionOrders,
@@ -90,6 +91,7 @@ const AllProductOrdersTable: React.FC<
       shouldLoadMoreProductOrders({
         loaded: perpsLoaded,
         page: requestedPage,
+        pageSize,
         hasMore: perpsHasMore,
         isValidating: Boolean(orderListState.isValidating),
       })
@@ -100,6 +102,7 @@ const AllProductOrdersTable: React.FC<
       shouldLoadMoreProductOrders({
         loaded: predictionOrders.length,
         page: requestedPage,
+        pageSize,
         hasMore: binary.hasMore,
         isValidating: binary.isValidating,
       })
@@ -110,6 +113,7 @@ const AllProductOrdersTable: React.FC<
     includePrediction,
     predictionUnderlyingSymbol,
     requestedPage,
+    pageSize,
     perpsHasMore,
     perpsLoaded,
     orderListState.isValidating,
@@ -142,6 +146,11 @@ const AllProductOrdersTable: React.FC<
             : undefined
         }
         onMergedPageChange={setRequestedPage}
+        mergedPageSize={pageSize}
+        onMergedPageSizeChange={(size) => {
+          setPageSize(size);
+          setRequestedPage(1);
+        }}
         mergeResetKey={[
           mode,
           perpsSymbol,

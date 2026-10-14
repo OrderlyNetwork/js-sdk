@@ -151,12 +151,13 @@ export function useProductOrdersScript({
     page: 1,
   });
   const page = paginationRequest.scope === scope ? paginationRequest.page : 1;
+  const [pageSize, setPageSize] = useState(20);
   const perpsHasMore = product !== "prediction" && perps.hasMore;
   useEffect(() => {
     if (!includePrediction || !canTrade) return;
     if (
       perpsHasMore &&
-      perpsRows.length <= page * 20 &&
+      perpsRows.length <= page * pageSize &&
       !perps.isLoading &&
       !perps.isValidating &&
       !perps.error
@@ -165,7 +166,7 @@ export function useProductOrdersScript({
     }
     if (
       binary.hasMore &&
-      predictionOrders.length <= page * 20 &&
+      predictionOrders.length <= page * pageSize &&
       !binary.isLoading &&
       !binary.isValidating &&
       !binary.error
@@ -176,6 +177,7 @@ export function useProductOrdersScript({
     includePrediction,
     canTrade,
     page,
+    pageSize,
     perpsHasMore,
     perpsRows.length,
     perps.isLoading,
@@ -209,7 +211,12 @@ export function useProductOrdersScript({
         (product !== "prediction" && perps.isValidating) || binary.isValidating,
       mergeProducts: includePrediction,
       mergedTotal: perpsRows.length + predictionOrders.length,
+      mergedPageSize: pageSize,
       mergeResetKey: scope,
+      onMergedPageSizeChange: (pageSize: number) => {
+        setPageSize(pageSize);
+        setPaginationRequest({ scope, page: 1 });
+      },
       onMergedPageChange: (page: number) =>
         setPaginationRequest({ scope, page }),
       ...(pending ? cancellation.orderListProps : {}),

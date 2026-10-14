@@ -3,7 +3,12 @@ import test from "node:test";
 import { shouldLoadMoreProductOrders } from "./productOrderPagination";
 
 /** Follow only pages exposed by the loaded-row total, as the merged table does. */
-function browseOrders(perpsCount: number, binaryCount: number, perpsSize = 50) {
+function browseOrders(
+  perpsCount: number,
+  binaryCount: number,
+  perpsSize = 50,
+  pageSize = 20,
+) {
   const streams = [
     { product: "PERP", total: perpsCount, size: perpsSize },
     { product: "BINARY", total: binaryCount, size: 50 },
@@ -20,12 +25,17 @@ function browseOrders(perpsCount: number, binaryCount: number, perpsSize = 50) {
     streams
       .flatMap((stream) => stream.orders.slice(0, stream.loaded))
       .sort((a, b) => b.timestamp - a.timestamp);
-  for (let page = 1; page <= Math.ceil(loadedOrders().length / 20); page++) {
+  for (
+    let page = 1;
+    page <= Math.ceil(loadedOrders().length / pageSize);
+    page++
+  ) {
     for (const stream of streams) {
       while (
         shouldLoadMoreProductOrders({
           loaded: stream.loaded,
           page,
+          pageSize,
           hasMore: stream.loaded < stream.total,
           isValidating: false,
         })
@@ -34,7 +44,7 @@ function browseOrders(perpsCount: number, binaryCount: number, perpsSize = 50) {
       }
     }
     loadedOrders()
-      .slice((page - 1) * 20, page * 20)
+      .slice((page - 1) * pageSize, page * pageSize)
       .forEach((order) => visited.add(order.id));
   }
   return visited;
@@ -80,4 +90,19 @@ test("in-flight or exhausted streams do not request another page", () => {
     }),
     false,
   );
+});
+
+test("all orders remain reachable with every supported display page size", () => {
+  for (const pageSize of [10, 20, 50, 100]) {
+    for (const [perps, binary] of [
+      [201, 0],
+      [0, 201],
+      [121, 201],
+    ]) {
+      assert.equal(
+        browseOrders(perps, binary, 50, pageSize).size,
+        perps + binary,
+      );
+    }
+  }
 });
