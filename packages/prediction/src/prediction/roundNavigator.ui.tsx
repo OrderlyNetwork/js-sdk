@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
   Tooltip,
   useMediaQuery,
+  useScreen,
 } from "@orderly.network/ui";
 import { binaryRowRoundStart, type BinaryInfoRow } from "./binary/binaryInfo";
 import {
@@ -144,6 +145,7 @@ export const RoundNavigator: React.FC<{
 }) => {
   const { t } = useTranslation();
   const { chart } = usePredictionFormatters();
+  const { isMobile } = useScreen();
   const isWide = useMediaQuery("(min-width: 1280px)");
   const [menu, setMenu] = useState<"past" | "more" | null>(null);
   const navigation = getRoundNavigation(
@@ -217,6 +219,7 @@ export const RoundNavigator: React.FC<{
       {menuRows.map((row) => (
         <Tooltip
           key={row.symbol}
+          open={isMobile ? false : undefined}
           content={tooltip(row)}
           side="right"
           className="oui-rounded-xl oui-bg-base-5 oui-p-2"
@@ -269,6 +272,7 @@ export const RoundNavigator: React.FC<{
                 return (
                   <Tooltip
                     key={row.symbol}
+                    open={isMobile ? false : undefined}
                     content={tooltip(row)}
                     className="oui-rounded-xl oui-bg-base-5 oui-p-2"
                   >
@@ -306,6 +310,7 @@ export const RoundNavigator: React.FC<{
               )}
             >
               <Tooltip
+                open={isMobile ? false : undefined}
                 content={tooltip(row)}
                 side="top"
                 className="oui-rounded-xl oui-bg-base-5 oui-p-2"
