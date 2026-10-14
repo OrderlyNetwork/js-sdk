@@ -339,6 +339,7 @@ it("explains the DOWN limit minimum and accepts the suggested USDC input", () =>
       field: "total",
       key: "prediction.message.downMinimumOrder",
       value: 5,
+      upPrice: 0.14,
       minQuantity: 35.72,
       minTotal: 30.72,
     });
@@ -356,6 +357,7 @@ it("explains the DOWN limit minimum and accepts the suggested USDC input", () =>
     expect(view.current().orderValidationError).toMatchObject({
       minQuantity: 10,
       minTotal: 5,
+      upPrice: 0.5,
     });
   } finally {
     view.unmount();
@@ -367,7 +369,7 @@ it.each([
   ["limit", "sell", "down"],
   ["market", "buy", "down"],
 ] as const)(
-  "keeps the existing minimum error for %s / %s / %s",
+  "preserves minimum-notional behavior for %s / %s / %s",
   (mode, side, outcome) => {
     const view = mountTotalForm(0.5);
     try {
@@ -380,11 +382,15 @@ it.each([
         view.current().setLimitPrice("0.5");
         view.current().setAmount("1");
       });
-      expect(view.current().orderValidationError).toEqual({
-        field: "total",
-        key: "orderEntry.total.error.min",
-        value: 5,
-      });
+      if (side === "sell") {
+        expect(view.current().orderValidationError).toBeUndefined();
+      } else {
+        expect(view.current().orderValidationError).toEqual({
+          field: "total",
+          key: "orderEntry.total.error.min",
+          value: 5,
+        });
+      }
     } finally {
       view.unmount();
     }

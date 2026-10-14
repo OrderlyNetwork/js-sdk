@@ -188,6 +188,10 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
     return target === field
       ? t(error.key, {
           value: error.value,
+          upPrice:
+            error.upPrice == null
+              ? undefined
+              : new Decimal(error.upPrice).toFixed(),
           minQuantity:
             error.minQuantity == null
               ? undefined

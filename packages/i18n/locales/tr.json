@@ -469,7 +469,7 @@
   "prediction.status.filled": "Gerçekleşti",
   "prediction.status.cancelled": "İptal edildi",
   "prediction.message.insufficientBalance": "Yeterli kullanılabilir bakiye yok.",
-  "prediction.message.downMinimumOrder": "Minimum emir büyüklüğü {{minQuantity}} DOWN kontratıdır (bu fiyattan {{minTotal}} USDC). {{value}} USDC minimum tutarı UP fiyatı (1 − DOWN fiyatı) kullanılarak hesaplanır.",
+  "prediction.message.downMinimumOrder": "En az {{minQuantity}} DOWN kontratı ({{minTotal}} USDC). Minimum {{value}} USDC tutarı UP fiyatına ({{upPrice}}) göre hesaplanır.",
   "prediction.message.insufficientContracts": "Satış için yeterli kontratınız yok.",
   "prediction.message.noExecutableQuotes": "Şu anda eşleşebilir kotasyon yok. Lütfen birkaç dakika içinde tekrar deneyin.",
   "prediction.message.orderNotFound": "Emir bulunamadı veya artık aktif değil.",

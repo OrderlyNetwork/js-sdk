@@ -214,7 +214,7 @@ export const prediction = {
   "prediction.status.cancelled": "Cancelled",
   "prediction.message.insufficientBalance": "Insufficient available balance.",
   "prediction.message.downMinimumOrder":
-    "Minimum order size is {{minQuantity}} DOWN contracts ({{minTotal}} USDC at this price). The {{value}} USDC minimum is calculated using the UP price (1 − DOWN price).",
+    "Min. {{minQuantity}} DOWN contracts ({{minTotal}} USDC). The {{value}} USDC minimum is based on the UP price ({{upPrice}}).",
   "prediction.message.insufficientContracts":
     "You do not hold enough contracts to sell.",
   "prediction.message.noExecutableQuotes":

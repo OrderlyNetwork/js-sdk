@@ -469,7 +469,7 @@
   "prediction.status.filled": "約定済み",
   "prediction.status.cancelled": "キャンセル済み",
   "prediction.message.insufficientBalance": "利用可能残高が不足しています。",
-  "prediction.message.downMinimumOrder": "最小注文数量は {{minQuantity}} DOWN コントラクトです（この価格で {{minTotal}} USDC）。最低金額 {{value}} USDC は UP 価格（1 − DOWN 価格）に基づいて計算されます。",
+  "prediction.message.downMinimumOrder": "最低 {{minQuantity}} DOWN コントラクト（{{minTotal}} USDC）。最低金額 {{value}} USDC は UP 価格（{{upPrice}}）に基づいて計算されます。",
   "prediction.message.insufficientContracts": "売却可能な契約数が不足しています。",
   "prediction.message.noExecutableQuotes": "現在約定可能なクォートがありません。しばらくしてからもう一度お試しください。",
   "prediction.message.orderNotFound": "注文が見つからないか、既に無効になっています。",

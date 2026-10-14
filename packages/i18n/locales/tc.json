@@ -469,7 +469,7 @@
   "prediction.status.filled": "已成交",
   "prediction.status.cancelled": "已取消",
   "prediction.message.insufficientBalance": "可用餘額不足。",
-  "prediction.message.downMinimumOrder": "最小下單數量為 {{minQuantity}} 張 DOWN 合約（按當前價格為 {{minTotal}} USDC）。{{value}} USDC 的最低金額按 UP 價格（1 − DOWN 價格）計算。",
+  "prediction.message.downMinimumOrder": "至少 {{minQuantity}} 張 DOWN 合約（{{minTotal}} USDC）。最低金額 {{value}} USDC 依 UP 價格（{{upPrice}}）計算。",
   "prediction.message.insufficientContracts": "可賣出的合約數量不足。",
   "prediction.message.noExecutableQuotes": "目前沒有可成交報價，請稍後再試。",
   "prediction.message.orderNotFound": "訂單不存在或已失效。",

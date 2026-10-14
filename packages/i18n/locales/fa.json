@@ -469,7 +469,7 @@
   "prediction.status.filled": "انجام‌شده",
   "prediction.status.cancelled": "لغوشده",
   "prediction.message.insufficientBalance": "موجودی در دسترس کافی نیست.",
-  "prediction.message.downMinimumOrder": "حداقل اندازه سفارش {{minQuantity}} قرارداد DOWN است ({{minTotal}} USDC با این قیمت). حداقل {{value}} USDC بر اساس قیمت UP (1 − قیمت DOWN) محاسبه می‌شود.",
+  "prediction.message.downMinimumOrder": "حداقل {{minQuantity}} قرارداد DOWN ({{minTotal}} USDC). حداقل مبلغ {{value}} USDC بر اساس قیمت UP ({{upPrice}}) محاسبه می‌شود.",
   "prediction.message.insufficientContracts": "قرارداد کافی برای فروش ندارید.",
   "prediction.message.noExecutableQuotes": "در حال حاضر قیمت قابل معامله‌ای وجود ندارد. لطفاً لحظاتی دیگر دوباره تلاش کنید.",
   "prediction.message.orderNotFound": "سفارش یافت نشد یا دیگر فعال نیست.",

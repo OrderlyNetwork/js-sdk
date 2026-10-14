@@ -469,7 +469,7 @@
   "prediction.status.filled": "Ausgeführt",
   "prediction.status.cancelled": "Storniert",
   "prediction.message.insufficientBalance": "Unzureichendes verfügbares Guthaben.",
-  "prediction.message.downMinimumOrder": "Die Mindestordergröße beträgt {{minQuantity}} DOWN-Kontrakte ({{minTotal}} USDC zu diesem Preis). Das Minimum von {{value}} USDC wird anhand des UP-Preises (1 − DOWN-Preis) berechnet.",
+  "prediction.message.downMinimumOrder": "Mind. {{minQuantity}} DOWN-Kontrakte ({{minTotal}} USDC). Der Mindestbetrag von {{value}} USDC wird anhand des UP-Preises ({{upPrice}}) berechnet.",
   "prediction.message.insufficientContracts": "Sie halten nicht genügend Kontrakte zum Verkauf.",
   "prediction.message.noExecutableQuotes": "Derzeit keine ausführbaren Quotes. Bitte versuchen Sie es in einem Moment erneut.",
   "prediction.message.orderNotFound": "Order nicht gefunden oder nicht mehr aktiv.",

@@ -469,7 +469,7 @@
   "prediction.status.filled": "Zrealizowane",
   "prediction.status.cancelled": "Anulowane",
   "prediction.message.insufficientBalance": "Niewystarczające dostępne saldo.",
-  "prediction.message.downMinimumOrder": "Minimalna wielkość zlecenia to {{minQuantity}} kontraktów DOWN ({{minTotal}} USDC po tej cenie). Minimum {{value}} USDC jest obliczane na podstawie ceny UP (1 − cena DOWN).",
+  "prediction.message.downMinimumOrder": "Min. {{minQuantity}} kontraktów DOWN ({{minTotal}} USDC). Minimum {{value}} USDC jest obliczane na podstawie ceny UP ({{upPrice}}).",
   "prediction.message.insufficientContracts": "Nie masz wystarczającej liczby kontraktów do sprzedaży.",
   "prediction.message.noExecutableQuotes": "Brak obecnie wykonywalnych kwotowań. Spróbuj ponownie za chwilę.",
   "prediction.message.orderNotFound": "Zlecenie nie zostało znalezione lub nie jest już aktywne.",

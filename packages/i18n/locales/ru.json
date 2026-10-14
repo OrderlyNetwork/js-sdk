@@ -469,7 +469,7 @@
   "prediction.status.filled": "Исполнен",
   "prediction.status.cancelled": "Отменён",
   "prediction.message.insufficientBalance": "Недостаточно доступного баланса.",
-  "prediction.message.downMinimumOrder": "Минимальный размер ордера — {{minQuantity}} контрактов DOWN ({{minTotal}} USDC по этой цене). Минимум {{value}} USDC рассчитывается по цене UP (1 − цена DOWN).",
+  "prediction.message.downMinimumOrder": "Мин. {{minQuantity}} контрактов DOWN ({{minTotal}} USDC). Минимум {{value}} USDC рассчитывается по цене UP ({{upPrice}}).",
   "prediction.message.insufficientContracts": "У вас недостаточно контрактов для продажи.",
   "prediction.message.noExecutableQuotes": "Сейчас нет исполняемых котировок. Повторите попытку через мгновение.",
   "prediction.message.orderNotFound": "Ордер не найден или больше не активен.",

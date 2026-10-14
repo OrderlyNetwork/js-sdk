@@ -41,6 +41,7 @@ export type PredictionOrderValidationError = {
   value?: number;
   minQuantity?: number;
   minTotal?: number;
+  upPrice?: number;
 };
 
 export type UsePredictionOrderFormArgs = {
@@ -284,6 +285,7 @@ export const usePredictionOrderForm = ({
           field: "total",
           key: "prediction.message.downMinimumOrder",
           value: limits.minNotional,
+          upPrice,
           ...binaryMinimumOrderInput(selectedPrice, selectedOutcome, limits),
         };
       }

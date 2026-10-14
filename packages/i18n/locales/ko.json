@@ -469,7 +469,7 @@
   "prediction.status.filled": "체결됨",
   "prediction.status.cancelled": "취소됨",
   "prediction.message.insufficientBalance": "사용 가능 잔액이 부족합니다.",
-  "prediction.message.downMinimumOrder": "최소 주문 수량은 DOWN 계약 {{minQuantity}}개입니다(현재 가격 기준 {{minTotal}} USDC). 최소 금액 {{value}} USDC는 UP 가격(1 − DOWN 가격)을 기준으로 계산됩니다.",
+  "prediction.message.downMinimumOrder": "최소 DOWN 계약 {{minQuantity}}개({{minTotal}} USDC). 최소 금액 {{value}} USDC는 UP 가격({{upPrice}})을 기준으로 계산됩니다.",
   "prediction.message.insufficientContracts": "매도 가능한 계약 수가 부족합니다.",
   "prediction.message.noExecutableQuotes": "현재 체결 가능한 호가가 없습니다. 잠시 후 다시 시도해 주세요.",
   "prediction.message.orderNotFound": "주문을 찾을 수 없거나 더 이상 유효하지 않습니다.",

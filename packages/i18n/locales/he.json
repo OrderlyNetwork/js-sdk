@@ -469,7 +469,7 @@
   "prediction.status.filled": "בוצע",
   "prediction.status.cancelled": "בוטל",
   "prediction.message.insufficientBalance": "יתרה זמינה אינה מספקת.",
-  "prediction.message.downMinimumOrder": "גודל ההזמנה המינימלי הוא {{minQuantity}} חוזי DOWN ({{minTotal}} USDC במחיר זה). המינימום של {{value}} USDC מחושב לפי מחיר UP (1 − מחיר DOWN).",
+  "prediction.message.downMinimumOrder": "מינימום {{minQuantity}} חוזי DOWN ({{minTotal}} USDC). סכום המינימום של {{value}} USDC מבוסס על מחיר UP ({{upPrice}}).",
   "prediction.message.insufficientContracts": "אין ברשותך מספיק חוזים למכירה.",
   "prediction.message.noExecutableQuotes": "אין כרגע הצעות מחיר לביצוע. נסו שוב בעוד רגע.",
   "prediction.message.orderNotFound": "ההזמנה לא נמצאה או שאינה פעילה עוד.",

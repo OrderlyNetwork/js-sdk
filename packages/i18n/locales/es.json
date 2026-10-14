@@ -469,7 +469,7 @@
   "prediction.status.filled": "Ejecutada",
   "prediction.status.cancelled": "Cancelada",
   "prediction.message.insufficientBalance": "Saldo disponible insuficiente.",
-  "prediction.message.downMinimumOrder": "El tamaño mínimo de orden es de {{minQuantity}} contratos DOWN ({{minTotal}} USDC a este precio). El mínimo de {{value}} USDC se calcula con el precio UP (1 − precio DOWN).",
+  "prediction.message.downMinimumOrder": "Mín. {{minQuantity}} contratos DOWN ({{minTotal}} USDC). El mínimo de {{value}} USDC se calcula con el precio UP ({{upPrice}}).",
   "prediction.message.insufficientContracts": "No tienes suficientes contratos para vender.",
   "prediction.message.noExecutableQuotes": "No hay cotizaciones ejecutables en este momento. Inténtelo de nuevo en unos instantes.",
   "prediction.message.orderNotFound": "Orden no encontrada o ya no activa.",
