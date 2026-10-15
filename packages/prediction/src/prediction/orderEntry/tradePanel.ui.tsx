@@ -257,7 +257,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
   };
 
   return (
-    <aside className="oui-overflow-hidden oui-rounded-xl oui-bg-base-9">
+    <aside className="oui-rounded-xl oui-bg-base-9">
       <div className="oui-prediction-orderEntry-form oui-min-w-0 oui-p-2 oui-text-base-contrast-54">
         {isMobile ? (
           <Select.options
