@@ -9,7 +9,6 @@ export type PredictionCandle = {
 };
 
 export const CANDLE_INTERVAL_MS = 60_000;
-export const CANDLE_COUNT = 81;
 export const CANDLE_WINDOW_MS = 80 * 60_000;
 export const CANDLE_TICK_INTERVAL_MS = 7 * 60_000;
 

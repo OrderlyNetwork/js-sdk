@@ -90,7 +90,8 @@ export const getPriceDifference = (current?: number, opening?: number) => {
   return {
     amount: amount.toNumber(),
     percent: opening > 0 ? amount.div(opening).mul(100).toNumber() : undefined,
-    isUp: amount.gte(0),
+    isUp: amount.gt(0),
+    isTie: amount.eq(0),
   };
 };
 

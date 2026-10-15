@@ -76,7 +76,6 @@ export const PriceChart: React.FC<{
 }) => {
   const { t } = useTranslation();
   const { chart: intl } = usePredictionFormatters();
-  const indexPrice = useIndexPriceFormatter(selectedRow?.index_price_symbol);
   // All visible round clocks use one calibrated leaf-local heartbeat.
   const now = useRoundNow(
     Math.max(selectedRow?.expire_at ?? 0, ...rows.map((row) => row.expire_at)),
@@ -159,6 +158,11 @@ export const PriceChart: React.FC<{
     : { opening: undefined, current: undefined };
   const chartOpeningPrice = prices.opening;
   const chartCurrentPrice = prices.current;
+  const indexPrice = useIndexPriceFormatter(
+    selectedRow?.index_price_symbol,
+    chartOpeningPrice,
+    chartCurrentPrice,
+  );
   const difference = getPriceDifference(chartCurrentPrice, chartOpeningPrice);
   const futureCountdown = selectedRow
     ? secondsUntil(selectedRow.observation_start_at, now)
@@ -394,10 +398,14 @@ export const PriceChart: React.FC<{
               <span
                 className={cn(
                   "oui-text-2xs oui-whitespace-nowrap oui-tabular-nums min-[480px]:oui-text-xs",
-                  isUp ? "oui-text-trade-profit" : "oui-text-trade-loss",
+                  difference.isTie
+                    ? "oui-text-base-contrast-54"
+                    : isUp
+                      ? "oui-text-trade-profit"
+                      : "oui-text-trade-loss",
                 )}
               >
-                {isUp ? (
+                {difference.isTie ? null : isUp ? (
                   <CaretUpIcon
                     className="oui-inline-block"
                     size={14}

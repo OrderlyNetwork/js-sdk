@@ -68,20 +68,31 @@ export const INDEX_PRICE_DP_OVERRIDES: Record<string, number> = {
  * Decimal places for underlying index prices, mirroring the perp display
  * convention (dp = decimals of the underlying perp's quote_tick) with the
  * constants above taking precedence. Falls back to 2 when neither the
- * symbol's config nor an override is available.
+ * symbol's config nor an override is available. Supplied price pairs raise this
+ * minimum precision to retain every digit that can determine the round's result.
  */
 export function resolveIndexPriceDp(
   indexPriceSymbol?: string | null,
   quoteTick?: number | null,
+  ...prices: (number | undefined)[]
 ): number {
+  let dp = 2;
   if (indexPriceSymbol) {
     const override = INDEX_PRICE_DP_OVERRIDES[indexPriceSymbol];
-    if (typeof override === "number") return override;
+    if (typeof override === "number") dp = override;
+    else if (quoteTick != null && Number.isFinite(quoteTick) && quoteTick > 0)
+      dp = new Decimal(quoteTick).decimalPlaces();
+  } else if (quoteTick != null && Number.isFinite(quoteTick) && quoteTick > 0) {
+    dp = new Decimal(quoteTick).decimalPlaces();
   }
-  if (quoteTick != null && Number.isFinite(quoteTick) && quoteTick > 0) {
-    return new Decimal(quoteTick).decimalPlaces();
-  }
-  return 2;
+  return Math.max(
+    dp,
+    ...prices
+      .filter(
+        (price): price is number => price != null && Number.isFinite(price),
+      )
+      .map((price) => new Decimal(price).decimalPlaces()),
+  );
 }
 
 /**
@@ -89,7 +100,11 @@ export function resolveIndexPriceDp(
  * index symbol's perp quote_tick via symbolsInfo (override constants win)
  * and formats with the shared parseNumber engine (perp orderbook style).
  */
-export function useIndexPriceFormatter(indexPriceSymbol?: string | null) {
+export function useIndexPriceFormatter(
+  indexPriceSymbol?: string | null,
+  firstPrice?: number,
+  secondPrice?: number,
+) {
   const symbolsInfo = useSymbolsInfo();
   return useMemo(() => {
     const quoteTick = indexPriceSymbol
@@ -98,6 +113,8 @@ export function useIndexPriceFormatter(indexPriceSymbol?: string | null) {
     const dp = resolveIndexPriceDp(
       indexPriceSymbol,
       typeof quoteTick === "number" ? quoteTick : undefined,
+      firstPrice,
+      secondPrice,
     );
     return {
       dp,
@@ -106,7 +123,7 @@ export function useIndexPriceFormatter(indexPriceSymbol?: string | null) {
           ? parseNumber(value, { rule: "price", dp })
           : "--",
     };
-  }, [indexPriceSymbol, symbolsInfo]);
+  }, [indexPriceSymbol, symbolsInfo, firstPrice, secondPrice]);
 }
 
 /** Preserve nonzero sub-cent amounts; otherwise keep two-dp truncation. */

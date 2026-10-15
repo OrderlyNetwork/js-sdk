@@ -162,16 +162,19 @@ test("price difference preserves sign, equality and missing values", () => {
     amount: -680,
     percent: -1,
     isUp: false,
+    isTie: false,
   });
   assert.deepEqual(getPriceDifference(68_680, 68_000), {
     amount: 680,
     percent: 1,
     isUp: true,
+    isTie: false,
   });
   assert.deepEqual(getPriceDifference(68_000, 68_000), {
     amount: 0,
     percent: 0,
-    isUp: true,
+    isUp: false,
+    isTie: true,
   });
   assert.equal(getPriceDifference(68_000), undefined);
   assert.equal(getPriceDifference(NaN, 68_000), undefined);

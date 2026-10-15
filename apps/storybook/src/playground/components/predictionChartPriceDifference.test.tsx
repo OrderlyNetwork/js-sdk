@@ -5,13 +5,14 @@ import type { BinaryInfoRow } from "@orderly.network/prediction/src/prediction/b
 import { PriceChart } from "@orderly.network/prediction/src/prediction/predictionChart.ui";
 
 const now = Date.UTC(2026, 9, 13, 2, 9, 57);
+const formatterArgs = vi.hoisted(() => vi.fn());
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 vi.mock("@orderly.network/ui", () => ({
   cn: (...values: unknown[]) => values.filter(Boolean).join(" "),
-  CaretDownIcon: () => null,
-  CaretUpIcon: () => null,
+  CaretDownIcon: () => <i data-direction="down" />,
+  CaretUpIcon: () => <i data-direction="up" />,
   ChevronDownIcon: () => null,
   ChevronRightIcon: () => null,
   ChevronUpIcon: () => null,
@@ -19,9 +20,10 @@ vi.mock("@orderly.network/ui", () => ({
   Tooltip: ({ children }: React.PropsWithChildren) => children,
 }));
 vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
-  useIndexPriceFormatter: () => ({
-    format: (value: number) => value.toFixed(2),
-  }),
+  useIndexPriceFormatter: (...args: unknown[]) => {
+    formatterArgs(...args);
+    return { format: (value: number) => value.toFixed(2) };
+  },
   usePredictionFormatters: () => ({
     chart: {
       roundTimeFormatter: { format: String },
@@ -111,4 +113,29 @@ it.each([false, true])(
 it("retains the positive sign for a small increase", () => {
   mount(82424.95, false);
   expect(differenceText()).toContain("+$0.96 (+0.0012%)");
+});
+
+it.each([false, true])(
+  "shows an equal price as neutral without a direction (historical=%s)",
+  (historical) => {
+    mount(82423.99, historical);
+    const difference = root!.root
+      .findAllByType("span")
+      .find((node) =>
+        node.children.some(
+          (child) => typeof child === "string" && child.includes("$0.00"),
+        ),
+      )!;
+    expect(difference.props.className).toContain("oui-text-base-contrast-54");
+    expect(difference.findAllByType("i")).toHaveLength(0);
+  },
+);
+
+it("passes both original prices into the shared precision formatter", () => {
+  mount(82423.991, true);
+  expect(formatterArgs).toHaveBeenLastCalledWith(
+    "PERP_BTC_USDC",
+    82423.99,
+    82423.991,
+  );
 });

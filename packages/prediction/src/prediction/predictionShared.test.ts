@@ -149,6 +149,19 @@ test("resolveIndexPriceDp falls back to 2 dp without tick or override", () => {
   assert.equal(resolveIndexPriceDp("PERP_X_USDC", 0), 2);
 });
 
+test("paired index prices retain the digits deciding the result", () => {
+  assert.equal(
+    resolveIndexPriceDp("PERP_BTC_USDC", 0.1, 68000.123, 68000.124),
+    3,
+  );
+  assert.equal(
+    resolveIndexPriceDp("PERP_BTC_USDC", 0.1, 68000.12, 68000.12),
+    2,
+  );
+  assert.equal(resolveIndexPriceDp("PERP_BTC_USDC", 0.1, undefined, NaN), 2);
+  assert.equal(resolveIndexPriceDp("PERP_SOL_USDC", 0.0001, 100, 101), 4);
+});
+
 test("formatUsd renders grouped two-dp amounts via parseNumber truncation", () => {
   assert.equal(formatUsd(1234.567), "1,234.56");
   assert.equal(formatUsd(0), "0.00");
