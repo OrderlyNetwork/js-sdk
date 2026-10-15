@@ -201,6 +201,68 @@ test("detailed inputs deduplicate and use remaining quantity; RO counts toward c
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL, 1), 70);
 });
 
+test("signed sell aggregates reserve only the pending shares of an UP holding", () => {
+  for (const quantity of [7.93, 15.87, 20]) {
+    for (const sign of [-1, 1]) {
+      const state = resolveBinaryCollateral({
+        symbol,
+        positions: [
+          position({
+            position_qty: 15.87,
+            pending_short_qty: sign * quantity,
+          }),
+        ],
+        orders: [order({ quantity, reduce_only: true })],
+        ordersComplete: true,
+      });
+      assert.ok(state);
+      assert.equal(state.mode, "detailed");
+      assert.equal(state.pendingSellQty, quantity);
+      assert.equal(
+        availableBinaryCloseQuantity(state, OrderSide.SELL),
+        quantity === 7.93 ? 7.94 : 0,
+      );
+      assert.equal(
+        availableBinaryCloseQuantity(state, OrderSide.SELL, 1),
+        15.87,
+      );
+      assert.equal(availableBinaryCloseQuantity(state, OrderSide.BUY), 0);
+    }
+  }
+});
+
+test("signed sell aggregates preserve reservations while order data catches up", () => {
+  for (const quantity of [0, 3, 10]) {
+    const state = resolveBinaryCollateral({
+      symbol,
+      positions: [position({ position_qty: 15.87, pending_short_qty: -7.93 })],
+      orders: quantity ? [order({ quantity, reduce_only: true })] : undefined,
+      ordersComplete: false,
+    });
+    assert.ok(state);
+    assert.equal(state.mode, quantity < 7.93 ? "approximate" : "detailed");
+    assert.equal(state.pendingSellQty, Math.max(7.93, quantity));
+    assert.equal(
+      availableBinaryCloseQuantity(state, OrderSide.SELL),
+      quantity > 7.93 ? 5.87 : 7.94,
+    );
+  }
+});
+
+test("invalid sell aggregates remain unavailable after signed quantity normalization", () => {
+  for (const quantity of [NaN, Infinity, -Infinity, "7.93"]) {
+    assert.equal(
+      resolveBinaryCollateral({
+        symbol,
+        positions: [position({ pending_short_qty: quantity as number })],
+        orders: [],
+        ordersComplete: true,
+      }),
+      undefined,
+    );
+  }
+});
+
 test("RO joins the allocation at zero frozen; priority decides who is displaced", () => {
   // The RO sell sits at a worse UP price than the new order: the new order
   // closes first, the displaced RO excess freezes nothing, so the ordinary

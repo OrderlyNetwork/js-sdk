@@ -71,11 +71,12 @@ export function useManagedPositionsScript(
             !Number.isFinite(row.pending_short_qty)
           )
             return 0;
-          const available = new Decimal(position.quantity).sub(
+          const reserved = new Decimal(
             position.outcome === "up"
               ? row.pending_short_qty
               : row.pending_long_qty,
-          );
+          ).abs();
+          const available = new Decimal(position.quantity).sub(reserved);
           return available.gt(0) ? available.toNumber() : 0;
         },
       };

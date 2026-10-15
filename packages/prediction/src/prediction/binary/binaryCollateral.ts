@@ -65,13 +65,16 @@ export function resolveBinaryCollateral(inputs: {
     return undefined;
   const positionQty = position?.position_qty ?? 0;
   const pendingBuyQty = position?.pending_long_qty ?? 0;
-  const pendingSellQty = position?.pending_short_qty ?? 0;
+  const pendingShortQty = position?.pending_short_qty ?? 0;
   if (
     !Number.isFinite(positionQty) ||
     !isQuantity(pendingBuyQty) ||
-    !isQuantity(pendingSellQty)
+    !Number.isFinite(pendingShortQty)
   )
     return undefined;
+  // Position aggregates can report SELL quantities as negative signed values.
+  // Reservations and order quantities use nonnegative magnitudes.
+  const pendingSellQty = Math.abs(pendingShortQty);
 
   const uniqueOrders = new Map<number, API.Order>();
   for (const item of orders ?? []) {
