@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Añadir preajuste",
   "prediction.oneTapRemoveRow": "Eliminar fila",
   "prediction.oneTapWin": "Ganancia",
-  "prediction.oneTapInvalidAmounts": "Introduce 1–99,999.99 USDC por cada preajuste (hasta 2 decimales).",
+  "prediction.oneTapInvalidAmounts": "Introduce 5–99,999.99 USDC por cada preajuste (hasta 2 decimales).",
   "prediction.currentPrice": "Precio actual",
   "prediction.finalPrice": "Precio final",
   "prediction.chance": "Prob. de alza",

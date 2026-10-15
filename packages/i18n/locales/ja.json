@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "プリセットを追加",
   "prediction.oneTapRemoveRow": "行を削除",
   "prediction.oneTapWin": "勝利時",
-  "prediction.oneTapInvalidAmounts": "各プリセットに 1–99,999.99 USDC を入力してください（小数点以下は2桁まで）。",
+  "prediction.oneTapInvalidAmounts": "各プリセットに 5–99,999.99 USDC を入力してください（小数点以下は2桁まで）。",
   "prediction.currentPrice": "現在価格",
   "prediction.finalPrice": "最終価格",
   "prediction.chance": "上昇確率",

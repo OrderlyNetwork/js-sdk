@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Preset hinzufügen",
   "prediction.oneTapRemoveRow": "Zeile entfernen",
   "prediction.oneTapWin": "Gewinn",
-  "prediction.oneTapInvalidAmounts": "Geben Sie für jedes Preset 1–99,999.99 USDC ein (maximal 2 Dezimalstellen).",
+  "prediction.oneTapInvalidAmounts": "Geben Sie für jedes Preset 5–99,999.99 USDC ein (maximal 2 Dezimalstellen).",
   "prediction.currentPrice": "Aktueller Preis",
   "prediction.finalPrice": "Endpreis",
   "prediction.chance": "Chance auf Steigen",

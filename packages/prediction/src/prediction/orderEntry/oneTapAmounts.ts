@@ -1,3 +1,4 @@
+import { Decimal } from "@orderly.network/utils";
 import type { PredictionOutcome } from "../prediction.types";
 
 export type OneTapAmounts = Record<PredictionOutcome, number[]>;
@@ -6,7 +7,7 @@ export const DEFAULT_ONE_TAP_AMOUNTS: OneTapAmounts = {
   up: [10],
   down: [10],
 };
-const MIN_ONE_TAP_AMOUNT = 1;
+const MIN_ONE_TAP_AMOUNT = 5;
 const MAX_ONE_TAP_AMOUNT = 99999.99;
 const PREVIOUS_ONE_TAP_DEFAULT = [10, 50, 100];
 const LEGACY_ONE_TAP_DEFAULT = [10, 100, 1000];
@@ -19,7 +20,8 @@ export const validOneTapAmounts = (amounts: unknown): amounts is number[] =>
     (amount: number) =>
       Number.isFinite(amount) &&
       amount >= MIN_ONE_TAP_AMOUNT &&
-      amount <= MAX_ONE_TAP_AMOUNT,
+      amount <= MAX_ONE_TAP_AMOUNT &&
+      new Decimal(amount).decimalPlaces() <= 2,
   );
 
 const matchesOneTapPreset = (amounts: number[], preset: number[]) =>

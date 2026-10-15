@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Додати пресет",
   "prediction.oneTapRemoveRow": "Видалити рядок",
   "prediction.oneTapWin": "Виграш",
-  "prediction.oneTapInvalidAmounts": "Вкажіть 1–99,999.99 USDC для кожного пресету (не більше 2 десяткових знаків).",
+  "prediction.oneTapInvalidAmounts": "Вкажіть 5–99,999.99 USDC для кожного пресету (не більше 2 десяткових знаків).",
   "prediction.currentPrice": "Поточна ціна",
   "prediction.finalPrice": "Фінальна ціна",
   "prediction.chance": "Шанс на ріст",

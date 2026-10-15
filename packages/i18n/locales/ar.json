@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "إضافة إعداد مسبق",
   "prediction.oneTapRemoveRow": "إزالة الصف",
   "prediction.oneTapWin": "الربح",
-  "prediction.oneTapInvalidAmounts": "أدخل 1–99,999.99 USDC لكل إعداد مسبق (بحد أقصى منزلتان عشريتان).",
+  "prediction.oneTapInvalidAmounts": "أدخل 5–99,999.99 USDC لكل إعداد مسبق (بحد أقصى منزلتان عشريتان).",
   "prediction.currentPrice": "السعر الحالي",
   "prediction.finalPrice": "السعر النهائي",
   "prediction.chance": "احتمال الصعود",

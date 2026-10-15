@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Ön ayar ekle",
   "prediction.oneTapRemoveRow": "Satırı kaldır",
   "prediction.oneTapWin": "Kazanç",
-  "prediction.oneTapInvalidAmounts": "Her ön ayar için 1–99,999.99 USDC girin (en fazla 2 ondalık basamak).",
+  "prediction.oneTapInvalidAmounts": "Her ön ayar için 5–99,999.99 USDC girin (en fazla 2 ondalık basamak).",
   "prediction.currentPrice": "Güncel fiyat",
   "prediction.finalPrice": "Bitiş fiyatı",
   "prediction.chance": "Yükseliş şansı",

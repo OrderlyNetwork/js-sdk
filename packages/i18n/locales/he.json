@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "הוסף ערך מוגדר",
   "prediction.oneTapRemoveRow": "הסר שורה",
   "prediction.oneTapWin": "זכייה",
-  "prediction.oneTapInvalidAmounts": "הזן 1–99,999.99 USDC עבור כל ערך מוגדר (עד 2 ספרות עשרוניות).",
+  "prediction.oneTapInvalidAmounts": "הזן 5–99,999.99 USDC עבור כל ערך מוגדר (עד 2 ספרות עשרוניות).",
   "prediction.currentPrice": "מחיר נוכחי",
   "prediction.finalPrice": "מחיר סופי",
   "prediction.chance": "סיכוי לעלייה",

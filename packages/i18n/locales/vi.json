@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Thêm mẫu nhanh",
   "prediction.oneTapRemoveRow": "Xóa hàng",
   "prediction.oneTapWin": "Thắng",
-  "prediction.oneTapInvalidAmounts": "Nhập 1–99,999.99 USDC cho mỗi mẫu nhanh (tối đa 2 chữ số thập phân).",
+  "prediction.oneTapInvalidAmounts": "Nhập 5–99,999.99 USDC cho mỗi mẫu nhanh (tối đa 2 chữ số thập phân).",
   "prediction.currentPrice": "Giá hiện tại",
   "prediction.finalPrice": "Giá cuối cùng",
   "prediction.chance": "Khả năng Lên",

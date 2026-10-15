@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Tambah prasetel",
   "prediction.oneTapRemoveRow": "Hapus baris",
   "prediction.oneTapWin": "Menang",
-  "prediction.oneTapInvalidAmounts": "Masukkan 1–99,999.99 USDC untuk setiap prasetel (maksimal 2 desimal).",
+  "prediction.oneTapInvalidAmounts": "Masukkan 5–99,999.99 USDC untuk setiap prasetel (maksimal 2 desimal).",
   "prediction.currentPrice": "Harga saat ini",
   "prediction.finalPrice": "Harga akhir",
   "prediction.chance": "Peluang Naik",

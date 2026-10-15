@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Aggiungi preset",
   "prediction.oneTapRemoveRow": "Rimuovi riga",
   "prediction.oneTapWin": "Vincita",
-  "prediction.oneTapInvalidAmounts": "Inserisci 1–99,999.99 USDC per ciascun preset (massimo 2 cifre decimali).",
+  "prediction.oneTapInvalidAmounts": "Inserisci 5–99,999.99 USDC per ciascun preset (massimo 2 cifre decimali).",
   "prediction.currentPrice": "Prezzo attuale",
   "prediction.finalPrice": "Prezzo finale",
   "prediction.chance": "Prob. di rialzo",

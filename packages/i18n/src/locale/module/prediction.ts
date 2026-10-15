@@ -42,7 +42,7 @@ export const prediction = {
   "prediction.oneTapRemoveRow": "Remove row",
   "prediction.oneTapWin": "Win",
   "prediction.oneTapInvalidAmounts":
-    "Enter 1–99,999.99 USDC for each preset (up to 2 decimal places).",
+    "Enter 5–99,999.99 USDC for each preset (up to 2 decimal places).",
   "prediction.currentPrice": "Current price",
   "prediction.finalPrice": "Final price",
   "prediction.chance": "Up chance",

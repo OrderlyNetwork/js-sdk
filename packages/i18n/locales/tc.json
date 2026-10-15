@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "新增預設",
   "prediction.oneTapRemoveRow": "移除列",
   "prediction.oneTapWin": "可贏",
-  "prediction.oneTapInvalidAmounts": "請為每個預設輸入 1–99,999.99 USDC（最多 2 位小數）。",
+  "prediction.oneTapInvalidAmounts": "請為每個預設輸入 5–99,999.99 USDC（最多 2 位小數）。",
   "prediction.currentPrice": "目前價格",
   "prediction.finalPrice": "最終價格",
   "prediction.chance": "上漲機率",

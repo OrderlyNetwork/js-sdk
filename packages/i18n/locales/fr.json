@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Ajouter un préréglage",
   "prediction.oneTapRemoveRow": "Supprimer la ligne",
   "prediction.oneTapWin": "Gain",
-  "prediction.oneTapInvalidAmounts": "Saisissez 1–99,999.99 USDC pour chaque préréglage (2 décimales maximum).",
+  "prediction.oneTapInvalidAmounts": "Saisissez 5–99,999.99 USDC pour chaque préréglage (2 décimales maximum).",
   "prediction.currentPrice": "Prix actuel",
   "prediction.finalPrice": "Prix final",
   "prediction.chance": "Prob. de hausse",

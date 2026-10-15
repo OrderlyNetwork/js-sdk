@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "프리셋 추가",
   "prediction.oneTapRemoveRow": "행 삭제",
   "prediction.oneTapWin": "당첨",
-  "prediction.oneTapInvalidAmounts": "각 프리셋에 1–99,999.99 USDC를 입력하세요(최대 소수점 이하 2자리).",
+  "prediction.oneTapInvalidAmounts": "각 프리셋에 5–99,999.99 USDC를 입력하세요(최대 소수점 이하 2자리).",
   "prediction.currentPrice": "현재 가격",
   "prediction.finalPrice": "최종 가격",
   "prediction.chance": "상승 확률",

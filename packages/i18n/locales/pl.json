@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Dodaj ustawienie wstępne",
   "prediction.oneTapRemoveRow": "Usuń wiersz",
   "prediction.oneTapWin": "Wygrana",
-  "prediction.oneTapInvalidAmounts": "Wpisz 1–99,999.99 USDC dla każdego ustawienia wstępnego (maksymalnie 2 miejsca dziesiętne).",
+  "prediction.oneTapInvalidAmounts": "Wpisz 5–99,999.99 USDC dla każdego ustawienia wstępnego (maksymalnie 2 miejsca dziesiętne).",
   "prediction.currentPrice": "Cena bieżąca",
   "prediction.finalPrice": "Cena końcowa",
   "prediction.chance": "Szansa na wzrost",

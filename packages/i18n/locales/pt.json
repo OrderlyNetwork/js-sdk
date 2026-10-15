@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Adicionar predefinição",
   "prediction.oneTapRemoveRow": "Remover linha",
   "prediction.oneTapWin": "Ganho",
-  "prediction.oneTapInvalidAmounts": "Insira 1–99,999.99 USDC para cada predefinição (até 2 casas decimais).",
+  "prediction.oneTapInvalidAmounts": "Insira 5–99,999.99 USDC para cada predefinição (até 2 casas decimais).",
   "prediction.currentPrice": "Preço atual",
   "prediction.finalPrice": "Preço final",
   "prediction.chance": "Prob. de alta",

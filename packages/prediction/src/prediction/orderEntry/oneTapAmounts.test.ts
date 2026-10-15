@@ -9,7 +9,7 @@ import {
 test("validOneTapAmounts accepts 1-3 finite amounts within bounds", () => {
   assert.equal(validOneTapAmounts([10]), true);
   assert.equal(validOneTapAmounts([10, 50, 100]), true);
-  assert.equal(validOneTapAmounts([1, 99999.99]), true);
+  assert.equal(validOneTapAmounts([5, 99999.99]), true);
 });
 
 test("validOneTapAmounts rejects non-arrays, wrong lengths, and out-of-range values", () => {
@@ -20,6 +20,8 @@ test("validOneTapAmounts rejects non-arrays, wrong lengths, and out-of-range val
   assert.equal(validOneTapAmounts([0.99]), false);
   assert.equal(validOneTapAmounts([100000]), false);
   assert.equal(validOneTapAmounts([Number.NaN]), false);
+  assert.equal(validOneTapAmounts([4.99]), false);
+  assert.equal(validOneTapAmounts([5.001]), false);
 });
 
 test("legacy flat-array presets fall back to defaults", () => {
@@ -35,6 +37,18 @@ test("object storage resolves per outcome and falls back per outcome", () => {
   const stored = { up: [5, 15], down: [0] };
   assert.deepEqual(resolveOneTapAmounts(stored, "up"), [5, 15]);
   assert.deepEqual(resolveOneTapAmounts(stored, "down"), [10]);
+  assert.deepEqual(
+    resolveOneTapAmounts({ up: [1, 5], down: [7.25] }, "up"),
+    [10],
+  );
+  assert.deepEqual(
+    resolveOneTapAmounts({ up: [1, 5], down: [7.25] }, "down"),
+    [7.25],
+  );
+  assert.deepEqual(
+    resolveOneTapAmounts({ up: [5.001], down: [10] }, "up"),
+    [10],
+  );
 });
 
 test("alignOneTapAmounts pads the shorter side from the opposite column", () => {
@@ -45,9 +59,9 @@ test("alignOneTapAmounts pads the shorter side from the opposite column", () => 
 });
 
 test("alignOneTapAmounts mirrors the opposite column for an empty side", () => {
-  assert.deepEqual(alignOneTapAmounts([1, 2, 3], []), {
-    up: [1, 2, 3],
-    down: [1, 2, 3],
+  assert.deepEqual(alignOneTapAmounts([5, 6, 7], []), {
+    up: [5, 6, 7],
+    down: [5, 6, 7],
   });
 });
 
@@ -56,7 +70,8 @@ test("editor text rejects invalid precision, out-of-range and mismatched rows wi
   for (const value of [
     "",
     "0",
-    "1.234",
+    "5.001",
+    "4.99",
     "1e2",
     "Infinity",
     "100000",

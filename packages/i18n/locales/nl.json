@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Preset toevoegen",
   "prediction.oneTapRemoveRow": "Rij verwijderen",
   "prediction.oneTapWin": "Winst",
-  "prediction.oneTapInvalidAmounts": "Voer 1–99,999.99 USDC in per preset (maximaal 2 decimalen).",
+  "prediction.oneTapInvalidAmounts": "Voer 5–99,999.99 USDC in per preset (maximaal 2 decimalen).",
   "prediction.currentPrice": "Huidige prijs",
   "prediction.finalPrice": "Eindprijs",
   "prediction.chance": "Kans op omhoog",

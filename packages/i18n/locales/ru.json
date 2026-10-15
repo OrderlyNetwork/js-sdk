@@ -319,7 +319,7 @@
   "prediction.oneTapAddPreset": "Добавить пресет",
   "prediction.oneTapRemoveRow": "Удалить строку",
   "prediction.oneTapWin": "Выигрыш",
-  "prediction.oneTapInvalidAmounts": "Введите 1–99,999.99 USDC для каждого пресета (не более 2 десятичных знаков).",
+  "prediction.oneTapInvalidAmounts": "Введите 5–99,999.99 USDC для каждого пресета (не более 2 десятичных знаков).",
   "prediction.currentPrice": "Текущая цена",
   "prediction.finalPrice": "Финальная цена",
   "prediction.chance": "Шанс на рост",
