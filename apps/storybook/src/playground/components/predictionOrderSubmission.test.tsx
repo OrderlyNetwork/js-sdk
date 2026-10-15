@@ -14,6 +14,8 @@ const mocks = vi.hoisted(() => ({
   notify: vi.fn(),
   onActiveTab: vi.fn(),
   available: 100,
+  baseMax: 10000,
+  minNotional: 5,
 }));
 vi.mock("@orderly.network/hooks", () => ({
   useMutation: () => [mocks.createOrder, {}],
@@ -78,9 +80,9 @@ function Consumer({ initialTab }: { initialTab: PredictionDataTab }) {
         expire_at: Date.now() + 60000,
         base_tick: 0.01,
         base_min: 0.01,
-        base_max: 10000,
+        base_max: mocks.baseMax,
         quote_tick: 0.01,
-        min_notional: 5,
+        min_notional: mocks.minNotional,
       } as BinaryInfoRow,
     ],
     selectedSymbol: symbol,
@@ -123,11 +125,34 @@ const input = (
 beforeEach(() => {
   vi.resetAllMocks();
   mocks.available = 100;
+  mocks.baseMax = 10000;
+  mocks.minNotional = 5;
   mocks.createOrder.mockResolvedValue({ success: true, data: { order_id: 1 } });
 });
 afterEach(() => {
   act(() => root?.unmount());
   root = undefined;
+});
+
+it("submits the same final pair as the preview without repartitioning the rounded total", async () => {
+  mocks.baseMax = 5;
+  mocks.minNotional = 1;
+  mocks.createOrder.mockResolvedValue({
+    success: true,
+    data: { rows: Array.from({ length: 4 }, (_, i) => ({ order_id: i + 1 })) },
+  });
+  mount();
+  await act(async () =>
+    actions.placeOrder({
+      ...input("limit"),
+      orderQuantity: 15,
+      requestedQuantity: 15.01,
+    }),
+  );
+  const orders = mocks.createOrder.mock.calls[0][0].orders;
+  expect(
+    orders.map((order: { order_quantity: string }) => order.order_quantity),
+  ).toEqual(["5", "5", "2.5", "2.5"]);
 });
 
 const cases = (

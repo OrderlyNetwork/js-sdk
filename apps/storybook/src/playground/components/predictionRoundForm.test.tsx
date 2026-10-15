@@ -3,7 +3,10 @@ import { act, create } from "react-test-renderer";
 import { expect, it } from "vitest";
 import { usePredictionOrderForm } from "@orderly.network/prediction/src/prediction/hooks/usePredictionOrderForm";
 
-function mountTotalForm(initialPrice = 0.31) {
+function mountTotalForm(
+  initialPrice = 0.31,
+  sizeRules: { baseMax?: number; minNotional?: number } = {},
+) {
   let state!: ReturnType<typeof usePredictionOrderForm>;
   const commits: Array<
     Pick<typeof state, "totalInput" | "amount" | "orderQuantity">
@@ -19,6 +22,7 @@ function mountTotalForm(initialPrice = 0.31) {
       marketId: "PERP_BTC5M_USDC",
       symbol: "PERP_BTC5M2609291035_USDC",
       baseTick,
+      ...sizeRules,
       executablePrices: {
         buy: { up: price, down: price },
         sell: { up: price, down: price },
@@ -58,6 +62,21 @@ function mountTotalForm(initialPrice = 0.31) {
     },
   };
 }
+
+it("previews only the tick-rounded children while retaining the original sizing request", () => {
+  const view = mountTotalForm(0.99, { baseMax: 5, minNotional: 1 });
+  try {
+    act(() => view.current().setTradeMode("market"));
+    act(() => view.current().setAmount("14.86"));
+    expect(view.current().requestedQuantity).toBe(15.01);
+    expect(view.current().orderQuantity).toBe(15);
+    expect(view.current().estimatedContracts).toBe(15);
+    expect(view.current().orderNotional).toBe(14.85);
+    expect(view.current().canPlaceOrder).toBe(true);
+  } finally {
+    view.unmount();
+  }
+});
 
 it.each(["buy", "sell"] as const)(
   "commits a %s total draft and its amount together, including clearing the draft",

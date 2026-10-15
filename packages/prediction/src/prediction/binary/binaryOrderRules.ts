@@ -478,7 +478,7 @@ export function binaryUpNotional(
   );
 }
 
-/** Balance tick-aligned children; reduce-only exits only require base_min. */
+/** Fill maximum-size children, balancing only an undersized final pair. */
 export function splitBinaryQuantity(
   quantity: number,
   upPrice: number,
@@ -522,15 +522,29 @@ export function splitBinaryQuantity(
     totalTicks.lt(minimum.mul(count))
   )
     return undefined;
-  const each = totalTicks.div(count).toDecimalPlaces(0, Decimal.ROUND_FLOOR);
-  const extra = totalTicks.sub(each.mul(count)).toNumber();
-  return Array.from({ length: count }, (_, i) =>
-    each
-      .add(i < extra ? 1 : 0)
-      .mul(tick)
-      .toNumber(),
+  const pieces = Array.from({ length: count }, (_, i) =>
+    i < count - 1 ? maxTicks : totalTicks.sub(maxTicks.mul(count - 1)),
   );
+  if (pieces[count - 1].lt(minimum) && count > 1) {
+    const each = pieces[count - 2]
+      .add(pieces[count - 1])
+      .div(2)
+      .toDecimalPlaces(0, Decimal.ROUND_FLOOR);
+    if (each.lt(minimum)) return undefined;
+    pieces[count - 2] = each;
+    // Closing orders must preserve all shares, including an odd final tick.
+    pieces[count - 1] = reduceOnly
+      ? totalTicks.sub(maxTicks.mul(count - 2)).sub(each)
+      : each;
+  }
+  if (pieces.some((size) => size.lt(minimum) || size.gt(maxTicks)))
+    return undefined;
+  return pieces.map((size) => size.mul(tick).toNumber());
 }
+
+/** The submitted total excludes any residual discarded by tail balancing. */
+export const sumBinaryQuantities = (quantities: readonly number[]): number =>
+  quantities.reduce((sum, size) => sum.add(size), new Decimal(0)).toNumber();
 
 type BinaryResponseRow = {
   order_id?: number | string;

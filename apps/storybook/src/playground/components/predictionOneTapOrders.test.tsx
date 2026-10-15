@@ -45,6 +45,38 @@ afterEach(() => {
   root = undefined;
 });
 
+it("previews the rounded tail quantity and submits its original sizing anchor", async () => {
+  const props = mount({
+    ...input(),
+    protectionPrice: () => 0.99,
+    selectedConfig: {
+      base_tick: 0.01,
+      base_max: 5,
+      min_notional: 1,
+    } as OneTapOrdersArgs["selectedConfig"],
+    book: {
+      asks: [[0.99, 100]],
+      bids: [[0.99, 100]],
+      downAsks: [],
+      downBids: [],
+    },
+  });
+  expect(state.evaluateOneTapOrder("up", 14.86)).toMatchObject({
+    requestedQuantity: 15.01,
+    quantity: 15,
+    canPlace: true,
+  });
+  expect(props.estimateAdditionalFrozen).toHaveBeenCalledWith(
+    "up",
+    15.01,
+    0.99,
+  );
+  await act(async () => state.placeOneTapOrder("up", 14.86, vi.fn()));
+  expect(props.submitOrder).toHaveBeenCalledWith(
+    expect.objectContaining({ quantity: 15.01 }),
+  );
+});
+
 it.each(["up", "down"] as const)(
   "sizes %s once at protection price and submits the same tick-aligned estimate",
   async (outcome) => {
@@ -54,6 +86,7 @@ it.each(["up", "down"] as const)(
     expect(state.evaluateOneTapOrder(outcome, 10)).toEqual({
       displayPrice,
       quantity,
+      requestedQuantity: quantity,
       requiredFrozen: 10,
       estimatedSlippage: 0,
       blockReason: undefined,

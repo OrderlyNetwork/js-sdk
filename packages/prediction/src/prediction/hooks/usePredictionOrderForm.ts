@@ -12,6 +12,7 @@ import {
   quoteToBinaryQuantity,
   resolveBinaryOrderLimits,
   splitBinaryQuantity,
+  sumBinaryQuantities,
   totalToBinaryAmount,
   validateBinaryOrderSize,
 } from "../binary/binaryOrderRules";
@@ -173,11 +174,40 @@ export const usePredictionOrderForm = ({
   );
 
   const numericAmount = Number.isFinite(Number(amount)) ? Number(amount) : 0;
-  const orderQuantity = useMemo(() => {
+  const requestedQuantity = useMemo(() => {
     if (amountUnit === "outcome") return floorToTick(numericAmount, baseTick);
     if (!Number.isFinite(selectedPrice) || selectedPrice <= 0) return 0;
     return quoteToBinaryQuantity(amount, selectedPrice, baseTick);
   }, [amount, amountUnit, baseTick, numericAmount, selectedPrice]);
+  const orderQuantities = useMemo(
+    () =>
+      splitBinaryQuantity(
+        requestedQuantity,
+        selectedOutcome === "up"
+          ? selectedPrice
+          : complementPrice(selectedPrice),
+        {
+          base_tick: baseTick,
+          base_min: baseMin,
+          base_max: baseMax,
+          min_notional: minNotional,
+        },
+        orderSide === "sell",
+      ),
+    [
+      requestedQuantity,
+      selectedOutcome,
+      selectedPrice,
+      baseTick,
+      baseMin,
+      baseMax,
+      minNotional,
+      orderSide,
+    ],
+  );
+  const orderQuantity = orderQuantities
+    ? sumBinaryQuantities(orderQuantities)
+    : requestedQuantity;
 
   const orderNotional = useMemo(
     () => new Decimal(orderQuantity).mul(selectedPrice).toNumber(),
@@ -229,7 +259,11 @@ export const usePredictionOrderForm = ({
   );
   const requiredFrozen =
     orderSide === "buy"
-      ? estimateAdditionalFrozen(selectedOutcome, orderQuantity, selectedPrice)
+      ? estimateAdditionalFrozen(
+          selectedOutcome,
+          requestedQuantity,
+          selectedPrice,
+        )
       : 0;
   const maxAmount = amountUnit === "quote" ? maxQuoteAmount : maxOutcomeAmount;
   const orderPercentage =
@@ -306,19 +340,7 @@ export const usePredictionOrderForm = ({
       };
     }
     if (rejection) return { field: "price", key: "prediction.invalidOrder" };
-    if (
-      !splitBinaryQuantity(
-        orderQuantity,
-        upPrice,
-        {
-          base_tick: limits.baseTick,
-          base_min: limits.baseMin,
-          base_max: limits.baseMax,
-          min_notional: limits.minNotional,
-        },
-        orderSide === "sell",
-      )
-    )
+    if (!orderQuantities)
       return { field: "amount", key: "prediction.invalidOrder" };
     if (
       orderSide === "buy" &&
@@ -346,6 +368,7 @@ export const usePredictionOrderForm = ({
     baseTick,
     minNotional,
     orderQuantity,
+    orderQuantities,
     quoteMin,
     quoteMax,
     quoteTick,
@@ -524,6 +547,7 @@ export const usePredictionOrderForm = ({
     selectedPrice,
     selectedPosition,
     orderQuantity,
+    requestedQuantity,
     orderNotional,
     requiredFrozen,
     estimatedContracts,

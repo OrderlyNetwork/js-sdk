@@ -6,6 +6,9 @@ import {
   parseSlippageTicks,
   quoteToBinaryQuantity,
   resolveBinaryOrderLimits,
+  complementPrice,
+  splitBinaryQuantity,
+  sumBinaryQuantities,
 } from "../../binary/binaryOrderRules";
 import type { BinaryOrderBook } from "../../binary/useBinaryOrderbook";
 import type {
@@ -39,6 +42,7 @@ export type OneTapOrdersArgs = {
 export interface OneTapOrderEvaluation {
   displayPrice: number | undefined;
   quantity: number;
+  requestedQuantity: number;
   requiredFrozen: number | undefined;
   estimatedSlippage: number | null;
   blockReason: OneTapBlockReason | undefined;
@@ -77,10 +81,21 @@ export const useOneTapOrders = ({
       quoteAmount: number,
     ): OneTapOrderEvaluation => {
       const displayPrice = protectionPrice(outcome, "buy");
-      const quantity =
+      const requestedQuantity =
         displayPrice == null
           ? 0
           : quoteToBinaryQuantity(quoteAmount, displayPrice, limits.baseTick);
+      const quantities =
+        displayPrice == null
+          ? undefined
+          : splitBinaryQuantity(
+              requestedQuantity,
+              outcome === "up" ? displayPrice : complementPrice(displayPrice),
+              selectedConfig ?? {},
+            );
+      const quantity = quantities
+        ? sumBinaryQuantities(quantities)
+        : requestedQuantity;
       const levels =
         outcome === "up"
           ? { asks: book.asks, bids: book.bids }
@@ -104,12 +119,13 @@ export const useOneTapOrders = ({
           return "prediction.invalidOrder";
         requiredFrozen = estimateAdditionalFrozen(
           outcome,
-          quantity,
+          requestedQuantity,
           displayPrice,
         );
         if (requiredFrozen == null || requiredFrozen > balance)
           return "prediction.message.insufficientBalance";
         if (
+          !quantities ||
           !binaryUpNotional(quantity, outcome, displayPrice).gte(
             limits.minNotional,
           )
@@ -126,6 +142,7 @@ export const useOneTapOrders = ({
       return {
         displayPrice,
         quantity,
+        requestedQuantity,
         requiredFrozen,
         estimatedSlippage,
         blockReason,
@@ -145,6 +162,7 @@ export const useOneTapOrders = ({
       slippage,
       protectionPrice,
       selectedSymbol,
+      selectedConfig,
     ],
   );
   const placeOneTapOrder = useCallback(
@@ -166,7 +184,7 @@ export const useOneTapOrders = ({
         side: "buy",
         type: "market",
         displayPrice: evaluation.displayPrice,
-        quantity: evaluation.quantity,
+        quantity: evaluation.requestedQuantity,
         reduceOnly: false,
       });
       if (!placed) return;

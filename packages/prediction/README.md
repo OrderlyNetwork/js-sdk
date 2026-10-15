@@ -287,6 +287,10 @@ independent of personal history polling. Complete expiry history confirms the
 position segment's close and final net PnL; spendable funds follow account
 balances, not the result timestamp or `settled_at` alone.
 
+Oversized opening orders fill maximum-size children first and balance only an
+undersized final pair; their tick-rounded residual stays unspent. Previews and
+funding estimates use the actual submitted child quantities.
+
 ### Account projections
 
 - `PredictionAccountActions` defines account operations independently; order edit parameters are the UP-coordinate price and the order's total quantity, including the filled quantity. Fee estimation likewise takes an UP-coordinate price.

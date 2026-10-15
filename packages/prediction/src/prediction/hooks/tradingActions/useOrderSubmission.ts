@@ -24,6 +24,7 @@ import {
   parseSlippageTicks,
   resolveBinaryOrderLimits,
   splitBinaryQuantity,
+  sumBinaryQuantities,
   submitBinaryBatches,
   toBinaryUpRequest,
   validateBinaryOrderSize,
@@ -45,6 +46,8 @@ export type PlaceOrderInput = {
   selectedOutcome: PredictionOutcome;
   selectedPrice: number;
   orderQuantity: number;
+  /** Original sizing anchor before tail rounding; optional for legacy callers. */
+  requestedQuantity?: number;
   onResetAmountAfterFill: () => void;
   clearNotification: () => void;
 };
@@ -223,13 +226,16 @@ export const useOrderSubmission = ({
         config,
         reduceOnly,
       );
+      const submittedQuantity = quantities
+        ? sumBinaryQuantities(quantities)
+        : quantity;
       const levels =
         outcome === "up"
           ? { asks: book.asks, bids: book.bids }
           : { asks: book.downAsks, bids: book.downBids };
       const estimated = estimateBinarySlippage(
         side,
-        quantity,
+        submittedQuantity,
         levels,
         limits.quoteTick,
       );
@@ -256,7 +262,7 @@ export const useOrderSubmission = ({
         marketRejected ||
         validateBinaryOrderSize({
           price: upPrice,
-          quantity,
+          quantity: submittedQuantity,
           limits,
           reduceOnly,
         })
@@ -267,7 +273,7 @@ export const useOrderSubmission = ({
       // Recheck the current protection price and snapshot immediately before
       // submission; a caller's canPlaceOrder flag may be stale.
       if (reduceOnly) {
-        if (quantity > availableQuantity(outcome, undefined, symbol)) {
+        if (submittedQuantity > availableQuantity(outcome, undefined, symbol)) {
           notify("prediction.message.insufficientContracts", "danger");
           return false;
         }
@@ -294,7 +300,8 @@ export const useOrderSubmission = ({
         margin_mode: "ISOLATED",
         ...(reduceOnly ? { reduce_only: true } : {}),
       }));
-      let remainingQuantity = new Decimal(quantity);
+      let remainingQuantity = new Decimal(submittedQuantity);
+      let sentOrders = 0;
       submitting.current = true;
       setIsSubmitting(true);
       try {
@@ -325,6 +332,7 @@ export const useOrderSubmission = ({
               (remaining, order) => remaining.sub(String(order.order_quantity)),
               remainingQuantity,
             );
+            sentOrders += batch.length;
             return response;
           },
           () => {
@@ -351,20 +359,14 @@ export const useOrderSubmission = ({
               )
                 return false;
             } else {
-              const pieces = splitBinaryQuantity(
-                remainingQuantity.toNumber(),
+              const pieces = quantities.slice(sentOrders);
+              const frozen = estimateBinaryOrderFrozen(
+                funds.getCollateralSnapshot(symbol),
+                upSide,
                 upPrice,
-                row,
+                remainingQuantity.toNumber(),
+                pieces,
               );
-              const frozen =
-                pieces &&
-                estimateBinaryOrderFrozen(
-                  funds.getCollateralSnapshot(symbol),
-                  upSide,
-                  upPrice,
-                  remainingQuantity.toNumber(),
-                  pieces,
-                );
               if (frozen == null || frozen.gt(funds.balance)) return false;
             }
             if (type === "limit") return true;
@@ -455,6 +457,7 @@ export const useOrderSubmission = ({
       selectedOutcome,
       selectedPrice,
       orderQuantity,
+      requestedQuantity,
       onResetAmountAfterFill,
       clearNotification,
     }: PlaceOrderInput) => {
@@ -482,7 +485,7 @@ export const useOrderSubmission = ({
         side: orderSide,
         type: orderType,
         displayPrice,
-        quantity: orderQuantity,
+        quantity: requestedQuantity ?? orderQuantity,
         reduceOnly: orderSide === "sell",
       });
       if (!placed) return;

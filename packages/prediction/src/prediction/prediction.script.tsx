@@ -155,6 +155,7 @@ export const usePredictionScript = (
       selectedOutcome: form.selectedOutcome,
       selectedPrice: form.selectedPrice,
       orderQuantity: form.orderQuantity,
+      requestedQuantity: form.requestedQuantity,
       onResetAmountAfterFill: form.resetAmountAfterFill,
       clearNotification,
     });
@@ -162,6 +163,7 @@ export const usePredictionScript = (
     canPlaceOrder,
     clearNotification,
     form.orderQuantity,
+    form.requestedQuantity,
     form.orderSide,
     form.orderType,
     form.resetAmountAfterFill,

@@ -231,13 +231,19 @@ test("MAX cent inputs avoid a second truncation and never buy beyond affordable 
   assert.equal(binaryMaxQuoteInput(200, 0.5), 100);
 });
 
-test("split quantity preserves every share and redistributes a dust tail", () => {
+test("split quantity fills max children and rounds down only the final undersized pair", () => {
   assert.deepEqual(splitBinaryQuantity(10000, 0.5, rules), [10000]);
-  assert.deepEqual(splitBinaryQuantity(10000.01, 0.5, rules), [5000.01, 5000]);
+  assert.deepEqual(splitBinaryQuantity(10000.01, 0.5, rules), [5000, 5000]);
   const pieces = splitBinaryQuantity(20000.01, 0.1, rules)!;
+  assert.deepEqual(pieces, [10000, 5000, 5000]);
+  assert.deepEqual(splitBinaryQuantity(20100, 0.1, rules), [10000, 10000, 100]);
+  assert.deepEqual(
+    splitBinaryQuantity(10000.01, 0.1, rules, true),
+    [10000, 0.01],
+  );
   assert.equal(
     pieces.reduce((sum, size) => sum.add(size), new Decimal(0)).toNumber(),
-    20000.01,
+    20000,
   );
   assert.ok(
     pieces.every(
@@ -755,7 +761,7 @@ test("reduce-only sizing exempts notional but retains all other size gates", () 
   assert.equal(splitBinaryQuantity(1, 0, rules, true), undefined);
   assert.deepEqual(
     splitBinaryQuantity(12.26, 0.36, { ...rules, base_max: 5 }, true),
-    [4.09, 4.09, 4.08],
+    [5, 5, 2.26],
   );
   assert.equal(
     splitBinaryQuantity(0.01, 0.36, { ...rules, base_min: 0.02 }, true),

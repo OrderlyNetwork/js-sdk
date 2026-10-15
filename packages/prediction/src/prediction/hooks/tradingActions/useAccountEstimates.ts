@@ -10,6 +10,7 @@ import type { BinaryInfoRow } from "../../binary/binaryInfo";
 import {
   resolveBinaryOrderLimits,
   splitBinaryQuantity,
+  sumBinaryQuantities,
   toBinaryUpRequest,
 } from "../../binary/binaryOrderRules";
 import type { BinaryFeeRates } from "../../binary/useBinaryFeeRates";
@@ -66,7 +67,7 @@ export const useAccountEstimates = ({
         getCollateralSnapshot(symbol),
         upSide,
         upPrice,
-        quantity,
+        sumBinaryQuantities(quantities),
         quantities,
       )?.toNumber();
     },
