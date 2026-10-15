@@ -162,7 +162,7 @@ it.each([
   },
 );
 
-it("UP/DOWN filters match closing shares while Buy/Sell filters retain API-side semantics", () => {
+it("UP/DOWN filters match closing shares while Buy/Sell filters match the displayed action", () => {
   let filters: ReturnType<typeof usePredictionFilters>;
   function Consumer() {
     filters = usePredictionFilters();
@@ -171,6 +171,10 @@ it("UP/DOWN filters match closing shares while Buy/Sell filters retain API-side 
   mount(<Consumer />);
   const upClose = toPredictionOrder(apiOrder());
   const downClose = toPredictionOrder(apiOrder({ side: OrderSide.BUY }));
+  const buyDown = toPredictionOrder(apiOrder({ reduce_only: false }));
+  const buyUp = toPredictionOrder(
+    apiOrder({ side: OrderSide.BUY, reduce_only: false }),
+  );
   act(() => {
     filters.onFilter({ name: "outcome", value: "up" });
   });
@@ -185,6 +189,17 @@ it("UP/DOWN filters match closing shares while Buy/Sell filters retain API-side 
     filters.onFilter({ name: "outcome", value: "all" });
     filters.onFilter({ name: "side", value: "buy" });
   });
+  // Buy covers Buy UP and Buy DOWN; a Buy DOWN order's underlying SELL side
+  // must not exclude it (QA OR-7529: the Sell filter used to show Buy DOWN).
+  expect(matchesPredictionOrderFilters(filters!, buyDown)).toBe(true);
+  expect(matchesPredictionOrderFilters(filters!, buyUp)).toBe(true);
   expect(matchesPredictionOrderFilters(filters!, upClose)).toBe(false);
+  expect(matchesPredictionOrderFilters(filters!, downClose)).toBe(false);
+  act(() => {
+    filters.onFilter({ name: "side", value: "sell" });
+  });
+  expect(matchesPredictionOrderFilters(filters!, upClose)).toBe(true);
   expect(matchesPredictionOrderFilters(filters!, downClose)).toBe(true);
+  expect(matchesPredictionOrderFilters(filters!, buyDown)).toBe(false);
+  expect(matchesPredictionOrderFilters(filters!, buyUp)).toBe(false);
 });

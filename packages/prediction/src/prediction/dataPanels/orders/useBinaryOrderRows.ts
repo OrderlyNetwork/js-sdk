@@ -3,6 +3,7 @@ import { useOrderStream } from "@orderly.network/hooks";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import {
   hasPredictionExecutions,
+  matchesBinaryDisplaySide,
   normalizePredictionOrders,
 } from "../../binary/binaryOrderDisplay";
 import type { PredictionOpenOrder } from "../../prediction.types";
@@ -40,6 +41,9 @@ export const useBinaryOrderRows = ({
   // The query therefore fetches all statuses and filters client-side, the same
   // pattern as usePredictionOrderHistory; perps rows in the merged view keep
   // the stock server-side FILLED semantics — a deliberate per-product rule.
+  // The same applies to the side filter: display Buy/Sell is a reduce-only
+  // function the orders API cannot query, so `side` stays out of the request
+  // and both directions are filtered client-side (matchesBinaryDisplaySide).
   const [rawOrders, stream] = useOrderStream(
     {
       productType: "BINARY",
@@ -50,7 +54,6 @@ export const useBinaryOrderRows = ({
           : mode === "filled"
             ? undefined
             : status,
-      side,
       dateRange: mode === "history" ? dateRange : undefined,
       size: 50,
     },
@@ -60,10 +63,12 @@ export const useBinaryOrderRows = ({
     () =>
       enabled
         ? normalizePredictionOrders(rawOrders ?? [], underlyingSymbol).filter(
-            (order) => mode !== "filled" || hasPredictionExecutions(order),
+            (order) =>
+              (mode !== "filled" || hasPredictionExecutions(order)) &&
+              matchesBinaryDisplaySide(order, side),
           )
         : [],
-    [rawOrders, underlyingSymbol, enabled, mode],
+    [rawOrders, underlyingSymbol, enabled, mode, side],
   );
   const fetchedCount = rawOrders?.length ?? 0;
   const total = stream.meta?.total ?? 0;

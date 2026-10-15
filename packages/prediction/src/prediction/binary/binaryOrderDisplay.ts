@@ -81,6 +81,20 @@ export const binaryOrderDisplaySide = (
   order: Pick<PredictionOpenOrder, "reduceOnly">,
 ): PredictionOrderSide => (order.reduceOnly ? "sell" : "buy");
 
+/**
+ * UI Buy/Sell filters use display-side semantics: Buy covers Buy UP and Buy
+ * DOWN (non-reduce-only), Sell covers Sell UP and Sell DOWN (reduce-only).
+ * /v1/orders has no reduce_only query param, so the server-side `side` filter
+ * (UP-book coordinates) cannot express this — the rows must be filtered here.
+ */
+export const matchesBinaryDisplaySide = (
+  order: Pick<PredictionOpenOrder, "reduceOnly">,
+  side?: OrderSide,
+): boolean =>
+  side !== OrderSide.BUY && side !== OrderSide.SELL
+    ? true
+    : binaryOrderDisplaySide(order).toUpperCase() === side;
+
 /** Echo immutable API attributes; only the UP price and quantity are changed. */
 export const binaryOrderEditPayload = (
   order: PredictionOpenOrder,

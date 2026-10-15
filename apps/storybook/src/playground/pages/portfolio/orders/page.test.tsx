@@ -33,9 +33,10 @@ vi.mock("@orderly.network/prediction", async () => {
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   const { binaryOrderPlainText } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderPlainText");
-  const { toPredictionStatus } =
+  const { binaryOrderDisplaySide, toPredictionStatus } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   return {
+    binaryOrderDisplaySide,
     binaryOrderPlainText,
     toPredictionOrderStatus: toPredictionStatus,
     useBinaryOrderRows: ({ enabled, mode }: any) => ({
@@ -125,7 +126,9 @@ beforeEach(() => {
         id: "down-sell",
         symbol: "PERP_BTC5M2610091200_USDC",
         outcome: "down",
-        side: "sell",
+        // Sell DOWN closes DOWN shares with a reduce-only BUY in the UP book.
+        side: "buy",
+        reduceOnly: true,
       },
     ],
     history: [],

@@ -36,9 +36,10 @@ vi.mock("@orderly.network/ui", () => ({
 vi.mock("@orderly.network/prediction", async () => {
   const { binaryOrderPlainText } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderPlainText");
-  const { toPredictionStatus } =
+  const { binaryOrderDisplaySide, toPredictionStatus } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   return {
+    binaryOrderDisplaySide,
     binaryOrderPlainText,
     toPredictionOrderStatus: toPredictionStatus,
     PredictionOrderCell: () => null,
@@ -107,6 +108,12 @@ const order = (id: number) => ({
   round: 1,
   status: "cancelled",
 });
+const displaySideOrders = () => [
+  { ...order(1), side: "buy", outcome: "up", reduceOnly: false },
+  { ...order(2), side: "sell", outcome: "down", reduceOnly: false },
+  { ...order(3), side: "sell", outcome: "up", reduceOnly: true },
+  { ...order(4), side: "buy", outcome: "down", reduceOnly: true },
+];
 function mount(overrides: Record<string, unknown> = {}) {
   act(() => {
     renderer = create(
@@ -133,6 +140,88 @@ afterEach(() => {
 });
 
 describe("SDK mixed order queries and pagination", () => {
+  it.each(["all", "prediction"] as const)(
+    "uses displayed Binary Buy/Sell in %s and preserves the original API side",
+    (product) => {
+      mocks.binaryRows = displaySideOrders();
+      mocks.filters = [{ name: "side", value: "BUY" }];
+      mocks.perpsRows = [
+        { order_id: 10, symbol: "PERP_ETH_USDC", side: "BUY" },
+      ];
+      mount({ product });
+      expect(mocks.table.supplementalRows.map((row: any) => row.id)).toEqual([
+        "prediction-1",
+        "prediction-2",
+      ]);
+      expect(mocks.table.mergedTotal).toBe(product === "all" ? 3 : 2);
+      expect(mocks.table.supplementalRows[1].plainText("side")).toBe(
+        "common.buy prediction.down",
+      );
+      expect(mocks.table.dataSource).toEqual(
+        product === "all" ? mocks.perpsRows : [],
+      );
+
+      mocks.filters = [{ name: "side", value: "SELL" }];
+      mocks.perpsRows = [
+        { order_id: 11, symbol: "PERP_ETH_USDC", side: "SELL" },
+      ];
+      act(() =>
+        renderer.update(
+          createElement(ProductOrdersWidget, { ...props, product }),
+        ),
+      );
+      expect(mocks.table.supplementalRows.map((row: any) => row.id)).toEqual([
+        "prediction-3",
+        "prediction-4",
+      ]);
+      expect(mocks.table.mergedTotal).toBe(product === "all" ? 3 : 2);
+      expect(mocks.table.supplementalRows[1].plainText("side")).toBe(
+        "common.sell prediction.down",
+      );
+      expect(mocks.table.dataSource).toEqual(
+        product === "all" ? mocks.perpsRows : [],
+      );
+      expect(mocks.binaryRows.map((row) => row.side)).toEqual([
+        "buy",
+        "sell",
+        "sell",
+        "buy",
+      ]);
+    },
+  );
+
+  it("keeps DOWN matches from subsequent batches and realtime row updates", () => {
+    mocks.filters = [{ name: "side", value: "SELL" }];
+    mocks.binaryRows = displaySideOrders().slice(0, 2);
+    mocks.binaryHasMore = true;
+    mount();
+    expect(mocks.table.supplementalRows).toHaveLength(0);
+    expect(mocks.binaryMore).toHaveBeenCalledOnce();
+
+    // A later REST page adds both closing outcomes.
+    mocks.binaryRows = displaySideOrders();
+    mocks.binaryHasMore = false;
+    act(() => renderer.update(createElement(ProductOrdersWidget, props)));
+    expect(mocks.table.supplementalRows.map((row: any) => row.id)).toEqual([
+      "prediction-3",
+      "prediction-4",
+    ]);
+
+    // The row projection must apply the same predicate to subsequent WS updates.
+    mocks.binaryRows = [
+      ...mocks.binaryRows,
+      { ...order(5), side: "sell", outcome: "down", reduceOnly: false },
+      { ...order(6), side: "buy", outcome: "down", reduceOnly: true },
+    ];
+    act(() => renderer.update(createElement(ProductOrdersWidget, props)));
+    expect(mocks.table.supplementalRows.map((row: any) => row.id)).toEqual([
+      "prediction-3",
+      "prediction-4",
+      "prediction-6",
+    ]);
+    expect(mocks.table.mergedTotal).toBe(3);
+  });
+
   it("passes product-isolated queries and sharing configuration to the SDK lists", () => {
     const sharePnLConfig = { backgroundImages: ["custom.png"] };
     mount({ sharePnLConfig });

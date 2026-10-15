@@ -84,11 +84,7 @@ export const useOrderEditing = ({
       if (!order.reduceOnly && openingQuantity == null) return undefined;
       const maxTotal = order.reduceOnly
         ? new Decimal(order.filledQuantity).add(
-            availableQuantity(
-              order.side === "sell" ? "up" : "down",
-              id,
-              order.symbol,
-            ),
+            availableQuantity(order.outcome, id, order.symbol),
           )
         : new Decimal(order.quantity).add(openingQuantity!);
       const boundedMax = maxTotal.lt(0)

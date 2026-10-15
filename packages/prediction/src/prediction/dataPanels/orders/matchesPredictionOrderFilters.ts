@@ -1,3 +1,4 @@
+import { binaryOrderDisplaySide } from "../../binary/binaryOrderDisplay";
 import type {
   PredictionOpenOrder,
   PredictionTrade,
@@ -10,6 +11,9 @@ export const matchesPredictionOrderFilters = (
 ) =>
   filters.matches({
     ...order,
+    // Buy/Sell filters follow the displayed action (Buy UP/DOWN vs Sell
+    // UP/DOWN), not the underlying API side — a Buy DOWN order is side SELL.
+    side: binaryOrderDisplaySide(order),
     status:
       filters.status === "pending" && order.status === "partialFilled"
         ? "pending"

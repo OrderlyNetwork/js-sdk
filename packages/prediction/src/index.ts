@@ -77,6 +77,7 @@ export type { MobileSharedProductHistoryProps } from "./prediction/dataPanels/sh
 export type { ProductOrderMode } from "./prediction/dataPanels/sharedProductOrdersPanel.script";
 
 export {
+  binaryOrderDisplaySide,
   toPredictionStatus as toPredictionOrderStatus,
   toOrderStatus as toApiPredictionOrderStatus,
   hasPredictionExecutions,

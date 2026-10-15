@@ -3,6 +3,7 @@ import type React from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
+  binaryOrderDisplaySide,
   binaryOrderPlainText,
   toPredictionOrderStatus,
   useBinaryOrderRows,
@@ -121,7 +122,10 @@ export function useProductOrdersScript({
               if (!value || value === "all") return true;
               if (filter.name === "outcome") return order.outcome === value;
               if (filter.name === "side")
-                return order.side.toUpperCase() === String(value).toUpperCase();
+                return (
+                  binaryOrderDisplaySide(order).toUpperCase() ===
+                  String(value).toUpperCase()
+                );
               if (filter.name === "status") {
                 const status = toPredictionOrderStatus(value);
                 return (

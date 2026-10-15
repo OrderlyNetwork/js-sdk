@@ -17,10 +17,11 @@ vi.mock("@orderly.network/hooks", () => ({
 }));
 
 const symbol = "PERP_BTC5M2608271200_USDC";
+// Matches toPredictionOrder: a reduce-only SELL is closing UP shares.
 const order: PredictionOpenOrder = {
   id: 42,
   symbol,
-  outcome: "down",
+  outcome: "up",
   side: "sell",
   type: "limit",
   orderType: "POST_ONLY",
@@ -127,7 +128,7 @@ it("exposes reduce-only totals using filled and available quantities for the ord
 });
 it("exposes opening totals using the DOWN display price and rounds market ceilings to ticks", () => {
   mount({
-    orderChanges: { reduceOnly: false },
+    orderChanges: { reduceOnly: false, outcome: "down" },
     configChanges: { base_tick: 0.05, base_max: 20.039 },
   });
   expect(getQuantityLimits(42)).toEqual({
@@ -139,7 +140,7 @@ it("exposes opening totals using the DOWN display price and rounds market ceilin
 });
 it("keeps opening edit limits unavailable until capacity recovers and preserves valid zero", () => {
   mocks.max.mockReturnValue(undefined);
-  mount({ orderChanges: { reduceOnly: false } });
+  mount({ orderChanges: { reduceOnly: false, outcome: "down" } });
   expect(getQuantityLimits(42)).toBeUndefined();
   mocks.max.mockReturnValue(0);
   expect(getQuantityLimits(42)?.maxQuantity).toBe(20);

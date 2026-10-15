@@ -83,13 +83,27 @@ it.each([
         size: 50,
         sourceTypeAll: mode !== "pending",
         status: expected,
-        side: OrderSide.SELL,
         dateRange: mode === "history" ? dateRange : undefined,
       }),
       { enabled: true, stopOnUnmount: true },
     );
+    // Display Buy/Sell cannot be queried server-side (no reduce_only param);
+    // the request must stay side-agnostic so no display side is missed.
+    expect(mocks.query.mock.calls[0][0].side).toBeUndefined();
   },
 );
+
+it("filters rows by display side locally without querying side", () => {
+  mocks.rows = [
+    order(1), // SELL + no reduce-only → Buy DOWN
+    { ...order(2), reduce_only: true }, // SELL + reduce-only → Sell UP
+    { ...order(3), side: OrderSide.BUY, reduce_only: true }, // Sell DOWN
+    { ...order(4), side: OrderSide.BUY }, // Buy UP
+  ];
+  mount({ mode: "history", side: OrderSide.SELL });
+  expect(mocks.query.mock.calls[0][0].side).toBeUndefined();
+  expect(result.rows.map((row) => row.id)).toEqual([2, 3]);
+});
 
 it("shows executed cancelled IOC orders, excludes working and unfilled orders and leaked Perps rows", () => {
   mocks.rows = [

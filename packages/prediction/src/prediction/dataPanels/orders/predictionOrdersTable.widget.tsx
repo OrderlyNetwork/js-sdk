@@ -63,9 +63,11 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
   });
   // Filled rows are client-filtered (has-executions semantics over an
   // all-status query), so the server total no longer matches the visible rows:
-  // fall back to the load-more pattern instead of counted pagination.
+  // fall back to the load-more pattern instead of counted pagination. The side
+  // filter is client-filtered too (display-side semantics the API can't query).
   const clientFiltered =
     mode === "filled" ||
+    filters.side !== "all" ||
     Boolean(props.predictionUnderlyingSymbol || filters.outcome !== "all");
   useEffect(() => {
     if (
