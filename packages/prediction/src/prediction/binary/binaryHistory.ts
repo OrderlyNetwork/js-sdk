@@ -1,8 +1,13 @@
 import type { API } from "@orderly.network/types";
 import { Decimal, parseBinarySymbol } from "@orderly.network/utils";
-import type { PredictionSettlement } from "../prediction.types";
+import type {
+  PredictionOutcome,
+  PredictionResult,
+  PredictionSettlement,
+} from "../prediction.types";
 import { binaryRoundFromSymbol } from "./binaryInfo";
 import { complementPrice } from "./binaryOrderRules";
+import { binaryResult } from "./binaryResult";
 
 export type BinaryHistoryState = "exit" | "settled" | "pending" | "unknown";
 export type BinaryHistoryCompleteness = "complete" | "incomplete" | "unknown";
@@ -13,8 +18,8 @@ export type BinaryHistoryRecord = {
   state: BinaryHistoryState;
   symbol: string;
   round: number;
-  outcome?: "up" | "down";
-  result?: "up" | "down" | "closed";
+  outcome?: PredictionOutcome;
+  result?: PredictionResult | "closed";
   quantity?: number;
   averagePrice?: number;
   investment?: number;
@@ -84,15 +89,8 @@ export function normalizeBinaryHistory(
   const quantity = finiteBinaryNumber(row.closed_position_qty)
     ? Math.abs(row.closed_position_qty)
     : undefined;
-  const outcome =
-    row.outcome === "UP" ? "up" : row.outcome === "DOWN" ? "down" : undefined;
-  const validR =
-    row.settlement_price_per_share === 0 ||
-    row.settlement_price_per_share === 1;
-  const matchingResult =
-    outcome != null &&
-    validR &&
-    row.settlement_price_per_share === (outcome === "up" ? 1 : 0);
+  const outcome = binaryResult(row.outcome, row.settlement_price_per_share);
+  const matchingResult = outcome != null;
   const status =
     typeof row.position_status === "string"
       ? row.position_status.toLowerCase()

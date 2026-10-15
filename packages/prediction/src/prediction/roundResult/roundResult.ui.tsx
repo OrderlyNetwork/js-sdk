@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
 import type { BinaryHistoryRecord } from "../binary/binaryHistory";
+import { binaryResultPhase } from "../binary/binaryResult";
 import { isBinarySettlementComplete } from "../binary/binarySettlement";
 import { RoundOrderStatusCard } from "../orderEntry/roundOrderStatusCard.ui";
 import { outcomeLabels } from "../predictionLabels";
@@ -108,7 +109,7 @@ export function RoundResultUI(
         intervalSeconds={props.intervalSeconds}
         round={(props.row?.observation_start_at ?? 0) / 1000}
         expireAt={props.row?.expire_at}
-        roundPhase={props.outcome === "up" ? "resolvedUp" : "resolvedDown"}
+        roundPhase={binaryResultPhase(props.outcome)}
         isRoundInSnapshot
       />
     </div>

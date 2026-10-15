@@ -26,6 +26,8 @@ export const prediction = {
     "Prediction trading is not available in your region.",
   "prediction.filter.allOutcomes": "All outcomes",
   "prediction.down": "Down",
+  "prediction.tie": "Tie",
+  "prediction.resolution.tiePayout": "0.5 USDC per share",
   "prediction.oneTap": "One-tap",
   "prediction.slippageTicks": "Slippage (ticks)",
   "prediction.slippageTicksHint":
@@ -50,7 +52,7 @@ export const prediction = {
   "prediction.column.last&chance": "Last/Up chance",
   "prediction.column.time&volume": "Time/Vol",
   "prediction.markPrice.tooltip":
-    "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0 or 1. DOWN displays 1 minus the UP mark price.",
+    "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0, 0.5 or 1. DOWN displays 1 minus the UP mark price.",
   "prediction.orderBook": "Order book",
   "prediction.contracts": "Contracts",
   "prediction.editOrder.confirm.price":
@@ -97,6 +99,7 @@ export const prediction = {
   "prediction.phase.closed": "Closed",
   "prediction.phase.resolvedUp": "Resolved · Up",
   "prediction.phase.resolvedDown": "Resolved · Down",
+  "prediction.phase.resolvedTie": "Resolved · Tie",
   "prediction.resolution.determiningWinner": "Hold on, determining winner...",
   "prediction.resolution.pendingDescription":
     "This market has ended. The final outcome will appear automatically when it is published.",

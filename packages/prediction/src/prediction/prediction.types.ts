@@ -4,6 +4,7 @@ import type { BinaryFeeRates } from "./binary/useBinaryFeeRates";
 import type { BinaryCancelAllOptions } from "./dataPanels/productOrderCancellation";
 
 export type PredictionOutcome = "up" | "down";
+export type PredictionResult = PredictionOutcome | "tie";
 export type PredictionOrderSide = "buy" | "sell";
 export type PredictionOrderType = "market" | "limit";
 export type PredictionAmountUnit = "quote" | "outcome";
@@ -12,7 +13,8 @@ export type PredictionRoundPhase =
   | "closingSoon"
   | "closed"
   | "resolvedUp"
-  | "resolvedDown";
+  | "resolvedDown"
+  | "resolvedTie";
 /** i18n keys for one-tap preset blockers; consumed via `blockReasonLabels`. */
 export type OneTapBlockReason =
   | "prediction.invalidOrder"
@@ -95,7 +97,7 @@ export type PredictionSettlement = {
   quantity: number;
   averagePrice: number;
   settlementPrice: number;
-  result?: PredictionOutcome | "closed";
+  result?: PredictionResult | "closed";
   payout: number;
   /**
    * Final net PnL; undefined while an expiry settlement is still pending

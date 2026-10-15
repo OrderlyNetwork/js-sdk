@@ -199,7 +199,7 @@ export declare namespace API {
     expire_at: number;
     s0: number | null;
     s1?: number | null;
-    outcome?: "UP" | "DOWN" | null;
+    outcome?: "UP" | "DOWN" | "TIE" | null;
     settlement_price_per_share?: number | null;
     result_committed_at?: number | null;
     index_price_symbol: string;
@@ -710,9 +710,9 @@ export declare namespace API {
     last_update_time: number; // Timestamp of the last update to the position
     leverage: number; // Leverage of the position
     margin_mode?: MarginMode | 1 | 0;
-    /** Binary round outcome ("UP"/"DOWN") on expiry settlement; null on early exit. */
-    outcome?: "UP" | "DOWN" | null;
-    /** Exact 0/1 per-share settlement price on expiry settlement; null on early exit. */
+    /** Binary round outcome ("UP"/"DOWN"/"TIE") on expiry settlement; null on early exit. */
+    outcome?: "UP" | "DOWN" | "TIE" | null;
+    /** Exact UP-book 0/0.5/1 per-share settlement price on expiry settlement; null on early exit. */
     settlement_price_per_share?: number | null;
     /**
      * System expiry close completion marker for the segment (settle initiation

@@ -87,6 +87,20 @@ test("published result restores the centered outcome card without details or act
   }
 });
 
+test("tie result uses a neutral card with its per-share payout", () => {
+  const html = renderToStaticMarkup(
+    createElement(RoundResultUI, props({ outcome: "tie" })),
+  );
+  assert.match(text(html), /Outcome: Tie/);
+  assert.match(text(html), /0.5 USDC per share/);
+  assert.match(html, /oui-bg-base-contrast-12/);
+  assert.doesNotMatch(html, /oui-bg-trade-(profit|loss)/);
+  assert.doesNotMatch(
+    text(html),
+    /Outcome: Down|Funds are being credited|Net PnL/,
+  );
+});
+
 test("settlement segments retain verified personal completion facts", () => {
   const completed = renderToStaticMarkup(
     createElement(SettlementSegments, { records: [record], conflict: false }),

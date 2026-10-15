@@ -6,6 +6,7 @@ import type {
   PredictionOrderSide,
   PredictionOrderType,
   PredictionOutcome,
+  PredictionResult,
   PredictionRoundPhase,
 } from "./prediction.types";
 
@@ -19,6 +20,11 @@ import type {
 export const outcomeLabels = (): Record<PredictionOutcome, string> => ({
   up: i18n.t("prediction.up"),
   down: i18n.t("prediction.down"),
+});
+
+export const resultLabels = (): Record<PredictionResult, string> => ({
+  ...outcomeLabels(),
+  tie: i18n.t("prediction.tie"),
 });
 
 export const sideLabels = (): Record<PredictionOrderSide, string> => ({
@@ -37,6 +43,7 @@ export const phaseLabels = (): Record<PredictionRoundPhase, string> => ({
   closed: i18n.t("prediction.phase.closed"),
   resolvedUp: i18n.t("prediction.phase.resolvedUp"),
   resolvedDown: i18n.t("prediction.phase.resolvedDown"),
+  resolvedTie: i18n.t("prediction.phase.resolvedTie"),
 });
 
 export const roundStatusLabels = (): Record<RoundStatus, string> => ({

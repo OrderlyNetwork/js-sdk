@@ -19,12 +19,12 @@ import {
   getRoundStatus,
   secondsUntil,
 } from "./binary/binaryRoundView";
-import type { PredictionOutcome } from "./prediction.types";
+import type { PredictionResult } from "./prediction.types";
 import type {
   PredictionChartMode,
   RoundOutcomeLookup,
 } from "./predictionChart.script";
-import { outcomeLabels, roundStatusLabels } from "./predictionLabels";
+import { resultLabels, roundStatusLabels } from "./predictionLabels";
 import {
   formatCountdown,
   formatCountdownWithHours,
@@ -42,7 +42,7 @@ export const LiveIndicator = () => (
   </span>
 );
 
-const RoundOutcomeIcon: React.FC<{ outcome?: PredictionOutcome }> = ({
+const RoundOutcomeIcon: React.FC<{ outcome?: PredictionResult }> = ({
   outcome,
 }) => (
   <span
@@ -52,13 +52,17 @@ const RoundOutcomeIcon: React.FC<{ outcome?: PredictionOutcome }> = ({
         ? "oui-bg-trade-profit/15 oui-text-trade-profit"
         : outcome === "down"
           ? "oui-bg-trade-loss/15 oui-text-trade-loss"
-          : "oui-text-base-contrast-36",
+          : outcome === "tie"
+            ? "oui-bg-base-contrast-12 oui-text-base-contrast"
+            : "oui-text-base-contrast-36",
     )}
   >
     {outcome === "up" ? (
       <CaretUpIcon size={12} color="inherit" />
     ) : outcome === "down" ? (
       <CaretDownIcon size={12} color="inherit" />
+    ) : outcome === "tie" ? (
+      "="
     ) : (
       "--"
     )}
@@ -184,7 +188,7 @@ export const RoundNavigator: React.FC<{
           <span className="oui-tabular-nums">
             {status === "ended"
               ? outcome
-                ? outcomeLabels()[outcome]
+                ? resultLabels()[outcome]
                 : "--"
               : formatCountdownWithHours(secondsUntil(row.expire_at, now))}
           </span>

@@ -3,7 +3,7 @@ import { useLocalStorage, useQuery } from "@orderly.network/hooks";
 import { getTimestamp, parseBinarySymbol } from "@orderly.network/utils";
 import { usePredictionMarkets } from "../hooks/usePredictionMarkets";
 import type {
-  PredictionOutcome,
+  PredictionResult,
   PredictionRoundPhase,
 } from "../prediction.types";
 import {
@@ -14,6 +14,7 @@ import {
   isBinaryRowTradable,
 } from "./binaryInfo";
 import { deriveBinaryMarkets, getBinaryMarketIdentity } from "./binaryMarkets";
+import { publishedBinaryOutcome } from "./binaryResult";
 import {
   BINARY_RESULT_POLL_DELAY_MS,
   startBinaryRoundClock,
@@ -239,17 +240,12 @@ export const useBinaryRounds = ({
   const openingPrice = selectedRow?.s0 ?? undefined;
 
   const roundOutcomeLookup = useCallback(
-    (roundStart: number): PredictionOutcome | undefined => {
+    (roundStart: number): PredictionResult | undefined => {
       const row =
         selectedRow && binaryRowRoundStart(selectedRow) === roundStart
           ? selectedRow
           : roundByStart.get(roundStart);
-      if (row?.result_committed_at == null) return undefined;
-      return row.outcome === "DOWN"
-        ? "down"
-        : row.outcome === "UP"
-          ? "up"
-          : undefined;
+      return publishedBinaryOutcome(row);
     },
     [roundByStart, selectedRow],
   );

@@ -8,11 +8,12 @@ import { secondsUntil } from "../binary/binaryRoundView";
 import { useRoundNow } from "../hooks/useRoundCountdown";
 import type {
   PredictionOutcome,
+  PredictionResult,
   PredictionAccountState,
 } from "../prediction.types";
 import {
   orderTypeLabels,
-  outcomeLabels,
+  resultLabels,
   phaseLabels,
   sideLabels,
 } from "../predictionLabels";
@@ -23,7 +24,7 @@ import {
 } from "../predictionShared";
 
 export const OutcomeBadge: React.FC<{
-  outcome: PredictionOutcome;
+  outcome: PredictionResult;
   muted?: boolean;
 }> = ({ outcome, muted }) => {
   useTranslation();
@@ -33,10 +34,16 @@ export const OutcomeBadge: React.FC<{
         "oui-prediction-outcomeBadge oui-uppercase",
         muted && "oui-text-base-contrast-20",
       )}
-      color={muted ? "neutral" : outcome === "up" ? "buy" : "sell"}
+      color={
+        muted || outcome === "tie"
+          ? "neutral"
+          : outcome === "up"
+            ? "buy"
+            : "sell"
+      }
       size="xs"
     >
-      {outcomeLabels()[outcome]}
+      {resultLabels()[outcome]}
     </Badge>
   );
 };

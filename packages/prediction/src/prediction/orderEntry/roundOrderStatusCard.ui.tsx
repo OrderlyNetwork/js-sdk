@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { CaretDownIcon, CaretUpIcon, Spinner, cn } from "@orderly.network/ui";
 import type { PredictionState } from "../prediction.script";
-import { outcomeLabels } from "../predictionLabels";
+import { resultLabels } from "../predictionLabels";
 import { usePredictionFormatters } from "../predictionShared";
 
 export const RoundOrderStatusCard: React.FC<
@@ -31,7 +31,9 @@ export const RoundOrderStatusCard: React.FC<
       ? "up"
       : roundPhase === "resolvedDown"
         ? "down"
-        : null;
+        : roundPhase === "resolvedTie"
+          ? "tie"
+          : null;
 
   return (
     <section
@@ -88,13 +90,19 @@ export const RoundOrderStatusCard: React.FC<
               "oui-flex oui-size-16 oui-items-center oui-justify-center oui-rounded-full",
               resolvedOutcome === "up"
                 ? "oui-bg-trade-profit/15 oui-text-trade-profit"
-                : "oui-bg-trade-loss/15 oui-text-trade-loss",
+                : resolvedOutcome === "down"
+                  ? "oui-bg-trade-loss/15 oui-text-trade-loss"
+                  : "oui-bg-base-contrast-12 oui-text-base-contrast",
             )}
           >
             {resolvedOutcome === "up" ? (
               <CaretUpIcon size={32} color="inherit" opacity={1} />
-            ) : (
+            ) : resolvedOutcome === "down" ? (
               <CaretDownIcon size={32} color="inherit" opacity={1} />
+            ) : (
+              <span aria-hidden="true" className="oui-text-3xl">
+                =
+              </span>
             )}
           </div>
           <h2
@@ -102,13 +110,20 @@ export const RoundOrderStatusCard: React.FC<
               "oui-mt-5 oui-text-lg oui-font-semibold",
               resolvedOutcome === "up"
                 ? "oui-text-trade-profit"
-                : "oui-text-trade-loss",
+                : resolvedOutcome === "down"
+                  ? "oui-text-trade-loss"
+                  : "oui-text-base-contrast",
             )}
           >
             {t("prediction.resolution.outcome", {
-              outcome: outcomeLabels()[resolvedOutcome],
+              outcome: resultLabels()[resolvedOutcome],
             })}
           </h2>
+          {resolvedOutcome === "tie" && (
+            <p className="oui-text-sm oui-mt-3 oui-text-base-contrast-54">
+              {t("prediction.resolution.tiePayout")}
+            </p>
+          )}
           <p className="oui-text-sm oui-mt-4 oui-font-normal oui-text-base-contrast-54">
             {marketName} · {formatRoundWindow(round, intervalSeconds, expireAt)}
           </p>

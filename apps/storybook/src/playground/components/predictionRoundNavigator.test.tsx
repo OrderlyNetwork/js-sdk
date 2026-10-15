@@ -18,6 +18,7 @@ vi.mock("@orderly.network/ui", () => ({
   AssetIcon: () => null,
   BarChartIcon: () => null,
   useMediaQuery: () => true,
+  useScreen: () => ({ isMobile: false }),
 }));
 vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
   formatCountdown: () => "04:00",
@@ -110,10 +111,20 @@ it("hides placeholder slots and the more menu for a history-only market", () => 
   act(() => root.unmount());
 });
 
-it("keeps placeholder slots and the more menu while the schedule continues", () => {
-  render([older, newer, live]);
-  expect(placeholderButton()).toBeDefined();
+it("hides missing round slots and exposes future rounds through the more menu", () => {
+  render([
+    older,
+    newer,
+    live,
+    {
+      ...live,
+      symbol: "PERP_BTC5M2609291040_USDC",
+      observation_start_at: live.expire_at,
+      expire_at: live.expire_at + 300_000,
+    },
+  ]);
+  expect(placeholderButton()).toBeUndefined();
   expect(moreButton()).toBeDefined();
-  expect(moreButton()!.props.disabled).toBe(true);
+  expect(moreButton()!.props.disabled).toBe(false);
   act(() => root.unmount());
 });

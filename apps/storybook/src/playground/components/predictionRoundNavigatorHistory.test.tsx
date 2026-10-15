@@ -8,6 +8,7 @@ import {
 import { RoundNavigator } from "@orderly.network/prediction/src/prediction/roundNavigator.ui";
 
 vi.mock("@orderly.network/i18n", () => ({
+  i18n: { t: (key: string) => key },
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 vi.mock("@orderly.network/ui", () => ({
@@ -25,6 +26,7 @@ vi.mock("@orderly.network/ui", () => ({
   PopoverContent: ({ children }: any) => <article>{children}</article>,
   Tooltip: ({ children }: any) => children,
   useMediaQuery: () => true,
+  useScreen: () => ({ isMobile: false }),
 }));
 vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
   formatCountdown: () => "00:00",

@@ -243,13 +243,17 @@ it.each([0, 1])(
   },
 );
 
-it.each(["UP", "DOWN"])(
+it.each(["UP", "DOWN", "TIE"])(
   "desktop preserves resolved %s across selection changes",
   (outcome) => {
     holdingsRows[0].roundInfo = {
       expire_at: 120_000,
       status: "DELISTING",
       result_committed_at: 121_000,
+      s0: 100,
+      s1: outcome === "UP" ? 101 : outcome === "DOWN" ? 99 : 100,
+      settlement_price_per_share:
+        outcome === "UP" ? 1 : outcome === "DOWN" ? 0 : 0.5,
       outcome,
     };
     clock.now = 122_000;
@@ -259,7 +263,9 @@ it.each(["UP", "DOWN"])(
     const expected =
       outcome === "UP"
         ? "prediction.phase.resolvedUp"
-        : "prediction.phase.resolvedDown";
+        : outcome === "DOWN"
+          ? "prediction.phase.resolvedDown"
+          : "prediction.phase.resolvedTie";
     expect(renderCell(rows[0].cells[7])).toContain(expected);
     act(() => {
       root!.update(
@@ -281,20 +287,26 @@ it.each(["UP", "DOWN"])(
   },
 );
 
-it.each(["UP", "DOWN"])(
+it.each(["UP", "DOWN", "TIE"])(
   "portfolio and mobile show resolved %s from row metadata",
   (outcome) => {
     holdingsRows[0].roundInfo = {
       expire_at: 120_000,
       status: "DELISTING",
       result_committed_at: 121_000,
+      s0: 100,
+      s1: outcome === "UP" ? 101 : outcome === "DOWN" ? 99 : 100,
+      settlement_price_per_share:
+        outcome === "UP" ? 1 : outcome === "DOWN" ? 0 : 0.5,
       outcome,
     };
     clock.now = 122_000;
     const expected =
       outcome === "UP"
         ? "prediction.phase.resolvedUp"
-        : "prediction.phase.resolvedDown";
+        : outcome === "DOWN"
+          ? "prediction.phase.resolvedDown"
+          : "prediction.phase.resolvedTie";
     const rows = mountTable({});
     expect(renderCell(rows[0].cells[7])).toContain(expected);
     act(() => root!.unmount());
@@ -325,6 +337,9 @@ it("result metadata arriving after expiry updates Closed to Resolved", () => {
         roundInfo: {
           ...holdingsRows[0].roundInfo,
           result_committed_at: 121_000,
+          s0: 100,
+          s1: 99,
+          settlement_price_per_share: 0,
           outcome: "DOWN",
         },
       }),

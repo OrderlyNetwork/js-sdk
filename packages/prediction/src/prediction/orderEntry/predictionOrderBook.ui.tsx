@@ -98,7 +98,8 @@ export const PredictionOrderBook: React.FC<
   const isPastRound =
     roundPhase === "closed" ||
     roundPhase === "resolvedUp" ||
-    roundPhase === "resolvedDown";
+    roundPhase === "resolvedDown" ||
+    roundPhase === "resolvedTie";
   const { isMobile } = useScreen();
 
   const [ladderEl, setLadderEl] = useState<HTMLDivElement | null>(null);

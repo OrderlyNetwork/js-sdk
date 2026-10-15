@@ -12,25 +12,9 @@ import {
   type BinaryInfoDetail,
   type BinaryInfoRow,
 } from "./binaryInfo";
+import { publishedBinaryOutcome } from "./binaryResult";
 
-/** Public publication is independent of a user's system close. */
-export function publishedBinaryOutcome(row?: BinaryInfoRow) {
-  if (
-    !row ||
-    !finiteBinaryNumber(row.result_committed_at) ||
-    row.result_committed_at <= 0 ||
-    !finiteBinaryNumber(row.s0) ||
-    !finiteBinaryNumber(row.s1) ||
-    row.s0 < 0 ||
-    row.s1 < 0
-  )
-    return undefined;
-  if (row.outcome === "UP" && row.settlement_price_per_share === 1)
-    return "up" as const;
-  if (row.outcome === "DOWN" && row.settlement_price_per_share === 0)
-    return "down" as const;
-  return undefined;
-}
+export { publishedBinaryOutcome } from "./binaryResult";
 
 export function hasBinarySettledDetail(row?: BinaryInfoDetail) {
   const evidence = row?.price_evidence;

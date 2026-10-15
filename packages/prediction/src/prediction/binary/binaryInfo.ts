@@ -1,6 +1,7 @@
 import type { API } from "@orderly.network/types";
 import { parseBinarySymbol } from "@orderly.network/utils";
 import type { PredictionRoundPhase } from "../prediction.types";
+import { binaryResultPhase, publishedBinaryOutcome } from "./binaryResult";
 
 export { BINARY_SYMBOL_PATTERN, isBinarySymbol } from "@orderly.network/utils";
 
@@ -76,12 +77,8 @@ export const deriveBinaryPhase = (
   row: BinaryInfoRow,
   nowMs: number,
 ): PredictionRoundPhase => {
-  if (
-    row.result_committed_at != null &&
-    (row.outcome === "UP" || row.outcome === "DOWN")
-  ) {
-    return row.outcome === "DOWN" ? "resolvedDown" : "resolvedUp";
-  }
+  const result = publishedBinaryOutcome(row);
+  if (result) return binaryResultPhase(result);
   if (nowMs >= row.expire_at) return "closed";
   const remainingSeconds = (row.expire_at - nowMs) / 1000;
   if (remainingSeconds <= 30) return "closingSoon";

@@ -9,6 +9,7 @@ export { usePredictionMarketTabs } from "./predictionMarketPanel.ui";
 export type { PredictionPerpsPanelProps } from "./dataPanels/perpsPanel.types";
 export type {
   PredictionOutcome,
+  PredictionResult,
   PredictionOrderSide,
   PredictionOrderType,
 } from "./prediction.types";
