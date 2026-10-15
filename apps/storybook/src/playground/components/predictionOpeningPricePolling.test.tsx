@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import React, { act, useState } from "react";
+import { act, useState } from "react";
 import { createRoot } from "react-dom/client";
 import useSWR, { SWRConfig, useSWRConfig } from "swr";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -31,6 +31,8 @@ const INFO_KEY = "/v1/public/binary/info";
 const detailKey = (symbol: string) => `${INFO_KEY}/${symbol}`;
 let snapshot: BinaryInfoDetail[];
 let publishedPrice: number | null;
+let result: Partial<BinaryInfoDetail> | undefined;
+let failDetail: boolean;
 let state: ReturnType<typeof useBinaryRounds>;
 let root: ReturnType<typeof createRoot>;
 let container: HTMLDivElement;
@@ -38,7 +40,13 @@ let mutate: ReturnType<typeof useSWRConfig>["mutate"];
 let renderBudget: number;
 const fetcher = vi.fn(async (key: string) => {
   if (key === INFO_KEY) return snapshot;
-  return { ...row, symbol: key.slice(INFO_KEY.length + 1), s0: publishedPrice };
+  if (failDetail) throw new Error("Binary info unavailable");
+  return {
+    ...row,
+    symbol: key.slice(INFO_KEY.length + 1),
+    s0: publishedPrice,
+    ...result,
+  };
 });
 const cache = () => new Map();
 const onSymbolSelect = vi.fn();
@@ -81,6 +89,9 @@ beforeEach(() => {
   fetcher.mockClear();
   snapshot = [row];
   publishedPrice = null;
+  result = undefined;
+  failDetail = false;
+  vi.spyOn(Math, "random").mockReturnValue(0.5);
   renderBudget = Infinity;
   container = document.createElement("div");
   document.body.appendChild(container);
@@ -90,6 +101,7 @@ afterEach(() => {
   act(() => root.unmount());
   container.remove();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 it("fetches at T0, retries a missing S0 every 2s, then stops while the snapshot stays stale", async () => {
@@ -164,17 +176,147 @@ it("does not carry the previous round's opening price into a future selection", 
   expect(detailRequests(next.symbol)).toHaveLength(0);
 });
 
-it("keeps the existing post-expiry grace period and result polling", async () => {
+it("starts result polling at T1 with jitter and no grace period", async () => {
   snapshot = [{ ...row, s0: 82_299.29 }];
   vi.setSystemTime(row.expire_at - 1_000);
   await render();
   await advance(1_005);
-  expect(detailRequests()).toHaveLength(0);
-  await advance(5_000);
   expect(detailRequests()).toHaveLength(1);
   expect(state.openingPrice).toBe(82_299.29);
-  await advance(5_000);
+  await advance(2_499);
+  expect(detailRequests()).toHaveLength(1);
+  await advance(1);
   expect(detailRequests()).toHaveLength(2);
+});
+
+it("restarts immediately at T1 when an opening query already has S0", async () => {
+  vi.setSystemTime(row.expire_at - 1_000);
+  publishedPrice = 82_299.29;
+  await render();
+  expect(detailRequests()).toHaveLength(1);
+  await advance(1_005);
+  expect(detailRequests()).toHaveLength(2);
+});
+
+it.each([false, true])(
+  "restarts paused detail polling at T1 after a round with S0 leaves the snapshot (initial error=%s)",
+  async (initialError) => {
+    snapshot = [{ ...row, s0: 100 }];
+    vi.setSystemTime(row.expire_at - 10_000);
+    publishedPrice = 100;
+    failDetail = initialError;
+    await render();
+    await act(async () => {
+      snapshot = [];
+      await mutate(INFO_KEY, snapshot, false);
+    });
+    expect(state.isRoundInSnapshot).toBe(false);
+    expect(detailRequests()).toHaveLength(1);
+    await advance(9_999);
+    expect(detailRequests()).toHaveLength(1);
+
+    failDetail = false;
+    await advance(6);
+    expect(state.roundPhase).toBe("closed");
+    expect(detailRequests()).toHaveLength(2);
+    await advance(2_499);
+    expect(detailRequests()).toHaveLength(2);
+    await advance(1);
+    expect(detailRequests()).toHaveLength(3);
+
+    result = {
+      s0: 100,
+      s1: 100,
+      outcome: "TIE",
+      settlement_price_per_share: 0.5,
+      result_committed_at: row.expire_at + 1_000,
+    };
+    await advance(2_500);
+    expect(state.roundPhase).toBe("resolvedTie");
+    const count = detailRequests().length;
+    await advance(20_000);
+    expect(detailRequests()).toHaveLength(count);
+  },
+);
+
+it("fetches an expired round outside the snapshot once before starting result polls", async () => {
+  snapshot = [];
+  vi.setSystemTime(row.expire_at);
+  publishedPrice = 100;
+  await render();
+  expect(state.selectedRow?.symbol).toBe(row.symbol);
+  expect(state.roundPhase).toBe("closed");
+  expect(detailRequests()).toHaveLength(1);
+  await advance(2_500);
+  expect(detailRequests()).toHaveLength(2);
+});
+
+it("polls every 10s after the first 30s of an unresolved round", async () => {
+  vi.setSystemTime(row.expire_at + 30_000);
+  await render();
+  expect(detailRequests()).toHaveLength(1);
+  await advance(9_999);
+  expect(detailRequests()).toHaveLength(1);
+  await advance(1);
+  expect(detailRequests()).toHaveLength(2);
+});
+
+it("stops after an official Tie without waiting for price evidence or personal history", async () => {
+  vi.setSystemTime(row.expire_at);
+  publishedPrice = 100;
+  await render();
+  result = {
+    s0: 100,
+    s1: 100,
+    outcome: "TIE",
+    settlement_price_per_share: 0.5,
+    result_committed_at: row.expire_at + 1_000,
+    price_evidence: null,
+  };
+  await advance(2_500);
+  expect(state.roundPhase).toBe("resolvedTie");
+  const count = detailRequests().length;
+  await advance(20_000);
+  expect(detailRequests()).toHaveLength(count);
+});
+
+it("recovers API failures on the polling cadence and cancels retries when inactive", async () => {
+  vi.setSystemTime(row.expire_at);
+  failDetail = true;
+  await render();
+  expect(state.detailError).toBeDefined();
+  expect(detailRequests()).toHaveLength(1);
+  await advance(2_500);
+  expect(detailRequests()).toHaveLength(2);
+  failDetail = false;
+  await advance(2_500);
+  expect(detailRequests()).toHaveLength(3);
+  expect(state.detailError).toBeUndefined();
+  await render(false);
+  await advance(20_000);
+  expect(detailRequests()).toHaveLength(3);
+});
+
+it("replaces the old round's result schedule when switching symbols and unmounting", async () => {
+  const next = {
+    ...row,
+    symbol: "PERP_BTC5M2610130150_USDC",
+    observation_start_at: row.expire_at,
+    expire_at: row.expire_at + 300_000,
+    s0: 100,
+  };
+  snapshot = [{ ...row, s0: 100 }, next];
+  vi.setSystemTime(row.expire_at);
+  await render();
+  expect(detailRequests()).toHaveLength(1);
+  await render(true, next.symbol);
+  await advance(20_000);
+  expect(detailRequests()).toHaveLength(1);
+  expect(detailRequests(next.symbol)).toHaveLength(0);
+  act(() => root.unmount());
+  root = createRoot(container);
+  await advance(20_000);
+  expect(detailRequests()).toHaveLength(1);
 });
 
 it("retains cached S0 without a render loop after the round leaves the snapshot", async () => {

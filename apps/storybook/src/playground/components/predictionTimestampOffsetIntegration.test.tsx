@@ -129,8 +129,7 @@ it.each([-300_000, 300_000])(
     expect(state.roundPhase).toBe("closed");
     expect(state.isRoundTradable).toBe(false);
     expect(state.markets[0].hasLiveRow).toBe(false);
-    await advance(5_000);
-    expect(state.now).toBeGreaterThanOrEqual(row.expire_at + 5_000);
+    expect(state.now).toBeGreaterThanOrEqual(row.expire_at);
   },
 );
 

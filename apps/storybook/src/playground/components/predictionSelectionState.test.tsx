@@ -150,7 +150,11 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.routeEnabled = true;
   snapshotRows = rows;
-  mocks.query.mockReturnValue({ data: undefined, isLoading: false });
+  mocks.query.mockReturnValue({
+    data: undefined,
+    isLoading: false,
+    mutate: vi.fn(async () => undefined),
+  });
   vi.useFakeTimers();
   vi.setSystemTime(now);
   storage = new Map([[storageKey, JSON.stringify("PERP_BTC5M_USDC")]]);

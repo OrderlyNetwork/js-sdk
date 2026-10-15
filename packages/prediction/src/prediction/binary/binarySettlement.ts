@@ -31,9 +31,18 @@ export function hasBinarySettledDetail(row?: BinaryInfoDetail) {
   );
 }
 
-/** Keep the SWR callback stable across market-driven renders. */
-export function binaryDetailRefreshInterval(detail?: BinaryInfoDetail) {
-  return hasBinarySettledDetail(detail) ? 0 : 5_000;
+/** Result publication ends polling independently of evidence or personal funds. */
+export function binaryDetailRefreshInterval(
+  detail?: BinaryInfoDetail,
+  now = Date.now(),
+  expireAt = detail?.expire_at,
+  random = Math.random,
+) {
+  if (publishedBinaryOutcome(detail) || (expireAt != null && now < expireAt))
+    return 0;
+  return expireAt != null && now - expireAt >= 30_000
+    ? 10_000
+    : 2_000 + Math.floor(random() * 1_001);
 }
 
 /** Do not let an older unpublished detail erase an already published snapshot. */

@@ -26,14 +26,6 @@ export function subscribeBinaryTime(listener: () => void): () => void {
   };
 }
 
-/**
- * Grace period after T1 before the waiting-result detail poll may start. The
- * outcome is not available the instant the round expires — a request fired
- * right at expiry would come back without `result_committed_at` — so the
- * first poll is deferred this long past `expire_at`.
- */
-export const BINARY_RESULT_POLL_DELAY_MS = 5_000;
-
 type RoundClock = {
   now: () => number;
   setTimeout: (callback: () => void, delay: number) => number;
@@ -64,7 +56,6 @@ export const startBinaryRoundClock = (
           row.observation_start_at,
           row.expire_at - 30_000,
           row.expire_at,
-          row.expire_at + BINARY_RESULT_POLL_DELAY_MS,
         ])
         .filter((boundary) => boundary > now),
     );

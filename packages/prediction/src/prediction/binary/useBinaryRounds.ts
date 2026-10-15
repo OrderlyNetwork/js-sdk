@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage, useQuery } from "@orderly.network/hooks";
 import { getTimestamp, parseBinarySymbol } from "@orderly.network/utils";
 import { usePredictionMarkets } from "../hooks/usePredictionMarkets";
@@ -15,11 +15,7 @@ import {
 } from "./binaryInfo";
 import { deriveBinaryMarkets, getBinaryMarketIdentity } from "./binaryMarkets";
 import { publishedBinaryOutcome } from "./binaryResult";
-import {
-  BINARY_RESULT_POLL_DELAY_MS,
-  startBinaryRoundClock,
-  subscribeBinaryTime,
-} from "./binaryRoundClock";
+import { startBinaryRoundClock, subscribeBinaryTime } from "./binaryRoundClock";
 import {
   binaryDetailRefreshInterval,
   mergeBinaryDetail,
@@ -40,9 +36,8 @@ export type UseBinaryRoundsArgs = {
  * (`GET /v1/public/binary/info`, api-spec §4). Phases are derived locally from
  * server-calibrated time (the middleware stamps the envelope timestamp offset
  * from any REST response), the waiting-result phase polls the detail endpoint
- * every 5s — starting only after a 5s post-expiry grace period
- * (BINARY_RESULT_POLL_DELAY_MS). Accepted contracts remain available after
- * leaving the snapshot, and detail polling continues until evidence arrives.
+ * from T1 with jitter, backing off after 30s until an official result arrives.
+ * Accepted contracts remain available after leaving the snapshot.
  */
 export const useBinaryRounds = ({
   active,
@@ -125,14 +120,21 @@ export const useBinaryRounds = ({
   const isRoundInSnapshot = !!snapshotSelectedRow;
   const waitingForResult =
     !!listSelectedRow &&
-    now >= listSelectedRow.expire_at + BINARY_RESULT_POLL_DELAY_MS &&
-    listSelectedRow.result_committed_at == null;
+    now >= listSelectedRow.expire_at &&
+    !publishedBinaryOutcome(listSelectedRow);
   const detailSymbol = parsedSymbol ? symbol : undefined;
+  const expireAt =
+    listSelectedRow?.expire_at ??
+    (parsedSymbol
+      ? parsedSymbol.roundStartMs + parsedSymbol.intervalSeconds * 1_000
+      : undefined);
+  const publishedResult = publishedBinaryOutcome(listSelectedRow);
   const waitingForOpeningPrice =
     !!listSelectedRow &&
     now >= listSelectedRow.observation_start_at &&
     now < listSelectedRow.expire_at &&
     listSelectedRow.s0 == null;
+  const isBeforeExpiry = expireAt != null && now < expireAt;
   const detailRefreshInterval = useCallback(
     (detail?: BinaryInfoDetail) =>
       waitingForOpeningPrice
@@ -142,30 +144,93 @@ export const useBinaryRounds = ({
           Number.isFinite(detail.s0)
           ? 0
           : 2_000
-        : binaryDetailRefreshInterval(detail),
-    [waitingForOpeningPrice, detailSymbol],
+        : publishedResult || isBeforeExpiry
+          ? 0
+          : binaryDetailRefreshInterval(
+              detail?.symbol === detailSymbol ? detail : undefined,
+              getTimestamp(),
+              expireAt,
+            ),
+    [
+      waitingForOpeningPrice,
+      detailSymbol,
+      expireAt,
+      publishedResult,
+      isBeforeExpiry,
+    ],
   );
+  const detailQueryKey =
+    active &&
+    detailSymbol &&
+    (!snapshotSelectedRow ||
+      waitingForOpeningPrice ||
+      waitingForResult ||
+      listSelectedRow?.result_committed_at != null)
+      ? `/v1/public/binary/info/${encodeURIComponent(detailSymbol)}`
+      : null;
   const {
     data: detailData,
     error: detailError,
     isLoading: detailLoading,
     mutate: refreshDetail,
-  } = useQuery<BinaryInfoDetail>(
-    active &&
-      detailSymbol &&
-      (!snapshotSelectedRow ||
-        waitingForOpeningPrice ||
-        waitingForResult ||
-        listSelectedRow?.result_committed_at != null)
-      ? `/v1/public/binary/info/${encodeURIComponent(detailSymbol)}`
-      : null,
-    {
-      refreshInterval: detailRefreshInterval,
-      // A long provider-level dedupe window must not suppress opening polls.
-      dedupingInterval: 1_000,
-      revalidateOnFocus: false,
-    },
-  );
+  } = useQuery<BinaryInfoDetail>(detailQueryKey, {
+    refreshInterval: detailRefreshInterval,
+    // A long provider-level dedupe window must not suppress opening polls.
+    dedupingInterval: 1_000,
+    revalidateOnFocus: false,
+    shouldRetryOnError: false,
+  });
+  const previousDetailQuery = useRef<{
+    key: string | null;
+    isBeforeExpiry: boolean;
+  }>();
+  useEffect(() => {
+    const previous = previousDetailQuery.current;
+    // Newly enabled keys fetch automatically. Existing keys need an immediate
+    // refresh when their pre-expiry polling resumes at T1.
+    if (
+      detailQueryKey &&
+      waitingForResult &&
+      previous?.key === detailQueryKey &&
+      previous.isBeforeExpiry
+    )
+      void refreshDetail().catch(() => undefined);
+    previousDetailQuery.current = { key: detailQueryKey, isBeforeExpiry };
+  }, [detailQueryKey, waitingForResult, isBeforeExpiry, refreshDetail]);
+  // SWR skips interval fetches while an error is cached. Retry on the same
+  // adaptive cadence, with effect cleanup preventing retries for old symbols.
+  useEffect(() => {
+    if (!active || !detailSymbol || !detailError) return;
+    const interval = detailRefreshInterval(detailData);
+    if (!interval) return;
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout>;
+    const retry = () => {
+      const delay = detailRefreshInterval(detailData);
+      if (!delay) return;
+      timer = setTimeout(async () => {
+        if (stopped) return;
+        try {
+          await refreshDetail();
+        } catch {
+          // Keep the query's error visible and retry without a second scheduler.
+        }
+        if (!stopped) retry();
+      }, delay);
+    };
+    retry();
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
+  }, [
+    active,
+    detailSymbol,
+    detailError,
+    detailData,
+    detailRefreshInterval,
+    refreshDetail,
+  ]);
   const validDetail =
     !!detailData &&
     !!detailSymbol &&

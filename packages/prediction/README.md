@@ -279,6 +279,16 @@ and are not added again to the buffer-inclusive required frozen amount.
 Risk/Writer must deploy the same buffer and verify rounding and funding fixtures
 before the new parameters are enabled. See [release dependencies](docs/fee-rollout.md).
 
+Public results accept `UP/1`, `DOWN/0` and `TIE/0.5` under `binary-v1`.
+From expiry the selected round is polled every 2 seconds plus 0–1 second of
+jitter, backing off to 10 seconds after 30 seconds and stopping when a valid
+official result is published, even if price evidence is unavailable. This is
+independent of personal history polling. Complete expiry history confirms the
+position segment's close and final net PnL; spendable funds follow account
+balances, not the result timestamp or `settled_at` alone.
+
+### Account projections
+
 - `PredictionAccountActions` defines account operations independently; order edit parameters are the UP-coordinate price and the order's total quantity, including the filled quantity. Fee estimation likewise takes an UP-coordinate price.
 - `estimateFee` returns `undefined` when the fee configuration is missing. The UI should display an unknown value and must not treat it as a zero fee.
 - `pendingOrdersComplete` provides the completeness status for funding and cancellation protection; an open-order set that has not finished loading must not be used as a complete snapshot.

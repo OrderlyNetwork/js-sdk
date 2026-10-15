@@ -6,10 +6,7 @@ import {
   type BinaryInfoRow,
 } from "./binaryInfo";
 import { deriveBinaryMarkets } from "./binaryMarkets";
-import {
-  BINARY_RESULT_POLL_DELAY_MS,
-  startBinaryRoundClock,
-} from "./binaryRoundClock";
+import { startBinaryRoundClock } from "./binaryRoundClock";
 
 const start = Date.UTC(2026, 8, 30);
 const current: BinaryInfoRow = {
@@ -96,7 +93,7 @@ test("closes a round and follows the next round without a new snapshot", () => {
   assert.equal(isBinaryRowTradable(current, now), false);
   assert.equal(deriveBinaryMarkets(rows, now)[0].currentRow, upcoming);
 
-  clock.advanceTo(upcoming.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
+  clock.advanceTo(upcoming.expire_at + 5);
   assert.equal(isBinaryRowTradable(upcoming, now), false);
   // Both rounds settled: the market stays browsable on the newest history row.
   const settled = deriveBinaryMarkets(rows, now);
@@ -107,7 +104,7 @@ test("closes a round and follows the next round without a new snapshot", () => {
   stop();
 });
 
-test("schedules a result-poll grace tick 5s after expiry", () => {
+test("reaches T1 without scheduling a post-expiry grace period", () => {
   const clock = createClock(start + 60_000);
   const ticks: number[] = [];
   const stop = startBinaryRoundClock(
@@ -115,18 +112,12 @@ test("schedules a result-poll grace tick 5s after expiry", () => {
     (time) => ticks.push(time),
     clock,
   );
-
   clock.advanceTo(current.expire_at + 5);
-  const ticksAtExpiry = ticks.length;
-  // Only the grace boundary remains scheduled after T1 itself fired.
-  assert.equal(clock.pending(), 1);
-
-  clock.advanceTo(current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
-  assert.equal(ticks.length, ticksAtExpiry + 1);
-  assert.equal(
-    ticks[ticks.length - 1],
-    current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5,
-  );
+  assert.equal(ticks.at(-1), current.expire_at + 5);
+  assert.equal(clock.pending(), 0);
+  const count = ticks.length;
+  clock.advanceTo(current.expire_at + 30_000);
+  assert.equal(ticks.length, count);
   stop();
 });
 
@@ -209,8 +200,8 @@ test("calibration revives an expired-looking round without replacing its snapsho
   assert.equal(clock.pending(), 1);
   clock.advanceTo(current.expire_at + 5);
   assert.equal(isBinaryRowTradable(current, now), false);
-  assert.equal(clock.pending(), 1);
-  clock.advanceTo(current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
+  assert.equal(clock.pending(), 0);
+  clock.advanceTo(current.expire_at + 5);
   assert.equal(clock.pending(), 0);
   stop();
   assert.equal(clock.subscriptions(), 0);
@@ -238,7 +229,7 @@ test("calibration replaces pending timers and respects independent consumer life
   stopFirst();
   assert.equal(clock.pending(), 1);
   assert.equal(clock.subscriptions(), 1);
-  clock.calibrateTo(current.expire_at + BINARY_RESULT_POLL_DELAY_MS + 5);
+  clock.calibrateTo(current.expire_at + 5);
   assert.equal(first.at(-1), start + 120_000);
   assert.equal(isBinaryRowTradable(current, second.at(-1)!), false);
   assert.equal(clock.pending(), 0);

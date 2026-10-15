@@ -84,6 +84,25 @@ test("public outcome requires committed official values and matching R, not posi
     false,
   );
 });
+test("result polls jitter from T1, slow down at 30s and stop on publication", () => {
+  const expiry = t0 + 300_000;
+  const pending = info({ result_committed_at: null });
+  assert.equal(binaryDetailRefreshInterval(pending, expiry - 1), 0);
+  assert.equal(
+    binaryDetailRefreshInterval(pending, expiry, expiry, () => 0),
+    2000,
+  );
+  assert.equal(
+    binaryDetailRefreshInterval(pending, expiry, expiry, () => 0.5),
+    2500,
+  );
+  assert.equal(
+    binaryDetailRefreshInterval(pending, expiry + 29_999, expiry, () => 0.9999),
+    3000,
+  );
+  assert.equal(binaryDetailRefreshInterval(pending, expiry + 30_000), 10000);
+  assert.equal(binaryDetailRefreshInterval(info(), expiry + 30_000), 0);
+});
 test("detail evidence is validated against official prices and boundary timestamps", () => {
   const row = info({
     price_evidence: {
@@ -93,9 +112,12 @@ test("detail evidence is validated against official prices and boundary timestam
   });
   assert.equal(hasBinarySettledDetail(row), true);
   assert.equal(binaryDetailRefreshInterval(row), 0);
-  assert.equal(binaryDetailRefreshInterval(info()), 5000);
-  assert.equal(binaryDetailRefreshInterval(undefined), 5000);
-  assert.equal(binaryDetailRefreshInterval({ ...row, s1: 102 }), 5000);
+  assert.equal(binaryDetailRefreshInterval(info()), 0);
+  assert.equal(
+    binaryDetailRefreshInterval(undefined, t0 + 300_000, t0 + 300_000, () => 0),
+    2000,
+  );
+  assert.equal(binaryDetailRefreshInterval({ ...row, s1: 102 }), 0);
   assert.equal(hasBinarySettledDetail(info()), false);
   assert.equal(hasBinarySettledDetail({ ...row, s1: 102 }), false);
   assert.equal(

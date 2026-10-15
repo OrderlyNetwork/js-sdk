@@ -74,13 +74,13 @@ test("only exact UP/1, DOWN/0 and TIE/0.5 result pairs are accepted", () => {
     assert.equal(binaryResult(outcome, 0.5), undefined);
 });
 
-test("a committed tie resolves and stops detail polling only with complete evidence", () => {
+test("a committed tie resolves and stops detail polling without waiting for evidence", () => {
   assert.equal(publishedBinaryOutcome(info), "tie");
   assert.equal(deriveBinaryPhase(info, t0 + 320_000), "resolvedTie");
   assert.equal(binaryDetailRefreshInterval(info), 0);
   assert.equal(
     binaryDetailRefreshInterval({ ...info, price_evidence: null }),
-    5000,
+    0,
   );
   for (const changes of [
     { result_committed_at: null },
@@ -93,7 +93,10 @@ test("a committed tie resolves and stops detail polling only with complete evide
     const row = { ...info, ...changes };
     assert.equal(publishedBinaryOutcome(row), undefined);
     assert.equal(deriveBinaryPhase(row, t0 + 320_000), "closed");
-    assert.equal(binaryDetailRefreshInterval(row), 5000);
+    assert.equal(
+      binaryDetailRefreshInterval(row, t0 + 320_000, row.expire_at, () => 0),
+      2000,
+    );
   }
   assert.equal(
     mergeBinaryDetail(info, { ...info, result_committed_at: null }),
