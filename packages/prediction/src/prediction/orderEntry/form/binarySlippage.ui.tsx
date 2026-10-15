@@ -42,42 +42,83 @@ export const BinarySlippage = ({
         }}
       >
         <PopoverTrigger asChild>
-          <Button size="xs" variant="text" color="secondary">
-            {t("orderEntry.slippage.est")}:{" "}
-            {estimated == null ? "--" : cents(estimated)}¢ / {t("common.max")}:{" "}
-            {cents(Number(slippage))}¢
+          <Button
+            size="xs"
+            variant="text"
+            color="secondary"
+            className="oui-gap-1 oui-font-normal oui-text-base-contrast-54"
+          >
+            <span>{t("orderEntry.slippage.est")}:</span>
+            <Text size="2xs" intensity={80}>
+              {estimated == null ? "--" : cents(estimated)}¢
+            </Text>
+            <span>/</span>
+            <span>{t("common.max")}:</span>
+            <Text size="2xs" intensity={80}>
+              {cents(Number(slippage))}¢
+            </Text>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="oui-w-64 oui-space-y-3 oui-p-4" align="end">
-          <Text size="xs">{t("prediction.slippageTicksHint")}</Text>
-          <div className="oui-flex oui-gap-2">
+        <PopoverContent
+          className="oui-w-[300px] oui-max-w-[calc(100vw-32px)] oui-space-y-4 oui-rounded-xl oui-p-4 oui-shadow-lg"
+          align="end"
+          sideOffset={8}
+          collisionPadding={16}
+        >
+          <div className="oui-space-y-1.5">
+            <Text as="div" size="sm" weight="semibold">
+              {t("orderEntry.slippage")}
+            </Text>
+            <Text as="p" size="xs" intensity={54} className="oui-leading-5">
+              {t("prediction.slippageTicksHint")}
+            </Text>
+          </div>
+          <div className="oui-grid oui-grid-cols-3 oui-gap-2">
             {[1, 2, 5].map((ticks) => (
               <Button
                 key={ticks}
-                size="xs"
+                size="md"
+                color={draft === String(ticks) ? "primary" : "secondary"}
                 variant={draft === String(ticks) ? "contained" : "outlined"}
+                aria-pressed={draft === String(ticks)}
                 onClick={() => setDraft(String(ticks))}
               >
                 {cents(ticks)}¢
               </Button>
             ))}
           </div>
-          <Input
-            aria-label={t("prediction.slippageTicks")}
-            value={draft}
-            onValueChange={setDraft}
-          />
-          {!valid && (
-            <Text size="xs" color="danger">
-              {t("prediction.invalidSlippageTicks")}
+          <div className="oui-space-y-2">
+            <Text as="div" size="xs" intensity={80}>
+              {t("prediction.slippageTicks")}
             </Text>
-          )}
-          <div className="oui-flex oui-justify-end oui-gap-2">
-            <Button size="xs" variant="outlined" onClick={() => setOpen(false)}>
+            <Input
+              aria-label={t("prediction.slippageTicks")}
+              aria-invalid={!valid}
+              inputMode="numeric"
+              size="lg"
+              fullWidth
+              color={valid ? "default" : "danger"}
+              classNames={{ input: "oui-font-medium" }}
+              value={draft}
+              onValueChange={setDraft}
+            />
+            {!valid && (
+              <Text as="p" size="xs" color="danger" role="alert">
+                {t("prediction.invalidSlippageTicks")}
+              </Text>
+            )}
+          </div>
+          <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-border-t oui-border-line-6 oui-pt-4">
+            <Button
+              size="md"
+              variant="outlined"
+              color="secondary"
+              onClick={() => setOpen(false)}
+            >
               {t("common.cancel")}
             </Button>
             <Button
-              size="xs"
+              size="md"
               disabled={!valid}
               onClick={() => {
                 setSlippage(draft);
