@@ -1,5 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Text } from "@orderly.network/ui";
+import { Button, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   binaryOrderDisplayPrice,
@@ -50,18 +50,6 @@ export const PredictionOrderCell = ({
             outcome={order.outcome}
             muted={order.status === "cancelled"}
           />
-          {order.reduceOnly && (
-            <span
-              className={cn(
-                "oui-text-3xs",
-                order.status === "cancelled"
-                  ? "oui-text-base-contrast-20"
-                  : "oui-text-base-contrast-54",
-              )}
-            >
-              {t("orderEntry.reduceOnly")}
-            </span>
-          )}
         </span>
       );
     case "reduce_only":
