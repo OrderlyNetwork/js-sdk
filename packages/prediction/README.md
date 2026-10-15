@@ -253,6 +253,32 @@ Confirmed records for the same account are kept in the provider's account cache 
 
 ## Public data semantics
 
+### Binary fees
+
+Binary account fields `binary_maker_fee_rate` and `binary_taker_fee_rate` are
+coefficients in bps. Divide by 10000 once to obtain `r` in
+`fee = shares * r * up_execution_price * (1 - up_execution_price)`.
+The current product default is maker 0 / taker 300 bps; always use the account's
+actual configuration. Missing or invalid configuration is unavailable, not a
+default fee or a free trade. A displayed coefficient of 3.00% does not mean a
+flat 3% charge on the trade amount.
+
+The shared account observer applies private `account` fee updates to Client Info
+and refreshes that snapshot after a private WebSocket reconnect. Managed-account
+views continue to use the target account's own fee configuration. Historical fees
+remain the backend's actual per-fill facts and are never recomputed from current
+rates or an average order price.
+
+Binary maker and taker share a 300 bps coefficient cap, independent of PERP.
+Builders obtain the confirmed Binary-only funding buffer from
+`BINARY_ORDER_FROZEN_BUFFER`, exported by `@orderly.network/prediction`.
+Required frozen, MAX and balance validation use this constant and the submitted
+limit/protection price, with DOWN mapped to the complementary price. Pure closing
+orders require no additional frozen funds. Estimated fees are shown separately
+and are not added again to the buffer-inclusive required frozen amount.
+Risk/Writer must deploy the same buffer and verify rounding and funding fixtures
+before the new parameters are enabled. See [release dependencies](docs/fee-rollout.md).
+
 - `PredictionAccountActions` defines account operations independently; order edit parameters are the UP-coordinate price and the order's total quantity, including the filled quantity. Fee estimation likewise takes an UP-coordinate price.
 - `estimateFee` returns `undefined` when the fee configuration is missing. The UI should display an unknown value and must not treat it as a zero fee.
 - `pendingOrdersComplete` provides the completeness status for funding and cancellation protection; an open-order set that has not finished loading must not be used as a complete snapshot.

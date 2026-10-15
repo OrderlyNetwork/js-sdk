@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useSWRConfig } from "swr";
 import { AccountState, EVENT_NAMES } from "@orderly.network/core";
-import { API, MarginMode, WSMessage } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  API,
+  MarginMode,
+  WSMessage,
+} from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
@@ -16,6 +21,7 @@ import { updateOrderCaches } from "../utils/orderCacheUpdate";
 import { object2underscore } from "../utils/ws";
 import { useAppStore } from "./appStore";
 import { usePositionActions } from "./orderlyHooks";
+import { useBinaryAccountFeeSync } from "./useBinaryAccountFeeSync";
 
 export const usePrivateDataObserver = (options: {
   getKeysMap: (type: string) => Map<string, getKeyFunction>;
@@ -36,7 +42,15 @@ export const usePrivateDataObserver = (options: {
     "/v1/client/info",
     {
       revalidateOnFocus: false,
+      keepPreviousData: false,
     },
+  );
+  const syncBinaryFees = useBinaryAccountFeeSync(
+    state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+      ? state.accountId
+      : undefined,
+    clientInfo,
   );
 
   useEffect(() => {
@@ -257,6 +271,7 @@ export const usePrivateDataObserver = (options: {
     const leveragesKey = ["/v1/client/leverages", state.accountId];
     const unsubscribe = ws.privateSubscribe("account", {
       onMessage: (data) => {
+        syncBinaryFees(data);
         const { symbol, leverage, marginMode } =
           data?.accountDetail?.symbolLeverage || {};
         if (!symbol || leverage === undefined) {
@@ -331,7 +346,7 @@ export const usePrivateDataObserver = (options: {
     });
 
     return () => unsubscribe?.();
-  }, [state.accountId]);
+  }, [state.accountId, syncBinaryFees]);
 
   // positions
   useEffect(() => {

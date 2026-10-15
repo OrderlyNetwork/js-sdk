@@ -20,6 +20,7 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { formatBinaryFeeBps } from "../binary/binaryFee";
 import { DEFAULT_BINARY_BASE_TICK } from "../binary/binaryOrderRules";
 import {
   blockReasonLabels,
@@ -35,10 +36,6 @@ import {
 import { PercentageControls } from "./form";
 import { BinarySlippage } from "./form/binarySlippage.ui";
 import type { TradePanelProps, PredictionTradeMode } from "./tradePanel.script";
-
-/** Render a bps coefficient as a percent; missing config is never "free". */
-const formatFeeBps = (bps: number | undefined) =>
-  bps == null ? "--%" : `${(bps / 100).toFixed(2)}%`;
 
 const PredictionOrderInput: React.FC<{
   id: string;
@@ -790,14 +787,14 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                 {t("dmm.taker")}:
               </Text>
               <Text size="2xs" className="oui-text-base-contrast-80">
-                {formatFeeBps(state.feeRates.takerBps)}
+                {formatBinaryFeeBps(state.feeRates.takerBps)}
               </Text>
               <Text size="2xs">/</Text>
               <Text className="oui-truncate" size="2xs">
                 {t("dmm.maker")}:
               </Text>
               <Text size="2xs" className="oui-text-base-contrast-80">
-                {formatFeeBps(state.feeRates.makerBps)}
+                {formatBinaryFeeBps(state.feeRates.makerBps)}
               </Text>
             </Flex>
           </Flex>

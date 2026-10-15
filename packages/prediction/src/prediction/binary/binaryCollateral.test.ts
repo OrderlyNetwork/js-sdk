@@ -53,18 +53,18 @@ const frozen = (
 ) => estimateBinaryOrderFrozen(state, side, price, quantity)!.toNumber();
 
 test("BUY uses p and SELL uses 1-p, with per-order USDC rounding", () => {
-  assert.equal(frozen(snapshot(0), OrderSide.BUY, 0.1, 100), 10.006);
-  assert.equal(frozen(snapshot(0), OrderSide.SELL, 0.1, 100), 90.054);
-  assert.equal(frozen(snapshot(0), OrderSide.SELL, 0.9, 100), 10.006);
-  assert.equal(frozen(snapshot(0), OrderSide.BUY, 0.9, 100), 90.054);
-  assert.equal(frozen(snapshot(0), OrderSide.BUY, 0.3333333, 0.01), 0.003336);
+  assert.equal(frozen(snapshot(0), OrderSide.BUY, 0.1, 100), 10.3);
+  assert.equal(frozen(snapshot(0), OrderSide.SELL, 0.1, 100), 92.7);
+  assert.equal(frozen(snapshot(0), OrderSide.SELL, 0.9, 100), 10.3);
+  assert.equal(frozen(snapshot(0), OrderSide.BUY, 0.9, 100), 92.7);
+  assert.equal(frozen(snapshot(0), OrderSide.BUY, 0.3333333, 0.01), 0.003434);
 });
 
 test("reverse orders freeze only the opening remainder on either holding side", () => {
   assert.equal(frozen(snapshot(100), OrderSide.SELL, 0.6, 100), 0);
-  assert.equal(frozen(snapshot(100), OrderSide.SELL, 0.6, 140), 16.0096);
+  assert.equal(frozen(snapshot(100), OrderSide.SELL, 0.6, 140), 16.48);
   assert.equal(frozen(snapshot(-100), OrderSide.BUY, 0.6, 100), 0);
-  assert.equal(frozen(snapshot(-100), OrderSide.BUY, 0.6, 140), 24.0144);
+  assert.equal(frozen(snapshot(-100), OrderSide.BUY, 0.6, 140), 24.72);
 });
 
 test("new orders reallocate existing reverse orders using UP price priority", () => {
@@ -77,7 +77,7 @@ test("new orders reallocate existing reverse orders using UP price priority", ()
     },
   ]);
   // The lower UP price closes first; the old order opens 40 at DOWN 0.2.
-  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 8.0048);
+  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 8.24);
   const short = snapshot(-100, [
     {
       side: OrderSide.BUY,
@@ -86,26 +86,26 @@ test("new orders reallocate existing reverse orders using UP price priority", ()
       createdTime: 100,
     },
   ]);
-  assert.equal(frozen(short, OrderSide.BUY, 0.6, 80), 8.0048);
+  assert.equal(frozen(short, OrderSide.BUY, 0.6, 80), 8.24);
 });
 
 test("already frozen opening margin is subtracted, including displaced pending quantity", () => {
   const state = snapshot(100, [
     { side: OrderSide.SELL, referencePrice: 0.8, quantity: 140 },
   ]);
-  // F_before = 8.0048; F_after = 24.0144; only the difference is additional.
-  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 16.0096);
+  // F_before = 8.24; F_after = 24.72; only the difference is additional.
+  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 16.48);
   const flat = snapshot(0, [
     { side: OrderSide.BUY, referencePrice: 0.5, quantity: 100 },
   ]);
-  assert.equal(frozen(flat, OrderSide.BUY, 0.6, 20), 12.0072);
+  assert.equal(frozen(flat, OrderSide.BUY, 0.6, 20), 12.36);
 });
 
 test("each opening order rounds up before summing", () => {
   const tiny = snapshot(0, [
     { side: OrderSide.BUY, referencePrice: 0.3333333, quantity: 0.01 },
   ]);
-  assert.equal(frozen(tiny, OrderSide.BUY, 0.3333333, 0.01), 0.003336);
+  assert.equal(frozen(tiny, OrderSide.BUY, 0.3333333, 0.01), 0.003434);
 });
 
 test("Max preserves pure closing with zero collateral and caps extra opening", () => {
@@ -148,11 +148,11 @@ test("Max preserves pure closing with zero collateral and caps extra opening", (
     snapshot: state,
     side: OrderSide.SELL,
     upPrice: 0.6,
-    balance: 8.0048,
+    balance: 8.24,
   });
   assert.equal(max, 80);
   assert.ok(
-    estimateBinaryOrderFrozen(state, OrderSide.SELL, 0.6, max)!.lte(8.0048),
+    estimateBinaryOrderFrozen(state, OrderSide.SELL, 0.6, max)!.lte(8.24),
   );
   assert.equal(
     maxBinaryOrderQuantity({
@@ -196,7 +196,7 @@ test("detailed inputs deduplicate and use remaining quantity; RO counts toward c
   assert.equal(state.orders[0].quantity, 60);
   assert.equal(state.orders[1].quantity, 30);
   assert.equal(state.orders[1].reduceOnly, true);
-  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 8.0048);
+  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 8.24);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL), 10);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL, 1), 70);
 });
@@ -285,7 +285,7 @@ test("RO joins the allocation at zero frozen; priority decides who is displaced"
     }),
     100,
   );
-  assert.equal(frozen(state, OrderSide.SELL, 0.6, 140), 16.0096);
+  assert.equal(frozen(state, OrderSide.SELL, 0.6, 140), 16.48);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL), 40);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.BUY), 0);
   assert.equal(availableBinaryCloseQuantity(state, OrderSide.SELL, 1), 100);
@@ -299,7 +299,7 @@ test("RO joins the allocation at zero frozen; priority decides who is displaced"
     orders: [order({ reduce_only: true, price: 0.4 })],
     ordersComplete: true,
   })!;
-  assert.equal(frozen(claimed, OrderSide.SELL, 0.6, 100), 24.0144);
+  assert.equal(frozen(claimed, OrderSide.SELL, 0.6, 100), 24.72);
   assert.equal(
     maxBinaryOrderQuantity({
       snapshot: claimed,
@@ -344,7 +344,7 @@ test("fallback retains observed prices and aggregates only unobserved quantities
   assert.equal(state.orders[2].referencePrice, 0.5);
   // The aggregate closes 10, the new order closes 80, and 10 of the known
   // ordinary order opens at DOWN 0.2. The displaced RO remainder stays free.
-  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 2.0012);
+  assert.equal(frozen(state, OrderSide.SELL, 0.6, 80), 2.06);
 });
 
 test("fallback preserves known RO price priority when order metadata is missing", () => {
@@ -377,7 +377,7 @@ test("fallback preserves known RO price priority when order metadata is missing"
       assert.equal(state.mode, "approximate");
       assert.equal(state.orders[0].referencePrice, roPrice);
       assert.equal(state.orders[0].quantity, 60);
-      assert.equal(frozen(state, side, upPrice, 100), 33.0198);
+      assert.equal(frozen(state, side, upPrice, 100), 33.99);
       assert.equal(
         maxBinaryOrderQuantity({ snapshot: state, side, upPrice, balance: 0 }),
         40,
@@ -404,7 +404,7 @@ test("fallback reserves RO closing capacity conservatively when price is missing
       ordersComplete: true,
     })!;
     assert.equal(state.mode, "approximate");
-    assert.equal(frozen(state, side, upPrice, 100), 33.0198);
+    assert.equal(frozen(state, side, upPrice, 100), 33.99);
     assert.equal(
       maxBinaryOrderQuantity({ snapshot: state, side, upPrice, balance: 0 }),
       40,
@@ -419,7 +419,7 @@ test("fallback keeps existing RO orders ahead of new orders at equal prices", ()
     orders: [order({ price: 0.5, reduce_only: true, created_time: NaN })],
     ordersComplete: true,
   })!;
-  assert.equal(frozen(state, OrderSide.SELL, 0.5, 100), 30.018);
+  assert.equal(frozen(state, OrderSide.SELL, 0.5, 100), 30.9);
   assert.equal(
     maxBinaryOrderQuantity({
       snapshot: state,
@@ -481,7 +481,7 @@ test("fallback preserves ordinary and RO FIFO when another order lacks timing", 
       assert.equal(fallback.mode, "approximate");
       assert.equal(
         frozen(fallback, side, upPrice, 50),
-        ordinaryFirst ? 25.015 : 0,
+        ordinaryFirst ? 25.75 : 0,
       );
       assert.equal(
         frozen(fallback, side, upPrice, 50),
@@ -494,7 +494,7 @@ test("fallback preserves ordinary and RO FIFO when another order lacks timing", 
           upPrice,
           balance: 1,
         }),
-        ordinaryFirst ? 1.99 : 101.66,
+        ordinaryFirst ? 1.94 : 101.61,
       );
       assert.equal(
         maxBinaryOrderQuantity({
@@ -539,15 +539,15 @@ test("fallback decimal quantities preserve frozen rounding and affordable Max", 
     })!;
     assert.equal(state.mode, "approximate");
     assert.equal(state.orders.find((item) => !item.reduceOnly)?.quantity, 0.7);
-    assert.equal(frozen(state, side, upPrice, 0.02), 0.012008);
+    assert.equal(frozen(state, side, upPrice, 0.02), 0.01236);
     const max = maxBinaryOrderQuantity({
       snapshot: state,
       side,
       upPrice,
-      balance: 0.012007,
+      balance: 0.012359,
     });
     assert.equal(max, 0.01);
-    assert.ok(frozen(state, side, upPrice, max) <= 0.012007);
+    assert.ok(frozen(state, side, upPrice, max) <= 0.012359);
   }
 });
 
@@ -568,12 +568,12 @@ test("incomplete coverage prices only the missing remainder at Mark", () => {
   assert.equal(low.orders[1].referencePrice, 0.5);
   // 20 of the new order opens at DOWN 0.4, and all 20 known pending shares
   // are displaced into opening at DOWN 0.2.
-  assert.equal(frozen(low, OrderSide.SELL, 0.6, 80), 12.0072);
-  assert.equal(frozen(high, OrderSide.SELL, 0.6, 80), 4.0024);
+  assert.equal(frozen(low, OrderSide.SELL, 0.6, 80), 12.36);
+  assert.equal(frozen(high, OrderSide.SELL, 0.6, 80), 4.12);
   assert.equal(availableBinaryCloseQuantity(low, OrderSide.SELL), 40);
   const detailed = resolveBinaryCollateral({ ...inputs, orders: [order()] })!;
   assert.equal(detailed.mode, "detailed");
-  assert.equal(frozen(detailed, OrderSide.SELL, 0.6, 80), 8.0048);
+  assert.equal(frozen(detailed, OrderSide.SELL, 0.6, 80), 8.24);
 });
 
 test("pending-only rows survive; other rounds do not contribute holding", () => {
@@ -584,7 +584,7 @@ test("pending-only rows survive; other rounds do not contribute holding", () => 
     ordersComplete: false,
   })!;
   assert.equal(state.orders[0].quantity, 10);
-  assert.equal(frozen(state, OrderSide.BUY, 0.6, 20), 12.0072);
+  assert.equal(frozen(state, OrderSide.BUY, 0.6, 20), 12.36);
   const other = resolveBinaryCollateral({
     symbol,
     positions: [position({ symbol: "OTHER" })],
@@ -592,7 +592,7 @@ test("pending-only rows survive; other rounds do not contribute holding", () => 
     ordersComplete: true,
   })!;
   assert.equal(other.positionQty, 0);
-  assert.equal(frozen(other, OrderSide.SELL, 0.6, 100), 40.024);
+  assert.equal(frozen(other, OrderSide.SELL, 0.6, 100), 41.2);
 });
 
 test("missing fields force fallback without discarding observed pending quantity", () => {
@@ -739,7 +739,7 @@ test("unknown opening prices or uncovered pending quantities still require Mark"
   });
   assert.equal(reduceOnly?.mode, "approximate");
   assert.equal(reduceOnly?.orders[0].referencePrice, 0);
-  assert.equal(frozen(reduceOnly!, OrderSide.SELL, 0.6, 80), 16.0096);
+  assert.equal(frozen(reduceOnly!, OrderSide.SELL, 0.6, 80), 16.48);
 });
 
 test("OR-7534 UP capacity stays positive with a DOWN holding and SELL pending order", () => {

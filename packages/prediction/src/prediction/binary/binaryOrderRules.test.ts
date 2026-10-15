@@ -260,7 +260,7 @@ test("MAX spends the full affordable balance and can exceed a child quantity lim
       snapshot: flat,
       side: OrderSide.BUY,
       upPrice: 0.5,
-      balance: 100.06,
+      balance: 103,
     }),
     200,
   );
@@ -268,7 +268,7 @@ test("MAX spends the full affordable balance and can exceed a child quantity lim
     snapshot: flat,
     side: OrderSide.BUY,
     upPrice: 0.5,
-    balance: 10006,
+    balance: 10300,
     splitRules: rules,
   });
   assert.equal(quantity, 20000);
@@ -281,11 +281,11 @@ test("MAX spends the full affordable balance and can exceed a child quantity lim
       quantity,
       [10000, 10000],
     )!.toNumber(),
-    10006,
+    10300,
   );
   assert.ok(
     estimateBinaryOrderFrozen(flat, OrderSide.BUY, 0.5, quantity + 0.01)!.gt(
-      10006,
+      10300,
     ),
   );
 });
@@ -300,7 +300,7 @@ test("split closing children share one closing budget and round opening freezes 
       20000,
       [10000, 10000],
     )!.toNumber(),
-    5003,
+    5150,
   );
   assert.equal(
     estimateBinaryOrderFrozen(
@@ -310,7 +310,7 @@ test("split closing children share one closing budget and round opening freezes 
       0.02,
       [0.01, 0.01],
     )!.toNumber(),
-    0.006672,
+    0.006868,
   );
 });
 

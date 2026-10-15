@@ -65,6 +65,7 @@ export type {
 } from "./prediction/prediction.types";
 
 export type { BinaryFeeRates } from "./prediction/binary/useBinaryFeeRates";
+export { BINARY_ORDER_FROZEN_BUFFER } from "./prediction/binary/binaryFunding";
 export type { SharedProductDataPanelProps } from "./prediction/dataPanels/sharedProductDataPanel.ui";
 export type { PredictionOrdersTableProps } from "./prediction/dataPanels/orders/predictionOrdersTable.widget";
 

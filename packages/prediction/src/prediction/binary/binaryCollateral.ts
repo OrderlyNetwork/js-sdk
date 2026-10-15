@@ -7,6 +7,7 @@ import {
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { floorToTickDecimal } from "../predictionShared";
+import { BINARY_ORDER_FROZEN_BUFFER } from "./binaryFunding";
 import {
   complementPrice,
   DEFAULT_BINARY_BASE_MAX,
@@ -14,8 +15,6 @@ import {
   splitBinaryQuantity,
 } from "./binaryOrderRules";
 import type { BinarySizeRules } from "./binaryOrderRules";
-
-export const ISO_ORDER_FROZEN_BUFFER = 0.0006;
 
 export type BinaryFundingEstimateMode =
   | "detailed"
@@ -259,7 +258,7 @@ export function estimateBinaryOrderFrozen(
       createdTime: Number.MAX_SAFE_INTEGER - quantities.length + index,
     })),
     leverage: 1,
-    isoTakerFeeBuffer: ISO_ORDER_FROZEN_BUFFER,
+    isoTakerFeeBuffer: BINARY_ORDER_FROZEN_BUFFER,
     getMarginPrice: binaryMarginPrice,
   });
 }
@@ -335,7 +334,9 @@ export function maxBinaryOrderQuantity(inputs: {
     side === OrderSide.BUY ? upPrice : complementPrice(upPrice);
   const fundedUpper = new Decimal(balance)
     .div(
-      new Decimal(marginPrice).mul(new Decimal(1).add(ISO_ORDER_FROZEN_BUFFER)),
+      new Decimal(marginPrice).mul(
+        new Decimal(1).add(BINARY_ORDER_FROZEN_BUFFER),
+      ),
     )
     .add(new Decimal(snapshot.positionQty).abs())
     .add(pendingQty);

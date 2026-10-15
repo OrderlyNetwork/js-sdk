@@ -62,6 +62,8 @@ jest.mock("../useAccount", () => ({
 }));
 jest.mock("../useWS", () => ({
   useWS: () => ({
+    on: jest.fn(),
+    off: jest.fn(),
     privateSubscribe: (topic: unknown, handler: any) => {
       if (typeof topic === "string")
         mockListeners.set(topic, handler.onMessage);
