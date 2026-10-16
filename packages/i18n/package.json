@@ -34,7 +34,11 @@
     "_generateEnJson": "node ./scripts/generateEnJson.js",
     "generateEnJson": "pnpm tsup && node ./scripts/generateEnJson.js",
     "copyLocales": "node ./scripts/copyLocales.js",
-    "generateMissingKeys": "pnpm tsup && pnpm _generateEnJson && node ./scripts/generateMissingKeys.js"
+    "generateMissingKeys": "pnpm tsup && pnpm _generateEnJson && node ./scripts/generateMissingKeys.js",
+    "translation:prepare": "pnpm tsup && pnpm copyLocales && node scripts/translationWorkflow.js prepare",
+    "translation:validate": "pnpm tsup && pnpm copyLocales && node scripts/translationWorkflow.js validate",
+    "translation:merge": "pnpm tsup && pnpm copyLocales && node scripts/translationWorkflow.js merge",
+    "test:translation": "node --test scripts/translationWorkflow.test.cjs"
   },
   "keywords": [],
   "files": [
