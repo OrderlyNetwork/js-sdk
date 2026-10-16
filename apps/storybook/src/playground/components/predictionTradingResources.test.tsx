@@ -50,6 +50,7 @@ vi.mock("@orderly.network/hooks", async () => ({
   usePositions: () => mocks.positions,
   useMarkPricesStream: () => ({ data: {} }),
   useSWRConfig: () => ({ cache: mocks.cache }),
+  unstable_serialize: (await vi.importActual<any>("swr")).unstable_serialize,
   useRefreshOrderCaches: () => mocks.refresh,
   useSubAccountQuery: () => ({ mutate: mocks.refresh }),
   useSubAccountMutation: () => [vi.fn(), {}],

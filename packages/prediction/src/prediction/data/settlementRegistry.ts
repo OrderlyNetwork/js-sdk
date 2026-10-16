@@ -30,10 +30,13 @@ export function createSettlementResource(accountId?: string) {
   const listeners = new Set<() => void>();
   const pollers = new Map<
     symbol,
-    { refresh: () => Promise<unknown>; interval: number; nextDue: number }
+    { refresh: () => Promise<unknown>; interval: number }
   >();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let generation = 0;
+  let refreshing = false;
+  const pollingInterval = () =>
+    Math.min(...[...pollers.values()].map((poller) => poller.interval));
   const stop = () => {
     generation++;
     clearTimeout(timer);
@@ -41,27 +44,29 @@ export function createSettlementResource(accountId?: string) {
   };
   const schedule = () => {
     stop();
-    if (!pollers.size) return;
+    if (!pollers.size || refreshing) return;
     const epoch = generation;
-    const delay = Math.max(
-      0,
-      Math.min(...[...pollers.values()].map((p) => p.nextDue)) - Date.now(),
-    );
-    timer = setTimeout(() => void fire(epoch), delay);
+    timer = setTimeout(() => void fire(epoch), pollingInterval());
   };
   const fire = async (epoch: number) => {
     if (epoch !== generation) return;
-    const stamp = Date.now();
-    const due = [...pollers.values()].filter((p) => p.nextDue <= stamp);
-    // Claim each deadline before awaiting: a retain/release landing during an
-    // in-flight refresh must not re-arm the same poller in a new chain.
-    for (const poller of due) poller.nextDue = stamp + poller.interval;
-    await Promise.allSettled(
-      due.map((poller) =>
-        epoch === generation ? poller.refresh() : undefined,
-      ),
-    );
-    if (epoch === generation) schedule();
+    timer = undefined;
+    const poller = pollers.values().next().value;
+    if (!poller || refreshing) return;
+    refreshing = true;
+    try {
+      // Every consumer reads the same account/query cache, so only one refresh
+      // is needed even when several subscribers request the same deadline.
+      await poller.refresh();
+    } catch {
+      // The query exposes errors to consumers; a failed refresh must not stop
+      // polling or leave an unhandled timer rejection.
+    } finally {
+      refreshing = false;
+      // Subscribers may have changed while awaiting the request. Resume from
+      // the current set rather than the timer generation that started it.
+      schedule();
+    }
   };
   return {
     getSnapshot: () => state,
@@ -133,23 +138,15 @@ export function createSettlementResource(accountId?: string) {
     },
     retainPolling: (refresh: () => Promise<unknown>, interval: number) => {
       const token = Symbol();
-      const previousInterval = pollers.size
-        ? Math.min(...[...pollers.values()].map((p) => p.interval))
-        : Infinity;
-      pollers.set(token, {
-        refresh,
-        interval,
-        nextDue: Date.now() + interval,
-      });
-      schedule();
-      // Re-entry immediately validates retained observations with the bound query.
-      if (pollers.size === 1 || interval < previousInterval)
-        void Promise.resolve()
-          .then(() => (pollers.has(token) ? refresh() : undefined))
-          .catch(() => undefined);
+      const previousInterval = pollingInterval();
+      pollers.set(token, { refresh, interval });
+      // Initial loading belongs to the query. New consumers only adjust the
+      // cadence, and equal-cadence subscriptions must not postpone a deadline.
+      if (pollingInterval() !== previousInterval) schedule();
       return () => {
+        const previousInterval = pollingInterval();
         pollers.delete(token);
-        schedule();
+        if (pollingInterval() !== previousInterval) schedule();
       };
     },
   };

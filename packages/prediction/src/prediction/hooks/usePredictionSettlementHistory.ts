@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import {
+  unstable_serialize,
   useMemoizedFn,
   usePrivateQuery,
   useSWRConfig,
@@ -30,6 +31,8 @@ import type {
  * not re-run the O(records) history dedupe every second.
  */
 const PENDING_SETTLEMENT_TICK_MS = 5_000;
+const SETTLEMENT_HISTORY_QUERY =
+  "/v1/position_history?product_type=BINARY&limit=1000";
 
 interface SettlementHistoryArgs {
   accountId?: string;
@@ -108,9 +111,7 @@ export function usePredictionSettlementHistory({
     isLoading,
     mutate: refreshHistory,
   } = usePrivateQuery<BinaryHistorySnapshot>(
-    historyEnabled
-      ? "/v1/position_history?product_type=BINARY&limit=1000"
-      : null,
+    historyEnabled ? SETTLEMENT_HISTORY_QUERY : null,
     {
       formatter: (data) => binaryHistorySnapshot(accountId!, data),
       keepPreviousData: false,
@@ -168,6 +169,14 @@ export function usePredictionSettlementHistory({
       observed.accountId !== expectedAccountId
     )
       return Promise.resolve();
+    // Read the live cache, not a render-time flag: an initial load or reconnect
+    // may already be fetching when this timer fires. mutate() would bypass SWR
+    // request deduplication and start another request for the same key.
+    const queryKey = unstable_serialize([
+      SETTLEMENT_HISTORY_QUERY,
+      expectedAccountId,
+    ]);
+    if (cache.get(queryKey)?.isValidating) return Promise.resolve();
     return refreshHistory();
   });
   useEffect(() => {

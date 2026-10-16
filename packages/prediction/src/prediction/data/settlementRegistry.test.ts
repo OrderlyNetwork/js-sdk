@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test, type TestContext } from "node:test";
 import {
   createSettlementResource,
   getSettlementResource,
@@ -18,6 +18,22 @@ const input = (
   seedPositions: seedPositions ?? undefined,
   now: Date.UTC(2026, 9, 9),
 });
+
+const flush = () => new Promise((resolve) => setImmediate(resolve));
+const mockClock = (t: TestContext) => {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] });
+  return async (ms: number) => {
+    t.mock.timers.tick(ms);
+    await flush();
+  };
+};
+const deferred = () => {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+};
 
 test("REST alone seeds observations; stream positions cannot seed a fresh account", () => {
   const r = getSettlementResource(new Map(), "a");
@@ -99,118 +115,269 @@ test("a cached resource validates REST on reactivation while retaining disappear
   leaveAgain();
 });
 
-test("each retained poller refreshes on its own cadence, not just the first registered", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout", "Date"] });
-  const flush = () => new Promise((resolve) => setImmediate(resolve));
-  const advance = async (ms: number) => {
-    t.mock.timers.tick(ms);
-    // Let the fired refresh reschedule before the clock moves on.
-    await flush();
-  };
-  const resource = createSettlementResource("a");
-  let fast = 0;
-  let slow = 0;
-  const releaseSlow = resource.retainPolling(() => {
-    slow++;
-    return Promise.resolve();
-  }, 60_000);
-  const releaseFast = resource.retainPolling(() => {
-    fast++;
-    return Promise.resolve();
-  }, 5_000);
-  // The first consumer and any faster interval validate immediately.
-  await flush();
-  assert.equal(fast, 1);
-  assert.equal(slow, 1);
-  for (let i = 0; i < 4; i++) await advance(5_000);
-  assert.equal(fast, 5);
-  assert.equal(slow, 1);
-  for (let i = 0; i < 8; i++) await advance(5_000);
-  assert.equal(fast, 13);
-  assert.equal(slow, 2);
-  releaseFast();
-  releaseSlow();
+test("three subscribers share one refresh per round without an immediate registration fetch", async (t) => {
+  const advance = mockClock(t);
+  const cache = new Map();
+  const calls = [0, 0, 0];
+  const releases = calls.map((_, index) =>
+    getSettlementResource(cache, "a").retainPolling(() => {
+      calls[index]++;
+      return Promise.resolve();
+    }, 5_000),
+  );
+  t.after(() => releases.forEach((release) => release()));
+  await advance(0);
+  assert.deepEqual(calls, [0, 0, 0]);
+  await advance(4_999);
+  assert.deepEqual(calls, [0, 0, 0]);
+  await advance(1);
+  assert.deepEqual(calls, [1, 0, 0]);
+  await advance(5_000);
+  assert.deepEqual(calls, [2, 0, 0]);
+  releases.forEach((release) => release());
   await advance(60_000);
-  assert.equal(fast, 13);
-  assert.equal(slow, 2);
+  assert.deepEqual(calls, [2, 0, 0]);
 });
 
-test("a release during an in-flight refresh keeps the surviving chain alive", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout", "Date"] });
-  const flush = () => new Promise((resolve) => setImmediate(resolve));
-  const advance = async (ms: number) => {
-    t.mock.timers.tick(ms);
-    await flush();
-  };
+test("the shortest interval controls all consumers and resets when fast polling leaves", async (t) => {
+  const advance = mockClock(t);
   const resource = createSettlementResource("a");
-  let fast = 0;
-  let slow = 0;
-  let releaseSlow: () => void = () => {};
-  releaseSlow = resource.retainPolling(() => {
-    slow++;
+  let calls = 0;
+  const refresh = () => {
+    calls++;
     return Promise.resolve();
-  }, 60_000);
-  const releaseFast = resource.retainPolling(() => {
-    fast++;
-    // Detach the slow poller from inside the fast poller's first
-    // timer-driven refresh, while fire() sits between claiming and rescheduling.
-    if (fast === 2) releaseSlow();
-    return Promise.resolve();
-  }, 5_000);
-  await flush();
-  assert.equal(fast, 1);
-  assert.equal(slow, 1);
+  };
+  const releaseSlow = resource.retainPolling(refresh, 60_000);
+  t.after(releaseSlow);
+  await advance(10_000);
+  assert.equal(calls, 0);
+  const releaseFast = resource.retainPolling(refresh, 5_000);
+  t.after(releaseFast);
+  await advance(0);
+  assert.equal(calls, 0);
+  await advance(4_999);
+  assert.equal(calls, 0);
+  await advance(1);
+  assert.equal(calls, 1);
   await advance(5_000);
-  assert.equal(fast, 2);
-  assert.equal(slow, 1);
-  for (let i = 0; i < 3; i++) await advance(5_000);
-  assert.equal(fast, 5);
-  assert.equal(slow, 1);
+  assert.equal(calls, 2);
   releaseFast();
-  await advance(60_000);
-  assert.equal(fast, 5);
-  assert.equal(slow, 1);
+  await advance(59_999);
+  assert.equal(calls, 2);
+  await advance(1);
+  assert.equal(calls, 3);
 });
 
-test("a release inside a refresh skips that round's remaining pollers", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout", "Date"] });
-  const flush = () => new Promise((resolve) => setImmediate(resolve));
-  const advance = async (ms: number) => {
-    t.mock.timers.tick(ms);
-    await flush();
-  };
+test("equal or slower subscriptions cannot postpone an existing deadline", async (t) => {
+  const advance = mockClock(t);
   const resource = createSettlementResource("a");
-  let fast = 0;
-  let slow = 0;
-  let releaseSlow: () => void = () => {};
-  const releaseFast = resource.retainPolling(() => {
-    fast++;
-    // On the first timer-driven round, detach the slower-registered poller
-    // synchronously before its refresh starts.
-    if (fast === 2) releaseSlow();
+  let calls = 0;
+  const refresh = () => {
+    calls++;
     return Promise.resolve();
-  }, 5_000);
-  await flush();
-  assert.equal(fast, 1);
-  releaseSlow = resource.retainPolling(() => {
-    slow++;
-    return Promise.resolve();
-  }, 5_000);
-  // Same cadence, registered second: no immediate validation, first due
-  // round fires both in insertion order.
+  };
+  const release = resource.retainPolling(refresh, 5_000);
+  t.after(release);
+  for (let i = 0; i < 4; i++) {
+    await advance(1_000);
+    resource.retainPolling(refresh, 5_000)();
+    resource.retainPolling(refresh, 60_000)();
+  }
+  assert.equal(calls, 0);
+  await advance(1_000);
+  assert.equal(calls, 1);
   await advance(5_000);
-  // fast===2 inside its refresh releases slow synchronously mid-round; the
-  // not-yet-started slow refresh must be skipped, not run by the stale chain.
-  assert.equal(fast, 2);
-  assert.equal(slow, 0);
-  for (let i = 0; i < 2; i++) await advance(5_000);
-  assert.equal(fast, 4);
-  assert.equal(slow, 0);
+  assert.equal(calls, 2);
+});
+
+test("releasing the selected consumer hands the unchanged deadline to a survivor", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  const calls = [0, 0];
+  const releaseFirst = resource.retainPolling(() => {
+    calls[0]++;
+    return Promise.resolve();
+  }, 5_000);
+  t.after(releaseFirst);
+  await advance(2_000);
+  const releaseSecond = resource.retainPolling(() => {
+    calls[1]++;
+    return Promise.resolve();
+  }, 5_000);
+  t.after(releaseSecond);
+  await advance(1_000);
+  releaseFirst();
+  await advance(1_999);
+  assert.deepEqual(calls, [0, 0]);
+  await advance(1);
+  assert.deepEqual(calls, [0, 1]);
+  await advance(5_000);
+  assert.deepEqual(calls, [0, 2]);
+});
+
+test("a consumer can release itself during refresh without losing the surviving chain", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  const calls = [0, 0];
+  const releaseFirst = resource.retainPolling(() => {
+    calls[0]++;
+    releaseFirst();
+    return Promise.resolve();
+  }, 5_000);
+  const releaseSecond = resource.retainPolling(() => {
+    calls[1]++;
+    return Promise.resolve();
+  }, 5_000);
+  t.after(releaseFirst);
+  t.after(releaseSecond);
+  await advance(5_000);
+  assert.deepEqual(calls, [1, 0]);
+  await advance(5_000);
+  assert.deepEqual(calls, [1, 1]);
+});
+
+test("slow refreshes never overlap or catch up missed deadlines", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  const request = deferred();
+  let calls = 0;
+  const release = resource.retainPolling(() => {
+    calls++;
+    return calls === 1 ? request.promise : Promise.resolve();
+  }, 5_000);
+  t.after(release);
+  await advance(5_000);
+  assert.equal(calls, 1);
+  await advance(30_000);
+  assert.equal(calls, 1);
+  request.resolve();
+  await flush();
+  await advance(4_999);
+  assert.equal(calls, 1);
+  await advance(1);
+  assert.equal(calls, 2);
+  await advance(5_000);
+  assert.equal(calls, 3);
+});
+
+test("synchronous and asynchronous refresh failures keep polling alive", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  let calls = 0;
+  const release = resource.retainPolling(() => {
+    calls++;
+    if (calls === 1) throw new Error("synchronous failure");
+    if (calls === 2) return Promise.reject(new Error("asynchronous failure"));
+    return Promise.resolve();
+  }, 5_000);
+  t.after(release);
+  for (let i = 1; i <= 4; i++) {
+    await advance(5_000);
+    assert.equal(calls, i);
+  }
+});
+
+test("interval changes during a request apply after it finishes", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  const request = deferred();
+  let calls = 0;
+  const refresh = () => {
+    calls++;
+    return calls === 1 ? request.promise : Promise.resolve();
+  };
+  const releaseSlow = resource.retainPolling(refresh, 60_000);
+  const releaseFast = resource.retainPolling(refresh, 5_000);
+  t.after(releaseSlow);
+  t.after(releaseFast);
+  await advance(5_000);
   releaseFast();
-  releaseSlow();
   await advance(60_000);
-  assert.equal(fast, 4);
-  assert.equal(slow, 0);
+  assert.equal(calls, 1);
+  request.resolve();
+  await flush();
+  await advance(59_999);
+  assert.equal(calls, 1);
+  await advance(1);
+  assert.equal(calls, 2);
+});
+
+test("unmounting and resubscribing during a request resumes only one chain", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  const request = deferred();
+  const calls = [0, 0];
+  const releaseFirst = resource.retainPolling(() => {
+    calls[0]++;
+    return request.promise;
+  }, 5_000);
+  t.after(releaseFirst);
+  await advance(5_000);
+  releaseFirst();
+  const releaseSecond = resource.retainPolling(() => {
+    calls[1]++;
+    return Promise.resolve();
+  }, 5_000);
+  t.after(releaseSecond);
+  await advance(20_000);
+  assert.deepEqual(calls, [1, 0]);
+  request.resolve();
+  await flush();
+  await advance(4_999);
+  assert.deepEqual(calls, [1, 0]);
+  await advance(1);
+  assert.deepEqual(calls, [1, 1]);
+  await advance(5_000);
+  assert.deepEqual(calls, [1, 2]);
+  releaseSecond();
+  await advance(60_000);
+  assert.deepEqual(calls, [1, 2]);
+});
+
+test("a request completing after the last unsubscribe cannot restart polling", async (t) => {
+  const advance = mockClock(t);
+  const resource = createSettlementResource("a");
+  const request = deferred();
+  let calls = 0;
+  const release = resource.retainPolling(() => {
+    calls++;
+    return request.promise;
+  }, 5_000);
+  t.after(release);
+  await advance(5_000);
+  release();
+  request.resolve();
+  await flush();
+  await advance(60_000);
+  assert.equal(calls, 1);
+});
+
+test("polling is isolated by account and cache even while another account has an in-flight request", async (t) => {
+  const advance = mockClock(t);
+  const cache = new Map();
+  const resources = [
+    getSettlementResource(cache, "a"),
+    getSettlementResource(cache, "b"),
+    getSettlementResource(new Map(), "a"),
+  ];
+  const request = deferred();
+  const calls = [0, 0, 0];
+  const releases = resources.map((resource, index) =>
+    resource.retainPolling(() => {
+      calls[index]++;
+      return index === 0 ? request.promise : Promise.resolve();
+    }, 5_000),
+  );
+  t.after(() => releases.forEach((release) => release()));
+  await advance(5_000);
+  assert.deepEqual(calls, [1, 1, 1]);
+  await advance(5_000);
+  assert.deepEqual(calls, [1, 2, 2]);
+  releases[0]();
+  request.resolve();
+  await flush();
+  await advance(5_000);
+  assert.deepEqual(calls, [1, 3, 3]);
 });
 
 test("retains confirmed records across missing history windows and ignores wrong-account or older snapshots", () => {

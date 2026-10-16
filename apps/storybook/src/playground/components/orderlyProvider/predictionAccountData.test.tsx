@@ -38,6 +38,8 @@ vi.mock("@orderly.network/hooks", async () => {
   const { useState } = await import("react");
   return {
     useSWRConfig: () => ({ cache: mocks.cache }),
+    unstable_serialize: (await vi.importActual<any>("swr"))
+      .unstable_serialize as (key: unknown) => string,
     useMemoizedFn: (
       await vi.importActual<any>(
         "@orderly.network/hooks/src/shared/useMemoizedFn",
@@ -245,11 +247,12 @@ describe("Prediction account resources", () => {
     );
     expect(mocks.ws.subscribe).not.toHaveBeenCalled();
   });
-  it("shares one polling timer; stops on last unmount and validates cached disappeared holdings on remount", async () => {
+  it("shares one polling timer; stops on last unmount and resumes polling cached disappeared holdings on remount", async () => {
     mocks.positions = [holding];
     mount(2);
     await flush();
-    expect(mocks.refresh).toHaveBeenCalledTimes(1);
+    // Initial loading belongs to the query; registration only arms the timer.
+    expect(mocks.refresh).not.toHaveBeenCalled();
     expect(vi.getTimerCount()).toBe(1);
     mocks.positions = [];
     update();
@@ -262,11 +265,12 @@ describe("Prediction account resources", () => {
     mount();
     await flush();
     expect(state.pendingSettlementSymbols).toEqual([holding.symbol]);
-    expect(mocks.refresh).toHaveBeenCalledTimes(1);
+    // The remounted poller refreshes on the resumed cadence, not on registration.
+    expect(mocks.refresh).not.toHaveBeenCalled();
     await act(async () => {
       await vi.advanceTimersByTimeAsync(5000);
     });
-    expect(mocks.refresh).toHaveBeenCalledTimes(2);
+    expect(mocks.refresh).toHaveBeenCalledTimes(1);
   });
   it("keeps polling disappeared holdings until the delayed personal REST settlement arrives", async () => {
     mocks.positions = [holding];
@@ -477,11 +481,12 @@ describe("Prediction account resources", () => {
     expect(mocks.privateQuery.mock.calls.map(([key]) => key)).toContain(
       "/v1/position_history?product_type=BINARY&limit=1000",
     );
-    expect(mocks.refresh).toHaveBeenCalledTimes(1);
+    // Enabling settlement history arms the heartbeat; the query itself loads.
+    expect(mocks.refresh).not.toHaveBeenCalled();
     await act(async () => {
       await vi.advanceTimersByTimeAsync(60000);
     });
-    expect(mocks.refresh).toHaveBeenCalledTimes(2);
+    expect(mocks.refresh).toHaveBeenCalledTimes(1);
     update();
     expect(vi.getTimerCount()).toBe(0);
   });
