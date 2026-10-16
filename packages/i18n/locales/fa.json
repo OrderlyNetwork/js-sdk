@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "سفارش باز شد",
   "orders.status.filled.toast.title": "سفارش پر شد",
   "orders.status.canceled.toast.title": "سفارش لغو شد",
+  "orders.status.partialFilledCanceled.toast.title": "سفارش به‌صورت جزئی پر شد؛ باقی لغو شد",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}، {{canceled}} لغو شد",
   "orders.status.rejected.toast.title": "سفارش رد شد",
   "orders.status.replaced.toast.title": "سفارش ویرایش شد",
   "orders.status.scaledSubOrderOpened.toast.title": "سفارش مقیاس‌دار: زیرسفارش باز شد",

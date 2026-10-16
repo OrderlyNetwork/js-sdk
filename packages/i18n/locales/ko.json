@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "주문 시작됨",
   "orders.status.filled.toast.title": "주문 체결됨",
   "orders.status.canceled.toast.title": "주문 취소됨",
+  "orders.status.partialFilledCanceled.toast.title": "주문 일부 체결, 잔여분 취소됨",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} 취소됨",
   "orders.status.rejected.toast.title": "주문 거부됨",
   "orders.status.replaced.toast.title": "주문 수정됨",
   "orders.status.scaledSubOrderOpened.toast.title": "스케일 주문: 하위 주문 시작됨",

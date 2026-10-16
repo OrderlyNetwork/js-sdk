@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Emir açıldı",
   "orders.status.filled.toast.title": "Emir dolduruldu",
   "orders.status.canceled.toast.title": "Emir iptal edildi",
+  "orders.status.partialFilledCanceled.toast.title": "Emir kısmen dolduruldu; kalan iptal edildi",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} iptal edildi",
   "orders.status.rejected.toast.title": "Emir reddedildi",
   "orders.status.replaced.toast.title": "Emir düzenlendi",
   "orders.status.scaledSubOrderOpened.toast.title": "Ölçekli emir: alt emir açıldı",

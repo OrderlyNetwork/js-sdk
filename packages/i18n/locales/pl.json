@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Zlecenie otwarte",
   "orders.status.filled.toast.title": "Zlecenie wypełnione",
   "orders.status.canceled.toast.title": "Zlecenie anulowane",
+  "orders.status.partialFilledCanceled.toast.title": "Zlecenie częściowo wypełnione; reszta anulowana",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, anulowano {{canceled}}",
   "orders.status.rejected.toast.title": "Zlecenie odrzucone",
   "orders.status.replaced.toast.title": "Zlecenie edytowane",
   "orders.status.scaledSubOrderOpened.toast.title": "Zlecenie skalowane: podzlecenie otwarte",

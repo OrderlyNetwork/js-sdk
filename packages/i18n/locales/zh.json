@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "订单已打开",
   "orders.status.filled.toast.title": "订单已成交",
   "orders.status.canceled.toast.title": "订单已取消",
+  "orders.status.partialFilledCanceled.toast.title": "订单部分成交，剩余已取消",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}，已取消 {{canceled}}",
   "orders.status.rejected.toast.title": "订单已拒绝",
   "orders.status.replaced.toast.title": "订单已编辑",
   "orders.status.scaledSubOrderOpened.toast.title": "分批订单：子订单已开启",

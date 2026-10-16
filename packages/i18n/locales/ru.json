@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Ордер открыт",
   "orders.status.filled.toast.title": "Ордер исполнен",
   "orders.status.canceled.toast.title": "Ордер отменен",
+  "orders.status.partialFilledCanceled.toast.title": "Ордер исполнен частично, остаток отменен",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, отменено {{canceled}}",
   "orders.status.rejected.toast.title": "Ордер отклонен",
   "orders.status.replaced.toast.title": "Ордер отредактирован",
   "orders.status.scaledSubOrderOpened.toast.title": "Масштабный ордер: открыт подордер",

@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Pesanan dibuka",
   "orders.status.filled.toast.title": "Pesanan terisi",
   "orders.status.canceled.toast.title": "Pesanan dibatalkan",
+  "orders.status.partialFilledCanceled.toast.title": "Pesanan terisi sebagian; sisanya dibatalkan",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} dibatalkan",
   "orders.status.rejected.toast.title": "Pesanan ditolak",
   "orders.status.replaced.toast.title": "Pesanan diedit",
   "orders.status.scaledSubOrderOpened.toast.title": "Order berskala: sub-order dibuka",

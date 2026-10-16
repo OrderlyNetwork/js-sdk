@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "הפקודה נפתחה",
   "orders.status.filled.toast.title": "הפקודה מולאה",
   "orders.status.canceled.toast.title": "הפקודה בוטלה",
+  "orders.status.partialFilledCanceled.toast.title": "הפקודה מולאה חלקית; היתרה בוטלה",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, בוטלו {{canceled}}",
   "orders.status.rejected.toast.title": "הפקודה נדחתה",
   "orders.status.replaced.toast.title": "הפקודה נערכה",
   "orders.status.scaledSubOrderOpened.toast.title": "פקודה מקוטעת: תת‑פקודה נפתחה",

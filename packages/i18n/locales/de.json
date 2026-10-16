@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Auftrag eröffnet",
   "orders.status.filled.toast.title": "Auftrag ausgeführt",
   "orders.status.canceled.toast.title": "Auftrag storniert",
+  "orders.status.partialFilledCanceled.toast.title": "Auftrag teilweise ausgeführt; Rest storniert",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} storniert",
   "orders.status.rejected.toast.title": "Auftrag abgelehnt",
   "orders.status.replaced.toast.title": "Auftrag bearbeitet",
   "orders.status.scaledSubOrderOpened.toast.title": "Skalierte Order: Unterorder geöffnet",

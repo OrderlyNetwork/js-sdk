@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Lệnh đã mở",
   "orders.status.filled.toast.title": "Lệnh đã khớp",
   "orders.status.canceled.toast.title": "Lệnh đã hủy",
+  "orders.status.partialFilledCanceled.toast.title": "Lệnh khớp một phần, phần còn lại đã hủy",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, đã hủy {{canceled}}",
   "orders.status.rejected.toast.title": "Lệnh đã từ chối",
   "orders.status.replaced.toast.title": "Lệnh đã chỉnh sửa",
   "orders.status.scaledSubOrderOpened.toast.title": "Lệnh theo tỷ lệ: đã mở lệnh con",

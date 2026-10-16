@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "تم فتح الأمر",
   "orders.status.filled.toast.title": "تم تنفيذ الأمر",
   "orders.status.canceled.toast.title": "تم إلغاء الأمر",
+  "orders.status.partialFilledCanceled.toast.title": "تم تنفيذ الأمر جزئيًا؛ تم إلغاء المتبقي",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}، تم إلغاء {{canceled}}",
   "orders.status.rejected.toast.title": "تم رفض الأمر",
   "orders.status.replaced.toast.title": "تم تعديل الأمر",
   "orders.status.scaledSubOrderOpened.toast.title": "أمر متدرج: تم فتح أمر فرعي",

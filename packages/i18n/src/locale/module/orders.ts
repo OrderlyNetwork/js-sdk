@@ -13,6 +13,10 @@ export const orders = {
   "orders.status.opened.toast.title": "Order opened",
   "orders.status.filled.toast.title": "Order filled",
   "orders.status.canceled.toast.title": "Order canceled",
+  "orders.status.partialFilledCanceled.toast.title":
+    "Order partially filled; remainder canceled",
+  "orders.status.partialFilledCanceled.toast.description":
+    "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} canceled",
   "orders.status.rejected.toast.title": "Order rejected",
   "orders.status.replaced.toast.title": "Order edited",
 

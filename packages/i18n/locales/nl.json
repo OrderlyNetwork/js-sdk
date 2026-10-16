@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Order geopend",
   "orders.status.filled.toast.title": "Order gevuld",
   "orders.status.canceled.toast.title": "Order geannuleerd",
+  "orders.status.partialFilledCanceled.toast.title": "Order deels gevuld; restant geannuleerd",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} geannuleerd",
   "orders.status.rejected.toast.title": "Order afgewezen",
   "orders.status.replaced.toast.title": "Order bewerkt",
   "orders.status.scaledSubOrderOpened.toast.title": "Geschaalde order: suborder geopend",

@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "注文オープン",
   "orders.status.filled.toast.title": "注文約定",
   "orders.status.canceled.toast.title": "注文キャンセル",
+  "orders.status.partialFilledCanceled.toast.title": "注文一部約定、残りはキャンセル",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}、{{canceled}} をキャンセル",
   "orders.status.rejected.toast.title": "注文拒否",
   "orders.status.replaced.toast.title": "注文編集",
   "orders.status.scaledSubOrderOpened.toast.title": "スケール注文：サブオーダーが開始されました",

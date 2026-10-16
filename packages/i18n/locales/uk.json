@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Ордер відкрито",
   "orders.status.filled.toast.title": "Ордер виконано",
   "orders.status.canceled.toast.title": "Ордер скасовано",
+  "orders.status.partialFilledCanceled.toast.title": "Ордер виконано частково, залишок скасовано",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, скасовано {{canceled}}",
   "orders.status.rejected.toast.title": "Ордер відхилено",
   "orders.status.replaced.toast.title": "Ордер відредаговано",
   "orders.status.scaledSubOrderOpened.toast.title": "Масштабований ордер: відкрито підордер",

@@ -590,6 +590,8 @@
   "orders.status.opened.toast.title": "Ordine aperto",
   "orders.status.filled.toast.title": "Ordine eseguito",
   "orders.status.canceled.toast.title": "Ordine annullato",
+  "orders.status.partialFilledCanceled.toast.title": "Ordine parzialmente eseguito; resto annullato",
+  "orders.status.partialFilledCanceled.toast.description": "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} annullati",
   "orders.status.rejected.toast.title": "Ordine rifiutato",
   "orders.status.replaced.toast.title": "Ordine modificato",
   "orders.status.scaledSubOrderOpened.toast.title": "Ordine scalato: sotto-ordine aperto",
