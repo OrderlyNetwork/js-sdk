@@ -107,6 +107,20 @@ orderly-devkit schema -p ./my-plugin --check         # fail on missing/drift (CI
 - `--write` also adds `configSchema.json` to `package.json` `files` when that allow-list exists, so the schema ships with the npm package.
 - `--check` prints a property-level diff and exits non-zero when the checked-in file is missing or out of sync with source; it never modifies files. A plugin without derivable `register*Plugin` options cannot be verified and is reported as such.
 
+### `check`
+
+Warn when a plugin's published build cannot be installed as a **runtime plugin in an Orderly One DEX** — i.e. its build leaves a package other than `react`, `react-dom` or `@orderly.network/*` as a bare import. No login required.
+
+- Scans the JS files npm would publish (`package.json` `files` allow-list when present, otherwise the whole package tree).
+- Orderly One loads marketplace plugins at runtime and resolves only `react` / `react-dom` / `@orderly.network/*` from the host import map. Bundle everything else into the plugin build (e.g. tsup `noExternal`).
+- **Advisory by default** (exit 0): the same plugin still works in hosts that bundle it at build time. Pass `--strict` to exit non-zero for CI gating.
+- `submit` runs the same check and prints the warning, but never blocks a submission.
+
+```bash
+orderly-devkit check -p ./my-plugin
+orderly-devkit check -p ./my-plugin --strict # CI: fail on non-host imports
+```
+
 ### Marketplace: `submit`, `search`, `list`, `update`, `view`, `disable`
 
 These commands use the Marketplace API. Public read commands (`search`, `view`) do not require login. Owner-scoped commands (`submit`, `list`, `update`, `disable`) require login (`orderly-devkit login`).
@@ -122,6 +136,7 @@ These commands use the Marketplace API. Public read commands (`search`, `view`) 
   Existing remote covers must use `https://oss.orderly.network/marketplace/`. Third-party or malformed URLs are rejected before any upload. For a local GCS emulator, set `GCS_PUBLIC_BASE_URL` to the same origin configured on the backend; `/marketplace/` is still required.
 - `pluginId` is optional — the backend derives it from the npm package name when omitted.
 - Submissions are queued and audited asynchronously; the command reports the submission status rather than a final listing. Resubmitting before the audit finishes returns a 409 — track the submission with `list` and resubmit once it completes.
+- Warns (does not fail) when the published build cannot be installed as a runtime plugin in an Orderly One DEX — see [`check`](#check).
 
 ```bash
 orderly-devkit submit

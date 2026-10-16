@@ -39,6 +39,10 @@ const {
   writeDerivedSchema,
 } = require("../internal/pluginConfigSchema");
 const {
+  checkPluginBundle,
+  formatRuntimePluginWarning,
+} = require("../internal/pluginBundleCheck");
+const {
   maybePrintOrderlyDevEnvironmentHints,
 } = require("../internal/orderlySdkDocsMcpDetect");
 const { printMarketplaceFailure } = require("../internal/marketplaceErrors");
@@ -289,6 +293,14 @@ module.exports = {
       error(`Cover image preparation failed: ${coverError.message}`);
       process.exitCode = 1;
       return;
+    }
+
+    // Warning only: a bundle that leaks non-host packages still works in hosts
+    // that build the plugin in, but cannot be installed as a runtime plugin in
+    // an Orderly One DEX. Do not block the submission.
+    const bundleCheck = checkPluginBundle(resolvedPath);
+    if (bundleCheck.unexpected.length > 0) {
+      warn(formatRuntimePluginWarning(bundleCheck.unexpected));
     }
 
     if (argv["dry-run"]) {
