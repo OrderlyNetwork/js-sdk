@@ -558,7 +558,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                   const { blockReason, minimumOrder, disabled, payout } =
                     state.oneTapOptions[outcome][index];
                   const buttonClassName = cn(
-                    "oui-text-xs oui-flex oui-min-h-12 oui-w-full oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-p-1 oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80",
+                    "oui-text-xs oui-flex oui-min-h-12 oui-w-full oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-p-1 oui-font-semibold oui-text-white oui-transition-opacity",
                     outcome === "up"
                       ? "oui-bg-success-darken"
                       : "oui-bg-danger-darken",
@@ -608,7 +608,7 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
                       }
                       className={cn(
                         buttonClassName,
-                        "disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
+                        "enabled:hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
                       )}
                     >
                       {label}
