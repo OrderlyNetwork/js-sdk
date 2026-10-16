@@ -23,7 +23,7 @@ import { Decimal } from "@orderly.network/utils";
 import { formatBinaryFeeBps } from "../binary/binaryFee";
 import { DEFAULT_BINARY_BASE_TICK } from "../binary/binaryOrderRules";
 import {
-  blockReasonLabels,
+  oneTapBlockReasonLabel,
   orderTypeLabels,
   outcomeLabels,
   sideLabels,
@@ -222,6 +222,8 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
         return t("prediction.message.noExecutableQuotes");
       case "prediction.message.insufficientBalance":
         return t("prediction.message.insufficientBalance");
+      case "prediction.message.fundingUnavailable":
+        return t("prediction.message.fundingUnavailable");
       case "prediction.message.insufficientContracts":
         return t("prediction.message.insufficientContracts");
       case "prediction.message.slippageExceeded":
@@ -553,37 +555,63 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
               <React.Fragment key={index}>
                 {(["up", "down"] as const).map((outcome) => {
                   const quoteAmount = oneTapAmounts[outcome][index];
-                  const { blockReason, disabled, payout } =
+                  const { blockReason, minimumOrder, disabled, payout } =
                     state.oneTapOptions[outcome][index];
+                  const buttonClassName = cn(
+                    "oui-text-xs oui-flex oui-min-h-12 oui-w-full oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-p-1 oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80",
+                    outcome === "up"
+                      ? "oui-bg-success-darken"
+                      : "oui-bg-danger-darken",
+                  );
+                  const label = (
+                    <>
+                      <span className="oui-text-base oui-leading-6 lg:oui-text-lg">
+                        ${quoteAmount}
+                      </span>
+                      <span className="oui-text-2xs oui-font-normal oui-tabular-nums">
+                        {t("prediction.oneTapWin")} ${formatUsd(payout)}
+                      </span>
+                    </>
+                  );
+                  if (blockReason != null) {
+                    return (
+                      <Tips
+                        key={outcome}
+                        title={t("common.tips")}
+                        content={oneTapBlockReasonLabel(
+                          blockReason,
+                          outcome,
+                          minimumOrder,
+                        )}
+                        className="oui-flex oui-min-w-0"
+                        trigger={
+                          <span
+                            tabIndex={isMobile ? undefined : 0}
+                            className={cn(
+                              buttonClassName,
+                              "oui-cursor-pointer oui-opacity-40",
+                            )}
+                          >
+                            {label}
+                          </span>
+                        }
+                      />
+                    );
+                  }
                   return (
                     <button
                       key={outcome}
                       type="button"
-                      title={
-                        blockReason != null
-                          ? blockReasonLabels()[blockReason]
-                          : undefined
-                      }
                       disabled={oneTapEditorOpen || disabled}
                       onClick={() =>
                         state.placeOneTapOrder(outcome, quoteAmount)
                       }
                       className={cn(
-                        "oui-text-xs oui-flex oui-min-h-12 oui-min-w-0 oui-flex-col oui-items-center oui-justify-center oui-rounded-md oui-p-1 oui-font-semibold oui-text-white oui-transition-opacity hover:oui-opacity-80 disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
-                        outcome === "up"
-                          ? "oui-bg-success-darken"
-                          : "oui-bg-danger-darken",
+                        buttonClassName,
+                        "disabled:oui-cursor-not-allowed disabled:oui-opacity-40",
                       )}
                     >
-                      <span className="oui-text-base oui-leading-6 lg:oui-text-lg">
-                        ${quoteAmount}
-                      </span>
-                      <span className="oui-text-2xs oui-font-normal oui-tabular-nums">
-                        {t("prediction.oneTapWin")}{" "}
-                        <span className="oui-font-normal">
-                          ${formatUsd(payout)}
-                        </span>
-                      </span>
+                      {label}
                     </button>
                   );
                 })}

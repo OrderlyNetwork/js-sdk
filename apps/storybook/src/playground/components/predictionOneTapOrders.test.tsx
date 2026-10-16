@@ -1,10 +1,13 @@
+import { useLayoutEffect } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
+import { useAccountEstimates } from "@orderly.network/prediction/src/prediction/hooks/tradingActions/useAccountEstimates";
 import {
   useOneTapOrders,
   type OneTapOrders,
   type OneTapOrdersArgs,
 } from "@orderly.network/prediction/src/prediction/hooks/tradingActions/useOneTapOrders";
+import type { PredictionAccountResources } from "@orderly.network/prediction/src/prediction/hooks/usePredictionAccountResources";
 
 let root: ReactTestRenderer | undefined;
 let state: OneTapOrders;
@@ -132,13 +135,31 @@ it.each([
     "unknown funding",
     { estimateAdditionalFrozen: () => undefined },
     10,
-    "insufficientBalance",
+    "fundingUnavailable",
+  ],
+  [
+    "NaN funding",
+    { estimateAdditionalFrozen: () => NaN },
+    10,
+    "fundingUnavailable",
+  ],
+  [
+    "infinite funding",
+    { estimateAdditionalFrozen: () => Infinity },
+    10,
+    "fundingUnavailable",
+  ],
+  [
+    "negative funding",
+    { estimateAdditionalFrozen: () => -1 },
+    10,
+    "fundingUnavailable",
   ],
   ["funds", { balance: 9 }, 10, "insufficientBalance"],
   ["zero amount", {}, 0, "invalidOrder"],
   ["invalid amount", {}, NaN, "invalidOrder"],
   ["below one tick", {}, 0.001, "invalidOrder"],
-  ["below UP notional", {}, 1, "invalidOrder"],
+  ["below UP notional", {}, 1, "belowMinimumNotional"],
 ] satisfies [string, Partial<OneTapOrdersArgs>, number, string][])(
   "uses the same rejection for the %s gate and submission",
   async (_label, overrides, amount, suffix) => {
@@ -180,9 +201,151 @@ it("checks DOWN min notional in UP coordinates", () => {
     ),
   );
   expect(state.evaluateOneTapOrder("down", 1).blockReason).toBe(
-    "prediction.invalidOrder",
+    "prediction.message.belowMinimumNotional",
   );
 });
+
+it("OR-7553 rejects rounded $5 below min notional before estimating real funding", async () => {
+  const props = {
+    ...input(),
+    balance: 143455.19,
+    protectionPrice: () => 0.58,
+    selectedConfig: {
+      base_tick: 0.01,
+      min_notional: 5,
+    } as OneTapOrdersArgs["selectedConfig"],
+    book: { ...input().book, asks: [[0.58, 100]] as [number, number][] },
+  };
+  const getCollateralSnapshot = vi.fn(() => ({
+    positionQty: 0,
+    pendingBuyQty: 0,
+    pendingSellQty: 0,
+    orders: [],
+    reservations: [],
+    mode: "detailed" as const,
+  }));
+  let estimate: OneTapOrdersArgs["estimateAdditionalFrozen"];
+  function FundingConsumer() {
+    const estimates = useAccountEstimates({
+      resources: {
+        accountReady: true,
+        balanceReady: true,
+        balance: props.balance,
+        availableQuantity: () => 0,
+        getCollateralSnapshot,
+      } as unknown as PredictionAccountResources,
+      active: true,
+      configBySymbol: new Map([[props.selectedSymbol!, props.selectedConfig!]]),
+      selectedSymbol: props.selectedSymbol,
+      feeRates: { makerBps: 0, takerBps: 6, makerRate: 0, takerRate: 0.0006 },
+      hasFeeConfig: true,
+    });
+    const oneTap = useOneTapOrders({
+      ...props,
+      estimateAdditionalFrozen: estimates.estimateAdditionalFrozen,
+    });
+    useLayoutEffect(() => {
+      estimate = estimates.estimateAdditionalFrozen;
+      state = oneTap;
+    });
+    return null;
+  }
+  act(() => {
+    root = create(<FundingConsumer />);
+  });
+  // This is the original undefined estimate that was misreported as insufficient funds.
+  expect(estimate!("up", 8.62, 0.58)).toBeUndefined();
+  getCollateralSnapshot.mockClear();
+  expect(state.evaluateOneTapOrder("up", 5)).toMatchObject({
+    quantity: 8.62,
+    minimumOrder: {
+      minQuantity: 8.63,
+      minTotal: 5.01,
+      value: 5,
+      upPrice: 0.58,
+    },
+    requiredFrozen: undefined,
+    blockReason: "prediction.message.belowMinimumNotional",
+    canPlace: false,
+  });
+  expect(getCollateralSnapshot).not.toHaveBeenCalled();
+  await act(async () => state.placeOneTapOrder("up", 5, vi.fn()));
+  expect(props.notify).toHaveBeenCalledWith(
+    "prediction.message.belowMinimumNotional",
+    "danger",
+  );
+  expect(props.submitOrder).not.toHaveBeenCalled();
+  expect(state.evaluateOneTapOrder("up", 10)).toMatchObject({
+    quantity: 17.24,
+    canPlace: true,
+    blockReason: undefined,
+  });
+});
+
+it.each([
+  ["up", 0.58, 5, 8.63, 5.01, 0.58],
+  ["up", 0.63, 5, 7.94, 5.01, 0.63],
+  ["down", 0.4, 1, 8.34, 3.34, 0.6],
+  ["down", 0.6, 1, 12.5, 7.5, 0.4],
+] as const)(
+  "calculates the %s minimum at protection price %s and updates it when the price changes",
+  (outcome, price, amount, minQuantity, minTotal, upPrice) => {
+    const props = mount({ ...input(), protectionPrice: () => price });
+    expect(state.evaluateOneTapOrder(outcome, amount)).toMatchObject({
+      blockReason: "prediction.message.belowMinimumNotional",
+      minimumOrder: { minQuantity, minTotal, value: 5, upPrice },
+    });
+    // At 0.5 both directions can exactly meet the minimum with 10 contracts.
+    act(() =>
+      root!.update(
+        <Consumer props={{ ...props, protectionPrice: () => 0.5 }} />,
+      ),
+    );
+    expect(state.evaluateOneTapOrder(outcome, 1).minimumOrder).toEqual({
+      minQuantity: 10,
+      minTotal: 5,
+      value: 5,
+      upPrice: 0.5,
+    });
+    expect(state.evaluateOneTapOrder(outcome, 5)).toMatchObject({
+      canPlace: true,
+      blockReason: undefined,
+    });
+    expect(state.evaluateOneTapOrder(outcome, 5).minimumOrder).toBeUndefined();
+  },
+);
+
+it("reports invalid splits without estimating funds or reporting insufficient balance", () => {
+  const props = mount({
+    ...input(),
+    selectedConfig: {
+      base_max: 5,
+      min_notional: 5,
+    } as OneTapOrdersArgs["selectedConfig"],
+    estimateAdditionalFrozen: vi.fn(() => undefined),
+  });
+  expect(state.evaluateOneTapOrder("up", 10)).toMatchObject({
+    blockReason: "prediction.invalidOrder",
+    canPlace: false,
+  });
+  expect(props.estimateAdditionalFrozen).not.toHaveBeenCalled();
+});
+
+it.each([0, 10])(
+  "accepts valid frozen funds of %s equal to the available balance",
+  (requiredFrozen) => {
+    mount({
+      ...input(),
+      balance: requiredFrozen,
+      estimateAdditionalFrozen: () => requiredFrozen,
+    });
+    expect(state.evaluateOneTapOrder("up", 10)).toMatchObject({
+      requiredFrozen,
+      blockReason: undefined,
+      canPlace: true,
+    });
+  },
+);
 
 it("uses outcome depth, permits partial IOC depth and rejects excessive slippage", () => {
   const props = input();

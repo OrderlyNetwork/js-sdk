@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import React, { useLayoutEffect } from "react";
+import { createRoot } from "react-dom/client";
 import {
   act,
   create,
@@ -12,6 +13,7 @@ import {
   type BinaryCollateralSnapshot,
 } from "@orderly.network/prediction/src/prediction/binary/binaryCollateral";
 import { useAccountEstimates } from "@orderly.network/prediction/src/prediction/hooks/tradingActions/useAccountEstimates";
+import type { OneTapOrderEvaluation } from "@orderly.network/prediction/src/prediction/hooks/tradingActions/useOneTapOrders";
 import {
   usePredictionAccountResources,
   type PredictionAccountResources,
@@ -32,6 +34,27 @@ const accountMocks = vi.hoisted(() => ({
     totalValue: 82.16 as number | null,
     accountInfo: { account_id: "account-a" },
   },
+}));
+const tipsMocks = vi.hoisted(() => ({
+  isMobile: false,
+  alert: vi.fn(),
+  placeOneTapOrder: vi.fn(),
+}));
+
+vi.mock("@orderly.network/ui/src/hooks", () => ({
+  useScreen: () => ({ isMobile: tipsMocks.isMobile }),
+}));
+vi.mock("@orderly.network/ui/src/modal", () => ({
+  modal: { alert: tipsMocks.alert },
+}));
+vi.mock("@orderly.network/ui/src/tooltip", () => ({
+  Tooltip: ({
+    children,
+    content,
+  }: {
+    children: React.ReactNode;
+    content: React.ReactElement<{ children: string }>;
+  }) => <div data-tips-content={content.props.children}>{children}</div>,
 }));
 
 vi.mock("@orderly.network/hooks", async () => {
@@ -69,12 +92,21 @@ vi.mock(
   () => ({ usePredictionSettlementHistory: () => ({}) }),
 );
 vi.mock("@orderly.network/i18n", () => ({
-  i18n: { t: (key: string) => key, language: "en" },
+  i18n: {
+    t: (key: string, options?: Record<string, string>) =>
+      options &&
+      (key === "prediction.message.oneTapUpMinimumOrder" ||
+        key === "prediction.message.oneTapDownMinimumOrder")
+        ? `${key}:${JSON.stringify(options)}`
+        : key,
+    language: "en",
+  },
   useTranslation: () => ({ t: (key: string) => key }),
   useLocaleCode: () => "en",
 }));
 vi.mock("@orderly.network/ui", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@orderly.network/ui")>();
+  const { Tips } = await import("@orderly.network/ui/src/tips/tips");
   const { forwardRef } = await import("react");
   const Children = ({ children }: { children?: React.ReactNode }) => children;
   return {
@@ -88,14 +120,31 @@ vi.mock("@orderly.network/ui", async (importOriginal) => {
     ),
     Text: Object.assign(Children, { numeral: Children }),
     Flex: Children,
-    Tooltip: Children,
-    Tips: ({ trigger }: { trigger: React.ReactNode }) => trigger,
-    Input: {
-      tooltip: ({ id, value }: { id: string; value: string }) => (
-        <input id={id} value={value} readOnly />
-      ),
-    },
-    useScreen: () => ({ isMobile: false }),
+    Tooltip: ({
+      children,
+      content,
+      open,
+    }: React.ComponentProps<typeof actual.Tooltip>) => (
+      <div data-tooltip-content={content} data-tooltip-open={open}>
+        {children}
+      </div>
+    ),
+    Tips,
+    Input: Object.assign(
+      ({ value }: { value: string }) => <input value={value} readOnly />,
+      {
+        tooltip: ({
+          id,
+          value,
+          tooltip,
+        }: {
+          id: string;
+          value: string;
+          tooltip?: string;
+        }) => <input id={id} value={value} data-error={tooltip} readOnly />,
+      },
+    ),
+    useScreen: () => ({ isMobile: tipsMocks.isMobile }),
     AddCircleIcon: () => null,
   };
 });
@@ -171,6 +220,7 @@ type Props = {
   symbol?: string;
   configChanges?: Partial<API.BinaryInfoRow>;
   resources?: PredictionAccountResources;
+  oneTapEvaluation?: OneTapOrderEvaluation;
 };
 let root: ReactTestRenderer | undefined;
 let estimates: ReturnType<typeof useAccountEstimates>;
@@ -185,6 +235,7 @@ function Probe({
   symbol: selectedSymbol = symbol,
   configChanges,
   resources,
+  oneTapEvaluation,
 }: Props) {
   const feeRates = {
     makerBps: 0,
@@ -241,7 +292,7 @@ function Probe({
     orderEntryAccountReady: accountReady,
     orderEntryFunded: true,
     placeOrder: () => {},
-    placeOneTapOrder: () => {},
+    placeOneTapOrder: tipsMocks.placeOneTapOrder,
     slippage: "5",
     setSlippage: () => {},
     estimatedSlippage: null,
@@ -249,14 +300,15 @@ function Probe({
     fundingEstimateMode: accountEstimates.fundingEstimateMode,
     availableQuantity: accountEstimates.availableQuantity,
     estimateFee: accountEstimates.estimateFee,
-    evaluateOneTapOrder: () => ({
-      displayPrice: undefined,
-      canPlace: false,
-      quantity: 0,
-      requiredFrozen: undefined,
-      blockReason: undefined,
-      estimatedSlippage: null,
-    }),
+    evaluateOneTapOrder: () =>
+      oneTapEvaluation ?? {
+        displayPrice: undefined,
+        canPlace: false,
+        quantity: 0,
+        requiredFrozen: undefined,
+        blockReason: undefined,
+        estimatedSlippage: null,
+      },
   });
   useLayoutEffect(() => {
     estimates = accountEstimates;
@@ -319,6 +371,9 @@ afterEach(() => {
   root = undefined;
 });
 beforeEach(() => {
+  tipsMocks.isMobile = false;
+  tipsMocks.alert.mockClear();
+  tipsMocks.placeOneTapOrder.mockClear();
   accountMocks.accountId = "account-a";
   accountMocks.collateral = {
     freeCollateral: 82.16,
@@ -326,6 +381,138 @@ beforeEach(() => {
     accountInfo: { account_id: "account-a" },
   };
 });
+
+it.each([
+  "prediction.message.belowMinimumNotional",
+  "prediction.message.fundingUnavailable",
+] as const)("passes %s to the blocked one-tap Tips trigger", (blockReason) => {
+  mount({
+    oneTapEvaluation: {
+      displayPrice: 0.58,
+      quantity: 8.62,
+      requestedQuantity: 8.62,
+      requiredFrozen: undefined,
+      blockReason,
+      estimatedSlippage: 0,
+      canPlace: false,
+    },
+  });
+  act(() => form.setTradeMode("oneTap"));
+  const tooltips = root!.root
+    .findAllByType("div")
+    .filter((node) => node.props["data-tips-content"] === blockReason);
+  expect(tooltips).toHaveLength(2);
+  for (const tooltip of tooltips) {
+    expect(tooltip.findAllByType("button")).toHaveLength(0);
+    const trigger = tooltip.findAllByType("span")[0];
+    expect(trigger.props.tabIndex).toBe(0);
+    expect(trigger.props.className).toContain("oui-opacity-40");
+  }
+});
+
+it("passes direction-specific minimum quantities and amounts to the one-tap tooltips", () => {
+  mount({
+    oneTapEvaluation: {
+      displayPrice: 0.58,
+      quantity: 8.62,
+      requestedQuantity: 8.62,
+      requiredFrozen: undefined,
+      estimatedSlippage: 0,
+      blockReason: "prediction.message.belowMinimumNotional",
+      minimumOrder: {
+        minQuantity: 8.63,
+        minTotal: 5.01,
+        value: 5,
+        upPrice: 0.42,
+      },
+      canPlace: false,
+    },
+  });
+  act(() => form.setTradeMode("oneTap"));
+  const contents = root!.root
+    .findAllByType("div")
+    .map((node) => node.props["data-tips-content"])
+    .filter(
+      (content) =>
+        typeof content === "string" &&
+        content.startsWith("prediction.message.oneTap"),
+    );
+  expect(contents).toEqual([
+    'prediction.message.oneTapUpMinimumOrder:{"minQuantity":"8.63","minTotal":"5.01","value":"5"}',
+    'prediction.message.oneTapDownMinimumOrder:{"minQuantity":"8.63","minTotal":"5.01","value":"5","upPrice":"0.42"}',
+  ]);
+});
+
+it.each([
+  "prediction.message.belowMinimumNotional",
+  "prediction.message.fundingUnavailable",
+] as const)(
+  "shows %s on mobile tap without placing an order",
+  async (blockReason) => {
+    tipsMocks.isMobile = true;
+    vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const domRoot = createRoot(container);
+    const evaluation: OneTapOrderEvaluation = {
+      displayPrice: 0.58,
+      quantity: 8.62,
+      requestedQuantity: 8.62,
+      requiredFrozen: undefined,
+      blockReason,
+      estimatedSlippage: 0,
+      canPlace: false,
+    };
+    const presetButtons = () =>
+      Array.from(container.querySelectorAll("button")).filter((button) =>
+        button.textContent?.startsWith("$10"),
+      );
+    try {
+      await act(async () => {
+        domRoot.render(<Probe oneTapEvaluation={evaluation} />);
+      });
+      await act(async () => form.setTradeMode("oneTap"));
+      expect(container.querySelector("button button")).toBeNull();
+      expect(presetButtons()).toHaveLength(2);
+      for (const button of presetButtons()) {
+        expect(button.disabled).toBe(false);
+        await act(async () => {
+          for (const type of ["pointerdown", "pointerup", "click"]) {
+            const event = new MouseEvent(type, { bubbles: true });
+            Object.defineProperty(event, "pointerType", { value: "touch" });
+            button.dispatchEvent(event);
+          }
+        });
+        expect(tipsMocks.alert).toHaveBeenLastCalledWith({
+          title: "common.tips",
+          message: blockReason,
+        });
+      }
+      expect(tipsMocks.alert).toHaveBeenCalledTimes(2);
+      expect(tipsMocks.placeOneTapOrder).not.toHaveBeenCalled();
+
+      await act(async () => {
+        domRoot.render(
+          <Probe
+            oneTapEvaluation={{
+              ...evaluation,
+              blockReason: undefined,
+              requiredFrozen: 5,
+              canPlace: true,
+            }}
+          />,
+        );
+      });
+      await act(async () => presetButtons()[0].click());
+      expect(tipsMocks.placeOneTapOrder).toHaveBeenCalledWith("up", 10);
+      expect(tipsMocks.alert).toHaveBeenCalledTimes(2);
+    } finally {
+      await act(async () => domRoot.unmount());
+      container.remove();
+      vi.unstubAllGlobals();
+    }
+  },
+);
 
 it("OR-7534 displays positive UP Max buy and a usable percentage with known SELL prices", () => {
   mount();
@@ -363,6 +550,36 @@ it.each([
     root!.root.findByProps({ "aria-label": "percentage" }).props.disabled,
   ).toBe(true);
 });
+
+it.each(["market", "limit"] as const)(
+  "%s form reports a missing collateral snapshot and recovers when it arrives",
+  (mode) => {
+    const props = { snapshot: null, balance: 143455.19 };
+    mount(props);
+    act(() => form.setTradeMode(mode));
+    act(() => form.setAmount(mode === "market" ? "10" : "20"));
+    expect(form.requiredFrozen).toBeUndefined();
+    expect(form.orderValidationError).toEqual({
+      field: "amount",
+      key: "prediction.message.fundingUnavailable",
+    });
+    expect(form.canPlaceOrder).toBe(false);
+    const submit = root!.root
+      .findAllByType("button")
+      .find((node) => text(node) === "common.buy prediction.up")!;
+    act(() => submit.props.onClick());
+    const amountInput = root!.root
+      .findAllByType("input")
+      .find((node) => node.props.id === "prediction-order-amount")!;
+    expect(amountInput.props["data-error"]).toBe(
+      "prediction.message.fundingUnavailable",
+    );
+    update({ ...props, snapshot: flatSnapshot });
+    expect(form.requiredFrozen).toBeGreaterThan(0);
+    expect(form.orderValidationError).toBeUndefined();
+    expect(form.canPlaceOrder).toBe(true);
+  },
+);
 
 it("marks capacity unavailable for an account that is not ready", () => {
   mount({ accountReady: false });

@@ -15,6 +15,13 @@ export type PredictionRoundPhase =
   | "resolvedUp"
   | "resolvedDown"
   | "resolvedTie";
+export type OneTapMinimumOrder = {
+  minQuantity: number;
+  minTotal: number;
+  value: number;
+  upPrice: number;
+};
+
 /** i18n keys for one-tap preset blockers; consumed via `blockReasonLabels`. */
 export type OneTapBlockReason =
   | "prediction.invalidOrder"
@@ -23,6 +30,8 @@ export type OneTapBlockReason =
   | "prediction.message.regionRestricted"
   | "prediction.message.orderFailed"
   | "prediction.message.insufficientBalance"
+  | "prediction.message.belowMinimumNotional"
+  | "prediction.message.fundingUnavailable"
   | "prediction.message.slippageExceeded";
 export type PredictionDataTab =
   | "openOrders"

@@ -37,6 +37,7 @@ export type PredictionOrderValidationError = {
     | "orderEntry.orderQuantity.error.min"
     | "prediction.message.noExecutableQuotes"
     | "prediction.message.insufficientBalance"
+    | "prediction.message.fundingUnavailable"
     | "prediction.message.insufficientContracts"
     | "prediction.message.slippageExceeded";
   value?: number;
@@ -342,11 +343,23 @@ export const usePredictionOrderForm = ({
     if (rejection) return { field: "price", key: "prediction.invalidOrder" };
     if (!orderQuantities)
       return { field: "amount", key: "prediction.invalidOrder" };
-    if (
-      orderSide === "buy" &&
-      (requiredFrozen == null || !(requiredFrozen <= balance))
-    ) {
-      return { field: "amount", key: "prediction.message.insufficientBalance" };
+    if (orderSide === "buy") {
+      if (
+        requiredFrozen == null ||
+        !Number.isFinite(requiredFrozen) ||
+        requiredFrozen < 0
+      ) {
+        return {
+          field: "amount",
+          key: "prediction.message.fundingUnavailable",
+        };
+      }
+      if (!(requiredFrozen <= balance)) {
+        return {
+          field: "amount",
+          key: "prediction.message.insufficientBalance",
+        };
+      }
     }
     if (
       orderSide === "sell" &&

@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import type { BinaryInfoRow } from "../../binary/binaryInfo";
 import {
+  binaryMinimumOrderInput,
   binaryUpNotional,
   estimateBinarySlippage,
   parseSlippageTicks,
@@ -13,6 +14,7 @@ import {
 import type { BinaryOrderBook } from "../../binary/useBinaryOrderbook";
 import type {
   OneTapBlockReason,
+  OneTapMinimumOrder,
   PredictionOutcome,
 } from "../../prediction.types";
 import type { OrderSubmission } from "./useOrderSubmission";
@@ -46,6 +48,7 @@ export interface OneTapOrderEvaluation {
   requiredFrozen: number | undefined;
   estimatedSlippage: number | null;
   blockReason: OneTapBlockReason | undefined;
+  minimumOrder?: OneTapMinimumOrder;
   canPlace: boolean;
 }
 
@@ -117,20 +120,26 @@ export const useOneTapOrders = ({
           return "prediction.message.orderFailed";
         if (!Number.isFinite(quoteAmount) || quoteAmount <= 0 || quantity <= 0)
           return "prediction.invalidOrder";
+        if (
+          !binaryUpNotional(quantity, outcome, displayPrice).gte(
+            limits.minNotional,
+          )
+        )
+          return "prediction.message.belowMinimumNotional";
+        if (!quantities) return "prediction.invalidOrder";
         requiredFrozen = estimateAdditionalFrozen(
           outcome,
           requestedQuantity,
           displayPrice,
         );
-        if (requiredFrozen == null || requiredFrozen > balance)
-          return "prediction.message.insufficientBalance";
         if (
-          !quantities ||
-          !binaryUpNotional(quantity, outcome, displayPrice).gte(
-            limits.minNotional,
-          )
+          requiredFrozen == null ||
+          !Number.isFinite(requiredFrozen) ||
+          requiredFrozen < 0
         )
-          return "prediction.invalidOrder";
+          return "prediction.message.fundingUnavailable";
+        if (requiredFrozen > balance)
+          return "prediction.message.insufficientBalance";
         // An in-flight submission disables presets without a transient notice.
         if (isSubmitting) return undefined;
         if (estimatedSlippage == null)
@@ -146,6 +155,19 @@ export const useOneTapOrders = ({
         requiredFrozen,
         estimatedSlippage,
         blockReason,
+        ...(blockReason === "prediction.message.belowMinimumNotional" &&
+        displayPrice != null
+          ? {
+              minimumOrder: {
+                ...binaryMinimumOrderInput(displayPrice, outcome, limits),
+                value: limits.minNotional,
+                upPrice:
+                  outcome === "up"
+                    ? displayPrice
+                    : complementPrice(displayPrice),
+              },
+            }
+          : {}),
         canPlace: !isSubmitting && blockReason == null,
       };
     },

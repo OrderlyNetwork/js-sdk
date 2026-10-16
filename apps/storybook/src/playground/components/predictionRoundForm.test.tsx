@@ -1,11 +1,15 @@
 import { useEffect, useLayoutEffect } from "react";
 import { act, create } from "react-test-renderer";
 import { expect, it } from "vitest";
-import { usePredictionOrderForm } from "@orderly.network/prediction/src/prediction/hooks/usePredictionOrderForm";
+import {
+  usePredictionOrderForm,
+  type UsePredictionOrderFormArgs,
+} from "@orderly.network/prediction/src/prediction/hooks/usePredictionOrderForm";
 
 function mountTotalForm(
   initialPrice = 0.31,
   sizeRules: { baseMax?: number; minNotional?: number } = {},
+  overrides: Partial<UsePredictionOrderFormArgs> = {},
 ) {
   let state!: ReturnType<typeof usePredictionOrderForm>;
   const commits: Array<
@@ -35,6 +39,7 @@ function mountTotalForm(
       positions: [],
       isRoundTradable: true,
       isRegionRestricted: false,
+      ...overrides,
     });
     // Capture committed state before the passive synchronization effect runs.
     useLayoutEffect(() => {
@@ -62,6 +67,58 @@ function mountTotalForm(
     },
   };
 }
+
+it.each(["market", "limit"] as const)(
+  "%s buy distinguishes unavailable funding from insufficient balance",
+  (mode) => {
+    for (const outcome of ["up", "down"] as const) {
+      for (const [requiredFrozen, expectedKey] of [
+        [undefined, "prediction.message.fundingUnavailable"],
+        [NaN, "prediction.message.fundingUnavailable"],
+        [Infinity, "prediction.message.fundingUnavailable"],
+        [-Infinity, "prediction.message.fundingUnavailable"],
+        [-1, "prediction.message.fundingUnavailable"],
+        [0, undefined],
+        [10, undefined],
+        [11, "prediction.message.insufficientBalance"],
+      ] as const) {
+        const view = mountTotalForm(
+          0.5,
+          {},
+          {
+            balance: 10,
+            estimateAdditionalFrozen: () => requiredFrozen,
+          },
+        );
+        try {
+          act(() => {
+            view.current().setTradeMode(mode);
+            view.current().setSelectedOutcome(outcome);
+          });
+          act(() => view.current().setAmount(mode === "market" ? "10" : "20"));
+          expect(
+            view.current().orderValidationError?.key,
+            `${outcome}: ${requiredFrozen}`,
+          ).toBe(expectedKey);
+          expect(view.current().canPlaceOrder).toBe(expectedKey == null);
+          if (expectedKey === "prediction.message.fundingUnavailable") {
+            act(() => view.current().setAmount("1"));
+            expect(view.current().orderValidationError?.key).toBe(
+              mode === "limit" && outcome === "down"
+                ? "prediction.message.downMinimumOrder"
+                : "orderEntry.total.error.min",
+            );
+            act(() => view.current().setOrderSide("sell"));
+            act(() => view.current().setAmount("20"));
+            expect(view.current().canPlaceOrder).toBe(true);
+          }
+        } finally {
+          view.unmount();
+        }
+      }
+    }
+  },
+);
 
 it("previews only the tick-rounded children while retaining the original sizing request", () => {
   const view = mountTotalForm(0.99, { baseMax: 5, minNotional: 1 });

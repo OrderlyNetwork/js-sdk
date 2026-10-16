@@ -98,6 +98,7 @@ export interface TradePanelProps extends TradePanelFormProps {
     {
       payout: number;
       blockReason: OneTapBlockReason | null;
+      minimumOrder?: OneTapOrderEvaluation["minimumOrder"];
       disabled: boolean;
     }[]
   >;
@@ -196,6 +197,9 @@ export function useTradePanelScript(
       return {
         payout,
         blockReason,
+        ...(evaluation?.minimumOrder
+          ? { minimumOrder: evaluation.minimumOrder }
+          : {}),
         disabled:
           !orderEntryAccountReady ||
           !orderEntryFunded ||

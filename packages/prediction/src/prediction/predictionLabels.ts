@@ -1,7 +1,9 @@
 import { i18n } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
 import type { RoundStatus } from "./binary/binaryRoundView";
 import type {
   OneTapBlockReason,
+  OneTapMinimumOrder,
   PredictionDataTab,
   PredictionOrderSide,
   PredictionOrderType,
@@ -67,10 +69,36 @@ export const blockReasonLabels = (): Record<OneTapBlockReason, string> => ({
   "prediction.message.insufficientBalance": i18n.t(
     "prediction.message.insufficientBalance",
   ),
+  "prediction.message.belowMinimumNotional": i18n.t(
+    "prediction.message.belowMinimumNotional",
+  ),
+  "prediction.message.fundingUnavailable": i18n.t(
+    "prediction.message.fundingUnavailable",
+  ),
   "prediction.message.slippageExceeded": i18n.t(
     "prediction.message.slippageExceeded",
   ),
 });
+
+export const oneTapBlockReasonLabel = (
+  reason: OneTapBlockReason,
+  outcome: PredictionOutcome,
+  minimumOrder?: OneTapMinimumOrder,
+): string => {
+  if (reason !== "prediction.message.belowMinimumNotional" || !minimumOrder)
+    return blockReasonLabels()[reason];
+  const options = {
+    minQuantity: new Decimal(minimumOrder.minQuantity).toFixed(),
+    minTotal: new Decimal(minimumOrder.minTotal).toFixed(2),
+    value: new Decimal(minimumOrder.value).toFixed(),
+  };
+  return outcome === "up"
+    ? i18n.t("prediction.message.oneTapUpMinimumOrder", options)
+    : i18n.t("prediction.message.oneTapDownMinimumOrder", {
+        ...options,
+        upPrice: new Decimal(minimumOrder.upPrice).toFixed(),
+      });
+};
 
 export const dataTabTitles = (): Record<PredictionDataTab, string> => ({
   predictions: i18n.t("prediction.tab.positions"),
