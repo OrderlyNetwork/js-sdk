@@ -27,10 +27,13 @@ const DEFAULT_IGNORES = [
 ];
 
 // Same patterns as the server scanner, so both report the same specifiers.
+// `from`/`import` inside a string literal (e.g. a minified header list like
+// `["from","etag",…]`) is not an import; a real keyword is never preceded by a
+// quote, so exclude that case.
 const BARE_IMPORT_PATTERNS = [
-  /\bfrom\s*["']([^"']+)["']/g,
-  /\bimport\s*["']([^"']+)["']/g,
-  /\bimport\s*\(\s*["']([^"']+)["']\s*\)/g,
+  /(?<!["'])\bfrom\s*["']([^"']+)["']/g,
+  /(?<!["'])\bimport\s*["']([^"']+)["']/g,
+  /(?<!["'])\bimport\s*\(\s*["']([^"']+)["']\s*\)/g,
 ];
 
 function isBareSpecifier(specifier) {

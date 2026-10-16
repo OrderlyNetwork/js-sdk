@@ -40,6 +40,17 @@ describe("scanBareImports", () => {
       "zustand",
     ]);
   });
+
+  it("ignores keywords inside string literals (bundled header lists)", () => {
+    assert.deepEqual(
+      scanBareImports('const h = ["from", "etag", "expires", "host"];'),
+      [],
+    );
+    assert.deepEqual(
+      scanBareImports('X = ["from", "etag"]; import { a } from "zustand";'),
+      ["zustand"],
+    );
+  });
 });
 
 describe("checkPluginBundle", () => {
