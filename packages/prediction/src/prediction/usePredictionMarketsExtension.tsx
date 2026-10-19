@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import type {
   MarketCategoryComponentKey,
   MarketTabConfig,
 } from "@orderly.network/markets-core";
+import { useFeatureEnabled } from "@orderly.network/react-app";
 import { usePredictionMarkets } from "./hooks/usePredictionMarkets";
 import type { UsePredictionMarketsOptions } from "./prediction.types";
 import { PredictionDropdownPanel } from "./predictionDropdownPanel";
@@ -44,14 +45,25 @@ export const usePredictionMarketsExtension = (
   onPredictionSelect?: (symbol: string) => void,
   options: UsePredictionMarketsOptions = {},
 ): PredictionMarketsExtensionProps => {
-  const { markets, isLoading } = usePredictionMarkets(options);
-  const tabs = usePredictionMarketTabs(componentKey);
+  const predictionEnabled = useFeatureEnabled("prediction");
+  const enabled = predictionEnabled && (options.enabled ?? true);
+  const { markets, isLoading } = usePredictionMarkets({ ...options, enabled });
+  const defaultTabs = usePredictionMarketTabs(componentKey);
+  const tabs = useMemo(
+    () =>
+      enabled
+        ? defaultTabs
+        : defaultTabs.filter(
+            (tab) => !("id" in tab && tab.id === "prediction"),
+          ),
+    [defaultTabs, enabled],
+  );
   const { favoriteMarketIds, toggleFavorite } = usePredictionFavorites();
 
   return {
     tabs,
     renderTabContent: (_, key, hide) =>
-      key === "prediction" ? (
+      enabled && key === "prediction" ? (
         <PredictionDropdownPanel
           markets={markets}
           loading={isLoading}
@@ -62,7 +74,7 @@ export const usePredictionMarketsExtension = (
         />
       ) : undefined,
     renderTabAfterContent: (_, key, hide, context) => {
-      if (key !== "all" && key !== "favorites") return null;
+      if (!enabled || (key !== "all" && key !== "favorites")) return null;
       const candidates =
         key === "favorites"
           ? markets.filter((market) => favoriteMarketIds.includes(market.id))

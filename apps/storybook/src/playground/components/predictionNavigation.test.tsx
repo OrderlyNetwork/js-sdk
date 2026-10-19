@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { PredictionPage } from "@orderly.network/prediction/src/prediction/prediction.page";
 import { Prediction } from "@orderly.network/prediction/src/prediction/prediction.ui";
 import { PredictionWidget } from "@orderly.network/prediction/src/prediction/prediction.widget";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   route: vi.fn(),
   routeAvailable: true,
   script: vi.fn(),
@@ -17,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
   useAppContext: () => ({
     onRouteChange: mocks.routeAvailable ? mocks.route : undefined,
   }),
@@ -38,6 +42,7 @@ function ui() {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.routeAvailable = true;
   mocks.script.mockReturnValue(mocks.state);
 });
@@ -143,3 +148,37 @@ it("keeps controlled selection without a router and disables all selection witho
   expect(mocks.state.goToLiveRound).not.toHaveBeenCalled();
   expect(mocks.state.goToNextRound).not.toHaveBeenCalled();
 });
+
+it.each([PredictionWidget, PredictionPage])(
+  "renders nothing and mounts no business resources while globally disabled",
+  (Page) => {
+    mocks.featureEnabled = false;
+    const cleanup = vi.fn();
+    mocks.script.mockImplementation(() => {
+      useEffect(() => cleanup, []);
+      return mocks.state;
+    });
+    act(() => {
+      root = create(<Page />);
+    });
+    expect(root.toJSON()).toBeNull();
+    expect(mocks.script).not.toHaveBeenCalled();
+    expect(mocks.route).not.toHaveBeenCalled();
+    mocks.featureEnabled = true;
+    act(() => root.update(<Page />));
+    expect(mocks.script).toHaveBeenCalled();
+    expect(mocks.route).toHaveBeenCalledOnce();
+    mocks.featureEnabled = false;
+    mocks.script.mockClear();
+    mocks.route.mockClear();
+    act(() => root.update(<Page />));
+    expect(root.toJSON()).toBeNull();
+    expect(cleanup).toHaveBeenCalledOnce();
+    expect(mocks.script).not.toHaveBeenCalled();
+    expect(mocks.route).not.toHaveBeenCalled();
+    mocks.featureEnabled = true;
+    act(() => root.update(<Page />));
+    expect(mocks.script).toHaveBeenCalled();
+    expect(mocks.route).toHaveBeenCalledOnce();
+  },
+);

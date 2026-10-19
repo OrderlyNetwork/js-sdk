@@ -9,6 +9,7 @@ import { TradingPage } from "@orderly.network/trading/src/pages/trading/trading.
 import { TradingPageProvider } from "@orderly.network/trading/src/provider/tradingPageProvider";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   account: vi.fn(),
   counts: vi.fn(),
   markets: vi.fn(),
@@ -30,6 +31,7 @@ vi.mock("@orderly.network/trading/src/hooks/useTradingLocalStorage", () => ({
   useTradingLocalStorage: () => mocks.preferences,
 }));
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
   useAppContext: () => ({
     onRouteChange: mocks.routeAvailable ? mocks.onRouteChange : undefined,
   }),
@@ -167,6 +169,7 @@ function slots() {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.routeAvailable = true;
   mocks.preferences.showAllSymbol = false;
   mocks.preferences.pnlNotionalDecimalPrecision = 4;
@@ -237,11 +240,11 @@ it("keeps all panel and count scopes in sync with symbol and preference changes"
 });
 
 it("starts disabled and supports dynamic enable, disable, and re-enable", () => {
-  mount({ ...props, predictionEnabled: false });
+  mocks.featureEnabled = false;
+  mount();
   for (const enabled of [false, true, false, true]) {
-    act(() =>
-      root!.update(<TradingPage {...props} predictionEnabled={enabled} />),
-    );
+    mocks.featureEnabled = enabled;
+    act(() => root!.update(<TradingPage {...props} />));
     expect(mocks.account).toHaveBeenLastCalledWith({ enabled });
     expect(mocks.markets).toHaveBeenLastCalledWith({ enabled });
     expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(enabled);
@@ -347,11 +350,11 @@ it("replaces each automatic slot configuration with the corresponding explicit o
   expect(pageProps().marketsDropdown).toBeDefined();
   expect(pageProps().dataListProductContent).toBe(dataListProductContent);
   expect(pageProps().dataListProductContent?.mobile).toBeUndefined();
+  mocks.featureEnabled = false;
   act(() =>
     root!.update(
       <TradingPage
         {...props}
-        predictionEnabled={false}
         marketsDropdown={marketsDropdown}
         dataListProductContent={dataListProductContent}
       />,
@@ -487,15 +490,10 @@ describe.each([
     "keeps explicit configuration and omits defaults with %s",
     (reason) => {
       mocks.routeAvailable = reason !== "no router";
+      mocks.featureEnabled = reason !== "disabled";
       const marketsDropdown = {};
       act(() => {
-        root = create(
-          <Page
-            {...props}
-            predictionEnabled={reason !== "disabled"}
-            marketsDropdown={marketsDropdown}
-          />,
-        );
+        root = create(<Page {...props} marketsDropdown={marketsDropdown} />);
       });
       const page = root!.root.findByType(Provider).props as TradingPageProps;
       expect(page.marketsDropdown).toBe(marketsDropdown);

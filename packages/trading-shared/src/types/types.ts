@@ -160,8 +160,6 @@ type BaseTradingPageProps = {
 export type TradingPageProps = BaseTradingPageProps &
   Pick<TradingPerpsPanelProps, "onSymbolChange" | "sharePnLConfig"> &
   TradingPageExtensionProps & {
-    /** Enable automatic Prediction integration; defaults to true. */
-    predictionEnabled?: boolean;
     referral?: ReferralProps;
     tradingRewards?: TradingRewardsProps;
     bottomSheetLeading?: React.ReactNode | string;

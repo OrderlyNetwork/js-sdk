@@ -5,6 +5,7 @@ import { OrdersPage } from "@orderly.network/portfolio/src/pages/orders/page";
 import { PositionsPage } from "@orderly.network/portfolio/src/pages/positions/page";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   route: vi.fn(),
   routeAvailable: true,
   accountId: "main-1",
@@ -17,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   history: vi.fn(),
 }));
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
   useAppContext: () => ({
     onRouteChange: mocks.routeAvailable ? mocks.route : undefined,
   }),
@@ -57,7 +59,7 @@ vi.mock("@orderly.network/prediction", () => ({
             key={value}
             onClick={() => {
               setProduct(value);
-              props.onProductChange(value);
+              props.onProductChange?.(value);
             }}
           >
             {value}
@@ -153,6 +155,7 @@ vi.mock("@orderly.network/ui", () => {
 let renderer: ReactTestRenderer;
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.accountId = "main-1";
   mocks.main = true;
   mocks.routeAvailable = true;
@@ -196,8 +199,9 @@ describe("Portfolio SDK default integration", () => {
       "prediction.currentAccount",
     );
   });
-  it("uses the original Orders widget when predictionEnabled is false", () => {
-    mount(OrdersPage, { predictionEnabled: false });
+  it("uses the original Orders widget when Prediction is globally disabled", () => {
+    mocks.featureEnabled = false;
+    mount(OrdersPage);
     expect(mocks.orders).not.toHaveBeenCalled();
     expect(mocks.legacyOrders).toHaveBeenCalledWith(
       expect.objectContaining({ productType: "PERP" }),
@@ -276,11 +280,8 @@ describe("Portfolio SDK default integration", () => {
     tab("Position history");
     expect(historySlot).toHaveBeenCalled();
     expect(mocks.prediction).not.toHaveBeenCalled();
-    act(() =>
-      renderer.update(
-        createElement(PositionsPage, { predictionEnabled: false }),
-      ),
-    );
+    mocks.featureEnabled = false;
+    act(() => renderer.update(createElement(PositionsPage)));
     expect(mocks.prediction).not.toHaveBeenCalled();
     expect(mocks.history).toHaveBeenCalled();
   });
@@ -316,7 +317,8 @@ it.each(["all", "pending", "tp_sl", "filled", "cancelled", "rejected"])(
   },
 );
 it("routes legacy Perps orders and encodes symbols", () => {
-  mount(OrdersPage, { predictionEnabled: false });
+  mocks.featureEnabled = false;
+  mount(OrdersPage);
   mocks.legacyOrders.mock.calls
     .at(-1)![0]
     .onSymbolChange({ symbol: "PERP/ETH?USDC" });

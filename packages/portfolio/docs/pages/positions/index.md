@@ -2,11 +2,10 @@
 
 Exported as `PositionsModule.PositionsPage` from `@orderly.network/portfolio`. Existing `PositionsProps`, including sharing, price calculation and symbol callbacks, continue to configure Perps positions.
 
-| Prop                            | Type                                     | Default | Behavior                                                            |
-| ------------------------------- | ---------------------------------------- | ------- | ------------------------------------------------------------------- |
-| `predictionEnabled`             | `boolean`                                | `true`  | Adds Perps / Prediction switches to Positions and Position history. |
-| `positionProductContent`        | `(perpsContent: ReactNode) => ReactNode` | —       | Overrides the built-in Positions panel.                             |
-| `positionHistoryProductContent` | `(perpsContent: ReactNode) => ReactNode` | —       | Overrides the built-in Position history panel.                      |
+| Prop                            | Type                                     | Default | Behavior                                       |
+| ------------------------------- | ---------------------------------------- | ------- | ---------------------------------------------- |
+| `positionProductContent`        | `(perpsContent: ReactNode) => ReactNode` | —       | Overrides the built-in Positions panel.        |
+| `positionHistoryProductContent` | `(perpsContent: ReactNode) => ReactNode` | —       | Overrides the built-in Position history panel. |
 
 Both product switches start on Perps. Current Prediction positions follow the Perps account scope: a main account can select all accounts (the default), the main account, or a child account. Rows are grouped by account, and the account selection is preserved across product switches. A signed-in child account only manages its own positions. Product switches omit position counts.
 
@@ -14,4 +13,4 @@ Current-account positions use the existing live stream. Child positions come fro
 
 Prediction Position history continues to use the signed-in account and displays the current-account hint. Orders and Liquidation retain their existing account scopes; this integration adds no child order management or bulk close actions.
 
-Set `predictionEnabled={false}` for Perps-only content. Custom callbacks take precedence for their tab, including when automatic Prediction integration is disabled. Nullish callback results retain the original Perps table. Liquidation remains Perps-only.
+Set `features={{ prediction: false }}` on `OrderlyAppProvider` for Perps-only content. Custom callbacks take precedence for their tab, including when automatic Prediction integration is disabled. Nullish callback results retain the original Perps table. Liquidation remains Perps-only.

@@ -6,8 +6,11 @@ import {
   MarketsHomePage,
   type MarketsHomePageProps,
 } from "@orderly.network/markets/src/pages/home/page";
+import { usePredictionMarketsDropdown } from "@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown";
+import { usePredictionMarketsSheet } from "@orderly.network/prediction/src/prediction/usePredictionMarketsSheet";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   BasePage: vi.fn((_props: MarketsHomePageProps) => null),
   markets: vi.fn(),
   navigate: vi.fn(),
@@ -24,6 +27,7 @@ vi.mock("@orderly.network/markets-core", () => ({
   UnFavoritesIcon2: () => null,
 }));
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
   useAppContext: () => ({ onRouteChange: mocks.onRouteChange }),
 }));
 vi.mock("@orderly.network/prediction", async () => ({
@@ -90,6 +94,7 @@ function panel(node: React.ReactNode) {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.onRouteChange = mocks.navigate;
   mocks.tabs = [{ type: "favorites" }, { type: "crypto" }, { type: "rwa" }];
   mocks.favorites = [];
@@ -125,7 +130,8 @@ describe("built-in Markets Prediction", () => {
     "does not enable resources with %s",
     (reason) => {
       if (reason === "no navigation") mocks.onRouteChange = undefined;
-      mount(reason === "disabled" ? { predictionEnabled: false } : {});
+      mocks.featureEnabled = reason !== "disabled";
+      mount();
       expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
       expect(pageProps().tabs).toBeUndefined();
       expect(
@@ -258,3 +264,97 @@ it("does not append Prediction to other categories or unmatched favorites", () =
     render({ type: "favorites" }, "favorites", vi.fn(), { searchValue: "ETH" }),
   ).toBeNull();
 });
+
+it("removes Prediction from public dropdown and sheet extensions despite enabled: true", () => {
+  let extensions: ReturnType<typeof usePredictionMarketsDropdown>[] = [];
+  function Consumer() {
+    extensions = [
+      usePredictionMarketsDropdown(mocks.navigate, { enabled: true }),
+      usePredictionMarketsSheet(mocks.navigate, { enabled: true }),
+    ];
+    return null;
+  }
+  mocks.tabs = [{ type: "crypto" }, predictionTab, { type: "all" }];
+  mocks.featureEnabled = false;
+  act(() => {
+    root = create(<Consumer />);
+  });
+  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
+  for (const extension of extensions) {
+    expect(
+      extension.tabs?.some((tab) => "id" in tab && tab.id === "prediction"),
+    ).toBe(false);
+    expect(
+      extension.renderTabContent!(predictionTab, "prediction", vi.fn()),
+    ).toBeUndefined();
+    expect(
+      extension.renderTabAfterContent!(predictionTab, "all", vi.fn()),
+    ).toBeNull();
+  }
+  mocks.featureEnabled = true;
+  act(() => root!.update(<Consumer />));
+  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: true });
+  for (const extension of extensions) {
+    expect(
+      extension.tabs?.filter((tab) => "id" in tab && tab.id === "prediction"),
+    ).toHaveLength(1);
+  }
+});
+
+it.each([
+  { name: "dropdown", useExtension: usePredictionMarketsDropdown },
+  { name: "sheet", useExtension: usePredictionMarketsSheet },
+])(
+  "keeps $name tabs and renderers in sync when locally disabled and restored",
+  ({ useExtension }) => {
+    let extension: ReturnType<typeof useExtension>;
+    function Consumer({ enabled }: { enabled?: boolean }) {
+      extension = useExtension(mocks.navigate, { enabled });
+      return null;
+    }
+    // Keep a warm cache even while disabled to verify that no stale content leaks.
+    mocks.markets.mockReturnValue({ markets, isLoading: false });
+    mocks.favorites = [markets[0].id];
+    mocks.tabs = [
+      { type: "favorites" },
+      { type: "crypto" },
+      predictionTab,
+      { type: "rwa" },
+    ];
+    act(() => {
+      root = create(<Consumer enabled={false} />);
+    });
+
+    for (const enabled of [false, true, false, undefined]) {
+      act(() => root!.update(<Consumer enabled={enabled} />));
+      const expectedEnabled = enabled !== false;
+      expect(mocks.markets).toHaveBeenLastCalledWith({
+        enabled: expectedEnabled,
+      });
+      expect(
+        extension!.tabs?.map((tab) => ("type" in tab ? tab.type : tab.id)),
+      ).toEqual(
+        expectedEnabled
+          ? ["favorites", "crypto", "prediction", "rwa"]
+          : ["favorites", "crypto", "rwa"],
+      );
+      const content = extension!.renderTabContent!(
+        predictionTab,
+        "prediction",
+        vi.fn(),
+      );
+      if (expectedEnabled) expect(panel(content).markets).toEqual(markets);
+      else expect(content).toBeUndefined();
+
+      for (const type of ["all", "favorites"] as const) {
+        const appended = extension!.renderTabAfterContent!(
+          { type },
+          type,
+          vi.fn(),
+        );
+        if (expectedEnabled) expect(isValidElement(appended)).toBe(true);
+        else expect(appended).toBeNull();
+      }
+    }
+  },
+);

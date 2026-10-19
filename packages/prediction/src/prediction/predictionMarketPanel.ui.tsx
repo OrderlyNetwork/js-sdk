@@ -10,6 +10,7 @@ import type {
   MarketCategoryComponentKey,
   MarketTabConfig,
 } from "@orderly.network/markets-core";
+import { useFeatureEnabled } from "@orderly.network/react-app";
 import { cn, Spinner, Text, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import type { BinaryMarket } from "./binary/binaryMarkets";
@@ -35,10 +36,12 @@ export const usePredictionMarketTabs = (
 ): MarketTabConfig[] => {
   const { t } = useTranslation();
   const defaultTabs = useMarketCategories(componentKey);
+  const predictionEnabled = useFeatureEnabled("prediction");
   return useMemo(() => {
     const tabs = defaultTabs.filter(
       (tab) => !("id" in tab && tab.id === "prediction"),
     );
+    if (!predictionEnabled) return tabs;
     const cryptoIndex = tabs.findIndex(
       (tab) => "type" in tab && tab.type === "crypto",
     );
@@ -48,7 +51,7 @@ export const usePredictionMarketTabs = (
       predictionMarketTab(t("common.predictions")),
     );
     return tabs;
-  }, [defaultTabs, t]);
+  }, [defaultTabs, t, predictionEnabled]);
 };
 
 export { formatPredictionMarketName } from "./predictionMarketSearch";

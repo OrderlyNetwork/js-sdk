@@ -4,6 +4,7 @@ import {
   type MarketCategoryConfig,
 } from "@orderly.network/hooks";
 import type {
+  AppFeatures,
   RouteOption,
   WalletChainChangeState,
 } from "@orderly.network/types";
@@ -36,6 +37,8 @@ export type WidgetConfigs = {
 };
 
 export type AppContextState = {
+  /** Application features; only explicit false disables a feature. */
+  features?: AppFeatures;
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
   /**
    * Whether the current network is not supported

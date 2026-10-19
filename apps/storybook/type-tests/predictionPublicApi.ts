@@ -4,7 +4,11 @@ import {
   type MarketsHomePageProps,
 } from "@orderly.network/markets";
 // Asset extraction keeps the public Portfolio and Trading wrappers compatible.
-import { AssetsModule } from "@orderly.network/portfolio";
+import {
+  AssetsModule,
+  OrdersModule,
+  PositionsModule,
+} from "@orderly.network/portfolio";
 import {
   PredictionPage,
   useBinaryOrderRows,
@@ -36,6 +40,11 @@ import {
   type PredictionOrderCellProps,
 } from "@orderly.network/prediction";
 import {
+  OrderlyAppProvider,
+  useFeatureEnabled,
+  type OrderlyAppProviderProps,
+} from "@orderly.network/react-app";
+import {
   TradingPage,
   type TradingPageProps,
   type TradingMarketsDropdownProps,
@@ -53,6 +62,7 @@ import type {
   TradingDataListProductContent as CommonDataListProductContent,
   TradingPageExtensionProps as CommonPageExtensionProps,
 } from "@orderly.network/trading-shared";
+import type { AppFeatures } from "@orderly.network/types";
 import type { API } from "@orderly.network/types";
 import {
   AssetsWidget,
@@ -225,8 +235,11 @@ export function usePredictionTradingPageContract(
     onPredictionSelect: () => {},
   });
   return {
+    marketsDropdown: {},
+    marketsSheet: {},
+    sideMarkets: {},
+    dataListProductContent: {},
     ...extension,
-    predictionEnabled: false,
     symbol: "PERP_BTC_USDC",
     tradingViewConfig,
   };
@@ -243,9 +256,11 @@ export function automaticTradingPageContract(
     sharePnLConfig: { backgroundImages: ["https://example.com/pnl.png"] },
   };
   const page = createElement(TradingPage, props);
-  const disabledPage = createElement(TradingPage, {
-    ...props,
-    predictionEnabled: false,
+  const disabledPage = createElement(OrderlyAppProvider, {
+    brokerId: "test",
+    networkId: "testnet",
+    features: { prediction: false },
+    children: page,
   });
   const customPage = createElement(TradingPage, {
     ...props,
@@ -301,7 +316,6 @@ export type NavigationContracts = [
 
 export function marketsPredictionContracts() {
   const props: MarketsHomePageProps = {
-    predictionEnabled: true,
     onPredictionSelect: (symbol: string) => void symbol,
     renderTabAfterContent: () => null,
   };
@@ -315,4 +329,35 @@ export type SharedAssetContracts = [
   >,
   Assert<Compatible<typeof TradingAssetViewWidget, typeof AssetViewWidget>>,
   Assert<Compatible<typeof tradingFirstDeposit, typeof useFirstTimeDeposit>>,
+];
+
+/** Application features are configured through the public provider entry. */
+export function useAppFeaturesContract() {
+  const features: AppFeatures = { prediction: false };
+  const props: OrderlyAppProviderProps = {
+    brokerId: "test",
+    networkId: "testnet",
+    features,
+  };
+  const enabled: boolean = useFeatureEnabled("prediction");
+  return { props, enabled };
+}
+
+export type RemovedPredictionPageOptions = [
+  Assert<"predictionEnabled" extends keyof TradingPageProps ? false : true>,
+  Assert<"predictionEnabled" extends keyof MarketsHomePageProps ? false : true>,
+  Assert<
+    "predictionEnabled" extends keyof React.ComponentProps<
+      typeof OrdersModule.OrdersPage
+    >
+      ? false
+      : true
+  >,
+  Assert<
+    "predictionEnabled" extends keyof React.ComponentProps<
+      typeof PositionsModule.PositionsPage
+    >
+      ? false
+      : true
+  >,
 ];

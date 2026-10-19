@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { ProductOrderInstrument } from "@orderly.network/prediction";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
 import { OrderStatus, type API } from "@orderly.network/types";
 import {
   Button,
@@ -24,15 +24,11 @@ export type PortfolioOrdersPageProps = {
   onSymbolChange?: (symbol: API.Symbol) => void;
   /** Overrides navigation to the exact Prediction round contract. */
   onPredictionSelect?: (symbol: string) => void;
-  /** Enable automatic Prediction integration; defaults to true. */
-  predictionEnabled?: boolean;
 };
 
-export const OrdersPage: React.FC<PortfolioOrdersPageProps> = ({
-  predictionEnabled = true,
-  ...props
-}) => {
+export const OrdersPage: React.FC<PortfolioOrdersPageProps> = (props) => {
   const { onRouteChange } = useAppContext();
+  const predictionEnabled = useFeatureEnabled("prediction");
   const navigatePerp = useCallback(
     (market: API.Symbol) => {
       onRouteChange?.({

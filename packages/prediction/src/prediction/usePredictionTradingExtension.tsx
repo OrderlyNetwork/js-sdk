@@ -1,3 +1,4 @@
+import { useFeatureEnabled } from "@orderly.network/react-app";
 import type {
   TradingDataListProductContent,
   TradingPageExtensionProps,
@@ -97,9 +98,10 @@ export function usePredictionTradingExtension({
   sharePnLConfig,
   pnlNotionalDecimalPrecision,
 }: PredictionTradingExtensionOptions): PredictionTradingExtensionProps {
+  const predictionEnabled = useFeatureEnabled("prediction");
   const scopedSymbol = showAllSymbol ? undefined : symbol;
-  const accountEnabled = enabled && accountPanelsEnabled;
-  const dropdownEnabled = enabled && marketsEnabled;
+  const accountEnabled = predictionEnabled && enabled && accountPanelsEnabled;
+  const dropdownEnabled = predictionEnabled && enabled && marketsEnabled;
   const state = usePredictionAccountData({ enabled: accountEnabled });
   const counts = useSharedProductCounts({
     product: "all",

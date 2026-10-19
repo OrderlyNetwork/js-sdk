@@ -43,7 +43,6 @@ export const TradingPage: React.FC<TradingPageProps> = (props) => {
     onSymbolChange:
       props.onSymbolChange || onRouteChange ? onSymbolChange : undefined,
     sharePnLConfig: props.sharePnLConfig,
-    enabled: props.predictionEnabled ?? true,
     marketsEnabled:
       hasPredictionNavigation &&
       (props.marketsDropdown == null ||

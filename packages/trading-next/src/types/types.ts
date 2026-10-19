@@ -186,6 +186,4 @@ export type TradingPageProps = BaseTradingPageProps & {
   marketsSheet?: MarketsSheetExtensionProps;
   /** Custom tabs for the desktop side markets panel (expanded mode). */
   sideMarkets?: ExpandMarketsExtensionProps;
-  /** Enable automatic Prediction market-list integration; defaults to true. */
-  predictionEnabled?: boolean;
 };

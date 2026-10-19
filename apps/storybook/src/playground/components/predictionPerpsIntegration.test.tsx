@@ -51,6 +51,7 @@ vi.mock("@orderly.network/i18n", () => ({
   i18n: { t: (key: string) => key },
 }));
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => true,
   useDataTap: (value: unknown) => value,
 }));
 vi.mock("@orderly.network/ui-connector", () => ({

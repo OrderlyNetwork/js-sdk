@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useCanTrade, useAppContext } from "@orderly.network/react-app";
+import {
+  useCanTrade,
+  useAppContext,
+  useFeatureEnabled,
+} from "@orderly.network/react-app";
 import {
   AssetViewWidget,
   useFirstTimeDeposit,
@@ -15,7 +19,12 @@ export type PredictionWidgetProps = {
   onSymbolChange?: (selection: PredictionSymbolSelection) => void;
 };
 
-export const PredictionWidget: React.FC<PredictionWidgetProps> = ({
+export const PredictionWidget: React.FC<PredictionWidgetProps> = (props) => {
+  const enabled = useFeatureEnabled("prediction");
+  return enabled ? <PredictionWidgetContent {...props} /> : null;
+};
+
+const PredictionWidgetContent: React.FC<PredictionWidgetProps> = ({
   symbol,
   onSymbolChange,
 }) => {

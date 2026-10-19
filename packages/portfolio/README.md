@@ -166,6 +166,6 @@ import { OrdersModule, PositionsModule } from "@orderly.network/portfolio";
 
 Orders initially displays all products and supports All / Perps / Prediction filtering. Positions and Position history initially display Perps and offer a Prediction switch. Liquidation remains Perps-only. Current Prediction positions share the Perps account filter and grouping: a main account can view and close its children’s holdings while preserving the selected account across product switches. Child logins manage their own positions. Prediction Orders and Position history continue to use only the signed-in account; the account filter is hidden for those views.
 
-Pass `predictionEnabled={false}` to either page to show only Perps. Positions' `positionProductContent` and `positionHistoryProductContent` callbacks still override the built-in panel for their respective tabs.
+Set `features={{ prediction: false }}` on `OrderlyAppProvider` to show only Perps. Positions' `positionProductContent` and `positionHistoryProductContent` callbacks still override the built-in panel for their respective tabs.
 
 Orders downloads the currently loaded rows matching the active product and filters. Historical lists load further pages on demand; downloads do not imply that every historical page has been loaded.

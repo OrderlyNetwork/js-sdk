@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/prediction/src/prediction/usePredictionTradingExtension";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   account: vi.fn(),
   counts: vi.fn(),
   markets: vi.fn(),
@@ -36,6 +37,9 @@ vi.mock(
   "@orderly.network/prediction/src/prediction/hooks/usePredictionMarkets",
   () => ({ usePredictionMarkets: mocks.markets }),
 );
+vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
+}));
 vi.mock("@orderly.network/hooks", () => ({
   useLocalStorage: () => [null, mocks.saveMarket],
 }));
@@ -119,6 +123,7 @@ function allSlots() {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.account.mockReturnValue(mocks.state);
   mocks.counts.mockReturnValue(mocks.countState);
   mocks.markets.mockReturnValue({ markets: [], isLoading: true });
@@ -307,5 +312,26 @@ it("keeps zero-argument and callback-only market dropdown consumers compatible",
   act(() => {
     root = create(<LegacyConsumer />);
   });
-  expect(mocks.markets.mock.calls).toEqual([[{}], [{}]]);
+  expect(mocks.markets.mock.calls).toEqual([
+    [{ enabled: true }],
+    [{ enabled: true }],
+  ]);
+});
+
+it("cannot override a globally disabled feature with enabled options", () => {
+  mocks.featureEnabled = false;
+  mount({
+    ...options,
+    enabled: true,
+    marketsEnabled: true,
+    accountPanelsEnabled: true,
+  });
+  expect(result).toEqual({});
+  expect(mocks.account).toHaveBeenLastCalledWith({ enabled: false });
+  expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(false);
+  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
+  mocks.featureEnabled = true;
+  act(() => root!.update(<Consumer {...options} enabled />));
+  expect(result.marketsDropdown).toBeDefined();
+  expect(result.dataListProductContent?.mobile).toBeDefined();
 });

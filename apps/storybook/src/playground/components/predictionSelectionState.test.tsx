@@ -7,6 +7,7 @@ import { PredictionWidget } from "@orderly.network/prediction/src/prediction/pre
 import { PredictionMarketPanelWidget } from "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   route: vi.fn(),
   routeEnabled: true,
   storageWrites: vi.fn(),
@@ -45,6 +46,7 @@ vi.mock("@orderly.network/hooks", async () => {
   return { useLocalStorage, useQuery: mocks.query };
 });
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
   useAppContext: () => ({
     onRouteChange: mocks.routeEnabled ? mocks.route : undefined,
   }),
@@ -148,6 +150,7 @@ function mount(onSymbolChange?: (selection: { symbol: string }) => void) {
 }
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.routeEnabled = true;
   snapshotRows = rows;
   mocks.query.mockReturnValue({

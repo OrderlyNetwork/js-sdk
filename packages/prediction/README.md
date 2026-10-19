@@ -27,6 +27,44 @@ function AccountPositions() {
 
 The host environment still needs the SDK's account and SWR providers configured. All public types are imported from the package root entry; there is no need to reference internal trading hooks or source paths.
 
+## Application features
+
+Prediction is enabled by default. Disable its built-in pages and integrations across the application through the existing app provider:
+
+```tsx
+import {
+  OrderlyAppProvider,
+  useFeatureEnabled,
+} from "@orderly.network/react-app";
+import type { AppFeatures } from "@orderly.network/types";
+
+const features: AppFeatures = { prediction: false };
+
+function PredictionNavigation() {
+  const predictionEnabled = useFeatureEnabled("prediction");
+  return predictionEnabled ? <PredictionMenu /> : null;
+}
+
+export function ExampleApp() {
+  return (
+    <OrderlyAppProvider
+      {...appConfig}
+      features={features}
+      onRouteChange={onRouteChange}
+    >
+      <PredictionNavigation />
+      <App />
+    </OrderlyAppProvider>
+  );
+}
+```
+
+Omitting `features`, passing `{}`, or setting `prediction: true` enables Prediction. Only explicit `false` disables it. Changes apply at runtime to Trading, Trading Next, Markets, Portfolio Orders and Positions, and the public Prediction market/trading extensions. A local extension's `enabled: true` cannot override the application setting. Page-level `predictionEnabled` props have been removed; use the provider configuration instead. Existing trading-page `disableFeatures` props retain their original behavior.
+
+When disabled, `PredictionPage` and `PredictionWidget` return `null` without mounting their business resources or requesting default-round navigation. Hosts own menu visibility and route fallback. Each automatic integration releases its query, subscription and polling demand; independent consumers remain active. Account valuation, the Binary info observer and `enableBinaryInfo` are independent of this UI setting. Low-level data hooks remain available. The setting is not an authorization or security boundary.
+
+Explicit custom slots remain host-owned and are not inspected or removed.
+
 ## Perps trading page integration
 
 `TradingPage` automatically adds Prediction markets and desktop and mobile account panels. Existing Perps pages keep using the same component and props:
@@ -42,11 +80,11 @@ import { TradingPage } from "@orderly.network/trading";
 />;
 ```
 
-Upgrading alone is not a zero-action change: `predictionEnabled` defaults to `true`, and hosts that already pass `onRouteChange` (most do, for portfolio and footer links) show Prediction entries in the markets dropdown immediately. Selecting one navigates to `/prediction/:symbol`; until that route exists the host serves a 404. Either configure the route as described below or set `predictionEnabled={false}` to keep Prediction off.
+Upgrading alone is not a zero-action change: Prediction is enabled by default, and hosts that already pass `onRouteChange` (most do, for portfolio and footer links) show Prediction entries in the markets dropdown immediately. Selecting one navigates to `/prediction/:symbol`; until that route exists the host serves a 404. Either configure the route as described below or set `features={{ prediction: false }}` on `OrderlyAppProvider` to keep Prediction off.
 
 The page reads the existing all-symbol and notional precision preferences and keeps list and count scopes in sync. Prediction selection uses the SDK app provider's existing `onRouteChange` callback with `{ href: "/prediction/" + encodeURIComponent(symbol), name: "prediction" }`. The host handles language prefixes and its own router. Configure the standard `/prediction/:symbol` route. Without `onRouteChange`, the automatic Prediction market dropdown is omitted; account panel extensions remain available.
 
-`TradingPageProps.predictionEnabled` defaults to `true`. Set it to `false` to disable this consumer's automatic Prediction resources and restore native Perps panels. It can be toggled at runtime. Explicit `marketsDropdown` and `dataListProductContent` objects independently replace the corresponding automatic configuration as a whole, without merging nested slots. Explicit configurations remain in effect when automatic Prediction is disabled.
+The application feature setting controls automatic Prediction integration. Explicit `marketsDropdown`, `marketsSheet`, `sideMarkets`, and `dataListProductContent` objects independently replace the corresponding automatic configuration as a whole, without merging nested slots. Explicit configurations remain in effect when automatic Prediction is disabled.
 
 Same-product selection calls `onSymbolChange` when supplied; the host owns updating `symbol` and its URL. Without this callback, selection requests `/perp/:symbol` through `onRouteChange`. Cross-product selection only calls `onRouteChange`. Selecting the current symbol is a no-op. Custom route mappings belong in the host's `onRouteChange` adapter.
 
@@ -78,13 +116,13 @@ In routed mode, entering `/prediction` selects the current round of the remember
 
 ### Automatic integration resources
 
-Automatic resources follow the slots in use. A non-nullish `marketsDropdown` (including `{}`), or navigation being unavailable (no `onRouteChange`), disables the automatic dropdown's metadata query and round clock. A non-nullish `dataListProductContent` (including `{}`) disables automatic account resources and counts. Removing an override resumes that part of the extension. Account panels retain their own market metadata when the dropdown is disabled; other consumers' shared resources and the native Perps account caches remain available.
+Automatic resources follow the slots in use. Non-nullish overrides for all three market surfaces (`marketsDropdown`, `marketsSheet`, and `sideMarkets`, including `{}`), or navigation being unavailable (no `onRouteChange`), disable automatic market metadata queries and round clocks. Overriding only one surface keeps the other automatic surfaces active. A non-nullish `dataListProductContent` (including `{}`) disables automatic account resources and counts. Removing an override resumes that part of the extension. Account panels retain their own market metadata when the dropdown is disabled; other consumers' shared resources and the native Perps account caches remain available.
 
 Existing account and SWR providers are still required; see [Stylesheet](#stylesheet) for the stylesheet options. Shared Perps components, trading preferences, and contracts now live in `@orderly.network/trading-shared`; their original Trading exports remain available. The shared package is installed as an SDK dependency and does not require consumer setup.
 
 ### Advanced integration and custom slots
 
-For manual control of resources or custom slot composition, keep using `usePredictionTradingExtension` and disable the page's automatic integration:
+For manual control of resources or custom slot composition, use `usePredictionTradingExtension` and explicitly supply all four extension slots. A non-nullish slot, including `{}`, replaces its automatic integration. Do not disable the application feature to configure a manual extension: public extensions also follow the application setting.
 
 `usePredictionTradingExtension` provides the markets dropdown and the desktop and mobile account panel extensions in one call. The integrator keeps control of routing, URL parameters, chart configuration, and the current symbol:
 
@@ -114,7 +152,10 @@ function PerpPage({
   return (
     <TradingPage
       {...predictionExtension}
-      predictionEnabled={false}
+      marketsDropdown={predictionExtension.marketsDropdown ?? {}}
+      marketsSheet={predictionExtension.marketsSheet ?? {}}
+      sideMarkets={predictionExtension.sideMarkets ?? {}}
+      dataListProductContent={predictionExtension.dataListProductContent ?? {}}
       symbol={symbol}
       onSymbolChange={onSymbolChange}
       tradingViewConfig={tradingViewConfig}
@@ -130,7 +171,7 @@ Pass the host page's `onSymbolChange`, `sharePnLConfig`, and `pnlNotionalDecimal
 
 Count statistics read the positions store directly and do not initialize TP/SL queries. Order statistics consumers release their cache registration when disabled, when the scope changes, or on unmount; other consumers of the same query remain valid.
 
-`enabled` defaults to `true`. Setting it to `false` returns an empty extension configuration and disables Prediction queries for that consumer, restoring the trading page's native panels; shared resources already held by other consumers are unaffected. Logged-out or loading states keep the existing account panel behavior, and counts are `null` while the open-order snapshot is not yet complete. The adapter does not fetch the full order or settlement history up front; the history panel loads on demand when displayed.
+`enabled` defaults to `true`. Setting it to `false` returns an empty extension configuration and disables Prediction queries for that consumer. When supplying it to a TradingPage, explicitly provide empty slots as shown above to prevent automatic integration from resuming; shared resources already held by other consumers are unaffected. Logged-out or loading states keep the existing account panel behavior, and counts are `null` while the open-order snapshot is not yet complete. The adapter does not fetch the full order or settlement history up front; the history panel loads on demand when displayed.
 
 `marketsEnabled` and `accountPanelsEnabled` both default to `true` and independently control the returned slots and their resources. The master `enabled: false` overrides both. For example, retain Prediction account panels while supplying your own dropdown:
 
@@ -148,8 +189,10 @@ const accountExtension = usePredictionTradingExtension({
 
 <TradingPage
   {...accountExtension}
-  predictionEnabled={false}
   marketsDropdown={customMarketsDropdown}
+  marketsSheet={{}}
+  sideMarkets={{}}
+  dataListProductContent={accountExtension.dataListProductContent ?? {}}
   symbol={symbol}
   tradingViewConfig={tradingViewConfig}
 />;
@@ -174,15 +217,18 @@ const customExtension = {
 
 <TradingPage
   {...customExtension}
-  predictionEnabled={false}
+  marketsDropdown={customExtension.marketsDropdown ?? {}}
+  marketsSheet={customExtension.marketsSheet ?? {}}
+  sideMarkets={customExtension.sideMarkets ?? {}}
+  dataListProductContent={customExtension.dataListProductContent ?? {}}
   symbol={symbol}
   tradingViewConfig={config}
 />;
 ```
 
-This customization applies when the adapter is enabled; when disabled, use the original `predictionExtension` directly to avoid injecting custom panels. For standalone layouts or asset page integration, the public account hook and panel components remain available.
+This customization applies when the adapter is enabled; when disabled, use the original `predictionExtension` with the same explicit empty-slot fallbacks to avoid injecting custom panels or resuming automatic integration. For standalone layouts or asset page integration, the public account hook and panel components remain available.
 
-The public types are `PredictionTradingExtensionOptions` and `PredictionTradingExtensionProps`; the return value maps to the `marketsDropdown` and `dataListProductContent` props of `TradingPageProps`. The existing `usePredictionMarketsDropdown(callback)` stays compatible and also accepts a second argument `{ enabled: false }` to control the markets query.
+The public types are `PredictionTradingExtensionOptions` and `PredictionTradingExtensionProps`; the return value maps to the `marketsDropdown`, `marketsSheet`, `sideMarkets`, and `dataListProductContent` props of `TradingPageProps`. The existing `usePredictionMarketsDropdown(callback)` stays compatible and also accepts a second argument `{ enabled: false }` to control the markets query.
 
 The independent contracts `TradingMarketsDropdownProps`, `TradingPerpsPanelProps`, `TradingDataListProductContent`, and `TradingPageExtensionProps` are exported by both `@orderly.network/trading-shared` and `@orderly.network/trading`. Prediction's existing panel and extension type names reuse these contracts without depending on the full trading page type. Panel precision remains a panel option, not a new `TradingPage` prop.
 

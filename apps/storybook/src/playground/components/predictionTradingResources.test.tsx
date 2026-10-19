@@ -1,11 +1,13 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { createOrderKeyRegistry } from "@orderly.network/hooks/src/provider/dataCenter/orderKeyRegistry";
+import { usePredictionAccountData } from "@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData";
 import type { TradingPageProps } from "@orderly.network/trading-shared";
 import { TradingPage } from "@orderly.network/trading/src/pages/trading/trading.page";
 import { AccountStatusEnum, type API } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
+  featureEnabled: true,
   context: {} as Record<string, unknown>,
   query: vi.fn(),
   privateQuery: vi.fn(),
@@ -114,6 +116,7 @@ vi.mock("@orderly.network/ui", () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }));
 vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => mocks.featureEnabled,
   useAppContext: () => ({ onRouteChange: vi.fn() }),
 }));
 vi.mock("@orderly.network/trading/src/hooks/useTradingLocalStorage", () => ({
@@ -209,6 +212,7 @@ beforeEach(() => {
   vi.setSystemTime(Date.UTC(2026, 9, 10, 12));
   vi.stubGlobal("window", { setTimeout, clearTimeout });
   vi.clearAllMocks();
+  mocks.featureEnabled = true;
   mocks.cache.clear();
   mocks.accountId = "a";
   mocks.positions = [];
@@ -355,5 +359,75 @@ it("keeps market queries and the round clock when only the dropdown is overridde
   clearQueries();
   update({ ...customMarketSlots, dataListProductContent: customAccount });
   expect(mocks.query.mock.calls.every(([key]) => key === null)).toBe(true);
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+it("releases feature-owned resources on global disable and restores them on re-enable", async () => {
+  mocks.positions = [expiredHolding];
+  update();
+  await act(async () => {});
+  expect(registry.handlers.size).toBe(3);
+  expect(vi.getTimerCount()).toBeGreaterThan(0);
+  mocks.featureEnabled = false;
+  clearQueries();
+  update();
+  await act(async () => {});
+  expect(mocks.query.mock.calls.every(([key]) => key === null)).toBe(true);
+  expect(mocks.privateQuery.mock.calls.every(([key]) => key === null)).toBe(
+    true,
+  );
+  expect(mocks.orderQuery.mock.calls.every(([key]) => key === null)).toBe(true);
+  expect(registry.handlers.size).toBe(0);
+  expect(vi.getTimerCount()).toBe(0);
+  mocks.refresh.mockClear();
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(5000);
+  });
+  expect(mocks.refresh).not.toHaveBeenCalled();
+  mocks.featureEnabled = true;
+  update();
+  await act(async () => {});
+  expect(registry.handlers.size).toBe(3);
+  expect(vi.getTimerCount()).toBeGreaterThan(0);
+});
+
+it("preserves a separate account-data consumer when the page integration is globally disabled", async () => {
+  function AccountConsumer() {
+    usePredictionAccountData();
+    return null;
+  }
+  mocks.positions = [expiredHolding];
+  mocks.featureEnabled = false;
+  const content = () => (
+    <>
+      <TradingPage {...props} />
+      <AccountConsumer />
+    </>
+  );
+  act(() => {
+    root = create(content());
+  });
+  await act(async () => {});
+  const accountKeys = [...registry.handlers.keys()];
+  expect(accountKeys).toHaveLength(1);
+  mocks.featureEnabled = true;
+  act(() => root!.update(content()));
+  await act(async () => {});
+  expect(registry.handlers.size).toBe(3);
+  const activeTimers = vi.getTimerCount();
+  mocks.featureEnabled = false;
+  act(() => root!.update(content()));
+  await act(async () => {});
+  expect([...registry.handlers.keys()]).toEqual(accountKeys);
+  expect(vi.getTimerCount()).toBeGreaterThan(0);
+  expect(vi.getTimerCount()).toBeLessThan(activeTimers);
+  mocks.refresh.mockClear();
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(5000);
+  });
+  expect(mocks.refresh).toHaveBeenCalledOnce();
+  act(() => root!.unmount());
+  root = undefined;
+  expect(registry.handlers.size).toBe(0);
   expect(vi.getTimerCount()).toBe(0);
 });

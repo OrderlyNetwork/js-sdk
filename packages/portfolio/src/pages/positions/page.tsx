@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
 import type { API } from "@orderly.network/types";
 import {
   Flex,
@@ -36,8 +36,6 @@ export type PortfolioPositionsPageProps = Omit<
   PositionsProps,
   "onSymbolChange"
 > & {
-  /** Enable automatic Prediction integration; defaults to true. */
-  predictionEnabled?: boolean;
   /**
    * Overrides navigation to the selected Perps market; defaults to opening
    * `/perp/<symbol>` through `onRouteChange` when omitted.
@@ -59,7 +57,6 @@ export type PortfolioPositionsPageProps = Omit<
 };
 
 export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
-  predictionEnabled = true,
   onSymbolChange: hostOnSymbolChange,
   onPredictionSelect,
   positionProductContent,
@@ -70,6 +67,7 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
   const { t } = useTranslation();
   const { state, isMainAccount } = useAccount();
   const { onRouteChange } = useAppContext();
+  const predictionEnabled = useFeatureEnabled("prediction");
   const navigatePerp = useCallback(
     (market: API.Symbol) => {
       onRouteChange?.({

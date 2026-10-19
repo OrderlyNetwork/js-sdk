@@ -3,7 +3,7 @@ import {
   usePredictionMarketTabs,
   usePredictionMarketsDropdown,
 } from "@orderly.network/prediction";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
 import { injectable } from "@orderly.network/ui";
 import { TradingPageProvider } from "../../provider/tradingPageProvider";
 import { TradingPageProps } from "../../types/types";
@@ -12,6 +12,7 @@ import { TradingWidget } from "./trading.widget";
 /** Inner page: receives props and renders provider + widget. Layout strategy from props (host or plugin). */
 const TradingPageInner: React.FC<TradingPageProps> = (props) => {
   const { onRouteChange } = useAppContext();
+  const predictionEnabled = useFeatureEnabled("prediction");
   const defaultPredictionSelect = useCallback(
     (symbol: string) => {
       onRouteChange?.({
@@ -22,16 +23,16 @@ const TradingPageInner: React.FC<TradingPageProps> = (props) => {
     [onRouteChange],
   );
   const hasPredictionNavigation = !!onRouteChange;
-  const predictionEnabled =
-    (props.predictionEnabled ?? true) &&
+  const needsAutomaticMarkets =
     hasPredictionNavigation &&
     (props.marketsDropdown == null ||
       props.marketsSheet == null ||
       props.sideMarkets == null);
+  const marketsEnabled = predictionEnabled && needsAutomaticMarkets;
   // One shared data pipeline feeds every surface; each slot only swaps in its
   // own default tab set and reuses the surface-agnostic renderers.
   const dropdown = usePredictionMarketsDropdown(defaultPredictionSelect, {
-    enabled: predictionEnabled,
+    enabled: needsAutomaticMarkets,
   });
   const sheetTabs = usePredictionMarketTabs("marketsSheet");
   const sideMarketsTabs = usePredictionMarketTabs("expandMarkets");
@@ -60,13 +61,13 @@ const TradingPageInner: React.FC<TradingPageProps> = (props) => {
       layoutStrategy={props.layoutStrategy}
       getInitialLayout={props.getInitialLayout}
       marketsDropdown={
-        props.marketsDropdown ?? (predictionEnabled ? dropdown : undefined)
+        props.marketsDropdown ?? (marketsEnabled ? dropdown : undefined)
       }
       marketsSheet={
-        props.marketsSheet ?? (predictionEnabled ? marketsSheet : undefined)
+        props.marketsSheet ?? (marketsEnabled ? marketsSheet : undefined)
       }
       sideMarkets={
-        props.sideMarkets ?? (predictionEnabled ? sideMarkets : undefined)
+        props.sideMarkets ?? (marketsEnabled ? sideMarkets : undefined)
       }
     >
       <TradingWidget />
