@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "ポジション履歴",
   "prediction.history.perps": "パーペチュアル履歴",
   "prediction.history.prediction": "予測履歴",
-  "prediction.countdownStatus": "カウントダウン / ステータス",
   "prediction.filledQuantity": "約定数量",
   "prediction.avgFillPrice": "平均約定価格",
   "prediction.closedQuantity": "決済数量",

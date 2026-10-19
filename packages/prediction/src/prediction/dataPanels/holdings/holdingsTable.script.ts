@@ -11,6 +11,7 @@ import {
 import type {
   PredictionAccountPanelState,
   PredictionPosition,
+  PredictionResult,
 } from "../../prediction.types";
 import { usePredictionFilters } from "../../predictionFilters.script";
 
@@ -32,6 +33,7 @@ export type HoldingsPositionRow = {
   availableQuantity: number;
   /** The position's own metadata drives countdowns and terminal states. */
   roundInfo: API.BinaryInfoRow | undefined;
+  resolvedOutcome: PredictionResult | undefined;
 };
 
 /**
@@ -98,6 +100,7 @@ export const buildHoldingsPositionRows = (
         getPositionState?.(position) ?? state
       ).availableQuantity(position.outcome, undefined, position.symbol),
       roundInfo,
+      resolvedOutcome: published,
     };
   });
 

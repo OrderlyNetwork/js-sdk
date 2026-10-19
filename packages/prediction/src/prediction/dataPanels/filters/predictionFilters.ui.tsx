@@ -48,6 +48,9 @@ export const PredictionFilters = ({
         { label: t("prediction.filter.allOutcomes"), value: "all" },
         { label: t("prediction.up"), value: "up" },
         { label: t("prediction.down"), value: "down" },
+        ...(mode === "settlements"
+          ? [{ label: t("prediction.tie"), value: "tie" }]
+          : []),
       ],
     });
   if (mode === "history") {

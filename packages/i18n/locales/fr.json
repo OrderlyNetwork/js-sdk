@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "Historique des positions",
   "prediction.history.perps": "Historique des Perps",
   "prediction.history.prediction": "Historique des prédictions",
-  "prediction.countdownStatus": "Compte à rebours / Statut",
   "prediction.filledQuantity": "Quantité exécutée",
   "prediction.avgFillPrice": "Prix d'exécution moy.",
   "prediction.closedQuantity": "Quantité clôturée",

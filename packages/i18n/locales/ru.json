@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "История позиций",
   "prediction.history.perps": "История бессрочных контрактов",
   "prediction.history.prediction": "История прогнозов",
-  "prediction.countdownStatus": "Обратный отсчёт / Статус",
   "prediction.filledQuantity": "Исполненное количество",
   "prediction.avgFillPrice": "Ср. цена исполнения",
   "prediction.closedQuantity": "Закрытое количество",

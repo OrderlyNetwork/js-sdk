@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "歷史倉位",
   "prediction.history.perps": "合約歷史",
   "prediction.history.prediction": "預測歷史",
-  "prediction.countdownStatus": "倒數 / 狀態",
   "prediction.filledQuantity": "成交數量",
   "prediction.avgFillPrice": "平均成交價",
   "prediction.closedQuantity": "已平倉數量",

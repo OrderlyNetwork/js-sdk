@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "Positionshistorie",
   "prediction.history.perps": "Perp-Verlauf",
   "prediction.history.prediction": "Prognose-Verlauf",
-  "prediction.countdownStatus": "Countdown / Status",
   "prediction.filledQuantity": "Ausgeführte Menge",
   "prediction.avgFillPrice": "Durchschn. Ausführungspreis",
   "prediction.closedQuantity": "Geschlossene Menge",

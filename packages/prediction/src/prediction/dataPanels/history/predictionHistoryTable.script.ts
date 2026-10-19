@@ -36,7 +36,7 @@ export const usePredictionHistoryTableScript = (
     () =>
       binaryHistoryDisplayRows(historyRecords).filter((record) =>
         matches({
-          outcome: record.outcome ?? "",
+          outcome: record.resolvedOutcome ?? "",
           status: record.result === "closed" ? "closed" : "settled",
           timestamp: record.filterTime,
         }),

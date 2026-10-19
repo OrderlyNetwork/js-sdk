@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Badge, cn, Text } from "@orderly.network/ui";
-import { deriveBinaryPhase, type BinaryInfoRow } from "../binary/binaryInfo";
+import { type BinaryInfoRow } from "../binary/binaryInfo";
 import { parseBinaryRoundSymbol } from "../binary/binaryMarkets";
 import { binaryOrderDisplaySide } from "../binary/binaryOrderDisplay";
 import { secondsUntil } from "../binary/binaryRoundView";
@@ -11,12 +11,7 @@ import type {
   PredictionResult,
   PredictionAccountState,
 } from "../prediction.types";
-import {
-  orderTypeLabels,
-  resultLabels,
-  phaseLabels,
-  sideLabels,
-} from "../predictionLabels";
+import { orderTypeLabels, resultLabels, sideLabels } from "../predictionLabels";
 import {
   formatCountdown,
   formatPredictionPnl,
@@ -206,15 +201,16 @@ export const PredictionOrderSymbol = ({
   );
 };
 
-/** Per-row calibrated clock keeps countdown and terminal state independent of selection. */
+/** Per-row calibrated countdown, independent of the selected round. */
 export const RoundCountdown: React.FC<{
   roundInfo: BinaryInfoRow | undefined;
 }> = ({ roundInfo }) => {
   useTranslation();
   const now = useRoundNow(roundInfo?.expire_at);
   if (!roundInfo) return <Text intensity={36}>--</Text>;
-  const phase = deriveBinaryPhase(roundInfo, now);
-  return phase === "trading" || phase === "closingSoon"
-    ? formatCountdown(secondsUntil(roundInfo.expire_at, now))
-    : phaseLabels()[phase];
+  return Number.isFinite(roundInfo.expire_at) && roundInfo.expire_at > now ? (
+    formatCountdown(secondsUntil(roundInfo.expire_at, now))
+  ) : (
+    <Text intensity={36}>--</Text>
+  );
 };

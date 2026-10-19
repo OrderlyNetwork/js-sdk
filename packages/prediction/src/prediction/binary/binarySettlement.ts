@@ -127,6 +127,7 @@ export function binaryHistoryDisplayRows(
     recordKey: record.recordKey,
     outcome: record.outcome,
     result: record.result,
+    resolvedOutcome: record.result === "closed" ? undefined : record.result,
     pnl: conflicted.has(record.recordKey)
       ? undefined
       : record.issues.length === 0

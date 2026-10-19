@@ -111,7 +111,6 @@ export const prediction = {
   "prediction.tab.predictionHistory": "Position history",
   "prediction.history.perps": "Perp history",
   "prediction.history.prediction": "Prediction history",
-  "prediction.countdownStatus": "Countdown / Status",
   "prediction.filledQuantity": "Filled quantity",
   "prediction.avgFillPrice": "Avg. fill price",
   "prediction.closedQuantity": "Closed quantity",

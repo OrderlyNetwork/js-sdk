@@ -34,11 +34,10 @@ export const PredictionHistoryTableUI = ({
   const columns = useMemo(
     () => [
       tableColumn(t("common.symbol"), 250, { fixed: "start" }),
-      tableColumn(t("prediction.outcome"), 100),
+      tableColumn(t("prediction.outcome"), 130),
       tableColumn(t("prediction.closedQuantity"), 130),
       tableColumn(t("prediction.avgEntryPrice"), 140),
       tableColumn(t("prediction.exitSettlementPrice"), 170),
-      tableColumn(t("prediction.result"), 130),
       tableColumn(t("positions.history.column.netPnl"), 140, {
         sortable: true,
       }),
@@ -51,7 +50,6 @@ export const PredictionHistoryTableUI = ({
       displayRecords.map((record) => ({
         id: record.recordKey,
         sortValues: [
-          undefined,
           undefined,
           undefined,
           undefined,
@@ -71,8 +69,8 @@ export const PredictionHistoryTableUI = ({
           ) : (
             <Text>{record.symbol}</Text>
           ),
-          record.outcome ? (
-            <OutcomeBadge outcome={record.outcome} />
+          record.resolvedOutcome ? (
+            <OutcomeBadge outcome={record.resolvedOutcome} />
           ) : (
             <Text intensity={36}>--</Text>
           ),
@@ -88,13 +86,6 @@ export const PredictionHistoryTableUI = ({
               )}
             </div>
           </div>,
-          record.result === "closed" ? (
-            t("prediction.closed")
-          ) : record.result ? (
-            <OutcomeBadge outcome={record.result} />
-          ) : (
-            <Text intensity={36}>--</Text>
-          ),
           // Final PnL/time only once the system close finished
           // (api-spec §6.3); pending expiry rows show placeholders.
           record.pnl != null ? (

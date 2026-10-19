@@ -536,3 +536,24 @@ test("a stale S0 still merges other updates and stabilizes on repeated merges", 
   assert.equal(merged.s1, 101);
   assert.equal(mergeBinaryDetail(merged, detail), merged);
 });
+
+test("history outcome uses final results independently of direction and excludes closed status", () => {
+  for (const outcome of ["UP", "DOWN", "TIE"] as const) {
+    const record = history({
+      side: "LONG",
+      outcome,
+      settlement_price_per_share:
+        outcome === "UP" ? 1 : outcome === "DOWN" ? 0 : 0.5,
+    });
+    const [row] = binaryHistoryDisplayRows([record]);
+    assert.equal(row.outcome, "up");
+    assert.equal(row.resolvedOutcome, outcome.toLowerCase());
+  }
+  const record = history();
+  const [exit] = binaryHistoryDisplayRows([{ ...record, result: "closed" }]);
+  const [pending] = binaryHistoryDisplayRows([
+    { ...record, result: undefined },
+  ]);
+  assert.equal(exit.resolvedOutcome, undefined);
+  assert.equal(pending.resolvedOutcome, undefined);
+});

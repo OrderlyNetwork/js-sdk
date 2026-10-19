@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "포지션 기록",
   "prediction.history.perps": "무기한 선물 내역",
   "prediction.history.prediction": "예측 내역",
-  "prediction.countdownStatus": "카운트다운 / 상태",
   "prediction.filledQuantity": "체결 수량",
   "prediction.avgFillPrice": "평균 체결 가격",
   "prediction.closedQuantity": "종료 수량",

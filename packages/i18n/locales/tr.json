@@ -378,7 +378,6 @@
   "prediction.tab.predictionHistory": "Pozisyon geçmişi",
   "prediction.history.perps": "Perp Geçmişi",
   "prediction.history.prediction": "Tahmin geçmişi",
-  "prediction.countdownStatus": "Geri sayım / Durum",
   "prediction.filledQuantity": "Gerçekleşen miktar",
   "prediction.avgFillPrice": "Ort. gerçekleşme fiyatı",
   "prediction.closedQuantity": "Kapatılan miktar",

@@ -317,3 +317,29 @@ test("expired symbols outside the metadata snapshot do not reuse stale marks", (
   assert.equal(rows[0].lastPrice, undefined);
   assert.equal(rows[0].uPnL, undefined);
 });
+
+test("outcome cells use the published round result for both position directions", () => {
+  for (const outcome of ["UP", "DOWN", "TIE"] as const) {
+    const round = {
+      ...publishedRound("UP"),
+      outcome,
+      settlement_price_per_share:
+        outcome === "UP" ? 1 : outcome === "DOWN" ? 0 : 0.5,
+      s1: outcome === "UP" ? 101 : outcome === "DOWN" ? 99 : 100,
+    };
+    const rows = buildHoldingsPositionRows(valuationState(round), all);
+    assert.deepEqual(
+      rows.map((row) => row.resolvedOutcome),
+      [outcome.toLowerCase(), outcome.toLowerCase()],
+    );
+    assert.deepEqual(
+      rows.map((row) => row.position.outcome),
+      ["up", "down"],
+    );
+    const pending = buildHoldingsPositionRows(
+      valuationState({ ...round, result_committed_at: null }),
+      all,
+    );
+    assert.ok(pending.every((row) => row.resolvedOutcome === undefined));
+  }
+});

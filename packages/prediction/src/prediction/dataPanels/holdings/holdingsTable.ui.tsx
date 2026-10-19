@@ -56,27 +56,35 @@ export const HoldingsTableUI = ({
         <PredictionFilters
           filters={filters}
           mode="holdings"
+          showOutcome={false}
           leadingItems={leadingFilterItems}
           onLeadingFilter={onLeadingFilter}
         />
       }
       columns={[
         tableColumn(t("common.symbol"), 250, { fixed: "start" }),
-        tableColumn(t("prediction.outcome"), 100),
         tableColumn(t("prediction.size"), 110, { sortable: true }),
         tableColumn(t("common.available"), 110, { sortable: true }),
         tableColumn(t("prediction.entryPrice"), 130, { sortable: true }),
         tableColumn(t("prediction.lastPrice"), 130, { sortable: true }),
         tableColumn(t("common.unrealizedPnl"), 170, { sortable: true }),
-        tableColumn(t("prediction.countdownStatus"), 150),
+        tableColumn(t("common.countdown"), 150),
+        tableColumn(t("prediction.outcome"), 100),
         tableColumn("", 100, { fixed: "end", align: "right", type: "action" }),
       ]}
       rows={rows.map(
-        ({ id, position, lastPrice, uPnL, availableQuantity, roundInfo }) => ({
+        ({
+          id,
+          position,
+          lastPrice,
+          uPnL,
+          availableQuantity,
+          roundInfo,
+          resolvedOutcome,
+        }) => ({
           id,
           groupId: position.accountId,
           sortValues: [
-            undefined,
             undefined,
             position.quantity,
             availableQuantity,
@@ -91,7 +99,6 @@ export const HoldingsTableUI = ({
               symbol={position.symbol}
               onSelectRoundSymbol={state.onSelectRoundSymbol}
             />,
-            <OutcomeBadge outcome={position.outcome} />,
             <TableNumber value={position.quantity} />,
             <TableNumber value={availableQuantity} />,
             <TableNumber value={position.averagePrice} />,
@@ -106,6 +113,11 @@ export const HoldingsTableUI = ({
               <Text intensity={36}>--</Text>
             ),
             <RoundCountdown roundInfo={roundInfo} />,
+            resolvedOutcome ? (
+              <OutcomeBadge outcome={resolvedOutcome} />
+            ) : (
+              <Text intensity={36}>--</Text>
+            ),
             <SellPosition
               state={getPositionState?.(position) ?? state}
               accountId={position.accountId}

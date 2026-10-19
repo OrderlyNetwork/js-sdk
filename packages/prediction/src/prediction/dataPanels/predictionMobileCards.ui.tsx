@@ -58,10 +58,22 @@ export const MobilePredictionPositions: React.FC<{
   const rows = useHoldingsPositionRows(state, filters.matches);
   return (
     <>
-      <PredictionFilters filters={filters} mode="holdings" />
+      <PredictionFilters
+        filters={filters}
+        mode="holdings"
+        showOutcome={false}
+      />
       <Cards empty={rows.length === 0}>
         {rows.map(
-          ({ id, position, lastPrice, uPnL, availableQuantity, roundInfo }) => (
+          ({
+            id,
+            position,
+            lastPrice,
+            uPnL,
+            availableQuantity,
+            roundInfo,
+            resolvedOutcome,
+          }) => (
             <div key={id} className="oui-rounded-xl oui-bg-base-9 oui-p-3">
               <div className="oui-flex oui-items-start oui-justify-between oui-gap-2">
                 <RoundSymbol
@@ -70,7 +82,6 @@ export const MobilePredictionPositions: React.FC<{
                   symbol={position.symbol}
                   onSelectRoundSymbol={state.onSelectRoundSymbol}
                 />
-                <OutcomeBadge outcome={position.outcome} />
               </div>
               <Divider intensity={6} className="oui-my-2 oui-w-full" />
               <div className="oui-grid oui-grid-cols-2 oui-gap-3">
@@ -97,8 +108,15 @@ export const MobilePredictionPositions: React.FC<{
                     <Text intensity={36}>--</Text>
                   )}
                 </Field>
-                <Field label={t("prediction.countdownStatus")}>
+                <Field label={t("common.countdown")}>
                   <RoundCountdown roundInfo={roundInfo} />
+                </Field>
+                <Field label={t("prediction.outcome")}>
+                  {resolvedOutcome ? (
+                    <OutcomeBadge outcome={resolvedOutcome} />
+                  ) : (
+                    <Text intensity={36}>--</Text>
+                  )}
                 </Field>
               </div>
               <div className="oui-mt-3 oui-flex oui-justify-end">
@@ -147,14 +165,16 @@ export const MobilePredictionHistory: React.FC<{
               ) : (
                 <Text>{record.symbol}</Text>
               )}
-              {record.outcome ? (
-                <OutcomeBadge outcome={record.outcome} />
-              ) : (
-                <Text intensity={36}>--</Text>
-              )}
             </div>
             <Divider intensity={6} className="oui-my-2 oui-w-full" />
             <div className="oui-grid oui-grid-cols-2 oui-gap-3">
+              <Field label={t("prediction.outcome")}>
+                {record.resolvedOutcome ? (
+                  <OutcomeBadge outcome={record.resolvedOutcome} />
+                ) : (
+                  <Text intensity={36}>--</Text>
+                )}
+              </Field>
               <Field label={t("prediction.closedQuantity")}>
                 <TableNumber value={record.quantity} />
               </Field>
@@ -163,15 +183,6 @@ export const MobilePredictionHistory: React.FC<{
               </Field>
               <Field label={t("prediction.exitSettlementPrice")}>
                 <TableNumber value={record.settlementPrice} />
-              </Field>
-              <Field label={t("prediction.result")}>
-                {record.result === "closed" ? (
-                  t("prediction.closed")
-                ) : record.result ? (
-                  <OutcomeBadge outcome={record.result} />
-                ) : (
-                  <Text intensity={36}>--</Text>
-                )}
               </Field>
               <Field label={t("positions.history.column.netPnl")}>
                 {record.pnl != null ? (
