@@ -83,9 +83,7 @@ export const MobileSharedProductOrdersPanel: React.FC<
   const canLoadMore =
     (instrument !== "prediction" && perpsHasMore) ||
     (instrument !== "perps" && binary.hasMore);
-  const clientFiltered = Boolean(
-    predictionUnderlyingSymbol || filters.outcome !== "all",
-  );
+  const clientFiltered = Boolean(predictionUnderlyingSymbol);
   const perpsStatusOptions = [
     { label: t("common.status.all"), value: "all" },
     { label: t("orders.status.pending"), value: "pending" },
@@ -118,12 +116,6 @@ export const MobileSharedProductOrdersPanel: React.FC<
       filters.onFilter({ name: "status", value: "all" });
       perpsOnFilter({ name: "status", value: "all" });
     }
-    // The outcome select is hidden outside the prediction-only view; reset
-    // it so it cannot silently filter the merged list with no visible
-    // control to change it back.
-    if (filter.value !== "prediction" && filters.outcome !== "all") {
-      filters.onFilter({ name: "outcome", value: "all" });
-    }
     onProductFilter(filter);
   };
   const cancelAllDisabled = sharedCancelAllDisabled;
@@ -137,7 +129,6 @@ export const MobileSharedProductOrdersPanel: React.FC<
         leadingItems={productFilterItems}
         onLeadingFilter={onMobileProductFilter}
         onFilter={onSharedFilter}
-        showOutcome={predictionOnly}
         statusOptions={predictionOnly ? undefined : perpsStatusOptions}
         trailing={
           mode === "pending" ? (

@@ -9,9 +9,10 @@ export const predictionDateRange = (days: number) => {
   return { from, to };
 };
 
-export const usePredictionFilters = (withDate = false) => {
+export const usePredictionFilters = (withDate = false, withOutcome = false) => {
   const [side, setSide] = useState("all");
-  const [outcome, setOutcome] = useState("all");
+  const [selectedOutcome, setOutcome] = useState("all");
+  const outcome = withOutcome ? selectedOutcome : "all";
   const [status, setStatus] = useState("all");
   const [days, setDays] = useState<number | null>(90);
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>(() =>
@@ -23,7 +24,8 @@ export const usePredictionFilters = (withDate = false) => {
   };
   const onFilter = ({ name, value }: { name: string; value: unknown }) => {
     if (name === "side" && typeof value === "string") setSide(value);
-    if (name === "outcome" && typeof value === "string") setOutcome(value);
+    if (withOutcome && name === "outcome" && typeof value === "string")
+      setOutcome(value);
     if (name === "status" && typeof value === "string") setStatus(value);
     if (name === "dateRange" && value !== null && typeof value === "object") {
       const range = value as { from?: Date | string; to?: Date | string };
@@ -38,7 +40,7 @@ export const usePredictionFilters = (withDate = false) => {
   // Stable identity so row selectors can memoize against it.
   const matches = useCallback(
     (record: {
-      outcome: string;
+      outcome?: string;
       side?: string;
       status?: string;
       timestamp?: number;

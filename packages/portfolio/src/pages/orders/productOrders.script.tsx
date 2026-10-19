@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import type React from "react";
 import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 import {
   binaryOrderDisplaySide,
   binaryOrderDisplayStatus,
-  binaryOrderOutcome,
   binaryOrderPlainText,
   toPredictionOrderStatus,
   useBinaryOrderRows,
@@ -42,7 +40,6 @@ export function useProductOrdersScript({
   onSymbolChange,
   onPredictionSelect,
 }: ProductOrdersProps) {
-  const { t } = useTranslation();
   const { state: account } = useAccount();
   const canTrade = useCanTrade();
   const pending = type === TabType.pending;
@@ -71,33 +68,7 @@ export function useProductOrdersScript({
     side: perps.ordersSide,
     dateRange: perps.dateRange,
   });
-  const [outcome, setOutcome] = useState("all");
-  const showOutcome =
-    product === "prediction" &&
-    [TabType.all, TabType.pending, TabType.filled, TabType.cancelled].includes(
-      type,
-    );
-  const activeOutcome = showOutcome ? outcome : "all";
-  useEffect(() => {
-    if (!showOutcome) setOutcome("all");
-  }, [showOutcome]);
-
-  const filterItems = useMemo(() => {
-    if (!showOutcome) return perps.filterItems;
-    const items = [...perps.filterItems];
-    const sideIndex = items.findIndex((item) => item.name === "side");
-    items.splice(sideIndex + 1, 0, {
-      type: "select",
-      name: "outcome",
-      value: activeOutcome,
-      options: [
-        { label: t("prediction.filter.allOutcomes"), value: "all" },
-        { label: t("prediction.up"), value: "up" },
-        { label: t("prediction.down"), value: "down" },
-      ],
-    });
-    return items;
-  }, [showOutcome, perps.filterItems, activeOutcome, t]);
+  const filterItems = perps.filterItems;
   const perpsRows = useMemo(() => {
     const rows = product === "prediction" ? [] : (perps.dataSource ?? []);
     return Array.from(
@@ -122,8 +93,6 @@ export function useProductOrdersScript({
             filterItems.every((filter) => {
               const value = filter.value;
               if (!value || value === "all") return true;
-              if (filter.name === "outcome")
-                return binaryOrderOutcome(order) === value;
               if (filter.name === "side")
                 return (
                   binaryOrderDisplaySide(order).toUpperCase() ===
@@ -214,10 +183,6 @@ export function useProductOrdersScript({
     orderListProps: {
       ...perps,
       filterItems,
-      onFilter: (filter: { name: string; value: any }) => {
-        if (filter.name === "outcome") setOutcome(filter.value);
-        else perps.onFilter(filter);
-      },
       dataSource: perpsRows,
       isLoading:
         (product !== "prediction" && perps.isLoading) || binary.isLoading,

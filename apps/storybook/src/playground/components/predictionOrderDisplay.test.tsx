@@ -2,12 +2,15 @@ import React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import { PredictionOrderSymbol } from "@orderly.network/prediction/src/prediction/cells/cells.ui";
+import { PredictionFilters } from "@orderly.network/prediction/src/prediction/dataPanels/filters/predictionFilters.ui";
 import { matchesPredictionOrderFilters } from "@orderly.network/prediction/src/prediction/dataPanels/orders/matchesPredictionOrderFilters";
 import { PredictionOrderCell } from "@orderly.network/prediction/src/prediction/dataPanels/orders/predictionOrderCell.ui";
 import { MobilePredictionOrderCard } from "@orderly.network/prediction/src/prediction/dataPanels/predictionMobileCards.ui";
 import type { PredictionAccountPanelState } from "@orderly.network/prediction/src/prediction/prediction.types";
 import { usePredictionFilters } from "@orderly.network/prediction/src/prediction/predictionFilters.script";
 import { OrderSide, OrderStatus, type API } from "@orderly.network/types";
+
+const { dataFilter } = vi.hoisted(() => ({ dataFilter: vi.fn(() => null) }));
 
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -22,9 +25,11 @@ vi.mock("@orderly.network/ui", async () => {
   const Text = Object.assign(wrapper, {
     numeral: wrapper,
     formatted: wrapper,
+    gradient: wrapper,
   });
   return {
     parseNumber,
+    DataFilter: dataFilter,
     Badge: wrapper,
     Button: wrapper,
     Text,
@@ -162,7 +167,7 @@ it.each([
   },
 );
 
-it("UP/DOWN filters match closing shares while Buy/Sell filters match the displayed action", () => {
+it("orders ignore outcome changes while Buy/Sell filters match the displayed action", () => {
   let filters: ReturnType<typeof usePredictionFilters>;
   function Consumer() {
     filters = usePredictionFilters();
@@ -177,12 +182,14 @@ it("UP/DOWN filters match closing shares while Buy/Sell filters match the displa
     filters.onFilter({ name: "outcome", value: "up" });
   });
   expect(matchesPredictionOrderFilters(filters!, upClose)).toBe(true);
-  expect(matchesPredictionOrderFilters(filters!, downClose)).toBe(false);
+  expect(matchesPredictionOrderFilters(filters!, downClose)).toBe(true);
+  expect(filters!.outcome).toBe("all");
   act(() => {
     filters.onFilter({ name: "outcome", value: "down" });
   });
-  expect(matchesPredictionOrderFilters(filters!, upClose)).toBe(false);
+  expect(matchesPredictionOrderFilters(filters!, upClose)).toBe(true);
   expect(matchesPredictionOrderFilters(filters!, downClose)).toBe(true);
+  expect(filters!.outcome).toBe("all");
   act(() => {
     filters.onFilter({ name: "outcome", value: "all" });
     filters.onFilter({ name: "side", value: "buy" });
@@ -201,3 +208,34 @@ it("UP/DOWN filters match closing shares while Buy/Sell filters match the displa
   expect(matchesPredictionOrderFilters(filters!, buyDown)).toBe(false);
   expect(matchesPredictionOrderFilters(filters!, buyUp)).toBe(false);
 });
+
+it.each(["holdings", "pending", "filled", "history", "settlements"] as const)(
+  "only position history exposes the outcome select: %s",
+  (mode) => {
+    let filters: ReturnType<typeof usePredictionFilters>;
+    function Consumer() {
+      filters = usePredictionFilters(false, mode === "settlements");
+      return <PredictionFilters filters={filters} mode={mode} />;
+    }
+    mount(<Consumer />);
+    const items = root.root.findByType(dataFilter).props.items;
+    const outcome = items.find(
+      (item: { name: string }) => item.name === "outcome",
+    );
+    if (mode !== "settlements") {
+      expect(outcome).toBeUndefined();
+      return;
+    }
+    expect(
+      outcome.options.map((option: { value: string }) => option.value),
+    ).toEqual(["all", "up", "down", "tie"]);
+    for (const selected of ["up", "down", "tie", "all"]) {
+      act(() => filters.onFilter({ name: "outcome", value: selected }));
+      for (const result of ["up", "down", "tie", ""]) {
+        expect(filters!.matches({ outcome: result })).toBe(
+          selected === "all" || selected === result,
+        );
+      }
+    }
+  },
+);

@@ -14,7 +14,6 @@ export const PredictionFilters = ({
   leadingItems = [],
   onLeadingFilter,
   onFilter,
-  showOutcome = true,
   statusOptions,
 }: {
   filters: ReturnType<typeof usePredictionFilters>;
@@ -23,7 +22,6 @@ export const PredictionFilters = ({
   leadingItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
   onFilter?: (filter: { name: string; value: unknown }) => void;
-  showOutcome?: boolean;
   statusOptions?: { label: string; value: string }[];
 }) => {
   const { t } = useTranslation();
@@ -39,7 +37,7 @@ export const PredictionFilters = ({
         { label: t("common.sell"), value: "sell" },
       ],
     });
-  if (showOutcome)
+  if (mode === "settlements")
     items.push({
       type: "select",
       name: "outcome",
@@ -48,9 +46,7 @@ export const PredictionFilters = ({
         { label: t("prediction.filter.allOutcomes"), value: "all" },
         { label: t("prediction.up"), value: "up" },
         { label: t("prediction.down"), value: "down" },
-        ...(mode === "settlements"
-          ? [{ label: t("prediction.tie"), value: "tie" }]
-          : []),
+        { label: t("prediction.tie"), value: "tie" },
       ],
     });
   if (mode === "history") {

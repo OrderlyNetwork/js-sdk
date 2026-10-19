@@ -3,6 +3,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import { normalizeBinaryHistory } from "@orderly.network/prediction/src/prediction/binary/binaryHistory";
 import { binaryHistoryDisplayRows } from "@orderly.network/prediction/src/prediction/binary/binarySettlement";
+import { RoundSymbol } from "@orderly.network/prediction/src/prediction/cells/cells.ui";
 import { PredictionHistoryTableUI } from "@orderly.network/prediction/src/prediction/dataPanels/history/predictionHistoryTable.ui";
 import { MobilePredictionHistory } from "@orderly.network/prediction/src/prediction/dataPanels/predictionMobileCards.ui";
 import { RoundOrderStatusCard } from "@orderly.network/prediction/src/prediction/orderEntry/roundOrderStatusCard.ui";
@@ -98,7 +99,11 @@ vi.mock("@orderly.network/prediction/src/prediction/dataPanels/table", () => ({
   }) => (
     <div>
       {rows.map((row) => (
-        <div key={row.id}>{row.cells}</div>
+        <div key={row.id}>
+          {row.cells.map((cell, index) => (
+            <React.Fragment key={index}>{cell}</React.Fragment>
+          ))}
+        </div>
       ))}
     </div>
   ),
@@ -206,9 +211,21 @@ it.each(["LONG", "SHORT"] as const)(
             />,
           ),
         );
-      expect(text(root!.toJSON())).toContain(
-        short ? "prediction.down" : "prediction.up",
+      // RoundSymbol encodes the held direction in its stripe, while the
+      // separate outcome badge displays the final result.
+      expect(root!.root.findByType(RoundSymbol).props.outcome).toBe(
+        short ? "down" : "up",
       );
+      expect(
+        root!.root.findAll(
+          (node) =>
+            node.type === "span" &&
+            node.props["aria-hidden"] === "true" &&
+            node.props.className
+              ?.split(" ")
+              .includes(short ? "oui-bg-trade-loss" : "oui-bg-trade-profit"),
+        ),
+      ).toHaveLength(1);
       expect(text(root!.toJSON())).toContain("prediction.tie");
       expect(text(root!.toJSON())).toContain(short ? "-10.02" : "9.98");
       expect(text(root!.toJSON())).toContain("0.5");

@@ -106,3 +106,59 @@ test("all orders remain reachable with every supported display page size", () =>
     }
   }
 });
+
+test("filtered orders automatically fill pages across sparse and empty batches", () => {
+  const orders = Array.from({ length: 451 }, (_, id) => ({
+    id,
+    outcome: id >= 100 && id % 7 === 0 ? "tie" : "up",
+  }));
+  let loaded = 50;
+  const visited = new Set<number>();
+  const matches = () =>
+    orders.slice(0, loaded).filter((order) => order.outcome === "tie");
+  for (let page = 1; ; page++) {
+    while (
+      shouldLoadMoreProductOrders({
+        loaded: matches().length,
+        page,
+        hasMore: loaded < orders.length,
+        isValidating: false,
+      })
+    ) {
+      loaded = Math.min(loaded + 50, orders.length);
+    }
+    if (page === 1) {
+      assert.ok(matches().length > 20);
+      assert.ok(
+        loaded < orders.length,
+        "stop after finding the next page, rather than fetching everything",
+      );
+    }
+    const rows = matches();
+    rows
+      .slice((page - 1) * 20, page * 20)
+      .forEach((row) => visited.add(row.id));
+    if (page * 20 >= rows.length) break;
+  }
+  assert.deepEqual(
+    [...visited],
+    orders.filter((order) => order.outcome === "tie").map((order) => order.id),
+  );
+});
+
+test("a filter with no matches stops when the source is exhausted", () => {
+  let loaded = 50;
+  let requests = 0;
+  while (
+    shouldLoadMoreProductOrders({
+      loaded: 0,
+      page: 1,
+      hasMore: loaded < 151,
+      isValidating: false,
+    })
+  ) {
+    loaded = Math.min(loaded + 50, 151);
+    requests++;
+  }
+  assert.equal(requests, 3);
+});

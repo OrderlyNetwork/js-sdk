@@ -56,7 +56,6 @@ export const HoldingsTableUI = ({
         <PredictionFilters
           filters={filters}
           mode="holdings"
-          showOutcome={false}
           leadingItems={leadingFilterItems}
           onLeadingFilter={onLeadingFilter}
         />

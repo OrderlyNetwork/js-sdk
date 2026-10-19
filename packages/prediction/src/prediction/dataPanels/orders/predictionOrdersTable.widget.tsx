@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { OrderSide } from "@orderly.network/types";
 import type { DataFilterItem } from "@orderly.network/ui";
-import { toOrderStatus } from "../../binary/binaryOrderDisplay";
+import {
+  binaryOrderDisplayStatus,
+  toOrderStatus,
+} from "../../binary/binaryOrderDisplay";
 import type { PredictionAccountPanelState } from "../../prediction.types";
+import { shouldLoadMoreProductOrders } from "../productOrderPagination";
 import { useProductOrderCancelAll } from "../useProductOrderCancelAll";
+import { matchesPredictionOrderFilters } from "./matchesPredictionOrderFilters";
 import {
   usePredictionOrdersTableScript,
   type PredictionOrdersTableMode,
@@ -32,10 +37,10 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
     predictionUnderlyingSymbol: props.predictionUnderlyingSymbol,
   });
   const scope = JSON.stringify([
+    props.state.accountId,
     mode,
     filters.side,
     filters.status,
-    filters.outcome,
     filters.dateRange.from?.getTime(),
     filters.dateRange.to?.getTime(),
     props.predictionUnderlyingSymbol,
@@ -61,25 +66,40 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
     status: mode === "history" && apiStatus !== "all" ? apiStatus : undefined,
     dateRange: filters.dateRange,
   });
-  // Filled rows are client-filtered (has-executions semantics over an
-  // all-status query), so the server total no longer matches the visible rows:
-  // fall back to the load-more pattern instead of counted pagination. The side
-  // filter is client-filtered too (display-side semantics the API can't query).
+  const orders = useMemo(
+    () =>
+      binary.rows.filter(
+        (order) =>
+          (!props.status ||
+            (props.status === "cancelled" &&
+              binaryOrderDisplayStatus(order) === "cancelled")) &&
+          matchesPredictionOrderFilters(filters, order),
+      ),
+    [binary.rows, props.status, filters],
+  );
+  // Client filters have no server total. Fill the visible page and look ahead
+  // one matching row so the next page remains reachable without Load more.
   const clientFiltered =
     mode === "filled" ||
     filters.side !== "all" ||
-    Boolean(props.predictionUnderlyingSymbol || filters.outcome !== "all");
+    Boolean(props.predictionUnderlyingSymbol);
   useEffect(() => {
     if (
-      !clientFiltered &&
-      binary.hasMore &&
-      binary.rows.length < requestedPage * 20 &&
-      !binary.isValidating
+      !binary.error &&
+      shouldLoadMoreProductOrders({
+        loaded: clientFiltered ? orders.length : binary.rows.length,
+        page: requestedPage,
+        hasMore: binary.hasMore,
+        isValidating: binary.isLoading || binary.isValidating,
+      })
     ) {
       binary.loadMore();
     }
   }, [
     binary.hasMore,
+    binary.error,
+    binary.isLoading,
+    orders.length,
     binary.rows.length,
     binary.isValidating,
     binary.loadMore,
@@ -93,11 +113,10 @@ export const PredictionOrdersTable: React.FC<PredictionOrdersTableProps> = ({
       filters={filters}
       cancelAllDisabled={cancellation.disabled}
       onCancelAll={cancellation.onCancelAll}
-      orders={binary.rows}
+      orders={orders}
       totalCount={clientFiltered ? undefined : binary.total}
       onPageChange={setRequestedPage}
-      hasMore={binary.hasMore}
-      loadMore={binary.loadMore}
+      loading={binary.isLoading || binary.isValidating}
     />
   );
 };

@@ -62,11 +62,7 @@ export const MobilePredictionPositions: React.FC<{
   const rows = useHoldingsPositionRows(state, filters.matches);
   return (
     <>
-      <PredictionFilters
-        filters={filters}
-        mode="holdings"
-        showOutcome={false}
-      />
+      <PredictionFilters filters={filters} mode="holdings" />
       <Cards empty={rows.length === 0}>
         {rows.map(
           ({

@@ -9,7 +9,7 @@ export const usePredictionHistoryTableScript = (
   state: PredictionAccountPanelState,
   underlyingSymbol?: string,
 ) => {
-  const filters = usePredictionFilters(true);
+  const filters = usePredictionFilters(true, true);
   const history = usePredictionSettlementHistory({
     accountId: state.accountId,
     enabled: state.accountReady,

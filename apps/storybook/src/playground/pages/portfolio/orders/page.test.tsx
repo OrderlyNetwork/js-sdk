@@ -8,20 +8,13 @@ const mocks = vi.hoisted(() => ({
   orderListProps: {} as any,
   cancelAllDisabled: false as boolean | undefined,
   nativeCancel: vi.fn(async () => true),
+  nativeFilter: vi.fn(),
   sdkCancel: vi.fn(async () => true),
   script: vi.fn(),
   table: vi.fn(),
   cancellation: vi.fn(),
   perpsDataSource: [] as any[],
 }));
-vi.mock("react", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("react")>();
-  return {
-    ...actual,
-    useState: (initial: any) =>
-      actual.useState(initial === "all" ? "up" : initial),
-  };
-});
 vi.mock("@orderly.network/hooks", () => ({
   useAccount: () => ({ state: { accountId: "account-1" } }),
 }));
@@ -33,11 +26,10 @@ vi.mock("@orderly.network/prediction", async () => {
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   const { binaryOrderPlainText } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderPlainText");
-  const { binaryOrderDisplaySide, binaryOrderOutcome, toPredictionStatus } =
+  const { binaryOrderDisplaySide, toPredictionStatus } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   return {
     binaryOrderDisplaySide,
-    binaryOrderOutcome,
     binaryOrderPlainText,
     toPredictionOrderStatus: toPredictionStatus,
     useBinaryOrderRows: ({ enabled, mode }: any) => ({
@@ -96,6 +88,7 @@ vi.mock("@orderly.network/ui-orders", () => ({
       pagination: { page: 1, pageSize: 50, count: 0 },
       manualPagination: false,
       onCancelAll: mocks.nativeCancel,
+      onFilter: mocks.nativeFilter,
     };
   },
 }));
@@ -187,20 +180,26 @@ describe("SDK cancellation wiring", () => {
 });
 
 describe("outcome filter scope", () => {
-  it("shows the outcome select only in the prediction instrument view", () => {
-    const all = render("all").table;
-    expect(
-      all.filterItems?.some(
-        (item: { name: string }) => item.name === "outcome",
-      ),
-    ).toBe(false);
-    const prediction = render("prediction").table;
-    expect(
-      prediction.filterItems?.some(
-        (item: { name: string }) => item.name === "outcome",
-      ),
-    ).toBe(true);
-  });
+  it.each(
+    ["all", "perps", "prediction"].flatMap((product) =>
+      ["pending", "filled", "all", "cancelled", "rejected"].map((type) => [
+        product,
+        type,
+      ]),
+    ),
+  )(
+    "%s / %s has no outcome select and preserves SDK filters",
+    (product, type) => {
+      const { table } = render(product, type);
+      expect(table.filterItems).toEqual([{ name: "side", value: "BUY" }]);
+      expect(
+        table.filterItems.some(
+          (item: { name: string }) => item.name === "outcome",
+        ),
+      ).toBe(false);
+      expect(table.onFilter).toBe(mocks.nativeFilter);
+    },
+  );
   it("keeps perps rows visible in the merged view and hidden in prediction", () => {
     mocks.perpsDataSource = [{ symbol: "PERP_BTC_USDC", order_id: 1 }];
     expect(render("all").table.dataSource).toEqual([
