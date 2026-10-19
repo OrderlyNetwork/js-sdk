@@ -3,6 +3,7 @@ import { Decimal } from "@orderly.network/utils";
 
 export type RebateRow = {
   date: string;
+  // Backend calculates rebates to 6 decimal places; displays use dp=6 to match.
   referee_rebate: number;
 };
 
@@ -65,6 +66,7 @@ export function resolveRebateRows(
 }
 
 export function sumRebates(rows: RebateRow[]): number {
+  // Sum raw amounts with Decimal before applying display precision or trimming zeros.
   return rows
     .reduce((sum, row) => sum.add(row.referee_rebate), new Decimal(0))
     .toNumber();
