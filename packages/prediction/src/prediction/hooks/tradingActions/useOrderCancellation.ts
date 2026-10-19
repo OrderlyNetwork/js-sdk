@@ -52,7 +52,7 @@ export const useOrderCancellation = ({
       // Region gating is already reflected by the disabled cancel button;
       // the remaining paths only fire on click/render races, so say why.
       if (isRegionRestricted) return;
-      const order = openOrders.find((item) => item.id === id);
+      const order = openOrders.find((item) => item.order_id === id);
       const symbol = orderSymbol ?? order?.symbol;
       if (!symbol) {
         notify(i18n.t("prediction.message.orderNotFound"), "danger");

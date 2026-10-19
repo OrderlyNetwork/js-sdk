@@ -8,10 +8,8 @@ import {
 import { afterEach, expect, it, vi } from "vitest";
 import { PendingValue } from "@orderly.network/prediction/src/prediction/dataPanels/orders/pendingValue.ui";
 import { PredictionOrderCell } from "@orderly.network/prediction/src/prediction/dataPanels/orders/predictionOrderCell.ui";
-import type {
-  PredictionAccountActions,
-  PredictionOpenOrder,
-} from "@orderly.network/prediction/src/prediction/prediction.types";
+import type { PredictionAccountActions } from "@orderly.network/prediction/src/prediction/prediction.types";
+import type { API } from "@orderly.network/types";
 
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -75,22 +73,19 @@ vi.mock("@orderly.network/ui-orders", () => ({
   OrderEditConfirmation: () => null,
 }));
 
-const order: PredictionOpenOrder = {
-  id: 7,
+const order = {
+  order_id: 7,
   symbol: "PERP_BTC5M2701011200_USDC",
-  outcome: "down",
-  side: "sell",
-  type: "limit",
-  orderType: "LIMIT",
-  reduceOnly: false,
+  side: "SELL",
+  type: "LIMIT",
+  reduce_only: false,
   price: 0.55,
   quantity: 13.93,
-  filledQuantity: 2.25,
-  averagePrice: 0.55,
-  timestamp: new Date(2026, 9, 13, 11, 57, 20).getTime(),
-  round: 0,
-  status: "partialFilled",
-};
+  total_executed_quantity: 2.25,
+  average_executed_price: 0.55,
+  created_time: new Date(2026, 9, 13, 11, 57, 20).getTime(),
+  status: "PARTIAL_FILLED",
+} as API.Order;
 const state = {
   isRegionRestricted: false,
   isOrderTradable: () => true,
@@ -125,7 +120,7 @@ it.each([
   ["notional", { quantity: 10 }, "4.50"],
   ["notional", { quantity: 3000 }, "1,350.00"],
   ["executed", {}, "1.01"],
-  ["notional", { status: "filled" }, "1.01"],
+  ["notional", { status: "FILLED" }, "1.01"],
 ] as const)(
   "formats %s as a PERP-style amount without a currency suffix (%j)",
   (field, changes, expected) => {

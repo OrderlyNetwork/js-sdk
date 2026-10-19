@@ -1,9 +1,9 @@
 import React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
-import type { PredictionOpenOrder } from "@orderly.network/prediction";
 import { PendingValue } from "@orderly.network/prediction/src/prediction/dataPanels/orders/pendingValue.ui";
 import type { PredictionAccountActions } from "@orderly.network/prediction/src/prediction/prediction.types";
+import type { API } from "@orderly.network/types";
 
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -39,22 +39,19 @@ type State = PredictionAccountActions & { isRegionRestricted: boolean };
 // chart is viewing. symbolB stays tradable while the chart sits on closed A.
 const symbolA = "PERP_BTC5M2601011200_USDC";
 const symbolB = "PERP_BTC5M2701011200_USDC";
-const order: PredictionOpenOrder = {
-  id: 7,
+const order = {
+  order_id: 7,
   symbol: symbolB,
-  outcome: "up",
-  side: "buy",
-  type: "limit",
-  orderType: "LIMIT",
-  clientOrderId: "client-7",
-  orderTag: "tag",
-  reduceOnly: false,
+  side: "BUY",
+  type: "LIMIT",
+  client_order_id: "client-7",
+  order_tag: "tag",
+  reduce_only: false,
   price: 0.4,
   quantity: 10,
-  filledQuantity: 0,
-  timestamp: 0,
-  round: 0,
-};
+  total_executed_quantity: 0,
+  created_time: 0,
+} as API.Order;
 function makeState(
   isOrderTradable: (symbol?: string) => boolean,
   isRegionRestricted = false,

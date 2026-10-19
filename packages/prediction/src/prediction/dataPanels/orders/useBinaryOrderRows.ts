@@ -1,12 +1,11 @@
 import { useMemo } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
-import { OrderSide, OrderStatus } from "@orderly.network/types";
+import { OrderSide, OrderStatus, type API } from "@orderly.network/types";
 import {
   hasPredictionExecutions,
   matchesBinaryDisplaySide,
-  normalizePredictionOrders,
+  filterPredictionOrders,
 } from "../../binary/binaryOrderDisplay";
-import type { PredictionOpenOrder } from "../../prediction.types";
 import type { ProductOrderMode } from "../sharedProductOrdersPanel.script";
 
 export interface BinaryOrderRowsOptions {
@@ -18,7 +17,7 @@ export interface BinaryOrderRowsOptions {
   underlyingSymbol?: string;
 }
 export interface BinaryOrderRowsState {
-  rows: PredictionOpenOrder[];
+  rows: API.Order[];
   total: number;
   hasMore: boolean;
   loadMore(): void;
@@ -59,10 +58,10 @@ export const useBinaryOrderRows = ({
     },
     { enabled, stopOnUnmount: true },
   );
-  const rows = useMemo<PredictionOpenOrder[]>(
+  const rows = useMemo<API.Order[]>(
     () =>
       enabled
-        ? normalizePredictionOrders(rawOrders ?? [], underlyingSymbol).filter(
+        ? filterPredictionOrders(rawOrders ?? [], underlyingSymbol).filter(
             (order) =>
               (mode !== "filled" || hasPredictionExecutions(order)) &&
               matchesBinaryDisplaySide(order, side),

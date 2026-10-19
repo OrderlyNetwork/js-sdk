@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
 import {
-  normalizePredictionOrders,
+  filterPredictionOrders,
   isPredictionTerminalOrder,
 } from "../binary/binaryOrderDisplay";
 
@@ -14,9 +14,7 @@ export function usePredictionOrderHistory(enabled: boolean) {
   const history = useMemo(
     () =>
       enabled
-        ? normalizePredictionOrders(orders ?? []).filter(
-            isPredictionTerminalOrder,
-          )
+        ? filterPredictionOrders(orders ?? []).filter(isPredictionTerminalOrder)
         : [],
     [orders, enabled],
   );

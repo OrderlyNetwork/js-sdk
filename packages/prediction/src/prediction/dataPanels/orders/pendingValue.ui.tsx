@@ -7,6 +7,7 @@ import {
   type SyntheticEvent,
 } from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
+import type { API } from "@orderly.network/types";
 import {
   Button,
   cn,
@@ -28,10 +29,7 @@ import {
 } from "../../binary/binaryOrderDisplay";
 import { validatePendingOrderDraft } from "../../binary/binaryOrderRules";
 import { TableNumber } from "../../cells";
-import type {
-  PredictionAccountActions,
-  PredictionOpenOrder,
-} from "../../prediction.types";
+import type { PredictionAccountActions } from "../../prediction.types";
 
 export const PendingValue = ({
   state,
@@ -39,19 +37,26 @@ export const PendingValue = ({
   field,
 }: {
   state: PredictionAccountActions & { isRegionRestricted: boolean };
-  order: PredictionOpenOrder;
+  order: API.Order;
   field: "price" | "quantity";
 }) => {
   const { t, i18n } = useTranslation();
+  const hasPrice = order.price != null && Number.isFinite(order.price);
   const displayValue =
     field === "price"
-      ? binaryOrderDisplayPrice(order, order.price)
+      ? hasPrice
+        ? binaryOrderDisplayPrice(order, order.price!)
+        : undefined
       : order.quantity;
   const disabled =
-    !state.isOrderTradable(order.symbol) || state.isRegionRestricted;
+    !state.isOrderTradable(order.symbol) ||
+    state.isRegionRestricted ||
+    !hasPrice;
   const [editing, setEditing] = useState(false);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(String(displayValue));
+  const [value, setValue] = useState(
+    displayValue == null ? "" : String(displayValue),
+  );
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,16 +68,16 @@ export const PendingValue = ({
   // reach the confirmation popover.
   const editLimits =
     editing && !disabled
-      ? state.getOrderEditQuantityLimits?.(order.id)
+      ? state.getOrderEditQuantityLimits?.(order.order_id)
       : undefined;
   const quantityLimits = field === "quantity" && !open ? editLimits : undefined;
   const showQuantityControls = quantityLimits != null;
   // A live order update or permission change invalidates the current draft.
-  const editorKey = `${order.id}:${field}:${displayValue}:${disabled}`;
+  const editorKey = `${order.order_id}:${field}:${displayValue}:${disabled}`;
   const [previousKey, setPreviousKey] = useState(editorKey);
   if (previousKey !== editorKey) {
     setPreviousKey(editorKey);
-    setValue(String(displayValue));
+    setValue(displayValue == null ? "" : String(displayValue));
     setEditing(false);
     setOpen(false);
   }
@@ -81,7 +86,7 @@ export const PendingValue = ({
     if (submittingRef.current) return;
     setOpen(false);
     setEditing(false);
-    setValue(String(displayValue));
+    setValue(displayValue == null ? "" : String(displayValue));
   }, [displayValue]);
 
   useLayoutEffect(() => {
@@ -128,7 +133,7 @@ export const PendingValue = ({
     event.stopPropagation();
     event.preventDefault();
     if (disabled || submittingRef.current || draftRejection) return;
-    if (new Decimal(value).eq(displayValue)) {
+    if (displayValue != null && new Decimal(value).eq(displayValue)) {
       restorePreviewFocusRef.current = true;
       cancelEditing();
       return;
@@ -168,10 +173,10 @@ export const PendingValue = ({
     setSubmitting(true);
     try {
       const updated = await state.editPendingOrder(
-        order.id,
+        order.order_id,
         field === "price"
           ? binaryOrderDisplayPrice(order, numericValue)
-          : order.price,
+          : order.price!,
         field === "quantity" ? numericValue : order.quantity,
       );
       if (updated) {
@@ -233,7 +238,7 @@ export const PendingValue = ({
             >
               {field === "quantity" && (
                 <>
-                  <TableNumber value={order.filledQuantity} /> /{" "}
+                  <TableNumber value={order.total_executed_quantity} /> /{" "}
                 </>
               )}
               <button
@@ -249,11 +254,15 @@ export const PendingValue = ({
                 onClick={(event) => {
                   event.stopPropagation();
                   if (disabled) return;
-                  setValue(String(displayValue));
+                  setValue(displayValue == null ? "" : String(displayValue));
                   setEditing(true);
                 }}
               >
-                <TableNumber value={displayValue} />
+                {displayValue == null || !Number.isFinite(displayValue) ? (
+                  "--"
+                ) : (
+                  <TableNumber value={displayValue} />
+                )}
               </button>
             </div>
           )}

@@ -4,6 +4,8 @@ import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   binaryOrderDisplaySide,
+  binaryOrderDisplayStatus,
+  binaryOrderOutcome,
   binaryOrderPlainText,
   toPredictionOrderStatus,
   useBinaryOrderRows,
@@ -120,7 +122,8 @@ export function useProductOrdersScript({
             filterItems.every((filter) => {
               const value = filter.value;
               if (!value || value === "all") return true;
-              if (filter.name === "outcome") return order.outcome === value;
+              if (filter.name === "outcome")
+                return binaryOrderOutcome(order) === value;
               if (filter.name === "side")
                 return (
                   binaryOrderDisplaySide(order).toUpperCase() ===
@@ -128,24 +131,26 @@ export function useProductOrdersScript({
                 );
               if (filter.name === "status") {
                 const status = toPredictionOrderStatus(value);
+                const displayStatus = binaryOrderDisplayStatus(order);
                 return (
                   status === "all" ||
-                  order.status === status ||
-                  (status === "pending" && order.status === "partialFilled")
+                  displayStatus === status ||
+                  (status === "pending" && displayStatus === "partialFilled")
                 );
               }
               if (filter.name === "dateRange") {
                 const range = value as { from?: Date; to?: Date };
                 return (
                   (!range.from ||
-                    order.timestamp >= new Date(range.from).getTime()) &&
-                  (!range.to || order.timestamp <= new Date(range.to).getTime())
+                    order.created_time >= new Date(range.from).getTime()) &&
+                  (!range.to ||
+                    order.created_time <= new Date(range.to).getTime())
                 );
               }
               return true;
             }),
           )
-          .map((order) => [order.id, order]),
+          .map((order) => [order.order_id, order]),
       ).values(),
     );
   }, [binary.rows, includePrediction, canTrade, filterItems]);

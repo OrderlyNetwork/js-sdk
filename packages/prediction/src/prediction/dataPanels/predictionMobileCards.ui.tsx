@@ -2,7 +2,11 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Divider, EmptyDataState, Text } from "@orderly.network/ui";
 import { AuthGuardEmpty, useAuthGuard } from "@orderly.network/ui-connector";
-import { binaryOrderDisplaySide } from "../binary/binaryOrderDisplay";
+import {
+  binaryOrderDisplaySide,
+  binaryOrderOutcome,
+  binaryOrderDisplayStatus,
+} from "../binary/binaryOrderDisplay";
 import {
   OutcomeBadge,
   PredictionOrderSymbol,
@@ -220,13 +224,13 @@ export const MobilePredictionOrderCard: React.FC<{
           onSelectRoundSymbol={state.onSelectRoundSymbol}
         />
         <span className="oui-text-2xs oui-text-base-contrast-54">
-          {formatTableTime(order.timestamp)}
+          {formatTableTime(order.created_time)}
         </span>
       </div>
       <Divider intensity={6} className="oui-my-2 oui-w-full" />
       <div className="oui-grid oui-grid-cols-2 oui-gap-3">
         <Field label={t("prediction.outcome")}>
-          <OutcomeBadge outcome={order.outcome} />
+          <OutcomeBadge outcome={binaryOrderOutcome(order)} />
         </Field>
         <Field label={t("common.side")}>
           {sideLabels()[binaryOrderDisplaySide(order)]}
@@ -258,9 +262,8 @@ export const MobilePredictionOrderCard: React.FC<{
           <PredictionOrderCell state={state} order={order} field="status" />
         </Field>
       </div>
-      {(!order.status ||
-        order.status === "pending" ||
-        order.status === "partialFilled") && (
+      {(binaryOrderDisplayStatus(order) === "pending" ||
+        binaryOrderDisplayStatus(order) === "partialFilled") && (
         <div className="oui-mt-3 oui-flex oui-justify-end">
           <PredictionOrderCell state={state} order={order} field="action" />
         </div>

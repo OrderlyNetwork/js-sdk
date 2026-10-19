@@ -1,15 +1,10 @@
 import React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
-import {
-  binaryOrderEditPayload,
-  toPredictionOrder,
-} from "@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay";
+import { binaryOrderOutcome } from "@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay";
+import { binaryOrderEditPayload } from "@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay";
 import { PendingValue } from "@orderly.network/prediction/src/prediction/dataPanels/orders/pendingValue.ui";
-import type {
-  PredictionAccountActions,
-  PredictionOpenOrder,
-} from "@orderly.network/prediction/src/prediction/prediction.types";
+import type { PredictionAccountActions } from "@orderly.network/prediction/src/prediction/prediction.types";
 import { OrderSide, OrderStatus, type API } from "@orderly.network/types";
 import { EditableCellInput } from "@orderly.network/ui-orders";
 
@@ -127,20 +122,17 @@ vi.mock("@orderly.network/ui-orders", async () => ({
   ...(await import("@orderly.network/ui-orders/src/components/orderList/desktop/editOrder/orderEditConfirmation")),
 }));
 
-const order: PredictionOpenOrder = {
-  id: 7,
+const order = {
+  order_id: 7,
   symbol: "PERP_BTC5M2701011200_USDC",
-  outcome: "down",
-  side: "sell",
-  type: "limit",
-  orderType: "LIMIT",
-  reduceOnly: false,
+  side: "SELL",
+  type: "LIMIT",
+  reduce_only: false,
   price: 0.55,
   quantity: 13.93,
-  filledQuantity: 2.25,
-  timestamp: 0,
-  round: 0,
-};
+  total_executed_quantity: 2.25,
+  created_time: 0,
+} as API.Order;
 const state = {
   isRegionRestricted: false,
   isOrderTradable: () => true,
@@ -157,7 +149,7 @@ const event = () => ({ stopPropagation: vi.fn(), preventDefault: vi.fn() });
 function mount(
   field: "price" | "quantity" = "price",
   nextState: typeof state = state,
-  nextOrder: PredictionOpenOrder = order,
+  nextOrder: API.Order = order,
 ) {
   act(() => {
     root = create(
@@ -212,7 +204,7 @@ it.each([
 ] as const)(
   "edits Sell %s shares using the original API side and UP coordinates",
   async (side, outcome, preview, draft) => {
-    const row = toPredictionOrder({
+    const row = {
       order_id: 7,
       symbol: order.symbol,
       type: "LIMIT",
@@ -225,8 +217,8 @@ it.each([
       created_time: 0,
       client_order_id: "close-7",
       order_tag: "close",
-    } as API.Order);
-    expect(row.outcome).toBe(outcome);
+    } as API.Order;
+    expect(binaryOrderOutcome(row)).toBe(outcome);
     mount("price", state, row);
     expect(
       root.root.findByType("button").findByType("span").children.join(""),
@@ -270,14 +262,14 @@ it("does not calculate quantity limits while previewing", () => {
     root.update(
       <PendingValue
         state={nextState}
-        order={{ ...order, filledQuantity: 3 }}
+        order={{ ...order, total_executed_quantity: 3 }}
         field="quantity"
       />,
     ),
   );
   expect(getLimits).not.toHaveBeenCalled();
   startEditing();
-  expect(getLimits).toHaveBeenCalledWith(order.id);
+  expect(getLimits).toHaveBeenCalledWith(order.order_id);
   changeValue("15");
   getLimits.mockClear();
   pressKey("Enter");

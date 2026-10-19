@@ -1,5 +1,5 @@
 import { useState, type ComponentProps } from "react";
-import { OrderSide, OrderStatus } from "@orderly.network/types";
+import { OrderSide, OrderStatus, type API } from "@orderly.network/types";
 import type { DataFilterItem } from "@orderly.network/ui";
 import {
   TabType,
@@ -7,10 +7,7 @@ import {
   DesktopOrderList,
 } from "@orderly.network/ui-orders";
 import { isBinarySymbol } from "../binary/binaryInfo";
-import type {
-  PredictionAccountPanelState,
-  PredictionOpenOrder,
-} from "../prediction.types";
+import type { PredictionAccountPanelState } from "../prediction.types";
 import {
   useBinaryOrderRows,
   type BinaryOrderRowsState,
@@ -98,7 +95,7 @@ export type UseAllProductOrdersTableScriptArgs = PredictionPerpsPanelProps & {
 export interface AllProductOrdersTableState {
   orderListState: PerpsOrderListState;
   cancelAllDisabled?: boolean;
-  predictionOrders: PredictionOpenOrder[];
+  predictionOrders: API.Order[];
   binary: BinaryOrderRowsState;
   perpsTotal: number;
   perpsHasMore: boolean;

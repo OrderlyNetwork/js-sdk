@@ -80,7 +80,7 @@ it("activates only the selected product, hides disabled cached rows, and keeps d
   act(() => root!.update(<Consumer instrument="prediction" />));
   expect(mocks.perps.mock.calls.at(-1)?.[0].enabled).toBe(false);
   expect(mocks.binary.mock.calls.at(-1)?.[1].enabled).toBe(true);
-  expect(result.predictionOrders[0].status).toBe("rejected");
+  expect(result.predictionOrders[0].status).toBe("REJECTED");
   expect(result.binary.hasMore).toBe(true);
   expect(mocks.loadMore).not.toHaveBeenCalled();
   act(() => root!.update(<Consumer instrument="all" />));

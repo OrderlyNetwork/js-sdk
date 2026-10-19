@@ -7,6 +7,7 @@ import {
 import { AssetsModule } from "@orderly.network/portfolio";
 import {
   PredictionPage,
+  useBinaryOrderRows,
   type PredictionSymbolSelection,
 } from "@orderly.network/prediction";
 import {
@@ -52,6 +53,7 @@ import type {
   TradingDataListProductContent as CommonDataListProductContent,
   TradingPageExtensionProps as CommonPageExtensionProps,
 } from "@orderly.network/trading-shared";
+import type { API } from "@orderly.network/types";
 import {
   AssetsWidget,
   AssetsTabWidget,
@@ -62,6 +64,12 @@ import {
 type Assert<T extends true> = T;
 type Compatible<A, B> = [A, B] extends [B, A] ? true : false;
 export type SharedTradingContracts = [
+  Assert<Compatible<PredictionAccountState["openOrders"][number], API.Order>>,
+  Assert<Compatible<PredictionAccountState["history"][number], API.Order>>,
+  Assert<Compatible<PredictionOrderCellProps["order"], API.Order>>,
+  Assert<
+    Compatible<ReturnType<typeof useBinaryOrderRows>["rows"][number], API.Order>
+  >,
   Assert<Compatible<TradingMarketsDropdownProps, CommonMarketsDropdownProps>>,
   Assert<Compatible<TradingPerpsPanelProps, CommonPerpsPanelProps>>,
   Assert<

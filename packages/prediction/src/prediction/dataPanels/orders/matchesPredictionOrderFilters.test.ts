@@ -6,10 +6,7 @@ import {
   OrderType,
   type API,
 } from "@orderly.network/types";
-import {
-  matchesBinaryDisplaySide,
-  toPredictionOrder,
-} from "../../binary/binaryOrderDisplay";
+import { matchesBinaryDisplaySide } from "../../binary/binaryOrderDisplay";
 import type { usePredictionFilters } from "../../predictionFilters.script";
 import { matchesPredictionOrderFilters } from "./matchesPredictionOrderFilters";
 
@@ -29,16 +26,16 @@ const apiOrder = (changes: Partial<API.Order> = {}) =>
 
 // buyUp / buyDown / sellUp / sellDown name the DISPLAYED action and outcome;
 // the underlying API side differs for three of the four (single UP book).
-const buyUp = toPredictionOrder(apiOrder({ side: OrderSide.BUY }));
-const buyDown = toPredictionOrder(apiOrder({ side: OrderSide.SELL }));
-const sellUp = toPredictionOrder({
+const buyUp = apiOrder({ side: OrderSide.BUY });
+const buyDown = apiOrder({ side: OrderSide.SELL });
+const sellUp = {
   ...apiOrder({ side: OrderSide.SELL }),
   reduce_only: true,
-});
-const sellDown = toPredictionOrder({
+};
+const sellDown = {
   ...apiOrder({ side: OrderSide.BUY }),
   reduce_only: true,
-});
+};
 
 test("matchesBinaryDisplaySide filters by reduce-only, not by API side", () => {
   for (const [row, buy, sell] of [
@@ -47,9 +44,17 @@ test("matchesBinaryDisplaySide filters by reduce-only, not by API side", () => {
     [sellUp, false, true],
     [sellDown, false, true],
   ] as const) {
-    assert.equal(matchesBinaryDisplaySide(row, OrderSide.BUY), buy, row.id);
-    assert.equal(matchesBinaryDisplaySide(row, OrderSide.SELL), sell, row.id);
-    assert.equal(matchesBinaryDisplaySide(row, undefined), true, row.id);
+    assert.equal(
+      matchesBinaryDisplaySide(row, OrderSide.BUY),
+      buy,
+      row.order_id,
+    );
+    assert.equal(
+      matchesBinaryDisplaySide(row, OrderSide.SELL),
+      sell,
+      row.order_id,
+    );
+    assert.equal(matchesBinaryDisplaySide(row, undefined), true, row.order_id);
   }
 });
 
@@ -57,8 +62,8 @@ test("matchesBinaryDisplaySide tolerates non-sides and missing reduce_only", () 
   // Shared-panel callers pass `OrderSide | "all"` straight through.
   assert.equal(matchesBinaryDisplaySide(sellUp, "all" as OrderSide), true);
   // Missing reduce_only defaults to Buy, same as binaryOrderDisplaySide.
-  const sparse = toPredictionOrder(apiOrder({ side: OrderSide.SELL }));
-  delete (sparse as { reduceOnly?: boolean }).reduceOnly;
+  const sparse = apiOrder({ side: OrderSide.SELL });
+  delete (sparse as { reduce_only?: boolean }).reduce_only;
   assert.equal(matchesBinaryDisplaySide(sparse, OrderSide.BUY), true);
   assert.equal(matchesBinaryDisplaySide(sparse, OrderSide.SELL), false);
 });
@@ -96,9 +101,7 @@ test("matchesPredictionOrderFilters feeds filters the displayed action", () => {
 });
 
 test("matchesPredictionOrderFilters keeps the pending status mapping", () => {
-  const partial = toPredictionOrder(
-    apiOrder({ status: OrderStatus.PARTIAL_FILLED }),
-  );
+  const partial = apiOrder({ status: OrderStatus.PARTIAL_FILLED });
   const statuses: string[] = [];
   const capturing = {
     side: "all",

@@ -53,8 +53,6 @@ export type {
   UsePredictionAccountDataOptions,
   PredictionSettlementHistoryState,
   PredictionPosition,
-  PredictionOpenOrder,
-  PredictionTrade,
   PredictionSettlement,
   PredictionDataTab,
   PredictionAccountState,
@@ -79,6 +77,11 @@ export type { ProductOrderMode } from "./prediction/dataPanels/sharedProductOrde
 
 export {
   binaryOrderDisplaySide,
+  binaryOrderOutcome,
+  binaryOrderDisplayPrice,
+  binaryOrderDisplayType,
+  binaryOrderRound,
+  binaryOrderDisplayStatus,
   toPredictionStatus as toPredictionOrderStatus,
   toOrderStatus as toApiPredictionOrderStatus,
   hasPredictionExecutions,

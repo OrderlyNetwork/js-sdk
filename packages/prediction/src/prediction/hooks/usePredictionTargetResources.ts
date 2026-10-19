@@ -16,7 +16,7 @@ import {
   toPredictionPosition,
   type BinaryPendingSnapshot,
 } from "../binary/binaryManagedPositions";
-import { normalizePredictionOrders } from "../binary/binaryOrderDisplay";
+import { filterPredictionOrders } from "../binary/binaryOrderDisplay";
 import { binaryFeeRates } from "../binary/useBinaryFeeRates";
 import type { PredictionOutcome } from "../prediction.types";
 
@@ -199,7 +199,7 @@ export function usePredictionTargetResources(
     positions: (positions.data?.rows ?? [])
       .filter((row) => isBinarySymbol(row.symbol) && row.position_qty !== 0)
       .map((row) => toPredictionPosition(row, targetAccountId)),
-    openOrders: normalizePredictionOrders(orders.data?.rows ?? []),
+    openOrders: filterPredictionOrders(orders.data?.rows ?? []),
     pendingOrdersComplete: complete,
     ordersLoading: orders.isLoading || info.isLoading,
     ordersError: orders.error || info.error,

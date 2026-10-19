@@ -11,7 +11,10 @@ import {
   isBinaryRowTradable,
   type BinaryInfoRow,
 } from "../../binary/binaryInfo";
-import { binaryOrderEditPayload } from "../../binary/binaryOrderDisplay";
+import {
+  binaryOrderOutcome,
+  binaryOrderEditPayload,
+} from "../../binary/binaryOrderDisplay";
 import {
   binaryRejectionNotice,
   complementPrice,
@@ -68,23 +71,31 @@ export const useOrderEditing = ({
   const [doUpdateOrder] = useMutation("/v1/order", "PUT");
   const getOrderEditQuantityLimits = useCallback(
     (id: number) => {
-      const order = openOrders.find((item) => item.id === id);
+      const order = openOrders.find((item) => item.order_id === id);
       const config = order?.symbol
         ? configBySymbol.get(order.symbol)
         : undefined;
-      if (!order || !config) return undefined;
+      if (
+        !order ||
+        !config ||
+        order.price == null ||
+        !Number.isFinite(order.price)
+      )
+        return undefined;
       const limits = resolveBinaryOrderLimits(config);
-      const openingQuantity = order.reduceOnly
+      const openingQuantity = order.reduce_only
         ? undefined
         : maxOpeningQuantity(
-            order.outcome,
-            order.outcome === "up" ? order.price : complementPrice(order.price),
+            binaryOrderOutcome(order),
+            binaryOrderOutcome(order) === "up"
+              ? order.price
+              : complementPrice(order.price),
             order.symbol,
           );
-      if (!order.reduceOnly && openingQuantity == null) return undefined;
-      const maxTotal = order.reduceOnly
-        ? new Decimal(order.filledQuantity).add(
-            availableQuantity(order.outcome, id, order.symbol),
+      if (!order.reduce_only && openingQuantity == null) return undefined;
+      const maxTotal = order.reduce_only
+        ? new Decimal(order.total_executed_quantity ?? 0).add(
+            availableQuantity(binaryOrderOutcome(order), id, order.symbol),
           )
         : new Decimal(order.quantity).add(openingQuantity!);
       const boundedMax = maxTotal.lt(0)
@@ -119,7 +130,7 @@ export const useOrderEditing = ({
       const revision = context.current.revision;
       const isCurrent = () =>
         mounted.current && context.current.revision === revision;
-      const order = openOrders.find((item) => item.id === id);
+      const order = openOrders.find((item) => item.order_id === id);
       const config = order?.symbol
         ? configBySymbol.get(order.symbol)
         : selectedConfig;
@@ -143,7 +154,7 @@ export const useOrderEditing = ({
           price,
           quantity,
           limits,
-          reduceOnly: order.reduceOnly,
+          reduceOnly: order.reduce_only,
           requireQuantityTickAligned: true,
           checkQuantityMax: true,
         })
@@ -151,7 +162,9 @@ export const useOrderEditing = ({
         notify("prediction.invalidOrder", "danger");
         return false;
       }
-      const remaining = new Decimal(quantity).sub(order.filledQuantity);
+      const remaining = new Decimal(quantity).sub(
+        order.total_executed_quantity ?? 0,
+      );
       // UI percentages and submission share the same total-quantity envelope.
       const quantityLimits = getOrderEditQuantityLimits(id);
       if (

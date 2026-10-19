@@ -33,10 +33,11 @@ vi.mock("@orderly.network/prediction", async () => {
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   const { binaryOrderPlainText } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderPlainText");
-  const { binaryOrderDisplaySide, toPredictionStatus } =
+  const { binaryOrderDisplaySide, binaryOrderOutcome, toPredictionStatus } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   return {
     binaryOrderDisplaySide,
+    binaryOrderOutcome,
     binaryOrderPlainText,
     toPredictionOrderStatus: toPredictionStatus,
     useBinaryOrderRows: ({ enabled, mode }: any) => ({
@@ -123,12 +124,11 @@ beforeEach(() => {
   mocks.state = {
     openOrders: [
       {
-        id: "down-sell",
+        order_id: 1,
         symbol: "PERP_BTC5M2610091200_USDC",
-        outcome: "down",
         // Sell DOWN closes DOWN shares with a reduce-only BUY in the UP book.
-        side: "buy",
-        reduceOnly: true,
+        side: "BUY",
+        reduce_only: true,
       },
     ],
     history: [],
@@ -213,44 +213,40 @@ describe("outcome filter scope", () => {
       openOrders: [],
       history: [
         {
-          id: "ioc-partial",
+          order_id: "ioc-partial",
           symbol: "PERP_BTC5M2610091200_USDC",
-          outcome: "up",
-          side: "buy",
-          status: "cancelled",
-          filledQuantity: 40,
+          side: "BUY",
+          status: "CANCELLED",
+          total_executed_quantity: 40,
           quantity: 100,
-          timestamp: 3,
+          created_time: 3,
         },
         {
-          id: "full",
+          order_id: "full",
           symbol: "PERP_BTC5M2610091200_USDC",
-          outcome: "up",
-          side: "buy",
-          status: "filled",
-          filledQuantity: 100,
+          side: "BUY",
+          status: "FILLED",
+          total_executed_quantity: 100,
           quantity: 100,
-          timestamp: 2,
+          created_time: 2,
         },
         {
-          id: "no-fill",
+          order_id: "no-fill",
           symbol: "PERP_BTC5M2610091200_USDC",
-          outcome: "down",
-          side: "buy",
-          status: "cancelled",
-          filledQuantity: 0,
+          side: "BUY",
+          status: "CANCELLED",
+          total_executed_quantity: 0,
           quantity: 100,
-          timestamp: 4,
+          created_time: 4,
         },
         {
-          id: "working",
+          order_id: "working",
           symbol: "PERP_BTC5M2610091200_USDC",
-          outcome: "up",
-          side: "buy",
-          status: "partialFilled",
-          filledQuantity: 10,
+          side: "BUY",
+          status: "PARTIAL_FILLED",
+          total_executed_quantity: 10,
           quantity: 100,
-          timestamp: 1,
+          created_time: 1,
         },
       ],
     };

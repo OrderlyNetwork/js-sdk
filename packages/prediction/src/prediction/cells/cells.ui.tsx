@@ -1,8 +1,14 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderStatus } from "@orderly.network/types";
 import { Badge, cn, Text } from "@orderly.network/ui";
 import { type BinaryInfoRow } from "../binary/binaryInfo";
 import { parseBinaryRoundSymbol } from "../binary/binaryMarkets";
+import {
+  binaryOrderOutcome,
+  binaryOrderRound,
+  binaryOrderDisplayType,
+} from "../binary/binaryOrderDisplay";
 import { secondsUntil } from "../binary/binaryRoundView";
 import { useRoundNow } from "../hooks/useRoundCountdown";
 import type {
@@ -165,17 +171,19 @@ export const PredictionOrderSymbol = ({
       }
     >
       <span
-        aria-label={outcomeLabels()[order.outcome]}
-        title={outcomeLabels()[order.outcome]}
+        aria-label={outcomeLabels()[binaryOrderOutcome(order)]}
+        title={outcomeLabels()[binaryOrderOutcome(order)]}
         className={cn(
           "oui-h-[34px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
-          order.outcome === "up" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
+          binaryOrderOutcome(order) === "up"
+            ? "oui-bg-trade-profit"
+            : "oui-bg-trade-loss",
         )}
       />
       <div
         className={cn(
           "oui-min-w-0",
-          order.status === "cancelled"
+          order.status === OrderStatus.CANCELLED
             ? "oui-text-base-contrast-20"
             : "oui-text-base-contrast",
         )}
@@ -185,17 +193,17 @@ export const PredictionOrderSymbol = ({
         </div>
         <div className="oui-mt-1 oui-flex oui-items-center oui-gap-1 oui-whitespace-nowrap">
           <Badge color="neutral" size="xs">
-            {orderTypeLabels()[order.type]}
+            {orderTypeLabels()[binaryOrderDisplayType(order)]}
           </Badge>
           <span
             className={cn(
               "oui-whitespace-nowrap oui-tabular-nums",
-              order.status === "cancelled"
+              order.status === OrderStatus.CANCELLED
                 ? "oui-text-base-contrast-20"
                 : "oui-text-base-contrast-54",
             )}
           >
-            {formatRoundBadge(order.round, market?.intervalSeconds)}
+            {formatRoundBadge(binaryOrderRound(order), market?.intervalSeconds)}
           </span>
         </div>
       </div>

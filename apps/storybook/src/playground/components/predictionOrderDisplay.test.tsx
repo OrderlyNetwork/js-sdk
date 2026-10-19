@@ -1,7 +1,6 @@
 import React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
-import { toPredictionOrder } from "@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay";
 import { PredictionOrderSymbol } from "@orderly.network/prediction/src/prediction/cells/cells.ui";
 import { matchesPredictionOrderFilters } from "@orderly.network/prediction/src/prediction/dataPanels/orders/matchesPredictionOrderFilters";
 import { PredictionOrderCell } from "@orderly.network/prediction/src/prediction/dataPanels/orders/predictionOrderCell.ui";
@@ -99,15 +98,10 @@ it.each([
 ] as const)(
   "desktop and mobile show %s reduce-only=%s as %s %s",
   (side, reduceOnly, action, outcome) => {
-    const order = toPredictionOrder(
-      apiOrder({ side, reduce_only: reduceOnly }),
-    );
+    const order = apiOrder({ side, reduce_only: reduceOnly });
     mount(<PredictionOrderCell state={state} order={order} field="side" />);
     expect(text(root.toJSON())).toContain(
       `common.${action} prediction.${outcome}`,
-    );
-    expect(text(root.toJSON()).includes("orderEntry.reduceOnly")).toBe(
-      reduceOnly,
     );
     act(() => {
       root.update(<MobilePredictionOrderCard state={state} order={order} />);
@@ -119,11 +113,19 @@ it.each([
     act(() => {
       root.update(<PredictionOrderSymbol order={order} />);
     });
-    const marker = root.root.findByProps({ "aria-label": `common.${action}` });
-    expect(marker.props.title).toBe(`common.${action}`);
+    const marker = root.root.findByProps({
+      "aria-label": `prediction.${outcome}`,
+    });
+    expect(marker.props.title).toBe(`prediction.${outcome}`);
     expect(marker.props.className).toContain(
-      action === "buy" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
+      outcome === "up" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
     );
+    act(() =>
+      root.update(
+        <PredictionOrderCell state={state} order={order} field="reduce_only" />,
+      ),
+    );
+    expect(text(root.toJSON())).toBe(reduceOnly ? "common.yes" : "common.no");
   },
 );
 
@@ -135,9 +137,7 @@ it.each([
 ] as const)(
   "settlement cells retain actual amounts for %s at UP price %s",
   (side, price, average, notional) => {
-    const order = toPredictionOrder(
-      apiOrder({ side, price, average_executed_price: price }),
-    );
+    const order = apiOrder({ side, price, average_executed_price: price });
     mount(
       <PredictionOrderCell
         state={state}
@@ -169,12 +169,10 @@ it("UP/DOWN filters match closing shares while Buy/Sell filters match the displa
     return null;
   }
   mount(<Consumer />);
-  const upClose = toPredictionOrder(apiOrder());
-  const downClose = toPredictionOrder(apiOrder({ side: OrderSide.BUY }));
-  const buyDown = toPredictionOrder(apiOrder({ reduce_only: false }));
-  const buyUp = toPredictionOrder(
-    apiOrder({ side: OrderSide.BUY, reduce_only: false }),
-  );
+  const upClose = apiOrder();
+  const downClose = apiOrder({ side: OrderSide.BUY });
+  const buyDown = apiOrder({ reduce_only: false });
+  const buyUp = apiOrder({ side: OrderSide.BUY, reduce_only: false });
   act(() => {
     filters.onFilter({ name: "outcome", value: "up" });
   });

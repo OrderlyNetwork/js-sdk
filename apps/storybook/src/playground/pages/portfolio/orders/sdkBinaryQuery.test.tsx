@@ -102,7 +102,7 @@ it("filters rows by display side locally without querying side", () => {
   ];
   mount({ mode: "history", side: OrderSide.SELL });
   expect(mocks.query.mock.calls[0][0].side).toBeUndefined();
-  expect(result.rows.map((row) => row.id)).toEqual([2, 3]);
+  expect(result.rows.map((row) => row.order_id)).toEqual([2, 3]);
 });
 
 it("shows executed cancelled IOC orders, excludes working and unfilled orders and leaked Perps rows", () => {
@@ -114,8 +114,9 @@ it("shows executed cancelled IOC orders, excludes working and unfilled orders an
     { ...order(5), symbol: "PERP_ETH_USDC" },
   ];
   mount({ mode: "filled" });
-  expect(result.rows.map((row) => row.id)).toEqual([1, 2]);
-  expect(result.rows[0].filledQuantity).toBe(40);
+  expect(result.rows.map((row) => row.order_id)).toEqual([1, 2]);
+  expect(result.rows[0].total_executed_quantity).toBe(40);
+  expect(result.rows[0]).toBe(mocks.rows[0]);
 });
 
 it("does not truncate loaded order history at 100 and stops once the paginated query ends", () => {

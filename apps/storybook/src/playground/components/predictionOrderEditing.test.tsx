@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import type { PredictionOpenOrder } from "@orderly.network/prediction";
 import { useOrderEditing } from "@orderly.network/prediction/src/prediction/hooks/tradingActions/useOrderEditing";
 import type { PredictionAccountResources } from "@orderly.network/prediction/src/prediction/hooks/usePredictionAccountResources";
 import type { API } from "@orderly.network/types";
@@ -17,23 +16,20 @@ vi.mock("@orderly.network/hooks", () => ({
 }));
 
 const symbol = "PERP_BTC5M2608271200_USDC";
-// Matches toPredictionOrder: a reduce-only SELL is closing UP shares.
-const order: PredictionOpenOrder = {
-  id: 42,
+// A reduce-only SELL closes UP shares.
+const order = {
+  order_id: 42,
   symbol,
-  outcome: "up",
-  side: "sell",
-  type: "limit",
-  orderType: "POST_ONLY",
-  clientOrderId: "client-42",
-  orderTag: "tag",
-  reduceOnly: true,
+  side: "SELL",
+  type: "POST_ONLY",
+  client_order_id: "client-42",
+  order_tag: "tag",
+  reduce_only: true,
   price: 0.8,
   quantity: 20,
-  filledQuantity: 10,
-  timestamp: 0,
-  round: 0,
-};
+  total_executed_quantity: 10,
+  created_time: 0,
+} as API.Order;
 const config = {
   symbol,
   status: "ACTIVE",
@@ -51,7 +47,7 @@ type Props = {
   active?: boolean;
   restricted?: boolean;
   expired?: boolean;
-  orderChanges?: Partial<PredictionOpenOrder>;
+  orderChanges?: Partial<API.Order>;
   configChanges?: Partial<API.BinaryInfoRow>;
 };
 let root: ReactTestRenderer | undefined;
@@ -128,7 +124,7 @@ it("exposes reduce-only totals using filled and available quantities for the ord
 });
 it("exposes opening totals using the DOWN display price and rounds market ceilings to ticks", () => {
   mount({
-    orderChanges: { reduceOnly: false, outcome: "down" },
+    orderChanges: { reduce_only: false, outcome: "down" },
     configChanges: { base_tick: 0.05, base_max: 20.039 },
   });
   expect(getQuantityLimits(42)).toEqual({
@@ -140,7 +136,7 @@ it("exposes opening totals using the DOWN display price and rounds market ceilin
 });
 it("keeps opening edit limits unavailable until capacity recovers and preserves valid zero", () => {
   mocks.max.mockReturnValue(undefined);
-  mount({ orderChanges: { reduceOnly: false, outcome: "down" } });
+  mount({ orderChanges: { reduce_only: false, outcome: "down" } });
   expect(getQuantityLimits(42)).toBeUndefined();
   mocks.max.mockReturnValue(0);
   expect(getQuantityLimits(42)?.maxQuantity).toBe(20);
@@ -220,7 +216,11 @@ it.each(["account", "disable", "unmount"])(
 it.each(["up", "down"] as const)(
   "edits small %s reduce-only orders but rejects small opening orders",
   async (outcome) => {
-    const orderChanges = { outcome, filledQuantity: 0, quantity: 1 };
+    const orderChanges = {
+      total_executed_quantity: 0,
+      quantity: 1,
+      side: outcome === "up" ? "BUY" : "SELL",
+    };
     mount({ orderChanges });
     await expect(edit(42, 0.36, 1)).resolves.toBe(true);
     expect(mocks.update).toHaveBeenCalledWith(
@@ -228,7 +228,7 @@ it.each(["up", "down"] as const)(
     );
     act(() =>
       root!.update(
-        <Consumer orderChanges={{ ...orderChanges, reduceOnly: false }} />,
+        <Consumer orderChanges={{ ...orderChanges, reduce_only: false }} />,
       ),
     );
     await expect(edit(42, 0.36, 1)).resolves.toBe(false);

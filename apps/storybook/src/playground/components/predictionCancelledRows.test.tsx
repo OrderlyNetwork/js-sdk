@@ -18,7 +18,7 @@ vi.mock("@orderly.network/ui", () => {
     TableFeatures: { DownloadFeature: "download" },
     Button: wrapper,
     Badge: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    Text: { numeral: wrapper, formatted: wrapper },
+    Text: Object.assign(wrapper, { numeral: wrapper, formatted: wrapper }),
     cn: (...classes: unknown[]) => classes.filter(Boolean).join(" "),
     DataTable: (props: any) => {
       mocks.table = props;
@@ -59,9 +59,14 @@ vi.mock(
   "@orderly.network/ui-orders/src/components/orderList/desktop/useColumn",
   () => ({
     useOrderColumn: () =>
-      ["symbol", "side", "fill_quantity", "price", "status"].map(
-        (dataIndex) => ({ dataIndex }),
-      ),
+      [
+        "symbol",
+        "side",
+        "fill_quantity",
+        "price",
+        "status",
+        "realized_pnl",
+      ].map((dataIndex) => ({ dataIndex })),
     adaptColumnsForSupplementalRows: (columns: any) => columns,
   }),
 );
@@ -74,6 +79,7 @@ vi.mock(
 );
 vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
   usePredictionFormatters: () => ({ formatRoundBadge: () => "11:00" }),
+  formatPredictionPnl: (value: number) => value.toFixed(2),
 }));
 vi.mock(
   "@orderly.network/prediction/src/prediction/predictionFilters.script",
@@ -96,9 +102,9 @@ vi.mock(
   () => ({
     buildProductFilterItems: () => [],
     useSharedProductOrdersPanelScript: () => ({ instrument: "all" }),
-    useAllProductOrdersTableScript: () => ({
+    useAllProductOrdersTableScript: ({ mode }: { mode: string }) => ({
       orderListState: {
-        type: "orderHistory",
+        type: mode === "filled" ? "filled" : "orderHistory",
         filterItems: [],
         useClientTable: true,
         dataSource: [],
@@ -121,18 +127,16 @@ it.each([0, 2])(
   (filledQuantity) => {
     mocks.orders = [
       {
-        id: 1,
-        timestamp: 1,
+        order_id: 1,
+        created_time: 1,
         symbol: "PERP_BTC5M2701011200_USDC",
-        round: 0,
-        status: "cancelled",
-        outcome: "down",
-        side: "sell",
-        type: "limit",
+        status: "CANCELLED",
+        side: "SELL",
+        type: "LIMIT",
         price: 0.5,
         quantity: 10,
-        filledQuantity,
-        reduceOnly: true,
+        total_executed_quantity: filledQuantity,
+        reduce_only: true,
       },
     ];
     act(() => {
@@ -156,14 +160,6 @@ it.each([0, 2])(
     expect(side.findByProps({ color: "neutral" }).props.className).toContain(
       "oui-text-base-contrast-20",
     );
-    expect(
-      side
-        .findAllByType("span")
-        .some(
-          (node) =>
-            node.props.className === "oui-text-3xs oui-text-base-contrast-20",
-        ),
-    ).toBe(true);
   },
 );
 
@@ -200,39 +196,85 @@ it("uses the same cancelled row styling for Perps and supplemental orders, prese
   }
 });
 
-it.each(["filled", "rejected"])("keeps %s Prediction rows bright", (status) => {
-  mocks.orders = [
-    {
-      id: 2,
-      timestamp: 2,
-      symbol: "PERP_BTC5M2701011200_USDC",
-      round: 0,
-      status,
-      outcome: "up",
-      side: "buy",
-      type: "limit",
-      price: 0.5,
-      quantity: 10,
-      filledQuantity: 2,
-    },
-  ];
-  act(() => {
-    renderer = create(
-      <SharedProductOrdersPanel state={{} as any} mode="history" />,
+it.each([OrderStatus.FILLED, OrderStatus.REJECTED])(
+  "keeps %s Prediction rows bright",
+  (status) => {
+    mocks.orders = [
+      {
+        order_id: 2,
+        created_time: 2,
+        symbol: "PERP_BTC5M2701011200_USDC",
+        status,
+        side: "BUY",
+        type: "LIMIT",
+        price: 0.5,
+        quantity: 10,
+        total_executed_quantity: 2,
+      },
+    ];
+    act(() => {
+      renderer = create(
+        <SharedProductOrdersPanel state={{} as any} mode="history" />,
+      );
+    });
+    const row = renderer.root.findByProps({ "data-row": "prediction-2" });
+    expect(row.props.className).toContain("oui-text-base-contrast-80");
+    expect(
+      row.findByProps({ "data-cell": "side" }).findByProps({ color: "buy" })
+        .props.className,
+    ).not.toContain("oui-text-base-contrast-20");
+    expect(
+      row
+        .findByProps({ "data-cell": "symbol" })
+        .findAllByType("div")
+        .some(
+          (node) =>
+            node.props.className === "oui-min-w-0 oui-text-base-contrast",
+        ),
+    ).toBe(true);
+  },
+);
+
+it.each(["filled", "history"] as const)(
+  "OR-7560: %s renders API realized PnL and exports it unchanged",
+  (mode) => {
+    mocks.orders = [
+      {
+        order_id: 25145227253,
+        symbol: "PERP_BTC5M2610190920_USDC",
+        side: "BUY",
+        reduce_only: true,
+        type: "SETTLEMENT",
+        status: OrderStatus.FILLED,
+        price: 1,
+        quantity: 16,
+        total_executed_quantity: 16,
+        realized_pnl: -8,
+        total_fee: 0.12,
+        created_time: 1792401942000,
+      },
+    ];
+    act(() => {
+      renderer = create(
+        <SharedProductOrdersPanel
+          state={
+            {} as React.ComponentProps<typeof SharedProductOrdersPanel>["state"]
+          }
+          mode={mode}
+        />,
+      );
+    });
+    const cell = renderer.root
+      .findByProps({ "data-row": "prediction-25145227253" })
+      .findByProps({ "data-cell": "realized_pnl" });
+    expect(
+      cell.findAllByType("div").some((node) => node.children.includes("-8.00")),
+    ).toBe(true);
+    const column = mocks.table.columns.find(
+      (column: { dataIndex: string }) => column.dataIndex === "realized_pnl",
     );
-  });
-  const row = renderer.root.findByProps({ "data-row": "prediction-2" });
-  expect(row.props.className).toContain("oui-text-base-contrast-80");
-  expect(
-    row.findByProps({ "data-cell": "side" }).findByProps({ color: "buy" }).props
-      .className,
-  ).not.toContain("oui-text-base-contrast-20");
-  expect(
-    row
-      .findByProps({ "data-cell": "symbol" })
-      .findAllByType("div")
-      .some(
-        (node) => node.props.className === "oui-min-w-0 oui-text-base-contrast",
-      ),
-  ).toBe(true);
-});
+    expect(column.renderPlantText(undefined, mocks.table.dataSource[0])).toBe(
+      "-8",
+    );
+  },
+);

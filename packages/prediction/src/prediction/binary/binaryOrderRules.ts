@@ -1,4 +1,4 @@
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide, type API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import type {
   PredictionAmountUnit,
@@ -9,6 +9,18 @@ import type {
 import { floorToTickDecimal } from "../predictionShared";
 import type { BinaryInfoRow } from "./binaryInfo";
 import type { BinaryOrderBook } from "./useBinaryOrderbook";
+
+/** Derive the shares from API side and reduce-only without changing the order. */
+export const binaryOrderOutcome = (
+  order: Pick<API.Order, "side" | "reduce_only">,
+): PredictionOutcome =>
+  (
+    order.reduce_only
+      ? order.side === OrderSide.SELL
+      : order.side === OrderSide.BUY
+  )
+    ? "up"
+    : "down";
 
 /** Preserve backend rejection details verbatim; whitespace alone is not a detail. */
 export function binaryRejectionNotice(
@@ -437,7 +449,7 @@ export type PendingOrderDraftRejection =
  * still validates every draft.
  */
 export function validatePendingOrderDraft(input: {
-  order: { outcome: PredictionOutcome; filledQuantity: number };
+  order: Pick<API.Order, "side" | "reduce_only" | "total_executed_quantity">;
   field: "price" | "quantity";
   value: number;
   limits?: BinaryOrderEditLimits;
@@ -450,12 +462,13 @@ export function validatePendingOrderDraft(input: {
     if (!limits) return undefined;
     // DOWN drafts are submitted as their UP complement (api-spec §5.2).
     const submittedPrice =
-      order.outcome === "up" ? value : complementPrice(value);
+      binaryOrderOutcome(order) === "up" ? value : complementPrice(value);
     return new Decimal(submittedPrice).div(limits.priceTick).isInteger()
       ? undefined
       : { key: "prediction.editOrder.error.tick", tick: limits.priceTick };
   }
-  if (value < order.filledQuantity) return { key: "prediction.invalidOrder" };
+  if (value < (order.total_executed_quantity ?? 0))
+    return { key: "prediction.invalidOrder" };
   if (!limits) return undefined;
   if (value > limits.maxQuantity)
     return {

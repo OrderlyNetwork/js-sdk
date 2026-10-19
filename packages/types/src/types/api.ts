@@ -228,6 +228,8 @@ export declare namespace API {
     visible: number;
     executed: number;
     total_fee: number;
+    /** Realized order PnL returned by the API, before separate trading fees. */
+    realized_pnl?: number;
     fee_asset: string;
     client_order_id?: string;
     average_executed_price: number;

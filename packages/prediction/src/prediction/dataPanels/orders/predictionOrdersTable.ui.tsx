@@ -1,4 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
+import type { API } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
 import type { DataFilterItem } from "@orderly.network/ui";
 import {
@@ -6,12 +7,11 @@ import {
   TabType,
   useOrderColumn,
 } from "@orderly.network/ui-orders";
-import { hasPredictionExecutions } from "../../binary/binaryOrderDisplay";
+import {
+  binaryOrderDisplayStatus,
+  hasPredictionExecutions,
+} from "../../binary/binaryOrderDisplay";
 import type { PredictionAccountPanelState } from "../../prediction.types";
-import type {
-  PredictionOpenOrder,
-  PredictionTrade,
-} from "../../prediction.types";
 import { PredictionFilters } from "../filters/predictionFilters.ui";
 import { PredictionDataTable, tableColumn } from "../table";
 import { matchesPredictionOrderFilters } from "./matchesPredictionOrderFilters";
@@ -28,7 +28,7 @@ export type PredictionOrdersTableUIProps = {
   status?: "cancelled" | "unsupported";
   leadingFilterItems?: DataFilterItem[];
   onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
-  orders?: (PredictionOpenOrder | PredictionTrade)[];
+  orders?: API.Order[];
   totalCount?: number;
   onPageChange?: (page: number) => void;
   hasMore?: boolean;
@@ -126,12 +126,11 @@ export const PredictionOrdersTableUI = ({
             (order) =>
               !status ||
               (status === "cancelled" &&
-                "status" in order &&
-                order.status === "cancelled"),
+                binaryOrderDisplayStatus(order) === "cancelled"),
           )
           .filter((order) => matchesPredictionOrderFilters(filters, order))
           .map((order) => ({
-            id: String(order.id),
+            id: String(order.order_id),
             cells: orderColumns.map((column) => (
               <PredictionOrderCell
                 key={String(column.dataIndex)}

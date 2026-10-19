@@ -23,8 +23,8 @@ export const ProductOrders: React.FC<ProductOrdersState> = ({
       <DesktopOrderList
         {...orderListProps}
         supplementalRows={orders.map((order) => ({
-          id: `prediction-${order.id}`,
-          timestamp: order.timestamp,
+          id: `prediction-${order.order_id}`,
+          timestamp: order.created_time,
           plainText: (field) => plainText(order, field),
           renderCell: (field) => (
             <PredictionOrderCell state={state} order={order} field={field} />

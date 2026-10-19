@@ -661,10 +661,18 @@ test("minimum DOWN input rounds contracts to ticks and cost up to cents", () => 
 
 test("pending order drafts reject over-limit and off-tick values inline", () => {
   const limits = { maxQuantity: 20.02, quantityTick: 0.01, priceTick: 0.01 };
-  const down = { outcome: "down" as const, filledQuantity: 2.25 };
-  const up = { outcome: "up" as const, filledQuantity: 0 };
+  const down = {
+    total_executed_quantity: 2.25,
+    side: OrderSide.SELL,
+    reduce_only: false,
+  };
+  const up = {
+    total_executed_quantity: 0,
+    side: OrderSide.BUY,
+    reduce_only: false,
+  };
   const draft = (
-    order: { outcome: "up" | "down"; filledQuantity: number },
+    order: Parameters<typeof validatePendingOrderDraft>[0]["order"],
     field: "price" | "quantity",
     value: number,
     withLimits = true,

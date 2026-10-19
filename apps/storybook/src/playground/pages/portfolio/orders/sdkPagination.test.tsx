@@ -36,10 +36,11 @@ vi.mock("@orderly.network/ui", () => ({
 vi.mock("@orderly.network/prediction", async () => {
   const { binaryOrderPlainText } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderPlainText");
-  const { binaryOrderDisplaySide, toPredictionStatus } =
+  const { binaryOrderDisplaySide, binaryOrderOutcome, toPredictionStatus } =
     await import("@orderly.network/prediction/src/prediction/binary/binaryOrderDisplay");
   return {
     binaryOrderDisplaySide,
+    binaryOrderOutcome,
     binaryOrderPlainText,
     toPredictionOrderStatus: toPredictionStatus,
     PredictionOrderCell: () => null,
@@ -95,24 +96,22 @@ const props = {
   ordersRef: { current: null },
 };
 const order = (id: number) => ({
-  id,
+  order_id: id,
   symbol: "PERP_ETH15M2610091200_USDC",
-  outcome: "up",
-  side: "buy",
-  type: "limit",
+  side: "BUY",
+  type: "LIMIT",
   price: 0.4,
   quantity: 100,
-  filledQuantity: 40,
-  averagePrice: 0.5,
-  timestamp: id,
-  round: 1,
-  status: "cancelled",
+  total_executed_quantity: 40,
+  average_executed_price: 0.5,
+  created_time: id,
+  status: "CANCELLED",
 });
 const displaySideOrders = () => [
-  { ...order(1), side: "buy", outcome: "up", reduceOnly: false },
-  { ...order(2), side: "sell", outcome: "down", reduceOnly: false },
-  { ...order(3), side: "sell", outcome: "up", reduceOnly: true },
-  { ...order(4), side: "buy", outcome: "down", reduceOnly: true },
+  { ...order(1), side: "BUY", reduce_only: false },
+  { ...order(2), side: "SELL", reduce_only: false },
+  { ...order(3), side: "SELL", reduce_only: true },
+  { ...order(4), side: "BUY", reduce_only: true },
 ];
 function mount(overrides: Record<string, unknown> = {}) {
   act(() => {
@@ -182,10 +181,10 @@ describe("SDK mixed order queries and pagination", () => {
         product === "all" ? mocks.perpsRows : [],
       );
       expect(mocks.binaryRows.map((row) => row.side)).toEqual([
-        "buy",
-        "sell",
-        "sell",
-        "buy",
+        "BUY",
+        "SELL",
+        "SELL",
+        "BUY",
       ]);
     },
   );
@@ -210,8 +209,8 @@ describe("SDK mixed order queries and pagination", () => {
     // The row projection must apply the same predicate to subsequent WS updates.
     mocks.binaryRows = [
       ...mocks.binaryRows,
-      { ...order(5), side: "sell", outcome: "down", reduceOnly: false },
-      { ...order(6), side: "buy", outcome: "down", reduceOnly: true },
+      { ...order(5), side: "SELL", reduce_only: false },
+      { ...order(6), side: "BUY", reduce_only: true },
     ];
     act(() => renderer.update(createElement(ProductOrdersWidget, props)));
     expect(mocks.table.supplementalRows.map((row: any) => row.id)).toEqual([

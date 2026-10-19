@@ -13,7 +13,7 @@ import {
 } from "../binary/binaryCollateral";
 import { isBinarySymbol } from "../binary/binaryInfo";
 import { toPredictionPosition } from "../binary/binaryManagedPositions";
-import { normalizePredictionOrders } from "../binary/binaryOrderDisplay";
+import { filterPredictionOrders } from "../binary/binaryOrderDisplay";
 import type { UsePredictionAccountDataOptions } from "../prediction.types";
 import {
   type PredictionOutcome,
@@ -70,8 +70,7 @@ export const usePredictionAccountResources = ({
     currentActive && accountReady && includeOrderHistory,
   );
   const openOrders = useMemo(
-    () =>
-      accountReady ? normalizePredictionOrders(pendingOrdersData ?? []) : [],
+    () => (accountReady ? filterPredictionOrders(pendingOrdersData ?? []) : []),
     [pendingOrdersData, accountReady],
   );
   const positionRows = usePositions();

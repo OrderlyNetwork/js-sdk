@@ -6,16 +6,22 @@ import {
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import type {
-  PredictionOpenOrder,
   PredictionOrderSide,
   PredictionOutcome,
-  PredictionTrade,
+  PredictionOrderType,
 } from "../prediction.types";
 import { binaryRoundFromSymbol, isBinarySymbol } from "./binaryInfo";
-import { complementPrice } from "./binaryOrderRules";
+import { complementPrice, binaryOrderOutcome } from "./binaryOrderRules";
 import { matchesPredictionUnderlying } from "./productScope";
 
-type PredictionStatus = NonNullable<PredictionOpenOrder["status"]>;
+export { binaryOrderOutcome } from "./binaryOrderRules";
+
+type PredictionStatus =
+  | "pending"
+  | "filled"
+  | "partialFilled"
+  | "cancelled"
+  | "rejected";
 // Maps (not object literals) so lookups with unexpected keys can never hit
 // inherited properties like "constructor" or "toString".
 const statusByApiStatus = new Map<string, PredictionStatus>([
@@ -38,48 +44,28 @@ export const toPredictionStatus = (value: unknown): PredictionStatus | "all" =>
 export const toOrderStatus = (value: unknown): OrderStatus | "all" =>
   apiStatusByPredictionStatus.get(String(value) as PredictionStatus) ?? "all";
 
-export const toPredictionOrder = (order: API.Order): PredictionOpenOrder => ({
-  id: order.order_id,
-  outcome: (
-    order.reduce_only
-      ? order.side === OrderSide.SELL
-      : order.side === OrderSide.BUY
+export const binaryOrderDisplayType = (
+  order: Pick<API.Order, "type">,
+): PredictionOrderType =>
+  [OrderType.LIMIT, OrderType.POST_ONLY, OrderType.BID, OrderType.ASK].includes(
+    order.type as OrderType,
   )
-    ? "up"
-    : "down",
-  side: order.side === OrderSide.BUY ? "buy" : "sell",
-  type: [
-    OrderType.LIMIT,
-    OrderType.POST_ONLY,
-    OrderType.BID,
-    OrderType.ASK,
-  ].includes(order.type as OrderType)
     ? "limit"
-    : "market",
-  orderType: order.type,
-  clientOrderId: order.client_order_id,
-  orderTag: order.order_tag,
-  price: Number(order.price ?? 0),
-  quantity: Number(order.quantity ?? 0),
-  filledQuantity: Number(order.total_executed_quantity ?? 0),
-  averagePrice:
-    Number.isFinite(order.average_executed_price) &&
-    order.total_executed_quantity > 0
-      ? order.average_executed_price
-      : undefined,
-  totalFee: Number.isFinite(order.total_fee) ? order.total_fee : undefined,
-  feeAsset: order.fee_asset,
-  reduceOnly: order.reduce_only,
-  symbol: order.symbol,
-  round: binaryRoundFromSymbol(order.symbol, order.created_time) ?? 0,
-  timestamp: order.created_time,
-  status: statusByApiStatus.get(String(order.status)) ?? "pending",
-});
+    : "market";
+
+export const binaryOrderRound = (
+  order: Pick<API.Order, "symbol" | "created_time">,
+) => binaryRoundFromSymbol(order.symbol, order.created_time) ?? 0;
+
+/** Interpret status only at display boundaries; keep the API record unchanged. */
+export const binaryOrderDisplayStatus = (
+  order: Pick<API.Order, "status">,
+): PredictionStatus => statusByApiStatus.get(String(order.status)) ?? "pending";
 
 /** User-facing action; API side stays in UP-book coordinates for requests. */
 export const binaryOrderDisplaySide = (
-  order: Pick<PredictionOpenOrder, "reduceOnly">,
-): PredictionOrderSide => (order.reduceOnly ? "sell" : "buy");
+  order: Pick<API.Order, "reduce_only">,
+): PredictionOrderSide => (order.reduce_only ? "sell" : "buy");
 
 /**
  * UI Buy/Sell filters use display-side semantics: Buy covers Buy UP and Buy
@@ -88,7 +74,7 @@ export const binaryOrderDisplaySide = (
  * (UP-book coordinates) cannot express this — the rows must be filtered here.
  */
 export const matchesBinaryDisplaySide = (
-  order: Pick<PredictionOpenOrder, "reduceOnly">,
+  order: Pick<API.Order, "reduce_only">,
   side?: OrderSide,
 ): boolean =>
   side !== OrderSide.BUY && side !== OrderSide.SELL
@@ -97,23 +83,23 @@ export const matchesBinaryDisplaySide = (
 
 /** Echo immutable API attributes; only the UP price and quantity are changed. */
 export const binaryOrderEditPayload = (
-  order: PredictionOpenOrder,
+  order: API.Order,
   price: number,
   quantity: number,
   quoteTick: number,
   baseTick: number,
 ) => {
-  if (!order.symbol || !order.orderType) return undefined;
+  if (!order.symbol || !order.type) return undefined;
   return {
-    order_id: order.id,
+    order_id: order.order_id,
     symbol: order.symbol,
-    side: order.side === "buy" ? OrderSide.BUY : OrderSide.SELL,
-    order_type: order.orderType,
-    ...(order.reduceOnly !== undefined && { reduce_only: order.reduceOnly }),
-    ...(order.clientOrderId && {
-      client_order_id: order.clientOrderId,
+    side: order.side,
+    order_type: order.type,
+    ...(order.reduce_only !== undefined && { reduce_only: order.reduce_only }),
+    ...(order.client_order_id && {
+      client_order_id: order.client_order_id,
     }),
-    ...(order.orderTag && { order_tag: order.orderTag }),
+    ...(order.order_tag && { order_tag: order.order_tag }),
     order_price: new Decimal(price).toFixed(
       new Decimal(quoteTick).decimalPlaces(),
     ),
@@ -124,42 +110,38 @@ export const binaryOrderEditPayload = (
 };
 
 /** Prices stay in UP coordinates in the model, including when editing. */
-export const binaryOrderDisplayPrice = (
-  order: PredictionOpenOrder,
-  upPrice: number,
-) => (order.outcome === "up" ? upPrice : complementPrice(upPrice));
+export const binaryOrderDisplayPrice = (order: API.Order, upPrice: number) =>
+  binaryOrderOutcome(order) === "up" ? upPrice : complementPrice(upPrice);
 
-export const binaryOrderExecutedValue = (order: PredictionOpenOrder) => {
-  if (order.filledQuantity <= 0) return 0;
-  if (order.averagePrice == null) return undefined;
-  return new Decimal(order.filledQuantity)
-    .mul(binaryOrderDisplayPrice(order, order.averagePrice))
+export const binaryOrderExecutedValue = (order: API.Order) => {
+  const filled = order.total_executed_quantity ?? 0;
+  if (filled <= 0) return 0;
+  if (!Number.isFinite(filled)) return undefined;
+  if (!Number.isFinite(order.average_executed_price)) return undefined;
+  return new Decimal(filled)
+    .mul(binaryOrderDisplayPrice(order, order.average_executed_price))
     .toNumber();
 };
 
-/** Shared account/list projection. Product filtering also guards cross-product WS cache inserts. */
-export const normalizePredictionOrders = (
+/** Filter product scope without copying records or dropping API fields. */
+export const filterPredictionOrders = (
   orders: readonly API.Order[],
   underlyingSymbol?: string,
-): PredictionOpenOrder[] =>
-  orders
-    .filter(
-      (order) =>
-        !order.algo_order_id &&
-        isBinarySymbol(order.symbol) &&
-        matchesPredictionUnderlying(order.symbol, underlyingSymbol),
-    )
-    .map(toPredictionOrder);
-export const isPredictionTerminalOrder = (
-  order: PredictionOpenOrder,
-): order is PredictionTrade =>
-  order.status === "filled" ||
-  order.status === "cancelled" ||
-  order.status === "rejected";
+): API.Order[] =>
+  orders.filter(
+    (order) =>
+      !order.algo_order_id &&
+      isBinarySymbol(order.symbol) &&
+      matchesPredictionUnderlying(order.symbol, underlyingSymbol),
+  );
+export const isPredictionTerminalOrder = (order: API.Order): boolean =>
+  order.status === OrderStatus.FILLED ||
+  order.status === OrderStatus.CANCELLED ||
+  order.status === OrderStatus.REJECTED;
 
 /** Open-order prices of one round, in the selected outcome's book coordinate. */
 export const binaryPendingOrderPrices = (
-  orders: readonly PredictionOpenOrder[],
+  orders: readonly API.Order[],
   symbol: string | undefined,
   outcome: PredictionOutcome,
 ): number[] =>
@@ -169,10 +151,11 @@ export const binaryPendingOrderPrices = (
           (order) =>
             order.symbol === symbol &&
             !isPredictionTerminalOrder(order) &&
+            order.price != null &&
             order.price > 0,
         )
         .map((order) =>
-          outcome === "up" ? order.price : complementPrice(order.price),
+          outcome === "up" ? order.price! : complementPrice(order.price!),
         )
     : [];
 
@@ -183,5 +166,5 @@ export const binaryPendingOrderPrices = (
  * One predicate for every surface (portfolio page, merged panel, prediction
  * panel); perps rows keep the stock server-side FILLED semantics.
  */
-export const hasPredictionExecutions = (order: PredictionOpenOrder) =>
-  isPredictionTerminalOrder(order) && (order.filledQuantity ?? 0) > 0;
+export const hasPredictionExecutions = (order: API.Order) =>
+  isPredictionTerminalOrder(order) && (order.total_executed_quantity ?? 0) > 0;

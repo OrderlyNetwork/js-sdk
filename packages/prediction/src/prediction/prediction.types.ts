@@ -63,41 +63,6 @@ export type PredictionPosition = {
   round?: number;
 };
 
-export type PredictionOpenOrder = {
-  id: number;
-  /** Outcome shares being bought or sold, accounting for reduce-only exits. */
-  outcome: PredictionOutcome;
-  /** Original API side in UP-book coordinates; not the displayed buy/sell action. */
-  side: PredictionOrderSide;
-  type: PredictionOrderType;
-  /** Original API type, retained verbatim when editing. */
-  orderType?: string;
-  clientOrderId?: string;
-  orderTag?: string;
-  /** UP-book price. */
-  price: number;
-  quantity: number;
-  /** Executed quantity so far (backend total_executed_quantity); 0 while resting. */
-  filledQuantity: number;
-  /** Average executed price in the UP coordinate, once partially filled. */
-  averagePrice?: number;
-  /** Historical confirmed fees, never recomputed from the current coefficient. */
-  totalFee?: number;
-  feeAsset?: string;
-  reduceOnly?: boolean;
-  /** Round-specific binary symbol. */
-  symbol?: string;
-  /** Round start in epoch seconds. */
-  round: number;
-  /** Order creation time in epoch milliseconds. */
-  timestamp: number;
-  status?: "pending" | "partialFilled" | "filled" | "cancelled" | "rejected";
-};
-
-export type PredictionTrade = PredictionOpenOrder & {
-  status: "filled" | "cancelled" | "rejected";
-};
-
 export type PredictionSettlement = {
   id: number;
   symbol?: string;
@@ -154,7 +119,7 @@ export type PredictionOrderBookLevel = {
 export type BinaryOrderCancellationCapability = {
   accountId?: string;
   accountReady: boolean;
-  openOrders: PredictionOpenOrder[];
+  openOrders: API.Order[];
   pendingOrdersComplete: boolean;
   isRegionRestricted: boolean;
   isOrderTradable: (symbol?: string) => boolean;
@@ -205,9 +170,9 @@ export interface PredictionAccountState
   accountReady: boolean;
   balance: number;
   positions: PredictionPosition[];
-  openOrders: PredictionOpenOrder[];
+  openOrders: API.Order[];
   pendingOrdersComplete: boolean;
-  history: PredictionTrade[];
+  history: API.Order[];
   hasFeeConfig: boolean;
   isSubmitting: boolean;
   feeRates: BinaryFeeRates;

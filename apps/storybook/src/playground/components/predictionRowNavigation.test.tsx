@@ -11,12 +11,12 @@ import { PredictionOrderCell } from "@orderly.network/prediction/src/prediction/
 import { PredictionAccountPanel } from "@orderly.network/prediction/src/prediction/dataPanels/predictionAccountPanel.widget";
 import { MobilePredictionHistory } from "@orderly.network/prediction/src/prediction/dataPanels/predictionMobileCards.ui";
 import * as tableModule from "@orderly.network/prediction/src/prediction/dataPanels/table";
-import type { PredictionOpenOrder } from "@orderly.network/prediction/src/prediction/prediction.types";
 import {
   usePredictionTradingExtension,
   type PredictionTradingExtensionOptions,
   type PredictionTradingExtensionProps,
 } from "@orderly.network/prediction/src/prediction/usePredictionTradingExtension";
+import type { API } from "@orderly.network/types";
 
 // OR-7482: data-panel row symbols navigate to their round contract, with the
 // same clickable scope as the Perps panels (positions, orders, history).
@@ -205,23 +205,20 @@ vi.mock(
 );
 
 const symbolA = "PERP_BTC5M2601011200_USDC";
-const order: PredictionOpenOrder = {
-  id: 7,
+const order = {
+  order_id: 7,
   symbol: symbolA,
-  outcome: "up",
-  side: "buy",
-  type: "limit",
-  orderType: "LIMIT",
-  clientOrderId: "client-7",
-  orderTag: "tag",
-  reduceOnly: false,
+  side: "BUY",
+  type: "LIMIT",
+  client_order_id: "client-7",
+  order_tag: "tag",
+  reduce_only: false,
   price: 0.4,
   quantity: 10,
-  filledQuantity: 0,
-  timestamp: 0,
-  round: 1767278400,
-  status: "pending",
-};
+  total_executed_quantity: 0,
+  created_time: 0,
+  status: "NEW",
+} as API.Order;
 
 let root: ReactTestRenderer | undefined;
 function mount(node: React.ReactElement) {
@@ -319,7 +316,11 @@ it("PredictionOrderCell stays plain when navigation is unavailable", () => {
 });
 
 it("filled order symbols stay clickable, matching Perps order history", () => {
-  const filledOrder = { ...order, id: 8, status: "filled" } as typeof order;
+  const filledOrder = {
+    ...order,
+    order_id: 8,
+    status: "FILLED",
+  } as typeof order;
   mount(
     <PredictionOrderSymbol order={filledOrder} onSelectRoundSymbol={vi.fn()} />,
   );

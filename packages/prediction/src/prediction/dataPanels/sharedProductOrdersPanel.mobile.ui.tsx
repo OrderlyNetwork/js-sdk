@@ -69,8 +69,8 @@ export const MobileSharedProductOrdersPanel: React.FC<
     instrument === "perps"
       ? []
       : filteredPredictionOrders.map((order) => ({
-          id: `prediction-${order.id}`,
-          timestamp: order.timestamp,
+          id: `prediction-${order.order_id}`,
+          timestamp: order.created_time,
           renderItem: () => (
             <MobilePredictionOrderCard state={scopedState} order={order} />
           ),
