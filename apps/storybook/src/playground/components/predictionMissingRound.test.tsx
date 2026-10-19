@@ -244,7 +244,7 @@ vi.mock("@orderly.network/prediction/src/prediction/roundNavigator.ui", () => ({
   RoundNavigator: () => null,
 }));
 it.each([true, false])(
-  "renders the actual missing-round chart return button (enabled=%s)",
+  "only renders the missing-round chart return button with a live target (enabled=%s)",
   async (enabled) => {
     const { PriceChart: ActualChart } = await vi.importActual<
       typeof import("@orderly.network/prediction/src/prediction/predictionChart.ui")
@@ -274,8 +274,182 @@ it.each([true, false])(
       .find((node) =>
         node.children.includes("prediction.rounds.goToLiveMarket"),
       );
-    expect(button).toBeDefined();
-    expect(button!.props.disabled).toBe(!enabled);
+    expect(!!button).toBe(enabled);
+    if (button) expect(button.props.disabled).toBe(false);
     expect(text()).not.toContain("$83021.82");
+  },
+);
+
+const future: BinaryInfoRow = {
+  ...live,
+  symbol: "PERP_BTC5M2610121405_USDC",
+  observation_start_at: now + 300_000,
+  expire_at: now + 600_000,
+};
+const historicalSymbol = "PERP_BTC5M2610101045_USDC";
+
+it.each([
+  {
+    name: "future only",
+    rows: [future],
+    symbol: historicalSymbol,
+    time: now,
+    expected: false,
+  },
+  {
+    name: "selected live",
+    rows: [live],
+    symbol: live.symbol,
+    time: now,
+    expected: false,
+  },
+  {
+    name: "missing history at T0",
+    rows: [live],
+    symbol: historicalSymbol,
+    time: now,
+    expected: true,
+  },
+  {
+    name: "selected future",
+    rows: [future, live],
+    symbol: future.symbol,
+    time: now,
+    expected: true,
+  },
+  {
+    name: "before T0",
+    rows: [live],
+    symbol: historicalSymbol,
+    time: now - 1,
+    expected: false,
+  },
+  {
+    name: "at T1",
+    rows: [live],
+    symbol: historicalSymbol,
+    time: live.expire_at,
+    expected: false,
+  },
+  {
+    name: "inactive",
+    rows: [{ ...live, status: "DELISTED" as const }],
+    symbol: historicalSymbol,
+    time: now,
+    expected: false,
+  },
+])("only allows live navigation: $name", ({ rows, symbol, time, expected }) => {
+  vi.setSystemTime(time);
+  mocks.rows = rows;
+  mount(symbol);
+  expect(rounds.canGoToLiveRound).toBe(expected);
+  act(() => rounds.goToLiveRound());
+  if (expected)
+    expect(mocks.select).toHaveBeenCalledExactlyOnceWith(live.symbol);
+  else expect(mocks.select).not.toHaveBeenCalled();
+});
+
+it("rechecks expiry when clicking a previously available live target", () => {
+  mount(historicalSymbol);
+  expect(rounds.canGoToLiveRound).toBe(true);
+  const jump = rounds.goToLiveRound;
+  vi.setSystemTime(live.expire_at);
+  act(() => jump());
+  expect(mocks.select).not.toHaveBeenCalled();
+});
+
+it.each([
+  {
+    name: "future only",
+    rows: [future],
+    selectedRow: undefined,
+    selectedRound: 1791726600,
+    time: now,
+    expected: false,
+  },
+  {
+    name: "selected live",
+    rows: [live],
+    selectedRow: live,
+    selectedRound: now / 1000,
+    time: now,
+    expected: false,
+  },
+  {
+    name: "selected future",
+    rows: [future, live],
+    selectedRow: future,
+    selectedRound: future.observation_start_at / 1000,
+    time: now,
+    expected: true,
+  },
+  {
+    name: "at T0",
+    rows: [live],
+    selectedRow: undefined,
+    selectedRound: 1791726600,
+    time: now,
+    expected: true,
+  },
+  {
+    name: "before T0",
+    rows: [live],
+    selectedRow: undefined,
+    selectedRound: 1791726600,
+    time: now - 1,
+    expected: false,
+  },
+  {
+    name: "at T1",
+    rows: [live],
+    selectedRow: undefined,
+    selectedRound: 1791726600,
+    time: live.expire_at,
+    expected: false,
+  },
+  {
+    name: "inactive",
+    rows: [{ ...live, status: "DELISTED" as const }],
+    selectedRow: undefined,
+    selectedRound: 1791726600,
+    time: now,
+    expected: false,
+  },
+])(
+  "renders the live button using the chart clock: $name",
+  async ({ rows, selectedRow, selectedRound, time, expected }) => {
+    const { PriceChart: ActualChart } = await vi.importActual<
+      typeof import("@orderly.network/prediction/src/prediction/predictionChart.ui")
+    >("@orderly.network/prediction/src/prediction/predictionChart.ui");
+    const render = () => (
+      <ActualChart
+        intervalSeconds={300}
+        base="BTC"
+        selectedRound={selectedRound}
+        onSelectRound={() => {}}
+        points={[]}
+        candles={[]}
+        roundOutcome={() => undefined}
+        selectedRow={selectedRow}
+        rows={rows}
+        currentPrice={undefined}
+        round={now / 1000}
+        onGoToLiveMarket={mocks.select}
+        isRoundUnavailable={!selectedRow}
+        canGoToLiveMarket
+      />
+    );
+    act(() => {
+      root = create(render());
+    });
+    // Keep the parent's eligibility stale while the chart clock crosses a boundary.
+    vi.setSystemTime(time);
+    act(() => root!.update(render()));
+    const button = root!.root
+      .findAllByType("button")
+      .find((node) =>
+        node.children.includes("prediction.rounds.goToLiveMarket"),
+      );
+    expect(!!button).toBe(expected);
   },
 );

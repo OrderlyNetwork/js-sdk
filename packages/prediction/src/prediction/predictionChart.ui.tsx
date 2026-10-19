@@ -89,10 +89,14 @@ export const PriceChart: React.FC<{
       : undefined;
   const isPastRound = status === "ended";
   const isFutureRound = status === "upcoming";
-  // "Go to live market" only makes sense while the market still has an
-  // ACTIVE unexpired round to jump to.
-  const hasLiveOrUpcomingRow = rows.some(
-    (row) => row.status === "ACTIVE" && row.expire_at > now,
+  // Validate the jump target against the leaf clock so expiry hides the button.
+  const hasLiveTarget = rows.some(
+    (row) =>
+      row.status === "ACTIVE" &&
+      row.observation_start_at <= now &&
+      now < row.expire_at &&
+      Math.floor(row.observation_start_at / 1000) === round &&
+      Math.floor(row.observation_start_at / 1000) !== selectedRound,
   );
 
   const [hoveredPoint, setHoveredPoint] = useState<
@@ -432,19 +436,18 @@ export const PriceChart: React.FC<{
           </div>
         </div>
         <div className="oui-order-first oui-flex oui-w-full oui-items-center oui-justify-end oui-gap-2 min-[480px]:oui-gap-3 2xl:oui-order-none 2xl:oui-ms-auto 2xl:oui-w-auto 2xl:oui-flex-none">
-          {status !== "live" &&
-            (isRoundUnavailable || hasLiveOrUpcomingRow) && (
-              <button
-                type="button"
-                onClick={onGoToLiveMarket}
-                disabled={!(canGoToLiveMarket ?? hasLiveOrUpcomingRow)}
-                className="oui-text-2xs oui-flex oui-min-w-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-p-2 oui-text-base-contrast-80 min-[480px]:oui-text-sm 2xl:oui-text-xs enabled:hover:oui-bg-base-6 disabled:oui-cursor-not-allowed disabled:oui-opacity-40 min-[480px]:oui-gap-2 min-[480px]:oui-px-4 min-[480px]:oui-py-2.5 2xl:oui-px-3 2xl:oui-py-2"
-              >
-                <LiveIndicator />
-                {t("prediction.rounds.goToLiveMarket")}
-                <ChevronRightIcon size={14} color="inherit" />
-              </button>
-            )}
+          {hasLiveTarget && (
+            <button
+              type="button"
+              onClick={onGoToLiveMarket}
+              disabled={!(canGoToLiveMarket ?? hasLiveTarget)}
+              className="oui-text-2xs oui-flex oui-min-w-0 oui-items-center oui-gap-1 oui-rounded-full oui-bg-base-7 oui-p-2 oui-text-base-contrast-80 min-[480px]:oui-text-sm 2xl:oui-text-xs enabled:hover:oui-bg-base-6 disabled:oui-cursor-not-allowed disabled:oui-opacity-40 min-[480px]:oui-gap-2 min-[480px]:oui-px-4 min-[480px]:oui-py-2.5 2xl:oui-px-3 2xl:oui-py-2"
+            >
+              <LiveIndicator />
+              {t("prediction.rounds.goToLiveMarket")}
+              <ChevronRightIcon size={14} color="inherit" />
+            </button>
+          )}
           {(isFutureRound || status === "live") && (
             <CountdownDisplay
               seconds={isFutureRound ? futureCountdown : countdown}
@@ -454,7 +457,7 @@ export const PriceChart: React.FC<{
                   : "prediction.rounds.endsIn",
               )}
               mutedIcon={isFutureRound}
-              compact={isFutureRound && hasLiveOrUpcomingRow}
+              compact={isFutureRound && hasLiveTarget}
             />
           )}
         </div>

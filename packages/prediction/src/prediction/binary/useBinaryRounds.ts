@@ -277,7 +277,9 @@ export const useBinaryRounds = ({
   const canGoToLiveRound =
     !!currentRow &&
     currentRow.status === "ACTIVE" &&
-    currentRow.expire_at > now;
+    currentRow.observation_start_at <= now &&
+    currentRow.expire_at > now &&
+    currentRow.symbol !== symbol;
 
   useEffect(() => {
     setAcceptedRow((previous) =>
@@ -337,16 +339,17 @@ export const useBinaryRounds = ({
   );
 
   const goToLiveRound = useCallback(() => {
-    if (!currentRow || currentRow.symbol === selectedRow?.symbol) return;
-    // A market with only history left has an expired currentRow; jumping to
-    // another settled round would be misleading, so keep the selection.
+    if (!currentRow || currentRow.symbol === symbol) return;
+    // Recheck the observation window at click time, even if state is stale.
+    const timestamp = getTimestamp();
     if (
       currentRow.status !== "ACTIVE" ||
-      currentRow.expire_at <= getTimestamp()
+      currentRow.observation_start_at > timestamp ||
+      currentRow.expire_at <= timestamp
     )
       return;
     onSymbolSelect(currentRow.symbol);
-  }, [currentRow, selectedRow?.symbol, onSymbolSelect]);
+  }, [currentRow, symbol, onSymbolSelect]);
 
   const nextTradableRow = useMemo(
     () => nextTradableBinaryRound(marketRows, now),
