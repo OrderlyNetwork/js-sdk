@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import React from "react";
 import {
   SharedProductDataPanel,
   usePredictionAccountData,
   ManagedPredictionPositions,
 } from "@orderly.network/prediction";
-import { formatAddress, Text } from "@orderly.network/ui";
 
 export const PortfolioProductPositionsPanel: React.FC<{
   type: "positions" | "positionHistory";
   perpsContent: React.ReactNode;
-  accountFilter: React.ReactNode;
+  accountFilter?: React.ReactNode;
   selectedAccount?: string;
   /** Selects the record's market and round when a Prediction row is clicked. */
   onPredictionSelect?: (symbol: string) => void;
@@ -21,8 +19,6 @@ export const PortfolioProductPositionsPanel: React.FC<{
   selectedAccount,
   onPredictionSelect,
 }) => {
-  const { t } = useTranslation();
-  const [product, setProduct] = useState<"perps" | "prediction">("perps");
   const accountState = usePredictionAccountData();
   // Prediction rows navigate to their round the same way the prediction page
   // injects the callback; Perps rows navigate through the injected perpsContent.
@@ -34,17 +30,7 @@ export const PortfolioProductPositionsPanel: React.FC<{
       type={type}
       initialProduct="perps"
       showPositionCounts={false}
-      onProductChange={setProduct}
-      beforeProductSelector={
-        product === "perps" || type === "positions" ? (
-          accountFilter
-        ) : (
-          <Text size="xs" color="neutral">
-            {t("prediction.currentAccount")}
-            {state.accountId && `: ${formatAddress(state.accountId)}`}
-          </Text>
-        )
-      }
+      beforeProductSelector={type === "positions" ? accountFilter : null}
       perpsPositionsContent={perpsContent}
       predictionPositionsContent={
         type === "positions" && selectedAccount ? (

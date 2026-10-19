@@ -213,23 +213,18 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
             title={t("positions.positionHistory")}
           >
             {positionHistoryProductContent || !predictionEnabled ? (
-              <>
-                {renderAccountFilter()}
-                {positionHistoryProductContent?.(perpsPositionHistoryContent) ??
-                  perpsPositionHistoryContent}
-              </>
+              (positionHistoryProductContent?.(perpsPositionHistoryContent) ??
+              perpsPositionHistoryContent)
             ) : (
               <PortfolioProductPositionsPanel
                 key={state.accountId}
                 type="positionHistory"
                 perpsContent={perpsPositionHistoryContent}
-                accountFilter={renderAccountFilter()}
                 onPredictionSelect={selectRoundSymbol}
               />
             )}
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
-            {renderAccountFilter()}
             <LiquidationWidget />
           </TabPanel>
         </Tabs>
