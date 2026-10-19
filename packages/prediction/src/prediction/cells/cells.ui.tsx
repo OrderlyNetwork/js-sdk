@@ -3,7 +3,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Badge, cn, Text } from "@orderly.network/ui";
 import { type BinaryInfoRow } from "../binary/binaryInfo";
 import { parseBinaryRoundSymbol } from "../binary/binaryMarkets";
-import { binaryOrderDisplaySide } from "../binary/binaryOrderDisplay";
 import { secondsUntil } from "../binary/binaryRoundView";
 import { useRoundNow } from "../hooks/useRoundCountdown";
 import type {
@@ -11,7 +10,11 @@ import type {
   PredictionResult,
   PredictionAccountState,
 } from "../prediction.types";
-import { orderTypeLabels, resultLabels, sideLabels } from "../predictionLabels";
+import {
+  orderTypeLabels,
+  outcomeLabels,
+  resultLabels,
+} from "../predictionLabels";
 import {
   formatCountdown,
   formatPredictionPnl,
@@ -142,7 +145,6 @@ export const PredictionOrderSymbol = ({
   const { formatRoundBadge } = usePredictionFormatters();
   const market = parseBinaryRoundSymbol(order.symbol);
   const { symbol } = order;
-  const displaySide = binaryOrderDisplaySide(order);
   const onClick =
     symbol && onSelectRoundSymbol
       ? () => onSelectRoundSymbol(symbol)
@@ -163,11 +165,11 @@ export const PredictionOrderSymbol = ({
       }
     >
       <span
-        aria-label={sideLabels()[displaySide]}
-        title={sideLabels()[displaySide]}
+        aria-label={outcomeLabels()[order.outcome]}
+        title={outcomeLabels()[order.outcome]}
         className={cn(
           "oui-h-[34px] oui-w-1 oui-shrink-0 oui-rounded-[1px]",
-          displaySide === "buy" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
+          order.outcome === "up" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
         )}
       />
       <div
