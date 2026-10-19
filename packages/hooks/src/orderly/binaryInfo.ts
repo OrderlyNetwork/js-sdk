@@ -50,8 +50,6 @@ export const toBinarySymbolsInfo = (
 const binaryInfoQueryOptions = {
   revalidateOnFocus: false,
   focusThrottleInterval: 1000 * 60 * 60 * 24,
-  // Server refreshes its in-memory snapshot every minute (TASK-25).
-  refreshInterval: 60_000,
   dedupingInterval: 1000 * 30,
   // Environments without the binary endpoint degrade to the calculator's
   // pass-through path for binary rows; keep retries bounded.
@@ -60,22 +58,23 @@ const binaryInfoQueryOptions = {
 };
 
 /**
- * App-level observer for the Binary info snapshot. Mounted from
- * `usePublicDataObserver`, so every app using `OrderlyConfigProvider`
- * exposes binary symbol config to the calculator context — independent of
- * whether the prediction page itself is mounted (binary position rows hit
- * the global calculators either way). Deployments without any Binary Option
- * exposure can disable the polling via `<OrderlyConfigProvider
- * enableBinaryInfo={false}>` (default true).
+ * Account-level observer enabled by raw Binary positions or pending quantities.
+ * Shares the Prediction page's snapshot cache without depending on its UI gate.
+ * Returns the configuration revision so the caller can recalculate positions
+ * after the synchronization effect has written it to the calculator store.
  */
-export const useBinaryInfoObserver = (enabled = true) => {
+export const useBinaryInfoObserver = (enabled: boolean) => {
   const setBinarySymbolsInfo = useAppStore(
     (state) => state.actions.setBinarySymbolsInfo,
   );
 
   const { data } = useQuery<API.BinaryInfoRow[]>(
     enabled ? BINARY_INFO_QUERY_KEY : null,
-    binaryInfoQueryOptions,
+    {
+      ...binaryInfoQueryOptions,
+      // A null key stops requests, but SWR still schedules a nonzero interval.
+      refreshInterval: enabled ? 60_000 : 0,
+    },
   );
   const binarySymbolsInfo = useMemo(
     () => (Array.isArray(data) ? toBinarySymbolsInfo(data) : undefined),
@@ -88,4 +87,6 @@ export const useBinaryInfoObserver = (enabled = true) => {
       setBinarySymbolsInfo(binarySymbolsInfo);
     }
   }, [enabled, binarySymbolsInfo, setBinarySymbolsInfo]);
+
+  return enabled ? binarySymbolsInfo : undefined;
 };

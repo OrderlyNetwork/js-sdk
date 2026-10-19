@@ -125,9 +125,66 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root?.unmount());
   root = undefined;
+  vi.useRealTimers();
 });
 
 describe("Binary info observer query synchronization", () => {
+  it("does not schedule polling timers while initially disabled", async () => {
+    vi.useFakeTimers();
+    await mount({ enabled: false });
+
+    expect(vi.getTimerCount()).toBe(0);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(180_000);
+    });
+    expect(vi.getTimerCount()).toBe(0);
+    expect(mocks.fetcher).not.toHaveBeenCalled();
+  });
+
+  it("releases the polling timer on disable and restores it on re-enable", async () => {
+    vi.useFakeTimers();
+    // Avoid request housekeeping timers so only the polling timer is counted.
+    cache.set(BINARY_INFO_QUERY_KEY, { data: [row] });
+    config.revalidateOnMount = false;
+    config.revalidateIfStale = false;
+    await mount();
+    expect(vi.getTimerCount()).toBe(1);
+
+    await update({ enabled: false });
+    expect(vi.getTimerCount()).toBe(0);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(180_000);
+    });
+    expect(vi.getTimerCount()).toBe(0);
+    expect(mocks.fetcher).not.toHaveBeenCalled();
+
+    await update({ enabled: true });
+    expect(vi.getTimerCount()).toBe(1);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60_000);
+    });
+    expect(mocks.fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not restart polling when an in-flight request finishes after disable", async () => {
+    vi.useFakeTimers();
+    let completeRequest!: (rows: API.BinaryInfoRow[]) => void;
+    mocks.fetcher.mockImplementationOnce(
+      () => new Promise((resolve) => (completeRequest = resolve)),
+    );
+    await mount();
+    await update({ enabled: false });
+    await act(async () => completeRequest([updatedRow]));
+    await act(async () => {
+      // Let request timeout/deduplication bookkeeping finish as well.
+      await vi.advanceTimersByTimeAsync(180_000);
+    });
+
+    expect(vi.getTimerCount()).toBe(0);
+    expect(mocks.fetcher).toHaveBeenCalledTimes(1);
+    expect(mocks.setBinarySymbolsInfo).not.toHaveBeenCalled();
+  });
+
   it("synchronizes when another consumer owns the deduplicated request", async () => {
     mocks.fetcher.mockResolvedValue([updatedRow]);
     await mount({ requester: true });

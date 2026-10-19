@@ -87,6 +87,7 @@ jest.mock("../next/apiStatus/apiStatus.store", () => ({
   useApiStatusActions: () => ({}),
 }));
 jest.mock("./appStore", () => ({ useAppStore: () => ({}) }));
+jest.mock("./binaryInfo", () => ({ useBinaryInfoObserver: () => undefined }));
 jest.mock("./orderlyHooks", () => ({ usePositionActions: () => ({}) }));
 jest.mock("../provider/dataCenter/dataCenterContext", () => ({
   useDataCenterContext: () => ({

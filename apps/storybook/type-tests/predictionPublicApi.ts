@@ -1,4 +1,8 @@
 import { createElement } from "react";
+import type {
+  ConfigProviderProps,
+  OrderlyConfigContextState,
+} from "@orderly.network/hooks";
 import {
   MarketsHomePage,
   type MarketsHomePageProps,
@@ -359,5 +363,15 @@ export type RemovedPredictionPageOptions = [
     >
       ? false
       : true
+  >,
+];
+
+export type RemovedBinaryInfoOption = [
+  Assert<"enableBinaryInfo" extends keyof ConfigProviderProps ? false : true>,
+  Assert<
+    "enableBinaryInfo" extends keyof OrderlyConfigContextState ? false : true
+  >,
+  Assert<
+    "enableBinaryInfo" extends keyof OrderlyAppProviderProps ? false : true
   >,
 ];

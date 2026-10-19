@@ -7,6 +7,7 @@ import {
   MarginMode,
   WSMessage,
 } from "@orderly.network/types";
+import { isBinarySymbol } from "@orderly.network/utils";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
@@ -20,6 +21,7 @@ import { useWS } from "../useWS";
 import { updateOrderCaches } from "../utils/orderCacheUpdate";
 import { object2underscore } from "../utils/ws";
 import { useAppStore } from "./appStore";
+import { useBinaryInfoObserver } from "./binaryInfo";
 import { usePositionActions } from "./orderlyHooks";
 import { useBinaryAccountFeeSync } from "./useBinaryAccountFeeSync";
 
@@ -36,6 +38,10 @@ export const usePrivateDataObserver = (options: {
   const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
   const positionsActions = usePositionActions();
+  const accountReady =
+    !!state.accountId &&
+    (state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
   // fetch the data of current account
 
   const { data: clientInfo } = usePrivateQuery<API.AccountInfo>(
@@ -66,11 +72,24 @@ export const usePrivateDataObserver = (options: {
   const { data: positions, isLoading: isPositionLoading } =
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
+      keepPreviousData: false,
       onError: (error) => {
         statusActions.updateApiError("positions", error.message);
       },
       // revalidateOnFocus: false,
     });
+
+  // Use raw account rows so loading metadata never depends on calculator output.
+  const hasBinaryExposure =
+    accountReady &&
+    !!positions?.rows?.some(
+      (row) =>
+        isBinarySymbol(row.symbol) &&
+        ((typeof row.position_qty === "number" && row.position_qty !== 0) ||
+          row.pending_long_qty > 0 ||
+          row.pending_short_qty > 0),
+    );
+  const binarySymbolsInfo = useBinaryInfoObserver(hasBinaryExposure);
 
   // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
   useEffect(() => {
@@ -97,14 +116,16 @@ export const usePrivateDataObserver = (options: {
   }, [isPositionLoading, statusActions]);
 
   useEffect(() => {
-    if (positions && Array.isArray(positions.rows)) {
-      // if (positions.rows.length > 0) {
+    if (accountReady && positions && Array.isArray(positions.rows)) {
       calculatorService.calc(CalculatorScope.POSITION, positions);
-      // } else {
-      //   statusActions.updateApiLoading("positions", false);
-      // }
     }
-  }, [calculatorService, positions]);
+  }, [
+    accountReady,
+    state.accountId,
+    calculatorService,
+    positions,
+    binarySymbolsInfo,
+  ]);
 
   //======================
 

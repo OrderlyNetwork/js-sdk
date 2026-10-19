@@ -80,6 +80,7 @@ jest.mock("./appStore", () => ({
   useAppStore: () => ({ setAccountInfo: mockSetAccountInfo }),
 }));
 jest.mock("./orderlyHooks", () => ({ usePositionActions: () => ({}) }));
+jest.mock("./binaryInfo", () => ({ useBinaryInfoObserver: () => undefined }));
 
 const info = (accountId = "A", taker = 6, maker = 20): API.AccountInfo =>
   ({

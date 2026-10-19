@@ -126,8 +126,8 @@ vi.mock("@orderly.network/ui-orders/src/components/orders.widget", () => ({
   TabType: { pending: "pending", tp_sl: "tp_sl", all: "all" },
 }));
 let root: ReactTestRenderer | undefined, state: any;
-function Native({ enableBinaryInfo = true }: { enableBinaryInfo?: boolean }) {
-  useBinaryInfoObserver(enableBinaryInfo);
+function Native({ hasBinaryExposure = true }: { hasBinaryExposure?: boolean }) {
+  useBinaryInfoObserver(hasBinaryExposure);
   const cancellation = useProductOrderCancelAll({
     instrument: "perps",
     perpsSymbol: "PERP_BTC_USDC",
@@ -155,14 +155,16 @@ afterEach(() => {
 });
 it.each([true, false])(
   "native PERPs keep cancellation and issue no extra Binary queries (observer=%s)",
-  async (enableBinaryInfo) => {
+  async (hasBinaryExposure) => {
     act(() => {
-      root = create(<Native enableBinaryInfo={enableBinaryInfo} />);
+      root = create(<Native hasBinaryExposure={hasBinaryExposure} />);
     });
     expect(mocks.publicQuery).toHaveBeenCalledTimes(1);
     expect(mocks.publicQuery).toHaveBeenCalledWith(
-      enableBinaryInfo ? "/v1/public/binary/info" : null,
-      expect.objectContaining({ refreshInterval: 60000 }),
+      hasBinaryExposure ? "/v1/public/binary/info" : null,
+      expect.objectContaining({
+        refreshInterval: hasBinaryExposure ? 60_000 : 0,
+      }),
     );
     expect(
       mocks.privateQuery.mock.calls.every(

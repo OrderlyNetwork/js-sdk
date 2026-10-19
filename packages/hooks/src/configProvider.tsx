@@ -50,7 +50,6 @@ export type BaseConfigProviderProps = {
 } & Pick<
   OrderlyConfigContextState,
   | "enableSwapDeposit"
-  | "enableBinaryInfo"
   | "customChains"
   | "dataAdapter"
   | "notification"
@@ -90,7 +89,6 @@ export const OrderlyConfigProvider: FC<
     chainFilter,
     customChains,
     enableSwapDeposit = false,
-    enableBinaryInfo = true,
     dataAdapter,
     notification,
     amplitudeConfig,
@@ -195,7 +193,6 @@ export const OrderlyConfigProvider: FC<
       walletAdapters: innerWalletAdapters,
       customChains,
       enableSwapDeposit,
-      enableBinaryInfo,
       defaultOrderbookTickSizes,
       defaultOrderbookSymbolDepths,
       dataAdapter,
@@ -211,7 +208,6 @@ export const OrderlyConfigProvider: FC<
     innerWalletAdapters,
     customChains,
     enableSwapDeposit,
-    enableBinaryInfo,
     defaultOrderbookTickSizes,
     defaultOrderbookSymbolDepths,
     dataAdapter,
