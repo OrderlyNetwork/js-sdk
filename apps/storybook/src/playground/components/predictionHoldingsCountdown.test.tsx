@@ -80,13 +80,16 @@ vi.mock("@orderly.network/ui-connector", () => ({
 }));
 vi.mock(
   "@orderly.network/prediction/src/prediction/cells",
-  async (importOriginal) => ({
-    ...(await importOriginal<object>()),
-    RoundSymbol: () => null,
-    OutcomeBadge: () => null,
-    TableNumber: () => null,
-    PredictionPnl: () => null,
-  }),
+  async (importOriginal) => {
+    const { createElement } = await import("react");
+    return {
+      ...(await importOriginal<object>()),
+      RoundSymbol: () => null,
+      OutcomeBadge: (props: any) => createElement("span", null, props?.outcome),
+      TableNumber: () => null,
+      PredictionPnl: () => null,
+    };
+  },
 );
 vi.mock(
   "@orderly.network/prediction/src/prediction/dataPanels/history/predictionHistoryTable.script",
@@ -132,6 +135,8 @@ vi.mock(
       await importOriginal<
         typeof import("@orderly.network/prediction/src/prediction/dataPanels/holdings/holdingsTable.script")
       >();
+    const { publishedBinaryOutcome } =
+      await import("@orderly.network/prediction/src/prediction/binary/binaryResult");
     return {
       useHoldingsTableScript: () => ({ filters: {} }),
       useHoldingsPositionRows: (state: any) =>
@@ -142,6 +147,7 @@ vi.mock(
               isSelectedRound:
                 !!row.position.symbol &&
                 row.position.symbol === state.marketView?.selectedRow?.symbol,
+              resolvedOutcome: publishedBinaryOutcome(row.roundInfo),
             })),
     };
   },
@@ -181,20 +187,20 @@ afterEach(() => {
 
 it("portfolio rows count down against their own rounds", () => {
   const rows = mountTable({});
-  expect(rows[0].cells[7].props.roundInfo.expire_at).toBe(120_000);
-  expect(rows[1].cells[7].props.roundInfo.expire_at).toBe(180_000);
-  expect(renderCell(rows[0].cells[7])).toContain("cd-120");
+  expect(rows[0].cells[6].props.roundInfo.expire_at).toBe(120_000);
+  expect(rows[1].cells[6].props.roundInfo.expire_at).toBe(180_000);
+  expect(renderCell(rows[0].cells[6])).toContain("cd-120");
 });
 
 it("rows without round metadata keep the placeholder", () => {
   const rows = mountTable({});
-  expect(renderCell(rows[2].cells[7])).toContain("--");
+  expect(renderCell(rows[2].cells[6])).toContain("--");
 });
 
-it("expired rounds show their closed phase instead of a zero countdown", () => {
+it("expired rounds keep the placeholder instead of a zero countdown", () => {
   clock.now = 180_000;
   const rows = mountTable({});
-  expect(renderCell(rows[1].cells[7])).toContain("prediction.phase.closed");
+  expect(renderCell(rows[1].cells[6])).toContain("--");
   clock.now = 0;
 });
 
@@ -212,11 +218,11 @@ it.each([0, 1])("all rows keep countdowns when row %i is selected", (index) => {
     },
   });
   // Selection does not hide other rounds' countdowns.
-  expect(rows[0].cells[7].props.roundInfo.expire_at).toBe(120_000);
-  expect(renderCell(rows[0].cells[7])).toContain("cd-120");
-  expect(rows[1].cells[7].props.roundInfo.expire_at).toBe(180_000);
-  expect(renderCell(rows[1].cells[7])).toContain("cd-180");
-  expect(renderCell(rows[2].cells[7])).toContain("--");
+  expect(rows[0].cells[6].props.roundInfo.expire_at).toBe(120_000);
+  expect(renderCell(rows[0].cells[6])).toContain("cd-120");
+  expect(rows[1].cells[6].props.roundInfo.expire_at).toBe(180_000);
+  expect(renderCell(rows[1].cells[6])).toContain("cd-180");
+  expect(renderCell(rows[2].cells[6])).toContain("--");
 });
 
 it.each([0, 1])(
@@ -261,12 +267,9 @@ it.each(["UP", "DOWN", "TIE"])(
       marketView: { selectedRow: { symbol: holdingsRows[0].position.symbol } },
     });
     const expected =
-      outcome === "UP"
-        ? "prediction.phase.resolvedUp"
-        : outcome === "DOWN"
-          ? "prediction.phase.resolvedDown"
-          : "prediction.phase.resolvedTie";
+      outcome === "UP" ? "up" : outcome === "DOWN" ? "down" : "tie";
     expect(renderCell(rows[0].cells[7])).toContain(expected);
+    expect(renderCell(rows[0].cells[6])).toContain("--");
     act(() => {
       root!.update(
         <HoldingsTableUI
@@ -302,11 +305,7 @@ it.each(["UP", "DOWN", "TIE"])(
     };
     clock.now = 122_000;
     const expected =
-      outcome === "UP"
-        ? "prediction.phase.resolvedUp"
-        : outcome === "DOWN"
-          ? "prediction.phase.resolvedDown"
-          : "prediction.phase.resolvedTie";
+      outcome === "UP" ? "up" : outcome === "DOWN" ? "down" : "tie";
     const rows = mountTable({});
     expect(renderCell(rows[0].cells[7])).toContain(expected);
     act(() => root!.unmount());
@@ -327,27 +326,25 @@ it.each(["UP", "DOWN", "TIE"])(
   },
 );
 
-it("result metadata arriving after expiry updates Closed to Resolved", () => {
+it("result metadata arriving after expiry fills in the outcome cell", () => {
   clock.now = 122_000;
   const rows = mountTable({});
-  expect(renderCell(rows[0].cells[7])).toContain("prediction.phase.closed");
+  expect(renderCell(rows[0].cells[7])).toContain("--");
+  holdingsRows[0].roundInfo = {
+    ...holdingsRows[0].roundInfo,
+    result_committed_at: 121_000,
+    s0: 100,
+    s1: 99,
+    settlement_price_per_share: 0,
+    outcome: "DOWN",
+  };
   act(() => {
-    cellRoot!.update(
-      React.cloneElement(rows[0].cells[7], {
-        roundInfo: {
-          ...holdingsRows[0].roundInfo,
-          result_committed_at: 121_000,
-          s0: 100,
-          s1: 99,
-          settlement_price_per_share: 0,
-          outcome: "DOWN",
-        },
-      }),
-    );
+    root!.update(<HoldingsTableUI state={{} as any} filters={{} as any} />);
   });
-  expect(JSON.stringify(cellRoot!.toJSON())).toContain(
-    "prediction.phase.resolvedDown",
-  );
+  const updated = root!.root.findAllByType(tableModule.PredictionDataTable)[0]
+    .props.rows;
+  expect(renderCell(updated[0].cells[7])).toContain("down");
+  expect(renderCell(updated[0].cells[6])).toContain("--");
 });
 
 it("price and PnL follow the round lifecycle without changing column names", () => {
@@ -383,8 +380,8 @@ it("price and PnL follow the round lifecycle without changing column names", () 
     },
   };
   let rows = mountTable(state);
-  expect(rows[0].cells[5].props.value).toBe(0.6);
-  expect(rows[0].cells[6].props.value).toBe(2);
+  expect(rows[0].cells[4].props.value).toBe(0.6);
+  expect(rows[0].cells[5].props.value).toBe(2);
   const update = (nextState: any) => {
     act(() =>
       root!.update(<HoldingsTableUI state={nextState} filters={{} as any} />),
@@ -393,8 +390,8 @@ it("price and PnL follow the round lifecycle without changing column names", () 
       .rows;
   };
   rows = update({ ...state, roundNow: 2_000 });
+  expect(renderCell(rows[0].cells[4])).toContain("--");
   expect(renderCell(rows[0].cells[5])).toContain("--");
-  expect(renderCell(rows[0].cells[6])).toContain("--");
   const resolved = {
     ...round,
     s1: 101,
@@ -403,18 +400,18 @@ it("price and PnL follow the round lifecycle without changing column names", () 
     result_committed_at: 2_100,
   };
   rows = update({ ...state, roundNow: 2_200, roundBySymbol: () => resolved });
-  expect(rows[0].cells[5].props.value).toBe(1);
-  expect(rows[0].cells[6].props.value).toBe(6);
+  expect(rows[0].cells[4].props.value).toBe(1);
+  expect(rows[0].cells[5].props.value).toBe(6);
   rows = update({
     ...state,
     roundNow: 2_200,
     roundBySymbol: () => resolved,
     marketView: undefined,
   });
-  expect(rows[0].cells[5].props.value).toBe(1);
-  expect(rows[0].cells[6].props.value).toBe(6);
+  expect(rows[0].cells[4].props.value).toBe(1);
+  expect(rows[0].cells[5].props.value).toBe(6);
   const columns = root!.root.findAllByType(tableModule.PredictionDataTable)[0]
     .props.columns;
-  expect(columns[5].title).toBe("prediction.lastPrice");
-  expect(columns[6].title).toBe("common.unrealizedPnl");
+  expect(columns[4].title).toBe("prediction.lastPrice");
+  expect(columns[5].title).toBe("common.unrealizedPnl");
 });

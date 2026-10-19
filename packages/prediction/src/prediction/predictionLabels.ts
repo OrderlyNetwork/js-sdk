@@ -9,7 +9,6 @@ import type {
   PredictionOrderType,
   PredictionOutcome,
   PredictionResult,
-  PredictionRoundPhase,
 } from "./prediction.types";
 
 /**
@@ -37,15 +36,6 @@ export const sideLabels = (): Record<PredictionOrderSide, string> => ({
 export const orderTypeLabels = (): Record<PredictionOrderType, string> => ({
   market: i18n.t("common.market"),
   limit: i18n.t("common.limit"),
-});
-
-export const phaseLabels = (): Record<PredictionRoundPhase, string> => ({
-  trading: i18n.t("prediction.phase.trading"),
-  closingSoon: i18n.t("prediction.phase.closingSoon"),
-  closed: i18n.t("prediction.phase.closed"),
-  resolvedUp: i18n.t("prediction.phase.resolvedUp"),
-  resolvedDown: i18n.t("prediction.phase.resolvedDown"),
-  resolvedTie: i18n.t("prediction.phase.resolvedTie"),
 });
 
 export const roundStatusLabels = (): Record<RoundStatus, string> => ({
