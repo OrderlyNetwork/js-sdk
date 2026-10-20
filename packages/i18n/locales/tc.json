@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "一般更新",
   "notification.maintenanceTitle": "系統維護",
   "notification.empty": "暫無公告",
-  "tradingPoints.points": "積分"
+  "tradingPoints.points": "積分",
+  "markets.tradeSubMenu.perps.description": "在免 Gas 訂單簿上交易永續合約"
 }

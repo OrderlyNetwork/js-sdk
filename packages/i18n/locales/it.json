@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Aggiornamento generale",
   "notification.maintenanceTitle": "Manutenzione sistema",
   "notification.empty": "Nessun annuncio",
-  "tradingPoints.points": "Punti"
+  "tradingPoints.points": "Punti",
+  "markets.tradeSubMenu.perps.description": "Fai trading di futuri perpetui su un book degli ordini senza gas"
 }

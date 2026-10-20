@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "تحديث عام",
   "notification.maintenanceTitle": "صيانة النظام",
   "notification.empty": "لا توجد إعلانات",
-  "tradingPoints.points": "النقاط"
+  "tradingPoints.points": "النقاط",
+  "markets.tradeSubMenu.perps.description": "تداول العقود الآجلة الدائمة على دفتر أوامر بدون رسوم غاز"
 }

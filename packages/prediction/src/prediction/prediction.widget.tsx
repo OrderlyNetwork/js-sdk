@@ -4,6 +4,7 @@ import {
   useAppContext,
   useFeatureEnabled,
 } from "@orderly.network/react-app";
+import { perpRoute, predictionRoute } from "@orderly.network/types";
 import {
   AssetViewWidget,
   useFirstTimeDeposit,
@@ -42,11 +43,7 @@ const PredictionWidgetContent: React.FC<PredictionWidgetProps> = ({
     (nextSymbol: string) => {
       if (nextSymbol === effectiveSymbol) return;
       if (onSymbolChange) onSymbolChange({ symbol: nextSymbol });
-      else
-        onRouteChange?.({
-          href: `/prediction/${encodeURIComponent(nextSymbol)}`,
-          name: "prediction",
-        });
+      else onRouteChange?.(predictionRoute(nextSymbol));
     },
     [effectiveSymbol, onSymbolChange, onRouteChange],
   );
@@ -83,19 +80,12 @@ const PredictionWidgetContent: React.FC<PredictionWidgetProps> = ({
       !completedDefaultRoute.current
     ) {
       completedDefaultRoute.current = true;
-      onRouteChange({
-        href: `/prediction/${encodeURIComponent(defaultSymbol)}`,
-        name: "prediction",
-        replace: true,
-      });
+      onRouteChange(predictionRoute(defaultSymbol, { replace: true }));
     }
   }, [symbol, onSymbolChange, onRouteChange, fallbackSymbol]);
   const navigatePerp = useCallback(
     (market: { symbol: string }) => {
-      onRouteChange?.({
-        href: `/perp/${encodeURIComponent(market.symbol)}`,
-        name: "perps",
-      });
+      onRouteChange?.(perpRoute(market.symbol));
     },
     [onRouteChange],
   );

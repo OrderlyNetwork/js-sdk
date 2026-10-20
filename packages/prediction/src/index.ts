@@ -40,6 +40,10 @@ export {
   type ManagedPredictionPositionsProps,
 } from "./prediction/dataPanels/holdings/managedPositions.widget";
 export { usePredictionMarkets } from "./prediction/hooks/usePredictionMarkets";
+export {
+  formatBinarySymbolName,
+  formatPredictionMarketName,
+} from "./prediction/predictionMarketSearch";
 
 export type {
   PredictionSymbolSelection,

@@ -15,8 +15,6 @@
   "extend.docs": "Docs",
   "extend.audits": "Audits",
   "extend.vaults": "Vaults",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Gasless orderbook perps with up to 100x leverage",
   "extend.woofiEarn": "WOOFi earn",
   "extend.woofiEarn.description": "Get yield effortlessly on any chain",
   "extend.wooStake": "WOO stake",

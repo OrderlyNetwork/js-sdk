@@ -15,8 +15,6 @@
   "extend.docs": "Documenten",
   "extend.audits": "Audits",
   "extend.vaults": "Kluizen",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Gasvrije orderboek-perps met tot 100x hefboom",
   "extend.woofiEarn": "WOOFi verdienen",
   "extend.woofiEarn.description": "Moeiteloos rendement behalen op elke chain",
   "extend.wooStake": "WOO staking",

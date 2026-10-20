@@ -63,7 +63,7 @@ vi.mock(
   () => ({ usePredictionMarketsDropdown: () => ({}) }),
 );
 vi.mock(
-  "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui",
+  "@orderly.network/prediction/src/prediction/predictionMarketSearch",
   () => ({
     formatPredictionMarketName: ({
       base,
@@ -72,6 +72,12 @@ vi.mock(
       base: string;
       period: string;
     }) => `${base} ${period}`,
+    formatBinarySymbolName: (symbol?: string) => {
+      const match = /^PERP_([A-Z0-9]+?)(5M|10M|15M)\d{10}_USDC$/.exec(
+        symbol ?? "",
+      );
+      return match ? `${match[1]} ${match[2]}` : undefined;
+    },
   }),
 );
 vi.mock("@orderly.network/prediction/src/prediction/predictionShared", () => ({
@@ -231,6 +237,11 @@ it.each([undefined, "INVALID", "PERP_BTC5M2610131400_USDC"])(
     mount(symbol);
     expect(rounds.isMissingHistoricalRound).toBe(false);
     expect(text()).toContain("prediction.rounds.unavailable");
+    if (symbol === "PERP_BTC5M2610131400_USDC") {
+      // The header shows the parsed market name, not the raw round symbol.
+      expect(text()).toContain("BTC 5M");
+      expect(text()).not.toContain(symbol);
+    }
   },
 );
 

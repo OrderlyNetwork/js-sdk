@@ -1,67 +1,89 @@
 // @vitest-environment jsdom
 import { MemoryRouter, Route, Routes } from "react-router";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { PERP_SYMBOL_STORAGE_KEY } from "@orderly.network/trading-shared";
+import { afterEach, expect, it, vi } from "vitest";
+import type {
+  TradeSubMenuItem,
+  TradeSubMenuWidgetProps,
+} from "@orderly.network/markets";
 import { customTradeSubMenuRender } from "./customTradeSubMenu";
 
-vi.mock("@orderly.network/markets", () => ({
-  SubMenuMarketsWidget: () => null,
+const mocks = vi.hoisted(() => ({
+  widget: vi.fn<(props: TradeSubMenuWidgetProps) => null>(() => null),
 }));
-vi.mock("@orderly.network/i18n", () => ({
+
+vi.mock("@orderly.network/markets", () => ({
+  PERPS_TRADE_SUB_MENU_KEY: "perps",
+  PREDICTION_TRADE_SUB_MENU_KEY: "prediction",
+  TradeSubMenuWidget: mocks.widget,
+}));
+vi.mock("@orderly.network/i18n", async (importActual) => ({
+  ...(await importActual<typeof import("@orderly.network/i18n")>()),
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 vi.mock("@orderly.network/ui", () => ({
-  EarnActiveIcon: () => null,
-  EarnInactiveIcon: () => null,
-  TradingActiveIcon: () => null,
-  TradingInactiveIcon: () => null,
   MarketsActiveIcon: () => null,
   MarketsInactiveIcon: () => null,
-  PredictionIcon: () => null,
-}));
-vi.mock("../../components/orderlyProvider/rounteProvider", () => ({
-  useRouteContext: () => ({ onRouteChange: vi.fn() }),
 }));
 
-function renderSubMenuAt(path: string): ReactTestRenderer {
-  const SubMenu = customTradeSubMenuRender();
-  let root: ReactTestRenderer;
+let root: ReactTestRenderer;
+
+afterEach(() => act(() => root.unmount()));
+
+function renderAt(path: string): TradeSubMenuWidgetProps {
   act(() => {
     root = create(
       <MemoryRouter initialEntries={[path]}>
         <Routes>
-          <Route path="/:lang/perp/:symbol" element={<SubMenu />} />
-          <Route path="/:lang/prediction/:symbol" element={<SubMenu />} />
-          <Route path="/:lang/markets" element={<SubMenu />} />
+          <Route
+            path="/:lang/perp/:symbol"
+            element={customTradeSubMenuRender()}
+          />
+          <Route
+            path="/:lang/rwa/:symbol"
+            element={customTradeSubMenuRender()}
+          />
+          <Route
+            path="/:lang/prediction/:symbol"
+            element={customTradeSubMenuRender()}
+          />
+          <Route path="/:lang/swap" element={customTradeSubMenuRender()} />
+          <Route path="/:lang/markets" element={customTradeSubMenuRender()} />
         </Routes>
       </MemoryRouter>,
     );
   });
-  return root!;
+  return mocks.widget.mock.calls.at(-1)![0];
 }
 
-let root: ReactTestRenderer;
-
-beforeEach(() => {
-  localStorage.clear();
+it.each([
+  ["/en/perp/PERP_BTC_USDC", "perps", "PERP_BTC_USDC"],
+  ["/en/rwa/PERP_XAU_USDC", "rwa", "PERP_XAU_USDC"],
+  // Host passes the route param; the widget drops binary/prediction symbols.
+  [
+    "/en/prediction/PERP_BTC5M2608271200_USDC",
+    "prediction",
+    "PERP_BTC5M2608271200_USDC",
+  ],
+  ["/en/swap", "spot", undefined],
+  ["/en/markets", "perps", undefined],
+])("derives the active entry and perps symbol at %s", (path, key, symbol) => {
+  const props = renderAt(path);
+  expect(props.activeKey).toBe(key);
+  expect(props.symbol).toBe(symbol);
 });
 
-afterEach(() => act(() => root.unmount()));
-
-it("mirrors the URL symbol into storage on a perps route", () => {
-  root = renderSubMenuAt("/en/perp/PERP_BTC_USDC");
-  expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBe("PERP_BTC_USDC");
-});
-
-it("does not overwrite the remembered symbol with the prediction round symbol", () => {
-  localStorage.setItem(PERP_SYMBOL_STORAGE_KEY, "PERP_BTC_USDC");
-  root = renderSubMenuAt("/en/prediction/PERP_BTC5M2608271200_USDC");
-  expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBe("PERP_BTC_USDC");
-});
-
-it("keeps the remembered symbol on routes without a perps symbol param", () => {
-  localStorage.setItem(PERP_SYMBOL_STORAGE_KEY, "PERP_BTC_USDC");
-  root = renderSubMenuAt("/en/markets");
-  expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBe("PERP_BTC_USDC");
+it("appends RWA after the built-in SDK entries", () => {
+  const builtins = [
+    { key: "perps", title: "common.perps" },
+    { key: "prediction", title: "common.predictions" },
+  ] as TradeSubMenuItem[];
+  const items = renderAt("/en/markets").items!(builtins);
+  expect(items.map((entry) => entry.key)).toEqual([
+    "perps",
+    "prediction",
+    "rwa",
+  ]);
+  expect(items[0]).toBe(builtins[0]);
+  expect(items[1]).toBe(builtins[1]);
 });

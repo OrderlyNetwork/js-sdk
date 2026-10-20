@@ -15,8 +15,6 @@
   "extend.docs": "ドキュメント",
   "extend.audits": "監査",
   "extend.vaults": "ボールト",
-  "extend.perps": "パーペチュアル",
-  "extend.perps.description": "ガス不要のオーダーブック型パーペチュアル、最大100倍のレバレッジ",
   "extend.woofiEarn": "WOOFi 獲得",
   "extend.woofiEarn.description": "どのチェーンでも簡単に利回りを得る",
   "extend.wooStake": "WOO ステーク",

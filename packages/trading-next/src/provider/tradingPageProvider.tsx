@@ -5,6 +5,7 @@ import {
   usePredictionMarketsDropdown,
 } from "@orderly.network/prediction";
 import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
+import { predictionRoute } from "@orderly.network/types";
 import { TradingPageState, TradingPageProps } from "../types/types";
 import { getBasicSymbolInfo } from "../utils/utils";
 import { TradingPageContext } from "./tradingPageContext";
@@ -21,10 +22,7 @@ export const TradingPageProvider: FC<PropsWithChildren<TradingPageProps>> = (
   const enabled = useFeatureEnabled("prediction") && !!onRouteChange;
   const selectPrediction = useCallback(
     (nextSymbol: string) => {
-      onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(nextSymbol)}`,
-        name: "prediction",
-      });
+      onRouteChange?.(predictionRoute(nextSymbol));
     },
     [onRouteChange],
   );

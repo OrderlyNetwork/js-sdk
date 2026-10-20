@@ -3,7 +3,12 @@ import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { ProductOrderInstrument } from "@orderly.network/prediction";
 import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
-import { OrderStatus, type API } from "@orderly.network/types";
+import {
+  OrderStatus,
+  perpRoute,
+  predictionRoute,
+  type API,
+} from "@orderly.network/types";
 import {
   Button,
   Divider,
@@ -31,19 +36,13 @@ export const OrdersPage: React.FC<PortfolioOrdersPageProps> = (props) => {
   const predictionEnabled = useFeatureEnabled("prediction");
   const navigatePerp = useCallback(
     (market: API.Symbol) => {
-      onRouteChange?.({
-        href: `/perp/${encodeURIComponent(market.symbol)}`,
-        name: "perps",
-      });
+      onRouteChange?.(perpRoute(market.symbol));
     },
     [onRouteChange],
   );
   const navigatePrediction = useCallback(
     (symbol: string) => {
-      onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(symbol)}`,
-        name: "prediction",
-      });
+      onRouteChange?.(predictionRoute(symbol));
     },
     [onRouteChange],
   );

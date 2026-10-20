@@ -54,8 +54,6 @@ export const usePredictionMarketTabs = (
   }, [defaultTabs, t, predictionEnabled]);
 };
 
-export { formatPredictionMarketName } from "./predictionMarketSearch";
-
 type PredictionMarketRowProps = {
   market: BinaryMarket;
   /** Live UP-coordinate BBO from the panel's @bbo subscriptions. */

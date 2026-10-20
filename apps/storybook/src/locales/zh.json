@@ -15,8 +15,6 @@
   "extend.docs": "文档",
   "extend.audits": "审计",
   "extend.vaults": "金库",
-  "extend.perps": "合约",
-  "extend.perps.description": "免 Gas 的订单簿永续合约，最高可达 100 倍杠杆",
   "extend.woofiEarn": "WOOFi 赚取",
   "extend.woofiEarn.description": "在任何链上轻松获取收益",
   "extend.wooStake": "WOO 质押",

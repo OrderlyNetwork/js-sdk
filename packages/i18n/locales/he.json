@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "עדכון כללי",
   "notification.maintenanceTitle": "תחזוקת מערכת",
   "notification.empty": "אין הודעות",
-  "tradingPoints.points": "נקודות"
+  "tradingPoints.points": "נקודות",
+  "markets.tradeSubMenu.perps.description": "סחרו בחוזים תמידיים בספר פקודות ללא עמלות גז"
 }

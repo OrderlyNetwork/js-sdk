@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Algemene update",
   "notification.maintenanceTitle": "Systeemonderhoud",
   "notification.empty": "Geen aankondigingen",
-  "tradingPoints.points": "Punten"
+  "tradingPoints.points": "Punten",
+  "markets.tradeSubMenu.perps.description": "Handel in perpetual futures op een gasloos orderboek"
 }

@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "به‌روزرسانی عمومی",
   "notification.maintenanceTitle": "نگهداری سیستم",
   "notification.empty": "اعلامی‌ای نیست",
-  "tradingPoints.points": "امتیاز"
+  "tradingPoints.points": "امتیاز",
+  "markets.tradeSubMenu.perps.description": "معامله فیوچرز دائمی در دفتر سفارش بدون کارمزد گس"
 }

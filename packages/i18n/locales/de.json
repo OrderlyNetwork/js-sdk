@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Allgemeines Update",
   "notification.maintenanceTitle": "Systemwartung",
   "notification.empty": "Keine Ankündigungen",
-  "tradingPoints.points": "Punkte"
+  "tradingPoints.points": "Punkte",
+  "markets.tradeSubMenu.perps.description": "Handle Perpetual Futures in einem gasfreien Orderbuch"
 }

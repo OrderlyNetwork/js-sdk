@@ -28,7 +28,10 @@ import {
 } from "./orderEntry";
 import type { PredictionState } from "./prediction.script";
 import { PriceChart } from "./predictionChart.ui";
-import { formatPredictionMarketName } from "./predictionMarketPanel.ui";
+import {
+  formatBinarySymbolName,
+  formatPredictionMarketName,
+} from "./predictionMarketSearch";
 import { formatPercent, usePredictionFormatters } from "./predictionShared";
 import { RoundResultWidget } from "./roundResult";
 import { usePredictionMarketsDropdown } from "./usePredictionMarketsDropdown";
@@ -182,7 +185,9 @@ export const Prediction: React.FC<
     state.selectedRow?.symbol !== state.requestedSymbol &&
     !state.isMissingHistoricalRound;
   const marketName = isRequestedSymbolUnavailable
-    ? (state.requestedSymbol ?? t("prediction.title"))
+    ? (formatBinarySymbolName(state.requestedSymbol) ??
+      state.requestedSymbol ??
+      t("prediction.title"))
     : displayMarket
       ? formatPredictionMarketName(displayMarket)
       : t("prediction.title");

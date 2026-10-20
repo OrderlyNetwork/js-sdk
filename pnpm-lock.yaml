@@ -1144,6 +1144,9 @@ importers:
 
   packages/markets:
     dependencies:
+      '@orderly.network/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@orderly.network/markets-core':
         specifier: workspace:*
         version: link:../markets-core
@@ -1153,6 +1156,15 @@ importers:
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      '@orderly.network/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@babel/core':
         specifier: ^7.29.7

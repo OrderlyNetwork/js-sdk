@@ -15,8 +15,6 @@
   "extend.docs": "文檔",
   "extend.audits": "審計",
   "extend.vaults": "金庫",
-  "extend.perps": "合約",
-  "extend.perps.description": "免 Gas 的訂單簿永續合約，最高可達 100 倍槓桿",
   "extend.woofiEarn": "WOOFi 賺取",
   "extend.woofiEarn.description": "在任何鏈上輕鬆獲取收益",
   "extend.wooStake": "WOO 質押",

@@ -1,7 +1,7 @@
 import {
   getStoredPerpSymbol,
   setStoredPerpSymbol,
-} from "@orderly.network/trading-shared";
+} from "@orderly.network/utils";
 
 export const DEFAULT_SYMBOL = "PERP_ETH_USDC";
 

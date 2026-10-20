@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "常规更新",
   "notification.maintenanceTitle": "系统维护",
   "notification.empty": "暂无公告",
-  "tradingPoints.points": "积分"
+  "tradingPoints.points": "积分",
+  "markets.tradeSubMenu.perps.description": "在免 Gas 订单簿上交易永续合约"
 }

@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Cập nhật chung",
   "notification.maintenanceTitle": "Bảo trì hệ thống",
   "notification.empty": "Không có thông báo",
-  "tradingPoints.points": "Điểm"
+  "tradingPoints.points": "Điểm",
+  "markets.tradeSubMenu.perps.description": "Giao dịch hợp đồng vĩnh viễn trên sổ lệnh không tốn phí gas"
 }

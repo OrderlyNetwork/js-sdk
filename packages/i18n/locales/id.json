@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Pembaruan umum",
   "notification.maintenanceTitle": "Pemeliharaan sistem",
   "notification.empty": "Tidak ada pengumuman",
-  "tradingPoints.points": "Poin"
+  "tradingPoints.points": "Poin",
+  "markets.tradeSubMenu.perps.description": "Perdagangkan futures perpetual di order book tanpa biaya gas"
 }

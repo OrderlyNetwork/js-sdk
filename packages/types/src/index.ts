@@ -34,6 +34,7 @@ export type {
   BracketOrder,
 } from "./order";
 export * from "./context";
+export * from "./routes";
 export type { AppFeatures } from "./appFeatures";
 export * from "./withdraw";
 export * from "./chains";

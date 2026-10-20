@@ -3,7 +3,7 @@ import {
   PERP_SYMBOL_STORAGE_KEY,
   getStoredPerpSymbol,
   setStoredPerpSymbol,
-} from "@orderly.network/trading-shared";
+} from "@orderly.network/utils";
 import {
   DEFAULT_SYMBOL,
   getPerpSymbol,
@@ -69,5 +69,25 @@ describe("SDK perpSymbolStorage helpers", () => {
     localStorage.setItem(PERP_SYMBOL_STORAGE_KEY, "PERP_BTC5M2608271200_USDC");
     expect(getStoredPerpSymbol()).toBeNull();
     expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBeNull();
+  });
+
+  it("treats missing storage as nothing stored", () => {
+    vi.stubGlobal("localStorage", undefined);
+    expect(() => setStoredPerpSymbol("PERP_BTC_USDC")).not.toThrow();
+    expect(getStoredPerpSymbol()).toBeNull();
+    expect(getPerpSymbol()).toBe(DEFAULT_SYMBOL);
+  });
+
+  it("swallows storage errors such as blocked site data", () => {
+    const blocked = () => {
+      throw new DOMException("blocked", "SecurityError");
+    };
+    vi.stubGlobal("localStorage", {
+      getItem: blocked,
+      setItem: blocked,
+      removeItem: blocked,
+    });
+    expect(() => setStoredPerpSymbol("PERP_BTC_USDC")).not.toThrow();
+    expect(getStoredPerpSymbol()).toBeNull();
   });
 });

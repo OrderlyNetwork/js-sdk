@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Mise à jour générale",
   "notification.maintenanceTitle": "Maintenance système",
   "notification.empty": "Aucune annonce",
-  "tradingPoints.points": "Points"
+  "tradingPoints.points": "Points",
+  "markets.tradeSubMenu.perps.description": "Tradez des contrats perpétuels sur un carnet d'ordres sans frais de gas"
 }

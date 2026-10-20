@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Общее обновление",
   "notification.maintenanceTitle": "Обслуживание системы",
   "notification.empty": "Нет объявлений",
-  "tradingPoints.points": "Баллы"
+  "tradingPoints.points": "Баллы",
+  "markets.tradeSubMenu.perps.description": "Торгуйте бессрочными фьючерсами в книге ордеров без комиссий за газ"
 }

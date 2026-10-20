@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Genel güncelleme",
   "notification.maintenanceTitle": "Sistem bakımı",
   "notification.empty": "Duyuru yok",
-  "tradingPoints.points": "Puanlar"
+  "tradingPoints.points": "Puanlar",
+  "markets.tradeSubMenu.perps.description": "Gas ücretsiz emir defterinde süresiz vadeli işlemler yapın"
 }

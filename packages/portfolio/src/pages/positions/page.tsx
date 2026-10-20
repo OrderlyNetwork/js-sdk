@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
-import type { API } from "@orderly.network/types";
+import { perpRoute, predictionRoute, type API } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -70,19 +70,13 @@ export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
   const predictionEnabled = useFeatureEnabled("prediction");
   const navigatePerp = useCallback(
     (market: API.Symbol) => {
-      onRouteChange?.({
-        href: `/perp/${encodeURIComponent(market.symbol)}`,
-        name: "perps",
-      });
+      onRouteChange?.(perpRoute(market.symbol));
     },
     [onRouteChange],
   );
   const navigatePrediction = useCallback(
     (symbol: string) => {
-      onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(symbol)}`,
-        name: "prediction",
-      });
+      onRouteChange?.(predictionRoute(symbol));
     },
     [onRouteChange],
   );

@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "일반 업데이트",
   "notification.maintenanceTitle": "시스템 점검",
   "notification.empty": "공지사항이 없습니다",
-  "tradingPoints.points": "포인트"
+  "tradingPoints.points": "포인트",
+  "markets.tradeSubMenu.perps.description": "가스비 없는 호가창에서 영구 선물을 거래하세요"
 }

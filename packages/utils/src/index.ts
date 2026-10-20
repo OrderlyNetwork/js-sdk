@@ -11,5 +11,6 @@ export * from "./symbol";
 export * from "./order";
 export * from "./tpsl";
 export * from "./formatNum";
+export * from "./perpSymbolStorage";
 
 // export { dayjs };

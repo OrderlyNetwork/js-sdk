@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "Aktualizacja ogólna",
   "notification.maintenanceTitle": "Konserwacja systemu",
   "notification.empty": "Brak ogłoszeń",
-  "tradingPoints.points": "Punkty"
+  "tradingPoints.points": "Punkty",
+  "markets.tradeSubMenu.perps.description": "Handluj kontraktami wieczystymi w księdze zleceń bez opłat za gas"
 }

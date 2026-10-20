@@ -6,6 +6,7 @@ import {
 } from "@orderly.network/markets-core";
 import { usePredictionMarketsExtension } from "@orderly.network/prediction";
 import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
+import { predictionRoute } from "@orderly.network/types";
 
 export type MarketsHomePageProps = MarketsHomePageBaseProps & {
   /** Override application navigation; receives the exact round symbol. */
@@ -17,10 +18,7 @@ export const MarketsHomePage: React.FC<MarketsHomePageProps> = (props) => {
   const predictionEnabled = useFeatureEnabled("prediction");
   const defaultPredictionSelect = useCallback(
     (symbol: string) => {
-      onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(symbol)}`,
-        name: "prediction",
-      });
+      onRouteChange?.(predictionRoute(symbol));
     },
     [onRouteChange],
   );

@@ -15,8 +15,6 @@
   "extend.docs": "Dokumente",
   "extend.audits": "Audits",
   "extend.vaults": "Tresore",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Gasfreie Orderbuch-Perps mit bis zu 100x Hebel",
   "extend.woofiEarn": "WOOFi verdienen",
   "extend.woofiEarn.description": "Erhalten Sie mühelos Rendite auf jeder Chain",
   "extend.wooStake": "WOO staken",

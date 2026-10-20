@@ -9,7 +9,7 @@ export {
   PERP_SYMBOL_STORAGE_KEY,
   getStoredPerpSymbol,
   setStoredPerpSymbol,
-} from "@orderly.network/trading-shared";
+} from "@orderly.network/utils";
 
 export type {
   ShareOptions,

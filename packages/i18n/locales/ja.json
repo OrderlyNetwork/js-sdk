@@ -1469,5 +1469,6 @@
   "notification.generalTitle": "一般アップデート",
   "notification.maintenanceTitle": "システムメンテナンス",
   "notification.empty": "お知らせはありません",
-  "tradingPoints.points": "ポイント"
+  "tradingPoints.points": "ポイント",
+  "markets.tradeSubMenu.perps.description": "ガス代無料のオーダーブックでパーペチュアルを取引"
 }

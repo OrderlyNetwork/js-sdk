@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useCallback, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import type { API } from "@orderly.network/types";
+import { perpRoute, predictionRoute, type API } from "@orderly.network/types";
 import { usePredictionIntegration } from "../hooks/usePredictionIntegration";
 import { useTradingLocalStorage } from "../hooks/useTradingLocalStorage";
 import { TradingPageState, TradingPageProps } from "../types/types";
@@ -17,10 +17,7 @@ export const TradingPageProvider: FC<PropsWithChildren<TradingPageProps>> = (
     useTradingLocalStorage();
   const selectPrediction = useCallback(
     (nextSymbol: string) => {
-      onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(nextSymbol)}`,
-        name: "prediction",
-      });
+      onRouteChange?.(predictionRoute(nextSymbol));
     },
     [onRouteChange],
   );
@@ -28,11 +25,7 @@ export const TradingPageProvider: FC<PropsWithChildren<TradingPageProps>> = (
     (market: API.Symbol) => {
       if (market.symbol === symbol) return;
       if (props.onSymbolChange) props.onSymbolChange(market);
-      else
-        onRouteChange?.({
-          href: `/perp/${encodeURIComponent(market.symbol)}`,
-          name: "perps",
-        });
+      else onRouteChange?.(perpRoute(market.symbol));
     },
     [symbol, props.onSymbolChange, onRouteChange],
   );

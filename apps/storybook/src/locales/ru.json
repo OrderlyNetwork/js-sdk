@@ -15,8 +15,6 @@
   "extend.docs": "Документы",
   "extend.audits": "Аудиты",
   "extend.vaults": "Хранилища",
-  "extend.perps": "Перпы",
-  "extend.perps.description": "Безгазовые перпетуалы с ордербуком и плечом до 100x",
   "extend.woofiEarn": "WOOFi заработок",
   "extend.woofiEarn.description": "Легко получайте доход в любой сети",
   "extend.wooStake": "WOO стейкинг",

@@ -80,11 +80,36 @@ import { TradingPage } from "@orderly.network/trading";
 
 Upgrading alone is not a zero-action change: Prediction is enabled by default, and hosts that already pass `onRouteChange` (most do, for portfolio and footer links) show Prediction entries in the markets dropdown immediately. Selecting one navigates to `/prediction/:symbol`; until that route exists the host serves a 404. Either configure the route as described below or set `features={{ prediction: false }}` on `OrderlyAppProvider` to keep Prediction off.
 
-The page reads the existing all-symbol and notional precision preferences and keeps list and count scopes in sync. Prediction selection uses the SDK app provider's existing `onRouteChange` callback with `{ href: "/prediction/" + encodeURIComponent(symbol), name: "prediction" }`. The host handles language prefixes and its own router. Configure the standard `/prediction/:symbol` route. Without `onRouteChange`, the automatic Prediction market dropdown is omitted; account panel extensions remain available.
+The page reads the existing all-symbol and notional precision preferences and keeps list and count scopes in sync. Prediction selection uses the SDK app provider's existing `onRouteChange` callback with `predictionRoute(symbol)`, i.e. `{ href: "/prediction/" + encodeURIComponent(symbol), name: "prediction" }`. The host handles language prefixes and its own router. Configure the standard `/prediction/:symbol` route. Without `onRouteChange`, the automatic Prediction market dropdown is omitted; account panel extensions remain available.
 
 The application feature setting controls automatic Prediction integration. Trading pages and their providers assemble the market surfaces and account panels internally; hosts do not supply product-content overrides.
 
 Same-product selection calls `onSymbolChange` when supplied; the host owns updating `symbol` and its URL. Without this callback, selection requests `/perp/:symbol` through `onRouteChange`. Cross-product selection only calls `onRouteChange`. Selecting the current symbol is a no-op. Custom route mappings belong in the host's `onRouteChange` adapter.
+
+### Route builders
+
+Every SDK page builds these destinations with the helpers exported from `@orderly.network/types`; hosts can use the same helpers for their own links and match on `RouteOption.name` instead of parsing hrefs:
+
+```tsx
+import {
+  PERP_ROUTE_NAME,
+  // "perps"
+  PREDICTION_ROUTE_NAME,
+  // "prediction"
+  perpRoute,
+  predictionRoute,
+} from "@orderly.network/types";
+
+perpRoute("PERP_BTC_USDC"); // { href: "/perp/PERP_BTC_USDC", name: "perps" }
+predictionRoute(); // { href: "/prediction", name: "prediction" }
+predictionRoute("PERP_BTC5M2608271200_USDC", { replace: true });
+```
+
+Symbols are URI-encoded. `replace` is only present when requested.
+
+### Trade sub menu
+
+Hosts with a Perps / Prediction switcher in the main navigation can use `TradeSubMenuWidget` from `@orderly.network/markets` instead of maintaining their own copy. It navigates with the builders above, hides Prediction when `features.prediction` is `false`, and accepts extra entries. Hosts control the highlighted entry with `activeKey` derived from their route; when omitted, it defaults to `"perps"`. See `packages/markets/docs/components/tradeSubMenu/index.md`.
 
 ## Prediction page navigation
 
@@ -144,13 +169,13 @@ Existing account and SWR providers are still required; see [Stylesheet](#stylesh
 
 ## Host symbol persistence
 
-The SDK does not touch host routing state, but hosts that remember the last perp symbol (the common `localStorage` pattern behind symbol-less `/perp` redirects) should use the guarded helpers shipped in `@orderly.network/trading` (also exported from `@orderly.network/trading-shared`) instead of hand-rolling storage:
+The SDK does not touch host routing state, but hosts that remember the last perp symbol (the common `localStorage` pattern behind symbol-less `/perp` redirects) should use the guarded helpers shipped in `@orderly.network/utils` instead of hand-rolling storage. `@orderly.network/trading` continues to re-export `PERP_SYMBOL_STORAGE_KEY`, `getStoredPerpSymbol`, and `setStoredPerpSymbol`, so existing Trading imports remain supported. Imports from `@orderly.network/trading-shared` must move to `@orderly.network/utils`.
 
 ```tsx
 import {
   getStoredPerpSymbol,
   setStoredPerpSymbol,
-} from "@orderly.network/trading";
+} from "@orderly.network/utils";
 
 const FALLBACK = "PERP_ETH_USDC";
 
@@ -163,7 +188,7 @@ export function setPerpSymbol(symbol: string) {
 }
 ```
 
-The helpers own the storage key (`orderly_perp_symbol`) and the guard. A Prediction round symbol such as `PERP_BTC5M2608271200_USDC` is never written and never returned; a round found in storage (for example written by a host implementation that predates the guard) is removed on read, so the store self-heals. Without the guard a remembered round expires and hijacks every later symbol-less `/perp` redirect onto a dead market — and upgrading the package alone cannot repair storage written by unguarded host code.
+The helpers own the storage key (`orderly_perp_symbol`) and the guard. They are safe to call during SSR or when the browser blocks storage: reads return `null` and writes are skipped. A Prediction round symbol such as `PERP_BTC5M2608271200_USDC` is never written and never returned; a round found in storage (for example written by a host implementation that predates the guard) is removed on read, so the store self-heals. Without the guard a remembered round expires and hijacks every later symbol-less `/perp` redirect onto a dead market — and upgrading the package alone cannot repair storage written by unguarded host code.
 
 Hosts that mirror the current symbol across pages (for example, a header bound to the active route) should still route-gate what they mirror, so Prediction views never feed a round symbol into perps display state.
 

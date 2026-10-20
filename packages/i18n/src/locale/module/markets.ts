@@ -13,6 +13,9 @@ export const markets = {
   "markets.topGainers": "Top gainers",
   "markets.topLosers": "Top losers",
 
+  "markets.tradeSubMenu.perps.description":
+    "Trade perpetual futures on a gasless orderbook",
+
   "markets.search.placeholder": "Search market",
   "markets.showLowVolume": "Show low vol.",
   "markets.showLowVolume.tooltip":
