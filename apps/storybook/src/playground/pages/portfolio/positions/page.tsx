@@ -7,7 +7,7 @@ import { API } from "@orderly.network/types";
 import { Box } from "@orderly.network/ui";
 import { tradingPageConfig } from "../../../../orderlyConfig";
 import { PathEnum } from "../../../constant";
-import { updateSymbol } from "../../../storage";
+import { setPerpSymbol } from "../../../perpSymbolStorage";
 
 export default function PositionsPage() {
   const local = useTradingLocalStorage();
@@ -16,7 +16,7 @@ export default function PositionsPage() {
   const onSymbolChange = useCallback(
     (data: API.Symbol) => {
       const symbol = data.symbol;
-      updateSymbol(symbol);
+      setPerpSymbol(symbol);
       navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }));
     },
     [navigate],

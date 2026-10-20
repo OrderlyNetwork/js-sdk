@@ -16,9 +16,9 @@ import { useRouteContext } from "../../components/orderlyProvider/rounteProvider
 import { PathEnum } from "../../playground/constant";
 import {
   DEFAULT_SYMBOL,
-  getSymbol,
-  updateSymbol,
-} from "../../playground/storage";
+  getPerpSymbol,
+  setPerpSymbol,
+} from "../../playground/perpSymbolStorage";
 import { MenuItemRow } from "./SubMenuComponents";
 
 const RIGHT_SECTION_WRAPPER_CLASSNAME = [
@@ -155,7 +155,7 @@ const RightSection = (props: { className?: string }) => {
     pathname.includes(`${prefix}/`),
   );
   const [symbol, setSymbol] = useState<string>(() =>
-    isPerpsSymbolRoute ? params.symbol || DEFAULT_SYMBOL : getSymbol(),
+    isPerpsSymbolRoute ? params.symbol || DEFAULT_SYMBOL : getPerpSymbol(),
   );
 
   useEffect(() => {
@@ -165,7 +165,7 @@ const RightSection = (props: { className?: string }) => {
   }, [params.symbol, isPerpsSymbolRoute, symbol]);
 
   useEffect(() => {
-    updateSymbol(symbol);
+    setPerpSymbol(symbol);
   }, [symbol]);
 
   const onSymbolChange = useCallback(

@@ -2,7 +2,7 @@
 import { MemoryRouter, Route, Routes } from "react-router";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { ORDERLY_SYMBOL_KEY } from "../../playground/storage";
+import { PERP_SYMBOL_STORAGE_KEY } from "@orderly.network/trading-shared";
 import { customTradeSubMenuRender } from "./customTradeSubMenu";
 
 vi.mock("@orderly.network/markets", () => ({
@@ -51,17 +51,17 @@ afterEach(() => act(() => root.unmount()));
 
 it("mirrors the URL symbol into storage on a perps route", () => {
   root = renderSubMenuAt("/en/perp/PERP_BTC_USDC");
-  expect(localStorage.getItem(ORDERLY_SYMBOL_KEY)).toBe("PERP_BTC_USDC");
+  expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBe("PERP_BTC_USDC");
 });
 
 it("does not overwrite the remembered symbol with the prediction round symbol", () => {
-  localStorage.setItem(ORDERLY_SYMBOL_KEY, "PERP_BTC_USDC");
+  localStorage.setItem(PERP_SYMBOL_STORAGE_KEY, "PERP_BTC_USDC");
   root = renderSubMenuAt("/en/prediction/PERP_BTC5M2608271200_USDC");
-  expect(localStorage.getItem(ORDERLY_SYMBOL_KEY)).toBe("PERP_BTC_USDC");
+  expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBe("PERP_BTC_USDC");
 });
 
 it("keeps the remembered symbol on routes without a perps symbol param", () => {
-  localStorage.setItem(ORDERLY_SYMBOL_KEY, "PERP_BTC_USDC");
+  localStorage.setItem(PERP_SYMBOL_STORAGE_KEY, "PERP_BTC_USDC");
   root = renderSubMenuAt("/en/markets");
-  expect(localStorage.getItem(ORDERLY_SYMBOL_KEY)).toBe("PERP_BTC_USDC");
+  expect(localStorage.getItem(PERP_SYMBOL_STORAGE_KEY)).toBe("PERP_BTC_USDC");
 });

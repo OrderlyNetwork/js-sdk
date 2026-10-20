@@ -14,7 +14,7 @@ import { Spinner } from "@orderly.network/ui";
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
 import { PathEnum } from "./constant";
-import { getSymbol } from "./storage";
+import { getPerpSymbol } from "./perpSymbolStorage";
 
 // Loading fallback component
 const PageLoading: React.FC = () => {
@@ -116,7 +116,7 @@ const AppRoute: React.FC = () => {
       element: (
         <Navigate
           // preserve the search parameters to ensure link device via url params works
-          to={`${getSymbol()}${window.location.search}`}
+          to={`${getPerpSymbol()}${window.location.search}`}
         />
       ),
     },
@@ -148,7 +148,7 @@ const AppRoute: React.FC = () => {
       children: [
         {
           index: true,
-          element: <Navigate to={getSymbol()} />,
+          element: <Navigate to={getPerpSymbol()} />,
         },
         {
           path: ":symbol",
@@ -161,7 +161,7 @@ const AppRoute: React.FC = () => {
       children: [
         {
           index: true,
-          element: <Navigate to={getSymbol()} />,
+          element: <Navigate to={getPerpSymbol()} />,
         },
         {
           path: ":symbol",
@@ -262,7 +262,7 @@ const AppRoute: React.FC = () => {
           element: (
             <Navigate
               // preserve the search parameters to ensure link device via url params works
-              to={`/${currentLocale}${PathEnum.Perp}/${getSymbol()}${window.location.search}`}
+              to={`/${currentLocale}${PathEnum.Perp}/${getPerpSymbol()}${window.location.search}`}
             />
           ),
         },

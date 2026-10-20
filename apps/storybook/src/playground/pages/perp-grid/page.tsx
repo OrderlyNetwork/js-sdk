@@ -8,7 +8,7 @@ import { OrderlyPluginProvider } from "@orderly.network/ui";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
-import { updateSymbol } from "../../storage";
+import { setPerpSymbol } from "../../perpSymbolStorage";
 
 export type PerpGridViewProps = Pick<TradingPageProps, "symbol">;
 
@@ -22,7 +22,7 @@ export default function PerpGridPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    updateSymbol(symbol);
+    setPerpSymbol(symbol);
   }, [symbol]);
 
   const onSymbolChange = useCallback(

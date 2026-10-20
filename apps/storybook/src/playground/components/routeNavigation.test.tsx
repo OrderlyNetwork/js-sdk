@@ -9,7 +9,9 @@ vi.mock("@orderly.network/i18n", () => ({ generatePath: mocks.generatePath }));
 vi.mock("@orderly.network/portfolio", () => ({
   PortfolioLeftSidebarPath: { FeeTier: "/fee", ApiKey: "/api" },
 }));
-vi.mock("../storage", () => ({ getSymbol: () => "PERP_ETH_USDC" }));
+vi.mock("../perpSymbolStorage", () => ({
+  getPerpSymbol: () => "PERP_ETH_USDC",
+}));
 let nav: ReturnType<typeof useNav>;
 let root: ReactTestRenderer;
 function Host() {

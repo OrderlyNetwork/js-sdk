@@ -3,14 +3,14 @@ import { useParams } from "react-router";
 import { TradingPage, type TradingPageProps } from "@orderly.network/trading";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
-import { updateSymbol } from "../../storage";
+import { setPerpSymbol } from "../../perpSymbolStorage";
 
 export type PerpViewProps = Pick<TradingPageProps, "symbol">;
 
 export default function PerpPage() {
   const { symbol } = useParams();
   useEffect(() => {
-    if (symbol) updateSymbol(symbol);
+    if (symbol) setPerpSymbol(symbol);
   }, [symbol]);
 
   return (
