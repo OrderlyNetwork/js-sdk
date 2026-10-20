@@ -15,11 +15,13 @@ export interface UseProductRegionRestrictedOptions {
    */
   platformAreasUrl?: string;
   /**
-   * Broker-side extra restricted regions (frontend policy per PRD §17.3):
-   * plain region/city names, unioned with the platform list, never loosening
-   * it. Keeps the product visible; only trading is disabled.
+   * Broker-side extra restricted region/city names, unioned with the platform
+   * list when enableDefault is true. Keeps the product visible; only trading
+   * is disabled.
    */
   customRegions?: string[];
+  /** Whether to apply the platform list; defaults to true. */
+  enableDefault?: boolean;
   /** Gate the underlying queries; defaults to true. */
   enabled?: boolean;
 }
@@ -32,9 +34,14 @@ export interface UseProductRegionRestrictedOptions {
 export const useProductRegionRestricted = (
   options: UseProductRegionRestrictedOptions = {},
 ) => {
-  const { platformAreasUrl, customRegions, enabled = true } = options;
+  const {
+    platformAreasUrl,
+    customRegions,
+    enableDefault = true,
+    enabled = true,
+  } = options;
   const { data: platformAreas } = useQuery<API.ProductRestrictedAreasResponse>(
-    enabled && platformAreasUrl ? platformAreasUrl : null,
+    enabled && enableDefault && platformAreasUrl ? platformAreasUrl : null,
     { revalidateOnFocus: false },
   );
   const { data: ipInfo } = useQuery<ProductRegionIpInfo>(
@@ -42,7 +49,12 @@ export const useProductRegionRestricted = (
     { revalidateOnFocus: false },
   );
   return useMemo(
-    () => isProductRegionRestricted({ platformAreas, ipInfo, customRegions }),
-    [platformAreas, ipInfo, customRegions],
+    () =>
+      isProductRegionRestricted({
+        platformAreas: enableDefault ? platformAreas : undefined,
+        ipInfo,
+        customRegions,
+      }),
+    [platformAreas, ipInfo, customRegions, enableDefault],
   );
 };

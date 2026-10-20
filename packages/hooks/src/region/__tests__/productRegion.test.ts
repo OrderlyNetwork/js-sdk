@@ -224,6 +224,56 @@ describe("useProductRegionRestricted", () => {
     expect(result.current).toBe(false);
   });
 
+  test.each([undefined, {}, { enableDefault: true }])(
+    "applies the platform list with default policy %p",
+    (policy) => {
+      mockQueries({ platformAreas, ipInfo: { region: "Singapore" } });
+      const { result } = renderHook(() =>
+        useProductRegionRestricted({
+          platformAreasUrl: "/v1/product_restricted_areas?product_type=BINARY",
+          ...policy,
+        }),
+      );
+      expect(result.current).toBe(true);
+      expect(useQueryMock.mock.calls.map(([url]) => url)).toEqual([
+        "/v1/product_restricted_areas?product_type=BINARY",
+        "/v1/ip_info",
+      ]);
+    },
+  );
+
+  test("disabling the platform list ignores retained data and supports runtime changes", () => {
+    // Simulate query data retained even when the platform query key is null.
+    useQueryMock.mockImplementation((url: string | null) => ({
+      data: url === "/v1/ip_info" ? { region: "Singapore" } : platformAreas,
+    }));
+    const { result, rerender } = renderHook(
+      ({ enableDefault, customRegions }) =>
+        useProductRegionRestricted({
+          platformAreasUrl: "/v1/product_restricted_areas?product_type=BINARY",
+          enableDefault,
+          customRegions,
+        }),
+      { initialProps: { enableDefault: true, customRegions: [] as string[] } },
+    );
+    expect(result.current).toBe(true);
+
+    useQueryMock.mockClear();
+    rerender({ enableDefault: false, customRegions: [] });
+    expect(result.current).toBe(false);
+    expect(useQueryMock.mock.calls.map(([url]) => url)).toEqual([
+      null,
+      "/v1/ip_info",
+    ]);
+
+    rerender({ enableDefault: false, customRegions: ["SINGA-PORE"] });
+    expect(result.current).toBe(true);
+    rerender({ enableDefault: false, customRegions: ["Toronto"] });
+    expect(result.current).toBe(false);
+    rerender({ enableDefault: true, customRegions: [] });
+    expect(result.current).toBe(true);
+  });
+
   test("omitting platformAreasUrl fires no platform request", () => {
     mockQueries({ ipInfo: { region: "Canada", city: "Toronto" } });
     const { result } = renderHook(() =>

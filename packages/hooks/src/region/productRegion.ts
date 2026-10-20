@@ -17,7 +17,7 @@ const normalize = (value?: string) =>
  * city and country to match, `visible` and `hidden` rows both restrict trading
  * while keeping the product visible. Custom entries are plain region/city
  * names (same format as the site-wide `customRestrictedRegions`) matched
- * against the IP region or city, and can only tighten the platform list.
+ * against the IP region or city, and unioned with any supplied platform list.
  *
  * Failing open on missing geo data is an explicit product decision:
  * unavailable data must not block trading.

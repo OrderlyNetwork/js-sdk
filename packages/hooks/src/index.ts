@@ -152,6 +152,7 @@ export {
   useRestrictedInfo,
   type RestrictedInfoReturns,
   type RestrictedInfoOptions,
+  type PredictionRegionRestriction,
 } from "./useRestrictedInfo";
 
 export {
