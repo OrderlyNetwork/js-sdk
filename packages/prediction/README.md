@@ -1,12 +1,18 @@
 # Prediction integration
 
+Start with the [Prediction Quick Start](docs/quick-start.md) for a complete
+integration using an existing application, including dependencies, providers, routes,
+navigation, styles, and an acceptance checklist. The guide ships with the package
+at `node_modules/@orderly.network/prediction/docs/quick-start.md`. The sections
+below describe advanced integration and data contracts; custom order consumers
+should read [Order field mapping](#order-field-mapping).
+
 Account data, the trading form, and the display lists each manage their own resources. For account-only display, use `usePredictionAccountData`; this hook does not initialize order placement, one-tap trading, or order book logic.
 
 ```tsx
 import {
   SharedProductDataPanel,
   usePredictionAccountData,
-  usePredictionMarkets,
   type PredictionAccountState,
   type UsePredictionAccountDataOptions,
 } from "@orderly.network/prediction";
@@ -93,13 +99,13 @@ Every SDK page builds these destinations with the helpers exported from `@orderl
 ```tsx
 import {
   PERP_ROUTE_NAME,
-  // "perps"
   PREDICTION_ROUTE_NAME,
-  // "prediction"
   perpRoute,
   predictionRoute,
 } from "@orderly.network/types";
 
+PERP_ROUTE_NAME; // "perps"
+PREDICTION_ROUTE_NAME; // "prediction"
 perpRoute("PERP_BTC_USDC"); // { href: "/perp/PERP_BTC_USDC", name: "perps" }
 predictionRoute(); // { href: "/prediction", name: "prediction" }
 predictionRoute("PERP_BTC5M2608271200_USDC", { replace: true });
@@ -109,7 +115,7 @@ Symbols are URI-encoded. `replace` is only present when requested.
 
 ### Trade sub menu
 
-Hosts with a Perps / Prediction switcher in the main navigation can use `TradeSubMenuWidget` from `@orderly.network/markets` instead of maintaining their own copy. It navigates with the builders above, hides Prediction when `features.prediction` is `false`, and accepts extra entries. Hosts control the highlighted entry with `activeKey` derived from their route; when omitted, it defaults to `"perps"`. See `packages/markets/docs/components/tradeSubMenu/index.md`.
+Hosts with a Perps / Prediction switcher in the main navigation can use `TradeSubMenuWidget` from `@orderly.network/markets` instead of maintaining their own copy. It navigates with the builders above, hides Prediction when `features.prediction` is `false`, and accepts extra entries. Hosts control the highlighted entry with `activeKey` derived from their route; when omitted, it defaults to `"perps"`. Pass the current Perps page `symbol` to target that market; without one, the widget uses the remembered Perps symbol and then `defaultSymbol` (`PERP_ETH_USDC`). `items` receives the built-in entries and returns the final list, and `onSymbolChange` overrides navigation for markets picked in the panel.
 
 ## Prediction page navigation
 
@@ -227,7 +233,7 @@ The settlement history widget loads history on its own after mounting and releas
 
 ## Settlement resource lifecycle
 
-The base account records the positions it has observed. When a position expires or disappears from the live list, tracking continues until the personal settlement history confirms completion. While settlements are pending, it refreshes every 5 seconds; during history display with no pending positions, every 60 seconds. There is no polling without load demand, and the timer is released once the last consumer unmounts. Multiple consumers share the same per-account registry and query cache.
+The base account records the positions it has observed. When a position expires or disappears from the live list, tracking continues until the personal settlement history confirms completion. While settlements are pending, it refreshes every 5 seconds; during history display with no pending positions, every 60 seconds. There is no polling without load demand, and the timer is released once the last consumer unmounts. Multiple consumers share the same per-account registry and query cache. Order cache registration is held per consumer: unmounting one consumer does not remove a key other consumers still need, and Prediction releases the registration after the last consumer leaves. Perps usage that never sets load options keeps the original cache-resident behavior.
 
 Confirmed records for the same account are kept in the provider's account cache to determine settlement status on remount; after account switching, logout, or disabling, stale account data is not served to consumers, and late responses are isolated by account identity.
 
@@ -256,8 +262,6 @@ Required frozen, MAX and balance validation use this constant and the submitted
 limit/protection price, with DOWN mapped to the complementary price. Pure closing
 orders require no additional frozen funds. Estimated fees are shown separately
 and are not added again to the buffer-inclusive required frozen amount.
-Risk/Writer must deploy the same buffer and verify rounding and funding fixtures
-before the new parameters are enabled. See [release dependencies](docs/fee-rollout.md).
 
 Public results accept `UP/1`, `DOWN/0` and `TIE/0.5` under `binary-v1`.
 From expiry the selected round is polled every 2 seconds plus 0–1 second of
@@ -277,8 +281,65 @@ funding estimates use the actual submitted child quantities.
 - `PredictionAccountActions` defines account operations independently; order edit parameters are the UP-coordinate price and the order's total quantity, including the filled quantity. Fee estimation likewise takes an UP-coordinate price.
 - `estimateFee` returns `undefined` when the fee configuration is missing. The UI should display an unknown value and must not treat it as a zero fee.
 - `pendingOrdersComplete` provides the completeness status for funding and cancellation protection; an open-order set that has not finished loading must not be used as a complete snapshot.
-- Order `timestamp`, settlement `settledAt`, and market `now` are in milliseconds; `round` on positions and orders is in seconds. Order history preserves the `rejected` terminal state.
+- `openOrders`, `history`, and `useBinaryOrderRows().rows` contain original `API.Order` records. Order `created_time`, settlement `settledAt`, and market `now` are in milliseconds. Position `round` and the value returned by `binaryOrderRound(order)` are in seconds; orders do not expose the former projected `timestamp` or `round` fields.
+- Order history retains the raw API `status`, including `REJECTED`. `binaryOrderDisplayStatus(order)` maps it to the display value `rejected`. See [Order field mapping](#order-field-mapping) for all field and display-helper changes.
 - `usePredictionMarkets` returns `PredictionMarketsState`; `configBySymbol` keeps its original name, and market configs use `API.BinaryInfoRow`.
 - `PredictionHoldingsMarketView` only uses the stable market row interface; extra fields from the detail endpoint are not part of the holdings view contract.
 
-A runnable type-consumption check against the package root entry lives in `apps/storybook/type-tests/predictionPublicApi.ts`; load and polling comparisons are documented in the [refactor validation record](./docs/refactor-validation.md).
+### Order field mapping
+
+Prediction account data, order queries, and components accept and return original
+`API.Order` records. The former projected types `PredictionOpenOrder` and
+`PredictionTrade` and the `toPredictionOrder()` helper have been removed without
+aliases. Product filtering only filters records and keeps the original object
+references and fields; UP/DOWN, side, price, and round are derived at consumption
+time with helpers exported from the package root.
+
+| Former projected field               | Use instead                                                                      |
+| ------------------------------------ | -------------------------------------------------------------------------------- |
+| `id`                                 | `order_id`                                                                       |
+| `timestamp`                          | `created_time` (milliseconds)                                                    |
+| `filledQuantity`                     | `total_executed_quantity`                                                        |
+| `averagePrice`                       | `average_executed_price` (UP coordinate)                                         |
+| `totalFee` / `feeAsset`              | `total_fee` / `fee_asset`                                                        |
+| `realizedPnl`                        | `realized_pnl`                                                                   |
+| `reduceOnly`                         | `reduce_only`                                                                    |
+| `clientOrderId` / `orderTag`         | `client_order_id` / `order_tag`                                                  |
+| `orderType`                          | `type` (raw `LIMIT`, `IOC`, `SETTLEMENT`, ...)                                   |
+| `type` (market/limit classification) | `binaryOrderDisplayType(order)`                                                  |
+| `side` (lowercase)                   | raw `side` (`BUY` / `SELL`); buy/sell action via `binaryOrderDisplaySide(order)` |
+| `status` (lowercase)                 | raw `status`; display category via `binaryOrderDisplayStatus(order)`             |
+| `outcome`                            | `binaryOrderOutcome(order)`                                                      |
+| `round`                              | `binaryOrderRound(order)` (seconds)                                              |
+
+`binaryOrderDisplayPrice(order, price)` converts an UP-coordinate price to the
+row's display direction. `toPredictionOrderStatus` / `toApiPredictionOrderStatus`
+convert filter statuses between the display and API vocabularies.
+
+```ts
+import {
+  binaryOrderDisplayPrice,
+  binaryOrderDisplaySide,
+  binaryOrderOutcome,
+} from "@orderly.network/prediction";
+import type { API } from "@orderly.network/types";
+
+declare const order: API.Order;
+
+const outcome = binaryOrderOutcome(order);
+const displaySide = binaryOrderDisplaySide(order);
+const displayPrice =
+  order.price != null && Number.isFinite(order.price)
+    ? binaryOrderDisplayPrice(order, order.price)
+    : undefined;
+const pnl = order.realized_pnl;
+```
+
+Preserved behavior for custom consumers:
+
+- Raw prices are always in the UP coordinate; only DOWN display and edit-input bounds use the complementary price, and the API record is never overwritten.
+- Order edits keep the original side, type, reduce-only flag, and client metadata.
+- Filled includes terminal orders with executions, including IOC orders cancelled after a partial fill; it excludes still-open partially filled orders and zero-execution terminal orders.
+- Order realized PnL uses `realized_pnl` directly, with no extra fee deduction and no sign change by outcome. Missing or non-finite PnL, average price, and fee values are handled at the display boundary without modifying the record.
+
+A runnable type-consumption check against the package root entry lives in `apps/storybook/type-tests/predictionPublicApi.ts`.
