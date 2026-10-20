@@ -14,6 +14,11 @@ export { type ReferralProps } from "./types/types";
 export { type TradingRewardsProps } from "./types/types";
 export { type TradingPageProps } from "./types/types";
 export { useTradingLocalStorage } from "./hooks/useTradingLocalStorage";
+export {
+  PERP_SYMBOL_STORAGE_KEY,
+  getStoredPerpSymbol,
+  setStoredPerpSymbol,
+} from "./utils/perpSymbolStorage";
 export { PositionHeader } from "./components/base/positionHeader/positionHeader.ui";
 export { Setting } from "./components/desktop/dataList/setting/setting.ui";
 export { useSettingScript } from "./components/desktop/dataList/setting/setting.script";

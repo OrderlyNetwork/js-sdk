@@ -5,6 +5,12 @@ import "./types/interceptorTargets";
 
 export type { TradingPerpsPanelProps } from "@orderly.network/trading-shared";
 
+export {
+  PERP_SYMBOL_STORAGE_KEY,
+  getStoredPerpSymbol,
+  setStoredPerpSymbol,
+} from "@orderly.network/trading-shared";
+
 export type {
   ShareOptions,
   TradingPageProps,

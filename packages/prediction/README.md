@@ -144,29 +144,28 @@ Existing account and SWR providers are still required; see [Stylesheet](#stylesh
 
 ## Host symbol persistence
 
-The SDK does not persist the current symbol. Hosts that store it themselves (the common `localStorage` pattern behind symbol-less `/perp` redirects) must keep Prediction round contracts out of that storage. A round symbol such as `PERP_BTC5M2608271200_USDC` stored as the perps symbol hijacks every later symbol-less `/perp` redirect and surfaces as an invalid market on Perps pages. Upgrading the package does not repair host-side storage; the guard is a host obligation.
-
-Use `isBinarySymbol` from `@orderly.network/utils` on both sides of the storage:
+The SDK does not touch host routing state, but hosts that remember the last perp symbol (the common `localStorage` pattern behind symbol-less `/perp` redirects) should use the guarded helpers shipped in `@orderly.network/trading` (also exported from `@orderly.network/trading-shared`) instead of hand-rolling storage:
 
 ```tsx
-import { isBinarySymbol } from "@orderly.network/utils";
+import {
+  getStoredPerpSymbol,
+  setStoredPerpSymbol,
+} from "@orderly.network/trading";
 
 const FALLBACK = "PERP_ETH_USDC";
 
-export function readStoredSymbol() {
-  const symbol = localStorage.getItem("orderly-current-symbol") || FALLBACK;
-  // A round stored before the write guard existed is not a perps market.
-  return isBinarySymbol(symbol) ? FALLBACK : symbol;
+export function getPerpSymbol() {
+  return getStoredPerpSymbol() ?? FALLBACK;
 }
 
-export function writeStoredSymbol(symbol: string) {
-  // Never persist a Prediction round contract as the perps symbol.
-  if (isBinarySymbol(symbol)) return;
-  localStorage.setItem("orderly-current-symbol", symbol || FALLBACK);
+export function setPerpSymbol(symbol: string) {
+  setStoredPerpSymbol(symbol);
 }
 ```
 
-Hosts that mirror the current symbol across pages (for example, a header bound to the active route) should apply the same filter to what Perps views read, not only to what is written.
+The helpers own the storage key (`orderly_perp_symbol`) and the guard. A Prediction round symbol such as `PERP_BTC5M2608271200_USDC` is never written and never returned; a round found in storage (for example written by a host implementation that predates the guard) is removed on read, so the store self-heals. Without the guard a remembered round expires and hijacks every later symbol-less `/perp` redirect onto a dead market — and upgrading the package alone cannot repair storage written by unguarded host code.
+
+Hosts that mirror the current symbol across pages (for example, a header bound to the active route) should still route-gate what they mirror, so Prediction views never feed a round symbol into perps display state.
 
 ## Stylesheet
 
