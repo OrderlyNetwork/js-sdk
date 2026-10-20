@@ -101,6 +101,12 @@ export type BasicSymbolInfo = {
 };
 
 export interface TradingPageState extends TradingPageProps {
+  /** SDK-generated desktop market configuration. */
+  marketsDropdown?: DropDownMarketsExtensionProps;
+  /** SDK-generated mobile market configuration. */
+  marketsSheet?: MarketsSheetExtensionProps;
+  /** SDK-generated expanded market configuration. */
+  sideMarkets?: ExpandMarketsExtensionProps;
   symbolInfo: {
     base_dp: number;
     quote_dp: number;
@@ -180,10 +186,4 @@ export type TradingPageProps = BaseTradingPageProps & {
   layoutStrategy?: LayoutStrategy;
   /** Optional factory for initial layout; called with desktop options. If omitted, strategy.defaultLayout(panelIds) is used. */
   getInitialLayout?: (options: DesktopLayoutInitialOptions) => LayoutModel;
-  /** Custom tabs for the desktop markets dropdown (e.g. Prediction). */
-  marketsDropdown?: DropDownMarketsExtensionProps;
-  /** Custom tabs for the mobile markets sheet; hosts also pass onRequestClose. */
-  marketsSheet?: MarketsSheetExtensionProps;
-  /** Custom tabs for the desktop side markets panel (expanded mode). */
-  sideMarkets?: ExpandMarketsExtensionProps;
 };

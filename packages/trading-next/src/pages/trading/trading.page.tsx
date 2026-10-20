@@ -1,79 +1,14 @@
-import React, { useCallback } from "react";
-import {
-  usePredictionMarketTabs,
-  usePredictionMarketsDropdown,
-} from "@orderly.network/prediction";
-import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
+import React from "react";
 import { injectable } from "@orderly.network/ui";
 import { TradingPageProvider } from "../../provider/tradingPageProvider";
-import { TradingPageProps } from "../../types/types";
+import type { TradingPageProps } from "../../types/types";
 import { TradingWidget } from "./trading.widget";
 
-/** Inner page: receives props and renders provider + widget. Layout strategy from props (host or plugin). */
-const TradingPageInner: React.FC<TradingPageProps> = (props) => {
-  const { onRouteChange } = useAppContext();
-  const predictionEnabled = useFeatureEnabled("prediction");
-  const defaultPredictionSelect = useCallback(
-    (symbol: string) => {
-      onRouteChange?.({
-        href: `/prediction/${encodeURIComponent(symbol)}`,
-        name: "prediction",
-      });
-    },
-    [onRouteChange],
-  );
-  const hasPredictionNavigation = !!onRouteChange;
-  const needsAutomaticMarkets =
-    hasPredictionNavigation &&
-    (props.marketsDropdown == null ||
-      props.marketsSheet == null ||
-      props.sideMarkets == null);
-  const marketsEnabled = predictionEnabled && needsAutomaticMarkets;
-  // One shared data pipeline feeds every surface; each slot only swaps in its
-  // own default tab set and reuses the surface-agnostic renderers.
-  const dropdown = usePredictionMarketsDropdown(defaultPredictionSelect, {
-    enabled: needsAutomaticMarkets,
-  });
-  const sheetTabs = usePredictionMarketTabs("marketsSheet");
-  const sideMarketsTabs = usePredictionMarketTabs("expandMarkets");
-  const marketsSheet = {
-    tabs: sheetTabs,
-    renderTabContent: dropdown.renderTabContent,
-    renderTabAfterContent: dropdown.renderTabAfterContent,
-  };
-  const sideMarkets = {
-    tabs: sideMarketsTabs,
-    renderTabContent: dropdown.renderTabContent,
-    renderTabAfterContent: dropdown.renderTabAfterContent,
-  };
+const TradingPageInner: React.FC<TradingPageProps> = (props) => (
+  <TradingPageProvider {...props}>
+    <TradingWidget />
+  </TradingPageProvider>
+);
 
-  return (
-    <TradingPageProvider
-      symbol={props.symbol}
-      tradingViewConfig={props.tradingViewConfig}
-      onSymbolChange={props.onSymbolChange}
-      disableFeatures={props.disableFeatures}
-      overrideFeatures={props.overrideFeatures}
-      referral={props.referral}
-      tradingRewards={props.tradingRewards}
-      bottomSheetLeading={props.bottomSheetLeading}
-      sharePnLConfig={props.sharePnLConfig}
-      layoutStrategy={props.layoutStrategy}
-      getInitialLayout={props.getInitialLayout}
-      marketsDropdown={
-        props.marketsDropdown ?? (marketsEnabled ? dropdown : undefined)
-      }
-      marketsSheet={
-        props.marketsSheet ?? (marketsEnabled ? marketsSheet : undefined)
-      }
-      sideMarkets={
-        props.sideMarkets ?? (marketsEnabled ? sideMarkets : undefined)
-      }
-    >
-      <TradingWidget />
-    </TradingPageProvider>
-  );
-};
-
-/** Injectable so layout plugins can intercept and inject layoutStrategy/getInitialLayout when host does not pass them */
+/** Existing layout plugins can still supply layoutStrategy/getInitialLayout. */
 export const TradingPage = injectable(TradingPageInner, "Trading.Page");

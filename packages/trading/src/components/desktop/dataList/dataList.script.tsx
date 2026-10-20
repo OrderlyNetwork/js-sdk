@@ -5,7 +5,7 @@ import {
   useTradingLocalStorage,
 } from "../../../hooks";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
-import type { TradingPageProps } from "../../../types/types";
+import type { TradingPageState } from "../../../types/types";
 
 export enum DataListTabType {
   positions = "Positions",
@@ -20,7 +20,7 @@ export enum DataListTabType {
 
 export const useDataListScript = (
   inputs: { current?: DataListTabType } & PositionsProps &
-    Pick<TradingPageProps, "dataListProductContent">,
+    Pick<TradingPageState, "dataListProductContent">,
 ) => {
   const {
     current,

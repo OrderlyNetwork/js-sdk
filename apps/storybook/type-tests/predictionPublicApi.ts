@@ -21,10 +21,7 @@ import {
 import {
   usePredictionAccountData,
   usePredictionMarkets,
-  usePredictionTradingExtension,
   usePredictionMarketsDropdown,
-  type PredictionTradingExtensionOptions,
-  type PredictionTradingExtensionProps,
   type PredictionPerpsPanelProps,
   useSharedProductCounts,
   useProductOrderCancelAll,
@@ -43,6 +40,12 @@ import {
   type PredictionOrdersTableProps,
   type PredictionOrderCellProps,
 } from "@orderly.network/prediction";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { usePredictionTradingExtension } from "@orderly.network/prediction";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { PredictionTradingExtensionOptions } from "@orderly.network/prediction";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { PredictionTradingExtensionProps } from "@orderly.network/prediction";
 import {
   OrderlyAppProvider,
   useFeatureEnabled,
@@ -50,22 +53,32 @@ import {
 } from "@orderly.network/react-app";
 import {
   TradingPage,
+  TradingPageProvider,
   type TradingPageProps,
-  type TradingMarketsDropdownProps,
   type TradingPerpsPanelProps,
-  type TradingDataListProductContent,
-  type TradingPageExtensionProps,
 } from "@orderly.network/trading";
 import {
   AssetViewWidget as TradingAssetViewWidget,
   useFirstTimeDeposit as tradingFirstDeposit,
 } from "@orderly.network/trading";
-import type {
-  TradingMarketsDropdownProps as CommonMarketsDropdownProps,
-  TradingPerpsPanelProps as CommonPerpsPanelProps,
-  TradingDataListProductContent as CommonDataListProductContent,
-  TradingPageExtensionProps as CommonPageExtensionProps,
-} from "@orderly.network/trading-shared";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { TradingMarketsDropdownProps as RemovedTradingTradingMarketsDropdownProps } from "@orderly.network/trading";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { TradingDataListProductContent as RemovedTradingTradingDataListProductContent } from "@orderly.network/trading";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { TradingPageExtensionProps as RemovedTradingTradingPageExtensionProps } from "@orderly.network/trading";
+import {
+  TradingPageProvider as NextTradingPageProvider,
+  type TradingPageProps as NextTradingPageProps,
+} from "@orderly.network/trading-next";
+import type { TradingPerpsPanelProps as CommonPerpsPanelProps } from "@orderly.network/trading-shared";
+import type { TradingPageProps as SharedTradingPageProps } from "@orderly.network/trading-shared";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { TradingMarketsDropdownProps as RemovedSharedTradingMarketsDropdownProps } from "@orderly.network/trading-shared";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { TradingDataListProductContent as RemovedSharedTradingDataListProductContent } from "@orderly.network/trading-shared";
+// @ts-expect-error Manual page composition is no longer a public API.
+import type { TradingPageExtensionProps as RemovedSharedTradingPageExtensionProps } from "@orderly.network/trading-shared";
 import type { AppFeatures } from "@orderly.network/types";
 import type { API } from "@orderly.network/types";
 import {
@@ -84,22 +97,8 @@ export type SharedTradingContracts = [
   Assert<
     Compatible<ReturnType<typeof useBinaryOrderRows>["rows"][number], API.Order>
   >,
-  Assert<Compatible<TradingMarketsDropdownProps, CommonMarketsDropdownProps>>,
   Assert<Compatible<TradingPerpsPanelProps, CommonPerpsPanelProps>>,
-  Assert<
-    Compatible<TradingDataListProductContent, CommonDataListProductContent>
-  >,
-  Assert<Compatible<TradingPageExtensionProps, CommonPageExtensionProps>>,
   Assert<Compatible<PredictionPerpsPanelProps, TradingPerpsPanelProps>>,
-  Assert<
-    Compatible<PredictionTradingExtensionProps, TradingPageExtensionProps>
-  >,
-  Assert<
-    Compatible<
-      TradingPageExtensionProps,
-      Pick<TradingPageProps, "marketsDropdown" | "dataListProductContent">
-    >
-  >,
   Assert<
     Compatible<
       TradingPerpsPanelProps,
@@ -157,19 +156,11 @@ export function usePredictionPublicApiContract(
   const status = toPredictionOrderStatus(
     toApiPredictionOrderStatus("rejected"),
   );
-  const extensionOptions: PredictionTradingExtensionOptions = {
-    symbol: "PERP_BTC_USDC",
-    showAllSymbol: false,
-    onPredictionSelect: () => {},
+  const perpsProps: PredictionPerpsPanelProps = {
     onSymbolChange: () => {},
     sharePnLConfig: { backgroundImages: ["https://example.com/pnl.png"] },
     pnlNotionalDecimalPrecision: 4,
-    marketsEnabled: false,
-    accountPanelsEnabled: true,
   };
-  const extension: PredictionTradingExtensionProps =
-    usePredictionTradingExtension(extensionOptions);
-  const perpsProps: PredictionPerpsPanelProps = extensionOptions;
   const configuredOrders: SharedProductOrdersPanelProps = {
     ...orders,
     ...perpsProps,
@@ -181,21 +172,6 @@ export function usePredictionPublicApiContract(
   const configuredHoldings: SharedProductDataPanelProps = {
     ...holdings,
     ...perpsProps,
-  };
-  const pageExtension: Pick<
-    TradingPageProps,
-    "marketsDropdown" | "dataListProductContent"
-  > = extension;
-  const customExtension: PredictionTradingExtensionProps = {
-    ...extension,
-    dataListProductContent: {
-      ...extension.dataListProductContent,
-      pending: "Custom pending panel",
-      mobile: {
-        ...extension.dataListProductContent?.mobile,
-        pending: "Custom pending panel",
-      },
-    },
   };
   const legacyDropdown = usePredictionMarketsDropdown();
   const callbackDropdown = usePredictionMarketsDropdown(() => {});
@@ -218,34 +194,12 @@ export function usePredictionPublicApiContract(
     round,
     status,
     obsolete,
-    pageExtension,
-    customExtension,
     legacyDropdown,
     callbackDropdown,
     disabledDropdown,
     configuredOrders,
     configuredHistory,
     configuredHoldings,
-  };
-}
-
-/** Minimal host page props remain compatible with the adapter's public result. */
-export function usePredictionTradingPageContract(
-  tradingViewConfig: TradingPageProps["tradingViewConfig"],
-): TradingPageProps {
-  const extension = usePredictionTradingExtension({
-    symbol: "PERP_BTC_USDC",
-    showAllSymbol: false,
-    onPredictionSelect: () => {},
-  });
-  return {
-    marketsDropdown: {},
-    marketsSheet: {},
-    sideMarkets: {},
-    dataListProductContent: {},
-    ...extension,
-    symbol: "PERP_BTC_USDC",
-    tradingViewConfig,
   };
 }
 
@@ -266,12 +220,7 @@ export function automaticTradingPageContract(
     features: { prediction: false },
     children: page,
   });
-  const customPage = createElement(TradingPage, {
-    ...props,
-    marketsDropdown: {},
-    dataListProductContent: { pending: "Custom pending panel" },
-  });
-  return { page, disabledPage, customPage };
+  return { page, disabledPage };
 }
 
 /** Prediction exposes the exact selected contract symbol. */
@@ -374,4 +323,30 @@ export type RemovedBinaryInfoOption = [
   Assert<
     "enableBinaryInfo" extends keyof OrderlyAppProviderProps ? false : true
   >,
+];
+
+type RemovedSlots =
+  | "marketsDropdown"
+  | "marketsSheet"
+  | "sideMarkets"
+  | "dataListProductContent";
+type NoSlots<T> = Extract<keyof T, RemovedSlots> extends never ? true : false;
+export type RemovedCompositionInputs = [
+  Assert<NoSlots<TradingPageProps>>,
+  Assert<NoSlots<SharedTradingPageProps>>,
+  Assert<NoSlots<NextTradingPageProps>>,
+  Assert<NoSlots<React.ComponentProps<typeof TradingPageProvider>>>,
+  Assert<NoSlots<React.ComponentProps<typeof NextTradingPageProvider>>>,
+];
+
+export type RemovedManualCompositionExports = [
+  typeof usePredictionTradingExtension,
+  PredictionTradingExtensionOptions,
+  PredictionTradingExtensionProps,
+  RemovedTradingTradingMarketsDropdownProps,
+  RemovedTradingTradingDataListProductContent,
+  RemovedTradingTradingPageExtensionProps,
+  RemovedSharedTradingMarketsDropdownProps,
+  RemovedSharedTradingDataListProductContent,
+  RemovedSharedTradingPageExtensionProps,
 ];

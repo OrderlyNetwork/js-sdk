@@ -40,11 +40,7 @@ export {
   type ManagedPredictionPositionsProps,
 } from "./prediction/dataPanels/holdings/managedPositions.widget";
 export { usePredictionMarkets } from "./prediction/hooks/usePredictionMarkets";
-export {
-  usePredictionTradingExtension,
-  type PredictionTradingExtensionOptions,
-  type PredictionTradingExtensionProps,
-} from "./prediction/usePredictionTradingExtension";
+
 export type {
   PredictionSymbolSelection,
   PredictionMarket,

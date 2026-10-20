@@ -12,7 +12,7 @@ import {
   useTradingLocalStorage,
 } from "../../../hooks";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
-import type { TradingPageProps } from "../../../types/types";
+import type { TradingPageState } from "../../../types/types";
 
 export enum DataListTabType {
   position = "Position",
@@ -32,7 +32,7 @@ export const useDataListScript = (props: {
   symbol: string;
   className?: string;
   sharePnLConfig?: SharePnLConfig;
-  dataListProductContent?: TradingPageProps["dataListProductContent"];
+  dataListProductContent?: TradingPageState["dataListProductContent"];
 }) => {
   const { symbol, sharePnLConfig } = props;
   const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);

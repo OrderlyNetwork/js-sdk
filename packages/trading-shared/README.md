@@ -1,6 +1,6 @@
 # @orderly.network/trading-shared
 
-Shared trading UI, order-book primitives, position panels, trading preferences, and page extension contracts used by Perps and Prediction.
+Shared trading UI, order-book primitives, position panels, trading preferences, and shared panel contracts used by Perps and Prediction.
 
 Asset tables, account filters, asset summaries, Faucet, and first-deposit helpers belong to `@orderly.network/ui-assets`. Neither foundation package depends on the other, portfolio, or prediction.
 

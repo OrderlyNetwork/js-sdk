@@ -4,10 +4,10 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { PredictionMarketPanelWidget } from "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui";
 import { usePredictionMarketsDropdown } from "@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown";
 import {
-  usePredictionTradingExtension,
-  type PredictionTradingExtensionOptions,
-  type PredictionTradingExtensionProps,
-} from "@orderly.network/prediction/src/prediction/usePredictionTradingExtension";
+  usePredictionIntegration,
+  type PredictionIntegrationOptions,
+} from "@orderly.network/trading/src/hooks/usePredictionIntegration";
+import type { PredictionIntegrationState } from "@orderly.network/trading/src/types/predictionIntegration";
 
 const mocks = vi.hoisted(() => ({
   featureEnabled: true,
@@ -79,14 +79,14 @@ vi.mock(
 );
 
 let root: ReactTestRenderer | undefined;
-let result: PredictionTradingExtensionProps;
-const options: PredictionTradingExtensionOptions = {
+let result: PredictionIntegrationState;
+const options: PredictionIntegrationOptions = {
   symbol: "PERP_BTC_USDC",
   showAllSymbol: false,
   onPredictionSelect: vi.fn(),
 };
-function Consumer(props: PredictionTradingExtensionOptions) {
-  result = usePredictionTradingExtension(props);
+function Consumer(props: PredictionIntegrationOptions) {
+  result = usePredictionIntegration(props);
   return null;
 }
 function mount(props = options) {
@@ -181,9 +181,9 @@ it("updates every slot and the counts scope together on symbol and preference ch
     const scope = props.showAllSymbol ? undefined : props.symbol;
     expect(mocks.counts).toHaveBeenLastCalledWith({
       product: "all",
+      enabled: true,
       perpsSymbol: scope,
       predictionUnderlyingSymbol: scope,
-      enabled: true,
     });
     for (const slot of allSlots().slots) {
       expect(slot.props.perpsSymbol).toBe(scope);
@@ -192,65 +192,17 @@ it("updates every slot and the counts scope together on symbol and preference ch
   }
 });
 
-it("disables each resource consumer, removes extensions, and supports re-enabling", () => {
-  mount();
-  act(() => root!.update(<Consumer {...options} enabled={false} />));
-  expect(result).toEqual({});
-  expect(mocks.account).toHaveBeenLastCalledWith({ enabled: false });
-  expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(false);
-  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
-  act(() => root!.update(<Consumer {...options} />));
+it("keeps account panels when market navigation is unavailable", () => {
+  mount({ ...options, marketsEnabled: false, onPredictionSelect: undefined });
+  expect(result.marketsDropdown).toBeUndefined();
+  expect(result.marketsSheet).toBeUndefined();
+  expect(result.sideMarkets).toBeUndefined();
   expect(result.dataListProductContent).toBeDefined();
-  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: true });
+  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
+  expect(mocks.account).toHaveBeenLastCalledWith({ enabled: true });
+  for (const slot of allSlots().slots)
+    expect(slot.props.state.onSelectRoundSymbol).toBeUndefined();
 });
-
-it.each([
-  [true, true],
-  [true, false],
-  [false, true],
-  [false, false],
-])(
-  "independently enables markets=%s and account panels=%s, subject to the master switch",
-  (marketsEnabled, accountPanelsEnabled) => {
-    mount();
-    for (const enabled of [true, false, true]) {
-      act(() =>
-        root!.update(
-          <Consumer
-            {...options}
-            enabled={enabled}
-            marketsEnabled={marketsEnabled}
-            accountPanelsEnabled={accountPanelsEnabled}
-          />,
-        ),
-      );
-      expect(mocks.markets).toHaveBeenLastCalledWith({
-        enabled: enabled && marketsEnabled,
-      });
-      expect(mocks.account).toHaveBeenLastCalledWith({
-        enabled: enabled && accountPanelsEnabled,
-      });
-      expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(
-        enabled && accountPanelsEnabled,
-      );
-      expect(Object.hasOwn(result, "marketsDropdown")).toBe(
-        enabled && marketsEnabled,
-      );
-      expect(Object.hasOwn(result, "marketsSheet")).toBe(
-        enabled && marketsEnabled,
-      );
-      expect(Object.hasOwn(result, "sideMarkets")).toBe(
-        enabled && marketsEnabled,
-      );
-      expect(Object.hasOwn(result, "dataListProductContent")).toBe(
-        enabled && accountPanelsEnabled,
-      );
-      if (!enabled || (!marketsEnabled && !accountPanelsEnabled)) {
-        expect(result).toEqual({});
-      }
-    }
-  },
-);
 
 it("reports selection to the host without persisting it and dismisses the dropdown", () => {
   mount();
@@ -322,16 +274,43 @@ it("cannot override a globally disabled feature with enabled options", () => {
   mocks.featureEnabled = false;
   mount({
     ...options,
-    enabled: true,
     marketsEnabled: true,
-    accountPanelsEnabled: true,
   });
-  expect(result).toEqual({});
+  expect(Object.values(result).every((value) => value === undefined)).toBe(
+    true,
+  );
   expect(mocks.account).toHaveBeenLastCalledWith({ enabled: false });
   expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(false);
   expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
   mocks.featureEnabled = true;
-  act(() => root!.update(<Consumer {...options} enabled />));
+  act(() => root!.update(<Consumer {...options} />));
   expect(result.marketsDropdown).toBeDefined();
   expect(result.dataListProductContent?.mobile).toBeDefined();
 });
+
+vi.mock("@orderly.network/prediction", async () => ({
+  usePredictionAccountData: (
+    await import("@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData")
+  ).usePredictionAccountData,
+  useSharedProductCounts: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/useSharedProductCounts")
+  ).useSharedProductCounts,
+  usePredictionMarketsDropdown: (
+    await import("@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown")
+  ).usePredictionMarketsDropdown,
+  usePredictionMarketTabs: (
+    await import("@orderly.network/prediction/src/prediction/predictionMarketPanel.ui")
+  ).usePredictionMarketTabs,
+  SharedProductDataPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductDataPanel.ui")
+  ).SharedProductDataPanel,
+  SharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.ui")
+  ).SharedProductOrdersPanel,
+  MobileSharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.mobile.ui")
+  ).MobileSharedProductOrdersPanel,
+  MobileSharedProductHistory: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductHistory.mobile.ui")
+  ).MobileSharedProductHistory,
+}));

@@ -1,9 +1,6 @@
 import { ReactNode } from "react";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
-import type {
-  TradingPageExtensionProps,
-  TradingPerpsPanelProps,
-} from "./tradingExtension";
+import type { TradingPerpsPanelProps } from "./tradingExtension";
 
 export type layoutInfo = {
   width?: number;
@@ -158,8 +155,7 @@ type BaseTradingPageProps = {
 };
 
 export type TradingPageProps = BaseTradingPageProps &
-  Pick<TradingPerpsPanelProps, "onSymbolChange" | "sharePnLConfig"> &
-  TradingPageExtensionProps & {
+  Pick<TradingPerpsPanelProps, "onSymbolChange" | "sharePnLConfig"> & {
     referral?: ReferralProps;
     tradingRewards?: TradingRewardsProps;
     bottomSheetLeading?: React.ReactNode | string;

@@ -12,10 +12,10 @@ import { PredictionAccountPanel } from "@orderly.network/prediction/src/predicti
 import { MobilePredictionHistory } from "@orderly.network/prediction/src/prediction/dataPanels/predictionMobileCards.ui";
 import * as tableModule from "@orderly.network/prediction/src/prediction/dataPanels/table";
 import {
-  usePredictionTradingExtension,
-  type PredictionTradingExtensionOptions,
-  type PredictionTradingExtensionProps,
-} from "@orderly.network/prediction/src/prediction/usePredictionTradingExtension";
+  usePredictionIntegration,
+  type PredictionIntegrationOptions,
+} from "@orderly.network/trading/src/hooks/usePredictionIntegration";
+import type { PredictionIntegrationState } from "@orderly.network/trading/src/types/predictionIntegration";
 import type { API } from "@orderly.network/types";
 
 // OR-7482: data-panel row symbols navigate to their round contract, with the
@@ -416,9 +416,9 @@ it("PredictionAccountPanel merges onSelectRoundSymbol into the panel state", () 
 
 it("the trading-page extension routes row clicks through onPredictionSelect", () => {
   const onPredictionSelect = vi.fn();
-  let result!: PredictionTradingExtensionProps;
-  function Consumer(props: PredictionTradingExtensionOptions) {
-    result = usePredictionTradingExtension(props);
+  let result!: PredictionIntegrationState;
+  function Consumer(props: PredictionIntegrationOptions) {
+    result = usePredictionIntegration(props);
     return null;
   }
   mount(
@@ -446,3 +446,30 @@ it("the trading-page extension routes row clicks through onPredictionSelect", ()
     onPredictionSelect,
   );
 });
+
+vi.mock("@orderly.network/prediction", async () => ({
+  usePredictionAccountData: (
+    await import("@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData")
+  ).usePredictionAccountData,
+  useSharedProductCounts: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/useSharedProductCounts")
+  ).useSharedProductCounts,
+  usePredictionMarketsDropdown: (
+    await import("@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown")
+  ).usePredictionMarketsDropdown,
+  usePredictionMarketTabs: (
+    await import("@orderly.network/prediction/src/prediction/predictionMarketPanel.ui")
+  ).usePredictionMarketTabs,
+  SharedProductDataPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductDataPanel.ui")
+  ).SharedProductDataPanel,
+  SharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.ui")
+  ).SharedProductOrdersPanel,
+  MobileSharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.mobile.ui")
+  ).MobileSharedProductOrdersPanel,
+  MobileSharedProductHistory: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductHistory.mobile.ui")
+  ).MobileSharedProductHistory,
+}));

@@ -3,13 +3,19 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PredictionMarketPanelWidget } from "@orderly.network/prediction/src/prediction/predictionMarketPanel.ui";
 import { TradingPage as NextTradingPage } from "@orderly.network/trading-next/src/pages/trading/trading.page";
+import { useTradingPageContext as useNextTradingPageContext } from "@orderly.network/trading-next/src/provider/tradingPageContext";
 import { TradingPageProvider as NextTradingPageProvider } from "@orderly.network/trading-next/src/provider/tradingPageProvider";
+import type { TradingPageState as NextTradingPageState } from "@orderly.network/trading-next/src/types/types";
 import type { TradingPageProps } from "@orderly.network/trading-shared";
 import { TradingPage } from "@orderly.network/trading/src/pages/trading/trading.page";
+import { useTradingPageContext } from "@orderly.network/trading/src/provider/tradingPageContext";
 import { TradingPageProvider } from "@orderly.network/trading/src/provider/tradingPageProvider";
+import type { TradingPageState } from "@orderly.network/trading/src/types/types";
 
 const mocks = vi.hoisted(() => ({
   featureEnabled: true,
+  pageState: {} as TradingPageState,
+  nextState: {} as NextTradingPageState,
   account: vi.fn(),
   counts: vi.fn(),
   markets: vi.fn(),
@@ -36,41 +42,66 @@ vi.mock("@orderly.network/react-app", () => ({
     onRouteChange: mocks.routeAvailable ? mocks.onRouteChange : undefined,
   }),
 }));
-vi.mock("@orderly.network/trading/src/provider/tradingPageProvider", () => ({
-  TradingPageProvider: () => null,
-}));
-vi.mock("@orderly.network/trading/src/pages/trading/trading.widget", () => ({
-  TradingWidget: () => null,
-}));
+
 vi.mock(
-  "@orderly.network/trading-next/src/provider/tradingPageProvider",
-  () => ({
-    TradingPageProvider: () => null,
-  }),
+  "@orderly.network/trading/src/pages/trading/trading.widget",
+  async () => {
+    const { useTradingPageContext } =
+      await import("@orderly.network/trading/src/provider/tradingPageContext");
+    return {
+      TradingWidget: () => {
+        mocks.pageState = useTradingPageContext();
+        return null;
+      },
+    };
+  },
 );
+
 vi.mock(
   "@orderly.network/trading-next/src/pages/trading/trading.widget",
-  () => ({
-    TradingWidget: () => null,
-  }),
+  async () => {
+    const { useTradingPageContext } =
+      await import("@orderly.network/trading-next/src/provider/tradingPageContext");
+    return {
+      TradingWidget: () => {
+        mocks.nextState = useTradingPageContext();
+        return null;
+      },
+    };
+  },
 );
+
 vi.mock("@orderly.network/ui", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@orderly.network/ui")>()),
   injectable: (component: React.ComponentType) => component,
 }));
-vi.mock("@orderly.network/prediction", async () => {
-  const extension =
-    await import("@orderly.network/prediction/src/prediction/usePredictionTradingExtension");
-  return {
-    usePredictionTradingExtension: extension.usePredictionTradingExtension,
-    usePredictionMarketsDropdown: (
-      await import("@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown")
-    ).usePredictionMarketsDropdown,
-    usePredictionMarketTabs: (
-      await import("@orderly.network/prediction/src/prediction/predictionMarketPanel.ui")
-    ).usePredictionMarketTabs,
-  };
-});
+vi.mock("@orderly.network/prediction", async () => ({
+  usePredictionAccountData: (
+    await import("@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData")
+  ).usePredictionAccountData,
+  useSharedProductCounts: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/useSharedProductCounts")
+  ).useSharedProductCounts,
+  usePredictionMarketsDropdown: (
+    await import("@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown")
+  ).usePredictionMarketsDropdown,
+  usePredictionMarketTabs: (
+    await import("@orderly.network/prediction/src/prediction/predictionMarketPanel.ui")
+  ).usePredictionMarketTabs,
+  SharedProductDataPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductDataPanel.ui")
+  ).SharedProductDataPanel,
+  SharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.ui")
+  ).SharedProductOrdersPanel,
+  MobileSharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.mobile.ui")
+  ).MobileSharedProductOrdersPanel,
+  MobileSharedProductHistory: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductHistory.mobile.ui")
+  ).MobileSharedProductHistory,
+}));
+
 vi.mock(
   "@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData",
   () => ({ usePredictionAccountData: mocks.account }),
@@ -85,6 +116,7 @@ vi.mock(
 );
 vi.mock("@orderly.network/hooks", () => ({
   useLocalStorage: () => [null, mocks.saveMarket],
+  useSymbolsInfo: () => new Proxy({}, { get: () => () => 0 }),
 }));
 vi.mock(
   "@orderly.network/prediction/src/prediction/predictionFavorites",
@@ -136,9 +168,8 @@ function mount(pageProps = props) {
     root = create(<TradingPage {...pageProps} />);
   });
 }
-function pageProps(): TradingPageProps {
-  // react-test-renderer types instance props as an any-valued index signature.
-  return root!.root.findByType(TradingPageProvider).props as TradingPageProps;
+function pageProps() {
+  return mocks.pageState as import("@orderly.network/trading/src/types/types").TradingPageState;
 }
 function element(node: React.ReactNode): ReactElement<Record<string, unknown>> {
   expect(isValidElement(node)).toBe(true);
@@ -333,142 +364,49 @@ it("keeps account panels but omits the automatic market dropdown without a route
   expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: true });
 });
 
-it("replaces each automatic slot configuration with the corresponding explicit object", () => {
-  const marketsDropdown = {};
-  const dataListProductContent = { pending: <div>Custom pending</div> };
-  mount({ ...props, marketsDropdown });
-  expect(pageProps().marketsDropdown).toBe(marketsDropdown);
-  expect(pageProps().dataListProductContent?.mobile).toBeDefined();
-  act(() =>
-    root!.update(
-      <TradingPage
-        {...props}
-        dataListProductContent={dataListProductContent}
-      />,
-    ),
-  );
-  expect(pageProps().marketsDropdown).toBeDefined();
-  expect(pageProps().dataListProductContent).toBe(dataListProductContent);
-  expect(pageProps().dataListProductContent?.mobile).toBeUndefined();
-  mocks.featureEnabled = false;
-  act(() =>
-    root!.update(
-      <TradingPage
-        {...props}
-        marketsDropdown={marketsDropdown}
-        dataListProductContent={dataListProductContent}
-      />,
-    ),
-  );
-  expect(pageProps().marketsDropdown).toBe(marketsDropdown);
-  expect(pageProps().dataListProductContent).toBe(dataListProductContent);
-});
+function TradingStateReader() {
+  mocks.pageState = useTradingPageContext();
+  return null;
+}
+function NextStateReader() {
+  mocks.nextState = useNextTradingPageContext();
+  return null;
+}
 
-it("pauses only overridden resources and resumes them when overrides are removed", () => {
-  const marketsDropdown = {};
-  const dataListProductContent = {};
-  mount();
-  for (const [overrideMarkets, overrideAccount] of [
-    [true, false],
-    [false, true],
-    [true, true],
-    [false, false],
-  ]) {
-    act(() =>
-      root!.update(
-        <TradingPage
-          {...props}
-          marketsDropdown={overrideMarkets ? marketsDropdown : undefined}
-          marketsSheet={overrideMarkets ? marketsDropdown : undefined}
-          sideMarkets={overrideMarkets ? marketsDropdown : undefined}
-          dataListProductContent={
-            overrideAccount ? dataListProductContent : undefined
-          }
-        />,
-      ),
-    );
-    expect(mocks.markets).toHaveBeenLastCalledWith({
-      enabled: !overrideMarkets,
-    });
-    expect(mocks.account).toHaveBeenLastCalledWith({
-      enabled: !overrideAccount,
-    });
-    expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(!overrideAccount);
-    if (overrideMarkets) {
-      expect(pageProps().marketsDropdown).toBe(marketsDropdown);
-    } else {
-      expect(pageProps().marketsDropdown?.renderTabContent).toBeDefined();
-    }
-    if (overrideAccount) {
-      expect(pageProps().dataListProductContent).toBe(dataListProductContent);
-    } else {
-      expect(pageProps().dataListProductContent?.mobile).toBeDefined();
-    }
-  }
-});
-
-it("uses nullish fallback and disables both resources without a router and with custom account content", () => {
-  const nullishProps = {
-    ...props,
-    marketsDropdown: null,
-    dataListProductContent: null,
-  } as unknown as TradingPageProps;
-  mount(nullishProps);
-  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: true });
-  expect(mocks.account).toHaveBeenLastCalledWith({ enabled: true });
-  expect(pageProps().marketsDropdown?.renderTabContent).toBeDefined();
-  expect(pageProps().dataListProductContent?.mobile).toBeDefined();
-  mocks.routeAvailable = false;
-  const dataListProductContent = {};
-  act(() =>
-    root!.update(
-      <TradingPage
-        {...props}
-        dataListProductContent={dataListProductContent}
-      />,
-    ),
-  );
-  expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
-  expect(mocks.account).toHaveBeenLastCalledWith({ enabled: false });
-  expect(mocks.counts.mock.calls.at(-1)?.[0].enabled).toBe(false);
-  expect(pageProps().marketsDropdown).toBeUndefined();
-  expect(pageProps().dataListProductContent).toBe(dataListProductContent);
-});
-
-const marketSlots = ["marketsDropdown", "marketsSheet", "sideMarkets"] as const;
-
+const marketSurfaces = [
+  "marketsDropdown",
+  "marketsSheet",
+  "sideMarkets",
+] as const;
 describe.each([
-  ["trading", TradingPage, TradingPageProvider],
-  ["trading-next", NextTradingPage, NextTradingPageProvider],
-] as const)("%s market surface overrides", (_, Page, Provider) => {
-  it.each([0, 1, 2, 3, 4, 5, 6, 7])(
-    "preserves overrides and keeps navigation on remaining surfaces (mask %i)",
-    (mask) => {
-      const overrides: Partial<TradingPageProps> = {};
-      marketSlots.forEach((key, index) => {
-        if (mask & (1 << index)) overrides[key] = {};
-      });
+  ["trading", TradingPage, TradingPageProvider, () => mocks.pageState],
+  [
+    "trading-next",
+    NextTradingPage,
+    NextTradingPageProvider,
+    () => mocks.nextState,
+  ],
+] as const)(
+  "%s automatic integration",
+  (packageName, Page, Provider, readState) => {
+    it("routes every market surface to the exact Prediction contract", () => {
       act(() => {
-        root = create(<Page {...props} {...overrides} />);
+        root = create(<Page {...props} />);
       });
-      const page = root!.root.findByType(Provider).props as TradingPageProps;
-      expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: mask !== 7 });
-      for (const key of marketSlots) {
-        if (overrides[key]) {
-          expect(page[key]).toBe(overrides[key]);
-          continue;
-        }
+      const state = readState();
+      for (const surface of marketSurfaces) {
         const hide = vi.fn();
-        const content = element(
-          page[key]!.renderTabContent!(
-            { id: "prediction", name: "Prediction", match: () => false },
-            "prediction",
-            hide,
-          ),
-        );
         let panelRoot!: ReactTestRenderer;
         act(() => {
-          panelRoot = create(content);
+          panelRoot = create(
+            element(
+              state[surface]!.renderTabContent!(
+                { id: "prediction", name: "Prediction", match: () => false },
+                "prediction",
+                hide,
+              ),
+            ),
+          );
         });
         try {
           panelRoot.root
@@ -483,23 +421,63 @@ describe.each([
           act(() => panelRoot.unmount());
         }
       }
-    },
-  );
+    });
 
-  it.each(["disabled", "no router"])(
-    "keeps explicit configuration and omits defaults with %s",
-    (reason) => {
-      mocks.routeAvailable = reason !== "no router";
-      mocks.featureEnabled = reason !== "disabled";
-      const marketsDropdown = {};
+    it.each(["disabled", "no router"])(
+      "omits all market surfaces with %s",
+      (reason) => {
+        mocks.featureEnabled = reason !== "disabled";
+        mocks.routeAvailable = reason !== "no router";
+        act(() => {
+          root = create(<Page {...props} />);
+        });
+        for (const surface of marketSurfaces)
+          expect(readState()[surface]).toBeUndefined();
+        expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
+      },
+    );
+
+    it("the public provider also builds the default integration without page-only inputs", () => {
       act(() => {
-        root = create(<Page {...props} marketsDropdown={marketsDropdown} />);
+        root = create(
+          <Provider {...props}>
+            {packageName === "trading" ? (
+              <TradingStateReader />
+            ) : (
+              <NextStateReader />
+            )}
+          </Provider>,
+        );
       });
-      const page = root!.root.findByType(Provider).props as TradingPageProps;
-      expect(page.marketsDropdown).toBe(marketsDropdown);
-      expect(page.marketsSheet).toBeUndefined();
-      expect(page.sideMarkets).toBeUndefined();
-      expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: false });
-    },
-  );
-});
+      expect(mocks.markets).toHaveBeenLastCalledWith({ enabled: true });
+      for (const surface of marketSurfaces)
+        expect(readState()[surface]?.renderTabContent).toBeTypeOf("function");
+      if (packageName === "trading")
+        expect(mocks.pageState.dataListProductContent?.mobile).toBeDefined();
+    });
+
+    it("does not accept removed runtime overrides", () => {
+      const removed = {
+        marketsDropdown: {},
+        marketsSheet: {},
+        sideMarkets: {},
+        dataListProductContent: {},
+      };
+      act(() => {
+        root = create(<Page {...props} {...removed} />);
+      });
+      for (const surface of marketSurfaces)
+        expect(readState()[surface]).not.toBe(removed[surface]);
+      if (packageName === "trading")
+        expect(mocks.pageState.dataListProductContent).not.toBe(
+          removed.dataListProductContent,
+        );
+      mocks.featureEnabled = false;
+      act(() => root!.update(<Page {...props} {...removed} />));
+      for (const surface of marketSurfaces)
+        expect(readState()[surface]).toBeUndefined();
+      if (packageName === "trading")
+        expect(mocks.pageState.dataListProductContent).toBeUndefined();
+    });
+  },
+);

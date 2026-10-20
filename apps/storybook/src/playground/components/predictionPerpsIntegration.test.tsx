@@ -3,9 +3,9 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { PredictionAccountPanel } from "@orderly.network/prediction/src/prediction/dataPanels/predictionAccountPanel.widget";
 import {
-  usePredictionTradingExtension,
-  type PredictionTradingExtensionOptions,
-} from "@orderly.network/prediction/src/prediction/usePredictionTradingExtension";
+  usePredictionIntegration,
+  type PredictionIntegrationOptions,
+} from "@orderly.network/trading/src/hooks/usePredictionIntegration";
 import { AccountStatusEnum } from "@orderly.network/types";
 
 const mocks = vi.hoisted(() => ({
@@ -188,8 +188,8 @@ vi.mock(
 );
 
 let root: ReactTestRenderer | undefined;
-function Consumer(props: PredictionTradingExtensionOptions) {
-  const content = usePredictionTradingExtension(props).dataListProductContent;
+function Consumer(props: PredictionIntegrationOptions) {
+  const content = usePredictionIntegration(props).dataListProductContent;
   return (
     <>
       {content?.pending}
@@ -201,7 +201,7 @@ function Consumer(props: PredictionTradingExtensionOptions) {
     </>
   );
 }
-const host: PredictionTradingExtensionOptions = {
+const host: PredictionIntegrationOptions = {
   symbol: "PERP_BTC_USDC",
   showAllSymbol: false,
   onPredictionSelect: vi.fn(),
@@ -330,3 +330,30 @@ it.each([false, true])(
     expect(onSymbolChange).toHaveBeenCalledOnce();
   },
 );
+
+vi.mock("@orderly.network/prediction", async () => ({
+  usePredictionAccountData: (
+    await import("@orderly.network/prediction/src/prediction/hooks/usePredictionAccountData")
+  ).usePredictionAccountData,
+  useSharedProductCounts: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/useSharedProductCounts")
+  ).useSharedProductCounts,
+  usePredictionMarketsDropdown: (
+    await import("@orderly.network/prediction/src/prediction/usePredictionMarketsDropdown")
+  ).usePredictionMarketsDropdown,
+  usePredictionMarketTabs: (
+    await import("@orderly.network/prediction/src/prediction/predictionMarketPanel.ui")
+  ).usePredictionMarketTabs,
+  SharedProductDataPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductDataPanel.ui")
+  ).SharedProductDataPanel,
+  SharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.ui")
+  ).SharedProductOrdersPanel,
+  MobileSharedProductOrdersPanel: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductOrdersPanel.mobile.ui")
+  ).MobileSharedProductOrdersPanel,
+  MobileSharedProductHistory: (
+    await import("@orderly.network/prediction/src/prediction/dataPanels/sharedProductHistory.mobile.ui")
+  ).MobileSharedProductHistory,
+}));

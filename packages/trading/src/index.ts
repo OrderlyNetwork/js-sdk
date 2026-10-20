@@ -3,12 +3,7 @@
  */
 import "./types/interceptorTargets";
 
-export type {
-  TradingMarketsDropdownProps,
-  TradingPerpsPanelProps,
-  TradingDataListProductContent,
-  TradingPageExtensionProps,
-} from "@orderly.network/trading-shared";
+export type { TradingPerpsPanelProps } from "@orderly.network/trading-shared";
 
 export type {
   ShareOptions,
