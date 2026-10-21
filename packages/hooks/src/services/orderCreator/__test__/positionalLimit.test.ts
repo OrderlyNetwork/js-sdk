@@ -480,6 +480,7 @@ describe("Positional price editing", () => {
       creator.crateUpdateOrder(
         {
           ...values,
+          sl_trigger_price: "3895",
           sl_order_type: OrderType.LIMIT,
           sl_order_price: "3890",
         },
@@ -490,7 +491,7 @@ describe("Positional price editing", () => {
       {
         order_id: 12,
         order_type: OrderType.LIMIT,
-        trigger_price: 3900,
+        trigger_price: 3895,
         price: 3890,
       },
     ]);
@@ -506,6 +507,7 @@ describe("Positional price editing", () => {
       creator.crateUpdateOrder(
         {
           ...values,
+          tp_trigger_price: "4105",
           tp_order_type: OrderType.MARKET,
           tp_order_price: undefined,
         },
@@ -516,7 +518,7 @@ describe("Positional price editing", () => {
       {
         order_id: 11,
         order_type: OrderType.CLOSE_POSITION,
-        trigger_price: 4100,
+        trigger_price: 4105,
       },
     ]);
   });
@@ -543,6 +545,7 @@ describe("Positional price editing", () => {
       partialCreator.crateUpdateOrder(
         {
           ...partialValues,
+          tp_trigger_price: "4105",
           tp_order_type: OrderType.MARKET,
           tp_order_price: undefined,
         },
@@ -553,7 +556,7 @@ describe("Positional price editing", () => {
       {
         order_id: 21,
         order_type: OrderType.MARKET,
-        trigger_price: 4100,
+        trigger_price: 4105,
       },
     ]);
   });
@@ -733,7 +736,7 @@ describe("Positional price editing", () => {
           {
             order_id: 12,
             type: OrderType.LIMIT,
-            trigger_price: 3900,
+            trigger_price: 3895,
             price: 3890,
           } as any,
         ],
@@ -743,7 +746,7 @@ describe("Positional price editing", () => {
       {
         order_id: 12,
         order_type: OrderType.LIMIT,
-        trigger_price: 3900,
+        trigger_price: 3895,
         price: 3890,
       },
     ]);
@@ -770,7 +773,7 @@ describe("Positional price editing", () => {
           {
             order_id: 11,
             type: OrderType.MARKET,
-            trigger_price: 4100,
+            trigger_price: 4105,
             price: 4110,
           },
         ],
@@ -780,7 +783,7 @@ describe("Positional price editing", () => {
       {
         order_id: 11,
         order_type: OrderType.CLOSE_POSITION,
-        trigger_price: 4100,
+        trigger_price: 4105,
       },
     ]);
     expect(() =>
@@ -795,7 +798,7 @@ describe("Positional price editing", () => {
           {
             order_id: 12,
             type: OrderType.LIMIT,
-            trigger_price: 3900,
+            trigger_price: 3895,
           },
         ],
         placeholderParent,
@@ -822,7 +825,7 @@ describe("Positional price editing", () => {
       child_orders: [placeholderParent],
       algo_type: AlgoOrderRootType.BRACKET,
     } as API.AlgoOrder;
-    expect(
+    expect(() =>
       sanitizeTPSLChildUpdates(
         [
           {
@@ -831,7 +834,7 @@ describe("Positional price editing", () => {
               {
                 order_id: 12,
                 type: OrderType.LIMIT,
-                trigger_price: 3900,
+                trigger_price: 3895,
                 price: 3890,
               },
             ],
@@ -839,19 +842,7 @@ describe("Positional price editing", () => {
         ],
         inactiveBracket,
       ),
-    ).toEqual([
-      {
-        order_id: 10,
-        child_orders: [
-          {
-            order_id: 12,
-            order_type: OrderType.LIMIT,
-            trigger_price: 3900,
-            price: 3890,
-          },
-        ],
-      },
-    ]);
+    ).toThrow(/type/);
     const tpOnlyParent = oldOrder();
     tpOnlyParent.child_orders = [tpOnlyParent.child_orders[0]];
     expect(() =>

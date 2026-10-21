@@ -1,4 +1,5 @@
-import { API } from "@orderly.network/types";
+import { API, OrderType } from "@orderly.network/types";
+import { getTPSLLeg, isConfiguredPendingTPSLLeg } from "@orderly.network/utils";
 import {
   getTPSLEditableOrderValues,
   TPSLEditableOrderValues,
@@ -21,8 +22,22 @@ const normalizePrice = (value: number | string | null | undefined) => {
 
 export function getBracketTPSLPriceInfo(
   order: API.AlgoOrder,
+  ancestor?: API.AlgoOrder,
 ): BracketTPSLPriceInfo {
   const { quantity: _, ...priceInfo } = getTPSLEditableOrderValues(order);
+  // Pending Bracket protection is configured before activation. Its prices
+  // are still editable, unlike stale prices on an inactive position placeholder.
+  for (const leg of ["tp", "sl"] as const) {
+    const child = getTPSLLeg(order, leg);
+    if (!child || !isConfiguredPendingTPSLLeg(order, child, ancestor)) {
+      continue;
+    }
+    priceInfo[`${leg}_trigger_price`] = child.trigger_price!.toString();
+    priceInfo[`${leg}_order_price`] =
+      priceInfo[`${leg}_order_type`] === OrderType.LIMIT
+        ? (child.price?.toString() ?? "")
+        : "";
+  }
   return priceInfo;
 }
 

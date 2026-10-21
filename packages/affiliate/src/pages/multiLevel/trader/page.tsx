@@ -14,7 +14,11 @@ import {
   usePagination,
   useScreen,
 } from "@orderly.network/ui";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import {
+  commifyOptional,
+  Decimal,
+  numberToHumanStyle,
+} from "@orderly.network/utils";
 import { useReferralContext } from "../../../provider";
 import { DateRange } from "../../../utils/types";
 import {
@@ -34,6 +38,11 @@ import { useTraderRebates, useTraderVolume } from "./useTraderData";
 type ChartPeriod = "7" | "30" | "90";
 
 const MAX_TABLE_RANGE_DAYS = 90;
+
+// Summary and Y-axis labels use at most 6 decimal places to match backend
+// calculations, truncate without rounding, and omit unnecessary trailing zeros.
+const formatRebate = (value: number) =>
+  numberToHumanStyle(value, 6).replace(/(\.\d*[1-9])0+(?=[KMBT]?$)/, "$1");
 
 const money = (value?: number, digits = 2) =>
   value === undefined
@@ -97,7 +106,12 @@ export const MultiLevelTraderPage = () => {
     {
       title: `${t("affiliate.trader.rebate")} (USDC)`,
       dataIndex: "referee_rebate",
-      render: (value: number) => money(value, 6),
+      // Match the summary precision and omit trailing zeros in rebate details.
+      render: (value: number) => (
+        <Text.numeral prefix="$" dp={6} padding={false}>
+          {value}
+        </Text.numeral>
+      ),
     },
     {
       title: `${t("affiliate.trader.tradingVol")} (USDC)`,
@@ -173,15 +187,9 @@ export const MultiLevelTraderPage = () => {
             {rebateTotal === undefined || summaryRebates.error ? (
               <Text size="3xl">--</Text>
             ) : (
-              <Text.numeral
-                rule="human"
-                prefix="$"
-                dp={2}
-                size="3xl"
-                className="oui-text-trade-profit"
-              >
-                {rebateTotal}
-              </Text.numeral>
+              <Text dir="ltr" size="3xl" className="oui-text-trade-profit">
+                ${formatRebate(rebateTotal)}
+              </Text>
             )}
             <Text size="sm" intensity={54}>
               {summaryPastLabel}
@@ -246,7 +254,12 @@ export const MultiLevelTraderPage = () => {
               data={chartData}
               colors={{ fill: "rgb(var(--oui-color-success))" }}
               className="oui-h-full oui-w-full"
-              tooltip={{ rm: Decimal.ROUND_DOWN, dp: 6 }}
+              // Keep tooltip precision and trailing-zero handling consistent with rebate details.
+              tooltip={{ rm: Decimal.ROUND_DOWN, dp: 6, padding: false }}
+              yAxis={{
+                tickFormatter: formatRebate,
+                width: 68,
+              }}
             />
           </div>
         )}
@@ -296,7 +309,9 @@ export const MultiLevelTraderPage = () => {
                   <Text intensity={54}>
                     {t("affiliate.trader.rebate")} (USDC)
                   </Text>
-                  <Text>{money(item.referee_rebate, 6)}</Text>
+                  <Text.numeral prefix="$" dp={6} padding={false}>
+                    {item.referee_rebate}
+                  </Text.numeral>
                 </Flex>
                 <Flex justify="between" width="100%">
                   <Text intensity={54}>

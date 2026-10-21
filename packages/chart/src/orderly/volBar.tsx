@@ -27,12 +27,17 @@ export type VolChartDataItem = {
 export type VolChartTooltip = {
   rm?: number;
   dp?: number;
+  padding?: boolean;
 };
 
 export type VolChartProps = {
   colors?: { fill: string };
   data: ReadonlyArray<VolChartDataItem> | VolChartDataItem[];
   tooltip?: VolChartTooltip;
+  yAxis?: {
+    tickFormatter?: (value: number) => string;
+    width?: number;
+  };
   className?: string;
   invisible?: boolean;
   responsiveContainerProps?: Omit<ResponsiveContainerProps, "children">;
@@ -116,6 +121,7 @@ const CustomTooltip = (
         titleClassName="oui-gap-4"
         rm={tooltip?.rm}
         dp={tooltip?.dp}
+        padding={tooltip?.padding}
       />
     );
   }
@@ -197,10 +203,14 @@ export const VolBarChart: React.FC<VolChartProps> = (props) => {
             axisLine={false}
             dataKey={"volume"}
             tickFormatter={(value, index) => {
+              // Preserve placeholder ticks for empty series, including zero-filled date windows.
               if (isEmpty) return `${index * 100}`;
+              if (props.yAxis?.tickFormatter) {
+                return props.yAxis.tickFormatter(value);
+              }
               return numberToHumanStyle(value, decimal);
             }}
-            width={45}
+            width={props.yAxis?.width ?? 45}
           />
           {/* @ts-ignore */}
           <XAxis

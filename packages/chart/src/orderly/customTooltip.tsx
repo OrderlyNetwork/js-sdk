@@ -9,6 +9,7 @@ export const OrderlyChartTooltip = (props: {
   coloring?: boolean;
   dp?: number;
   rm?: number;
+  padding?: boolean;
 }) => {
   const {
     label,
@@ -33,6 +34,7 @@ export const OrderlyChartTooltip = (props: {
           weight="semibold"
           rm={rm}
           dp={dp}
+          padding={props.padding}
         >
           {value}
         </Text.numeral>

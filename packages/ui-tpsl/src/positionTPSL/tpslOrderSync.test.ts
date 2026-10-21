@@ -31,6 +31,28 @@ const createOrder = (overrides: Partial<API.AlgoOrder> = {}) =>
   }) as API.AlgoOrder;
 
 describe("TP/SL external order synchronization", () => {
+  it("keeps new order type selection available", () => {
+    expect(isTPSLOrderTypeLocked(undefined, "tp")).toBe(false);
+    expect(isTPSLOrderTypeLocked(undefined, "sl")).toBe(false);
+  });
+
+  it.each(["tp", "sl"] as const)(
+    "locks pending Bracket %s without changing the displayed type",
+    (leg) => {
+      const order = createOrder();
+      order.child_orders.forEach((child) => {
+        child.is_activated = false;
+      });
+      const bracket = { algo_type: AlgoOrderRootType.BRACKET } as API.AlgoOrder;
+      const configured = getTPSLEditOrderType(order, leg);
+      expect(isTPSLOrderTypeLocked(order, leg, bracket)).toBe(true);
+      expect(getTPSLEditOrderType(order, leg)).toBe(configured);
+      order.is_activated = true;
+      expect(isTPSLOrderTypeLocked(order, leg, bracket)).toBe(false);
+      order.algo_type = AlgoOrderRootType.POSITIONAL_TP_SL;
+      expect(isTPSLOrderTypeLocked(order, leg, bracket)).toBe(true);
+    },
+  );
   it("locks editing and defaults a missing child to MARKET", () => {
     const tpOnly = createOrder({
       child_orders: [createOrder().child_orders[0]],
