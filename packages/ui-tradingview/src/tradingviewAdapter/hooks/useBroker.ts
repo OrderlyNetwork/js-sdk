@@ -74,6 +74,10 @@ const useBroker = ({
   }, [cancelOrder]);
 
   useEffect(() => {
+    broker.current.editOrder = editOrder;
+  }, [editOrder]);
+
+  useEffect(() => {
     // when theme change, update the color config
     broker.current.colorConfig = colorConfig;
   }, [colorConfig]);
