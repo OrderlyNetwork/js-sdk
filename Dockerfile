@@ -1,4 +1,4 @@
-FROM node:22 AS base
+FROM node:22.23.4 AS base
 RUN npm install -g pnpm@12
 
 FROM base AS deps
