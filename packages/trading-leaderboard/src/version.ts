@@ -7,7 +7,8 @@ declare global {
 }
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/trading-leaderboard"] = "3.2.2";
+  window.__ORDERLY_VERSION__["@orderly.network/trading-leaderboard"] =
+    "3.2.3-alpha.0";
 }
 
-export default "3.2.2";
+export default "3.2.3-alpha.0";
