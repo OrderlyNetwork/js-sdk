@@ -172,7 +172,7 @@ async function main() {
     console.error("[ai-docs] QMD index failed:", e);
     console.error(
       "If better-sqlite3 failed to load: from the repo root run `pnpm rebuild:better-sqlite3` (or `pnpm rebuild better-sqlite3 --pending -r`). " +
-        "pnpm 10 only runs dependency install scripts for packages listed under `pnpm.onlyBuiltDependencies` in the root package.json.",
+        "pnpm 12 only runs dependency install scripts for packages enabled under `allowBuilds` in the root pnpm-workspace.yaml.",
     );
     process.exit(1);
   } finally {

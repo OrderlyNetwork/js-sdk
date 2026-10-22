@@ -13,7 +13,7 @@
   "scripts": {
     "cli": "node ./bin/cli.js",
     "clean": "rimraf dist",
-    "link-global": "pnpm link --global",
+    "link-global": "pnpm add -g .",
     "test": "node --test"
   },
   "engines": {

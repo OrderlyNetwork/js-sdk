@@ -10,7 +10,10 @@ This is a pnpm monorepo using Turbo for build orchestration. It contains:
 - `apps/storybook` - Storybook for component development and documentation
 - `apps/ai-docs` - Documentation site generators for components and hooks
 
-Requires pnpm v10+ and Node.js v20.19.0+.
+Requires pnpm v12 (the project pins v12.15.0) and Node.js v20.19.0+.
+Install pnpm v12 before running project commands; pnpm v10 cannot reliably
+bootstrap the native v12 executable from the `packageManager` pin. Docker uses
+`pnpm@12` to bootstrap the pinned project version.
 
 ## Commands
 
