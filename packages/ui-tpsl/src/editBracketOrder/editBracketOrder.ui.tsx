@@ -15,6 +15,7 @@ import {
   Flex,
   ScrollArea,
   ThrottledButton,
+  toast,
   useScreen,
 } from "@orderly.network/ui";
 import { OrderInfo } from "../components/orderInfo";
@@ -239,7 +240,9 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                 props.onClose?.();
               })
               .catch((err) => {
-                console.log("--->>>cancel order", err);
+                if (typeof err?.message === "string" && err.message.trim()) {
+                  toast.error(err.message);
+                }
               });
           }}
         >

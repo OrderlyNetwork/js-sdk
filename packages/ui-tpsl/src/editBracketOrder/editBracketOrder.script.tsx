@@ -37,7 +37,7 @@ function getInitialOrder(order: API.AlgoOrderExt) {
   const slOrder = childOrder.child_orders.find(
     (item) => item.algo_type === AlgoOrderType.STOP_LOSS,
   );
-  const tpslPriceInfo = getBracketTPSLPriceInfo(childOrder);
+  const tpslPriceInfo = getBracketTPSLPriceInfo(childOrder, order);
 
   return {
     baseInfo: {
@@ -52,8 +52,8 @@ function getInitialOrder(order: API.AlgoOrderExt) {
       // sl_enable: !!slOrder?.trigger_price,
     },
     tpslPriceInfo,
-    disableTPOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "tp"),
-    disableSLOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "sl"),
+    disableTPOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "tp", order),
+    disableSLOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "sl", order),
     tpInfo: {
       orderId: tpOrder?.algo_order_id,
     },
@@ -142,7 +142,13 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
                 .toNumber()
             : undefined,
         }));
-        const childOrders = createTPSLOrderUpdates(legs, parent);
+        const childOrders = createTPSLOrderUpdates(
+          legs,
+          parent,
+          undefined,
+          [],
+          props.order,
+        );
         if (!childOrders.length) return;
         return doUpdateOrder({
           order_id: props.order.algo_order_id,

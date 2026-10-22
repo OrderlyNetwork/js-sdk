@@ -7,6 +7,7 @@ import {
 } from "@orderly.network/types";
 import { createMockSymbolConfig } from "../../services/orderCreator/__test__/testHelpers";
 import { useOrderStream } from "./useOrderStream";
+import { useSubAccountAlgoOrderStream } from "./useSubAccountAlgoOrderStream";
 
 const mockUpdateAlgoOrder = jest.fn().mockResolvedValue({ success: true });
 const mockSymbolInfo = createMockSymbolConfig();
@@ -18,6 +19,13 @@ jest.mock("../../provider/dataCenter/dataCenterContext", () => ({
 }));
 jest.mock("../../useMutation", () => ({
   useMutation: () => [mockUpdateAlgoOrder, {}],
+}));
+jest.mock("../../subAccount", () => ({
+  useSubAccountMutation: () => [mockUpdateAlgoOrder, {}],
+  useSubAccountQuery: () => ({ data: { rows: mockOrders }, mutate: jest.fn() }),
+}));
+jest.mock("../../useEventEmitter", () => ({
+  useEventEmitter: () => ({ on: jest.fn(), off: jest.fn() }),
 }));
 jest.mock("../../usePrivateInfiniteQuery", () => ({
   usePrivateInfiniteQuery: (key: () => string) => ({
@@ -169,4 +177,156 @@ describe("useOrderStream TP/SL updates", () => {
       expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
     },
   );
+});
+
+describe.each(["main", "sub"])("%s account TP/SL policy", (account) => {
+  const useStream = () =>
+    account === "main"
+      ? useOrderStream({})
+      : useSubAccountAlgoOrderStream({}, { accountId: "sub-account" });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    const parent = createOrder();
+    parent.child_orders[0].is_activated = false;
+    parent.child_orders[0].root_algo_order_id = 20;
+    mockOrders = [
+      {
+        algo_order_id: 20,
+        algo_type: "BRACKET",
+        symbol: parent.symbol,
+        child_orders: [parent],
+      },
+    ];
+    mockMarkPrice = 4000;
+  });
+
+  it("rejects pending Bracket type changes before making a request", async () => {
+    const { result } = renderHook(useStream);
+    await act(async () => {
+      await expect(
+        Promise.resolve().then(() =>
+          result.current[1].updateTPSLOrder(20, [
+            {
+              order_id: 10,
+              child_orders: [
+                { order_id: 11, type: OrderType.MARKET, trigger_price: 4105 },
+              ],
+            },
+          ]),
+        ),
+      ).rejects.toThrow(/type/);
+    });
+    expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
+  });
+
+  it("allows legitimate nested placeholder activation", async () => {
+    mockOrders[0].child_orders[0].is_activated = true;
+    const { result } = renderHook(useStream);
+    await act(async () => {
+      await result.current[1].updateTPSLOrder(20, [
+        {
+          order_id: 10,
+          child_orders: [
+            { order_id: 11, type: OrderType.MARKET, trigger_price: 4105 },
+          ],
+        },
+      ]);
+    });
+    expect(mockUpdateAlgoOrder).toHaveBeenCalledWith({
+      order_id: 20,
+      child_orders: [
+        {
+          order_id: 10,
+          child_orders: [
+            { order_id: 11, order_type: OrderType.MARKET, trigger_price: 4105 },
+          ],
+        },
+      ],
+    });
+  });
+
+  it("rejects unchanged triggers without making a request", async () => {
+    mockOrders[0].child_orders[0].is_activated = true;
+    const { result } = renderHook(useStream);
+    await act(async () => {
+      await expect(
+        Promise.resolve().then(() =>
+          result.current[1].updateTPSLOrder(20, [
+            {
+              order_id: 10,
+              child_orders: [
+                {
+                  order_id: 11,
+                  type: OrderType.MARKET,
+                  trigger_price: "4100.00",
+                },
+              ],
+            },
+          ]),
+        ),
+      ).rejects.toThrow(/trigger price/);
+    });
+    expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
+  });
+
+  it("only sends a changed Pending leg and skips an unchanged sibling", async () => {
+    const parent = mockOrders[0].child_orders[0];
+    parent.is_activated = false;
+    parent.child_orders.push({
+      ...parent.child_orders[0],
+      algo_order_id: 12,
+      algo_type: "STOP_LOSS",
+      type: OrderType.MARKET,
+      trigger_price: 3900,
+    });
+    const { result } = renderHook(useStream);
+    const unchanged = [
+      { order_id: 11, type: OrderType.LIMIT, trigger_price: 4100, price: 4130 },
+      { order_id: 12, type: OrderType.MARKET, trigger_price: 3900 },
+    ];
+    await act(async () => {
+      await result.current[1].updateTPSLOrder(20, [
+        { order_id: 10, child_orders: unchanged },
+      ]);
+    });
+    expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
+    await act(async () => {
+      await result.current[1].updateTPSLOrder(20, [
+        {
+          order_id: 10,
+          child_orders: [
+            { ...unchanged[0], trigger_price: 4105 },
+            unchanged[1],
+          ],
+        },
+      ]);
+    });
+    expect(mockUpdateAlgoOrder).toHaveBeenCalledWith({
+      order_id: 20,
+      child_orders: [
+        { order_id: 10, child_orders: [{ order_id: 11, trigger_price: 4105 }] },
+      ],
+    });
+  });
+
+  it("explicitly cancels a configured Pending leg", async () => {
+    mockOrders[0].child_orders[0].is_activated = false;
+    const { result } = renderHook(useStream);
+    await act(async () => {
+      await result.current[1].updateTPSLOrder(20, [
+        {
+          order_id: 10,
+          child_orders: [
+            { order_id: 11, is_activated: false, trigger_price: 0, price: 0 },
+          ],
+        },
+      ]);
+    });
+    expect(mockUpdateAlgoOrder).toHaveBeenCalledWith({
+      order_id: 20,
+      child_orders: [
+        { order_id: 10, child_orders: [{ order_id: 11, is_activated: false }] },
+      ],
+    });
+  });
 });

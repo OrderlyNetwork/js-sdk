@@ -80,6 +80,47 @@ orderly-devkit create module
 orderly-devkit create module --name my-module
 ```
 
+### `schema`
+
+Derive a plugin's `configSchema.json` — the dynamic options form Orderly One renders on install — from the `register*Plugin(options)` signature. No login required.
+
+- Types derive from the first parameter: `string`, `number`, `integer`, `boolean`, `?` optionality, and string/number literal unions (→ `enum`). Unsupported types are skipped with a warning.
+- JSDoc on each option becomes the form field:
+
+| JSDoc              | Schema field  | Applies to      |
+| ------------------ | ------------- | --------------- |
+| doc comment        | `description` | all             |
+| `@default <value>` | `default`     | all             |
+| `@minimum`         | `minimum`     | number, integer |
+| `@maximum`         | `maximum`     | number, integer |
+| `@minLength`       | `minLength`   | string          |
+| `@maxLength`       | `maxLength`   | string          |
+| `@pattern`         | `pattern`     | string          |
+
+```bash
+orderly-devkit schema -p ./my-plugin                 # print the derived schema
+orderly-devkit schema -p ./my-plugin --write         # create configSchema.json when missing
+orderly-devkit schema -p ./my-plugin --write --force # regenerate it from source
+orderly-devkit schema -p ./my-plugin --check         # fail on missing/drift (CI)
+```
+
+- `--write` also adds `configSchema.json` to `package.json` `files` when that allow-list exists, so the schema ships with the npm package.
+- `--check` prints a property-level diff and exits non-zero when the checked-in file is missing or out of sync with source; it never modifies files. A plugin without derivable `register*Plugin` options cannot be verified and is reported as such.
+
+### `check`
+
+Warn when a plugin's published build cannot be installed as a **runtime plugin in an Orderly One DEX** — i.e. its build leaves a package other than `react`, `react-dom` or `@orderly.network/*` as a bare import. No login required.
+
+- Scans the JS files npm would publish (`package.json` `files` allow-list when present, otherwise the whole package tree).
+- Orderly One loads marketplace plugins at runtime and resolves only `react` / `react-dom` / `@orderly.network/*` from the host import map. Bundle everything else into the plugin build (e.g. tsup `noExternal`).
+- **Advisory by default** (exit 0): the same plugin still works in hosts that bundle it at build time. Pass `--strict` to exit non-zero for CI gating.
+- `submit` runs the same check and prints the warning, but never blocks a submission.
+
+```bash
+orderly-devkit check -p ./my-plugin
+orderly-devkit check -p ./my-plugin --strict # CI: fail on non-host imports
+```
+
 ### Marketplace: `submit`, `search`, `list`, `update`, `view`, `disable`
 
 These commands use the Marketplace API. Public read commands (`search`, `view`) do not require login. Owner-scoped commands (`submit`, `list`, `update`, `disable`) require login (`orderly-devkit login`).
@@ -89,16 +130,19 @@ These commands use the Marketplace API. Public read commands (`search`, `view`) 
 - Resolves metadata from `package.json` and/or `.orderly-manifest.json`.
 - Required: `npmName`, `repoUrl`, `name`, `description`, at least one tag, and at least one cover image. `name` and `description` are prompted for when missing.
 - `repoUrl` should be a GitHub URL (`https://github.com/<owner>/<repo>`); it can be filled from `git remote` when missing.
+- `--write-schema` writes the derived `configSchema.json` when the file is missing; without it the schema is derived from source on the fly for the submission payload. Commit the file and run `orderly-devkit schema --check` in CI so it stays in sync.
 - **Tags** must be from the allowed set (max 5): `UI`, `Indicator`, `Order Entry`, `Trading`, `Chart`, `Portfolio`, `Analytics`, `Market`, `OrderBook`, `Deposit`, `Withdraw`, `Transfer`, `Swap`, `Liquidity`, `Staking`, `Rewards`, `Tool`, `Widget`, `AI`.
 - **`coverImages`** (1–5) may be local paths relative to the plugin directory; they are uploaded to the Marketplace and replaced with the managed URLs. `--dry-run` validates them without uploading.
   Existing remote covers must use `https://oss.orderly.network/marketplace/`. Third-party or malformed URLs are rejected before any upload. For a local GCS emulator, set `GCS_PUBLIC_BASE_URL` to the same origin configured on the backend; `/marketplace/` is still required.
 - `pluginId` is optional — the backend derives it from the npm package name when omitted.
 - Submissions are queued and audited asynchronously; the command reports the submission status rather than a final listing. Resubmitting before the audit finishes returns a 409 — track the submission with `list` and resubmit once it completes.
+- Warns (does not fail) when the published build cannot be installed as a runtime plugin in an Orderly One DEX — see [`check`](#check).
 
 ```bash
 orderly-devkit submit
 orderly-devkit submit --path ./my-plugin
 orderly-devkit submit -p ./my-plugin --tags UI,Trading --dry-run
+orderly-devkit submit -p ./my-plugin --write-schema
 ```
 
 **`search`** — search public available plugins in Marketplace. `--tag` accepts a tag display name (e.g. `Order Entry`) or its slug (e.g. `order-entry`); display names are converted to slugs automatically.

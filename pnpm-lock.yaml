@@ -605,6 +605,9 @@ importers:
       handlebars:
         specifier: ^4.7.9
         version: 4.7.9
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
