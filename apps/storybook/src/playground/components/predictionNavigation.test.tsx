@@ -11,6 +11,13 @@ const mocks = vi.hoisted(() => ({
   routeAvailable: true,
   script: vi.fn(),
   state: {
+    rounds: {
+      shouldFallbackMissingRound: false,
+      missingRoundFallbackRow: undefined,
+      rows: [],
+    },
+    isRoundsReady: true,
+    isRoundsLoading: false,
     defaultSymbol: "PERP_BTC5M2609291035_USDC",
     selectedRow: { symbol: "PERP_BTC5M2609291035_USDC" },
     selectMarketRound: vi.fn(),

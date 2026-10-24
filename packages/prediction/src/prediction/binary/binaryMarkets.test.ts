@@ -6,6 +6,7 @@ import {
   deriveBinaryMarkets,
   getBinaryMarketIdentity,
   parseBinaryRoundSymbol,
+  selectBinaryRoundFallback,
 } from "./binaryMarkets";
 
 const now = Date.UTC(2026, 8, 29, 10, 36);
@@ -188,4 +189,93 @@ test("keeps history markets but excludes inconsistent records", () => {
   assert.equal(markets[0].hasLiveRow, false);
   // Both rows are history-tier; the later-expiring delisted round wins.
   assert.equal(markets[0].currentRow.status, "DELISTED");
+});
+
+test("fallback prefers the latest live, nearest future, then latest expired round independent of order", () => {
+  const older = row("BTC", 5, now - 900_000);
+  const expired = row("BTC", 5, now - 600_000, "DELISTED");
+  const earlierLive = row("BTC", 5, now - 180_000);
+  const live = row("BTC", 5, now - 60_000);
+  const future = row("BTC", 5, now + 240_000);
+  const later = row("BTC", 5, now + 540_000);
+  for (const [rows, expected] of [
+    [[future, older, live, expired, earlierLive, later], live],
+    [[later, expired, future, older], future],
+    [[older, expired], expired],
+  ] as [BinaryInfoRow[], BinaryInfoRow][]) {
+    assert.equal(
+      selectBinaryRoundFallback(rows, "PERP_BTC5M_USDC", now),
+      expected,
+    );
+    assert.equal(
+      selectBinaryRoundFallback([...rows].reverse(), "PERP_BTC5M_USDC", now),
+      expected,
+    );
+  }
+});
+
+test("fallback excludes other families, inconsistent data and unexpired inactive rows", () => {
+  const start = now - 60_000;
+  const btc = row("BTC", 5, start);
+  const invalid: BinaryInfoRow[] = [
+    row("ETH", 5, start),
+    row("BTC", 10, start),
+    row("BTC", 15, start),
+    {
+      ...btc,
+      symbol: btc.symbol.replace("USDC", "USDT"),
+      index_price_symbol: "PERP_BTC_USDT",
+    },
+    { ...btc, index_price_symbol: "PERP_ETH_USDC" },
+    { ...btc, fee_model: "OTHER" },
+    { ...btc, observation_start_at: start + 60_000 },
+    ...(["DELISTING", "RECYCLING", "DELISTED"] as const).flatMap((status) => [
+      row("BTC", 5, start, status),
+      row("BTC", 5, now + 240_000, status),
+    ]),
+  ];
+  assert.equal(
+    selectBinaryRoundFallback(invalid, "PERP_BTC5M_USDC", now),
+    undefined,
+  );
+  assert.equal(
+    selectBinaryRoundFallback([], "PERP_BTC5M_USDC", now),
+    undefined,
+  );
+  assert.equal(selectBinaryRoundFallback([btc], undefined, now), undefined);
+  const history = row("BTC", 5, now - 600_000, "DELISTED");
+  assert.equal(
+    selectBinaryRoundFallback([...invalid, history], "PERP_BTC5M_USDC", now),
+    history,
+  );
+});
+
+test("fallback includes T0 as live and T1 as expired even for delisted history", () => {
+  const starting = row("BTC", 5, now);
+  const ending = row("BTC", 5, now - 300_000);
+  const future = row("BTC", 5, now + 300_000);
+  assert.equal(
+    selectBinaryRoundFallback(
+      [future, ending, starting],
+      "PERP_BTC5M_USDC",
+      now,
+    ),
+    starting,
+  );
+  assert.equal(
+    selectBinaryRoundFallback([ending, future], "PERP_BTC5M_USDC", now),
+    future,
+  );
+  for (const status of [
+    "ACTIVE",
+    "DELISTING",
+    "RECYCLING",
+    "DELISTED",
+  ] as const) {
+    const expired = { ...ending, status };
+    assert.equal(
+      selectBinaryRoundFallback([expired], "PERP_BTC5M_USDC", now),
+      expired,
+    );
+  }
 });

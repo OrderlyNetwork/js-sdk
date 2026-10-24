@@ -13,7 +13,11 @@ import {
   deriveBinaryPhase,
   isBinaryRowTradable,
 } from "./binaryInfo";
-import { deriveBinaryMarkets, getBinaryMarketIdentity } from "./binaryMarkets";
+import {
+  deriveBinaryMarkets,
+  getBinaryMarketIdentity,
+  selectBinaryRoundFallback,
+} from "./binaryMarkets";
 import { publishedBinaryOutcome } from "./binaryResult";
 import { startBinaryRoundClock, subscribeBinaryTime } from "./binaryRoundClock";
 import {
@@ -172,6 +176,7 @@ export const useBinaryRounds = ({
     data: detailData,
     error: detailError,
     isLoading: detailLoading,
+    isValidating: detailValidating,
     mutate: refreshDetail,
   } = useQuery<BinaryInfoDetail>(detailQueryKey, {
     refreshInterval: detailRefreshInterval,
@@ -180,6 +185,19 @@ export const useBinaryRounds = ({
     revalidateOnFocus: false,
     shouldRetryOnError: false,
   });
+  // Let the query's mount effects start revalidation before consuming cached errors.
+  // If a shared query stays idle, its cached failure can be used for fallback.
+  const [mountedDetailKey, setMountedDetailKey] = useState<string | null>(null);
+  useEffect(() => {
+    // The extra render observes revalidation started by the query's mount effects.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMountedDetailKey(detailQueryKey);
+  }, [detailQueryKey]);
+  const detailPending =
+    detailQueryKey != null &&
+    (mountedDetailKey !== detailQueryKey ||
+      !!detailLoading ||
+      !!detailValidating);
   const previousDetailQuery = useRef<{
     key: string | null;
     isBeforeExpiry: boolean;
@@ -197,10 +215,31 @@ export const useBinaryRounds = ({
       void refreshDetail().catch(() => undefined);
     previousDetailQuery.current = { key: detailQueryKey, isBeforeExpiry };
   }, [detailQueryKey, waitingForResult, isBeforeExpiry, refreshDetail]);
-  // SWR skips interval fetches while an error is cached. Retry on the same
-  // adaptive cadence, with effect cleanup preventing retries for old symbols.
+  const validDetail =
+    !!detailData &&
+    !!detailSymbol &&
+    detailData.symbol === detailSymbol &&
+    getBinaryMarketIdentity(detailData)?.id === requestedMarketId
+      ? detailData
+      : undefined;
+  const selectedRow = useMemo(() => {
+    const merged = listSelectedRow
+      ? mergeBinaryDetail(listSelectedRow, validDetail)
+      : validDetail;
+    // Retain S0 when the detail key pauses at T1 or the snapshot lags behind.
+    return merged && merged.s0 == null && cachedRow?.s0 != null
+      ? { ...merged, s0: cachedRow.s0 }
+      : merged;
+  }, [listSelectedRow, validDetail, cachedRow?.s0]);
+  const shouldRetryDetail =
+    !!selectedRow &&
+    (now >= selectedRow.expire_at
+      ? !publishedBinaryOutcome(selectedRow)
+      : now >= selectedRow.observation_start_at && selectedRow.s0 == null);
+  // Retry failed polls only for a known round that still needs S0 or a result.
+  // Missing rounds use fallback navigation instead of retrying their details.
   useEffect(() => {
-    if (!active || !detailSymbol || !detailError) return;
+    if (!detailQueryKey || !detailError || !shouldRetryDetail) return;
     const interval = detailRefreshInterval(detailData);
     if (!interval) return;
     let stopped = false;
@@ -224,29 +263,13 @@ export const useBinaryRounds = ({
       clearTimeout(timer);
     };
   }, [
-    active,
-    detailSymbol,
+    detailQueryKey,
+    shouldRetryDetail,
     detailError,
     detailData,
     detailRefreshInterval,
     refreshDetail,
   ]);
-  const validDetail =
-    !!detailData &&
-    !!detailSymbol &&
-    detailData.symbol === detailSymbol &&
-    getBinaryMarketIdentity(detailData)?.id === requestedMarketId
-      ? detailData
-      : undefined;
-  const selectedRow = useMemo(() => {
-    const merged = listSelectedRow
-      ? mergeBinaryDetail(listSelectedRow, validDetail)
-      : validDetail;
-    // Retain S0 when the detail key pauses at T1 or the snapshot lags behind.
-    return merged && merged.s0 == null && cachedRow?.s0 != null
-      ? { ...merged, s0: cachedRow.s0 }
-      : merged;
-  }, [listSelectedRow, validDetail, cachedRow?.s0]);
   const identity = selectedRow && getBinaryMarketIdentity(selectedRow);
   const market = identity
     ? {
@@ -273,13 +296,23 @@ export const useBinaryRounds = ({
     parsedSymbol.roundStartMs + parsedSymbol.intervalSeconds * 1_000 <= now &&
     !selectedRow &&
     !isLoading &&
-    !detailLoading;
+    !detailPending;
   const canGoToLiveRound =
     !!currentRow &&
     currentRow.status === "ACTIVE" &&
     currentRow.observation_start_at <= now &&
     currentRow.expire_at > now &&
     currentRow.symbol !== symbol;
+  // A failed refresh must not navigate away from usable round data.
+  const shouldFallbackMissingRound =
+    !!detailQueryKey &&
+    !isLoading &&
+    !detailPending &&
+    !selectedRow &&
+    detailError != null;
+  const missingRoundFallbackRow = shouldFallbackMissingRound
+    ? selectBinaryRoundFallback(marketRows, requestedMarketId, now)
+    : undefined;
 
   useEffect(() => {
     setAcceptedRow((previous) =>
@@ -383,13 +416,15 @@ export const useBinaryRounds = ({
     markets,
     market,
     requestedMarket,
+    shouldFallbackMissingRound,
+    missingRoundFallbackRow,
     isMissingHistoricalRound,
     canGoToLiveRound,
     marketId,
     defaultSymbol,
     isLoading:
       isLoading ||
-      (symbol != null && !!parsedSymbol && !selectedRow && !!detailLoading),
+      (symbol != null && !!parsedSymbol && !selectedRow && detailPending),
     error: error ?? detailError,
     round,
     selectedRound,

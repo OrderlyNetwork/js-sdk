@@ -40,10 +40,13 @@ const PredictionWidgetContent: React.FC<PredictionWidgetProps> = ({
   }
   const effectiveSymbol = symbol ?? fallbackSymbol;
   const selectSymbol = useCallback(
-    (nextSymbol: string) => {
+    (nextSymbol: string, replace = false) => {
       if (nextSymbol === effectiveSymbol) return;
       if (onSymbolChange) onSymbolChange({ symbol: nextSymbol });
-      else onRouteChange?.(predictionRoute(nextSymbol));
+      else
+        onRouteChange?.(
+          predictionRoute(nextSymbol, replace ? { replace: true } : undefined),
+        );
     },
     [effectiveSymbol, onSymbolChange, onRouteChange],
   );
@@ -52,6 +55,29 @@ const PredictionWidgetContent: React.FC<PredictionWidgetProps> = ({
     symbol: effectiveSymbol,
     onSymbolSelect: selectSymbol,
   });
+  const { shouldFallbackMissingRound, missingRoundFallbackRow } = state.rounds;
+  const isRedirectingMissingRound = canSelect && !!missingRoundFallbackRow;
+  const missingRoundSelection = useRef({
+    symbol: effectiveSymbol,
+    requested: false,
+  });
+  useEffect(() => {
+    if (missingRoundSelection.current.symbol !== effectiveSymbol) {
+      missingRoundSelection.current = {
+        symbol: effectiveSymbol,
+        requested: false,
+      };
+    }
+    if (
+      !canSelect ||
+      !missingRoundFallbackRow ||
+      missingRoundSelection.current.requested
+    )
+      return;
+    // Request one fallback per selection; the host owns accepting the new symbol.
+    missingRoundSelection.current.requested = true;
+    selectSymbol(missingRoundFallbackRow.symbol, true);
+  }, [effectiveSymbol, canSelect, missingRoundFallbackRow, selectSymbol]);
   // Stable identity so the memoized market rows in the dropdown are not
   // re-rendered on every page tick.
   const selectedRowSymbol = state.selectedRow?.symbol;
@@ -94,6 +120,8 @@ const PredictionWidgetContent: React.FC<PredictionWidgetProps> = ({
   return (
     <Prediction
       {...state}
+      isRoundsReady={state.isRoundsReady && !shouldFallbackMissingRound}
+      isRoundsLoading={state.isRoundsLoading || isRedirectingMissingRound}
       accountPanel={<AssetViewWidget isFirstTimeDeposit={isFirstTimeDeposit} />}
       orderEntryAccountReady={canTrade}
       orderEntryFunded={canTrade && !isFirstTimeDeposit}

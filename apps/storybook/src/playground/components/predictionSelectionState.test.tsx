@@ -38,6 +38,7 @@ const eth = {
 };
 const rows = [history, live, eth];
 let snapshotRows = rows;
+let snapshotLoading = false;
 const storageKey = "orderly_prediction_selected_market";
 let storage: Map<string, string>;
 vi.mock("@orderly.network/hooks", async () => {
@@ -62,7 +63,7 @@ vi.mock(
     usePredictionMarkets: () => ({
       rows: snapshotRows,
       markets: deriveBinaryMarkets(snapshotRows, Date.now()),
-      isLoading: false,
+      isLoading: snapshotLoading,
     }),
   }),
 );
@@ -80,10 +81,17 @@ vi.mock(
           symbol?: string;
           onSymbolSelect: (symbol: string) => void;
         },
-      ) => ({
-        ...useBinaryRounds({ active: true, ...selection }),
-        isRegionRestricted: false,
-      }),
+      ) => {
+        const rounds = useBinaryRounds({ active: true, ...selection });
+        return {
+          ...rounds,
+          rounds,
+          isRoundsReady:
+            !!rounds.selectedRow || rounds.isMissingHistoricalRound,
+          isRoundsLoading: rounds.isLoading,
+          isRegionRestricted: false,
+        };
+      },
     };
   },
 );
@@ -153,6 +161,7 @@ beforeEach(() => {
   mocks.featureEnabled = true;
   mocks.routeEnabled = true;
   snapshotRows = rows;
+  snapshotLoading = false;
   mocks.query.mockReturnValue({
     data: undefined,
     isLoading: false,
@@ -280,6 +289,7 @@ it("keeps the exact round after expiry and snapshot removal", () => {
 it.each(["UNKNOWN", "PERP_BTC5M_USDC", "PERP_BTC5M2602301200_USDC"])(
   "does not fall back or query invalid symbol %s",
   (symbol) => {
+    mocks.query.mockReturnValue({ error: new Error("Network request failed") });
     act(() => {
       root = create(<PredictionWidget symbol={symbol} />);
     });
@@ -297,6 +307,7 @@ it("does not use stale or mismatched details while the target symbol is loading 
   });
   expect(state().selectedRow).toBeUndefined();
   expect(state().isRoundTradable).toBe(false);
+  expect(mocks.route).not.toHaveBeenCalled();
   mocks.query.mockReturnValue({
     data: undefined,
     isLoading: false,
@@ -304,6 +315,313 @@ it("does not use stale or mismatched details while the target symbol is loading 
   });
   act(() => root.update(<PredictionWidget symbol={history.symbol} />));
   expect(state().selectedRow).toBeUndefined();
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${live.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+});
+
+const missingHistorySymbol = "PERP_BTC5M2609281030_USDC";
+const missingFutureSymbol = "PERP_BTC5M2609301030_USDC";
+it.each([missingHistorySymbol, missingFutureSymbol])(
+  "replaces the URL once for missing round %s while the host delays acceptance",
+  (symbol) => {
+    mocks.query.mockReturnValue({
+      error: new Error("binary round not found"),
+      isLoading: false,
+    });
+    act(() => {
+      root = create(<PredictionWidget symbol={symbol} />);
+    });
+    expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+      href: `/prediction/${live.symbol}`,
+      name: "prediction",
+      replace: true,
+    });
+    expect(state().selectedRow).toBeUndefined();
+    expect(state().isRoundsReady).toBe(false);
+    expect(state().isRoundsLoading).toBe(true);
+    expect(mocks.storageWrites).not.toHaveBeenCalled();
+    snapshotRows = [...rows];
+    act(() => root.update(<PredictionWidget symbol={symbol} />));
+    act(() => vi.advanceTimersByTime(15_000));
+    expect(mocks.route).toHaveBeenCalledOnce();
+    act(() => root.update(<PredictionWidget symbol={live.symbol} />));
+    expect(state().selectedRow.symbol).toBe(live.symbol);
+    expect(state().isRoundsReady).toBe(true);
+    expect(state().isRoundsLoading).toBe(false);
+    // Returning to the same missing URL starts a new navigation attempt.
+    act(() => root.update(<PredictionWidget symbol={symbol} />));
+    expect(mocks.route).toHaveBeenCalledTimes(2);
+  },
+);
+it.each([
+  { code: -1006, message: "Round unavailable" },
+  { code: "-1006", message: "Round unavailable" },
+  new Error("binary round not found"),
+])("uses the existing controlled callback for a missing round: %s", (error) => {
+  const onSymbolChange = vi.fn();
+  mocks.query.mockReturnValue({ error, isLoading: false });
+  act(() => {
+    root = create(
+      <PredictionWidget
+        symbol={missingHistorySymbol}
+        onSymbolChange={onSymbolChange}
+      />,
+    );
+  });
+  expect(onSymbolChange).toHaveBeenCalledExactlyOnceWith({
+    symbol: live.symbol,
+  });
+  expect(mocks.route).not.toHaveBeenCalled();
+  expect(state().selectedRow).toBeUndefined();
+  expect(state().isRoundsLoading).toBe(true);
+  act(() => {
+    root.update(
+      <PredictionWidget
+        symbol={missingHistorySymbol}
+        onSymbolChange={(selection) => onSymbolChange(selection)}
+      />,
+    );
+  });
+  expect(onSymbolChange).toHaveBeenCalledOnce();
+});
+it.each(
+  [
+    new Error("Network request failed"),
+    new Error("Internal server error"),
+    { code: -1000, message: "Request failed" },
+  ].flatMap((error) =>
+    [missingHistorySymbol, missingFutureSymbol].map((symbol) => ({
+      error,
+      symbol,
+    })),
+  ),
+)(
+  "redirects any detail error without usable data: $symbol / $error",
+  ({ error, symbol }) => {
+    mocks.query.mockReturnValue({ error, isLoading: false });
+    act(() => {
+      root = create(<PredictionWidget symbol={symbol} />);
+    });
+    expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+      href: `/prediction/${live.symbol}`,
+      name: "prediction",
+      replace: true,
+    });
+    expect(state().selectedRow).toBeUndefined();
+    expect(state().isRoundsReady).toBe(false);
+    expect(state().isRoundsLoading).toBe(true);
+  },
+);
+it.each([missingHistorySymbol, missingFutureSymbol])(
+  "does not redirect without a detail error: %s",
+  (symbol) => {
+    act(() => {
+      root = create(<PredictionWidget symbol={symbol} />);
+    });
+    expect(state().selectedRow).toBeUndefined();
+    expect(mocks.route).not.toHaveBeenCalled();
+  },
+);
+it("waits for the snapshot and detail query to finish before redirecting", () => {
+  snapshotLoading = true;
+  mocks.query.mockReturnValue({
+    error: new Error("binary round not found"),
+    isLoading: true,
+  });
+  act(() => {
+    root = create(<PredictionWidget symbol={missingHistorySymbol} />);
+  });
+  expect(mocks.route).not.toHaveBeenCalled();
+  snapshotLoading = false;
+  act(() => root.update(<PredictionWidget symbol={missingHistorySymbol} />));
+  expect(mocks.route).not.toHaveBeenCalled();
+  mocks.query.mockReturnValue({
+    error: new Error("binary round not found"),
+    isLoading: false,
+  });
+  act(() => root.update(<PredictionWidget symbol={missingHistorySymbol} />));
+  expect(mocks.route).toHaveBeenCalledOnce();
+});
+it("requests only one fallback while waiting for host acceptance", () => {
+  snapshotRows = [live, nextRound];
+  mocks.query.mockReturnValue({ error: new Error("binary round not found") });
+  act(() => {
+    root = create(<PredictionWidget symbol={missingHistorySymbol} />);
+  });
+  act(() => vi.advanceTimersByTime(nextRound.observation_start_at - now + 5));
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${live.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+});
+it("selects a published future round immediately when only another market is live", () => {
+  snapshotRows = [history, nextRound, eth];
+  mocks.query.mockReturnValue({ error: new Error("Internal server error") });
+  act(() => {
+    root = create(<PredictionWidget symbol={missingHistorySymbol} />);
+  });
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${nextRound.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+  act(() => vi.advanceTimersByTime(nextRound.observation_start_at - now + 5));
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${nextRound.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+});
+it("redirects when a live round arrives in a later snapshot", () => {
+  snapshotRows = [eth];
+  mocks.query.mockReturnValue({ error: new Error("Network request failed") });
+  act(() => {
+    root = create(<PredictionWidget symbol={missingFutureSymbol} />);
+  });
+  expect(mocks.route).not.toHaveBeenCalled();
+  snapshotRows = rows;
+  act(() => root.update(<PredictionWidget symbol={missingFutureSymbol} />));
+  expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+    href: `/prediction/${live.symbol}`,
+    name: "prediction",
+    replace: true,
+  });
+});
+it.each(["future", "expired"] as const)(
+  "recovers from no candidates when a %s round arrives and stays after host acceptance",
+  (kind) => {
+    const target =
+      kind === "future"
+        ? nextRound
+        : { ...history, status: "DELISTED" as const };
+    const onSymbolChange = vi.fn();
+    snapshotRows = [eth];
+    mocks.query.mockReturnValue({ error: new Error("Network request failed") });
+    const render = (symbol: string) => (
+      <PredictionWidget symbol={symbol} onSymbolChange={onSymbolChange} />
+    );
+    act(() => {
+      root = create(render(missingHistorySymbol));
+    });
+    expect(state().isRoundsReady).toBe(false);
+    expect(state().isRoundsLoading).toBe(false);
+    expect(onSymbolChange).not.toHaveBeenCalled();
+    snapshotRows = [eth, target];
+    act(() => root.update(render(missingHistorySymbol)));
+    expect(onSymbolChange).toHaveBeenCalledExactlyOnceWith({
+      symbol: target.symbol,
+    });
+    expect(state().isRoundsLoading).toBe(true);
+    snapshotRows = [...snapshotRows];
+    act(() => root.update(render(missingHistorySymbol)));
+    expect(onSymbolChange).toHaveBeenCalledOnce();
+    act(() => root.update(render(target.symbol)));
+    expect(state().selectedRow.symbol).toBe(target.symbol);
+    expect(state().isRoundsReady).toBe(true);
+    expect(state().isRoundsLoading).toBe(false);
+    snapshotRows = [...snapshotRows, live];
+    act(() => root.update(render(target.symbol)));
+    expect(state().selectedRow.symbol).toBe(target.symbol);
+    expect(onSymbolChange).toHaveBeenCalledOnce();
+    expect(mocks.route).not.toHaveBeenCalled();
+  },
+);
+it.each([
+  {
+    name: "live",
+    candidates: () => [history, nextRound, live],
+    target: () => live,
+  },
+  {
+    name: "future",
+    candidates: () => [history, nextRound],
+    target: () => nextRound,
+  },
+  { name: "expired", candidates: () => [history], target: () => history },
+])(
+  "requires the detail failure to finish before selecting a $name fallback",
+  ({ candidates, target }) => {
+    snapshotRows = candidates();
+    mocks.query.mockReturnValue({
+      error: new Error("Cached failure"),
+      isLoading: true,
+    });
+    act(() => {
+      root = create(<PredictionWidget symbol={missingFutureSymbol} />);
+    });
+    expect(mocks.route).not.toHaveBeenCalled();
+    expect(state().isRoundsLoading).toBe(true);
+    mocks.query.mockReturnValue({
+      error: new Error("Fresh failure"),
+      isLoading: false,
+    });
+    act(() => root.update(<PredictionWidget symbol={missingFutureSymbol} />));
+    expect(mocks.route).toHaveBeenCalledExactlyOnceWith({
+      href: `/prediction/${target().symbol}`,
+      name: "prediction",
+      replace: true,
+    });
+  },
+);
+it.each([
+  eth,
+  {
+    ...live,
+    symbol: "PERP_BTC10M2609291030_USDC",
+    observation_start_at: now - 360_000,
+    expire_at: now + 240_000,
+  },
+])("does not redirect to a different market family: $symbol", (row) => {
+  snapshotRows = [row];
+  mocks.query.mockReturnValue({ error: new Error("Network request failed") });
+  act(() => {
+    root = create(<PredictionWidget symbol={missingHistorySymbol} />);
+  });
+  expect(mocks.route).not.toHaveBeenCalled();
+});
+it.each([
+  new Error("binary round not found"),
+  new Error("Network request failed"),
+  new Error("Internal server error"),
+])(
+  "does not redirect valid snapshot, cached or detail rows on refresh failure: %s",
+  (error) => {
+    mocks.query.mockReturnValue({ error });
+    act(() => {
+      root = create(<PredictionWidget symbol={history.symbol} />);
+    });
+    expect(state().selectedRow.symbol).toBe(history.symbol);
+    expect(state().isRoundsLoading).toBe(false);
+    snapshotRows = [live, eth];
+    act(() => root.update(<PredictionWidget symbol={history.symbol} />));
+    expect(state().selectedRow.symbol).toBe(history.symbol);
+    expect(state().isRoundsLoading).toBe(false);
+    mocks.query.mockReturnValue({
+      error,
+      data: {
+        ...history,
+        symbol: missingHistorySymbol,
+        observation_start_at: history.observation_start_at - 86_400_000,
+        expire_at: history.expire_at - 86_400_000,
+      },
+    });
+    act(() => root.update(<PredictionWidget symbol={missingHistorySymbol} />));
+    expect(state().selectedRow.symbol).toBe(missingHistorySymbol);
+    expect(state().isRoundsLoading).toBe(false);
+    expect(mocks.route).not.toHaveBeenCalled();
+  },
+);
+it("does not wait for navigation when the host supplies no selection channel", () => {
+  mocks.routeEnabled = false;
+  mocks.query.mockReturnValue({ error: new Error("Network request failed") });
+  act(() => {
+    root = create(<PredictionWidget symbol={missingHistorySymbol} />);
+  });
+  expect(state().isRoundsLoading).toBe(false);
   expect(mocks.route).not.toHaveBeenCalled();
 });
 it("reports chart and next-round selections without changing the accepted contract", () => {

@@ -81,6 +81,25 @@ const isBetterCurrentRow = (
   }
 };
 
+/** Select a real same-market fallback without treating inactive future rows as history. */
+export function selectBinaryRoundFallback(
+  rows: BinaryInfoRow[],
+  marketId: string | undefined,
+  now: number,
+): BinaryInfoRow | undefined {
+  if (!marketId) return undefined;
+  let selected: BinaryInfoRow | undefined;
+  for (const row of rows) {
+    if (
+      getBinaryMarketIdentity(row)?.id !== marketId ||
+      (row.status !== "ACTIVE" && row.expire_at > now)
+    )
+      continue;
+    if (!selected || isBetterCurrentRow(row, selected, now)) selected = row;
+  }
+  return selected;
+}
+
 /**
  * Markets stay visible while the snapshot still carries any of their rounds —
  * including fully expired or delisted history, which remains browsable via

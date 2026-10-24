@@ -7,6 +7,7 @@ import type { BinaryInfoDetail } from "@orderly.network/prediction/src/predictio
 import { useBinaryRounds } from "@orderly.network/prediction/src/prediction/binary/useBinaryRounds";
 
 vi.mock("@orderly.network/hooks", () => ({
+  useSWRConfig,
   useQuery: (key: string | null, options: object) => useSWR(key, options),
   useLocalStorage: (_key: string, initial: unknown) => useState(initial),
 }));
@@ -33,6 +34,7 @@ let snapshot: BinaryInfoDetail[];
 let publishedPrice: number | null;
 let result: Partial<BinaryInfoDetail> | undefined;
 let failDetail: boolean;
+let deferredDetail: ((key: string) => Promise<BinaryInfoDetail>) | undefined;
 let state: ReturnType<typeof useBinaryRounds>;
 let root: ReturnType<typeof createRoot>;
 let container: HTMLDivElement;
@@ -40,6 +42,7 @@ let mutate: ReturnType<typeof useSWRConfig>["mutate"];
 let renderBudget: number;
 const fetcher = vi.fn(async (key: string) => {
   if (key === INFO_KEY) return snapshot;
+  if (deferredDetail) return deferredDetail(key);
   if (failDetail) throw new Error("Binary info unavailable");
   return {
     ...row,
@@ -91,6 +94,7 @@ beforeEach(() => {
   publishedPrice = null;
   result = undefined;
   failDetail = false;
+  deferredDetail = undefined;
   vi.spyOn(Math, "random").mockReturnValue(0.5);
   renderBudget = Infinity;
   container = document.createElement("div");
@@ -297,6 +301,79 @@ it("recovers API failures on the polling cadence and cancels retries when inacti
   expect(detailRequests()).toHaveLength(3);
 });
 
+it("does not retry a missing expired round after its detail request fails", async () => {
+  snapshot = [];
+  vi.setSystemTime(row.expire_at + 60_000);
+  failDetail = true;
+  await render();
+  expect(state.selectedRow).toBeUndefined();
+  expect(state.detailError).toBeDefined();
+  expect(detailRequests()).toHaveLength(1);
+  await advance(31_000);
+  expect(detailRequests()).toHaveLength(1);
+  expect(state.isLoading).toBe(false);
+});
+
+it("retries opening-price failures and stops when the snapshot publishes S0", async () => {
+  vi.setSystemTime(T0 + 34_000);
+  failDetail = true;
+  await render();
+  expect(state.selectedRow?.symbol).toBe(row.symbol);
+  expect(detailRequests()).toHaveLength(1);
+  await advance(2_000);
+  expect(detailRequests()).toHaveLength(2);
+  await act(async () => {
+    snapshot = [{ ...row, s0: 100 }];
+    await mutate(INFO_KEY, snapshot, false);
+  });
+  expect(state.openingPrice).toBe(100);
+  await advance(10_000);
+  expect(detailRequests()).toHaveLength(2);
+});
+
+it("keeps retrying a retained round after it leaves the snapshot until its result arrives", async () => {
+  vi.setSystemTime(row.expire_at + 60_000);
+  failDetail = true;
+  await render();
+  await act(async () => {
+    snapshot = [];
+    await mutate(INFO_KEY, snapshot, false);
+  });
+  expect(state.isRoundInSnapshot).toBe(false);
+  expect(state.selectedRow?.symbol).toBe(row.symbol);
+  await advance(10_000);
+  expect(detailRequests()).toHaveLength(2);
+  failDetail = false;
+  result = {
+    s0: 100,
+    s1: 100,
+    outcome: "TIE",
+    settlement_price_per_share: 0.5,
+    result_committed_at: row.expire_at + 1_000,
+  };
+  await advance(10_000);
+  expect(detailRequests()).toHaveLength(3);
+  expect(state.roundPhase).toBe("resolvedTie");
+  await advance(20_000);
+  expect(detailRequests()).toHaveLength(3);
+});
+
+it("retries settlement failures for a round loaded only from details", async () => {
+  snapshot = [];
+  vi.setSystemTime(row.expire_at + 60_000);
+  publishedPrice = 100;
+  await render();
+  expect(state.selectedRow?.symbol).toBe(row.symbol);
+  expect(state.isRoundInSnapshot).toBe(false);
+  failDetail = true;
+  await advance(10_000);
+  expect(state.detailError).toBeDefined();
+  expect(detailRequests()).toHaveLength(2);
+  await advance(10_000);
+  expect(detailRequests()).toHaveLength(3);
+  expect(state.selectedRow?.symbol).toBe(row.symbol);
+});
+
 it("replaces the old round's result schedule when switching symbols and unmounting", async () => {
   const next = {
     ...row,
@@ -338,4 +415,36 @@ it("retains cached S0 without a render loop after the round leaves the snapshot"
   expect(detailRequests().length).toBeGreaterThan(0);
   expect(state.selectedRow).toBe(selected);
   expect(state.openingPrice).toBe(82_299.29);
+});
+
+it("ignores a late error for a previously selected symbol and falls back on the current request's network error", async () => {
+  vi.setSystemTime(T0 + 34_000);
+  const oldSymbol = "PERP_BTC5M2610120145_USDC";
+  const newSymbol = "PERP_BTC5M2610140145_USDC";
+  let rejectOld!: (reason: Error) => void;
+  let rejectNew!: (reason: Error) => void;
+  deferredDetail = (key) =>
+    new Promise<BinaryInfoDetail>((_resolve, reject) => {
+      if (key === detailKey(oldSymbol)) rejectOld = reject;
+      else if (key === detailKey(newSymbol)) rejectNew = reject;
+    });
+  await render(true, oldSymbol);
+  // Complete the snapshot query while the detail request stays pending.
+  await act(async () => {
+    await mutate(INFO_KEY);
+  });
+  expect(detailRequests(oldSymbol)).toHaveLength(1);
+  await render(true, newSymbol);
+  expect(detailRequests(newSymbol)).toHaveLength(1);
+  await act(async () => rejectOld(new Error("Network request failed")));
+  expect(state.detailError).toBeUndefined();
+  expect(state.isLoading).toBe(true);
+  expect(state.missingRoundFallbackRow).toBeUndefined();
+  await act(async () => rejectNew(new Error("Network request failed")));
+  expect(state.detailError?.message).toBe("Network request failed");
+  expect(state.detailLoading).toBe(false);
+  expect(state.isLoading).toBe(false);
+  expect(state.missingRoundFallbackRow?.symbol).toBe(row.symbol);
+  await render(false, newSymbol);
+  expect(state.missingRoundFallbackRow).toBeUndefined();
 });

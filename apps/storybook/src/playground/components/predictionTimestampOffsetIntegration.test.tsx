@@ -28,6 +28,7 @@ const row: BinaryInfoRow = {
 const rows = [row];
 
 vi.mock("@orderly.network/hooks", () => ({
+  useSWRConfig: () => ({ cache: new Map() }),
   // Keep the exact same snapshot object throughout calibration and clock jumps.
   useQuery: (url: string | null) => ({
     data: url === "/v1/public/binary/info" ? rows : undefined,

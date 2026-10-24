@@ -4,7 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { BinaryInfoRow } from "@orderly.network/prediction/src/prediction/binary/binaryInfo";
 import { useBinaryRounds } from "@orderly.network/prediction/src/prediction/binary/useBinaryRounds";
 import type { PredictionState } from "@orderly.network/prediction/src/prediction/prediction.script";
-import { Prediction } from "@orderly.network/prediction/src/prediction/prediction.ui";
+import { PredictionWidget } from "@orderly.network/prediction/src/prediction/prediction.widget";
 import { PriceChart } from "@orderly.network/prediction/src/prediction/predictionChart.ui";
 
 const mocks = vi.hoisted(() => ({
@@ -26,6 +26,39 @@ vi.mock("@orderly.network/hooks", () => ({
 vi.mock("@orderly.network/i18n", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
   i18n: { t: (key: string) => key },
+}));
+vi.mock("@orderly.network/react-app", () => ({
+  useFeatureEnabled: () => true,
+  useAppContext: () => ({}),
+  useCanTrade: () => false,
+}));
+vi.mock("@orderly.network/ui-assets", () => ({
+  AssetViewWidget: () => null,
+  useFirstTimeDeposit: () => false,
+}));
+vi.mock("@orderly.network/prediction/src/prediction/prediction.script", () => ({
+  usePredictionScript: (
+    _restricted: boolean,
+    _active: boolean,
+    _live: boolean,
+    selection: { symbol?: string; onSymbolSelect: (symbol: string) => void },
+  ) => {
+    rounds = useBinaryRounds({ active: true, ...selection });
+    return {
+      ...rounds,
+      rounds,
+      isRoundsReady: !!rounds.selectedRow || rounds.isMissingHistoricalRound,
+      isRoundsLoading: rounds.isLoading,
+      round: rounds.round ?? rounds.selectedRound ?? 0,
+      selectedRound: rounds.selectedRound ?? 0,
+      activeTab: "history",
+      historyRecords: [],
+      pendingSettlementSymbols: [],
+      outcomePrices: {},
+      priceHistory: [],
+      candles: [],
+    } as unknown as PredictionState;
+  },
 }));
 vi.mock("@orderly.network/markets-core", () => ({
   DataItem: () => null,
@@ -124,27 +157,12 @@ const live: BinaryInfoRow = {
 let rounds: ReturnType<typeof useBinaryRounds>;
 let root: ReactTestRenderer | undefined;
 function Consumer({ symbol }: { symbol?: string }) {
-  rounds = useBinaryRounds({
-    active: true,
-    symbol,
-    onSymbolSelect: mocks.select,
-  });
-  const state = {
-    ...rounds,
-    isRoundsReady: !!rounds.selectedRow || rounds.isMissingHistoricalRound,
-    isRoundsLoading: rounds.isLoading,
-    requestedSymbol: symbol,
-    onSelectSymbol: mocks.select,
-    round: rounds.round ?? rounds.selectedRound ?? 0,
-    selectedRound: rounds.selectedRound ?? 0,
-    activeTab: "history",
-    historyRecords: [],
-    pendingSettlementSymbols: [],
-    outcomePrices: {},
-    priceHistory: [],
-    candles: [],
-  } as unknown as PredictionState;
-  return <Prediction {...state} />;
+  return (
+    <PredictionWidget
+      symbol={symbol}
+      onSymbolChange={({ symbol }) => mocks.select(symbol)}
+    />
+  );
 }
 function mount(symbol?: string) {
   act(() => {
@@ -170,44 +188,88 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
 });
-it.each([true, false])(
-  "retains missing-round status, navigation and history (desktop=%s)",
-  (desktop) => {
+it.each([
+  [true, "PERP_BTC5M2610101045_USDC"],
+  [false, "PERP_BTC5M2610101045_USDC"],
+  [true, "PERP_BTC5M2610131400_USDC"],
+  [false, "PERP_BTC5M2610131400_USDC"],
+] as const)(
+  "redirects a missing round without an empty-state flash (desktop=%s, symbol=%s)",
+  (desktop, symbol) => {
     mocks.desktop = desktop;
-    mount("PERP_BTC5M2610101045_USDC");
+    mount(symbol);
     expect(rounds.selectedRow).toBeUndefined();
     expect(rounds.isRoundTradable).toBe(false);
-    expect(text()).toContain("prediction.notInSnapshot");
-    expect(text()).toContain("BTC 5M");
-    expect(text()).toContain("personal history retained");
-    expect(text()).not.toContain("prediction.rounds.unavailable");
-    const chart = root!.root.findByType(PriceChart);
-    expect(chart.props.canGoToLiveMarket).toBe(true);
-    expect(chart.props.selectedRound).toBe(
-      Date.UTC(2026, 9, 10, 10, 45) / 1000,
-    );
-    act(() => chart.props.onGoToLiveMarket());
     expect(mocks.select).toHaveBeenCalledExactlyOnceWith(live.symbol);
-    expect(rounds.selectedRow).toBeUndefined();
+    expect(text()).toContain("loading");
+    expect(text()).not.toContain("prediction.notInSnapshot");
+    expect(text()).toContain("BTC 5M");
+    expect(text()).not.toContain("prediction.rounds.unavailable");
+    expect(root!.root.findAllByType(PriceChart)).toHaveLength(0);
+    act(() => root!.update(<Consumer symbol={symbol} />));
+    expect(mocks.select).toHaveBeenCalledExactlyOnceWith(live.symbol);
+    mocks.error = undefined;
+    act(() => root!.update(<Consumer symbol={live.symbol} />));
+    expect(rounds.selectedRow?.symbol).toBe(live.symbol);
+    expect(text()).not.toContain("loading");
+    expect(text()).toContain("trade form");
+    expect(text()).toContain("personal history retained");
   },
 );
-it("disables returning to live when the family has no active round", () => {
-  mocks.rows = [];
-  mount("PERP_BTC5M2610011350_USDC");
-  expect(root!.root.findByType(PriceChart).props.canGoToLiveMarket).toBe(false);
-  act(() => rounds.goToLiveRound());
-  expect(mocks.select).not.toHaveBeenCalled();
-  expect(text()).toContain("personal history retained");
-});
-it("keeps loading distinct from missing, then renders the missing round", () => {
+it.each([true, false])(
+  "shows the existing empty state when no same-market fallback exists (desktop=%s)",
+  (desktop) => {
+    mocks.desktop = desktop;
+    mocks.rows = [
+      {
+        ...live,
+        symbol: live.symbol.replace("BTC", "ETH"),
+        index_price_symbol: "PERP_ETH_USDC",
+      },
+    ];
+    mount("PERP_BTC5M2610011350_USDC");
+    expect(root!.root.findAllByType(PriceChart)).toHaveLength(0);
+    expect(rounds.canGoToLiveRound).toBe(false);
+    act(() => rounds.goToLiveRound());
+    expect(mocks.select).not.toHaveBeenCalled();
+    expect(text()).toContain("prediction.rounds.unavailable");
+    expect(text()).not.toContain("loading");
+    expect(text()).not.toContain("prediction.notInSnapshot");
+  },
+);
+it("waits for details before automatically returning to live", () => {
   mocks.loading = true;
   mount("PERP_BTC5M2610011350_USDC");
   expect(rounds.isMissingHistoricalRound).toBe(false);
   expect(text()).toContain("loading");
+  expect(mocks.select).not.toHaveBeenCalled();
   mocks.loading = false;
   act(() => root!.update(<Consumer symbol="PERP_BTC5M2610011350_USDC" />));
-  expect(text()).toContain("prediction.notInSnapshot");
+  expect(text()).toContain("loading");
+  expect(text()).not.toContain("prediction.notInSnapshot");
+  expect(mocks.select).toHaveBeenCalledExactlyOnceWith(live.symbol);
 });
+it.each([true, false])(
+  "keeps redirect loading when subsequent detail errors change (desktop=%s)",
+  (desktop) => {
+    mocks.desktop = desktop;
+    const symbol = "PERP_BTC5M2610101045_USDC";
+    mount(symbol);
+    expect(mocks.select).toHaveBeenCalledExactlyOnceWith(live.symbol);
+    for (const message of ["Network request failed", "Internal server error"]) {
+      mocks.error = new Error(message);
+      act(() => root!.update(<Consumer symbol={symbol} />));
+      expect(text()).toContain("loading");
+      expect(text()).not.toContain("prediction.notInSnapshot");
+      expect(text()).not.toContain("prediction.rounds.unavailable");
+      expect(mocks.select).toHaveBeenCalledOnce();
+    }
+    mocks.error = undefined;
+    act(() => root!.update(<Consumer symbol={live.symbol} />));
+    expect(text()).not.toContain("loading");
+    expect(text()).toContain("trade form");
+  },
+);
 it("recovers to successful delisted DOWN details", () => {
   mount("PERP_BTC5M2610111350_USDC");
   mocks.error = undefined;
@@ -299,6 +361,46 @@ const future: BinaryInfoRow = {
 };
 const historicalSymbol = "PERP_BTC5M2610101045_USDC";
 
+it.each(
+  [true, false].flatMap((desktop) => [
+    { desktop, target: future },
+    {
+      desktop,
+      target: {
+        ...live,
+        symbol: "PERP_BTC5M2610121355_USDC",
+        observation_start_at: now - 300_000,
+        expire_at: now,
+        status: "DELISTED" as const,
+        outcome: "DOWN" as const,
+        s0: 100,
+        s1: 99,
+        settlement_price_per_share: 0,
+        result_committed_at: now,
+      },
+    },
+  ]),
+)(
+  "loads until the host accepts a future or expired fallback (desktop=$desktop, target=$target.symbol)",
+  ({ desktop, target }) => {
+    mocks.desktop = desktop;
+    mocks.rows = [target];
+    mount(historicalSymbol);
+    expect(mocks.select).toHaveBeenCalledExactlyOnceWith(target.symbol);
+    expect(text()).toContain("loading");
+    expect(text()).not.toContain("prediction.rounds.unavailable");
+    expect(text()).not.toContain("prediction.notInSnapshot");
+    expect(root!.root.findAllByType(PriceChart)).toHaveLength(0);
+    act(() => root!.update(<Consumer symbol={historicalSymbol} />));
+    expect(mocks.select).toHaveBeenCalledOnce();
+    act(() => root!.update(<Consumer symbol={target.symbol} />));
+    expect(rounds.selectedRow?.symbol).toBe(target.symbol);
+    expect(text()).not.toContain("loading");
+    expect(text()).not.toContain("prediction.rounds.unavailable");
+    expect(root!.root.findAllByType(PriceChart)).toHaveLength(1);
+  },
+);
+
 it.each([
   {
     name: "future only",
@@ -354,6 +456,7 @@ it.each([
   mocks.rows = rows;
   mount(symbol);
   expect(rounds.canGoToLiveRound).toBe(expected);
+  mocks.select.mockClear();
   act(() => rounds.goToLiveRound());
   if (expected)
     expect(mocks.select).toHaveBeenCalledExactlyOnceWith(live.symbol);
@@ -364,6 +467,7 @@ it("rechecks expiry when clicking a previously available live target", () => {
   mount(historicalSymbol);
   expect(rounds.canGoToLiveRound).toBe(true);
   const jump = rounds.goToLiveRound;
+  mocks.select.mockClear();
   vi.setSystemTime(live.expire_at);
   act(() => jump());
   expect(mocks.select).not.toHaveBeenCalled();
