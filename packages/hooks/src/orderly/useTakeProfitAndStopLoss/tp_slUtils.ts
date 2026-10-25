@@ -27,6 +27,8 @@ export type UpdateOrderKey =
 
 /**
  * offset -> TP/SL price
+ * TODO: Define amount-offset sign semantics for entry-price and mark-price bases
+ * together with percentage offsets, preserving profitable SL and loss-side TP.
  */
 export function offsetToPrice(inputs: {
   qty: number;
@@ -93,6 +95,12 @@ export function priceToOffset(
   return decimal!.abs().toNumber();
 }
 
+/**
+ * TODO: Reconcile signed percentage display with entry/mark-based input conversion.
+ * Negative SL input currently reverses direction, but blanket abs() prevents
+ * profitable SL edits relative to entry. Preserve profitable SL and loss-side TP;
+ * cover long/short, MARKET/LIMIT, both bases, and display-to-input round trips.
+ */
 export function offsetPercentageToPrice(inputs: {
   qty: number;
   percentage: number;

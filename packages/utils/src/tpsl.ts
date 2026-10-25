@@ -16,6 +16,9 @@ export function resolveTPSLOrderType(
 }
 
 export type TPSLOrderState = {
+  algo_order_id?: number;
+  parent_algo_order_id?: number;
+  root_algo_order_id?: number;
   symbol?: string;
   side?: string;
   margin_mode?: string;
@@ -76,6 +79,74 @@ export function isTPSLTriggered(order: TPSLOrderState): boolean {
     ) ||
     (order.total_executed_quantity ?? order.executed ?? 0) > 0 ||
     (order.child_orders?.some(isTPSLTriggered) ?? false)
+  );
+}
+
+const hasTPSLParent = (
+  parent: TPSLOrderState,
+  ancestor?: TPSLOrderState,
+): boolean =>
+  ancestor != null ||
+  !!parent.parent_algo_type ||
+  parent.root_algo_order_algo_type === "BRACKET" ||
+  (Number(parent.parent_algo_order_id) > 0 &&
+    parent.parent_algo_order_id !== parent.algo_order_id) ||
+  (Number(parent.root_algo_order_id) > 0 &&
+    parent.root_algo_order_id !== parent.algo_order_id);
+
+const isFinishedTPSLLeg = (child: TPSLOrderState): boolean =>
+  ["CANCELLED", "CANCELED", "FILLED", "REJECTED", "EXPIRED"].includes(
+    child.algo_status ?? child.status ?? "",
+  );
+
+/** Match the backend activation policy, including parents nested in Brackets. */
+export function isTPSLActivationAllowed(
+  parent: TPSLOrderState,
+  ancestor?: TPSLOrderState,
+): boolean {
+  if (!["TP_SL", "POSITIONAL_TP_SL"].includes(parent.algo_type ?? "")) {
+    return false;
+  }
+  return (
+    !hasTPSLParent(parent, ancestor) ||
+    (parent.algo_type === "TP_SL" && parent.is_activated === true)
+  );
+}
+
+/** Configured Pending Bracket protection is not an empty activation placeholder. */
+export function isConfiguredPendingTPSLLeg(
+  parent: TPSLOrderState,
+  child: TPSLOrderState | undefined,
+  ancestor?: TPSLOrderState,
+): boolean {
+  return (
+    ["TP_SL", "POSITIONAL_TP_SL"].includes(parent.algo_type ?? "") &&
+    hasTPSLParent(parent, ancestor) &&
+    parent.is_activated === false &&
+    !isTPSLTriggered(parent) &&
+    !!child &&
+    ["TAKE_PROFIT", "STOP_LOSS"].includes(child.algo_type ?? "") &&
+    child.is_activated === false &&
+    !isTPSLTriggered(child) &&
+    !isFinishedTPSLLeg(child) &&
+    Number.isFinite(Number(child.trigger_price)) &&
+    Number(child.trigger_price) > 0
+  );
+}
+
+/** An inactive placeholder may select its first type only under an allowed parent. */
+export function canChangeTPSLOrderType(
+  parent: TPSLOrderState,
+  child: TPSLOrderState | undefined,
+  ancestor?: TPSLOrderState,
+): boolean {
+  return (
+    isTPSLActivationAllowed(parent, ancestor) &&
+    !!child &&
+    ["TAKE_PROFIT", "STOP_LOSS"].includes(child.algo_type ?? "") &&
+    child.is_activated === false &&
+    !isTPSLTriggered(child) &&
+    !isFinishedTPSLLeg(child)
   );
 }
 
