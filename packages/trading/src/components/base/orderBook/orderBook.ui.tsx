@@ -31,6 +31,7 @@ export const OrderBook: React.FC<OrderBookState & { className?: string }> = (
           onDepthChange={props.onDepthChange}
           className={props.className}
           symbolInfo={props.symbolInfo}
+          pendingOrders={props.pendingOrders}
           showBuySellRatio={props.showBuySellRatio}
           setShowBuySellRatio={props.setShowBuySellRatio}
           buySellRatio={props.buySellRatio}

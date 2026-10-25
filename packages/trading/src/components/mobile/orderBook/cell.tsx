@@ -1,6 +1,6 @@
 import { FC, useContext, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, parseNumber, Text } from "@orderly.network/ui";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { CellBar } from "../../base/orderBook/cellBar";
 import {
@@ -27,7 +27,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
 
   const width = (accumulated / count) * 100;
 
-  const { cellHeight, onItemClick, depth, symbolInfo } =
+  const { cellHeight, onItemClick, depth, symbolInfo, pendingOrders } =
     useContext(OrderBookContext);
 
   const { base_dp, quote_dp, base, quote } = symbolInfo;
@@ -44,6 +44,13 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const dp = useMemo(() => {
     return getPrecisionByNumber(depth || `${quote_dp}`);
   }, [depth, quote_dp]);
+
+  const isPendingOrder = useMemo(() => {
+    const priceStr = parseNumber(price, { dp: dp, padding: true });
+    return pendingOrders.some(
+      (item) => priceStr === parseNumber(item, { dp: dp, padding: true }),
+    );
+  }, [pendingOrders, price, dp]);
 
   const renderCell = () => {
     switch (coinUnit) {
@@ -82,12 +89,25 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
       }}
     >
       <Flex itemAlign="center" justify={"between"}>
-        <Text.numeral
-          color={type === OrderBookCellType.BID ? "buy" : "sell"}
-          dp={dp}
-        >
-          {price}
-        </Text.numeral>
+        <Flex itemAlign="center" gapX={1}>
+          <Text.numeral
+            color={type === OrderBookCellType.BID ? "buy" : "sell"}
+            dp={dp}
+          >
+            {price}
+          </Text.numeral>
+          {isPendingOrder && (
+            <div
+              data-testid="oui-testid-orderBook-mobile-pendingOrder"
+              className={cn(
+                "oui-pointer-events-none oui-size-[4px] oui-shrink-0 oui-rounded-full",
+                type === OrderBookCellType.ASK
+                  ? "oui-bg-trade-loss"
+                  : "oui-bg-trade-profit",
+              )}
+            />
+          )}
+        </Flex>
         {renderCell()}
       </Flex>
       {Number.isNaN(width) ? null : (

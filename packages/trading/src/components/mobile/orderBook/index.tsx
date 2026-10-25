@@ -47,6 +47,7 @@ export interface OrderBookProps {
   cellHeight?: number;
 
   className?: string;
+  pendingOrders?: number[];
   /** Same key as order book stream / funding APIs (e.g. may include broker suffix). */
   symbol: string;
   symbolInfo: BasicSymbolInfo;
@@ -81,7 +82,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
-      pendingOrders={EMPTY_LIST}
+      pendingOrders={props.pendingOrders || EMPTY_LIST}
       showTotal={false}
       symbolInfo={props.symbolInfo}
       showBuySellRatio={showBuySellRatio}
