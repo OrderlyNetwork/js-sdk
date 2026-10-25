@@ -21,6 +21,8 @@ const mocks = vi.hoisted(() => {
     setStorageChain: vi.fn(),
     track: vi.fn(),
     setTrackUserId: vi.fn(),
+    localAddress: undefined as string | undefined,
+    connectedChain: undefined as { id: number; namespace: string } | undefined,
     accountState: {
       status: 0,
       validating: false,
@@ -38,12 +40,22 @@ const mocks = vi.hoisted(() => {
       icon: "",
       provider: {},
       accounts: [{ address: "0xgoogle" }],
-      chains: [{ id: 1, namespace: "EVM" }],
+      chains: [{ id: 1, namespace: "EVM" }] as {
+        id: number;
+        namespace: string;
+      }[],
     },
   };
 });
 
 vi.mock("@orderly.network/hooks", () => ({
+  parseJSON: (value: string | null) => {
+    try {
+      return JSON.parse(value ?? "");
+    } catch {
+      return undefined;
+    }
+  },
   useAccount: () => ({
     account: mocks.account,
     state: mocks.accountState,
@@ -56,7 +68,7 @@ vi.mock("@orderly.network/hooks", () => ({
       mocks.handlers.set(event, handler),
     off: (event: string) => mocks.handlers.delete(event),
   }),
-  useKeyStore: () => ({ getAddress: () => undefined }),
+  useKeyStore: () => ({ getAddress: () => mocks.localAddress }),
   useStorageChain: () => ({
     storageChain: null,
     setStorageChain: mocks.setStorageChain,
@@ -68,7 +80,7 @@ vi.mock("@orderly.network/hooks", () => ({
   useWalletConnector: () => ({
     wallet: mocks.wallet,
     connect: mocks.connect,
-    connectedChain: mocks.wallet.chains[0],
+    connectedChain: mocks.connectedChain ?? mocks.wallet.chains[0],
     disconnect: mocks.disconnect,
     namespace: ChainNamespace.evm,
   }),
@@ -233,5 +245,71 @@ describe("useWalletStateHandle OAuth resume", () => {
     expect(
       window.sessionStorage.getItem("orderly:privy-oauth-connect-intent"),
     ).toBeNull();
+  });
+});
+
+describe("useWalletStateHandle restore", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.handlers.clear();
+    mocks.checkChainSupport.mockReturnValue(true);
+    mocks.account.setAddress.mockResolvedValue(AccountStatusEnum.NotSignedIn);
+    mocks.account.address = undefined;
+    mocks.account.chainId = undefined;
+    mocks.accountState.status = AccountStatusEnum.NotConnected;
+    mocks.accountState.validating = false;
+    mocks.localAddress = undefined;
+    mocks.connectedChain = undefined;
+    mocks.wallet.chains = [{ id: 1, namespace: "EVM" }];
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+  });
+
+  it.each(["not-json", "null"])(
+    "ignores malformed saved wallet info (%s)",
+    (value) => {
+      mocks.localAddress = "0xsaved";
+      window.localStorage.setItem("orderly:wallet-info", value);
+
+      expect(() => renderHook(() => useWalletStateHandle({}))).not.toThrow();
+      expect(mocks.connect).not.toHaveBeenCalled();
+    },
+  );
+
+  it("waits for the wallet chain before restoring the account", async () => {
+    mocks.connectedChain = { id: 1, namespace: "EVM" };
+    mocks.wallet.chains = [];
+
+    const { rerender } = renderHook(() => useWalletStateHandle({}));
+
+    expect(mocks.account.setAddress).not.toHaveBeenCalled();
+    expect(mocks.account.switchChainId).not.toHaveBeenCalled();
+
+    mocks.wallet = { ...mocks.wallet, chains: [{ id: 1, namespace: "EVM" }] };
+    rerender();
+
+    await waitFor(() =>
+      expect(mocks.account.setAddress).toHaveBeenCalledWith(
+        "0xgoogle",
+        expect.objectContaining({
+          chain: { id: 1, namespace: ChainNamespace.evm },
+        }),
+      ),
+    );
+  });
+
+  it("handles a failed account restore", async () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.account.setAddress.mockRejectedValue(new Error("restore failed"));
+
+    renderHook(() => useWalletStateHandle({}));
+
+    await waitFor(() =>
+      expect(error).toHaveBeenCalledWith(
+        "Failed to restore wallet account",
+        expect.any(Error),
+      ),
+    );
+    error.mockRestore();
   });
 });

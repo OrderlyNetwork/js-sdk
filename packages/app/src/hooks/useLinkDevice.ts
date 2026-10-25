@@ -46,10 +46,11 @@ export function useLinkDevice() {
 
   useEffect(() => {
     const linkData = getLinkDeviceData();
-    const walletInfo = JSON.parse(localStorage.getItem(WALLET_KEY) ?? "{}");
+    const walletInfo =
+      parseJSON<{ label?: string }>(localStorage.getItem(WALLET_KEY)) ?? {};
     if (linkData && walletInfo) {
       // clear connect data when link device
-      onDisconnect(walletInfo.label);
+      onDisconnect(walletInfo.label!);
     }
   }, []);
 
