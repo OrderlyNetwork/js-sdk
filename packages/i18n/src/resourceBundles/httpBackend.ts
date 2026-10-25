@@ -17,11 +17,14 @@ export class Backend {
   async fetchData(url: string) {
     try {
       const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
       const data = await res.json();
       return data;
     } catch (error) {
       console.error(`Failed to fetch data from ${url}:`, error);
-      return {};
+      return undefined;
     }
   }
 
@@ -55,12 +58,17 @@ export class Backend {
       return true;
     });
 
-    const promises = urls.map(async (url) => {
-      const data = await this.fetchData(url);
-      i18n.addResourceBundle(lang, ns, data, true, true);
-      this.cache.add(url);
-    });
+    // fetch in parallel, but apply in the declared order so that later paths
+    // (e.g. extend files) always override earlier ones
+    const results = await Promise.all(urls.map((url) => this.fetchData(url)));
 
-    await Promise.all(promises);
+    results.forEach((data, index) => {
+      // don't cache failed requests, so they can be retried later
+      if (!data) {
+        return;
+      }
+      i18n.addResourceBundle(lang, ns, data, true, true);
+      this.cache.add(urls[index]);
+    });
   }
 }
