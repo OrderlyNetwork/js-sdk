@@ -490,7 +490,7 @@ describe("production announcement provider", () => {
 });
 
 describe("legacy maintenance source", () => {
-  it("keeps maintenance out of the public hook's reading list and expires ordinary cards", async () => {
+  it("includes maintenance in the public hook's reading list and expires only ordinary cards", async () => {
     vi.useFakeTimers();
     fixture.maintenance = {
       startTime: 10,
@@ -501,6 +501,7 @@ describe("legacy maintenance source", () => {
     const { result } = renderHook(() => useAnnouncement(), { wrapper });
     await settle();
     expect(result.current.tips.map((item) => item.announcement_id)).toEqual([
+      "-1",
       1,
     ]);
     expect(
@@ -508,6 +509,7 @@ describe("legacy maintenance source", () => {
     ).toBe(true);
     act(() => result.current.closeTips());
     expect(result.current.showAnnouncement).toBe(false);
+    expect(result.current.tips).toHaveLength(2);
     fixture.list.mockResolvedValue(
       response([
         { ...row(1, 20), notification_card_end_time: Date.now() + 1000 },
@@ -526,11 +528,15 @@ describe("legacy maintenance source", () => {
     expect(
       result.current.cardTips?.map((item) => item.announcement_id),
     ).toEqual(["-1"]);
-    expect(result.current.tips).toHaveLength(1);
+    expect(result.current.tips.map((item) => item.announcement_id)).toEqual([
+      1,
+      "-1",
+    ]);
     expect(result.current.hasUnread).toBe(true);
     act(() => result.current.openMessageCenter?.());
     expect(result.current.showAnnouncement).toBe(false);
     expect(result.current.hasUnread).toBe(false);
+    expect(result.current.tips).toHaveLength(2);
     expect(fixture.ws.subscribe).toHaveBeenCalledTimes(2);
   });
   it("keeps past maintenance times at status zero and clears only when a time is reset", async () => {

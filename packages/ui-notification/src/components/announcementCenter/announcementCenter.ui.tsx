@@ -8,6 +8,7 @@ import {
 } from "@orderly.network/ui";
 import { cn } from "@orderly.network/ui";
 import type { AnnouncementSummary } from "../../types";
+import { isSystemMaintenance } from "../../utils/bellAnnouncements";
 import { AnnouncementListSkeleton } from "../announcementListSkeleton";
 import { AnnouncementSourceBadge } from "../announcementSourceBadge";
 import { AnnouncementItem } from "./announcementItem";
@@ -100,8 +101,12 @@ export const AnnouncementCenterUI: FC<{
 }> = (props) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState<string | number | null>(null);
+  const unavailable = props.status === "error" || props.status === "loading";
+  const dataSource = unavailable
+    ? props.dataSource.filter(isSystemMaintenance)
+    : props.dataSource;
   const ContentArea =
-    props.status === "error" || props.status === "loading" ? "div" : ScrollArea;
+    unavailable && dataSource.length === 0 ? "div" : ScrollArea;
 
   return (
     <>
@@ -112,6 +117,15 @@ export const AnnouncementCenterUI: FC<{
       </div>
 
       <ContentArea className="oui-flex oui-h-[300px] oui-flex-col oui-p-3">
+        {(dataSource.length > 0 || !unavailable) && (
+          <AnnouncementContent
+            dataSource={dataSource}
+            current={expanded}
+            onExpandToggle={setExpanded}
+            onItemClick={props.onItemClick}
+            platformName={props.platformName}
+          />
+        )}
         {props.status === "loading" ? (
           <div
             role="status"
@@ -143,15 +157,7 @@ export const AnnouncementCenterUI: FC<{
               {t("notification.retry")}
             </Button>
           </div>
-        ) : (
-          <AnnouncementContent
-            dataSource={props.dataSource}
-            current={expanded}
-            onExpandToggle={setExpanded}
-            onItemClick={props.onItemClick}
-            platformName={props.platformName}
-          />
-        )}
+        ) : null}
       </ContentArea>
       {props.onViewAll && (
         <div className="oui-flex oui-justify-center oui-px-3 oui-pb-3">

@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType } from "@orderly.network/types";
 import {
   ChevronDownIcon,
@@ -48,6 +48,23 @@ export interface NotificationListProps {
   notifications: NotificationItemProps[];
   onRemove?: (id: string) => void;
 }
+
+/**
+ * Literal `i18n.t` values keep the keys visible to static extraction, and the
+ * `Record<union, string>` return type turns a missing entry into a compile
+ * error. Rebuilt per call so `i18n.t` always reads the current language.
+ */
+const categoryLabels = (): Record<
+  NonNullable<AnnouncementSummary["category"]>,
+  string
+> => ({
+  campaign: i18n.t("notification.category.campaign"),
+  listing: i18n.t("notification.category.listing"),
+  delisting: i18n.t("notification.category.delisting"),
+  update: i18n.t("notification.category.update"),
+  legal: i18n.t("notification.category.legal"),
+  others: i18n.t("notification.category.others"),
+});
 
 const NotificationHeader: FC<{
   // type: AnnouncementType;
@@ -120,7 +137,7 @@ const NotificationHeader: FC<{
         {!category && icon}
         {category ? (
           <Text size="sm" color="primary">
-            {t(`notification.category.${category}`)}
+            {categoryLabels()[category]}
           </Text>
         ) : (
           title

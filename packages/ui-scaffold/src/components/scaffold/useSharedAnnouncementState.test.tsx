@@ -114,7 +114,9 @@ describe("shared maintenance and announcement cards", () => {
     expect(
       result.current.state.cardTips?.map((tip) => tip.announcement_id),
     ).toEqual(["-1"]);
-    expect(result.current.state.tips).toHaveLength(1);
+    expect(result.current.state.tips.map((tip) => tip.announcement_id)).toEqual(
+      [1, "-1"],
+    );
     expect(result.current.state.hasUnread).toBe(true);
     expect(result.current.state.showAnnouncement).toBe(true);
     expect(result.current.state.cardSession).toBe(session);
@@ -150,7 +152,7 @@ describe("shared maintenance and announcement cards", () => {
     expect(result.current.state.hasUnread).toBe(false);
     expect(result.current.showLegacy).toBe(false);
     expect(result.current.state.cardTips).toHaveLength(2);
-    expect(result.current.state.tips).toHaveLength(1);
+    expect(result.current.state.tips).toHaveLength(2);
   });
   it("keeps maintenance visible when the last ordinary announcement is unpublished", () => {
     const { result } = renderHook(() => useHarness());
@@ -160,10 +162,27 @@ describe("shared maintenance and announcement cards", () => {
       result.current.setOpen(false);
     });
     expect(result.current.state.cardTips).toEqual([maintenance]);
+    expect(result.current.state.tips).toEqual([maintenance]);
     expect(result.current.state.showAnnouncement).toBe(true);
     expect(result.current.state.cardSession).toBe(session);
     act(() => result.current.setLegacyTips([]));
     expect(result.current.state.showAnnouncement).toBe(false);
+    expect(result.current.state.tips).toEqual([]);
+  });
+  it("updates and removes maintenance in the bell independently of card visibility", () => {
+    const { result } = renderHook(() => useHarness());
+    act(() => result.current.state.closeTips());
+    const updated = {
+      ...maintenance,
+      updated_time: now + 1000,
+      startTime: now + 1000,
+      message: "Rescheduled maintenance",
+    };
+    act(() => result.current.setLegacyTips([updated]));
+    expect(result.current.state.tips).toEqual([updated, article()]);
+    expect(result.current.state.showAnnouncement).toBe(false);
+    act(() => result.current.setLegacyTips([]));
+    expect(result.current.state.tips).toEqual([article()]);
   });
   it("closes an empty group after expiry and opens a fresh session on the next notification", () => {
     const { result } = renderHook(() => useHarness([]));

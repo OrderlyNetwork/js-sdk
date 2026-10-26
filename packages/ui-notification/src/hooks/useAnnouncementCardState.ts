@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AnnouncementScaffoldState } from "../articles/context";
 import type { AnnouncementSummary } from "../types";
+import {
+  isSystemMaintenance as isMaintenance,
+  mergeBellAnnouncements,
+} from "../utils/bellAnnouncements";
 
 const MAX_TIMEOUT = 2_147_483_647;
-const isMaintenance = (tip: AnnouncementSummary) =>
-  String(tip.announcement_id) === "-1";
 
 /** Missing deadlines retain legacy snapshots; maintenance never uses card expiry. */
 export function mergeAnnouncementCards(
@@ -84,6 +86,10 @@ export function useAnnouncementCardState(
     () => controlled?.maintenanceTips ?? legacy.tips.filter(isMaintenance),
     [controlled?.maintenanceTips, legacy.tips],
   );
+  const tips = useMemo(
+    () => mergeBellAnnouncements(controlled?.tips ?? [], maintenance),
+    [controlled?.tips, maintenance],
+  );
   const cardTips = useMemo(
     () => mergeAnnouncementCards(ordinaryCards ?? [], maintenance, Date.now()),
     [ordinaryCards, maintenance, now],
@@ -161,6 +167,7 @@ export function useAnnouncementCardState(
   return controlled
     ? {
         ...controlled,
+        tips,
         maintenanceDialogInfo: legacy.maintenanceDialogInfo,
         cardTips,
         showAnnouncement: sharedVisibility.open,

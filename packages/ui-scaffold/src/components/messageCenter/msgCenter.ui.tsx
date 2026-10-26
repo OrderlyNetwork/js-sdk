@@ -19,6 +19,7 @@ import {
   type AnnouncementSummary,
 } from "@orderly.network/ui-notification";
 import { useScaffoldContext } from "../scaffold";
+import { selectMessages } from "./selectMessages";
 
 /**
  * Notify bell with Popover (click) + Tooltip (hover) coexisting.
@@ -86,7 +87,7 @@ export const MessageCenter: FC<{
             arrow
             content={
               <AnnouncementCenterUI
-                dataSource={messages.slice(0, 5)}
+                dataSource={selectMessages(messages)}
                 platformName={props.platformName}
                 status={props.status}
                 retry={props.retry}
