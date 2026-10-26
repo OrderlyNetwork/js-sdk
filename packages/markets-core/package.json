@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/markets-core",
-  "version": "3.3.0-alpha.0",
+  "version": "3.3.0",
   "description": "Base market components, categories, context, and page primitives",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
