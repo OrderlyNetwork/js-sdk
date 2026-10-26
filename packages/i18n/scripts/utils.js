@@ -14,6 +14,24 @@ const i18nValidErrors = {
   unclosedTag: (tagName) => `Unclosed tag: <${tagName}>`,
 };
 
+// HTML void elements never take a closing tag (e.g. <br>), so they must not
+// join the tag-pairing stack; a stray </br> is still rejected below.
+const voidElements = new Set([
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "source",
+  "track",
+  "wbr",
+]);
+
 /**
  * Validate the value of i18n
  * @param {string} value - The value to validate
@@ -69,6 +87,8 @@ function validateI18nValue(value) {
           error: i18nValidErrors.mismatchedClosingTag(tagName),
         };
       }
+    } else if (voidElements.has(tagName.toLowerCase())) {
+      continue;
     } else {
       stack.push(tagName);
     }

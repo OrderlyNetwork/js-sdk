@@ -30,7 +30,6 @@ export const usePublicDataObserver = () => {
   const { setSymbolsInfo, setFundingRates, setRwaSymbolsInfo } = useAppStore(
     (state) => state.actions,
   );
-
   // const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
 
   const symbols = useSymbolStore((state) => state.data);

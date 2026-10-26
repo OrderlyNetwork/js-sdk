@@ -1,0 +1,157 @@
+export const prediction = {
+  "prediction.loadingAccountResources": "Loading account resources…",
+  "prediction.message.targetResourcesFailed":
+    "Unable to load this account's positions, orders or fee rates. Please reopen and try again.",
+  "prediction.message.aggregatePositionsFailed":
+    "Unable to load sub-account positions. Please try again.",
+  "prediction.orders.loadError": "Unable to load orders. Please try again.",
+  "prediction.currentAccount": "Current account",
+  "prediction.title": "Prediction",
+  "prediction.description": "Trade outcomes with real-time odds",
+  "prediction.marketName": "{{base}} UP/DOWN {{period}}",
+  "prediction.chart.indexPrice": "{{base}} index price",
+  "prediction.chart.marketAriaLabel": "{{base}} price chart",
+  "prediction.up": "Up",
+  "prediction.filter.allInstruments": "All instruments",
+  "prediction.cancelAll.all.description":
+    "Cancel all cancellable PERP and Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.perps.description":
+    "Cancel all PERP pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.rounds.description":
+    "Cancel all cancellable Binary pending orders in your account, including orders hidden by display filters?",
+  "prediction.cancelAll.scoped.description":
+    "Cancel all cancellable pending orders in the selected scope ({{scope}}), including orders hidden by display filters?",
+  "prediction.region.restrictedTitle": "Region restricted",
+  "prediction.region.restrictedDescription":
+    "Prediction trading is not available in your region.",
+  "prediction.filter.allOutcomes": "All outcomes",
+  "prediction.down": "Down",
+  "prediction.tie": "Tie",
+  "prediction.resolution.tiePayout": "0.5 USDC per share",
+  "prediction.oneTap": "One-tap",
+  "prediction.slippageTicks": "Slippage (ticks)",
+  "prediction.slippageTicksHint":
+    "Maximum price movement: 0–10 ticks. One tick is the market price increment.",
+  "prediction.invalidSlippageTicks": "Enter a whole number from 0 to 10.",
+  "prediction.message.batchResult":
+    "Orders accepted: {{accepted}}; failed: {{failed}}; unconfirmed: {{unknown}}; not sent: {{unsent}}.",
+  "prediction.message.acceptanceUnknown":
+    "Order acceptance is unconfirmed. Check your orders before placing another order.",
+  "prediction.oneTapBuy": "One-tap buy",
+  "prediction.oneTapAddPreset": "Add preset",
+  "prediction.oneTapRemoveRow": "Remove row",
+  "prediction.oneTapWin": "Win",
+  "prediction.oneTapInvalidAmounts":
+    "Enter 5–99,999.99 USDC for each preset (up to 2 decimal places).",
+  "prediction.currentPrice": "Current price",
+  "prediction.finalPrice": "Final price",
+  "prediction.chance": "Up chance",
+  "prediction.lastPrice": "Last price",
+  "prediction.volumeShort": "Vol",
+  /** Combined compact-panel headers, perps `Last/24h %` style. */
+  "prediction.column.last&chance": "Last/Up chance",
+  "prediction.column.time&volume": "Time/Vol",
+  "prediction.markPrice.tooltip":
+    "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0, 0.5 or 1. DOWN displays 1 minus the UP mark price.",
+  "prediction.orderBook": "Order book",
+  "prediction.contracts": "Contracts",
+  "prediction.editOrder.confirm.price":
+    "You agree changing the price of this prediction order to <0>{{value}}</0>.",
+  "prediction.editOrder.confirm.quantity":
+    "You agree changing the quantity of this prediction order to <0>{{value}}</0>.",
+  "prediction.editOrder.error.quantityMax":
+    "Maximum total quantity is {{maxQuantity}} contracts.",
+  "prediction.editOrder.error.tick": "Enter a value in {{tick}} increments.",
+  "prediction.outcome": "Outcome",
+  "prediction.odds": "Odds",
+  "prediction.oddsHint": "Odds for your current bet direction.",
+  "prediction.available.buyHint": "USDC available to buy prediction shares.",
+  "prediction.available.sellHint":
+    "Shares available to sell for the selected outcome, excluding shares reserved by pending sell orders.",
+  "prediction.toWin": "To win",
+  "prediction.toWinHint":
+    "Estimated payout if your prediction is correct, based on current odds. Final payout may vary at settlement.",
+  "prediction.tradingAgreement": "By trading, you agree to the",
+  "prediction.termOfUse": "Term of Use",
+  "prediction.chart.historyError": "Load failed. Retrying…",
+  "prediction.noData": "No data yet",
+  "prediction.chart.priceToBeat": "Price to beat",
+  "prediction.chart.priceToBeatHint":
+    "Price to beat is the BTC index price at the start of this round.",
+  "prediction.chart.currentPriceHint":
+    "Current price is the real-time BTC index price for reference only. It is not the settlement price.",
+  "prediction.chart.priceMode": "Price chart",
+  "prediction.chart.chartMode": "Candlestick chart",
+  "prediction.chart.target": "Target",
+  "prediction.rounds.past": "Past",
+  "prediction.rounds.today": "Today",
+  "prediction.rounds.more": "More",
+  "prediction.rounds.ended": "Ended",
+  "prediction.rounds.live": "Live",
+  "prediction.rounds.upcoming": "Upcoming",
+  "prediction.rounds.resolutionTime": "Resolution time",
+  "prediction.rounds.endsIn": "Ends in",
+  "prediction.rounds.startsIn": "Starts in",
+  "prediction.rounds.notOpenYet": "This round has not opened for trading yet.",
+  "prediction.rounds.goToLiveMarket": "Go to live market",
+  "prediction.resolution.determiningWinner": "Hold on, determining winner...",
+  "prediction.resolution.pendingDescription":
+    "This market has ended. The final outcome will appear automatically when it is published.",
+  "prediction.resolution.fundsProcessing": "Funds are being credited",
+  "prediction.resolution.segmentComplete": "Position segment settled",
+  "prediction.resolution.dataIncomplete": "Settlement data is incomplete.",
+  "prediction.resolution.outcome": "Outcome: {{outcome}}",
+  "prediction.tab.filled": "Filled",
+  "prediction.tab.predictionHistory": "Position history",
+  "prediction.history.perps": "Perp history",
+  "prediction.history.prediction": "Prediction history",
+  "prediction.filledQuantity": "Filled quantity",
+  "prediction.avgFillPrice": "Avg. fill price",
+  "prediction.closedQuantity": "Closed quantity",
+  "prediction.avgEntryPrice": "Avg. entry price",
+  "prediction.exitSettlementPrice": "Exit / Settlement price",
+  "prediction.closedSettledTime": "Closed / Settled time",
+  "prediction.exitPrice": "Exit price",
+  "prediction.closed": "Closed",
+  "prediction.invalidOrder": "Enter a valid price and available quantity.",
+  "prediction.message.orderFailed": "Order was not accepted. Please try again.",
+  "prediction.rounds.unavailable":
+    "No prediction rounds are available right now. Please try again later.",
+  "prediction.estimatedFee": "Est. fee",
+  "prediction.requiredFrozen": "Required frozen",
+  "prediction.notInSnapshot": "This round is no longer in the recent records.",
+  "prediction.tab.openOrders": "Pending",
+  "prediction.tab.positions": "Positions",
+  "prediction.tab.assets": "Assets",
+  "prediction.tab.orderHistory": "Order history",
+  "prediction.orderValue": "Order value",
+  "prediction.size": "Size",
+  "prediction.entryPrice": "Entry price",
+  "prediction.filledOrderPrice": "Filled / Order price",
+  "prediction.settlementPrice": "Settlement price",
+  "prediction.settledTime": "Settled time",
+  "prediction.status.filled": "Filled",
+  "prediction.status.cancelled": "Cancelled",
+  "prediction.message.insufficientBalance": "Insufficient available balance.",
+  "prediction.message.belowMinimumNotional":
+    "Order value is below the minimum after quantity rounding.",
+  "prediction.message.oneTapUpMinimumOrder":
+    "Min. {{minQuantity}} UP contracts ({{minTotal}} USDC).",
+  "prediction.message.oneTapDownMinimumOrder":
+    "Min. {{minQuantity}} DOWN contracts ({{minTotal}} USDC). The {{value}} USDC minimum is based on the UP price ({{upPrice}}).",
+  "prediction.message.fundingUnavailable":
+    "Unable to estimate required funds. Please try again.",
+  "prediction.message.downMinimumOrder":
+    "Min. {{minQuantity}} DOWN contracts ({{minTotal}} USDC). The {{value}} USDC minimum is based on the UP price ({{upPrice}}).",
+  "prediction.message.insufficientContracts":
+    "You do not hold enough contracts to sell.",
+  "prediction.message.noExecutableQuotes":
+    "No executable quotes right now. Please try again in a moment.",
+  "prediction.message.orderNotFound": "Order not found or no longer active.",
+  "prediction.message.roundNotTradable": "This round is no longer tradable.",
+  "prediction.message.regionRestricted":
+    "Trading is not available in your region.",
+  "prediction.message.sellFailed": "Unable to sell position.",
+  "prediction.message.slippageExceeded":
+    "Estimated slippage exceeds your max slippage.",
+} as const;

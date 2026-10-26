@@ -1,5 +1,6 @@
 export const orders = {
   "orders.orderHistory": "Order history",
+  "orders.loadMore": "Load more",
 
   "orders.status.pending": "Pending",
   "orders.status.filled": "Filled",
@@ -12,6 +13,10 @@ export const orders = {
   "orders.status.opened.toast.title": "Order opened",
   "orders.status.filled.toast.title": "Order filled",
   "orders.status.canceled.toast.title": "Order canceled",
+  "orders.status.partialFilledCanceled.toast.title":
+    "Order partially filled; remainder canceled",
+  "orders.status.partialFilledCanceled.toast.description":
+    "{{side}} {{symbol}} {{filled}} / {{quantity}}, {{canceled}} canceled",
   "orders.status.rejected.toast.title": "Order rejected",
   "orders.status.replaced.toast.title": "Order edited",
 
@@ -40,6 +45,11 @@ export const orders = {
     "Are you sure you want to cancel your pending order.",
 
   "orders.cancelAll": "Cancel all",
+  "orders.cancelAll.contextChanged":
+    "Your account or cancellation scope has changed. Please confirm again.",
+  "orders.cancelAll.failed": "Unable to cancel orders. Please try again.",
+  "orders.cancelAll.hiddenOrders":
+    "This includes orders hidden by display filters.",
   "orders.pending.cancelAll": "Cancel all pending orders",
   "orders.pending.cancelAll.description":
     "Are you sure you want to cancel all of your pending orders?",

@@ -1,14 +1,10 @@
 import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
 import { Decimal } from "@orderly.network/utils";
-import {
-  useCollateral,
-  useIndexPricesStream,
-  useUpdatedRef,
-  useTokenInfo,
-} from "..";
+import { useIndexPricesStream, useUpdatedRef, useTokenInfo } from "..";
 import { useAppStore } from "./appStore";
 import { useHoldingStream } from "./useHoldingStream";
+import { usePerpUnsettledPnL } from "./usePerpUnsettledPnL";
 
 const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
   accountPerp;
@@ -18,7 +14,7 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
  * if token is not provided, return the max withdrawal amount for USDC
  */
 export const useMaxWithdrawal = (token: string) => {
-  const { unsettledPnL } = useCollateral();
+  const unsettledPnL = usePerpUnsettledPnL();
 
   const { freeCollateral } = useAppStore((state) => state.portfolio);
 

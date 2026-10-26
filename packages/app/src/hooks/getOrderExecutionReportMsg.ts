@@ -2,7 +2,7 @@ import { i18n } from "@orderly.network/i18n";
 import { API, OrderStatus, OrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { parseNumber } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
+import { capitalizeString, Decimal } from "@orderly.network/utils";
 
 function getDisplaySide(side: string) {
   if (side === "BUY") {
@@ -21,16 +21,23 @@ export function getOrderExecutionReportMsg(
   data: (API.AlgoOrder | API.Order) & {
     fieldChanges?: AlgoOrderFieldChanges;
   },
-  symbolsInfo: any,
+  symbolsInfo: Record<string, (field: "base_dp") => number | undefined>,
   displaySymbol: string,
 ) {
   const { symbol, side, quantity, client_order_id, fieldChanges } = data;
   const total_executed_quantity =
     "total_executed_quantity" in data ? data.total_executed_quantity : 0;
   const status = "status" in data ? data.status : data.algo_status;
+  const isPartialIocCancellation =
+    !("algo_type" in data) &&
+    data.type === OrderType.IOC &&
+    status === OrderStatus.CANCELLED &&
+    Number.isFinite(total_executed_quantity) &&
+    Number.isFinite(quantity) &&
+    total_executed_quantity > 0 &&
+    total_executed_quantity < quantity;
   const getSymbolInfo = symbolsInfo[symbol];
   const base_dp = getSymbolInfo("base_dp");
-  const quote_dp = getSymbolInfo("quote_dp");
   const displaySide = getDisplaySide(side);
   const displayQuantity =
     "algo_type" in data && data.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
@@ -64,6 +71,26 @@ export function getOrderExecutionReportMsg(
       msg = `${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
       break;
     case OrderStatus.CANCELLED:
+      if (isPartialIocCancellation) {
+        const remainingQuantity = new Decimal(quantity)
+          .sub(total_executed_quantity)
+          .toNumber();
+        title = i18n.t("orders.status.partialFilledCanceled.toast.title");
+        msg = i18n.t("orders.status.partialFilledCanceled.toast.description", {
+          side: displaySide,
+          symbol: displaySymbol,
+          filled:
+            base_dp === undefined
+              ? total_executed_quantity
+              : parseNumber(total_executed_quantity, { dp: base_dp }),
+          quantity: displayQuantity,
+          canceled:
+            base_dp === undefined
+              ? remainingQuantity
+              : parseNumber(remainingQuantity, { dp: base_dp }),
+        });
+        break;
+      }
       title = i18n.t("orders.status.canceled.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
@@ -103,5 +130,9 @@ export function getOrderExecutionReportMsg(
     title,
     msg,
     status,
+    hasFill:
+      status === OrderStatus.FILLED ||
+      status === OrderStatus.PARTIAL_FILLED ||
+      isPartialIocCancellation,
   };
 }

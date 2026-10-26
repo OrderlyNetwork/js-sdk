@@ -15,8 +15,6 @@
   "extend.docs": "Documentos",
   "extend.audits": "Auditorias",
   "extend.vaults": "Cofres",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Perps de livro de ordens sem taxas de gás com alavancagem de até 100x",
   "extend.woofiEarn": "WOOFi ganhar",
   "extend.woofiEarn.description": "Obtenha rendimento sem esforço em qualquer rede",
   "extend.wooStake": "WOO staking",

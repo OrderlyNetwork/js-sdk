@@ -825,7 +825,7 @@ const useOrderEntry = (
         usdcHolding: usdcHolding.holding,
         usdcPendingShort: usdcHolding.pending_short,
         usdcIsolatedOrderFrozen: usdcHolding.isolated_order_frozen,
-        totalUnsettledPnL: portfolio.unsettledPnL,
+        totalUnsettledPnL: portfolio.perpUnsettledPnL ?? 0,
       });
     },
   );

@@ -268,8 +268,22 @@ export const useOrderColumn = (props: {
   }, [_type, pnlNotionalDecimalPrecision, sharePnLConfig, t]);
 
   return columns as Column[];
+};
 
-  // return columns();
+/**
+ * Column layout companion to `supplementalRows`: ensures a side column exists
+ * and widens the symbol column so two-line supplemental symbols fit.
+ */
+export const adaptColumnsForSupplementalRows = (
+  columns: Column[],
+): Column[] => {
+  const shared = [...columns];
+  if (!shared.some((column) => column.dataIndex === "side")) {
+    shared.splice(1, 0, side({ width: 130 }));
+  }
+  return shared.map((column) =>
+    column.dataIndex === "symbol" ? { ...column, width: 250 } : column,
+  );
 };
 
 function instrument(option?: {
@@ -760,7 +774,7 @@ function estTotal(option?: {
 }): Column<API.Order> {
   return {
     title: i18n.t("common.notional"),
-    dataIndex: "executed",
+    dataIndex: option?.isPending ? "notional" : "executed",
     width: option?.width,
     className: option?.className,
     onSort:

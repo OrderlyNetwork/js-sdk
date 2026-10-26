@@ -15,8 +15,6 @@
   "extend.docs": "مستندات",
   "extend.audits": "ممیزی‌ها",
   "extend.vaults": "خزانه‌ها",
-  "extend.perps": "پرپس",
-  "extend.perps.description": "پرپس بدون گس با دفتر سفارش تا ۱۰۰ برابر اهرم",
   "extend.woofiEarn": "WOOFi earn",
   "extend.woofiEarn.description": "بازدهی بدون زحمت روی هر زنجیره",
   "extend.wooStake": "WOO stake",

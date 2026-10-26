@@ -2,8 +2,9 @@ import { useCallback, useMemo } from "react";
 import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useCollateral, useHoldingStream, useIndexPricesStream } from "..";
+import { useHoldingStream, useIndexPricesStream } from "..";
 import { useAppStore } from "./appStore";
+import { usePerpUnsettledPnL } from "./usePerpUnsettledPnL";
 
 const { LTV, collateralRatio } = account;
 
@@ -23,7 +24,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
 
   const { getIndexPrice } = useIndexPricesStream();
 
-  const { unsettledPnL } = useCollateral();
+  const unsettledPnL = usePerpUnsettledPnL();
 
   const usdcBalance = useMemo<number>(() => {
     if (isUSDC && input) {

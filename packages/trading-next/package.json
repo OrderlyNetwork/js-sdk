@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-next",
-  "version": "3.2.3",
+  "version": "3.3.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -31,6 +31,7 @@
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets": "workspace:*",
     "@orderly.network/portfolio": "workspace:*",
+    "@orderly.network/prediction": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",

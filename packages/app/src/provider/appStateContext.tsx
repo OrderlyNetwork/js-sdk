@@ -3,13 +3,14 @@ import {
   RestrictedInfoReturns,
   type MarketCategoryConfig,
 } from "@orderly.network/hooks";
-import type { WalletChainChangeState } from "@orderly.network/types";
+import type {
+  AppFeatures,
+  RouteOption,
+  WalletChainChangeState,
+} from "@orderly.network/types";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
-export type RouteOption = {
-  href: "/portfolio" | "/portfolio/history" | "/perp";
-  name: string;
-};
+export type { RouteOption } from "@orderly.network/types";
 
 export type WidgetConfigs = {
   scanQRCode?: {
@@ -36,6 +37,8 @@ export type WidgetConfigs = {
 };
 
 export type AppContextState = {
+  /** Application features; only explicit false disables a feature. */
+  features?: AppFeatures;
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
   /**
    * Whether the current network is not supported
@@ -49,6 +52,10 @@ export type AppContextState = {
   restrictedInfo: RestrictedInfoReturns;
   showAnnouncement: boolean;
   setShowAnnouncement: (show: boolean) => void;
+  /**
+   * Host navigation callback bridging SDK route changes to the app router.
+   * See `RouterAdapter` for the option shape and `href` conventions.
+   */
   onRouteChange?: (option: RouteOption) => void;
   widgetConfigs?: WidgetConfigs;
   initialized: boolean;

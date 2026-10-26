@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { MouseEvent } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -63,6 +63,15 @@ const AccountIdForCopy = (props: AccountIdForCopyProps) => {
 export const AccountItem = (props: AccountItemProps) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+  const descriptionRef = useRef<HTMLSpanElement>(null);
+  const [descriptionTooltipOpen, setDescriptionTooltipOpen] = useState(false);
+
+  const onDescriptionTooltipOpenChange = useCallback((open: boolean) => {
+    const element = descriptionRef.current;
+    setDescriptionTooltipOpen(
+      open && !!element && element.scrollWidth > element.clientWidth,
+    );
+  }, []);
 
   const {
     isMainAccount,
@@ -110,17 +119,14 @@ export const AccountItem = (props: AccountItemProps) => {
       justify="between"
       itemAlign="center"
       width="100%"
+      onClick={handleSwitch}
       className={cn(
-        "oui-relative oui-cursor-pointer oui-rounded-[6px] oui-bg-base-6 oui-px-3 oui-py-4",
+        "oui-relative oui-cursor-pointer oui-gap-3 oui-rounded-[6px] oui-bg-base-6 oui-px-3 oui-py-4",
         "oui-border oui-border-base-6",
         isCurrent && "oui-border-[rgb(var(--oui-gradient-brand-start))]",
         !isCurrent && "hover:oui-border-base-contrast-16",
       )}
     >
-      <div
-        className="oui-absolute oui-inset-0 oui-z-0"
-        onClick={handleSwitch}
-      />
       {isCurrent && (
         <div
           className={cn(
@@ -132,7 +138,12 @@ export const AccountItem = (props: AccountItemProps) => {
           {t("subAccount.modal.current")}
         </div>
       )}
-      <Flex direction="column" itemAlign="start" gap={1} className="oui-z-[2]">
+      <Flex
+        direction="column"
+        itemAlign="start"
+        gap={1}
+        className="oui-z-[2] oui-min-w-0 oui-flex-1"
+      >
         {isMainAccount ? (
           <Text className="oui-text-xs oui-leading-3 oui-text-base-contrast">
             {formatAddress(userAddress ?? "")}
@@ -141,13 +152,27 @@ export const AccountItem = (props: AccountItemProps) => {
           <Flex
             justify="start"
             itemAlign="center"
-            className="oui-cursor-pointer oui-gap-[2px] oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
+            className="oui-max-w-full oui-cursor-pointer oui-gap-[2px] oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
             onClick={handleEdit}
           >
-            <Text className="oui-text-xs oui-leading-3 oui-text-base-contrast">
-              {description}
-            </Text>
-            <EditIcon className="oui-fill-base-contrast-54 hover:oui-fill-base-contrast" />
+            <Tooltip
+              open={descriptionTooltipOpen}
+              onOpenChange={onDescriptionTooltipOpenChange}
+              onClick={stopPropagation}
+              content={
+                <Text className="oui-block oui-max-w-[180px] oui-break-all oui-text-2xs oui-text-base-contrast">
+                  {description}
+                </Text>
+              }
+            >
+              <Text
+                ref={descriptionRef}
+                className="oui-min-w-0 oui-truncate oui-text-xs oui-leading-3 oui-text-base-contrast"
+              >
+                {description}
+              </Text>
+            </Tooltip>
+            <EditIcon className="oui-shrink-0 oui-fill-base-contrast-54 hover:oui-fill-base-contrast" />
           </Flex>
         )}
         {isMobile ? (
@@ -158,7 +183,7 @@ export const AccountItem = (props: AccountItemProps) => {
             className="oui-w-full"
             onClick={stopPropagation}
           >
-            <Text className="oui-text-2xs oui-leading-3 oui-text-base-contrast-36">
+            <Text className="oui-min-w-0 oui-truncate oui-text-2xs oui-leading-3 oui-text-base-contrast-36">
               ID: {formatAddress(accountId)}
             </Text>
             <CopyIcon
@@ -169,18 +194,22 @@ export const AccountItem = (props: AccountItemProps) => {
           </Flex>
         ) : (
           <Tooltip
+            onClick={stopPropagation}
             content={
               <AccountIdForCopy accountId={accountId} onCopy={copyAccountId} />
             }
           >
-            <Text className="oui-text-2xs oui-leading-3 oui-text-base-contrast-36 hover:oui-text-base-contrast">
+            <Text
+              onClick={stopPropagation}
+              className="oui-max-w-full oui-truncate oui-text-2xs oui-leading-3 oui-text-base-contrast-36 hover:oui-text-base-contrast"
+            >
               ID: {formatAddress(accountId)}
             </Text>
           </Tooltip>
         )}
       </Flex>
       <Flex
-        className="oui-text-xs oui-text-base-contrast"
+        className="oui-shrink-0 oui-whitespace-nowrap oui-text-xs oui-text-base-contrast"
         itemAlign="end"
         gap={1}
       >

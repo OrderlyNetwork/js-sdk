@@ -15,8 +15,6 @@
   "extend.docs": "الوثائق",
   "extend.audits": "التدقيق",
   "extend.vaults": "الخزائن",
-  "extend.perps": "البيربس",
-  "extend.perps.description": "عقود بيرب دفتر أوامر بدون غاز برافعة حتى 100x",
   "extend.woofiEarn": "WOOFi Earn",
   "extend.woofiEarn.description": "احصل على عائد بكل سهولة على أي سلسلة",
   "extend.wooStake": "WOO stake",

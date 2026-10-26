@@ -1,3 +1,32 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+engineStrict: true
+autoInstallPeers: true
+publicHoistPattern:
+  - "*storybook*"
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - "@orderly.network/*"
+strictDepBuilds: false
+overrides:
+  "ws@>=8.0.0 <8.21.0": "8.21.2"
+  "viem>ws": "8.21.2"
+allowBuilds:
+  "@reown/appkit": false
+  "@swc/core": false
+  better-sqlite3: true
+  bigint-buffer: false
+  bufferutil: false
+  es5-ext: false
+  esbuild: false
+  keccak: false
+  node-llama-cpp: false
+  secp256k1: false
+  tree-sitter-go: false
+  tree-sitter-javascript: false
+  tree-sitter-python: false
+  tree-sitter-rust: false
+  tree-sitter-typescript: false
+  utf-8-validate: false

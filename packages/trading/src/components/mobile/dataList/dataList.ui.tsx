@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Button,
@@ -14,6 +13,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import type { TabPanelProps } from "@orderly.network/ui";
+import { AssetsWidget } from "@orderly.network/ui-assets";
 import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   MobileLiquidationWidget,
@@ -96,7 +96,11 @@ const SymbolControlHeader: React.FC<
 };
 
 const OrdersView: React.FC<
-  DataListState & { type: TabType; ordersStatus?: OrderStatus }
+  DataListState & {
+    type: TabType;
+    ordersStatus?: OrderStatus;
+    productType?: string;
+  }
 > = (props) => {
   return (
     <Flex direction={"column"} pb={2} width={"100%"}>
@@ -106,6 +110,7 @@ const OrdersView: React.FC<
       )}
       <MobileOrderListWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
+        productType={props.productType}
         onSymbolChange={props.onSymbolChange}
         type={props.type}
         ordersStatus={props.ordersStatus}
@@ -162,6 +167,7 @@ const HistoryTab: React.FC<DataListState> = (props) => {
         >
           <MobilePositionHistoryWidget
             symbol={props.showAllSymbol ? undefined : props.symbol}
+            productType="PERP"
             onSymbolChange={props.onSymbolChange}
             classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
             sharePnLConfig={props.sharePnLConfig}
@@ -171,7 +177,11 @@ const HistoryTab: React.FC<DataListState> = (props) => {
           title={t("orders.orderHistory")}
           value={DataListTabSubType.orderHistory}
         >
-          <OrdersView type={TabType.orderHistory} {...props} />
+          <OrdersView
+            type={TabType.orderHistory}
+            productType="PERP"
+            {...props}
+          />
         </TabPanel>
       </Tabs>
     </div>
@@ -192,20 +202,33 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     setTab,
     className,
   } = props;
+  const visiblePositionCount =
+    props.dataListProductContent?.counts?.positions ?? positionCount;
+  const visiblePendingCount =
+    props.dataListProductContent?.counts?.pending === null
+      ? 0
+      : (props.dataListProductContent?.counts?.pending ?? pendingOrderCount);
+  const mobileContent = props.dataListProductContent?.mobile;
+  const perpsPositions = <PositionsView {...props} />;
+  const positionsContent =
+    typeof mobileContent?.positions === "function"
+      ? mobileContent.positions(perpsPositions)
+      : (mobileContent?.positions ?? perpsPositions);
 
   const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
-      title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
+      title: `${t("common.positions")}${visiblePositionCount > 0 ? ` (${visiblePositionCount})` : ""}`,
       value: DataListTabType.position,
-      content: <PositionsView {...props} />,
+      content: positionsContent,
     },
     {
-      title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
+      title: `${t("orders.status.pending")}${visiblePendingCount > 0 ? ` (${visiblePendingCount})` : ""}`,
       value: DataListTabType.pending,
-      content: (
+      content: mobileContent?.pending ?? (
         <OrdersView
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
+          productType="PERP"
           {...props}
         />
       ),
@@ -224,7 +247,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     {
       title: t("trading.history"),
       value: DataListTabType.history,
-      content: <HistoryTab {...props} />,
+      content: mobileContent?.history ?? <HistoryTab {...props} />,
     },
     {
       title: t("positions.liquidation"),
@@ -240,7 +263,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     {
       title: t("common.assets"),
       value: DataListTabType.assets,
-      content: <AssetsModule.AssetsWidget />,
+      content: <AssetsWidget />,
     },
   ];
 

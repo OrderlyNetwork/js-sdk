@@ -2,6 +2,7 @@ export { AssetsPage } from "./page";
 export {
   AssetsWidget,
   AssetsDataTableWidget,
+  AssetsTabWidget,
 } from "./assetsPage/assets.widget";
 export type { AssetsWidgetProps } from "./assetsPage/assets.widget";
 export { AssetsTable, AssetsDataTable } from "./assetsPage/assets.ui.desktop";

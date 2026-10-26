@@ -2,6 +2,7 @@ import React from "react";
 import { usePositionStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
+import { isBinarySymbol } from "@orderly.network/utils";
 import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import type { PositionsProps } from "../../types/types";
 import { useSort } from "../../utils/sorting";
@@ -45,8 +46,12 @@ export const usePositionsScript = (props: PositionsProps) => {
     includedPendingOrder,
   });
 
+  // /v1/positions mixes both products (api-spec §6.2); binary positions are
+  // owned by the prediction UI and never render in the perps table.
   const rawDataSource =
-    useDataTap(data?.rows, { fallbackData: [] }) ?? undefined;
+    useDataTap(data?.rows, { fallbackData: [] })?.filter(
+      (item) => !isBinarySymbol(item.symbol),
+    ) ?? undefined;
   const dataSource = getSortedList(rawDataSource || []);
 
   return {

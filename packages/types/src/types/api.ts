@@ -180,6 +180,40 @@ export declare namespace API {
     name: string;
   }
 
+  /**
+   * Row of the unified Binary info snapshot (`GET /v1/public/binary/info`,
+   * api-spec §3.1/§4): most recent 300 rounds (any of the four statuses),
+   * refreshed every minute on the server side. Reuses the regular symbol
+   * trading parameters and omits liquidation fields (binary has none);
+   * `base_imr`/`base_mmr` are NOT part of the payload — the PRD fixes
+   * imr=1/mmr=0 for every binary symbol.
+   */
+  export interface BinaryInfoRow {
+    symbol: string;
+    status: "ACTIVE" | "DELISTING" | "RECYCLING" | "DELISTED";
+    product_type: "BINARY";
+    activated_at: number | null;
+    /** T0, UTC epoch milliseconds. */
+    observation_start_at: number;
+    /** T1, UTC epoch milliseconds; hard deadline for create/edit/cancel. */
+    expire_at: number;
+    s0: number | null;
+    s1?: number | null;
+    outcome?: "UP" | "DOWN" | "TIE" | null;
+    settlement_price_per_share?: number | null;
+    result_committed_at?: number | null;
+    index_price_symbol: string;
+    fee_model: string;
+    quote_min?: number;
+    quote_max?: number;
+    quote_tick?: number;
+    base_min?: number;
+    base_max?: number;
+    base_tick?: number;
+    min_notional?: number;
+    imr_factor?: number;
+  }
+
   export interface Order {
     symbol: string;
     status: string;
@@ -194,6 +228,8 @@ export declare namespace API {
     visible: number;
     executed: number;
     total_fee: number;
+    /** Realized order PnL returned by the API, before separate trading fees. */
+    realized_pnl?: number;
     fee_asset: string;
     client_order_id?: string;
     average_executed_price: number;
@@ -471,6 +507,13 @@ export declare namespace API {
     maker_fee_rate: number;
     rwa_taker_fee_rate?: number;
     rwa_maker_fee_rate?: number;
+    /**
+     * Binary Option probability-fee coefficients in bps (divide by 10000 once
+     * to get r in fee = C*r*p*(1-p)). Absent when no valid binary config
+     * exists — must not be treated as free.
+     */
+    binary_taker_fee_rate?: number;
+    binary_maker_fee_rate?: number;
     max_leverage: number;
     futures_taker_fee_rate: number;
     futures_maker_fee_rate: number;
@@ -669,6 +712,15 @@ export declare namespace API {
     last_update_time: number; // Timestamp of the last update to the position
     leverage: number; // Leverage of the position
     margin_mode?: MarginMode | 1 | 0;
+    /** Binary round outcome ("UP"/"DOWN"/"TIE") on expiry settlement; null on early exit. */
+    outcome?: "UP" | "DOWN" | "TIE" | null;
+    /** Exact UP-book 0/0.5/1 per-share settlement price on expiry settlement; null on early exit. */
+    settlement_price_per_share?: number | null;
+    /**
+     * System expiry close completion marker for the segment (settle initiation
+     * time, UTC epoch ms); null for voluntary exits or partial system closes.
+     */
+    settled_at?: number | null;
   }
 
   export interface LiquidationPositionByPerp {
@@ -709,6 +761,21 @@ export declare namespace API {
     city: string;
     region: string;
     checked: boolean;
+  }
+
+  /** GET /v1/product_restricted_areas?product_type=... — platform-side list. */
+  export interface ProductRestrictedAreasResponse {
+    product_type: string;
+    countries: {
+      rows: { name: string; visibility: "visible" | "hidden" }[];
+    };
+    cities: {
+      rows: {
+        name: string;
+        country_name: string;
+        visibility: "visible" | "hidden";
+      }[];
+    };
   }
 
   export interface LeverageInfo {

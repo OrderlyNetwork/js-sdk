@@ -5,11 +5,29 @@ import { useQuery } from "./useQuery";
 
 export type RestrictedInfoReturns = ReturnType<typeof useRestrictedInfo>;
 
+export interface PredictionRegionRestriction {
+  /** Whether to apply the platform Prediction list; defaults to true. */
+  enableDefault?: boolean;
+  /** Extra region/city names to restrict; defaults to an empty list. */
+  customRestrictedRegions?: string[];
+}
+
 export interface RestrictedInfoOptions {
+  /**
+   * Whether to apply the site-wide platform list from `/v1/restricted_areas`;
+   * defaults to false. Does not affect `predictionRegionRestriction`, whose own
+   * `enableDefault` defaults to true.
+   */
   enableDefault?: boolean;
   customRestrictedIps?: string[];
   customRestrictedRegions?: string[];
   customUnblockRegions?: string[];
+  /**
+   * Prediction trading region policy. Defaults to the platform list with no
+   * extra restrictions. Does not affect site-wide `restrictedOpen` or wallet
+   * connections.
+   */
+  predictionRegionRestriction?: PredictionRegionRestriction;
   content?:
     | ReactNode
     | ((data: { ip: string; brokerName: string }) => ReactNode);
@@ -26,6 +44,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     customRestrictedIps = defaultRestrictedIps,
     customRestrictedRegions = defaultRestrictedRegions,
     customUnblockRegions = defaultUnblockRegions,
+    predictionRegionRestriction,
     content,
   } = options || {};
   const [ip, setIp] = useState<string>("");
@@ -131,6 +150,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     canUnblock,
     accessRestricted,
     setAccessRestricted,
+    predictionRegionRestriction,
   };
 };
 

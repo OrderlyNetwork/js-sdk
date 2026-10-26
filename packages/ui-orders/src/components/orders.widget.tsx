@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import type { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { OrderListInstance } from "./orderList/orderList.script";
 import { useOrdersScript } from "./orders.script";
@@ -15,6 +16,9 @@ export enum TabType {
 }
 
 export type OrdersWidgetProps = {
+  /** Optional read-side product filter, forwarded to every status tab. */
+  productType?: string;
+  onSymbolChange?: (symbol: API.Symbol) => void;
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;

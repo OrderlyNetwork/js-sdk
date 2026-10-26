@@ -1,0 +1,196 @@
+import React, { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import type { RouterAdapter } from "@orderly.network/types";
+import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
+import { LeftNavProps, LeftNavUI } from "@orderly.network/ui-scaffold";
+import {
+  MarketsProvider,
+  type MarketsProviderProps,
+} from "../../components/marketsProvider";
+import { useMarketCategories } from "../../components/shared/hooks/useMarketCategories";
+import type { MarketTabContentRenderer } from "../../components/shared/tabUtils";
+import { MarketsPageTab } from "../../type";
+
+const LazyMarketsHeaderWidget = React.lazy(() =>
+  import("./marketsHeader/marketsHeader.widget").then((mod) => {
+    return { default: mod.MarketsHeaderWidget };
+  }),
+);
+
+const LazyMarketsDataListWidget = React.lazy(() =>
+  import("./marketsDataList").then((mod) => {
+    return { default: mod.MarketsDataListWidget };
+  }),
+);
+
+const LazyFundingWidget = React.lazy(() =>
+  import("./funding/funding.widget").then((mod) => {
+    return { default: mod.FundingWidget };
+  }),
+);
+
+export type MarketsHomePageProps = MarketsProviderProps & {
+  className?: string;
+  /** Renders a custom panel when the tab is not backed by the markets data source. */
+  renderTabContent?: MarketTabContentRenderer;
+  /** Appends product content after a built-in market list. */
+  renderTabAfterContent?: MarketTabContentRenderer;
+};
+
+export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
+  const { isMobile } = useScreen();
+
+  const [activeTab, setActiveTab] = useState<MarketsPageTab>(
+    MarketsPageTab.Markets,
+  );
+  const defaultTabs = useMarketCategories("marketsDataList");
+  const tabs = props.tabs ?? defaultTabs;
+
+  return (
+    <MarketsProvider
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+      navProps={props.navProps}
+      comparisonProps={props.comparisonProps}
+      tabs={tabs}
+    >
+      <div
+        id="oui-markets-home-page"
+        className={cn("oui-font-semibold", props.className)}
+      >
+        {isMobile ? (
+          <MarketsMobileContent
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            navProps={props.navProps}
+            renderTabContent={props.renderTabContent}
+            renderTabAfterContent={props.renderTabAfterContent}
+          />
+        ) : (
+          <MarketsDesktopContent
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            renderTabContent={props.renderTabContent}
+            renderTabAfterContent={props.renderTabAfterContent}
+          />
+        )}
+      </div>
+    </MarketsProvider>
+  );
+};
+
+type MarketsContentProps = {
+  activeTab: MarketsPageTab;
+  onTabChange: (value: MarketsPageTab) => void;
+  renderTabContent?: MarketTabContentRenderer;
+  /** Appends product content after a built-in market list. */
+  renderTabAfterContent?: MarketTabContentRenderer;
+  // only for mobile
+  navProps?: {
+    logo?: {
+      src: string;
+      alt: string;
+    };
+    routerAdapter?: RouterAdapter;
+    leftNav?: LeftNavProps;
+  };
+};
+
+const MarketsDesktopContent: React.FC<MarketsContentProps> = (props) => {
+  const { t } = useTranslation();
+
+  return (
+    <Box p={6}>
+      <Tabs
+        size="xl"
+        value={props.activeTab}
+        onValueChange={props.onTabChange as (value: string) => void}
+      >
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-markets-trigger",
+            content: "oui-tabs-markets-content",
+          }}
+          title={t("common.markets")}
+          value={MarketsPageTab.Markets}
+          testid="oui-testid-markets-tab"
+        >
+          <React.Suspense fallback={null}>
+            <LazyMarketsHeaderWidget className="oui-mt-4" />
+          </React.Suspense>
+          <React.Suspense fallback={null}>
+            <LazyMarketsDataListWidget
+              renderTabContent={props.renderTabContent}
+              renderTabAfterContent={props.renderTabAfterContent}
+            />
+          </React.Suspense>
+        </TabPanel>
+        <TabPanel
+          classNames={{
+            trigger: "oui-tabs-funding-trigger",
+            content: "oui-tabs-funding-content",
+          }}
+          title={t("common.funding")}
+          value={MarketsPageTab.Funding}
+          testid="oui-testid-funding-tab"
+        >
+          <React.Suspense fallback={null}>
+            <LazyFundingWidget />
+          </React.Suspense>
+        </TabPanel>
+      </Tabs>
+    </Box>
+  );
+};
+
+const MarketsMobileContent: React.FC<MarketsContentProps> = (props) => {
+  const { t } = useTranslation();
+
+  return (
+    <Tabs
+      size="xl"
+      value={props.activeTab}
+      onValueChange={props.onTabChange as (value: string) => void}
+      classNames={{
+        tabsListContainer: "oui-border-0",
+        tabsList: "oui-mx-6 oui-my-2",
+        tabsContent: "oui-px-3",
+      }}
+      leading={
+        props.navProps?.leftNav && (
+          <LeftNavUI
+            className="-oui-me-4 oui-ms-3"
+            {...props?.navProps?.leftNav}
+            logo={props?.navProps?.logo}
+            routerAdapter={props?.navProps?.routerAdapter}
+          />
+        )
+      }
+    >
+      <TabPanel
+        title={t("common.markets")}
+        value="markets"
+        testid="oui-testid-markets-tab"
+      >
+        <React.Suspense fallback={null}>
+          <LazyMarketsHeaderWidget className="oui-mt-2" />
+        </React.Suspense>
+        <React.Suspense fallback={null}>
+          <LazyMarketsDataListWidget
+            renderTabContent={props.renderTabContent}
+            renderTabAfterContent={props.renderTabAfterContent}
+          />
+        </React.Suspense>
+      </TabPanel>
+      <TabPanel
+        title={t("common.funding")}
+        value="funding"
+        testid="oui-testid-funding-tab"
+      >
+        <React.Suspense fallback={null}>
+          <LazyFundingWidget />
+        </React.Suspense>
+      </TabPanel>
+    </Tabs>
+  );
+};

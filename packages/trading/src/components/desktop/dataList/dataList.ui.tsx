@@ -1,18 +1,17 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Box,
   Divider,
   Flex,
   InfoCircleIcon,
-  ScrollArea,
   TabPanel,
   Tabs,
   Tooltip,
 } from "@orderly.network/ui";
 import type { TabPanelProps } from "@orderly.network/ui";
+import { AssetsTabWidget } from "@orderly.network/ui-assets";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   LiquidationWidget,
@@ -60,6 +59,22 @@ const PositionsView: React.FC<DataListState> = (props) => {
     </Flex>
   );
 };
+
+const resolvePositionsContent = (
+  content:
+    | React.ReactNode
+    | ((perpsContent: React.ReactNode) => React.ReactNode)
+    | undefined,
+  perpsContent: React.ReactNode,
+) =>
+  typeof content === "function"
+    ? content(perpsContent)
+    : (content ?? perpsContent);
+
+export {
+  PerpsPositionsPanel,
+  PerpsPositionsSettings,
+} from "@orderly.network/trading-shared";
 
 export const LiquidationTab: React.FC = () => {
   const { t } = useTranslation();
@@ -113,21 +128,31 @@ export const DataList: React.FC<DataListState> = (props) => {
     setUnPnlPriceBasic,
     setPnlNotionalDecimalPrecision,
   } = props;
+  const visiblePositionCount =
+    props.dataListProductContent?.counts?.positions ?? positionCount;
+  const visiblePendingCount =
+    props.dataListProductContent?.counts?.pending === null
+      ? 0
+      : (props.dataListProductContent?.counts?.pending ?? pendingOrderCount);
 
   const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
       value: DataListTabType.positions,
-      title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
-      content: <PositionsView {...props} />,
+      title: `${t("common.positions")}${visiblePositionCount > 0 ? ` (${visiblePositionCount})` : ""}`,
+      content: resolvePositionsContent(
+        props.dataListProductContent?.positions,
+        <PositionsView {...props} />,
+      ),
     },
     {
       value: DataListTabType.pending,
-      title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
-      content: (
+      title: `${t("orders.status.pending")}${visiblePendingCount > 0 ? ` (${visiblePendingCount})` : ""}`,
+      content: props.dataListProductContent?.pending ?? (
         <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           testIds={{ tableBody: "oui-testid-dataList-pending-table-body" }}
         />
@@ -149,12 +174,13 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.filled,
       title: t("orders.status.filled"),
-      content: (
+      content: props.dataListProductContent?.filled ?? (
         <DesktopOrderListWidget
           type={TabType.filled}
           symbol={showAllSymbol ? undefined : symbol}
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           ordersStatus={OrderStatus.FILLED}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           testIds={{ tableBody: "oui-testid-dataList-filled-table-body" }}
           sharePnLConfig={sharePnLConfig}
@@ -164,10 +190,11 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.positionHistory,
       title: t("positions.positionHistory"),
-      content: (
+      content: props.dataListProductContent?.positionHistory ?? (
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           sharePnLConfig={sharePnLConfig}
         />
@@ -176,11 +203,12 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.orderHistory,
       title: t("orders.orderHistory"),
-      content: (
+      content: props.dataListProductContent?.orderHistory ?? (
         <DesktopOrderListWidget
           type={TabType.orderHistory}
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
+          productType="PERP"
           onSymbolChange={onSymbolChange}
           testIds={{ tableBody: "oui-testid-dataList-orderHistory-table-body" }}
           sharePnLConfig={sharePnLConfig}
@@ -197,26 +225,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.assets,
       title: t("common.assets"),
-      content: (
-        <Flex
-          width="100%"
-          height="100%"
-          className="oui-overflow-y-auto oui-hide-scrollbar oui-pt-3"
-        >
-          <AssetsModule.AssetsDataTableWidget
-            classNames={{
-              scrollRoot:
-                "oui-h-full oui-mb-6 oui-mt-0 oui-p-0 oui-pt-3 oui-h-[calc(100%_-_40px)]",
-              root: "oui-gap-4 oui-h-full",
-              desc: "oui-ms-1",
-            }}
-            dataTableClassNames={{
-              header: "oui-bg-base-9",
-              root: "oui-h-[calc(100%_-_28px)]",
-            }}
-          />
-        </Flex>
-      ),
+      content: <AssetsTabWidget />,
     },
   ];
 

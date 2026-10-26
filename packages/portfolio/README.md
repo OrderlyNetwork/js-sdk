@@ -152,3 +152,20 @@ function PortfolioLayout({ children }) {
 2. **Mobile Detection**: Components automatically detect mobile environment and render corresponding UI
 3. **Dependency Requirements**: Ensure all necessary dependency packages are installed, including `@orderly.network/ui`, `@orderly.network/i18n`, etc.
 4. **RouterAdapter**: Ensure proper implementation of `routerAdapter` interface to support page navigation functionality
+
+## Built-in Prediction integration
+
+`OrdersModule.OrdersPage` and `PositionsModule.PositionsPage` include Prediction by default. Existing page calls continue to work without product slots, account queries, or additional Prediction CSS imports:
+
+```tsx
+import { OrdersModule, PositionsModule } from "@orderly.network/portfolio";
+
+<OrdersModule.OrdersPage sharePnLConfig={sharePnLConfig} />;
+<PositionsModule.PositionsPage onSymbolChange={onSymbolChange} />;
+```
+
+Orders initially displays all products and supports All / Perps / Prediction filtering. Positions and Position history initially display Perps and offer a Prediction switch. Liquidation remains Perps-only. Current Prediction positions share the Perps account filter and grouping: a main account can view and close its children’s holdings while preserving the selected account across product switches. Child logins manage their own positions. Prediction Orders and Position history continue to use only the signed-in account; the account filter is hidden for those views.
+
+Set `features={{ prediction: false }}` on `OrderlyAppProvider` to show only Perps. Positions' `positionProductContent` and `positionHistoryProductContent` callbacks still override the built-in panel for their respective tabs.
+
+Orders downloads the currently loaded rows matching the active product and filters. Historical lists load further pages on demand; downloads do not imply that every historical page has been loaded.

@@ -15,8 +15,6 @@
   "extend.docs": "Documentos",
   "extend.audits": "Auditorías",
   "extend.vaults": "Bóvedas",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Perps con libro de órdenes sin gas y hasta 100x de apalancamiento",
   "extend.woofiEarn": "WOOFi ganar",
   "extend.woofiEarn.description": "Obtén rendimiento sin esfuerzo en cualquier cadena",
   "extend.wooStake": "WOO staking",

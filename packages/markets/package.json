@@ -1,13 +1,15 @@
 {
   "name": "@orderly.network/markets",
-  "version": "3.2.3",
-  "description": "",
+  "version": "3.3.0",
+  "description": "Market pages with built-in product integrations",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup && pnpm run build:css",
-    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.build.json"
   },
   "keywords": [],
   "files": [
@@ -17,13 +19,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/markets-core": "workspace:*",
+    "@orderly.network/prediction": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-scaffold": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "ramda": "^0.31.3"
+    "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

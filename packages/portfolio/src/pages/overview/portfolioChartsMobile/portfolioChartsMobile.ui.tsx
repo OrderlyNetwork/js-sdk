@@ -96,7 +96,7 @@ export const PortfolioChartsMobileUI: React.FC<
                   </linearGradient>
                 </defs>
                 <Area
-                  type="natural"
+                  type="monotoneX"
                   dataKey="account_value"
                   stroke="rgb(var(--oui-color-trading-profit))"
                   strokeWidth={1.5}

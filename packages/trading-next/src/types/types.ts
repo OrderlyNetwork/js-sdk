@@ -1,5 +1,10 @@
 import { ReactNode } from "react";
 import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
+import type {
+  DropDownMarketsExtensionProps,
+  ExpandMarketsExtensionProps,
+  MarketsSheetExtensionProps,
+} from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
@@ -96,6 +101,12 @@ export type BasicSymbolInfo = {
 };
 
 export interface TradingPageState extends TradingPageProps {
+  /** SDK-generated desktop market configuration. */
+  marketsDropdown?: DropDownMarketsExtensionProps;
+  /** SDK-generated mobile market configuration. */
+  marketsSheet?: MarketsSheetExtensionProps;
+  /** SDK-generated expanded market configuration. */
+  sideMarkets?: ExpandMarketsExtensionProps;
   symbolInfo: {
     base_dp: number;
     quote_dp: number;

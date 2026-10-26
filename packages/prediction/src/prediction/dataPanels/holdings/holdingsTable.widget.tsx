@@ -1,0 +1,19 @@
+import React from "react";
+import type { DataFilterItem } from "@orderly.network/ui";
+import type { PredictionAccountPanelState } from "../../prediction.types";
+import { useHoldingsTableScript } from "./holdingsTable.script";
+import { HoldingsTableUI, type HoldingsTableUIProps } from "./holdingsTable.ui";
+
+export type HoldingsTableProps = Pick<
+  HoldingsTableUIProps,
+  "getPositionState" | "groups" | "onSubmitted" | "loading"
+> & {
+  state: PredictionAccountPanelState;
+  leadingFilterItems?: DataFilterItem[];
+  onLeadingFilter?: (filter: { name: string; value: unknown }) => void;
+};
+
+export const HoldingsTable: React.FC<HoldingsTableProps> = (props) => {
+  const { filters } = useHoldingsTableScript();
+  return <HoldingsTableUI {...props} filters={filters} />;
+};

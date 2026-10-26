@@ -11,7 +11,10 @@ import {
 import { TradingPage } from "@orderly.network/trading-next";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
-import { getSymbol, updateSymbol } from "../../../utils/storage";
+import {
+  getPerpSymbol,
+  setPerpSymbol,
+} from "../../../playground/perpSymbolStorage";
 import { OrderlyIcon } from "./icons";
 
 const meta: Meta<typeof TradingPage> = {
@@ -49,10 +52,10 @@ type Story = StoryObj<typeof meta>;
 
 export const GridLayoutPage: Story = {
   render: (arg) => {
-    const [symbol, setSymbol] = useState(getSymbol() || "PERP_BTC_USDC");
+    const [symbol, setSymbol] = useState(getPerpSymbol() || "PERP_BTC_USDC");
 
     useEffect(() => {
-      updateSymbol(symbol);
+      setPerpSymbol(symbol);
     }, [symbol]);
 
     return (

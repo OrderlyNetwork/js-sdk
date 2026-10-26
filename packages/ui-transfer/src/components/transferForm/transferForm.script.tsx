@@ -74,7 +74,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const { portfolio, positions } = useSubAccountDataObserver(observerAccountId);
   const subAccountMaxAmount = useSubAccountMaxWithdrawal({
     token: token.symbol,
-    unsettledPnL: portfolio?.unsettledPnL,
+    unsettledPnL: portfolio?.perpUnsettledPnL,
     freeCollateral: portfolio?.freeCollateral ?? zero,
     holdings: portfolio?.holding,
   });
@@ -91,7 +91,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const { unsettledPnL, maxQuantity } = useMemo(() => {
     if (observerAccountId) {
       return {
-        unsettledPnL: portfolio?.unsettledPnL,
+        unsettledPnL: portfolio?.perpUnsettledPnL,
         maxQuantity: subAccountMaxAmount,
       };
     }
@@ -103,7 +103,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     observerAccountId,
     currentUnsettledPnL,
     currentMaxAmount,
-    portfolio?.unsettledPnL,
+    portfolio?.perpUnsettledPnL,
     subAccountMaxAmount,
   ]);
 

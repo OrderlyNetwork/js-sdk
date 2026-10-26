@@ -15,8 +15,6 @@
   "extend.docs": "Belgeler",
   "extend.audits": "Denetimler",
   "extend.vaults": "Kasalar",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Gazsız emir defteri perpleri, 100x'e kadar kaldıraçla",
   "extend.woofiEarn": "WOOFi kazan",
   "extend.woofiEarn.description": "Herhangi bir zincirde zahmetsizce getiri elde edin",
   "extend.wooStake": "WOO stake",

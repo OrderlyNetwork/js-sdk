@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "3.2.3",
+  "version": "3.3.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -30,8 +30,9 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets": "workspace:*",
-    "@orderly.network/portfolio": "workspace:*",
+    "@orderly.network/prediction": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/trading-shared": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
@@ -45,7 +46,8 @@
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@uiw/react-split": "5.9.3"
+    "@uiw/react-split": "5.9.3",
+    "@orderly.network/ui-assets": "workspace:*"
   },
   "devDependencies": {
     "@orderly.network/core": "workspace:*",

@@ -62,18 +62,9 @@
   },
   "engines": {
     "node": ">=20.19.0",
-    "pnpm": ">=10.0.0"
+    "pnpm": ">=12.0.0 <13"
   },
-  "pnpm": {
-    "overrides": {
-      "ws@>=8.0.0 <8.21.0": "8.21.2",
-      "viem>ws": "8.21.2"
-    },
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
-  },
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@12.15.0",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,html,css,md}": [
       "eslint --fix --config eslint.config.fix.mjs",

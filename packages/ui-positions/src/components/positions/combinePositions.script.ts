@@ -10,6 +10,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useDataTap } from "@orderly.network/react-app";
 import { type API } from "@orderly.network/types";
 import { formatAddress, usePagination } from "@orderly.network/ui";
+import { isBinarySymbol } from "@orderly.network/utils";
 import type { PositionsProps } from "../../types/types";
 import { calculatePositions } from "./calculatePositions";
 import { useSubAccountQuery } from "./hooks/useSubAccountQuery";
@@ -86,9 +87,11 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
   }, [newPositions, symbolsInfo, accountInfo, state.mainAccountId, tpslOrders]);
 
   const allPositions = useMemo(() => {
-    return [...mainAccountPositions?.rows, ...subAccountPositions].filter(
-      (item) => item.position_qty !== 0,
-    );
+    // /v1/positions mixes both products (api-spec §6.2); binary positions
+    // are owned by the prediction UI and never render in the perps table.
+    return [...mainAccountPositions?.rows, ...subAccountPositions]
+      .filter((item) => item.position_qty !== 0)
+      .filter((item) => !isBinarySymbol(item.symbol));
   }, [mainAccountPositions, subAccountPositions]);
 
   const dataSource = useDataTap(allPositions) ?? [];

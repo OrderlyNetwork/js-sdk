@@ -199,6 +199,8 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
             props.onOpenMarketsSheetChange(false);
             props.onSymbolChange?.(symbol);
           }}
+          onRequestClose={() => props.onOpenMarketsSheetChange(false)}
+          {...props.marketsSheet}
         />
       </SimpleSheet>
       {rwaStatusBar}

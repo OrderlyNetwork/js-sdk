@@ -7,6 +7,7 @@ import { MarketCalculatorName } from "./markPrice";
 export class CalculatorContext implements CalculatorCtx {
   accountInfo?: API.AccountInfo;
   symbolsInfo?: Record<string, API.SymbolExt>;
+  perpSymbolsInfo?: Record<string, API.SymbolExt>;
   fundingRates?: Record<string, API.FundingRate>;
   // holding: API.Holding[];
   // portfolio — dynamic getter to always read the latest output from PortfolioCalculator
@@ -22,6 +23,20 @@ export class CalculatorContext implements CalculatorCtx {
   tokensInfo?: API.Token[];
 
   private output: Record<string, any>;
+
+  /**
+   * Memoized symbolsInfo/accountInfo composition keyed by store input
+   * references. setCtxData runs on every calculator update (each price tick
+   * per scope); the inputs only change when their SWR payloads do, so the
+   * composed ~800-key records are reused while the references are unchanged.
+   */
+  private lastCompose?: {
+    symbolsInfoInput?: Record<string, API.SymbolExt>;
+    binarySymbolsInfoInput?: Record<string, API.SymbolExt>;
+    accountInfoInput?: API.AccountInfo;
+    symbolsInfo: Record<string, API.SymbolExt>;
+    accountInfo: API.AccountInfo | undefined;
+  };
 
   private static _instance: CalculatorContext;
 
@@ -71,16 +86,68 @@ export class CalculatorContext implements CalculatorCtx {
   }
 
   private setCtxData() {
-    this.accountInfo = useAppStore.getState().accountInfo as API.AccountInfo;
-    this.symbolsInfo = useAppStore.getState().symbolsInfo as Record<
-      string,
-      API.SymbolExt
-    >;
-    this.fundingRates = useAppStore.getState().fundingRates as Record<
-      string,
-      API.FundingRate
-    >;
-    this.tokensInfo = useAppStore.getState().tokensInfo || [];
+    const state = useAppStore.getState();
+    this.perpSymbolsInfo = state.symbolsInfo;
+    this.fundingRates = state.fundingRates as Record<string, API.FundingRate>;
+    this.tokensInfo = state.tokensInfo || [];
+
+    if (
+      this.lastCompose &&
+      this.lastCompose.symbolsInfoInput === state.symbolsInfo &&
+      this.lastCompose.binarySymbolsInfoInput === state.binarySymbolsInfo &&
+      this.lastCompose.accountInfoInput === state.accountInfo
+    ) {
+      this.symbolsInfo = this.lastCompose.symbolsInfo;
+      this.accountInfo = this.lastCompose.accountInfo;
+      return;
+    }
+
+    const accountInfo = state.accountInfo as API.AccountInfo;
+    const binarySymbolsInfo = state.binarySymbolsInfo;
+    let composedAccountInfo = accountInfo;
+    let symbolsInfo: Record<string, API.SymbolExt>;
+
+    if (binarySymbolsInfo) {
+      // Compose the binary symbol config (from /v1/public/binary/info with the
+      // PRD-fixed base_imr=1/base_mmr=0) into the calculator view only —
+      // appStore.symbolsInfo itself stays binary-free for plain consumers
+      // (symbol pickers, badge lookups, ...).
+      symbolsInfo = {
+        ...state.symbolsInfo,
+        ...binarySymbolsInfo,
+      } as Record<string, API.SymbolExt>;
+
+      if (accountInfo) {
+        // Binary rows must also resolve IMR_Factor (portfolio's
+        // totalInitialMarginWithQty throws on a missing entry) even when
+        // /v1/client/info's imr_factor map doesn't list the symbol.
+        let missing = false;
+        const imrFactor: Record<string, number> = {
+          ...accountInfo.imr_factor,
+        };
+        for (const symbol of Object.keys(binarySymbolsInfo)) {
+          if (imrFactor[symbol] == null) {
+            imrFactor[symbol] = binarySymbolsInfo[symbol].imr_factor ?? 0;
+            missing = true;
+          }
+        }
+        if (missing) {
+          composedAccountInfo = { ...accountInfo, imr_factor: imrFactor };
+        }
+      }
+    } else {
+      symbolsInfo = state.symbolsInfo as Record<string, API.SymbolExt>;
+    }
+
+    this.lastCompose = {
+      symbolsInfoInput: state.symbolsInfo,
+      binarySymbolsInfoInput: binarySymbolsInfo,
+      accountInfoInput: accountInfo,
+      symbolsInfo,
+      accountInfo: composedAccountInfo,
+    };
+    this.symbolsInfo = symbolsInfo;
+    this.accountInfo = composedAccountInfo;
   }
 
   get(fn: (output: Record<string, any>) => any) {

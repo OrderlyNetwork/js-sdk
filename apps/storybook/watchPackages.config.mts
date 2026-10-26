@@ -72,6 +72,12 @@ const base: Package[] = [
 
 const ui: Package[] = [
   {
+    package: "@orderly.network/ui-assets",
+    path: "../../packages/ui-assets/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/ui/dist",
     path: "../../packages/ui/dist",
     watch: true,
@@ -170,6 +176,12 @@ const page: Package[] = [
     includeCSS: true,
   },
   {
+    package: "@orderly.network/markets-core",
+    path: "../../packages/markets-core/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/markets",
     path: "../../packages/markets/src",
     watch: true,
@@ -182,8 +194,20 @@ const page: Package[] = [
     includeCSS: true,
   },
   {
+    package: "@orderly.network/prediction",
+    path: "../../packages/prediction/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
     package: "@orderly.network/trading",
     path: "../../packages/trading/src",
+    watch: true,
+    includeCSS: true,
+  },
+  {
+    package: "@orderly.network/trading-shared",
+    path: "../../packages/trading-shared/src",
     watch: true,
     includeCSS: true,
   },

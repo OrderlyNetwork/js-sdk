@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useMemo, useRef } from "react";
+import React, { PropsWithChildren, useMemo, useState } from "react";
 import { useWSObserver } from "../../orderly/internal/useWSObserver";
 import { useInitRwaSymbolsRuntime } from "../../orderly/orderlyHooks";
 import { usePrivateDataObserver } from "../../orderly/usePrivateDataObserver";
@@ -6,11 +6,8 @@ import { usePublicDataObserver } from "../../orderly/usePublicDataObserver";
 import { useCalculatorService } from "../../useCalculatorService";
 import { useDatabaseInitialization } from "../../useDatabaseInitialization";
 import { usePreLoadData } from "../../usePreloadData";
-import {
-  DataCenterContext,
-  DataCenterContextState,
-  getKeyFunction,
-} from "./dataCenterContext";
+import { DataCenterContext, DataCenterContextState } from "./dataCenterContext";
+import { createOrderKeyRegistry } from "./orderKeyRegistry";
 
 export const DataCenterProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -33,24 +30,20 @@ export const DataCenterProvider: React.FC<PropsWithChildren> = ({
    */
   useWSObserver(calculatorService);
 
-  const getKeyHandlerMapRef = useRef<Map<string, getKeyFunction>>(new Map());
+  const [registry] = useState(createOrderKeyRegistry);
 
   usePrivateDataObserver({
     getKeysMap(type) {
-      return getKeyHandlerMapRef.current;
+      return registry.handlers;
     },
   });
 
   const memoizedValue = useMemo<DataCenterContextState>(() => {
     return {
-      registerKeyHandler: (key, fun) => {
-        getKeyHandlerMapRef.current.set(key, fun);
-      },
-      unregisterKeyHandler: (key) => {
-        getKeyHandlerMapRef.current.delete(key);
-      },
+      registerKeyHandler: registry.register,
+      unregisterKeyHandler: registry.unregister,
     };
-  }, [getKeyHandlerMapRef.current]);
+  }, [registry]);
 
   // if (databaseError) {
   //   return (

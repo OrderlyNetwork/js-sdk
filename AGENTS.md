@@ -10,7 +10,10 @@ This is a pnpm monorepo using Turbo for build orchestration. It contains:
 - `apps/storybook` - Storybook for component development and documentation
 - `apps/ai-docs` - Documentation site generators for components and hooks
 
-Requires pnpm v10+ and Node.js v20.19.0+.
+Requires pnpm v12 (the project pins v12.15.0) and Node.js v20.19.0+.
+Install pnpm v12 before running project commands; pnpm v10 cannot reliably
+bootstrap the native v12 executable from the `packageManager` pin. Docker uses
+`pnpm@12` to bootstrap the pinned project version.
 
 ## Commands
 
@@ -92,6 +95,8 @@ componentName/
 3. Key format: `module.keyName` (e.g., `common.cancel`)
 4. Only add to `.ts` module files, never edit the JSON translation files in `packages/i18n/locales/` - they are generated via the `translate-locales` skill
 5. Use i18n in the UI layer for displayed text; script handlers may translate interaction feedback such as Toast and modal messages
+6. Never compose i18n keys dynamically (template literals or variables). Static key extraction only sees literal keys - ``t(`common.${side}`)`` silently loses translations while tests (identity-mocked i18n) still pass, and an ESLint `no-restricted-syntax` rule in the root `eslint.config.mjs` rejects interpolated keys. When labels are keyed by a domain union (outcome/side/status/phase), use the label-map pattern from `packages/prediction/src/prediction/predictionLabels.ts`: a `Record<Union, string>` whose values are literal `i18n.t("key")` calls, so a missing entry becomes a compile error instead of a runtime gap.
+7. Whenever user-facing text is added or changed, automatically run the `translate-locales` skill to synchronize all supported locales as part of the same task, without asking for confirmation. Refresh translations for existing keys whose English source text changed as well as translating new keys. Skip translation only when the user explicitly requests it. If synchronization cannot be completed, report the reason and identify the affected keys and locales in the final response.
 
 ## Utilities & Conventions
 
@@ -99,6 +104,19 @@ componentName/
 - Local storage: use `useLocalStorage` from `@orderly.network/hooks`
 - Styling: Tailwind CSS with `tailwind-merge` and `tailwind-variants`; prefer `@orderly.network/ui` components
 - Never hardcode colors - use `oui-*` Tailwind classes or theme variables from `apps/storybook/src/theme/customTheme.ts` (see the `replace-hardcoded-colors` skill)
+
+### API Response Envelopes (rows unwrap)
+
+The net layer `get()` (behind `useQuery`/`usePrivateQuery`/`fetcher`; see `packages/net/src/fetch/index.ts`) unwraps success envelopes before SWR sees the data:
+
+- `{ success, data: { rows: [...] } }` → returns the bare `rows` array; `meta` is silently dropped.
+- Any other `data` shape (object without a top-level `rows`, or a bare array) → returned as-is.
+- Passing `formatter: (data) => data` bypasses the unwrap and keeps the full `data` object - use this when you need `meta`.
+
+Rules:
+
+- Type rows endpoints as arrays: `useQuery<API.MarketInfo[]>("/v1/public/futures")` - never `useQuery<{ rows: ... }>`. The runtime mismatch is invisible to TypeScript: `data?.rows` is silently `undefined` and the feature renders empty.
+- API-doc envelope examples (`{ success, data: ... }`) describe the HTTP response only; the hook never sees `success`/`data`.
 
 ## Key Packages
 

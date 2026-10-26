@@ -15,8 +15,6 @@
   "extend.docs": "Documenti",
   "extend.audits": "Audit",
   "extend.vaults": "Depositi",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Perps con order book senza gas e leva fino a 100x",
   "extend.woofiEarn": "WOOFi guadagna",
   "extend.woofiEarn.description": "Ottieni rendimenti senza sforzo su qualsiasi chain",
   "extend.wooStake": "WOO staking",

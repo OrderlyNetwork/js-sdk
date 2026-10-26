@@ -1,222 +1,71 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { generatePath, useTranslation } from "@orderly.network/i18n";
-import { SubMenuMarketsWidget } from "@orderly.network/markets";
-import { API } from "@orderly.network/types";
+import React, { useCallback } from "react";
+import { useLocation, useParams } from "react-router";
+import { removeLangPrefix, useTranslation } from "@orderly.network/i18n";
 import {
-  EarnActiveIcon,
-  EarnInactiveIcon,
-  TradingActiveIcon,
-  TradingInactiveIcon,
-  MarketsActiveIcon,
-  MarketsInactiveIcon,
-} from "@orderly.network/ui";
-import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
+  PERPS_TRADE_SUB_MENU_KEY,
+  PREDICTION_TRADE_SUB_MENU_KEY,
+  TradeSubMenuWidget,
+  type TradeSubMenuItem,
+} from "@orderly.network/markets";
+import { MarketsActiveIcon, MarketsInactiveIcon } from "@orderly.network/ui";
 import { PathEnum } from "../../playground/constant";
-import { DEFAULT_SYMBOL, updateSymbol } from "../../playground/storage";
-import { MenuItemRow } from "./SubMenuComponents";
+import { DEFAULT_SYMBOL } from "../../playground/perpSymbolStorage";
 
-const RIGHT_SECTION_WRAPPER_CLASSNAME = [
-  "oui-overflow-hidden",
-  "oui-transition-[width,height] oui-duration-120 oui-ease-out",
-  "data-[state=open]:oui-w-[280px] data-[state=closed]:oui-w-0",
-  "data-[state=open]:oui-h-[423px] data-[state=closed]:oui-h-0",
-  "data-[state=closed]:oui-pointer-events-none",
-].join(" ");
+const SPOT_KEY = "spot";
+const RWA_KEY = "rwa";
 
-const RIGHT_SECTION_ANIMATION_CLASSNAME = [
-  "oui-origin-top-left",
-  "data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
-  "data-[state=open]:oui-fade-in-0 data-[state=closed]:oui-fade-out-0",
-  "data-[state=open]:oui-zoom-in-95 data-[state=closed]:oui-zoom-out-95",
-  "data-[state=open]:oui-slide-in-from-top-2",
-  "data-[state=open]:oui-slide-in-from-left-2",
-].join(" ");
+function matchesRoute(path: string, route: string) {
+  return path === route || path.startsWith(`${route}/`);
+}
 
-const LeftSection = (props: {
-  selectedTab: string;
-  onSelect: (tab: string) => void;
-  onSpotClick: () => void;
-  onPerpsClick: () => void;
-  onRWAClick: () => void;
-  onHoverTab: (tab: "perps" | null) => void;
-}) => {
-  const {
-    selectedTab,
-    onSelect,
-    onSpotClick,
-    onPerpsClick,
-    onRWAClick,
-    onHoverTab,
-  } = props;
+/** Expects a pathname without the language prefix. */
+function getTradeSubMenuKey(path: string): string {
+  if (matchesRoute(path, PathEnum.Prediction)) {
+    return PREDICTION_TRADE_SUB_MENU_KEY;
+  }
+  if (matchesRoute(path, PathEnum.Swap)) return SPOT_KEY;
+  if (matchesRoute(path, PathEnum.Rwa)) return RWA_KEY;
+  return PERPS_TRADE_SUB_MENU_KEY;
+}
+
+const TradeSubMenu: React.FC = () => {
   const { t } = useTranslation();
-
-  const menus = [
-    {
-      key: "spot",
-      activeIcon: <EarnActiveIcon size={20} />,
-      inactiveIcon: <EarnInactiveIcon size={20} />,
-      title: t("extend.spot"),
-      description: t("extend.spot.description"),
-      onClick: () => {
-        onSelect("spot");
-        onSpotClick();
-      },
-    },
-    {
-      key: "perps",
-      activeIcon: <TradingActiveIcon size={20} />,
-      inactiveIcon: <TradingInactiveIcon size={20} />,
-      title: t("extend.perps"),
-      description: t("extend.perps.description"),
-      onClick: () => {
-        onSelect("perps");
-        onPerpsClick();
-      },
-      onMouseEnter: () => {
-        onHoverTab("perps");
-      },
-    },
-    {
-      key: "rwa",
-      activeIcon: <MarketsActiveIcon size={20} />,
-      inactiveIcon: <MarketsInactiveIcon size={20} />,
-      title: t("common.rwa"),
-      description: t("common.rwa"),
-      onClick: () => {
-        onSelect("rwa");
-        onRWAClick();
-      },
-    },
-  ];
-
-  return (
-    <div className="oui-w-[240px] oui-flex-shrink-0 oui-rounded-lg">
-      {menus.map((menu) => {
-        const isActive = selectedTab === menu.key;
-        return (
-          <MenuItemRow
-            key={menu.key}
-            activeIcon={isActive ? menu.activeIcon : menu.inactiveIcon}
-            title={menu.title}
-            description={menu.description}
-            onClick={menu.onClick}
-            onMouseEnter={
-              menu.onMouseEnter ??
-              (() => {
-                onHoverTab(null);
-              })
-            }
-            isActive={isActive}
-            showArrow={true}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const RightSection = (props: { className?: string }) => {
-  const { className } = props;
+  const { pathname } = useLocation();
   const params = useParams();
+  const path = removeLangPrefix(pathname);
 
-  const { onRouteChange } = useRouteContext();
-  const [symbol, setSymbol] = useState<string>(params.symbol || DEFAULT_SYMBOL);
-
-  useEffect(() => {
-    const next = params.symbol || DEFAULT_SYMBOL;
-    if (next !== symbol) setSymbol(next);
-  }, [params.symbol]);
-
-  useEffect(() => {
-    updateSymbol(symbol);
-  }, [symbol]);
-
-  const onSymbolChange = useCallback(
-    (data: API.Symbol) => {
-      const nextSymbol = data.symbol;
-      setSymbol(nextSymbol);
-      onRouteChange({
-        href: `${PathEnum.Perp}/${nextSymbol}`,
-        name: "perps",
-      });
+  const items = useCallback(
+    (builtins: TradeSubMenuItem[]): TradeSubMenuItem[] => {
+      // const spot: TradeSubMenuItem = {
+      //   key: SPOT_KEY,
+      //   title: t("extend.spot"),
+      //   description: t("extend.spot.description"),
+      //   activeIcon: <EarnActiveIcon size={20} />,
+      //   inactiveIcon: <EarnInactiveIcon size={20} />,
+      //   route: { href: PathEnum.Swap, name: SPOT_KEY },
+      // };
+      const rwa: TradeSubMenuItem = {
+        key: RWA_KEY,
+        title: t("common.rwa"),
+        description: t("common.rwa"),
+        activeIcon: <MarketsActiveIcon size={20} />,
+        inactiveIcon: <MarketsInactiveIcon size={20} />,
+        route: { href: PathEnum.Rwa, name: RWA_KEY },
+      };
+      return [...builtins, rwa];
     },
-    [onRouteChange],
+    [t],
   );
 
   return (
-    <div className={className}>
-      <SubMenuMarketsWidget
-        className="oui-rounded-md oui-p-2"
-        symbol={symbol}
-        onSymbolChange={onSymbolChange}
-      />
-    </div>
+    <TradeSubMenuWidget
+      activeKey={getTradeSubMenuKey(path)}
+      // Prediction round symbols are ignored inside the widget via isBinarySymbol.
+      symbol={params.symbol}
+      defaultSymbol={DEFAULT_SYMBOL}
+      items={items}
+    />
   );
 };
 
-export const customTradeSubMenuRender = () => {
-  return () => {
-    const [selectedTab, setSelectedTab] = useState("perps");
-    const [hoverTab, setHoverTab] = useState<"perps" | null>(null);
-    const { onRouteChange } = useRouteContext();
-    const location = window.location;
-
-    const handleSpotClick = () => {
-      onRouteChange({
-        href: PathEnum.Swap,
-        name: "spot",
-      });
-    };
-
-    const handlePerpsClick = () => {
-      onRouteChange({ href: PathEnum.Perp, name: "perps" });
-    };
-
-    const handleRWAClick = () => {
-      onRouteChange({ href: PathEnum.Rwa, name: "rwa" });
-    };
-
-    useEffect(() => {
-      const pathname = location.pathname || "";
-      if (pathname.includes(PathEnum.Swap)) setSelectedTab("spot");
-      if (pathname.includes(PathEnum.Rwa)) setSelectedTab("rwa");
-    }, [location.pathname]);
-
-    const showPerpsRightSection =
-      selectedTab === "perps" || hoverTab === "perps";
-    const rightSectionState = showPerpsRightSection ? "open" : "closed";
-
-    return (
-      <div
-        className="oui-flex oui-p-1 oui-bg-base-8 oui-rounded-lg oui-border oui-border-line-6"
-        onMouseLeave={() => {
-          setHoverTab(null);
-        }}
-      >
-        <LeftSection
-          selectedTab={selectedTab}
-          onSelect={setSelectedTab}
-          onSpotClick={handleSpotClick}
-          onPerpsClick={handlePerpsClick}
-          onRWAClick={handleRWAClick}
-          onHoverTab={setHoverTab}
-        />
-        <div
-          className={RIGHT_SECTION_WRAPPER_CLASSNAME}
-          onMouseEnter={() => {
-            setHoverTab("perps");
-          }}
-          data-state={rightSectionState}
-        >
-          <div
-            className={RIGHT_SECTION_ANIMATION_CLASSNAME}
-            data-state={rightSectionState}
-          >
-            <RightSection className="oui-w-[280px] oui-h-[423px] oui-ml-1" />
-          </div>
-        </div>
-      </div>
-    );
-  };
-};
+export const customTradeSubMenuRender = () => <TradeSubMenu />;

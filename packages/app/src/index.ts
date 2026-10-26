@@ -4,6 +4,7 @@ export {
 } from "./provider/orderlyAppProvider";
 export { useAppConfig } from "./provider/appConfigContext";
 export { useAppContext } from "./provider/appStateContext";
+export { useFeatureEnabled } from "./hooks/useFeatureEnabled";
 export { useDataTap } from "./hooks/useDataTap";
 export { type AppLogos } from "./types";
 export { type AppStateProviderProps } from "./provider/appStateProvider";

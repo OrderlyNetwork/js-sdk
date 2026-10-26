@@ -9,23 +9,29 @@ import {
 } from "react";
 import { differenceInDays, setHours, subDays, format } from "date-fns";
 import {
+  useAccount,
   useLocalStorage,
   useOrderStream,
+  useRefreshOrderCaches,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
+import { useCanTrade, useDataTap } from "@orderly.network/react-app";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
   API,
 } from "@orderly.network/types";
-import { modal, usePagination, Text, Table } from "@orderly.network/ui";
+import { usePagination, Table } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
-import { formatSymbol } from "@orderly.network/utils";
+import { formatSymbol, isBinarySymbol } from "@orderly.network/utils";
 import { areDatesEqual } from "../../utils/util";
 import { TabType } from "../orders.widget";
+import {
+  assertCancelAllSucceeded,
+  useCancelAllConfirmation,
+} from "./useCancelAllConfirmation";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export type OrderListInstance = {
@@ -34,9 +40,23 @@ export type OrderListInstance = {
 
 export type useOrderListScriptOptions = {
   type: TabType;
+  /** Pause this list query while its product is hidden. */
+  enabled?: boolean;
   ordersStatus?: OrderStatus;
   symbol?: string;
+  /**
+   * Product filter forwarded to the orders query ("PERP"/"BINARY"); omit to
+   * query all products.
+   * This does not add a product filter to DELETE. PERP cancel-all enumerates
+   * loaded display symbols and may miss hidden symbols; BINARY cancel-all
+   * without a symbol remains account-wide. Callers needing complete product
+   * isolation must provide a separate cancellation workflow.
+   */
+  productType?: string;
   enableLoadMore?: boolean;
+  /** Blocks bulk cancellation, including confirmation dialogs already open. */
+  cancelAllDisabled?: boolean;
+  onCancelAllAfter?: () => Promise<unknown>;
   onSymbolChange?: (symbol: API.Symbol) => void;
   sharePnLConfig?: SharePnLConfig;
   filterConfig?: {
@@ -61,6 +81,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     sharePnLConfig,
   } = props;
   const { t } = useTranslation();
+  const canTrade = useCanTrade();
+  const { state: account } = useAccount();
+  const refreshOrders = useRefreshOrderCaches();
   const symbolsInfo = useSymbolsInfo();
 
   const manualPagination = useMemo(() => {
@@ -119,8 +142,11 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const [
     data,
     {
+      error,
       isLoading,
+      isValidating,
       loadMore,
+      hasMore,
       cancelOrder,
       updateOrder,
       cancelAlgoOrder,
@@ -128,20 +154,26 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
       cancelAllPendingOrders,
       cancelAllTPSLOrders,
       meta,
-      refresh,
     },
-  ] = useOrderStream({
-    symbol: props.symbol,
-    status: orderStatus,
-    side: ordersSide,
-    page: enableLoadMore || !manualPagination ? undefined : page,
-    // pending and ts_sl list get all data
-    size: manualPagination ? pageSize : 500,
-    sourceTypeAll: type === TabType.orderHistory || type === TabType.filled,
-    dateRange,
-    includes,
-    excludes,
-  });
+  ] = useOrderStream(
+    {
+      symbol: props.symbol,
+      productType: props.productType,
+      status: orderStatus,
+      side: ordersSide,
+      page: enableLoadMore || !manualPagination ? undefined : page,
+      // pending and ts_sl list get all data
+      size: manualPagination ? pageSize : 500,
+      sourceTypeAll: type === TabType.orderHistory || type === TabType.filled,
+      dateRange,
+      includes,
+      excludes,
+    },
+    {
+      enabled: props.enabled ?? true,
+      stopOnUnmount: props.enabled !== undefined,
+    },
+  );
 
   const localPageSizeKey = `orderly_${type}_pageSize`;
   const [typePageSize, setTypePageSize] = useLocalStorage(
@@ -155,50 +187,59 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     }
   }, [pageSize, typePageSize]);
 
-  const onCancelAll = useCallback(() => {
-    const { title, content } = getDialogInfo(type, t, props.symbol);
-
-    modal.confirm({
-      title: title,
-      content: <Text size="sm">{content}</Text>,
-      onCancel: async () => {},
-      onOk: async () => {
-        try {
-          // await cancelAll(null, { source_type: "ALL" });
-          if (type === TabType.tp_sl) {
-            await cancelAllTPSLOrders(props.symbol);
-          } else {
-            await cancelAllPendingOrders(props.symbol);
-          }
-          refresh();
-          return Promise.resolve(true);
-        } catch (error) {
-          // @ts-ignore
-          if (error?.message !== undefined) {
-            // @ts-ignore
-            toast.error(error.message);
-          }
-          return Promise.resolve(false);
-        } finally {
-          Promise.resolve();
-        }
-      },
-    });
-  }, [type, t, props.symbol]);
+  const dialog = getDialogInfo(type, t, props.symbol);
+  const { onCancelAll } = useCancelAllConfirmation({
+    scopeKey: JSON.stringify([type, props.symbol, props.productType]),
+    disabled: props.cancelAllDisabled || !canTrade,
+    ...dialog,
+    content: `${dialog.content} ${t("orders.cancelAll.hiddenOrders")}`,
+    execute: async (isCurrent) => {
+      if (!isCurrent()) return false;
+      const accountId = account.accountId;
+      try {
+        const responses =
+          type === TabType.tp_sl
+            ? await cancelAllTPSLOrders(props.symbol)
+            : await cancelAllPendingOrders(props.symbol);
+        assertCancelAllSucceeded(responses);
+        return isCurrent();
+      } finally {
+        await Promise.resolve()
+          .then(() => refreshOrders(accountId))
+          .catch(() => undefined);
+      }
+    },
+    onSuccess: async () => {
+      await props.onCancelAllAfter?.();
+    },
+  });
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
   // Filter by symbol if symbol prop is provided (hide other symbols)
   const filteredData = useMemo(() => {
     const rawData = type !== TabType.tp_sl ? formattedData : data;
-    if (!props.symbol || !rawData) {
+    if (!rawData) {
       return rawData;
     }
-    return rawData.filter(
+    // The product_type query only filters the REST fetch; executionreport WS
+    // inserts into every orders* cache key regardless of product, so Binary
+    // rows can leak into a PERP-scoped list. Strip them client-side.
+    const rows =
+      props.productType?.toUpperCase() === "PERP"
+        ? rawData.filter(
+            (order: API.AlgoOrder | API.AlgoOrderExt) =>
+              !isBinarySymbol(order.symbol ?? ""),
+          )
+        : rawData;
+    if (!props.symbol) {
+      return rows;
+    }
+    return rows.filter(
       (order: API.AlgoOrder | API.AlgoOrderExt) =>
         order.symbol === props.symbol,
     );
-  }, [type, formattedData, data, props.symbol]);
+  }, [type, formattedData, data, props.symbol, props.productType]);
 
   const dataSource =
     useDataTap(filteredData, {
@@ -215,8 +256,12 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   return {
     type,
     dataSource,
+    error,
     isLoading,
+    isValidating,
     loadMore,
+    hasMore,
+    meta,
     cancelOrder,
     updateOrder,
     cancelAlgoOrder,
@@ -237,6 +282,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     symbolsInfo,
     filterDays,
     updateFilterDays,
+    orderStatus,
+    ordersSide,
+    dateRange,
 
     symbol: props.symbol,
   };

@@ -3,8 +3,10 @@ import {
   AlgoOrderRootType,
   OrderEntity,
   OrderSide,
+  OrderStatus,
   OrderType,
 } from "@orderly.network/types";
+import { createOrderKeyRegistry } from "../../provider/dataCenter/orderKeyRegistry";
 import { createMockSymbolConfig } from "../../services/orderCreator/__test__/testHelpers";
 import { useOrderStream } from "./useOrderStream";
 import { useSubAccountAlgoOrderStream } from "./useSubAccountAlgoOrderStream";
@@ -12,10 +14,12 @@ import { useSubAccountAlgoOrderStream } from "./useSubAccountAlgoOrderStream";
 const mockUpdateAlgoOrder = jest.fn().mockResolvedValue({ success: true });
 const mockSymbolInfo = createMockSymbolConfig();
 let mockOrders: any[];
+let mockNormalOrders: any[];
 let mockMarkPrice: number;
+let mockDataCenter: any = {};
 
 jest.mock("../../provider/dataCenter/dataCenterContext", () => ({
-  useDataCenterContext: () => ({}),
+  useDataCenterContext: () => mockDataCenter,
 }));
 jest.mock("../../useMutation", () => ({
   useMutation: () => [mockUpdateAlgoOrder, {}],
@@ -28,8 +32,12 @@ jest.mock("../../useEventEmitter", () => ({
   useEventEmitter: () => ({ on: jest.fn(), off: jest.fn() }),
 }));
 jest.mock("../../usePrivateInfiniteQuery", () => ({
-  usePrivateInfiniteQuery: (key: () => string) => ({
-    data: [{ rows: key().includes("/algo/orders") ? mockOrders : [] }],
+  usePrivateInfiniteQuery: (key: (() => string) | null) => ({
+    data: [
+      {
+        rows: key?.().includes("/algo/orders") ? mockOrders : mockNormalOrders,
+      },
+    ],
     mutate: jest.fn(),
   }),
 }));
@@ -64,9 +72,125 @@ const createOrder = (fullPosition = false) => ({
   ],
 });
 
+describe("useOrderStream bulk cancellation", () => {
+  beforeEach(() => {
+    mockUpdateAlgoOrder.mockReset().mockResolvedValue({ success: true });
+    mockOrders = [createOrder()];
+    mockNormalOrders = [];
+    mockMarkPrice = 4000;
+  });
+
+  it("keeps pending cancellation scoped to symbol and independent of display filters", async () => {
+    const { result } = renderHook(() =>
+      useOrderStream({ side: OrderSide.BUY }),
+    );
+    await result.current[1].cancelAllPendingOrders("PERP_BTC_USDC");
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC" }],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.STOP }],
+      [
+        null,
+        { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
+      ],
+    ]);
+  });
+
+  it("scopes a PERP unscoped cancel-all to perp symbols only, symbol by symbol", async () => {
+    mockOrders = [];
+    mockNormalOrders = [
+      { order_id: 1, symbol: "PERP_BTC_USDC" },
+      { order_id: 2, symbol: "PERP_ETH_USDC" },
+      { order_id: 3, symbol: "PERP_ETH_USDC" },
+      { order_id: 4, symbol: "PERP_BTC5M2608271200_USDC" },
+    ];
+    const { result } = renderHook(() =>
+      useOrderStream({
+        status: OrderStatus.INCOMPLETE,
+        productType: "PERP",
+        size: 500,
+      }),
+    );
+    await result.current[1].cancelAllPendingOrders();
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [null, { symbol: "PERP_BTC_USDC" }],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.STOP }],
+      [
+        null,
+        { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
+      ],
+      [null, { symbol: "PERP_ETH_USDC" }],
+      [null, { symbol: "PERP_ETH_USDC", algo_type: AlgoOrderRootType.STOP }],
+      [
+        null,
+        { symbol: "PERP_ETH_USDC", algo_type: AlgoOrderRootType.TRAILING_STOP },
+      ],
+    ]);
+  });
+
+  it("keeps the legacy unscoped cancel-all for streams without a product filter", async () => {
+    const { result } = renderHook(() => useOrderStream({}));
+    await result.current[1].cancelAllPendingOrders();
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [null, {}],
+      [null, { algo_type: AlgoOrderRootType.STOP }],
+      [null, { algo_type: AlgoOrderRootType.TRAILING_STOP }],
+    ]);
+  });
+
+  it("preserves the two independent TP/SL cancellation types", async () => {
+    const { result } = renderHook(() => useOrderStream({}));
+    await result.current[1].cancelAllTPSLOrders("PERP_BTC_USDC");
+    expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+      [
+        null,
+        {
+          symbol: "PERP_BTC_USDC",
+          algo_type: AlgoOrderRootType.POSITIONAL_TP_SL,
+        },
+      ],
+      [null, { symbol: "PERP_BTC_USDC", algo_type: AlgoOrderRootType.TP_SL }],
+    ]);
+  });
+
+  it("rejects backend failures rather than returning a fulfilled batch", async () => {
+    mockUpdateAlgoOrder.mockResolvedValueOnce({
+      success: false,
+      message: "CANCEL_REJECTED",
+    });
+    const { result } = renderHook(() => useOrderStream({}));
+    await expect(result.current[1].cancelAllPendingOrders()).rejects.toThrow(
+      "CANCEL_REJECTED",
+    );
+    expect(mockUpdateAlgoOrder).toHaveBeenCalledTimes(3);
+  });
+
+  it("awaits other submitted requests before rejecting a partial failure", async () => {
+    let finish!: () => void;
+    mockUpdateAlgoOrder
+      .mockRejectedValueOnce(new Error("FAILED"))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finish = () => resolve({ success: true });
+          }),
+      );
+    const { result } = renderHook(() => useOrderStream({}));
+    const rejected = jest.fn();
+    const pending = result.current[1]
+      .cancelAllPendingOrders()
+      .catch((error) => rejected(error.message));
+    await Promise.resolve();
+    expect(rejected).not.toHaveBeenCalled();
+    finish();
+    await pending;
+    expect(rejected).toHaveBeenCalledWith("FAILED");
+  });
+});
+
 describe("useOrderStream TP/SL updates", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUpdateAlgoOrder.mockReset().mockResolvedValue({ success: true });
     mockOrders = [createOrder()];
     mockMarkPrice = 4000;
   });
@@ -177,6 +301,53 @@ describe("useOrderStream TP/SL updates", () => {
       expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
     },
   );
+});
+
+describe("useOrderStream resource release", () => {
+  beforeEach(() => {
+    mockOrders = [];
+    mockMarkPrice = 4000;
+  });
+  afterEach(() => {
+    mockDataCenter = {};
+  });
+  it("keeps a shared key until its last consumer disables or unmounts", () => {
+    const registry = createOrderKeyRegistry();
+    mockDataCenter = {
+      registerKeyHandler: registry.register,
+      unregisterKeyHandler: registry.unregister,
+    };
+    const first = renderHook(
+      ({ enabled }) =>
+        useOrderStream(
+          { productType: "BINARY" },
+          { enabled, stopOnUnmount: true },
+        ),
+      { initialProps: { enabled: true } },
+    );
+    const second = renderHook(() =>
+      useOrderStream({ productType: "BINARY" }, { stopOnUnmount: true }),
+    );
+    const count = registry.handlers.size;
+    expect(count).toBeGreaterThan(0);
+    first.rerender({ enabled: false });
+    expect(registry.handlers.size).toBe(count);
+    second.unmount();
+    expect(registry.handlers.size).toBe(0);
+    first.unmount();
+  });
+  it("preserves the default cache retention after a legacy consumer unmounts", () => {
+    const registry = createOrderKeyRegistry();
+    mockDataCenter = {
+      registerKeyHandler: registry.register,
+      unregisterKeyHandler: registry.unregister,
+    };
+    const legacy = renderHook(() => useOrderStream({ productType: "PERP" }));
+    const count = registry.handlers.size;
+    legacy.unmount();
+    expect(registry.handlers.size).toBe(count);
+    expect(count).toBeGreaterThan(0);
+  });
 });
 
 describe.each(["main", "sub"])("%s account TP/SL policy", (account) => {

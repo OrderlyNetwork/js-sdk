@@ -1,8 +1,8 @@
-import { memo } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { Button, CloseIcon, ThrottledButton } from "@orderly.network/ui";
+import { memo, type MouseEvent } from "react";
+import { Trans } from "@orderly.network/i18n";
 import { commify } from "@orderly.network/utils";
 import { EditType } from "../../../../type";
+import { OrderEditConfirmation } from "./orderEditConfirmation";
 
 type ConfirmContentProps = {
   type: EditType;
@@ -10,12 +10,11 @@ type ConfirmContentProps = {
   value: string;
   cancelPopover: () => void;
   isSubmitting: boolean;
-  onConfirm: (e: any) => void;
+  onConfirm: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
 export const ConfirmContent = memo((props: ConfirmContentProps) => {
   const { type, base, value, cancelPopover, isSubmitting, onConfirm } = props;
-  const { t } = useTranslation();
 
   const renderLabel = () => {
     const common = {
@@ -53,30 +52,13 @@ export const ConfirmContent = memo((props: ConfirmContentProps) => {
   };
 
   return (
-    <div className="oui-relative oui-pt-5">
-      <div className="desktop:oui-text-sm oui-text-2xs oui-text-base-contrast-54">
-        {renderLabel()}
-      </div>
-      <div className="oui-mt-5 oui-grid oui-grid-cols-2 oui-gap-2">
-        <Button
-          color="secondary"
-          size={"md"}
-          onClick={cancelPopover}
-          disabled={isSubmitting}
-        >
-          {t("common.cancel")}
-        </Button>
-        <ThrottledButton size={"md"} loading={isSubmitting} onClick={onConfirm}>
-          {t("common.confirm")}
-        </ThrottledButton>
-      </div>
-      <button
-        className="oui-absolute oui-end-0 oui-top-0 oui-text-base-contrast-54"
-        onClick={cancelPopover}
-      >
-        <CloseIcon size={16} color="white" opacity={1} />
-      </button>
-    </div>
+    <OrderEditConfirmation
+      cancelPopover={cancelPopover}
+      isSubmitting={isSubmitting}
+      onConfirm={onConfirm}
+    >
+      {renderLabel()}
+    </OrderEditConfirmation>
   );
 });
 

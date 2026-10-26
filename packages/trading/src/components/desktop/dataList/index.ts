@@ -1,4 +1,8 @@
-export { DataList } from "./dataList.ui";
+export {
+  DataList,
+  PerpsPositionsPanel,
+  PerpsPositionsSettings,
+} from "./dataList.ui";
 export { DataListWidget } from "./dataList.widget";
 export {
   DataListDesktopTabsTarget,

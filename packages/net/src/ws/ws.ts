@@ -641,8 +641,37 @@ export class WS extends EventEmitter {
   onceSubscribe(
     params: any,
     callback: Omit<WSMessageHandler, "onUnsubscribe">,
-  ) {
-    this.subscribe(params, callback, true);
+  ): unsubscribe {
+    let disposed = false;
+    const handler = {
+      ...callback,
+      onMessage: (message: any) => {
+        if (!disposed) callback.onMessage(message);
+      },
+      onError: (error: any) => {
+        if (!disposed) callback.onError?.(error);
+      },
+    };
+    this.subscribe(params, handler, true);
+    const topic = this.getTopicKeyFromParams(
+      typeof params === "string"
+        ? { event: "subscribe", topic: params }
+        : params,
+    );
+    // Preserve reconnect replay until the caller explicitly releases the request.
+    return () => {
+      if (disposed) return;
+      disposed = true;
+      this._pendingPublicSubscribe = this._pendingPublicSubscribe.filter(
+        ([, pending]) => pending.onMessage !== handler.onMessage,
+      );
+      const registered = this._eventHandlers.get(topic);
+      if (!registered) return;
+      registered.callback = registered.callback.filter(
+        (current) => current.onMessage !== handler.onMessage,
+      );
+      if (!registered.callback.length) this._eventHandlers.delete(topic);
+    };
   }
 
   private unsubscribe(

@@ -15,8 +15,6 @@
   "extend.docs": "Dokumen",
   "extend.audits": "Audit",
   "extend.vaults": "Vault",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Perps orderbook tanpa gas dengan leverage hingga 100x",
   "extend.woofiEarn": "WOOFi dapatkan",
   "extend.woofiEarn.description": "Dapatkan yield dengan mudah di chain mana pun",
   "extend.wooStake": "WOO staking",

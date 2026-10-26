@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
+import { isBinarySymbol } from "@orderly.network/utils";
 import { useTradingLocalStorage } from "./useTradingLocalStorage";
 
 export const usePendingOrderCount = (symbol?: string) => {
@@ -11,12 +12,13 @@ export const usePendingOrderCount = (symbol?: string) => {
   // const tpslOrdersPageSizeKey = `orderly_${TabType.tp_sl}_pageSize`;
 
   // const [pendingOrderPageSize] = useLocalStorage(pendingOrdersPageSizeKey, 500);
-  // const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 500);
+  // const [tpslOrdersPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 500);
 
   const [pendingOrders] = useOrderStream(
     {
       symbol: showAllSymbol ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
+      productType: "PERP",
       excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
       // size: pendingOrderPageSize,
       size: 500,
@@ -32,7 +34,7 @@ export const usePendingOrderCount = (symbol?: string) => {
       symbol: showAllSymbol ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-      // size: tpslOrderPageSize,
+      // size: tpslOrdersPageSize,
       size: 500,
       // sourceTypeAll: true,
     },
@@ -43,7 +45,13 @@ export const usePendingOrderCount = (symbol?: string) => {
 
   const pendingCount = useMemo(() => {
     if (showAllSymbol) {
-      return pendingOrders?.length ?? 0;
+      // Binary rows never appear here from REST (product_type=PERP), but the
+      // executionreport WS inserts into every orders* cache key, so guard the
+      // count against cross-product leaks.
+      return (
+        pendingOrders?.filter((item) => !isBinarySymbol(item.symbol ?? ""))
+          .length ?? 0
+      );
     }
     return pendingOrders?.filter((item) => item.symbol === symbol)?.length ?? 0;
   }, [pendingOrders, showAllSymbol, symbol]);

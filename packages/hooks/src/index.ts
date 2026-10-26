@@ -32,6 +32,11 @@ export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
 export { useUpdatedRef } from "./shared/useUpdatedRef";
 export { useMemoizedFn } from "./shared/useMemoizedFn";
+export { useRefreshOrderCaches } from "./useRefreshOrderCaches";
+export {
+  assertCancelAllSucceeded,
+  settleOrderCancellations,
+} from "./utils/orderCancellation";
 export { useAudioPlayer } from "./shared/useAudio";
 export { useReferralInfo, type RefferalAPI } from "./referral";
 
@@ -147,7 +152,17 @@ export {
   useRestrictedInfo,
   type RestrictedInfoReturns,
   type RestrictedInfoOptions,
+  type PredictionRegionRestriction,
 } from "./useRestrictedInfo";
+
+export {
+  useProductRegionRestricted,
+  type UseProductRegionRestrictedOptions,
+} from "./region/useProductRegionRestricted";
+export {
+  isProductRegionRestricted,
+  type ProductRegionIpInfo,
+} from "./region/productRegion";
 
 export * from "./subAccount";
 
@@ -158,4 +173,7 @@ export * from "./next/tpsl";
 
 export * from "./feature-flag";
 
-export { createTPSLOrderUpdates } from "./services/orderCreator/tpslOrderUpdates";
+export {
+  createTPSLOrderUpdates,
+  type TPSLChildUpdate,
+} from "./services/orderCreator/tpslOrderUpdates";

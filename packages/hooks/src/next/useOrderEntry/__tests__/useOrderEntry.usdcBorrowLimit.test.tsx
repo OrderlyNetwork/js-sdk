@@ -46,6 +46,7 @@ const mockPortfolio = {
     },
   ],
   unsettledPnL: 0,
+  perpUnsettledPnL: 0,
 };
 
 jest.mock("../../../orderly/appStore", () => ({
@@ -158,6 +159,7 @@ describe("useOrderEntry USDC borrow limit submission guard", () => {
     delete (mockFormattedOrder as { slippage?: number }).slippage;
     mockPortfolio.holding[0].holding = 100;
     mockPortfolio.unsettledPnL = 0;
+    mockPortfolio.perpUnsettledPnL = 0;
     mockPositionRows.splice(0);
     mockOrderbookUpdate = undefined;
   });
@@ -170,6 +172,29 @@ describe("useOrderEntry USDC borrow limit submission guard", () => {
       });
     });
   };
+
+  it("uses ordinary Perp PnL for borrowing while Binary equity changes", () => {
+    mockPortfolio.holding[0].holding = -100;
+    mockPortfolio.perpUnsettledPnL = 20;
+    const { result } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: { margin_mode: MarginMode.ISOLATED },
+      }),
+    );
+    publishOrderbook();
+
+    const baseline =
+      result.current.helper.getProjectedUSDCBorrow(mockGeneratedOrder);
+    expect(baseline).toBe(90.06);
+    mockPortfolio.unsettledPnL = 1_020;
+    expect(
+      result.current.helper.getProjectedUSDCBorrow(mockGeneratedOrder),
+    ).toBe(baseline);
+    mockPortfolio.unsettledPnL = -980;
+    expect(
+      result.current.helper.getProjectedUSDCBorrow(mockGeneratedOrder),
+    ).toBe(baseline);
+  });
 
   it("keeps the BBO gate for max qty while the orderbook is unavailable", () => {
     Object.assign(mockFormattedOrder, {

@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/core";
 import { mutate } from "@orderly.network/net";
 import { getTimestamp } from "@orderly.network/utils";
-import { useMemoizedFn } from "..";
+import { useMemoizedFn } from "../shared/useMemoizedFn";
 import { useAccountInstance } from "../useAccountInstance";
 import { useConfig } from "../useConfig";
 
@@ -47,6 +47,8 @@ const fetcher = (
 type SubAccountMutationOptions<T, E> = SWRMutationConfiguration<T, E> & {
   /** sub account id */
   accountId?: string;
+  /** Recheck ownership after asynchronous signing, before sending the request. */
+  shouldExecute?: () => boolean;
 };
 
 /**
@@ -70,7 +72,7 @@ export const useSubAccountMutation = <T, E>(
    */
   options?: SubAccountMutationOptions<T, E>,
 ) => {
-  const { accountId, ...restOptions } = options || ({} as any);
+  const { accountId, shouldExecute, ...restOptions } = options || ({} as any);
   const apiBaseUrl = useConfig("apiBaseUrl");
 
   let fullUrl = url;
@@ -98,7 +100,14 @@ export const useSubAccountMutation = <T, E>(
     params?: Record<string, any>,
     options?: SubAccountMutationOptions<T, E>,
   ): Promise<any> => {
-    const { accountId: _accountId, ...restOptions } = options || ({} as any);
+    const {
+      accountId: _accountId,
+      shouldExecute: _shouldExecute,
+      ...restOptions
+    } = options || ({} as any);
+    const allowed = _shouldExecute ?? shouldExecute;
+    if (allowed && !allowed())
+      throw new Error("Account operation is no longer allowed");
     let newUrl = url;
     if (typeof params === "object" && Object.keys(params).length) {
       const search = new URLSearchParams(params);
@@ -113,6 +122,8 @@ export const useSubAccountMutation = <T, E>(
 
     const signer = account.signer;
     const signature = await signer.sign(payload, getTimestamp());
+    if (allowed && !allowed())
+      throw new Error("Account operation is no longer allowed");
 
     return trigger(
       {

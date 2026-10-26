@@ -1,68 +1,170 @@
-import { FC, SVGProps, useRef } from "react";
-import React from "react";
+import React, { useCallback, useRef, useState } from "react";
+import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, Button, Divider, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { OrderListInstance, OrdersWidget } from "@orderly.network/ui-orders";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import type { ProductOrderInstrument } from "@orderly.network/prediction";
+import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
+import {
+  OrderStatus,
+  perpRoute,
+  predictionRoute,
+  type API,
+} from "@orderly.network/types";
+import {
+  Button,
+  Divider,
+  Select,
+  Tabs,
+  TabPanel,
+  Text,
+  formatAddress,
+} from "@orderly.network/ui";
+import { TabType, type OrderListInstance } from "@orderly.network/ui-orders";
+import type { SharePnLConfig } from "@orderly.network/ui-share";
+import { PerpsOrdersPage } from "./perpsPage.ui";
+import { ProductOrdersWidget } from "./productOrders.widget";
 
-export const OrdersPage: React.FC<{ sharePnLConfig?: SharePnLConfig }> = (
-  props,
-) => {
-  const { sharePnLConfig } = props;
-  const { t } = useTranslation();
+export type PortfolioOrdersPageProps = {
+  sharePnLConfig?: SharePnLConfig;
+  /** Overrides navigation to the selected Perps market. */
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  /** Overrides navigation to the exact Prediction round contract. */
+  onPredictionSelect?: (symbol: string) => void;
+};
 
-  const ordersRef = useRef<OrderListInstance>(null);
-
-  const onDownload = () => {
-    ordersRef.current?.download?.();
-  };
-
-  return (
-    <Flex
-      // p={6}
-      direction={"column"}
-      itemAlign={"start"}
-      gap={4}
-      width="100%"
-      height="100%"
-    >
-      <Flex width="100%" justify="between">
-        <Text size="lg">{t("common.orders")}</Text>
-        <Tooltip content={t("orders.download.tooltip")}>
-          <Button
-            color="gray"
-            size="sm"
-            className="oui-bg-base-4"
-            onClick={onDownload}
-          >
-            {t("common.download")}
-            <TooltipIcon className="oui-text-base-contrast-36 oui-ms-[5px]" />
-          </Button>
-        </Tooltip>
-      </Flex>
-      <Divider className="oui-w-full" />
-      {/* 26(title height) + 1(divider) + 32 (padding) */}
-      <Box width="100%" className="oui-h-[calc(100%_-_59px)]">
-        <OrdersWidget ref={ordersRef} sharePnLConfig={sharePnLConfig} />
-      </Box>
-    </Flex>
+export const OrdersPage: React.FC<PortfolioOrdersPageProps> = (props) => {
+  const { onRouteChange } = useAppContext();
+  const predictionEnabled = useFeatureEnabled("prediction");
+  const navigatePerp = useCallback(
+    (market: API.Symbol) => {
+      onRouteChange?.(perpRoute(market.symbol));
+    },
+    [onRouteChange],
+  );
+  const navigatePrediction = useCallback(
+    (symbol: string) => {
+      onRouteChange?.(predictionRoute(symbol));
+    },
+    [onRouteChange],
+  );
+  const onSymbolChange =
+    props.onSymbolChange ?? (onRouteChange ? navigatePerp : undefined);
+  const onPredictionSelect =
+    props.onPredictionSelect ??
+    (onRouteChange ? navigatePrediction : undefined);
+  return predictionEnabled ? (
+    <ProductOrdersPage
+      {...props}
+      onSymbolChange={onSymbolChange}
+      onPredictionSelect={onPredictionSelect}
+    />
+  ) : (
+    <PerpsOrdersPage {...props} onSymbolChange={onSymbolChange} />
   );
 };
 
-const TooltipIcon = React.forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  (props, ref) => {
-    return (
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 12 12"
-        fill="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
-        ref={ref}
-        {...props}
+const ProductOrdersPage: React.FC<PortfolioOrdersPageProps> = ({
+  sharePnLConfig,
+  onSymbolChange,
+  onPredictionSelect,
+}) => {
+  const { state: account } = useAccount();
+  const { t } = useTranslation();
+  const [product, setProduct] = useState<ProductOrderInstrument>("all");
+  const [tab, setTab] = useState<string>(TabType.all);
+  const ordersRef = useRef<OrderListInstance>(null);
+  const tabs = [
+    { value: TabType.all, label: t("common.all") },
+    {
+      value: TabType.pending,
+      label: t("orders.status.pending"),
+      status: OrderStatus.INCOMPLETE,
+    },
+    {
+      value: TabType.tp_sl,
+      label: t("common.tpsl"),
+      status: OrderStatus.INCOMPLETE,
+    },
+    {
+      value: TabType.filled,
+      label: t("orders.status.filled"),
+      status: OrderStatus.FILLED,
+    },
+    {
+      value: TabType.cancelled,
+      label: t("orders.status.canceled"),
+      status: OrderStatus.CANCELLED,
+    },
+    {
+      value: TabType.rejected,
+      label: t("orders.status.rejected"),
+      status: OrderStatus.REJECTED,
+    },
+  ];
+  return (
+    <div className="oui-flex oui-h-full oui-flex-col oui-gap-4">
+      <Text size="lg">{t("common.orders")}</Text>
+      <div className="oui-flex oui-items-center oui-justify-between oui-gap-3">
+        <div className="oui-flex oui-min-w-0 oui-flex-wrap oui-items-center oui-gap-3">
+          <div className="oui-w-[180px] oui-shrink-0">
+            <Select.options
+              value={product}
+              onValueChange={(value) =>
+                setProduct(value as ProductOrderInstrument)
+              }
+              size="sm"
+              options={[
+                {
+                  label: t("prediction.filter.allInstruments"),
+                  value: "all",
+                },
+                { label: t("common.perps"), value: "perps" },
+                { label: t("common.predictions"), value: "prediction" },
+              ]}
+            />
+          </div>
+        </div>
+        {product === "prediction" && (
+          <Text size="xs" color="neutral">
+            {t("prediction.currentAccount")}
+            {account.accountId && `: ${formatAddress(account.accountId)}`}
+          </Text>
+        )}
+        <Button
+          size="xs"
+          color="secondary"
+          className="oui-w-auto oui-shrink-0"
+          onClick={() => ordersRef.current?.download?.()}
+        >
+          {t("common.download")}
+        </Button>
+      </div>
+      <Divider />
+      <Tabs
+        value={tab}
+        onValueChange={setTab}
+        variant="contained"
+        className="oui-min-h-0 oui-min-w-0 oui-flex-1"
+        classNames={{
+          // Keep scrolling inside DataTable, below the filters and above pagination.
+          tabsContent:
+            "oui-h-[calc(100%_-_40px)] oui-min-h-0 oui-overflow-hidden",
+        }}
       >
-        <path d="M5.999 1.007a5 5 0 1 0 0 10 5 5 0 0 0 0-10m0 2.5a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1m0 1.5a.5.5 0 0 1 .5.5v2.5a.5.5 0 0 1-1 0v-2.5a.5.5 0 0 1 .5-.5" />
-      </svg>
-    );
-  },
-);
+        {tabs.map((item) => (
+          <TabPanel key={item.value} value={item.value} title={item.label}>
+            <ProductOrdersWidget
+              key={`${account.accountId}:${product}`}
+              onSymbolChange={onSymbolChange}
+              onPredictionSelect={onPredictionSelect}
+              sharePnLConfig={sharePnLConfig}
+              type={item.value}
+              ordersStatus={item.status}
+              product={product}
+              ordersRef={ordersRef}
+            />
+          </TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  );
+};

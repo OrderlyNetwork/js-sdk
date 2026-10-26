@@ -433,9 +433,9 @@ describe("PositionCalculator", () => {
 
   describe("update()", () => {
     test("should update position store with calculated data", () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
         usePositionStore,
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
       } = require("../../usePositionStream/usePosition.store");
       const mockSetPositions = jest.fn();
       (usePositionStore.getState as jest.Mock).mockReturnValue({
@@ -464,9 +464,9 @@ describe("PositionCalculator", () => {
     });
 
     test("should not update if data is null", () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
         usePositionStore,
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
       } = require("../../usePositionStream/usePosition.store");
       const mockSetPositions = jest.fn();
       (usePositionStore.getState as jest.Mock).mockReturnValue({
@@ -483,9 +483,9 @@ describe("PositionCalculator", () => {
     });
 
     test("should not update if rows is not an array", () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
         usePositionStore,
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
       } = require("../../usePositionStream/usePosition.store");
       const mockSetPositions = jest.fn();
       (usePositionStore.getState as jest.Mock).mockReturnValue({
@@ -505,9 +505,9 @@ describe("PositionCalculator", () => {
     });
 
     test("should update API loading status when positions are loaded", () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
         useApiStatusStore,
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
       } = require("../../../next/apiStatus/apiStatus.store");
       const mockUpdateApiLoading = jest.fn();
       (useApiStatusStore.getState as jest.Mock).mockReturnValue({
@@ -521,9 +521,9 @@ describe("PositionCalculator", () => {
         },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
         usePositionStore,
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
       } = require("../../usePositionStream/usePosition.store");
       (usePositionStore.getState as jest.Mock).mockReturnValue({
         positions: {},
@@ -553,9 +553,9 @@ describe("PositionCalculator", () => {
 
   describe("destroy()", () => {
     test("should close position and delete from context", () => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
         usePositionStore,
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
       } = require("../../usePositionStream/usePosition.store");
       const mockClosePosition = jest.fn();
       (usePositionStore.getState as jest.Mock).mockReturnValue({
@@ -601,6 +601,88 @@ describe("PositionCalculator", () => {
           true,
         );
       }
+    });
+  });
+
+  describe("binary position rows (never in /v1/public/info)", () => {
+    const BINARY_SYMBOL = "PERP_BTC5M2609290635_USDC";
+
+    test("passes a row without symbol config through with mm stamped 0", () => {
+      const row = createMockPosition(BINARY_SYMBOL, {
+        margin_mode: "ISOLATED",
+        last_sum_unitary_funding: null,
+      } as unknown as Partial<API.Position>);
+      const positionData = { rows: [row] } as unknown as API.PositionInfo;
+
+      const result = calculator.calc(
+        CalculatorScope.POSITION,
+        positionData,
+        mockCtx,
+      );
+
+      // Equity PnL is computed even when risk configuration is unavailable.
+      expect(result?.rows[0]).toEqual({
+        ...row,
+        mm: 0,
+        notional: 2000,
+        unsettled_pnl: 100,
+        unsettlement_pnl: 100,
+      });
+      expect(result?.total_unsettled_pnl).toBe(100);
+      expect(result?.total_unsettled_isolated_pnl).toBe(100);
+      expect(result?.total_unreal_pnl).toBe(0);
+      expect(result?.notional).toBe(0);
+    });
+
+    test("computes PRD-fixed mmr=0 for a configured binary symbol", () => {
+      const binaryCtx = {
+        ...mockCtx,
+        symbolsInfo: {
+          ...mockCtx.symbolsInfo,
+          [BINARY_SYMBOL]: {
+            base_imr: 1,
+            base_mmr: 0,
+            imr_factor: 0.000000091,
+          } as API.SymbolExt,
+        },
+        accountInfo: {
+          ...mockCtx.accountInfo,
+          imr_factor: {
+            ...mockCtx.accountInfo?.imr_factor,
+            [BINARY_SYMBOL]: 0.000000091,
+          },
+        },
+      } as unknown as CalculatorContext;
+
+      const row = createMockPosition(BINARY_SYMBOL, {
+        margin_mode: "ISOLATED",
+      } as unknown as Partial<API.Position>);
+      const positionData = { rows: [row] } as unknown as API.PositionInfo;
+
+      let result: API.PositionsTPSLExt | null = null;
+      expect(() => {
+        result = calculator.calc(
+          CalculatorScope.POSITION,
+          positionData,
+          binaryCtx,
+        ) as API.PositionsTPSLExt;
+      }).not.toThrow();
+
+      // PRD: every binary symbol is configured with imr=1 / mmr=0, so the
+      // maintenance margin rate and maintenance margin are exactly zero.
+      expect(result?.rows[0]?.mmr).toBe(0);
+      expect(result?.rows[0]?.mm).toBe(0);
+    });
+
+    test("tolerates null last_sum_unitary_funding on a configured row", () => {
+      const row = createMockPosition("PERP_ETH_USDC", {
+        last_sum_unitary_funding: null,
+      } as unknown as Partial<API.Position>);
+      const positionData = { rows: [row] } as unknown as API.PositionInfo;
+
+      expect(() =>
+        calculator.calc(CalculatorScope.POSITION, positionData, mockCtx),
+      ).not.toThrow();
     });
   });
 });

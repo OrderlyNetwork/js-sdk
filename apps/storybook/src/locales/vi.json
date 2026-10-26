@@ -15,8 +15,6 @@
   "extend.docs": "Tài liệu",
   "extend.audits": "Kiểm toán",
   "extend.vaults": "Kho",
-  "extend.perps": "Perps",
-  "extend.perps.description": "Perps sổ lệnh không tốn phí gas với đòn bẩy lên đến 100x",
   "extend.woofiEarn": "WOOFi kiếm tiền",
   "extend.woofiEarn.description": "Nhận lợi nhuận dễ dàng trên bất kỳ chuỗi nào",
   "extend.wooStake": "WOO staking",

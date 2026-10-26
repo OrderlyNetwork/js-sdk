@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/i18n",
-  "version": "3.2.3",
+  "version": "3.3.0",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -34,7 +34,11 @@
     "_generateEnJson": "node ./scripts/generateEnJson.js",
     "generateEnJson": "pnpm tsup && node ./scripts/generateEnJson.js",
     "copyLocales": "node ./scripts/copyLocales.js",
-    "generateMissingKeys": "pnpm tsup && pnpm _generateEnJson && node ./scripts/generateMissingKeys.js"
+    "generateMissingKeys": "pnpm tsup && pnpm _generateEnJson && node ./scripts/generateMissingKeys.js",
+    "translation:prepare": "pnpm tsup && pnpm copyLocales && node scripts/translationWorkflow.js prepare",
+    "translation:validate": "pnpm tsup && pnpm copyLocales && node scripts/translationWorkflow.js validate",
+    "translation:merge": "pnpm tsup && pnpm copyLocales && node scripts/translationWorkflow.js merge",
+    "test:translation": "node --test scripts/translationWorkflow.test.cjs"
   },
   "keywords": [],
   "files": [

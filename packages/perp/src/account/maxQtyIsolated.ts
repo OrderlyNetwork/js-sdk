@@ -74,6 +74,13 @@ export type IsolatedPendingOrder = {
   quantity: number;
   /** Creation time in ms; the earlier order wins when prices are equal. */
   createdTime?: number;
+  /**
+   * Informational reduce-only marker: such orders freeze no margin, but still
+   * consume closing budget by allocation priority. Pricing callbacks
+   * (`getMarginPrice`) use it to zero the order's frozen contribution; the
+   * simulation itself gives it no special treatment.
+   */
+  reduceOnly?: boolean;
 };
 
 /**
@@ -117,8 +124,16 @@ export function isolatedPendingOrdersFrozen(inputs: {
   orders: IsolatedPendingOrder[];
   leverage: number;
   isoTakerFeeBuffer?: number;
+  /** Margin price only; allocation priority always uses referencePrice. */
+  getMarginPrice?: (order: IsolatedPendingOrder) => number;
 }): Decimal {
-  const { positionQty, orders, leverage, isoTakerFeeBuffer } = inputs;
+  const {
+    positionQty,
+    orders,
+    leverage,
+    isoTakerFeeBuffer,
+    getMarginPrice = (order) => order.referencePrice,
+  } = inputs;
   const marginRate = isolatedMarginRate({ leverage, isoTakerFeeBuffer });
 
   const reverseSide =
@@ -136,7 +151,7 @@ export function isolatedPendingOrdersFrozen(inputs: {
       if (closingBudget.lte(0)) {
         frozen = frozen.add(
           roundUpFrozen(
-            new Decimal(order.referencePrice)
+            new Decimal(getMarginPrice(order))
               .mul(order.quantity)
               .mul(marginRate),
           ),
@@ -150,7 +165,7 @@ export function isolatedPendingOrdersFrozen(inputs: {
       if (openQty.gt(0)) {
         frozen = frozen.add(
           roundUpFrozen(
-            new Decimal(order.referencePrice).mul(openQty).mul(marginRate),
+            new Decimal(getMarginPrice(order)).mul(openQty).mul(marginRate),
           ),
         );
       }
@@ -163,7 +178,7 @@ export function isolatedPendingOrdersFrozen(inputs: {
     }
     frozen = frozen.add(
       roundUpFrozen(
-        new Decimal(order.referencePrice).mul(order.quantity).mul(marginRate),
+        new Decimal(getMarginPrice(order)).mul(order.quantity).mul(marginRate),
       ),
     );
   }
@@ -184,21 +199,31 @@ export function additionalIsolatedOrderFrozenByOrders(inputs: {
   pendingOrders: IsolatedPendingOrder[];
   leverage: number;
   isoTakerFeeBuffer?: number;
+  /** Optional product-specific margin price, without changing order priority. */
+  getMarginPrice?: (order: IsolatedPendingOrder) => number;
 }): Decimal {
-  const { positionQty, newOrders, pendingOrders, leverage, isoTakerFeeBuffer } =
-    inputs;
+  const {
+    positionQty,
+    newOrders,
+    pendingOrders,
+    leverage,
+    isoTakerFeeBuffer,
+    getMarginPrice,
+  } = inputs;
 
   const frozenBefore = isolatedPendingOrdersFrozen({
     positionQty,
     orders: pendingOrders,
     leverage,
     isoTakerFeeBuffer,
+    getMarginPrice,
   });
   const frozenAfter = isolatedPendingOrdersFrozen({
     positionQty,
     orders: [...pendingOrders, ...newOrders],
     leverage,
     isoTakerFeeBuffer,
+    getMarginPrice,
   });
 
   const additionalFrozen = frozenAfter.sub(frozenBefore);

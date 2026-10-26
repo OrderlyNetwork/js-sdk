@@ -8,6 +8,10 @@ import {
   SymbolInfoBarFullWidget,
   HorizontalMarketsWidget,
 } from "@orderly.network/markets";
+import type {
+  DropDownMarketsExtensionProps,
+  ExpandMarketsExtensionProps,
+} from "@orderly.network/markets";
 import { cn } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import type { SharePnLConfig } from "@orderly.network/ui-share";
@@ -52,6 +56,10 @@ export interface TradingPanelRegistryProps {
   navigateToPortfolio?: () => void;
   sharePnLConfig?: SharePnLConfig;
   isFirstTimeDeposit?: boolean;
+  /** Custom tabs for the markets dropdown (e.g. Prediction). */
+  marketsDropdown?: DropDownMarketsExtensionProps;
+  /** Custom tabs for the side markets panel (expanded mode). */
+  sideMarkets?: ExpandMarketsExtensionProps;
   resizeable?: boolean;
   /** Optional when layout is rule-driven; defaults used for SwitchLayout when undefined. */
   layout?: LayoutPosition;
@@ -122,6 +130,7 @@ export function createTradingPanelRegistry(
         <SymbolInfoBarFullWidget
           symbol={symbol}
           onSymbolChange={onSymbolChange}
+          marketsDropdown={props.marketsDropdown}
           closeCountdown={closeCountdown}
           showCountdown={showCountdown}
         />
@@ -235,6 +244,7 @@ export function createTradingPanelRegistry(
       // resizeable={resizeable}
       symbol={symbol}
       onSymbolChange={onSymbolChange}
+      {...props.sideMarkets}
     />
   );
   panels.set(TRADING_PANEL_IDS.MARKETS, {

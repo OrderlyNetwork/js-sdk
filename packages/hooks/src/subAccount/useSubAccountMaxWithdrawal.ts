@@ -14,6 +14,7 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
  */
 export function useSubAccountMaxWithdrawal(options: {
   token?: string;
+  /** Ordinary Perp funding PnL; excludes Binary equity PnL. */
   unsettledPnL?: number;
   freeCollateral: Decimal;
   holdings?: API.Holding[];

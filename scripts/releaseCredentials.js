@@ -44,6 +44,7 @@ async function withNpmAuth(
       env: {
         ...withRegistryEnvironment(env, registry),
         NPM_CONFIG_USERCONFIG: configPath,
+        PNPM_CONFIG_USERCONFIG: configPath,
         NPM_TOKEN: token,
       },
       configPath,
@@ -162,12 +163,13 @@ function withRegistryEnvironment(env, registry) {
     return { ...env };
   }
 
-  // Set both spellings: npm CLI accepts NPM_CONFIG_*, but @changesets/cli
+  // pnpm uses PNPM_CONFIG_*, npm CLI accepts NPM_CONFIG_*, and Changesets
   // reads process.env.npm_config_registry directly (case-sensitive on Linux).
   return {
     ...env,
     NPM_CONFIG_REGISTRY: registry,
     npm_config_registry: registry,
+    PNPM_CONFIG_REGISTRY: registry,
   };
 }
 

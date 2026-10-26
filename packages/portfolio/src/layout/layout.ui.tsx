@@ -22,6 +22,7 @@ export const PortfolioLayout: FC<PropsWithChildren<PortfolioLayoutProps>> = (
 
   return (
     <Scaffold
+      leftSideProps={leftSideProps}
       leftSidebar={
         props.hideSideBar ? null : (
           <LeftSidebar

@@ -1,20 +1,16 @@
-import { FC, useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { FC } from "react";
 import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, Flex, Grid, Spinner, Text, VectorIcon } from "@orderly.network/ui";
+import { cn, Flex, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { BuySellRatioBar, BuySellRatio } from "../../base/orderBook";
-import {
-  ORDERBOOK_COIN_TYPE_KEY,
-  OrderBookProvider,
-} from "../../base/orderBook/orderContext";
+import { OrderBookProvider } from "../../base/orderBook/orderContext";
 import { InjectableDesktopAsks } from "./asks.desktop";
 import { InjectableDesktopBids } from "./bids.desktop";
 import { BuySellRatioSettings } from "./buySellRatio";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { DesktopHeader } from "./header.desktop";
 import { DesktopMarkPrice } from "./markPrice.desktop";
+import { useOrderBookDisplayOptions } from "./useOrderBookDisplayOptions";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -41,6 +37,7 @@ export interface DesktopOrderBookProps {
   showBuySellRatio?: boolean;
   setShowBuySellRatio?: (show: boolean) => void;
   buySellRatio?: BuySellRatio | null;
+  showBuySellRatioSettings?: boolean;
 }
 
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
@@ -54,44 +51,10 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
     showBuySellRatio = true,
     setShowBuySellRatio,
     buySellRatio,
+    showBuySellRatioSettings = true,
   } = props;
 
-  const { t } = useTranslation();
-  const divRef = useRef<HTMLDivElement>(null);
-
-  const [showTotal, setShowTotal] = useState(false);
-
-  const [coinType, setCoinType] = useLocalStorage(
-    ORDERBOOK_COIN_TYPE_KEY,
-    base,
-  );
-
-  useEffect(() => {
-    if (coinType !== quote && base) {
-      setCoinType(base);
-    }
-  }, [base, quote]);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { inlineSize: width } = entry.borderBoxSize[0];
-        setShowTotal(width >= 360);
-      }
-    });
-
-    const targetDiv = divRef.current;
-
-    if (targetDiv) {
-      resizeObserver.observe(targetDiv);
-    }
-
-    return () => {
-      if (targetDiv) {
-        resizeObserver.unobserve(targetDiv);
-      }
-    };
-  }, []);
+  const { ref: divRef, showTotal } = useOrderBookDisplayOptions(base, quote);
 
   return (
     <OrderBookProvider
@@ -123,10 +86,12 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
             value={props.activeDepth}
             onChange={onDepthChange}
           />
-          <BuySellRatioSettings
-            showBuySellRatio={showBuySellRatio}
-            setShowBuySellRatio={setShowBuySellRatio}
-          />
+          {showBuySellRatioSettings && setShowBuySellRatio && (
+            <BuySellRatioSettings
+              showBuySellRatio={showBuySellRatio}
+              setShowBuySellRatio={setShowBuySellRatio}
+            />
+          )}
         </Flex>
         <DesktopHeader quote={quote} base={base} />
         <InjectableDesktopAsks

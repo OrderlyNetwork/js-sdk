@@ -8,7 +8,10 @@ import { TradingPage, OrderBookWidget } from "@orderly.network/trading";
 import { Box, OrderlyPluginProvider } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
-import { getSymbol, updateSymbol } from "../../../utils/storage";
+import {
+  getPerpSymbol,
+  setPerpSymbol,
+} from "../../../playground/perpSymbolStorage";
 import { OrderlyIcon } from "../trading/icons";
 
 // import { registerOrderbookStripedFlashPlugin } from "./orderbookStripedFlashPlugin";
@@ -52,10 +55,10 @@ export const OrderBookWithStripedFlash: Story = {
 /** Full trading page with orderbook striped flash plugin active on the orderbook. */
 export const TradingPageWithStripedFlash: Story = {
   render: (arg) => {
-    const [symbol, setSymbol] = useState(getSymbol() || "PERP_BTC_USDC");
+    const [symbol, setSymbol] = useState(getPerpSymbol() || "PERP_BTC_USDC");
 
     useEffect(() => {
-      updateSymbol(symbol);
+      setPerpSymbol(symbol);
     }, [symbol]);
 
     return (

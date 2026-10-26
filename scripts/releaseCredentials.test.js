@@ -55,6 +55,11 @@ describe("release credentials", () => {
         assert.equal(fileStat.mode & 0o777, 0o600);
         assert.equal(context.env.NPM_TOKEN, token);
         assert.equal(context.env.NPM_CONFIG_USERCONFIG, configPath);
+        assert.equal(context.env.PNPM_CONFIG_USERCONFIG, configPath);
+        assert.equal(
+          context.env.PNPM_CONFIG_REGISTRY,
+          "https://npm.example.com/custom/",
+        );
         assert.equal(
           context.env.NPM_CONFIG_REGISTRY,
           "https://npm.example.com/custom/",
@@ -70,6 +75,30 @@ describe("release credentials", () => {
 
     await assertPathMissing(configPath);
     assert.equal(await readFile(projectNpmrc, "utf8"), originalProjectNpmrc);
+  });
+
+  test("passes the registry to pnpm and Changesets without a token", async () => {
+    const env = { PATH: process.env.PATH };
+    await withNpmAuth(
+      { registry: "https://npm.example.com/custom/", env },
+      async (context) => {
+        assert.equal(context.configPath, undefined);
+        assert.equal(
+          context.env.PNPM_CONFIG_REGISTRY,
+          "https://npm.example.com/custom/",
+        );
+        assert.equal(
+          context.env.NPM_CONFIG_REGISTRY,
+          "https://npm.example.com/custom/",
+        );
+        assert.equal(
+          context.env.npm_config_registry,
+          "https://npm.example.com/custom/",
+        );
+        assert.equal(context.env.PNPM_CONFIG_USERCONFIG, undefined);
+      },
+    );
+    assert.deepEqual(env, { PATH: process.env.PATH });
   });
 
   test("cleans up temporary npm credentials after callback failure", async () => {

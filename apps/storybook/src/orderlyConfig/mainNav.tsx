@@ -13,6 +13,7 @@ import {
   ReferralSolidIcon,
   BattleSolidInactiveIcon,
   AssetIcon,
+  PredictionIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
 import { PathEnum } from "../playground/constant";
@@ -71,9 +72,9 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
     {
       name: i18n.t("common.trading"),
       href: "/",
-      activeHrefs: [PathEnum.Swap],
+      activeHrefs: [PathEnum.Swap, PathEnum.Prediction],
       isHomePageInMobile: true,
-      customSubMenuRender: customTradeSubMenuRender(),
+      customSubMenuRender: customTradeSubMenuRender,
     },
     {
       label: i18n.t("extend.earn"),
@@ -83,7 +84,7 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       subMenuBackNav: { href: PathEnum.Perp, name: i18n.t("common.trading") },
       disabled: true,
       className: "oui-cursor-pointer",
-      customSubMenuRender: customEarnSubMenuRender(),
+      customSubMenuRender: customEarnSubMenuRender,
     },
     { name: i18n.t("common.markets"), href: "/markets" },
     { name: i18n.t("common.portfolio"), href: "/portfolio" },
@@ -165,9 +166,16 @@ const getLeftNavMenus = (): LeftNavProps => {
         icon: <SpotIcon />,
       },
       {
-        name: i18n.t("extend.perps"),
+        name: i18n.t("common.perps"),
         href: "/",
         icon: <TradingIcon />,
+      },
+      {
+        name: i18n.t("common.predictions"),
+        href: PathEnum.Prediction,
+        icon: (
+          <PredictionIcon monochrome className="oui-text-base-contrast-80" />
+        ),
       },
       {
         name: i18n.t("extend.earn"),

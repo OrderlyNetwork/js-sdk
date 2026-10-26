@@ -7,6 +7,8 @@ export interface CalculatorCtx {
   //  positions:
   accountInfo?: API.AccountInfo;
   symbolsInfo?: Record<string, API.SymbolExt>;
+  /** Ordinary Perp config before Binary config is composed into symbolsInfo. */
+  perpSymbolsInfo?: Record<string, API.SymbolExt>;
   fundingRates?: Record<string, API.FundingRate>;
   // markPrices: Record<string, number> | null;
   // holding: API.Holding[];

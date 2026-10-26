@@ -3,6 +3,14 @@
  */
 import "./types/interceptorTargets";
 
+export type { TradingPerpsPanelProps } from "@orderly.network/trading-shared";
+
+export {
+  PERP_SYMBOL_STORAGE_KEY,
+  getStoredPerpSymbol,
+  setStoredPerpSymbol,
+} from "@orderly.network/utils";
+
 export type {
   ShareOptions,
   TradingPageProps,
@@ -19,6 +27,11 @@ export * from "./components/desktop/dataList";
 export * from "./components/base/lastTrades";
 export * from "./components/desktop/assetView";
 export * from "./components/base/orderBook";
+export * from "./components/desktop/orderBook";
+// Named (not barrel) export: keep the full mobile order book widget internal
+// and only expose the lean ladder for externally-driven books.
+export { MobileOrderBookLadder } from "./components/mobile/orderBook/ladder.mobile";
+export type { MobileOrderBookLadderProps } from "./components/mobile/orderBook/ladder.mobile";
 export * from "./components/desktop/riskRate";
 export * from "./components/desktop/orderBookAndTrades";
 export * from "./components/desktop/layout/splitLayout/splitLayout";
@@ -27,6 +40,7 @@ export * from "./components/mobile/portfolioSheet";
 export * from "./components/mobile/fundingRate";
 export * from "./components/mobile/fundingRateModal";
 export * from "./pages/trading";
+export { useFirstTimeDeposit } from "./pages/trading/hooks/useFirstTimeDeposit";
 export * from "./provider/tradingPageContext";
 export * from "./provider/tradingPageProvider";
 export * from "./hooks";

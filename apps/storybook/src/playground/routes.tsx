@@ -14,7 +14,7 @@ import { Spinner } from "@orderly.network/ui";
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
 import { PathEnum } from "./constant";
-import { getSymbol } from "./storage";
+import { getPerpSymbol } from "./perpSymbolStorage";
 
 // Loading fallback component
 const PageLoading: React.FC = () => {
@@ -55,6 +55,7 @@ const MarketsPage = lazyImportPage(() => import("./pages/markets/page"));
 const PerpPage = lazyImportPage(() => import("./pages/perp/page"));
 const PerpGridPage = lazyImportPage(() => import("./pages/perp-grid/page"));
 const PerpSplitPage = lazyImportPage(() => import("./pages/perp-split/page"));
+const PredictionPage = lazyImportPage(() => import("./pages/prediction/page"));
 const APIKeyPage = lazyImportPage(
   () => import("./pages/portfolio/api-key/page"),
 );
@@ -115,7 +116,7 @@ const AppRoute: React.FC = () => {
       element: (
         <Navigate
           // preserve the search parameters to ensure link device via url params works
-          to={`${getSymbol()}${window.location.search}`}
+          to={`${getPerpSymbol()}${window.location.search}`}
         />
       ),
     },
@@ -135,11 +136,19 @@ const AppRoute: React.FC = () => {
       children: tradeRoutes,
     },
     {
+      path: "prediction",
+      element: <PredictionPage />,
+    },
+    {
+      path: "prediction/:symbol",
+      element: <PredictionPage />,
+    },
+    {
       path: "perp-grid",
       children: [
         {
           index: true,
-          element: <Navigate to={getSymbol()} />,
+          element: <Navigate to={getPerpSymbol()} />,
         },
         {
           path: ":symbol",
@@ -152,7 +161,7 @@ const AppRoute: React.FC = () => {
       children: [
         {
           index: true,
-          element: <Navigate to={getSymbol()} />,
+          element: <Navigate to={getPerpSymbol()} />,
         },
         {
           path: ":symbol",
@@ -253,7 +262,7 @@ const AppRoute: React.FC = () => {
           element: (
             <Navigate
               // preserve the search parameters to ensure link device via url params works
-              to={`/${currentLocale}${PathEnum.Perp}/${getSymbol()}${window.location.search}`}
+              to={`/${currentLocale}${PathEnum.Perp}/${getPerpSymbol()}${window.location.search}`}
             />
           ),
         },

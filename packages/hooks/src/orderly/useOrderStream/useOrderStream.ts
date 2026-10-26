@@ -8,7 +8,11 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
-import { withTPSLProvenance, isPositionalTPSL } from "@orderly.network/utils";
+import {
+  withTPSLProvenance,
+  isPositionalTPSL,
+  isBinarySymbol,
+} from "@orderly.network/utils";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
 import {
   normalizeTPSLChildType,
@@ -18,6 +22,7 @@ import {
 import { validateTPSLChild } from "../../services/orderCreator/validateTPSLChild";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
+import { settleOrderCancellations } from "../../utils/orderCancellation";
 import { generateKeyFun } from "../../utils/swr";
 import version from "../../version";
 import { useMarkPricesStream } from "../useMarkPricesStream";
@@ -48,6 +53,14 @@ export const useOrderStream = (
      * @default []
      */
     excludes?: CombineOrderType[];
+    /**
+     * Filter orders by product type. Only uppercase "PERP"/"BINARY" are
+     * accepted by the API; omit to query all products.
+     * This is a read-side filter, not a DELETE parameter. Unscoped PERP
+     * cancellation uses loaded symbols; unscoped BINARY cancellation still
+     * uses the legacy account-wide path and can cancel PERP orders too.
+     */
+    productType?: string;
     dateRange?: {
       from?: Date;
       to?: Date;
@@ -58,12 +71,15 @@ export const useOrderStream = (
      * Keep the state update alive
      */
     keeplive?: boolean;
+    /** Suspend private queries and cache registration. Defaults to true. */
+    enabled?: boolean;
     /**
      * Stop the state update when the component unmount
      */
     stopOnUnmount?: boolean;
   },
 ) => {
+  const enabled = options?.enabled !== false;
   const {
     status,
     symbol,
@@ -72,6 +88,7 @@ export const useOrderStream = (
     page,
     dateRange,
     sourceTypeAll,
+    productType,
   } = params;
 
   const [includes, setIncludes] = useState<CombineOrderType[]>(
@@ -118,11 +135,14 @@ export const useOrderStream = (
       page,
       dateRange,
       sourceTypeAll,
+      productType,
     });
-  }, [status, symbol, side, size, page, dateRange]);
+  }, [status, symbol, side, size, page, dateRange, sourceTypeAll, productType]);
 
   const algoOrderKeyFn = useMemo(() => {
-    return sourceTypeAll
+    // Binary filtering keeps the ordinary-order SQL branch only (no binary
+    // algo orders exist), same as sourceTypeAll.
+    return sourceTypeAll || productType === "BINARY"
       ? null
       : generateKeyFun("/v1/algo/orders", {
           status,
@@ -132,47 +152,65 @@ export const useOrderStream = (
           page,
           dateRange,
         });
-  }, [status, symbol, side, dateRange, size]);
+  }, [status, symbol, side, dateRange, size, sourceTypeAll, productType]);
 
   useEffect(() => {
+    if (!enabled) return;
     const formatKey = (value?: string) => (value ? `:${value}` : "");
-    const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
+    const scope = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side,
-    )}${formatKey(size.toString())}`;
+    )}${formatKey(size.toString())}${formatKey(productType)}`;
+    const key = `${scope}#${normalOrderKeyFn(0, null)}`;
 
-    registerKeyHandler?.(key, normalOrderKeyFn);
+    const keepAfterRelease = options?.stopOnUnmount !== true;
+    const releaseNormal = registerKeyHandler?.(
+      key,
+      normalOrderKeyFn,
+      keepAfterRelease,
+    );
 
-    if (algoOrderKeyFn) {
-      registerKeyHandler?.(key.replace("orders", "algoOrders"), algoOrderKeyFn);
-    }
+    const algoKey = `${scope.replace("orders", "algoOrders")}#${algoOrderKeyFn?.(0, null)}`;
+    const releaseAlgo = algoOrderKeyFn
+      ? registerKeyHandler?.(algoKey, algoOrderKeyFn, keepAfterRelease)
+      : undefined;
 
     return () => {
-      if (!options?.stopOnUnmount) return;
-
-      unregisterKeyHandler(key);
+      if (typeof releaseNormal === "function") releaseNormal();
+      else if (!keepAfterRelease) unregisterKeyHandler?.(key);
 
       if (algoOrderKeyFn) {
-        unregisterKeyHandler(key.replace("orders", "algoOrders"));
+        if (typeof releaseAlgo === "function") releaseAlgo();
+        else if (!keepAfterRelease) unregisterKeyHandler?.(algoKey);
       }
     };
-  }, [normalOrderKeyFn, options?.keeplive]);
+  }, [
+    enabled,
+    normalOrderKeyFn,
+    algoOrderKeyFn,
+    options?.keeplive,
+    options?.stopOnUnmount,
+    registerKeyHandler,
+    unregisterKeyHandler,
+  ]);
 
   const normalOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
-    normalOrderKeyFn,
+    enabled ? normalOrderKeyFn : null,
     {
       initialSize: 1,
       formatter: (data) => data,
       revalidateOnFocus: false,
+      revalidateOnMount: true,
     },
   );
 
   // console.log("ordersResponse", ordersResponse);
 
   const algoOrdersResponse = usePrivateInfiniteQuery<API.OrderResponse>(
-    algoOrderKeyFn,
+    enabled ? algoOrderKeyFn : null,
     {
       formatter: (data) => data,
       revalidateOnFocus: false,
+      revalidateOnMount: true,
     },
   );
 
@@ -181,7 +219,7 @@ export const useOrderStream = (
   const flattenOrders = useMemo(() => {
     if (
       !normalOrdersResponse.data ||
-      (!algoOrdersResponse.data && !sourceTypeAll)
+      (!algoOrdersResponse.data && !sourceTypeAll && algoOrderKeyFn)
     ) {
       return null;
     }
@@ -198,7 +236,17 @@ export const useOrderStream = (
       orders = [...orders, ...algoOrders];
     }
 
-    orders = orders?.map((order) => withTPSLProvenance(order));
+    const seen = new Set<string>();
+    orders = orders
+      ?.filter((order) => {
+        const id = order.algo_order_id
+          ? `algo:${order.algo_order_id}`
+          : `order:${order.order_id}`;
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      })
+      .map((order) => withTPSLProvenance(order));
 
     if (includes.includes("ALL") && excludes.length === 0) {
       return orders;
@@ -285,7 +333,7 @@ export const useOrderStream = (
 
     // TODO: order type check
 
-    return Promise.all(
+    return settleOrderCancellations(
       types.map((type) => {
         return doCancelAllAlgoOrders(null, {
           algo_type: type,
@@ -296,33 +344,96 @@ export const useOrderStream = (
   };
 
   /**
-   * cancel all orders
+   * Cancel PERP orders symbol by symbol.
+   *
+   * Binary API spec §2.9 adds product_type to GET /v1/orders only; DELETE
+   * /v1/orders retains the existing optional symbol parameter. An account-wide
+   * DELETE would also cancel tradable Binary orders, so enumerate PERP symbols.
+   *
+   * Known limitation: flattenOrders is a display snapshot, already constrained
+   * by query filters, includes/excludes and loaded pages. A symbol absent from
+   * that snapshot is missed; orders on a discovered symbol are cancelled by
+   * the server even if those individual orders are hidden or not loaded.
+   * A null/empty snapshot submits no requests and resolves to an empty array;
+   * a fulfilled result does not prove all account PERP orders were cancelled.
+   *
+   * TODO: Discover targets from a separate, unfiltered pending-order snapshot
+   * and verify completeness for both ordinary and algo orders before enabling
+   * cancel-all. A larger page size alone does not establish completeness.
+   */
+  const cancelPerpOrdersBySymbol = useCallback(() => {
+    const symbols = [
+      ...new Set(
+        (flattenOrders ?? [])
+          .map((order) => order.symbol)
+          .filter((symbol) => !!symbol && !isBinarySymbol(symbol)),
+      ),
+    ];
+    return settleOrderCancellations(
+      symbols.flatMap((symbol) => [
+        doCancelAllOrders(null, { symbol }),
+        doCancelAllAlgoOrders(null, {
+          algo_type: AlgoOrderRootType.STOP,
+          symbol,
+        }),
+        doCancelAllAlgoOrders(null, {
+          algo_type: AlgoOrderRootType.TRAILING_STOP,
+          symbol,
+        }),
+      ]),
+    );
+  }, [flattenOrders]);
+
+  /**
+   * Cancel pending orders. Only PERP has symbol-based product isolation here;
+   * BINARY and an omitted product filter retain legacy account-wide behavior.
    */
   const cancelAllOrders = useCallback(() => {
-    return Promise.all([
+    if (productType === "PERP") {
+      return cancelPerpOrdersBySymbol();
+    }
+    return settleOrderCancellations([
       doCancelAllOrders(null),
       doCancelAllAlgoOrders(null, { algo_type: AlgoOrderRootType.STOP }),
       doCancelAllAlgoOrders(null, {
         algo_type: AlgoOrderRootType.TRAILING_STOP,
       }),
     ]);
-  }, [normalOrdersResponse.data, algoOrdersResponse.data]);
+  }, [cancelPerpOrdersBySymbol, productType]);
 
+  /**
+   * An explicit symbol scopes cancellation independently of display filters.
+   * Without a symbol, PERP uses the limited snapshot described above; BINARY
+   * still falls back to account-wide cancellation. TODO: Isolate BINARY targets
+   * before treating this method as product-scoped cancel-all for that product.
+   */
   const cancelAllPendingOrders = useCallback(
     (symbol?: string) => {
-      return Promise.all([
-        doCancelAllOrders(null, { ...(symbol && { symbol }) }),
-        doCancelAllAlgoOrders(null, {
-          algo_type: AlgoOrderRootType.STOP,
-          ...(symbol && { symbol }),
-        }),
+      if (symbol) {
+        return settleOrderCancellations([
+          doCancelAllOrders(null, { symbol }),
+          doCancelAllAlgoOrders(null, {
+            algo_type: AlgoOrderRootType.STOP,
+            symbol,
+          }),
+          doCancelAllAlgoOrders(null, {
+            algo_type: AlgoOrderRootType.TRAILING_STOP,
+            symbol,
+          }),
+        ]);
+      }
+      if (productType === "PERP") {
+        return cancelPerpOrdersBySymbol();
+      }
+      return settleOrderCancellations([
+        doCancelAllOrders(null, {}),
+        doCancelAllAlgoOrders(null, { algo_type: AlgoOrderRootType.STOP }),
         doCancelAllAlgoOrders(null, {
           algo_type: AlgoOrderRootType.TRAILING_STOP,
-          ...(symbol && { symbol }),
         }),
       ]);
     },
-    [symbol],
+    [cancelPerpOrdersBySymbol, productType],
   );
 
   const cancelPostionOrdersByTypes = useCallback(
@@ -513,9 +624,16 @@ export const useOrderStream = (
     return _cancelOrder(orderId, "algoOrder", symbol);
   }, []);
 
-  const loadMore = () => {
-    // ordersResponse.setSize(ordersResponse.size + 1);
-  };
+  const loadMore = useCallback(() => {
+    void normalOrdersResponse.setSize((size) => size + 1);
+    if (algoOrderKeyFn) {
+      void algoOrdersResponse.setSize((size) => size + 1);
+    }
+  }, [
+    normalOrdersResponse.setSize,
+    algoOrdersResponse.setSize,
+    algoOrderKeyFn,
+  ]);
 
   // const cancelTPSLOrder = useCallback((orderId:number, symbol:string)=>{
   //   return
@@ -608,7 +726,15 @@ export const useOrderStream = (
     orders,
     {
       total,
+      error: normalOrdersResponse.error || algoOrdersResponse.error,
+      // Either stream may outlive the other, especially algo-only portfolios.
+      hasMore:
+        (normalOrdersResponse.data?.at(-1)?.rows.length ?? 0) > 0 ||
+        (Boolean(algoOrderKeyFn) &&
+          (algoOrdersResponse.data?.at(-1)?.rows.length ?? 0) > 0),
       isLoading: normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
+      isValidating:
+        normalOrdersResponse.isValidating || algoOrdersResponse.isValidating,
       refresh,
       loadMore,
       cancelAllOrders,

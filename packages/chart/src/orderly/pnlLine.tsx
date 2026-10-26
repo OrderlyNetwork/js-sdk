@@ -100,7 +100,7 @@ export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
       )}
       {!props.invisible && (
         <Line
-          type="natural"
+          type="monotoneX"
           dataKey="pnl"
           stroke={colors.primary}
           strokeWidth={isMobile ? 1.5 : 2}

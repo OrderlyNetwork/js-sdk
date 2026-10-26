@@ -15,8 +15,6 @@
   "extend.docs": "תיעוד",
   "extend.audits": "ביקורות אבטחה",
   "extend.vaults": "כספות (Vaults)",
-  "extend.perps": "פרפס",
-  "extend.perps.description": "פרפס ללא גז עם ספר פקודות ועד פי 100 מינוף",
   "extend.woofiEarn": "WOOFi earn",
   "extend.woofiEarn.description": "קבלו תשואה בקלות בכל רשת",
   "extend.wooStake": "WOO stake",

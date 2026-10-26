@@ -1,5 +1,7 @@
+import React from "react";
 import { OrdersModule } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
+import { tradingPageConfig } from "../../../../orderlyConfig";
 
 export default function OrdersPage() {
   return (
@@ -13,11 +15,12 @@ export default function OrdersPage() {
         minHeight: 379,
         maxHeight: 2560,
         overflow: "hidden",
-        // Make the table scroll instead of the page scroll
         height: "calc(100vh - 48px - 29px - 48px)",
       }}
     >
-      <OrdersModule.OrdersPage />
+      <OrdersModule.OrdersPage
+        sharePnLConfig={tradingPageConfig.sharePnLConfig}
+      />
     </Box>
   );
 }

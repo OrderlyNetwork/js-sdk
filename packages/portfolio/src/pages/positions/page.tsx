@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext, useFeatureEnabled } from "@orderly.network/react-app";
+import { perpRoute, predictionRoute, type API } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -14,6 +15,7 @@ import {
   Tooltip,
   InfoCircleIcon,
 } from "@orderly.network/ui";
+import type { SelectOption } from "@orderly.network/ui";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
@@ -21,8 +23,8 @@ import {
   CombinePositionsWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { AccountType } from "../assets/assetsPage/assets.ui.desktop";
+import { PortfolioProductPositionsPanel } from "./productPanel.widget";
 
 enum TabsType {
   positions = "Positions",
@@ -30,10 +32,60 @@ enum TabsType {
   liquidation = "Liquidation",
 }
 
-export const PositionsPage: React.FC<PositionsProps> = (props) => {
+export type PortfolioPositionsPageProps = Omit<
+  PositionsProps,
+  "onSymbolChange"
+> & {
+  /**
+   * Overrides navigation to the selected Perps market; defaults to opening
+   * `/perp/<symbol>` through `onRouteChange` when omitted.
+   */
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  /**
+   * Overrides navigation to the exact Prediction round contract; defaults to
+   * opening `/prediction/<symbol>` through `onRouteChange` when omitted.
+   */
+  onPredictionSelect?: (symbol: string) => void;
+  /**
+   * Overrides the built-in product panel; receives the original Perps table.
+   */
+  positionProductContent?: (perpsContent: React.ReactNode) => React.ReactNode;
+  /** Equivalent extension point for Position history. */
+  positionHistoryProductContent?: (
+    perpsContent: React.ReactNode,
+  ) => React.ReactNode;
+};
+
+export const PositionsPage: React.FC<PortfolioPositionsPageProps> = ({
+  onSymbolChange: hostOnSymbolChange,
+  onPredictionSelect,
+  positionProductContent,
+  positionHistoryProductContent,
+  ...positionsProps
+}) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
   const { state, isMainAccount } = useAccount();
+  const { onRouteChange } = useAppContext();
+  const predictionEnabled = useFeatureEnabled("prediction");
+  const navigatePerp = useCallback(
+    (market: API.Symbol) => {
+      onRouteChange?.(perpRoute(market.symbol));
+    },
+    [onRouteChange],
+  );
+  const navigatePrediction = useCallback(
+    (symbol: string) => {
+      onRouteChange?.(predictionRoute(symbol));
+    },
+    [onRouteChange],
+  );
+  // Host callbacks win; otherwise navigate through the app router when present.
+  const onSymbolChange =
+    hostOnSymbolChange ?? (onRouteChange ? navigatePerp : undefined);
+  const selectRoundSymbol =
+    onPredictionSelect ?? (onRouteChange ? navigatePrediction : undefined);
+  const perpsProps = { ...positionsProps, onSymbolChange };
 
   const subAccounts = state.subAccounts ?? [];
 
@@ -73,6 +125,37 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
     return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [subAccounts]);
 
+  const renderAccountFilter = () =>
+    isMainAccount ? (
+      <DataFilter
+        onFilter={onAccountFilter}
+        items={[
+          {
+            type: "select",
+            name: "account",
+            value: selectedAccount,
+            options: memoizedOptions,
+          },
+        ]}
+      />
+    ) : null;
+
+  const perpsPositionsContent = isMainAccount ? (
+    <CombinePositionsWidget selectedAccount={selectedAccount} {...perpsProps} />
+  ) : (
+    <PositionsWidget {...perpsProps} enableSortingStorage={false} />
+  );
+
+  // Binary rows share /v1/position_history (api-spec §6.2); history is
+  // server-paginated, so the Perps view must filter via product_type.
+  const perpsPositionHistoryContent = (
+    <PositionHistoryWidget
+      {...perpsProps}
+      enableSortingStorage={false}
+      productType="PERP"
+    />
+  );
+
   return (
     <Flex
       // p={6}
@@ -91,41 +174,47 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
         <Tabs
           value={tab}
           onValueChange={(e) => setTab(e as any)}
+          size="lg"
           classNames={{
             tabsList: "!oui-border-none oui-pb-1",
-            tabsContent: "oui-h-[calc(100%_-_28px)]",
+            tabsContent: "oui-h-[calc(100%_-_32px)]",
             trigger: "oui-group",
           }}
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
-            {isMainAccount ? (
+            {positionProductContent || !predictionEnabled ? (
               <>
-                <DataFilter
-                  onFilter={onAccountFilter}
-                  items={[
-                    {
-                      type: "select",
-                      name: "account",
-                      value: selectedAccount,
-                      options: memoizedOptions,
-                    },
-                  ]}
-                />
-                <CombinePositionsWidget
-                  selectedAccount={selectedAccount}
-                  {...props}
-                />
+                {renderAccountFilter()}
+                {positionProductContent?.(perpsPositionsContent) ??
+                  perpsPositionsContent}
               </>
             ) : (
-              <PositionsWidget {...props} enableSortingStorage={false} />
+              <PortfolioProductPositionsPanel
+                key={state.accountId}
+                type="positions"
+                selectedAccount={selectedAccount}
+                perpsContent={perpsPositionsContent}
+                accountFilter={renderAccountFilter()}
+                onPredictionSelect={selectRoundSymbol}
+              />
             )}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}
             title={t("positions.positionHistory")}
           >
-            <PositionHistoryWidget {...props} enableSortingStorage={false} />
+            {positionHistoryProductContent || !predictionEnabled ? (
+              (positionHistoryProductContent?.(perpsPositionHistoryContent) ??
+              perpsPositionHistoryContent)
+            ) : (
+              <PortfolioProductPositionsPanel
+                key={state.accountId}
+                type="positionHistory"
+                perpsContent={perpsPositionHistoryContent}
+                onPredictionSelect={selectRoundSymbol}
+              />
+            )}
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
             <LiquidationWidget />

@@ -5,6 +5,7 @@ import {
   useTradingLocalStorage,
 } from "../../../hooks";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
+import type { TradingPageState } from "../../../types/types";
 
 export enum DataListTabType {
   positions = "Positions",
@@ -18,7 +19,8 @@ export enum DataListTabType {
 }
 
 export const useDataListScript = (
-  inputs: { current?: DataListTabType } & PositionsProps,
+  inputs: { current?: DataListTabType } & PositionsProps &
+    Pick<TradingPageState, "dataListProductContent">,
 ) => {
   const {
     current,
@@ -26,6 +28,7 @@ export const useDataListScript = (
     sharePnLConfig,
     symbol,
     includedPendingOrder,
+    dataListProductContent,
   } = inputs;
 
   const localStorage = useTradingLocalStorage({ pnlNotionalDecimalPrecision });
@@ -42,6 +45,7 @@ export const useDataListScript = (
     symbol,
     calcMode: localStorage.unPnlPriceBasis,
     includedPendingOrder,
+    dataListProductContent,
     ...localStorage,
     positionCount,
     pendingOrderCount,

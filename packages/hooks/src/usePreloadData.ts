@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import { get } from "@orderly.network/net";
 import { getGlobalObject } from "@orderly.network/utils";
 import { useAppStore } from "./orderly/appStore";
 import { OrderlyContext } from "./orderlyContext";
@@ -67,37 +68,72 @@ export const usePreLoadData = () => {
     fetchSwapSupport();
   }, [swapSupportInfo, enableSwapDeposit]);
 
-  const { data: systemInfo } = useSWR(
+  const { data: systemInfo, mutate: refreshSystemInfo } = useSWR(
     "/v1/public/system_info",
     async (url: string, init?: RequestInit) => {
-      const data = await fetch(
+      // Use the same arrival-time calibration as every other net request.
+      // Calling net directly keeps bootstrap independent of timestamp-waiting
+      // query middleware.
+      const data = await get(
         url.startsWith("http") ? url : `${apiBaseUrl}${url}`,
         init,
       );
-      return await data.json();
+      const offset = (getGlobalObject() as Record<string, unknown>)
+        .__ORDERLY_timestamp_offset;
+      if (typeof offset !== "number" || !Number.isFinite(offset)) {
+        // Rejected samples (e.g. a slow first response) must be retried rather
+        // than leaving private requests waiting for an offset indefinitely.
+        throw new Error("Failed to initialize server timestamp offset");
+      }
+      return data;
     },
     {
       errorRetryCount: 3,
       errorRetryInterval: 500,
+      // Focus uses an explicit mutation below: SWR's focus throttle reads
+      // Date.now(), which can suppress revalidation after a backwards jump.
+      revalidateOnFocus: false,
     },
   );
 
   useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof document === "undefined" ||
+      typeof window.addEventListener !== "function" ||
+      typeof document.addEventListener !== "function"
+    ) {
+      return;
+    }
+    let pending: Promise<unknown> | undefined;
+    let stopped = false;
+    const refreshOnFocus = () => {
+      if (stopped || document.visibilityState !== "visible" || pending) return;
+      // Bound mutate() invalidates SWR's deduplication markers. A new sample is
+      // required even if the last response arrived just before the clock jump.
+      pending = refreshSystemInfo()
+        .catch(() => undefined)
+        .finally(() => {
+          pending = undefined;
+        });
+    };
+    window.addEventListener("focus", refreshOnFocus);
+    document.addEventListener("visibilitychange", refreshOnFocus);
+    return () => {
+      stopped = true;
+      window.removeEventListener("focus", refreshOnFocus);
+      document.removeEventListener("visibilitychange", refreshOnFocus);
+    };
+  }, [refreshSystemInfo]);
+
+  useEffect(() => {
     if (timestampOffsetInitialized) return;
     if (typeof systemInfo !== "undefined") {
-      const serverTimestamp = systemInfo.timestamp;
-      const localTimestamp = Date.now();
-      // Calculate the difference between server and local time
-      const timestampOffset = serverTimestamp - localTimestamp;
-
-      if (isNaN(timestampOffset)) {
+      const offset = (getGlobalObject() as Record<string, unknown>)
+        .__ORDERLY_timestamp_offset;
+      if (typeof offset !== "number" || !Number.isFinite(offset)) {
         return;
       }
-
-      // Store the offset globally for use in API calls
-      (
-        getGlobalObject() as Record<string, unknown>
-      ).__ORDERLY_timestamp_offset = timestampOffset;
       setTimestampOffsetInitialized(true);
     }
   }, [systemInfo, timestampOffsetInitialized]);

@@ -2,7 +2,9 @@ export enum PathEnum {
   Root = "/",
   Perp = "/perp",
   PerpGrid = "/perp-grid",
+  PerpSplit = "/perp-split",
   Rwa = "/rwa",
+  Prediction = "/prediction",
   Swap = "/swap",
 
   Portfolio = "/portfolio",
@@ -44,4 +46,5 @@ export const PageTitleMap = {
   [PathEnum.Vaults]: "Vaults",
   [PathEnum.Points]: "Points",
   [PathEnum.Swap]: "Spot",
+  [PathEnum.Prediction]: "Predictions",
 };

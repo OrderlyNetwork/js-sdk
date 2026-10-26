@@ -95,7 +95,10 @@ export const useMarginRatio = (): MarginRatioReturn => {
 
     for (let index = 0; index < rows.length; index++) {
       const item = rows[index];
-      if (item.mm !== null) {
+      // Loose equality: rows without symbol config (e.g. binary rounds that
+      // fell out of /v1/public/binary/info) pass through the calculator with
+      // mm undefined, and Decimal.add(undefined) throws.
+      if (item.mm != null) {
         // console.log("calc add mm", item.mm, positionsMM, notional);
 
         positionsMM = positionsMM.add(item.mm);
@@ -121,7 +124,7 @@ export const useMarginRatio = (): MarginRatioReturn => {
 
     for (let index = 0; index < rows.length; index++) {
       const item = rows[index];
-      if (item.mm !== null) {
+      if (item.mm != null) {
         maintenanceMargin = maintenanceMargin.add(item.mm);
       }
     }

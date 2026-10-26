@@ -4,7 +4,7 @@ import { generatePath } from "@orderly.network/i18n";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { RouteOption } from "@orderly.network/types";
 import { PathEnum } from "../constant";
-import { getSymbol } from "../storage";
+import { getPerpSymbol } from "../perpSymbolStorage";
 
 // if href not equal to the route path, we need to convert it to the route path
 const routeMap: Record<PropertyKey, PathEnum> = {
@@ -17,20 +17,22 @@ export const useNav = () => {
 
   const onRouteChange = useCallback(
     (option: RouteOption) => {
-      if (option?.target === "_blank") {
+      if (option.target === "_blank") {
         window.open(option.href);
         return;
       }
 
-      if (option?.href === "/") {
-        const symbol = getSymbol();
-        navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }));
+      if (option.href === "/") {
+        const symbol = getPerpSymbol();
+        navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }), {
+          replace: option.replace,
+        });
         return;
       }
 
-      const path = routeMap[option?.href!] || option?.href || "";
+      const path = routeMap[option.href] || option.href;
       const href = generatePath({ path });
-      navigate(href);
+      navigate(href, { replace: option.replace });
     },
     [navigate],
   );

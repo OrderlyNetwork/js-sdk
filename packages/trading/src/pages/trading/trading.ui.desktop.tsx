@@ -371,6 +371,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
       panelSize={panelSize}
+      {...props.sideMarkets}
     />
   );
 
@@ -460,6 +461,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       <SymbolInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
+        marketsDropdown={props.marketsDropdown}
         closeCountdown={closeCountdown}
         showCountdown={showCountdown}
         trailing={
@@ -538,6 +540,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         current={undefined}
         symbol={props.symbol}
         sharePnLConfig={props.sharePnLConfig}
+        dataListProductContent={props.dataListProductContent}
       />
     </React.Suspense>
   );
