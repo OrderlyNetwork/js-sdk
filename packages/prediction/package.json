@@ -1,7 +1,13 @@
 {
   "name": "@orderly.network/prediction",
   "version": "3.3.0-alpha.0",
-  "description": "Prediction market UI prototype for Orderly",
+  "description": "Prediction market UI for Orderly",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OrderlyNetwork/js-sdk.git",
+    "directory": "packages/prediction"
+  },
+  "homepage": "https://github.com/OrderlyNetwork/js-sdk/tree/main/packages/prediction#readme",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
