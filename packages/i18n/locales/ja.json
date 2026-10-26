@@ -1493,6 +1493,10 @@
   "notification.source.label": "出典：{{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "プラットフォーム",
+  "notification.video.loading": "動画を読み込み中…",
+  "notification.video.openExternal": "{{provider}} で開く",
+  "notification.video.reload": "動画を再読み込み",
+  "notification.video.slow": "動画の読み込みに時間がかかっています。",
   "notification.viewAll": "すべて表示",
   "tradingPoints.points": "ポイント"
 }

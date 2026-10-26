@@ -1,4 +1,8 @@
 export const notification = {
+  "notification.video.loading": "Loading video…",
+  "notification.video.slow": "The video is taking longer to load.",
+  "notification.video.reload": "Reload video",
+  "notification.video.openExternal": "Open on {{provider}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
   "notification.source.label": "Source: {{name}}",

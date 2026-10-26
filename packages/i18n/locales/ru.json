@@ -1493,6 +1493,10 @@
   "notification.source.label": "Источник: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Платформа",
+  "notification.video.loading": "Загрузка видео…",
+  "notification.video.openExternal": "Открыть на {{provider}}",
+  "notification.video.reload": "Перезагрузить видео",
+  "notification.video.slow": "Видео загружается дольше обычного.",
   "notification.viewAll": "Показать все",
   "tradingPoints.points": "Баллы"
 }

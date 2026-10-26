@@ -1493,6 +1493,10 @@
   "notification.source.label": "Źródło: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platforma",
+  "notification.video.loading": "Ładowanie wideo…",
+  "notification.video.openExternal": "Otwórz w {{provider}}",
+  "notification.video.reload": "Załaduj wideo ponownie",
+  "notification.video.slow": "Ładowanie wideo trwa dłużej niż zwykle.",
   "notification.viewAll": "Zobacz wszystkie",
   "tradingPoints.points": "Punkty"
 }

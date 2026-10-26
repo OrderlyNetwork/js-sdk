@@ -1493,6 +1493,10 @@
   "notification.source.label": "Bron: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
+  "notification.video.loading": "Video laden…",
+  "notification.video.openExternal": "Openen op {{provider}}",
+  "notification.video.reload": "Video opnieuw laden",
+  "notification.video.slow": "Het laden van de video duurt langer.",
   "notification.viewAll": "Alles bekijken",
   "tradingPoints.points": "Punten"
 }

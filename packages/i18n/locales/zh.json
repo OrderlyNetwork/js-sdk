@@ -1493,6 +1493,10 @@
   "notification.source.label": "来源：{{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "平台",
+  "notification.video.loading": "视频加载中…",
+  "notification.video.openExternal": "在 {{provider}} 上打开",
+  "notification.video.reload": "重新加载视频",
+  "notification.video.slow": "视频加载时间较长。",
   "notification.viewAll": "查看全部",
   "tradingPoints.points": "积分"
 }

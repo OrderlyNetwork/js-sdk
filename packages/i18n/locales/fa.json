@@ -1493,6 +1493,10 @@
   "notification.source.label": "منبع: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "پلتفرم",
+  "notification.video.loading": "در حال بارگذاری ویدیو…",
+  "notification.video.openExternal": "باز کردن در {{provider}}",
+  "notification.video.reload": "بارگذاری مجدد ویدیو",
+  "notification.video.slow": "بارگذاری ویدیو طولانی‌تر از حد معمول طول می‌کشد.",
   "notification.viewAll": "مشاهده همه",
   "tradingPoints.points": "امتیاز"
 }

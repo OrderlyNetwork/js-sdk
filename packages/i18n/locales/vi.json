@@ -1493,6 +1493,10 @@
   "notification.source.label": "Nguồn: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Nền tảng",
+  "notification.video.loading": "Đang tải video…",
+  "notification.video.openExternal": "Mở trên {{provider}}",
+  "notification.video.reload": "Tải lại video",
+  "notification.video.slow": "Video đang mất nhiều thời gian để tải hơn.",
   "notification.viewAll": "Xem tất cả",
   "tradingPoints.points": "Điểm"
 }

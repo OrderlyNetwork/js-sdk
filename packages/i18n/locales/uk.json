@@ -1493,6 +1493,10 @@
   "notification.source.label": "Джерело: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Платформа",
+  "notification.video.loading": "Завантаження відео…",
+  "notification.video.openExternal": "Відкрити на {{provider}}",
+  "notification.video.reload": "Перезавантажити відео",
+  "notification.video.slow": "Відео завантажується довше, ніж зазвичай.",
   "notification.viewAll": "Переглянути всі",
   "tradingPoints.points": "Бали"
 }

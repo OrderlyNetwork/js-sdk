@@ -1493,6 +1493,10 @@
   "notification.source.label": "Sumber: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
+  "notification.video.loading": "Memuat video…",
+  "notification.video.openExternal": "Buka di {{provider}}",
+  "notification.video.reload": "Muat ulang video",
+  "notification.video.slow": "Video membutuhkan waktu lebih lama untuk dimuat.",
   "notification.viewAll": "Lihat semua",
   "tradingPoints.points": "Poin"
 }

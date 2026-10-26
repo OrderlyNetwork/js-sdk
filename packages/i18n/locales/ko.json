@@ -1493,6 +1493,10 @@
   "notification.source.label": "출처: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "플랫폼",
+  "notification.video.loading": "동영상 로드 중…",
+  "notification.video.openExternal": "{{provider}}에서 열기",
+  "notification.video.reload": "동영상 다시 로드",
+  "notification.video.slow": "동영상 로드가 오래 걸리고 있습니다.",
   "notification.viewAll": "전체 보기",
   "tradingPoints.points": "포인트"
 }

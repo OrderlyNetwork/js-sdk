@@ -1,5 +1,6 @@
 import { createElement, type ReactNode } from "react";
 import MarkdownIt from "markdown-it";
+import { AnnouncementVideo } from "./announcementVideo";
 
 export interface MarkdownToken {
   type: string;
@@ -25,24 +26,75 @@ export function safeHttpsUrl(url?: string | null): string | undefined {
   }
 }
 
+// Keep these URL rules aligned with dex-creator's normalizeBlogPostVideoUrl.
+const YOUTUBE_VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
+const VIMEO_VIDEO_ID_PATTERN = /^[1-9]\d{0,11}$/;
+const VIDEO_EMBED_MARKER = "embed-video";
+
 export function videoEmbedUrl(value: string): string | null {
-  const safeUrl = safeHttpsUrl(value);
-  if (!safeUrl) return null;
-  const url = new URL(safeUrl);
-  const host = url.hostname.toLowerCase();
-  if (["youtube.com", "www.youtube.com", "youtu.be"].includes(host)) {
-    const id =
-      host === "youtu.be" ? url.pathname.slice(1) : url.searchParams.get("v");
-    return id && /^[A-Za-z0-9_-]{11}$/.test(id)
-      ? `https://www.youtube-nocookie.com/embed/${id}`
-      : null;
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol !== "https:" || url.username || url.password || url.port) {
+      return null;
+    }
+
+    const hostname = url.hostname.toLowerCase();
+    const path = url.pathname.split("/").filter(Boolean);
+    let videoId: string | null = null;
+
+    if (hostname === "youtu.be" && path.length === 1) {
+      videoId = path[0] ?? null;
+    } else if (hostname === "youtube.com" || hostname === "www.youtube.com") {
+      if (url.pathname === "/watch") {
+        videoId = url.searchParams.get("v");
+      } else if (
+        path.length === 2 &&
+        (path[0] === "shorts" || path[0] === "embed")
+      ) {
+        videoId = path[1] ?? null;
+      }
+    } else if (
+      (hostname === "youtube-nocookie.com" ||
+        hostname === "www.youtube-nocookie.com") &&
+      path.length === 2 &&
+      path[0] === "embed"
+    ) {
+      videoId = path[1] ?? null;
+    }
+
+    if (videoId && YOUTUBE_VIDEO_ID_PATTERN.test(videoId)) {
+      return `https://www.youtube-nocookie.com/embed/${videoId}`;
+    }
+
+    videoId = null;
+    if (
+      (hostname === "vimeo.com" || hostname === "www.vimeo.com") &&
+      path.length === 1
+    ) {
+      videoId = path[0] ?? null;
+    } else if (
+      hostname === "player.vimeo.com" &&
+      path.length === 2 &&
+      path[0] === "video"
+    ) {
+      videoId = path[1] ?? null;
+    }
+
+    if (videoId && VIMEO_VIDEO_ID_PATTERN.test(videoId)) {
+      return `https://player.vimeo.com/video/${videoId}`;
+    }
+
+    return null;
+  } catch {
+    return null;
   }
-  if (
-    ["vimeo.com", "www.vimeo.com"].includes(host) &&
-    /^\/\d+$/.test(url.pathname)
-  )
-    return `https://player.vimeo.com/video${url.pathname}`;
-  return null;
+}
+
+function markedVideoEmbed(token: MarkdownToken, label: string): string | null {
+  return token.attrGet("title") === VIDEO_EMBED_MARKER ||
+    label.startsWith("Video: ")
+    ? videoEmbedUrl(token.attrGet("href") ?? "")
+    : null;
 }
 
 /** Summaries exclude media, raw HTML and code; all three entrances use this text. */
@@ -57,9 +109,10 @@ export function announcementExcerpt(content: string): string {
         if (index <= skipUntil) return "";
         if (
           token.type === "link_open" &&
-          tokens[index + 1]?.type === "text" &&
-          tokens[index + 1].content.startsWith("Video: ") &&
-          videoEmbedUrl(token.attrGet("href") ?? "")
+          markedVideoEmbed(
+            token,
+            tokens[index + 1]?.type === "text" ? tokens[index + 1].content : "",
+          )
         ) {
           const closing = tokens.findIndex(
             (item, next) => next > index && item.type === "link_close",
@@ -158,20 +211,15 @@ function renderTokens(tokens: MarkdownToken[]): ReactNode[] {
           const label = children.every((child) => typeof child === "string")
             ? children.join("")
             : "";
-          const embed = label.startsWith("Video: ")
-            ? videoEmbedUrl(href ?? "")
-            : null;
+          const embed = markedVideoEmbed(token, label);
           if (embed) {
             result.push(
-              createElement("iframe", {
-                key,
+              createElement(AnnouncementVideo, {
+                key: `${key}:${embed}`,
                 src: embed,
-                title: label.slice(7) || "Video",
-                className:
-                  "oui-my-6 oui-aspect-video oui-w-full oui-rounded-md oui-border-0",
-                sandbox: "allow-scripts allow-same-origin allow-presentation",
-                allowFullScreen: true,
-                referrerPolicy: "strict-origin-when-cross-origin",
+                title:
+                  (label.startsWith("Video: ") ? label.slice(7) : label) ||
+                  "Video",
               }),
             );
             continue;

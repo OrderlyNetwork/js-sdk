@@ -1493,6 +1493,10 @@
   "notification.source.label": "المصدر: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "المنصة",
+  "notification.video.loading": "جارٍ تحميل الفيديو…",
+  "notification.video.openExternal": "فتح على {{provider}}",
+  "notification.video.reload": "إعادة تحميل الفيديو",
+  "notification.video.slow": "يستغرق تحميل الفيديو وقتًا أطول.",
   "notification.viewAll": "عرض الكل",
   "tradingPoints.points": "النقاط"
 }

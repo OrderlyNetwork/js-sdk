@@ -1493,6 +1493,10 @@
   "notification.source.label": "Kaynak: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
+  "notification.video.loading": "Video yükleniyor…",
+  "notification.video.openExternal": "{{provider}} üzerinde aç",
+  "notification.video.reload": "Videoyu yeniden yükle",
+  "notification.video.slow": "Videonun yüklenmesi normalden uzun sürüyor.",
   "notification.viewAll": "Tümünü görüntüle",
   "tradingPoints.points": "Puanlar"
 }

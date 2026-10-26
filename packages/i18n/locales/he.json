@@ -1493,6 +1493,10 @@
   "notification.source.label": "מקור: {{name}}",
   "notification.source.orderly": "Orderly",
   "notification.source.platform": "פלטפורמה",
+  "notification.video.loading": "טוען וידאו…",
+  "notification.video.openExternal": "פתיחה ב-{{provider}}",
+  "notification.video.reload": "טעינת הווידאו מחדש",
+  "notification.video.slow": "טעינת הווידאו אורכת זמן רב מהרגיל.",
   "notification.viewAll": "הצג הכול",
   "tradingPoints.points": "נקודות"
 }
