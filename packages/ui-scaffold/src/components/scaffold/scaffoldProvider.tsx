@@ -7,6 +7,7 @@ import {
 import { useAnnouncement } from "@orderly.network/ui-notification";
 import { checkChainSupport } from "../../utils/chain";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
+import { useSharedAnnouncementState } from "./useSharedAnnouncementState";
 
 export type ScaffoldProviderProps = Omit<
   ScaffoldState,
@@ -30,7 +31,11 @@ export const ScaffoldProvider: React.FC<
 
   const { networkId } = useContext<any>(OrderlyContext);
 
-  const announcementState = useAnnouncement();
+  const legacyAnnouncementState = useAnnouncement();
+  const announcementState = useSharedAnnouncementState(
+    undefined,
+    legacyAnnouncementState,
+  );
 
   // console.log("announcementState", announcementState);
 

@@ -1,6 +1,6 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType, type API } from "@orderly.network/types";
+import { AnnouncementType } from "@orderly.network/types";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -9,12 +9,15 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
+import type { AnnouncementSummary } from "../../types";
+import { resolveCardId } from "../../utils/cardSelection";
 import {
   AnnouncementIcon,
   BattleIcon,
   FundIcon,
   SecurityIcon,
 } from "../announcementCenter/icons";
+import { AnnouncementSourceBadge } from "../announcementSourceBadge";
 import {
   CampaignContentCard,
   CommunityVoteContentCard,
@@ -27,8 +30,10 @@ export interface NotificationProps {
   // Define your notification props here
   className?: string;
   // children?: React.ReactNode;
-  dataSource: API.AnnouncementRow[];
+  dataSource: AnnouncementSummary[];
   onClose?: () => void;
+  onCurrentChange?: (id?: string | number) => void;
+  platformName?: string;
 }
 
 export interface NotificationItemProps {
@@ -46,7 +51,7 @@ export interface NotificationListProps {
 
 const NotificationHeader: FC<{
   // type: AnnouncementType;
-  dataSource: API.AnnouncementRow[];
+  dataSource: AnnouncementSummary[];
   current: number;
   expanded?: boolean;
   onExpandToggle?: () => void;
@@ -54,7 +59,7 @@ const NotificationHeader: FC<{
 }> = (props) => {
   const { t } = useTranslation();
   const { expanded } = props;
-  const { type } = props.dataSource[props.current];
+  const { type, category } = props.dataSource[props.current];
 
   const title = useMemo(() => {
     switch (type) {
@@ -62,7 +67,7 @@ const NotificationHeader: FC<{
         return (
           <Text
             size="sm"
-            className="oui-text-transparent oui-bg-clip-text oui-gradient-brand"
+            className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
           >
             {t("notification.campaign")}
           </Text>
@@ -111,11 +116,21 @@ const NotificationHeader: FC<{
   }, [type]);
   return (
     <Flex itemAlign="center" justify="between" className="oui-px-4 oui-py-3">
-      <div className="orderly-notification-header oui-flex oui-items-center oui-gap-2">
-        {icon}
-        {title}
+      <div className="orderly-notification-header oui-flex oui-min-w-0 oui-flex-wrap oui-items-center oui-gap-2">
+        {!category && icon}
+        {category ? (
+          <Text size="sm" color="primary">
+            {t(`notification.category.${category}`)}
+          </Text>
+        ) : (
+          title
+        )}
       </div>
       <button
+        type="button"
+        aria-label={t(
+          expanded ? "notification.collapse" : "notification.expand",
+        )}
         onClick={props.onExpandToggle}
         className="oui-transition-transform oui-duration-300"
         style={{
@@ -145,6 +160,8 @@ const NotificationFooter: FC<{
     >
       <Flex gap={2}>
         <button
+          type="button"
+          aria-label={t("notification.previous")}
           disabled={current - 1 < 0}
           onClick={onPrev}
           className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 hover:oui-bg-base-5 disabled:oui-opacity-50"
@@ -155,6 +172,8 @@ const NotificationFooter: FC<{
           {current + 1}/{total}
         </Text>
         <button
+          type="button"
+          aria-label={t("notification.next")}
           disabled={current + 1 >= total}
           onClick={onNext}
           className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 hover:oui-bg-base-5 disabled:oui-opacity-50"
@@ -172,7 +191,7 @@ const NotificationFooter: FC<{
 };
 
 const NotificationContent: FC<{
-  dataSource: (API.AnnouncementRow & {
+  dataSource: (AnnouncementSummary & {
     startTime?: number;
     endTime?: number;
   })[];
@@ -181,6 +200,38 @@ const NotificationContent: FC<{
 }> = (props) => {
   const elements = useMemo(() => {
     return props.dataSource.map((message) => {
+      if (message.title && message.url) {
+        return (
+          <button
+            key={message.announcement_id}
+            type="button"
+            onClick={() => props.onItemClick(message.url!)}
+            className="oui-announcement-notification-content oui-flex oui-w-full oui-flex-col oui-gap-3 oui-rounded-md oui-text-start focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
+          >
+            <Text size="base" weight="semibold" intensity={98}>
+              {message.title}
+            </Text>
+            <Text.formatted
+              size="2xs"
+              intensity={36}
+              rule="date"
+              formatString="yyyy-MM-dd HH:mm:ss"
+            >
+              {message.published_time ?? message.updated_time ?? 0}
+            </Text.formatted>
+            {message.message && (
+              <Text
+                size="xs"
+                weight="regular"
+                intensity={80}
+                className="oui-line-clamp-3"
+              >
+                {message.message}
+              </Text>
+            )}
+          </button>
+        );
+      }
       const { type } = message;
       switch (type) {
         case AnnouncementType.Campaign:
@@ -225,7 +276,7 @@ const NotificationContent: FC<{
           );
       }
     });
-  }, [props.dataSource]);
+  }, [props.dataSource, props.onItemClick]);
   return <>{elements[props.current]}</>;
 };
 
@@ -237,7 +288,20 @@ export const NotificationUI: FC<
 > = (props) => {
   const [expanded, setExpanded] = useState(true);
 
-  const [current, setCurrent] = useState(0);
+  const ids = useMemo(
+    () => props.dataSource.map((item) => item.announcement_id),
+    [props.dataSource],
+  );
+  const [selection, setSelection] = useState<{
+    ids: (string | number)[];
+    id?: string | number;
+  }>({ ids, id: ids[0] });
+  const currentId = resolveCardId(selection.id, selection.ids, ids);
+  if (selection.ids !== ids) setSelection({ ids, id: currentId });
+  const current = Math.max(0, ids.indexOf(currentId!));
+  useEffect(() => {
+    props.onCurrentChange?.(currentId);
+  }, [currentId, props.onCurrentChange]);
   const len = useMemo(() => props.dataSource?.length ?? 0, [props.dataSource]);
 
   if (len === 0) {
@@ -264,6 +328,11 @@ export const NotificationUI: FC<
         {/* Inner div needs overflow-hidden and min-height-0 for grid animation to work */}
         <div className="oui-min-h-0 oui-overflow-hidden ">
           <div className="oui-px-4 oui-py-3">
+            <AnnouncementSourceBadge
+              isOfficial={props.dataSource[current].is_official}
+              platformName={props.platformName}
+              className="oui-mb-3"
+            />
             <NotificationContent
               dataSource={props.dataSource ?? []}
               current={current}
@@ -281,13 +350,13 @@ export const NotificationUI: FC<
           if (current - 1 < 0) {
             return;
           }
-          setCurrent(current - 1);
+          setSelection({ ids, id: ids[current - 1] });
         }}
         onNext={() => {
           if (current + 1 >= len) {
             return;
           }
-          setCurrent(current + 1);
+          setSelection({ ids, id: ids[current + 1] });
         }}
       />
     </div>

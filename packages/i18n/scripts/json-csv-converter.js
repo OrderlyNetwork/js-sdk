@@ -204,10 +204,15 @@ function getMissingKeys(jsonList, header) {
     throw "Object array please.";
   }
 
+  const ignoreKeys = loadIgnoreKeys();
   const baseJson = jsonList[0];
   const baseKeys = Object.keys(baseJson);
   const errors = {};
   for (const key of baseKeys) {
+    // Skip detection if key is in ignore list
+    if (shouldIgnoreKey(key, ignoreKeys)) {
+      continue;
+    }
     for (const [index, json] of jsonList.entries()) {
       const val = json[key] || "";
       const bool = validateI18nValue(val);

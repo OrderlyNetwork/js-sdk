@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType } from "@orderly.network/types";
 import { Flex, Text, ChevronDownIcon, cn } from "@orderly.network/ui";
+import { AnnouncementSourceBadge } from "../announcementSourceBadge";
 import {
   AnnouncementIcon,
   ArrowRightShortIcon,
@@ -21,6 +22,8 @@ export const AnnouncementItem: FC<{
   updatedTime: number;
   className?: string;
   showDivider?: boolean;
+  isOfficial?: boolean;
+  platformName?: string;
 }> = (props) => {
   const { t } = useTranslation();
   const Icon = useMemo(() => {
@@ -124,9 +127,16 @@ export const AnnouncementItem: FC<{
       <Icon color="white" className="oui-mt-3 oui-shrink-0" />
 
       <Flex direction="column" itemAlign="start" grow>
-        <Text size="xs" intensity={80} weight="bold">
-          {title}
-        </Text>
+        <div className="oui-flex oui-flex-col oui-items-start oui-gap-1">
+          <AnnouncementSourceBadge
+            isOfficial={props.isOfficial}
+            platformName={props.platformName}
+            className="oui-self-start"
+          />
+          <Text size="xs" intensity={80} weight="bold">
+            {title}
+          </Text>
+        </div>
         {updateTime}
         {/* Expandable content with animation */}
         <div

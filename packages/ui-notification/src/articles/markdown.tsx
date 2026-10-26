@@ -1,0 +1,224 @@
+import { createElement, type ReactNode } from "react";
+import MarkdownIt from "markdown-it";
+
+export interface MarkdownToken {
+  type: string;
+  tag: string;
+  nesting: number;
+  content: string;
+  children?: MarkdownToken[];
+  hidden?: boolean;
+  attrGet(name: string): string | null;
+}
+
+const parser = new MarkdownIt({ html: false, linkify: false, breaks: true });
+
+export function safeHttpsUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:" && !parsed.username && !parsed.password
+      ? parsed.href
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function videoEmbedUrl(value: string): string | null {
+  const safeUrl = safeHttpsUrl(value);
+  if (!safeUrl) return null;
+  const url = new URL(safeUrl);
+  const host = url.hostname.toLowerCase();
+  if (["youtube.com", "www.youtube.com", "youtu.be"].includes(host)) {
+    const id =
+      host === "youtu.be" ? url.pathname.slice(1) : url.searchParams.get("v");
+    return id && /^[A-Za-z0-9_-]{11}$/.test(id)
+      ? `https://www.youtube-nocookie.com/embed/${id}`
+      : null;
+  }
+  if (
+    ["vimeo.com", "www.vimeo.com"].includes(host) &&
+    /^\/\d+$/.test(url.pathname)
+  )
+    return `https://player.vimeo.com/video${url.pathname}`;
+  return null;
+}
+
+/** Summaries exclude media, raw HTML and code; all three entrances use this text. */
+export function announcementExcerpt(content: string): string {
+  const stripped = content
+    .replace(/<([a-z][\w:-]*)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "")
+    .replace(/<[^>]*>/g, "");
+  const collect = (tokens: MarkdownToken[]): string => {
+    let skipUntil = -1;
+    return tokens
+      .map((token, index) => {
+        if (index <= skipUntil) return "";
+        if (
+          token.type === "link_open" &&
+          tokens[index + 1]?.type === "text" &&
+          tokens[index + 1].content.startsWith("Video: ") &&
+          videoEmbedUrl(token.attrGet("href") ?? "")
+        ) {
+          const closing = tokens.findIndex(
+            (item, next) => next > index && item.type === "link_close",
+          );
+          if (closing >= 0) skipUntil = closing;
+          return "";
+        }
+        if (token.type === "text") return token.content;
+        if (token.type === "softbreak" || token.type === "hardbreak")
+          return " ";
+        if (token.type === "inline") return `${collect(token.children ?? [])} `;
+        return "";
+      })
+      .join("");
+  };
+  return collect(parser.parse(stripped, {})).replace(/\s+/g, " ").trim();
+}
+
+const classes: Record<string, string> = {
+  p: "oui-leading-7",
+  h1: "oui-text-2xl oui-font-semibold oui-text-base-contrast-98",
+  h2: "oui-text-xl oui-font-semibold oui-text-base-contrast-98",
+  h3: "oui-text-lg oui-font-semibold oui-text-base-contrast-98",
+  h4: "oui-font-semibold",
+  h5: "oui-font-semibold",
+  h6: "oui-font-semibold",
+  ul: "oui-list-disc oui-space-y-2 oui-ps-6",
+  ol: "oui-list-decimal oui-space-y-2 oui-ps-6",
+  li: "oui-leading-7",
+  blockquote:
+    "oui-border-s-2 oui-border-primary oui-bg-base-8 oui-p-4 oui-text-base-contrast-54",
+  pre: "oui-overflow-x-auto oui-rounded-md oui-bg-base-8 oui-p-4 oui-text-xs",
+  code: "oui-rounded oui-bg-base-8 oui-px-1 oui-font-mono oui-text-xs",
+  table: "oui-w-full oui-border-collapse oui-text-start",
+  th: "oui-border oui-border-line-12 oui-p-3 oui-text-start oui-font-semibold",
+  td: "oui-border oui-border-line-12 oui-p-3",
+  hr: "oui-border-line-6",
+  strong: "oui-font-semibold oui-text-base-contrast-98",
+  em: "oui-italic",
+};
+const allowedTags = new Set([
+  ...Object.keys(classes),
+  "thead",
+  "tbody",
+  "tr",
+  "s",
+]);
+
+/** Render parser tokens as React nodes. No raw HTML or arbitrary token attributes. */
+function renderTokens(tokens: MarkdownToken[]): ReactNode[] {
+  let cursor = 0;
+  function read(): ReactNode[] {
+    const result: ReactNode[] = [];
+    while (cursor < tokens.length) {
+      const token = tokens[cursor++];
+      if (token.nesting === -1) break;
+      const key = cursor;
+      if (token.type === "inline")
+        result.push(...renderTokens(token.children ?? []));
+      else if (token.type === "text") result.push(token.content);
+      else if (token.type === "softbreak" || token.type === "hardbreak")
+        result.push(createElement("br", { key }));
+      else if (token.type === "image") {
+        const src = safeHttpsUrl(token.attrGet("src"));
+        if (src)
+          result.push(
+            createElement("img", {
+              key,
+              src,
+              alt: token.content,
+              loading: "lazy",
+              className: "oui-max-w-full oui-rounded-md",
+            }),
+          );
+      } else if (token.type === "fence" || token.type === "code_block") {
+        result.push(
+          createElement(
+            "pre",
+            { key, className: classes.pre },
+            createElement("code", null, token.content),
+          ),
+        );
+      } else if (token.type === "code_inline") {
+        result.push(
+          createElement(
+            "code",
+            { key, className: classes.code },
+            token.content,
+          ),
+        );
+      } else if (token.nesting === 1) {
+        const children = read();
+        if (token.hidden) result.push(...children);
+        else if (token.tag === "a") {
+          const href = safeHttpsUrl(token.attrGet("href"));
+          const label = children.every((child) => typeof child === "string")
+            ? children.join("")
+            : "";
+          const embed = label.startsWith("Video: ")
+            ? videoEmbedUrl(href ?? "")
+            : null;
+          if (embed) {
+            result.push(
+              createElement("iframe", {
+                key,
+                src: embed,
+                title: label.slice(7) || "Video",
+                className:
+                  "oui-my-6 oui-aspect-video oui-w-full oui-rounded-md oui-border-0",
+                sandbox: "allow-scripts allow-same-origin allow-presentation",
+                allowFullScreen: true,
+                referrerPolicy: "strict-origin-when-cross-origin",
+              }),
+            );
+            continue;
+          }
+          result.push(
+            href
+              ? createElement(
+                  "a",
+                  {
+                    key,
+                    href,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    className: "oui-text-primary-light oui-underline",
+                  },
+                  children,
+                )
+              : createElement("span", { key }, children),
+          );
+        } else if (allowedTags.has(token.tag)) {
+          const element = createElement(
+            token.tag,
+            { key, className: classes[token.tag] },
+            children,
+          );
+          result.push(
+            token.tag === "table"
+              ? createElement(
+                  "div",
+                  { key, className: "oui-overflow-x-auto" },
+                  element,
+                )
+              : element,
+          );
+        } else result.push(...children);
+      } else if (token.tag === "hr")
+        result.push(createElement("hr", { key, className: classes.hr }));
+    }
+    return result;
+  }
+  return read();
+}
+
+export function AnnouncementMarkdown({ content }: { content: string }) {
+  return (
+    <div className="oui-announcement-markdown oui-text-sm oui-space-y-6 oui-break-words oui-font-normal oui-text-base-contrast-80">
+      {renderTokens(parser.parse(content, {}))}
+    </div>
+  );
+}

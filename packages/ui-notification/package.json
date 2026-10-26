@@ -28,7 +28,8 @@
     "@orderly.network/utils": "workspace:*",
     "@date-fns/utc": "1.2.0",
     "date-fns": "^3.6.0",
-    "immer": "^10.1.1"
+    "immer": "^10.1.1",
+    "markdown-it": "^14.2.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.8.1",

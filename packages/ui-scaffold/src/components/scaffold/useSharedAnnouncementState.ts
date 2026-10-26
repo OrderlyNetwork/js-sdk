@@ -1,0 +1,157 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { AnnouncementSummary } from "@orderly.network/ui-notification";
+import type { ScaffoldAnnouncementState } from "./scaffoldContext";
+
+const MAX_TIMEOUT = 2_147_483_647;
+const isMaintenance = (tip: AnnouncementSummary) =>
+  String(tip.announcement_id) === "-1";
+
+/** Missing deadlines retain legacy snapshots; maintenance never uses card expiry. */
+export function mergeAnnouncementCards(
+  announcements: AnnouncementSummary[],
+  maintenance: AnnouncementSummary[],
+  now: number,
+) {
+  const seen = new Set<string>();
+  return [...announcements, ...maintenance]
+    .filter((tip) => {
+      const id = String(tip.announcement_id);
+      if (seen.has(id)) return false;
+      const end = tip.notification_card_end_time;
+      if (!isMaintenance(tip) && end != null && now >= end) return false;
+      seen.add(id);
+      return true;
+    })
+    .sort(
+      (a, b) =>
+        (b.published_time ?? b.updated_time ?? 0) -
+          (a.published_time ?? a.updated_time ?? 0) ||
+        Number(b.announcement_id) - Number(a.announcement_id),
+    );
+}
+
+type CardVisibility = {
+  open: boolean;
+  sourceOpen: boolean;
+  hasCards: boolean;
+  session: number;
+};
+
+/** A session belongs to the shared carousel, not either underlying data source. */
+export function reconcileCardVisibility(
+  previous: CardVisibility,
+  sourceOpen: boolean,
+  hasCards: boolean,
+): CardVisibility {
+  const open =
+    hasCards &&
+    (previous.open ||
+      (sourceOpen && (!previous.sourceOpen || !previous.hasCards)));
+  if (
+    previous.open === open &&
+    previous.sourceOpen === sourceOpen &&
+    previous.hasCards === hasCards
+  )
+    return previous;
+  return {
+    open,
+    sourceOpen,
+    hasCards,
+    session: open && !previous.open ? previous.session + 1 : previous.session,
+  };
+}
+
+export function useSharedAnnouncementState(
+  controlled: ScaffoldAnnouncementState | undefined,
+  legacy: ScaffoldAnnouncementState,
+): ScaffoldAnnouncementState {
+  const [now, setNow] = useState(Date.now);
+  const [visibility, setVisibility] = useState<CardVisibility>({
+    open: false,
+    sourceOpen: false,
+    hasCards: false,
+    session: 0,
+  });
+  const ordinaryCards = controlled?.cardTips ?? controlled?.tips;
+  const maintenance = useMemo(
+    () => controlled?.maintenanceTips ?? legacy.tips.filter(isMaintenance),
+    [controlled?.maintenanceTips, legacy.tips],
+  );
+  const cardTips = useMemo(
+    () => mergeAnnouncementCards(ordinaryCards ?? [], maintenance, now),
+    [ordinaryCards, maintenance, now],
+  );
+  const sourceOpen =
+    !!controlled &&
+    (controlled.showAnnouncement ||
+      (controlled.maintenanceTips === undefined &&
+        maintenance.length > 0 &&
+        legacy.showAnnouncement));
+  const sharedVisibility = reconcileCardVisibility(
+    visibility,
+    sourceOpen,
+    cardTips.length > 0,
+  );
+  if (sharedVisibility !== visibility) setVisibility(sharedVisibility);
+
+  const closeShared = useCallback(
+    (acknowledge = false) => {
+      setVisibility((current) =>
+        current.open ? { ...current, open: false } : current,
+      );
+      if (acknowledge && controlled?.openMessageCenter)
+        controlled.openMessageCenter();
+      else controlled?.closeTips();
+      legacy.closeTips();
+    },
+    [controlled, legacy.closeTips],
+  );
+  const closeTips = useCallback(() => closeShared(), [closeShared]);
+  const openMessageCenter = useCallback(() => closeShared(true), [closeShared]);
+
+  useEffect(() => {
+    if (!ordinaryCards || typeof window === "undefined") return;
+    const update = () => setNow(Date.now());
+    const deadlines = ordinaryCards
+      .filter((tip) => !isMaintenance(tip))
+      .map((tip) => tip.notification_card_end_time)
+      .filter(
+        (end): end is number =>
+          end != null && Number.isFinite(end) && end > now,
+      );
+    const deadline = Math.min(...deadlines);
+    const timer = Number.isFinite(deadline)
+      ? window.setTimeout(
+          update,
+          Math.min(MAX_TIMEOUT, Math.max(0, deadline - Date.now())),
+        )
+      : undefined;
+    window.addEventListener("focus", update);
+    window.addEventListener("pageshow", update);
+    window.addEventListener("online", update);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("focus", update);
+      window.removeEventListener("pageshow", update);
+      window.removeEventListener("online", update);
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, [ordinaryCards, now]);
+
+  useEffect(() => {
+    if (controlled && !cardTips.length && sourceOpen) closeTips();
+  }, [controlled, cardTips.length, sourceOpen, closeTips]);
+
+  return controlled
+    ? {
+        ...controlled,
+        maintenanceDialogInfo: legacy.maintenanceDialogInfo,
+        cardTips,
+        showAnnouncement: sharedVisibility.open,
+        cardSession: sharedVisibility.session,
+        closeTips,
+        openMessageCenter,
+      }
+    : legacy;
+}

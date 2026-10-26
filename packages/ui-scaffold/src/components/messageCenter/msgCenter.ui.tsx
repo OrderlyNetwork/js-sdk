@@ -1,6 +1,5 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
 import {
   BellIcon,
   DialogHeader,
@@ -15,7 +14,10 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@orderly.network/ui";
-import { AnnouncementCenterUI } from "@orderly.network/ui-notification";
+import {
+  AnnouncementCenterUI,
+  type AnnouncementSummary,
+} from "@orderly.network/ui-notification";
 import { useScaffoldContext } from "../scaffold";
 
 /**
@@ -25,24 +27,29 @@ import { useScaffoldContext } from "../scaffold";
  */
 export const MessageCenter: FC<{
   maintenanceDialogInfo?: string;
-  messages: API.AnnouncementRow[];
+  messages: AnnouncementSummary[];
+  platformName?: string;
   showAnnouncement: boolean;
   closeTips: () => void;
+  hasUnread?: boolean;
+  onOpen?: () => void;
+  status?: "loading" | "ready" | "error";
+  retry?: () => void;
 }> = (props) => {
   const { maintenanceDialogInfo, messages, showAnnouncement, closeTips } =
     props;
   const { routerAdapter } = useScaffoldContext();
   const { t } = useTranslation();
-  const messageSize = useMemo(() => messages.length, [messages]);
   // Track Popover open to suppress Tooltip while the popover is visible
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const onItemClick = (url: string) => {
     if (!url) return;
+    setPopoverOpen(false);
     routerAdapter?.onRouteChange({
       href: url,
       name: url,
-      target: "_blank",
+      target: url.startsWith("/") ? "_self" : "_blank",
     });
   };
 
@@ -73,14 +80,23 @@ export const MessageCenter: FC<{
             onOpenChange={(open) => {
               setPopoverOpen(open);
               if (open) {
-                closeTips();
+                (props.onOpen ?? closeTips)();
               }
             }}
             arrow
             content={
               <AnnouncementCenterUI
-                dataSource={messages}
+                dataSource={messages.slice(0, 5)}
+                platformName={props.platformName}
+                status={props.status}
+                retry={props.retry}
                 onItemClick={onItemClick}
+                onViewAll={() => {
+                  const search = new URLSearchParams(window.location.search);
+                  search.delete("category");
+                  search.delete("page");
+                  onItemClick(`/announcement?${search.toString()}`);
+                }}
               />
             }
             contentProps={{
@@ -90,7 +106,11 @@ export const MessageCenter: FC<{
           >
             {/* Stack TooltipTrigger and PopoverTrigger (via Popover's asChild) on the same element */}
             <TooltipTrigger asChild>
-              <div className="oui-relative oui-flex oui-cursor-pointer oui-items-center oui-justify-center">
+              <button
+                type="button"
+                aria-label={t("ui.messageCenter.tooltip")}
+                className="oui-relative oui-flex oui-cursor-pointer oui-items-center oui-justify-center"
+              >
                 <BellIcon
                   color="white"
                   opacity={0.8}
@@ -98,12 +118,14 @@ export const MessageCenter: FC<{
                   viewBox="0 0 20 20"
                   className="hover:oui-opacity-100"
                 />
-                {messageSize > 0 && showAnnouncement && (
-                  <div className="oui-absolute -oui-end-[6px] -oui-top-[6px] oui-flex oui-size-4 oui-items-center oui-justify-center oui-rounded-full oui-bg-primary-darken oui-text-[10px] oui-leading-none oui-text-primary-contrast">
-                    {messageSize}
-                  </div>
+                {(props.hasUnread ??
+                  (messages.length > 0 && showAnnouncement)) && (
+                  <span
+                    aria-label={t("notification.newAnnouncements")}
+                    className="oui-absolute -oui-end-1 -oui-top-1 oui-size-2 oui-rounded-full oui-bg-danger"
+                  />
                 )}
-              </div>
+              </button>
             </TooltipTrigger>
           </Popover>
           <TooltipContent side="bottom">
