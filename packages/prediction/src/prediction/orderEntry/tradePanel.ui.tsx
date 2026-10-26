@@ -790,9 +790,14 @@ export const TradePanel: React.FC<TradePanelProps> = (state) => {
 
         <div className="oui-text-2xs oui-mt-2 oui-text-center oui-font-normal oui-text-base-contrast-54">
           {t("prediction.tradingAgreement")}{" "}
-          <span className="oui-border-b oui-border-base-contrast-36 oui-text-base-contrast-54">
+          <a
+            href="https://orderly.network/docs/introduction/trade-on-orderly/orderly-predict/supplemental-terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="oui-border-b oui-border-base-contrast-36 oui-text-base-contrast-54"
+          >
             {t("prediction.termOfUse")}
-          </span>
+          </a>
         </div>
 
         <div className="oui-text-xs oui-mt-4 oui-space-y-2">
