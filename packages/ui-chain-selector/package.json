@@ -29,7 +29,7 @@
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.19",
-    "jsdom": "^20.0.3",
+    "jsdom": "^26.1.0",
     "postcss": "^8.5.26",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

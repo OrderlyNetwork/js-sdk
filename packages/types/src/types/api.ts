@@ -92,10 +92,24 @@ export declare namespace API {
     type?: AnnouncementType | null;
     updated_time?: number | null;
     coverImage?: string;
+    is_official?: boolean;
+    category?:
+      | "CAMPAIGN"
+      | "LISTINGS"
+      | "DELISTINGS"
+      | "UPDATES"
+      | "LEGAL"
+      | "OTHERS";
+    published_time?: number;
+    notification_card_end_time?: number | null;
+    translations?: Partial<
+      Record<"en" | "zh" | "es" | "fr" | "ja" | "ko", { title: string }>
+    >;
   }
 
   export interface Announcement {
     last_updated_time?: number | null;
+    total?: number;
     rows?: AnnouncementRow[];
   }
 

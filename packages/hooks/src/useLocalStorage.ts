@@ -26,11 +26,23 @@ export function useLocalStorage<T>(
       console.warn(`Error reading localStorage key “${key}”:`, error);
       return initialValue;
     }
-  }, [initialValue, key]);
+  }, [initialValue, key, options.parseJSON]);
 
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
-  const [storedValue, setStoredValue] = useState<T>(readValue);
+  const [stored, setStored] = useState(() => ({ key, value: readValue() }));
+  // Resolve a new key during render so the old scope is never exposed for a frame.
+  const storedValue = stored.key === key ? stored.value : readValue();
+  const setStoredValue = useCallback(
+    (value: T) => {
+      setStored((previous) =>
+        previous.key === key && Object.is(previous.value, value)
+          ? previous
+          : { key, value },
+      );
+    },
+    [key],
+  );
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
@@ -45,7 +57,7 @@ export function useLocalStorage<T>(
 
       try {
         // Allow value to be a function so we have the same API as useState
-        const newValue = value instanceof Function ? value(storedValue) : value;
+        const newValue = value instanceof Function ? value(readValue()) : value;
 
         // Save to local storage
         window.localStorage.setItem(key, JSON.stringify(newValue));
@@ -53,7 +65,7 @@ export function useLocalStorage<T>(
         window.dispatchEvent(new Event("storage"));
 
         // Save state
-        setStoredValue(() => newValue);
+        setStoredValue(newValue);
 
         // We dispatch a custom event so every useLocalStorage hook are notified
         // window.dispatchEvent(new Event('local-storage'))
@@ -61,12 +73,12 @@ export function useLocalStorage<T>(
         console.warn(`Error setting localStorage key “${key}”:`, error);
       }
     },
-    [storedValue],
+    [key, storedValue],
   );
 
   useEffect(() => {
     setStoredValue(readValue());
-  }, []);
+  }, [key]);
 
   // const handleStorageChange = useCallback(
   //   (event: StorageEvent | CustomEvent) => {
@@ -91,7 +103,7 @@ export function useLocalStorage<T>(
     return () => {
       window?.removeEventListener?.("storage", handleStorageChange);
     };
-  }, [key]);
+  }, [key, readValue, setStoredValue]);
 
   return [storedValue, setValue];
 }

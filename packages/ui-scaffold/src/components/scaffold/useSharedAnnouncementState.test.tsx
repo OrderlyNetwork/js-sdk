@@ -46,6 +46,7 @@ function useHarness(
   const [showAnnouncement, setOpen] = useState(ordinaryOpen);
   const [showLegacy, setLegacyOpen] = useState(legacyOpen);
   const [hasUnread, setUnread] = useState(true);
+  const [reminderVersion, setReminderVersion] = useState(0);
   const closeOrdinary = useCallback(() => setOpen(false), []);
   const closeLegacy = useCallback(() => setLegacyOpen(false), []);
   const openBell = useCallback(() => {
@@ -57,6 +58,7 @@ function useHarness(
       tips,
       showAnnouncement,
       hasUnread,
+      reminderVersion,
       closeTips: closeOrdinary,
       openMessageCenter: openBell,
     },
@@ -74,10 +76,32 @@ function useHarness(
     setOpen,
     showAnnouncement,
     showLegacy,
+    setReminderVersion,
   };
 }
 
 describe("shared maintenance and announcement cards", () => {
+  it("reopens for a new push batched with dismissing the previous group", () => {
+    const { result } = renderHook(() => useHarness([]));
+    const session = result.current.state.cardSession!;
+    act(() => {
+      result.current.state.closeTips();
+      result.current.setTips([article(2, now + 20_000)]);
+      result.current.setOpen(true);
+      result.current.setReminderVersion((version) => version + 1);
+    });
+    expect(result.current.state.showAnnouncement).toBe(true);
+    expect(result.current.state.cardSession).toBe(session + 1);
+  });
+  it("rejects newly supplied expired cards even if no previous deadline timer ran", () => {
+    const { result } = renderHook(() => useHarness([]));
+    act(() => {
+      vi.setSystemTime(now + 20_000);
+      result.current.setTips([article(2, now + 10_000)]);
+    });
+    expect(result.current.state.cardTips).toEqual([]);
+    expect(result.current.state.showAnnouncement).toBe(false);
+  });
   it("expires an announcement on time without removing it from reading entrances or hiding maintenance", () => {
     const { result } = renderHook(() => useHarness());
     const session = result.current.state.cardSession;

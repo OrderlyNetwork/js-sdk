@@ -8,6 +8,7 @@ import {
 } from "@orderly.network/ui";
 import { cn } from "@orderly.network/ui";
 import type { AnnouncementSummary } from "../../types";
+import { AnnouncementListSkeleton } from "../announcementListSkeleton";
 import { AnnouncementSourceBadge } from "../announcementSourceBadge";
 import { AnnouncementItem } from "./announcementItem";
 
@@ -99,6 +100,8 @@ export const AnnouncementCenterUI: FC<{
 }> = (props) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState<string | number | null>(null);
+  const ContentArea =
+    props.status === "error" || props.status === "loading" ? "div" : ScrollArea;
 
   return (
     <>
@@ -108,29 +111,33 @@ export const AnnouncementCenterUI: FC<{
         </Text>
       </div>
 
-      <ScrollArea className="oui-flex oui-h-[300px] oui-flex-col oui-space-y-1 oui-p-3">
+      <ContentArea className="oui-flex oui-h-[300px] oui-flex-col oui-p-3">
         {props.status === "loading" ? (
           <div
             role="status"
             aria-label={t("notification.loading")}
-            className="oui-space-y-4 oui-p-2"
+            className="oui-min-w-0"
           >
-            {Array.from({ length: 5 }, (_, index) => (
-              <div
-                key={index}
-                className="oui-h-10 oui-animate-pulse oui-rounded oui-bg-base-6"
-              />
-            ))}
+            <AnnouncementListSkeleton compact />
           </div>
         ) : props.status === "error" ? (
-          <div role="alert" className="oui-space-y-4 oui-p-2">
-            <Text size="xs" intensity={54}>
+          <div
+            role="alert"
+            className="oui-announcement-error oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-gap-4 oui-px-5 oui-py-6 oui-text-center"
+          >
+            <Text
+              as="p"
+              size="xs"
+              intensity={54}
+              className="oui-max-w-[240px] oui-break-words oui-whitespace-normal oui-leading-5"
+            >
               {t("notification.loadFailed")}
             </Text>
             <Button
               variant="contained"
               color="primary"
               size="sm"
+              className="oui-shrink-0 oui-px-4"
               onClick={props.retry}
             >
               {t("notification.retry")}
@@ -145,7 +152,7 @@ export const AnnouncementCenterUI: FC<{
             platformName={props.platformName}
           />
         )}
-      </ScrollArea>
+      </ContentArea>
       {props.onViewAll && (
         <div className="oui-flex oui-justify-center oui-px-3 oui-pb-3">
           <Button

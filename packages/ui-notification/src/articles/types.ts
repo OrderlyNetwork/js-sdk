@@ -18,7 +18,7 @@ export type AnnouncementApiCategory =
 export type ContentLocale = "en" | "zh" | "es" | "fr" | "ja" | "ko";
 export type AnnouncementTranslation = { title: string; content: string };
 
-/** Proposed v0.5 payload for the frontend prototype; not a deployed API contract. */
+/** Public detail payload. Legacy compatibility fields may also be present. */
 export type AnnouncementArticle = {
   announcement_id: number;
   category: AnnouncementApiCategory;
@@ -30,4 +30,43 @@ export type AnnouncementArticle = {
   translations: { en: AnnouncementTranslation } & Partial<
     Record<ContentLocale, AnnouncementTranslation>
   >;
+};
+
+/** Public lists contain titles only; the server omits incomplete translations. */
+export type AnnouncementListRow = Omit<
+  AnnouncementArticle,
+  "translations" | "is_official"
+> & {
+  is_official?: boolean;
+  message?: string;
+  url?: string | null;
+  type?: string | null;
+  i18n?: Record<string, string | null>;
+  translations: { en: { title: string } } & Partial<
+    Record<ContentLocale, { title: string }>
+  >;
+};
+
+export type AnnouncementListResponse = {
+  rows: AnnouncementListRow[];
+  total: number;
+  last_updated_time: number;
+};
+
+export type AnnouncementActiveResponse = {
+  rows: AnnouncementArticle[];
+  total: number;
+  last_updated_time: number;
+};
+
+export type AnnouncementListQuery = {
+  category?: AnnouncementCategory;
+  page?: number;
+  size?: number;
+};
+
+export type AnnouncementSourceOptions = {
+  /** Defaults to the broker configured by OrderlyProvider. */
+  brokerId?: string;
+  excludeOfficial?: boolean;
 };

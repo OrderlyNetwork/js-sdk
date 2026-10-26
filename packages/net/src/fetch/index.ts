@@ -26,20 +26,12 @@ async function request(url: string, options: RequestInit) {
     //   throw new Error(res.message);
     // }
   } else {
-    // console.log(response.status);
-    try {
-      const errorMsg = await response.json();
-      if (response.status === 400) {
-        throw new ApiError(
-          errorMsg.message || errorMsg.code || response.statusText,
-          errorMsg.code,
-        );
-      }
-      // TODO: throw error code
-      throw new Error(errorMsg.message || errorMsg.code || response.statusText);
-    } catch (e) {
-      throw e;
-    }
+    const errorMsg = (await response.json().catch(() => ({}))) ?? {};
+    throw new ApiError(
+      errorMsg.message || String(errorMsg.code || response.statusText),
+      errorMsg.code,
+      response.status,
+    );
   }
 
   // throw new Error(response.statusText);
@@ -89,7 +81,7 @@ async function get<R>(
     }
     return res.data;
   }
-  throw new Error(res.message);
+  throw new ApiError(res.message, res.code);
 }
 async function post(
   url: string,

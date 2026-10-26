@@ -5,6 +5,7 @@ import type {
   AnnouncementApiCategory,
   AnnouncementCategory,
   ContentLocale,
+  AnnouncementListRow,
 } from "./types";
 
 export type LocalizedArticle = Omit<AnnouncementArticle, "category"> & {
@@ -25,12 +26,38 @@ const categoryFilters: Record<
   OTHERS: "others",
 };
 export type ReadStatus = "loading" | "ready" | "error";
-export function sortAnnouncements(articles: AnnouncementArticle[]) {
+export function sortAnnouncements<
+  T extends Pick<AnnouncementArticle, "published_time" | "announcement_id">,
+>(articles: T[]): T[] {
   return [...articles].sort(
     (a, b) =>
       b.published_time - a.published_time ||
       b.announcement_id - a.announcement_id,
   );
+}
+
+export type LocalizedAnnouncement = Omit<
+  LocalizedArticle,
+  "translations" | "content" | "is_official"
+> & {
+  translations: AnnouncementListRow["translations"];
+  is_official?: boolean;
+  content?: string;
+  url?: string | null;
+};
+
+export function localizeAnnouncement(
+  row: AnnouncementListRow,
+  locale: string,
+): LocalizedAnnouncement {
+  const candidate = row.translations[locale as ContentLocale];
+  const selected = candidate?.title.trim() ? (locale as ContentLocale) : "en";
+  return {
+    ...row,
+    title: row.translations[selected]!.title,
+    category: categoryFilters[row.category] ?? "others",
+    contentLocale: selected,
+  };
 }
 export function visibleAnnouncements(
   articles: AnnouncementArticle[],
@@ -58,16 +85,16 @@ export function localizeArticle(
     contentLocale: complete ? (locale as ContentLocale) : "en",
   };
 }
-export function toSummary(article: LocalizedArticle): AnnouncementSummary {
+export function toSummary(article: LocalizedAnnouncement): AnnouncementSummary {
   return {
     announcement_id: article.announcement_id,
     is_official: article.is_official,
     title: article.title,
     category: article.category,
-    message: announcementExcerpt(article.content),
+    message: article.content ? announcementExcerpt(article.content) : "",
     published_time: article.published_time,
     updated_time: article.updated_time,
     notification_card_end_time: article.notification_card_end_time,
-    url: `/announcement/${article.announcement_id}`,
+    url: article.url || `/announcement/${article.announcement_id}`,
   };
 }

@@ -4,6 +4,16 @@ export { NotificationUI } from "./components/notification/notification.ui";
 export { AnnouncementCenterPage } from "./pages/announcementCenter.page";
 export { AnnouncementPageUI } from "./pages/announcementCenter.ui";
 export { useAnnouncement } from "./hooks/useAnnouncement";
+export type {
+  AnnouncementOptions,
+  AnnouncementReturn,
+} from "./hooks/useAnnouncement";
+export { useMaintenanceAnnouncement } from "./hooks/useMaintenanceAnnouncement";
+export {
+  useAnnouncementCardState,
+  mergeAnnouncementCards,
+  reconcileCardVisibility,
+} from "./hooks/useAnnouncementCardState";
 export type { AnnouncementSummary } from "./types";
 export { AnnouncementSourceBadge } from "./components/announcementSourceBadge";
 export type { AnnouncementSourceBadgeProps } from "./components/announcementSourceBadge";
@@ -19,6 +29,18 @@ export {
   toSummary,
   AnnouncementArticlesContext,
   useAnnouncementArticles,
+  AnnouncementProvider,
+  useAnnouncementDetail,
+  useAnnouncementList,
+  localizeAnnouncement,
+  type AnnouncementProviderProps,
+  type AnnouncementSourceOptions,
+  type AnnouncementListRow,
+  type AnnouncementListResponse,
+  type AnnouncementActiveResponse,
+  type AnnouncementListQuery,
+  type AnnouncementListValue,
+  type LocalizedAnnouncement,
   type AnnouncementCategory,
   type AnnouncementApiCategory,
   type ContentLocale,

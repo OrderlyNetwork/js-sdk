@@ -11,6 +11,8 @@ import {
 } from "@orderly.network/ui";
 import { AnnouncementMarkdown } from "../articles/markdown";
 import { announcementCategories } from "../articles/types";
+import { AnnouncementDetailSkeleton } from "../components/announcementDetailSkeleton";
+import { AnnouncementListSkeleton } from "../components/announcementListSkeleton";
 import { AnnouncementSourceBadge } from "../components/announcementSourceBadge";
 import type { AnnouncementCenterScriptReturns } from "./announcementCenter.script";
 
@@ -57,38 +59,36 @@ export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
 
   const readState =
     props.status === "loading" ? (
-      <div
-        role="status"
-        aria-label={t("notification.loading")}
-        className="oui-space-y-6 oui-py-6"
-      >
-        {Array.from({ length: announcementId ? 4 : 5 }, (_, index) => (
-          <div
-            key={index}
-            className="oui-h-16 oui-animate-pulse oui-rounded-md oui-bg-base-8"
-          />
-        ))}
+      <div role="status" aria-label={t("notification.loading")}>
+        {announcementId ? (
+          <AnnouncementDetailSkeleton />
+        ) : (
+          <AnnouncementListSkeleton />
+        )}
       </div>
     ) : props.status === "error" ? (
-      <Flex
-        direction="column"
-        gap={4}
-        itemAlign="start"
-        className="oui-py-6"
+      <div
+        className="oui-announcement-error oui-flex oui-min-h-[280px] oui-flex-col oui-items-center oui-justify-center oui-gap-4 oui-px-5 oui-py-8 oui-text-center lg:oui-min-h-[360px]"
         role="alert"
       >
-        <Text size="sm" intensity={54}>
+        <Text
+          as="p"
+          size="sm"
+          intensity={54}
+          className="oui-max-w-[360px] oui-break-words oui-whitespace-normal oui-leading-6"
+        >
           {t("notification.loadFailed")}
         </Text>
         <Button
           variant="contained"
           color="primary"
-          size="lg"
+          size="md"
+          className="oui-shrink-0 oui-px-5"
           onClick={props.retry}
         >
           {t("notification.retry")}
         </Button>
-      </Flex>
+      </div>
     ) : null;
 
   if (announcementId) {

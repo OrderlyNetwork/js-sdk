@@ -17,6 +17,11 @@ export const NotificationUI: FC<{
 }> = (props) => {
   const { dataSource, showAnnouncement } = props;
   const { routerAdapter } = useScaffoldContext();
+  const onCurrentChange = useCallback(
+    (id?: string | number) =>
+      props.onCurrentChange?.(showAnnouncement ? id : undefined),
+    [showAnnouncement, props.onCurrentChange],
+  );
   const onItemClick = (url: string) => {
     if (!url) return;
     props.onClose();
@@ -29,6 +34,13 @@ export const NotificationUI: FC<{
 
   const notificationRef = useRef<HTMLDivElement>(null);
   const len = useMemo(() => dataSource?.length ?? 0, [dataSource]);
+  useEffect(() => {
+    if (!showAnnouncement || !len) props.onCurrentChange?.(undefined);
+  }, [showAnnouncement, len, props.onCurrentChange]);
+  useEffect(
+    () => () => props.onCurrentChange?.(undefined),
+    [props.onCurrentChange],
+  );
 
   const onClose = useCallback(() => {
     if (len === 0) {
@@ -87,7 +99,7 @@ export const NotificationUI: FC<{
     >
       <NotificationUIComponent
         key={props.cardSession}
-        onCurrentChange={props.onCurrentChange}
+        onCurrentChange={onCurrentChange}
         dataSource={dataSource}
         platformName={props.platformName}
         onClose={onClose}

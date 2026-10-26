@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useConfig } from "@orderly.network/hooks";
-import { useAnnouncementArticles } from "../articles/context";
 import {
   announcementCategories,
   type AnnouncementCategory,
 } from "../articles/types";
+import { useAnnouncementDetail } from "../articles/useAnnouncementDetail";
+import { useAnnouncementList } from "../articles/useAnnouncementList";
 
 export type AnnouncementCenterScriptOptions = {
   announcementId?: string;
@@ -25,34 +26,27 @@ export const useAnnouncementCenterScript = (
   options: AnnouncementCenterScriptOptions = {},
 ) => {
   const platformName = useConfig<string | undefined>("brokerName");
-  const { articles, status, retry, refresh } = useAnnouncementArticles();
   const { announcementId, onRouteChange } = options;
 
-  useEffect(() => {
-    if (announcementId) refresh();
-  }, [announcementId, refresh]);
+  const detail = useAnnouncementDetail(announcementId);
 
   const searchParams = readSearchParams();
   const category: AnnouncementCategory =
     announcementCategories.find(
       (item) => item === searchParams.get("category"),
     ) ?? "all";
-  const filtered = useMemo(
-    () =>
-      articles.filter(
-        (item) => category === "all" || item.category === category,
-      ),
-    [articles, category],
-  );
-  const pageTotal = Math.max(1, Math.ceil(filtered.length / 20));
   const requestedPage = Number(searchParams.get("page") ?? 1);
-  const page = Number.isSafeInteger(requestedPage)
-    ? Math.max(1, Math.min(requestedPage, pageTotal))
-    : 1;
-  const announcements = filtered.slice((page - 1) * 20, page * 20);
-  const article = articles.find(
-    (item) => String(item.announcement_id) === announcementId,
+  const page =
+    Number.isSafeInteger(requestedPage) && requestedPage > 0
+      ? requestedPage
+      : 1;
+  const list = useAnnouncementList(
+    { category, page, size: 20 },
+    !announcementId,
   );
+  const pageTotal = Math.max(1, Math.ceil(list.total / 20));
+  const announcements = list.articles;
+  const article = detail.article;
 
   const selectCategory = useCallback(
     (nextCategory: AnnouncementCategory) => {
@@ -73,6 +67,10 @@ export const useAnnouncementCenterScript = (
     },
     [onRouteChange],
   );
+  useEffect(() => {
+    if (!announcementId && list.status === "ready" && page > pageTotal)
+      selectPage(pageTotal);
+  }, [announcementId, list.status, page, pageTotal, selectPage]);
   const openArticle = useCallback(
     (id: number) => {
       onRouteChange?.(
@@ -106,9 +104,9 @@ export const useAnnouncementCenterScript = (
     selectPage,
     page,
     pageTotal,
-    count: filtered.length,
-    status,
-    retry,
+    count: list.total,
+    status: announcementId ? detail.status : list.status,
+    retry: announcementId ? detail.retry : list.retry,
   };
 };
 

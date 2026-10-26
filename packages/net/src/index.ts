@@ -1,6 +1,7 @@
 export { default as version } from "./version";
 export { get, post, del, put, mutate } from "./fetch";
 export { subscribeTimestampOffset } from "./fetch/timestampOffset";
+export { ApiError } from "./errors/apiError";
 
 export { __ORDERLY_API_URL_KEY__ } from "./constants";
 

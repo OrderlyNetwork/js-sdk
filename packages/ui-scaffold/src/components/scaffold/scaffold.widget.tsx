@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactNode } from "react";
 import { type RouterAdapter } from "@orderly.network/types";
+import type { AnnouncementSourceOptions } from "@orderly.network/ui-notification";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { LeftNavProps } from "../leftNav";
@@ -11,6 +12,7 @@ import { DesktopScaffold } from "./scaffold.ui";
 import { ScaffoldProvider } from "./scaffoldProvider";
 
 export type ScaffoldProps = {
+  announcementOptions?: AnnouncementSourceOptions;
   /**
    * custom left sidebar component, only works on desktop
    * if provided, the layout will use this component over the default sidebar component
@@ -84,6 +86,7 @@ export const Scaffold: React.FC<PropsWithChildren<ScaffoldProps>> = (props) => {
 
   return (
     <ScaffoldProvider
+      announcementOptions={props.announcementOptions}
       routerAdapter={props.routerAdapter}
       expanded={state.expand}
       setExpand={state.setExpand}

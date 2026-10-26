@@ -1,7 +1,7 @@
 import type { API } from "@orderly.network/types";
 
-/** Frontend announcement metadata; the public API schema is unchanged. */
-export type AnnouncementSummary = API.AnnouncementRow & {
+/** Localized metadata used by the bell and card carousel. */
+export type AnnouncementSummary = Omit<API.AnnouncementRow, "category"> & {
   title?: string;
   is_official?: boolean;
   published_time?: number;
