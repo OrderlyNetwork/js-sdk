@@ -15,6 +15,7 @@ import {
   useWS,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import type { API } from "@orderly.network/types";
 import { shouldShowListingDelistingAnnouncement } from "../utils";
 import { type AnnouncementArticlesValue } from "./context";
@@ -34,7 +35,6 @@ import type {
   AnnouncementListQuery,
   AnnouncementListResponse,
   AnnouncementListRow,
-  AnnouncementSourceOptions,
   ContentLocale,
 } from "./types";
 
@@ -59,13 +59,12 @@ function normalizeRow(row: AnnouncementListRow): AnnouncementListRow {
 }
 
 export function useLiveAnnouncements(
-  options: AnnouncementSourceOptions = {},
   enabled = true,
 ): AnnouncementArticlesValue {
-  const configuredBroker = useConfig<string | undefined>("brokerId");
+  const brokerId = useConfig<string | undefined>("brokerId") || undefined;
   const apiBaseUrl = useConfig<string>("apiBaseUrl");
-  const brokerId = (options.brokerId ?? configuredBroker) || undefined;
-  const excludeOfficial = options.excludeOfficial ?? false;
+  const { widgetConfigs } = useAppContext();
+  const excludeOfficial = widgetConfigs?.announcement?.excludeOfficial ?? false;
   const scope = JSON.stringify([apiBaseUrl, brokerId, excludeOfficial]);
   const { i18n } = useTranslation();
   const locale = announcementLocale(i18n.language);

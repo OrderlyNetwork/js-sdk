@@ -81,7 +81,7 @@ describe("server-paginated announcement page", () => {
     window.history.replaceState(
       {},
       "",
-      "/announcement?category=legal&page=99&demo=1",
+      "/announcement?category=legal&page=99&brokerId=review",
     );
     getList.mockReturnValue({ articles: [], total: 0, status: "loading" });
     const { result, rerender } = renderHook(
@@ -93,7 +93,7 @@ describe("server-paginated announcement page", () => {
     getList.mockReturnValue({ articles: [], total: 45, status: "ready" });
     rerender();
     expect(onRouteChange).toHaveBeenCalledWith(
-      "/announcement?category=legal&page=3&demo=1",
+      "/announcement?category=legal&page=3&brokerId=review",
     );
     window.history.replaceState({}, "", onRouteChange.mock.calls[0][0]);
     rerender();
@@ -107,7 +107,7 @@ describe("server-paginated announcement page", () => {
     window.history.replaceState(
       {},
       "",
-      "/announcement?category=legal&page=3&demo=1",
+      "/announcement?category=legal&page=3&brokerId=review",
     );
     const { result } = renderHook(
       () => useAnnouncementCenterScript({ onRouteChange }),
@@ -115,10 +115,12 @@ describe("server-paginated announcement page", () => {
     );
     act(() => result.current.selectCategory("listing"));
     expect(onRouteChange).toHaveBeenLastCalledWith(
-      "/announcement?category=listing&demo=1",
+      "/announcement?category=listing&brokerId=review",
     );
     act(() => result.current.selectCategory("all"));
-    expect(onRouteChange).toHaveBeenLastCalledWith("/announcement?demo=1");
+    expect(onRouteChange).toHaveBeenLastCalledWith(
+      "/announcement?brokerId=review",
+    );
   });
   it("retains paging context when entering and leaving an ID detail route", () => {
     window.history.replaceState({}, "", "/announcement?category=legal&page=3");

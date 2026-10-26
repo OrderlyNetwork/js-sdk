@@ -13,6 +13,10 @@ import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 export type { RouteOption } from "@orderly.network/types";
 
 export type WidgetConfigs = {
+  announcement?: {
+    /** Exclude Orderly official announcements from all announcement views. Defaults to false. */
+    excludeOfficial?: boolean;
+  };
   scanQRCode?: {
     onSuccess?: (url: string) => void;
   };

@@ -237,7 +237,7 @@ describe("shared maintenance and announcement cards", () => {
     );
     expect(cards.map((tip) => tip.announcement_id)).toEqual([2, "-1"]);
   });
-  it("leaves non-prototype legacy state unchanged", () => {
+  it("returns legacy maintenance state when no article state is available", () => {
     const legacy: ScaffoldAnnouncementState = {
       tips: [maintenance],
       showAnnouncement: true,

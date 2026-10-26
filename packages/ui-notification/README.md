@@ -1,21 +1,40 @@
 # Announcement integration
 
 `Scaffold` supplies a production announcement provider to the header bell,
-cards and announcement pages. It uses the configured broker and includes
-official announcements by default.
+cards and announcement pages. It reads the broker from the global
+`OrderlyConfigProvider` configuration and includes official announcements by default.
 
 ```tsx
-<Scaffold announcementOptions={{ excludeOfficial: true }}>
+<Scaffold>
   <AnnouncementCenterPage announcementId={announcementId} />
 </Scaffold>
 ```
+
+Configure official announcement visibility once for all entry points:
+
+```tsx
+<OrderlyAppProvider
+  {...appProps}
+  widgetConfigs={{ announcement: { excludeOfficial: true } }}
+>
+  <Scaffold>{children}</Scaffold>
+</OrderlyAppProvider>
+```
+
+`widgetConfigs.announcement.excludeOfficial` defaults to `false`. The broker
+always comes from the global configuration; providers and hooks do not override
+announcement source options.
+
+Custom `AnnouncementArticlesContext` sources own their supplied data and bypass
+production source filtering.
+Maintenance reminders are independent of official announcement visibility.
 
 For integrations without Scaffold, the announcement page supplies its own
 provider. Wrap custom entry points in `AnnouncementProvider` inside the existing
 Orderly app providers to share requests and subscriptions:
 
 ```tsx
-<AnnouncementProvider brokerId="my-broker" excludeOfficial={false}>
+<AnnouncementProvider>
   <CustomHeader />
   <AnnouncementCenterPage announcementId={announcementId} />
 </AnnouncementProvider>
@@ -75,8 +94,7 @@ const { articles, total, status, retry } = useAnnouncementList({
 Custom `AnnouncementArticlesContext` sources can provide optional `getList`,
 `watchList` and `retryList` functions. Without those functions the hook paginates
 that custom context's in-memory articles. This does not enable a production API
-fallback. The explicitly enabled playground simulation supplies its own page
-results and active card bodies without starting production requests.
+fallback.
 
 ## Synchronization
 

@@ -9,7 +9,6 @@ import {
   AnnouncementProvider,
   useAnnouncementArticles,
   useMaintenanceAnnouncement,
-  type AnnouncementSourceOptions,
 } from "@orderly.network/ui-notification";
 import { checkChainSupport } from "../../utils/chain";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
@@ -19,12 +18,6 @@ export type ScaffoldProviderProps = Omit<
   ScaffoldState,
   "checkChainSupport" | "announcementState"
 >;
-// Optional state injection retains the original automatic maintenance reminders.
-type ControlledAnnouncementProps = {
-  announcementState?: ScaffoldState["announcementState"];
-  announcementOptions?: AnnouncementSourceOptions;
-};
-
 const ScaffoldProviderContent: React.FC<
   React.PropsWithChildren<ScaffoldProviderProps>
 > = (props) => {
@@ -53,8 +46,6 @@ const ScaffoldProviderContent: React.FC<
     () => setShowAnnouncement(announcementState.showAnnouncement),
     [announcementState.showAnnouncement, setShowAnnouncement],
   );
-
-  // console.log("announcementState", announcementState);
 
   const checkChainSupportHandle = useMemoizedFn((chainId: number | string) => {
     return checkChainSupport(
@@ -95,10 +86,7 @@ const ScaffoldProviderContent: React.FC<
 export const ScaffoldProvider: React.FC<
   React.PropsWithChildren<ScaffoldProviderProps>
 > = (props) => (
-  <AnnouncementProvider
-    {...props.announcementOptions}
-    disabled={!!props.announcementState}
-  >
+  <AnnouncementProvider>
     <ScaffoldProviderContent {...props} />
   </AnnouncementProvider>
 );

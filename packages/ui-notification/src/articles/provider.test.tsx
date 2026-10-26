@@ -16,6 +16,9 @@ import { useAnnouncementList } from "./useAnnouncementList";
 
 const fixture = vi.hoisted(() => ({
   brokerId: "a" as string | undefined,
+  widgetConfigs: undefined as
+    | undefined
+    | { announcement?: { excludeOfficial?: boolean } },
   apiBaseUrl: "https://api.example",
   locale: "en",
   markets: [{ symbol: "PERP_BTC_USDC" }],
@@ -67,6 +70,12 @@ vi.mock("@orderly.network/i18n", () => ({
   }),
 }));
 vi.mock("@orderly.network/ui", () => ({}));
+vi.mock("@orderly.network/react-app", () => ({
+  useAppContext: () => ({
+    widgetConfigs: fixture.widgetConfigs,
+    setShowAnnouncement: () => {},
+  }),
+}));
 
 const row = (id = 1, updated_time = 10): AnnouncementListRow => ({
   announcement_id: id,
@@ -116,6 +125,7 @@ async function push(
 beforeEach(() => {
   localStorage.clear();
   fixture.brokerId = "a";
+  fixture.widgetConfigs = undefined;
   fixture.apiBaseUrl = "https://api.example";
   fixture.locale = "en";
   fixture.markets = [{ symbol: "PERP_BTC_USDC" }];
@@ -187,20 +197,6 @@ describe("production announcement provider", () => {
       hasUnread: true,
       showAnnouncement: true,
     });
-  });
-  it("keeps nested automatic consumers disabled under controlled scaffold ownership", async () => {
-    const disabled = ({ children }: PropsWithChildren) => (
-      <AnnouncementProvider disabled>
-        <AnnouncementProvider>{children}</AnnouncementProvider>
-      </AnnouncementProvider>
-    );
-    const { result } = renderHook(useAnnouncementArticles, {
-      wrapper: disabled,
-    });
-    await settle();
-    expect(result.current.status).toBe("ready");
-    expect(fixture.list).not.toHaveBeenCalled();
-    expect(fixture.ws.subscribe).not.toHaveBeenCalled();
   });
   it("shares one list and subscription set across nested automatic providers", async () => {
     const nested = ({ children }: PropsWithChildren) => (
@@ -326,17 +322,106 @@ describe("production announcement provider", () => {
       { broker_id: "a", exclude_official: "false", page: "1", size: "5" },
     );
   });
-  it("excludes official details even if the detail endpoint returns one", async () => {
-    const excluded = ({ children }: PropsWithChildren) => (
-      <AnnouncementProvider excludeOfficial>{children}</AnnouncementProvider>
+  it("applies widget configuration changes to requests and subscriptions", async () => {
+    const { rerender } = renderHook(useAnnouncementArticles, { wrapper });
+    await settle();
+    expect(fixture.handlers.has("orderly_official$announcement")).toBe(true);
+
+    fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
+    rerender();
+    await settle();
+    expect(fixture.list).toHaveBeenLastCalledWith(
+      "https://api.example/v2/public/announcement",
+      { broker_id: "a", exclude_official: "true", page: "1", size: "5" },
     );
+    expect(fixture.handlers.has("orderly_official$announcement")).toBe(false);
+    expect(fixture.handlers.has("a$announcement")).toBe(true);
+
+    fixture.widgetConfigs = undefined;
+    rerender();
+    await settle();
+    expect(fixture.list).toHaveBeenLastCalledWith(
+      "https://api.example/v2/public/announcement",
+      { broker_id: "a", exclude_official: "false", page: "1", size: "5" },
+    );
+    expect(fixture.handlers.has("orderly_official$announcement")).toBe(true);
+  });
+  it.each(["shared", "nested"])(
+    "uses widget configuration for bell, cards, page and detail with a %s provider",
+    async (mode) => {
+      fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
+      const officialRow = { ...row(2), is_official: true };
+      const officialArticle = { ...full(2), is_official: true };
+      fixture.list.mockResolvedValue(response([row(), officialRow]));
+      fixture.active.mockResolvedValue(response([full(), officialArticle]));
+      fixture.detail.mockResolvedValue(officialArticle);
+      const nested = ({ children }: PropsWithChildren) => (
+        <AnnouncementProvider>
+          <AnnouncementProvider>{children}</AnnouncementProvider>
+        </AnnouncementProvider>
+      );
+      const { result } = renderHook(
+        () => ({
+          source: useAnnouncementArticles(),
+          cards: useAnnouncement(),
+          page: useAnnouncementList({ page: 2, size: 20 }),
+          detail: useAnnouncementDetail("2"),
+        }),
+        { wrapper: mode === "nested" ? nested : wrapper },
+      );
+      await settle();
+      expect(
+        result.current.source.articles.map((item) => item.announcement_id),
+      ).toEqual([1]);
+      expect(
+        result.current.cards.cardTips?.map((item) => item.announcement_id),
+      ).toEqual([1]);
+      expect(
+        result.current.page.articles.map((item) => item.announcement_id),
+      ).toEqual([1]);
+      expect(result.current.detail.article).toBeUndefined();
+      expect(fixture.list).toHaveBeenCalledWith(
+        "https://api.example/v2/public/announcement",
+        { broker_id: "a", exclude_official: "true", page: "2", size: "20" },
+      );
+      expect(fixture.active).toHaveBeenCalledTimes(1);
+      expect(fixture.active.mock.calls[0][1]).toMatchObject({
+        broker_id: "a",
+        exclude_official: "true",
+      });
+      expect(fixture.handlers.has("orderly_official$announcement")).toBe(false);
+    },
+  );
+  it("uses widget configuration for standalone announcement hooks", async () => {
+    fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
+    fixture.list.mockResolvedValue(response([{ ...row(), is_official: true }]));
+    fixture.active.mockResolvedValue(
+      response([{ ...full(), is_official: true }]),
+    );
+    const { result } = renderHook(() => useAnnouncement());
+    await settle();
+    expect(result.current.tips).toEqual([]);
+    expect(result.current.cardTips).toEqual([]);
+    expect(fixture.list.mock.calls[0][1]).toMatchObject({
+      broker_id: "a",
+      exclude_official: "true",
+    });
+    expect(fixture.active.mock.calls[0][1]).toMatchObject({
+      broker_id: "a",
+      exclude_official: "true",
+    });
+    expect(fixture.handlers.has("orderly_official$announcement")).toBe(false);
+    expect(fixture.handlers.has("a$announcement")).toBe(true);
+  });
+  it("excludes official details even if the detail endpoint returns one", async () => {
+    fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
     fixture.detail.mockResolvedValue({ ...full(), is_official: true });
     const { result } = renderHook(
       () => ({
         detail: useAnnouncementDetail("1"),
         value: useAnnouncementArticles(),
       }),
-      { wrapper: excluded },
+      { wrapper },
     );
     await settle();
     expect(result.current.detail.article).toBeUndefined();
