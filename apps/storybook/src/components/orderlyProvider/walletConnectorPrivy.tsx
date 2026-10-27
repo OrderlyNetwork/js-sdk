@@ -74,7 +74,13 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
                       ? "/orderly-black.png"
                       : "/orderly-white.png",
                 },
-                loginMethods: ["email", "google", "twitter", "telegram"],
+                loginMethods: [
+                  "email",
+                  "google",
+                  "twitter",
+                  "telegram",
+                  "discord",
+                ],
               },
             }
           : undefined
