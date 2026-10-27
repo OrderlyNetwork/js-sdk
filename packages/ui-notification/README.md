@@ -136,21 +136,14 @@ absent, the detail page defaults to `false` and only matches the configured
 broker's platform announcements. Matching never falls back to an official post.
 The same slug can identify different official and platform posts.
 
-Use the `slug` page prop for slug lookup, or `id` for ID lookup. A non-empty
-`slug` takes precedence when both are supplied; without either prop the page
-shows the list. These props select the query type explicitly, including numeric
-slugs:
+Use the `slug` page prop for slug lookup. A non-empty `slug` takes precedence
+when `id` is also supplied; without either prop the page shows the list. These
+props select the query type explicitly, including numeric slugs:
 
 ```tsx
-// /announcement/:slug, for example:
 // /announcement/release-notes?is_official=true
 <AnnouncementCenterPage slug={slug} />
-<AnnouncementCenterPage id="55" />
 ```
-
-The Playground and sdk-demo route adapters pass every path segment as `slug`,
-including numeric strings. Integrations that support legacy ID links must
-explicitly pass the intended ID through `id` at their own routing boundary.
 
 The optional page/widget/script `isOfficial` prop overrides the URL parameter.
 An absent prop and URL parameter default to `false`. Invalid URL values display

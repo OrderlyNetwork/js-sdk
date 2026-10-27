@@ -46,6 +46,11 @@ function deferred<T>() {
   return { promise, resolve };
 }
 const stores: AnnouncementStore[] = [];
+const notFoundErrors = [
+  { status: 404 },
+  { status: 400, code: -1006 },
+  { code: -1006 },
+];
 function harness() {
   const server = { rows: [article()] };
   const list = vi.fn<(query?: unknown) => Promise<AnnouncementListResponse>>(
@@ -97,6 +102,48 @@ afterEach(() => {
   stores.forEach((store) => store.stop());
   stores.length = 0;
   vi.useRealTimers();
+});
+
+describe.each(["id", "slug"] as const)("%s detail failures", (locator) => {
+  const setup = () => {
+    const { store, server, detail, detailBySlug } = harness();
+    server.rows = [{ ...article(), slug: "shared" }];
+    return {
+      read: () =>
+        locator === "id"
+          ? store.loadDetail("1", true)
+          : store.loadDetailBySlug("shared", true, true),
+      state: () =>
+        locator === "id"
+          ? store.getSnapshot().details["1"]
+          : store.getDetailBySlug("shared", true),
+      request: locator === "id" ? detail : detailBySlug,
+    };
+  };
+  it.each(notFoundErrors)(
+    "treats %j as an unavailable announcement",
+    async (error) => {
+      const { read, state, request } = setup();
+      request.mockRejectedValueOnce(error);
+      await read();
+      expect(state()).toEqual({ status: "ready" });
+    },
+  );
+  it.each([
+    new Error("Network unavailable"),
+    { status: 503 },
+    { status: 400, code: -1000 },
+  ])("retains retry behavior for %j", async (error) => {
+    const { read, state, request } = setup();
+    request.mockRejectedValueOnce(error);
+    await read();
+    expect(state()).toEqual({ status: "error" });
+    await read();
+    expect(state()).toMatchObject({
+      status: "ready",
+      article: { announcement_id: 1 },
+    });
+  });
 });
 
 describe("announcement source contract", () => {
@@ -364,30 +411,35 @@ describe("push verification", () => {
     expect(store.getSnapshot().details["1"].article?.updated_time).toBe(20);
     expect(onNotify).toHaveBeenCalledTimes(1);
   });
-  it("removes confirmed unpublished rows from every cached view and rejects stale resurrection", async () => {
-    const { store, server, list, active } = harness();
-    store.watchList({ page: 2, size: 20 });
-    await store.refresh();
-    server.rows = [];
-    // Simulate lagging caches after the uncached detail endpoint confirms removal.
-    list.mockResolvedValue(response([row()]));
-    active.mockResolvedValue(response([article()]));
-    store.notify({ announcement_id: 1, updated_time: 20 });
-    await store.refresh();
-    await store.refresh();
-    expect(store.getSnapshot().rows).toEqual([]);
-    expect(store.getSnapshot().active.rows).toEqual([]);
-    expect(
-      store.getSnapshot().lists[listQueryKey({ page: 2, size: 20 })].rows,
-    ).toEqual([]);
-    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
-    server.rows = [article(1, 30)];
-    list.mockResolvedValue(response([row(1, 30)]));
-    active.mockResolvedValue(response([article(1, 30)]));
-    store.notify({ announcement_id: 1, updated_time: 30 });
-    await store.refresh();
-    expect(store.getSnapshot().rows).toHaveLength(1);
-  });
+  it.each(notFoundErrors)(
+    "removes unpublished rows on %j from every cached view and rejects stale resurrection",
+    async (error) => {
+      const { store, server, list, active, detail } = harness();
+      store.watchList({ page: 2, size: 20 });
+      await store.refresh();
+      server.rows = [];
+      detail.mockRejectedValue(error);
+      // Simulate lagging caches after the uncached detail endpoint confirms removal.
+      list.mockResolvedValue(response([row()]));
+      active.mockResolvedValue(response([article()]));
+      store.notify({ announcement_id: 1, updated_time: 20 });
+      await store.refresh();
+      await store.refresh();
+      expect(store.getSnapshot().rows).toEqual([]);
+      expect(store.getSnapshot().active.rows).toEqual([]);
+      expect(
+        store.getSnapshot().lists[listQueryKey({ page: 2, size: 20 })].rows,
+      ).toEqual([]);
+      expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+      server.rows = [article(1, 30)];
+      detail.mockResolvedValue(article(1, 30));
+      list.mockResolvedValue(response([row(1, 30)]));
+      active.mockResolvedValue(response([article(1, 30)]));
+      store.notify({ announcement_id: 1, updated_time: 30 });
+      await store.refresh();
+      expect(store.getSnapshot().rows).toHaveLength(1);
+    },
+  );
   it("ignores responses and reminders after disposal", async () => {
     const { store, list, onNotify } = harness();
     const pending = deferred<AnnouncementListResponse>();
@@ -456,6 +508,44 @@ describe("slug and ID cache coherence", () => {
     slug: "shared",
     is_official,
   });
+  it.each(notFoundErrors)(
+    "keeps other sources intact when an unresolved slug returns %j",
+    async (error) => {
+      const { store, server, detailBySlug } = harness();
+      server.rows = [slugArticle(2, 10, false)];
+      await store.refresh();
+      await store.loadDetailBySlug("shared", false);
+      detailBySlug.mockRejectedValueOnce(error);
+      await store.loadDetailBySlug("shared", true);
+      expect(store.getDetailBySlug("shared", true)).toEqual({
+        status: "ready",
+      });
+      expect(
+        store.getDetailBySlug("shared", false).article?.announcement_id,
+      ).toBe(2);
+      expect(
+        store.getSnapshot().active.rows.map((item) => item.announcement_id),
+      ).toEqual([2]);
+    },
+  );
+  it("keeps published details readable after only their card deadline expires", async () => {
+    vi.useFakeTimers();
+    const { store, server } = harness();
+    server.rows = [
+      { ...slugArticle(), notification_card_end_time: Date.now() + 1000 },
+    ];
+    await store.refresh();
+    await store.loadDetailBySlug("shared", true);
+    expect(store.getSnapshot().active.rows).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(1000);
+    await store.refresh();
+    await store.loadDetail("1", true);
+    expect(store.getSnapshot().active.rows).toEqual([]);
+    expect(store.getDetailBySlug("shared", true)).toMatchObject({
+      status: "ready",
+      article: { announcement_id: 1 },
+    });
+  });
   it("deduplicates slug reads and shares their complete body with ID readers", async () => {
     const { store, server, detail, detailBySlug } = harness();
     server.rows = [slugArticle()];
@@ -470,19 +560,25 @@ describe("slug and ID cache coherence", () => {
     await store.loadDetail("1");
     expect(detail).not.toHaveBeenCalled();
   });
-  it("keeps same-slug sources isolated when one is removed by a slug 404", async () => {
-    const { store, server } = harness();
-    server.rows = [slugArticle(), slugArticle(2, 10, false)];
-    await store.loadDetailBySlug("shared", true);
-    await store.loadDetailBySlug("shared", false);
-    server.rows = [slugArticle(2, 10, false)];
-    await store.loadDetailBySlug("shared", true, true);
-    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "ready" });
-    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
-    expect(
-      store.getDetailBySlug("shared", false).article?.announcement_id,
-    ).toBe(2);
-  });
+  it.each(notFoundErrors)(
+    "keeps same-slug sources isolated when one is removed by %j",
+    async (error) => {
+      const { store, server, detailBySlug } = harness();
+      server.rows = [slugArticle(), slugArticle(2, 10, false)];
+      await store.loadDetailBySlug("shared", true);
+      await store.loadDetailBySlug("shared", false);
+      server.rows = [slugArticle(2, 10, false)];
+      detailBySlug.mockRejectedValueOnce(error);
+      await store.loadDetailBySlug("shared", true, true);
+      expect(store.getDetailBySlug("shared", true)).toEqual({
+        status: "ready",
+      });
+      expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+      expect(
+        store.getDetailBySlug("shared", false).article?.announcement_id,
+      ).toBe(2);
+    },
+  );
   it("invalidates slug aliases when a list sees a newer version, then revalidates by ID", async () => {
     const { store, server, detail, detailBySlug } = harness();
     server.rows = [slugArticle()];
@@ -544,20 +640,26 @@ describe("slug and ID cache coherence", () => {
     );
     expect(store.getSnapshot().details["1"].status).toBe("ready");
   });
-  it("cancels a slow ID body when a known slug confirms its removal", async () => {
-    const { store, server, detail } = harness();
-    server.rows = [slugArticle()];
-    await store.loadDetailBySlug("shared", true);
-    const old = deferred<AnnouncementArticle>();
-    detail.mockReturnValueOnce(old.promise);
-    const reading = store.loadDetail("1", true);
-    server.rows = [];
-    await store.loadDetailBySlug("shared", true, true);
-    old.resolve(slugArticle(1, 30));
-    await reading;
-    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
-    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "ready" });
-  });
+  it.each(notFoundErrors)(
+    "cancels a slow ID body when a known slug confirms its removal with %j",
+    async (error) => {
+      const { store, server, detail, detailBySlug } = harness();
+      server.rows = [slugArticle()];
+      await store.loadDetailBySlug("shared", true);
+      const old = deferred<AnnouncementArticle>();
+      detail.mockReturnValueOnce(old.promise);
+      const reading = store.loadDetail("1", true);
+      server.rows = [];
+      detailBySlug.mockRejectedValueOnce(error);
+      await store.loadDetailBySlug("shared", true, true);
+      old.resolve(slugArticle(1, 30));
+      await reading;
+      expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+      expect(store.getDetailBySlug("shared", true)).toEqual({
+        status: "ready",
+      });
+    },
+  );
   it("discards an old slug body after a newer ID verification publishes its alias", async () => {
     const { store, server, detailBySlug } = harness();
     const old = deferred<AnnouncementArticle>();

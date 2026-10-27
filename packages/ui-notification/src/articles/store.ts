@@ -20,6 +20,9 @@ type SlugDetailEntry = { status: ReadStatus; id?: string };
 const slugDetailKey = (slug: string, isOfficial: boolean) =>
   JSON.stringify([slug, isOfficial]);
 const foregroundRefreshInterval = 60_000;
+type DetailError = { status?: number; code?: number };
+const isAnnouncementNotFound = (error: DetailError) =>
+  error?.status === 404 || error?.code === -1006;
 export type AnnouncementListState =
   AnnouncementResourceState<AnnouncementListRow>;
 type Snapshot = {
@@ -566,9 +569,9 @@ export class AnnouncementStore {
         );
         return article;
       })
-      .catch((error: { status?: number }) => {
+      .catch((error: DetailError) => {
         if (!current()) throw error;
-        if (error?.status === 404) {
+        if (isAnnouncementNotFound(error)) {
           this.remove(id);
           this.writeDetail(id, { status: "ready" });
           return undefined;
@@ -691,9 +694,9 @@ export class AnnouncementStore {
         );
         return article;
       })
-      .catch((error: { status?: number }) => {
+      .catch((error: DetailError) => {
         if (!current()) throw error;
-        if (error?.status === 404) {
+        if (isAnnouncementNotFound(error)) {
           if (alias?.id) {
             this.remove(alias.id);
             this.writeDetail(alias.id, { status: "ready" });
