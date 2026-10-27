@@ -49,7 +49,7 @@ export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
   const { t } = useTranslation();
   const {
     article,
-    announcementId,
+    isDetail,
     category,
     announcements,
     selectCategory,
@@ -60,7 +60,7 @@ export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
   const readState =
     props.status === "loading" ? (
       <div role="status" aria-label={t("notification.loading")}>
-        {announcementId ? (
+        {isDetail ? (
           <AnnouncementDetailSkeleton />
         ) : (
           <AnnouncementListSkeleton />
@@ -91,7 +91,7 @@ export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
       </div>
     ) : null;
 
-  if (announcementId) {
+  if (isDetail) {
     return (
       <main className="oui-announcement-detail oui-mx-auto oui-w-full oui-max-w-4xl oui-px-5 oui-py-8 lg:oui-px-8 lg:oui-py-12">
         <Flex gap={2} itemAlign="center" className="oui-mb-8 oui-flex-wrap">

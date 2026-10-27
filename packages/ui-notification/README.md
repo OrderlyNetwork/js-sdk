@@ -6,7 +6,7 @@ cards and announcement pages. It reads the broker from the global
 
 ```tsx
 <Scaffold>
-  <AnnouncementCenterPage announcementId={announcementId} />
+  <AnnouncementCenterPage slug={slug} />
 </Scaffold>
 ```
 
@@ -36,7 +36,7 @@ Orderly app providers to share requests and subscriptions:
 ```tsx
 <AnnouncementProvider>
   <CustomHeader />
-  <AnnouncementCenterPage announcementId={announcementId} />
+  <AnnouncementCenterPage slug={slug} />
 </AnnouncementProvider>
 ```
 
@@ -45,10 +45,12 @@ existing `useAnnouncement({ hideTips })` return fields remain available. `tips`
 contains the bell's current reading list; `cardTips` contains the independent
 carousel, including maintenance reminders and automatic deadline filtering.
 
-## Public reads (v1.5)
+## Public reads (v1.6)
 
-This integration requires the v1.5 backend contract. There is no fallback to an
-older backend when `/active` or server pagination is unavailable.
+This integration uses the v1.6 public-read contract (PRD 7.6), plus direct
+slug lookup scoped by `is_official=true` or `broker_id` on the detail endpoint.
+There is no fallback to an older backend when slug lookup, `/active` or server
+pagination is unavailable.
 
 - The bell requests `GET /v2/public/announcement` with `page=1&size=5`.
   `useAnnouncementArticles().articles` exposes these localized titles.
@@ -70,10 +72,17 @@ older backend when `/active` or server pagination is unavailable.
   use the supported base language; other UI languages fall back to English.
   Incomplete translations fall back to English for the whole card. Language
   changes refetch active without clearing list or complete detail caches.
-- `useAnnouncementDetail(id)` requests `GET /v2/public/announcement/detail` with
-  `announcement_id` and optional `broker_id`. It does not send `exclude_official`;
-  the SDK also checks source and market visibility. Active's locale-trimmed
-  payload is never used as a complete detail cache.
+- `useAnnouncementDetail(target, isOfficial = false)` accepts `{ slug }` or
+  `{ id }` to select the query type explicitly. String arguments remain supported:
+  numeric strings select ID lookup, and other strings select slug lookup. It requests
+  `GET /v2/public/announcement/detail` with `slug` + `is_official=true` for an
+  official post, or `slug` + `broker_id` for a platform post. Official slug requests
+  omit `broker_id`; platform slug requests omit `is_official` entirely. Numeric ID
+  requests use `announcement_id` and optional `broker_id` as before.
+  ID requests do not send `slug` or `is_official`; a default platform source must
+  not restrict official ID links or ID-based WebSocket verification. Neither
+  request sends `exclude_official`; the SDK also checks source and market
+  visibility. Active's locale-trimmed payload is never a complete detail cache.
 - All list and active requests include `broker_id` when configured and
   `exclude_official`. `last_updated_time` describes all published announcements
   in that source scope, independently of category, page or active-card expiry.
@@ -95,6 +104,73 @@ Custom `AnnouncementArticlesContext` sources can provide optional `getList`,
 `watchList` and `retryList` functions. Without those functions the hook paginates
 that custom context's in-memory articles. This does not enable a production API
 fallback.
+
+## Slug routes
+
+Public list, active-card, detail and WebSocket payloads carry the backend-generated
+`slug`. The list, bell and cards generate `/announcement/:slug?is_official=true|false`
+links. Official links explicitly use `is_official=true`; when the parameter is
+absent, the detail page defaults to `false` and only matches the configured
+broker's platform announcements. Matching never falls back to an official post.
+The same slug can identify different official and platform posts.
+
+Use the `slug` page prop for slug lookup, or `id` for ID lookup. A non-empty
+`slug` takes precedence when both are supplied; without either prop the page
+shows the list. These props select the query type explicitly, including numeric
+slugs:
+
+```tsx
+// /announcement/:slug, for example:
+// /announcement/release-notes?is_official=true
+<AnnouncementCenterPage slug={slug} routerAdapter={routerAdapter} />
+<AnnouncementCenterPage id="55" routerAdapter={routerAdapter} />
+```
+
+The Playground route adapter passes numeric path segments as `id` to retain old
+ID links; other segments are passed as `slug`. Integrations supporting numeric
+slugs should pass them explicitly as `slug`.
+
+The optional page/widget/script `isOfficial` prop overrides the URL parameter.
+An absent prop and URL parameter default to `false`. Invalid URL values display
+the existing not-found state for slug routes. Numeric ID routes retain their
+original behavior independently of the source parameter.
+
+Slug routes query the detail endpoint directly using either the official scope
+(`slug` + `is_official=true`) or the configured broker scope (`slug` + `broker_id`).
+The route's default `is_official=false` selects platform lookup but is not sent
+as an API parameter. Without a broker, platform slug requests are blocked.
+Slug routes do not fetch a complete list or depend on the bell/current page or
+`dataAdapter.announcementList` for lookup. The returned
+detail is checked against the requested slug, source, known version and existing
+visibility rules before entering the cache. A mismatched slug/source is a read
+error; a 404 or a platform slug without a configured broker shows not-found.
+Slug errors have an independent retry and do not fall back to list-based lookup.
+
+Slug requests are isolated by source scope and `(slug, is_official)`. Successful
+reads associate the slug with its returned ID and share the complete ID body
+cache. List updates, WebSocket verification and recovery invalidate the same body;
+ID-based removal clears its slug associations. Slow responses cannot overwrite
+newer bodies or restore a publication removed after their request began.
+
+Legacy/custom rows without a slug or known source identity generate numeric ID
+links. Explicit adapter `url` values retain priority. Navigation from the list
+preserves category, page and other query parameters, and returning to the list
+removes `is_official` without leaving a trailing question mark.
+
+The bell and cards merge the current URL query when clicked, so changes after
+their initial render are retained. The destination query takes precedence for
+colliding keys, and the target announcement's `is_official` overrides the source
+parameter. Custom summaries without source metadata use the destination's source
+value; links without a source do not inherit the current source. Explicit external
+links remain unchanged.
+
+Custom `AnnouncementArticlesContext` sources may implement
+`getDetailBySlug(slug, isOfficial)` and
+`loadDetailBySlug(slug, isOfficial, force?)` for direct slug reads. The existing
+`getDetail(id)` / `loadDetail(id, force?)` signatures are unchanged. Without both
+slug methods the hook matches its own supplied articles: complete bodies render
+directly; title-only matches load through the custom ID method when provided.
+Custom contexts never automatically request the production endpoint.
 
 ## Synchronization
 
@@ -152,8 +228,10 @@ the header bell, cards, list and open detail page. Under a healthy WebSocket
 connection and available REST APIs, removal must complete within five seconds.
 Mocked tests and package builds do not establish that integration criterion.
 
-Slug generation and management validation are backend/admin responsibilities;
-this repository's public reader continues to navigate by announcement ID.
+Slug generation and management validation remain backend/admin responsibilities.
+Real REST/WebSocket acceptance with backend slug lookup, including source isolation and
+direct-link refreshes, must be verified against a deployed backend; mocked tests
+do not establish that integration criterion.
 
 The standalone `tsc --noEmit --project packages/ui-notification/tsconfig.build.json`
 check is currently blocked by existing dependency type-resolution errors in

@@ -77,7 +77,7 @@ const articles = [true, false].map((is_official) =>
 const tips = articles.map(toSummary);
 const pageProps: AnnouncementCenterScriptReturns = {
   platformName,
-  announcementId: undefined,
+  isDetail: false,
   category: "all",
   announcements: articles,
   article: undefined,
@@ -294,11 +294,7 @@ describe("announcement source labels", () => {
       articles
         .map((article) =>
           renderToStaticMarkup(
-            <AnnouncementPageUI
-              {...pageProps}
-              announcementId={String(article.announcement_id)}
-              article={article}
-            />,
+            <AnnouncementPageUI {...pageProps} isDetail article={article} />,
           ),
         )
         .join(""),

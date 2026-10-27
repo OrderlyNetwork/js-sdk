@@ -126,6 +126,13 @@ export function useLiveAnnouncements(
         ...(brokerId ? { broker_id: brokerId } : {}),
       }),
   );
+  const detailBySlug = useMemoizedFn(
+    (slug: string, isOfficial: boolean): Promise<AnnouncementArticle> =>
+      fetchDetail({
+        slug,
+        ...(isOfficial ? { is_official: true } : { broker_id: brokerId }),
+      }),
+  );
   const visible = useMemoizedFn((row: AnnouncementListRow) => {
     if (row.is_official === true && excludeOfficial) return false;
     if (row.is_official === false && !brokerId) return false;
@@ -153,6 +160,7 @@ export function useLiveAnnouncements(
         list,
         active,
         detail,
+        detailBySlug,
         visible,
         onNotify,
       }),
@@ -236,6 +244,27 @@ export function useLiveAnnouncements(
     },
     [snapshot.lists, locale, marketList, brokerId, excludeOfficial],
   );
+  const getDetailBySlug = useCallback(
+    (slug: string, isOfficial: boolean) => {
+      const entry = store.getDetailBySlug(slug, isOfficial);
+      return {
+        status: entry.status,
+        article:
+          entry.article && visible(entry.article)
+            ? localizeArticle(entry.article, locale)
+            : undefined,
+      };
+    },
+    [
+      store,
+      snapshot.slugDetails,
+      snapshot.details,
+      locale,
+      marketList,
+      brokerId,
+      excludeOfficial,
+    ],
+  );
   const tips = useMemo(() => articles.map(toSummary), [articles]);
   const cardTips = useMemo(
     () =>
@@ -267,6 +296,8 @@ export function useLiveAnnouncements(
     getList,
     watchList: store.watchList,
     retryList: store.retryList,
+    getDetailBySlug,
+    loadDetailBySlug: store.loadDetailBySlug,
     scaffoldState: {
       tips,
       cardTips,

@@ -159,6 +159,479 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+describe("direct slug details", () => {
+  const slugArticle = (
+    id = 55,
+    is_official = false,
+    slug = "release-notes",
+    updated_time = 10,
+  ) => ({
+    ...full(id, updated_time),
+    slug,
+    is_official,
+  });
+  function server(initial = [slugArticle(), slugArticle(90, true)]) {
+    const state = { rows: initial };
+    fixture.list.mockResolvedValue(response([]));
+    fixture.active.mockResolvedValue(response([]));
+    fixture.detail.mockImplementation(async (_url, params) => {
+      const found = state.rows.find((row) =>
+        params.announcement_id !== undefined
+          ? String(row.announcement_id) === params.announcement_id
+          : row.slug === params.slug &&
+            row.is_official === (params.is_official === true) &&
+            (row.is_official ||
+              (!!params.broker_id &&
+                (!row.broker_id || row.broker_id === params.broker_id))),
+      );
+      if (!found) throw { status: 404 };
+      return found;
+    });
+    return state;
+  }
+  it.each([false, true])(
+    "queries an explicit numeric slug with source %s",
+    async (isOfficial) => {
+      server([slugArticle(55, false, "123"), slugArticle(90, true, "123")]);
+      const { result } = renderHook(
+        () => useAnnouncementDetail({ slug: "123" }, isOfficial),
+        { wrapper },
+      );
+      await settle();
+      expect(result.current.article).toMatchObject({
+        announcement_id: isOfficial ? 90 : 55,
+        slug: "123",
+        is_official: isOfficial,
+      });
+      expect(fixture.detail).toHaveBeenCalledExactlyOnceWith(
+        "https://api.example/v2/public/announcement/detail",
+        {
+          slug: "123",
+          ...(isOfficial ? { is_official: true } : { broker_id: "a" }),
+        },
+      );
+    },
+  );
+  it("keeps explicit ID lookup independent of the source", async () => {
+    server();
+    const { result } = renderHook(() => useAnnouncementDetail({ id: "90" }), {
+      wrapper,
+    });
+    await settle();
+    expect(result.current.article).toMatchObject({
+      announcement_id: 90,
+      is_official: true,
+    });
+    expect(fixture.detail).toHaveBeenCalledExactlyOnceWith(
+      "https://api.example/v2/public/announcement/detail",
+      { announcement_id: "90", broker_id: "a" },
+    );
+  });
+  it.each([undefined, false, true])(
+    "requests an old slug directly with source %s without fetching a complete list",
+    async (isOfficial) => {
+      server();
+      fixture.list.mockRejectedValue(new Error("lists unavailable"));
+      const { result } = renderHook(
+        () => ({
+          detail: useAnnouncementDetail("release-notes", isOfficial),
+          page: useAnnouncementList({ category: "legal", page: 3 }),
+        }),
+        { wrapper },
+      );
+      await settle();
+      expect(result.current.detail).toMatchObject({
+        status: "ready",
+        article: {
+          announcement_id: isOfficial ? 90 : 55,
+          is_official: isOfficial ?? false,
+        },
+      });
+      expect(fixture.detail).toHaveBeenCalledExactlyOnceWith(
+        "https://api.example/v2/public/announcement/detail",
+        {
+          slug: "release-notes",
+          ...(isOfficial ? { is_official: true } : { broker_id: "a" }),
+        },
+      );
+      expect(
+        fixture.list.mock.calls.every(
+          ([, params]) => params.page && params.size,
+        ),
+      ).toBe(true);
+      expect(result.current.page.status).toBe("error");
+    },
+  );
+  it.each(["missing", "official-only"])(
+    "does not fall back to a list or official source for %s",
+    async (scenario) => {
+      server(scenario === "missing" ? [] : [slugArticle(90, true)]);
+      const { result } = renderHook(
+        () => useAnnouncementDetail("release-notes"),
+        { wrapper },
+      );
+      await settle();
+      expect(result.current).toMatchObject({
+        status: "ready",
+        article: undefined,
+      });
+      expect(fixture.detail).toHaveBeenCalledTimes(1);
+      expect(
+        fixture.list.mock.calls.every(([, params]) => params.size === "5"),
+      ).toBe(true);
+    },
+  );
+  it("switches same-slug sources without sharing their bodies", async () => {
+    server();
+    const { result, rerender } = renderHook(
+      ({ official }) => useAnnouncementDetail("release-notes", official),
+      { wrapper, initialProps: { official: true } },
+    );
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(90);
+    rerender({ official: false });
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(55);
+    rerender({ official: true });
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(90);
+  });
+  it("scopes identical platform slugs to the configured broker without sending is_official", async () => {
+    server([
+      { ...slugArticle(55), broker_id: "a" },
+      { ...slugArticle(66), broker_id: "b" },
+      { ...slugArticle(90, true), broker_id: "" },
+    ]);
+    const { result, rerender } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper },
+    );
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(55);
+    expect(fixture.detail).toHaveBeenLastCalledWith(expect.any(String), {
+      slug: "release-notes",
+      broker_id: "a",
+    });
+    fixture.brokerId = "b";
+    rerender();
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(66);
+    expect(fixture.detail).toHaveBeenLastCalledWith(expect.any(String), {
+      slug: "release-notes",
+      broker_id: "b",
+    });
+    expect(
+      fixture.detail.mock.calls.every(
+        ([, params]) =>
+          !("is_official" in params) && !("announcement_id" in params),
+      ),
+    ).toBe(true);
+  });
+  it("does not query platform without a broker but can open official slugs", async () => {
+    server();
+    fixture.brokerId = undefined;
+    const { result, rerender } = renderHook(
+      ({ official }) => useAnnouncementDetail("release-notes", official),
+      { wrapper, initialProps: { official: false } },
+    );
+    await settle();
+    expect(result.current).toMatchObject({
+      status: "ready",
+      article: undefined,
+    });
+    expect(fixture.detail).not.toHaveBeenCalled();
+    rerender({ official: true });
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(90);
+    expect(fixture.detail).toHaveBeenLastCalledWith(expect.any(String), {
+      slug: "release-notes",
+      is_official: true,
+    });
+  });
+  it("blocks excluded official slugs without blocking platform details behind a list adapter", async () => {
+    server();
+    fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
+    fixture.context = { dataAdapter: { announcementList: () => [] } };
+    const { result, rerender } = renderHook(
+      ({ official }) => useAnnouncementDetail("release-notes", official),
+      { wrapper, initialProps: { official: true } },
+    );
+    await settle();
+    expect(result.current.article).toBeUndefined();
+    expect(fixture.detail).not.toHaveBeenCalled();
+    rerender({ official: false });
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(55);
+  });
+  it("applies market visibility to direct detail bodies", async () => {
+    const hidden = slugArticle();
+    hidden.category = "LISTINGS";
+    hidden.translations.en.title = "New listing: $SOL";
+    server([hidden]);
+    const { result } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper },
+    );
+    await settle();
+    expect(result.current).toMatchObject({
+      status: "ready",
+      article: undefined,
+    });
+    expect(fixture.detail).toHaveBeenCalledTimes(1);
+  });
+  it("preserves live bell and card slug links without per-card detail reads", async () => {
+    fixture.list.mockResolvedValue(response([slugArticle()]));
+    fixture.active.mockResolvedValue(response([slugArticle()]));
+    const { result } = renderHook(() => useAnnouncement(), { wrapper });
+    await settle();
+    const expected = {
+      slug: "release-notes",
+      url: "/announcement/release-notes?is_official=false",
+    };
+    expect(result.current.tips[0]).toMatchObject(expected);
+    expect(result.current.cardTips?.[0]).toMatchObject(expected);
+    expect(fixture.detail).not.toHaveBeenCalled();
+  });
+  it("shows loading and retries only the failed slug detail", async () => {
+    server();
+    let finish!: (value: AnnouncementArticle) => void;
+    fixture.detail.mockImplementationOnce(
+      async () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const { result } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper },
+    );
+    await settle();
+    expect(result.current.status).toBe("loading");
+    await act(async () => finish(slugArticle()));
+    expect(result.current.article?.announcement_id).toBe(55);
+    fixture.detail.mockRejectedValueOnce({ status: 503 });
+    await act(async () => result.current.retry());
+    expect(result.current.status).toBe("error");
+    const listReads = fixture.list.mock.calls.length;
+    const activeReads = fixture.active.mock.calls.length;
+    await act(async () => result.current.retry());
+    expect(result.current).toMatchObject({
+      status: "ready",
+      article: { announcement_id: 55 },
+    });
+    expect(fixture.list).toHaveBeenCalledTimes(listReads);
+    expect(fixture.active).toHaveBeenCalledTimes(activeReads);
+  });
+  it("revalidates slug bodies on recovery without fetching a full list", async () => {
+    const state = server();
+    const { result } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper },
+    );
+    await settle();
+    state.rows[0] = slugArticle(55, false, "release-notes", 20);
+    state.rows[0].translations.en.content = "Recovered body";
+    await act(async () => window.dispatchEvent(new Event("focus")));
+    expect(result.current.article?.content).toBe("Recovered body");
+    expect(fixture.list.mock.calls.every(([, params]) => params.page)).toBe(
+      true,
+    );
+  });
+  it("verifies pushes by ID and removes all aliases when unpublished", async () => {
+    const state = server();
+    const { result } = renderHook(
+      () => ({
+        slug: useAnnouncementDetail("release-notes"),
+        id: useAnnouncementDetail("55"),
+      }),
+      { wrapper },
+    );
+    await settle();
+    state.rows[0] = slugArticle(55, false, "release-notes", 20);
+    state.rows[0].translations.en.content = "Updated body";
+    fixture.detail.mockClear();
+    await push(55, 20);
+    expect(result.current.slug.article?.content).toBe("Updated body");
+    expect(result.current.id.article?.content).toBe("Updated body");
+    expect(
+      fixture.detail.mock.calls.every(
+        ([, params]) =>
+          params.announcement_id === "55" &&
+          !("is_official" in params) &&
+          !("slug" in params),
+      ),
+    ).toBe(true);
+    state.rows = state.rows.filter((row) => row.announcement_id !== 55);
+    await push(55, 30);
+    expect(result.current.slug).toMatchObject({
+      status: "ready",
+      article: undefined,
+    });
+    expect(result.current.id).toMatchObject({
+      status: "ready",
+      article: undefined,
+    });
+  });
+  it.each(["slug", "source"])(
+    "rejects a mismatched %s response before populating ID cache",
+    async (field) => {
+      server();
+      fixture.detail.mockResolvedValue(
+        field === "slug"
+          ? slugArticle(55, false, "other")
+          : slugArticle(55, true),
+      );
+      const { result } = renderHook(
+        () => ({
+          detail: useAnnouncementDetail("release-notes"),
+          source: useAnnouncementArticles(),
+        }),
+        { wrapper },
+      );
+      await settle();
+      expect(result.current.detail).toMatchObject({
+        status: "error",
+        article: undefined,
+      });
+      expect(result.current.source.getDetail?.("55").article).toBeUndefined();
+    },
+  );
+  it("discards a slow slug response when broker scope changes", async () => {
+    server();
+    let finish!: (value: AnnouncementArticle) => void;
+    fixture.detail.mockImplementation(async (_url, params) =>
+      params.broker_id === "a"
+        ? new Promise((resolve) => {
+            finish = resolve;
+          })
+        : slugArticle(66),
+    );
+    const { result, rerender } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper },
+    );
+    await settle();
+    fixture.brokerId = "b";
+    rerender();
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(66);
+    await act(async () => finish(slugArticle()));
+    expect(result.current.article?.announcement_id).toBe(66);
+  });
+  it("deduplicates concurrent slug readers and isolates route changes", async () => {
+    server();
+    let finish!: (value: AnnouncementArticle) => void;
+    fixture.detail.mockImplementation(async (_url, params) =>
+      params.slug === "release-notes"
+        ? new Promise((resolve) => {
+            finish = resolve;
+          })
+        : slugArticle(66, false, "new-post"),
+    );
+    const { result, rerender } = renderHook(
+      ({ slug }) => ({
+        current: useAnnouncementDetail(slug),
+        other: useAnnouncementDetail(slug),
+      }),
+      { wrapper, initialProps: { slug: "release-notes" } },
+    );
+    await settle();
+    expect(fixture.detail).toHaveBeenCalledTimes(1);
+    rerender({ slug: "new-post" });
+    await settle();
+    expect(result.current.current.article?.announcement_id).toBe(66);
+    await act(async () => finish(slugArticle()));
+    expect(result.current.current.article?.announcement_id).toBe(66);
+  });
+  it.each(["a", undefined])(
+    "preserves official legacy IDs with broker %s without sending slug or default source",
+    async (brokerId) => {
+      server();
+      fixture.brokerId = brokerId;
+      const { result } = renderHook(() => useAnnouncementDetail("90"), {
+        wrapper,
+      });
+      await settle();
+      expect(result.current.article?.announcement_id).toBe(90);
+      expect(fixture.detail).toHaveBeenCalledExactlyOnceWith(
+        expect.any(String),
+        {
+          announcement_id: "90",
+          ...(brokerId ? { broker_id: brokerId } : {}),
+        },
+      );
+    },
+  );
+  it("resolves complete custom context articles without production requests", () => {
+    const articles = [slugArticle(), slugArticle(90, true)].map((article) =>
+      localizeArticle(article, "en"),
+    );
+    const loadDetail = vi.fn();
+    const custom = ({ children }: PropsWithChildren) => (
+      <AnnouncementArticlesContext.Provider
+        value={{
+          articles,
+          status: "ready",
+          refresh: vi.fn(),
+          retry: vi.fn(),
+          loadDetail,
+        }}
+      >
+        <AnnouncementProvider>{children}</AnnouncementProvider>
+      </AnnouncementArticlesContext.Provider>
+    );
+    const { result } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper: custom },
+    );
+    expect(result.current.article?.announcement_id).toBe(55);
+    expect(loadDetail).not.toHaveBeenCalled();
+    expect(fixture.list).not.toHaveBeenCalled();
+    expect(fixture.detail).not.toHaveBeenCalled();
+  });
+  it("loads an incomplete custom article through its existing ID method", () => {
+    const article = {
+      ...localizeAnnouncement({ ...row(55), slug: "release-notes" }, "en"),
+      content: undefined,
+    };
+    const loadDetail = vi.fn();
+    const custom = ({ children }: PropsWithChildren) => (
+      <AnnouncementArticlesContext.Provider
+        value={{
+          articles: [article],
+          status: "ready",
+          refresh: vi.fn(),
+          retry: vi.fn(),
+          loadDetail,
+        }}
+      >
+        <AnnouncementProvider>{children}</AnnouncementProvider>
+      </AnnouncementArticlesContext.Provider>
+    );
+    const { result } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper: custom },
+    );
+    expect(loadDetail).toHaveBeenCalledWith("55", true);
+    expect(result.current.article).toBeUndefined();
+    expect(fixture.detail).not.toHaveBeenCalled();
+  });
+  it("remains usable under StrictMode cleanup and restart", async () => {
+    server();
+    const strict = ({ children }: PropsWithChildren) => (
+      <StrictMode>
+        <AnnouncementProvider>{children}</AnnouncementProvider>
+      </StrictMode>
+    );
+    const { result } = renderHook(
+      () => useAnnouncementDetail("release-notes"),
+      { wrapper: strict },
+    );
+    await settle();
+    expect(result.current.article?.announcement_id).toBe(55);
+  });
+});
+
 describe("production announcement provider", () => {
   it("reads a direct detail even when the already loaded list has not seen its publication", async () => {
     fixture.list.mockResolvedValue(response([]));

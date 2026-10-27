@@ -86,6 +86,7 @@ export declare namespace API {
 
   export interface AnnouncementRow {
     announcement_id: number | string;
+    slug?: string;
     message: string;
     i18n?: Record<PropertyKey, string | null>;
     url?: string | null;
@@ -1000,6 +1001,7 @@ export declare namespace WSMessage {
 
   export interface Announcement {
     announcement_id: string;
+    slug?: string;
     message: string;
     i18n: Record<PropertyKey, string | null>;
     url?: string | null;

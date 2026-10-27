@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useConfig } from "@orderly.network/hooks";
+import { announcementDetailUrl } from "../articles/routes";
 import {
   announcementCategories,
   type AnnouncementCategory,
@@ -8,7 +9,10 @@ import { useAnnouncementDetail } from "../articles/useAnnouncementDetail";
 import { useAnnouncementList } from "../articles/useAnnouncementList";
 
 export type AnnouncementCenterScriptOptions = {
-  announcementId?: string;
+  /** Backend-generated slug; takes precedence over id when non-empty. */
+  slug?: string;
+  id?: string;
+  isOfficial?: boolean;
   onRouteChange?: (href: string) => void;
 };
 
@@ -19,18 +23,28 @@ const readSearchParams = () =>
 
 const hrefWithSearch = (path: string, params: URLSearchParams) => {
   const search = params.toString();
-  return `${path}?${search}`;
+  return search ? `${path}?${search}` : path;
 };
 
 export const useAnnouncementCenterScript = (
   options: AnnouncementCenterScriptOptions = {},
 ) => {
   const platformName = useConfig<string | undefined>("brokerName");
-  const { announcementId, onRouteChange } = options;
-
-  const detail = useAnnouncementDetail(announcementId);
+  const { slug, id, onRouteChange } = options;
+  const isDetail = !!(slug || id);
 
   const searchParams = readSearchParams();
+  const source = searchParams.get("is_official");
+  const invalidSource =
+    !!slug &&
+    options.isOfficial === undefined &&
+    source !== null &&
+    source !== "true" &&
+    source !== "false";
+  const detail = useAnnouncementDetail(
+    invalidSource ? undefined : slug ? { slug } : id ? { id } : undefined,
+    options.isOfficial ?? source === "true",
+  );
   const category: AnnouncementCategory =
     announcementCategories.find(
       (item) => item === searchParams.get("category"),
@@ -40,17 +54,15 @@ export const useAnnouncementCenterScript = (
     Number.isSafeInteger(requestedPage) && requestedPage > 0
       ? requestedPage
       : 1;
-  const list = useAnnouncementList(
-    { category, page, size: 20 },
-    !announcementId,
-  );
+  const list = useAnnouncementList({ category, page, size: 20 }, !isDetail);
   const pageTotal = Math.max(1, Math.ceil(list.total / 20));
   const announcements = list.articles;
-  const article = detail.article;
+  const article = invalidSource ? undefined : detail.article;
 
   const selectCategory = useCallback(
     (nextCategory: AnnouncementCategory) => {
       const params = readSearchParams();
+      params.delete("is_official");
       if (nextCategory === "all") params.delete("category");
       else params.set("category", nextCategory);
       params.delete("page");
@@ -61,6 +73,7 @@ export const useAnnouncementCenterScript = (
   const selectPage = useCallback(
     (nextPage: number) => {
       const params = readSearchParams();
+      params.delete("is_official");
       if (nextPage === 1) params.delete("page");
       else params.set("page", String(nextPage));
       onRouteChange?.(hrefWithSearch("/announcement", params));
@@ -68,20 +81,26 @@ export const useAnnouncementCenterScript = (
     [onRouteChange],
   );
   useEffect(() => {
-    if (!announcementId && list.status === "ready" && page > pageTotal)
+    if (!isDetail && list.status === "ready" && page > pageTotal)
       selectPage(pageTotal);
-  }, [announcementId, list.status, page, pageTotal, selectPage]);
+  }, [isDetail, list.status, page, pageTotal, selectPage]);
   const openArticle = useCallback(
     (id: number) => {
       onRouteChange?.(
-        hrefWithSearch(`/announcement/${id}`, readSearchParams()),
+        announcementDetailUrl(
+          announcements.find((item) => item.announcement_id === id) ?? {
+            announcement_id: id,
+          },
+          readSearchParams(),
+        ),
       );
     },
-    [onRouteChange],
+    [announcements, onRouteChange],
   );
   const backToList = useCallback(
     (nextCategory?: AnnouncementCategory) => {
       const params = readSearchParams();
+      params.delete("is_official");
       if (nextCategory) {
         if (nextCategory === "all") params.delete("category");
         else params.set("category", nextCategory);
@@ -94,7 +113,7 @@ export const useAnnouncementCenterScript = (
 
   return {
     platformName,
-    announcementId,
+    isDetail,
     category,
     announcements,
     article,
@@ -105,8 +124,12 @@ export const useAnnouncementCenterScript = (
     page,
     pageTotal,
     count: list.total,
-    status: announcementId ? detail.status : list.status,
-    retry: announcementId ? detail.retry : list.retry,
+    status: invalidSource
+      ? ("ready" as const)
+      : isDetail
+        ? detail.status
+        : list.status,
+    retry: isDetail ? detail.retry : list.retry,
   };
 };
 

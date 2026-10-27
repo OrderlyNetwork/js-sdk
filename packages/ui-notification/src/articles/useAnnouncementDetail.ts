@@ -1,29 +1,88 @@
 import { useCallback, useEffect } from "react";
 import { useAnnouncementArticles } from "./context";
 import type { LocalizedArticle } from "./model";
+import { findAnnouncementBySlug, isAnnouncementId } from "./routes";
 
-export function useAnnouncementDetail(id?: string) {
-  const { articles, getDetail, loadDetail, status, retry } =
-    useAnnouncementArticles();
-  const detail = id ? getDetail?.(id) : undefined;
+/** Explicit locators select the query type; strings retain numeric ID detection. */
+export function useAnnouncementDetail(
+  target?: string | { slug: string } | { id: string },
+  isOfficial = false,
+) {
+  const {
+    articles,
+    getDetail,
+    loadDetail,
+    status,
+    retry,
+    getDetailBySlug,
+    loadDetailBySlug,
+  } = useAnnouncementArticles();
+  const locator =
+    typeof target === "string"
+      ? isAnnouncementId(target)
+        ? { id: target }
+        : { slug: target }
+      : target;
+  const slug = locator && "slug" in locator ? locator.slug : undefined;
+  const targetId = locator && "id" in locator ? locator.id : undefined;
+  const directSlug = !!slug && !!getDetailBySlug && !!loadDetailBySlug;
+  const customArticle =
+    slug && !directSlug
+      ? findAnnouncementBySlug(articles, slug, isOfficial)
+      : undefined;
+  const completeCustom =
+    customArticle && typeof customArticle.content === "string"
+      ? (customArticle as LocalizedArticle)
+      : undefined;
+  const id = slug
+    ? customArticle
+      ? String(customArticle.announcement_id)
+      : undefined
+    : targetId;
+  const detail = directSlug
+    ? getDetailBySlug!(slug!, isOfficial)
+    : completeCustom
+      ? { status, article: completeCustom }
+      : id
+        ? getDetail?.(id)
+        : undefined;
+  const load = useCallback(
+    (force = false) => {
+      if (directSlug) void loadDetailBySlug!(slug!, isOfficial, force);
+      else if (id && loadDetail && !completeCustom) void loadDetail(id, force);
+    },
+    [
+      directSlug,
+      slug,
+      isOfficial,
+      loadDetailBySlug,
+      id,
+      loadDetail,
+      completeCustom,
+    ],
+  );
   useEffect(() => {
-    if (id && loadDetail) void loadDetail(id, true);
-  }, [id, loadDetail]);
+    load(true);
+  }, [load]);
   useEffect(() => {
-    if (id && loadDetail && detail?.status === "loading") void loadDetail(id);
-  }, [id, loadDetail, detail?.status, getDetail]);
+    if (detail?.status === "loading") load();
+  }, [load, detail?.status, getDetail, getDetailBySlug]);
   const retryDetail = useCallback(() => {
-    if (id && loadDetail) void loadDetail(id, true);
+    if (directSlug || (id && loadDetail && !completeCustom)) load(true);
     else retry();
-  }, [id, loadDetail, retry]);
+  }, [directSlug, id, loadDetail, completeCustom, load, retry]);
+  const article = detail
+    ? detail.article
+    : (articles.find(
+        (row) =>
+          String(row.announcement_id) === id && typeof row.content === "string",
+      ) as LocalizedArticle | undefined);
   return {
-    article: detail
-      ? detail.article
-      : (articles.find(
-          (row) =>
-            String(row.announcement_id) === id &&
-            typeof row.content === "string",
-        ) as LocalizedArticle | undefined),
+    article:
+      article &&
+      (!slug || (article.slug === slug && article.is_official === isOfficial))
+        ? article
+        : undefined,
     status: detail?.status ?? status,
     retry: retryDetail,
   };

@@ -4,7 +4,9 @@ import { useAnnouncementCenterScript } from "./announcementCenter.script";
 import { AnnouncementPageUI } from "./announcementCenter.ui";
 
 type AnnouncementCenterWidgetProps = {
-  announcementId?: string;
+  slug?: string;
+  id?: string;
+  isOfficial?: boolean;
   onRouteChange: (url: string) => void;
 };
 
@@ -19,7 +21,9 @@ const ArticleAnnouncementCenterWidget: FC<AnnouncementCenterWidgetProps> = (
     [props.onRouteChange],
   );
   const state = useAnnouncementCenterScript({
-    announcementId: props.announcementId,
+    slug: props.slug,
+    id: props.id,
+    isOfficial: props.isOfficial,
     onRouteChange,
   });
   return <AnnouncementPageUI {...state} />;

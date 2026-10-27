@@ -247,7 +247,7 @@ const AppRoute: React.FC = () => {
       element: <AnnouncementPage />,
     },
     {
-      path: "announcement/:announcementId",
+      path: "announcement/:slug",
       element: <AnnouncementPage />,
     },
     {

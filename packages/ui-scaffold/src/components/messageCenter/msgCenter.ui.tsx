@@ -18,6 +18,7 @@ import {
   AnnouncementCenterUI,
   type AnnouncementSummary,
 } from "@orderly.network/ui-notification";
+import { mergeAnnouncementDetailQuery } from "../../utils/announcement";
 import { useScaffoldContext } from "../scaffold";
 import { selectMessages } from "./selectMessages";
 
@@ -46,11 +47,15 @@ export const MessageCenter: FC<{
 
   const onItemClick = (url: string) => {
     if (!url) return;
+    const href = mergeAnnouncementDetailQuery(
+      url,
+      messages.find((item) => item.url === url)?.is_official,
+    );
     setPopoverOpen(false);
     routerAdapter?.onRouteChange({
-      href: url,
-      name: url,
-      target: url.startsWith("/") ? "_self" : "_blank",
+      href,
+      name: href,
+      target: href.startsWith("/") ? "_self" : "_blank",
     });
   };
 

@@ -15,9 +15,12 @@ class Socket {
     this.readyState = Socket.OPEN;
     this.onopen?.({} as Event);
   }
-  receive(topic: string) {
+  receive(
+    topic: string,
+    data: { announcement_id: number; slug?: string } = { announcement_id: 1 },
+  ) {
     this.listeners.get("message")?.({
-      data: JSON.stringify({ topic, data: { announcement_id: 1 } }),
+      data: JSON.stringify({ topic, data }),
     });
   }
 }
@@ -42,6 +45,22 @@ const client = () =>
   new WS({ publicUrl: "wss://example.test", privateUrl: "" });
 
 describe("announcement topic subscriptions", () => {
+  it.each(["orderly_official$announcement", "broker_a$announcement"])(
+    "preserves slug metadata for %s and still accepts legacy payloads",
+    (topic) => {
+      const ws = client();
+      socket.open();
+      const onMessage = jest.fn();
+      ws.subscribe(topic, { onMessage });
+      socket.receive(topic, { announcement_id: 55, slug: "release-notes" });
+      expect(onMessage).toHaveBeenLastCalledWith({
+        announcement_id: 55,
+        slug: "release-notes",
+      });
+      socket.receive(topic);
+      expect(onMessage).toHaveBeenLastCalledWith({ announcement_id: 1 });
+    },
+  );
   it.each(["orderly_official$announcement", "broker_a$announcement"])(
     "delivers only messages for the subscribed topic %s",
     (topic) => {

@@ -74,16 +74,24 @@ function harness() {
     return found;
   });
   const onNotify = vi.fn();
+  const detailBySlug = vi.fn(async (slug: string, isOfficial: boolean) => {
+    const found = server.rows.find(
+      (row) => row.slug === slug && row.is_official === isOfficial,
+    );
+    if (!found) throw { status: 404 };
+    return found;
+  });
   const store = new AnnouncementStore({
     brokerId: "a",
     list,
     active,
     detail,
+    detailBySlug,
     onNotify,
     visible: () => true,
   });
   stores.push(store);
-  return { store, server, list, active, detail, onNotify };
+  return { store, server, list, active, detail, detailBySlug, onNotify };
 }
 afterEach(() => {
   stores.forEach((store) => store.stop());
@@ -156,6 +164,7 @@ describe("announcement source contract", () => {
       list,
       active,
       detail,
+      detailBySlug: vi.fn(),
       visible: () => true,
       onNotify: vi.fn(),
     });
@@ -438,6 +447,159 @@ describe("detail cache", () => {
     await store.refresh();
     expect(store.getSnapshot().details["1"]).toEqual({ status: "loading" });
     expect(onNotify).not.toHaveBeenCalled();
+  });
+});
+
+describe("slug and ID cache coherence", () => {
+  const slugArticle = (id = 1, version = 10, is_official = true) => ({
+    ...article(id, version),
+    slug: "shared",
+    is_official,
+  });
+  it("deduplicates slug reads and shares their complete body with ID readers", async () => {
+    const { store, server, detail, detailBySlug } = harness();
+    server.rows = [slugArticle()];
+    await Promise.all([
+      store.loadDetailBySlug("shared", true),
+      store.loadDetailBySlug("shared", true),
+    ]);
+    expect(detailBySlug).toHaveBeenCalledTimes(1);
+    expect(store.getDetailBySlug("shared", true).article).toBe(
+      store.getSnapshot().details["1"].article,
+    );
+    await store.loadDetail("1");
+    expect(detail).not.toHaveBeenCalled();
+  });
+  it("keeps same-slug sources isolated when one is removed by a slug 404", async () => {
+    const { store, server } = harness();
+    server.rows = [slugArticle(), slugArticle(2, 10, false)];
+    await store.loadDetailBySlug("shared", true);
+    await store.loadDetailBySlug("shared", false);
+    server.rows = [slugArticle(2, 10, false)];
+    await store.loadDetailBySlug("shared", true, true);
+    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "ready" });
+    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+    expect(
+      store.getDetailBySlug("shared", false).article?.announcement_id,
+    ).toBe(2);
+  });
+  it("invalidates slug aliases when a list sees a newer version, then revalidates by ID", async () => {
+    const { store, server, detail, detailBySlug } = harness();
+    server.rows = [slugArticle()];
+    await store.loadDetailBySlug("shared", true);
+    server.rows = [slugArticle(1, 20)];
+    await store.refresh();
+    expect(store.getDetailBySlug("shared", true).status).toBe("loading");
+    await store.loadDetailBySlug("shared", true);
+    expect(detail).toHaveBeenCalledExactlyOnceWith("1");
+    expect(detailBySlug).toHaveBeenCalledTimes(1);
+    expect(store.getDetailBySlug("shared", true).article?.updated_time).toBe(
+      20,
+    );
+  });
+  it("does not overwrite a newer slug body with a slow older ID response", async () => {
+    const { store, server, detail } = harness();
+    const old = deferred<AnnouncementArticle>();
+    detail.mockReturnValueOnce(old.promise);
+    const reading = store.loadDetail("1");
+    server.rows = [slugArticle(1, 20)];
+    await store.loadDetailBySlug("shared", true);
+    old.resolve(slugArticle(1, 10));
+    await reading;
+    expect(store.getSnapshot().details["1"].article?.updated_time).toBe(20);
+    expect(store.getDetailBySlug("shared", true).article?.updated_time).toBe(
+      20,
+    );
+  });
+  it("does not restore a removed ID from an initially unresolved slug response", async () => {
+    const { store, server, detailBySlug } = harness();
+    const old = deferred<AnnouncementArticle>();
+    detailBySlug.mockReturnValueOnce(old.promise);
+    const reading = store.loadDetailBySlug("shared", true);
+    server.rows = [];
+    store.notify({ announcement_id: 1, updated_time: 20 });
+    await store.refresh();
+    // The body was read before removal, even if its version exceeds known metadata.
+    old.resolve(slugArticle(1, 30));
+    await reading;
+    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "ready" });
+    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+  });
+  it("does not replace a new slug body with an older ID request's transient failure", async () => {
+    const { store, server, detail } = harness();
+    let fail!: (error: unknown) => void;
+    detail.mockImplementationOnce(
+      () =>
+        new Promise((_resolve, reject) => {
+          fail = reject;
+        }),
+    );
+    const reading = store.loadDetail("1");
+    server.rows = [slugArticle(1, 20)];
+    await store.loadDetailBySlug("shared", true);
+    fail({ status: 503 });
+    await reading;
+    expect(store.getDetailBySlug("shared", true).article?.updated_time).toBe(
+      20,
+    );
+    expect(store.getSnapshot().details["1"].status).toBe("ready");
+  });
+  it("cancels a slow ID body when a known slug confirms its removal", async () => {
+    const { store, server, detail } = harness();
+    server.rows = [slugArticle()];
+    await store.loadDetailBySlug("shared", true);
+    const old = deferred<AnnouncementArticle>();
+    detail.mockReturnValueOnce(old.promise);
+    const reading = store.loadDetail("1", true);
+    server.rows = [];
+    await store.loadDetailBySlug("shared", true, true);
+    old.resolve(slugArticle(1, 30));
+    await reading;
+    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "ready" });
+  });
+  it("discards an old slug body after a newer ID verification publishes its alias", async () => {
+    const { store, server, detailBySlug } = harness();
+    const old = deferred<AnnouncementArticle>();
+    detailBySlug.mockReturnValueOnce(old.promise);
+    const reading = store.loadDetailBySlug("shared", true);
+    server.rows = [slugArticle(1, 20)];
+    store.notify({ announcement_id: 1, updated_time: 20 });
+    await store.refresh();
+    old.resolve(slugArticle(1, 10));
+    await reading;
+    expect(store.getDetailBySlug("shared", true).article?.updated_time).toBe(
+      20,
+    );
+  });
+  it("discards a slow slug refresh invalidated by an ID removal", async () => {
+    const { store, server, detailBySlug } = harness();
+    server.rows = [slugArticle()];
+    await store.loadDetailBySlug("shared", true);
+    const old = deferred<AnnouncementArticle>();
+    detailBySlug.mockReturnValueOnce(old.promise);
+    const reading = store.loadDetailBySlug("shared", true, true);
+    server.rows = [];
+    store.notify({ announcement_id: 1, updated_time: 20 });
+    await store.refresh();
+    old.resolve(slugArticle());
+    await reading;
+    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "ready" });
+    expect(store.getSnapshot().details["1"]).toEqual({ status: "ready" });
+  });
+  it("keeps a stale slug result below a newer list version out of the body cache", async () => {
+    const { store, server } = harness();
+    server.rows = [slugArticle(1, 20)];
+    await store.refresh();
+    server.rows = [slugArticle(1, 10)];
+    await store.loadDetailBySlug("shared", true);
+    expect(store.getDetailBySlug("shared", true)).toEqual({ status: "error" });
+    expect(store.getSnapshot().details["1"]).toBeUndefined();
+    server.rows = [slugArticle(1, 20)];
+    await store.loadDetailBySlug("shared", true, true);
+    expect(store.getDetailBySlug("shared", true).article?.updated_time).toBe(
+      20,
+    );
   });
 });
 

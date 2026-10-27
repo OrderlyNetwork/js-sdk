@@ -5,6 +5,7 @@ import {
   type AnnouncementSummary,
 } from "@orderly.network/ui-notification";
 import { windowGuard } from "@orderly.network/utils";
+import { mergeAnnouncementDetailQuery } from "../../utils/announcement";
 import { useScaffoldContext } from "../scaffold";
 
 export const NotificationUI: FC<{
@@ -24,11 +25,15 @@ export const NotificationUI: FC<{
   );
   const onItemClick = (url: string) => {
     if (!url) return;
+    const href = mergeAnnouncementDetailQuery(
+      url,
+      dataSource.find((item) => item.url === url)?.is_official,
+    );
     props.onClose();
     routerAdapter?.onRouteChange({
-      href: url,
-      name: url,
-      target: url.startsWith("/") ? "_self" : "_blank",
+      href,
+      name: href,
+      target: href.startsWith("/") ? "_self" : "_blank",
     });
   };
 

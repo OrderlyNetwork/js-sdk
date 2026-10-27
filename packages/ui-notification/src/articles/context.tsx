@@ -44,6 +44,16 @@ export type AnnouncementArticlesValue = {
   getList?: (query: AnnouncementListQuery) => AnnouncementListValue;
   watchList?: (query: AnnouncementListQuery) => () => void;
   retryList?: (query: AnnouncementListQuery) => void;
+  /** Reads slug details directly, independently of list data and adapters. */
+  getDetailBySlug?: (
+    slug: string,
+    isOfficial: boolean,
+  ) => AnnouncementDetailState;
+  loadDetailBySlug?: (
+    slug: string,
+    isOfficial: boolean,
+    force?: boolean,
+  ) => Promise<void>;
 };
 
 export type AnnouncementDetailState = {

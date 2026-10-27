@@ -4,11 +4,18 @@ import { AnnouncementCenterWidget } from "./announcementCenter.widget";
 
 export const AnnouncementCenterPage: FC<{
   routerAdapter?: RouterAdapter;
-  announcementId?: string;
+  /** Backend-generated slug; takes precedence over id when non-empty. */
+  slug?: string;
+  /** Announcement ID for explicit ID lookup. */
+  id?: string;
+  /** Overrides the URL's is_official parameter; defaults to false when absent. */
+  isOfficial?: boolean;
 }> = (props) => {
   return (
     <AnnouncementCenterWidget
-      announcementId={props.announcementId}
+      slug={props.slug}
+      id={props.id}
+      isOfficial={props.isOfficial}
       onRouteChange={(url: string) => {
         if (!url) return;
         const isExternal = /^https?:\/\//i.test(url);

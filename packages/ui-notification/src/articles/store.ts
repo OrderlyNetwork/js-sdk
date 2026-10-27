@@ -16,6 +16,9 @@ import type {
 } from "./types";
 
 export type DetailEntry = { status: ReadStatus; article?: AnnouncementArticle };
+type SlugDetailEntry = { status: ReadStatus; id?: string };
+const slugDetailKey = (slug: string, isOfficial: boolean) =>
+  JSON.stringify([slug, isOfficial]);
 export type AnnouncementListState =
   AnnouncementResourceState<AnnouncementListRow>;
 type Snapshot = {
@@ -24,6 +27,7 @@ type Snapshot = {
   status: ReadStatus;
   details: Record<string, DetailEntry>;
   lists: Record<string, AnnouncementListState>;
+  slugDetails: Record<string, SlugDetailEntry>;
   active: AnnouncementResourceState<AnnouncementArticle>;
   activeLocale: ContentLocale;
   cardOpen: boolean;
@@ -118,6 +122,8 @@ export class AnnouncementStore {
   private pending = new Map<string, number>();
   private handledNotifications = new Map<string, number>();
   private removed = new Map<string, number>();
+  private removalEpoch = 0;
+  private removalEpochs = new Map<string, number>();
   private knownVersions = new Map<string, number>();
   private cardReminders = new Map<
     string,
@@ -128,6 +134,11 @@ export class AnnouncementStore {
     Promise<AnnouncementArticle | undefined>
   >();
   private detailVersions = new Map<string, number>();
+  private slugRequests = new Map<
+    string,
+    Promise<AnnouncementArticle | undefined>
+  >();
+  private slugVersions = new Map<string, number>();
   private running?: Promise<void>;
   private dirty = false;
   private active = true;
@@ -141,6 +152,10 @@ export class AnnouncementStore {
       list: (query: AnnouncementListQuery) => Promise<AnnouncementListResponse>;
       active: (locale: ContentLocale) => Promise<AnnouncementActiveResponse>;
       detail: (id: string) => Promise<AnnouncementArticle>;
+      detailBySlug: (
+        slug: string,
+        isOfficial: boolean,
+      ) => Promise<AnnouncementArticle>;
       visible: (row: AnnouncementListRow) => boolean;
       onNotify: () => void;
     },
@@ -152,6 +167,7 @@ export class AnnouncementStore {
       status: "loading",
       details: {},
       lists: {},
+      slugDetails: {},
       active: { rows: [], total: 0, last_updated_time: 0, status: "loading" },
       activeLocale: locale,
       cardOpen: false,
@@ -202,6 +218,7 @@ export class AnnouncementStore {
   }
   private publish = () => {
     const details = { ...this.snapshot.details };
+    const slugDetails = { ...this.snapshot.slugDetails };
     const rows = [
       this.bell.state.rows,
       this.cards.state.rows,
@@ -217,6 +234,8 @@ export class AnnouncementStore {
       if (cached && row.updated_time > cached.updated_time) {
         this.invalidate(id);
         details[id] = { status: "loading" };
+        for (const [key, entry] of Object.entries(slugDetails))
+          if (entry.id === id) slugDetails[key] = { status: "ready", id };
       }
     }
     let remind = false;
@@ -234,6 +253,7 @@ export class AnnouncementStore {
     this.snapshot = {
       ...this.snapshot,
       details,
+      slugDetails,
       cardOpen: this.snapshot.cardOpen || remind,
       reminderVersion: this.snapshot.reminderVersion + (remind ? 1 : 0),
       rows: this.bell.state.rows,
@@ -300,12 +320,14 @@ export class AnnouncementStore {
     clearTimeout(this.retryTimer);
     this.running = undefined;
     this.detailRequests.clear();
+    this.slugRequests.clear();
     this.bell.stop();
     this.cards.stop();
     for (const { resource } of this.queries.values()) resource.stop();
   };
   notify = (message: {
     announcement_id: string | number;
+    slug?: string;
     updated_time?: number;
   }) => {
     if (!this.active || message?.announcement_id == null) return;
@@ -318,9 +340,7 @@ export class AnnouncementStore {
       this.pending.set(id, version);
       this.invalidate(id);
       if (this.snapshot.details[id])
-        this.update({
-          details: { ...this.snapshot.details, [id]: { status: "loading" } },
-        });
+        this.writeDetail(id, { status: "loading" });
     }
     void this.refresh();
   };
@@ -407,8 +427,35 @@ export class AnnouncementStore {
   private invalidate(id: string) {
     this.detailVersions.set(id, (this.detailVersions.get(id) ?? 0) + 1);
     this.detailRequests.delete(id);
+    for (const [key, entry] of Object.entries(this.snapshot.slugDetails))
+      if (entry.id === id) this.invalidateSlug(key);
+  }
+  private invalidateSlug(key: string) {
+    this.slugVersions.set(key, (this.slugVersions.get(key) ?? 0) + 1);
+    this.slugRequests.delete(key);
+  }
+  /** ID and slug readers share one complete body and its invalidation state. */
+  private writeDetail(
+    id: string,
+    entry: DetailEntry,
+    identity = entry.article,
+  ) {
+    const slugDetails = { ...this.snapshot.slugDetails };
+    for (const [key, alias] of Object.entries(slugDetails))
+      if (alias.id === id) slugDetails[key] = { status: "ready", id };
+    if (identity?.slug && typeof identity.is_official === "boolean") {
+      const key = slugDetailKey(identity.slug, identity.is_official);
+      this.invalidateSlug(key);
+      slugDetails[key] = { status: "ready", id };
+    }
+    this.update({
+      details: { ...this.snapshot.details, [id]: entry },
+      slugDetails,
+    });
   }
   private remove(id: string) {
+    this.removalEpochs.set(id, ++this.removalEpoch);
+    this.invalidate(id);
     this.removed.set(
       id,
       Math.max(
@@ -418,6 +465,13 @@ export class AnnouncementStore {
         this.removed.get(id) ?? 0,
       ),
     );
+    const slugDetails = { ...this.snapshot.slugDetails };
+    for (const [key, entry] of Object.entries(slugDetails)) {
+      if (entry.id !== id) continue;
+      this.invalidateSlug(key);
+      slugDetails[key] = { status: "ready" };
+    }
+    this.update({ slugDetails });
     this.cardReminders.delete(id);
     const retain = (row: AnnouncementListRow) =>
       String(row.announcement_id) !== id;
@@ -433,7 +487,14 @@ export class AnnouncementStore {
       this.invalidate(id);
       details[id] = { status: "loading" };
     }
-    this.update({ details });
+    const slugDetails = { ...this.snapshot.slugDetails };
+    for (const [key, entry] of Object.entries(slugDetails)) {
+      this.invalidateSlug(key);
+      slugDetails[key] = entry.id
+        ? { status: "ready", id: entry.id }
+        : { status: "loading" };
+    }
+    this.update({ details, slugDetails });
     void this.refresh();
   };
 
@@ -446,17 +507,13 @@ export class AnnouncementStore {
     if (!force && this.snapshot.details[id]?.status === "ready")
       return Promise.resolve(this.snapshot.details[id].article);
     if (this.emptyScope) {
-      this.update({
-        details: { ...this.snapshot.details, [id]: { status: "ready" } },
-      });
+      this.writeDetail(id, { status: "ready" });
       return Promise.resolve(undefined);
     }
     this.invalidate(id);
     const version = this.detailVersions.get(id);
     const generation = this.generation;
-    this.update({
-      details: { ...this.snapshot.details, [id]: { status: "loading" } },
-    });
+    this.writeDetail(id, { status: "loading" });
     const current = () =>
       this.active &&
       generation === this.generation &&
@@ -467,6 +524,18 @@ export class AnnouncementStore {
         if (!current()) throw new Error("Superseded announcement detail");
         if (String(article.announcement_id) !== id)
           throw new Error("Unexpected announcement ID");
+        const requiredVersion = Math.max(
+          this.pending.get(id) ?? 0,
+          this.knownVersions.get(id) ?? 0,
+        );
+        const latest = this.snapshot.details[id]?.article;
+        if (
+          latest &&
+          this.retained(latest) &&
+          latest.updated_time >= requiredVersion &&
+          latest.updated_time > article.updated_time
+        )
+          return latest;
         if (
           !this.retained(article) ||
           article.updated_time <
@@ -475,26 +544,29 @@ export class AnnouncementStore {
           throw new Error("Announcement detail precedes notification");
         this.knownVersions.set(id, article.updated_time);
         const visible = this.options.visible(article);
-        this.update({
-          details: {
-            ...this.snapshot.details,
-            [id]: { status: "ready", article: visible ? article : undefined },
-          },
-        });
+        this.writeDetail(
+          id,
+          { status: "ready", article: visible ? article : undefined },
+          article,
+        );
         return article;
       })
       .catch((error: { status?: number }) => {
         if (!current()) throw error;
         if (error?.status === 404) {
           this.remove(id);
-          this.update({
-            details: { ...this.snapshot.details, [id]: { status: "ready" } },
-          });
+          this.writeDetail(id, { status: "ready" });
           return undefined;
         }
-        this.update({
-          details: { ...this.snapshot.details, [id]: { status: "error" } },
-        });
+        const latest = this.snapshot.details[id]?.article;
+        if (
+          latest &&
+          this.retained(latest) &&
+          latest.updated_time >=
+            Math.max(this.pending.get(id) ?? 0, this.knownVersions.get(id) ?? 0)
+        )
+          return latest;
+        this.writeDetail(id, { status: "error" });
         throw error;
       })
       .finally(() => {
@@ -505,6 +577,140 @@ export class AnnouncementStore {
   }
   loadDetail = (id: string, force = false): Promise<void> =>
     this.requestDetail(id, force).then(
+      () => undefined,
+      () => undefined,
+    );
+
+  private slugAllowed(isOfficial: boolean) {
+    return isOfficial ? !this.options.excludeOfficial : !!this.options.brokerId;
+  }
+  getDetailBySlug = (slug: string, isOfficial: boolean): DetailEntry => {
+    if (!this.slugAllowed(isOfficial)) return { status: "ready" };
+    const entry = this.snapshot.slugDetails[slugDetailKey(slug, isOfficial)];
+    if (entry?.status !== "ready" || !entry.id)
+      return { status: entry?.status ?? "loading" };
+    const detail = this.snapshot.details[entry.id] ?? {
+      status: "loading" as const,
+    };
+    const article = detail.article;
+    return {
+      status: detail.status,
+      article:
+        article?.slug === slug && article.is_official === isOfficial
+          ? article
+          : undefined,
+    };
+  };
+  private requestDetailBySlug(
+    slug: string,
+    isOfficial: boolean,
+    force = false,
+  ): Promise<AnnouncementArticle | undefined> {
+    if (!this.active || !this.slugAllowed(isOfficial))
+      return Promise.resolve(undefined);
+    const key = slugDetailKey(slug, isOfficial);
+    if (this.slugRequests.has(key)) return this.slugRequests.get(key)!;
+    const alias = this.snapshot.slugDetails[key];
+    if (!force && alias?.status === "ready") {
+      if (!alias.id) return Promise.resolve(undefined);
+      return this.requestDetail(alias.id);
+    }
+    this.invalidateSlug(key);
+    const version = this.slugVersions.get(key);
+    const generation = this.generation;
+    const removalEpoch = this.removalEpoch;
+    const current = () =>
+      this.active &&
+      generation === this.generation &&
+      version === this.slugVersions.get(key);
+    this.update({
+      slugDetails: {
+        ...this.snapshot.slugDetails,
+        [key]: { status: "loading", id: alias?.id },
+      },
+    });
+    const request = this.options
+      .detailBySlug(slug, isOfficial)
+      .then((article) => {
+        if (!current()) throw new Error("Superseded announcement slug detail");
+        if (article.slug !== slug || article.is_official !== isOfficial)
+          throw new Error("Unexpected announcement slug or source");
+        const id = String(article.announcement_id);
+        const requiredVersion = Math.max(
+          this.pending.get(id) ?? 0,
+          this.knownVersions.get(id) ?? 0,
+        );
+        const latest = this.snapshot.details[id]?.article;
+        if (
+          latest?.slug === slug &&
+          latest.is_official === isOfficial &&
+          this.retained(latest) &&
+          latest.updated_time >= requiredVersion &&
+          latest.updated_time > article.updated_time
+        ) {
+          this.writeDetail(id, { status: "ready", article: latest }, latest);
+          return latest;
+        }
+        if (
+          !this.retained(article) ||
+          (this.removalEpochs.get(id) ?? 0) > removalEpoch
+        ) {
+          this.update({
+            slugDetails: {
+              ...this.snapshot.slugDetails,
+              [key]: { status: "ready" },
+            },
+          });
+          return undefined;
+        }
+        if (article.updated_time < requiredVersion)
+          throw new Error("Announcement detail precedes notification");
+        this.knownVersions.set(id, article.updated_time);
+        this.writeDetail(
+          id,
+          {
+            status: "ready",
+            article: this.options.visible(article) ? article : undefined,
+          },
+          article,
+        );
+        return article;
+      })
+      .catch((error: { status?: number }) => {
+        if (!current()) throw error;
+        if (error?.status === 404) {
+          if (alias?.id) {
+            this.remove(alias.id);
+            this.writeDetail(alias.id, { status: "ready" });
+          }
+          this.update({
+            slugDetails: {
+              ...this.snapshot.slugDetails,
+              [key]: { status: "ready" },
+            },
+          });
+          return undefined;
+        }
+        this.update({
+          slugDetails: {
+            ...this.snapshot.slugDetails,
+            [key]: { status: "error", id: alias?.id },
+          },
+        });
+        throw error;
+      })
+      .finally(() => {
+        if (current()) this.slugRequests.delete(key);
+      });
+    this.slugRequests.set(key, request);
+    return request;
+  }
+  loadDetailBySlug = (
+    slug: string,
+    isOfficial: boolean,
+    force = false,
+  ): Promise<void> =>
+    this.requestDetailBySlug(slug, isOfficial, force).then(
       () => undefined,
       () => undefined,
     );

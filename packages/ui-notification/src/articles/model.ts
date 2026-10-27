@@ -1,5 +1,6 @@
 import type { AnnouncementSummary } from "../types";
 import { announcementExcerpt } from "./markdown";
+import { announcementDetailUrl } from "./routes";
 import type {
   AnnouncementArticle,
   AnnouncementApiCategory,
@@ -88,6 +89,7 @@ export function localizeArticle(
 export function toSummary(article: LocalizedAnnouncement): AnnouncementSummary {
   return {
     announcement_id: article.announcement_id,
+    slug: article.slug,
     is_official: article.is_official,
     title: article.title,
     category: article.category,
@@ -95,6 +97,6 @@ export function toSummary(article: LocalizedAnnouncement): AnnouncementSummary {
     published_time: article.published_time,
     updated_time: article.updated_time,
     notification_card_end_time: article.notification_card_end_time,
-    url: article.url || `/announcement/${article.announcement_id}`,
+    url: announcementDetailUrl(article),
   };
 }
