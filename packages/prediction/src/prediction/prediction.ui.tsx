@@ -126,7 +126,7 @@ const MobileMarketPanel: React.FC<
             )}
           </div>
           <div className="oui-text-xs oui-flex oui-w-full oui-items-center oui-justify-between">
-            <Text intensity={36}>{t("prediction.chance")}</Text>
+            <Text intensity={36}>{t("prediction.probability")}</Text>
             <Text intensity={98}>
               {state.isMissingHistoricalRound
                 ? "--"
@@ -296,7 +296,7 @@ export const Prediction: React.FC<
               }
             />
             <DataItem
-              label={t("prediction.chance")}
+              label={t("prediction.probability")}
               value={
                 <Text intensity={98}>
                   {state.isMissingHistoricalRound

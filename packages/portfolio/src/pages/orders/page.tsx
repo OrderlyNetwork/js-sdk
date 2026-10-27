@@ -118,7 +118,7 @@ const ProductOrdersPage: React.FC<PortfolioOrdersPageProps> = ({
                   value: "all",
                 },
                 { label: t("common.perps"), value: "perps" },
-                { label: t("common.predictions"), value: "prediction" },
+                { label: t("common.predict"), value: "prediction" },
               ]}
             />
           </div>

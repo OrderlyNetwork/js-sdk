@@ -45,11 +45,7 @@ export const usePredictionMarketTabs = (
     const cryptoIndex = tabs.findIndex(
       (tab) => "type" in tab && tab.type === "crypto",
     );
-    tabs.splice(
-      cryptoIndex + 1,
-      0,
-      predictionMarketTab(t("common.predictions")),
-    );
+    tabs.splice(cryptoIndex + 1, 0, predictionMarketTab(t("common.predict")));
     return tabs;
   }, [defaultTabs, t, predictionEnabled]);
 };
@@ -284,7 +280,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
               <>
                 {/* Combined single-line headers, perps `Last/24h %` style. */}
                 <th className="oui-px-2 oui-text-end oui-whitespace-nowrap">
-                  {t("prediction.column.last&chance")}
+                  {t("prediction.column.last&probability")}
                 </th>
                 <th className="oui-px-2 oui-text-end oui-whitespace-nowrap">
                   {t("prediction.column.time&volume")}
@@ -296,7 +292,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
                   {t("markets.column.last")}
                 </th>
                 <th className="oui-px-2 oui-text-end">
-                  {t("prediction.chance")}
+                  {t("prediction.probability")}
                 </th>
                 <th className="oui-px-2 oui-text-end">
                   {t("prediction.volumeShort")}

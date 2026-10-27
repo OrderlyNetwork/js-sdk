@@ -99,6 +99,7 @@
   "common.stake": "質押",
   "common.perps": "合約",
   "common.predictions": "預測",
+  "common.predict": "預測",
   "common.allAccount": "全部帳戶",
   "common.mainAccount": "主帳戶",
   "common.subAccount": "子帳戶",
@@ -146,6 +147,7 @@
   "markets.openInterest.tooltip": "每边持倉的总規模。",
   "markets.topGainers": "涨幅榜",
   "markets.topLosers": "跌幅榜",
+  "markets.tradeSubMenu.perps.description": "在免 Gas 訂單簿上交易永續合約",
   "markets.search.placeholder": "搜尋市場",
   "markets.showLowVolume": "顯示低成交量",
   "markets.showLowVolume.tooltip": "包含 24 小時成交量低於 $1,000 的市場。",
@@ -322,10 +324,10 @@
   "prediction.oneTapInvalidAmounts": "請為每個預設輸入 5–99,999.99 USDC（最多 2 位小數）。",
   "prediction.currentPrice": "目前價格",
   "prediction.finalPrice": "最終價格",
-  "prediction.chance": "上漲機率",
+  "prediction.probability": "上漲機率",
   "prediction.lastPrice": "最新價",
   "prediction.volumeShort": "成交量",
-  "prediction.column.last&chance": "最新/上漲機率",
+  "prediction.column.last&probability": "最新/上漲機率",
   "prediction.column.time&volume": "時間/成交量",
   "prediction.markPrice.tooltip": "預測標記價格。交易期間等於預測指數價格，結算時變為 0、0.5 或 1。跌方向顯示為 1 減去漲方向標記價格。",
   "prediction.orderBook": "訂單簿",
@@ -1469,6 +1471,5 @@
   "notification.generalTitle": "一般更新",
   "notification.maintenanceTitle": "系統維護",
   "notification.empty": "暫無公告",
-  "tradingPoints.points": "積分",
-  "markets.tradeSubMenu.perps.description": "在免 Gas 訂單簿上交易永續合約"
+  "tradingPoints.points": "積分"
 }

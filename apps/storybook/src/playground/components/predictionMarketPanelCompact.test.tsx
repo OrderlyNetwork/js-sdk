@@ -128,7 +128,7 @@ it("switches to the 3-column two-line layout in narrow containers", () => {
   // Combined single-line headers, perps `Last/24h %` style.
   const headers = Array.from(container!.querySelectorAll("thead th"));
   expect(headers).toHaveLength(3);
-  expect(headers[1].textContent).toBe("prediction.column.last&chance");
+  expect(headers[1].textContent).toBe("prediction.column.last&probability");
   expect(headers[2].textContent).toBe("prediction.column.time&volume");
   // Chance rides under the last price as the untinted second line (no
   // up/down coloring), volume rides under the countdown in the trailing column.

@@ -99,6 +99,7 @@
   "common.stake": "质押",
   "common.perps": "合约",
   "common.predictions": "预测",
+  "common.predict": "预测",
   "common.allAccount": "全部账户",
   "common.mainAccount": "主账户",
   "common.subAccount": "子账户",
@@ -146,6 +147,7 @@
   "markets.openInterest.tooltip": "每边持仓的总规模。",
   "markets.topGainers": "涨幅榜",
   "markets.topLosers": "跌幅榜",
+  "markets.tradeSubMenu.perps.description": "在免 Gas 订单簿上交易永续合约",
   "markets.search.placeholder": "搜索市场",
   "markets.showLowVolume": "显示低成交量",
   "markets.showLowVolume.tooltip": "包含 24 小时成交量低于 $1,000 的市场。",
@@ -322,10 +324,10 @@
   "prediction.oneTapInvalidAmounts": "请为每个预设输入 5–99,999.99 USDC（最多 2 位小数）。",
   "prediction.currentPrice": "当前价格",
   "prediction.finalPrice": "最终价格",
-  "prediction.chance": "上涨概率",
+  "prediction.probability": "上涨概率",
   "prediction.lastPrice": "最新价",
   "prediction.volumeShort": "成交量",
-  "prediction.column.last&chance": "最新/上涨概率",
+  "prediction.column.last&probability": "最新/上涨概率",
   "prediction.column.time&volume": "时间/成交量",
   "prediction.markPrice.tooltip": "预测标记价格。交易期间等于预测指数价格，结算时变为 0、0.5 或 1。跌方向显示为 1 减去涨方向标记价格。",
   "prediction.orderBook": "订单簿",
@@ -1469,6 +1471,5 @@
   "notification.generalTitle": "常规更新",
   "notification.maintenanceTitle": "系统维护",
   "notification.empty": "暂无公告",
-  "tradingPoints.points": "积分",
-  "markets.tradeSubMenu.perps.description": "在免 Gas 订单簿上交易永续合约"
+  "tradingPoints.points": "积分"
 }

@@ -76,7 +76,7 @@ it.each([
 it("appends RWA after the built-in SDK entries", () => {
   const builtins = [
     { key: "perps", title: "common.perps" },
-    { key: "prediction", title: "common.predictions" },
+    { key: "prediction", title: "common.predict" },
   ] as TradeSubMenuItem[];
   const items = renderAt("/en/markets").items!(builtins);
   expect(items.map((entry) => entry.key)).toEqual([
