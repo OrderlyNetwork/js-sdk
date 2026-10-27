@@ -43,7 +43,9 @@ export type PortfolioPositionsPageProps = Omit<
   onSymbolChange?: (symbol: API.Symbol) => void;
   /**
    * Overrides navigation to the exact Prediction round contract; defaults to
-   * opening `/prediction/<symbol>` through `onRouteChange` when omitted.
+   * opening `/prediction/<symbol>` through `onRouteChange` when omitted. The
+   * href keeps the legacy `/prediction` prefix; hosts map or redirect it onto
+   * their `/predict` route.
    */
   onPredictionSelect?: (symbol: string) => void;
   /**

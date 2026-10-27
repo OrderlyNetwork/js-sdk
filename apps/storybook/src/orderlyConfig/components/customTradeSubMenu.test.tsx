@@ -44,7 +44,7 @@ function renderAt(path: string): TradeSubMenuWidgetProps {
             element={customTradeSubMenuRender()}
           />
           <Route
-            path="/:lang/prediction/:symbol"
+            path="/:lang/predict/:symbol"
             element={customTradeSubMenuRender()}
           />
           <Route path="/:lang/swap" element={customTradeSubMenuRender()} />
@@ -61,7 +61,7 @@ it.each([
   ["/en/rwa/PERP_XAU_USDC", "rwa", "PERP_XAU_USDC"],
   // Host passes the route param; the widget drops binary/prediction symbols.
   [
-    "/en/prediction/PERP_BTC5M2608271200_USDC",
+    "/en/predict/PERP_BTC5M2608271200_USDC",
     "prediction",
     "PERP_BTC5M2608271200_USDC",
   ],

@@ -138,7 +138,7 @@ framework-specific wiring.
 
 #### Next.js 15 App Router
 
-- Route: `src/app/[lang]/prediction/[[...symbol]]/page.tsx`. Await `params`,
+- Route: `src/app/[lang]/predict/[[...symbol]]/page.tsx`. Await `params`,
   reject more than one symbol segment with `notFound()`, and pass `symbol?.[0]`
   to the client view.
 - Rendering: use a Client Component boundary for SDK UI. Browser-only imports
@@ -150,7 +150,7 @@ framework-specific wiring.
 
 #### Remix 2
 
-- Route: a single `app/routes/$lang.prediction.($symbol).tsx` handles both base
+- Route: a single `app/routes/$lang.predict.($symbol).tsx` handles both base
   and symbol URLs; read `symbol` through Remix `useParams`. An existing parent
   with `Outlet` plus `_index` and `$symbol` children is also valid; choose one
   structure.
@@ -162,7 +162,7 @@ framework-specific wiring.
 
 #### Vite / React Router 7
 
-- Route: add `prediction/:symbol?` to the existing `baseRoutes` under `:lang`,
+- Route: add `predict/:symbol?` to the existing `baseRoutes` under `:lang`,
   wherever the host declares them (`src/appRouter.tsx` or `src/routes.tsx`).
 - Rendering: reuse `OrderlyProvider` and its `Outlet`.
 - Navigation: use `navigate(href, { replace })`, and create the router once
@@ -172,10 +172,10 @@ framework-specific wiring.
 #### All frameworks
 
 - Extend the existing route path constants (`PathEnum` in this example) with
-  `Prediction = "/prediction"`. Keep this a base path, never a market family or
+  `Prediction = "/predict"`. Keep this a base path, never a market family or
   hardcoded round. Add a corresponding page title using the host's title
-  convention. If titles are derived from the pathname, map both `/prediction`
-  and `/prediction/*` to that title rather than looking up the full round URL or
+  convention. If titles are derived from the pathname, map both `/predict`
+  and `/predict/*` to that title rather than looking up the full round URL or
   using Perps `formatSymbol` for a Binary contract.
 - Update the existing navigation callback, storage wrapper, and Trade menu as
   described in [reference host wiring](#reference-host-wiring). An adapter that
@@ -229,7 +229,7 @@ export default function PredictionRoute() {
 
 In the module that declares the host's route objects, reuse `lazyImportPage` to
 import that module as `PredictionRoute` and append a
-`{ path: "prediction/:symbol?", element: <PredictionRoute /> }` entry to
+`{ path: "predict/:symbol?", element: <PredictionRoute /> }` entry to
 `baseRoutes` once. Keep all existing Perps, Markets, Portfolio, and other route
 objects.
 
@@ -347,7 +347,12 @@ export function useNav() {
           ? window.location.search
           : pathWithSearch.slice(queryStart);
       const path =
-        pathname === "/" ? perpRoute(getPerpSymbol()).href : pathname;
+        pathname === "/"
+          ? perpRoute(getPerpSymbol()).href
+          : pathname.replace(
+              /^(\/[a-z]{2})?\/prediction(?=\/|$)/,
+              "$1/predict",
+            );
       const href = generatePath({
         path,
         locale:
@@ -371,6 +376,23 @@ switch callbacks as well to retain `window.location.search` and `hash`, using
 the framework's replacement navigation so page params follow the URL. Never read
 `window` at module scope or in a server render to construct these destinations;
 the callbacks run in the browser.
+
+#### Navigation compatibility and old links
+
+The SDK keeps emitting legacy `/prediction` hrefs. Register the new `predict/:symbol?` route alongside a legacy redirect under the same `:lang` parent:
+
+```tsx
+function LegacyPredictionRedirect() {
+  const { pathname, search, hash } = useLocation();
+  const path = pathname.replace(/^(\/[a-z]{2})?\/prediction(?=\/|$)/, "$1/predict");
+  return <Navigate to={`${path}${search}${hash}`} replace />;
+}
+
+// Add to baseRoutes; keep the new predict/:symbol? page route as well.
+{ path: "prediction/:symbol?", element: <LegacyPredictionRedirect /> }
+```
+
+This preserves the existing encoded symbol, locale, query and hash without decoding/re-encoding the legacy pathname. Use equivalent replacement redirects in other host frameworks.
 
 #### Provider navigation wiring
 
@@ -459,8 +481,7 @@ export default function TradeMenu() {
   const path = usePathWithoutLang();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const isPrediction =
-    path === "/prediction" || path.startsWith("/prediction/");
+  const isPrediction = path === "/predict" || path.startsWith("/predict/");
   const match = path.match(/^\/perp\/([^/]+)$/);
   let symbol: string | undefined;
   try {
@@ -504,7 +525,7 @@ configuration while sharing the same provider setup.
 
 Navigation rules:
 
-- Entering `/prediction` without a symbol selects the remembered/default market's
+- Entering `/predict` without a symbol selects the remembered/default market's
   current round once metadata is available and requests the exact URL with
   `replace: true`. Always forward this flag to the host router.
 - A symbol identifies one exact contract, such as
@@ -552,7 +573,7 @@ With Prediction enabled:
 Continue rendering the standard pages. Manual Prediction extension props and
 additional account queries are unnecessary for these built-in integrations.
 `MarketsHomePage` inserts the Prediction tab after Crypto and routes selections to
-`/prediction/<encoded-round-symbol>`; without `onRouteChange`, pass
+`/predict/<encoded-round-symbol>`; without `onRouteChange`, pass
 `onPredictionSelect` to enable it. See
 [Perps integration](../README.md#perps-trading-page-integration).
 
@@ -582,7 +603,7 @@ and supply a route fallback, as `PredictionRoute` does above. Otherwise a disabl
 hooks or account valuation for existing Binary exposure.
 
 For those custom entries, reuse the pieces the SDK already ships: the label key
-`common.predictions` from `@orderly.network/i18n`, `PredictionIcon` from
+`common.predict` from `@orderly.network/i18n`, `PredictionIcon` from
 `@orderly.network/ui`, and the destination `predictionRoute()` from
 `@orderly.network/types`.
 
@@ -718,7 +739,7 @@ than hardcoding the illustrative historical symbol:
 - [ ] Check desktop and mobile trading views and their styles. Test the host's
       custom navigation entries as well as the built-in menu. Confirm other routes,
       existing menu entries, and wallet/locale composition still work.
-- [ ] Open both `/prediction` and `/prediction/<current-symbol>` without a locale,
+- [ ] Open both `/predict` and `/predict/<current-symbol>` without a locale,
       then with `/en` and one supported non-English prefix. Verify that framework
       redirects preserve the exact contract and query, Prediction text is
       translated rather than showing raw i18n keys, and language switching
@@ -761,7 +782,7 @@ diagnostics.
 | Trading is unavailable                                       | Check wallet/account readiness, collateral, round availability, and Binary region restrictions.                                                                          |
 | Fee is unknown                                               | Check actual account Binary fee configuration. Missing/invalid rates are unavailable, not zero; do not invent a fallback rate.                                           |
 | Returning to Perps restores a Binary round                   | Use guarded storage helpers and write only from Perps routes.                                                                                                            |
-| Base route works but a direct unlocalized round URL does not | Make the locale redirect (for example Next.js middleware) match both `/prediction` and `/prediction/<symbol>`; preserve the original symbol and query.                   |
+| Base route works but a direct unlocalized round URL does not | Make the locale redirect (for example Next.js middleware) match both `/predict` and `/predict/<symbol>`; preserve the original symbol and query.                         |
 | Server import or hydration errors in Next.js/Remix           | Keep the new SDK page behind the framework client boundary; do not statically render a Remix `.client` export or put `ssr: false` in a Next.js Server Component.         |
 | Blank page after adding a locale prefix                      | Initial locale normalization must navigate or rerender; a URL-only `replaceState` followed by an early return leaves no router mounted.                                  |
 
@@ -793,7 +814,7 @@ and usages rather than assuming the reference file paths:
 Identify the framework using the [framework differences](#framework-differences).
 The `:lang` prefix in the
 reference is illustrative: preserve the host's prefix/basename and existing
-navigation adapter. An unlocalized host should register `/prediction/:symbol?`
+navigation adapter. An unlocalized host should register `/predict/:symbol?`
 and retain its unlocalized adapter instead of adding a Locale route merely to
 match this guide. Register both the base and exact-symbol destinations, either
 through an optional segment or two equivalent routes.
