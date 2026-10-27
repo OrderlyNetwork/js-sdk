@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
@@ -107,6 +107,40 @@ export const AnnouncementCenterUI: FC<{
     : props.dataSource;
   const ContentArea =
     unavailable && dataSource.length === 0 ? "div" : ScrollArea;
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [canScrollDown, setCanScrollDown] = useState(false);
+
+  useEffect(() => {
+    const viewport = contentRef.current?.querySelector<HTMLElement>(
+      "[data-radix-scroll-area-viewport]",
+    );
+    if (!viewport) {
+      setCanScrollDown(false);
+      return;
+    }
+
+    const updateScrollHint = () => {
+      setCanScrollDown(
+        viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop > 1,
+      );
+    };
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updateScrollHint)
+        : undefined;
+
+    viewport.addEventListener("scroll", updateScrollHint, { passive: true });
+    observer?.observe(viewport);
+    if (viewport.firstElementChild) {
+      observer?.observe(viewport.firstElementChild);
+    }
+    updateScrollHint();
+
+    return () => {
+      viewport.removeEventListener("scroll", updateScrollHint);
+      observer?.disconnect();
+    };
+  }, [ContentArea]);
 
   return (
     <>
@@ -116,49 +150,60 @@ export const AnnouncementCenterUI: FC<{
         </Text>
       </div>
 
-      <ContentArea className="oui-flex oui-h-[300px] oui-flex-col oui-p-3">
-        {(dataSource.length > 0 || !unavailable) && (
-          <AnnouncementContent
-            dataSource={dataSource}
-            current={expanded}
-            onExpandToggle={setExpanded}
-            onItemClick={props.onItemClick}
-            platformName={props.platformName}
+      <div ref={contentRef} className="oui-relative">
+        <ContentArea
+          {...(ContentArea === ScrollArea ? { type: "auto" as const } : {})}
+          className="oui-flex oui-h-[300px] oui-flex-col oui-p-3 [&>[data-orientation=vertical]>div]:oui-bg-base-contrast-20 [&>[data-orientation=vertical]>div:hover]:oui-bg-base-contrast-30"
+        >
+          {(dataSource.length > 0 || !unavailable) && (
+            <AnnouncementContent
+              dataSource={dataSource}
+              current={expanded}
+              onExpandToggle={setExpanded}
+              onItemClick={props.onItemClick}
+              platformName={props.platformName}
+            />
+          )}
+          {props.status === "loading" ? (
+            <div
+              role="status"
+              aria-label={t("notification.loading")}
+              className="oui-min-w-0"
+            >
+              <AnnouncementListSkeleton compact />
+            </div>
+          ) : props.status === "error" ? (
+            <div
+              role="alert"
+              className="oui-announcement-error oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-gap-4 oui-px-5 oui-py-6 oui-text-center"
+            >
+              <Text
+                as="p"
+                size="xs"
+                intensity={54}
+                className="oui-max-w-[240px] oui-break-words oui-whitespace-normal oui-leading-5"
+              >
+                {t("notification.loadFailed")}
+              </Text>
+              <Button
+                variant="contained"
+                color="primary"
+                size="sm"
+                className="oui-shrink-0 oui-px-4"
+                onClick={props.retry}
+              >
+                {t("notification.retry")}
+              </Button>
+            </div>
+          ) : null}
+        </ContentArea>
+        {canScrollDown && (
+          <div
+            aria-hidden="true"
+            className="oui-announcement-scroll-hint oui-pointer-events-none oui-absolute oui-inset-x-3 oui-bottom-3 oui-h-8 oui-bg-gradient-to-t oui-from-base-8 oui-to-transparent"
           />
         )}
-        {props.status === "loading" ? (
-          <div
-            role="status"
-            aria-label={t("notification.loading")}
-            className="oui-min-w-0"
-          >
-            <AnnouncementListSkeleton compact />
-          </div>
-        ) : props.status === "error" ? (
-          <div
-            role="alert"
-            className="oui-announcement-error oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-gap-4 oui-px-5 oui-py-6 oui-text-center"
-          >
-            <Text
-              as="p"
-              size="xs"
-              intensity={54}
-              className="oui-max-w-[240px] oui-break-words oui-whitespace-normal oui-leading-5"
-            >
-              {t("notification.loadFailed")}
-            </Text>
-            <Button
-              variant="contained"
-              color="primary"
-              size="sm"
-              className="oui-shrink-0 oui-px-4"
-              onClick={props.retry}
-            >
-              {t("notification.retry")}
-            </Button>
-          </div>
-        ) : null}
-      </ContentArea>
+      </div>
       {props.onViewAll && (
         <div className="oui-flex oui-justify-center oui-px-3 oui-pb-3">
           <Button
