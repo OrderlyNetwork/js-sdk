@@ -24,6 +24,7 @@ export default defineConfig({
       "../../packages/ui-notification/src/articles/**/*.test.{ts,tsx}",
       "../../packages/ui-notification/src/pages/**/*.test.{ts,tsx}",
       "src/playground/pages/announcement/**/*.test.tsx",
+      "src/playground/hooks/useNav.test.tsx",
       "../../packages/ui-scaffold/src/components/messageCenter/selectMessages.test.ts",
       "../../packages/ui-scaffold/src/components/announcementNavigation.test.tsx",
       "../../packages/ui-scaffold/src/components/scaffold/useSharedAnnouncementState.test.tsx",

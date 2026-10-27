@@ -10,6 +10,28 @@ cards and announcement pages. It reads the broker from the global
 </Scaffold>
 ```
 
+`AnnouncementCenterPage` uses `OrderlyAppProvider.onRouteChange` by default.
+Configure navigation once on the app provider. An optional page-level
+`onRouteChange` callback overrides it; the page no longer accepts `routerAdapter`.
+Both callbacks receive a `RouteOption` with `href`, `name` and
+`scope: "announcement"`; HTTP(S) external links also set `target: "_blank"`.
+Without either callback, the page does not navigate.
+
+Announcement navigation supplies the complete target query. When
+`option.scope === "announcement"`, the host must use the query in `option.href`
+as-is, including clearing the current query when the target has none. Do not
+merge deleted category, page or `is_official` parameters back into the URL.
+Preserve locale handling, hashes and external-link behavior in the host adapter.
+
+```tsx
+<OrderlyAppProvider {...appProps} onRouteChange={onRouteChange}>
+  <AnnouncementCenterPage slug={slug} />
+</OrderlyAppProvider>
+
+// Optional navigation override for this page only:
+<AnnouncementCenterPage slug={slug} onRouteChange={customOnRouteChange} />
+```
+
 Configure official announcement visibility once for all entry points:
 
 ```tsx
@@ -122,13 +144,13 @@ slugs:
 ```tsx
 // /announcement/:slug, for example:
 // /announcement/release-notes?is_official=true
-<AnnouncementCenterPage slug={slug} routerAdapter={routerAdapter} />
-<AnnouncementCenterPage id="55" routerAdapter={routerAdapter} />
+<AnnouncementCenterPage slug={slug} />
+<AnnouncementCenterPage id="55" />
 ```
 
-The Playground route adapter passes numeric path segments as `id` to retain old
-ID links; other segments are passed as `slug`. Integrations supporting numeric
-slugs should pass them explicitly as `slug`.
+The Playground and sdk-demo route adapters pass every path segment as `slug`,
+including numeric strings. Integrations that support legacy ID links must
+explicitly pass the intended ID through `id` at their own routing boundary.
 
 The optional page/widget/script `isOfficial` prop overrides the URL parameter.
 An absent prop and URL parameter default to `false`. Invalid URL values display

@@ -1,9 +1,11 @@
 import { FC } from "react";
-import { RouterAdapter } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
+import type { RouteOption } from "@orderly.network/types";
 import { AnnouncementCenterWidget } from "./announcementCenter.widget";
 
 export const AnnouncementCenterPage: FC<{
-  routerAdapter?: RouterAdapter;
+  /** Overrides OrderlyAppProvider navigation when supplied. */
+  onRouteChange?: (option: RouteOption) => void;
   /** Backend-generated slug; takes precedence over id when non-empty. */
   slug?: string;
   /** Announcement ID for explicit ID lookup. */
@@ -11,6 +13,8 @@ export const AnnouncementCenterPage: FC<{
   /** Overrides the URL's is_official parameter; defaults to false when absent. */
   isOfficial?: boolean;
 }> = (props) => {
+  const { onRouteChange: globalOnRouteChange } = useAppContext();
+  const onRouteChange = props.onRouteChange ?? globalOnRouteChange;
   return (
     <AnnouncementCenterWidget
       slug={props.slug}
@@ -19,9 +23,10 @@ export const AnnouncementCenterPage: FC<{
       onRouteChange={(url: string) => {
         if (!url) return;
         const isExternal = /^https?:\/\//i.test(url);
-        props.routerAdapter?.onRouteChange({
+        onRouteChange?.({
           href: url,
           name: url,
+          scope: "announcement",
           ...(isExternal ? { target: "_blank" as const } : {}),
         });
       }}

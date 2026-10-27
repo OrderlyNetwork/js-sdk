@@ -12,9 +12,9 @@ const meta: Meta<typeof AnnouncementCenterPage> = {
     layout: "centered",
   },
   argTypes: {
-    routerAdapter: {
-      control: "object",
-      description: "Router adapter for handling navigation and route changes",
+    onRouteChange: {
+      control: false,
+      description: "Optional override for OrderlyAppProvider navigation",
     },
   },
 };
@@ -27,15 +27,18 @@ type Story = StoryObj<typeof meta>;
  * Shows the announcement center page with default router behavior
  */
 export const Default: Story = {
+  args: {},
+};
+
+/** Overrides the application callback for this page only. */
+export const WithNavigationOverride: Story = {
   args: {
-    routerAdapter: {
-      onRouteChange: (route) => {
-        console.log("Route change:", route);
-        // Default behavior: open in new tab
-        if (route.href) {
-          window.open(route.href, route.target || "_blank");
-        }
-      },
+    onRouteChange: (route) => {
+      if (route.target === "_blank") {
+        window.open(route.href, "_blank", "noopener,noreferrer");
+      } else {
+        window.location.assign(route.href);
+      }
     },
   },
 };
