@@ -214,6 +214,11 @@ Custom contexts never automatically request the production endpoint.
 - Initialization, public reconnect, foreground/online recovery and hourly
   reconciliation refresh silently. Recovery invalidates detail bodies so mounted
   detail routes revalidate even when their ID is outside the bell/current page.
+- Focus, visible-state changes and pageshow share a 60-second refresh window,
+  measured from initialization or the latest refresh of the shared views. Events
+  inside that window do not invalidate details or queue another request. Window
+  expiry alone does not trigger a refresh. WebSocket updates, public reconnects,
+  online recovery and explicit refreshes remain immediate.
 - List caches belong to the API/broker/source/category/page/size scope. Active
   reads additionally belong to a content locale. Superseded scope, page and
   language responses cannot overwrite the current view.

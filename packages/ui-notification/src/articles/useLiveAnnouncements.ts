@@ -182,7 +182,7 @@ export function useLiveAnnouncements(
     };
     ws.on("status:change", connection);
     const foreground = () => {
-      if (document.visibilityState !== "hidden") store.recover();
+      if (document.visibilityState !== "hidden") store.recoverOnForeground();
     };
     window.addEventListener("online", store.recover);
     window.addEventListener("focus", foreground);

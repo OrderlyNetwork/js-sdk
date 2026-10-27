@@ -423,6 +423,7 @@ describe("direct slug details", () => {
     expect(fixture.active).toHaveBeenCalledTimes(activeReads);
   });
   it("revalidates slug bodies on recovery without fetching a full list", async () => {
+    vi.useFakeTimers();
     const state = server();
     const { result } = renderHook(
       () => useAnnouncementDetail("release-notes"),
@@ -431,6 +432,7 @@ describe("direct slug details", () => {
     await settle();
     state.rows[0] = slugArticle(55, false, "release-notes", 20);
     state.rows[0].translations.en.content = "Recovered body";
+    await act(async () => vi.advanceTimersByTimeAsync(60_000));
     await act(async () => window.dispatchEvent(new Event("focus")));
     expect(result.current.article?.content).toBe("Recovered body");
     expect(fixture.list.mock.calls.every(([, params]) => params.page)).toBe(
@@ -660,9 +662,11 @@ describe("production announcement provider", () => {
     expect(localStorage.getItem(unreadKey("b"))).toBe("true");
   });
   it("reminds for a push whose version was already fetched by foreground recovery", async () => {
+    vi.useFakeTimers();
     const { result } = renderHook(useAnnouncementArticles, { wrapper });
     await settle();
     fixture.list.mockResolvedValue(response([row(1, 20)]));
+    await act(async () => vi.advanceTimersByTimeAsync(60_000));
     await act(async () => window.dispatchEvent(new Event("focus")));
     expect(result.current.scaffoldState?.hasUnread).toBe(false);
     await push(1, 20);
@@ -980,11 +984,114 @@ describe("production announcement provider", () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(60 * 60 * 1000);
     });
-    expect(fixture.list).toHaveBeenCalledTimes(6);
+    expect(fixture.list).toHaveBeenCalledTimes(4);
     expect(result.current.scaffoldState).toMatchObject({
       hasUnread: false,
       showAnnouncement: false,
     });
+  });
+  it("shares a 60-second foreground window across focus, visibility and pageshow", async () => {
+    vi.useFakeTimers();
+    renderHook(() => useAnnouncementList({ page: 1, size: 20 }), { wrapper });
+    await settle();
+    const foreground = async () => {
+      await act(async () => {
+        window.dispatchEvent(new Event("focus"));
+        document.dispatchEvent(new Event("visibilitychange"));
+        window.dispatchEvent(new Event("pageshow"));
+      });
+    };
+    expect(fixture.list).toHaveBeenCalledTimes(2);
+    expect(fixture.active).toHaveBeenCalledTimes(1);
+
+    await foreground();
+    await act(async () => vi.advanceTimersByTimeAsync(59_999));
+    await foreground();
+    expect(fixture.list).toHaveBeenCalledTimes(2);
+    expect(fixture.active).toHaveBeenCalledTimes(1);
+
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    await foreground();
+    expect(fixture.list).toHaveBeenCalledTimes(4);
+    expect(fixture.active).toHaveBeenCalledTimes(2);
+    await foreground();
+    expect(fixture.list).toHaveBeenCalledTimes(4);
+
+    // Expiry alone does not schedule another request.
+    await act(async () => vi.advanceTimersByTimeAsync(60_000));
+    expect(fixture.active).toHaveBeenCalledTimes(2);
+    await foreground();
+    expect(fixture.list).toHaveBeenCalledTimes(6);
+    expect(fixture.active).toHaveBeenCalledTimes(3);
+  });
+  it("ignores foreground events while hidden without consuming the refresh window", async () => {
+    vi.useFakeTimers();
+    renderHook(useAnnouncementArticles, { wrapper });
+    await settle();
+    await act(async () => vi.advanceTimersByTimeAsync(60_000));
+    const visibility = vi.spyOn(document, "visibilityState", "get");
+    try {
+      visibility.mockReturnValue("hidden");
+      await act(async () => {
+        window.dispatchEvent(new Event("focus"));
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+      expect(fixture.list).toHaveBeenCalledTimes(1);
+      visibility.mockReturnValue("visible");
+      await act(async () =>
+        document.dispatchEvent(new Event("visibilitychange")),
+      );
+      expect(fixture.list).toHaveBeenCalledTimes(2);
+    } finally {
+      visibility.mockRestore();
+    }
+  });
+  it("refreshes immediately for WebSocket updates and restarts foreground freshness", async () => {
+    vi.useFakeTimers();
+    const { result } = renderHook(
+      () => ({
+        source: useAnnouncementArticles(),
+        page: useAnnouncementList(),
+      }),
+      { wrapper },
+    );
+    await settle();
+    await act(async () => vi.advanceTimersByTimeAsync(30_000));
+    fixture.list.mockResolvedValue(response([row(1, 20)]));
+    await push(1, 20);
+    expect(fixture.list).toHaveBeenCalledTimes(4);
+    expect(fixture.active).toHaveBeenCalledTimes(2);
+    expect(fixture.detail).toHaveBeenCalledTimes(1);
+    expect(result.current.page.articles[0].updated_time).toBe(20);
+    expect(result.current.source.scaffoldState?.hasUnread).toBe(true);
+
+    await act(async () => vi.advanceTimersByTimeAsync(30_000));
+    await act(async () => window.dispatchEvent(new Event("focus")));
+    expect(fixture.list).toHaveBeenCalledTimes(4);
+    await push(1, 30);
+    expect(fixture.list).toHaveBeenCalledTimes(6);
+    expect(fixture.active).toHaveBeenCalledTimes(3);
+    expect(fixture.detail).toHaveBeenCalledTimes(2);
+  });
+  it("does not queue a second foreground refresh while requests are pending", async () => {
+    vi.useFakeTimers();
+    renderHook(useAnnouncementArticles, { wrapper });
+    await settle();
+    await act(async () => vi.advanceTimersByTimeAsync(60_000));
+    let finish!: (data: ReturnType<typeof response>) => void;
+    fixture.list.mockReturnValueOnce(
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+    );
+    await act(async () => window.dispatchEvent(new Event("focus")));
+    await act(async () =>
+      document.dispatchEvent(new Event("visibilitychange")),
+    );
+    await act(async () => window.dispatchEvent(new Event("pageshow")));
+    await act(async () => finish(response()));
+    expect(fixture.list).toHaveBeenCalledTimes(2);
+    expect(fixture.active).toHaveBeenCalledTimes(2);
   });
   it("cleans up subscriptions, timers and connection listeners", async () => {
     vi.useFakeTimers();
@@ -1328,11 +1435,13 @@ describe("v1.5 public reads", () => {
     expect(result.current.source.scaffoldState?.hasUnread).toBe(false);
   });
   it("revalidates an open detail on foreground recovery without relying on page membership", async () => {
+    vi.useFakeTimers();
     const { result } = renderHook(() => useAnnouncementDetail("1"), {
       wrapper,
     });
     await settle();
     fixture.detail.mockRejectedValue({ status: 404 });
+    await act(async () => vi.advanceTimersByTimeAsync(60_000));
     await act(async () => window.dispatchEvent(new Event("focus")));
     expect(result.current.article).toBeUndefined();
     expect(result.current.status).toBe("ready");

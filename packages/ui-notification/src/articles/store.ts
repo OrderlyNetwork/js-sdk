@@ -19,6 +19,7 @@ export type DetailEntry = { status: ReadStatus; article?: AnnouncementArticle };
 type SlugDetailEntry = { status: ReadStatus; id?: string };
 const slugDetailKey = (slug: string, isOfficial: boolean) =>
   JSON.stringify([slug, isOfficial]);
+const foregroundRefreshInterval = 60_000;
 export type AnnouncementListState =
   AnnouncementResourceState<AnnouncementListRow>;
 type Snapshot = {
@@ -145,6 +146,7 @@ export class AnnouncementStore {
   private generation = 0;
   private retryTimer?: ReturnType<typeof setTimeout>;
   private retries = 0;
+  private lastViewRefreshAt?: number;
 
   constructor(
     private readonly options: AnnouncementSourceOptions & {
@@ -309,6 +311,7 @@ export class AnnouncementStore {
   };
   start = () => {
     this.active = true;
+    this.lastViewRefreshAt = Date.now();
     void this.bell.start();
     void this.cards.start();
     for (const { resource, users } of this.queries.values())
@@ -344,14 +347,16 @@ export class AnnouncementStore {
     }
     void this.refresh();
   };
-  private refreshViews = () =>
-    Promise.all([
+  private refreshViews = () => {
+    this.lastViewRefreshAt = Date.now();
+    return Promise.all([
       this.bell.refresh(),
       this.cards.refresh(),
       ...[...this.queries.values()]
         .filter(({ users }) => users > 0)
         .map(({ resource }) => resource.refresh()),
     ]);
+  };
   refresh = (): Promise<void> => {
     if (!this.active) return Promise.resolve();
     this.dirty = true;
@@ -480,6 +485,16 @@ export class AnnouncementStore {
     for (const { resource } of this.queries.values())
       resource.replaceRows(resource.state.rows.filter(retain));
   }
+  /** Coalesces foreground events without delaying pushes or connection recovery. */
+  recoverOnForeground = () => {
+    if (
+      !this.active ||
+      (this.lastViewRefreshAt !== undefined &&
+        Date.now() - this.lastViewRefreshAt < foregroundRefreshInterval)
+    )
+      return;
+    this.recover();
+  };
   /** Recovery never interprets a missing paginated row as an unpublished detail. */
   recover = () => {
     const details = { ...this.snapshot.details };
