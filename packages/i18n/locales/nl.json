@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Video opnieuw laden",
   "notification.video.slow": "Het laden van de video duurt langer.",
   "notification.viewAll": "Alles bekijken",
-  "tradingPoints.points": "Punten"
+  "tradingPoints.points": "Punten",
+  "notification.source.community": "Community",
+  "notification.source.filter": "Bron van aankondiging",
+  "notification.source.official": "Officieel"
 }

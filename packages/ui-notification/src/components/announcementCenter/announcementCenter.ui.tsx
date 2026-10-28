@@ -20,6 +20,7 @@ export const AnnouncementContent: FC<{
   onItemClick: (url: string) => void;
   showDivider?: boolean;
   platformName?: string;
+  showSourceBadge?: boolean;
 }> = (props) => {
   const { dataSource, current, onExpandToggle, onItemClick } = props;
   const { t } = useTranslation();
@@ -48,11 +49,13 @@ export const AnnouncementContent: FC<{
             onClick={() => item.url && onItemClick(item.url)}
             className="oui-announcement-summary oui-flex oui-w-full oui-flex-col oui-gap-1 oui-rounded-md oui-px-2 oui-py-3 oui-text-start hover:oui-bg-base-6 focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
           >
-            <AnnouncementSourceBadge
-              isOfficial={item.is_official}
-              platformName={props.platformName}
-              className="oui-self-start"
-            />
+            {props.showSourceBadge !== false && (
+              <AnnouncementSourceBadge
+                isOfficial={item.is_official}
+                platformName={props.platformName}
+                className="oui-self-start"
+              />
+            )}
             <Text size="xs" weight="semibold" intensity={80}>
               {item.title}
             </Text>
@@ -77,6 +80,7 @@ export const AnnouncementContent: FC<{
             showDivider={props.showDivider}
             isOfficial={item.is_official}
             platformName={props.platformName}
+            showSourceBadge={props.showSourceBadge}
             onExpandToggle={() => {
               if (current === item.announcement_id) {
                 onExpandToggle(null);
@@ -98,6 +102,7 @@ export const AnnouncementCenterUI: FC<{
   status?: "loading" | "ready" | "error";
   retry?: () => void;
   platformName?: string;
+  showSourceBadge?: boolean;
 }> = (props) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState<string | number | null>(null);
@@ -162,6 +167,7 @@ export const AnnouncementCenterUI: FC<{
               onExpandToggle={setExpanded}
               onItemClick={props.onItemClick}
               platformName={props.platformName}
+              showSourceBadge={props.showSourceBadge}
             />
           )}
           {props.status === "loading" ? (

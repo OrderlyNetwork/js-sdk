@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Załaduj wideo ponownie",
   "notification.video.slow": "Ładowanie wideo trwa dłużej niż zwykle.",
   "notification.viewAll": "Zobacz wszystkie",
-  "tradingPoints.points": "Punkty"
+  "tradingPoints.points": "Punkty",
+  "notification.source.community": "Społeczność",
+  "notification.source.filter": "Źródło ogłoszenia",
+  "notification.source.official": "Oficjalne"
 }

@@ -1498,5 +1498,8 @@
   "notification.video.reload": "بارگذاری مجدد ویدیو",
   "notification.video.slow": "بارگذاری ویدیو طولانی‌تر از حد معمول طول می‌کشد.",
   "notification.viewAll": "مشاهده همه",
-  "tradingPoints.points": "امتیاز"
+  "tradingPoints.points": "امتیاز",
+  "notification.source.community": "جامعه",
+  "notification.source.filter": "منبع اطلاعیه",
+  "notification.source.official": "رسمی"
 }

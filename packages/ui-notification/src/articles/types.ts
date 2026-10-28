@@ -61,7 +61,10 @@ export type AnnouncementActiveResponse = {
   last_updated_time: number;
 };
 
+export type AnnouncementSourceFilter = "all" | "official" | "community";
+
 export type AnnouncementListQuery = {
+  source?: AnnouncementSourceFilter;
   category?: AnnouncementCategory;
   page?: number;
   size?: number;

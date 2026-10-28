@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Перезавантажити відео",
   "notification.video.slow": "Відео завантажується довше, ніж зазвичай.",
   "notification.viewAll": "Переглянути всі",
-  "tradingPoints.points": "Бали"
+  "tradingPoints.points": "Бали",
+  "notification.source.community": "Спільнота",
+  "notification.source.filter": "Джерело оголошення",
+  "notification.source.official": "Офіційні"
 }

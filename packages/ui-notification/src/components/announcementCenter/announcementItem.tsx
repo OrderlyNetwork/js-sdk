@@ -24,6 +24,7 @@ export const AnnouncementItem: FC<{
   showDivider?: boolean;
   isOfficial?: boolean;
   platformName?: string;
+  showSourceBadge?: boolean;
 }> = (props) => {
   const { t } = useTranslation();
   const Icon = useMemo(() => {
@@ -128,11 +129,13 @@ export const AnnouncementItem: FC<{
 
       <Flex direction="column" itemAlign="start" grow>
         <div className="oui-flex oui-flex-col oui-items-start oui-gap-1">
-          <AnnouncementSourceBadge
-            isOfficial={props.isOfficial}
-            platformName={props.platformName}
-            className="oui-self-start"
-          />
+          {props.showSourceBadge !== false && (
+            <AnnouncementSourceBadge
+              isOfficial={props.isOfficial}
+              platformName={props.platformName}
+              className="oui-self-start"
+            />
+          )}
           <Text size="xs" intensity={80} weight="bold">
             {title}
           </Text>

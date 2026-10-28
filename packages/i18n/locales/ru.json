@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Перезагрузить видео",
   "notification.video.slow": "Видео загружается дольше обычного.",
   "notification.viewAll": "Показать все",
-  "tradingPoints.points": "Баллы"
+  "tradingPoints.points": "Баллы",
+  "notification.source.community": "Сообщество",
+  "notification.source.filter": "Источник объявления",
+  "notification.source.official": "Официальные"
 }

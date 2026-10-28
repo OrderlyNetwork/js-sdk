@@ -1498,5 +1498,8 @@
   "notification.video.reload": "重新載入影片",
   "notification.video.slow": "影片載入時間較長。",
   "notification.viewAll": "查看全部",
-  "tradingPoints.points": "積分"
+  "tradingPoints.points": "積分",
+  "notification.source.community": "社群",
+  "notification.source.filter": "公告來源",
+  "notification.source.official": "官方"
 }

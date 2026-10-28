@@ -31,6 +31,7 @@ export const MessageCenter: FC<{
   maintenanceDialogInfo?: string;
   messages: AnnouncementSummary[];
   platformName?: string;
+  showSourceBadge?: boolean;
   showAnnouncement: boolean;
   closeTips: () => void;
   hasUnread?: boolean;
@@ -94,6 +95,7 @@ export const MessageCenter: FC<{
               <AnnouncementCenterUI
                 dataSource={selectMessages(messages)}
                 platformName={props.platformName}
+                showSourceBadge={props.showSourceBadge}
                 status={props.status}
                 retry={props.retry}
                 onItemClick={onItemClick}

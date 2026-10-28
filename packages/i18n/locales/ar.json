@@ -1498,5 +1498,8 @@
   "notification.video.reload": "إعادة تحميل الفيديو",
   "notification.video.slow": "يستغرق تحميل الفيديو وقتًا أطول.",
   "notification.viewAll": "عرض الكل",
-  "tradingPoints.points": "النقاط"
+  "tradingPoints.points": "النقاط",
+  "notification.source.community": "المجتمع",
+  "notification.source.filter": "مصدر الإعلان",
+  "notification.source.official": "رسمي"
 }

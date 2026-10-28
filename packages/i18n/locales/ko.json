@@ -1498,5 +1498,8 @@
   "notification.video.reload": "동영상 다시 로드",
   "notification.video.slow": "동영상 로드가 오래 걸리고 있습니다.",
   "notification.viewAll": "전체 보기",
-  "tradingPoints.points": "포인트"
+  "tradingPoints.points": "포인트",
+  "notification.source.community": "커뮤니티",
+  "notification.source.filter": "공지 출처",
+  "notification.source.official": "공식"
 }

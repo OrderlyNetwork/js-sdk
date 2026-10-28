@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Tải lại video",
   "notification.video.slow": "Video đang mất nhiều thời gian để tải hơn.",
   "notification.viewAll": "Xem tất cả",
-  "tradingPoints.points": "Điểm"
+  "tradingPoints.points": "Điểm",
+  "notification.source.community": "Cộng đồng",
+  "notification.source.filter": "Nguồn thông báo",
+  "notification.source.official": "Chính thức"
 }

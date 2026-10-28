@@ -58,6 +58,7 @@ export const emptyListState: AnnouncementListState = {
 export function normalizeListQuery(query: AnnouncementListQuery = {}) {
   return {
     category: query.category ?? "all",
+    source: query.source ?? "all",
     page: Number.isSafeInteger(query.page) && query.page! > 0 ? query.page! : 1,
     size:
       Number.isSafeInteger(query.size) && query.size! > 0
@@ -91,7 +92,11 @@ function sourceParams(options: AnnouncementSourceOptions) {
 export function announcementQuery(
   options: AnnouncementSourceOptions & AnnouncementListQuery,
 ) {
-  const params = sourceParams(options);
+  const params = sourceParams({
+    brokerId: options.source === "official" ? undefined : options.brokerId,
+    excludeOfficial:
+      options.source === "community" ? true : options.excludeOfficial,
+  });
   if (options.category && options.category !== "all")
     params.set("category", categories[options.category]);
   if (options.page !== undefined || options.size !== undefined) {
@@ -194,9 +199,13 @@ export class AnnouncementStore {
   ): AnnouncementResource<AnnouncementListRow> {
     return new AnnouncementResource(
       async () => {
-        const data = this.emptyScope
-          ? { rows: [], total: 0, last_updated_time: 0 }
-          : await this.options.list(query);
+        const unavailableSource =
+          (query.source === "official" && this.options.excludeOfficial) ||
+          (query.source === "community" && !this.options.brokerId);
+        const data =
+          this.emptyScope || unavailableSource
+            ? { rows: [], total: 0, last_updated_time: 0 }
+            : await this.options.list(query);
         return {
           ...data,
           rows: sortAnnouncements(data.rows),

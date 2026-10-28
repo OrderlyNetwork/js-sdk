@@ -1498,5 +1498,8 @@
   "notification.video.reload": "動画を再読み込み",
   "notification.video.slow": "動画の読み込みに時間がかかっています。",
   "notification.viewAll": "すべて表示",
-  "tradingPoints.points": "ポイント"
+  "tradingPoints.points": "ポイント",
+  "notification.source.community": "コミュニティ",
+  "notification.source.filter": "お知らせの発信元",
+  "notification.source.official": "公式"
 }

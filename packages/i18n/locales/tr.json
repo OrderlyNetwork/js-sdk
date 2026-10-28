@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Videoyu yeniden yükle",
   "notification.video.slow": "Videonun yüklenmesi normalden uzun sürüyor.",
   "notification.viewAll": "Tümünü görüntüle",
-  "tradingPoints.points": "Puanlar"
+  "tradingPoints.points": "Puanlar",
+  "notification.source.community": "Topluluk",
+  "notification.source.filter": "Duyuru kaynağı",
+  "notification.source.official": "Resmî"
 }

@@ -782,3 +782,87 @@ describe("cross-view races", () => {
     expect(store.getSnapshot().cardOpen).toBe(false);
   });
 });
+
+describe("source-filtered server pages", () => {
+  it.each(["all", "official", "community"] as const)(
+    "builds source and category params for %s",
+    (source) => {
+      const params = new URL(
+        announcementQuery({
+          brokerId: "broker",
+          source,
+          category: "legal",
+          page: 2,
+          size: 20,
+        }),
+        "https://example.com",
+      ).searchParams;
+      expect(params.get("broker_id")).toBe(
+        source === "official" ? null : "broker",
+      );
+      expect(params.get("exclude_official")).toBe(
+        String(source === "community"),
+      );
+      expect(params.get("category")).toBe("LEGAL");
+      expect(params.get("page")).toBe("2");
+    },
+  );
+  it("isolates cached totals and retries by source", async () => {
+    const { store, list } = harness();
+    list.mockImplementation(async (query: any) =>
+      response(
+        [row(query.source === "official" ? 1 : 2)],
+        query.source === "official" ? 30 : 50,
+      ),
+    );
+    const official = { source: "official" as const, page: 1 };
+    const community = { source: "community" as const, page: 1 };
+    store.watchList(official);
+    store.watchList(community);
+    await vi.waitFor(() =>
+      expect(store.getSnapshot().lists[listQueryKey(community)]?.total).toBe(
+        50,
+      ),
+    );
+    expect(store.getSnapshot().lists[listQueryKey(official)].total).toBe(30);
+    list.mockClear();
+    await store.retryList(official);
+    expect(list).toHaveBeenCalledExactlyOnceWith({
+      source: "official",
+      category: "all",
+      page: 1,
+      size: 20,
+    });
+  });
+  it.each([
+    { source: "official" as const, brokerId: "broker", excludeOfficial: true },
+    {
+      source: "community" as const,
+      brokerId: undefined,
+      excludeOfficial: false,
+    },
+  ])(
+    "returns an empty page for unavailable scope $source",
+    async ({ source, ...scope }) => {
+      const list = vi.fn(async () => response([row()]));
+      const store = new AnnouncementStore({
+        ...scope,
+        list,
+        active: vi.fn(),
+        detail: vi.fn(),
+        detailBySlug: vi.fn(),
+        visible: () => true,
+        onNotify: vi.fn(),
+      });
+      stores.push(store);
+      store.watchList({ source });
+      await vi.waitFor(() =>
+        expect(
+          store.getSnapshot().lists[listQueryKey({ source })]?.status,
+        ).toBe("ready"),
+      );
+      expect(store.getSnapshot().lists[listQueryKey({ source })].total).toBe(0);
+      expect(list).not.toHaveBeenCalled();
+    },
+  );
+});

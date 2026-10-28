@@ -1498,5 +1498,8 @@
   "notification.video.reload": "Recarregar vídeo",
   "notification.video.slow": "O vídeo está demorando mais para carregar.",
   "notification.viewAll": "Ver tudo",
-  "tradingPoints.points": "Pontos"
+  "tradingPoints.points": "Pontos",
+  "notification.source.community": "Comunidade",
+  "notification.source.filter": "Fonte do anúncio",
+  "notification.source.official": "Oficial"
 }

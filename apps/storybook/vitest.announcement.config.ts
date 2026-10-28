@@ -9,6 +9,9 @@ export default defineConfig({
       "@testing-library/react": createRequire(import.meta.url).resolve(
         "@testing-library/react",
       ),
+      "@orderly.network/ui": fileURLToPath(
+        new URL("../../packages/ui/src/index.ts", import.meta.url),
+      ),
       "@orderly.network/ui-notification": fileURLToPath(
         new URL("../../packages/ui-notification/src/index.ts", import.meta.url),
       ),

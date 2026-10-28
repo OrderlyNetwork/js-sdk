@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { Badge } from "@orderly.network/ui";
@@ -26,7 +27,7 @@ vi.mock("@orderly.network/i18n", () => {
   };
 });
 vi.mock("@orderly.network/ui", async () => {
-  const { createElement } = await import("react");
+  const { createElement, Children, isValidElement } = await import("react");
   const element =
     (tag: string) =>
     ({ children, className }: { children?: unknown; className?: string }) =>
@@ -48,6 +49,26 @@ vi.mock("@orderly.network/ui", async () => {
     Text: text,
     ScrollArea: element("div"),
     Button: element("button"),
+    Tabs: ({
+      children,
+      classNames,
+      value,
+    }: {
+      children?: ReactNode;
+      classNames?: { tabsList?: string };
+      value: string;
+    }) =>
+      createElement(
+        "div",
+        null,
+        createElement("div", { className: classNames?.tabsList }),
+        Children.toArray(children).filter(
+          (child) =>
+            isValidElement<{ value: string }>(child) &&
+            child.props.value === value,
+        ),
+      ),
+    TabPanel: ({ children }: { children?: ReactNode }) => children,
     Divider: element("hr"),
     Icon: element("svg"),
     ChevronDownIcon: element("svg"),
@@ -79,6 +100,8 @@ const pageProps: AnnouncementCenterScriptReturns = {
   platformName,
   isDetail: false,
   category: "all",
+  sourceFilter: "all",
+  selectSource: vi.fn(),
   announcements: articles,
   article: undefined,
   status: "ready",
@@ -276,6 +299,9 @@ describe("announcement source labels", () => {
     },
   );
   it("renders both sources in the list", () => {
+    expect(
+      renderToStaticMarkup(<AnnouncementPageUI {...pageProps} />),
+    ).toContain("oui-announcement-sources");
     expectSources(renderToStaticMarkup(<AnnouncementPageUI {...pageProps} />));
   });
   it.each(articles)(
@@ -300,4 +326,61 @@ describe("announcement source labels", () => {
         .join(""),
     );
   });
+});
+
+describe("hidden announcement source labels", () => {
+  it.each([true, false])(
+    "hides source badges in the bell for title-based rows=%s",
+    (hasTitle) => {
+      const markup = renderToStaticMarkup(
+        <AnnouncementCenterUI
+          dataSource={tips.map((tip) => ({
+            ...tip,
+            title: hasTitle ? tip.title : undefined,
+            type: null,
+          }))}
+          platformName={platformName}
+          showSourceBadge={false}
+          onItemClick={vi.fn()}
+        />,
+      );
+      expect(markup).not.toContain("data-announcement-source=");
+      expect(markup).toContain(
+        hasTitle ? "Trading campaign" : "notification.general",
+      );
+      expect(markup).toContain("<time");
+    },
+  );
+  it("hides list badges and source filters while retaining titles, times and categories", () => {
+    const markup = renderToStaticMarkup(
+      <AnnouncementPageUI
+        {...pageProps}
+        showSourceBadge={false}
+        showSourceFilter={false}
+      />,
+    );
+    expect(markup).not.toContain("data-announcement-source=");
+    expect(markup).toContain("Trading campaign");
+    expect(markup).toContain("<time");
+    expect(markup).not.toContain("oui-announcement-sources");
+    expect(markup).toContain("oui-announcement-categories");
+  });
+  it.each(articles)(
+    "hides the detail badge and its spacing ($is_official)",
+    (article) => {
+      const markup = renderToStaticMarkup(
+        <AnnouncementPageUI
+          {...pageProps}
+          isDetail
+          article={article}
+          showSourceBadge={false}
+        />,
+      );
+      expect(markup).not.toContain("data-announcement-source=");
+      expect(markup).toContain("<article><h1>");
+      expect(markup).toContain(article.title);
+      expect(markup).toContain("Campaign details");
+      expect(markup).toContain("<time");
+    },
+  );
 });

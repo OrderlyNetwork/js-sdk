@@ -1,9 +1,11 @@
 import { useCallback, useEffect } from "react";
 import { useConfig } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
 import { announcementDetailUrl } from "../articles/routes";
 import {
   announcementCategories,
   type AnnouncementCategory,
+  type AnnouncementSourceFilter,
 } from "../articles/types";
 import { useAnnouncementDetail } from "../articles/useAnnouncementDetail";
 import { useAnnouncementList } from "../articles/useAnnouncementList";
@@ -30,6 +32,8 @@ export const useAnnouncementCenterScript = (
   options: AnnouncementCenterScriptOptions = {},
 ) => {
   const platformName = useConfig<string | undefined>("brokerName");
+  const { widgetConfigs } = useAppContext();
+  const showSourceBadge = !widgetConfigs?.announcement?.excludeOfficial;
   const { slug, id, onRouteChange } = options;
   const isDetail = !!(slug || id);
 
@@ -54,7 +58,17 @@ export const useAnnouncementCenterScript = (
     Number.isSafeInteger(requestedPage) && requestedPage > 0
       ? requestedPage
       : 1;
-  const list = useAnnouncementList({ category, page, size: 20 }, !isDetail);
+  const sourceFilter: AnnouncementSourceFilter = !showSourceBadge
+    ? "all"
+    : searchParams.get("source") === "official"
+      ? "official"
+      : searchParams.get("source") === "community"
+        ? "community"
+        : "all";
+  const list = useAnnouncementList(
+    { category, page, size: 20, source: sourceFilter },
+    !isDetail,
+  );
   const pageTotal = Math.max(1, Math.ceil(list.total / 20));
   const announcements = list.articles;
   const article = invalidSource ? undefined : detail.article;
@@ -65,6 +79,17 @@ export const useAnnouncementCenterScript = (
       params.delete("is_official");
       if (nextCategory === "all") params.delete("category");
       else params.set("category", nextCategory);
+      params.delete("page");
+      onRouteChange?.(hrefWithSearch("/announcement", params));
+    },
+    [onRouteChange],
+  );
+  const selectSource = useCallback(
+    (nextSource: AnnouncementSourceFilter) => {
+      const params = readSearchParams();
+      params.delete("is_official");
+      if (nextSource === "all") params.delete("source");
+      else params.set("source", nextSource);
       params.delete("page");
       onRouteChange?.(hrefWithSearch("/announcement", params));
     },
@@ -113,11 +138,15 @@ export const useAnnouncementCenterScript = (
 
   return {
     platformName,
+    showSourceBadge,
+    showSourceFilter: showSourceBadge,
     isDetail,
     category,
     announcements,
     article,
     selectCategory,
+    sourceFilter,
+    selectSource,
     openArticle,
     backToList,
     selectPage,
@@ -133,6 +162,10 @@ export const useAnnouncementCenterScript = (
   };
 };
 
-export type AnnouncementCenterScriptReturns = ReturnType<
-  typeof useAnnouncementCenterScript
->;
+export type AnnouncementCenterScriptReturns = Omit<
+  ReturnType<typeof useAnnouncementCenterScript>,
+  "showSourceBadge" | "showSourceFilter"
+> & {
+  showSourceBadge?: boolean;
+  showSourceFilter?: boolean;
+};

@@ -8,6 +8,14 @@ import {
 } from "../articles/context";
 import { useAnnouncementCenterScript } from "./announcementCenter.script";
 
+const config = vi.hoisted(() => ({
+  widgetConfigs: undefined as
+    | { announcement?: { excludeOfficial?: boolean } }
+    | undefined,
+}));
+vi.mock("@orderly.network/react-app", () => ({
+  useAppContext: () => ({ widgetConfigs: config.widgetConfigs }),
+}));
 vi.mock("@orderly.network/hooks", () => ({ useConfig: () => "Broker" }));
 const getList = vi.fn();
 const watchList = vi.fn(() => vi.fn());
@@ -34,6 +42,7 @@ const wrapper = ({ children }: PropsWithChildren) => (
   </AnnouncementArticlesContext.Provider>
 );
 beforeEach(() => {
+  config.widgetConfigs = undefined;
   window.history.replaceState({}, "", "/announcement");
   getList
     .mockReset()
@@ -229,6 +238,7 @@ describe("server-paginated announcement page", () => {
       category: "listing",
       page: 2,
       size: 20,
+      source: "all",
     });
     expect(result.current).toMatchObject({
       announcements: [],
@@ -249,6 +259,7 @@ describe("server-paginated announcement page", () => {
         category: "all",
         page: 1,
         size: 20,
+        source: "all",
       });
     },
   );
@@ -276,6 +287,7 @@ describe("server-paginated announcement page", () => {
       category: "legal",
       page: 3,
       size: 20,
+      source: "all",
     });
   });
   it("resets the page when choosing a category and preserves unrelated route parameters", () => {
@@ -321,4 +333,118 @@ describe("server-paginated announcement page", () => {
     expect(loadDetail).toHaveBeenCalledWith("55", true);
     expect(onRouteChange).not.toHaveBeenCalled();
   });
+});
+
+describe("announcement source filters", () => {
+  it.each(["official", "community", "all", "invalid"])(
+    "reads source %s and preserves it while navigating",
+    (source) => {
+      window.history.replaceState(
+        {},
+        "",
+        `/announcement?category=legal&page=2&source=${source}&theme=dark`,
+      );
+      const { result } = renderHook(
+        () => useAnnouncementCenterScript({ onRouteChange }),
+        { wrapper },
+      );
+      expect(result.current.sourceFilter).toBe(
+        source === "official" || source === "community" ? source : "all",
+      );
+      expect(watchList).toHaveBeenCalledWith({
+        category: "legal",
+        page: 2,
+        size: 20,
+        source: result.current.sourceFilter,
+      });
+      act(() => result.current.selectCategory("update"));
+      expect(onRouteChange).toHaveBeenLastCalledWith(
+        `/announcement?category=update&source=${source}&theme=dark`,
+      );
+      act(() => result.current.selectPage(3));
+      expect(onRouteChange).toHaveBeenLastCalledWith(
+        `/announcement?category=legal&page=3&source=${source}&theme=dark`,
+      );
+      act(() => result.current.selectSource("community"));
+      expect(onRouteChange).toHaveBeenLastCalledWith(
+        "/announcement?category=legal&source=community&theme=dark",
+      );
+      act(() => result.current.selectSource("all"));
+      expect(onRouteChange).toHaveBeenLastCalledWith(
+        "/announcement?category=legal&theme=dark",
+      );
+    },
+  );
+  it("keeps the list source separate from the article source on detail round trips", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/announcement?source=community&category=legal&page=2",
+    );
+    getList.mockReturnValue({
+      articles: [{ announcement_id: 55, slug: "release", is_official: true }],
+      total: 41,
+      status: "ready",
+    });
+    const { result, rerender } = renderHook(
+      ({ slug }: { slug?: string }) =>
+        useAnnouncementCenterScript({ slug, onRouteChange }),
+      { wrapper, initialProps: { slug: undefined as string | undefined } },
+    );
+    act(() => result.current.openArticle(55));
+    expect(onRouteChange).toHaveBeenLastCalledWith(
+      "/announcement/release?source=community&category=legal&page=2&is_official=true",
+    );
+    window.history.replaceState({}, "", onRouteChange.mock.lastCall![0]);
+    rerender({ slug: "release" });
+    expect(getDetailBySlug).toHaveBeenLastCalledWith("release", true);
+    act(() => result.current.backToList());
+    expect(onRouteChange).toHaveBeenLastCalledWith(
+      "/announcement?source=community&category=legal&page=2",
+    );
+  });
+});
+
+describe("announcement source badge visibility", () => {
+  it("defaults to visible and follows changes to the official announcement config", () => {
+    const { result, rerender } = renderHook(
+      () => useAnnouncementCenterScript(),
+      { wrapper },
+    );
+    expect(result.current.showSourceBadge).toBe(true);
+    expect(result.current.showSourceFilter).toBe(true);
+    config.widgetConfigs = { announcement: { excludeOfficial: true } };
+    rerender();
+    expect(result.current.showSourceBadge).toBe(false);
+    expect(result.current.showSourceFilter).toBe(false);
+    config.widgetConfigs = { announcement: { excludeOfficial: false } };
+    rerender();
+    expect(result.current.showSourceBadge).toBe(true);
+    expect(result.current.showSourceFilter).toBe(true);
+  });
+});
+
+describe("hidden announcement source filters", () => {
+  it.each(["official", "community"])(
+    "ignores source=%s when official announcements are excluded",
+    (source) => {
+      window.history.replaceState({}, "", `/announcement?source=${source}`);
+      config.widgetConfigs = { announcement: { excludeOfficial: true } };
+      const { result, rerender } = renderHook(
+        () => useAnnouncementCenterScript(),
+        { wrapper },
+      );
+      expect(result.current.sourceFilter).toBe("all");
+      expect(getList).toHaveBeenLastCalledWith({
+        category: "all",
+        page: 1,
+        size: 20,
+        source: "all",
+      });
+      config.widgetConfigs = { announcement: { excludeOfficial: false } };
+      rerender();
+      expect(result.current.sourceFilter).toBe(source);
+      expect(result.current.showSourceFilter).toBe(true);
+    },
+  );
 });

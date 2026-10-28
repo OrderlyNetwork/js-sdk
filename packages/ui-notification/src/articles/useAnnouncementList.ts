@@ -9,21 +9,35 @@ export function useAnnouncementList(
   enabled = true,
 ) {
   const source = useAnnouncementArticles();
-  const { category, page, size } = normalizeListQuery(query);
+  const {
+    category,
+    page,
+    size,
+    source: sourceFilter,
+  } = normalizeListQuery(query);
   const { watchList, retryList } = source;
   useEffect(() => {
-    if (enabled) return watchList?.({ category, page, size });
-  }, [enabled, watchList, category, page, size]);
+    if (enabled)
+      return watchList?.({ category, page, size, source: sourceFilter });
+  }, [enabled, watchList, category, page, size, sourceFilter]);
   const retry = useCallback(() => {
-    if (retryList) retryList({ category, page, size });
+    if (retryList) retryList({ category, page, size, source: sourceFilter });
     else source.retry();
-  }, [retryList, source.retry, category, page, size]);
+  }, [retryList, source.retry, category, page, size, sourceFilter]);
   const filtered = source.getList
     ? []
     : source.articles.filter(
-        (row) => category === "all" || row.category === category,
+        (row) =>
+          (category === "all" || row.category === category) &&
+          (sourceFilter === "all" ||
+            row.is_official === (sourceFilter === "official")),
       );
-  const state = source.getList?.({ category, page, size }) ?? {
+  const state = source.getList?.({
+    category,
+    page,
+    size,
+    source: sourceFilter,
+  }) ?? {
     articles: filtered.slice((page - 1) * size, page * size),
     total: filtered.length,
     status: source.status,
