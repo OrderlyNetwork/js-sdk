@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/prediction",
-  "version": "3.3.0",
+  "version": "3.3.1-alpha.0",
   "description": "Prediction market UI for Orderly",
   "repository": {
     "type": "git",
