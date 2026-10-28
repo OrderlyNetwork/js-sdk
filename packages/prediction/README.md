@@ -14,6 +14,7 @@ routes, navigation, styles, an acceptance checklist, and
 [Next.js, Remix, and Vite reference projects](docs/integration-guide.md#reference-projects).
 The guide ships with the package at
 `node_modules/@orderly.network/prediction/docs/integration-guide.md`.
+For broker-level access configuration, see [regional restrictions](docs/regional-restrictions.md).
 
 This README is the reference for feature behavior, navigation contracts, and
 data semantics. Custom order consumers should read
@@ -25,8 +26,9 @@ data semantics. Custom order consumers should read
 > already pass `onRouteChange` to `OrderlyAppProvider` (most do, for Portfolio
 > and footer links) show Prediction entries in the trading page's markets
 > dropdown immediately after upgrading. Selecting one navigates to
-> `/prediction/:symbol`, which the reference host redirects to
-> `/predict/:symbol`. Register that route (plus the legacy redirect). Either
+> `/prediction/:symbol`; map SDK hrefs to `/predict/:symbol` in the host's
+> navigation adapter and register the `/predict/:symbol?` page route. Add a
+> legacy redirect only if the host previously exposed `/prediction` routes. Either
 > [add the route](docs/integration-guide.md#2-connect-the-provider-routes-page-and-menu)
 > or set `features={{ prediction: false }}` on `OrderlyAppProvider`.
 
@@ -523,8 +525,28 @@ Behavior custom consumers can rely on:
 
 ## Migrating from earlier versions
 
-These changes affect hosts that integrated a pre-release Prediction build or the
-earlier Trading and Trading Shared integration points.
+These changes affect hosts upgrading from 3.3.0, a pre-release Prediction build,
+or the earlier Trading and Trading Shared integration points.
+
+### Host routes and menu labels in 3.3.1
+
+For hosts following the 3.3.0 integration guide, rename the existing page route
+from `prediction/:symbol?` to `predict/:symbol?` and update host path constants
+such as `PathEnum.Prediction = "/predict"`, menu hrefs, and page-title mappings.
+Replace the old `/prediction` page route with a redirect to `/predict`, preserving
+symbols, query parameters, and hashes. Keep only the redirect at the old path;
+registering both a page and a redirect there creates conflicting routes.
+
+Map SDK `/prediction` hrefs to `/predict` in the navigation adapter for every
+integration. First-time integrations need only the `/predict` page route;
+the legacy redirect is for existing bookmarks and direct links. See
+[navigation compatibility](docs/integration-guide.md#navigation-compatibility-and-old-links)
+for the shared path helper and redirect example.
+
+The current guide and its `common.predict` menu label require the 3.3.1 release,
+including `@orderly.network/i18n` 3.3.1 or later. Align SDK dependencies before
+using the updated examples; i18n 3.3.0 does not include that key. See
+[dependency preparation](docs/integration-guide.md#1-prepare-dependencies-and-the-host-application).
 
 ### Removed manual page integration API
 
