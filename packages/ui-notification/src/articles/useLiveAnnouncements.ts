@@ -12,7 +12,6 @@ import {
   useMarketList,
   useMemoizedFn,
   useOrderlyContext,
-  useWS,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
@@ -25,7 +24,6 @@ import {
   announcementQuery,
   announcementActiveQuery,
   announcementLocale,
-  announcementTopics,
   emptyListState,
   listQueryKey,
 } from "./store";
@@ -37,6 +35,7 @@ import type {
   AnnouncementListRow,
   ContentLocale,
 } from "./types";
+import { useAnnouncementSubscription } from "./useAnnouncementSubscription";
 
 const identity = <T>(data: T) => data;
 const legacyCategories: Record<string, AnnouncementListRow["category"]> = {
@@ -72,7 +71,6 @@ export function useLiveAnnouncements(
   const { dataAdapter } = useOrderlyContext();
   const adapter = dataAdapter?.announcementList;
   const previousAdapter = useRef(adapter);
-  const ws = useWS();
   const [unread, setUnread] = useLocalStorage<boolean>(
     `orderly_announcement_unread:${JSON.stringify(brokerId ?? null)}`,
     false,
@@ -172,15 +170,16 @@ export function useLiveAnnouncements(
     store.getSnapshot,
   );
 
+  useAnnouncementSubscription({
+    enabled,
+    brokerId,
+    excludeOfficial,
+    onMessage: store.notify,
+    onReconnect: store.recover,
+  });
+
   useEffect(() => {
     if (!enabled) return;
-    const subscriptions = announcementTopics({ brokerId, excludeOfficial }).map(
-      (topic) => ws.subscribe(topic, { onMessage: store.notify }),
-    );
-    const connection = (event: { type: string; isPrivate: boolean }) => {
-      if (event.type === "open" && !event.isPrivate) store.recover();
-    };
-    ws.on("status:change", connection);
     const foreground = () => {
       if (document.visibilityState !== "hidden") store.recoverOnForeground();
     };
@@ -192,15 +191,13 @@ export function useLiveAnnouncements(
     const hourly = window.setInterval(store.recover, 60 * 60 * 1000);
     return () => {
       store.stop();
-      subscriptions.forEach((unsubscribe) => unsubscribe?.());
-      ws.off("status:change", connection);
       window.clearInterval(hourly);
       window.removeEventListener("online", store.recover);
       window.removeEventListener("focus", foreground);
       window.removeEventListener("pageshow", foreground);
       document.removeEventListener("visibilitychange", foreground);
     };
-  }, [store, enabled, ws]);
+  }, [store, enabled]);
   useEffect(() => {
     if (enabled) store.setLocale(locale);
   }, [enabled, store, locale]);
