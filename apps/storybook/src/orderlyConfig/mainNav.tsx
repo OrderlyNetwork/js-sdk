@@ -171,7 +171,7 @@ const getLeftNavMenus = (): LeftNavProps => {
         icon: <TradingIcon />,
       },
       {
-        name: i18n.t("common.predictions"),
+        name: i18n.t("common.predict"),
         href: PathEnum.Prediction,
         icon: (
           <PredictionIcon monochrome className="oui-text-base-contrast-80" />

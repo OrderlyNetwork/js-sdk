@@ -1,204 +1,132 @@
 # Prediction Integration Guide
 
-Add Prediction to an existing Orderly SDK application: reuse its providers and
-router, register a round-specific route, and let the SDK assemble the trading and
-account panels.
-
-For autonomous implementation, start with the
-[AI Integration Workflow](#ai-integration-workflow) at the end of this guide, then
-adapt the [Vite reference](#vite-reference) to the host using the
-[framework differences](#framework-differences).
-
-Prediction requires `@orderly.network/prediction` **3.3.0 or later**. Align the
-host's Orderly SDK dependencies to the release that contains the chosen
-Prediction version. Packages in one release do not all share a version number;
-for example, `@orderly.network/perp` has its own major version. See
-[Check dependencies and inputs](#b-check-dependencies-and-inputs) for how to pick
-the release and its package versions. Use a pre-release only when explicitly
-requested, with matching dependencies from that preview release.
+Add Prediction to an existing Orderly SDK application by extending its provider,
+router, and Trade menu. This guide covers the required wiring; the
+[package reference](../README.md) covers SDK behavior and advanced consumers.
+For automated integration, also follow the [AI workflow](#ai-integration-workflow).
 
 > [!IMPORTANT]
-> Prediction is enabled by default. After upgrading, a host that already passes
-> `onRouteChange` immediately shows Prediction entries in the trading page's
-> markets dropdown, and they lead to a 404 until the Prediction route exists.
-> Complete [the route step](#2-connect-the-provider-routes-page-and-menu) in the
-> same change, or set `features={{ prediction: false }}` on `OrderlyAppProvider`
-> until it is ready.
+> Prediction is enabled by default. SDK menus emit legacy `/prediction` hrefs;
+> register `/predict` and complete the [navigation wiring](#navigation-callbacks)
+> in the same change, or keep `features.prediction: false` until ready.
 
 ## Minimal integration checklist
 
-Use this checklist to locate the required changes before following the detailed
-steps. Reuse the host's existing integration points:
-
-- [ ] [Align dependencies](#1-prepare-dependencies-and-the-host-application) to the
-      selected SDK release and add the packages imported by the integration.
-- [ ] [Add the Prediction page](#vite-reference), passing the exact URL `symbol`
-      to `PredictionPage` and keeping the host's existing layout.
-- [ ] [Register the base and symbol routes](#framework-differences) with the
-      existing router, locale prefix, and framework client boundary.
-- [ ] [Wire provider navigation](#provider-navigation-wiring) through the host's
-      shared callback, preserving locale, query, hash, and `replace`. Use the
-      [guarded Perps storage helpers](#guarded-storage-and-migration) for remembered
-      Perps destinations.
-- [ ] [Extend the Trade menu](#trade-menu) and
-      [handle disabled Prediction](#4-configure-feature-visibility-and-regional-restrictions)
-      with hidden custom entries and a host route fallback.
-- [ ] [Keep the shared styles](#3-keep-the-shared-styles-and-built-in-integrations)
-      and standard Trading, Markets, and Portfolio integrations.
+- [ ] [Align SDK dependencies](#1-prepare-dependencies-and-the-host-application).
+- [ ] [Add the page and routes](#vite-reference), passing the URL's exact symbol.
+- [ ] [Connect navigation](#provider-navigation-wiring) and map SDK hrefs to the
+      host route. [Redirect legacy links](#navigation-compatibility-and-old-links)
+      only if the host previously exposed `/prediction` routes.
+- [ ] [Guard Perps storage](#guarded-storage-and-migration) and
+      [add a navigation entry](#trade-menu) as a top-level menu or Trade submenu.
+- [ ] [Handle disabled Prediction](#4-configure-feature-visibility-and-regional-restrictions)
+      and [verify the integration](#5-verify-the-integration).
 
 ## Reference projects
 
-Use these templates as complete examples of Prediction integration for each
-framework:
+| Framework | Template                                                                                           | Inspect                                               |
+| --------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Next.js   | [orderly-js-sdk-nextjs-template](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template) | App Router page/client boundary and locale middleware |
+| Remix     | [orderly-js-sdk-remix-template](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)   | Optional-symbol route and locale redirects            |
+| Vite      | [orderly-js-sdk-vite-template](https://github.com/OrderlyNetwork/orderly-js-sdk-vite-template)     | Browser bootstrap, routing, and lazy-loaded pages     |
 
-| Framework | Project                                                                                            | Integration points to inspect                           |
-| --------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Next.js   | [orderly-js-sdk-nextjs-template](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template) | App Router page/client view and locale middleware       |
-| Remix     | [orderly-js-sdk-remix-template](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)   | Optional-symbol route and server locale redirects       |
-| Vite      | [orderly-js-sdk-vite-template](https://github.com/OrderlyNetwork/orderly-js-sdk-vite-template)     | Browser bootstrap, route factory, and lazy-loaded pages |
-
-For shared wiring, inspect the provider, navigation adapter, Prediction route,
-Trade menu, feature visibility, and Perps symbol storage. Adapt those pieces to
-the host's existing structure and retain its broker/network, wallet, locale, and
-layout configuration. File names, hook organization, menu contents, and test tools
-are examples rather than SDK requirements.
-
-Check the template's `package.json` and use a tag or commit compatible with the
-SDK release selected for the host. A template tracking a preview release does
-not establish compatibility with a stable release.
+Use a template tag or commit compatible with the selected SDK release. A template
+tracking a preview does not establish stable-release compatibility. File names,
+provider organization, and test tools are examples; adapt them to the host.
 
 ## 1. Prepare dependencies and the host application
 
-Prediction requires React 18 or later. This guide and the reference projects
-cover Next.js 15 App Router, Remix 2, and Vite with React Router 7; for other
-framework versions or routers, adapt the same integration points. Keep the
-host's existing framework: do not install React Router into Next.js or upgrade
-Remix to React Router 7 for this integration. Use the host's existing package
-manager and lockfile.
+This guide requires React 18+, `@orderly.network/prediction` **3.3.1 or later**,
+and `@orderly.network/i18n` **3.3.1 or later** for `common.predict` in Option A
+and custom entries. 3.3.1 is the minimum compatible version, not a fixed
+installation version. Select the target before editing dependencies:
 
-First align every Orderly SDK package already listed in the host's
-`package.json` to that release, including its wallet connector, for example
-`@orderly.network/trading` and `@orderly.network/ui-scaffold`. Then add
-`@orderly.network/prediction` and only those of the following packages that the
-integration code imports and the host does not yet depend on directly:
+1. If the user specifies a stable or preview version, use it after verifying
+   that it supports this guide's APIs and i18n keys. If incompatible, report the
+   mismatch rather than silently substituting another version.
+2. Otherwise keep the host's existing compatible Prediction version.
+3. If Prediction is absent or incompatible, prefer the version corresponding
+   to the host's main SDK release when that release supports this guide.
+4. If no compatible version matches the host's release, select the latest stable
+   Prediction release and align the related SDK dependencies to it.
 
-| Package                       | Imported by                                                                   |
-| ----------------------------- | ----------------------------------------------------------------------------- |
-| `@orderly.network/prediction` | Prediction route page                                                         |
-| `@orderly.network/react-app`  | `useFeatureEnabled` in the route page                                         |
-| `@orderly.network/types`      | `perpRoute`, `predictionRoute`, `RouteOption`                                 |
-| `@orderly.network/utils`      | Guarded Perps symbol storage                                                  |
-| `@orderly.network/i18n`       | `generatePath` and `getLocalePathFromPathname` in navigation                  |
-| `@orderly.network/markets`    | `TradeSubMenuWidget`                                                          |
-| `@orderly.network/ui`         | Global stylesheet and `PredictionIcon` for custom entries                     |
-| `@orderly.network/hooks`      | `RestrictedInfoOptions`, only when configuring Prediction region restrictions |
+Do not automatically downgrade a host already on a later compatible release.
 
-For example, a host already on SDK 3.3.0 that depends on the other packages adds
-only Prediction at the same release:
+Align all direct Orderly SDK dependencies to that release, including the wallet
+connector after checking its compatibility. Package version numbers can differ
+within a release; for example, `@orderly.network/perp` has its own major version.
+Read the selected Prediction package's published metadata:
 
 ```sh
-npm install --save-exact @orderly.network/prediction@3.3.0
-# pnpm add --save-exact @orderly.network/prediction@3.3.0
-# yarn add --exact @orderly.network/prediction@3.3.0
+npm view @orderly.network/prediction@<version> dependencies
 ```
 
-Use the line matching the host's package manager. This command does not install
-or configure the host's wallet provider.
+Published dependency values are constraints: an exact version requires that
+version, while a range allows compatible versions within the range. Use those
+constraints to choose compatible direct dependencies; do not treat a range as
+an exact version for `--save-exact`. After installation, inspect the lockfile's
+actual resolved versions and confirm that the host and Prediction use compatible
+SDK dependencies, including an i18n version that contains `common.predict`.
 
-Keep these existing pieces:
+For other SDK packages, such as Trading, Markets, and the wallet connector,
+confirm the corresponding versions in the host's registry rather than assuming
+every package has the same number.
+Preserve independently versioned plugins/tooling and workspace `workspace:`
+ranges. Keep React, React DOM, and their types in compatible version families.
 
-- The configured router and the existing `LocaleProvider`, wallet connector, and
-  `OrderlyAppProvider` composition. Any components using router hooks must
-  remain under the host's router.
-- The existing provider's `brokerId` / `brokerName` / `networkId` props **or** its
-  stable `configStore`, with matching endpoints and wallet network. Keep that
-  configuration form. Do not add a store just to match a generic example or
-  combine the two exclusive provider configuration forms.
+Add Prediction and only missing direct dependencies imported by the integration.
+In the table below, A is an independent top-level menu entry and B is a Trading
+submenu; see the [menu options](#trade-menu).
 
-Coding, dependency checks, and public-market navigation checks do not require a
-connected wallet or funds. Trading acceptance additionally requires a connected
-wallet, a registered/signed-in Orderly account, and sufficient available collateral
-on the selected test environment.
+| Package                        | Used for                                | Applies to                           |
+| ------------------------------ | --------------------------------------- | ------------------------------------ |
+| `@orderly.network/prediction`  | `PredictionPage`                        | A and B                              |
+| `@orderly.network/react-app`   | Provider and `useFeatureEnabled`        | A and B                              |
+| `@orderly.network/types`       | Route builders and `RouteOption`        | A and B                              |
+| `@orderly.network/utils`       | Guarded Perps storage                   | A and B                              |
+| `@orderly.network/i18n`        | Localized paths and menu labels         | A and B; 3.3.1+ for `common.predict` |
+| `@orderly.network/markets`     | `TradeSubMenuWidget`                    | B                                    |
+| `@orderly.network/ui-scaffold` | `Scaffold` and navigation configuration | A and B when using Scaffold          |
+| `@orderly.network/ui`          | Custom navigation icons                 | Optional in A and B                  |
 
-`OrderlyAppProvider` already composes the SDK configuration and account/data
-providers. Add the routes to the existing provider tree; avoid creating a second
-account provider or adding a Prediction-specific SWR provider.
+For a host already aligned to release 3.3.1, add Prediction with the commands
+below. Replace the example version with the version selected by the rules above,
+including when using AI to integrate:
+
+```sh
+npm install --save-exact @orderly.network/prediction@3.3.1
+# pnpm add --save-exact @orderly.network/prediction@3.3.1
+# yarn add --exact @orderly.network/prediction@3.3.1
+```
+
+Use the host's existing package manager and update its lockfile. Retain its
+framework/router, provider tree, broker/network, wallet, locale resources, and
+endpoints. Keep the provider's existing configuration form: direct broker/network
+props **or** a stable `configStore`. `OrderlyAppProvider` already composes account
+and data providers; no additional account or Prediction SWR provider is needed.
 
 ## 2. Connect the provider, routes, page, and menu
 
 ### Framework differences
 
-All code examples below use the paths and providers of a Vite application.
-Adapt those integration points to the host; keep one router, provider tree, and
-page layout. Framework-specific code should follow the existing project structure.
+The examples use Next.js 15 App Router, Remix 2, and Vite with React Router 7.
+These are example versions, not minimum requirements or a tested compatibility
+range. Use the host's installed APIs and retain its framework/router.
 
-Framework route params are already decoded; decode only when extracting a symbol
-from a pathname. See the [reference projects](#reference-projects) for
-framework-specific wiring.
+| Host                | Route and symbol                                                                                                                    | Navigation                                                               | Rendering                                                                                                                           |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Next.js App Router  | `src/app/[lang]/predict/[[...symbol]]/page.tsx`; in v15 await `params`, reject extra segments with `notFound()`, pass `symbol?.[0]` | `router.replace` for `replace: true`, otherwise `router.push`            | Client Component for SDK UI; browser-only imports may use `next/dynamic` with `ssr: false` inside that boundary                     |
+| Remix               | `app/routes/$lang.predict.($symbol).tsx`; read `symbol` through `useParams`                                                         | Existing `useNavigate` from `@remix-run/react`, forwarding `{ replace }` | Preserve root providers and SSR; use a hydration boundary for browser-only content and never render `.client` exports on the server |
+| Vite / React Router | `predict/:symbol?` beneath the existing locale parent; read `symbol` through `useParams`                                            | `navigate(href, { replace })`                                            | Existing provider/`Outlet`; create the router once after initial URL normalization                                                  |
 
-#### Next.js 15 App Router
-
-- Route: `src/app/[lang]/prediction/[[...symbol]]/page.tsx`. Await `params`,
-  reject more than one symbol segment with `notFound()`, and pass `symbol?.[0]`
-  to the client view.
-- Rendering: use a Client Component boundary for SDK UI. Browser-only imports
-  can use `next/dynamic` with `ssr: false` inside that boundary.
-- Navigation: use `router.replace` for `replace: true`, otherwise
-  `router.push`.
-- Locale middleware: match both the base and exact-symbol paths without
-  changing the contract or query.
-
-#### Remix 2
-
-- Route: a single `app/routes/$lang.prediction.($symbol).tsx` handles both base
-  and symbol URLs; read `symbol` through Remix `useParams`. An existing parent
-  with `Outlet` plus `_index` and `$symbol` children is also valid; choose one
-  structure.
-- Rendering: keep the framework router and root providers. Ordinary route
-  components render on the server and client; use a hydration boundary only for
-  browser-only content. Do not render `.client` exports on the server.
-- Navigation: use `useNavigate` from `@remix-run/react` with `{ replace }`; do
-  not install React Router 7.
-
-#### Vite / React Router 7
-
-- Route: add `prediction/:symbol?` to the existing `baseRoutes` under `:lang`,
-  wherever the host declares them (`src/appRouter.tsx` or `src/routes.tsx`).
-- Rendering: reuse `OrderlyProvider` and its `Outlet`.
-- Navigation: use `navigate(href, { replace })`, and create the router once
-  after initial locale normalization, as shown in the
-  [Vite reference](#vite-reference).
-
-#### All frameworks
-
-- Extend the existing route path constants (`PathEnum` in this example) with
-  `Prediction = "/prediction"`. Keep this a base path, never a market family or
-  hardcoded round. Add a corresponding page title using the host's title
-  convention. If titles are derived from the pathname, map both `/prediction`
-  and `/prediction/*` to that title rather than looking up the full round URL or
-  using Perps `formatSymbol` for a Binary contract.
-- Update the existing navigation callback, storage wrapper, and Trade menu as
-  described in [reference host wiring](#reference-host-wiring). An adapter that
-  drops `replace` or query strings breaks base-route history.
-- Keep `OrderlyAppProvider` in place, including its broker/network configuration,
-  wallet connector, icons, plugins, and callbacks. Set or preserve the feature
-  flag there.
-- If the Perps page keeps a local `symbol` initialized from URL params/props,
-  make the URL the source of truth, or synchronize that state on incoming
-  params/props changes, so Back/Forward and cross-product return do not show a
-  stale Perps market. Preserve its TradingView and sharing configuration.
-- Preserve the host's locale loading strategy and extension messages. Follow its
-  existing resource-loading or asset-copy workflow when upgrading SDK messages.
+Framework params are already decoded; decode only symbols extracted directly
+from a pathname. Preserve the host's locale and basename. An unlocalized host
+uses `/predict/:symbol?` without adding a locale route.
 
 ### Vite reference
 
-The example uses a Vite application with an existing Orderly provider tree.
-File names and imports are illustrative: reuse the host's equivalent modules and
-create new files only when needed. For Next.js or Remix, adapt routing and client
-boundaries using the [framework differences](#framework-differences) while
-retaining the same integration behavior.
-
-Create `src/pages/prediction/page.tsx`:
+Add a thin page, such as `src/pages/prediction/page.tsx`, using the host's existing
+layout and navigation hook:
 
 ```tsx
 import { useEffect } from "react";
@@ -227,97 +155,56 @@ export default function PredictionRoute() {
 }
 ```
 
-In the module that declares the host's route objects, reuse `lazyImportPage` to
-import that module as `PredictionRoute` and append a
-`{ path: "prediction/:symbol?", element: <PredictionRoute /> }` entry to
-`baseRoutes` once. Keep all existing Perps, Markets, Portfolio, and other route
-objects.
-
-The router factory below uses those `baseRoutes` beneath the existing `:lang`
-parent and `OrderlyProvider`, which already supplies the providers and `Outlet`.
-Use this shape in the host's existing router setup; it adds no provider or layout
-around the page. Call the factory once during browser bootstrap after initial
-locale normalization, and pass its returned router to `AppRoute`. Keep/export the
-existing `baseRoutes` at module scope so bootstrap can call
-`createAppRouter(baseRoutes)` and render `<AppRoute router={router} />`.
-`PerpsRedirect` resolves its destination on each render, so the redirect uses the
-locale in the current URL and the latest remembered Perps symbol rather than
-values captured when the router was created.
+Reuse the host's lazy page import and merge this entry into the existing
+route list under the same parent:
 
 ```tsx
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-  useLocation,
-  type RouteObject,
-} from "react-router";
-import { generatePath, getLocalePathFromPathname } from "@orderly.network/i18n";
-import { perpRoute } from "@orderly.network/types";
-import { OrderlyProvider } from "./components/orderlyProvider";
-import { getPerpSymbol } from "./perpSymbolStorage";
-
-function PerpsRedirect() {
-  const { pathname, search, hash } = useLocation();
-  const href = generatePath({
-    path: perpRoute(getPerpSymbol()).href,
-    locale: getLocalePathFromPathname(pathname) ?? undefined,
-    search,
-  });
-  return <Navigate to={`${href}${hash}`} replace />;
-}
-
-export function createAppRouter(baseRoutes: RouteObject[]) {
-  return createBrowserRouter([
-    {
-      path: "/",
-      element: <OrderlyProvider />,
-      children: [
-        { index: true, element: <PerpsRedirect /> },
-        {
-          path: ":lang",
-          children: [
-            { index: true, element: <PerpsRedirect /> },
-            ...baseRoutes,
-          ],
-        },
-      ],
-    },
-  ]);
-}
-
-export default function AppRoute({
-  router,
-}: {
-  router: ReturnType<typeof createAppRouter>;
-}) {
-  return <RouterProvider router={router} />;
-}
+const predictionRoutes = [
+  { path: "predict/:symbol?", element: <PredictionRoute /> },
+];
 ```
 
-If the host normalizes unlocalized paths, do it before mounting the application:
-when a locale is missing, call `window.location.replace(redirectPath)` with the
-original `search` and `hash`, and mount the application only for an
-already-normalized URL. Rewriting the URL without navigating or rerendering leaves
-no router mounted. Preserve the special `/` redirect to the remembered Perps market.
-Create the router once in a browser bootstrap factory, retaining the existing
-route objects and lazy imports, rather than on every `AppRoute` render. Keep
-subsequent URL-to-locale synchronization in a component beneath `RouterProvider`
-using `useLocation` and an effect. Do not call hooks conditionally or depend on
-round selection to recreate the router.
+Add the optional [legacy redirect](#navigation-compatibility-and-old-links) only
+when migrating a host that previously exposed `/prediction` routes.
+Keep one router and provider tree, including existing loaders, guards, error
+boundaries, and instrumentation. Full router/bootstrap examples are in the
+[reference projects](#reference-projects).
+
+If locale normalization is needed, handle `/predict` base/symbol paths before
+creating the router. Include `/prediction` paths only when supporting an existing
+legacy route. Copy the encoded symbol segment without decoding it,
+and preserve the query and client hash:
+`/predict/PERP_BTC5M2608271200_USDC?network=test#orders` becomes
+`/zh/predict/PERP_BTC5M2608271200_USDC?network=test#orders` for locale `zh`.
+Either navigate with `window.location.replace`, or use `replaceState` and
+continue mounting the router; an early return after URL-only replacement leaves
+no router mounted.
+
+Keep existing root and symbol-less Perps redirects, resolving the current locale
+and remembered symbol at navigation time. The Perps page must also follow URL
+changes after Back/Forward or cross-product navigation.
 
 ### Reference host wiring
 
 #### Navigation callbacks
 
-Update the host's navigation hook (`src/hooks/useNav.ts` in this example) using
-this callback, preserving any additional host branches and existing path
-mappings (for example, aliases for Portfolio sidebar paths). Use `perpRoute` for
-the remembered Perps destination and the SDK `generatePath` to retain the
-current locale. Keep the current query string and
-hash unless the SDK destination explicitly supplies a replacement for each.
-Split off the hash before parsing the query, and append it after the localized
-path and query. An explicit trailing `?` or `#` clears the corresponding value:
+Extend the existing navigation adapter, retaining its route aliases, external
+links, and basename handling. The Vite example below maps SDK paths, retains
+locale/query/hash, and forwards replacement navigation. An explicit destination
+`?` or `#` clears that suffix; an omitted suffix retains the current value.
+
+Share the pathname rewrite between the adapter and legacy redirect. For example,
+create `src/predictionPath.ts`:
+
+```ts
+const LEGACY_PREDICTION_PATH = /^(\/[a-z]{2})?\/prediction(?=\/|$)/;
+
+export function toPredictPath(pathname: string): string {
+  return pathname.replace(LEGACY_PREDICTION_PATH, "$1/predict");
+}
+```
+
+Import that helper in the existing navigation hook:
 
 ```tsx
 import { useCallback } from "react";
@@ -325,6 +212,7 @@ import { useNavigate } from "react-router";
 import { generatePath, getLocalePathFromPathname } from "@orderly.network/i18n";
 import { perpRoute, type RouteOption } from "@orderly.network/types";
 import { getPerpSymbol } from "../perpSymbolStorage";
+import { toPredictPath } from "../predictionPath";
 
 export function useNav() {
   const navigate = useNavigate();
@@ -347,7 +235,9 @@ export function useNav() {
           ? window.location.search
           : pathWithSearch.slice(queryStart);
       const path =
-        pathname === "/" ? perpRoute(getPerpSymbol()).href : pathname;
+        pathname === "/"
+          ? perpRoute(getPerpSymbol()).href
+          : toPredictPath(pathname);
       const href = generatePath({
         path,
         locale:
@@ -362,93 +252,140 @@ export function useNav() {
 }
 ```
 
-Use the locale from the current browser pathname, as above, so a direct localized
-URL also works before the provider's locale synchronization effect completes.
+The current pathname supplies the locale even before provider synchronization.
+Apply host prefixes once, and preserve query/hash in language-switch callbacks
+using the framework's replacement navigation. Browser location reads belong in
+browser callbacks, not module scope or server rendering.
 
-Preserve a host-specific basename/custom URL mapping if present. The SDK emits
-unprefixed paths; apply the host's prefix exactly once. Update existing language
-switch callbacks as well to retain `window.location.search` and `hash`, using
-the framework's replacement navigation so page params follow the URL. Never read
-`window` at module scope or in a server render to construct these destinations;
-the callbacks run in the browser.
+#### Navigation compatibility and old links
+
+Every integration maps SDK hrefs through the navigation adapter, including a
+first-time integration with no previous Prediction routes:
+
+| SDK request                                                | Host destination before locale/basename handling |
+| ---------------------------------------------------------- | ------------------------------------------------ |
+| `predictionRoute()` → `/prediction`                        | `/predict`                                       |
+| `predictionRoute(symbol)` → `/prediction/<encoded-symbol>` | `/predict/<encoded-symbol>`                      |
+
+`RouteOption.name` and the submenu active key remain `"prediction"`. Only the
+host URL segment changes. Custom `onPredictionSelect` callbacks override provider
+navigation and must target the host route themselves. See
+[route builders](../README.md#route-builders) for the full SDK contract.
+
+**Upgrading a 3.3.0 host:** rename the existing page route from
+`prediction/:symbol?` to `predict/:symbol?` and change host path constants such as
+`PathEnum.Prediction` from `"/prediction"` to `"/predict"`. Update host menu links
+and page-title mappings to the new path. Replace the old page route with the
+legacy redirect below; do not register both the old page and the redirect at
+`prediction/:symbol?`, where duplicate routes can select the wrong element.
+For Next.js or Remix, move the page to the corresponding `/predict` route and
+use the old route only for redirection.
+
+**Optional migration:** add `LegacyPredictionRedirect` only if the host previously
+exposed `/prediction` base or symbol routes. It preserves existing bookmarks,
+shared links, and direct entries when moving to `/predict`. A first-time
+integration registers only the new page route; SDK href mapping above is still
+required.
+
+```tsx
+import { Navigate, useLocation } from "react-router";
+import { toPredictPath } from "../predictionPath";
+
+function LegacyPredictionRedirect() {
+  const { pathname, search, hash } = useLocation();
+  const path = toPredictPath(pathname);
+  return <Navigate to={`${path}${search}${hash}`} replace />;
+}
+
+// Merge under the same parent as predict/:symbol? only for a legacy migration.
+const legacyPredictionRoutes = [
+  { path: "prediction/:symbol?", element: <LegacyPredictionRedirect /> },
+];
+```
+
+Rewrite only the legacy page segment, preserving encoded symbols and URL suffixes;
+leave `/predictionish` and `/portfolio/prediction` unchanged. The regex uses the
+SDK's two-letter locale prefixes; adapt the shared helper once for other host
+locales/basenames, and adjust its import path to the host's file structure.
+For a legacy migration in Next.js or Remix, use the existing redirect mechanism
+for legacy base and symbol URLs. Server handlers cannot read a fragment; retain
+client-side hash handling where required.
 
 #### Provider navigation wiring
 
-In the existing `OrderlyProvider` component, call the shared `useNav` hook and pass
-its callback to the existing `OrderlyAppProvider`. This component must render
-beneath the host's router, as it does in the Vite route tree above.
-
-The excerpt shows the app-provider node within that component.
-`existingProviderProps` and `existingChildren` stand for the host's existing
-provider props and content, including its `Outlet`. Keep the wallet and locale
-wrappers at their existing positions around or within this node:
+Call `useNav` beneath the existing router and pass its callback to the existing
+provider, retaining the other props and children:
 
 ```tsx
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { useNav } from "../hooks/useNav";
+const { onRouteChange } = useNav();
 
-export function OrderlyProvider() {
-  const { onRouteChange } = useNav();
-
-  return (
-    <OrderlyAppProvider
-      {...existingProviderProps}
-      onRouteChange={onRouteChange}
-    >
-      {existingChildren}
-    </OrderlyAppProvider>
-  );
-}
+<OrderlyAppProvider {...existingProviderProps} onRouteChange={onRouteChange}>
+  {existingChildren}
+</OrderlyAppProvider>;
 ```
-
-Retain the existing direct broker/network props or stable `configStore`, feature
-settings, region settings, icons, plugins, and other callbacks in those props.
-The explicit `onRouteChange` connects the shared navigation adapter, including
-any preserved host-specific branches. SDK round selection and the Trade menu
-then reach the same adapter as host navigation. Next.js and Remix use their
-existing framework-specific navigation hook at the equivalent provider node.
 
 #### Guarded storage and migration
 
-Implement the host's storage wrapper with the guarded helpers and keep its
-callers consistent. The names below match the reference templates; adapt them
-to the host. The helpers handle unavailable storage during SSR or in restricted
-browsers:
+Use the [public Perps storage helpers](../README.md#host-symbol-persistence) for
+`getPerpSymbol` / `setPerpSymbol`, with the host's configured default. Write only
+from Perps routes so Prediction rounds cannot become remembered Perps markets.
 
-```ts
-import {
-  getStoredPerpSymbol,
-  setStoredPerpSymbol,
-} from "@orderly.network/utils";
-
-export const DEFAULT_SYMBOL = "PERP_ETH_USDC";
-
-export function getPerpSymbol() {
-  return getStoredPerpSymbol() ?? DEFAULT_SYMBOL;
-}
-
-export function setPerpSymbol(symbol: string) {
-  setStoredPerpSymbol(symbol);
-}
-```
-
-For existing applications, migrate a host-owned key to `orderly_perp_symbol`
-when preserving that preference is required. Keep an existing valid SDK value;
-otherwise pass the legacy value through `setStoredPerpSymbol` before consumers
-read it. Reject Binary rounds, tolerate unavailable storage, and confirm the new
-value before deleting a valid legacy value, because writes can silently fail.
-The SDK does not perform this host-specific migration automatically.
-
-Keep symbol writes in Perps page effects only. A server-side redirect has no
-access to browser storage and uses the configured default Perps symbol.
+If migrating a host-owned key, preserve a valid SDK preference; otherwise pass
+the legacy value through the guarded setter. Confirm the new value before
+removing a valid legacy value because storage writes may fail. This host-specific
+migration is not automatic. Server redirects cannot read localStorage and use
+the configured default.
 
 #### Trade menu
 
-Create a Trade menu component (`src/components/layout/customTradeSubMenu.tsx` in
-this example). `usePathWithoutLang` stands for the host's way of reading the
-current path without its locale prefix. The mount guard also keeps
-remembered-symbol reads out of SSR markup when adapting this component to a
-server-rendered host.
+Choose the arrangement that fits the host: an independent top-level Prediction
+entry or a switcher inside the existing Trading menu. Both use the same
+[routes and navigation adapter](#navigation-callbacks).
+
+**Option A: independent top-level entry**
+
+`dex-creator-template` adds Predict alongside Trading in
+`Scaffold.mainNavProps.mainMenus`. In the existing configuration hook, merge the
+entry into the host's ordered menu list once:
+
+```tsx
+const { t } = useTranslation();
+const mainMenus = predictionEnabled
+  ? [...existingMainMenus, { name: t("common.predict"), href: "/predict" }]
+  : existingMainMenus;
+```
+
+`useTranslation` comes from `@orderly.network/i18n`. `predictionEnabled` is the
+same effective feature setting passed to `OrderlyAppProvider`; a configuration
+hook outside that provider should read the host's authoritative setting.
+The template derives it from its enabled menu configuration.
+
+Inside the Prediction layout, keep base and round URLs highlighted as one entry:
+
+```tsx
+<Scaffold
+  {...existingScaffoldProps}
+  mainNavProps={{ ...existingMainNavProps, mainMenus, initialMenu: "/predict" }}
+  routerAdapter={{
+    ...existingRouterAdapter,
+    onRouteChange,
+    currentPath: "/predict",
+  }}
+>
+  {children}
+</Scaffold>
+```
+
+These active-path values belong to the Prediction layout; a shared layout must
+derive them from the current route. Reuse the filtered menu list in custom mobile
+sidebars, as the template does. Bottom navigation is configured separately and
+does not gain a Prediction item automatically. The independent entry needs no
+`customSubMenuRender` or Prediction `activeHrefs` on the Trading item.
+
+**Option B: switcher inside Trading**
+
+`usePathWithoutLang` below represents the host's locale-free pathname hook.
+The mount guard prevents browser preferences from changing initial SSR markup:
 
 ```tsx
 import { useEffect, useState } from "react";
@@ -459,8 +396,7 @@ export default function TradeMenu() {
   const path = usePathWithoutLang();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const isPrediction =
-    path === "/prediction" || path.startsWith("/prediction/");
+  const isPrediction = path === "/predict" || path.startsWith("/predict/");
   const match = path.match(/^\/perp\/([^/]+)$/);
   let symbol: string | undefined;
   try {
@@ -477,441 +413,144 @@ export default function TradeMenu() {
 }
 ```
 
-Import this component where the host builds its Scaffold configuration
-(`useOrderlyConfig.tsx` in this example). On its existing
-Trading `mainMenus` entry, merge `activeHrefs: [PathEnum.Prediction]` with any
-existing active paths and add `customSubMenuRender: () => <TradeMenu />`, preserving
-the other entries and host custom submenu content. If a custom submenu already
-exists, compose its additional product entries through the widget's `items`
-callback rather than creating another Trading menu entry.
+Extend the existing Scaffold Trading menu: merge `activeHrefs: ["/predict"]` with
+existing active paths and add `customSubMenuRender: () => <TradeMenu />`.
+Keep `PathEnum.Prediction = "/predict"` if using path constants, and map both base
+and symbol URLs to the Prediction page title. Compose existing custom submenu
+entries through the widget's `items` callback. See
+[Trade sub menu](../README.md#trade-sub-menu) for its props.
 
-The mount guard defers widget rendering; it is not a replacement for import-time
-SSR compatibility. If an upgraded dependency fails before mounting, capture the
-failing server import, preserve any existing SSR bundler configuration, and
-report/fix that dependency issue rather than assuming the Prediction page wrapper
-fixes the root.
-
-If the root provider builds this configuration before mounting
-`OrderlyAppProvider`, do not call `useFeatureEnabled` there to gate menus. Gate
-custom entries in components rendered beneath the provider, or pass the existing
-authoritative feature setting into configuration generation. The widget handles
-its own Prediction flag; built-in market selectors also provide mobile access.
-
-The [reference templates](#reference-projects) demonstrate feature-aware layout
-configuration while sharing the same provider setup.
+When gating custom entries with `useFeatureEnabled`, render them beneath
+`OrderlyAppProvider`; outside it, use the host's authoritative setting as in
+Option A. The mount guard handles rendering only; it cannot fix import-time SSR
+errors. Both arrangements follow the same
+[feature visibility and route fallback rules](#4-configure-feature-visibility-and-regional-restrictions).
 
 ### Navigation contract
 
-Navigation rules:
+- A URL symbol identifies one exact round. Pass accepted URL changes back to
+  `PredictionPage`; refresh and history restore that round, and expiry does not
+  advance it automatically.
+- Symbol-less entry selects the remembered/default market's current round and
+  requests replacement navigation. Always forward `RouteOption.replace`.
+- `onSymbolChange` takes precedence for same-product selections; a controlled
+  host must accept the selection by updating `symbol` itself.
 
-- Entering `/prediction` without a symbol selects the remembered/default market's
-  current round once metadata is available and requests the exact URL with
-  `replace: true`. Always forward this flag to the host router.
-- A symbol identifies one exact contract, such as
-  `PERP_BTC5M2608271200_USDC`, rather than a market family. This symbol is an
-  illustrative historical round, not a contract to use for a live trading test.
-- Refresh, sharing, and browser history restore that contract. Expiry does not
-  advance it automatically. The live/next-round controls request another URL;
-  the host must accept navigation and pass the new symbol back to the page.
-- Invalid or unavailable symbols do not redirect on their own. Only a valid
-  contract whose detail request fails with no usable data requests one
-  same-market fallback round; the host still accepts that request. See
-  [symbol resolution and fallback](../README.md#symbol-resolution-and-fallback).
-- The optional `onSymbolChange` receives `{ symbol }` and takes precedence over
-  same-product routing. In controlled integrations, update the symbol yourself;
-  cross-product navigation still uses `onRouteChange`.
-- Only the Perps page writes its remembered symbol. The guarded storage helpers
-  reject Binary round symbols and clean up previously stored round symbols.
+See [page navigation](../README.md#prediction-page-navigation) for selection
+semantics and [symbol resolution and fallback](../README.md#symbol-resolution-and-fallback)
+for invalid, unavailable, and historical contracts.
 
-See [page navigation](../README.md#prediction-page-navigation),
-[symbol persistence](../README.md#host-symbol-persistence), and
-[Trade sub menu](../README.md#trade-sub-menu) for the complete contracts.
+## 3. Built-in integrations
 
-## 3. Keep the shared styles and built-in integrations
+| Existing surface             | Automatic Prediction integration                                                |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| `TradingPage`                | Market selectors and shared desktop/mobile account panels                       |
+| Trading Next layouts         | Market selectors only                                                           |
+| `MarketsHomePage`            | Prediction tab and supplemental All/favorites rows when navigation is available |
+| Portfolio Orders / Positions | Product filtering and Prediction account panels                                 |
 
-Retain the existing import in the application's global stylesheet:
-
-```css
-@import "@orderly.network/ui/dist/styles.css";
-```
-
-The UI stylesheet includes Prediction and shared trading classes. Keep it on the
-same SDK release version. Alternative stylesheet/Tailwind setups are covered in
-[Stylesheet](../README.md#stylesheet).
-
-With Prediction enabled:
-
-| Existing SDK surface                                           | Built-in behavior                                                                     |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `TradingPage` (`@orderly.network/trading`)                     | Prediction market selection and shared desktop/mobile account panels                  |
-| Trading Next layouts (`@orderly.network/trading-next`)         | Prediction market selectors; no cross-product account panels                          |
-| `MarketsHomePage` (`@orderly.network/markets`)                 | Prediction tab plus supplemental All/favorites rows when `onRouteChange` is available |
-| `OrdersModule.OrdersPage` (`@orderly.network/portfolio`)       | Product filtering, Prediction rows, and cancellation                                  |
-| `PositionsModule.PositionsPage` (`@orderly.network/portfolio`) | Prediction positions and position history product switches                            |
-
-Continue rendering the standard pages. Manual Prediction extension props and
-additional account queries are unnecessary for these built-in integrations.
-`MarketsHomePage` inserts the Prediction tab after Crypto and routes selections to
-`/prediction/<encoded-round-symbol>`; without `onRouteChange`, pass
-`onPredictionSelect` to enable it. See
-[Perps integration](../README.md#perps-trading-page-integration).
-
-In Portfolio, Orders initially shows All products with All / Perps / Prediction
-filters. Positions and Position history initially show Perps with a Prediction
-switch; Liquidation remains Perps-only. Keep the existing page props. Custom
-`positionProductContent` and `positionHistoryProductContent` callbacks override the
-built-in content for their respective tabs.
-
-Both Portfolio pages fall back to the app provider's `onRouteChange` when
-`onSymbolChange` / `onPredictionSelect` are omitted; supplied callbacks take
-precedence. Preserve the host's `sharePnLConfig` on both pages and its Positions
-precision/calculation preferences. See
-[Portfolio integration](../README.md#portfolio-integration) and the reference
-projects for the page wiring.
+Keep standard page calls and host props. Built-in navigation uses the
+[shared adapter](#navigation-callbacks); custom callbacks retain precedence.
+No additional account queries or manual product panels are required. See
+[Perps integration](../README.md#perps-trading-page-integration),
+[Portfolio integration](../README.md#portfolio-integration), and the
+[migration reference](../README.md#removed-manual-page-integration-api).
 
 ## 4. Configure feature visibility and regional restrictions
 
-Prediction is enabled when `features` is omitted, empty, or contains
-`prediction: true`. Set `features={{ prediction: false }}` on the existing
-`OrderlyAppProvider` to disable the automatic integration.
+Only an explicit `features.prediction: false` disables Prediction. Preserve other
+feature settings and an existing disabled state unless enabling it was requested.
+`TradeSubMenuWidget` hides its entry automatically. Gate custom entries with the
+same effective setting, or `useFeatureEnabled("prediction")` beneath the provider,
+and provide the route fallback shown in the
+[page example](#vite-reference). Disabled SDK pages return `null`; account
+valuation and independent low-level consumers remain available. See
+[application features](../README.md#application-features).
 
-`TradeSubMenuWidget` hides its Prediction entry automatically. Hosts must hide
-their own mobile/side navigation entries using `useFeatureEnabled("prediction")`
-and supply a route fallback, as `PredictionRoute` does above. Otherwise a disabled
-`PredictionPage` returns `null`. This UI setting does not disable low-level data
-hooks or account valuation for existing Binary exposure.
+For custom entries, reuse `common.predict`, `PredictionIcon` from
+`@orderly.network/ui`, and `predictionRoute()` through the shared adapter.
+Additional broker region restrictions are optional: retain existing settings or
+follow [regional restrictions](regional-restrictions.md) when configuring them.
 
-For those custom entries, reuse the pieces the SDK already ships: the label key
-`common.predictions` from `@orderly.network/i18n`, `PredictionIcon` from
-`@orderly.network/ui`, and the destination `predictionRoute()` from
-`@orderly.network/types`.
+## 5. Verify the integration
 
-Broker-specific Prediction region restrictions are configured through the
-existing provider's `restrictedInfo` prop:
+### Verification prerequisites
 
-```ts
-import type { RestrictedInfoOptions } from "@orderly.network/hooks";
+Use the host's existing endpoints/network and development script for live checks:
 
-declare const existingRestrictedInfo: RestrictedInfoOptions | undefined;
-declare const extraRegions: string[];
+- Public UI: confirm `/v1/public/binary/info` returns metadata and use a current
+  round symbol from that environment.
+- Trading: confirm backend support for fees, trading, and settlement, plus an
+  authorized test wallet, a registered/signed-in Orderly account, and sufficient
+  collateral. Code and public navigation checks need no wallet or funds.
 
-const restrictedInfo: RestrictedInfoOptions = {
-  ...existingRestrictedInfo,
-  predictionRegionRestriction: {
-    ...existingRestrictedInfo?.predictionRegionRestriction,
-    customRestrictedRegions: [
-      ...new Set([
-        ...(existingRestrictedInfo?.predictionRegionRestriction
-          ?.customRestrictedRegions ?? []),
-        ...extraRegions,
-      ]),
-    ],
-  },
-};
-```
+### Verification checks
 
-This configuration is optional. When needed, pass
-`restrictedInfo={restrictedInfo}` to the existing `OrderlyAppProvider`, keeping
-its configuration form (direct props or `configStore`), other props, children,
-and site-wide restriction settings unchanged. `extraRegions` contains region/city
-names in the same format as the site-wide `customRestrictedRegions`. The example
-merges and deduplicates the existing and extra Prediction regions while
-preserving the existing `enableDefault`, including an explicit `false`.
+Run the host's typecheck, relevant lint, build, and focused route tests. Use the
+application tsconfig with project references; a build that ignores compiler/lint
+errors does not replace those checks. Resolve dependency/tooling issues without
+forced peer installs, framework changes, casts, or ignored errors. Record
+pre-existing failures and unavailable checks separately.
 
-Policy semantics:
+| Check                         | Expected result                                                                                                                                  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Base route                    | Resolves the current round with replacement navigation; Back skips the extra base entry                                                          |
+| Round route                   | Direct load, refresh, sharing, round selection, and Back/Forward follow the URL                                                                  |
+| Localization                  | `/predict` base and symbol URLs work with and without locale prefixes; preserve encoding, query, client hash, and history                        |
+| Legacy links (migration only) | If the host previously exposed `/prediction`, its base and symbol URLs replace onto `/predict` with locale and suffixes preserved                |
+| Navigation adapter            | Explicit/inherited query/hash values work; unrelated paths and existing route aliases are unaffected                                             |
+| Perps return and storage      | Cross-product switching restores a valid Perps symbol; guarded migration tolerates blocked/failed storage                                        |
+| UI and features               | Desktop/mobile menus, highlighting, styles, and translations work; disabling hides entries and uses the route fallback                           |
+| Production routing            | Next.js/Remix direct round loads have no SSR/hydration errors; Next.js rejects extra segments; deployed SPAs serve history fallback              |
+| Unavailable data              | Exercise the documented [fallback rules](../README.md#symbol-resolution-and-fallback), missing fees, and region restrictions                     |
+| Account flows                 | Authorized live checks cover submission, open orders, cancellation, positions, history, and settlement across Prediction, Trading, and Portfolio |
 
-- The policy and both fields are optional. `enableDefault` defaults to `true`,
-  and `customRestrictedRegions` defaults to `[]`.
-- With `enableDefault: true`, custom regions are combined with the platform
-  Binary list returned by `/v1/product_restricted_areas?product_type=BINARY`.
-- With `enableDefault: false`, only custom regions apply; with an empty custom
-  list, no Prediction region restriction is applied.
-- The policy does not override site-wide restrictions or wallet connection
-  limits.
-- Restricted users can still view the product, but trading is disabled. Missing
-  geo data does not block trading under the current product behavior.
-- For custom trading actions, use `useBinaryRegionRestricted` from
-  `@orderly.network/prediction`.
-
-## 5. Check the target environment
-
-Start the host with its existing development script and use the URL printed by
-that server. Read its environment and endpoints from the host configuration;
-keep the API, public/private WebSocket, Operator endpoints, and wallet network
-consistent. Do not introduce reference-project ports, endpoints, or environment
-switches.
-
-Confirm that `/v1/public/binary/info` returns market metadata in the selected
-environment, and that the backend supports the required account fees, trading,
-and settlement operations. Report unavailable backend capabilities separately
-from code integration results.
-
-## 6. Verify the integration
-
-Use the host's own scripts for typecheck, relevant lint, and build checks. When
-the host has no typecheck script, use its installed TypeScript compiler with the
-application's tsconfig and `--noEmit` when supported; with TypeScript project
-references, check the application project rather than a root that only
-references others. Run existing focused route/navigation tests and extend that
-harness for changed behavior where needed; do not add a new testing framework
-solely for this integration.
-
-The installed framework/tool versions and scripts are authoritative. If a lint
-script fails to start because of a pre-existing tooling mismatch, record the
-failure and use the installed ESLint with the existing config to check affected
-files. Do not change framework versions, bypass peer-dependency checks, or enable
-more ignored errors just to make the build green. Missing dependencies require
-installation before a meaningful check; `node_modules` existing alone does not
-prove it is complete.
-
-If the build configuration ignores type or lint errors (for example Next.js
-`typescript.ignoreBuildErrors` or `eslint.ignoreDuringBuilds`), always run the
-separate compiler and lint checks. Do not interpret build success as their
-replacement.
-
-When the host has no test runner, perform the public-UI checks through available
-browser automation and report unavailable checks. For
-the feature-disabled case, temporarily set the existing provider's flag to false
-in a test fixture or local verification change, check navigation, then restore
-the intended setting without reverting unrelated user edits. There is no SDK
-localStorage switch that automatically changes this provider flag.
-
-For server-rendered hosts such as Next.js and Remix, also start the built
-application with the host's production start script when its build succeeds and
-repeat a direct round-URL load/refresh. Inspect both server logs and browser
-console for SSR import errors and hydration warnings; a typecheck does not
-establish server rendering compatibility. For a Vite SPA, check the production
-preview, with SPA history fallback serving both base and round paths in the
-eventual deployment host.
-
-### Public UI and account acceptance
-
-Run the checks below using the host's development server and available browser
-automation, with its existing mocks for deterministic route tests. For live
-checks, obtain a current contract from the target environment's metadata rather
-than hardcoding the illustrative historical symbol:
-
-- [ ] Open the localized symbol-less Prediction route. Once metadata loads, it
-      fills the exact round URL using replacement navigation. With an earlier
-      non-Prediction history entry, one Back action does not revisit an extra
-      base-route entry.
-- [ ] Refresh a round-specific URL, share it, select another round, and use Back.
-      The selected contract follows the URL; expiry alone does not move it.
-- [ ] Exercise the host's existing root, localized-root, and symbol-less Perps
-      redirects with a query and hash. Client redirects retain the locale, query,
-      and hash and use the remembered/default market. Server redirects preserve
-      the incoming contract/query where applicable and use their configured
-      default; they cannot read localStorage or a URL fragment. Preserve existing
-      history behavior and forward requested replacement navigation. Do not add
-      new root routes just to match an example.
-- [ ] With the host's existing mocks, fail a detail request for a valid contract
-      absent from the snapshot. A same-market fallback requests one replacement
-      URL, or one `onSymbolChange` in controlled mode. Without a fallback, the
-      unavailable view remains. Invalid symbols, mismatched metadata, and failed
-      refreshes of already-available data do not themselves request navigation.
-- [ ] Switch between Perps and Prediction through the menu and market selectors.
-      Check menu highlighting, locale/query/basename preservation, and the remembered
-      Perps symbol after returning to `/perp`.
-- [ ] Seed the former host storage key with a Perps symbol, then with a Binary
-      round. Verify migration preserves a valid preference, rejects rounds,
-      respects an existing SDK preference, and tolerates blocked/failed storage.
-- [ ] Check desktop and mobile trading views and their styles. Test the host's
-      custom navigation entries as well as the built-in menu. Confirm other routes,
-      existing menu entries, and wallet/locale composition still work.
-- [ ] Open both `/prediction` and `/prediction/<current-symbol>` without a locale,
-      then with `/en` and one supported non-English prefix. Verify that framework
-      redirects preserve the exact contract and query, Prediction text is
-      translated rather than showing raw i18n keys, and language switching
-      retains the query/hash.
-- [ ] In Next.js and Remix, directly load and refresh a round URL in the built
-      application. Verify successful server responses, client rendering, and no
-      new SSR/hydration errors. Reject extra catch-all path segments in Next.js.
-- [ ] With a funded account on the intended test environment, check order
-      submission, open orders, cancellation, positions, history, and settlement
-      in Prediction, Trading, and Portfolio. Custom order rendering should follow
-      the
-      [order field mapping](../README.md#order-field-mapping).
-- [ ] Disable Prediction. Built-in entries disappear, custom entries are hidden,
-      and direct Prediction URLs use the host fallback. Existing account valuation
-      remains available.
-- [ ] Verify unavailable markets, missing fees, and regional restrictions produce
-      the expected display and disabled trading behavior.
-
-When a test runner, browser, account session, test funds, backend capability, or
-permission to submit the requested trades is unavailable, continue independent
-checks and report the exact checks left **not verified**, with reproducible manual
-steps. Trading checks require an existing authorized test account and the intended
-environment. A checklist, typecheck, or mocked response is not evidence of live
-trading. Diagnose failed checks, apply scoped fixes, and rerun the affected checks;
-distinguish pre-existing failures with baseline evidence instead of suppressing
-diagnostics.
+Use existing mocks for deterministic route/fallback checks and browser checks for
+public UI. Test disabled behavior in a fixture or temporary provider setting and
+restore the intended configuration afterward. For SSR hosts, repeat direct loads
+against the production build and inspect server/browser logs; for SPAs, use the
+production preview. Typecheck and mocked tests do not establish live trading.
 
 ### Troubleshooting
 
-| Symptom                                                      | Check                                                                                                                                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Prediction selection opens a missing page                    | Register both base and symbol routes; merge the route beneath the correct locale prefix.                                                                                 |
-| Base route adds an unwanted history entry                    | Forward `RouteOption.replace` to the router.                                                                                                                             |
-| Selecting another round leaves the page unchanged            | Update the URL/`symbol`; controlled callbacks only request selection.                                                                                                    |
-| Round stays expired                                          | URLs intentionally pin contracts. Use the live-round control and accept its navigation request.                                                                          |
-| No markets or an unavailable round                           | Inspect `/v1/public/binary/info` and `/v1/public/binary/info/:symbol` in the configured environment; see [Navigation contract](#navigation-contract) for fallback rules. |
-| Prediction menu entry is missing                             | Check `features.prediction` and that `OrderlyAppProvider` receives `onRouteChange`; automatic market navigation requires it.                                             |
-| Page is blank after disabling                                | Supply the host route fallback; disabled SDK pages return `null`.                                                                                                        |
-| Page is unstyled                                             | Check the global UI stylesheet import and matching SDK versions.                                                                                                         |
-| Trading is unavailable                                       | Check wallet/account readiness, collateral, round availability, and Binary region restrictions.                                                                          |
-| Fee is unknown                                               | Check actual account Binary fee configuration. Missing/invalid rates are unavailable, not zero; do not invent a fallback rate.                                           |
-| Returning to Perps restores a Binary round                   | Use guarded storage helpers and write only from Perps routes.                                                                                                            |
-| Base route works but a direct unlocalized round URL does not | Make the locale redirect (for example Next.js middleware) match both `/prediction` and `/prediction/<symbol>`; preserve the original symbol and query.                   |
-| Server import or hydration errors in Next.js/Remix           | Keep the new SDK page behind the framework client boundary; do not statically render a Remix `.client` export or put `ssr: false` in a Next.js Server Component.         |
-| Blank page after adding a locale prefix                      | Initial locale normalization must navigate or rerender; a URL-only `replaceState` followed by an early return leaves no router mounted.                                  |
+| Symptom                                                     | Check and reference                                                                                                                                                                                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Missing page, lost query/hash, or extra history entry       | Check the `/predict` page route, basename, preserved query/hash, and forwarded `replace` flag. See [navigation and legacy links](#navigation-compatibility-and-old-links).                                                                                    |
+| Blank page after locale normalization                       | Confirm the router still mounts after `replaceState`, or use `location.replace`. See [browser bootstrap rules](#vite-reference).                                                                                                                              |
+| Selection does not update the page or round remains expired | Pass URL changes back through `symbol`; accept live-round navigation because an exact-round URL stays pinned. See [navigation contract](#navigation-contract).                                                                                                |
+| Missing menus or blank page after disabling                 | Check the effective `features.prediction` setting, custom menu gates, and host route fallback. See [feature visibility](#4-configure-feature-visibility-and-regional-restrictions).                                                                           |
+| Menu displays `common.predict`                              | Check that the resolved `@orderly.network/i18n` version is 3.3.1+ and custom locale resources include the key. See [dependencies](#1-prepare-dependencies-and-the-host-application).                                                                          |
+| Returning to Perps restores a Binary round                  | Check that only Perps routes write the remembered symbol through the guarded setter. See [guarded storage](#guarded-storage-and-migration).                                                                                                                   |
+| Unstyled page or server import/hydration error              | Check the global stylesheet import, matching SDK versions, and browser-only rendering boundary. See [stylesheet reference](../README.md#stylesheet) and [framework boundaries](#framework-differences).                                                       |
+| Trading unavailable or unknown fees                         | Check wallet/account readiness, collateral, round availability, fee data, and region settings. See [verification prerequisites](#verification-prerequisites), [Binary fees](../README.md#binary-fees), and [regional restrictions](regional-restrictions.md). |
 
 ## AI Integration Workflow
 
-Follow this workflow when an AI agent is asked to integrate Prediction into an
-existing application. Use the Vite example as the reference contract and adapt it
-to the host's existing framework. The
-[framework differences](#framework-differences) cover Next.js 15 App
-Router, Remix 2, and Vite / React Router 7. For other routers, identify any missing
-adapter instead of migrating the application to React Router.
+1. **Discover:** read repository instructions, package metadata, lockfile, and
+   initial Git changes. Locate the actual provider, router, navigation, Perps
+   storage, and verification scripts. Check whether the host
+   previously exposed legacy `/prediction` routes.
+   Select the actual SDK version using the
+   [version selection rules](#1-prepare-dependencies-and-the-host-application);
+   3.3.1 is the minimum compatible version, and the installation example is not
+   a fixed version requirement.
+2. **Choose the menu:** use the user's specified arrangement; otherwise retain
+   an existing Prediction menu. When adding a new Prediction menu without a
+   specified arrangement, ask the user to choose between an independent top-level
+   entry and a Trading submenu before changing the menu. See
+   [menu options](#trade-menu).
+3. **Implement:** follow the [checklist](#minimal-integration-checklist) using the
+   host's existing modules and [framework adapter](#framework-differences).
+   Preserve unrelated work and configuration. Reuse existing wiring on repeated
+   runs; verify one router/provider tree, one route per intended parent, and one
+   menu entry per surface. Add a legacy redirect
+   only for an existing `/prediction` route migration; always map SDK hrefs.
+4. **Verify:** complete the [checks above](#5-verify-the-integration). Continue
+   independent checks when a tool, backend capability, wallet, or funds is missing.
+5. **Report:** list changed files, target/resolved SDK versions, router mode,
+   feature state, checks with outcomes, and remaining prerequisites. Report code
+   integration and live trading verification separately; mark either incomplete
+   when its required checks failed or could not run.
 
-### A. Discover the host before editing
-
-Read repository instructions and the target application's `package.json` and
-lockfile. Use its existing package manager. Record the initial Git changes and
-preserve unrelated user work. Locate these integration points by searching imports
-and usages rather than assuming the reference file paths:
-
-| Integration point | What to identify                                                                                                                                 |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Routing           | Next.js App Router, Remix file routes, or React Router route objects/JSX; parent routes, basename, locale prefix, redirects, and instrumentation |
-| Providers         | Existing `OrderlyAppProvider`, Locale/wallet provider order, `configStore`, `onRouteChange`, and `features`                                      |
-| Navigation        | Shared Scaffold, Trade menu, custom mobile/side entries, and active-route handling                                                               |
-| Persistence       | Last Perps symbol readers/writers and symbol-less Perps redirects                                                                                |
-| Styling           | Existing global SDK stylesheet or SDK Tailwind content setup                                                                                     |
-| Verification      | Actual typecheck, lint, build, test, and development-server scripts, including package-specific scripts in monorepos                             |
-
-Identify the framework using the [framework differences](#framework-differences).
-The `:lang` prefix in the
-reference is illustrative: preserve the host's prefix/basename and existing
-navigation adapter. An unlocalized host should register `/prediction/:symbol?`
-and retain its unlocalized adapter instead of adding a Locale route merely to
-match this guide. Register both the base and exact-symbol destinations, either
-through an optional segment or two equivalent routes.
-
-### B. Check dependencies and inputs
-
-Select the target Prediction version before changing pins:
-
-1. If the host already depends on `@orderly.network/prediction` 3.3.0 or later,
-   keep that version.
-2. Otherwise, if the host's main SDK packages (such as
-   `@orderly.network/react-app` and `@orderly.network/trading`) already share a
-   version of 3.3.0 or later, use the Prediction version with the same number.
-3. Otherwise, use the latest stable Prediction release.
-
-If the user explicitly requested a preview version, select that exact preview
-instead and apply the dependency-alignment checks below to its published
-metadata. Do not replace a requested preview with a stable version silently.
-
-Never downgrade a host that is already on a later release. Read the exact package
-versions of that release with
-`npm view @orderly.network/prediction@<version> dependencies` and align the
-host's matching direct dependencies to them. Packages outside that list, such as
-`@orderly.network/trading`, `@orderly.network/markets`, and the wallet connector,
-normally use Prediction's version number. Confirm every target version in the
-host's configured package registry; update existing direct SDK dependencies and
-add only packages the integration imports. Preserve independently versioned
-plugins and tooling. Confirm wallet connector compatibility before changing its
-version. In a workspace SDK checkout, retain `workspace:` dependency ranges rather
-than replacing them with registry pins. Update the existing lockfile with the
-same package manager.
-
-Keep React, React DOM, and their type packages in one compatible version family.
-After upgrading, inspect the dependency tree (for example `npm ls react react-dom
-@types/react @types/react-dom`) if SDK components fail JSX type checking. Resolve
-incompatible or duplicated React type families through the dependency graph; do
-not hide those errors with component casts, ignored compiler errors, or forced
-peer installation.
-
-Updating only `prediction` is insufficient. Align the direct SDK packages already
-used by the app, retain unrelated dependency changes, and resolve any
-upgrade-related API errors before claiming integration success.
-
-Derive the broker, network, endpoints, and wallet/locale configuration from the
-host. Keep them unchanged; do not copy example identities, credentials, or temporary
-internal versions. If the host lacks its required providers/configuration, or the
-selected compatible release cannot be resolved, report the exact missing input
-and continue only work that does not depend on it. Do not silently fall back to a
-pre-release, mix SDK releases, or switch to a different backend environment.
-Missing wallet sessions or test funds do not block coding.
-
-### C. Merge the integration once
-
-Use the examples as contracts to merge into the host, not replacement application
-files. On first and subsequent runs:
-
-1. Reuse the single router and existing provider tree. Extend the current
-   `onRouteChange` to support Prediction paths and `replace`, preserving its
-   external-link handling, route aliases, locale, query string, and basename
-   behavior.
-2. Reuse an existing Prediction page/route when present; otherwise add the thin
-   page based on the reference, passing the accepted URL symbol to
-   `PredictionPage`. Retain lazy loading, loaders, guards, error boundaries, and
-   instrumented router creation. In a data router, add the child route to the
-   existing route objects; do not mount `Routes` or a second `RouterProvider`
-   inside them. Next.js and Remix retain their framework routers and the
-   client/SSR boundaries listed in the
-   [framework differences](#framework-differences).
-3. Merge Prediction into the existing Trade menu and active-path rules, retaining
-   host entries. Gate custom mobile/side entries with `useFeatureEnabled` and
-   provide a disabled-feature route fallback to the remembered/default Perps page.
-   Reuse existing translated labels and follow the host's localization workflow
-   for any new user-facing copy.
-4. Preserve other `features` fields and an existing explicit `prediction: false`;
-   report that pre-existing disabled state unless the user requested enabling it.
-   Otherwise rely on the default enabled behavior. Preserve all other provider
-   props, children, and region settings. Additional region restrictions are opt-in;
-   retain the host's values and do not invent a restricted-region list.
-5. Replace unguarded Perps symbol storage with the public guarded helpers where
-   needed, and keep writes scoped to Perps routes. Reuse an existing stylesheet or
-   compatible Tailwind setup; add the UI stylesheet only if neither covers SDK
-   styles.
-6. Keep standard Trading, Markets, and Portfolio calls. Remove obsolete manual
-   Prediction extension wiring only where it is replaced by the built-in
-   integration described in the
-   [migration reference](../README.md#removed-manual-page-integration-api).
-
-Before validation, inspect the resulting configuration for one Prediction route
-per intended parent, one menu entry per intended surface, one provider tree, and
-one effective stylesheet setup. If a second run discovers all required wiring,
-skip those edits and proceed directly to verification.
-
-### D. Verify and report
-
-Follow [Verify the integration](#6-verify-the-integration) for commands and
-acceptance checks. Keep code verification and live trading verification
-separate, and report any checks that could not run.
-
-#### Completion report
-
-Report the changed files and their purpose, target/resolved SDK versions, router
-mode, effective feature state, validation commands with outcomes, and browser/API
-evidence. Identify each remaining prerequisite and the checks it blocks. Use these
-completion categories independently:
-
-- **Code integration verified**: dependency installation, typecheck, relevant lint,
-  application build, and the route/UI checks all passed for the target app.
-- **Code integration implemented; verification incomplete**: wiring is present,
-  but one or more checks failed or could not run. List them; do not report full
-  success.
-- **Trading integration verified**: the requested account/trading scenarios passed
-  against the selected backend. Otherwise state **Trading integration not fully
-  verified**, even when code integration is verified.
-
-If no suitable host configuration exists and wiring cannot be completed, report
-**Integration blocked** with the missing inputs and any independent work completed.
-
----
-
-For standalone account layouts and resource lifecycles, continue with the
-[Prediction integration reference](../README.md).
+For standalone account data, field mappings, and resource lifecycles, use the
+[package reference](../README.md#standalone-account-data).

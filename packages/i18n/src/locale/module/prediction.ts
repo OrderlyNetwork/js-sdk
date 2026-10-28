@@ -6,7 +6,7 @@ export const prediction = {
     "Unable to load sub-account positions. Please try again.",
   "prediction.orders.loadError": "Unable to load orders. Please try again.",
   "prediction.currentAccount": "Current account",
-  "prediction.title": "Prediction",
+  "prediction.title": "Predict",
   "prediction.description": "Trade outcomes with real-time odds",
   "prediction.marketName": "{{base}} UP/DOWN {{period}}",
   "prediction.chart.indexPrice": "{{base}} index price",
@@ -45,11 +45,11 @@ export const prediction = {
     "Enter 5–99,999.99 USDC for each preset (up to 2 decimal places).",
   "prediction.currentPrice": "Current price",
   "prediction.finalPrice": "Final price",
-  "prediction.chance": "Up chance",
+  "prediction.probability": "Up probability",
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
   /** Combined compact-panel headers, perps `Last/24h %` style. */
-  "prediction.column.last&chance": "Last/Up chance",
+  "prediction.column.last&probability": "Last/Up prob.",
   "prediction.column.time&volume": "Time/Vol",
   "prediction.markPrice.tooltip":
     "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0, 0.5 or 1. DOWN displays 1 minus the UP mark price.",

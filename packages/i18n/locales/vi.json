@@ -99,6 +99,7 @@
   "common.stake": "Đặt cọc",
   "common.perps": "Hợp đồng vĩnh viễn",
   "common.predictions": "Dự đoán",
+  "common.predict": "Dự đoán",
   "common.allAccount": "Tất cả tài khoản",
   "common.mainAccount": "Tài khoản chính",
   "common.subAccount": "Tài khoản phụ",
@@ -146,6 +147,7 @@
   "markets.openInterest.tooltip": "Tổng kích thước vị thế mỗi bên.",
   "markets.topGainers": "Tăng giá nhiều nhất",
   "markets.topLosers": "Giảm giá nhiều nhất",
+  "markets.tradeSubMenu.perps.description": "Giao dịch hợp đồng vĩnh viễn trên sổ lệnh không tốn phí gas",
   "markets.search.placeholder": "Tìm kiếm thị trường",
   "markets.showLowVolume": "Hiện KL thấp",
   "markets.showLowVolume.tooltip": "Bao gồm các thị trường có khối lượng giao dịch 24h dưới $1,000.",
@@ -322,10 +324,10 @@
   "prediction.oneTapInvalidAmounts": "Nhập 5–99,999.99 USDC cho mỗi mẫu nhanh (tối đa 2 chữ số thập phân).",
   "prediction.currentPrice": "Giá hiện tại",
   "prediction.finalPrice": "Giá cuối cùng",
-  "prediction.chance": "Khả năng Lên",
+  "prediction.probability": "Xác suất Lên",
   "prediction.lastPrice": "Giá gần nhất",
   "prediction.volumeShort": "KL",
-  "prediction.column.last&chance": "Gần nhất/Khả năng Lên",
+  "prediction.column.last&probability": "Gần nhất/Xác suất Lên",
   "prediction.column.time&volume": "Thời gian/Khối lượng",
   "prediction.markPrice.tooltip": "Giá đánh dấu của Dự đoán. Trong phiên giao dịch bằng với giá chỉ số của Dự đoán; khi quyết toán sẽ thành 0, 0,5 hoặc 1. Xuống hiển thị bằng 1 trừ đi giá đánh dấu của Lên.",
   "prediction.orderBook": "Sổ lệnh",
@@ -1469,6 +1471,5 @@
   "notification.generalTitle": "Cập nhật chung",
   "notification.maintenanceTitle": "Bảo trì hệ thống",
   "notification.empty": "Không có thông báo",
-  "tradingPoints.points": "Điểm",
-  "markets.tradeSubMenu.perps.description": "Giao dịch hợp đồng vĩnh viễn trên sổ lệnh không tốn phí gas"
+  "tradingPoints.points": "Điểm"
 }

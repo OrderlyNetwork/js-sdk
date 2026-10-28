@@ -99,6 +99,7 @@
   "common.stake": "Stake",
   "common.perps": "Perps",
   "common.predictions": "Prediksi",
+  "common.predict": "Prediksi",
   "common.allAccount": "Semua akun",
   "common.mainAccount": "Akun utama",
   "common.subAccount": "Sub-akun",
@@ -146,6 +147,7 @@
   "markets.openInterest.tooltip": "Total ukuran posisi per sisi.",
   "markets.topGainers": "Top gainers",
   "markets.topLosers": "Top losers",
+  "markets.tradeSubMenu.perps.description": "Perdagangkan futures perpetual di order book tanpa biaya gas",
   "markets.search.placeholder": "Cari pasar",
   "markets.showLowVolume": "Tampilkan vol. rendah",
   "markets.showLowVolume.tooltip": "Sertakan pasar dengan volume perdagangan 24 jam kurang dari $1,000.",
@@ -322,10 +324,10 @@
   "prediction.oneTapInvalidAmounts": "Masukkan 5–99,999.99 USDC untuk setiap prasetel (maksimal 2 desimal).",
   "prediction.currentPrice": "Harga saat ini",
   "prediction.finalPrice": "Harga akhir",
-  "prediction.chance": "Peluang Naik",
+  "prediction.probability": "Probabilitas Naik",
   "prediction.lastPrice": "Harga terakhir",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&chance": "Terakhir/Peluang Naik",
+  "prediction.column.last&probability": "Terakhir/Prob. Naik",
   "prediction.column.time&volume": "Waktu/Volume",
   "prediction.markPrice.tooltip": "Harga penandaan Prediksi. Selama perdagangan, harganya sama dengan harga indeks Prediksi; saat penyelesaian menjadi 0, 0,5 atau 1. Turun menampilkan 1 dikurangi harga penandaan Naik.",
   "prediction.orderBook": "Buku order",
@@ -1469,6 +1471,5 @@
   "notification.generalTitle": "Pembaruan umum",
   "notification.maintenanceTitle": "Pemeliharaan sistem",
   "notification.empty": "Tidak ada pengumuman",
-  "tradingPoints.points": "Poin",
-  "markets.tradeSubMenu.perps.description": "Perdagangkan futures perpetual di order book tanpa biaya gas"
+  "tradingPoints.points": "Poin"
 }

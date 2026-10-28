@@ -155,7 +155,7 @@ export const SharedProductDataPanel: React.FC<SharedProductDataPanelProps> = ({
                 "oui-group oui-text-2xs oui-inline-flex oui-h-7 oui-items-center oui-justify-center oui-gap-x-1 !oui-rounded-md oui-bg-base-7 oui-px-3 oui-font-medium oui-text-base-contrast-36 oui-transition-all hover:oui-bg-base-5 hover:oui-text-base-contrast-54 data-[state=active]:oui-bg-base-5 data-[state=active]:oui-text-base-contrast",
               )}
             >
-              {item === "perps" ? t("common.perps") : t("common.predictions")}
+              {item === "perps" ? t("common.perps") : t("common.predict")}
               {showPositionCounts &&
                 type === "positions" &&
                 ` (${item === "perps" ? perpsPositionCount : predictionPositionCount})`}

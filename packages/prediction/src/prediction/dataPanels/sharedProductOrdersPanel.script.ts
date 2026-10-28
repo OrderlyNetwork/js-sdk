@@ -21,10 +21,7 @@ type PerpsOrderListState = ComponentProps<typeof DesktopOrderList>;
 /** Instrument select shared by the desktop panel and mobile cards. */
 export const buildProductFilterItems = (
   t: (
-    key:
-      | "prediction.filter.allInstruments"
-      | "common.perps"
-      | "common.predictions",
+    key: "prediction.filter.allInstruments" | "common.perps" | "common.predict",
   ) => string,
   instrument: ProductOrderInstrument,
 ): DataFilterItem[] => [
@@ -35,7 +32,7 @@ export const buildProductFilterItems = (
     options: [
       { label: t("prediction.filter.allInstruments"), value: "all" },
       { label: t("common.perps"), value: "perps" },
-      { label: t("common.predictions"), value: "prediction" },
+      { label: t("common.predict"), value: "prediction" },
     ],
   },
 ];

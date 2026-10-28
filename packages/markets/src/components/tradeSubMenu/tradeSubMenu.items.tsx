@@ -53,7 +53,7 @@ export function useBuiltinTradeSubMenuItems(
     perps,
     {
       key: PREDICTION_TRADE_SUB_MENU_KEY,
-      title: t("common.predictions"),
+      title: t("common.predict"),
       description: t("prediction.description"),
       activeIcon: <PredictionIcon active size={20} />,
       inactiveIcon: <PredictionIcon size={20} />,

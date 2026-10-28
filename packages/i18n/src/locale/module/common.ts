@@ -106,6 +106,7 @@ export const common = {
   "common.stake": "Stake",
   "common.perps": "Perps",
   "common.predictions": "Predictions",
+  "common.predict": "Predict",
   "common.allAccount": "All accounts",
   "common.mainAccount": "Main account",
   "common.subAccount": "Sub account",

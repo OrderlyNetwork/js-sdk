@@ -14,6 +14,8 @@ import { Spinner } from "@orderly.network/ui";
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
 import { PathEnum } from "./constant";
+import { LegacyPredictionRedirect } from "./legacyPredictionRedirect";
+import { localizeEntryPath } from "./navigationPaths";
 import { getPerpSymbol } from "./perpSymbolStorage";
 
 // Loading fallback component
@@ -92,15 +94,15 @@ const AppRoute: React.FC = () => {
   let currentLocale = parseI18nLang(i18n?.language);
 
   const pathname = window.location.pathname;
-  const localePath = getLocalePathFromPathname(pathname);
+  let localePath = getLocalePathFromPathname(pathname);
 
   // TODO: use react router navigate instead of window.history.replaceState
   if (!localePath && pathname !== PathEnum.Root) {
     // redirect to the current locale path
     // /perp/PERP_ETH_USDC => /en/perp/PERP_ETH_USDC
-    const redirectPath = `/${currentLocale}${pathname}`;
+    const redirectPath = localizeEntryPath(currentLocale, window.location);
     window.history.replaceState({}, "", redirectPath);
-    return;
+    localePath = currentLocale;
   }
 
   if (localePath && localePath !== currentLocale) {
@@ -127,6 +129,8 @@ const AppRoute: React.FC = () => {
   ];
 
   const baseRoutes: RouteObject[] = [
+    { path: "prediction", element: <LegacyPredictionRedirect /> },
+    { path: "prediction/:symbol", element: <LegacyPredictionRedirect /> },
     {
       path: "perp",
       children: tradeRoutes,
@@ -136,11 +140,11 @@ const AppRoute: React.FC = () => {
       children: tradeRoutes,
     },
     {
-      path: "prediction",
+      path: "predict",
       element: <PredictionPage />,
     },
     {
-      path: "prediction/:symbol",
+      path: "predict/:symbol",
       element: <PredictionPage />,
     },
     {

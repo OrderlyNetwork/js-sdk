@@ -3,7 +3,11 @@
  * e.g. Perps <-> Prediction switches or links to portfolio pages.
  */
 export type RouteOption = {
-  /** In-app path to navigate to, e.g. `/perp/PERP_BTC_USDC` or `/prediction/PERP_BTC5M2608271200_USDC`. */
+  /**
+   * In-app path to navigate to, e.g. `/perp/PERP_BTC_USDC` or
+   * `/prediction/PERP_BTC5M2608271200_USDC`. Prediction hrefs keep the legacy
+   * `/prediction` prefix; hosts map or redirect them onto `/predict`.
+   */
   href: string;
   /** Display name or identifier of the destination route. */
   name: string;

@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/markets",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Market pages with built-in product integrations",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
