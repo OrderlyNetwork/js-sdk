@@ -23,7 +23,7 @@ See the [SDK release notes](https://orderly.network/docs/release-notes/sdk) for 
 ### Prerequisites
 
 - Node.js >= 20.19.0
-- pnpm >= 10.0.0; this repository pins pnpm 10.26.2 in `package.json`.
+- pnpm >= 12.0.0; this repository pins pnpm 12.15.0 in `package.json`.
 
 Run the following commands from the repository root.
 
