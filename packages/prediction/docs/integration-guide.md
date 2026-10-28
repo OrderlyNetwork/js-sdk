@@ -454,7 +454,7 @@ Keep standard page calls and host props. Built-in navigation uses the
 No additional account queries or manual product panels are required. See
 [Perps integration](../README.md#perps-trading-page-integration),
 [Portfolio integration](../README.md#portfolio-integration), and the
-[migration reference](../README.md#removed-manual-page-integration-api).
+[migration reference](../README.md#migrating-from-earlier-versions).
 
 ## 4. Configure feature visibility and regional restrictions
 

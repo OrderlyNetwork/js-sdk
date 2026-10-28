@@ -472,26 +472,24 @@ original `API.Order` records. Product filtering only filters records and keeps
 the original object references and fields. UP/DOWN, side, price, and round are
 derived at consumption time with helpers exported from the package root.
 
-The table maps the fields of the removed projected order types (see
-[Migrating from earlier versions](#migrating-from-earlier-versions)) to the raw
-fields and helpers:
+Use the following raw fields and helpers for order display and calculations:
 
-| Former projected field               | Use instead                                                                      |
-| ------------------------------------ | -------------------------------------------------------------------------------- |
-| `id`                                 | `order_id`                                                                       |
-| `timestamp`                          | `created_time` (milliseconds)                                                    |
-| `filledQuantity`                     | `total_executed_quantity`                                                        |
-| `averagePrice`                       | `average_executed_price` (UP coordinate)                                         |
-| `totalFee` / `feeAsset`              | `total_fee` / `fee_asset`                                                        |
-| `realizedPnl`                        | `realized_pnl`                                                                   |
-| `reduceOnly`                         | `reduce_only`                                                                    |
-| `clientOrderId` / `orderTag`         | `client_order_id` / `order_tag`                                                  |
-| `orderType`                          | `type` (raw `LIMIT`, `IOC`, `SETTLEMENT`, ...)                                   |
-| `type` (market/limit classification) | `binaryOrderDisplayType(order)`                                                  |
-| `side` (lowercase)                   | raw `side` (`BUY` / `SELL`); buy/sell action via `binaryOrderDisplaySide(order)` |
-| `status` (lowercase)                 | raw `status`; display category via `binaryOrderDisplayStatus(order)`             |
-| `outcome`                            | `binaryOrderOutcome(order)`                                                      |
-| `round`                              | `binaryOrderRound(order)` (seconds)                                              |
+| Display value                   | Raw field or helper                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| Order ID                        | `order_id`                                                                       |
+| Creation time                   | `created_time` (milliseconds)                                                    |
+| Filled quantity                 | `total_executed_quantity`                                                        |
+| Average execution price         | `average_executed_price` (UP coordinate)                                         |
+| Total fee / fee asset           | `total_fee` / `fee_asset`                                                        |
+| Realized PnL                    | `realized_pnl`                                                                   |
+| Reduce-only flag                | `reduce_only`                                                                    |
+| Client order ID / order tag     | `client_order_id` / `order_tag`                                                  |
+| Raw order type                  | `type` (raw `LIMIT`, `IOC`, `SETTLEMENT`, ...)                                   |
+| Market/limit classification     | `binaryOrderDisplayType(order)`                                                  |
+| Order side / buy-sell action    | raw `side` (`BUY` / `SELL`); buy/sell action via `binaryOrderDisplaySide(order)` |
+| Order status / display category | raw `status`; display category via `binaryOrderDisplayStatus(order)`             |
+| Outcome                         | `binaryOrderOutcome(order)`                                                      |
+| Round time                      | `binaryOrderRound(order)` (seconds)                                              |
 
 `binaryOrderDisplayPrice(order, price)` converts an UP-coordinate price to the
 row's display direction. `toPredictionOrderStatus` / `toApiPredictionOrderStatus`
@@ -525,8 +523,7 @@ Behavior custom consumers can rely on:
 
 ## Migrating from earlier versions
 
-These changes affect hosts upgrading from 3.3.0, a pre-release Prediction build,
-or the earlier Trading and Trading Shared integration points.
+The following changes apply when upgrading from the published 3.3.0 release.
 
 ### Host routes and menu labels in 3.3.1
 
@@ -547,56 +544,3 @@ The current guide and its `common.predict` menu label require the 3.3.1 release,
 including `@orderly.network/i18n` 3.3.1 or later. Align SDK dependencies before
 using the updated examples; i18n 3.3.0 does not include that key. See
 [dependency preparation](docs/integration-guide.md#1-prepare-dependencies-and-the-host-application).
-
-### Removed manual page integration API
-
-The page/provider inputs `marketsDropdown`, `marketsSheet`, `sideMarkets`, and
-`dataListProductContent` have been removed. `usePredictionTradingExtension`, its
-options/result types, and the Trading/Trading Shared slot-specific aliases are
-no longer public APIs. Remove manual extension calls and their spread/override
-props; configure `features.prediction` on `OrderlyAppProvider` and render the
-standard page instead:
-
-```tsx
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { TradingPage } from "@orderly.network/trading";
-
-<OrderlyAppProvider
-  brokerId={brokerId}
-  networkId={networkId}
-  onRouteChange={onRouteChange}
-  features={{ prediction: true }}
->
-  <TradingPage symbol={symbol} tradingViewConfig={tradingViewConfig} />
-</OrderlyAppProvider>;
-```
-
-What remains unchanged:
-
-- Independent account hooks and panel components remain available for
-  standalone layouts. `TradingPerpsPanelProps` and `PredictionPerpsPanelProps`
-  remain public.
-- Existing market-component extension APIs and Interceptor targets are
-  unchanged; this release introduces no new customization targets.
-- Shared Perps components and preferences remain in
-  `@orderly.network/trading-shared`, with the original Trading exports
-  preserved.
-
-### Other removed or moved APIs
-
-| Change                                                                                      | Migration                                                                                                |
-| ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Page-level `predictionEnabled` props removed                                                | Configure `features.prediction` on `OrderlyAppProvider` ([Application features](#application-features)). |
-| Market family IDs are no longer `PredictionPage` props or URL parameters                    | Pass the exact round `symbol`; family IDs remain internal grouping and preference values.                |
-| Perps symbol storage helpers no longer exported from `@orderly.network/trading-shared`      | Import them from `@orderly.network/utils`; `@orderly.network/trading` re-exports are unchanged.          |
-| `includeHistory` load option removed                                                        | Set `includeOrderHistory` and `includeSettlementHistory` explicitly (example below).                     |
-| `PredictionOpenOrder`, `PredictionTrade`, and `toPredictionOrder()` removed without aliases | Consume raw `API.Order` records with the package helpers ([Order field mapping](#order-field-mapping)).  |
-| Projected order `timestamp` and `round` fields removed                                      | Use `created_time` (milliseconds) and `binaryOrderRound(order)` (seconds).                               |
-
-```tsx
-const account = usePredictionAccountData({
-  enabled: true,
-  includeOrderHistory: true,
-  includeSettlementHistory: true,
-});
-```
