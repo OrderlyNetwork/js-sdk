@@ -30,12 +30,12 @@ export const MarketsHomePage: React.FC<MarketsHomePageProps> = (props) => {
     { enabled: hasPredictionNavigation },
   );
   const renderTabContent = useCallback<MarketTabContentRenderer>(
-    (tab, key, hide) => {
-      const custom = props.renderTabContent?.(tab, key, hide);
+    (tab, key, hide, context) => {
+      const custom = props.renderTabContent?.(tab, key, hide, context);
       return custom !== undefined
         ? custom
         : enabled
-          ? prediction.renderTabContent(tab, key, hide)
+          ? prediction.renderTabContent(tab, key, hide, context)
           : undefined;
     },
     [props.renderTabContent, enabled, prediction.renderTabContent],

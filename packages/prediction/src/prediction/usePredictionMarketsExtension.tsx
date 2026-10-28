@@ -22,12 +22,19 @@ export type PredictionMarketsExtensionProps = {
     tab: MarketTabConfig,
     key: string,
     hide: () => void,
+    context?: {
+      searchValue?: string;
+      componentKey?: MarketCategoryComponentKey;
+    },
   ) => ReactNode | undefined;
   renderTabAfterContent: (
     tab: MarketTabConfig,
     key: string,
     hide: () => void,
-    context?: { searchValue?: string },
+    context?: {
+      searchValue?: string;
+      componentKey?: MarketCategoryComponentKey;
+    },
   ) => ReactNode;
 };
 
@@ -59,12 +66,19 @@ export const usePredictionMarketsExtension = (
     [defaultTabs, enabled],
   );
   const { favoriteMarketIds, toggleFavorite } = usePredictionFavorites();
+  // Dropdown and sheet lists override DataTable's default base-9 surface.
+  const getBackground = (surface = componentKey) =>
+    surface === "dropDownMarkets" || surface === "marketsSheet"
+      ? "base-8"
+      : "base-9";
 
   return {
     tabs,
-    renderTabContent: (_, key, hide) =>
+    renderTabContent: (_, key, hide, context) =>
       enabled && key === "prediction" ? (
         <PredictionDropdownPanel
+          componentKey={context?.componentKey ?? componentKey}
+          background={getBackground(context?.componentKey)}
           markets={markets}
           loading={isLoading}
           favoriteMarketIds={favoriteMarketIds}
@@ -86,12 +100,15 @@ export const usePredictionMarketsExtension = (
       if (!visibleMarkets.length) return null;
       return (
         <PredictionDropdownPanel
+          componentKey={context?.componentKey ?? componentKey}
+          background={getBackground(context?.componentKey)}
           markets={visibleMarkets}
+          favoritesSection={key === "favorites"}
           favoriteMarketIds={favoriteMarketIds}
           onToggleFavorite={toggleFavorite}
           hide={hide}
           onPredictionSelect={onPredictionSelect}
-          className={`!oui-h-auto oui-flex-none oui-border-t oui-border-line-12 oui-pt-2${key === "all" ? " !oui-overflow-visible" : ""}`}
+          className={`!oui-h-auto !oui-min-h-0 oui-flex-none oui-border-t oui-border-line-12 !oui-pb-[max(20px,env(safe-area-inset-bottom,0px))]${key === "all" ? " !oui-overflow-visible" : ""}`}
         />
       );
     },

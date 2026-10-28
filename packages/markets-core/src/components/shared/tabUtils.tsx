@@ -2,6 +2,7 @@ import { createElement, isValidElement, useMemo } from "react";
 import type {
   BuiltInMarketTab,
   CustomMarketTab,
+  MarketCategoryComponentKey,
   MarketTabConfig,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -20,12 +21,16 @@ export function isBuiltInMarketTab(
  * panel, markets page). `hide` closes the host surface, when it has one.
  * Supplemental renderers receive the current search in `context` so they can
  * return null when no product rows match, keeping the host empty state accurate.
+ * Hosts can identify their surface when reusing another surface's renderer.
  */
 export type MarketTabContentRenderer = (
   tab: MarketTabConfig,
   key: string,
   hide: () => void,
-  context?: { searchValue?: string },
+  context?: {
+    searchValue?: string;
+    componentKey?: MarketCategoryComponentKey;
+  },
 ) => React.ReactNode | undefined;
 
 export function isCustomMarketTab(

@@ -164,6 +164,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           if (isBuiltIn && meta) {
             const afterContent = props.renderTabAfterContent?.(tab, key, noop, {
               searchValue,
+              componentKey: "marketsDataList",
             });
             const title =
               tab.type === "favorites"
@@ -267,7 +268,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           }
 
           // Custom category
-          const customContent = props.renderTabContent?.(tab, key, noop);
+          const customContent = props.renderTabContent?.(tab, key, noop, {
+            searchValue,
+            componentKey: "marketsDataList",
+          });
           return (
             <TabPanel
               key={key}

@@ -4,12 +4,14 @@ import type { LocaleMessages } from "@orderly.network/i18n";
 import {
   DataItem,
   DropDownMarketsWidget,
+  MarketsSheetWidget,
   TriangleDownIcon,
 } from "@orderly.network/markets-core";
 import type { API } from "@orderly.network/types";
 import {
   ChevronUpIcon,
   cn,
+  SimpleSheet,
   Spinner,
   TabPanel,
   Tabs,
@@ -34,7 +36,7 @@ import {
 } from "./predictionMarketSearch";
 import { formatPercent, usePredictionFormatters } from "./predictionShared";
 import { RoundResultWidget } from "./roundResult";
-import { usePredictionMarketsDropdown } from "./usePredictionMarketsDropdown";
+import { usePredictionMarketsExtension } from "./usePredictionMarketsExtension";
 
 // Re-exported here so the package entry keeps importing every public
 // prediction surface from one module.
@@ -155,7 +157,11 @@ export const Prediction: React.FC<
   const isDesktopLayout = useMediaQuery("(min-width: 1280px)");
   const { isMobile } = useScreen();
   const panelMarketView = usePredictionPanelMarketView(state);
-  const marketsDropdown = usePredictionMarketsDropdown(state.onSelectSymbol);
+  const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
+  const marketsExtension = usePredictionMarketsExtension(
+    isMobile ? "marketsSheet" : "dropDownMarkets",
+    state.onSelectSymbol,
+  );
 
   useEffect(() => {
     if (!state.notification) return;
@@ -191,54 +197,82 @@ export const Prediction: React.FC<
     : displayMarket
       ? formatPredictionMarketName(displayMarket)
       : t("prediction.title");
-  const marketSelector = (
+  const marketSelectorTrigger = (
+    <button
+      type="button"
+      onClick={isMobile ? () => setOpenMarketsSheet(true) : undefined}
+      disabled={!state.onSelectSymbol && !state.onNavigatePerp}
+      className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
+    >
+      {!isRequestedSymbolUnavailable && displayMarket && (
+        <TokenIcon name={displayMarket.base} size="lg" />
+      )}
+      <div className="oui-min-w-0 oui-flex-1">
+        <h1 className="oui-flex oui-items-center oui-gap-1 oui-truncate oui-text-base oui-font-semibold oui-text-base-contrast">
+          <span className="oui-truncate">{marketName}</span>
+          <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
+        </h1>
+        {!isRequestedSymbolUnavailable && displayMarket && (
+          <div className="oui-text-xs oui-mt-0.5 oui-truncate oui-font-normal oui-text-base-contrast-54">
+            {formatRoundWindow(
+              state.selectedRow?.observation_start_at != null
+                ? state.selectedRow.observation_start_at / 1_000
+                : state.selectedRound,
+              displayMarket.intervalSeconds,
+              state.selectedRow?.expire_at,
+            )}
+          </div>
+        )}
+      </div>
+    </button>
+  );
+  const marketsProps = {
+    ...marketsExtension,
+    tabs: state.onNavigatePerp
+      ? marketsExtension.tabs
+      : marketsExtension.tabs.filter(
+          (tab) => "id" in tab && tab.id === "prediction",
+        ),
+    symbol: isRequestedSymbolUnavailable
+      ? undefined
+      : state.selectedRow?.symbol,
+  };
+  const marketSelector = isMobile ? (
+    <>
+      {marketSelectorTrigger}
+      <SimpleSheet
+        open={openMarketsSheet}
+        onOpenChange={setOpenMarketsSheet}
+        classNames={{
+          body: "oui-h-full oui-pb-0",
+          content: "!oui-w-full !oui-max-w-none !oui-p-0",
+        }}
+        contentProps={{
+          side: "left",
+          closeClassName:
+            "!oui-end-1 oui-flex oui-size-11 oui-items-center oui-justify-center",
+        }}
+      >
+        <MarketsSheetWidget
+          {...marketsProps}
+          onSymbolChange={
+            state.onNavigatePerp
+              ? (symbol) => {
+                  setOpenMarketsSheet(false);
+                  state.onNavigatePerp?.(symbol);
+                }
+              : undefined
+          }
+          onRequestClose={() => setOpenMarketsSheet(false)}
+        />
+      </SimpleSheet>
+    </>
+  ) : (
     <DropDownMarketsWidget
-      {...marketsDropdown}
-      tabs={
-        state.onNavigatePerp
-          ? marketsDropdown.tabs
-          : marketsDropdown.tabs?.filter(
-              (tab) => "id" in tab && tab.id === "prediction",
-            )
-      }
-      contentClassName={
-        isMobile
-          ? "oui-h-[560px] oui-w-[920px] oui-max-w-[calc(100vw-24px)]"
-          : undefined
-      }
-      symbol={
-        isRequestedSymbolUnavailable
-          ? undefined
-          : displayMarket?.indexPriceSymbol
-      }
+      {...marketsProps}
       onSymbolChange={state.onNavigatePerp}
     >
-      <button
-        type="button"
-        disabled={!state.onSelectSymbol && !state.onNavigatePerp}
-        className="oui-flex oui-min-w-0 oui-items-center oui-gap-3 oui-text-start 2xl:oui-w-[340px] 2xl:oui-shrink-0"
-      >
-        {!isRequestedSymbolUnavailable && displayMarket && (
-          <TokenIcon name={displayMarket.base} size="lg" />
-        )}
-        <div className="oui-min-w-0 oui-flex-1">
-          <h1 className="oui-flex oui-items-center oui-gap-1 oui-truncate oui-text-base oui-font-semibold oui-text-base-contrast">
-            <span className="oui-truncate">{marketName}</span>
-            <TriangleDownIcon className="oui-flex-none oui-text-base-contrast-54" />
-          </h1>
-          {!isRequestedSymbolUnavailable && displayMarket && (
-            <div className="oui-text-xs oui-mt-0.5 oui-truncate oui-font-normal oui-text-base-contrast-54">
-              {formatRoundWindow(
-                state.selectedRow?.observation_start_at != null
-                  ? state.selectedRow.observation_start_at / 1_000
-                  : state.selectedRound,
-                displayMarket.intervalSeconds,
-                state.selectedRow?.expire_at,
-              )}
-            </div>
-          )}
-        </div>
-      </button>
+      {marketSelectorTrigger}
     </DropDownMarketsWidget>
   );
   if (!state.isRoundsReady || isRequestedSymbolUnavailable) {

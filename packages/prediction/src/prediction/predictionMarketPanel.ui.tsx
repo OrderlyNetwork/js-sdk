@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   FavoritesIcon2,
@@ -11,7 +11,14 @@ import type {
   MarketTabConfig,
 } from "@orderly.network/markets-core";
 import { useFeatureEnabled } from "@orderly.network/react-app";
-import { cn, Spinner, Text, TokenIcon } from "@orderly.network/ui";
+import {
+  cn,
+  InjectableEmptyDataState,
+  Spinner,
+  Text,
+  TokenIcon,
+  useScreen,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import type { BinaryMarket } from "./binary/binaryMarkets";
 import { DEFAULT_BINARY_QUOTE_TICK } from "./binary/binaryOrderRules";
@@ -59,8 +66,11 @@ type PredictionMarketRowProps = {
   favorite: boolean;
   onToggleFavorite: (symbol: string) => void;
   onSelect?: (symbol: string) => void;
-  /** 3-column two-line layout for narrow containers (side panel, mobile sheets). */
+  /** Three-column two-line layout used by side panels, sheets and the mobile markets page. */
   compact?: boolean;
+  selected: boolean;
+  rowHeightClassName: string;
+  desktopMarketsPage: boolean;
 };
 
 const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
@@ -71,6 +81,9 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
   onToggleFavorite,
   onSelect,
   compact,
+  selected,
+  rowHeightClassName,
+  desktopMarketsPage,
 }) => {
   const { t } = useTranslation();
   // Shared heartbeat tick: rows update their own countdown each second
@@ -109,7 +122,7 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
       </Text.numeral>
     );
   const symbolCell = (
-    <div className="oui-flex oui-items-center oui-gap-2">
+    <div className="oui-flex oui-items-center oui-gap-1">
       <button
         type="button"
         aria-label={t("markets.favorites")}
@@ -117,41 +130,64 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
           event.stopPropagation();
           onToggleFavorite(market.id);
         }}
-        className="oui-flex oui-size-4 oui-flex-none oui-items-center oui-justify-center"
+        className="oui-me-1 oui-flex oui-size-3 oui-flex-none oui-items-center oui-justify-center"
       >
-        {favorite ? <FavoritesIcon2 /> : <UnFavoritesIcon2 />}
+        {favorite ? (
+          <FavoritesIcon2 className="oui-size-3" />
+        ) : (
+          <UnFavoritesIcon2 className="oui-size-3" />
+        )}
       </button>
       <TokenIcon name={market.base} className="oui-size-[18px]" />
-      <Text size="2xs" className="oui-whitespace-nowrap oui-text-base-contrast">
+      <Text
+        size={desktopMarketsPage ? "xs" : "2xs"}
+        className="oui-whitespace-nowrap"
+      >
         {formatPredictionMarketName(market)}
       </Text>
     </div>
   );
   const rowClassName = cn(
     "oui-prediction-market-row",
-    onSelect && "oui-cursor-pointer hover:oui-bg-base-7",
-    !market.hasLiveRow && "oui-opacity-60",
+    rowHeightClassName,
+    desktopMarketsPage && "oui-border-b oui-border-b-line-4",
+    "[&>td:first-child]:oui-ps-3 [&>td:last-child]:oui-pe-3 [&>td]:oui-px-1",
+    "[&>td:first-child]:oui-rounded-s [&>td:last-child]:oui-rounded-e",
+    selected ? "[&>td]:oui-bg-line-6" : "[&:hover>td]:oui-bg-line-4",
+    onSelect && "oui-cursor-pointer",
+  );
+
+  const priceClassName = cn(
+    "oui-text-end",
+    desktopMarketsPage ? "oui-text-xs" : "oui-text-2xs",
   );
 
   if (compact) {
     return (
       <tr
         className={rowClassName}
+        aria-selected={selected}
         aria-disabled={!onSelect}
         onClick={
           onSelect ? () => onSelect(market.currentRow.symbol) : undefined
         }
       >
-        <td className="oui-px-2 oui-py-1.5 oui-text-start oui-align-middle">
-          {symbolCell}
+        <td className="oui-text-start oui-align-middle">{symbolCell}</td>
+        <td className="oui-text-end oui-align-middle">
+          <div className="oui-flex oui-flex-col oui-items-end oui-gap-1">
+            <Text size="2xs">{lastPrice}</Text>
+            <Text size="2xs">{chance}</Text>
+          </div>
         </td>
-        <td className="oui-px-2 oui-py-1.5 oui-text-end oui-align-middle">
-          <div className="oui-text-xs oui-leading-4">{lastPrice}</div>
-          <div className="oui-text-2xs oui-leading-4">{chance}</div>
-        </td>
-        <td className="oui-px-2 oui-py-1.5 oui-text-end oui-align-middle">
-          <div className="oui-text-xs oui-leading-4">{countdown}</div>
-          <div className="oui-text-2xs oui-leading-4">{volumeCell}</div>
+        <td className="oui-text-end oui-align-middle">
+          <div className="oui-flex oui-flex-col oui-items-end oui-gap-1">
+            <Text size="2xs" intensity={market.hasLiveRow ? undefined : 54}>
+              {countdown}
+            </Text>
+            <Text size="2xs" intensity={54}>
+              {volumeCell}
+            </Text>
+          </div>
         </td>
       </tr>
     );
@@ -159,15 +195,18 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
 
   return (
     <tr
-      className={cn(rowClassName, "oui-h-[34px]")}
+      className={rowClassName}
+      aria-selected={selected}
       aria-disabled={!onSelect}
       onClick={onSelect ? () => onSelect(market.currentRow.symbol) : undefined}
     >
-      <td className="oui-px-2 oui-text-start">{symbolCell}</td>
-      <td className="oui-text-xs oui-px-2 oui-text-end">{lastPrice}</td>
-      <td className="oui-text-xs oui-px-2 oui-text-end">{chance}</td>
-      <td className="oui-text-xs oui-px-2 oui-text-end">{volumeCell}</td>
-      <td className="oui-text-xs oui-px-2 oui-text-end">{countdown}</td>
+      <td className="oui-text-start">{symbolCell}</td>
+      <td className={priceClassName}>{lastPrice}</td>
+      <td className={priceClassName}>{chance}</td>
+      <td className="oui-text-xs oui-text-end">{volumeCell}</td>
+      <td className={priceClassName}>
+        <Text intensity={market.hasLiveRow ? undefined : 54}>{countdown}</Text>
+      </td>
     </tr>
   );
 };
@@ -176,30 +215,6 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
 // identities stay stable between round-boundary clock jumps, and the BBO map
 // update preserves untouched symbols' object identities.
 const PredictionMarketRow = React.memo(PredictionMarketRowImpl);
-
-/** Below this container width the panel switches to the compact 3-column layout. */
-const PREDICTION_COMPACT_PANEL_WIDTH = 460;
-
-/**
- * Narrow containers (side panel, mobile sheets) cannot fit the 5-column row.
- * Observe the panel width and fall back to a 3-column two-line layout that
- * mirrors the perps side-list rows. Environments without ResizeObserver
- * (tests, SSR) keep the default layout.
- */
-const useCompactPanelWidth = () => {
-  const [compact, setCompact] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCompact(entry.contentRect.width < PREDICTION_COMPACT_PANEL_WIDTH);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return { ref, compact };
-};
 
 export type PredictionMarketPanelProps = {
   markets: BinaryMarket[];
@@ -212,6 +227,12 @@ export type PredictionMarketPanelProps = {
   onToggleFavorite: (symbol: string) => void;
   onSelect?: (symbol: string) => void;
   className?: string;
+  /** Match the surrounding market list, including its sticky header and empty states. */
+  background?: "base-8" | "base-9";
+  /** Host surface controls list density, empty-state placement and safe-area padding. */
+  componentKey?: MarketCategoryComponentKey;
+  /** Desktop favorites use the default 40px table header rather than the 48px markets header. */
+  favoritesSection?: boolean;
 };
 
 export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
@@ -223,41 +244,67 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
   onToggleFavorite,
   onSelect,
   className,
+  background = "base-8",
+  componentKey = "dropDownMarkets",
+  favoritesSection = false,
 }) => {
   const { t } = useTranslation();
-  const { searchValue } = useMarketsContext();
-  const { ref, compact } = useCompactPanelWidth();
+  const { searchValue, symbol } = useMarketsContext();
+  const { isMobile } = useScreen();
   const visibleMarkets = filterPredictionMarkets(markets, searchValue);
+  const backgroundClassName =
+    background === "base-9" ? "oui-bg-base-9" : "oui-bg-base-8";
+
+  const isMarketsPage = componentKey === "marketsDataList";
+  const isDesktopMarketsPage = isMarketsPage && !isMobile;
+  const compact =
+    componentKey === "expandMarkets" ||
+    componentKey === "marketsSheet" ||
+    (isMarketsPage && isMobile);
+  const rowHeightClassName = isMarketsPage
+    ? isMobile
+      ? "oui-h-[54px]"
+      : "oui-h-[55px]"
+    : componentKey === "dropDownMarkets"
+      ? "oui-h-[34px]"
+      : "oui-h-[53px]";
+  const safeAreaClassName =
+    (isMobile || componentKey === "marketsSheet") &&
+    "oui-pb-[env(safe-area-inset-bottom,_20px)]";
 
   if (visibleMarkets.length === 0) {
     return (
       <div
-        ref={ref}
         className={cn(
-          "oui-flex oui-h-full oui-items-center oui-justify-center oui-bg-base-8",
+          "oui-flex oui-h-full oui-min-h-[162px] oui-justify-center",
+          isDesktopMarketsPage
+            ? "oui-items-center"
+            : "oui-items-start oui-pt-6",
+          safeAreaClassName,
+          backgroundClassName,
           className,
         )}
       >
-        {loading ? (
-          <Spinner />
-        ) : (
-          <Text intensity={54} size="sm">
-            {t("ui.empty.description")}
-          </Text>
-        )}
+        {loading ? <Spinner /> : <InjectableEmptyDataState />}
       </div>
     );
   }
 
   return (
     <div
-      ref={ref}
       className={cn(
-        "oui-custom-scrollbar oui-h-full oui-overflow-auto oui-bg-base-8 oui-px-1",
+        "oui-text-xs oui-custom-scrollbar oui-h-full oui-min-h-[162px] oui-overflow-auto oui-font-semibold",
+        (componentKey === "dropDownMarkets" ||
+          componentKey === "expandMarkets") &&
+          "oui-px-1",
+        !safeAreaClassName && componentKey === "dropDownMarkets" && "oui-pb-5",
+        !safeAreaClassName && componentKey === "expandMarkets" && "oui-pb-2",
+        safeAreaClassName,
+        backgroundClassName,
         className,
       )}
     >
-      <table className="oui-w-full oui-table-fixed oui-text-base-contrast">
+      <table className="oui-w-full oui-table-fixed oui-text-base-contrast-80">
         {compact ? (
           <colgroup>
             <col className="oui-w-[45%]" />
@@ -273,31 +320,41 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
             <col className="oui-w-[18%]" />
           </colgroup>
         )}
-        <thead className="oui-text-xs oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-text-base-contrast-36">
-          <tr className="oui-h-9">
-            <th className="oui-px-2 oui-text-start">{t("common.symbol")}</th>
+        <thead
+          className={cn(
+            "oui-text-xs oui-sticky oui-top-0 oui-z-10 oui-text-base-contrast-36",
+            backgroundClassName,
+          )}
+        >
+          <tr
+            className={cn(
+              "[&>th:first-child]:oui-ps-3 [&>th:last-child]:oui-pe-3 [&>th]:oui-px-1",
+              isDesktopMarketsPage
+                ? favoritesSection
+                  ? "oui-h-10"
+                  : "oui-h-12"
+                : "oui-h-9",
+              isDesktopMarketsPage &&
+                "[&>th]:oui-border-b [&>th]:oui-border-line",
+            )}
+          >
+            <th className="oui-text-start">{t("common.symbol")}</th>
             {compact ? (
               <>
                 {/* Combined single-line headers, perps `Last/24h %` style. */}
-                <th className="oui-px-2 oui-text-end oui-whitespace-nowrap">
+                <th className="oui-whitespace-nowrap oui-text-end">
                   {t("prediction.column.last&probability")}
                 </th>
-                <th className="oui-px-2 oui-text-end oui-whitespace-nowrap">
+                <th className="oui-whitespace-nowrap oui-text-end">
                   {t("prediction.column.time&volume")}
                 </th>
               </>
             ) : (
               <>
-                <th className="oui-px-2 oui-text-end">
-                  {t("markets.column.last")}
-                </th>
-                <th className="oui-px-2 oui-text-end">
-                  {t("prediction.probability")}
-                </th>
-                <th className="oui-px-2 oui-text-end">
-                  {t("prediction.volumeShort")}
-                </th>
-                <th className="oui-px-2 oui-text-end">{t("common.time")}</th>
+                <th className="oui-text-end">{t("markets.column.last")}</th>
+                <th className="oui-text-end">{t("prediction.probability")}</th>
+                <th className="oui-text-end">{t("prediction.volumeShort")}</th>
+                <th className="oui-text-end">{t("common.time")}</th>
               </>
             )}
           </tr>
@@ -313,6 +370,9 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
               onToggleFavorite={onToggleFavorite}
               onSelect={onSelect}
               compact={compact}
+              selected={symbol === market.currentRow.symbol}
+              rowHeightClassName={rowHeightClassName}
+              desktopMarketsPage={isDesktopMarketsPage}
             />
           ))}
         </tbody>
