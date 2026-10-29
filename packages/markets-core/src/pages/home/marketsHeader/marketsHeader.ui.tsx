@@ -1,6 +1,13 @@
 import { FC, ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, EmptyDataState, Flex, Text } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  EmptyDataState,
+  Spinner,
+  Flex,
+  Text,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { LowVolumeEmptyView } from "../../../components/shared/lowVolumeEmptyView";
@@ -43,6 +50,8 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
         />
         <CardItem
           data={news}
+          isReady={props.isReady}
+          isLoading={props.isLoading}
           isHiddenByLowVolumeFilter={props.newsHiddenByLowVolumeFilter}
           title={
             <Text.gradient color="brand">
@@ -53,6 +62,8 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
         />
         <CardItem
           data={gainers}
+          isReady={props.isReady}
+          isLoading={props.isLoading}
           isHiddenByLowVolumeFilter={props.gainersHiddenByLowVolumeFilter}
           title={
             <Text className="oui-text-success-light">
@@ -63,6 +74,8 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
         />
         <CardItem
           data={losers}
+          isReady={props.isReady}
+          isLoading={props.isLoading}
           isHiddenByLowVolumeFilter={props.losersHiddenByLowVolumeFilter}
           title={
             <Text className="oui-text-danger-light">
@@ -175,6 +188,8 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
 };
 
 type CardItemProps = {
+  isReady?: boolean;
+  isLoading?: boolean;
   data?: TListItem[];
   isHiddenByLowVolumeFilter?: boolean;
   title: ReactNode;
@@ -192,18 +207,26 @@ const CardItem: React.FC<CardItemProps> = (props) => {
       </Box>
 
       <Flex direction="column" itemAlign="start" mt={2}>
-        {!props.data?.length && (
+        {(props.isReady === false || !props.data?.length) && (
           <Box className="oui-w-full oui-py-6">
-            {props.isHiddenByLowVolumeFilter ? (
-              <LowVolumeEmptyView />
-            ) : (
-              <EmptyDataState />
+            {props.isLoading && (
+              <Flex justify="center">
+                <Spinner size="md" />
+              </Flex>
             )}
+            {!props.isLoading &&
+              props.isReady !== false &&
+              (props.isHiddenByLowVolumeFilter ? (
+                <LowVolumeEmptyView />
+              ) : (
+                <EmptyDataState />
+              ))}
           </Box>
         )}
-        {props.data?.map((item, index) => (
-          <ListItem key={item.symbol} item={item} onSymbol={props.onSymbol} />
-        ))}
+        {props.isReady !== false &&
+          props.data?.map((item, index) => (
+            <ListItem key={item.symbol} item={item} onSymbol={props.onSymbol} />
+          ))}
       </Flex>
     </Box>
   );

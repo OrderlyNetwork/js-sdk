@@ -3,11 +3,11 @@ import useSWRSubscription from "swr/subscription";
 import { WSMessage } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useWS } from "../useWS";
-import { useMarketList } from "./useMarket/market.store";
+import { useMarketStore } from "./useMarket/market.store";
 
 export const useMarketsStream = () => {
   const ws = useWS();
-  const futures = useMarketList();
+  const { market: futures, requestStatus } = useMarketStore();
 
   const topic = "tickers";
 
@@ -59,5 +59,5 @@ export const useMarketsStream = () => {
     });
   }, [futures, tickers]);
 
-  return { data: value as unknown as WSMessage.Ticker[] };
+  return { data: value as unknown as WSMessage.Ticker[], ...requestStatus };
 };

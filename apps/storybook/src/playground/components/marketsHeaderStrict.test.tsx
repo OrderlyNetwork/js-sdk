@@ -9,7 +9,12 @@ import { MobileMarketsHeader } from "@orderly.network/markets-core/src/pages/hom
 import { useDataSource } from "@orderly.network/markets-core/src/pages/home/marketsHeader/marketsHeader.script";
 import { MarketsHeader } from "@orderly.network/markets-core/src/pages/home/marketsHeader/marketsHeader.ui";
 
-const state = vi.hoisted(() => ({ markets: [] as MarketsItem[] }));
+const state = vi.hoisted(() => ({
+  markets: [] as MarketsItem[],
+  isReady: true,
+  isLoading: false,
+  error: undefined as unknown,
+}));
 
 vi.mock("@orderly.network/hooks", async () => {
   const { useLocalStorage } =
@@ -25,7 +30,12 @@ vi.mock("@orderly.network/hooks", async () => {
         newListing: [],
         type,
       }),
-      { addToHistory: vi.fn() },
+      {
+        addToHistory: vi.fn(),
+        isReady: state.isReady,
+        isLoading: state.isLoading,
+        error: state.error,
+      },
     ],
     useQuery: () => ({ data: { total_holding: 42 } }),
   };
@@ -49,6 +59,7 @@ vi.mock("@orderly.network/ui", () => {
       <button onClick={onClick}>{children}</button>
     ),
     EmptyDataState: () => <div data-empty />,
+    Spinner: () => <div data-loading />,
     cn: (...classes: string[]) => classes.filter(Boolean).join(" "),
   };
 });
@@ -94,6 +105,9 @@ function mount(View?: typeof MarketsHeader) {
 beforeEach(() => {
   localStorage.clear();
   state.markets = [];
+  state.isReady = true;
+  state.isLoading = false;
+  state.error = undefined;
   vi.spyOn(Date, "now").mockReturnValue(now);
 });
 afterEach(() => {
@@ -161,6 +175,43 @@ describe("market header Strict filtering", () => {
     ["desktop", MarketsHeader],
     ["mobile", MobileMarketsHeader],
   ] as const) {
+    it(`${name}: hides empty states until the first request succeeds`, () => {
+      state.isReady = false;
+      state.isLoading = true;
+      mount(View);
+      expect(
+        renderer.root.findAllByProps({ "data-loading": true }),
+      ).toHaveLength(3);
+      expect(renderer.root.findAllByProps({ "data-empty": true })).toHaveLength(
+        0,
+      );
+      expect(renderer.root.findAllByType("button")).toHaveLength(0);
+
+      state.isLoading = false;
+      state.error = new Error("Request failed");
+      act(() => renderer.update(<Harness View={View} />));
+      expect(
+        renderer.root.findAllByProps({ "data-loading": true }),
+      ).toHaveLength(0);
+      expect(renderer.root.findAllByProps({ "data-empty": true })).toHaveLength(
+        0,
+      );
+
+      state.isReady = true;
+      state.error = undefined;
+      act(() => renderer.update(<Harness View={View} />));
+      expect(renderer.root.findAllByProps({ "data-empty": true })).toHaveLength(
+        3,
+      );
+
+      state.markets = [market("ETH", 31, 1000)];
+      act(() => renderer.update(<Harness View={View} />));
+      expect(renderer.root.findAllByProps({ "data-empty": true })).toHaveLength(
+        0,
+      );
+      expect(data.news[0].symbol).toBe("ETH");
+    });
+
     it(`${name}: distinguishes a natural empty state from Strict hiding and restores all lists`, () => {
       state.markets = [];
       localStorage.setItem(storageKey, "false");

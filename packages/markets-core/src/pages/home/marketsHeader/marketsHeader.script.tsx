@@ -8,6 +8,8 @@ import { sortList } from "../../../utils";
 export type MarketsHeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
 
 type MarketsHeaderFilterState = {
+  isReady?: boolean;
+  isLoading?: boolean;
   newsHiddenByLowVolumeFilter?: boolean;
   gainersHiddenByLowVolumeFilter?: boolean;
   losersHiddenByLowVolumeFilter?: boolean;
@@ -82,6 +84,8 @@ export function useDataSource() {
   }, [balance]);
 
   const filterState: MarketsHeaderFilterState = {
+    isReady: favorite.isReady,
+    isLoading: favorite.isLoading,
     newsHiddenByLowVolumeFilter: filteredMarkets.allHidden,
     gainersHiddenByLowVolumeFilter: filteredMarkets.allHidden,
     losersHiddenByLowVolumeFilter: filteredMarkets.allHidden,

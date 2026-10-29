@@ -4,6 +4,7 @@ import {
   Box,
   cn,
   EmptyDataState,
+  Spinner,
   Flex,
   TabPanel,
   Tabs,
@@ -59,6 +60,8 @@ export const MobileMarketsHeader: FC<MobileMarketsHeaderProps> = (props) => {
           >
             <CardItem
               data={news}
+              isReady={props.isReady}
+              isLoading={props.isLoading}
               isHiddenByLowVolumeFilter={props.newsHiddenByLowVolumeFilter}
               onSymbol={onSymbol}
             />
@@ -70,6 +73,8 @@ export const MobileMarketsHeader: FC<MobileMarketsHeaderProps> = (props) => {
           >
             <CardItem
               data={gainers}
+              isReady={props.isReady}
+              isLoading={props.isLoading}
               isHiddenByLowVolumeFilter={props.gainersHiddenByLowVolumeFilter}
               onSymbol={onSymbol}
             />
@@ -81,6 +86,8 @@ export const MobileMarketsHeader: FC<MobileMarketsHeaderProps> = (props) => {
           >
             <CardItem
               data={losers}
+              isReady={props.isReady}
+              isLoading={props.isLoading}
               isHiddenByLowVolumeFilter={props.losersHiddenByLowVolumeFilter}
               onSymbol={onSymbol}
             />
@@ -190,6 +197,8 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
 };
 
 type CardItemProps = {
+  isReady?: boolean;
+  isLoading?: boolean;
   data?: TListItem[];
   isHiddenByLowVolumeFilter?: boolean;
   className?: string;
@@ -199,23 +208,31 @@ type CardItemProps = {
 const CardItem: React.FC<CardItemProps> = (props) => {
   return (
     <Flex direction="column" itemAlign="start" mt={3}>
-      {!props.data?.length && (
+      {(props.isReady === false || !props.data?.length) && (
         <Box className="oui-w-full oui-py-6">
-          {props.isHiddenByLowVolumeFilter ? (
-            <LowVolumeEmptyView />
-          ) : (
-            <EmptyDataState />
+          {props.isLoading && (
+            <Flex justify="center">
+              <Spinner size="md" />
+            </Flex>
           )}
+          {!props.isLoading &&
+            props.isReady !== false &&
+            (props.isHiddenByLowVolumeFilter ? (
+              <LowVolumeEmptyView />
+            ) : (
+              <EmptyDataState />
+            ))}
         </Box>
       )}
-      {props.data?.map((item) => (
-        <ListItem
-          key={item.symbol}
-          item={item}
-          onSymbol={props.onSymbol}
-          className="oui-px-0"
-        />
-      ))}
+      {props.isReady !== false &&
+        props.data?.map((item) => (
+          <ListItem
+            key={item.symbol}
+            item={item}
+            onSymbol={props.onSymbol}
+            className="oui-px-0"
+          />
+        ))}
     </Flex>
   );
 };
