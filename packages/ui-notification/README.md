@@ -32,24 +32,32 @@ Preserve locale handling, hashes and external-link behavior in the host adapter.
 <AnnouncementCenterPage slug={slug} onRouteChange={customOnRouteChange} />
 ```
 
-Configure official announcement visibility once for all entry points:
+Official announcements are excluded by default. To include them for all entry points:
 
 ```tsx
 <OrderlyAppProvider
   {...appProps}
-  widgetConfigs={{ announcement: { excludeOfficial: true } }}
+  widgetConfigs={{ announcement: { excludeOfficial: false } }}
 >
   <Scaffold>{children}</Scaffold>
 </OrderlyAppProvider>
 ```
 
-`widgetConfigs.announcement.excludeOfficial` defaults to `false`. The broker
-always comes from the global configuration; providers and hooks do not override
-announcement source options.
+`widgetConfigs.announcement.excludeOfficial` defaults to `true`. List and active
+requests explicitly send `exclude_official=true`, and the SDK subscribes only to
+the configured broker's announcement topic. Set `false` to include official
+announcements and subscribe to `orderly_official$announcement`. Without a broker,
+the default scope is empty and no announcement reads or subscriptions are started.
+The same source setting applies to list, bell, cards and detail visibility.
+The broker always comes from the global configuration; providers and hooks do
+not override announcement source options.
 
 Custom `AnnouncementArticlesContext` sources own their supplied data and bypass
 production source filtering.
-Maintenance reminders are independent of official announcement visibility.
+Maintenance reminders are independent of official announcement visibility:
+`system_info?source=maintenance`, `maintenance_status`, maintenance cards and the
+maintenance dialog retain their existing behavior. Opening the bell or choosing
+Close all still closes the shared card group, including maintenance reminders.
 
 For integrations without Scaffold, the announcement page supplies its own
 provider. Wrap custom entry points in `AnnouncementProvider` inside the existing

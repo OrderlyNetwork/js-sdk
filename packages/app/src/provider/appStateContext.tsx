@@ -14,7 +14,7 @@ export type { RouteOption } from "@orderly.network/types";
 
 export type WidgetConfigs = {
   announcement?: {
-    /** Exclude Orderly official announcements from all announcement views. Defaults to false. */
+    /** Exclude Orderly official announcements from all announcement views. Defaults to true. */
     excludeOfficial?: boolean;
   };
   scanQRCode?: {

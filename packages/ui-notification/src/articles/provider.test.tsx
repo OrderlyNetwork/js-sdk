@@ -129,7 +129,7 @@ async function push(
 beforeEach(() => {
   localStorage.clear();
   fixture.brokerId = "a";
-  fixture.widgetConfigs = undefined;
+  fixture.widgetConfigs = { announcement: { excludeOfficial: false } };
   fixture.apiBaseUrl = "https://api.example";
   fixture.locale = "en";
   fixture.markets = [{ symbol: "PERP_BTC_USDC" }];
@@ -161,6 +161,134 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+});
+
+describe("default announcement sources", () => {
+  it.each([
+    undefined,
+    {},
+    { announcement: {} },
+    { announcement: { excludeOfficial: true } },
+  ])(
+    "excludes official announcements with configuration %j",
+    async (config) => {
+      fixture.widgetConfigs = config;
+      fixture.list.mockResolvedValue(
+        response([row(), { ...row(2), is_official: true }]),
+      );
+      fixture.active.mockResolvedValue(
+        activeResponse([full(), { ...full(2), is_official: true }]),
+      );
+      fixture.detail.mockResolvedValue({ ...full(2), is_official: true });
+      const { result } = renderHook(
+        () => ({
+          source: useAnnouncementArticles(),
+          page: useAnnouncementList({ page: 2 }),
+          detail: useAnnouncementDetail({ id: "2" }),
+          officialSlug: useAnnouncementDetail({ slug: "official-post" }, true),
+        }),
+        { wrapper },
+      );
+      await settle();
+      expect(
+        result.current.source.articles.map((item) => item.announcement_id),
+      ).toEqual([1]);
+      expect(
+        result.current.page.articles.map((item) => item.announcement_id),
+      ).toEqual([1]);
+      expect(
+        result.current.source.scaffoldState?.cardTips?.map(
+          (item) => item.announcement_id,
+        ),
+      ).toEqual([1]);
+      expect(result.current.detail).toMatchObject({
+        status: "ready",
+        article: undefined,
+      });
+      expect(result.current.officialSlug).toMatchObject({
+        status: "ready",
+        article: undefined,
+      });
+      expect(fixture.detail).toHaveBeenCalledTimes(1);
+      for (const [, params] of fixture.list.mock.calls)
+        expect(params.exclude_official).toBe("true");
+      expect(fixture.active.mock.calls[0][1]).toMatchObject({
+        broker_id: "a",
+        exclude_official: "true",
+        locale: "en",
+      });
+      expect([...fixture.handlers.keys()]).toEqual(["a$announcement"]);
+    },
+  );
+
+  it("clears official data and unsubscribes when an explicit opt-in is removed", async () => {
+    fixture.list.mockResolvedValue(response([{ ...row(), is_official: true }]));
+    fixture.active.mockResolvedValue(
+      activeResponse([{ ...full(), is_official: true }]),
+    );
+    const { result, rerender } = renderHook(useAnnouncementArticles, {
+      wrapper,
+    });
+    await settle();
+    expect(result.current.articles).toHaveLength(1);
+    expect(fixture.handlers.has("orderly_official$announcement")).toBe(true);
+    fixture.widgetConfigs = undefined;
+    rerender();
+    expect(result.current.articles).toEqual([]);
+    await settle();
+    expect(result.current.scaffoldState?.cardTips).toEqual([]);
+    expect([...fixture.handlers.keys()]).toEqual(["a$announcement"]);
+    expect(fixture.list.mock.calls.at(-1)?.[1].exclude_official).toBe("true");
+  });
+
+  it.each([0, 2])(
+    "retains maintenance cards and dialogs without a broker at status %s",
+    async (status) => {
+      fixture.widgetConfigs = undefined;
+      fixture.brokerId = undefined;
+      fixture.maintenance = {
+        startTime: 10,
+        endTime: 20,
+        status,
+        brokerName: "Broker",
+      };
+      const { result } = renderHook(
+        () => ({
+          cards: useAnnouncement(),
+          page: useAnnouncementList(),
+          detail: useAnnouncementDetail({ id: "2" }),
+        }),
+        { wrapper },
+      );
+      await settle();
+      expect(result.current.page).toMatchObject({
+        total: 0,
+        articles: [],
+        status: "ready",
+      });
+      expect(result.current.detail).toMatchObject({
+        article: undefined,
+        status: "ready",
+      });
+      expect(
+        result.current.cards.cardTips?.map((item) => item.announcement_id),
+      ).toEqual(["-1"]);
+      expect(result.current.cards.showAnnouncement).toBe(true);
+      expect(result.current.cards.maintenanceDialogInfo).toBe(
+        status === 2 ? "maintenance.dialog.description" : undefined,
+      );
+      expect(fixture.list).not.toHaveBeenCalled();
+      expect(fixture.active).not.toHaveBeenCalled();
+      expect(fixture.detail).not.toHaveBeenCalled();
+      expect(fixture.ws.subscribe).not.toHaveBeenCalled();
+      act(() => result.current.cards.openMessageCenter?.());
+      expect(result.current.cards.showAnnouncement).toBe(false);
+      expect(result.current.cards.cardTips).toHaveLength(1);
+      expect(result.current.cards.maintenanceDialogInfo).toBe(
+        status === 2 ? "maintenance.dialog.description" : undefined,
+      );
+    },
+  );
 });
 
 describe("direct slug details", () => {
@@ -818,7 +946,7 @@ describe("production announcement provider", () => {
     expect(fixture.handlers.has("orderly_official$announcement")).toBe(false);
     expect(fixture.handlers.has("a$announcement")).toBe(true);
 
-    fixture.widgetConfigs = undefined;
+    fixture.widgetConfigs = { announcement: { excludeOfficial: false } };
     rerender();
     await settle();
     expect(fixture.list).toHaveBeenLastCalledWith(

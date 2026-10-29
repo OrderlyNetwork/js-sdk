@@ -339,6 +339,7 @@ describe("announcement source filters", () => {
   it.each(["official", "community", "all", "invalid"])(
     "reads source %s and preserves it while navigating",
     (source) => {
+      config.widgetConfigs = { announcement: { excludeOfficial: false } };
       window.history.replaceState(
         {},
         "",
@@ -406,13 +407,13 @@ describe("announcement source filters", () => {
 });
 
 describe("announcement source badge visibility", () => {
-  it("defaults to visible and follows changes to the official announcement config", () => {
+  it("defaults to hidden and follows changes to the official announcement config", () => {
     const { result, rerender } = renderHook(
       () => useAnnouncementCenterScript(),
       { wrapper },
     );
-    expect(result.current.showSourceBadge).toBe(true);
-    expect(result.current.showSourceFilter).toBe(true);
+    expect(result.current.showSourceBadge).toBe(false);
+    expect(result.current.showSourceFilter).toBe(false);
     config.widgetConfigs = { announcement: { excludeOfficial: true } };
     rerender();
     expect(result.current.showSourceBadge).toBe(false);

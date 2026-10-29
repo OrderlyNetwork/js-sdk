@@ -63,7 +63,7 @@ export function useLiveAnnouncements(
   const brokerId = useConfig<string | undefined>("brokerId") || undefined;
   const apiBaseUrl = useConfig<string>("apiBaseUrl");
   const { widgetConfigs } = useAppContext();
-  const excludeOfficial = widgetConfigs?.announcement?.excludeOfficial ?? false;
+  const excludeOfficial = widgetConfigs?.announcement?.excludeOfficial ?? true;
   const scope = JSON.stringify([apiBaseUrl, brokerId, excludeOfficial]);
   const { i18n } = useTranslation();
   const locale = announcementLocale(i18n.language);

@@ -74,5 +74,6 @@ export type AnnouncementListQuery = {
 export type AnnouncementSourceOptions = {
   /** Defaults to the broker configured by OrderlyProvider. */
   brokerId?: string;
+  /** Defaults to true; set false to include official announcements. */
   excludeOfficial?: boolean;
 };

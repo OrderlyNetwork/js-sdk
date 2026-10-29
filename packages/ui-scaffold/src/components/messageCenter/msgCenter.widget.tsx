@@ -12,7 +12,7 @@ export const MessageCenterWidget = () => {
     <MessageCenter
       messages={announcementState.tips}
       platformName={platformName}
-      showSourceBadge={!widgetConfigs?.announcement?.excludeOfficial}
+      showSourceBadge={!(widgetConfigs?.announcement?.excludeOfficial ?? true)}
       maintenanceDialogInfo={announcementState.maintenanceDialogInfo}
       showAnnouncement={announcementState.showAnnouncement}
       closeTips={announcementState.closeTips}

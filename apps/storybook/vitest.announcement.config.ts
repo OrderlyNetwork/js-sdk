@@ -29,6 +29,7 @@ export default defineConfig({
       "src/playground/pages/announcement/**/*.test.tsx",
       "src/playground/hooks/useNav.test.tsx",
       "../../packages/ui-scaffold/src/components/messageCenter/selectMessages.test.ts",
+      "../../packages/ui-scaffold/src/components/messageCenter/msgCenter.widget.test.tsx",
       "../../packages/ui-scaffold/src/components/announcementNavigation.test.tsx",
       "../../packages/ui-scaffold/src/components/scaffold/useSharedAnnouncementState.test.tsx",
     ],

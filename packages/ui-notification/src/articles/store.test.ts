@@ -92,6 +92,7 @@ function harness() {
   });
   const store = new AnnouncementStore({
     brokerId: "a",
+    excludeOfficial: false,
     list,
     active,
     detail,
@@ -152,8 +153,13 @@ describe.each(["id", "slug"] as const)("%s detail failures", (locator) => {
 
 describe("announcement source contract", () => {
   it.each([
-    [{}, ["orderly_official$announcement"]],
-    [{ brokerId: "a" }, ["orderly_official$announcement", "a$announcement"]],
+    [{}, []],
+    [{ brokerId: "a" }, ["a$announcement"]],
+    [{ excludeOfficial: false }, ["orderly_official$announcement"]],
+    [
+      { brokerId: "a", excludeOfficial: false },
+      ["orderly_official$announcement", "a$announcement"],
+    ],
     [{ brokerId: "a", excludeOfficial: true }, ["a$announcement"]],
     [{ excludeOfficial: true }, []],
   ])("selects requested topics for %j", (options, expected) => {
@@ -179,7 +185,7 @@ describe("announcement source contract", () => {
         }).split("?")[1],
       );
       expect(params.get("broker_id")).toBe("a & b");
-      expect(params.get("exclude_official")).toBe("false");
+      expect(params.get("exclude_official")).toBe("true");
       expect(params.get("category")).toBe(expected);
       expect(params.get("page")).toBe("2");
       expect(params.get("size")).toBe("20");
@@ -797,6 +803,7 @@ describe("source-filtered server pages", () => {
       const params = new URL(
         announcementQuery({
           brokerId: "broker",
+          excludeOfficial: false,
           source,
           category: "legal",
           page: 2,
