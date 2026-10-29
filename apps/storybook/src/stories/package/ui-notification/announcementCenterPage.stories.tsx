@@ -12,7 +12,7 @@ const meta: Meta<typeof AnnouncementCenterPage> = {
     layout: "centered",
   },
   argTypes: {
-    onRouteChange: {
+    routerAdapter: {
       control: false,
       description: "Optional override for OrderlyAppProvider navigation",
     },
@@ -33,12 +33,14 @@ export const Default: Story = {
 /** Overrides the application callback for this page only. */
 export const WithNavigationOverride: Story = {
   args: {
-    onRouteChange: (route) => {
-      if (route.target === "_blank") {
-        window.open(route.href, "_blank", "noopener,noreferrer");
-      } else {
-        window.location.assign(route.href);
-      }
+    routerAdapter: {
+      onRouteChange: (route) => {
+        if (route.target === "_blank") {
+          window.open(route.href, "_blank", "noopener,noreferrer");
+        } else {
+          window.location.assign(route.href);
+        }
+      },
     },
   },
 };

@@ -86,6 +86,27 @@ afterEach(() => {
 });
 
 describe("announcement source tabs", () => {
+  it("uses the configured broker name between All and Orderly", () => {
+    render(page({ platformName: "  Orderly Demo  " }));
+    expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
+      "common.all",
+      "Orderly Demo",
+      "notification.source.orderly",
+    ]);
+    fireEvent.mouseDown(screen.getByRole("tab", { name: "Orderly Demo" }), {
+      button: 0,
+      ctrlKey: false,
+    });
+    expect(props.selectSource).toHaveBeenCalledWith("community");
+    fireEvent.mouseDown(
+      screen.getByRole("tab", { name: "notification.source.orderly" }),
+      {
+        button: 0,
+        ctrlKey: false,
+      },
+    );
+    expect(props.selectSource).toHaveBeenCalledWith("official");
+  });
   it.each(["ltr", "rtl"])(
     "retains source order through selection and list updates in %s",
     (dir) => {
@@ -93,8 +114,8 @@ describe("announcement source tabs", () => {
       const { rerender } = render(page());
       const expectedOrder = [
         "common.all",
-        "notification.source.official",
-        "notification.source.community",
+        "notification.source.platform",
+        "notification.source.orderly",
       ];
       const tabOrder = () =>
         screen.getAllByRole("tab").map((tab) => tab.textContent);
@@ -155,7 +176,7 @@ describe("announcement source tabs", () => {
   it("keeps selection controlled and shows the new list only in its active panel", () => {
     const { rerender } = render(page());
     const community = screen.getByRole("tab", {
-      name: "notification.source.community",
+      name: "notification.source.platform",
     });
     fireEvent.mouseDown(community, { button: 0, ctrlKey: false });
     expect(props.selectSource).toHaveBeenCalledWith("community");
@@ -175,8 +196,8 @@ describe("announcement source tabs", () => {
     expect(community.getAttribute("aria-selected")).toBe("true");
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
       "common.all",
-      "notification.source.official",
-      "notification.source.community",
+      "notification.source.platform",
+      "notification.source.orderly",
     ]);
     expect(screen.queryByText("Current article")).toBeNull();
     expect(screen.getAllByText("Community article")).toHaveLength(1);
@@ -200,10 +221,10 @@ describe("announcement source tabs", () => {
     vi.clearAllMocks();
     fireEvent.keyDown(all, { key });
     await waitFor(() =>
-      expect(props.selectSource).toHaveBeenCalledWith("official"),
+      expect(props.selectSource).toHaveBeenCalledWith("community"),
     );
     expect(document.activeElement).toBe(
-      screen.getByRole("tab", { name: "notification.source.official" }),
+      screen.getByRole("tab", { name: "notification.source.platform" }),
     );
   });
 

@@ -40,9 +40,9 @@ describe("announcement page navigation", () => {
     });
   });
 
-  it("uses the explicit override without invoking the global callback", () => {
+  it("prefers the page router adapter over the global callback", () => {
     const onRouteChange = vi.fn();
-    render(<AnnouncementCenterPage onRouteChange={onRouteChange} />);
+    render(<AnnouncementCenterPage routerAdapter={{ onRouteChange }} />);
     widgetProps().onRouteChange("/announcement");
     expect(onRouteChange).toHaveBeenCalledExactlyOnceWith({
       href: "/announcement",
@@ -58,7 +58,7 @@ describe("announcement page navigation", () => {
       const onRouteChange = vi.fn();
       render(
         <AnnouncementCenterPage
-          onRouteChange={override ? onRouteChange : undefined}
+          routerAdapter={override ? { onRouteChange } : undefined}
         />,
       );
       const url = "https://orderly.network/docs?section=api#detail";
@@ -83,6 +83,20 @@ describe("announcement page navigation", () => {
     expect(() => widgetProps().onRouteChange("/announcement")).not.toThrow();
   });
 
+  it("supports the original router adapter without a global callback", () => {
+    mocks.onRouteChange = undefined;
+    const onRouteChange = vi.fn();
+    render(<AnnouncementCenterPage routerAdapter={{ onRouteChange }} />);
+    widgetProps().onRouteChange("/announcement");
+    expect(onRouteChange).toHaveBeenCalledExactlyOnceWith({
+      href: "/announcement",
+      name: "/announcement",
+      scope: "announcement",
+    });
+    widgetProps().onRouteChange("");
+    expect(onRouteChange).toHaveBeenCalledTimes(1);
+  });
+
   it("ignores empty URLs", () => {
     render(<AnnouncementCenterPage />);
     widgetProps().onRouteChange("");
@@ -100,9 +114,17 @@ describe("announcement page navigation", () => {
     expect(nextGlobal).toHaveBeenCalledTimes(1);
 
     const firstOverride = vi.fn();
-    rerender(<AnnouncementCenterPage onRouteChange={firstOverride} />);
+    rerender(
+      <AnnouncementCenterPage
+        routerAdapter={{ onRouteChange: firstOverride }}
+      />,
+    );
     const nextOverride = vi.fn();
-    rerender(<AnnouncementCenterPage onRouteChange={nextOverride} />);
+    rerender(
+      <AnnouncementCenterPage
+        routerAdapter={{ onRouteChange: nextOverride }}
+      />,
+    );
     widgetProps().onRouteChange("/announcement");
     expect(firstOverride).not.toHaveBeenCalled();
     expect(nextOverride).toHaveBeenCalledTimes(1);

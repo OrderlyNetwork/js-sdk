@@ -4,8 +4,9 @@
 
 `AnnouncementCenterPage` renders the announcement center and uses the global
 `OrderlyAppProvider.onRouteChange` callback for navigation. An optional
-page-level `onRouteChange` overrides the global callback. The former
-`routerAdapter` prop has been replaced by `onRouteChange`.
+page-level `routerAdapter.onRouteChange` overrides the global callback. The
+original `routerAdapter` prop remains supported; there is no direct page-level
+`onRouteChange` prop. Removing the adapter restores global navigation.
 
 ## Exports
 
@@ -16,12 +17,12 @@ through the selected callback.
 
 #### Props
 
-| Prop            | Type                            | Required | Description                                                                                   |
-| --------------- | ------------------------------- | -------- | --------------------------------------------------------------------------------------------- |
-| `slug`          | `string`                        | No       | Explicit slug lookup, including numeric strings; a non-empty slug takes precedence over `id`. |
-| `id`            | `string`                        | No       | Explicit ID lookup. Without either locator, the page shows the list.                          |
-| `isOfficial`    | `boolean`                       | No       | Overrides URL `is_official`; defaults to false when both are absent.                          |
-| `onRouteChange` | `(option: RouteOption) => void` | No       | Overrides `OrderlyAppProvider.onRouteChange`.                                                 |
+| Prop            | Type            | Required | Description                                                                                   |
+| --------------- | --------------- | -------- | --------------------------------------------------------------------------------------------- |
+| `slug`          | `string`        | No       | Explicit slug lookup, including numeric strings; a non-empty slug takes precedence over `id`. |
+| `id`            | `string`        | No       | Explicit ID lookup. Without either locator, the page shows the list.                          |
+| `isOfficial`    | `boolean`       | No       | Overrides URL `is_official`; defaults to false when both are absent.                          |
+| `routerAdapter` | `RouterAdapter` | No       | Its `onRouteChange` takes priority over `OrderlyAppProvider.onRouteChange`.                   |
 
 Navigation callbacks receive `href`, `name`, and `scope: "announcement"`.
 HTTP(S) external links additionally set `target: "_blank"`. Empty URLs are
@@ -43,5 +44,5 @@ import { AnnouncementCenterPage } from "@orderly.network/ui-notification";
 </OrderlyAppProvider>;
 
 // Optional override, using the same RouteOption contract:
-<AnnouncementCenterPage slug={slug} onRouteChange={customOnRouteChange} />;
+<AnnouncementCenterPage slug={slug} routerAdapter={routerAdapter} />;
 ```

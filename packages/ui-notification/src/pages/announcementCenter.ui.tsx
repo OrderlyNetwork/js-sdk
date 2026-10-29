@@ -283,15 +283,17 @@ export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
                   "oui-box-border oui-h-auto oui-min-h-8 oui-min-w-[72px] oui-max-w-full oui-whitespace-normal oui-break-words oui-py-1",
               }}
             >
-              {(["all", "official", "community"] as const).map((item) => (
+              {(["all", "community", "official"] as const).map((item) => (
                 <TabPanel
                   key={item}
                   value={item}
                   title={
                     {
                       all: t("common.all"),
-                      official: t("notification.source.official"),
-                      community: t("notification.source.community"),
+                      official: t("notification.source.orderly"),
+                      community:
+                        props.platformName?.trim() ||
+                        t("notification.source.platform"),
                     }[item]
                   }
                 >

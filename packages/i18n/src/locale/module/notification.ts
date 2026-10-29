@@ -1,7 +1,5 @@
 export const notification = {
   "notification.source.filter": "Announcement source",
-  "notification.source.official": "Official",
-  "notification.source.community": "Community",
   "notification.video.loading": "Loading video…",
   "notification.video.slow": "The video is taking longer to load.",
   "notification.video.reload": "Reload video",
