@@ -211,7 +211,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
                       storageKey="orderly_markets_datalist_community_sel_sub_tab"
                       size="md"
                       classNames={{
-                        tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+                        tabsList: "oui-px-0 oui-pt-4 oui-pb-2",
                         tabsContent: "oui-h-full",
                       }}
                       className="oui-marketsDataList-community-tabs"
@@ -231,7 +231,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
                       storageKey="orderly_markets_datalist_rwa_sel_sub_tab"
                       size="md"
                       classNames={{
-                        tabsList: "oui-px-3 oui-pt-1 oui-pb-2",
+                        tabsList: "oui-px-0 oui-pt-4 oui-pb-2",
                         tabsContent: "oui-h-full",
                       }}
                       className="oui-marketsDataList-rwa-tabs"

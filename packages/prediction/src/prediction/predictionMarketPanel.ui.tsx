@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
+  FavoritesIcon,
   FavoritesIcon2,
+  UnFavoritesIcon,
   UnFavoritesIcon2,
   useMarketCategories,
   useMarketsContext,
@@ -121,23 +123,37 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
         {volume}
       </Text.numeral>
     );
+  const favoriteButton = (
+    <button
+      type="button"
+      aria-label={t("markets.favorites")}
+      onClick={(event) => {
+        event.stopPropagation();
+        onToggleFavorite(market.id);
+      }}
+      className={cn(
+        "oui-flex oui-items-center oui-justify-center",
+        desktopMarketsPage
+          ? "oui-size-full"
+          : "oui-me-1 oui-size-3 oui-flex-none",
+      )}
+    >
+      {desktopMarketsPage ? (
+        favorite ? (
+          <FavoritesIcon />
+        ) : (
+          <UnFavoritesIcon />
+        )
+      ) : favorite ? (
+        <FavoritesIcon2 className="oui-size-3" />
+      ) : (
+        <UnFavoritesIcon2 className="oui-size-3" />
+      )}
+    </button>
+  );
   const symbolCell = (
     <div className="oui-flex oui-items-center oui-gap-1">
-      <button
-        type="button"
-        aria-label={t("markets.favorites")}
-        onClick={(event) => {
-          event.stopPropagation();
-          onToggleFavorite(market.id);
-        }}
-        className="oui-me-1 oui-flex oui-size-3 oui-flex-none oui-items-center oui-justify-center"
-      >
-        {favorite ? (
-          <FavoritesIcon2 className="oui-size-3" />
-        ) : (
-          <UnFavoritesIcon2 className="oui-size-3" />
-        )}
-      </button>
+      {!desktopMarketsPage && favoriteButton}
       <TokenIcon name={market.base} className="oui-size-[18px]" />
       <Text
         size={desktopMarketsPage ? "xs" : "2xs"}
@@ -151,6 +167,7 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
     "oui-prediction-market-row",
     rowHeightClassName,
     desktopMarketsPage && "oui-border-b oui-border-b-line-4",
+    desktopMarketsPage && "[&>td:first-child]:!oui-ps-1",
     "[&>td:first-child]:oui-ps-3 [&>td:last-child]:oui-pe-3 [&>td]:oui-px-1",
     "[&>td:first-child]:oui-rounded-s [&>td:last-child]:oui-rounded-e",
     selected ? "[&>td]:oui-bg-line-6" : "[&:hover>td]:oui-bg-line-4",
@@ -200,6 +217,9 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
       aria-disabled={!onSelect}
       onClick={onSelect ? () => onSelect(market.currentRow.symbol) : undefined}
     >
+      {desktopMarketsPage && (
+        <td className="oui-text-center">{favoriteButton}</td>
+      )}
       <td className="oui-text-start">{symbolCell}</td>
       <td className={priceClassName}>{lastPrice}</td>
       <td className={priceClassName}>{chance}</td>
@@ -294,6 +314,8 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
     <div
       className={cn(
         "oui-text-xs oui-custom-scrollbar oui-h-full oui-min-h-[162px] oui-overflow-auto oui-font-semibold",
+        // Match the desktop market table's leading inset.
+        isDesktopMarketsPage && "oui-box-border oui-ps-[7px]",
         (componentKey === "dropDownMarkets" ||
           componentKey === "expandMarkets") &&
           "oui-px-1",
@@ -304,8 +326,23 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
         className,
       )}
     >
-      <table className="oui-w-full oui-table-fixed oui-text-base-contrast-80">
-        {compact ? (
+      <table
+        className={cn(
+          "oui-w-full oui-table-fixed oui-text-base-contrast-80",
+          isDesktopMarketsPage && "oui-border-collapse",
+        )}
+      >
+        {isDesktopMarketsPage ? (
+          <colgroup>
+            {/* Match the numeric column widths used by the desktop market table. */}
+            <col className="oui-w-[30px]" />
+            <col className="oui-w-[120px]" />
+            <col className="oui-w-[100px]" />
+            <col className="oui-w-[100px]" />
+            <col className="oui-w-[100px]" />
+            <col className="oui-w-[100px]" />
+          </colgroup>
+        ) : compact ? (
           <colgroup>
             <col className="oui-w-[45%]" />
             <col className="oui-w-[28%]" />
@@ -335,9 +372,16 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
                   : "oui-h-12"
                 : "oui-h-9",
               isDesktopMarketsPage &&
-                "[&>th]:oui-border-b [&>th]:oui-border-line",
+                "[&>th:first-child]:!oui-ps-1 [&>th]:oui-border-b [&>th]:oui-border-line",
             )}
           >
+            {isDesktopMarketsPage && (
+              <th className="oui-text-center">
+                <div className="oui-flex oui-w-full oui-items-center oui-justify-center">
+                  <UnFavoritesIcon />
+                </div>
+              </th>
+            )}
             <th className="oui-text-start">{t("common.symbol")}</th>
             {compact ? (
               <>
