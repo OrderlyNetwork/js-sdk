@@ -129,7 +129,7 @@ async function push(
 beforeEach(() => {
   localStorage.clear();
   fixture.brokerId = "a";
-  fixture.widgetConfigs = { announcement: { excludeOfficial: false } };
+  fixture.widgetConfigs = undefined;
   fixture.apiBaseUrl = "https://api.example";
   fixture.locale = "en";
   fixture.markets = [{ symbol: "PERP_BTC_USDC" }];
@@ -168,8 +168,75 @@ describe("default announcement sources", () => {
     undefined,
     {},
     { announcement: {} },
-    { announcement: { excludeOfficial: true } },
+    { announcement: { excludeOfficial: false } },
   ])(
+    "includes official announcements by default with configuration %j",
+    async (config) => {
+      fixture.widgetConfigs = config;
+      const official = { ...full(2), is_official: true, slug: "official-post" };
+      fixture.list.mockResolvedValue(response([row(), official]));
+      fixture.active.mockResolvedValue(activeResponse([full(), official]));
+      fixture.detail.mockResolvedValue(official);
+      const { result } = renderHook(
+        () => ({
+          source: useAnnouncementArticles(),
+          page: useAnnouncementList({ page: 2 }),
+          detail: useAnnouncementDetail({ id: "2" }),
+          slug: useAnnouncementDetail({ slug: "official-post" }, true),
+        }),
+        { wrapper },
+      );
+      await settle();
+      expect(
+        result.current.source.articles.map((item) => item.announcement_id),
+      ).toEqual([2, 1]);
+      expect(
+        result.current.page.articles.map((item) => item.announcement_id),
+      ).toEqual([2, 1]);
+      expect(
+        result.current.source.scaffoldState?.cardTips?.map(
+          (item) => item.announcement_id,
+        ),
+      ).toEqual([2, 1]);
+      expect(result.current.detail.article?.announcement_id).toBe(2);
+      expect(result.current.slug.article?.announcement_id).toBe(2);
+      for (const [, params] of fixture.list.mock.calls)
+        expect(params.exclude_official).toBe("false");
+      expect(fixture.active.mock.calls[0][1]).toMatchObject({
+        broker_id: "a",
+        exclude_official: "false",
+      });
+      expect([...fixture.handlers.keys()]).toEqual([
+        "orderly_official$announcement",
+        "a$announcement",
+      ]);
+    },
+  );
+  it("reads and subscribes to official announcements without a broker by default", async () => {
+    fixture.brokerId = undefined;
+    const official = { ...full(2), is_official: true };
+    fixture.list.mockResolvedValue(response([official]));
+    fixture.active.mockResolvedValue(activeResponse([official]));
+    const { result } = renderHook(useAnnouncementArticles, { wrapper });
+    await settle();
+    expect(result.current.articles.map((item) => item.announcement_id)).toEqual(
+      [2],
+    );
+    expect(fixture.list.mock.calls[0][1]).toEqual({
+      exclude_official: "false",
+      page: "1",
+      size: "5",
+    });
+    expect(fixture.active.mock.calls[0][1]).toEqual({
+      exclude_official: "false",
+      locale: "en",
+    });
+    expect([...fixture.handlers.keys()]).toEqual([
+      "orderly_official$announcement",
+    ]);
+  });
+
+  it.each([{ announcement: { excludeOfficial: true } }])(
     "excludes official announcements with configuration %j",
     async (config) => {
       fixture.widgetConfigs = config;
@@ -221,7 +288,7 @@ describe("default announcement sources", () => {
     },
   );
 
-  it("clears official data and unsubscribes when an explicit opt-in is removed", async () => {
+  it("clears official data and unsubscribes when exclusion is explicitly enabled", async () => {
     fixture.list.mockResolvedValue(response([{ ...row(), is_official: true }]));
     fixture.active.mockResolvedValue(
       activeResponse([{ ...full(), is_official: true }]),
@@ -232,7 +299,7 @@ describe("default announcement sources", () => {
     await settle();
     expect(result.current.articles).toHaveLength(1);
     expect(fixture.handlers.has("orderly_official$announcement")).toBe(true);
-    fixture.widgetConfigs = undefined;
+    fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
     rerender();
     expect(result.current.articles).toEqual([]);
     await settle();
@@ -244,7 +311,7 @@ describe("default announcement sources", () => {
   it.each([0, 2])(
     "retains maintenance cards and dialogs without a broker at status %s",
     async (status) => {
-      fixture.widgetConfigs = undefined;
+      fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
       fixture.brokerId = undefined;
       fixture.maintenance = {
         startTime: 10,

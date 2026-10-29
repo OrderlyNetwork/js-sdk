@@ -153,8 +153,8 @@ describe.each(["id", "slug"] as const)("%s detail failures", (locator) => {
 
 describe("announcement source contract", () => {
   it.each([
-    [{}, []],
-    [{ brokerId: "a" }, ["a$announcement"]],
+    [{}, ["orderly_official$announcement"]],
+    [{ brokerId: "a" }, ["orderly_official$announcement", "a$announcement"]],
     [{ excludeOfficial: false }, ["orderly_official$announcement"]],
     [
       { brokerId: "a", excludeOfficial: false },
@@ -185,7 +185,7 @@ describe("announcement source contract", () => {
         }).split("?")[1],
       );
       expect(params.get("broker_id")).toBe("a & b");
-      expect(params.get("exclude_official")).toBe("true");
+      expect(params.get("exclude_official")).toBe("false");
       expect(params.get("category")).toBe(expected);
       expect(params.get("page")).toBe("2");
       expect(params.get("size")).toBe("20");

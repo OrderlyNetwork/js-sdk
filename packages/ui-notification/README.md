@@ -32,22 +32,23 @@ Preserve locale handling, hashes and external-link behavior in the host adapter.
 <AnnouncementCenterPage slug={slug} onRouteChange={customOnRouteChange} />
 ```
 
-Official announcements are excluded by default. To include them for all entry points:
+Official announcements are included by default. To exclude them for all entry points:
 
 ```tsx
 <OrderlyAppProvider
   {...appProps}
-  widgetConfigs={{ announcement: { excludeOfficial: false } }}
+  widgetConfigs={{ announcement: { excludeOfficial: true } }}
 >
   <Scaffold>{children}</Scaffold>
 </OrderlyAppProvider>
 ```
 
-`widgetConfigs.announcement.excludeOfficial` defaults to `true`. List and active
-requests explicitly send `exclude_official=true`, and the SDK subscribes only to
-the configured broker's announcement topic. Set `false` to include official
-announcements and subscribe to `orderly_official$announcement`. Without a broker,
-the default scope is empty and no announcement reads or subscriptions are started.
+`widgetConfigs.announcement.excludeOfficial` defaults to `false`. List and active
+requests explicitly send `exclude_official=false`, and the SDK subscribes to
+`orderly_official$announcement` and the configured broker's announcement topic.
+Set `true` to exclude official announcements and their subscription. Without a
+broker, the default scope includes only official announcements; explicitly
+excluding them leaves the scope empty, with no announcement reads or subscriptions.
 The same source setting applies to list, bell, cards and detail visibility.
 The broker always comes from the global configuration; providers and hooks do
 not override announcement source options.

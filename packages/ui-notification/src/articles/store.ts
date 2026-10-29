@@ -76,7 +76,7 @@ export function announcementLocale(language: string): ContentLocale {
 }
 export function announcementTopics({
   brokerId,
-  excludeOfficial = true,
+  excludeOfficial = false,
 }: AnnouncementSourceOptions) {
   return [
     ...(!excludeOfficial ? ["orderly_official$announcement"] : []),
@@ -86,7 +86,7 @@ export function announcementTopics({
 function sourceParams(options: AnnouncementSourceOptions) {
   const params = new URLSearchParams();
   if (options.brokerId) params.set("broker_id", options.brokerId);
-  params.set("exclude_official", String(options.excludeOfficial ?? true));
+  params.set("exclude_official", String(options.excludeOfficial ?? false));
   return params;
 }
 export function announcementQuery(
@@ -172,7 +172,7 @@ export class AnnouncementStore {
   ) {
     this.options = {
       ...options,
-      excludeOfficial: options.excludeOfficial ?? true,
+      excludeOfficial: options.excludeOfficial ?? false,
     };
     const locale = options.locale ?? "en";
     this.snapshot = {

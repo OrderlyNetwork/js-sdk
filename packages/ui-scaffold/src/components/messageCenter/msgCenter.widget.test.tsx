@@ -40,26 +40,26 @@ describe("header announcement source configuration", () => {
     undefined,
     {},
     { announcement: {} },
-    { announcement: { excludeOfficial: true } },
+    { announcement: { excludeOfficial: false } },
   ])(
-    "hides source badges by default and preserves the maintenance dialog with %j",
+    "shows source badges by default and preserves the maintenance dialog with %j",
     (config) => {
       fixture.widgetConfigs = config;
       const { rerender } = render(<MessageCenterWidget />);
       expect(screen.getByTestId("bell").getAttribute("data-source-badge")).toBe(
-        "false",
+        "true",
       );
       expect(screen.getByText("Maintenance is ongoing")).toBeTruthy();
-      fixture.widgetConfigs = { announcement: { excludeOfficial: false } };
+      fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
       rerender(<MessageCenterWidget />);
       expect(screen.getByTestId("bell").getAttribute("data-source-badge")).toBe(
-        "true",
+        "false",
       );
       expect(screen.getByText("Maintenance is ongoing")).toBeTruthy();
       fixture.widgetConfigs = undefined;
       rerender(<MessageCenterWidget />);
       expect(screen.getByTestId("bell").getAttribute("data-source-badge")).toBe(
-        "false",
+        "true",
       );
     },
   );

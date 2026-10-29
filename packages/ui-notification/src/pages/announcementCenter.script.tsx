@@ -35,7 +35,7 @@ export const useAnnouncementCenterScript = (
   const platformName = useConfig<string | undefined>("brokerName");
   const { widgetConfigs } = useAppContext();
   const showSourceBadge = !(
-    widgetConfigs?.announcement?.excludeOfficial ?? true
+    widgetConfigs?.announcement?.excludeOfficial ?? false
   );
   const { slug, id, onRouteChange } = options;
   const isDetail = !!(slug || id);

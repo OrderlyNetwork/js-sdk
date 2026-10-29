@@ -407,13 +407,13 @@ describe("announcement source filters", () => {
 });
 
 describe("announcement source badge visibility", () => {
-  it("defaults to hidden and follows changes to the official announcement config", () => {
+  it("defaults to visible and follows changes to the official announcement config", () => {
     const { result, rerender } = renderHook(
       () => useAnnouncementCenterScript(),
       { wrapper },
     );
-    expect(result.current.showSourceBadge).toBe(false);
-    expect(result.current.showSourceFilter).toBe(false);
+    expect(result.current.showSourceBadge).toBe(true);
+    expect(result.current.showSourceFilter).toBe(true);
     config.widgetConfigs = { announcement: { excludeOfficial: true } };
     rerender();
     expect(result.current.showSourceBadge).toBe(false);
