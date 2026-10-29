@@ -149,10 +149,6 @@
   "markets.topLosers": "الأعلى انخفاضًا",
   "markets.tradeSubMenu.perps.description": "تداول العقود الآجلة الدائمة على دفتر أوامر بدون رسوم غاز",
   "markets.search.placeholder": "ابحث في السوق",
-  "markets.showLowVolume": "إظهار الحجم المنخفض",
-  "markets.showLowVolume.tooltip": "تضمين الأسواق التي يقل حجم تداولها خلال 24 ساعة عن $1,000.",
-  "markets.showLowVolume.empty": "الأسواق المطابقة مخفية بواسطة فلتر حجم التداول خلال 24 ساعة.",
-  "markets.showLowVolume.action": "إظهار الأسواق ذات الحجم المنخفض",
   "markets.dataList.favorites.empty": "انقر على أيقونة <0/> بجانب السوق لإضافته إلى قائمتك.",
   "markets.dataList.column.8hFunding": "تمويل 8h",
   "markets.dataList.column.moveTop": "نقل إلى الأعلى",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "النقاط",
   "notification.source.community": "المجتمع",
   "notification.source.filter": "مصدر الإعلان",
-  "notification.source.official": "رسمي"
+  "notification.source.official": "رسمي",
+  "markets.strictVolumeFilter": "صارم",
+  "markets.strictVolumeFilter.tooltip": "عرض الأسواق التي يبلغ حجم تداولها خلال 24 ساعة $1,000 على الأقل فقط.",
+  "markets.strictVolumeFilter.empty": "الأسواق التي يقل حجم تداولها خلال 24 ساعة عن $1,000 مخفية.",
+  "markets.strictVolumeFilter.action": "إيقاف تشغيل الوضع الصارم",
+  "markets.strictVolumeFilter.mode": "الوضع الصارم"
 }

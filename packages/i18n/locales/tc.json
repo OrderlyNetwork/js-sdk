@@ -149,10 +149,6 @@
   "markets.topLosers": "跌幅榜",
   "markets.tradeSubMenu.perps.description": "在免 Gas 訂單簿上交易永續合約",
   "markets.search.placeholder": "搜尋市場",
-  "markets.showLowVolume": "顯示低成交量",
-  "markets.showLowVolume.tooltip": "包含 24 小時成交量低於 $1,000 的市場。",
-  "markets.showLowVolume.empty": "符合條件的市場已被 24 小時成交量篩選隱藏。",
-  "markets.showLowVolume.action": "顯示低成交量市場",
   "markets.dataList.favorites.empty": "點選市場旁边的<0/>圖示將其添加到您的列表中。",
   "markets.dataList.column.8hFunding": "8小時資金",
   "markets.dataList.column.moveTop": "移至頂部",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "積分",
   "notification.source.community": "社群",
   "notification.source.filter": "公告來源",
-  "notification.source.official": "官方"
+  "notification.source.official": "官方",
+  "markets.strictVolumeFilter": "嚴格",
+  "markets.strictVolumeFilter.tooltip": "僅顯示 24 小時成交量至少為 $1,000 的市場。",
+  "markets.strictVolumeFilter.empty": "24 小時成交量低於 $1,000 的市場已被隱藏。",
+  "markets.strictVolumeFilter.action": "關閉嚴格模式",
+  "markets.strictVolumeFilter.mode": "嚴格模式"
 }

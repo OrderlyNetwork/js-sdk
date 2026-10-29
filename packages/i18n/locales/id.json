@@ -149,10 +149,6 @@
   "markets.topLosers": "Top losers",
   "markets.tradeSubMenu.perps.description": "Perdagangkan futures perpetual di order book tanpa biaya gas",
   "markets.search.placeholder": "Cari pasar",
-  "markets.showLowVolume": "Tampilkan vol. rendah",
-  "markets.showLowVolume.tooltip": "Sertakan pasar dengan volume perdagangan 24 jam kurang dari $1,000.",
-  "markets.showLowVolume.empty": "Pasar yang cocok disembunyikan oleh filter volume 24 jam.",
-  "markets.showLowVolume.action": "Tampilkan pasar volume rendah",
   "markets.dataList.favorites.empty": "Klik ikon <0/> di sebelah pasar untuk menambahkannya ke daftar Anda.",
   "markets.dataList.column.8hFunding": "Pendanaan 8h",
   "markets.dataList.column.moveTop": "Pindah ke atas",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Poin",
   "notification.source.community": "Komunitas",
   "notification.source.filter": "Sumber pengumuman",
-  "notification.source.official": "Resmi"
+  "notification.source.official": "Resmi",
+  "markets.strictVolumeFilter": "Ketat",
+  "markets.strictVolumeFilter.tooltip": "Hanya tampilkan pasar dengan volume perdagangan 24 jam minimal $1,000.",
+  "markets.strictVolumeFilter.empty": "Pasar dengan volume perdagangan 24 jam di bawah $1,000 disembunyikan.",
+  "markets.strictVolumeFilter.action": "Matikan mode ketat",
+  "markets.strictVolumeFilter.mode": "Mode ketat"
 }

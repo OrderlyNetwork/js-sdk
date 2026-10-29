@@ -1,8 +1,17 @@
 import { FC, ReactNode, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  EmptyDataState,
+  Flex,
+  TabPanel,
+  Tabs,
+  Text,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
+import { LowVolumeEmptyView } from "../../../components/shared/lowVolumeEmptyView";
 import { SymbolDisplay } from "../../../components/symbolDisplay";
 import { OrderlyIcon } from "../../../icons";
 import { MarketsHeaderReturns } from "./marketsHeader.script";
@@ -48,21 +57,33 @@ export const MobileMarketsHeader: FC<MobileMarketsHeaderProps> = (props) => {
             value="newListings"
             testid="oui-testid-markets-tab"
           >
-            <CardItem data={news} onSymbol={onSymbol} />
+            <CardItem
+              data={news}
+              isHiddenByLowVolumeFilter={props.newsHiddenByLowVolumeFilter}
+              onSymbol={onSymbol}
+            />
           </TabPanel>
           <TabPanel
             title={t("markets.topGainers")}
             value="topGainers"
             testid="oui-testid-funding-tab"
           >
-            <CardItem data={gainers} onSymbol={onSymbol} />
+            <CardItem
+              data={gainers}
+              isHiddenByLowVolumeFilter={props.gainersHiddenByLowVolumeFilter}
+              onSymbol={onSymbol}
+            />
           </TabPanel>
           <TabPanel
             title={t("markets.topLosers")}
             value="topLosers"
             testid="oui-testid-funding-tab"
           >
-            <CardItem data={losers} onSymbol={onSymbol} />
+            <CardItem
+              data={losers}
+              isHiddenByLowVolumeFilter={props.losersHiddenByLowVolumeFilter}
+              onSymbol={onSymbol}
+            />
           </TabPanel>
         </Tabs>
       </Box>
@@ -170,6 +191,7 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
 
 type CardItemProps = {
   data?: TListItem[];
+  isHiddenByLowVolumeFilter?: boolean;
   className?: string;
   onSymbol: (item: any) => void;
 };
@@ -177,6 +199,15 @@ type CardItemProps = {
 const CardItem: React.FC<CardItemProps> = (props) => {
   return (
     <Flex direction="column" itemAlign="start" mt={3}>
+      {!props.data?.length && (
+        <Box className="oui-w-full oui-py-6">
+          {props.isHiddenByLowVolumeFilter ? (
+            <LowVolumeEmptyView />
+          ) : (
+            <EmptyDataState />
+          )}
+        </Box>
+      )}
       {props.data?.map((item) => (
         <ListItem
           key={item.symbol}

@@ -149,10 +149,6 @@
   "markets.topLosers": "Giảm giá nhiều nhất",
   "markets.tradeSubMenu.perps.description": "Giao dịch hợp đồng vĩnh viễn trên sổ lệnh không tốn phí gas",
   "markets.search.placeholder": "Tìm kiếm thị trường",
-  "markets.showLowVolume": "Hiện KL thấp",
-  "markets.showLowVolume.tooltip": "Bao gồm các thị trường có khối lượng giao dịch 24h dưới $1,000.",
-  "markets.showLowVolume.empty": "Các thị trường khớp bị ẩn bởi bộ lọc khối lượng 24h.",
-  "markets.showLowVolume.action": "Hiện thị trường khối lượng thấp",
   "markets.dataList.favorites.empty": "Nhấp vào biểu tượng <0/> bên cạnh thị trường để thêm vào danh sách của bạn.",
   "markets.dataList.column.8hFunding": "Tài trợ 8h",
   "markets.dataList.column.moveTop": "Di chuyển lên đầu",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Điểm",
   "notification.source.community": "Cộng đồng",
   "notification.source.filter": "Nguồn thông báo",
-  "notification.source.official": "Chính thức"
+  "notification.source.official": "Chính thức",
+  "markets.strictVolumeFilter": "Nghiêm ngặt",
+  "markets.strictVolumeFilter.tooltip": "Chỉ hiển thị các thị trường có khối lượng giao dịch 24 giờ từ $1,000 trở lên.",
+  "markets.strictVolumeFilter.empty": "Các thị trường có khối lượng giao dịch 24 giờ dưới $1,000 đã bị ẩn.",
+  "markets.strictVolumeFilter.action": "Tắt chế độ nghiêm ngặt",
+  "markets.strictVolumeFilter.mode": "Chế độ nghiêm ngặt"
 }

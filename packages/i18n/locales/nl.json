@@ -149,10 +149,6 @@
   "markets.topLosers": "Grootste dalers",
   "markets.tradeSubMenu.perps.description": "Handel in perpetual futures op een gasloos orderboek",
   "markets.search.placeholder": "Zoek markt",
-  "markets.showLowVolume": "Toon laag vol.",
-  "markets.showLowVolume.tooltip": "Markten met minder dan $1,000 handelsvolume in 24u opnemen.",
-  "markets.showLowVolume.empty": "Overeenkomende markten zijn verborgen door het 24u-volumefilter.",
-  "markets.showLowVolume.action": "Toon markten met laag volume",
   "markets.dataList.favorites.empty": "Klik op het <0/> icoon naast een markt om deze aan uw lijst toe te voegen.",
   "markets.dataList.column.8hFunding": "8u financiering",
   "markets.dataList.column.moveTop": "Naar boven verplaatsen",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Punten",
   "notification.source.community": "Community",
   "notification.source.filter": "Bron van aankondiging",
-  "notification.source.official": "Officieel"
+  "notification.source.official": "Officieel",
+  "markets.strictVolumeFilter": "Strikt",
+  "markets.strictVolumeFilter.tooltip": "Toon alleen markten met een 24-uurs handelsvolume van ten minste $1,000.",
+  "markets.strictVolumeFilter.empty": "Markten met een 24-uurs handelsvolume onder $1,000 zijn verborgen.",
+  "markets.strictVolumeFilter.action": "Strikte modus uitschakelen",
+  "markets.strictVolumeFilter.mode": "Strikte modus"
 }

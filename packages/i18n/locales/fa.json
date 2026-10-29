@@ -149,10 +149,6 @@
   "markets.topLosers": "بیشترین افت",
   "markets.tradeSubMenu.perps.description": "معامله فیوچرز دائمی در دفتر سفارش بدون کارمزد گس",
   "markets.search.placeholder": "جستجوی مارکت",
-  "markets.showLowVolume": "نمایش حجم کم",
-  "markets.showLowVolume.tooltip": "بازارهایی با حجم معاملات ۲۴ ساعته کمتر از $1,000 را شامل شود.",
-  "markets.showLowVolume.empty": "بازارهای منطبق توسط فیلتر حجم ۲۴ ساعته پنهان شده‌اند.",
-  "markets.showLowVolume.action": "نمایش بازارهای کم‌حجم",
   "markets.dataList.favorites.empty": "روی آیکن <0/> کنار یک مارکت بزنید تا به لیست اضافه شود.",
   "markets.dataList.column.8hFunding": "تأمین ۸ساعت",
   "markets.dataList.column.moveTop": "انتقال به بالا",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "امتیاز",
   "notification.source.community": "جامعه",
   "notification.source.filter": "منبع اطلاعیه",
-  "notification.source.official": "رسمی"
+  "notification.source.official": "رسمی",
+  "markets.strictVolumeFilter": "سخت‌گیرانه",
+  "markets.strictVolumeFilter.tooltip": "فقط بازارهایی را نمایش دهید که حجم معاملات ۲۴ ساعته آنها حداقل $1,000 باشد.",
+  "markets.strictVolumeFilter.empty": "بازارهایی که حجم معاملات ۲۴ ساعته آنها کمتر از $1,000 است، پنهان شده‌اند.",
+  "markets.strictVolumeFilter.action": "خاموش کردن حالت سخت‌گیرانه",
+  "markets.strictVolumeFilter.mode": "حالت سخت‌گیرانه"
 }

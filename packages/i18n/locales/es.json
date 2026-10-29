@@ -149,10 +149,6 @@
   "markets.topLosers": "Mayores perdedores",
   "markets.tradeSubMenu.perps.description": "Opera futuros perpetuos en un libro de órdenes sin gas",
   "markets.search.placeholder": "Buscar mercado",
-  "markets.showLowVolume": "Mostrar vol. bajo",
-  "markets.showLowVolume.tooltip": "Incluir mercados con menos de $1,000 en volumen de negociación en 24h.",
-  "markets.showLowVolume.empty": "Los mercados coincidentes están ocultos por el filtro de volumen en 24h.",
-  "markets.showLowVolume.action": "Mostrar mercados de bajo volumen",
   "markets.dataList.favorites.empty": "Haz clic en el icono <0/> junto a un mercado para agregarlo a tu lista.",
   "markets.dataList.column.8hFunding": "Financiamiento 8h",
   "markets.dataList.column.moveTop": "Mover arriba",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Puntos",
   "notification.source.community": "Comunidad",
   "notification.source.filter": "Fuente del anuncio",
-  "notification.source.official": "Oficial"
+  "notification.source.official": "Oficial",
+  "markets.strictVolumeFilter": "Estricto",
+  "markets.strictVolumeFilter.tooltip": "Mostrar solo mercados con un volumen de negociación de 24 h de al menos $1,000.",
+  "markets.strictVolumeFilter.empty": "Los mercados con un volumen de 24 h inferior a $1,000 están ocultos.",
+  "markets.strictVolumeFilter.action": "Desactivar modo estricto",
+  "markets.strictVolumeFilter.mode": "Modo estricto"
 }

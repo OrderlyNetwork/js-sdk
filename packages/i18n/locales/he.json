@@ -149,10 +149,6 @@
   "markets.topLosers": "יורדים מובילים",
   "markets.tradeSubMenu.perps.description": "סחרו בחוזים תמידיים בספר פקודות ללא עמלות גז",
   "markets.search.placeholder": "חיפוש שוק",
-  "markets.showLowVolume": "הצג נפח נמוך",
-  "markets.showLowVolume.tooltip": "כלול שווקים עם נפח מסחר של פחות מ-$1,000 ב-24 שעות.",
-  "markets.showLowVolume.empty": "שווקים תואמים מוסתרים על ידי מסנן נפח המסחר ל-24 שעות.",
-  "markets.showLowVolume.action": "הצג שווקים בנפח נמוך",
   "markets.dataList.favorites.empty": "לחצו על הסמל <0/> ליד השוק כדי להוסיף לרשימה.",
   "markets.dataList.column.8hFunding": "מימון 8ש",
   "markets.dataList.column.moveTop": "העברה לראש",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "נקודות",
   "notification.source.community": "קהילה",
   "notification.source.filter": "מקור ההודעה",
-  "notification.source.official": "רשמי"
+  "notification.source.official": "רשמי",
+  "markets.strictVolumeFilter": "קפדני",
+  "markets.strictVolumeFilter.tooltip": "הצג רק שווקים עם היקף מסחר של 24 שעות של לפחות $1,000.",
+  "markets.strictVolumeFilter.empty": "שווקים עם היקף מסחר של 24 שעות מתחת ל-$1,000 מוסתרים.",
+  "markets.strictVolumeFilter.action": "כבה את המצב הקפדני",
+  "markets.strictVolumeFilter.mode": "מצב קפדני"
 }

@@ -149,10 +149,6 @@
   "markets.topLosers": "Лучшие по падению",
   "markets.tradeSubMenu.perps.description": "Торгуйте бессрочными фьючерсами в книге ордеров без комиссий за газ",
   "markets.search.placeholder": "Поиск рынка",
-  "markets.showLowVolume": "Показать низк. объём",
-  "markets.showLowVolume.tooltip": "Включать рынки с объёмом торгов менее $1,000 за 24ч.",
-  "markets.showLowVolume.empty": "Совпадающие рынки скрыты фильтром объёма за 24ч.",
-  "markets.showLowVolume.action": "Показать рынки с низким объёмом",
   "markets.dataList.favorites.empty": "Нажмите на значок <0/> рядом с рынком, чтобы добавить его в ваш список.",
   "markets.dataList.column.8hFunding": "8ч фандинг",
   "markets.dataList.column.moveTop": "Переместить вверх",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Баллы",
   "notification.source.community": "Сообщество",
   "notification.source.filter": "Источник объявления",
-  "notification.source.official": "Официальные"
+  "notification.source.official": "Официальные",
+  "markets.strictVolumeFilter": "Строгий",
+  "markets.strictVolumeFilter.tooltip": "Показывать только рынки с объёмом торгов за 24 ч не менее $1,000.",
+  "markets.strictVolumeFilter.empty": "Рынки с объёмом торгов за 24 ч менее $1,000 скрыты.",
+  "markets.strictVolumeFilter.action": "Отключить строгий режим",
+  "markets.strictVolumeFilter.mode": "Строгий режим"
 }

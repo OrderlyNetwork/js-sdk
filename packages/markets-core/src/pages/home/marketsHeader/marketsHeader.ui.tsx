@@ -1,8 +1,9 @@
 import { FC, ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, EmptyDataState, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
+import { LowVolumeEmptyView } from "../../../components/shared/lowVolumeEmptyView";
 import { SymbolDisplay } from "../../../components/symbolDisplay";
 import { OrderlyIcon } from "../../../icons";
 import { MarketsHeaderReturns } from "./marketsHeader.script";
@@ -42,6 +43,7 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
         />
         <CardItem
           data={news}
+          isHiddenByLowVolumeFilter={props.newsHiddenByLowVolumeFilter}
           title={
             <Text.gradient color="brand">
               {t("markets.newListings")}
@@ -51,6 +53,7 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
         />
         <CardItem
           data={gainers}
+          isHiddenByLowVolumeFilter={props.gainersHiddenByLowVolumeFilter}
           title={
             <Text className="oui-text-success-light">
               {t("markets.topGainers")}
@@ -60,6 +63,7 @@ export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
         />
         <CardItem
           data={losers}
+          isHiddenByLowVolumeFilter={props.losersHiddenByLowVolumeFilter}
           title={
             <Text className="oui-text-danger-light">
               {t("markets.topLosers")}
@@ -172,6 +176,7 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
 
 type CardItemProps = {
   data?: TListItem[];
+  isHiddenByLowVolumeFilter?: boolean;
   title: ReactNode;
   className?: string;
   onSymbol: (item: any) => void;
@@ -187,6 +192,15 @@ const CardItem: React.FC<CardItemProps> = (props) => {
       </Box>
 
       <Flex direction="column" itemAlign="start" mt={2}>
+        {!props.data?.length && (
+          <Box className="oui-w-full oui-py-6">
+            {props.isHiddenByLowVolumeFilter ? (
+              <LowVolumeEmptyView />
+            ) : (
+              <EmptyDataState />
+            )}
+          </Box>
+        )}
         {props.data?.map((item, index) => (
           <ListItem key={item.symbol} item={item} onSymbol={props.onSymbol} />
         ))}

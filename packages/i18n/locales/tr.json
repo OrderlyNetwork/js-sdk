@@ -149,10 +149,6 @@
   "markets.topLosers": "En çok kaybedenler",
   "markets.tradeSubMenu.perps.description": "Gas ücretsiz emir defterinde süresiz vadeli işlemler yapın",
   "markets.search.placeholder": "Piyasa ara",
-  "markets.showLowVolume": "Düşük hacmi göster",
-  "markets.showLowVolume.tooltip": "24 saatlik işlem hacmi $1,000'den az olan piyasaları dahil et.",
-  "markets.showLowVolume.empty": "Eşleşen piyasalar 24 saatlik hacim filtresi tarafından gizleniyor.",
-  "markets.showLowVolume.action": "Düşük hacimli piyasaları göster",
   "markets.dataList.favorites.empty": "Listeye eklemek için bir piyasanın yanındaki <0/> simgesine tıklayın.",
   "markets.dataList.column.8hFunding": "8s fonlama",
   "markets.dataList.column.moveTop": "En üste taşı",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Puanlar",
   "notification.source.community": "Topluluk",
   "notification.source.filter": "Duyuru kaynağı",
-  "notification.source.official": "Resmî"
+  "notification.source.official": "Resmî",
+  "markets.strictVolumeFilter": "Sıkı",
+  "markets.strictVolumeFilter.tooltip": "Yalnızca 24 saatlik işlem hacmi en az $1,000 olan piyasaları göster.",
+  "markets.strictVolumeFilter.empty": "24 saatlik işlem hacmi $1,000 altında olan piyasalar gizlenir.",
+  "markets.strictVolumeFilter.action": "Sıkı modu kapat",
+  "markets.strictVolumeFilter.mode": "Sıkı mod"
 }

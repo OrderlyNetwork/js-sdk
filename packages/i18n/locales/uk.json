@@ -149,10 +149,6 @@
   "markets.topLosers": "Топ падіння",
   "markets.tradeSubMenu.perps.description": "Торгуйте безстроковими ф'ючерсами в книзі ордерів без комісій за газ",
   "markets.search.placeholder": "Пошук ринку",
-  "markets.showLowVolume": "Показати низьк. обсяг",
-  "markets.showLowVolume.tooltip": "Включити ринки з обсягом торгів менше $1,000 за 24 год.",
-  "markets.showLowVolume.empty": "Відповідні ринки приховані фільтром обсягу за 24 год.",
-  "markets.showLowVolume.action": "Показати ринки з низьким обсягом",
   "markets.dataList.favorites.empty": "Натисніть на значок <0/>, щоб додати ринок до списку.",
   "markets.dataList.column.8hFunding": "8г фінансування",
   "markets.dataList.column.moveTop": "Перемістити вгору",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Бали",
   "notification.source.community": "Спільнота",
   "notification.source.filter": "Джерело оголошення",
-  "notification.source.official": "Офіційні"
+  "notification.source.official": "Офіційні",
+  "markets.strictVolumeFilter": "Суворий",
+  "markets.strictVolumeFilter.tooltip": "Показувати лише ринки з обсягом торгів за 24 год щонайменше $1,000.",
+  "markets.strictVolumeFilter.empty": "Ринки з обсягом торгів за 24 год менше $1,000 приховано.",
+  "markets.strictVolumeFilter.action": "Вимкнути суворий режим",
+  "markets.strictVolumeFilter.mode": "Суворий режим"
 }

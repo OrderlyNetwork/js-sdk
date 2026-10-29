@@ -149,10 +149,6 @@
   "markets.topLosers": "Plus grandes pertes",
   "markets.tradeSubMenu.perps.description": "Tradez des contrats perpétuels sur un carnet d'ordres sans frais de gas",
   "markets.search.placeholder": "Rechercher un marché",
-  "markets.showLowVolume": "Afficher vol. bas",
-  "markets.showLowVolume.tooltip": "Inclure les marchés avec moins de $1,000 de volume de trading sur 24h.",
-  "markets.showLowVolume.empty": "Les marchés correspondants sont masqués par le filtre de volume sur 24h.",
-  "markets.showLowVolume.action": "Afficher les marchés à faible volume",
   "markets.dataList.favorites.empty": "Cliquez sur l'icône <0/> à côté d'un marché pour l'ajouter à votre liste.",
   "markets.dataList.column.8hFunding": "Financement 8h",
   "markets.dataList.column.moveTop": "Déplacer en haut",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Points",
   "notification.source.community": "Communauté",
   "notification.source.filter": "Source de l’annonce",
-  "notification.source.official": "Officiel"
+  "notification.source.official": "Officiel",
+  "markets.strictVolumeFilter": "Strict",
+  "markets.strictVolumeFilter.tooltip": "Afficher uniquement les marchés avec un volume d'échanges sur 24 h d'au moins $1,000.",
+  "markets.strictVolumeFilter.empty": "Les marchés dont le volume sur 24 h est inférieur à $1,000 sont masqués.",
+  "markets.strictVolumeFilter.action": "Désactiver le mode strict",
+  "markets.strictVolumeFilter.mode": "Mode strict"
 }

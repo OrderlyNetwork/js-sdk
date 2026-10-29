@@ -149,10 +149,6 @@
   "markets.topLosers": "跌幅榜",
   "markets.tradeSubMenu.perps.description": "在免 Gas 订单簿上交易永续合约",
   "markets.search.placeholder": "搜索市场",
-  "markets.showLowVolume": "显示低成交量",
-  "markets.showLowVolume.tooltip": "包含 24 小时成交量低于 $1,000 的市场。",
-  "markets.showLowVolume.empty": "匹配的市场已被 24 小时成交量筛选隐藏。",
-  "markets.showLowVolume.action": "显示低成交量市场",
   "markets.dataList.favorites.empty": "点击市场旁边的<0/>图标将其添加到您的列表中。",
   "markets.dataList.column.8hFunding": "8小时资金",
   "markets.dataList.column.moveTop": "移至顶部",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "积分",
   "notification.source.community": "社区",
   "notification.source.filter": "公告来源",
-  "notification.source.official": "官方"
+  "notification.source.official": "官方",
+  "markets.strictVolumeFilter": "严格",
+  "markets.strictVolumeFilter.tooltip": "仅显示 24 小时成交量至少为 $1,000 的市场。",
+  "markets.strictVolumeFilter.empty": "24 小时成交量低于 $1,000 的市场已被隐藏。",
+  "markets.strictVolumeFilter.action": "关闭严格模式",
+  "markets.strictVolumeFilter.mode": "严格模式"
 }

@@ -14,7 +14,7 @@ export const LowVolumeEmptyView = () => {
         intensity={54}
         className="oui-w-full oui-px-3 oui-text-center"
       >
-        {t("markets.showLowVolume.empty")}
+        {t("markets.strictVolumeFilter.empty")}
       </Text>
       <Button
         variant="text"
@@ -22,7 +22,7 @@ export const LowVolumeEmptyView = () => {
         size="xs"
         onClick={() => setShowLowVolume(true)}
       >
-        {t("markets.showLowVolume.action")}
+        {t("markets.strictVolumeFilter.action")}
       </Button>
     </Flex>
   );

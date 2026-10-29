@@ -149,10 +149,6 @@
   "markets.topLosers": "Top-Verlierer",
   "markets.tradeSubMenu.perps.description": "Handle Perpetual Futures in einem gasfreien Orderbuch",
   "markets.search.placeholder": "Markt suchen",
-  "markets.showLowVolume": "Niedr. Vol. anzeigen",
-  "markets.showLowVolume.tooltip": "Märkte mit weniger als $1,000 Handelsvolumen in 24 Std. einbeziehen.",
-  "markets.showLowVolume.empty": "Passende Märkte sind durch den 24h-Volumenfilter ausgeblendet.",
-  "markets.showLowVolume.action": "Märkte mit niedrigem Volumen anzeigen",
   "markets.dataList.favorites.empty": "Klicken Sie auf das <0/>-Symbol neben einem Markt, um ihn zu Ihrer Liste hinzuzufügen.",
   "markets.dataList.column.8hFunding": "8h Finanzierung",
   "markets.dataList.column.moveTop": "Nach oben verschieben",
@@ -1501,5 +1497,10 @@
   "tradingPoints.points": "Punkte",
   "notification.source.community": "Community",
   "notification.source.filter": "Ankündigungsquelle",
-  "notification.source.official": "Offiziell"
+  "notification.source.official": "Offiziell",
+  "markets.strictVolumeFilter": "Streng",
+  "markets.strictVolumeFilter.tooltip": "Nur Märkte mit einem 24-Stunden-Handelsvolumen von mindestens $1,000 anzeigen.",
+  "markets.strictVolumeFilter.empty": "Märkte mit einem 24-Stunden-Handelsvolumen unter $1,000 sind ausgeblendet.",
+  "markets.strictVolumeFilter.action": "Strengen Modus deaktivieren",
+  "markets.strictVolumeFilter.mode": "Strenger Modus"
 }
