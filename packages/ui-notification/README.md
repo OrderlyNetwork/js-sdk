@@ -67,10 +67,10 @@ existing `useAnnouncement({ hideTips })` return fields remain available. `tips`
 contains the bell's current reading list; `cardTips` contains the independent
 carousel, including maintenance reminders and automatic deadline filtering.
 
-## Public reads (v1.6)
+## Public reads (TD v1.8 / PRD v0.13)
 
-This integration uses the v1.6 public-read contract (PRD 7.6), plus direct
-slug lookup scoped by `is_official=true` or `broker_id` on the detail endpoint.
+This integration uses the TD v1.8 / PRD v0.13 public-read contract, including
+direct slug lookup scoped by `is_official=true` or `broker_id` on the detail endpoint.
 There is no fallback to an older backend when slug lookup, `/active` or server
 pagination is unavailable.
 
@@ -79,17 +79,31 @@ pagination is unavailable.
 - The announcement page requests the same endpoint with `category`, `page` and
   `size=20`. The `all` category omits the category parameter; UI categories
   `listing`, `delisting` and `update` map to `LISTINGS`, `DELISTINGS` and `UPDATES`.
-  Responses have title-only `rows`, required `total`, and `last_updated_time`.
-- `total` is the server's count after category filtering and before pagination.
+  Responses have title-only `rows`, `last_updated_time`, and required `meta`:
+  `{ total, records_per_page, current_page }`. There is no top-level `total`.
+  Pagination metadata contains the effective server values; without page and size,
+  `records_per_page` equals `total` and `current_page` is 1. Reads preserve the
+  complete response data with an identity formatter so net does not unwrap rows.
+- `meta.total` is the server's count after category filtering and before pagination.
+  The SDK maps it to the existing `useAnnouncementList().total` return value.
+  The hook also preserves `meta`. The page uses the shared
+  `usePagination().parsePagination(meta)` helper to calculate its page count.
+  Custom sources may omit `meta`; the hook synthesizes it from their existing
+  `total` and the normalized requested page and size (20 by default).
+  The URL remains the source of truth for the selected page. Selecting a page
+  updates the URL; out-of-range URLs redirect to the last page only after a
+  successful read. Empty results retain page 1.
   Client market filtering and `dataAdapter.announcementList` apply to the current
   page without changing this total or filling the page from subsequent pages.
   A Listings/Delistings page may therefore be short or empty while pagination
   remains available. Out-of-range page URLs are corrected after receiving total.
 - Cards request `GET /v2/public/announcement/active` with the source parameters
-  and `locale`, without category or pagination. Rows contain complete article
+  and `locale`, without category or pagination. The response contains only `rows`
+  and `last_updated_time`, with no `meta` or `total`. Rows contain complete article
   translations and only announcements with a future card deadline. The SDK
   extracts summaries from those bodies and removes cards when deadlines pass.
-  Initialization and carousel selection do not fetch per-card details.
+  Initialization and carousel selection do not fetch per-card details. The carousel
+  count uses the currently visible ordinary and maintenance cards.
 - Active requests send only `en`, `zh`, `es`, `fr`, `ja` or `ko`. Regional variants
   use the supported base language; other UI languages fall back to English.
   Incomplete translations fall back to English for the whole card. Language

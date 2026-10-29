@@ -448,3 +448,88 @@ describe("hidden announcement source filters", () => {
     },
   );
 });
+
+describe("effective announcement page size", () => {
+  it("calculates pages and corrects out-of-range URLs using the server page size", () => {
+    window.history.replaceState({}, "", "/announcement?page=10");
+    getList.mockReturnValue({
+      articles: [],
+      total: 81,
+      meta: { total: 81, records_per_page: 10, current_page: 10 },
+      status: "ready",
+    });
+    const { result } = renderHook(
+      () => useAnnouncementCenterScript({ onRouteChange }),
+      { wrapper },
+    );
+    expect(result.current.pageTotal).toBe(9);
+    expect(onRouteChange).toHaveBeenLastCalledWith("/announcement?page=9");
+  });
+});
+
+describe("announcement pagination URL authority", () => {
+  it("keeps URL pages authoritative when navigating and refreshing", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/announcement?category=legal&page=4&theme=dark",
+    );
+    getList.mockReturnValue({
+      articles: [],
+      total: 81,
+      meta: { total: 81, records_per_page: 10, current_page: 1 },
+      status: "ready",
+    });
+    const { result, rerender, unmount } = renderHook(
+      () => useAnnouncementCenterScript({ onRouteChange }),
+      { wrapper },
+    );
+    expect(result.current.page).toBe(4);
+    expect(result.current.pageTotal).toBe(9);
+    expect(onRouteChange).not.toHaveBeenCalled();
+    act(() => result.current.selectPage(6));
+    expect(onRouteChange).toHaveBeenLastCalledWith(
+      "/announcement?category=legal&page=6&theme=dark",
+    );
+    window.history.replaceState({}, "", onRouteChange.mock.calls[0][0]);
+    rerender();
+    expect(result.current.page).toBe(6);
+    expect(watchList).toHaveBeenLastCalledWith({
+      category: "legal",
+      page: 6,
+      size: 20,
+      source: "all",
+    });
+    unmount();
+    const refreshed = renderHook(() => useAnnouncementCenterScript(), {
+      wrapper,
+    });
+    expect(refreshed.result.current.page).toBe(6);
+  });
+  it.each(["loading", "error", "ready"] as const)(
+    "corrects empty out-of-range pages only when ready: %s",
+    (status) => {
+      window.history.replaceState(
+        {},
+        "",
+        "/announcement?category=legal&page=3&theme=dark",
+      );
+      getList.mockReturnValue({
+        articles: [],
+        total: 0,
+        meta: { total: 0, records_per_page: 0, current_page: 3 },
+        status,
+      });
+      const { result } = renderHook(
+        () => useAnnouncementCenterScript({ onRouteChange }),
+        { wrapper },
+      );
+      expect(result.current.pageTotal).toBe(1);
+      if (status === "ready")
+        expect(onRouteChange).toHaveBeenLastCalledWith(
+          "/announcement?category=legal&theme=dark",
+        );
+      else expect(onRouteChange).not.toHaveBeenCalled();
+    },
+  );
+});

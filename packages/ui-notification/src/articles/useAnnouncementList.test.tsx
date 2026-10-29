@@ -51,6 +51,11 @@ describe("announcement list source filtering", () => {
         { wrapper },
       );
       expect(result.current.total).toBe(total);
+      expect(result.current.meta).toEqual({
+        total,
+        records_per_page: 2,
+        current_page: 1,
+      });
       expect(result.current.articles.map((row) => row.announcement_id)).toEqual(
         ids,
       );
@@ -101,6 +106,32 @@ describe("announcement list source filtering", () => {
       page: 1,
       size: 20,
     });
+  });
+  it.each([
+    undefined,
+    { total: 81, records_per_page: 10, current_page: 2 },
+    { total: 0, records_per_page: 0, current_page: 1 },
+  ])("retains server meta or synthesizes it for custom sources: %j", (meta) => {
+    const total = meta?.total ?? 81;
+    const sourceValue: AnnouncementArticlesValue = {
+      ...value,
+      getList: () => ({ articles: [], total, status: "ready", meta }),
+    };
+    const { result } = renderHook(
+      () => useAnnouncementList({ size: 25, page: 2 }),
+      {
+        wrapper: ({ children }) => (
+          <AnnouncementArticlesContext.Provider value={sourceValue}>
+            {children}
+          </AnnouncementArticlesContext.Provider>
+        ),
+      },
+    );
+    expect(result.current.total).toBe(total);
+    expect(result.current.meta).toEqual(
+      meta ?? { total, records_per_page: 25, current_page: 2 },
+    );
+    if (meta) expect(result.current.meta).toBe(meta);
   });
   it("shows no items when the selected category has no matching source", () => {
     const { result } = renderHook(

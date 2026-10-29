@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type { API } from "@orderly.network/types";
 import type { AnnouncementSummary } from "../types";
 import type {
   LocalizedAnnouncement,
@@ -10,6 +11,8 @@ import type { AnnouncementListQuery } from "./types";
 export type AnnouncementListValue = {
   articles: LocalizedAnnouncement[];
   total: number;
+  /** Server pagination metadata; custom sources may omit it to use the requested page and size. */
+  meta?: API.RecordsMeta;
   status: ReadStatus;
 };
 

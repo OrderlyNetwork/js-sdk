@@ -1,8 +1,10 @@
+import type { API } from "@orderly.network/types";
 import type { ReadStatus } from "./model";
 
 export type AnnouncementResourceState<T> = {
   rows: T[];
   total: number;
+  meta?: API.RecordsMeta;
   last_updated_time: number;
   status: ReadStatus;
 };
@@ -26,6 +28,7 @@ export class AnnouncementResource<T> {
     private readonly read: () => Promise<{
       rows: T[];
       total: number;
+      meta?: API.RecordsMeta;
       last_updated_time: number;
     }>,
     private readonly changed: () => void,

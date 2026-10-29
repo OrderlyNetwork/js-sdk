@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useConfig } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { usePagination } from "@orderly.network/ui";
 import { announcementDetailUrl } from "../articles/routes";
 import {
   announcementCategories,
@@ -66,10 +67,12 @@ export const useAnnouncementCenterScript = (
         ? "community"
         : "all";
   const list = useAnnouncementList(
-    { category, page, size: 20, source: sourceFilter },
+    { category, page, source: sourceFilter },
     !isDetail,
   );
-  const pageTotal = Math.max(1, Math.ceil(list.total / 20));
+  const { parsePagination } = usePagination();
+  const pagination = parsePagination(list.meta);
+  const pageTotal = Math.max(1, pagination.pageTotal ?? 0);
   const announcements = list.articles;
   const article = invalidSource ? undefined : detail.article;
 

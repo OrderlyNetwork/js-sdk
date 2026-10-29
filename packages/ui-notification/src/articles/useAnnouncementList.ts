@@ -40,7 +40,21 @@ export function useAnnouncementList(
   }) ?? {
     articles: filtered.slice((page - 1) * size, page * size),
     total: filtered.length,
+    meta: {
+      total: filtered.length,
+      records_per_page: size,
+      current_page: page,
+    },
     status: source.status,
   };
-  return { ...state, retry };
+  const meta = state.meta ?? {
+    total: state.total,
+    records_per_page: size,
+    current_page: page,
+  };
+  return {
+    ...state,
+    meta,
+    retry,
+  };
 }

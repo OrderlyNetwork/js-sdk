@@ -35,7 +35,11 @@ const response = <T extends AnnouncementListRow>(
   total = rows.length,
 ) => ({
   rows,
-  total,
+  meta: { total, records_per_page: 20, current_page: 1 },
+  last_updated_time: Math.max(0, ...rows.map((item) => item.updated_time)),
+});
+const activeResponse = (rows: AnnouncementArticle[]) => ({
+  rows,
   last_updated_time: Math.max(0, ...rows.map((item) => item.updated_time)),
 });
 function deferred<T>() {
@@ -65,7 +69,7 @@ function harness() {
   const active = vi.fn<
     (locale?: unknown) => Promise<AnnouncementActiveResponse>
   >(async () =>
-    response(
+    activeResponse(
       server.rows.filter(
         (item) => item.notification_card_end_time! > Date.now(),
       ),
@@ -262,7 +266,11 @@ describe("independent public views", () => {
     await Promise.resolve();
     expect(
       store.getSnapshot().lists[listQueryKey({ page: 1, size: 20 })],
-    ).toMatchObject({ rows: [row(1)], total: 101 });
+    ).toMatchObject({
+      rows: [row(1)],
+      total: 101,
+      meta: { total: 101, records_per_page: 20, current_page: 1 },
+    });
     expect(
       store.getSnapshot().lists[
         listQueryKey({ category: "listing", page: 2, size: 20 })
@@ -286,14 +294,13 @@ describe("independent public views", () => {
   });
   it("discards old locale responses without throwing away list and detail caches", async () => {
     const { store, active } = harness();
-    const english =
-      deferred<ReturnType<typeof response<AnnouncementArticle>>>();
+    const english = deferred<ReturnType<typeof activeResponse>>();
     active.mockReturnValueOnce(english.promise);
     const reading = store.refresh();
     await store.loadDetail("1");
     store.setLocale("ja");
     await Promise.resolve();
-    english.resolve(response([article(9)]));
+    english.resolve(activeResponse([article(9)]));
     await reading;
     expect(store.getSnapshot()).toMatchObject({
       activeLocale: "ja",
@@ -421,7 +428,7 @@ describe("push verification", () => {
       detail.mockRejectedValue(error);
       // Simulate lagging caches after the uncached detail endpoint confirms removal.
       list.mockResolvedValue(response([row()]));
-      active.mockResolvedValue(response([article()]));
+      active.mockResolvedValue(activeResponse([article()]));
       store.notify({ announcement_id: 1, updated_time: 20 });
       await store.refresh();
       await store.refresh();
@@ -434,7 +441,7 @@ describe("push verification", () => {
       server.rows = [article(1, 30)];
       detail.mockResolvedValue(article(1, 30));
       list.mockResolvedValue(response([row(1, 30)]));
-      active.mockResolvedValue(response([article(1, 30)]));
+      active.mockResolvedValue(activeResponse([article(1, 30)]));
       store.notify({ announcement_id: 1, updated_time: 30 });
       await store.refresh();
       expect(store.getSnapshot().rows).toHaveLength(1);
@@ -467,7 +474,7 @@ describe("detail cache", () => {
     const { store, list, active } = harness();
     await store.loadDetail("1");
     list.mockResolvedValue(response([], 50));
-    active.mockResolvedValue(response([]));
+    active.mockResolvedValue(activeResponse([]));
     await store.refresh();
     expect(store.getSnapshot().details["1"].article).toEqual(article());
   });
@@ -729,17 +736,17 @@ describe("cross-view races", () => {
   it("opens cards after a late active response instead of losing the verified reminder", async () => {
     const { store, server, active, onNotify } = harness();
     active.mockResolvedValue({
-      ...response([article()]),
+      ...activeResponse([article()]),
       last_updated_time: 999,
     });
     await store.refresh();
     server.rows = [article(1, 20)];
-    const cards = deferred<ReturnType<typeof response<AnnouncementArticle>>>();
+    const cards = deferred<ReturnType<typeof activeResponse>>();
     active.mockReturnValueOnce(cards.promise);
     store.notify({ announcement_id: 1, updated_time: 20 });
     await vi.waitFor(() => expect(onNotify).toHaveBeenCalledTimes(1));
     expect(store.getSnapshot().cardOpen).toBe(false);
-    cards.resolve(response([article(1, 20)]));
+    cards.resolve(activeResponse([article(1, 20)]));
     await vi.waitFor(() => expect(store.getSnapshot().cardOpen).toBe(true));
     expect(store.getSnapshot().reminderVersion).toBe(1);
   });
@@ -767,17 +774,17 @@ describe("cross-view races", () => {
   it("does not reopen a dismissed reminder when its delayed active response arrives", async () => {
     const { store, server, active, onNotify } = harness();
     active.mockResolvedValue({
-      ...response([article()]),
+      ...activeResponse([article()]),
       last_updated_time: 999,
     });
     await store.refresh();
     server.rows = [article(1, 20)];
-    const cards = deferred<ReturnType<typeof response<AnnouncementArticle>>>();
+    const cards = deferred<ReturnType<typeof activeResponse>>();
     active.mockReturnValueOnce(cards.promise);
     store.notify({ announcement_id: 1, updated_time: 20 });
     await vi.waitFor(() => expect(onNotify).toHaveBeenCalledTimes(1));
     store.closeTips();
-    cards.resolve(response([article(1, 20)]));
+    cards.resolve(activeResponse([article(1, 20)]));
     await store.refresh();
     expect(store.getSnapshot().cardOpen).toBe(false);
   });

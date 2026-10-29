@@ -99,7 +99,11 @@ const full = (id = 1, updated_time = 10): AnnouncementArticle => ({
 });
 const response = (rows = [row()]) => ({
   rows,
-  total: rows.length,
+  meta: { total: rows.length, records_per_page: 20, current_page: 1 },
+  last_updated_time: Math.max(0, ...rows.map((item) => item.updated_time)),
+});
+const activeResponse = (rows: AnnouncementArticle[] = [full()]) => ({
+  rows,
   last_updated_time: Math.max(0, ...rows.map((item) => item.updated_time)),
 });
 const unreadKey = (broker: string | null = "a") =>
@@ -135,7 +139,7 @@ beforeEach(() => {
   fixture.list.mockReset().mockResolvedValue(response());
   fixture.active
     .mockReset()
-    .mockImplementation(async () => response([full(1, fixture.version)]));
+    .mockImplementation(async () => activeResponse([full(1, fixture.version)]));
   fixture.detail
     .mockReset()
     .mockImplementation(async (_url, params) =>
@@ -173,7 +177,7 @@ describe("direct slug details", () => {
   function server(initial = [slugArticle(), slugArticle(90, true)]) {
     const state = { rows: initial };
     fixture.list.mockResolvedValue(response([]));
-    fixture.active.mockResolvedValue(response([]));
+    fixture.active.mockResolvedValue(activeResponse([]));
     fixture.detail.mockImplementation(async (_url, params) => {
       const found = state.rows.find((row) =>
         params.announcement_id !== undefined
@@ -381,7 +385,7 @@ describe("direct slug details", () => {
   });
   it("preserves live bell and card slug links without per-card detail reads", async () => {
     fixture.list.mockResolvedValue(response([slugArticle()]));
-    fixture.active.mockResolvedValue(response([slugArticle()]));
+    fixture.active.mockResolvedValue(activeResponse([slugArticle()]));
     const { result } = renderHook(() => useAnnouncement(), { wrapper });
     await settle();
     const expected = {
@@ -830,7 +834,9 @@ describe("production announcement provider", () => {
       const officialRow = { ...row(2), is_official: true };
       const officialArticle = { ...full(2), is_official: true };
       fixture.list.mockResolvedValue(response([row(), officialRow]));
-      fixture.active.mockResolvedValue(response([full(), officialArticle]));
+      fixture.active.mockResolvedValue(
+        activeResponse([full(), officialArticle]),
+      );
       fixture.detail.mockResolvedValue(officialArticle);
       const nested = ({ children }: PropsWithChildren) => (
         <AnnouncementProvider>
@@ -873,7 +879,7 @@ describe("production announcement provider", () => {
     fixture.widgetConfigs = { announcement: { excludeOfficial: true } };
     fixture.list.mockResolvedValue(response([{ ...row(), is_official: true }]));
     fixture.active.mockResolvedValue(
-      response([{ ...full(), is_official: true }]),
+      activeResponse([{ ...full(), is_official: true }]),
     );
     const { result } = renderHook(() => useAnnouncement());
     await settle();
@@ -918,7 +924,7 @@ describe("production announcement provider", () => {
       },
     };
     fixture.list.mockResolvedValue(response([listing]));
-    fixture.active.mockResolvedValue(response([]));
+    fixture.active.mockResolvedValue(activeResponse([]));
     fixture.detail.mockResolvedValue({
       ...listing,
       is_official: false,
@@ -955,7 +961,7 @@ describe("production announcement provider", () => {
     await push(1, 20);
     expect(result.current.detail.article?.content).toBe("Updated body");
     fixture.list.mockResolvedValue(response([]));
-    fixture.active.mockResolvedValue(response([]));
+    fixture.active.mockResolvedValue(activeResponse([]));
     fixture.detail.mockRejectedValue({ status: 404 });
     await push(1, 30);
     expect(result.current.detail.article).toBeUndefined();
@@ -1181,7 +1187,7 @@ describe("legacy maintenance source", () => {
       ]),
     );
     fixture.active.mockResolvedValue(
-      response([
+      activeResponse([
         { ...full(1, 20), notification_card_end_time: Date.now() + 1000 },
       ]),
     );
@@ -1247,7 +1253,7 @@ describe("v1.5 public reads", () => {
                 translations: { en: { title: "$UNKNOWN listing" } },
               },
             ]),
-            total: 81,
+            meta: { total: 81, records_per_page: 10, current_page: 2 },
             last_updated_time: 900,
           },
     );
@@ -1269,6 +1275,7 @@ describe("v1.5 public reads", () => {
     expect(result.current).toMatchObject({
       articles: [],
       total: 81,
+      meta: { total: 81, records_per_page: 10, current_page: 2 },
       status: "ready",
     });
     expect(fixture.active).toHaveBeenCalledWith(
@@ -1281,7 +1288,10 @@ describe("v1.5 public reads", () => {
     );
   });
   it("keeps server totals when an adapter injects or removes current-page rows", async () => {
-    fixture.list.mockResolvedValue({ ...response([row(1)]), total: 81 });
+    fixture.list.mockResolvedValue({
+      ...response([row(1)]),
+      meta: { total: 81, records_per_page: 20, current_page: 1 },
+    });
     fixture.context = {
       dataAdapter: { announcementList: () => [row(99), row(98)] },
     };
@@ -1340,7 +1350,7 @@ describe("v1.5 public reads", () => {
   });
   it("loads more than ten card bodies in one active request without detail fetches", async () => {
     fixture.active.mockResolvedValue(
-      response(Array.from({ length: 15 }, (_, id) => full(id + 1))),
+      activeResponse(Array.from({ length: 15 }, (_, id) => full(id + 1))),
     );
     const { result } = renderHook(useAnnouncementArticles, { wrapper });
     await settle();
@@ -1356,13 +1366,13 @@ describe("v1.5 public reads", () => {
     expect(fixture.detail).not.toHaveBeenCalled();
   });
   it("refetches active for language changes and ignores the previous language response", async () => {
-    let english!: (data: ReturnType<typeof response>) => void;
+    let english!: (data: ReturnType<typeof activeResponse>) => void;
     fixture.active.mockImplementation(async (_url, params) =>
       params.locale === "en"
         ? new Promise((resolve) => {
             english = resolve;
           })
-        : response([full()]),
+        : activeResponse([full()]),
     );
     const { result, rerender } = renderHook(useAnnouncementArticles, {
       wrapper,
@@ -1375,7 +1385,7 @@ describe("v1.5 public reads", () => {
       title: "日本語タイトル",
       message: "日本語本文",
     });
-    await act(async () => english(response([full(99)])));
+    await act(async () => english(activeResponse([full(99)])));
     expect(result.current.scaffoldState?.cardTips?.[0].announcement_id).toBe(1);
     expect(fixture.list).toHaveBeenCalledTimes(1);
   });
@@ -1383,7 +1393,7 @@ describe("v1.5 public reads", () => {
     fixture.locale = "ja";
     const incomplete = full();
     incomplete.translations.ja!.content = " ";
-    fixture.active.mockResolvedValue(response([incomplete]));
+    fixture.active.mockResolvedValue(activeResponse([incomplete]));
     const { result } = renderHook(useAnnouncementArticles, { wrapper });
     await settle();
     expect(result.current.scaffoldState?.cardTips?.[0]).toMatchObject({
@@ -1402,7 +1412,9 @@ describe("v1.5 public reads", () => {
   );
   it("does not treat active's locale-trimmed translations as a complete detail cache", async () => {
     fixture.active.mockResolvedValue(
-      response([{ ...full(), translations: { en: full().translations.en } }]),
+      activeResponse([
+        { ...full(), translations: { en: full().translations.en } },
+      ]),
     );
     const { result, rerender } = renderHook(
       ({ id }: { id?: string }) => useAnnouncementDetail(id),
@@ -1416,7 +1428,10 @@ describe("v1.5 public reads", () => {
     expect(fixture.detail).toHaveBeenCalledTimes(1);
   });
   it("keeps other-page direct details after a bell refresh, then removes them on a verified push", async () => {
-    fixture.list.mockResolvedValue({ ...response([row(2)]), total: 40 });
+    fixture.list.mockResolvedValue({
+      ...response([row(2)]),
+      meta: { total: 40, records_per_page: 20, current_page: 1 },
+    });
     const { result } = renderHook(
       () => ({
         source: useAnnouncementArticles(),
@@ -1487,7 +1502,7 @@ describe("active-card loading lifecycle", () => {
     await settle();
     await push(1, 20);
     expect(result.current.showAnnouncement).toBe(true);
-    let finish!: (data: ReturnType<typeof response>) => void;
+    let finish!: (data: ReturnType<typeof activeResponse>) => void;
     fixture.active.mockImplementation(
       async () =>
         new Promise((resolve) => {
@@ -1498,7 +1513,7 @@ describe("active-card loading lifecycle", () => {
     rerender();
     await settle();
     expect(result.current.cardStatus).toBe("loading");
-    await act(async () => finish(response([full(1, 20)])));
+    await act(async () => finish(activeResponse([full(1, 20)])));
     expect(result.current.showAnnouncement).toBe(true);
     expect(result.current.cardTips?.[0].message).toBe("日本語本文");
   });
@@ -1513,7 +1528,10 @@ describe("independent page retries", () => {
         failed = true;
         throw new Error("offline");
       }
-      return { ...response([row()]), total: 42 };
+      return {
+        ...response([row()]),
+        meta: { total: 42, records_per_page: 20, current_page: 1 },
+      };
     });
     const { result } = renderHook(() => useAnnouncementList({ page: 2 }), {
       wrapper,

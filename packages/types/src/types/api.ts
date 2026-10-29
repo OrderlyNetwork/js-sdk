@@ -110,7 +110,7 @@ export declare namespace API {
 
   export interface Announcement {
     last_updated_time?: number | null;
-    total?: number;
+    meta?: RecordsMeta;
     rows?: AnnouncementRow[];
   }
 

@@ -1,3 +1,5 @@
+import type { API } from "@orderly.network/types";
+
 export const announcementCategories = [
   "all",
   "campaign",
@@ -51,13 +53,12 @@ export type AnnouncementListRow = Omit<
 
 export type AnnouncementListResponse = {
   rows: AnnouncementListRow[];
-  total: number;
+  meta: API.RecordsMeta;
   last_updated_time: number;
 };
 
 export type AnnouncementActiveResponse = {
   rows: AnnouncementArticle[];
-  total: number;
   last_updated_time: number;
 };
 

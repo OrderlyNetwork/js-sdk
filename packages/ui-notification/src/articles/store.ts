@@ -204,10 +204,20 @@ export class AnnouncementStore {
           (query.source === "community" && !this.options.brokerId);
         const data =
           this.emptyScope || unavailableSource
-            ? { rows: [], total: 0, last_updated_time: 0 }
+            ? {
+                rows: [],
+                meta: {
+                  total: 0,
+                  records_per_page: normalizeListQuery(query).size,
+                  current_page: normalizeListQuery(query).page,
+                },
+                last_updated_time: 0,
+              }
             : await this.options.list(query);
         return {
-          ...data,
+          total: data.meta.total,
+          meta: data.meta,
+          last_updated_time: data.last_updated_time,
           rows: sortAnnouncements(data.rows),
         };
       },
@@ -219,10 +229,11 @@ export class AnnouncementStore {
     return new AnnouncementResource(
       async () => {
         const data = this.emptyScope
-          ? { rows: [], total: 0, last_updated_time: 0 }
+          ? { rows: [], last_updated_time: 0 }
           : await this.options.active(locale);
         return {
           ...data,
+          total: data.rows.length,
           rows: sortAnnouncements(data.rows),
         };
       },
