@@ -3,7 +3,13 @@ import { useAnnouncementArticles } from "./context";
 import { normalizeListQuery } from "./store";
 import type { AnnouncementListQuery } from "./types";
 
-/** Reads a server page, or an in-memory page supplied by a custom context. */
+/**
+ * Reads a localized page from an ancestor provider or custom source.
+ * @param query - Defaults to category/source "all", page 1 and size 20 (maximum 100).
+ * @param enabled - Defaults to true. False disables page subscription, not reading existing state or explicit retry.
+ * @returns articles for the selected page, total before client filtering, pagination meta,
+ * read status and retry. Without custom pagination methods, supplied articles are paginated in memory.
+ */
 export function useAnnouncementList(
   query: AnnouncementListQuery = {},
   enabled = true,

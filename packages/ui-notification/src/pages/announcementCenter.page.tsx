@@ -3,14 +3,21 @@ import { useAppContext } from "@orderly.network/react-app";
 import type { RouterAdapter } from "@orderly.network/types";
 import { AnnouncementCenterWidget } from "./announcementCenter.widget";
 
+/**
+ * Connected announcement list/detail page with automatic provider support.
+ * Page routerAdapter.onRouteChange takes priority over the global app callback.
+ * Navigation emits RouteOption with scope "announcement"; HTTP(S) external links
+ * also set target "_blank". Without either callback, navigation does nothing.
+ * @returns The list when no locator is supplied, otherwise the selected article view.
+ */
 export const AnnouncementCenterPage: FC<{
-  /** Overrides OrderlyAppProvider navigation; uses the global callback when omitted. */
+  /** Page navigation override. Priority: this adapter, then OrderlyAppProvider.onRouteChange. */
   routerAdapter?: RouterAdapter;
-  /** Backend-generated slug; takes precedence over id when non-empty. */
+  /** Backend slug for detail lookup; a non-empty value takes precedence over id. Omit both locators for the list. */
   slug?: string;
-  /** Announcement ID for explicit ID lookup. */
+  /** Explicit programmatic ID lookup when slug is absent. */
   id?: string;
-  /** Overrides the URL's is_official parameter; defaults to false when absent. */
+  /** Overrides URL is_official for slug lookup; absence uses the URL, then false. Does not enable excluded official posts. */
   isOfficial?: boolean;
 }> = (props) => {
   const { onRouteChange: globalOnRouteChange } = useAppContext();

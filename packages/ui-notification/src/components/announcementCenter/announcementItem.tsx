@@ -27,21 +27,45 @@ function getAnnouncementIcon(type: AnnouncementType | undefined | null) {
   }
 }
 
+/**
+ * Controlled expandable row for legacy messages and maintenance reminders.
+ * The host owns expanded state and link handling. Maintenance uses the UTC start/end window.
+ * @returns A message row with optional campaign/vote action and source badge.
+ */
 export const AnnouncementItem: FC<{
-  // title: string;
+  /** Controlled expansion state; changed through onExpandToggle. */
   expanded: boolean;
+  /** Campaign/vote action destination; absent/empty hides the action. */
   url?: string | null;
+  /** Handles campaign/vote URL clicks without toggling expansion. */
   onItemClick: (url: string) => void;
+  /** Requests that the host toggle expanded; omitted means no expansion action. */
   onExpandToggle?: () => void;
+  /** Legacy type determining title and icon; null/undefined uses general presentation. */
   type: AnnouncementType | undefined | null;
+  /** Localized message body. */
   message: string;
+  /** Display timestamp in milliseconds for non-maintenance rows. */
   updatedTime: number;
+  /** Maintenance start timestamp in milliseconds. */
   startTime?: number;
+  /** Maintenance end timestamp in milliseconds. */
   endTime?: number;
+  /** Additional row classes. */
   className?: string;
+  /**
+   * Use divided-list styling.
+   * @default false
+   */
   showDivider?: boolean;
+  /** Known source identity; undefined hides the badge. */
   isOfficial?: boolean;
+  /** Platform label; absent/blank uses the translated fallback. */
   platformName?: string;
+  /**
+   * Display the badge when identity is known.
+   * @default true
+   */
   showSourceBadge?: boolean;
 }> = (props) => {
   const { t } = useTranslation();

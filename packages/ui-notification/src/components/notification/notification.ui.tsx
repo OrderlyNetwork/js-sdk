@@ -26,13 +26,19 @@ import {
   MaintenanceContentCard,
 } from "./contentCard";
 
+/**
+ * Props for the notification carousel; the host owns popup visibility and positioning.
+ */
 export interface NotificationProps {
-  // Define your notification props here
+  /** Accepted compatibility prop; currently not applied to the rendered carousel. */
   className?: string;
-  // children?: React.ReactNode;
+  /** Visible cards, normally useAnnouncement().cardTips; an empty array renders nothing. */
   dataSource: AnnouncementSummary[];
+  /** Handles Close all; omitted means no dismissal action. */
   onClose?: () => void;
+  /** Reports the selected card ID; undefined means an empty card list. */
   onCurrentChange?: (id?: string | number) => void;
+  /** Platform source label; absent/blank uses the translated fallback. */
   platformName?: string;
 }
 
@@ -297,9 +303,17 @@ const NotificationContent: FC<{
   return <>{elements[props.current]}</>;
 };
 
+/**
+ * Carousel presentation with previous/next, expansion and Close all controls.
+ * Use ComponentProps<typeof NotificationUI> for its props from the package root.
+ * @returns One selected card with controls, or null for an empty dataSource.
+ * The host supplies visibility, positioning and URL navigation; expansion defaults to true.
+ */
 export const NotificationUI: FC<
   NotificationProps & {
+    /** Accepted compatibility prop; currently not rendered. */
     maintenanceMessage?: string;
+    /** Handles a card destination URL; does not dismiss cards automatically. */
     onItemClick: (url: string) => void;
   }
 > = (props) => {

@@ -14,6 +14,11 @@ export interface MarkdownToken {
 
 const parser = new MarkdownIt({ html: false, linkify: false, breaks: true });
 
+/**
+ * Validates a destination for HTTPS-only article media/links.
+ * @param url - Optional URL; missing, malformed, non-HTTPS or credential-bearing values are rejected.
+ * @returns A normalized HTTPS URL, or undefined when rejected.
+ */
 export function safeHttpsUrl(url?: string | null): string | undefined {
   if (!url) return undefined;
   try {
@@ -31,6 +36,11 @@ const YOUTUBE_VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const VIMEO_VIDEO_ID_PATTERN = /^[1-9]\d{0,11}$/;
 const VIDEO_EMBED_MARKER = "embed-video";
 
+/**
+ * Converts supported HTTPS YouTube/Vimeo URLs into embeddable destinations.
+ * @param value - Video page, short link or supported embed URL.
+ * @returns The supported embed URL, or null for unsupported/invalid input.
+ */
 export function videoEmbedUrl(value: string): string | null {
   try {
     const url = new URL(value.trim());
@@ -97,7 +107,11 @@ function markedVideoEmbed(token: MarkdownToken, label: string): string | null {
     : null;
 }
 
-/** Summaries exclude media, raw HTML and code; all three entrances use this text. */
+/**
+ * Extracts plain summary text from Markdown, excluding media, raw HTML and code.
+ * @param content - Markdown article body.
+ * @returns Trimmed text with normalized whitespace.
+ */
 export function announcementExcerpt(content: string): string {
   const stripped = content
     .replace(/<([a-z][\w:-]*)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "")
@@ -263,6 +277,11 @@ function renderTokens(tokens: MarkdownToken[]): ReactNode[] {
   return read();
 }
 
+/**
+ * Renders a Markdown article with raw HTML disabled.
+ * @param props - Article content in Markdown; explicitly marked supported video links can embed.
+ * @returns The rendered article body.
+ */
 export function AnnouncementMarkdown({ content }: { content: string }) {
   return (
     <div className="oui-announcement-markdown oui-text-sm oui-space-y-6 oui-break-words oui-font-normal oui-text-base-contrast-80">

@@ -8,7 +8,13 @@ import {
 
 const MAX_TIMEOUT = 2_147_483_647;
 
-/** Missing deadlines retain legacy snapshots; maintenance never uses card expiry. */
+/**
+ * Combines ordinary and maintenance cards, deduplicates by ID and sorts newest first.
+ * @param announcements - Ordinary card summaries.
+ * @param maintenance - Maintenance summaries, exempt from card deadline expiry.
+ * @param now - Current timestamp in milliseconds.
+ * @returns A new list without expired ordinary cards; missing/null deadlines retain a card.
+ */
 export function mergeAnnouncementCards(
   announcements: AnnouncementSummary[],
   maintenance: AnnouncementSummary[],
@@ -40,7 +46,14 @@ type CardVisibility = {
   reminderVersion?: number;
 };
 
-/** A session belongs to the shared carousel, not either underlying data source. */
+/**
+ * Reconciles shared carousel visibility and advances its session when reopening.
+ * @param previous - Previous open/sourceOpen/hasCards/session/reminderVersion state.
+ * @param sourceOpen - Whether an underlying source requests an open carousel.
+ * @param hasCards - Whether there are displayable cards.
+ * @param reminderVersion - Publication reminder version; defaults to 0.
+ * @returns Updated visibility/session state, or the original object when unchanged.
+ */
 export function reconcileCardVisibility(
   previous: CardVisibility,
   sourceOpen: boolean,
@@ -70,6 +83,13 @@ export function reconcileCardVisibility(
   };
 }
 
+/**
+ * Composes shared carousel visibility, card expiry and maintenance dismissal.
+ * @param controlled - Ordinary source state; undefined returns the legacy state.
+ * @param legacy - Maintenance source state, including its dialog and dismissal action.
+ * @returns Bell tips, deadline-filtered cardTips and shared actions. closeTips dismisses
+ * both sources; openMessageCenter also invokes the controlled source acknowledgment.
+ */
 export function useAnnouncementCardState(
   controlled: AnnouncementScaffoldState | undefined,
   legacy: AnnouncementScaffoldState,

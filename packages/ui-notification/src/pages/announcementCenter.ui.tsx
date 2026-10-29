@@ -47,6 +47,12 @@ const PublishedTime = ({ timestamp }: { timestamp: number }) => {
   );
 };
 
+/**
+ * Controlled announcement page presentation using AnnouncementCenterScriptReturns.
+ * The host supplies list/detail data, read status, filters, pagination and callbacks.
+ * Does not start reads or navigate on its own; source badges and filters default to true.
+ * @returns A list, detail, loading, error or unavailable-article view for the supplied state.
+ */
 export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
   const { t } = useTranslation();
   const {

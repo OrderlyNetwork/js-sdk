@@ -142,35 +142,65 @@ export const useAnnouncementCenterScript = (
   );
 
   return {
+    /** Platform badge label, or undefined for the translated fallback. */
     platformName,
+    /** Whether the connected page displays source badges. */
     showSourceBadge,
+    /** Whether the connected page displays source filter controls. */
     showSourceFilter: showSourceBadge,
+    /** True for the detail view; false for the paginated list. */
     isDetail,
+    /** Selected UI category, including all. */
     category,
+    /** Localized rows on the current list page. */
     announcements,
+    /** Complete localized detail, or undefined when no visible article exists. */
     article,
+    /** Request a category change and reset pagination. */
     selectCategory,
+    /** Selected all, official or community source filter. */
     sourceFilter,
+    /** Request a source change and reset pagination. */
     selectSource,
+    /** Navigate to a list article identified by its numeric announcement ID. */
     openArticle,
+    /** Return to the list, optionally selecting a different category. */
     backToList,
+    /** Request a page change. */
     selectPage,
+    /** Selected one-based page. */
     page,
+    /** Total page count, with a minimum of one. */
     pageTotal,
+    /** Announcement total before client filtering. */
     count: list.total,
+    /** Loading, ready or error for the displayed view. */
     status: invalidSource
       ? ("ready" as const)
       : isDetail
         ? detail.status
         : list.status,
+    /** Retry the displayed list or detail read. */
     retry: isDetail ? detail.retry : list.retry,
   };
 };
 
+/**
+ * Controlled props for AnnouncementPageUI. All fields except the display flags are required,
+ * even when their value is undefined. The internal page script is not a package-root export.
+ */
 export type AnnouncementCenterScriptReturns = Omit<
   ReturnType<typeof useAnnouncementCenterScript>,
   "showSourceBadge" | "showSourceFilter"
 > & {
+  /**
+   * Display source badges.
+   * @default true
+   */
   showSourceBadge?: boolean;
+  /**
+   * Display source filter controls.
+   * @default true
+   */
   showSourceFilter?: boolean;
 };

@@ -97,13 +97,28 @@ export const AnnouncementContent: FC<{
   );
 };
 
+/**
+ * Bell summary presentation with optional loading/error states and View all action.
+ * The host supplies data, handles navigation and acknowledges unread separately.
+ * @returns A summary list; loading/error states keep maintenance visible and hide ordinary rows.
+ */
 export const AnnouncementCenterUI: FC<{
+  /** Localized bell summaries and optional maintenance reminders. */
   dataSource: AnnouncementSummary[];
+  /** Handles a destination URL; this UI does not perform navigation. */
   onItemClick: (url: string) => void;
+  /** Handles View all; omitting it hides that action. */
   onViewAll?: () => void;
+  /** Optional read state; omitted state displays the supplied rows. */
   status?: "loading" | "ready" | "error";
+  /** Handles the error-state retry button. */
   retry?: () => void;
+  /** Platform source label; absent/blank uses the translated fallback. */
   platformName?: string;
+  /**
+   * Display source badges when identity is known.
+   * @default true
+   */
   showSourceBadge?: boolean;
 }> = (props) => {
   const { t } = useTranslation();

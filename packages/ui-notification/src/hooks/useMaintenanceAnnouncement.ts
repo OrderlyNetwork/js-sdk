@@ -9,7 +9,11 @@ import { AnnouncementType } from "@orderly.network/types";
 import type { AnnouncementSummary } from "../types";
 import { getTimeString } from "../utils";
 
-/** The legacy system_info reminders have their own trigger, but share the carousel. */
+/**
+ * Reads maintenance reminders independently of ordinary announcement visibility.
+ * @returns Maintenance-only tips, an optional localized maintenanceDialogInfo message,
+ * showAnnouncement visibility and closeTips to dismiss the reminder.
+ */
 export function useMaintenanceAnnouncement() {
   const { t } = useTranslation();
   const { startTime, endTime, status, brokerName } = useMaintenanceStatus();

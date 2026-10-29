@@ -3,7 +3,13 @@ import { useAnnouncementArticles } from "./context";
 import type { LocalizedArticle } from "./model";
 import { findAnnouncementBySlug, isAnnouncementId } from "./routes";
 
-/** Explicit locators select the query type; strings retain numeric ID detection. */
+/**
+ * Reads a complete localized article from an ancestor provider or custom source.
+ * @param target - Explicit slug or ID locator. String values use ID lookup for digits-only values
+ * and slug lookup otherwise; host detail routes should use an explicit slug locator.
+ * @param isOfficial - Slug source selector; defaults to false. Does not bypass global visibility.
+ * @returns article, status and retry. A ready result without article means no visible match.
+ */
 export function useAnnouncementDetail(
   target?: string | { slug: string } | { id: string },
   isOfficial = false,

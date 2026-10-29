@@ -1,12 +1,22 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Badge, cn } from "@orderly.network/ui";
 
+/**
+ * Presentation options for a known announcement source badge.
+ */
 export type AnnouncementSourceBadgeProps = {
+  /** True labels Orderly, false labels the platform, and undefined hides the badge. */
   isOfficial?: boolean;
+  /** Platform label; a blank/absent value uses the translated Platform fallback. */
   platformName?: string;
+  /** Additional badge classes. */
   className?: string;
 };
 
+/**
+ * Displays an official or platform source label.
+ * @returns The source badge, or null when isOfficial is not known.
+ */
 export function AnnouncementSourceBadge({
   isOfficial,
   platformName,
