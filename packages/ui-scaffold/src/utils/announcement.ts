@@ -1,3 +1,8 @@
+/** Matches local announcement destinations without matching unrelated paths. */
+export function isAnnouncementRoute(url: string) {
+  return /^\/announcement(?:\/|[?#]|$)/.test(url);
+}
+
 /** Merge the live query only for local announcement details; target values win. */
 export function mergeAnnouncementDetailQuery(
   url: string,

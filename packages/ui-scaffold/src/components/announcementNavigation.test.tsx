@@ -129,6 +129,7 @@ describe.each(["bell", "card"] as const)("%s detail navigation", (entry) => {
         href: expected,
         name: expected,
         target: "_self",
+        scope: "announcement",
       });
       if (entry === "card") expect(fixture.onClose).toHaveBeenCalledOnce();
     },
@@ -145,6 +146,7 @@ describe.each(["bell", "card"] as const)("%s detail navigation", (entry) => {
         href: `/announcement/release-notes?theme=old&is_official=${isOfficial}`,
         name: expect.any(String),
         target: "_self",
+        scope: "announcement",
       });
     },
   );
@@ -162,6 +164,7 @@ describe.each(["bell", "card"] as const)("%s detail navigation", (entry) => {
       href: "/announcement/release-notes?brokerId=test&theme=dark&is_official=true&campaign=target#details",
       name: expect.any(String),
       target: "_self",
+      scope: "announcement",
     });
   });
   it.each(["/announcement/55", "/announcement/release-notes"])(
@@ -178,6 +181,7 @@ describe.each(["bell", "card"] as const)("%s detail navigation", (entry) => {
         href: `${url}?brokerId=test`,
         name: `${url}?brokerId=test`,
         target: "_self",
+        scope: "announcement",
       });
     },
   );
@@ -189,12 +193,29 @@ describe.each(["bell", "card"] as const)("%s detail navigation", (entry) => {
       href: "/announcement/55",
       name: "/announcement/55",
       target: "_self",
+      scope: "announcement",
+    });
+  });
+  it.each([
+    "/announcement",
+    "/announcement?category=legal",
+    "/announcement#latest",
+    "/announcement/",
+  ])("scopes the local list destination %s without rewriting it", (url) => {
+    show(url);
+    fireEvent.click(screen.getByText("Read announcement"));
+    expect(fixture.onRouteChange).toHaveBeenCalledExactlyOnceWith({
+      href: url,
+      name: url,
+      target: "_self",
+      scope: "announcement",
     });
   });
   it.each([
     "https://example.com/announcement/release-notes?campaign=target&is_official=true#details",
     "https://example.com/promo?campaign=target",
     "/campaign?campaign=target",
+    "/announcement-archive?campaign=target",
   ])("keeps explicit non-detail link %s unchanged", (url) => {
     show(url, false);
     fireEvent.click(screen.getByText("Read announcement"));
@@ -206,7 +227,7 @@ describe.each(["bell", "card"] as const)("%s detail navigation", (entry) => {
   });
 });
 
-it("retains the bell's existing view-all navigation", () => {
+it("scopes view-all navigation and removes category and page while retaining broker context", () => {
   render(
     <MessageCenter
       messages={[]}
@@ -224,5 +245,24 @@ it("retains the bell's existing view-all navigation", () => {
     href: "/announcement?brokerId=test&theme=dark",
     name: expect.any(String),
     target: "_self",
+    scope: "announcement",
+  });
+});
+
+it("does not leave a trailing query delimiter when view all removes every parameter", () => {
+  render(
+    <MessageCenter
+      messages={[]}
+      showAnnouncement={false}
+      closeTips={fixture.onClose}
+    />,
+  );
+  window.history.replaceState({}, "", "/announcement?category=legal&page=3");
+  fireEvent.click(screen.getByText("View all"));
+  expect(fixture.onRouteChange).toHaveBeenCalledWith({
+    href: "/announcement",
+    name: expect.any(String),
+    target: "_self",
+    scope: "announcement",
   });
 });

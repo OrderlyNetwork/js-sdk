@@ -18,7 +18,10 @@ import {
   AnnouncementCenterUI,
   type AnnouncementSummary,
 } from "@orderly.network/ui-notification";
-import { mergeAnnouncementDetailQuery } from "../../utils/announcement";
+import {
+  isAnnouncementRoute,
+  mergeAnnouncementDetailQuery,
+} from "../../utils/announcement";
 import { useScaffoldContext } from "../scaffold";
 import { selectMessages } from "./selectMessages";
 
@@ -57,6 +60,7 @@ export const MessageCenter: FC<{
       href,
       name: href,
       target: href.startsWith("/") ? "_self" : "_blank",
+      ...(isAnnouncementRoute(href) ? { scope: "announcement" } : {}),
     });
   };
 
@@ -103,7 +107,8 @@ export const MessageCenter: FC<{
                   const search = new URLSearchParams(window.location.search);
                   search.delete("category");
                   search.delete("page");
-                  onItemClick(`/announcement?${search.toString()}`);
+                  const query = search.toString();
+                  onItemClick(`/announcement${query ? `?${query}` : ""}`);
                 }}
               />
             }

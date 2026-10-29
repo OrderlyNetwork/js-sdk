@@ -5,7 +5,10 @@ import {
   type AnnouncementSummary,
 } from "@orderly.network/ui-notification";
 import { windowGuard } from "@orderly.network/utils";
-import { mergeAnnouncementDetailQuery } from "../../utils/announcement";
+import {
+  isAnnouncementRoute,
+  mergeAnnouncementDetailQuery,
+} from "../../utils/announcement";
 import { useScaffoldContext } from "../scaffold";
 
 export const NotificationUI: FC<{
@@ -34,6 +37,7 @@ export const NotificationUI: FC<{
       href,
       name: href,
       target: href.startsWith("/") ? "_self" : "_blank",
+      ...(isAnnouncementRoute(href) ? { scope: "announcement" } : {}),
     });
   };
 
@@ -76,16 +80,19 @@ export const NotificationUI: FC<{
     if (len === 0) {
       return;
     }
-    if (showAnnouncement) {
-      // open the notification`
-      windowGuard(() => {
+    let frame: number | undefined;
+    windowGuard(() => {
+      frame = requestAnimationFrame(() => {
         if (notificationRef.current) {
-          requestAnimationFrame(() => {
-            notificationRef.current!.style.transform = "translateY(0)";
-          });
+          notificationRef.current.style.transform = showAnnouncement
+            ? "translateY(0)"
+            : "translateY(120%)";
         }
       });
-    }
+    });
+    return () => {
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    };
   }, [showAnnouncement, len]);
 
   if (len === 0) {
