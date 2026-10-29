@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Text } from "@orderly.network/ui";
+import { formatMaintenanceTime } from "../../utils/maintenanceTime";
 import { ArrowRightShortIcon } from "../announcementCenter/icons";
 
 export const CampaignContentCard: FC<{
@@ -46,51 +47,22 @@ export const CampaignContentCard: FC<{
 
 export const MaintenanceContentCard: FC<{
   message: string;
-  startTime: number;
-  endTime: number;
+  startTime?: number;
+  endTime?: number;
 }> = ({ message, startTime, endTime }) => {
-  const { t } = useTranslation();
-  // const formattedMessage = useMemo(() => {
-  //   // Calculate duration in hours
-  //   const hours = differenceInHours(endTime, startTime);
-
-  //   const minutes = differenceInMinutes(endTime, startTime) - hours * 60;
-
-  //   // Convert timestamps to UTC dates
-  //   const startUtc = new UTCDate(startTime);
-  //   const endUtc = new UTCDate(endTime);
-
-  //   // Format start time as HH:mm (24-hour format) in UTC
-  //   const startTimeFormatted = format(startUtc, "HH:mm");
-
-  //   // Format end time as hh:mm a (12-hour format with AM/PM) in UTC
-  //   const endTimeFormatted = format(endUtc, "hh:mm a");
-
-  //   if (hours > 0) {
-  //     return t("notification.maintenanceDuration.hours", {
-  //       hours: minutes > 0 ? (hours + minutes / 60).toFixed(1) : hours,
-  //       startTimeFormatted,
-  //       endTimeFormatted,
-  //     });
-  //   }
-
-  //   return t("notification.maintenanceDuration.minutes", {
-  //     minutes,
-  //     startTimeFormatted,
-  //     endTimeFormatted,
-  //   });
-  // }, [startTime, endTime, t]);
+  const maintenanceTime = formatMaintenanceTime(startTime, endTime);
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-1">
-      <Text size="xs" intensity={54}>
-        {t("notification.recentlyUpdated")}
-      </Text>
-      {/* <Flex itemAlign={"center"}>
-        <Text size="xs" weight="bold">
-          {formattedMessage}
+      {maintenanceTime && (
+        <Text
+          size="xs"
+          intensity={54}
+          className="oui-whitespace-normal oui-break-words"
+        >
+          <span dir="ltr">{maintenanceTime}</span>
         </Text>
-      </Flex> */}
+      )}
       {message && (
         <Text size="2xs" intensity={80} as="div" className="oui-mt-2">
           {message}

@@ -1,7 +1,8 @@
-import { FC, useMemo } from "react";
+import { FC, useId, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType } from "@orderly.network/types";
 import { Flex, Text, ChevronDownIcon, cn } from "@orderly.network/ui";
+import { formatMaintenanceTime } from "../../utils/maintenanceTime";
 import { AnnouncementSourceBadge } from "../announcementSourceBadge";
 import {
   AnnouncementIcon,
@@ -10,6 +11,21 @@ import {
   FundIcon,
   SecurityIcon,
 } from "./icons";
+
+function getAnnouncementIcon(type: AnnouncementType | undefined | null) {
+  switch (type) {
+    case AnnouncementType.Campaign:
+      return CampaignIcon;
+
+    case AnnouncementType.Listing:
+      return FundIcon;
+    case AnnouncementType.Maintenance:
+      return SecurityIcon;
+    case AnnouncementType.Delisting:
+    default:
+      return AnnouncementIcon;
+  }
+}
 
 export const AnnouncementItem: FC<{
   // title: string;
@@ -20,6 +36,8 @@ export const AnnouncementItem: FC<{
   type: AnnouncementType | undefined | null;
   message: string;
   updatedTime: number;
+  startTime?: number;
+  endTime?: number;
   className?: string;
   showDivider?: boolean;
   isOfficial?: boolean;
@@ -27,20 +45,7 @@ export const AnnouncementItem: FC<{
   showSourceBadge?: boolean;
 }> = (props) => {
   const { t } = useTranslation();
-  const Icon = useMemo(() => {
-    switch (props.type) {
-      case AnnouncementType.Campaign:
-        return CampaignIcon;
-
-      case AnnouncementType.Listing:
-        return FundIcon;
-      case AnnouncementType.Maintenance:
-        return SecurityIcon;
-      case AnnouncementType.Delisting:
-      default:
-        return AnnouncementIcon;
-    }
-  }, [props.type]);
+  const contentId = useId();
 
   const title = useMemo(() => {
     switch (props.type) {
@@ -59,43 +64,19 @@ export const AnnouncementItem: FC<{
     }
   }, [props.type, t]);
 
-  const action = useMemo(() => {
-    if (
-      (props.type === AnnouncementType.Campaign ||
-        props.type === AnnouncementType.Vote) &&
-      typeof props.url === "string" &&
-      props.url !== "" &&
-      typeof props.onItemClick === "function"
-    ) {
-      return (
-        <Flex
-          gap={1}
-          itemAlign="center"
-          className="oui-cursor-pointer"
-          onClick={(event) => {
-            event.stopPropagation();
-            props.onItemClick(props.url!);
-          }}
-        >
-          <Text
-            size="xs"
-            color="buy"
-            className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
-          >
-            {t("notification.joinNow")}
-          </Text>
-          <ArrowRightShortIcon size={18} />
-        </Flex>
-      );
-    }
-    return null;
-  }, [props.type, props.url, t]);
-
   const updateTime = useMemo(() => {
     if (props.type === AnnouncementType.Maintenance) {
+      const maintenanceTime = formatMaintenanceTime(
+        props.startTime,
+        props.endTime,
+      );
+      if (!maintenanceTime) {
+        return null;
+      }
+
       return (
-        <Text size="2xs" intensity={36}>
-          {t("notification.recentlyUpdated")}
+        <Text size="2xs" intensity={36} className="oui-whitespace-normal">
+          <span dir="ltr">{maintenanceTime}</span>
         </Text>
       );
     }
@@ -109,7 +90,109 @@ export const AnnouncementItem: FC<{
         {props.updatedTime}
       </Text.formatted>
     );
-  }, [props.updatedTime, props.type, t]);
+  }, [props.updatedTime, props.type, props.startTime, props.endTime]);
+
+  if (props.type === AnnouncementType.Maintenance) {
+    return (
+      <div
+        className={cn(
+          "oui-announcement-maintenance oui-min-w-0 oui-rounded-md oui-text-base-contrast-80 oui-transition-colors hover:oui-bg-base-6",
+          props.expanded && "oui-bg-base-6",
+          props.className,
+        )}
+      >
+        <button
+          type="button"
+          aria-expanded={props.expanded}
+          aria-controls={contentId}
+          onClick={props.onExpandToggle}
+          className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-rounded-md oui-px-2 oui-py-3 oui-text-start focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
+        >
+          <span className="oui-flex oui-min-w-0 oui-flex-1 oui-flex-col oui-items-start oui-gap-1 oui-break-words [overflow-wrap:anywhere]">
+            {props.showSourceBadge !== false && (
+              <AnnouncementSourceBadge
+                isOfficial={props.isOfficial}
+                platformName={props.platformName}
+                className="oui-self-start"
+              />
+            )}
+            <span className="oui-flex oui-max-w-full oui-items-center oui-gap-1">
+              <Text
+                size="xs"
+                intensity={80}
+                weight="semibold"
+                className="oui-min-w-0"
+              >
+                {title}
+              </Text>
+              <SecurityIcon
+                size={14}
+                color="inherit"
+                className="oui-shrink-0 oui-text-base-contrast-54"
+                aria-hidden="true"
+              />
+            </span>
+            {updateTime}
+          </span>
+          <ChevronDownIcon
+            size={18}
+            color="inherit"
+            opacity={1}
+            aria-hidden="true"
+            className={cn(
+              "oui-shrink-0 oui-text-base-contrast-54 oui-transition-transform oui-duration-300 oui-ease-in-out motion-reduce:oui-transition-none",
+              props.expanded && "oui-rotate-180",
+            )}
+          />
+        </button>
+        <div
+          id={contentId}
+          aria-hidden={!props.expanded}
+          className="oui-grid oui-transition-[grid-template-rows] oui-duration-300 oui-ease-in-out motion-reduce:oui-transition-none"
+          style={{ gridTemplateRows: props.expanded ? "1fr" : "0fr" }}
+        >
+          <div className="oui-min-h-0 oui-min-w-0 oui-overflow-hidden">
+            <Text
+              as="div"
+              size="2xs"
+              intensity={80}
+              className="oui-select-text oui-whitespace-pre-wrap oui-break-words oui-px-2 oui-pb-3 oui-leading-5 [overflow-wrap:anywhere]"
+            >
+              {props.message}
+            </Text>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const Icon = getAnnouncementIcon(props.type);
+
+  const action =
+    (props.type === AnnouncementType.Campaign ||
+      props.type === AnnouncementType.Vote) &&
+    typeof props.url === "string" &&
+    props.url !== "" &&
+    typeof props.onItemClick === "function" ? (
+      <Flex
+        gap={1}
+        itemAlign="center"
+        className="oui-cursor-pointer"
+        onClick={(event) => {
+          event.stopPropagation();
+          props.onItemClick(props.url!);
+        }}
+      >
+        <Text
+          size="xs"
+          color="buy"
+          className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
+        >
+          {t("notification.joinNow")}
+        </Text>
+        <ArrowRightShortIcon size={18} />
+      </Flex>
+    ) : null;
 
   return (
     <Flex

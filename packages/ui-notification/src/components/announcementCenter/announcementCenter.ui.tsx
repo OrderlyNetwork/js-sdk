@@ -75,6 +75,8 @@ export const AnnouncementContent: FC<{
             key={item.announcement_id}
             message={item.message}
             updatedTime={item.updated_time ?? 0}
+            startTime={item.startTime}
+            endTime={item.endTime}
             expanded={current === item.announcement_id}
             type={item.type}
             showDivider={props.showDivider}

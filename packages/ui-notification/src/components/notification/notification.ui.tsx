@@ -265,8 +265,8 @@ const NotificationContent: FC<{
           return (
             <MaintenanceContentCard
               message={message.message}
-              startTime={message.startTime ?? 0}
-              endTime={message.endTime ?? 0}
+              startTime={message.startTime}
+              endTime={message.endTime}
             />
           );
         case AnnouncementType.Delisting:
