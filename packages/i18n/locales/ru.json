@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Опубликовано",
   "notification.retry": "Повторить",
   "notification.source.label": "Источник: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Платформа",
   "notification.video.loading": "Загрузка видео…",
   "notification.video.openExternal": "Открыть на {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Показывать только рынки с объёмом торгов за 24 ч не менее $1,000.",
   "markets.strictVolumeFilter.empty": "Рынки с объёмом торгов за 24 ч менее $1,000 скрыты.",
   "markets.strictVolumeFilter.action": "Отключить строгий режим",
-  "markets.strictVolumeFilter.mode": "Строгий режим"
+  "markets.strictVolumeFilter.mode": "Строгий режим",
+  "notification.source.system": "Система"
 }

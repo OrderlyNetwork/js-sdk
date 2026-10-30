@@ -17,7 +17,7 @@ vi.mock("@orderly.network/react-app", () => ({}));
 vi.mock("@orderly.network/i18n", () => {
   const t = (key: string, values?: { name?: string }) =>
     ({
-      "notification.source.orderly": "Orderly",
+      "notification.source.system": "System",
       "notification.source.platform": "Platform",
       "notification.source.label": `Source: ${values?.name ?? ""}`,
     })[key] ?? key;
@@ -118,7 +118,7 @@ const pageProps: AnnouncementCenterScriptReturns = {
 function expectSources(markup: string) {
   expect(markup).toContain('data-announcement-source="official"');
   expect(markup).toContain('data-announcement-source="platform"');
-  expect(markup).toContain("Orderly");
+  expect(markup).toContain("System");
   expect(markup).toContain(platformName);
 }
 
@@ -140,8 +140,8 @@ describe("announcement source labels", () => {
     expect(vi.mocked(Badge).mock.calls[0][0]).toMatchObject({
       color: "neutral",
       size: "xs",
-      title: "Orderly",
-      "aria-label": "Source: Orderly",
+      title: "System",
+      "aria-label": "Source: System",
       "data-announcement-source": "official",
     });
     expect(markup).toContain("custom-source-class");
@@ -171,7 +171,7 @@ describe("announcement source labels", () => {
     const official = renderToStaticMarkup(
       <AnnouncementSourceBadge isOfficial platformName={platformName} />,
     );
-    expect(official).toContain("Orderly");
+    expect(official).toContain("System");
     expect(official).not.toContain(platformName);
     const name = "A very long trading platform name";
     const platform = renderToStaticMarkup(
@@ -227,7 +227,7 @@ describe("announcement source labels", () => {
           `data-announcement-source="${isOfficial ? "official" : "platform"}"`,
         );
         expect(markup).toContain(
-          `title="${isOfficial ? "Orderly" : brokerName.trim() || "Platform"}"`,
+          `title="${isOfficial ? "System" : brokerName.trim() || "Platform"}"`,
         );
         expectSourceAboveTitle(markup, title);
       }

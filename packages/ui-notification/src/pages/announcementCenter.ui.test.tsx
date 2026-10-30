@@ -86,12 +86,12 @@ afterEach(() => {
 });
 
 describe("announcement source tabs", () => {
-  it("uses the configured broker name between All and Orderly", () => {
+  it("uses the configured broker name between All and System", () => {
     render(page({ platformName: "  Orderly Demo  " }));
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
       "common.all",
       "Orderly Demo",
-      "notification.source.orderly",
+      "notification.source.system",
     ]);
     fireEvent.mouseDown(screen.getByRole("tab", { name: "Orderly Demo" }), {
       button: 0,
@@ -99,7 +99,7 @@ describe("announcement source tabs", () => {
     });
     expect(props.selectSource).toHaveBeenCalledWith("community");
     fireEvent.mouseDown(
-      screen.getByRole("tab", { name: "notification.source.orderly" }),
+      screen.getByRole("tab", { name: "notification.source.system" }),
       {
         button: 0,
         ctrlKey: false,
@@ -115,7 +115,7 @@ describe("announcement source tabs", () => {
       const expectedOrder = [
         "common.all",
         "notification.source.platform",
-        "notification.source.orderly",
+        "notification.source.system",
       ];
       const tabOrder = () =>
         screen.getAllByRole("tab").map((tab) => tab.textContent);
@@ -197,7 +197,7 @@ describe("announcement source tabs", () => {
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
       "common.all",
       "notification.source.platform",
-      "notification.source.orderly",
+      "notification.source.system",
     ]);
     expect(screen.queryByText("Current article")).toBeNull();
     expect(screen.getAllByText("Community article")).toHaveLength(1);

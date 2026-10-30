@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Diterbitkan pada",
   "notification.retry": "Coba lagi",
   "notification.source.label": "Sumber: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
   "notification.video.loading": "Memuat video…",
   "notification.video.openExternal": "Buka di {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Hanya tampilkan pasar dengan volume perdagangan 24 jam minimal $1,000.",
   "markets.strictVolumeFilter.empty": "Pasar dengan volume perdagangan 24 jam di bawah $1,000 disembunyikan.",
   "markets.strictVolumeFilter.action": "Matikan mode ketat",
-  "markets.strictVolumeFilter.mode": "Mode ketat"
+  "markets.strictVolumeFilter.mode": "Mode ketat",
+  "notification.source.system": "Sistem"
 }

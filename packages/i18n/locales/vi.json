@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Xuất bản ngày",
   "notification.retry": "Thử lại",
   "notification.source.label": "Nguồn: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Nền tảng",
   "notification.video.loading": "Đang tải video…",
   "notification.video.openExternal": "Mở trên {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Chỉ hiển thị các thị trường có khối lượng giao dịch 24 giờ từ $1,000 trở lên.",
   "markets.strictVolumeFilter.empty": "Các thị trường có khối lượng giao dịch 24 giờ dưới $1,000 đã bị ẩn.",
   "markets.strictVolumeFilter.action": "Tắt chế độ nghiêm ngặt",
-  "markets.strictVolumeFilter.mode": "Chế độ nghiêm ngặt"
+  "markets.strictVolumeFilter.mode": "Chế độ nghiêm ngặt",
+  "notification.source.system": "Hệ thống"
 }

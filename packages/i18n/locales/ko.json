@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "게시일",
   "notification.retry": "재시도",
   "notification.source.label": "출처: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "플랫폼",
   "notification.video.loading": "동영상 로드 중…",
   "notification.video.openExternal": "{{provider}}에서 열기",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "24시간 거래량이 $1,000 이상인 시장만 표시합니다.",
   "markets.strictVolumeFilter.empty": "24시간 거래량이 $1,000 미만인 시장은 숨겨져 있습니다.",
   "markets.strictVolumeFilter.action": "엄격 모드 끄기",
-  "markets.strictVolumeFilter.mode": "엄격 모드"
+  "markets.strictVolumeFilter.mode": "엄격 모드",
+  "notification.source.system": "시스템"
 }

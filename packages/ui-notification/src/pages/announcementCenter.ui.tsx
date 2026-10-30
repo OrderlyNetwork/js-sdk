@@ -296,7 +296,7 @@ export const AnnouncementPageUI = (props: AnnouncementCenterScriptReturns) => {
                   title={
                     {
                       all: t("common.all"),
-                      official: t("notification.source.orderly"),
+                      official: t("notification.source.system"),
                       community:
                         props.platformName?.trim() ||
                         t("notification.source.platform"),

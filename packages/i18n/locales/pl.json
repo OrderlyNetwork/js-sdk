@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Opublikowano",
   "notification.retry": "Spróbuj ponownie",
   "notification.source.label": "Źródło: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platforma",
   "notification.video.loading": "Ładowanie wideo…",
   "notification.video.openExternal": "Otwórz w {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Pokazuj tylko rynki z wolumenem obrotu z 24 h wynoszącym co najmniej $1,000.",
   "markets.strictVolumeFilter.empty": "Rynki z wolumenem obrotu z 24 h poniżej $1,000 są ukryte.",
   "markets.strictVolumeFilter.action": "Wyłącz tryb ścisły",
-  "markets.strictVolumeFilter.mode": "Tryb ścisły"
+  "markets.strictVolumeFilter.mode": "Tryb ścisły",
+  "notification.source.system": "System"
 }

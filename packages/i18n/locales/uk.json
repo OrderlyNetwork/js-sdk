@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Опубліковано",
   "notification.retry": "Повторити",
   "notification.source.label": "Джерело: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Платформа",
   "notification.video.loading": "Завантаження відео…",
   "notification.video.openExternal": "Відкрити на {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Показувати лише ринки з обсягом торгів за 24 год щонайменше $1,000.",
   "markets.strictVolumeFilter.empty": "Ринки з обсягом торгів за 24 год менше $1,000 приховано.",
   "markets.strictVolumeFilter.action": "Вимкнути суворий режим",
-  "markets.strictVolumeFilter.mode": "Суворий режим"
+  "markets.strictVolumeFilter.mode": "Суворий режим",
+  "notification.source.system": "Система"
 }

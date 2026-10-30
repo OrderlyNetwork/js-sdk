@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "منتشر شده در",
   "notification.retry": "تلاش مجدد",
   "notification.source.label": "منبع: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "پلتفرم",
   "notification.video.loading": "در حال بارگذاری ویدیو…",
   "notification.video.openExternal": "باز کردن در {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "فقط بازارهایی را نمایش دهید که حجم معاملات ۲۴ ساعته آنها حداقل $1,000 باشد.",
   "markets.strictVolumeFilter.empty": "بازارهایی که حجم معاملات ۲۴ ساعته آنها کمتر از $1,000 است، پنهان شده‌اند.",
   "markets.strictVolumeFilter.action": "خاموش کردن حالت سخت‌گیرانه",
-  "markets.strictVolumeFilter.mode": "حالت سخت‌گیرانه"
+  "markets.strictVolumeFilter.mode": "حالت سخت‌گیرانه",
+  "notification.source.system": "سیستم"
 }

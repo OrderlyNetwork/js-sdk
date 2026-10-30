@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "פורסם ב-",
   "notification.retry": "נסה שוב",
   "notification.source.label": "מקור: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "פלטפורמה",
   "notification.video.loading": "טוען וידאו…",
   "notification.video.openExternal": "פתיחה ב-{{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "הצג רק שווקים עם היקף מסחר של 24 שעות של לפחות $1,000.",
   "markets.strictVolumeFilter.empty": "שווקים עם היקף מסחר של 24 שעות מתחת ל-$1,000 מוסתרים.",
   "markets.strictVolumeFilter.action": "כבה את המצב הקפדני",
-  "markets.strictVolumeFilter.mode": "מצב קפדני"
+  "markets.strictVolumeFilter.mode": "מצב קפדני",
+  "notification.source.system": "מערכת"
 }

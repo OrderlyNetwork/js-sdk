@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Yayımlandığı tarih",
   "notification.retry": "Yeniden dene",
   "notification.source.label": "Kaynak: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
   "notification.video.loading": "Video yükleniyor…",
   "notification.video.openExternal": "{{provider}} üzerinde aç",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Yalnızca 24 saatlik işlem hacmi en az $1,000 olan piyasaları göster.",
   "markets.strictVolumeFilter.empty": "24 saatlik işlem hacmi $1,000 altında olan piyasalar gizlenir.",
   "markets.strictVolumeFilter.action": "Sıkı modu kapat",
-  "markets.strictVolumeFilter.mode": "Sıkı mod"
+  "markets.strictVolumeFilter.mode": "Sıkı mod",
+  "notification.source.system": "Sistem"
 }

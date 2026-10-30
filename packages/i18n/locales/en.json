@@ -1459,7 +1459,6 @@
   "notification.video.slow": "The video is taking longer to load.",
   "notification.video.reload": "Reload video",
   "notification.video.openExternal": "Open on {{provider}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
   "notification.source.label": "Source: {{name}}",
   "notification.campaign": "Campaign announcement",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Retry",
   "notification.pagination": "Announcement pages",
   "notification.newAnnouncements": "New announcements",
-  "tradingPoints.points": "Points"
+  "tradingPoints.points": "Points",
+  "notification.source.system": "System"
 }

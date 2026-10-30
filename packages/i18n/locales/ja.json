@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "公開日",
   "notification.retry": "再試行",
   "notification.source.label": "出典：{{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "プラットフォーム",
   "notification.video.loading": "動画を読み込み中…",
   "notification.video.openExternal": "{{provider}} で開く",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "24時間取引量が $1,000 以上の市場のみ表示します。",
   "markets.strictVolumeFilter.empty": "24時間取引量が $1,000 未満の市場は非表示になっています。",
   "markets.strictVolumeFilter.action": "厳格モードをオフにする",
-  "markets.strictVolumeFilter.mode": "厳格モード"
+  "markets.strictVolumeFilter.mode": "厳格モード",
+  "notification.source.system": "システム"
 }

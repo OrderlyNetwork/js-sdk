@@ -4,7 +4,7 @@ export const notification = {
   "notification.video.slow": "The video is taking longer to load.",
   "notification.video.reload": "Reload video",
   "notification.video.openExternal": "Open on {{provider}}",
-  "notification.source.orderly": "Orderly",
+  "notification.source.system": "System",
   "notification.source.platform": "Platform",
   "notification.source.label": "Source: {{name}}",
   // Announcement related keys

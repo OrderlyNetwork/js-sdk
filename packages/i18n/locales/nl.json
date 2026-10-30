@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Gepubliceerd op",
   "notification.retry": "Opnieuw proberen",
   "notification.source.label": "Bron: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Platform",
   "notification.video.loading": "Video laden…",
   "notification.video.openExternal": "Openen op {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Toon alleen markten met een 24-uurs handelsvolume van ten minste $1,000.",
   "markets.strictVolumeFilter.empty": "Markten met een 24-uurs handelsvolume onder $1,000 zijn verborgen.",
   "markets.strictVolumeFilter.action": "Strikte modus uitschakelen",
-  "markets.strictVolumeFilter.mode": "Strikte modus"
+  "markets.strictVolumeFilter.mode": "Strikte modus",
+  "notification.source.system": "Systeem"
 }

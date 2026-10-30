@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "تاريخ النشر",
   "notification.retry": "إعادة المحاولة",
   "notification.source.label": "المصدر: {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "المنصة",
   "notification.video.loading": "جارٍ تحميل الفيديو…",
   "notification.video.openExternal": "فتح على {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "عرض الأسواق التي يبلغ حجم تداولها خلال 24 ساعة $1,000 على الأقل فقط.",
   "markets.strictVolumeFilter.empty": "الأسواق التي يقل حجم تداولها خلال 24 ساعة عن $1,000 مخفية.",
   "markets.strictVolumeFilter.action": "إيقاف تشغيل الوضع الصارم",
-  "markets.strictVolumeFilter.mode": "الوضع الصارم"
+  "markets.strictVolumeFilter.mode": "الوضع الصارم",
+  "notification.source.system": "النظام"
 }

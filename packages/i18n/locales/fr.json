@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "Publié le",
   "notification.retry": "Réessayer",
   "notification.source.label": "Source : {{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "Plateforme",
   "notification.video.loading": "Chargement de la vidéo…",
   "notification.video.openExternal": "Ouvrir sur {{provider}}",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "Afficher uniquement les marchés avec un volume d'échanges sur 24 h d'au moins $1,000.",
   "markets.strictVolumeFilter.empty": "Les marchés dont le volume sur 24 h est inférieur à $1,000 sont masqués.",
   "markets.strictVolumeFilter.action": "Désactiver le mode strict",
-  "markets.strictVolumeFilter.mode": "Mode strict"
+  "markets.strictVolumeFilter.mode": "Mode strict",
+  "notification.source.system": "Système"
 }

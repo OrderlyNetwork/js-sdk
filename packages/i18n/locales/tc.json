@@ -1484,7 +1484,6 @@
   "notification.publishedOn": "發布於",
   "notification.retry": "重試",
   "notification.source.label": "來源：{{name}}",
-  "notification.source.orderly": "Orderly",
   "notification.source.platform": "平台",
   "notification.video.loading": "影片載入中…",
   "notification.video.openExternal": "在 {{provider}} 上開啟",
@@ -1497,5 +1496,6 @@
   "markets.strictVolumeFilter.tooltip": "僅顯示 24 小時成交量至少為 $1,000 的市場。",
   "markets.strictVolumeFilter.empty": "24 小時成交量低於 $1,000 的市場已被隱藏。",
   "markets.strictVolumeFilter.action": "關閉嚴格模式",
-  "markets.strictVolumeFilter.mode": "嚴格模式"
+  "markets.strictVolumeFilter.mode": "嚴格模式",
+  "notification.source.system": "系統"
 }

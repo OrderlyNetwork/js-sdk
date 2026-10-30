@@ -5,7 +5,7 @@ import { Badge, cn } from "@orderly.network/ui";
  * Presentation options for a known announcement source badge.
  */
 export type AnnouncementSourceBadgeProps = {
-  /** True labels Orderly, false labels the platform, and undefined hides the badge. */
+  /** True labels System, false labels the platform, and undefined hides the badge. */
   isOfficial?: boolean;
   /** Platform label; a blank/absent value uses the translated Platform fallback. */
   platformName?: string;
@@ -26,7 +26,7 @@ export function AnnouncementSourceBadge({
   // Unknown legacy sources must not be presented as official or platform-owned.
   if (typeof isOfficial !== "boolean") return null;
   const label = isOfficial
-    ? t("notification.source.orderly")
+    ? t("notification.source.system")
     : platformName?.trim() || t("notification.source.platform");
   return (
     <Badge
