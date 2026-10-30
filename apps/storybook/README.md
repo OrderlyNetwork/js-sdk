@@ -21,7 +21,7 @@ Create `apps/storybook/.env.local` for your local overrides. This file is ignore
 VITE_ENV=staging
 VITE_NETWORK_ID=testnet
 VITE_BROKER_ID=demo
-VITE_BROKER_NAME=Orderly
+VITE_BROKER_NAME=Orderly Demo
 ```
 
 The `pnpm dev` and `pnpm storybook` scripts load `.env.local` before `.env` using `dotenv-cli`. Existing shell environment variables take precedence over both files, and values in `.env.local` take precedence over `.env`. Restart the development server after changing environment variables, package watch settings, or Storybook story filters.
@@ -32,13 +32,13 @@ The URL parameters below override the corresponding application settings. Packag
 
 Configure the Vite playground using URL query parameters:
 
-| Parameter    | Description / Values                                  | Environment Variable | Fallback  |
-| ------------ | ----------------------------------------------------- | -------------------- | --------- |
-| `env`        | API environment: `dev`, `qa`, `staging`, or `prod`.   | `VITE_ENV`           | `staging` |
-| `networkId`  | Network: `mainnet` or `testnet`.                      | `VITE_NETWORK_ID`    | `testnet` |
-| `brokerId`   | Your broker ID.                                       | `VITE_BROKER_ID`     | `demo`    |
-| `brokerName` | Your broker display name.                             | `VITE_BROKER_NAME`   | `Orderly` |
-| `walletMode` | Wallet provider mode: `privy`, `wallet`, or `legacy`. | —                    | `privy`   |
+| Parameter    | Description / Values                                  | Environment Variable | Fallback       |
+| ------------ | ----------------------------------------------------- | -------------------- | -------------- |
+| `env`        | API environment: `dev`, `qa`, `staging`, or `prod`.   | `VITE_ENV`           | `staging`      |
+| `networkId`  | Network: `mainnet` or `testnet`.                      | `VITE_NETWORK_ID`    | `testnet`      |
+| `brokerId`   | Your broker ID.                                       | `VITE_BROKER_ID`     | `demo`         |
+| `brokerName` | Your broker display name.                             | `VITE_BROKER_NAME`   | `Orderly Demo` |
+| `walletMode` | Wallet provider mode: `privy`, `wallet`, or `legacy`. | —                    | `privy`        |
 
 For `env`, `networkId`, `brokerId`, and `brokerName`, non-empty URL parameters take precedence over the corresponding environment variables. When neither provides a non-empty value, the fallback above is used. See [Local Environment](#local-environment) for file loading and precedence.
 
@@ -47,7 +47,7 @@ For `env`, `networkId`, `brokerId`, and `brokerName`, non-empty URL parameters t
 For example, to use mainnet with external wallets only:
 
 ```text
-http://localhost:5173/en/perp/PERP_ETH_USDC?env=prod&networkId=mainnet&brokerId=demo&brokerName=Orderly&walletMode=wallet
+http://localhost:5173/en/perp/PERP_ETH_USDC?env=prod&networkId=mainnet&brokerId=demo&brokerName=Orderly%20Demo&walletMode=wallet
 ```
 
 ### Wallet Modes

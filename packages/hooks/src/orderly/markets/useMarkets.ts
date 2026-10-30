@@ -1,9 +1,10 @@
-import { useContext, useEffect, useId, useState } from "react";
+import { useContext, useEffect, useId, useMemo, useState } from "react";
 import { API, WSMessage } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { OrderlyContext } from "../../orderlyContext";
 import { getSymbolDisplayName } from "../../useBadgeBySymbol";
 import { useEventEmitter } from "../../useEventEmitter";
+import type { MarketDataStatus } from "../useMarket/market.store";
 import { useMarketsStream } from "../useMarketsStream";
 import { RwaSymbolsInfo, useRwaSymbolsInfo } from "../useRwaSymbolsInfo";
 import { SymbolsInfo, useSymbolsInfo } from "../useSymbolsInfo";
@@ -295,31 +296,28 @@ export const useMarketsStore = () => {
 /**
  * Hook for accessing filtered market data based on type
  * @param type - Type of markets to filter (defaults to ALL)
- * @returns Tuple containing filtered markets array and markets store
+ * @returns Filtered markets and preferences with read-only request status.
  */
 export const useMarkets = (
   type: MarketsType = MarketsType.ALL,
-): [MarketsItem[], MarketsStore] => {
-  const { data: futures } = useMarketsStream();
+): [MarketsItem[], MarketsStore & MarketDataStatus] => {
+  const { data: futures, isReady, isLoading, error } = useMarketsStream();
   const symbolsInfo = useSymbolsInfo();
   const rwaSymbolsInfo = useRwaSymbolsInfo();
-
-  const [markets, setMarkets] = useState<MarketsItem[]>([]);
 
   const store = useMarketsStore();
 
   const { favorites, recent, newListing } = store;
 
-  useEffect(() => {
+  const markets = useMemo(() => {
     const markets = addFieldToMarkets(futures, symbolsInfo, rwaSymbolsInfo);
-    const filterList = filterMarkets({
+    return filterMarkets({
       markets,
       favorites,
       recent,
       newListing,
       type,
     });
-    setMarkets(filterList);
   }, [
     futures,
     symbolsInfo,
@@ -330,7 +328,7 @@ export const useMarkets = (
     type,
   ]);
 
-  return [markets, store];
+  return [markets, { ...store, isReady, isLoading, error }];
 };
 
 /**

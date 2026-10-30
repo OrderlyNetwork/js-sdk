@@ -1,7 +1,13 @@
 {
   "name": "@orderly.network/ui-notification",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OrderlyNetwork/js-sdk.git",
+    "directory": "packages/ui-notification"
+  },
+  "homepage": "https://github.com/OrderlyNetwork/js-sdk/tree/main/packages/ui-notification#readme",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
@@ -14,7 +20,8 @@
     "Notification"
   ],
   "files": [
-    "dist"
+    "dist",
+    "docs"
   ],
   "publishConfig": {
     "access": "public"
@@ -28,7 +35,8 @@
     "@orderly.network/utils": "workspace:*",
     "@date-fns/utc": "1.2.0",
     "date-fns": "^3.6.0",
-    "immer": "^10.1.1"
+    "immer": "^10.1.1",
+    "markdown-it": "^14.2.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.8.1",

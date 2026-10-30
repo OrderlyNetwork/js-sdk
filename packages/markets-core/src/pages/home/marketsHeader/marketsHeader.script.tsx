@@ -1,9 +1,19 @@
 import { useMemo } from "react";
 import { useMarkets, useQuery, MarketsType } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
+import { useLowVolumeMarketFilter } from "../../../components/shared/lowVolumeMarketFilter";
+import { filterMarketsByLowVolume } from "../../../components/shared/marketVolumeFilter";
 import { sortList } from "../../../utils";
 
 export type MarketsHeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
+
+type MarketsHeaderFilterState = {
+  isReady?: boolean;
+  isLoading?: boolean;
+  newsHiddenByLowVolumeFilter?: boolean;
+  gainersHiddenByLowVolumeFilter?: boolean;
+  losersHiddenByLowVolumeFilter?: boolean;
+};
 
 export const useMarketsHeaderScript = () => {
   const data = useDataSource();
@@ -15,27 +25,39 @@ export const useMarketsHeaderScript = () => {
 
 export function useDataSource() {
   const [markets, favorite] = useMarkets(MarketsType.ALL);
+  const { showLowVolume } = useLowVolumeMarketFilter();
   const { data: balance } = useQuery("/v1/public/balance/stats");
+
+  const filteredMarkets = useMemo(
+    () => filterMarketsByLowVolume(markets, showLowVolume),
+    [markets, showLowVolume],
+  );
 
   const news = useMemo(
     () =>
-      sortList(markets, { sortKey: "created_time", sortOrder: "desc" }).slice(
-        0,
-        5,
-      ),
-    [markets],
+      sortList(filteredMarkets.visibleMarkets, {
+        sortKey: "created_time",
+        sortOrder: "desc",
+      }).slice(0, 5),
+    [filteredMarkets],
   );
 
   const gainers = useMemo(
     () =>
-      sortList(markets, { sortKey: "change", sortOrder: "desc" }).slice(0, 5),
-    [markets],
+      sortList(filteredMarkets.visibleMarkets, {
+        sortKey: "change",
+        sortOrder: "desc",
+      }).slice(0, 5),
+    [filteredMarkets],
   );
 
   const losers = useMemo(
     () =>
-      sortList(markets, { sortKey: "change", sortOrder: "asc" }).slice(0, 5),
-    [markets],
+      sortList(filteredMarkets.visibleMarkets, {
+        sortKey: "change",
+        sortOrder: "asc",
+      }).slice(0, 5),
+    [filteredMarkets],
   );
 
   const total24Amount = useMemo(
@@ -61,7 +83,16 @@ export function useDataSource() {
     return new Decimal(total_holding).toNumber();
   }, [balance]);
 
+  const filterState: MarketsHeaderFilterState = {
+    isReady: favorite.isReady,
+    isLoading: favorite.isLoading,
+    newsHiddenByLowVolumeFilter: filteredMarkets.allHidden,
+    gainersHiddenByLowVolumeFilter: filteredMarkets.allHidden,
+    losersHiddenByLowVolumeFilter: filteredMarkets.allHidden,
+  };
+
   return {
+    ...filterState,
     markets,
     news,
     gainers,

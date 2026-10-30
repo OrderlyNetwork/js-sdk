@@ -1,8 +1,18 @@
 import { FC, ReactNode, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  EmptyDataState,
+  Spinner,
+  Flex,
+  TabPanel,
+  Tabs,
+  Text,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
+import { LowVolumeEmptyView } from "../../../components/shared/lowVolumeEmptyView";
 import { SymbolDisplay } from "../../../components/symbolDisplay";
 import { OrderlyIcon } from "../../../icons";
 import { MarketsHeaderReturns } from "./marketsHeader.script";
@@ -48,21 +58,39 @@ export const MobileMarketsHeader: FC<MobileMarketsHeaderProps> = (props) => {
             value="newListings"
             testid="oui-testid-markets-tab"
           >
-            <CardItem data={news} onSymbol={onSymbol} />
+            <CardItem
+              data={news}
+              isReady={props.isReady}
+              isLoading={props.isLoading}
+              isHiddenByLowVolumeFilter={props.newsHiddenByLowVolumeFilter}
+              onSymbol={onSymbol}
+            />
           </TabPanel>
           <TabPanel
             title={t("markets.topGainers")}
             value="topGainers"
             testid="oui-testid-funding-tab"
           >
-            <CardItem data={gainers} onSymbol={onSymbol} />
+            <CardItem
+              data={gainers}
+              isReady={props.isReady}
+              isLoading={props.isLoading}
+              isHiddenByLowVolumeFilter={props.gainersHiddenByLowVolumeFilter}
+              onSymbol={onSymbol}
+            />
           </TabPanel>
           <TabPanel
             title={t("markets.topLosers")}
             value="topLosers"
             testid="oui-testid-funding-tab"
           >
-            <CardItem data={losers} onSymbol={onSymbol} />
+            <CardItem
+              data={losers}
+              isReady={props.isReady}
+              isLoading={props.isLoading}
+              isHiddenByLowVolumeFilter={props.losersHiddenByLowVolumeFilter}
+              onSymbol={onSymbol}
+            />
           </TabPanel>
         </Tabs>
       </Box>
@@ -169,7 +197,10 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
 };
 
 type CardItemProps = {
+  isReady?: boolean;
+  isLoading?: boolean;
   data?: TListItem[];
+  isHiddenByLowVolumeFilter?: boolean;
   className?: string;
   onSymbol: (item: any) => void;
 };
@@ -177,14 +208,31 @@ type CardItemProps = {
 const CardItem: React.FC<CardItemProps> = (props) => {
   return (
     <Flex direction="column" itemAlign="start" mt={3}>
-      {props.data?.map((item) => (
-        <ListItem
-          key={item.symbol}
-          item={item}
-          onSymbol={props.onSymbol}
-          className="oui-px-0"
-        />
-      ))}
+      {(props.isReady === false || !props.data?.length) && (
+        <Box className="oui-w-full oui-py-6">
+          {props.isLoading && (
+            <Flex justify="center">
+              <Spinner size="md" />
+            </Flex>
+          )}
+          {!props.isLoading &&
+            props.isReady !== false &&
+            (props.isHiddenByLowVolumeFilter ? (
+              <LowVolumeEmptyView />
+            ) : (
+              <EmptyDataState />
+            ))}
+        </Box>
+      )}
+      {props.isReady !== false &&
+        props.data?.map((item) => (
+          <ListItem
+            key={item.symbol}
+            item={item}
+            onSymbol={props.onSymbol}
+            className="oui-px-0"
+          />
+        ))}
     </Flex>
   );
 };

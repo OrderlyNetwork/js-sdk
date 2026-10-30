@@ -1,6 +1,8 @@
 import { createContext, useContext } from "react";
 import { RouterAdapter } from "@orderly.network/types";
-import { useAnnouncement } from "@orderly.network/ui-notification";
+import type { AnnouncementScaffoldState } from "@orderly.network/ui-notification";
+
+export type ScaffoldAnnouncementState = AnnouncementScaffoldState;
 
 export type ScaffoldState = {
   routerAdapter?: RouterAdapter;
@@ -10,7 +12,7 @@ export type ScaffoldState = {
   topNavbarHeight: number;
   footerHeight: number;
   announcementHeight: number;
-  announcementState: ReturnType<typeof useAnnouncement>;
+  announcementState: ScaffoldAnnouncementState;
 };
 
 export const ScaffoldContext = createContext<ScaffoldState>(

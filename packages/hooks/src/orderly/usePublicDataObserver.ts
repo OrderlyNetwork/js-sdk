@@ -129,12 +129,12 @@ export const usePublicDataObserver = () => {
     },
   });
 
-  const { data: futures } = useFutures();
+  const { data: futures, isReady, isLoading, error } = useFutures();
   const { updateMarket } = useMarketStore((state) => state.actions);
 
   useEffect(() => {
-    updateMarket(futures);
-  }, [futures]);
+    updateMarket(futures, { isReady, isLoading, error });
+  }, [futures, isReady, isLoading, error, updateMarket]);
 
   /**
    * token info

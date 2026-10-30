@@ -1,0 +1,66 @@
+import { useCallback, useEffect } from "react";
+import { useAnnouncementArticles } from "./context";
+import { normalizeListQuery } from "./store";
+import type { AnnouncementListQuery } from "./types";
+
+/**
+ * Reads a localized page from an ancestor provider or custom source.
+ * @param query - Defaults to category/source "all", page 1 and size 20 (maximum 100).
+ * @param enabled - Defaults to true. False disables page subscription, not reading existing state or explicit retry.
+ * @returns articles for the selected page, total before client filtering, pagination meta,
+ * read status and retry. Without custom pagination methods, supplied articles are paginated in memory.
+ */
+export function useAnnouncementList(
+  query: AnnouncementListQuery = {},
+  enabled = true,
+) {
+  const source = useAnnouncementArticles();
+  const {
+    category,
+    page,
+    size,
+    source: sourceFilter,
+  } = normalizeListQuery(query);
+  const { watchList, retryList } = source;
+  useEffect(() => {
+    if (enabled)
+      return watchList?.({ category, page, size, source: sourceFilter });
+  }, [enabled, watchList, category, page, size, sourceFilter]);
+  const retry = useCallback(() => {
+    if (retryList) retryList({ category, page, size, source: sourceFilter });
+    else source.retry();
+  }, [retryList, source.retry, category, page, size, sourceFilter]);
+  const filtered = source.getList
+    ? []
+    : source.articles.filter(
+        (row) =>
+          (category === "all" || row.category === category) &&
+          (sourceFilter === "all" ||
+            row.is_official === (sourceFilter === "official")),
+      );
+  const state = source.getList?.({
+    category,
+    page,
+    size,
+    source: sourceFilter,
+  }) ?? {
+    articles: filtered.slice((page - 1) * size, page * size),
+    total: filtered.length,
+    meta: {
+      total: filtered.length,
+      records_per_page: size,
+      current_page: page,
+    },
+    status: source.status,
+  };
+  const meta = state.meta ?? {
+    total: state.total,
+    records_per_page: size,
+    current_page: page,
+  };
+  return {
+    ...state,
+    meta,
+    retry,
+  };
+}

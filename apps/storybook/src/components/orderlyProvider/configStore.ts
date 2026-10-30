@@ -23,7 +23,7 @@ export const useConfigStore = (params: ConfigStoreOptions) => {
     return new CustomConfigStore({
       networkId: networkId || VITE_NETWORK_ID || "testnet",
       brokerId: brokerId || VITE_BROKER_ID || "demo",
-      brokerName: brokerName || VITE_BROKER_NAME || "Orderly",
+      brokerName: brokerName || VITE_BROKER_NAME || "Orderly Demo",
       env: env || VITE_ENV || "staging",
     });
   }, [networkId, brokerId, brokerName, env]);

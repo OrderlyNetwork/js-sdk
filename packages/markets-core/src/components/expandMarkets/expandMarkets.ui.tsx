@@ -291,7 +291,9 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           const isBuiltIn = isBuiltInMarketTab(tab);
           const isCommunity =
             isBuiltIn && tab.type === MarketsTabName.Community;
-          const customContent = props.renderTabContent?.(tab, key, noop);
+          const customContent = props.renderTabContent?.(tab, key, noop, {
+            componentKey: "expandMarkets",
+          });
 
           return (
             <TabPanel
@@ -312,6 +314,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
                         tab.type,
                         props.renderTabAfterContent?.(tab, key, noop, {
                           searchValue,
+                          componentKey: "expandMarkets",
                         }),
                       )
                     : renderCustomContent(key)}

@@ -1,195 +1,54 @@
-import { useEffect, useState } from "react";
-import {
-  MaintenanceStatus,
-  useLocalStorage,
-  useMaintenanceStatus,
-  useMarketList,
-  useOrderlyContext,
-  useQuery,
-  useWS,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useContext, useEffect } from "react";
 import { useAppContext } from "@orderly.network/react-app";
-import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
-import {
-  filterDuplicateArrayById,
-  getTimeString,
-  shouldShowListingDelistingAnnouncement,
-  sortDataByUpdatedTime,
-} from "../utils";
+import { AnnouncementArticlesContext } from "../articles/context";
+import { toSummary } from "../articles/model";
+import { useLiveAnnouncements } from "../articles/useLiveAnnouncements";
+import { useAnnouncementCardState } from "./useAnnouncementCardState";
+import { useMaintenanceAnnouncement } from "./useMaintenanceAnnouncement";
 
-const maintentanceId = "-1";
-
+/**
+ * Presentation options for useAnnouncement; does not override the global source.
+ */
 export type AnnouncementOptions = {
+  /**
+   * Suppress returned and global carousel visibility without disabling reads.
+   * @default false
+   */
   hideTips?: boolean;
 };
-
-interface AnnouncementStore {
-  show?: boolean;
-  lastUpdateTime?: number | null;
-}
-
-const ORDERLY_ANNOUNCEMENT_KEY = "orderly_announcement";
-
-const useAnnouncementData = () => {
-  const { t } = useTranslation();
-  const ws = useWS();
-  const { dataAdapter } = useOrderlyContext();
-  const marketList = useMarketList();
-
-  const [announcementStore, setAnnouncementStore] =
-    useLocalStorage<AnnouncementStore>(ORDERLY_ANNOUNCEMENT_KEY, {});
-
-  const [tips, setTips] = useState<API.AnnouncementRow[]>([]);
-  const [maintenances, setMaintenances] = useState([] as API.AnnouncementRow[]);
-
-  const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<string>();
-
-  const { startTime, endTime, status, brokerName } = useMaintenanceStatus();
-
-  const { data: announcements } = useQuery<API.Announcement>(
-    `/v2/public/announcement`,
-    {
-      revalidateOnFocus: false,
-      refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
-      formatter: (data) => data,
-    },
-  );
-
-  const getMaintentTipsContent = (
-    brokerName: string,
-    startDate: string,
-    endDate: string,
-  ) => t("maintenance.tips.description", { brokerName, startDate, endDate });
-
-  const getMaintentDialogContent = (brokerName: string, endDate: string) =>
-    t("maintenance.dialog.description", { brokerName, endDate });
-
-  useEffect(() => {
-    const startDate = startTime ? getTimeString(startTime) : "-";
-    const endDate = endTime ? getTimeString(endTime) : "-";
-
-    const dialogContent =
-      status === MaintenanceStatus.Maintenance
-        ? getMaintentDialogContent(brokerName, endDate)
-        : undefined;
-
-    setMaintenanceDialogInfo(dialogContent);
-
-    if (startTime && endTime) {
-      setMaintenances([
-        {
-          announcement_id: maintentanceId,
-          type: AnnouncementType.Maintenance,
-          startTime: startTime,
-          endTime: endTime,
-          updated_time: startTime,
-          message: getMaintentTipsContent(brokerName, startDate, endDate),
-        },
-      ] as unknown as API.AnnouncementRow[]);
-    } else {
-      setMaintenances([]);
-    }
-  }, [startTime, endTime, status, brokerName, t]);
-
-  useEffect(() => {
-    let list = [...(maintenances ?? []), ...(announcements?.rows ?? [])];
-
-    if (typeof dataAdapter?.announcementList === "function") {
-      list = dataAdapter.announcementList(list);
-    }
-
-    list = list.filter((item) =>
-      shouldShowListingDelistingAnnouncement(item, marketList),
-    );
-
-    const removedDuplicateList = filterDuplicateArrayById(list);
-    const sortedList = sortDataByUpdatedTime(removedDuplicateList);
-
-    setTips(sortedList);
-  }, [maintenances, announcements, dataAdapter?.announcementList, marketList]);
-
-  useEffect(() => {
-    if (!announcements?.rows) {
-      return;
-    }
-    const lastUpdateTime = announcements.last_updated_time ?? 0;
-    const firstTipTime = tips[0]?.updated_time ?? 0;
-    const updatedTime = Math.max(lastUpdateTime, firstTipTime);
-
-    const closedTime = announcementStore.lastUpdateTime ?? 0;
-    if (closedTime < updatedTime) {
-      setAnnouncementStore({ show: true, lastUpdateTime: updatedTime });
-    }
-  }, [announcements, tips]);
-
-  useEffect(() => {
-    const unsubscribe = ws.subscribe("announcement", {
-      onMessage(message: WSMessage.Announcement) {
-        if (message) {
-          const newTip: API.AnnouncementRow = {
-            announcement_id: message.announcement_id,
-            message: message.message,
-            url: message.url,
-            i18n: message.i18n,
-            type: message.type,
-            updated_time: message.updated_time,
-          };
-          if (!shouldShowListingDelistingAnnouncement(newTip, marketList)) {
-            return;
-          }
-          setTips((prev) => {
-            const list = prev.filter(
-              (item) => item.announcement_id !== message.announcement_id,
-            );
-            return [...list, newTip];
-          });
-          // @ts-ignore
-          setAnnouncementStore((prev) => ({ ...prev, show: true }));
-        }
-      },
-    });
-    return () => {
-      unsubscribe?.();
-    };
-  }, [ws, marketList]);
-
-  return {
-    tips,
-    maintenanceDialogInfo,
-    announcementStore,
-    setAnnouncementStore,
-  };
-};
-
+/**
+ * Return value of useAnnouncement, including shared bell/card state and maintenance reminders.
+ */
 export type AnnouncementReturn = ReturnType<typeof useAnnouncement>;
 
-export const useAnnouncement = (options?: AnnouncementOptions) => {
-  const { showAnnouncement, setShowAnnouncement } = useAppContext();
-
-  const {
-    tips,
-    maintenanceDialogInfo,
-    announcementStore,
-    setAnnouncementStore,
-  } = useAnnouncementData();
-
-  const closeTips = () => {
-    // @ts-ignore
-    setAnnouncementStore((prev) => ({ ...prev, show: false }));
-  };
-
-  useEffect(() => {
-    const len = tips.length;
-    setShowAnnouncement(
-      Boolean(len) && announcementStore.show && !options?.hideTips,
-    );
-  }, [tips, announcementStore.show, options?.hideTips, setShowAnnouncement]);
-
+/**
+ * Reads the ancestor source, or creates an automatic source for standalone use.
+ * Use a shared AnnouncementProvider for multiple custom entry points.
+ * @param options - Presentation options; hideTips defaults to false.
+ * @returns Shared bell tips, independent cardTips, unread/dismissal actions and maintenance state.
+ * closeTips dismisses cards; openMessageCenter also acknowledges ordinary unread state.
+ * Official posts are included by default; set widgetConfigs.announcement.excludeOfficial
+ * to true to exclude them from the automatic source.
+ */
+export function useAnnouncement(options?: AnnouncementOptions) {
+  const context = useContext(AnnouncementArticlesContext);
+  const automatic = useLiveAnnouncements(!context);
+  const maintenance = useMaintenanceAnnouncement();
+  const source =
+    context?.scaffoldState ??
+    (context
+      ? { ...automatic.scaffoldState!, tips: context.articles.map(toSummary) }
+      : automatic.scaffoldState!);
+  const state = useAnnouncementCardState(source, maintenance);
+  const { setShowAnnouncement } = useAppContext();
+  const showAnnouncement = !options?.hideTips && state.showAnnouncement;
+  useEffect(
+    () => setShowAnnouncement(showAnnouncement),
+    [showAnnouncement, setShowAnnouncement],
+  );
   return {
-    maintenanceDialogInfo,
-    tips,
-    closeTips,
+    ...state,
+    maintenanceTips: source.maintenanceTips ?? maintenance.tips,
     showAnnouncement,
   };
-};
+}

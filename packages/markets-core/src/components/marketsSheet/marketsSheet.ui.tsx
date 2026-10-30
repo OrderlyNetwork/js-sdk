@@ -86,6 +86,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     const hide = props.hide ?? noop;
     const afterContent = props.renderTabAfterContent?.(tab, key, hide, {
       searchValue,
+      componentKey: "marketsSheet",
     });
     const hasSupplementalContent = Boolean(afterContent);
     const useParentScroll =
@@ -238,6 +239,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
             tab,
             key,
             props.hide ?? noop,
+            { componentKey: "marketsSheet" },
           );
 
           return (

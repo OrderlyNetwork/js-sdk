@@ -5,6 +5,7 @@ import { UnFavoritesIcon } from "../../icons";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { useMarketsListFullColumns } from "../marketsListFull/column";
 import { useMarketsContext } from "../marketsProvider";
+import { desktopMarketsTableClassName } from "../shared/desktopMarketsTable";
 import { LowVolumeEmptyView } from "../shared/lowVolumeEmptyView";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 
@@ -53,6 +54,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
             isHiddenByLowVolumeFilter ? <LowVolumeEmptyView /> : emptyView
           }
           classNames={{
+            root: desktopMarketsTableClassName,
             empty: isHiddenByLowVolumeFilter
               ? "oui-items-start oui-pt-16"
               : "oui-items-start oui-mt-6",

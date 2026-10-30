@@ -5,13 +5,15 @@ import type {
   SWRMutationConfiguration,
 } from "swr/mutation";
 import useSWRMutation from "swr/mutation";
+import { usePluginScope } from "@orderly.network/plugin-core";
 import { SDKError } from "@orderly.network/types";
 import { useConfig } from "./useConfig";
+import { PLUGIN_ID_HEADER } from "./useQuery";
 import { fetcher } from "./utils/fetcher";
 
 /**
- * useQuery
- * @description for public api
+ * useLazyQuery
+ * @description Lazily requests public APIs and preserves plugin attribution headers.
  * @param query
  * @param options
  */
@@ -21,8 +23,9 @@ export const useLazyQuery = <T, R = any>(
     formatter?: (data: any) => R;
     init?: RequestInit;
   },
-): SWRMutationResponse => {
+): SWRMutationResponse<any, any, Parameters<SWRHook>[0], any> => {
   const apiBaseUrl = useConfig("apiBaseUrl");
+  const pluginScope = usePluginScope();
   const { formatter, init, ...swrOptions } = options || {};
   // check the query is public api
   // if (typeof query === "string" && !query.startsWith("/v1/public")) {
@@ -46,7 +49,10 @@ export const useLazyQuery = <T, R = any>(
           .join("&");
         url = `${url}?${queryString}`;
       }
-      return fetcher(url, init, { formatter });
+      const headers = new Headers(init?.headers);
+      if (pluginScope?.pluginId)
+        headers.set(PLUGIN_ID_HEADER, pluginScope.pluginId);
+      return fetcher(url, { ...init, headers }, { formatter });
     },
     swrOptions,
   );

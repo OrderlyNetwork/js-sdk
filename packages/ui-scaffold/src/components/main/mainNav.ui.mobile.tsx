@@ -105,7 +105,7 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
         className="oui-relative"
       >
         <ChevronLeftIcon
-          className="oui-absolute oui-start-6 oui-text-base-contrast-54"
+          className="oui-absolute oui-start-6 oui-text-base-contrast-54 rtl:oui-rotate-180"
           onClick={onBack}
         />
         <Text className="oui-text-base oui-font-bold oui-text-base-contrast">
