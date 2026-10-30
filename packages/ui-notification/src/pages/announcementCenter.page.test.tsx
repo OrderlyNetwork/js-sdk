@@ -26,6 +26,11 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("announcement page navigation", () => {
+  it("forwards root classes to the connected widget", () => {
+    render(<AnnouncementCenterPage className="host-announcement-page" />);
+    expect(widgetProps().className).toBe("host-announcement-page");
+  });
+
   it.each([
     "/announcement/release-notes?is_official=true&category=legal&page=2",
     "/announcement?category=legal",

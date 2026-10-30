@@ -8,6 +8,32 @@ import {
 } from "./markdown";
 
 describe("Markdown content", () => {
+  it("retains root classes and the table scroll hook for rich article content", () => {
+    const markup = renderToStaticMarkup(
+      <AnnouncementMarkdown
+        className="host-article"
+        content={[
+          "# Title",
+          "[Read more](https://example.com)",
+          "![Cover](https://example.com/image.png)",
+          "| Header |\n| --- |\n| Cell |",
+          "```js\nconst value = 1;\n```",
+        ].join("\n\n")}
+      />,
+    );
+    const rootClasses = markup.match(/^<div class="([^"]+)"/)?.[1].split(/\s+/);
+    expect(rootClasses).toEqual(
+      expect.arrayContaining([
+        "host-article",
+        "oui-announcement-markdown",
+        "oui-notification-announcementMarkdown",
+      ]),
+    );
+    expect(markup).toContain(
+      "oui-notification-announcementMarkdown-table-scroll",
+    );
+  });
+
   it.each([
     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "https://youtu.be/dQw4w9WgXcQ?si=share",

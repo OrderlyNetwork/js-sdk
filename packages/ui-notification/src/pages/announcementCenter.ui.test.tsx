@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { StrictMode, type HTMLAttributes } from "react";
+import { StrictMode, type ComponentProps, type HTMLAttributes } from "react";
 import {
   act,
   cleanup,
@@ -71,7 +71,9 @@ const props: AnnouncementCenterScriptReturns = {
   selectPage: vi.fn(),
   retry: vi.fn(),
 };
-const page = (overrides: Partial<AnnouncementCenterScriptReturns> = {}) => (
+const page = (
+  overrides: Partial<ComponentProps<typeof AnnouncementPageUI>> = {},
+) => (
   <StrictMode>
     <OrderlyThemeProvider>
       <AnnouncementPageUI {...props} {...overrides} />
@@ -86,6 +88,52 @@ afterEach(() => {
 });
 
 describe("announcement source tabs", () => {
+  it.each([false, true])(
+    "forwards root classes with isDetail=%s",
+    (isDetail) => {
+      const { container } = render(
+        page({ isDetail, className: "host-announcement" }),
+      );
+      expect(container.firstElementChild?.tagName).toBe("MAIN");
+      expect(
+        container.firstElementChild?.classList.contains("host-announcement"),
+      ).toBe(true);
+      expect(
+        container.firstElementChild?.classList.contains(
+          isDetail ? "oui-announcement-detail" : "oui-announcement-center",
+        ),
+      ).toBe(true);
+    },
+  );
+
+  it("scopes hiding hooks to the filter controls, outside the content panel", () => {
+    const { container } = render(page());
+    const sourceFilter = container.querySelector(
+      ".oui-notification-sourceFilter",
+    );
+    expect(sourceFilter?.contains(screen.getByRole("tablist"))).toBe(true);
+    expect(sourceFilter?.contains(screen.getByRole("tabpanel"))).toBe(false);
+    expect(sourceFilter?.contains(screen.getByText("Current article"))).toBe(
+      false,
+    );
+    expect(
+      container.querySelector(".oui-notification-categoryFilter")?.tagName,
+    ).toBe("ASIDE");
+    for (const source of ["all", "community", "official"]) {
+      const trigger = container.querySelector(
+        `.oui-notification-sourceFilter-${source}-btn`,
+      );
+      expect(trigger?.getAttribute("role")).toBe("tab");
+      expect(
+        trigger?.classList.contains("oui-notification-sourceFilter-btn"),
+      ).toBe(true);
+    }
+    expect(
+      container.querySelector(".oui-notification-categoryFilter-campaign-btn")
+        ?.tagName,
+    ).toBe("BUTTON");
+  });
+
   it("uses the configured broker name between All and System", () => {
     render(page({ platformName: "  Orderly Demo  " }));
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([

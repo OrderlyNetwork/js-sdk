@@ -11,6 +11,8 @@ import { AnnouncementCenterWidget } from "./announcementCenter.widget";
  * @returns The list when no locator is supplied, otherwise the selected article view.
  */
 export const AnnouncementCenterPage: FC<{
+  /** Additional classes applied to the list or detail page root. */
+  className?: string;
   /** Page navigation override. Priority: this adapter, then OrderlyAppProvider.onRouteChange. */
   routerAdapter?: RouterAdapter;
   /** Backend slug for detail lookup; a non-empty value takes precedence over id. Omit both locators for the list. */
@@ -25,6 +27,7 @@ export const AnnouncementCenterPage: FC<{
     props.routerAdapter?.onRouteChange ?? globalOnRouteChange;
   return (
     <AnnouncementCenterWidget
+      className={props.className}
       slug={props.slug}
       id={props.id}
       isOfficial={props.isOfficial}

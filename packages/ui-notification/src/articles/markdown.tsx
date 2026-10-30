@@ -1,5 +1,6 @@
 import { createElement, type ReactNode } from "react";
 import MarkdownIt from "markdown-it";
+import { cn } from "@orderly.network/ui";
 import { AnnouncementVideo } from "./announcementVideo";
 
 export interface MarkdownToken {
@@ -263,7 +264,11 @@ function renderTokens(tokens: MarkdownToken[]): ReactNode[] {
             token.tag === "table"
               ? createElement(
                   "div",
-                  { key, className: "oui-overflow-x-auto" },
+                  {
+                    key,
+                    className:
+                      "oui-notification-announcementMarkdown-table-scroll oui-overflow-x-auto",
+                  },
                   element,
                 )
               : element,
@@ -282,9 +287,21 @@ function renderTokens(tokens: MarkdownToken[]): ReactNode[] {
  * @param props - Article content in Markdown; explicitly marked supported video links can embed.
  * @returns The rendered article body.
  */
-export function AnnouncementMarkdown({ content }: { content: string }) {
+export function AnnouncementMarkdown({
+  content,
+  className,
+}: {
+  content: string;
+  /** Additional classes applied to the article body root. */
+  className?: string;
+}) {
   return (
-    <div className="oui-announcement-markdown oui-text-sm oui-space-y-6 oui-break-words oui-font-normal oui-text-base-contrast-80">
+    <div
+      className={cn(
+        "oui-notification-announcementMarkdown oui-announcement-markdown oui-text-sm oui-space-y-6 oui-break-words oui-font-normal oui-text-base-contrast-80",
+        className,
+      )}
+    >
       {renderTokens(parser.parse(content, {}))}
     </div>
   );

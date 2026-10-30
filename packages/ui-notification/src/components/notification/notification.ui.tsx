@@ -8,6 +8,7 @@ import {
   Divider,
   Flex,
   Text,
+  cn,
 } from "@orderly.network/ui";
 import type { AnnouncementSummary } from "../../types";
 import { resolveCardId } from "../../utils/cardSelection";
@@ -30,7 +31,7 @@ import {
  * Props for the notification carousel; the host owns popup visibility and positioning.
  */
 export interface NotificationProps {
-  /** Accepted compatibility prop; currently not applied to the rendered carousel. */
+  /** Additional classes applied to the carousel root. */
   className?: string;
   /** Visible cards, normally useAnnouncement().cardTips; an empty array renders nothing. */
   dataSource: AnnouncementSummary[];
@@ -90,34 +91,54 @@ const NotificationHeader: FC<{
         return (
           <Text
             size="sm"
-            className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
+            className="oui-notification-header-category oui-bg-clip-text oui-text-transparent oui-gradient-brand"
           >
             {t("notification.campaign")}
           </Text>
         );
       case AnnouncementType.Delisting:
-        return <Text size="sm">{t("notification.delistingTitle")}</Text>;
+        return (
+          <Text className="oui-notification-header-category" size="sm">
+            {t("notification.delistingTitle")}
+          </Text>
+        );
       case AnnouncementType.Listing:
         return (
-          <Text size="sm" color="buy">
+          <Text
+            className="oui-notification-header-category"
+            size="sm"
+            color="buy"
+          >
             {t("notification.listing")}
           </Text>
         );
       case AnnouncementType.Maintenance:
         return (
-          <Text size="sm" color="warning">
+          <Text
+            className="oui-notification-header-category"
+            size="sm"
+            color="warning"
+          >
             {t("notification.maintenanceTitle")}
           </Text>
         );
       case AnnouncementType.Vote:
         return (
-          <Text size="sm" color="inherit">
+          <Text
+            className="oui-notification-header-category"
+            size="sm"
+            color="inherit"
+          >
             {t("notification.vote")}
           </Text>
         );
       default:
         return (
-          <Text size="sm" color="inherit">
+          <Text
+            className="oui-notification-header-category"
+            size="sm"
+            color="inherit"
+          >
             {t("notification.generalTitle")}
           </Text>
         );
@@ -138,11 +159,19 @@ const NotificationHeader: FC<{
     }
   }, [type]);
   return (
-    <Flex itemAlign="center" justify="between" className="oui-px-4 oui-py-3">
-      <div className="orderly-notification-header oui-flex oui-min-w-0 oui-flex-wrap oui-items-center oui-gap-2">
+    <Flex
+      itemAlign="center"
+      justify="between"
+      className="oui-notification-header oui-px-4 oui-py-3"
+    >
+      <div className="oui-notification-header-title orderly-notification-header oui-flex oui-min-w-0 oui-flex-wrap oui-items-center oui-gap-2">
         {!category && icon}
         {category ? (
-          <Text size="sm" color="primary">
+          <Text
+            className="oui-notification-header-category"
+            size="sm"
+            color="primary"
+          >
             {categoryLabels()[category]}
           </Text>
         ) : (
@@ -155,12 +184,16 @@ const NotificationHeader: FC<{
           expanded ? "notification.collapse" : "notification.expand",
         )}
         onClick={props.onExpandToggle}
-        className="oui-transition-transform oui-duration-300"
+        className="oui-notification-expand-btn oui-transition-transform oui-duration-300"
         style={{
           transform: !expanded ? "rotate(180deg)" : "rotate(0deg)",
         }}
       >
-        <ChevronDownIcon size={18} color="white" />
+        <ChevronDownIcon
+          className="oui-notification-expand-icon"
+          size={18}
+          color="white"
+        />
       </button>
     </Flex>
   );
@@ -177,21 +210,29 @@ const NotificationFooter: FC<{
   const { t } = useTranslation();
   return (
     <Flex
-      className="orderly-notification-footer oui-px-4 oui-py-2"
+      className="oui-notification-footer orderly-notification-footer oui-px-4 oui-py-2"
       itemAlign="center"
       justify="between"
     >
-      <Flex gap={2}>
+      <Flex gap={2} className="oui-notification-pagination">
         <button
           type="button"
           aria-label={t("notification.previous")}
           disabled={current - 1 < 0}
           onClick={onPrev}
-          className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 hover:oui-bg-base-5 disabled:oui-opacity-50"
+          className="oui-notification-previous-btn oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 hover:oui-bg-base-5 disabled:oui-opacity-50"
         >
-          <ChevronLeftIcon size={14} color="white" />
+          <ChevronLeftIcon
+            className="oui-notification-previous-icon"
+            size={14}
+            color="white"
+          />
         </button>
-        <Text intensity={54} size="sm">
+        <Text
+          intensity={54}
+          size="sm"
+          className="oui-notification-pagination-count"
+        >
           {current + 1}/{total}
         </Text>
         <button
@@ -199,13 +240,21 @@ const NotificationFooter: FC<{
           aria-label={t("notification.next")}
           disabled={current + 1 >= total}
           onClick={onNext}
-          className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 hover:oui-bg-base-5 disabled:oui-opacity-50"
+          className="oui-notification-next-btn oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-6 hover:oui-bg-base-5 disabled:oui-opacity-50"
         >
-          <ChevronRightIcon size={14} color="white" />
+          <ChevronRightIcon
+            className="oui-notification-next-icon"
+            size={14}
+            color="white"
+          />
         </button>
       </Flex>
-      <button onClick={onCloseAll}>
-        <Text size="xs" color="primary">
+      <button className="oui-notification-close-all-btn" onClick={onCloseAll}>
+        <Text
+          className="oui-notification-close-all-label"
+          size="xs"
+          color="primary"
+        >
           {t("notification.closeAll", { total })}
         </Text>
       </button>
@@ -229,12 +278,18 @@ const NotificationContent: FC<{
             key={message.announcement_id}
             type="button"
             onClick={() => props.onItemClick(message.url!)}
-            className="oui-announcement-notification-content oui-flex oui-w-full oui-flex-col oui-gap-3 oui-rounded-md oui-text-start focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
+            className="oui-notification-content-btn oui-announcement-notification-content oui-flex oui-w-full oui-flex-col oui-gap-3 oui-rounded-md oui-text-start focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
           >
-            <Text size="base" weight="semibold" intensity={98}>
+            <Text
+              size="base"
+              weight="semibold"
+              intensity={98}
+              className="oui-notification-content-title"
+            >
               {message.title}
             </Text>
             <Text.formatted
+              className="oui-notification-content-time"
               size="2xs"
               intensity={36}
               rule="date"
@@ -247,7 +302,7 @@ const NotificationContent: FC<{
                 size="xs"
                 weight="regular"
                 intensity={80}
-                className="oui-line-clamp-3"
+                className="oui-notification-content-message oui-line-clamp-3"
               >
                 {message.message}
               </Text>
@@ -340,7 +395,12 @@ export const NotificationUI: FC<
   }
 
   return (
-    <div className="orderly-notification oui-w-full ">
+    <div
+      className={cn(
+        "oui-notification orderly-notification oui-w-full ",
+        props.className,
+      )}
+    >
       <NotificationHeader
         dataSource={props.dataSource ?? []}
         current={current}
@@ -349,16 +409,16 @@ export const NotificationUI: FC<
           setExpanded(!expanded);
         }}
       />
-      <Divider className="oui-mx-4" />
+      <Divider className="oui-notification-divider oui-mx-4" />
       <div
-        className="oui-grid oui-transition-all oui-duration-300 oui-ease-in-out"
+        className="oui-notification-content oui-grid oui-transition-all oui-duration-300 oui-ease-in-out"
         style={{
           gridTemplateRows: expanded ? "1fr" : "0fr",
         }}
       >
         {/* Inner div needs overflow-hidden and min-height-0 for grid animation to work */}
-        <div className="oui-min-h-0 oui-overflow-hidden ">
-          <div className="oui-px-4 oui-py-3">
+        <div className="oui-notification-content-viewport oui-min-h-0 oui-overflow-hidden ">
+          <div className="oui-notification-content-body oui-px-4 oui-py-3">
             <AnnouncementSourceBadge
               isOfficial={props.dataSource[current].is_official}
               platformName={props.platformName}

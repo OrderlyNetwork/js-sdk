@@ -11,6 +11,16 @@ import {
   toSummary,
   type AnnouncementCenterScriptReturns,
 } from "@orderly.network/ui-notification";
+import { AnnouncementDetailSkeleton } from "../announcementDetailSkeleton";
+import { AnnouncementListSkeleton } from "../announcementListSkeleton";
+import {
+  CampaignContentCard,
+  CommunityVoteContentCard,
+  DelistingContentCard,
+  ListingContentCard,
+  MaintenanceContentCard,
+} from "../notification/contentCard";
+import { AnnouncementContent } from "./announcementCenter.ui";
 
 vi.mock("@orderly.network/hooks", () => ({}));
 vi.mock("@orderly.network/react-app", () => ({}));
@@ -377,10 +387,149 @@ describe("hidden announcement source labels", () => {
         />,
       );
       expect(markup).not.toContain("data-announcement-source=");
-      expect(markup).toContain("<article><h1>");
+      expect(markup).toMatch(/<article[^>]*><h1>/);
+      expect(markup).not.toContain("oui-notification-sourceBadge-slot");
       expect(markup).toContain(article.title);
       expect(markup).toContain("Campaign details");
       expect(markup).toContain("<time");
     },
   );
+});
+
+describe("notification override hooks", () => {
+  it("forwards custom root classes and preserves carousel compatibility classes", () => {
+    const markup = renderToStaticMarkup(
+      <NotificationUI
+        dataSource={tips}
+        onItemClick={vi.fn()}
+        className="host-notification"
+      />,
+    );
+    const rootClass = markup.match(/^<div class="([^"]+)"/)?.[1].split(/\s+/);
+    expect(rootClass).toEqual(
+      expect.arrayContaining([
+        "host-notification",
+        "oui-notification",
+        "orderly-notification",
+        "oui-w-full",
+      ]),
+    );
+    expect(markup).toContain("orderly-notification-header");
+    expect(markup).toContain("orderly-notification-footer");
+  });
+
+  it("exposes a shared badge hook and a spacing slot on detail pages", () => {
+    const badge = renderToStaticMarkup(<AnnouncementSourceBadge isOfficial />);
+    expect(badge).toContain("oui-notification-sourceBadge ");
+    expect(badge).toContain('data-announcement-source="official"');
+    const detail = renderToStaticMarkup(
+      <AnnouncementPageUI {...pageProps} isDetail article={articles[0]} />,
+    );
+    expect(detail).toContain(
+      'class="oui-notification-sourceBadge-slot oui-mb-4"',
+    );
+    expect(detail).toContain("oui-notification-announcementDetail-article");
+  });
+});
+
+describe("additional component className forwarding", () => {
+  const hostClass = "host-override";
+  it.each([
+    [
+      "bell panel",
+      () => (
+        <AnnouncementCenterUI
+          className={hostClass}
+          dataSource={tips}
+          onItemClick={vi.fn()}
+        />
+      ),
+    ],
+    [
+      "bell list",
+      () => (
+        <AnnouncementContent
+          className={hostClass}
+          dataSource={tips}
+          current={null}
+          onExpandToggle={vi.fn()}
+          onItemClick={vi.fn()}
+        />
+      ),
+    ],
+    [
+      "empty bell list",
+      () => (
+        <AnnouncementContent
+          className={hostClass}
+          dataSource={[]}
+          current={null}
+          onExpandToggle={vi.fn()}
+          onItemClick={vi.fn()}
+        />
+      ),
+    ],
+    [
+      "detail skeleton",
+      () => <AnnouncementDetailSkeleton className={hostClass} />,
+    ],
+    ["list skeleton", () => <AnnouncementListSkeleton className={hostClass} />],
+    [
+      "campaign card",
+      () => (
+        <CampaignContentCard
+          className={hostClass}
+          message="Campaign"
+          coverImage=""
+          updateTime={1}
+          onItemClick={vi.fn()}
+        />
+      ),
+    ],
+    [
+      "vote card",
+      () => (
+        <CommunityVoteContentCard
+          className={hostClass}
+          message="Vote"
+          onItemClick={vi.fn()}
+        />
+      ),
+    ],
+    [
+      "delisting card",
+      () => (
+        <DelistingContentCard
+          className={hostClass}
+          message="Delisting"
+          updateTime={1}
+        />
+      ),
+    ],
+    [
+      "listing card",
+      () => (
+        <ListingContentCard
+          className={hostClass}
+          message="Listing"
+          updateTime={1}
+        />
+      ),
+    ],
+    [
+      "maintenance card",
+      () => (
+        <MaintenanceContentCard className={hostClass} message="Maintenance" />
+      ),
+    ],
+  ])("applies external classes to the %s root", (_, element) => {
+    const markup = renderToStaticMarkup((element as () => ReactNode)());
+    const rootClasses = markup
+      .match(/^<div[^>]*class="([^"]+)"/)?.[1]
+      .split(/\s+/);
+    expect(rootClasses).toContain(hostClass);
+    expect(
+      rootClasses?.some((name) => name.startsWith("oui-notification-")),
+    ).toBe(true);
+  });
 });

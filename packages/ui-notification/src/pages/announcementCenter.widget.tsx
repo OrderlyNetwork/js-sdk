@@ -4,6 +4,7 @@ import { useAnnouncementCenterScript } from "./announcementCenter.script";
 import { AnnouncementPageUI } from "./announcementCenter.ui";
 
 type AnnouncementCenterWidgetProps = {
+  className?: string;
   slug?: string;
   id?: string;
   isOfficial?: boolean;
@@ -26,7 +27,7 @@ const ArticleAnnouncementCenterWidget: FC<AnnouncementCenterWidgetProps> = (
     isOfficial: props.isOfficial,
     onRouteChange,
   });
-  return <AnnouncementPageUI {...state} />;
+  return <AnnouncementPageUI {...state} className={props.className} />;
 };
 
 export const AnnouncementCenterWidget: FC<AnnouncementCenterWidgetProps> = (

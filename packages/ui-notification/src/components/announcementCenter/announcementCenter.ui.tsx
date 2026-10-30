@@ -14,6 +14,8 @@ import { AnnouncementSourceBadge } from "../announcementSourceBadge";
 import { AnnouncementItem } from "./announcementItem";
 
 export const AnnouncementContent: FC<{
+  /** Additional classes applied to the list or empty-state root. */
+  className?: string;
   dataSource: AnnouncementSummary[];
   current: string | number | null;
   onExpandToggle: (id: string | number | null) => void;
@@ -27,7 +29,12 @@ export const AnnouncementContent: FC<{
 
   if (!Array.isArray(dataSource) || dataSource.length === 0) {
     return (
-      <div className="oui-flex oui-h-[160px] oui-items-center oui-justify-center">
+      <div
+        className={cn(
+          "oui-notification-announcementCenter-empty oui-flex oui-h-[160px] oui-items-center oui-justify-center",
+          props.className,
+        )}
+      >
         <InjectableEmptyDataState title={t("notification.empty")} />
       </div>
     );
@@ -36,7 +43,8 @@ export const AnnouncementContent: FC<{
   return (
     <div
       className={cn(
-        "oui-flex oui-flex-col oui-space-y-1",
+        "oui-notification-announcementCenter-list oui-flex oui-flex-col oui-space-y-1",
+        props.className,
         props.showDivider &&
           "[&>*:not(:first-child)]:oui-border-t [&>*:not(:first-child)]:oui-border-line-12  [&>*:not(:first-child)]:oui-pt-1",
       )}
@@ -47,7 +55,7 @@ export const AnnouncementContent: FC<{
             type="button"
             key={item.announcement_id}
             onClick={() => item.url && onItemClick(item.url)}
-            className="oui-announcement-summary oui-flex oui-w-full oui-flex-col oui-gap-1 oui-rounded-md oui-px-2 oui-py-3 oui-text-start hover:oui-bg-base-6 focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
+            className="oui-notification-announcementCenter-item-btn oui-announcement-summary oui-flex oui-w-full oui-flex-col oui-gap-1 oui-rounded-md oui-px-2 oui-py-3 oui-text-start hover:oui-bg-base-6 focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
           >
             {props.showSourceBadge !== false && (
               <AnnouncementSourceBadge
@@ -56,10 +64,16 @@ export const AnnouncementContent: FC<{
                 className="oui-self-start"
               />
             )}
-            <Text size="xs" weight="semibold" intensity={80}>
+            <Text
+              className="oui-notification-announcementCenter-item-title"
+              size="xs"
+              weight="semibold"
+              intensity={80}
+            >
               {item.title}
             </Text>
             <Text.formatted
+              className="oui-notification-announcementCenter-item-time"
               size="2xs"
               intensity={36}
               rule="date"
@@ -103,6 +117,8 @@ export const AnnouncementContent: FC<{
  * @returns A summary list; loading/error states keep maintenance visible and hide ordinary rows.
  */
 export const AnnouncementCenterUI: FC<{
+  /** Additional classes applied to the bell panel root. */
+  className?: string;
   /** Localized bell summaries and optional maintenance reminders. */
   dataSource: AnnouncementSummary[];
   /** Handles a destination URL; this UI does not perform navigation. */
@@ -165,17 +181,24 @@ export const AnnouncementCenterUI: FC<{
   }, [ContentArea]);
 
   return (
-    <>
-      <div className="oui-px-5 oui-pt-4">
-        <Text intensity={80} weight="bold">
+    <div className={cn("oui-notification-announcementCenter", props.className)}>
+      <div className="oui-notification-announcementCenter-header oui-px-5 oui-pt-4">
+        <Text
+          className="oui-notification-announcementCenter-title"
+          intensity={80}
+          weight="bold"
+        >
           {t("notification.title")}
         </Text>
       </div>
 
-      <div ref={contentRef} className="oui-relative">
+      <div
+        ref={contentRef}
+        className="oui-notification-announcementCenter-content oui-relative"
+      >
         <ContentArea
           {...(ContentArea === ScrollArea ? { type: "auto" as const } : {})}
-          className="oui-flex oui-h-[300px] oui-flex-col oui-p-3 [&>[data-orientation=vertical]>div]:oui-bg-base-contrast-20 [&>[data-orientation=vertical]>div:hover]:oui-bg-base-contrast-30"
+          className="oui-notification-announcementCenter-scroll-area oui-flex oui-h-[300px] oui-flex-col oui-p-3 [&>[data-orientation=vertical]>div]:oui-bg-base-contrast-20 [&>[data-orientation=vertical]>div:hover]:oui-bg-base-contrast-30"
         >
           {(dataSource.length > 0 || !unavailable) && (
             <AnnouncementContent
@@ -191,20 +214,20 @@ export const AnnouncementCenterUI: FC<{
             <div
               role="status"
               aria-label={t("notification.loading")}
-              className="oui-min-w-0"
+              className="oui-notification-announcementCenter-loading oui-min-w-0"
             >
               <AnnouncementListSkeleton compact />
             </div>
           ) : props.status === "error" ? (
             <div
               role="alert"
-              className="oui-announcement-error oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-gap-4 oui-px-5 oui-py-6 oui-text-center"
+              className="oui-notification-announcementCenter-error oui-announcement-error oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-gap-4 oui-px-5 oui-py-6 oui-text-center"
             >
               <Text
                 as="p"
                 size="xs"
                 intensity={54}
-                className="oui-max-w-[240px] oui-break-words oui-whitespace-normal oui-leading-5"
+                className="oui-notification-announcementCenter-error-message oui-max-w-[240px] oui-break-words oui-whitespace-normal oui-leading-5"
               >
                 {t("notification.loadFailed")}
               </Text>
@@ -212,7 +235,7 @@ export const AnnouncementCenterUI: FC<{
                 variant="contained"
                 color="primary"
                 size="sm"
-                className="oui-shrink-0 oui-px-4"
+                className="oui-notification-announcementCenter-retry-btn oui-shrink-0 oui-px-4"
                 onClick={props.retry}
               >
                 {t("notification.retry")}
@@ -228,17 +251,17 @@ export const AnnouncementCenterUI: FC<{
         )}
       </div>
       {props.onViewAll && (
-        <div className="oui-flex oui-justify-center oui-px-3 oui-pb-3">
+        <div className="oui-notification-announcementCenter-footer oui-flex oui-justify-center oui-px-3 oui-pb-3">
           <Button
             variant="text"
             size="sm"
-            className="oui-text-primary-light"
+            className="oui-notification-announcementCenter-view-all-btn oui-text-primary-light"
             onClick={props.onViewAll}
           >
             {t("notification.viewAll")}
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 };

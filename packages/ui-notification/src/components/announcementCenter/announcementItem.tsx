@@ -99,13 +99,18 @@ export const AnnouncementItem: FC<{
       }
 
       return (
-        <Text size="2xs" intensity={36} className="oui-whitespace-normal">
+        <Text
+          size="2xs"
+          intensity={36}
+          className="oui-notification-announcementItem-time oui-whitespace-normal"
+        >
           <span dir="ltr">{maintenanceTime}</span>
         </Text>
       );
     }
     return (
       <Text.formatted
+        className="oui-notification-announcementItem-time"
         size="2xs"
         intensity={36}
         rule="date"
@@ -120,7 +125,7 @@ export const AnnouncementItem: FC<{
     return (
       <div
         className={cn(
-          "oui-announcement-maintenance oui-min-w-0 oui-rounded-md oui-text-base-contrast-80 oui-transition-colors hover:oui-bg-base-6",
+          "oui-notification-announcementItem oui-notification-announcementItem-maintenance oui-announcement-maintenance oui-min-w-0 oui-rounded-md oui-text-base-contrast-80 oui-transition-colors hover:oui-bg-base-6",
           props.expanded && "oui-bg-base-6",
           props.className,
         )}
@@ -130,9 +135,9 @@ export const AnnouncementItem: FC<{
           aria-expanded={props.expanded}
           aria-controls={contentId}
           onClick={props.onExpandToggle}
-          className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-rounded-md oui-px-2 oui-py-3 oui-text-start focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
+          className="oui-notification-announcementItem-expand-btn oui-flex oui-w-full oui-items-center oui-gap-2 oui-rounded-md oui-px-2 oui-py-3 oui-text-start focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
         >
-          <span className="oui-flex oui-min-w-0 oui-flex-1 oui-flex-col oui-items-start oui-gap-1 oui-break-words [overflow-wrap:anywhere]">
+          <span className="oui-notification-announcementItem-header oui-flex oui-min-w-0 oui-flex-1 oui-flex-col oui-items-start oui-gap-1 oui-break-words [overflow-wrap:anywhere]">
             {props.showSourceBadge !== false && (
               <AnnouncementSourceBadge
                 isOfficial={props.isOfficial}
@@ -140,19 +145,19 @@ export const AnnouncementItem: FC<{
                 className="oui-self-start"
               />
             )}
-            <span className="oui-flex oui-max-w-full oui-items-center oui-gap-1">
+            <span className="oui-notification-announcementItem-heading oui-flex oui-max-w-full oui-items-center oui-gap-1">
               <Text
                 size="xs"
                 intensity={80}
                 weight="semibold"
-                className="oui-min-w-0"
+                className="oui-notification-announcementItem-title oui-min-w-0"
               >
                 {title}
               </Text>
               <SecurityIcon
                 size={14}
                 color="inherit"
-                className="oui-shrink-0 oui-text-base-contrast-54"
+                className="oui-notification-announcementItem-icon oui-shrink-0 oui-text-base-contrast-54"
                 aria-hidden="true"
               />
             </span>
@@ -164,7 +169,7 @@ export const AnnouncementItem: FC<{
             opacity={1}
             aria-hidden="true"
             className={cn(
-              "oui-shrink-0 oui-text-base-contrast-54 oui-transition-transform oui-duration-300 oui-ease-in-out motion-reduce:oui-transition-none",
+              "oui-notification-announcementItem-chevron oui-shrink-0 oui-text-base-contrast-54 oui-transition-transform oui-duration-300 oui-ease-in-out motion-reduce:oui-transition-none",
               props.expanded && "oui-rotate-180",
             )}
           />
@@ -172,15 +177,15 @@ export const AnnouncementItem: FC<{
         <div
           id={contentId}
           aria-hidden={!props.expanded}
-          className="oui-grid oui-transition-[grid-template-rows] oui-duration-300 oui-ease-in-out motion-reduce:oui-transition-none"
+          className="oui-notification-announcementItem-content oui-grid oui-transition-[grid-template-rows] oui-duration-300 oui-ease-in-out motion-reduce:oui-transition-none"
           style={{ gridTemplateRows: props.expanded ? "1fr" : "0fr" }}
         >
-          <div className="oui-min-h-0 oui-min-w-0 oui-overflow-hidden">
+          <div className="oui-notification-announcementItem-content-body oui-min-h-0 oui-min-w-0 oui-overflow-hidden">
             <Text
               as="div"
               size="2xs"
               intensity={80}
-              className="oui-select-text oui-whitespace-pre-wrap oui-break-words oui-px-2 oui-pb-3 oui-leading-5 [overflow-wrap:anywhere]"
+              className="oui-notification-announcementItem-message oui-select-text oui-whitespace-pre-wrap oui-break-words oui-px-2 oui-pb-3 oui-leading-5 [overflow-wrap:anywhere]"
             >
               {props.message}
             </Text>
@@ -201,7 +206,7 @@ export const AnnouncementItem: FC<{
       <Flex
         gap={1}
         itemAlign="center"
-        className="oui-cursor-pointer"
+        className="oui-notification-announcementItem-join-btn oui-cursor-pointer"
         onClick={(event) => {
           event.stopPropagation();
           props.onItemClick(props.url!);
@@ -214,7 +219,10 @@ export const AnnouncementItem: FC<{
         >
           {t("notification.joinNow")}
         </Text>
-        <ArrowRightShortIcon size={18} />
+        <ArrowRightShortIcon
+          className="oui-notification-announcementItem-join-icon"
+          size={18}
+        />
       </Flex>
     ) : null;
 
@@ -223,7 +231,7 @@ export const AnnouncementItem: FC<{
       gap={2}
       itemAlign="start"
       className={cn(
-        "oui-px-2 oui-py-[6px] oui-text-base-contrast-80",
+        "oui-notification-announcementItem oui-px-2 oui-py-[6px] oui-text-base-contrast-80",
         !props.showDivider && "oui-rounded-md hover:oui-bg-base-6",
         !props.showDivider && props.expanded && "oui-bg-base-6",
         props.className,
@@ -232,10 +240,18 @@ export const AnnouncementItem: FC<{
         props.onExpandToggle?.();
       }}
     >
-      <Icon color="white" className="oui-mt-3 oui-shrink-0" />
+      <Icon
+        color="white"
+        className="oui-notification-announcementItem-icon oui-mt-3 oui-shrink-0"
+      />
 
-      <Flex direction="column" itemAlign="start" grow>
-        <div className="oui-flex oui-flex-col oui-items-start oui-gap-1">
+      <Flex
+        className="oui-notification-announcementItem-body"
+        direction="column"
+        itemAlign="start"
+        grow
+      >
+        <div className="oui-notification-announcementItem-header oui-flex oui-flex-col oui-items-start oui-gap-1">
           {props.showSourceBadge !== false && (
             <AnnouncementSourceBadge
               isOfficial={props.isOfficial}
@@ -243,32 +259,42 @@ export const AnnouncementItem: FC<{
               className="oui-self-start"
             />
           )}
-          <Text size="xs" intensity={80} weight="bold">
+          <Text
+            className="oui-notification-announcementItem-title"
+            size="xs"
+            intensity={80}
+            weight="bold"
+          >
             {title}
           </Text>
         </div>
         {updateTime}
         {/* Expandable content with animation */}
         <div
-          className="oui-grid oui-transition-all oui-duration-300 oui-ease-in-out"
+          className="oui-notification-announcementItem-content oui-grid oui-transition-all oui-duration-300 oui-ease-in-out"
           style={{
             gridTemplateRows: props.expanded ? "1fr" : "0fr",
           }}
         >
-          <div className="oui-flex oui-flex-col oui-gap-2 oui-overflow-hidden">
-            <Text size="2xs" intensity={80} as="div" className="oui-pt-2">
+          <div className="oui-notification-announcementItem-content-body oui-flex oui-flex-col oui-gap-2 oui-overflow-hidden">
+            <Text
+              size="2xs"
+              intensity={80}
+              as="div"
+              className="oui-notification-announcementItem-message oui-pt-2"
+            >
               {props.message}
             </Text>
             {action}
           </div>
         </div>
       </Flex>
-      <div className="oui-pt-3">
+      <div className="oui-notification-announcementItem-chevron-slot oui-pt-3">
         {/* Chevron icon with rotation animation */}
         <ChevronDownIcon
           color="white"
           size={18}
-          className={`oui-transition-transform oui-duration-300 oui-ease-in-out ${
+          className={`oui-notification-announcementItem-chevron oui-transition-transform oui-duration-300 oui-ease-in-out ${
             props.expanded ? "oui-rotate-180" : "oui-rotate-0"
           }`}
         />

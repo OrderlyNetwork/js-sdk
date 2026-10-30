@@ -36,11 +36,13 @@ export function AnnouncementSourceBadge({
       title={label}
       aria-label={t("notification.source.label", { name: label })}
       className={cn(
-        "oui-max-w-[140px] oui-shrink-0 oui-align-middle",
+        "oui-notification-sourceBadge oui-max-w-[140px] oui-shrink-0 oui-align-middle",
         className,
       )}
     >
-      <span className="oui-min-w-0 oui-truncate">{label}</span>
+      <span className="oui-notification-sourceBadge-label oui-min-w-0 oui-truncate">
+        {label}
+      </span>
     </Badge>
   );
 }

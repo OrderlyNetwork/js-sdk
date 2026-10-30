@@ -25,6 +25,28 @@ afterEach(() => {
 });
 
 describe("announcement video loading", () => {
+  it("forwards root classes while preserving the video layout", () => {
+    const { container } = render(
+      <AnnouncementVideo src={src} title="Demo" className="host-video" />,
+    );
+    expect(container.firstElementChild?.classList.contains("host-video")).toBe(
+      true,
+    );
+    expect(
+      container.firstElementChild?.classList.contains("oui-aspect-video"),
+    ).toBe(true);
+    expect(
+      container.querySelector(".oui-notification-announcementVideo-spinner"),
+    ).not.toBeNull();
+    expect(
+      screen
+        .getByRole("status")
+        .classList.contains(
+          "oui-notification-announcementVideo-status-message",
+        ),
+    ).toBe(true);
+  });
+
   it("preserves a loaded player during text edits and resets when its video changes", () => {
     const content = '[Demo](https://youtu.be/dQw4w9WgXcQ "embed-video")';
     const { rerender } = render(<AnnouncementMarkdown content={content} />);
