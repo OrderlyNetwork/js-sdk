@@ -1,24 +1,41 @@
 import { FC, useCallback } from "react";
+import { AnnouncementProvider } from "../articles/provider";
 import { useAnnouncementCenterScript } from "./announcementCenter.script";
-import { AnnouncementCenterUI } from "./announcementCenter.ui";
+import { AnnouncementPageUI } from "./announcementCenter.ui";
 
-export const AnnouncementCenterWidget: FC<{
+type AnnouncementCenterWidgetProps = {
+  className?: string;
+  slug?: string;
+  id?: string;
+  isOfficial?: boolean;
   onRouteChange: (url: string) => void;
-}> = (props) => {
-  const { dataSource, current, setCurrent } = useAnnouncementCenterScript();
-  const onItemClick = useCallback(
+};
+
+const ArticleAnnouncementCenterWidget: FC<AnnouncementCenterWidgetProps> = (
+  props,
+) => {
+  const onRouteChange = useCallback(
     (url: string) => {
       if (!url) return;
       props.onRouteChange(url);
     },
     [props.onRouteChange],
   );
+  const state = useAnnouncementCenterScript({
+    slug: props.slug,
+    id: props.id,
+    isOfficial: props.isOfficial,
+    onRouteChange,
+  });
+  return <AnnouncementPageUI {...state} className={props.className} />;
+};
+
+export const AnnouncementCenterWidget: FC<AnnouncementCenterWidgetProps> = (
+  props,
+) => {
   return (
-    <AnnouncementCenterUI
-      dataSource={dataSource}
-      current={current}
-      setCurrent={setCurrent}
-      onItemClick={onItemClick}
-    />
+    <AnnouncementProvider>
+      <ArticleAnnouncementCenterWidget {...props} />
+    </AnnouncementProvider>
   );
 };

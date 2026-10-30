@@ -15,7 +15,6 @@ Provides scaffold/layout copy: announcement campaign, footer (join community, op
 
 | Key | Purpose |
 |-----|---------|
-| scaffold.announcement.campaign | Latest Campaign is coming |
 | scaffold.footer.joinCommunity | Join our community |
 | scaffold.footer.operational | Operational |
 | scaffold.footer.poweredBy | Powered by |

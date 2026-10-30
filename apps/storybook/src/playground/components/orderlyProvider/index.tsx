@@ -12,8 +12,9 @@ import { useNav } from "../../hooks/useNav";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
 const onLanguageChanged = async (lang: LocaleCode) => {
-  const path = removeLangPrefix(window.location.pathname);
-  window.history.replaceState({}, "", `/${lang}${path}`);
+  const { pathname, search, hash } = window.location;
+  const path = removeLangPrefix(pathname);
+  window.history.replaceState({}, "", `/${lang}${path}${search}${hash}`);
 };
 
 export const OrderlyProvider: React.FC = () => {
@@ -42,7 +43,7 @@ export const OrderlyProvider: React.FC = () => {
             isRwaRoute={isRwaRoute}
           >
             <ScrollToTop />
-            {/* because the portfolio layout is used in route layout, we need to render the outlet */}
+            {/* The outlet renders pages and nested route layouts. */}
             <Outlet />
           </OrderlyAppRootProvider>
         </WalletConnectorProvider>

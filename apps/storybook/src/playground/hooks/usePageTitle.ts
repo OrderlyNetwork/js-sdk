@@ -21,6 +21,9 @@ export function usePageTitle() {
     if (path.startsWith(PathEnum.Perp) && symbol) {
       title = formatSymbol(symbol, "base-type");
     }
+    if (path.startsWith(`${PathEnum.Announcement}/`)) {
+      title = PageTitleMap[PathEnum.Announcement];
+    }
 
     if (path.startsWith(`${PathEnum.Prediction}/`)) {
       title =

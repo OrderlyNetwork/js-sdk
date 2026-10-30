@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { cn, DataTable, type DataTableClassNames } from "@orderly.network/ui";
 import { useMarketsContext } from "../marketsProvider";
+import { desktopMarketsTableClassName } from "../shared/desktopMarketsTable";
 import { LowVolumeEmptyView } from "../shared/lowVolumeEmptyView";
 import { useMarketsListFullColumns } from "./column";
 import {
@@ -65,6 +66,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       pagination={pagination}
       classNames={{
         ...props.tableClassNames,
+        root: cn(desktopMarketsTableClassName, props.tableClassNames?.root),
         header: "oui-h-12",
         empty: isHiddenByLowVolumeFilter
           ? "oui-items-start oui-pt-16"

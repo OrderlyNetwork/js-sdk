@@ -1,19 +1,24 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import {
   OrderlyContext,
   useChains,
   useMemoizedFn,
 } from "@orderly.network/hooks";
-import { useAnnouncement } from "@orderly.network/ui-notification";
+import { useAppContext } from "@orderly.network/react-app";
+import {
+  AnnouncementProvider,
+  useAnnouncementArticles,
+  useMaintenanceAnnouncement,
+} from "@orderly.network/ui-notification";
 import { checkChainSupport } from "../../utils/chain";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
+import { useSharedAnnouncementState } from "./useSharedAnnouncementState";
 
 export type ScaffoldProviderProps = Omit<
   ScaffoldState,
   "checkChainSupport" | "announcementState"
 >;
-
-export const ScaffoldProvider: React.FC<
+const ScaffoldProviderContent: React.FC<
   React.PropsWithChildren<ScaffoldProviderProps>
 > = (props) => {
   const {
@@ -30,9 +35,17 @@ export const ScaffoldProvider: React.FC<
 
   const { networkId } = useContext<any>(OrderlyContext);
 
-  const announcementState = useAnnouncement();
-
-  // console.log("announcementState", announcementState);
+  const legacyAnnouncementState = useMaintenanceAnnouncement();
+  const articles = useAnnouncementArticles();
+  const announcementState = useSharedAnnouncementState(
+    articles.scaffoldState,
+    legacyAnnouncementState,
+  );
+  const { setShowAnnouncement } = useAppContext();
+  useEffect(
+    () => setShowAnnouncement(announcementState.showAnnouncement),
+    [announcementState.showAnnouncement, setShowAnnouncement],
+  );
 
   const checkChainSupportHandle = useMemoizedFn((chainId: number | string) => {
     return checkChainSupport(
@@ -69,3 +82,11 @@ export const ScaffoldProvider: React.FC<
     </ScaffoldContext.Provider>
   );
 };
+
+export const ScaffoldProvider: React.FC<
+  React.PropsWithChildren<ScaffoldProviderProps>
+> = (props) => (
+  <AnnouncementProvider>
+    <ScaffoldProviderContent {...props} />
+  </AnnouncementProvider>
+);

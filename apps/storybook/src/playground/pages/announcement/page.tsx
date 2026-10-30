@@ -1,49 +1,59 @@
-import React from "react";
+import { useNavigate } from "react-router";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
-import { AnnouncementCenterPage } from "@orderly.network/ui-notification";
+import { ChevronLeftIcon, Text, useScreen } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout/baseLayout";
-import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider";
-import { PathEnum } from "../../constant";
+import { useNav } from "../../hooks/useNav";
+import { AnnouncementWidget } from "./announcement.widget";
 
-const AnnouncementTopBar: React.FC = () => {
+export default function AnnouncementPage() {
+  const { isMobile } = useScreen();
   const { t } = useTranslation();
-  const { onRouteChange } = useRouteContext();
+  const navigate = useNavigate();
+  const { onRouteChange } = useNav();
 
   const onBack = () => {
-    onRouteChange({ href: PathEnum.Root, name: t("common.trading") });
+    if (window.history.state?.idx > 0) {
+      navigate(-1);
+    } else {
+      onRouteChange({ href: "/", name: "trading" });
+    }
   };
 
   return (
-    <Flex
-      width={"100%"}
-      height={44}
-      px={3}
-      direction={"row"}
-      itemAlign={"center"}
-      justify={"center"}
-      className="oui-relative"
-    >
-      <ChevronLeftIcon
-        className="oui-absolute oui-start-6 oui-text-base-contrast-54"
-        onClick={onBack}
-      />
-      <Text className="oui-text-base oui-font-bold oui-text-base-contrast">
-        {t("notification.centerTitle")}
-      </Text>
-    </Flex>
-  );
-};
-
-export default function AnnouncementPage() {
-  return (
     <BaseLayout
-      topBar={<AnnouncementTopBar />}
+      topBar={
+        isMobile ? (
+          <div className="oui-announcement-mobile-nav oui-grid oui-h-12 oui-grid-cols-[40px_minmax(0,1fr)_40px] oui-items-center oui-px-5">
+            <button
+              type="button"
+              aria-label={t("common.close")}
+              onClick={onBack}
+              className="oui-flex oui-size-10 oui-items-center oui-justify-center oui-rounded oui-text-base-contrast-54 focus-visible:oui-outline focus-visible:oui-outline-2 focus-visible:oui-outline-primary"
+            >
+              <ChevronLeftIcon
+                size={24}
+                color="inherit"
+                opacity={1}
+                className="rtl:oui-rotate-180"
+              />
+            </button>
+            <Text asChild size="base" weight="semibold" intensity={98}>
+              <h1 className="oui-text-center">
+                {t("notification.announcements")}
+              </h1>
+            </Text>
+          </div>
+        ) : undefined
+      }
       classNames={{
+        root: "lg:oui-overflow-y-scroll",
         bottomNav: "oui-hidden",
+        content: isMobile
+          ? "[&_.oui-announcement-title]:oui-hidden [&_.oui-announcement-center]:oui-pt-0 [&_.oui-announcement-navigation]:oui-mt-0"
+          : undefined,
       }}
     >
-      <AnnouncementCenterPage />
+      <AnnouncementWidget />
     </BaseLayout>
   );
 }

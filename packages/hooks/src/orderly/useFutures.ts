@@ -12,7 +12,7 @@ export const useFutures = () => {
 
   const rwaSymbolsInfo = useRwaSymbolsInfoStore();
 
-  const { data } = useQuery<API.MarketInfo[]>("/v1/public/futures", {
+  const { data, error } = useQuery<API.MarketInfo[]>("/v1/public/futures", {
     // 24 hours
     focusThrottleInterval: 1000 * 60 * 60 * 24,
     revalidateOnFocus: true,
@@ -41,5 +41,8 @@ export const useFutures = () => {
 
   return {
     data: futures,
+    isReady: Array.isArray(data),
+    isLoading: !Array.isArray(data) && !error,
+    error,
   };
 };

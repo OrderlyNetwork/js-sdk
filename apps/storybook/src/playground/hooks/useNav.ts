@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useNavigate } from "react-router";
+import { parsePath, useNavigate } from "react-router";
 import { generatePath, getLocalePathFromPathname } from "@orderly.network/i18n";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { RouteOption } from "@orderly.network/types";
@@ -20,6 +20,18 @@ export const useNav = () => {
     (option: RouteOption) => {
       if (option.target === "_blank") {
         window.open(option.href);
+        return;
+      }
+
+      if (option.scope === "announcement") {
+        const { pathname = "/", search, hash = "" } = parsePath(option.href);
+        const path =
+          pathname === "/"
+            ? `${PathEnum.Perp}/${encodeURIComponent(getPerpSymbol())}`
+            : routeMap[pathname] || pathname;
+        // Announcement URLs include the complete query, including removals.
+        const href = generatePath({ path, search: search || "?" });
+        navigate(`${href}${hash}`, { replace: option.replace });
         return;
       }
 

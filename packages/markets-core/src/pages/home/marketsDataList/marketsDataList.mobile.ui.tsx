@@ -219,6 +219,7 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
           if (isBuiltIn && meta) {
             const afterContent = props.renderTabAfterContent?.(tab, key, noop, {
               searchValue,
+              componentKey: "marketsDataList",
             });
             const title =
               tab.type === "favorites"
@@ -272,7 +273,10 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
           }
 
           // Custom category
-          const customContent = props.renderTabContent?.(tab, key, noop);
+          const customContent = props.renderTabContent?.(tab, key, noop, {
+            searchValue,
+            componentKey: "marketsDataList",
+          });
           return (
             <TabPanel
               key={key}
@@ -283,7 +287,16 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
               value={key}
             >
               {customContent !== undefined ? (
-                customContent
+                <>
+                  {key === "prediction" && (
+                    <SearchInput
+                      classNames={{
+                        root: "oui-mx-3 oui-mb-2 oui-mt-5 oui-min-w-0",
+                      }}
+                    />
+                  )}
+                  {customContent}
+                </>
               ) : (
                 <>
                   <SearchWithLowVolumeFilter className="oui-mb-2 oui-mt-5" />
