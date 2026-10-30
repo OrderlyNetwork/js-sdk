@@ -43,7 +43,10 @@ routes are ready, following the selected version guide's integration or deferral
 
 Default announcement bell, card, and View all links need working list/detail
 destinations. A main-menu entry and a [custom mobile return bar](../../packages/ui-notification/docs/integration-guide.md#optional-mobile-return-bar)
-are optional.
+are optional. A mobile sidebar entry is also optional; when adding one, append
+it to the end of the mobile menu by default. Routes do not create menu entries.
+Follow [announcement navigation entries](../../packages/ui-notification/docs/integration-guide.md#announcement-navigation-entries)
+for the sidebar setup and preserving the bell in custom desktop navigation.
 
 For a first-time announcement setup, follow the [integration checklist](../../packages/ui-notification/docs/integration-guide.md#first-time-integration-checklist)
 and [framework route placement](../../packages/ui-notification/docs/integration-guide.md#framework-route-placement)

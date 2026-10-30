@@ -10,16 +10,17 @@ source contracts are documented in the types and JSDoc linked from the
 - [First-time integration checklist](#first-time-integration-checklist)
 - [Dependencies and styles](#dependencies-and-styles)
 - [1. Configure navigation](#1-configure-navigation)
-- [Standalone navigation adapter](#standalone-navigation-adapter)
+  - [Standalone navigation adapter](#standalone-navigation-adapter)
 - [2. Register routes and choose the source](#2-register-routes-and-choose-the-source)
-- [Framework route placement](#framework-route-placement)
-- [Page titles and server boundaries](#page-titles-and-server-boundaries)
-- [Legacy ID destinations](#legacy-id-destinations)
-- [Optional mobile return bar](#optional-mobile-return-bar)
+  - [Announcement navigation entries](#announcement-navigation-entries)
+  - [Framework route placement](#framework-route-placement)
+  - [Page titles and server boundaries](#page-titles-and-server-boundaries)
+  - [Legacy ID destinations](#legacy-id-destinations)
+  - [Optional mobile return bar](#optional-mobile-return-bar)
 - [3. Migrate custom integrations](#3-migrate-custom-integrations)
 - [4. Deployment requirements](#4-deployment-requirements)
 - [5. Verify the integration](#5-verify-the-integration)
-- [Troubleshooting](#troubleshooting)
+  - [Troubleshooting](#troubleshooting)
 
 ## First-time integration checklist
 
@@ -28,6 +29,8 @@ source contracts are documented in the types and JSDoc linked from the
       under the existing layout and choose the announcement sources.
 - [ ] [Connect one navigation callback](#standalone-navigation-adapter) to the
       existing app provider and Scaffold.
+- [ ] Review [announcement navigation entries](#announcement-navigation-entries):
+      optionally append a mobile sidebar entry and retain the bell in custom desktop navigation.
 - [ ] If needed, add the [mobile return bar](#optional-mobile-return-bar).
 - [ ] [Verify routes, navigation, and presentation](#5-verify-the-integration).
 
@@ -199,7 +202,9 @@ or directly opening detail URLs.
 The default Scaffold bell, cards, and View all action emit local detail/list
 destinations. Register both routes above, reusing an existing list route, or map
 those destinations to working custom host views. Adding a separate menu entry
-is optional; exposed SDK links still need working destinations.
+is optional; exposed SDK links still need working destinations. See
+[announcement navigation entries](#announcement-navigation-entries) for sidebar
+and custom desktop navigation setup.
 
 Keep the detail URL's `is_official` parameter: `true` selects an official post;
 `false` or an absent value selects a platform post. Platform posts require the
@@ -228,6 +233,92 @@ This setting applies to the bell, cards, list and details. Without a broker,
 the default configuration shows only official posts; explicitly excluding
 official posts leaves ordinary announcement views empty. Maintenance reminders
 remain available independently.
+
+### Announcement navigation entries
+
+Registering list/detail routes does not add an announcement item to a mobile
+sidebar. To add one, append it to the **end** of `mainNavProps.leftNav.menus` by
+default; the position is a host choice (the demo places it between its trading
+and account entries). Reuse an existing announcement entry instead of adding a
+duplicate, and preserve the other menu items and sidebar settings. A separate
+desktop main-menu entry or bottom-navigation item is not required.
+
+Inside the host's existing client-side layout, merge the entry into its current
+Scaffold configuration:
+
+```tsx
+import type { PropsWithChildren } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { BellIcon } from "@orderly.network/ui";
+import { Scaffold, type ScaffoldProps } from "@orderly.network/ui-scaffold";
+
+function AnnouncementNavigationScaffold({
+  mainNavProps,
+  ...scaffoldProps
+}: PropsWithChildren<ScaffoldProps>) {
+  const { t } = useTranslation();
+  const announcementPath = "/announcement";
+  const existingMenus = mainNavProps?.leftNav?.menus ?? [];
+  const menus = existingMenus.some((item) => item.href === announcementPath)
+    ? existingMenus
+    : [
+        ...existingMenus,
+        {
+          name: t("notification.announcements"),
+          href: announcementPath,
+          icon: <BellIcon color="inherit" opacity={0.8} viewBox="0 0 20 20" />,
+        },
+      ];
+
+  return (
+    <Scaffold
+      {...scaffoldProps}
+      mainNavProps={{
+        ...mainNavProps,
+        leftNav: { ...mainNavProps?.leftNav, menus },
+      }}
+    />
+  );
+}
+```
+
+Use this merge in the existing layout inside the app's providers; pass its current
+Scaffold props, including `routerAdapter` and children. The built-in sidebar uses
+the existing router adapter for navigation. Keep the host's locale/basename
+handling there so prefixes are applied once. If the host already uses a different
+announcement path, use that same path for the entry and duplicate check. The
+example icon uses `color="inherit"` so the bell follows the theme; the demo pins
+a fixed white icon.
+
+For a custom mobile sidebar, append the equivalent item to its own menu data.
+Adding `leftNav.menus` will not update a separate custom renderer's data source.
+Wire internal links through the host router and close the drawer after selection.
+
+The default **desktop** navigation already renders the SDK announcement bell.
+If the host supplies `mainNavProps.customRender`, it replaces that layout: retain
+its existing logo, menus, account and wallet controls, and insert
+`components.notify` into the right-hand group. For example, the relevant group
+inside the existing callback can render:
+
+```tsx
+<Flex itemAlign="center" className="oui-gap-2">
+  {components.accountSummary}
+  {components.notify}
+  {components.languageSwitcher}
+  {components.subAccount}
+  {components.chainMenu}
+  {components.walletConnect}
+</Flex>
+```
+
+Import `Flex` from `@orderly.network/ui` when using this fragment. `notify` is an
+optional slot; the current mobile navigation callback does not provide it. Keep
+the existing `Scaffold.routerAdapter` connected for bell and View all navigation.
+
+The bell, mobile sidebar item, and [mobile return bar](#optional-mobile-return-bar)
+are separate host configuration points. A sidebar item opens the announcement
+list; the optional return bar handles detail-to-list and list-to-trading actions.
+Adding any one of them does not configure the others.
 
 ### Framework route placement
 
@@ -452,6 +543,13 @@ integration checks before rollout.
 - [ ] Bell, card, and View all links use the intended router adapter and resolve
       to SDK pages or mapped host views. List/detail direct entry, refresh, slug
       changes, and Back/Forward navigation work.
+- [ ] If configured, the mobile sidebar announcement item appears once at the
+      intended position (the end by default) with a translated label and the
+      intended bell icon. Selecting it opens the list with the intended
+      locale/basename and closes the drawer. Existing desktop menus and bottom
+      navigation remain available.
+- [ ] The default desktop bell remains visible, including `components.notify`
+      in custom desktop navigation, and its items and View all action navigate correctly.
 - [ ] List source filtering uses `source=official` or `source=community`; selecting
       all removes `source`. Changing source removes `is_official` and `page` while
       retaining the category and repeated context parameters. Category, page, and
@@ -485,14 +583,16 @@ integration checks before rollout.
 
 ### Troubleshooting
 
-| Symptom                                                     | Check                                                                                                                                                                                |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Bell, card, or View all links do nothing                    | Connect both provider and Scaffold callbacks; see [navigation setup](#1-configure-navigation).                                                                                       |
-| Detail URLs work through clicks but fail on refresh         | Register the detail route and configure server routing or SPA history fallback; see [framework route placement](#framework-route-placement).                                         |
-| Removed filters or an old hash reappear                     | Forward `scope: "announcement"`, use destination suffixes only, and explicitly clear `generatePath` query inheritance; see the [standalone adapter](#standalone-navigation-adapter). |
-| Locale or deployment prefix appears twice                   | Apply the prefix once and let a basename-aware router add its own basename; see [framework route placement](#framework-route-placement).                                             |
-| Page is unstyled or the custom return arrow does not mirror | Check the global SDK stylesheet and generated host classes; see [dependencies and styles](#dependencies-and-styles).                                                                 |
-| Direct SSR load reports hook or server import errors        | Check client rendering boundaries and server-safe title/route imports; see [page titles and server boundaries](#page-titles-and-server-boundaries).                                  |
+| Symptom                                                      | Check                                                                                                                                                                                |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Announcement page exists but the mobile sidebar has no entry | Add the optional item to `mainNavProps.leftNav.menus`, or the custom sidebar's own menu data; see [navigation entries](#announcement-navigation-entries).                            |
+| Bell is missing from custom desktop navigation               | Render the optional `components.notify` slot in the existing `mainNavProps.customRender` callback; see [navigation entries](#announcement-navigation-entries).                       |
+| Bell, card, or View all links do nothing                     | Connect both provider and Scaffold callbacks; see [navigation setup](#1-configure-navigation).                                                                                       |
+| Detail URLs work through clicks but fail on refresh          | Register the detail route and configure server routing or SPA history fallback; see [framework route placement](#framework-route-placement).                                         |
+| Removed filters or an old hash reappear                      | Forward `scope: "announcement"`, use destination suffixes only, and explicitly clear `generatePath` query inheritance; see the [standalone adapter](#standalone-navigation-adapter). |
+| Locale or deployment prefix appears twice                    | Apply the prefix once and let a basename-aware router add its own basename; see [framework route placement](#framework-route-placement).                                             |
+| Page is unstyled or the custom return arrow does not mirror  | Check the global SDK stylesheet and generated host classes; see [dependencies and styles](#dependencies-and-styles).                                                                 |
+| Direct SSR load reports hook or server import errors         | Check client rendering boundaries and server-safe title/route imports; see [page titles and server boundaries](#page-titles-and-server-boundaries).                                  |
 
 For version-specific upgrade steps, see the
 [SDK Integration and Upgrade Guides](https://github.com/OrderlyNetwork/js-sdk/blob/main/docs/integration/README.md).
