@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-assets",
-  "version": "3.4.0-alpha.0",
+  "version": "3.4.0",
   "description": "Shared asset views, conversion history, account filters, and deposit helpers",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
