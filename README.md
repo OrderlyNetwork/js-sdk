@@ -14,6 +14,10 @@ Start building with Orderly SDKs using these ready-to-use templates:
 - [Remix Template](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)
 - [Next.js Template](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template)
 
+## Integration and Upgrade Guides
+
+Use the [Integration and Upgrade Guides](docs/integration/README.md) to choose an upgrade path, review required migrations, and find complete feature integration instructions.
+
 ## Release Notes
 
 See the [SDK release notes](https://orderly.network/docs/release-notes/sdk) for version updates, new features, bug fixes, and upgrade notices.

@@ -36,7 +36,7 @@ import { Scaffold } from "@orderly.network/ui-scaffold";
 
 This renders the announcement list. To render an article, pass the detail route's
 slug, for example `<AnnouncementCenterPage slug="release-notes" />`.
-See [route and navigation setup](./docs/announcement-integration-guide.md#1-configure-navigation)
+See [route and navigation setup](./docs/integration-guide.md#1-configure-navigation)
 for the host routing requirements.
 
 ## Key defaults
@@ -54,8 +54,10 @@ for the host routing requirements.
 
 ## Documentation
 
-- [Integration and migration guide](./docs/announcement-integration-guide.md):
+- [Integration and migration guide](./docs/integration-guide.md):
   navigation, routes, announcement sources, custom UI migration and deployment
   requirements.
+- [SDK Integration and Upgrade Guides](https://github.com/OrderlyNetwork/js-sdk/blob/main/docs/integration/README.md):
+  version-specific upgrade paths and migration checklists.
 - [Public exports](./src/index.ts): follow each exported declaration for its types,
   defaults and English JSDoc.

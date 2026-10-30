@@ -20,6 +20,8 @@ This README is the reference for feature behavior, navigation contracts, and
 data semantics. Custom order consumers should read
 [Order field mapping](#order-field-mapping); upgrading hosts should also check
 [Migrating from earlier versions](#migrating-from-earlier-versions).
+For version-specific upgrade steps, see the
+[SDK Integration and Upgrade Guides](https://github.com/OrderlyNetwork/js-sdk/blob/main/docs/integration/README.md).
 
 > [!IMPORTANT]
 > **Upgrading requires a route.** Prediction is enabled by default. Hosts that

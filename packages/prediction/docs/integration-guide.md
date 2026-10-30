@@ -42,12 +42,17 @@ and custom entries. 3.3.1 is the minimum compatible version, not a fixed
 installation version. Select the target before editing dependencies:
 
 1. If the user specifies a stable or preview version, use it after verifying
+
    that it supports this guide's APIs and i18n keys. If incompatible, report the
    mismatch rather than silently substituting another version.
+
 2. Otherwise keep the host's existing compatible Prediction version.
 3. If Prediction is absent or incompatible, prefer the version corresponding
+
    to the host's main SDK release when that release supports this guide.
+
 4. If no compatible version matches the host's release, select the latest stable
+
    Prediction release and align the related SDK dependencies to it.
 
 Do not automatically downgrade a host already on a later compatible release.
@@ -190,8 +195,11 @@ changes after Back/Forward or cross-product navigation.
 
 Extend the existing navigation adapter, retaining its route aliases, external
 links, and basename handling. The Vite example below maps SDK paths, retains
-locale/query/hash, and forwards replacement navigation. An explicit destination
-`?` or `#` clears that suffix; an omitted suffix retains the current value.
+locale/query/hash, and forwards replacement navigation. For ordinary navigation,
+an explicit destination `?` or `#` clears that suffix; an omitted suffix retains
+the current value. Announcement-scoped navigation instead uses only the
+destination query and hash, including clearing absent suffixes, as required by
+the [announcement integration guide](https://github.com/OrderlyNetwork/js-sdk/blob/main/packages/ui-notification/docs/integration-guide.md#1-configure-navigation).
 
 Share the pathname rewrite between the adapter and legacy redirect. For example,
 create `src/predictionPath.ts`:
@@ -222,17 +230,24 @@ export function useNav() {
         window.open(option.href, "_blank", "noopener,noreferrer");
         return;
       }
+      const announcementNavigation = option.scope === "announcement";
       const hashStart = option.href.indexOf("#");
       const pathWithSearch =
         hashStart < 0 ? option.href : option.href.slice(0, hashStart);
       const hash =
-        hashStart < 0 ? window.location.hash : option.href.slice(hashStart);
+        hashStart < 0
+          ? announcementNavigation
+            ? ""
+            : window.location.hash
+          : option.href.slice(hashStart);
       const queryStart = pathWithSearch.indexOf("?");
       const pathname =
         queryStart < 0 ? pathWithSearch : pathWithSearch.slice(0, queryStart);
       const search =
         queryStart < 0
-          ? window.location.search
+          ? announcementNavigation
+            ? "?"
+            : window.location.search
           : pathWithSearch.slice(queryStart);
       const path =
         pathname === "/"
@@ -244,13 +259,18 @@ export function useNav() {
           getLocalePathFromPathname(window.location.pathname) ?? undefined,
         search,
       });
-      navigate(`${href}${hash}`, { replace: option.replace });
+      const destination = href.endsWith("?") ? href.slice(0, -1) : href;
+      navigate(`${destination}${hash}`, { replace: option.replace });
     },
     [navigate],
   );
   return { onRouteChange };
 }
 ```
+
+Passing `search: "?"` explicitly clears query inheritance in `generatePath`;
+an empty string would fall back to the current query. The final normalization
+removes a trailing empty query marker before navigation.
 
 The current pathname supplies the locale even before provider synchronization.
 Apply host prefixes once, and preserve query/hash in language-switch callbacks
@@ -527,6 +547,7 @@ production preview. Typecheck and mocked tests do not establish live trading.
 ## AI Integration Workflow
 
 1. **Discover:** read repository instructions, package metadata, lockfile, and
+
    initial Git changes. Locate the actual provider, router, navigation, Perps
    storage, and verification scripts. Check whether the host
    previously exposed legacy `/prediction` routes.
@@ -534,23 +555,34 @@ production preview. Typecheck and mocked tests do not establish live trading.
    [version selection rules](#1-prepare-dependencies-and-the-host-application);
    3.3.1 is the minimum compatible version, and the installation example is not
    a fixed version requirement.
+
 2. **Choose the menu:** use the user's specified arrangement; otherwise retain
+
    an existing Prediction menu. When adding a new Prediction menu without a
    specified arrangement, ask the user to choose between an independent top-level
    entry and a Trading submenu before changing the menu. See
    [menu options](#trade-menu).
+
 3. **Implement:** follow the [checklist](#minimal-integration-checklist) using the
+
    host's existing modules and [framework adapter](#framework-differences).
    Preserve unrelated work and configuration. Reuse existing wiring on repeated
    runs; verify one router/provider tree, one route per intended parent, and one
    menu entry per surface. Add a legacy redirect
    only for an existing `/prediction` route migration; always map SDK hrefs.
+
 4. **Verify:** complete the [checks above](#5-verify-the-integration). Continue
+
    independent checks when a tool, backend capability, wallet, or funds is missing.
+
 5. **Report:** list changed files, target/resolved SDK versions, router mode,
+
    feature state, checks with outcomes, and remaining prerequisites. Report code
    integration and live trading verification separately; mark either incomplete
    when its required checks failed or could not run.
 
 For standalone account data, field mappings, and resource lifecycles, use the
 [package reference](../README.md#standalone-account-data).
+
+For version-specific upgrade steps, see the
+[SDK Integration and Upgrade Guides](https://github.com/OrderlyNetwork/js-sdk/blob/main/docs/integration/README.md).
