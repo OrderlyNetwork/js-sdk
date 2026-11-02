@@ -282,6 +282,9 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@binance/w3w-blocknative-connector':
+        specifier: ^1.1.12
+        version: 1.1.12(@web3-onboard/common@2.4.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(bufferutil@4.0.9)(debug@4.4.3(supports-color@8.1.1))(encoding@0.1.13)(tsx@4.21.0)(utf-8-validate@5.0.10)(yaml@2.9.0)
       '@orderly.network/affiliate':
         specifier: workspace:*
         version: link:../../packages/affiliate
@@ -17374,7 +17377,7 @@ snapshots:
       '@binance/w3w-types': 1.1.4
       '@binance/w3w-utils': 1.1.8
       eip1193-provider: 1.0.1(bufferutil@4.0.9)(debug@4.4.3(supports-color@8.1.1))(utf-8-validate@5.0.10)
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -17427,7 +17430,7 @@ snapshots:
 
   '@binance/w3w-types@1.1.4':
     dependencies:
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
 
   '@binance/w3w-utils@1.1.4':
     dependencies:
@@ -17446,7 +17449,7 @@ snapshots:
   '@binance/w3w-utils@1.1.8':
     dependencies:
       '@binance/w3w-types': 1.1.4
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       hash.js: 1.1.7
       js-base64: 3.7.7
 
