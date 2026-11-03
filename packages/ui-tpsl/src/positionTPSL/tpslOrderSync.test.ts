@@ -1,6 +1,6 @@
 import { AlgoOrderRootType, API, OrderType } from "@orderly.network/types";
 import {
-  getChangedTPSLEditableOrderValues,
+  getTPSLPriceSyncChanges,
   getTPSLEditOrderType,
   getTPSLEditableOrderValues,
   isTPSLOrderTypeLocked,
@@ -132,7 +132,7 @@ describe("TP/SL external order synchronization", () => {
       }),
     );
 
-    expect(getChangedTPSLEditableOrderValues(previous, next)).toEqual({
+    expect(getTPSLPriceSyncChanges(previous, next)).toEqual({
       quantity: 3,
       tp_trigger_price: "4300",
       tp_order_price: "4290",
@@ -154,7 +154,7 @@ describe("TP/SL external order synchronization", () => {
       }),
     );
 
-    expect(getChangedTPSLEditableOrderValues(previous, next)).toEqual({
+    expect(getTPSLPriceSyncChanges(previous, next)).toEqual({
       tp_trigger_price: "4250",
       tp_order_type: OrderType.MARKET,
       tp_order_price: "",
@@ -185,10 +185,34 @@ describe("TP/SL external order synchronization", () => {
 
     const merged = {
       ...localDraft,
-      ...getChangedTPSLEditableOrderValues(previous, next),
+      ...getTPSLPriceSyncChanges(previous, next, localDraft),
     };
 
     expect(merged.tp_trigger_price).toBe("4300");
     expect(merged.sl_trigger_price).toBe("3750");
+  });
+
+  it("keeps a price draft when the same price changes, until the trigger locks", () => {
+    const previous = getTPSLEditableOrderValues(createOrder());
+    const draft = {
+      ...previous,
+      tp_trigger_price: "4400",
+      tp_order_price: "4420",
+    };
+    const next = {
+      ...previous,
+      tp_trigger_price: "4300",
+      tp_order_price: "4310",
+      quantity: 3,
+    };
+    expect(getTPSLPriceSyncChanges(previous, { ...previous }, draft)).toEqual(
+      {},
+    );
+    expect(getTPSLPriceSyncChanges(previous, next, draft)).toEqual({
+      quantity: 3,
+    });
+    expect(getTPSLPriceSyncChanges(next, next, draft, { tp: "4300" })).toEqual({
+      tp_trigger_price: "4300",
+    });
   });
 });

@@ -384,6 +384,7 @@
   "prediction.closed": "Closed",
   "prediction.invalidOrder": "Enter a valid price and available quantity.",
   "prediction.message.orderFailed": "Order was not accepted. Please try again.",
+  "prediction.message.connectWallet": "Connect your wallet to trade.",
   "prediction.rounds.unavailable": "No prediction rounds are available right now. Please try again later.",
   "prediction.estimatedFee": "Est. fee",
   "prediction.requiredFrozen": "Required frozen",
@@ -1496,6 +1497,5 @@
   "notification.retry": "Retry",
   "notification.pagination": "Announcement pages",
   "notification.newAnnouncements": "New announcements",
-  "tradingPoints.points": "Points",
-  "prediction.message.connectWallet": "Connect your wallet to trade."
+  "tradingPoints.points": "Points"
 }

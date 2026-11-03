@@ -12,6 +12,7 @@ import { TPSLBuilderOptions, useTPSLBuilder } from "./useTPSL.script";
 let mockMarginMode: MarginMode | undefined;
 let mockPositions: any[] = [];
 let mockSlPriceError: any = null;
+let mockPriceDraft: Record<string, string> = {};
 const mockClose = jest.fn();
 const mockSetValue = jest.fn();
 const mockSetValues = jest.fn();
@@ -22,6 +23,7 @@ const mockUseTPSLOrder = jest.fn(() => [
   {
     side: OrderSide.BUY,
     quantity: 0,
+    ...mockPriceDraft,
   },
   {
     submit: jest.fn(),
@@ -68,9 +70,7 @@ jest.mock("./positionTpslConfirm", () => ({
 }));
 
 jest.mock("./tpslOrderSync", () => ({
-  getChangedTPSLEditableOrderValues: jest.fn(() => ({})),
-  getTPSLEditableOrderValues:
-    jest.requireActual("./tpslOrderSync").getTPSLEditableOrderValues,
+  ...jest.requireActual("./tpslOrderSync"),
   isTPSLOrderTypeLocked: (order: unknown, leg: unknown) =>
     mockIsTPSLOrderTypeLocked(order, leg),
 }));
@@ -97,20 +97,24 @@ const HookProbe = ({ options }: { options: TPSLBuilderOptions }) => {
 
 const renderBuilder = (options: Partial<TPSLBuilderOptions> = {}) => {
   let renderer: ReactTestRenderer;
+  const renderProbe = (changes: Partial<TPSLBuilderOptions> = {}) => (
+    <HookProbe
+      options={{
+        symbol: "PERP_ETH_USDC",
+        positionType: PositionType.FULL,
+        close: mockClose,
+        ...options,
+        ...changes,
+      }}
+    />
+  );
   act(() => {
-    renderer = create(
-      <HookProbe
-        options={{
-          symbol: "PERP_ETH_USDC",
-          positionType: PositionType.FULL,
-          close: mockClose,
-          ...options,
-        }}
-      />,
-    );
+    renderer = create(renderProbe());
   });
   return {
     result: latestResult!,
+    rerender: (changes: Partial<TPSLBuilderOptions>) =>
+      act(() => renderer!.update(renderProbe(changes))),
     unmount: () => act(() => renderer!.unmount()),
   };
 };
@@ -252,6 +256,43 @@ describe("useTPSLBuilder position selection", () => {
     view.unmount();
   });
 
+  it("preserves price drafts on order refresh and restores the server trigger when locked", () => {
+    const order = createTPSLOrder();
+    mockPriceDraft = {
+      tp_trigger_price: "4190",
+      tp_order_price: "4220",
+      sl_trigger_price: "3800",
+      sl_order_price: "3790",
+    };
+    const view = renderBuilder({ order, isEditing: true });
+    try {
+      view.rerender({ order: { ...order } });
+      expect(mockSetValues).not.toHaveBeenCalled();
+      const updated = {
+        ...order,
+        child_orders: [
+          { ...order.child_orders[0], trigger_price: 4205, price: 4215 },
+          { ...order.child_orders[1], price: 3780 },
+        ],
+      };
+      view.rerender({ order: updated });
+      expect(mockSetValues).toHaveBeenLastCalledWith(
+        { sl_order_price: "3780" },
+        true,
+      );
+
+      mockPriceDraft.sl_order_price = "3780";
+      view.rerender({ order: { ...updated, is_triggered: true } });
+      expect(mockSetValues).toHaveBeenLastCalledWith(
+        { tp_trigger_price: "4205" },
+        true,
+      );
+    } finally {
+      mockPriceDraft = {};
+      view.unmount();
+    }
+  });
+
   it("locks both trigger legs and quantity when the parent is triggered", () => {
     const view = renderBuilder({
       order: createTPSLOrder({ parentTriggered: true, tpTriggered: true }),
@@ -264,17 +305,17 @@ describe("useTPSLBuilder position selection", () => {
     view.unmount();
   });
 
-  it("does not use child trigger flags to lock the editor", () => {
+  it("locks only the triggered leg when the parent has not triggered", () => {
     const view = renderBuilder({
       order: createTPSLOrder({
         parentTriggered: false,
         tpTriggered: true,
-        slTriggered: true,
+        slTriggered: false,
       }),
       isEditing: true,
     });
 
-    expect(view.result.disableTPTriggerEditing).toBe(false);
+    expect(view.result.disableTPTriggerEditing).toBe(true);
     expect(view.result.disableSLTriggerEditing).toBe(false);
     expect(view.result.disableQuantityEditing).toBe(false);
     view.unmount();

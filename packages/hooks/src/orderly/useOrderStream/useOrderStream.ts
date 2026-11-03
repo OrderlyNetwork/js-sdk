@@ -20,6 +20,7 @@ import {
   TPSLChildUpdate,
 } from "../../services/orderCreator/tpslOrderUpdates";
 import { validateTPSLChild } from "../../services/orderCreator/validateTPSLChild";
+import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { settleOrderCancellations } from "../../utils/orderCancellation";
@@ -563,11 +564,8 @@ export const useOrderStream = (
   /**
    * update algo order
    */
-  const updateAlgoOrder = useCallback(
-    (orderId: string, order: OrderEntity) => {
-      return _updateOrder(orderId, order, "algoOrder");
-    },
-    [_updateOrder],
+  const updateAlgoOrder = useMemoizedFn((orderId: string, order: OrderEntity) =>
+    _updateOrder(orderId, order, "algoOrder"),
   );
 
   const _cancelOrder = useCallback(
@@ -654,7 +652,7 @@ export const useOrderStream = (
     [],
   );
 
-  const updateTPSLOrder = useCallback(
+  const updateTPSLOrder = useMemoizedFn(
     async (
       /**
        * the root algo order id
@@ -710,7 +708,6 @@ export const useOrderStream = (
         child_orders: changes,
       });
     },
-    [flattenOrders, doUpdateAlgoOrder, markPrices, symbolsInfo],
   );
 
   const meta = useMemo(() => {

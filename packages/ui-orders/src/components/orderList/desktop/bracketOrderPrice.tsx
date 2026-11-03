@@ -1,16 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import {
-  Flex,
-  Tooltip,
-  Text,
-  cn,
-  EditIcon,
-  useModal,
-  modal,
-} from "@orderly.network/ui";
+import { Flex, Tooltip, Text, cn, EditIcon } from "@orderly.network/ui";
+import { EditBracketOrderModal } from "@orderly.network/ui-tpsl";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 
@@ -82,20 +75,23 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
 const EditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
   const { order } = props;
 
-  const onEdit = () => {
-    modal.show("EditBracketOrderDialogId", {
-      order,
-    });
-  };
-
+  const [open, setOpen] = useState(false);
   return (
-    <EditIcon
-      size={16}
-      className="oui-text-base-contrast oui-cursor-pointer"
-      onClick={() => {
-        onEdit();
-      }}
-    />
+    <>
+      <EditIcon
+        size={16}
+        className="oui-text-base-contrast oui-cursor-pointer"
+        onClick={() => setOpen(true)}
+      />
+      {open && (
+        <EditBracketOrderModal
+          mode="dialog"
+          open={open}
+          onOpenChange={setOpen}
+          order={order}
+        />
+      )}
+    </>
   );
 };
 

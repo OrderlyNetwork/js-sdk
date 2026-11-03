@@ -62,6 +62,35 @@ const builders = {
 describe.each(Object.entries(builders))(
   "TP/SL edit policy: %s",
   (_name, update) => {
+    it.each(["parent", "leg"])(
+      "blocks trigger edits when the %s triggers",
+      (source) => {
+        const parent = makeParent("TP_SL", "TAKE_PROFIT", OrderType.LIMIT);
+        const child = parent.child_orders[0];
+        child.is_activated = true;
+        if (source === "parent") parent.is_triggered = true;
+        else child.is_triggered = true;
+
+        expect(() => update(parent, OrderType.LIMIT, 4105)).toThrow(
+          /cannot be changed/,
+        );
+        expect(update(parent, OrderType.LIMIT, "4100.00")).toEqual([
+          { order_id: 11, price: 4120 },
+        ]);
+      },
+    );
+
+    it("does not treat an executed Bracket entry as a triggered TP/SL leg", () => {
+      const parent = makeParent("TP_SL", "TAKE_PROFIT", OrderType.LIMIT);
+      parent.child_orders[0].is_activated = true;
+      expect(
+        update(parent, OrderType.LIMIT, 4105, {
+          ...bracket,
+          is_triggered: true,
+        }),
+      ).toEqual([{ order_id: 11, trigger_price: 4105, price: 4120 }]);
+    });
+
     it.each(["TAKE_PROFIT", "STOP_LOSS"])(
       "blocks both directions for pending Bracket %s",
       (leg) => {

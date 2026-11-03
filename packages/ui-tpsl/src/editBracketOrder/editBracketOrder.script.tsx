@@ -1,7 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   ERROR_MSG_CODES,
   createTPSLOrderUpdates,
+  revalidateTPSLOrderUpdates,
   useMaxQty,
   useMutation,
   useOrderEntry,
@@ -18,8 +19,16 @@ import {
   PositionType,
   SDKError,
 } from "@orderly.network/types";
-import { Decimal, resolveTPSLOrderType } from "@orderly.network/utils";
-import { isTPSLOrderTypeLocked } from "../positionTPSL/tpslOrderSync";
+import {
+  Decimal,
+  getTPSLLeg,
+  isTPSLTriggerLocked,
+  resolveTPSLOrderType,
+} from "@orderly.network/utils";
+import {
+  getTPSLPriceSyncChanges,
+  isTPSLOrderTypeLocked,
+} from "../positionTPSL/tpslOrderSync";
 import {
   getBracketTPSLPriceInfo,
   hasBracketTPSLPriceChanged,
@@ -38,6 +47,13 @@ function getInitialOrder(order: API.AlgoOrderExt) {
     (item) => item.algo_type === AlgoOrderType.STOP_LOSS,
   );
   const tpslPriceInfo = getBracketTPSLPriceInfo(childOrder, order);
+  const lockedTPSLTriggers: Partial<Record<"tp" | "sl", string | number>> = {};
+  for (const leg of ["tp", "sl"] as const) {
+    const child = getTPSLLeg(childOrder, leg);
+    if (isTPSLTriggerLocked(childOrder, child)) {
+      lockedTPSLTriggers[leg] = tpslPriceInfo[`${leg}_trigger_price`];
+    }
+  }
 
   return {
     baseInfo: {
@@ -52,6 +68,7 @@ function getInitialOrder(order: API.AlgoOrderExt) {
       // sl_enable: !!slOrder?.trigger_price,
     },
     tpslPriceInfo,
+    lockedTPSLTriggers,
     disableTPOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "tp", order),
     disableSLOrderTypeSelector: isTPSLOrderTypeLocked(childOrder, "sl", order),
     tpInfo: {
@@ -70,6 +87,7 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
   const {
     baseInfo,
     tpslPriceInfo,
+    lockedTPSLTriggers,
     disableTPOrderTypeSelector,
     disableSLOrderTypeSelector,
   } = getInitialOrder(props.order);
@@ -82,6 +100,7 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     formattedOrder,
     setValue,
     setValues,
+    setValuesRaw,
     estLiqPrice,
     metaState,
     symbolInfo,
@@ -90,6 +109,7 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
   } = useOrderEntry(props.order.symbol, {
     initialOrder: baseInfo,
     maxQty,
+    lockedTPSLTriggers,
   });
   const symbol = props.order.symbol;
 
@@ -102,11 +122,67 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     formattedOrder.tp_trigger_price,
     formattedOrder.sl_trigger_price,
   ]);
+  const orderID = props.order.algo_order_id;
+  const latestOrder = useRef({ order: props.order, lockedTPSLTriggers });
+  latestOrder.current = { order: props.order, lockedTPSLTriggers };
+  const mounted = useRef(false);
   useEffect(() => {
-    setValues({
-      ...tpslPriceInfo,
-    });
-  }, [props.order, setValues]);
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const previousOrder = useRef<{
+    id: typeof orderID;
+    values: typeof tpslPriceInfo;
+    price: typeof baseInfo.order_price;
+    quantity: typeof baseInfo.order_quantity;
+  }>();
+  useEffect(() => {
+    const previous = previousOrder.current;
+    previousOrder.current = {
+      id: orderID,
+      values: tpslPriceInfo,
+      price: baseInfo.order_price,
+      quantity: baseInfo.order_quantity,
+    };
+    const changes =
+      previous?.id === orderID && previous
+        ? getTPSLPriceSyncChanges(
+            previous.values,
+            tpslPriceInfo,
+            formattedOrder,
+            lockedTPSLTriggers,
+          )
+        : tpslPriceInfo;
+    const sameOrder = previous?.id === orderID;
+    const mainOrderChanges = {
+      ...(!sameOrder || previous?.price !== baseInfo.order_price
+        ? {
+            order_price:
+              baseInfo.order_price == null ? "" : String(baseInfo.order_price),
+          }
+        : {}),
+      ...(!sameOrder || previous?.quantity !== baseInfo.order_quantity
+        ? {
+            order_quantity:
+              baseInfo.order_quantity == null
+                ? ""
+                : String(baseInfo.order_quantity),
+          }
+        : {}),
+    };
+    const fields = { ...changes, ...mainOrderChanges };
+    if (Object.keys(fields).length > 0) setValuesRaw(fields, true);
+  }, [
+    orderID,
+    baseInfo.order_price,
+    baseInfo.order_quantity,
+    tpslPriceInfo,
+    formattedOrder,
+    lockedTPSLTriggers,
+    setValuesRaw,
+  ]);
 
   const slPriceError = useTpslPriceChecker({
     slPrice: formattedOrder.sl_trigger_price,
@@ -118,10 +194,39 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_ERROR;
 
   const onSubmit = async () => {
+    const lockErrors = { ...(isSlPriceError ? slPriceError : undefined) };
+    for (const leg of ["tp", "sl"] as const) {
+      const trigger = lockedTPSLTriggers[leg];
+      const key = `${leg}_trigger_price` as const;
+      if (
+        trigger !== undefined &&
+        Number(formattedOrder[key] || 0) !== Number(trigger || 0)
+      ) {
+        lockErrors[key] = {
+          type: -1,
+          message: "Trigger price cannot be changed after TP/SL is triggered",
+        };
+      }
+    }
     return helper
-      .validate(isSlPriceError ? slPriceError : undefined)
+      .validate(Object.keys(lockErrors).length ? lockErrors : undefined)
       .then(() => {
-        const parent = props.order.child_orders[0];
+        const { order, lockedTPSLTriggers: latestTriggers } =
+          latestOrder.current;
+        if (!mounted.current || order.algo_order_id !== orderID) return;
+        for (const leg of ["tp", "sl"] as const) {
+          const trigger = latestTriggers[leg];
+          if (
+            trigger !== undefined &&
+            Number(formattedOrder[`${leg}_trigger_price`] || 0) !==
+              Number(trigger || 0)
+          ) {
+            throw new SDKError(
+              "Trigger price cannot be changed after TP/SL is triggered",
+            );
+          }
+        }
+        const parent = order.child_orders[0];
         const legs = (["tp", "sl"] as const).map((leg) => ({
           algo_type:
             leg === "tp" ? AlgoOrderType.TAKE_PROFIT : AlgoOrderType.STOP_LOSS,
@@ -142,19 +247,24 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
                 .toNumber()
             : undefined,
         }));
-        const childOrders = createTPSLOrderUpdates(
+        // Diff against the same snapshot as the validated form.
+        const changes = createTPSLOrderUpdates(
           legs,
-          parent,
+          props.order.child_orders[0],
           undefined,
           [],
           props.order,
         );
+        const childOrders =
+          props.order === order
+            ? changes
+            : revalidateTPSLOrderUpdates(changes, parent, order);
         if (!childOrders.length) return;
         return doUpdateOrder({
-          order_id: props.order.algo_order_id,
+          order_id: order.algo_order_id,
           child_orders: [
             {
-              order_id: props.order.child_orders[0].algo_order_id,
+              order_id: parent.algo_order_id,
               child_orders: childOrders,
             },
           ],
@@ -177,6 +287,8 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     isPriceChanged,
     disableTPOrderTypeSelector,
     disableSLOrderTypeSelector,
+    disableTPTriggerEditing: lockedTPSLTriggers.tp !== undefined,
+    disableSLTriggerEditing: lockedTPSLTriggers.sl !== undefined,
   };
 };
 

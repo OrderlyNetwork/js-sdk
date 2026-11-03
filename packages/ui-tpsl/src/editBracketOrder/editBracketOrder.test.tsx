@@ -1,36 +1,73 @@
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import { API, OrderType } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { registerSimpleDialog, toast } from "@orderly.network/ui";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
 import { useEditBracketOrder } from "./editBracketOrder.script";
 import { EditBracketOrderUI } from "./editBracketOrder.ui";
+import {
+  EditBracketOrderDialogId,
+  EditBracketOrderModal,
+} from "./editBracketOrder.widget";
 
 const mockUpdate = jest.fn().mockResolvedValue({ success: true });
 const mockValidate = jest.fn().mockResolvedValue(undefined);
 const mockClose = jest.fn();
 let mockIsMobile = false;
+let mockRealCalculation = false;
+let mockStreamOrders: API.AlgoOrderExt[] | undefined;
+let mockHasMoreOrders = false;
+const mockLoadMoreOrders = jest.fn();
 let state: ReturnType<typeof useEditBracketOrder>;
 
 jest.mock("@orderly.network/hooks", () => ({
   ERROR_MSG_CODES: {},
-  createTPSLOrderUpdates: jest.requireActual(
+  ...jest.requireActual(
     "@orderly.network/hooks/src/services/orderCreator/tpslOrderUpdates",
-  ).createTPSLOrderUpdates,
+  ),
   useMutation: () => [mockUpdate, {}],
+  useOrderStream: () => [
+    mockStreamOrders,
+    {
+      isLoading: !mockStreamOrders,
+      hasMore: mockHasMoreOrders,
+      loadMore: mockLoadMoreOrders,
+    },
+  ],
   useMaxQty: () => 10,
   useTpslPriceChecker: () => undefined,
   useOrderEntry: (_symbol: string, options: any) => {
+    if (mockRealCalculation) {
+      const { useOrderEntryNextInternal } = jest.requireActual(
+        "@orderly.network/hooks/src/next/useOrderEntry/useOrderEntry.internal",
+      );
+      const symbolInfo = { symbol: _symbol, quote_dp: 2, base_dp: 4 };
+      const internal = useOrderEntryNextInternal(_symbol, {
+        ...options,
+        symbolInfo,
+      });
+      return {
+        ...internal,
+        setValue: (key: string, value: unknown) =>
+          internal.setValue(key, value, { markPrice: 4000 }),
+        setValuesRaw: (values: unknown) => internal.setValuesRaw(values, 4000),
+        helper: { validate: mockValidate },
+        metaState: {},
+        symbolInfo,
+      };
+    }
     const React = jest.requireActual("react");
     const [values, set] = React.useState(options.initialOrder);
+    const merge = React.useCallback(
+      (next: any) => set((old: any) => ({ ...old, ...next })),
+      [],
+    );
     return {
       formattedOrder: values,
       setValue: (key: string, value: unknown) =>
         set((old: any) => ({ ...old, [key]: value })),
-      setValues: React.useCallback(
-        (next: any) => set((old: any) => ({ ...old, ...next })),
-        [],
-      ),
+      setValues: merge,
+      setValuesRaw: merge,
       helper: { validate: mockValidate },
       metaState: {},
       symbolInfo: { symbol: "PERP_ETH_USDC", quote_dp: 2, base_dp: 4 },
@@ -49,6 +86,10 @@ jest.mock("@orderly.network/ui", () => {
   return {
     cn: (...args: any[]) => args.filter(Boolean).join(" "),
     Flex: Container,
+    SimpleDialog: Container,
+    SimpleSheet: Container,
+    registerSimpleDialog: jest.fn(),
+    registerSimpleSheet: jest.fn(),
     ScrollArea: Container,
     Text: Container,
     Divider: () => null,
@@ -138,6 +179,62 @@ const Probe = ({ order }: { order: API.AlgoOrderExt }) => {
   return <EditBracketOrderUI {...state} onClose={mockClose} />;
 };
 
+it("opens the registered dialog from the live order, with no fallback to the original snapshot", () => {
+  const order = makeOrder(true);
+  order.type = OrderType.LIMIT;
+  const [parent] = order.child_orders;
+  const stopLoss = parent.child_orders[1];
+  stopLoss.is_activated = true;
+
+  const Registered = (registerSimpleDialog as jest.Mock).mock.calls.find(
+    ([id]) => id === EditBracketOrderDialogId,
+  )![1];
+  const close = jest.fn();
+  const render = () => <Registered order={order} close={close} />;
+  let renderer!: ReactTestRenderer;
+  act(() => {
+    renderer = create(render());
+  });
+  try {
+    expect(renderer.root.findAllByType(TPSLInputRowWidget)).toHaveLength(0);
+    mockStreamOrders = [];
+    mockHasMoreOrders = true;
+    act(() => renderer.update(render()));
+    expect(mockLoadMoreOrders).toHaveBeenCalledTimes(1);
+    expect(close).not.toHaveBeenCalled();
+
+    mockStreamOrders = [
+      {
+        ...order,
+        child_orders: [
+          {
+            ...parent,
+            child_orders: [
+              parent.child_orders[0],
+              { ...stopLoss, is_triggered: true },
+            ],
+          },
+        ],
+      },
+    ];
+    mockHasMoreOrders = false;
+    act(() => renderer.update(render()));
+    const sl = renderer.root
+      .findAllByType(TPSLInputRowWidget)
+      .find((row) => row.props.type === "sl")!;
+    expect(sl.props.disableTriggerEditing).toBe(true);
+
+    mockStreamOrders = [];
+    act(() => renderer.update(render()));
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(renderer.root.findAllByType(TPSLInputRowWidget)).toHaveLength(0);
+  } finally {
+    act(() => renderer.unmount());
+    mockStreamOrders = undefined;
+    mockHasMoreOrders = false;
+  }
+});
+
 describe.each([false, true])("Bracket edit UI (mobile=%s)", (mobile) => {
   let renderer: ReactTestRenderer;
   beforeEach(() => {
@@ -146,6 +243,235 @@ describe.each([false, true])("Bracket edit UI (mobile=%s)", (mobile) => {
   });
   afterEach(() => {
     act(() => renderer?.unmount());
+    mockRealCalculation = false;
+  });
+
+  it("keeps the open dialog or sheet connected to the latest order", () => {
+    mockRealCalculation = true;
+    const order = makeOrder(true);
+    order.type = OrderType.LIMIT;
+    const parent = order.child_orders[0];
+    parent.child_orders[1].is_activated = true;
+    const view = (snapshot: API.AlgoOrderExt) => (
+      <EditBracketOrderModal
+        mode={mobile ? "sheet" : "dialog"}
+        open
+        onOpenChange={mockClose}
+        order={snapshot}
+      />
+    );
+    const stopLoss = () =>
+      renderer.root
+        .findAllByType(TPSLInputRowWidget)
+        .find((row) => row.props.type === "sl")!.props;
+
+    act(() => {
+      renderer = create(view(order));
+    });
+    act(() => {
+      stopLoss().onChange("sl_trigger_price", "3895");
+      stopLoss().onChange("sl_order_price", "3880");
+    });
+    act(() =>
+      renderer.update(
+        view({
+          ...order,
+          price: 4050,
+          quantity: 2,
+          child_orders: [
+            {
+              ...parent,
+              child_orders: [
+                parent.child_orders[0],
+                {
+                  ...parent.child_orders[1],
+                  trigger_price: 3910,
+                  is_triggered: true,
+                },
+              ],
+            },
+          ],
+        }),
+      ),
+    );
+    expect(stopLoss().disableTriggerEditing).toBe(true);
+    expect(stopLoss().rootOrderPrice).toBe("4050");
+    expect(stopLoss().values).toMatchObject({
+      trigger_price: "3910",
+      order_price: "3880",
+      PnL: -340,
+    });
+  });
+
+  it("keeps an untouched sibling price refreshed during validation", async () => {
+    mockRealCalculation = true;
+    const order = makeOrder(true);
+    order.type = OrderType.LIMIT;
+    const parent = order.child_orders[0];
+    Object.assign(parent.child_orders[0], {
+      is_activated: true,
+      type: OrderType.LIMIT,
+      price: 4130,
+    });
+    parent.child_orders[1].is_activated = true;
+    act(() => {
+      renderer = create(<Probe order={order} />);
+    });
+    act(() => state.setValue("sl_order_price", "3880"));
+
+    let finishValidation!: () => void;
+    mockValidate.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        finishValidation = resolve;
+      }),
+    );
+    const submission = state.onSubmit();
+    act(() =>
+      renderer.update(
+        <Probe
+          order={{
+            ...order,
+            child_orders: [
+              {
+                ...parent,
+                child_orders: [
+                  { ...parent.child_orders[0], price: 4140 },
+                  parent.child_orders[1],
+                ],
+              },
+            ],
+          }}
+        />,
+      ),
+    );
+    await act(async () => {
+      finishValidation();
+      await submission;
+    });
+
+    expect(mockUpdate).toHaveBeenCalledWith({
+      order_id: 1,
+      child_orders: [
+        { order_id: 10, child_orders: [{ order_id: 12, price: 3880 }] },
+      ],
+    });
+  });
+
+  it.each(["triggered", "closed"])(
+    "does not send a pending submission after the editor is %s",
+    async (event) => {
+      mockRealCalculation = true;
+      const order = makeOrder(true);
+      order.type = OrderType.LIMIT;
+      const parent = order.child_orders[0];
+      parent.child_orders[1].is_activated = true;
+      act(() => {
+        renderer = create(<Probe order={order} />);
+      });
+      act(() => state.setValue("sl_trigger_price", "3895"));
+
+      let finishValidation!: () => void;
+      mockValidate.mockReturnValueOnce(
+        new Promise<void>((resolve) => {
+          finishValidation = resolve;
+        }),
+      );
+      const submission = state.onSubmit();
+      if (event === "closed") {
+        act(() => renderer.unmount());
+        finishValidation();
+        await submission;
+      } else {
+        act(() =>
+          renderer.update(
+            <Probe
+              order={{
+                ...order,
+                child_orders: [
+                  {
+                    ...parent,
+                    child_orders: [
+                      parent.child_orders[0],
+                      { ...parent.child_orders[1], is_triggered: true },
+                    ],
+                  },
+                ],
+              }}
+            />,
+          ),
+        );
+        finishValidation();
+        await expect(submission).rejects.toThrow(/cannot be changed/);
+      }
+      expect(mockUpdate).not.toHaveBeenCalled();
+    },
+  );
+
+  it("keeps drafts across snapshots and only submits the execution price once the leg triggers", async () => {
+    mockRealCalculation = true;
+    const order = makeOrder(true);
+    order.type = OrderType.LIMIT;
+    const parent = order.child_orders[0];
+    parent.child_orders[1].is_activated = true;
+
+    act(() => {
+      renderer = create(<Probe order={order} />);
+    });
+    act(() => {
+      state.setValue("sl_trigger_price", "3895");
+      state.setValue("sl_order_price", "3880");
+    });
+
+    const publish = (trigger: number, price: number, isTriggered = false) => {
+      const snapshot = {
+        ...order,
+        child_orders: [
+          {
+            ...parent,
+            child_orders: [
+              parent.child_orders[0],
+              {
+                ...parent.child_orders[1],
+                trigger_price: trigger,
+                price,
+                is_triggered: isTriggered,
+              },
+            ],
+          },
+        ],
+      };
+      act(() => renderer.update(<Probe order={snapshot} />));
+    };
+
+    publish(3900, 3890);
+    publish(3910, 3900);
+    expect(state.formattedOrder).toMatchObject({
+      sl_trigger_price: "3895",
+      sl_order_price: "3880",
+    });
+
+    publish(3910, 3900, true);
+    expect(state.disableSLTriggerEditing).toBe(true);
+    expect(state.disableTPTriggerEditing).toBe(false);
+    expect(state.formattedOrder).toMatchObject({
+      sl_trigger_price: "3910",
+      sl_order_price: "3880",
+    });
+
+    act(() => state.setValue("sl_offset_percentage_from_mark", 0.05));
+    expect(state.formattedOrder).toMatchObject({
+      sl_trigger_price: "3910",
+      sl_order_price: "3800",
+    });
+    await act(async () => {
+      await state.onSubmit();
+    });
+    expect(mockUpdate).toHaveBeenCalledWith({
+      order_id: 1,
+      child_orders: [
+        { order_id: 10, child_orders: [{ order_id: 12, price: 3800 }] },
+      ],
+    });
   });
 
   it("leaves field validation errors to the form without showing a Toast", async () => {

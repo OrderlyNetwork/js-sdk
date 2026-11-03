@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { compose, head } from "ramda";
 import {
   type API,
@@ -7,13 +7,17 @@ import {
   OrderType,
   MarginMode,
 } from "@orderly.network/types";
-import { priceToROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
+import {
+  getTPSLExecutionType,
+  isTPSLCalculationField,
+  priceToROI,
+  refreshTPSLValues,
+} from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import {
   baseInputHandle,
   getCalculateHandler,
 } from "../../utils/orderEntryHelper";
-import { hasTPSL } from "./helper";
 import { type FullOrderState } from "./orderEntry.store";
 
 const initialOrderState = {
@@ -51,9 +55,22 @@ const useOrderEntryNextInternal = (
     initialOrder?: Omit<Partial<FullOrderState>, "symbol">;
     symbolInfo?: API.SymbolExt;
     symbolLeverage?: number;
+    /** Trigger prices owned by an already triggered TP/SL order. */
+    lockedTPSLTriggers?: Partial<Record<"tp" | "sl", string | number>>;
   } = {},
 ) => {
-  const { symbolInfo, symbolLeverage } = options;
+  const { symbolInfo, symbolLeverage, lockedTPSLTriggers } = options;
+  const marketInputs = useRef<
+    Partial<
+      Record<
+        "tp" | "sl",
+        {
+          key: keyof FullOrderState;
+          value: string | number;
+        }
+      >
+    >
+  >({});
   const initialOrder = normalizeInitialOrder(options.initialOrder);
 
   // Use local state instead of global zustand store to avoid state pollution
@@ -67,82 +84,22 @@ const useOrderEntryNextInternal = (
       }) as FullOrderState,
   );
 
-  // Local actions that work with local state
-  const actions = useMemo(
-    () => ({
-      initOrder: (
-        sym: string,
-        opts?: {
-          side?: OrderSide;
-          order_type?: OrderType;
-          margin_mode?: MarginMode;
-        },
-      ) => {
-        setOrderEntity({
-          ...initialOrderState,
-          symbol: sym,
-          side: opts?.side ?? OrderSide.BUY,
-          order_type: opts?.order_type ?? OrderType.LIMIT,
-          margin_mode: opts?.margin_mode ?? MarginMode.CROSS,
-        } as FullOrderState);
-      },
-      updateOrder: (order: Partial<FullOrderState>) => {
-        setOrderEntity((prev) => ({ ...prev, ...order, symbol }));
-      },
-      updateOrderByKey: <K extends keyof FullOrderState>(
-        key: K,
-        value: FullOrderState[K],
-      ) => {
-        setOrderEntity((prev) => ({
-          ...prev,
-          [key]: key === "symbol" ? symbol : value,
-          symbol,
-        }));
-      },
-      resetOrder: (_order?: Partial<FullOrderState>) => {
-        setOrderEntity((prev) => ({
-          ...prev,
-          order_price: "",
-          order_quantity: "",
-          trigger_price: "",
-          total: "",
-          tp_trigger_price: "",
-          tp_pnl: "",
-          tp_offset: "",
-          tp_offset_percentage: "",
-          tp_offset_from_mark: "",
-          tp_offset_percentage_from_mark: "",
-          sl_trigger_price: "",
-          sl_pnl: "",
-          sl_offset: "",
-          sl_offset_percentage: "",
-          sl_offset_from_mark: "",
-          sl_offset_percentage_from_mark: "",
-        }));
-      },
-      hasTP_SL: () => {
-        const order = orderEntity;
-        return (
-          typeof order.tp_trigger_price !== "undefined" ||
-          typeof order.sl_trigger_price !== "undefined"
-        );
-      },
-    }),
-    [orderEntity, symbol],
-  );
+  // Event callbacks can update the form in the same render batch.
+  const currentOrder = useRef(orderEntity);
+  const updateOrder = (changes: Partial<FullOrderState>) => {
+    currentOrder.current = { ...currentOrder.current, ...changes, symbol };
+    setOrderEntity(currentOrder.current);
+  };
 
-  // Initialize order when symbol changes
   useEffect(() => {
-    actions.initOrder(symbol, initialOrder);
-    if (initialOrder) {
-      actions.updateOrder({
-        ...initialOrder,
-        symbol,
-      });
-    }
+    marketInputs.current = {};
+    currentOrder.current = {
+      ...initialOrderState,
+      ...initialOrder,
+      symbol,
+    } as FullOrderState;
+    setOrderEntity(currentOrder.current);
   }, [symbol]);
-
-  // console.log("orderEntity", orderEntity);
 
   const calculate = useCallback(
     (
@@ -151,9 +108,13 @@ const useOrderEntryNextInternal = (
       value: any,
       markPrice: number,
       config: API.SymbolExt,
+      lockTrigger?: boolean,
     ): Partial<FullOrderState> => {
       // console.log("calculate", values, fieldName, value, options);
-      const fieldHandler = getCalculateHandler(fieldName);
+      const fieldHandler = getCalculateHandler(fieldName, lockTrigger);
+      if (isTPSLCalculationField(fieldName)) {
+        return fieldHandler([values, fieldName, value, markPrice, config])[0];
+      }
 
       const newValues = compose<any, any, any, Partial<FullOrderState>>(
         head,
@@ -169,214 +130,146 @@ const useOrderEntryNextInternal = (
     [],
   );
 
+  const applyField = (
+    currentEntry: Partial<FullOrderState>,
+    key: keyof FullOrderState,
+    value: any,
+    markPrice: number,
+  ) => {
+    const leg = key.startsWith("tp_")
+      ? "tp"
+      : key.startsWith("sl_")
+        ? "sl"
+        : undefined;
+    const calculated = isTPSLCalculationField(key);
+    const locked = leg !== undefined && lockedTPSLTriggers?.[leg] !== undefined;
+    if (
+      leg &&
+      locked &&
+      (key === `${leg}_trigger_price` ||
+        (calculated &&
+          (getTPSLExecutionType(currentEntry, leg) !== OrderType.LIMIT ||
+            !Number(currentEntry[`${leg}_trigger_price`]))))
+    )
+      return currentEntry;
+
+    if (
+      leg &&
+      (key === `${leg}_trigger_price` || key === `${leg}_order_type`)
+    ) {
+      delete marketInputs.current[leg];
+    } else if (
+      leg &&
+      calculated &&
+      !locked &&
+      getTPSLExecutionType(currentEntry, leg) === OrderType.MARKET
+    ) {
+      marketInputs.current[leg] = { key, value };
+    }
+
+    return symbolInfo
+      ? calculate(currentEntry, key, value, markPrice, symbolInfo, locked)
+      : { ...currentEntry, [key]: value };
+  };
+
   const setValue = (
     key: keyof FullOrderState,
     value: any,
-    additional?: {
-      markPrice: number;
-    },
+    additional?: { markPrice: number },
   ) => {
-    if (!symbolInfo) {
-      actions.updateOrderByKey(key, value);
-      console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
-      return;
-    }
-
-    /** Use local state directly to avoid stale closure. */
-    const currentEntry = orderEntity;
     const { markPrice } = additional ?? { markPrice: 0 };
-
-    let newValues = calculate(
-      { ...currentEntry },
-      key,
-      value,
-      markPrice,
-      symbolInfo,
-    );
-
-    /// if the order type is market or stop market, recalculate the total use mark price
-    if (key === "order_type") {
-      if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
-        newValues = calculate(
-          newValues,
-          "order_price",
-          markPrice,
-          markPrice,
-          symbolInfo,
-        );
-      }
+    const current = { ...currentOrder.current };
+    let newValues = applyField(current, key, value, markPrice);
+    if (newValues === current) return;
+    if (!symbolInfo) {
+      updateOrder(newValues);
+      console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
+      return newValues;
     }
 
     if (
-      (key === "order_quantity" || key === "order_price") &&
-      hasTPSL(newValues)
+      key === "order_type" &&
+      (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
     ) {
-      newValues = calculateTPSL(key, newValues, markPrice, symbolInfo);
+      newValues = calculate(
+        newValues,
+        "order_price",
+        markPrice,
+        markPrice,
+        symbolInfo,
+      );
+    }
+    if (key === "order_quantity" || key === "order_price" || key === "total") {
+      newValues = refreshOrderTPSL(
+        newValues,
+        markPrice,
+        key === "total" ? "order_quantity" : key,
+      );
+    } else {
+      Object.assign(
+        newValues,
+        priceToROI({ values: newValues, symbolLeverage, markPrice }),
+      );
     }
 
-    const { tp_ROI, sl_ROI } = priceToROI({
-      values: newValues,
-      symbolLeverage,
-      markPrice,
-    });
-    if (tp_ROI) {
-      newValues.tp_ROI = tp_ROI;
-    }
-    if (sl_ROI) {
-      newValues.sl_ROI = sl_ROI;
-    }
-
-    actions.updateOrder(newValues);
-
+    updateOrder(newValues);
     return newValues;
   };
 
-  const calculateTPSL = (
-    key: string,
-    newValues: Partial<FullOrderState>,
+  const refreshOrderTPSL = (
+    values: Partial<FullOrderState>,
     markPrice: number,
-    symbolInfo: API.SymbolExt,
+    source: "order_quantity" | "order_price" | "mark" | "sync",
   ) => {
-    if (key === "order_price") {
-      if (typeof newValues.tp_pnl !== "undefined") {
-        newValues = calculate(
-          newValues,
-          "tp_pnl",
-          newValues.tp_pnl,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (typeof newValues.sl_pnl !== "undefined") {
-        newValues = calculate(
-          newValues,
-          "sl_pnl",
-          newValues.sl_pnl,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (
-        newValues.tp_offset_from_mark !== undefined &&
-        newValues.tp_offset_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "tp_offset_from_mark",
-          newValues.tp_offset_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (
-        newValues.tp_offset_percentage_from_mark !== undefined &&
-        newValues.tp_offset_percentage_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "tp_offset_percentage_from_mark",
-          newValues.tp_offset_percentage_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (
-        newValues.sl_offset_from_mark !== undefined &&
-        newValues.sl_offset_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "sl_offset_from_mark",
-          newValues.sl_offset_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (
-        newValues.sl_offset_percentage_from_mark !== undefined &&
-        newValues.sl_offset_percentage_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "sl_offset_percentage_from_mark",
-          newValues.sl_offset_percentage_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
-    } else {
-      if (typeof newValues.tp_trigger_price !== "undefined") {
-        newValues = calculate(
-          newValues,
-          "tp_trigger_price",
-          newValues.tp_trigger_price,
-          markPrice,
-          symbolInfo,
-        );
-      }
+    if (!symbolInfo) return values;
+    const newValues = { ...values };
+    const entryPrice =
+      values.order_type === OrderType.MARKET ||
+      values.order_type === OrderType.STOP_MARKET
+        ? markPrice
+        : Number(values.order_price);
+    const side = values.side ?? OrderSide.BUY;
 
-      if (typeof newValues.sl_trigger_price !== "undefined") {
-        newValues = calculate(
-          newValues,
-          "sl_trigger_price",
-          newValues.sl_trigger_price,
-          markPrice,
-          symbolInfo,
-        );
-      }
-
-      // Re-derive trigger from mark-based offsets when qty changes (same as trigger recompute path).
+    for (const leg of ["tp", "sl"] as const) {
+      const input = marketInputs.current[leg];
+      const usesMark = input?.key.endsWith("_from_mark");
+      const shouldReplay =
+        source === "mark" ||
+        (source === "order_price" &&
+          (usesMark || input?.key.endsWith("_pnl"))) ||
+        (source === "order_quantity" && usesMark);
       if (
-        newValues.tp_offset_from_mark !== undefined &&
-        newValues.tp_offset_from_mark !== ""
+        input &&
+        shouldReplay &&
+        lockedTPSLTriggers?.[leg] === undefined &&
+        getTPSLExecutionType(newValues, leg) === OrderType.MARKET
       ) {
-        newValues = calculate(
+        Object.assign(
           newValues,
-          "tp_offset_from_mark",
-          newValues.tp_offset_from_mark!,
-          markPrice,
-          symbolInfo,
+          calculate(newValues, input.key, input.value, markPrice, symbolInfo),
         );
       }
-      if (
-        newValues.tp_offset_percentage_from_mark !== undefined &&
-        newValues.tp_offset_percentage_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "tp_offset_percentage_from_mark",
-          newValues.tp_offset_percentage_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (
-        newValues.sl_offset_from_mark !== undefined &&
-        newValues.sl_offset_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "sl_offset_from_mark",
-          newValues.sl_offset_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
-      if (
-        newValues.sl_offset_percentage_from_mark !== undefined &&
-        newValues.sl_offset_percentage_from_mark !== ""
-      ) {
-        newValues = calculate(
-          newValues,
-          "sl_offset_percentage_from_mark",
-          newValues.sl_offset_percentage_from_mark!,
-          markPrice,
-          symbolInfo,
-        );
-      }
+      Object.assign(
+        newValues,
+        refreshTPSLValues(
+          leg,
+          {
+            values: newValues,
+            entryPrice,
+            markPrice,
+            qty:
+              Number(values.order_quantity) * (side === OrderSide.BUY ? 1 : -1),
+            orderSide: side,
+          },
+          { symbol: symbolInfo },
+        ),
+      );
     }
 
-    return newValues;
+    return Object.assign(
+      newValues,
+      priceToROI({ values: newValues, symbolLeverage, markPrice }),
+    );
   };
 
   const setValues = (
@@ -385,26 +278,29 @@ const useOrderEntryNextInternal = (
       markPrice: number;
     },
   ) => {
-    if (!symbolInfo) {
-      actions.updateOrder(values);
-      console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
-      return;
+    const markPrice = additional?.markPrice ?? 0;
+    let newValues: Partial<FullOrderState> = { ...currentOrder.current };
+    for (const key of Object.keys(values) as (keyof FullOrderState)[]) {
+      newValues = applyField(newValues, key, values[key], markPrice);
     }
 
-    /** Use local state directly to avoid stale closure. */
-    let newValues: Partial<FullOrderState> = { ...orderEntity };
-
-    Object.keys(values).forEach((key) => {
-      newValues = calculate(
+    if (
+      "order_price" in values ||
+      "order_quantity" in values ||
+      "total" in values
+    ) {
+      newValues = refreshOrderTPSL(
         newValues,
-        key as keyof FullOrderState,
-        values[key as keyof FullOrderState],
         additional?.markPrice ?? 0,
-        symbolInfo!,
+        "sync",
       );
-    });
-
-    actions.updateOrder(newValues);
+    } else {
+      Object.assign(
+        newValues,
+        priceToROI({ values: newValues, symbolLeverage, markPrice }),
+      );
+    }
+    updateOrder(newValues);
 
     return newValues;
   };
@@ -415,71 +311,58 @@ const useOrderEntryNextInternal = (
    * IMPORTANT: This intentionally skips `calculate()` to avoid overwriting user/advanced computed
    * fields (e.g. `sl_trigger_price`) via chained recomputation from other derived inputs.
    */
-  const setValuesRaw = (values: Partial<FullOrderState>) => {
-    if (!symbolInfo) {
-      actions.updateOrder(values);
-      // Raw merge path still updates store, but derived calculations are skipped when `symbolInfo` is missing.
-      console.warn(
-        "[ORDERLY]:symbolInfo missing; skipping derived order calculations",
-      );
-      return;
-    }
-
-    /** Use local state directly to avoid stale closure. */
-    const newValues: Partial<FullOrderState> = {
-      ...orderEntity,
+  const setValuesRaw = (
+    values: Partial<FullOrderState>,
+    markPrice?: number,
+  ) => {
+    let newValues: Partial<FullOrderState> = {
+      ...currentOrder.current,
       ...values,
     };
-
-    actions.updateOrder(newValues);
-
+    for (const leg of ["tp", "sl"] as const) {
+      const triggerKey = `${leg}_trigger_price` as const;
+      const lockedTrigger = lockedTPSLTriggers?.[leg];
+      if (triggerKey in values || `${leg}_order_type` in values) {
+        delete marketInputs.current[leg];
+      }
+      if (lockedTrigger !== undefined)
+        newValues[triggerKey] = String(lockedTrigger);
+    }
+    if (markPrice !== undefined) {
+      newValues = refreshOrderTPSL(newValues, markPrice, "sync");
+    }
+    updateOrder(newValues);
     return newValues;
   };
 
-  const onMarkPriceUpdated = useCallback(
-    (markPrice: number, baseOn: string[] = []) => {
-      if (!options.symbolInfo) return;
-      /** Use local state directly to avoid stale closure. */
-      let newValues: Partial<FullOrderState> = { ...orderEntity };
-
-      if (baseOn.length === 0) {
-        newValues = calculate(
-          { ...orderEntity },
-          "order_price",
-          markPrice,
-          markPrice,
-          options.symbolInfo!,
-        );
-      } else {
-        baseOn.forEach((key) => {
-          newValues = calculate(
-            { ...newValues },
-            key as keyof FullOrderState,
-            orderEntity[key as keyof FullOrderState],
-            markPrice,
-            options.symbolInfo!,
-          );
-        });
-      }
-
-      if (hasTPSL(newValues)) {
-        const { tp_ROI, sl_ROI } = priceToROI({
-          values: newValues,
-          symbolLeverage,
-          markPrice,
-        });
-        if (tp_ROI) {
-          newValues.tp_ROI = tp_ROI;
-        }
-        if (sl_ROI) {
-          newValues.sl_ROI = sl_ROI;
-        }
-      }
-
-      actions.updateOrder(newValues);
-    },
-    [actions, calculate, options.symbolInfo, symbolLeverage, orderEntity],
-  );
+  const onMarkPriceUpdated = (
+    markPrice: number,
+    lastChangedField?: keyof FullOrderState,
+  ) => {
+    if (!symbolInfo) return;
+    let newValues: Partial<FullOrderState> = { ...currentOrder.current };
+    const isMarket =
+      newValues.order_type === OrderType.MARKET ||
+      newValues.order_type === OrderType.STOP_MARKET;
+    if (isMarket) {
+      const mainField =
+        lastChangedField &&
+        !lastChangedField.startsWith("tp_") &&
+        !lastChangedField.startsWith("sl_")
+          ? lastChangedField
+          : undefined;
+      newValues = calculate(
+        newValues,
+        mainField ?? "order_price",
+        mainField ? newValues[mainField] : markPrice,
+        markPrice,
+        symbolInfo,
+      );
+    }
+    updateOrder(
+      refreshOrderTPSL(newValues, markPrice, isMarket ? "mark" : "sync"),
+    );
+  };
 
   const validate = (
     order: Partial<OrderlyOrder>,
@@ -494,6 +377,14 @@ const useOrderEntryNextInternal = (
     return creator?.validate(order, {
       ...options,
       symbol: symbolInfo!,
+      skipTPSLTriggerPriceAgainstMark: lockedTPSLTriggers && {
+        tp:
+          lockedTPSLTriggers.tp !== undefined &&
+          Number(order.tp_trigger_price) === Number(lockedTPSLTriggers.tp),
+        sl:
+          lockedTPSLTriggers.sl !== undefined &&
+          Number(order.sl_trigger_price) === Number(lockedTPSLTriggers.sl),
+      },
     });
   };
 
@@ -525,8 +416,30 @@ const useOrderEntryNextInternal = (
     // order.submit(values);
   }, [orderEntity]);
 
-  const resetOrder = (order?: Partial<OrderlyOrder>) => {
-    actions.resetOrder(order);
+  const resetOrder = () => {
+    marketInputs.current = {};
+    updateOrder({
+      order_price: "",
+      order_quantity: "",
+      trigger_price: "",
+      total: "",
+      tp_trigger_price: "",
+      tp_order_price: "",
+      tp_pnl: "",
+      tp_ROI: undefined,
+      tp_offset: "",
+      tp_offset_percentage: "",
+      tp_offset_from_mark: "",
+      tp_offset_percentage_from_mark: "",
+      sl_trigger_price: "",
+      sl_order_price: "",
+      sl_pnl: "",
+      sl_ROI: undefined,
+      sl_offset: "",
+      sl_offset_percentage: "",
+      sl_offset_from_mark: "",
+      sl_offset_percentage_from_mark: "",
+    });
   };
 
   return {

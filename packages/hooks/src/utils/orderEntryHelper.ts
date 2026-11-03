@@ -302,15 +302,11 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   ];
 }
 
-function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
+function tpslInputHandle(
+  inputs: orderEntryInputs,
+  lockTrigger?: boolean,
+): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
-  /** Mark-based offset modes must derive from mark price even when main order is LIMIT. */
-  // const useMarkPriceBase =
-  //   input === "tp_offset_from_mark" ||
-  //   input === "sl_offset_from_mark" ||
-  //   input === "tp_offset_percentage_from_mark" ||
-  //   input === "sl_offset_percentage_from_mark";
-
   const price =
     values.order_type === OrderType.MARKET ||
     values.order_type === OrderType.STOP_MARKET
@@ -318,7 +314,11 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
       : values.order_price;
 
   // if price or quantity is empty, return
-  if (!price || !values.order_quantity) {
+  if (
+    (!price || !values.order_quantity) &&
+    input.endsWith("_pnl") &&
+    value !== ""
+  ) {
     return [values, input, value, markPrice, config];
   }
 
@@ -327,7 +327,7 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     {
       key: input,
       value,
-      entryPrice: price, // order price or mark price
+      entryPrice: price ?? 0,
       qty:
         values.side === OrderSide.BUY
           ? Number(values.order_quantity)
@@ -339,6 +339,7 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     },
     {
       symbol: config,
+      lockTrigger,
     },
   );
 
@@ -356,6 +357,7 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
 export const getCalculateHandler = (
   fieldName: keyof OrderlyOrder,
+  lockTrigger?: boolean,
 ): orderEntryInputHandle => {
   switch (fieldName) {
     case "order_type":
@@ -387,7 +389,7 @@ export const getCalculateHandler = (
     case "tp_order_type":
     case "sl_order_type":
     case "sl_order_price":
-      return tpslInputHandle;
+      return (inputs) => tpslInputHandle(inputs, lockTrigger);
 
     default:
       return otherInputHandle;

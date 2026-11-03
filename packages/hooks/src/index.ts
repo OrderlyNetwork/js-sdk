@@ -175,5 +175,6 @@ export * from "./feature-flag";
 
 export {
   createTPSLOrderUpdates,
+  revalidateTPSLOrderUpdates,
   type TPSLChildUpdate,
 } from "./services/orderCreator/tpslOrderUpdates";

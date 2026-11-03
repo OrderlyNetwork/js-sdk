@@ -41,6 +41,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     PnLMode.PERCENTAGE,
   );
   const [focus, setFocus] = useState(true);
+  const [draft, setDraft] = useState<{ key: string; value: string }>();
 
   const { t } = useTranslation();
 
@@ -111,6 +112,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
 
   const onValueChange = (value: string) => {
     if (!props.disabled) {
+      setDraft({ key, value });
       props.onChange(key, value);
     }
   };
@@ -277,15 +279,19 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     formatter,
     onModeChange: (mode: PnLMode) => {
       if (!props.disabled) {
+        setDraft(undefined);
         setMode(mode);
       }
     },
     disabled: props.disabled,
-    value,
+    value: focus && !props.disabled && draft?.key === key ? draft.value : value,
     pnl: values[PnLMode.PnL],
     onValueChange,
     quote_dp: props.quote_dp,
-    setFocus,
+    setFocus: (focused: boolean) => {
+      if (!focused) setDraft(undefined);
+      setFocus(focused);
+    },
   };
 };
 

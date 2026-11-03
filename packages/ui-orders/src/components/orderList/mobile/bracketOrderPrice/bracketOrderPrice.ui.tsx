@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { cn, EditIcon, Flex, Text, modal } from "@orderly.network/ui";
+import { cn, EditIcon, Flex, Text } from "@orderly.network/ui";
+import { EditBracketOrderModal } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
 import { MobileTooltip } from "../items";
 import { BracketOrderPriceState } from "./bracketOrderPrice.script";
@@ -8,11 +9,7 @@ import { BracketOrderPriceState } from "./bracketOrderPrice.script";
 export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
   const { t } = useTranslation();
 
-  const onEdit = () => {
-    modal.show("EditBracketOrderSheetId", {
-      order: props.order,
-    });
-  };
+  const [editOpen, setEditOpen] = useState(false);
 
   if (!props.sl_trigger_price && !props.tp_trigger_price) return <></>;
 
@@ -79,11 +76,19 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
         </button>
       </MobileTooltip>
       <EditIcon
-        onClick={onEdit}
+        onClick={() => setEditOpen(true)}
         opacity={1}
         className="oui-cursor-pointer oui-text-base-contrast-54"
         size={16}
       />
+      {editOpen && (
+        <EditBracketOrderModal
+          mode="sheet"
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          order={props.order}
+        />
+      )}
     </Flex>
   );
 };
