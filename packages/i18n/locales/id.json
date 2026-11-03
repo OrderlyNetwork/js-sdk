@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilitas Naik",
   "prediction.lastPrice": "Harga terakhir",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Terakhir/Prob. Naik",
   "prediction.column.time&volume": "Waktu/Volume",
   "prediction.markPrice.tooltip": "Harga penandaan Prediksi. Selama perdagangan, harganya sama dengan harga indeks Prediksi; saat penyelesaian menjadi 0, 0,5 atau 1. Turun menampilkan 1 dikurangi harga penandaan Naik.",
   "prediction.orderBook": "Buku order",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Coba lagi",
   "notification.pagination": "Halaman pengumuman",
   "notification.newAnnouncements": "Pengumuman baru",
-  "tradingPoints.points": "Poin"
+  "tradingPoints.points": "Poin",
+  "prediction.message.connectWallet": "Hubungkan dompet Anda untuk bertrading."
 }

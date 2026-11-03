@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilidad de alza",
   "prediction.lastPrice": "Último precio",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Último/Prob. alza",
   "prediction.column.time&volume": "Hora/Volumen",
   "prediction.markPrice.tooltip": "Precio de marcación de Predicción. Durante la negociación coincide con el precio índice de Predicción; en la liquidación pasa a ser 0, 0,5 o 1. La baja muestra 1 menos el precio de marcación del alza.",
   "prediction.orderBook": "Libro de órdenes",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Reintentar",
   "notification.pagination": "Páginas de anuncios",
   "notification.newAnnouncements": "Nuevos anuncios",
-  "tradingPoints.points": "Puntos"
+  "tradingPoints.points": "Puntos",
+  "prediction.message.connectWallet": "Conecta tu billetera para operar."
 }

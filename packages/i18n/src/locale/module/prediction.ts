@@ -49,7 +49,6 @@ export const prediction = {
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
   /** Combined compact-panel headers, perps `Last/24h %` style. */
-  "prediction.column.last&probability": "Last/Up prob.",
   "prediction.column.time&volume": "Time/Vol",
   "prediction.markPrice.tooltip":
     "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0, 0.5 or 1. DOWN displays 1 minus the UP mark price.",
@@ -115,6 +114,7 @@ export const prediction = {
   "prediction.closed": "Closed",
   "prediction.invalidOrder": "Enter a valid price and available quantity.",
   "prediction.message.orderFailed": "Order was not accepted. Please try again.",
+  "prediction.message.connectWallet": "Connect your wallet to trade.",
   "prediction.rounds.unavailable":
     "No prediction rounds are available right now. Please try again later.",
   "prediction.estimatedFee": "Est. fee",

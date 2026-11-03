@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilité de hausse",
   "prediction.lastPrice": "Dernier prix",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Dernier/Prob. hausse",
   "prediction.column.time&volume": "Heure/Volume",
   "prediction.markPrice.tooltip": "Prix de marque de la Prédiction. Pendant la négociation, il est égal au prix indiciel de la Prédiction ; au règlement, il devient 0, 0,5 ou 1. La baisse affiche 1 moins le prix de marque de la hausse.",
   "prediction.orderBook": "Carnet d'ordres",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Réessayer",
   "notification.pagination": "Pages d'annonces",
   "notification.newAnnouncements": "Nouvelles annonces",
-  "tradingPoints.points": "Points"
+  "tradingPoints.points": "Points",
+  "prediction.message.connectWallet": "Connectez votre portefeuille pour trader."
 }

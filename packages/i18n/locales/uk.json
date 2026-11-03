@@ -328,7 +328,6 @@
   "prediction.probability": "Ймовірність росту",
   "prediction.lastPrice": "Остання ціна",
   "prediction.volumeShort": "Обсяг",
-  "prediction.column.last&probability": "Ост./Ймовір. росту",
   "prediction.column.time&volume": "Час/Обсяг",
   "prediction.markPrice.tooltip": "Ціна маркування Прогнозу. Під час торгів вона дорівнює індексній ціні Прогнозу; під час розрахунку стає 0, 0,5 або 1. «Вниз» відображається як 1 мінус ціна маркування «Вгору».",
   "prediction.orderBook": "Книга ордерів",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Повторити",
   "notification.pagination": "Сторінки оголошень",
   "notification.newAnnouncements": "Нові оголошення",
-  "tradingPoints.points": "Бали"
+  "tradingPoints.points": "Бали",
+  "prediction.message.connectWallet": "Підключіть гаманець, щоб торгувати."
 }

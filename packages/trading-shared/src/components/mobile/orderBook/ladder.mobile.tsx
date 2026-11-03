@@ -36,7 +36,7 @@ export interface MobileOrderBookLadderProps {
   symbolInfo: BasicSymbolInfo;
   /** Active depth key; its decimals drive the price precision. Defaults to `symbolInfo.base_tick`. */
   depth?: string;
-  /** Depth options; providing them renders the depth picker row. */
+  /** Depth options; providing them renders the depth picker row. A single option renders without the picker. */
   depths?: string[];
   onDepthChange?: (depth: number) => void;
   /** @default 20 */
@@ -106,6 +106,8 @@ export const MobileOrderBookLadder: FC<MobileOrderBookLadderProps> = (
             depth={depths}
             value={activeDepth}
             onChange={onDepthChange}
+            // Nothing to choose from: keep the control but drop the picker.
+            readOnly={depths.length === 1}
           />
         ) : null}
         {isLoading && (

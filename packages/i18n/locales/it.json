@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilità di rialzo",
   "prediction.lastPrice": "Ultimo prezzo",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Ultimo/Prob. rialzo",
   "prediction.column.time&volume": "Ora/Volume",
   "prediction.markPrice.tooltip": "Prezzo di marking di Previsione. Durante la negoziazione coincide con il prezzo indice di Previsione; al regolamento diventa 0, 0,5 o 1. Il ribasso mostra 1 meno il prezzo di marking del rialzo.",
   "prediction.orderBook": "Libro degli ordini",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Riprova",
   "notification.pagination": "Pagine degli annunci",
   "notification.newAnnouncements": "Nuovi annunci",
-  "tradingPoints.points": "Punti"
+  "tradingPoints.points": "Punti",
+  "prediction.message.connectWallet": "Connetti il tuo wallet per fare trading."
 }

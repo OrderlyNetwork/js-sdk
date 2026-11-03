@@ -32,7 +32,7 @@ import {
   filterPredictionMarkets,
   formatPredictionMarketName,
 } from "./predictionMarketSearch";
-import { formatCountdown, formatPercent } from "./predictionShared";
+import { formatCountdown } from "./predictionShared";
 
 const predictionMarketTab = (name: string): MarketTabConfig => ({
   id: "prediction",
@@ -91,7 +91,7 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
   // Shared heartbeat tick: rows update their own countdown each second
   // without re-rendering the whole panel.
   const seconds = useRoundCountdown(market.currentRow.expire_at);
-  // Mid = UP win probability; both sides must be present to derive it.
+  // The displayed price is the midpoint and requires both sides of the book.
   const price =
     bbo?.bestBid != null && bbo?.bestAsk != null
       ? new Decimal(bbo.bestBid).add(bbo.bestAsk).div(2).toNumber()
@@ -104,13 +104,6 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
             market.currentRow.quote_tick ?? DEFAULT_BINARY_QUOTE_TICK,
           ).decimalPlaces(),
         );
-  // Chance derives from the tick-rounded last price so both cells read as the
-  // same number; a half-tick mid like 0.505 would otherwise split into
-  // Last 0.51 vs Chance 50.5%.
-  const chance =
-    price == null
-      ? "--"
-      : formatPercent(new Decimal(lastPrice).mul(100).toNumber());
   const countdown = market.hasLiveRow
     ? formatCountdown(seconds)
     : t("prediction.closed");
@@ -191,10 +184,7 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
       >
         <td className="oui-text-start oui-align-middle">{symbolCell}</td>
         <td className="oui-text-end oui-align-middle">
-          <div className="oui-flex oui-flex-col oui-items-end oui-gap-1">
-            <Text size="2xs">{lastPrice}</Text>
-            <Text size="2xs">{chance}</Text>
-          </div>
+          <Text size="2xs">{lastPrice}</Text>
         </td>
         <td className="oui-text-end oui-align-middle">
           <div className="oui-flex oui-flex-col oui-items-end oui-gap-1">
@@ -222,7 +212,6 @@ const PredictionMarketRowImpl: React.FC<PredictionMarketRowProps> = ({
       )}
       <td className="oui-text-start">{symbolCell}</td>
       <td className={priceClassName}>{lastPrice}</td>
-      <td className={priceClassName}>{chance}</td>
       <td className="oui-text-xs oui-text-end">{volumeCell}</td>
       <td className={priceClassName}>
         <Text intensity={market.hasLiveRow ? undefined : 54}>{countdown}</Text>
@@ -340,7 +329,6 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
             <col className="oui-w-[100px]" />
             <col className="oui-w-[100px]" />
             <col className="oui-w-[100px]" />
-            <col className="oui-w-[100px]" />
           </colgroup>
         ) : compact ? (
           <colgroup>
@@ -350,8 +338,7 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
           </colgroup>
         ) : (
           <colgroup>
-            <col className="oui-w-[34%]" />
-            <col className="oui-w-[16%]" />
+            <col className="oui-w-[50%]" />
             <col className="oui-w-[16%]" />
             <col className="oui-w-[16%]" />
             <col className="oui-w-[18%]" />
@@ -385,9 +372,8 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
             <th className="oui-text-start">{t("common.symbol")}</th>
             {compact ? (
               <>
-                {/* Combined single-line headers, perps `Last/24h %` style. */}
                 <th className="oui-whitespace-nowrap oui-text-end">
-                  {t("prediction.column.last&probability")}
+                  {t("markets.column.last")}
                 </th>
                 <th className="oui-whitespace-nowrap oui-text-end">
                   {t("prediction.column.time&volume")}
@@ -396,7 +382,6 @@ export const PredictionMarketPanel: React.FC<PredictionMarketPanelProps> = ({
             ) : (
               <>
                 <th className="oui-text-end">{t("markets.column.last")}</th>
-                <th className="oui-text-end">{t("prediction.probability")}</th>
                 <th className="oui-text-end">{t("prediction.volumeShort")}</th>
                 <th className="oui-text-end">{t("common.time")}</th>
               </>

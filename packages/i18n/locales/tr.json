@@ -328,7 +328,6 @@
   "prediction.probability": "Yükseliş olasılığı",
   "prediction.lastPrice": "Son fiyat",
   "prediction.volumeShort": "Hacim",
-  "prediction.column.last&probability": "Son/Yüks. olas.",
   "prediction.column.time&volume": "Zaman/Hacim",
   "prediction.markPrice.tooltip": "Tahmin işaret fiyatı. İşlem sırasında Tahmin endeks fiyatına eşittir; uzlaşımda 0, 0,5 veya 1 olur. Aşağı, 1 eksi Yukarı işaret fiyatı olarak görüntülenir.",
   "prediction.orderBook": "Emir defteri",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Yeniden dene",
   "notification.pagination": "Duyuru sayfaları",
   "notification.newAnnouncements": "Yeni duyurular",
-  "tradingPoints.points": "Puanlar"
+  "tradingPoints.points": "Puanlar",
+  "prediction.message.connectWallet": "İşlem yapmak için cüzdanınızı bağlayın."
 }

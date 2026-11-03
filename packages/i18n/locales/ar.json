@@ -328,7 +328,6 @@
   "prediction.probability": "احتمال الصعود",
   "prediction.lastPrice": "آخر سعر",
   "prediction.volumeShort": "الحجم",
-  "prediction.column.last&probability": "الأخير/احتمال الصعود",
   "prediction.column.time&volume": "الوقت/الحجم",
   "prediction.markPrice.tooltip": "سعر العلامة للتوقعات. أثناء التداول يساوي سعر المؤشر للتوقعات؛ وعند التسوية يصبح 0 أو 0.5 أو 1. يُعرض الهبوط كـ 1 ناقص سعر علامة الصعود.",
   "prediction.orderBook": "دفتر الأوامر",
@@ -1497,5 +1496,6 @@
   "notification.retry": "إعادة المحاولة",
   "notification.pagination": "صفحات الإعلانات",
   "notification.newAnnouncements": "إعلانات جديدة",
-  "tradingPoints.points": "النقاط"
+  "tradingPoints.points": "النقاط",
+  "prediction.message.connectWallet": "اربط محفظتك للتداول."
 }

@@ -35,7 +35,7 @@ export interface OrderBookLadderProps {
   symbolInfo: BasicSymbolInfo;
   /** Active depth key; its decimals drive the price precision. Defaults to `symbolInfo.base_tick`. */
   depth?: string;
-  /** Depth options; providing them renders the depth selector toolbar row. */
+  /** Depth options; providing them renders the depth selector toolbar row. A single option renders without the dropdown. */
   depths?: string[];
   onDepthChange?: (depth: number) => void;
   /** @default 20 */
@@ -84,6 +84,8 @@ export const OrderBookLadder: FC<OrderBookLadderProps> = (props) => {
           depths={depths}
           value={activeDepth}
           onChange={onDepthChange}
+          // Nothing to choose from: keep the control but drop the dropdown.
+          readOnly={depths.length === 1}
         />
       </Flex>
     ) : null;

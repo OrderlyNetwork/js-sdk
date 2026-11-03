@@ -328,7 +328,6 @@
   "prediction.probability": "上涨概率",
   "prediction.lastPrice": "最新价",
   "prediction.volumeShort": "成交量",
-  "prediction.column.last&probability": "最新/上涨概率",
   "prediction.column.time&volume": "时间/成交量",
   "prediction.markPrice.tooltip": "预测标记价格。交易期间等于预测指数价格，结算时变为 0、0.5 或 1。跌方向显示为 1 减去涨方向标记价格。",
   "prediction.orderBook": "订单簿",
@@ -1497,5 +1496,6 @@
   "notification.retry": "重试",
   "notification.pagination": "公告分页",
   "notification.newAnnouncements": "新公告",
-  "tradingPoints.points": "积分"
+  "tradingPoints.points": "积分",
+  "prediction.message.connectWallet": "请连接钱包以进行交易。"
 }

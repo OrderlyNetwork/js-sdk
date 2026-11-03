@@ -328,7 +328,6 @@
   "prediction.probability": "احتمال صعود",
   "prediction.lastPrice": "آخرین قیمت",
   "prediction.volumeShort": "حجم",
-  "prediction.column.last&probability": "آخر/احتمال صعود",
   "prediction.column.time&volume": "زمان/حجم",
   "prediction.markPrice.tooltip": "قیمت نشان پیش‌بینی. در طول معاملات با قیمت شاخص پیش‌بینی برابر است و در تسویه به 0، 0.5 یا 1 تبدیل می‌شود. نزولی به‌صورت 1 منهای قیمت نشان صعودی نمایش داده می‌شود.",
   "prediction.orderBook": "دفتر سفارش‌ها",
@@ -1497,5 +1496,6 @@
   "notification.retry": "تلاش مجدد",
   "notification.pagination": "صفحات اطلاعیه‌ها",
   "notification.newAnnouncements": "اطلاعیه‌های جدید",
-  "tradingPoints.points": "امتیاز"
+  "tradingPoints.points": "امتیاز",
+  "prediction.message.connectWallet": "برای معامله، کیف پول خود را متصل کنید."
 }

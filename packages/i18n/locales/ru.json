@@ -328,7 +328,6 @@
   "prediction.probability": "Вероятность роста",
   "prediction.lastPrice": "Последняя цена",
   "prediction.volumeShort": "Объём",
-  "prediction.column.last&probability": "Посл./Вероят. роста",
   "prediction.column.time&volume": "Время/Объем",
   "prediction.markPrice.tooltip": "Цена маркировки Прогноза. Во время торговли она равна индексной цене Прогноза; при расчёте становится 0, 0,5 или 1. «Вниз» отображается как 1 минус цена маркировки «Вверх».",
   "prediction.orderBook": "Книга ордеров",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Повторить",
   "notification.pagination": "Страницы объявлений",
   "notification.newAnnouncements": "Новые объявления",
-  "tradingPoints.points": "Баллы"
+  "tradingPoints.points": "Баллы",
+  "prediction.message.connectWallet": "Подключите кошелёк, чтобы торговать."
 }

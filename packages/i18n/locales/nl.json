@@ -328,7 +328,6 @@
   "prediction.probability": "Up-waarschijnlijkheid",
   "prediction.lastPrice": "Laatste prijs",
   "prediction.volumeShort": "Vol.",
-  "prediction.column.last&probability": "Laatste/Up-waarsch.",
   "prediction.column.time&volume": "Tijd/Volume",
   "prediction.markPrice.tooltip": "Markeringsprijs van Voorspelling. Tijdens de handel is deze gelijk aan de indexprijs van Voorspelling; bij afwikkeling wordt deze 0, 0,5 of 1. Omlaag toont 1 min de markeringsprijs van Omhoog.",
   "prediction.orderBook": "Orderboek",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Opnieuw proberen",
   "notification.pagination": "Aankondigingspagina's",
   "notification.newAnnouncements": "Nieuwe aankondigingen",
-  "tradingPoints.points": "Punten"
+  "tradingPoints.points": "Punten",
+  "prediction.message.connectWallet": "Verbind je wallet om te handelen."
 }

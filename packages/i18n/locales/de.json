@@ -328,7 +328,6 @@
   "prediction.probability": "Up-Wahrscheinlichkeit",
   "prediction.lastPrice": "Letzter Preis",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Letzter/Up-Wahrsch.",
   "prediction.column.time&volume": "Zeit/Volumen",
   "prediction.markPrice.tooltip": "Marktpreis der Prognose. Während des Handels entspricht er dem Prognose-Indexpreis; bei der Abrechnung wird er 0, 0,5 oder 1. Fallen zeigt 1 minus den Marktpreis von Steigen an.",
   "prediction.orderBook": "Orderbuch",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Erneut versuchen",
   "notification.pagination": "Ankündigungsseiten",
   "notification.newAnnouncements": "Neue Ankündigungen",
-  "tradingPoints.points": "Punkte"
+  "tradingPoints.points": "Punkte",
+  "prediction.message.connectWallet": "Verbinde deine Wallet, um zu handeln."
 }

@@ -328,7 +328,6 @@
   "prediction.probability": "Xác suất Lên",
   "prediction.lastPrice": "Giá gần nhất",
   "prediction.volumeShort": "KL",
-  "prediction.column.last&probability": "Gần nhất/Xác suất Lên",
   "prediction.column.time&volume": "Thời gian/Khối lượng",
   "prediction.markPrice.tooltip": "Giá đánh dấu của Dự đoán. Trong phiên giao dịch bằng với giá chỉ số của Dự đoán; khi quyết toán sẽ thành 0, 0,5 hoặc 1. Xuống hiển thị bằng 1 trừ đi giá đánh dấu của Lên.",
   "prediction.orderBook": "Sổ lệnh",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Thử lại",
   "notification.pagination": "Trang thông báo",
   "notification.newAnnouncements": "Thông báo mới",
-  "tradingPoints.points": "Điểm"
+  "tradingPoints.points": "Điểm",
+  "prediction.message.connectWallet": "Kết nối ví của bạn để giao dịch."
 }

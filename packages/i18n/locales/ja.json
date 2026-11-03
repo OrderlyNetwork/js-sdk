@@ -328,7 +328,6 @@
   "prediction.probability": "上昇確率",
   "prediction.lastPrice": "最新価格",
   "prediction.volumeShort": "出来高",
-  "prediction.column.last&probability": "最終/上昇確率",
   "prediction.column.time&volume": "時間/出来高",
   "prediction.markPrice.tooltip": "予測のマーク価格。取引中は予測指数価格と一致し、決済時には 0、0.5 または 1 になります。下落側は 1 から上昇側のマーク価格を差し引いた値で表示されます。",
   "prediction.orderBook": "オーダーブック",
@@ -1497,5 +1496,6 @@
   "notification.retry": "再試行",
   "notification.pagination": "お知らせのページ",
   "notification.newAnnouncements": "新着のお知らせ",
-  "tradingPoints.points": "ポイント"
+  "tradingPoints.points": "ポイント",
+  "prediction.message.connectWallet": "取引するにはウォレットを接続してください。"
 }

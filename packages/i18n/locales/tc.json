@@ -328,7 +328,6 @@
   "prediction.probability": "上漲機率",
   "prediction.lastPrice": "最新價",
   "prediction.volumeShort": "成交量",
-  "prediction.column.last&probability": "最新/上漲機率",
   "prediction.column.time&volume": "時間/成交量",
   "prediction.markPrice.tooltip": "預測標記價格。交易期間等於預測指數價格，結算時變為 0、0.5 或 1。跌方向顯示為 1 減去漲方向標記價格。",
   "prediction.orderBook": "訂單簿",
@@ -1497,5 +1496,6 @@
   "notification.retry": "重試",
   "notification.pagination": "公告分頁",
   "notification.newAnnouncements": "新公告",
-  "tradingPoints.points": "積分"
+  "tradingPoints.points": "積分",
+  "prediction.message.connectWallet": "請連接錢包以進行交易。"
 }

@@ -328,7 +328,6 @@
   "prediction.probability": "Prawdopodobieństwo wzrostu",
   "prediction.lastPrice": "Ostatnia cena",
   "prediction.volumeShort": "Wol.",
-  "prediction.column.last&probability": "Ost./Prawdop. wzrostu",
   "prediction.column.time&volume": "Czas/Wolumen",
   "prediction.markPrice.tooltip": "Cena znacznika Prognozy. Podczas handlu jest równa cenie indeksu Prognozy; przy rozliczeniu staje się 0, 0,5 lub 1. Spadek wyświetla 1 minus cena znacznika Wzrostu.",
   "prediction.orderBook": "Arkusz zleceń",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Spróbuj ponownie",
   "notification.pagination": "Strony ogłoszeń",
   "notification.newAnnouncements": "Nowe ogłoszenia",
-  "tradingPoints.points": "Punkty"
+  "tradingPoints.points": "Punkty",
+  "prediction.message.connectWallet": "Połącz portfel, aby handlować."
 }

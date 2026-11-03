@@ -328,7 +328,6 @@
   "prediction.probability": "Up probability",
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Last/Up prob.",
   "prediction.column.time&volume": "Time/Vol",
   "prediction.markPrice.tooltip": "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0, 0.5 or 1. DOWN displays 1 minus the UP mark price.",
   "prediction.orderBook": "Order book",
@@ -1497,5 +1496,6 @@
   "notification.retry": "Retry",
   "notification.pagination": "Announcement pages",
   "notification.newAnnouncements": "New announcements",
-  "tradingPoints.points": "Points"
+  "tradingPoints.points": "Points",
+  "prediction.message.connectWallet": "Connect your wallet to trade."
 }

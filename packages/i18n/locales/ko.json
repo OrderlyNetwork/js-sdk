@@ -328,7 +328,6 @@
   "prediction.probability": "상승 확률",
   "prediction.lastPrice": "최근 가격",
   "prediction.volumeShort": "거래량",
-  "prediction.column.last&probability": "현재가/상승 확률",
   "prediction.column.time&volume": "시간/거래량",
   "prediction.markPrice.tooltip": "예측 마크 가격. 거래 중에는 예측 지수 가격과 동일하며 정산 시 0, 0.5 또는 1이 됩니다. 하락은 1에서 상승 마크 가격을 뺀 값으로 표시됩니다.",
   "prediction.orderBook": "오더북",
@@ -1497,5 +1496,6 @@
   "notification.retry": "재시도",
   "notification.pagination": "공지 페이지",
   "notification.newAnnouncements": "새 공지",
-  "tradingPoints.points": "포인트"
+  "tradingPoints.points": "포인트",
+  "prediction.message.connectWallet": "거래하려면 지갑을 연결하세요."
 }
