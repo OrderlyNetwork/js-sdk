@@ -14,7 +14,7 @@ import {
   NewsFillIcon,
   Box,
   Tooltip,
-  WarningIcon,
+  InfoCircleIcon,
 } from "@orderly.network/ui";
 import { CloseIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -31,6 +31,7 @@ import { SymbolBadge } from "../symbolBadge";
 import { SymbolDisplay } from "../symbolDisplay";
 import { RwaTooltip } from "./rwaTooltip";
 import type { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.script";
+import { useSymbolInfoBarRiskNoticeDismissal } from "./useSymbolInfoBarRiskNoticeDismissal";
 
 const LazyDropDownMarketsWidget = React.lazy(() =>
   import("../dropDownMarkets").then((mod) => {
@@ -57,6 +58,7 @@ const RISK_NOTICE_LEARN_MORE_URL =
 export const SymbolInfoBarRiskNotice: React.FC<{
   className?: string;
   visible: boolean;
+  symbol?: string;
   symbolWithBroker: string;
   brokerName: string;
   isPreTge?: boolean;
@@ -66,44 +68,73 @@ export const SymbolInfoBarRiskNotice: React.FC<{
   className,
   visible,
   symbolWithBroker,
+  symbol = symbolWithBroker,
   brokerName,
   isPreTge,
   autoHeight,
 }) => {
   const { t } = useTranslation();
-  if (!visible) return null;
+  const [dismissed, setDismissed] = useSymbolInfoBarRiskNoticeDismissal(
+    symbol,
+    isPreTge,
+  );
+
+  if (!visible || dismissed === true) return null;
+
   return (
-    <a
-      href={RISK_NOTICE_LEARN_MORE_URL}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Flex
+      itemAlign="start"
+      gap={2}
       className={cn(
-        "oui-symbol-info-bar-risk-notice oui-w-full oui-bg-warning-darken/10 oui-rounded-none oui-text-warning-darken hover:oui-cursor-pointer oui-block",
+        "oui-symbol-info-bar-risk-notice oui-w-full oui-shrink-0 oui-bg-base-6 oui-rounded-md oui-text-base-contrast-54 oui-pe-3",
+        autoHeight ? "oui-min-h-0" : "oui-min-h-[46px]",
         className,
       )}
     >
-      <Flex
-        itemAlign="center"
-        gap={2}
-        className={
-          autoHeight ? "oui-min-h-0 oui-py-2 oui-px-2" : "oui-h-[46px] oui-px-3"
-        }
-      >
-        <WarningIcon className="oui-shrink-0 oui-size-4 oui-text-warning-darken" />
-        <Text size="xs" className="oui-text-warning-darken oui-flex-1">
-          {t(
-            isPreTge
-              ? "markets.symbolInfoBar.riskNotice.preLaunch.content"
-              : "markets.symbolInfoBar.riskNotice.content",
-            {
-              symbolWithBroker,
-              brokerName,
-            },
-          )}{" "}
-          <span className="oui-underline">{t("common.learnMore")}</span>
+      <div className="oui-flex oui-min-w-0 oui-flex-1 oui-items-center oui-gap-2 oui-self-stretch oui-py-2 oui-ps-3">
+        <InfoCircleIcon
+          opacity={1}
+          className="oui-size-4 oui-shrink-0 oui-self-center oui-text-base-contrast-54"
+        />
+        <Text
+          size="xs"
+          className="oui-min-w-0 oui-flex-1 oui-break-words oui-leading-5 oui-text-base-contrast-54"
+        >
+          <a
+            href={RISK_NOTICE_LEARN_MORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="oui-cursor-pointer"
+          >
+            {t(
+              isPreTge
+                ? "markets.symbolInfoBar.riskNotice.preLaunch.content"
+                : "markets.symbolInfoBar.riskNotice.content",
+              {
+                symbolWithBroker,
+                brokerName,
+              },
+            )}{" "}
+            <span className="oui-whitespace-nowrap oui-text-base-contrast oui-underline">
+              {t("common.learnMore")}
+            </span>
+          </a>
         </Text>
-      </Flex>
-    </a>
+      </div>
+      <button
+        type="button"
+        aria-label={t("common.close")}
+        className="oui-group -oui-me-1 oui-grid oui-size-8 oui-shrink-0 oui-cursor-pointer oui-place-items-center oui-self-center oui-rounded-md focus-visible:oui-outline focus-visible:oui-outline-1 focus-visible:oui-outline-base-contrast"
+        onClick={() => setDismissed(true)}
+      >
+        {/* Color goes on the icon itself: BaseIcon defaults to oui-text-black */}
+        <CloseIcon
+          size={16}
+          opacity={1}
+          className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast group-focus-visible:oui-text-base-contrast"
+        />
+      </button>
+    </Flex>
   );
 };
 
@@ -401,6 +432,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
       {/* autoHeight: banner text can wrap — fixed 46px row spilled over the chart in compact hosts */}
       <SymbolInfoBarRiskNotice
         visible={isCommunityListed}
+        symbol={symbol}
         symbolWithBroker={symbolWithBroker}
         brokerName={brokerNameRaw ?? brokerName ?? ""}
         isPreTge={isPreTge}

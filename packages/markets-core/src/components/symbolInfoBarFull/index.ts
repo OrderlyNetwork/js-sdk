@@ -7,3 +7,4 @@ export { SymbolInfoBarFullWidget } from "./symbolInfoBarFull.widget";
 export type { SymbolInfoBarFullProps } from "./symbolInfoBarFull.ui";
 export { DataItem } from "./dataItem.ui";
 export type { DataItemProps } from "./dataItem.ui";
+export { useSymbolInfoBarRiskNoticeDismissal } from "./useSymbolInfoBarRiskNoticeDismissal";

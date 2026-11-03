@@ -23,12 +23,14 @@ import { CSS, Transform } from "@dnd-kit/utilities";
 import {
   useBadgeBySymbol,
   useGetRwaSymbolOpenStatus,
+  useSymbolsInfo,
   useLocalStorage,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
+  useSymbolInfoBarRiskNoticeDismissal,
   HorizontalMarketsWidget,
 } from "@orderly.network/markets";
 import {
@@ -180,12 +182,20 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   } = props;
 
   const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
-  const { brokerName } = useBadgeBySymbol(props.symbol);
+  const { brokerId, brokerName } = useBadgeBySymbol(props.symbol);
+  const symbolsInfo = useSymbolsInfo();
+  const isPreTge = Boolean(symbolsInfo[props.symbol]?.("is_pretge"));
+  const [riskNoticeDismissed] = useSymbolInfoBarRiskNoticeDismissal(
+    props.symbol,
+    isPreTge,
+  );
+  const showRiskNotice =
+    Boolean(brokerId ?? brokerName) && riskNoticeDismissed !== true;
   const { t } = useTranslation();
 
   const symbolInfoBarHeight = useMemo(() => {
     let height = 56;
-    if (brokerName) {
+    if (showRiskNotice) {
       height += 46;
       height += 8;
     }
@@ -193,7 +203,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       height += 48;
     }
     return height;
-  }, [showCountdown, brokerName]);
+  }, [showCountdown, showRiskNotice]);
 
   const { isRwa, open } = useGetRwaSymbolOpenStatus(props.symbol);
 
@@ -451,11 +461,10 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const symbolInfoBarView = (
     <Box
-      className="oui-trading-symbolInfoBar-container"
+      className="oui-trading-symbolInfoBar-container oui-shrink-0"
       width="100%"
       style={{
         minHeight: symbolInfoBarHeight,
-        height: symbolInfoBarHeight,
       }}
     >
       <SymbolInfoBarFullWidget

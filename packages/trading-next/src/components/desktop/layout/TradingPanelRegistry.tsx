@@ -123,7 +123,7 @@ export function createTradingPanelRegistry(
           display: "flex",
           flexDirection: "column",
           minHeight: symbolInfoBarHeight,
-          height: symbolInfoBarHeight,
+          flexShrink: 0,
           width: "100%",
         }}
       >
