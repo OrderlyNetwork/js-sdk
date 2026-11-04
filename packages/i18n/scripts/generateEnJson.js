@@ -4,7 +4,7 @@ const { en } = require("../dist");
 
 async function generateEnJson() {
   const outPath = path.resolve(__dirname, "../locales/en.json");
-  const jsonData = JSON.stringify(en, null, 2);
+  const jsonData = JSON.stringify(en, null, 2) + "\n";
   await fs.outputFile(outPath, jsonData, { encoding: "utf8" });
 }
 
