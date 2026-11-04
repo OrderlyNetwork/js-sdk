@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Laden fehlgeschlagen. Neuer Versuch…",
   "prediction.noData": "Noch keine Daten",
   "prediction.chart.priceToBeat": "Zu schlagender Preis",
-  "prediction.chart.priceToBeatHint": "Der zu schlagende Preis ist der BTC-Indexpreis zu Beginn dieser Runde.",
+  "prediction.chart.priceToBeatHint": "Der zu schlagende Preis ist der 60-Sekunden-Durchschnitt des BTC-Indexpreises zu Beginn dieser Runde.",
   "prediction.chart.currentPriceHint": "Der aktuelle Preis ist der BTC-Indexpreis in Echtzeit und dient nur als Referenz. Er ist nicht der Abrechnungspreis.",
   "prediction.chart.priceMode": "Preischart",
   "prediction.chart.chartMode": "Kerzenchart",

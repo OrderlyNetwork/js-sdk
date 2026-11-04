@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Laden mislukt. Opnieuw proberen…",
   "prediction.noData": "Nog geen gegevens",
   "prediction.chart.priceToBeat": "Te kloppen prijs",
-  "prediction.chart.priceToBeatHint": "De te kloppen prijs is de BTC-indexprijs aan het begin van deze ronde.",
+  "prediction.chart.priceToBeatHint": "De te kloppen prijs is de 60-secondengemiddelde BTC-indexprijs aan het begin van deze ronde.",
   "prediction.chart.currentPriceHint": "De huidige prijs is de realtime BTC-indexprijs, alleen ter referentie. Het is niet de vereffeningsprijs.",
   "prediction.chart.priceMode": "Prijsgrafiek",
   "prediction.chart.chartMode": "Candlestickgrafiek",

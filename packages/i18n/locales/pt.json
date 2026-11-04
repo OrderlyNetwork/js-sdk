@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Falha ao carregar. Tentando novamente…",
   "prediction.noData": "Ainda não há dados",
   "prediction.chart.priceToBeat": "Preço a superar",
-  "prediction.chart.priceToBeatHint": "O preço a superar é o preço índice do BTC no início desta rodada.",
+  "prediction.chart.priceToBeatHint": "O preço a superar é a média de 60 segundos do preço índice do BTC no início desta rodada.",
   "prediction.chart.currentPriceHint": "O preço atual é o preço índice do BTC em tempo real, apenas como referência. Não é o preço de liquidação.",
   "prediction.chart.priceMode": "Gráfico de preço",
   "prediction.chart.chartMode": "Gráfico de candles",

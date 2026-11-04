@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Yükleme başarısız. Yeniden deneniyor…",
   "prediction.noData": "Henüz veri yok",
   "prediction.chart.priceToBeat": "Aşılacak fiyat",
-  "prediction.chart.priceToBeatHint": "Aşılacak fiyat, bu turun başlangıcındaki BTC endeks fiyatıdır.",
+  "prediction.chart.priceToBeatHint": "Aşılacak fiyat, bu turun başlangıcındaki 60 saniyelik ortalama BTC endeks fiyatıdır.",
   "prediction.chart.currentPriceHint": "Güncel fiyat, yalnızca bilgi amaçlı gerçek zamanlı BTC endeks fiyatıdır. Uzlaşma fiyatı değildir.",
   "prediction.chart.priceMode": "Fiyat grafiği",
   "prediction.chart.chartMode": "Mum grafiği",

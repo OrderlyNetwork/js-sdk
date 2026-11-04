@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Не удалось загрузить. Повторная попытка…",
   "prediction.noData": "Данных пока нет",
   "prediction.chart.priceToBeat": "Целевая цена",
-  "prediction.chart.priceToBeatHint": "Целевая цена — это индексная цена BTC на начало этого раунда.",
+  "prediction.chart.priceToBeatHint": "Целевая цена — это средняя за 60 секунд индексная цена BTC на начало этого раунда.",
   "prediction.chart.currentPriceHint": "Текущая цена — это индексная цена BTC в реальном времени, приведена для справки. Она не является ценой расчёта.",
   "prediction.chart.priceMode": "График цены",
   "prediction.chart.chartMode": "Свечной график",

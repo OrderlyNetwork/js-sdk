@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Не вдалося завантажити. Повторна спроба…",
   "prediction.noData": "Даних ще немає",
   "prediction.chart.priceToBeat": "Цільова ціна",
-  "prediction.chart.priceToBeatHint": "Цільова ціна — це індексна ціна BTC на початку цього раунду.",
+  "prediction.chart.priceToBeatHint": "Цільова ціна — це середня за 60 секунд індексна ціна BTC на початку цього раунду.",
   "prediction.chart.currentPriceHint": "Поточна ціна — це індексна ціна BTC у реальному часі, наведена для довідки. Вона не є ціною розрахунку.",
   "prediction.chart.priceMode": "Графік ціни",
   "prediction.chart.chartMode": "Свічковий графік",

@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "הטעינה נכשלה. מנסה שוב…",
   "prediction.noData": "אין נתונים עדיין",
   "prediction.chart.priceToBeat": "מחיר לשבירה",
-  "prediction.chart.priceToBeatHint": "מחיר לשבירה הוא מדד ה-BTC בתחילת סבב זה.",
+  "prediction.chart.priceToBeatHint": "מחיר לשבירה הוא ממוצע 60 השניות של מדד ה-BTC בתחילת סבב זה.",
   "prediction.chart.currentPriceHint": "המחיר הנוכחי הוא מדד ה-BTC בזמן אמת, לעיון בלבד. זהו אינו מחיר הסליקה.",
   "prediction.chart.priceMode": "גרף מחירים",
   "prediction.chart.chartMode": "גרף נרות",

@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Caricamento non riuscito. Nuovo tentativo…",
   "prediction.noData": "Ancora nessun dato",
   "prediction.chart.priceToBeat": "Prezzo da battere",
-  "prediction.chart.priceToBeatHint": "Il prezzo da battere è il prezzo indice del BTC all'inizio di questo round.",
+  "prediction.chart.priceToBeatHint": "Il prezzo da battere è la media a 60 secondi del prezzo indice del BTC all'inizio di questo round.",
   "prediction.chart.currentPriceHint": "Il prezzo attuale è il prezzo indice del BTC in tempo reale, solo come riferimento. Non è il prezzo di regolamento.",
   "prediction.chart.priceMode": "Grafico del prezzo",
   "prediction.chart.chartMode": "Grafico a candele",

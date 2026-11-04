@@ -16,6 +16,7 @@ import {
 import {
   deriveBinaryMarkets,
   getBinaryMarketIdentity,
+  resolveIndexPriceSourceSymbol,
   selectBinaryRoundFallback,
 } from "./binaryMarkets";
 import { publishedBinaryOutcome } from "./binaryResult";
@@ -90,6 +91,8 @@ export const useBinaryRounds = ({
         quote: parsedSymbol.quote,
         period: parsedSymbol.period,
         intervalSeconds: parsedSymbol.intervalSeconds,
+        // Underlying perp index; parseIndexPriceSymbol also accepts the Predict
+        // format the backend may return in index_price_symbol.
         indexPriceSymbol: `PERP_${parsedSymbol.base}_${parsedSymbol.quote}`,
       }
     : undefined;
@@ -439,8 +442,14 @@ export const useBinaryRounds = ({
     roundPhase,
     isRoundTradable,
     openingPrice,
+    /** Underlying index in either format (`PERP_BTC_USDC` / `SPOT_BTCTWAP60S_USDC`) for market scoping. */
     underlyingSymbol:
       selectedRow?.index_price_symbol ?? market?.indexPriceSymbol ?? "",
+    /** Price feed for the chart and Current price (REST + WS), e.g. `SPOT_BTCTWAP60S_USDC`. */
+    indexPriceSourceSymbol: resolveIndexPriceSourceSymbol(
+      selectedRow,
+      market?.indexPriceSymbol,
+    ),
     roundOutcomeLookup,
     selectMarketRound,
     goToLiveRound,

@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "載入失敗，正在重試…",
   "prediction.noData": "暫無資料",
   "prediction.chart.priceToBeat": "基準價",
-  "prediction.chart.priceToBeatHint": "基準價即本輪開始時的 BTC 指數價格。",
+  "prediction.chart.priceToBeatHint": "基準價即本輪開始時的 BTC 指數價格 60 秒平均值。",
   "prediction.chart.currentPriceHint": "目前價格為即時 BTC 指數價格，僅供參考，並非結算價格。",
   "prediction.chart.priceMode": "價格圖",
   "prediction.chart.chartMode": "K線圖",

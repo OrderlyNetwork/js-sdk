@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Gagal memuat. Mencoba ulang…",
   "prediction.noData": "Belum ada data",
   "prediction.chart.priceToBeat": "Harga patokan",
-  "prediction.chart.priceToBeatHint": "Harga patokan adalah harga indeks BTC pada awal ronde ini.",
+  "prediction.chart.priceToBeatHint": "Harga patokan adalah rata-rata 60 detik harga indeks BTC pada awal ronde ini.",
   "prediction.chart.currentPriceHint": "Harga saat ini adalah harga indeks BTC real-time, hanya untuk referensi. Ini bukan harga penyelesaian.",
   "prediction.chart.priceMode": "Grafik harga",
   "prediction.chart.chartMode": "Grafik candlestick",

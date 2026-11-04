@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "로드에 실패했습니다. 재시도 중…",
   "prediction.noData": "아직 데이터가 없습니다",
   "prediction.chart.priceToBeat": "기준 가격",
-  "prediction.chart.priceToBeatHint": "기준 가격은 이 라운드 시작 시의 BTC 지수 가격입니다.",
+  "prediction.chart.priceToBeatHint": "기준 가격은 이 라운드 시작 시의 BTC 지수 가격 60초 평균입니다.",
   "prediction.chart.currentPriceHint": "현재 가격은 실시간 BTC 지수 가격으로 참고용이며, 정산 가격이 아닙니다.",
   "prediction.chart.priceMode": "가격 차트",
   "prediction.chart.chartMode": "캔들 차트",

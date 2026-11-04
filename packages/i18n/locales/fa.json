@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "بارگذاری ناموفق بود. در حال تلاش مجدد…",
   "prediction.noData": "هنوز داده‌ای وجود ندارد",
   "prediction.chart.priceToBeat": "قیمت مرجع",
-  "prediction.chart.priceToBeatHint": "قیمت مرجع، قیمت شاخص BTC در ابتدای این دور است.",
+  "prediction.chart.priceToBeatHint": "قیمت مرجع، میانگین ۶۰ ثانیه‌ای قیمت شاخص BTC در ابتدای این دور است.",
   "prediction.chart.currentPriceHint": "قیمت فعلی، قیمت لحظه‌ای شاخص BTC و صرفاً جهت اطلاع است. این قیمت تسویه نیست.",
   "prediction.chart.priceMode": "نمودار قیمت",
   "prediction.chart.chartMode": "نمودار کندل",

@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "Nie udało się załadować. Ponawianie…",
   "prediction.noData": "Brak danych",
   "prediction.chart.priceToBeat": "Cena do pobicia",
-  "prediction.chart.priceToBeatHint": "Cena do pobicia to indeksowa cena BTC na początku tej rundy.",
+  "prediction.chart.priceToBeatHint": "Cena do pobicia to 60-sekundowa średnia indeksowa cena BTC na początku tej rundy.",
   "prediction.chart.currentPriceHint": "Cena bieżąca to indeksowa cena BTC w czasie rzeczywistym, podana wyłącznie informacyjnie. Nie jest ceną rozliczenia.",
   "prediction.chart.priceMode": "Wykres ceny",
   "prediction.chart.chartMode": "Wykres świecowy",

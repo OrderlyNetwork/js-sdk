@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "加载失败，正在重试…",
   "prediction.noData": "暂无数据",
   "prediction.chart.priceToBeat": "基准价",
-  "prediction.chart.priceToBeatHint": "基准价即本轮开始时的 BTC 指数价格。",
+  "prediction.chart.priceToBeatHint": "基准价即本轮开始时的 BTC 指数价格 60 秒平均值。",
   "prediction.chart.currentPriceHint": "当前价格为实时 BTC 指数价格，仅供参考，并非结算价格。",
   "prediction.chart.priceMode": "价格图",
   "prediction.chart.chartMode": "K线图",

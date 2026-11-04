@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "読み込みに失敗しました。再試行中…",
   "prediction.noData": "データはまだありません",
   "prediction.chart.priceToBeat": "基準価格",
-  "prediction.chart.priceToBeatHint": "基準価格は本ラウンド開始時のBTC指数価格です。",
+  "prediction.chart.priceToBeatHint": "基準価格は本ラウンド開始時のBTC指数価格の60秒平均です。",
   "prediction.chart.currentPriceHint": "現在価格はリアルタイムのBTC指数価格であり、参考値です。確定価格ではありません。",
   "prediction.chart.priceMode": "価格チャート",
   "prediction.chart.chartMode": "ローソク足チャート",

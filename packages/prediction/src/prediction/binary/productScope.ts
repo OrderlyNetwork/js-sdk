@@ -1,17 +1,20 @@
-import { INDEX_SYMBOL_PATTERN, parseBinaryRoundSymbol } from "./binaryMarkets";
+import { parseBinaryRoundSymbol, parseIndexPriceSymbol } from "./binaryMarkets";
 
-/** Match every Binary period and round for the underlying Perp market. */
+/**
+ * Match every Binary period and round for the underlying market. Accepts the
+ * underlying index in either format (`PERP_BTC_USDC` or `SPOT_BTCTWAP60S_USDC`).
+ */
 export const matchesPredictionUnderlying = (
   predictionSymbol: string | undefined,
-  underlyingPerpSymbol: string | undefined,
+  underlyingIndexSymbol: string | undefined,
 ) => {
-  if (!underlyingPerpSymbol) return true;
-  const underlying = INDEX_SYMBOL_PATTERN.exec(underlyingPerpSymbol);
+  if (!underlyingIndexSymbol) return true;
+  const underlying = parseIndexPriceSymbol(underlyingIndexSymbol);
   const prediction = parseBinaryRoundSymbol(predictionSymbol);
   return Boolean(
     underlying &&
     prediction &&
-    prediction.base === underlying[1] &&
-    prediction.quote === underlying[2],
+    prediction.base === underlying.base &&
+    prediction.quote === underlying.quote,
   );
 };

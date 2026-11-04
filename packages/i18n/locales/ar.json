@@ -348,7 +348,7 @@
   "prediction.chart.historyError": "فشل التحميل. جارٍ إعادة المحاولة…",
   "prediction.noData": "لا توجد بيانات بعد",
   "prediction.chart.priceToBeat": "السعر المراد تجاوزه",
-  "prediction.chart.priceToBeatHint": "السعر المراد تجاوزه هو سعر مؤشر BTC عند بدء هذه الجولة.",
+  "prediction.chart.priceToBeatHint": "السعر المراد تجاوزه هو متوسط سعر مؤشر BTC لمدة 60 ثانية عند بدء هذه الجولة.",
   "prediction.chart.currentPriceHint": "السعر الحالي هو سعر مؤشر BTC اللحظي للاسترشاد فقط، وهو ليس سعر التسوية.",
   "prediction.chart.priceMode": "مخطط السعر",
   "prediction.chart.chartMode": "مخطط الشموع اليابانية",
