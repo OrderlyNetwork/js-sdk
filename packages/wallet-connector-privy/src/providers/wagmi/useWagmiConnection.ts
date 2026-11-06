@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Connector,
   useAccount,
@@ -43,15 +43,34 @@ export function useWagmiConnection() {
   // Disconnected connectors are hidden locally until that cleanup confirms.
   const [storedDisconnectedConnectors, setStoredDisconnectedConnectors] =
     useLocalStorage<string[]>(DisconnectedConnectorsKey, EMPTY_CONNECTOR_IDS);
-  const disconnectedConnectors: string[] = Array.isArray(
+  const persistedConnectorIds: string[] = Array.isArray(
     storedDisconnectedConnectors,
   )
     ? storedDisconnectedConnectors
     : EMPTY_CONNECTOR_IDS;
-  const disconnectedConnectorsRef = useRef(disconnectedConnectors);
+  const [localChanges, setLocalChanges] = useState(
+    () => new Map<string, boolean>(),
+  );
+  const localChangesRef = useRef(localChanges);
+  const persistedConnectorIdsRef = useRef(persistedConnectorIds);
   useEffect(() => {
-    disconnectedConnectorsRef.current = disconnectedConnectors;
-  }, [disconnectedConnectors]);
+    persistedConnectorIdsRef.current = persistedConnectorIds;
+    if (localChangesRef.current !== localChanges || localChanges.size === 0) {
+      return;
+    }
+
+    // Keep each local change until the persisted state for that connector matches.
+    const remaining = new Map(localChanges);
+    for (const [id, disconnected] of localChanges) {
+      if (persistedConnectorIds.includes(id) === disconnected) {
+        remaining.delete(id);
+      }
+    }
+    if (remaining.size !== localChanges.size) {
+      localChangesRef.current = remaining;
+      setLocalChanges(remaining);
+    }
+  }, [localChanges, persistedConnectorIds]);
   const pendingDisconnectRef = useRef<{
     id: string;
     promise: Promise<CleanupResult>;
@@ -60,22 +79,43 @@ export function useWagmiConnection() {
   const connectRequestIdRef = useRef(0);
 
   const isSuppressed =
-    !!connector && disconnectedConnectors.includes(connector.id);
+    !!connector &&
+    (localChanges.get(connector.id) ??
+      persistedConnectorIds.includes(connector.id));
   const isConnected = isWagmiConnected && !isSuppressed;
+
+  const isConnectorDisconnected = useCallback(
+    (id: string) =>
+      localChangesRef.current.get(id) ??
+      persistedConnectorIdsRef.current.includes(id),
+    [],
+  );
 
   const setConnectorDisconnected = useCallback(
     (id: string, disconnected: boolean) => {
-      const previous = disconnectedConnectorsRef.current;
-      if (previous.includes(id) === disconnected) {
+      if (isConnectorDisconnected(id) === disconnected) {
         return;
       }
-      const next = disconnected
-        ? [...previous, id]
-        : previous.filter((item) => item !== id);
-      disconnectedConnectorsRef.current = next;
-      setStoredDisconnectedConnectors(next);
+
+      const next = new Map(localChangesRef.current).set(id, disconnected);
+      localChangesRef.current = next;
+      setLocalChanges(next);
+      // Read storage at write time, even if a storage event is still queued.
+      setStoredDisconnectedConnectors((stored) => {
+        const ids = new Set(
+          Array.isArray(stored) ? stored : EMPTY_CONNECTOR_IDS,
+        );
+        for (const [changedId, isDisconnected] of next) {
+          if (isDisconnected) {
+            ids.add(changedId);
+          } else {
+            ids.delete(changedId);
+          }
+        }
+        return [...ids];
+      });
     },
-    [setStoredDisconnectedConnectors],
+    [isConnectorDisconnected, setStoredDisconnectedConnectors],
   );
 
   const cleanupConnection = useCallback(
@@ -186,9 +226,9 @@ export function useWagmiConnection() {
   const needsCleanup = useCallback(
     (target: Connector | undefined) =>
       !!target &&
-      disconnectedConnectorsRef.current.includes(target.id) &&
+      isConnectorDisconnected(target.id) &&
       config.state.connections.has(target.uid),
-    [config],
+    [config, isConnectorDisconnected],
   );
 
   const connectAfterCleanup = useCallback(

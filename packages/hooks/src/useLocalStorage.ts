@@ -10,7 +10,7 @@ export function useLocalStorage<T>(
   } = {
     parseJSON: parseJSON,
   },
-): [any, (value: T) => void] {
+): [any, React.Dispatch<React.SetStateAction<T>>] {
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = useCallback((): T => {
@@ -46,8 +46,8 @@ export function useLocalStorage<T>(
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue: React.Dispatch<T> = useCallback(
-    (value: T) => {
+  const setValue: React.Dispatch<React.SetStateAction<T>> = useCallback(
+    (value) => {
       // Prevent build error "window is undefined" but keeps working
       if (typeof window === "undefined") {
         console.warn(
@@ -57,7 +57,10 @@ export function useLocalStorage<T>(
 
       try {
         // Allow value to be a function so we have the same API as useState
-        const newValue = value instanceof Function ? value(readValue()) : value;
+        const newValue =
+          value instanceof Function
+            ? (value as (previous: T) => T)(readValue())
+            : value;
 
         // Save to local storage
         window.localStorage.setItem(key, JSON.stringify(newValue));

@@ -83,24 +83,9 @@ vi.mock("wagmi", () => ({
 }));
 
 vi.mock("@orderly.network/hooks", async () => {
-  const React = await vi.importActual<typeof import("react")>("react");
-  return {
-    useEventEmitter: () => mocks.eventEmitter,
-    useLocalStorage: (key: string, initialValue: unknown) => {
-      const [value, setValue] = React.useState(() => {
-        const raw = window.localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : initialValue;
-      });
-      const update = React.useCallback(
-        (next: unknown) => {
-          window.localStorage.setItem(key, JSON.stringify(next));
-          setValue(next);
-        },
-        [key],
-      );
-      return [value, update];
-    },
-  };
+  const { useLocalStorage } =
+    await import("@orderly.network/hooks/src/useLocalStorage");
+  return { useEventEmitter: () => mocks.eventEmitter, useLocalStorage };
 });
 
 vi.mock("@orderly.network/ui-connector", () => ({
@@ -195,6 +180,82 @@ describe("WagmiWalletProvider disconnect", () => {
     expect(current.wallet).toBeUndefined();
     expect(current.connectedChain).toBeNull();
   });
+
+  it("ends the local connection when storage fails and cleanup is still pending", async () => {
+    window.localStorage.setItem(DISCONNECTED_CONNECTORS_KEY, "[]");
+    const cleanupRequest = createDeferred();
+    mocks.disconnectAsync.mockReturnValue(cleanupRequest.promise);
+    renderProvider();
+    await waitFor(() => expect(current.wallet).toBeDefined());
+    const writeStorage = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new DOMException("Storage quota exceeded", "QuotaExceededError");
+      });
+
+    await act(async () => {
+      await current.disconnect();
+    });
+
+    expect(mocks.disconnectAsync).toHaveBeenCalledExactlyOnceWith({
+      connector: mocks.wcConnector,
+    });
+    expect(writeStorage).toHaveBeenCalledWith(
+      DISCONNECTED_CONNECTORS_KEY,
+      '["walletConnect"]',
+    );
+    expect(readDisconnectedConnectors()).toEqual([]);
+    expect(current.isConnected).toBe(false);
+    expect(current.wallet).toBeUndefined();
+    expect(current.connectedChain).toBeNull();
+
+    act(() => {
+      window.dispatchEvent(new Event("storage"));
+    });
+    expect(current.isConnected).toBe(false);
+  });
+
+  it.each(["before", "after"])(
+    "preserves another tab's disconnect marker when cleanup finishes %s the storage event",
+    async (cleanupTiming) => {
+      const cleanupRequest = createDeferred();
+      mocks.disconnectAsync.mockReturnValue(cleanupRequest.promise);
+      renderProvider();
+      vi.spyOn(Storage.prototype, "setItem").mockImplementationOnce(() => {
+        throw new DOMException("Storage quota exceeded", "QuotaExceededError");
+      });
+
+      await act(async () => {
+        await current.disconnect();
+      });
+      expect(readDisconnectedConnectors()).toEqual([]);
+      expect(current.isConnected).toBe(false);
+
+      window.localStorage.setItem(
+        DISCONNECTED_CONNECTORS_KEY,
+        JSON.stringify(["io.rabby"]),
+      );
+      const notifyStorageChange = () => {
+        window.dispatchEvent(
+          new StorageEvent("storage", { key: DISCONNECTED_CONNECTORS_KEY }),
+        );
+      };
+      if (cleanupTiming === "after") {
+        act(notifyStorageChange);
+      }
+
+      await act(async () => {
+        setWagmiDisconnected();
+        cleanupRequest.resolve();
+        await cleanupRequest.promise;
+      });
+      if (cleanupTiming === "before") {
+        act(notifyStorageChange);
+      }
+
+      expect(readDisconnectedConnectors()).toEqual(["io.rabby"]);
+    },
+  );
 
   it("keeps the old connection hidden when the background cleanup fails", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
