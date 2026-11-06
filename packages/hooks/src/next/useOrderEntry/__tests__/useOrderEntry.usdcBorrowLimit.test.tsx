@@ -528,7 +528,7 @@ describe("useOrderEntry TP/SL price refresh", () => {
     );
     expect(result.current.formattedOrder).toMatchObject({
       sl_trigger_price: "2360",
-      sl_order_price: "2304",
+      sl_order_price: "2340",
     });
     act(() =>
       result.current.setValuesRaw(
@@ -543,6 +543,68 @@ describe("useOrderEntry TP/SL price refresh", () => {
       sl_trigger_price: "2360",
       sl_order_price: "2310",
       sl_offset: 40,
+    });
+  });
+
+  it("recomputes signed offsets immediately when changing the order side", () => {
+    const { result } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_price: "2400",
+          order_quantity: "2",
+          side: OrderSide.BUY,
+          tp_order_type: OrderType.LIMIT,
+          tp_trigger_price: "2500",
+          tp_order_price: "2490",
+        },
+      }),
+    );
+    expect(result.current.formattedOrder).toMatchObject({
+      tp_offset: 100,
+      tp_offset_percentage: 0.0417,
+    });
+
+    act(() => result.current.setValue("side", OrderSide.SELL));
+    expect(result.current.formattedOrder).toMatchObject({
+      tp_trigger_price: "2500",
+      tp_order_price: "2490",
+      tp_offset: -100,
+      tp_offset_percentage: -0.0417,
+      tp_offset_from_mark: -100,
+      tp_offset_percentage_from_mark: -0.0417,
+    });
+
+    act(() => result.current.setValues({ side: OrderSide.BUY }));
+    expect(result.current.formattedOrder).toMatchObject({
+      tp_offset: 100,
+      tp_offset_percentage: 0.0417,
+      tp_offset_from_mark: 100,
+      tp_offset_percentage_from_mark: 0.0417,
+    });
+  });
+
+  it("preserves a Market mark offset when switching order sides", () => {
+    const { result, rerender } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_type: OrderType.MARKET,
+          order_quantity: "2",
+          sl_order_type: OrderType.MARKET,
+        },
+      }),
+    );
+
+    act(() => result.current.setValue("sl_offset_from_mark", 50));
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("2350");
+
+    act(() => result.current.setValue("side", OrderSide.SELL));
+    act(() => result.current.setValue("side", OrderSide.BUY));
+    mockMarkPrice = 2450;
+    rerender();
+
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2400",
+      sl_offset_from_mark: 50,
     });
   });
 

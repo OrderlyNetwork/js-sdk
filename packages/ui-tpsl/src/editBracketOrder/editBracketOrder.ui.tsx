@@ -18,6 +18,7 @@ import {
   toast,
   useScreen,
 } from "@orderly.network/ui";
+import { checkIsNaN, Decimal } from "@orderly.network/utils";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
@@ -25,6 +26,13 @@ import { TPSLPositionTypeWidget } from "../components/tpslPostionType";
 import { useEditBracketOrder } from "./editBracketOrder.script";
 
 type Props = ReturnType<typeof useEditBracketOrder>;
+
+function roundPnl(pnl: string | number | undefined, roundingMode: number) {
+  return pnl === undefined || checkIsNaN(pnl)
+    ? ""
+    : new Decimal(pnl).todp(2, roundingMode).toString();
+}
+
 export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   const { t } = useTranslation();
   const { errors, validated } = props.metaState;
@@ -48,6 +56,8 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     symbolInfo,
     setValues,
   } = props;
+  const tpPnl = roundPnl(formattedOrder.tp_pnl, Decimal.ROUND_FLOOR);
+  const slPnl = roundPnl(formattedOrder.sl_pnl, Decimal.ROUND_FLOOR);
 
   const [tpValues, setTpValuse] = useState<{
     // enable: boolean;
@@ -65,7 +75,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
     order_price: formattedOrder.tp_order_price ?? "",
     trigger_price: formattedOrder.tp_trigger_price ?? "",
-    PnL: formattedOrder.tp_pnl ?? "",
+    PnL: tpPnl,
     Offset: formattedOrder.tp_offset ?? "",
     "Offset%": formattedOrder.tp_offset_percentage ?? "",
     OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
@@ -89,7 +99,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
     order_price: formattedOrder.sl_order_price ?? "",
     trigger_price: formattedOrder.sl_trigger_price ?? "",
-    PnL: formattedOrder.sl_pnl ?? "",
+    PnL: slPnl,
     Offset: formattedOrder.sl_offset ?? "",
     "Offset%": formattedOrder.sl_offset_percentage ?? "",
     OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
@@ -105,14 +115,14 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
       order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.tp_order_price ?? "",
       trigger_price: formattedOrder.tp_trigger_price ?? "",
-      PnL: formattedOrder.tp_pnl ?? "",
+      PnL: tpPnl,
       Offset: formattedOrder.tp_offset ?? "",
       "Offset%": formattedOrder.tp_offset_percentage ?? "",
       OffsetFromMark: formattedOrder.tp_offset_from_mark ?? "",
       PercentageFromMark: formattedOrder.tp_offset_percentage_from_mark ?? "",
       ROI: formattedOrder.tp_ROI ?? "",
     }));
-  }, [formattedOrder]);
+  }, [formattedOrder, tpPnl]);
 
   useEffect(() => {
     setSlValues((prev) => ({
@@ -121,14 +131,14 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
       order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.sl_order_price ?? "",
       trigger_price: formattedOrder.sl_trigger_price ?? "",
-      PnL: formattedOrder.sl_pnl ?? "",
+      PnL: slPnl,
       Offset: formattedOrder.sl_offset ?? "",
       "Offset%": formattedOrder.sl_offset_percentage ?? "",
       OffsetFromMark: formattedOrder.sl_offset_from_mark ?? "",
       PercentageFromMark: formattedOrder.sl_offset_percentage_from_mark ?? "",
       ROI: formattedOrder.sl_ROI ?? "",
     }));
-  }, [formattedOrder]);
+  }, [formattedOrder, slPnl]);
   return (
     <div>
       <ScrollArea
@@ -217,8 +227,12 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
           </Flex>
 
           <PnlInfo
-            tp_pnl={formattedOrder.tp_pnl}
-            sl_pnl={formattedOrder.sl_pnl}
+            tp_pnl={tpPnl}
+            sl_pnl={slPnl}
+            riskRewardPnl={{
+              tp_pnl: roundPnl(formattedOrder.tp_pnl, Decimal.ROUND_UP),
+              sl_pnl: roundPnl(formattedOrder.sl_pnl, Decimal.ROUND_UP),
+            }}
             className="oui-mt-6"
           />
         </div>

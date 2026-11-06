@@ -19,7 +19,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
     return utils.findTPSLFromOrder(props.order.child_orders[0]);
   }, [props.order]);
 
-  const { pnl } = calcBracketRoiAndPnL(order);
+  const { pnl } = calcBracketRoiAndPnL(order, quote_dp);
 
   if (!tp_trigger_price && !sl_trigger_price) {
     return "--";
@@ -37,7 +37,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
                 <Text intensity={80}>{`${t("tpsl.tpPnl")}:`} &nbsp;</Text>
               }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
-              dp={quote_dp}
+              dp={2}
               color="buy"
               showIdentifier
             >
@@ -51,7 +51,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
                 <Text intensity={80}>{`${t("tpsl.slPnl")}:`} &nbsp;</Text>
               }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
-              dp={quote_dp}
+              dp={2}
               color="sell"
             >
               {pnl.slPnL}

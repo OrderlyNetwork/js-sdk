@@ -355,14 +355,14 @@ describe("useTPSLOrder create and edit routing", () => {
   );
 
   it.each([
-    ["tp_offset", 200],
-    ["tp_offset_percentage", 0.05],
-    ["tp_offset_from_mark", 200],
-    ["tp_offset_percentage_from_mark", 0.05],
-    ["tp_pnl", 400],
+    ["tp_offset", 200, 4110],
+    ["tp_offset_percentage", 0.05, 4110],
+    ["tp_offset_from_mark", 200, 4110],
+    ["tp_offset_percentage_from_mark", 0.05, 4110],
+    ["tp_pnl", 400, 4200],
   ])(
-    "edits triggered Limit price through %s without changing the trigger",
-    async (key, value) => {
+    "applies %s = %s to the triggered Limit leg with execution price %s",
+    async (key, value, expectedPrice) => {
       const defaultOrder = {
         ...existingFullOrder,
         is_triggered: true,
@@ -391,16 +391,23 @@ describe("useTPSLOrder create and edit routing", () => {
       });
 
       expect(Number(result.current[0].tp_trigger_price)).toBe(4100);
-      expect(Number(result.current[0].tp_order_price)).toBe(4200);
+      expect(Number(result.current[0].tp_order_price)).toBe(expectedPrice);
       await act(async () => {
         await expect(result.current[1].validate()).resolves.toBeDefined();
         await result.current[1].submit();
       });
-      expect(mockUpdateOrder).toHaveBeenCalledWith(
-        { order_id: 10, child_orders: [{ order_id: 11, price: 4200 }] },
-        {},
-        undefined,
-      );
+      if (key === "tp_pnl") {
+        expect(mockUpdateOrder).toHaveBeenCalledWith(
+          {
+            order_id: 10,
+            child_orders: [{ order_id: 11, price: expectedPrice }],
+          },
+          {},
+          undefined,
+        );
+      } else {
+        expect(mockUpdateOrder).not.toHaveBeenCalled();
+      }
     },
   );
 

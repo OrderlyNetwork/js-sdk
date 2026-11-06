@@ -49,6 +49,28 @@ const props: any = {
 };
 
 describe("Full-position TP/SL row", () => {
+  it("passes the symbol quote precision to the Offset field", () => {
+    const tree = create(<TPSLInputRowUI {...props} quote_dp={8} />);
+    expect(tree.root.findByType("pnl-input" as any).props.quote_dp).toBe(8);
+    tree.unmount();
+  });
+
+  it("shows the estimate when PnL and ROI are zero", () => {
+    const tree = create(
+      <TPSLInputRowUI
+        {...props}
+        roi={0}
+        values={{ ...props.values, PnL: 0 }}
+      />,
+    );
+    expect(
+      tree.root
+        .findAllByType("numeral" as any)
+        .map((node) => node.props.children),
+    ).toEqual(["4100", 0, 0]);
+    tree.unmount();
+  });
+
   it.each(["tp", "sl"])(
     "enables independent %s Limit input and type selection",
     (type) => {
@@ -74,7 +96,7 @@ describe("Full-position TP/SL row", () => {
     ).toBe(false);
     tree.unmount();
   });
-  it("locks the trigger but keeps the Limit order price and Offset editable", () => {
+  it("locks the trigger and Offset but keeps the Limit order price editable", () => {
     props.onChange.mockClear();
     const tree = create(
       <TPSLInputRowUI
@@ -88,6 +110,9 @@ describe("Full-position TP/SL row", () => {
     expect(inputs[0].props.disabled).toBe(true);
     expect(inputs[1].props.disabled).toBe(false);
     expect(tree.root.findByType("pnl-input" as any).props.disabled).toBe(false);
+    expect(tree.root.findByType("pnl-input" as any).props.offsetReadOnly).toBe(
+      true,
+    );
     expect(tree.root.findByType("order-type" as any).props.disabled).toBe(true);
 
     act(() => inputs[0].props.onValueChange("4200"));

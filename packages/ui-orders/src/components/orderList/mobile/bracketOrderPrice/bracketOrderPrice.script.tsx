@@ -15,7 +15,7 @@ export const useBracketOrderPriceScript = (props: OrderCellState) => {
     return utils.findTPSLFromOrder(order.child_orders[0]);
   }, [order]);
 
-  const { pnl } = calcBracketRoiAndPnL(order);
+  const { pnl } = calcBracketRoiAndPnL(order, quote_dp);
 
   return {
     sl_trigger_price,

@@ -24,11 +24,13 @@ export type UpdateOrderKey =
   | "sl_offset"
   | "sl_offset_from_mark";
 
-/**
- * offset -> TP/SL price
- * TODO: Define amount-offset sign semantics for entry-price and mark-price bases
- * together with percentage offsets, preserving profitable SL and loss-side TP.
- */
+function getOffsetDirection(orderSide: OrderSide, orderType: AlgoOrderType) {
+  return (orderSide === OrderSide.BUY) ===
+    (orderType === AlgoOrderType.TAKE_PROFIT)
+    ? 1
+    : -1;
+}
+
 export function offsetToPrice(inputs: {
   qty: number;
   offset: number;
@@ -36,25 +38,14 @@ export function offsetToPrice(inputs: {
   orderSide: OrderSide;
   orderType: AlgoOrderType;
 }) {
-  const { qty, offset, entryPrice, orderType, orderSide } = inputs;
+  const { offset, entryPrice, orderType, orderSide } = inputs;
 
-  if (!offset) return;
+  if (!Number.isFinite(offset)) return;
 
-  if (orderSide === OrderSide.BUY) {
-    if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      return new Decimal(entryPrice).add(new Decimal(offset)).toNumber();
-    }
-
-    return new Decimal(entryPrice).minus(new Decimal(offset)).toNumber();
-  }
-
-  if (orderSide === OrderSide.SELL) {
-    if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      return new Decimal(entryPrice).minus(new Decimal(offset)).toNumber();
-    }
-
-    return new Decimal(entryPrice).add(new Decimal(offset)).toNumber();
-  }
+  return new Decimal(offset)
+    .mul(getOffsetDirection(orderSide, orderType))
+    .add(entryPrice)
+    .toNumber();
 }
 
 export function priceToOffset(
@@ -67,31 +58,16 @@ export function priceToOffset(
   },
   options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {},
 ) {
-  const { qty, price, entryPrice, orderType, orderSide } = inputs;
-  const { symbol } = options;
-  let decimal: Decimal;
-
-  if (orderSide === OrderSide.BUY) {
-    if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      decimal = new Decimal(price).minus(new Decimal(entryPrice));
-    }
-
-    decimal = new Decimal(price).minus(new Decimal(entryPrice));
-  }
-
-  if (orderSide === OrderSide.SELL) {
-    if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      decimal = new Decimal(price).minus(new Decimal(entryPrice));
-    }
-
-    decimal = new Decimal(entryPrice).minus(new Decimal(price));
-  }
-
-  if (symbol) {
-    return decimal!.abs().todp(symbol.quote_dp, Decimal.ROUND_UP).toNumber();
-  }
-
-  return decimal!.abs().toNumber();
+  const { price, entryPrice, orderType, orderSide } = inputs;
+  const difference = new Decimal(price).minus(entryPrice);
+  // Round the price difference up before applying direction. Adding it back
+  // to the reference and truncating the positive price then restores the trigger.
+  const roundedDifference = options.symbol
+    ? difference.todp(options.symbol.quote_dp, Decimal.ROUND_CEIL)
+    : difference;
+  return roundedDifference
+    .mul(getOffsetDirection(orderSide, orderType))
+    .toNumber();
 }
 
 export function offsetPercentageToPrice(inputs: {
@@ -145,10 +121,7 @@ export function priceToOffsetPercentage(inputs: {
   if (entryPrice === 0) return 0;
 
   // Match the direction used by offsetPercentageToPrice.
-  const direction =
-    (orderSide === OrderSide.BUY) === (orderType === AlgoOrderType.TAKE_PROFIT)
-      ? 1
-      : -1;
+  const direction = getOffsetDirection(orderSide, orderType);
   // Round to nearest so a typed percentage survives the quote_dp price rounding.
   return new Decimal(price)
     .minus(entryPrice)
@@ -200,54 +173,35 @@ export function pnlToPrice(inputs: {
   }
 }
 
-/**
- * TP/SL price -> pnl
- * @price trigger_price
- * @entryPrice calculate price, maybe markPrice/limitPrice/order.price
- */
+type PriceToPnlOptions = {
+  symbol?: Pick<API.SymbolExt, "quote_dp">;
+  pnlRoundingMode?: number;
+};
+
+type PriceToPnlInputs = {
+  qty: number;
+  price: number;
+  entryPrice: number;
+  orderSide: OrderSide;
+  orderType: AlgoOrderType;
+};
+
+function calculatePnl({ qty, price, entryPrice, orderSide }: PriceToPnlInputs) {
+  return orderSide === OrderSide.BUY || orderSide === OrderSide.SELL
+    ? new Decimal(qty).mul(new Decimal(price).minus(entryPrice))
+    : zero;
+}
+
+/** Calculate PnL at the supplied TP/SL execution price. */
 export function priceToPnl(
-  inputs: {
-    qty: number;
-    price: number;
-    entryPrice: number;
-    orderSide: OrderSide;
-    orderType: AlgoOrderType;
-  },
-  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {},
+  inputs: PriceToPnlInputs,
+  options: PriceToPnlOptions = {},
 ): number {
-  const { qty, price, entryPrice, orderType, orderSide } = inputs;
-  const { symbol } = options;
-  let decimal = zero;
-  // const qty =
-  //   orderSide === OrderSide.BUY ? Math.abs(_qty) : Math.abs(_qty) * -1;
+  const { symbol, pnlRoundingMode } = options;
+  const decimal = calculatePnl(inputs);
 
-  if (orderSide === OrderSide.BUY) {
-    if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      decimal = new Decimal(qty).mul(
-        new Decimal(price).minus(new Decimal(entryPrice)),
-      );
-    }
-
-    decimal = new Decimal(qty).mul(
-      new Decimal(price).minus(new Decimal(entryPrice)),
-    );
-  }
-
-  if (orderSide === OrderSide.SELL) {
-    if (orderType === AlgoOrderType.TAKE_PROFIT) {
-      decimal = new Decimal(qty).mul(
-        new Decimal(price).minus(new Decimal(entryPrice)),
-      );
-    }
-
-    decimal = new Decimal(qty).mul(
-      new Decimal(price).minus(new Decimal(entryPrice)),
-    );
-  }
-
-  if (symbol) {
-    // return decimal.todp(symbol.quote_dp, Decimal.ROUND_DOWN).toNumber();
-    return decimal.todp(2, Decimal.ROUND_UP).toNumber();
+  if (symbol || pnlRoundingMode !== undefined) {
+    return decimal.todp(2, pnlRoundingMode ?? Decimal.ROUND_UP).toNumber();
   }
 
   return decimal.toNumber();
@@ -366,6 +320,7 @@ type CalculationInputs = {
 type CalculationOptions = {
   symbol?: Pick<API.SymbolExt, "quote_dp">;
   lockTrigger?: boolean;
+  unroundedTPSLPnl?: boolean;
 };
 
 /** Entry-based conversions use the same rounded entry in both directions. */
@@ -381,11 +336,12 @@ export function refreshTPSLValues(
   options: CalculationOptions = {},
 ) {
   const { values, orderSide, qty } = inputs;
+  const symbol = options.symbol ?? { quote_dp: 2 };
   const triggerPrice = Number(values[`${leg}_trigger_price`]);
   const executionPrice = Number(getTPSLExecutionPrice(values, leg));
   const entryPrice = roundEntryPrice(
     Number(inputs.entryPrice),
-    options.symbol?.quote_dp ?? 2,
+    symbol.quote_dp,
   );
   const markPrice = Number(inputs.markPrice ?? inputs.entryPrice);
   const orderType =
@@ -396,20 +352,23 @@ export function refreshTPSLValues(
   const hasMark = Number.isFinite(markPrice) && markPrice > 0;
   const fromEntry = { ...base, entryPrice };
   const fromMark = { ...base, entryPrice: markPrice };
+  const pnlInputs = { ...fromEntry, price: executionPrice };
   return {
     [`${leg}_pnl`]:
       hasEntry &&
       Number.isFinite(executionPrice) &&
       executionPrice > 0 &&
       Number(qty)
-        ? priceToPnl({ ...fromEntry, price: executionPrice }, options)
+        ? options.unroundedTPSLPnl
+          ? calculatePnl(pnlInputs).toString()
+          : priceToPnl(pnlInputs, options)
         : "",
     [`${leg}_offset`]:
-      hasTrigger && hasEntry ? priceToOffset(fromEntry, options) : "",
+      hasTrigger && hasEntry ? priceToOffset(fromEntry, { symbol }) : "",
     [`${leg}_offset_percentage`]:
       hasTrigger && hasEntry ? priceToOffsetPercentage(fromEntry) : "",
     [`${leg}_offset_from_mark`]:
-      hasTrigger && hasMark ? priceToOffset(fromMark, options) : "",
+      hasTrigger && hasMark ? priceToOffset(fromMark, { symbol }) : "",
     [`${leg}_offset_percentage_from_mark`]:
       hasTrigger && hasMark ? priceToOffsetPercentage(fromMark) : "",
   };
@@ -448,11 +407,21 @@ export function tpslCalculateHelper(
       [priceKey]: value === OrderType.LIMIT ? (values[triggerKey] ?? "") : "",
     };
   } else if (isTPSLCalculationField(key)) {
-    if (options.lockTrigger && (!isLimit || !Number(values[triggerKey])))
+    const isPnl = key === `${leg}_pnl`;
+    if (
+      options.lockTrigger &&
+      (!isPnl || !isLimit || !Number(values[triggerKey]))
+    )
       return {};
 
     let price: number | undefined;
     if (value !== "") {
+      if (
+        typeof value !== "number" &&
+        (typeof value !== "string" || !value.trim())
+      ) {
+        return {};
+      }
       const isPercentage = key.includes("_percentage");
       // The formatter appends a second decimal point to preserve typing suffixes.
       const amount = Number(
@@ -479,7 +448,7 @@ export function tpslCalculateHelper(
           leg === "tp" ? AlgoOrderType.TAKE_PROFIT : AlgoOrderType.STOP_LOSS,
       };
 
-      if (key.endsWith("_pnl")) {
+      if (isPnl) {
         if (!Number.isFinite(calculation.qty)) return {};
         price = pnlToPrice({ ...calculation, pnl: amount });
       } else if (isPercentage) {
@@ -494,7 +463,9 @@ export function tpslCalculateHelper(
     }
 
     const formattedPrice =
-      price === undefined ? "" : todpIfNeed(price, quoteDP);
+      price === undefined
+        ? ""
+        : todpIfNeed(new Decimal(price).toFixed(), quoteDP);
     changes = {
       ...(options.lockTrigger ? {} : { [triggerKey]: formattedPrice }),
       ...(isLimit ? { [priceKey]: formattedPrice } : {}),

@@ -29,7 +29,7 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
                   <Text intensity={80}>{`${t("tpsl.tpPnl")}:`} &nbsp;</Text>
                 }
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
-                dp={props.quote_dp}
+                dp={2}
                 color="buy"
                 showIdentifier
               >
@@ -43,7 +43,7 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
                   <Text intensity={80}>{`${t("tpsl.slPnl")}:`} &nbsp;</Text>
                 }
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
-                dp={props.quote_dp}
+                dp={2}
                 color="sell"
               >
                 {props.pnl?.slPnL}

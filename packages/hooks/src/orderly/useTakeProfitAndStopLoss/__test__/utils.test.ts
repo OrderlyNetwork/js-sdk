@@ -2,6 +2,7 @@
 import { AlgoOrderType, OrderlyOrder, OrderType } from "@orderly.network/types";
 // Import functions to be tested
 import { OrderSide } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import {
   offsetToPrice,
   priceToOffset,
@@ -277,6 +278,27 @@ describe("TP/SL Utils function", () => {
   });
 
   describe("priceToPnl", () => {
+    it.each([
+      [99.132, 68.67144, 68.67, 68.68],
+      [82.5, -58.0644, -58.07, -58.07],
+    ])(
+      "rounds estimates at %s using the requested mode",
+      (price, raw, floor, legacy) => {
+        const inputs = {
+          qty: 7.62,
+          price,
+          entryPrice: 90.12,
+          orderSide: OrderSide.BUY,
+          orderType: AlgoOrderType.TAKE_PROFIT,
+        };
+        expect(priceToPnl(inputs)).toBe(raw);
+        expect(
+          priceToPnl(inputs, { pnlRoundingMode: Decimal.ROUND_FLOOR }),
+        ).toBe(floor);
+        expect(priceToPnl(inputs, { symbol: { quote_dp: 3 } })).toBe(legacy);
+      },
+    );
+
     test("Calculates pnl correctly for LONG/TAKE_PROFIT type with target price above mark price", () => {
       const inputs = {
         qty: 0.1,
@@ -340,13 +362,14 @@ describe("TP/SL Utils function", () => {
           (orderSide === OrderSide.BUY) === (leg === "tp") ? 1 : -1;
         describe.each([OrderType.MARKET, OrderType.LIMIT])("%s", (type) => {
           describe.each([
-            ["offset_percentage", base.entryPrice],
-            ["offset_percentage_from_mark", base.markPrice],
-          ] as const)("%s", (field, referencePrice) => {
-            it.each([2, -2])("round-trips a signed %s%% offset", (percent) => {
-              const price = String(
-                referencePrice + (direction * referencePrice * percent) / 100,
-              );
+            ["offset", base.entryPrice, 1],
+            ["offset_from_mark", base.markPrice, 1],
+            ["offset_percentage", base.entryPrice, base.entryPrice],
+            ["offset_percentage_from_mark", base.markPrice, base.markPrice],
+          ] as const)("%s", (field, referencePrice, scale) => {
+            it.each([2, -2])("round-trips a signed offset of %s", (offset) => {
+              const value = scale === 1 ? offset : offset / 100;
+              const price = String(referencePrice + direction * scale * value);
               const triggerKey = `${leg}_trigger_price` as const;
               const key = `${leg}_${field}`;
               const inputs = {
@@ -360,7 +383,7 @@ describe("TP/SL Utils function", () => {
                 key: triggerKey,
                 value: price,
               });
-              expect(manual[key]).toBe(percent / 100);
+              expect(manual[key]).toBe(value);
 
               const edited = tpslCalculateHelper(key, {
                 ...inputs,
@@ -485,6 +508,68 @@ describe("TP/SL Utils function", () => {
         sl_order_price: "",
         sl_offset_from_mark: "",
         sl_pnl: "",
+      });
+    });
+
+    it.each([
+      [105.005, "100", 2, 5],
+      [105.005, "110", 2, -5],
+      [100.005, "100", 2, 0],
+      [0.000000219, "0.00000020", 8, 0.00000001],
+    ])(
+      "round-trips mark %s and trigger %s at %s decimals with offset %s",
+      (markPrice, trigger, quoteDP, offset) => {
+        const options = { symbol: { quote_dp: quoteDP } };
+        const inputs = {
+          ...base,
+          markPrice,
+          values: { sl_order_type: OrderType.LIMIT },
+        };
+        const manual = tpslCalculateHelper(
+          "sl_trigger_price",
+          { ...inputs, key: "sl_trigger_price", value: trigger },
+          options,
+        );
+        expect(manual.sl_offset_from_mark).toBe(offset);
+
+        const key = "sl_offset_from_mark";
+        const edited = tpslCalculateHelper(
+          key,
+          {
+            ...inputs,
+            key,
+            value: String(offset),
+            values: { ...inputs.values, ...manual },
+          },
+          options,
+        );
+        expect(Number(edited.sl_trigger_price)).toBe(Number(trigger));
+        expect(Number(edited.sl_order_price)).toBe(Number(trigger));
+        expect(edited.sl_offset_from_mark).toBe(offset);
+      },
+    );
+
+    it("sets the entry price for a zero amount and clears prices for an empty amount", () => {
+      const key = "sl_offset";
+      const inputs = {
+        ...base,
+        key,
+        values: {
+          sl_order_type: OrderType.LIMIT,
+          sl_trigger_price: "2350",
+          sl_order_price: "2340",
+        },
+      };
+      const result = tpslCalculateHelper(key, { ...inputs, value: "0" });
+      expect(result).toMatchObject({
+        sl_trigger_price: "2400",
+        sl_order_price: "2400",
+        sl_offset: 0,
+      });
+      expect(tpslCalculateHelper(key, { ...inputs, value: "" })).toMatchObject({
+        sl_trigger_price: "",
+        sl_order_price: "",
+        sl_offset: "",
       });
     });
 

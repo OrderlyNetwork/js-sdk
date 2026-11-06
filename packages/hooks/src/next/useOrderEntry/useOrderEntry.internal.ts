@@ -57,9 +57,12 @@ const useOrderEntryNextInternal = (
     symbolLeverage?: number;
     /** Trigger prices owned by an already triggered TP/SL order. */
     lockedTPSLTriggers?: Partial<Record<"tp" | "sl", string | number>>;
+    /** Return TP/SL PnL as decimal strings so consumers can round without losing precision. */
+    unroundedTPSLPnl?: boolean;
   } = {},
 ) => {
-  const { symbolInfo, symbolLeverage, lockedTPSLTriggers } = options;
+  const { symbolInfo, symbolLeverage, lockedTPSLTriggers, unroundedTPSLPnl } =
+    options;
   const marketInputs = useRef<
     Partial<
       Record<
@@ -111,7 +114,11 @@ const useOrderEntryNextInternal = (
       lockTrigger?: boolean,
     ): Partial<FullOrderState> => {
       // console.log("calculate", values, fieldName, value, options);
-      const fieldHandler = getCalculateHandler(fieldName, lockTrigger);
+      const fieldHandler = getCalculateHandler(
+        fieldName,
+        lockTrigger,
+        unroundedTPSLPnl,
+      );
       if (isTPSLCalculationField(fieldName)) {
         return fieldHandler([values, fieldName, value, markPrice, config])[0];
       }
@@ -127,7 +134,7 @@ const useOrderEntryNextInternal = (
 
       return newValues as Partial<FullOrderState>;
     },
-    [],
+    [unroundedTPSLPnl],
   );
 
   const applyField = (
@@ -148,7 +155,8 @@ const useOrderEntryNextInternal = (
       locked &&
       (key === `${leg}_trigger_price` ||
         (calculated &&
-          (getTPSLExecutionType(currentEntry, leg) !== OrderType.LIMIT ||
+          (key !== `${leg}_pnl` ||
+            getTPSLExecutionType(currentEntry, leg) !== OrderType.LIMIT ||
             !Number(currentEntry[`${leg}_trigger_price`]))))
     )
       return currentEntry;
@@ -199,11 +207,16 @@ const useOrderEntryNextInternal = (
         symbolInfo,
       );
     }
-    if (key === "order_quantity" || key === "order_price" || key === "total") {
+    if (
+      key === "order_quantity" ||
+      key === "order_price" ||
+      key === "total" ||
+      key === "side"
+    ) {
       newValues = refreshOrderTPSL(
         newValues,
         markPrice,
-        key === "total" ? "order_quantity" : key,
+        key === "side" ? "sync" : key === "total" ? "order_quantity" : key,
       );
     } else {
       Object.assign(
@@ -261,7 +274,7 @@ const useOrderEntryNextInternal = (
               Number(values.order_quantity) * (side === OrderSide.BUY ? 1 : -1),
             orderSide: side,
           },
-          { symbol: symbolInfo },
+          { symbol: symbolInfo, unroundedTPSLPnl },
         ),
       );
     }
@@ -287,7 +300,8 @@ const useOrderEntryNextInternal = (
     if (
       "order_price" in values ||
       "order_quantity" in values ||
-      "total" in values
+      "total" in values ||
+      "side" in values
     ) {
       newValues = refreshOrderTPSL(
         newValues,

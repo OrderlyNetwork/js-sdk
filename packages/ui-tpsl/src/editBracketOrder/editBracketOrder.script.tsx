@@ -110,6 +110,7 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     initialOrder: baseInfo,
     maxQty,
     lockedTPSLTriggers,
+    unroundedTPSLPnl: true,
   });
   const symbol = props.order.symbol;
 

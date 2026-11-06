@@ -2,6 +2,7 @@ import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import { API, OrderType } from "@orderly.network/types";
 import { registerSimpleDialog, toast } from "@orderly.network/ui";
+import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
 import { useEditBracketOrder } from "./editBracketOrder.script";
 import { EditBracketOrderUI } from "./editBracketOrder.ui";
@@ -13,6 +14,7 @@ import {
 const mockUpdate = jest.fn().mockResolvedValue({ success: true });
 const mockValidate = jest.fn().mockResolvedValue(undefined);
 const mockClose = jest.fn();
+const mockHighPrecisionSymbol = "PERP_HIGH_PRECISION_USDC";
 let mockIsMobile = false;
 let mockRealCalculation = false;
 let mockStreamOrders: API.AlgoOrderExt[] | undefined;
@@ -41,7 +43,12 @@ jest.mock("@orderly.network/hooks", () => ({
       const { useOrderEntryNextInternal } = jest.requireActual(
         "@orderly.network/hooks/src/next/useOrderEntry/useOrderEntry.internal",
       );
-      const symbolInfo = { symbol: _symbol, quote_dp: 2, base_dp: 4 };
+      const symbolInfo = {
+        symbol: _symbol,
+        quote_dp: _symbol === "PERP_SOL_USDC" ? 3 : 2,
+        base_dp: 4,
+        ...(_symbol === mockHighPrecisionSymbol && { quote_dp: 8, base_dp: 6 }),
+      };
       const internal = useOrderEntryNextInternal(_symbol, {
         ...options,
         symbolInfo,
@@ -83,6 +90,13 @@ jest.mock("@orderly.network/react-app", () => ({
 jest.mock("@orderly.network/ui", () => {
   const React = jest.requireActual("react");
   const Container = ({ children }: any) => <>{children}</>;
+  const Text = Object.assign(Container, {
+    numeral: ({ children, dp }: { children: number | string; dp: number }) => (
+      <span>
+        {typeof children === "number" ? children.toFixed(dp) : children}
+      </span>
+    ),
+  });
   return {
     cn: (...args: any[]) => args.filter(Boolean).join(" "),
     Flex: Container,
@@ -91,7 +105,7 @@ jest.mock("@orderly.network/ui", () => {
     registerSimpleDialog: jest.fn(),
     registerSimpleSheet: jest.fn(),
     ScrollArea: Container,
-    Text: Container,
+    Text,
     Divider: () => null,
     DotStatus: () => null,
     ThrottledButton: ({ children, onClick, disabled }: any) => (
@@ -119,7 +133,6 @@ jest.mock("@orderly.network/ui", () => {
   };
 });
 jest.mock("../components/orderInfo", () => ({ OrderInfo: () => null }));
-jest.mock("../components/pnlInfo", () => ({ PnlInfo: () => null }));
 jest.mock("../components/tpslPostionType", () => ({
   TPSLPositionTypeWidget: () => null,
 }));
@@ -246,6 +259,115 @@ describe.each([false, true])("Bracket edit UI (mobile=%s)", (mobile) => {
     mockRealCalculation = false;
   });
 
+  it("floors estimates for saved and edited TP/SL prices", () => {
+    mockRealCalculation = true;
+    const order = {
+      ...makeOrder(),
+      symbol: "PERP_SOL_USDC",
+      type: OrderType.LIMIT,
+      quantity: 7.62,
+      price: 90.12,
+    };
+    const parent = order.child_orders[0];
+    const [takeProfit, stopLoss] = parent.child_orders;
+    Object.assign(takeProfit, {
+      type: OrderType.LIMIT,
+      trigger_price: 99.132,
+      price: 99.132,
+    });
+    Object.assign(stopLoss, { trigger_price: 83, price: 82.5 });
+    act(() => {
+      renderer = create(<Probe order={order} />);
+    });
+    const displayedPnls = () => renderer.root.findByType(PnlInfo).props;
+    expect(displayedPnls()).toMatchObject({
+      tp_pnl: "68.67",
+      sl_pnl: "-58.07",
+    });
+
+    act(() => state.setValue("tp_order_price", "99.131"));
+    expect(state.formattedOrder).toMatchObject({
+      tp_trigger_price: "99.132",
+      tp_pnl: "68.66382",
+    });
+    expect(displayedPnls().tp_pnl).toBe("68.66");
+
+    act(() =>
+      renderer.update(
+        <Probe
+          order={{
+            ...order,
+            child_orders: [
+              {
+                ...parent,
+                child_orders: [
+                  takeProfit,
+                  { ...stopLoss, type: OrderType.MARKET },
+                ],
+              },
+            ],
+          }}
+        />,
+      ),
+    );
+    expect(displayedPnls()).toMatchObject({
+      tp_pnl: "68.66",
+      sl_pnl: "-54.26",
+    });
+  });
+
+  it("keeps the risk-reward ratio when a small gain displays as zero", () => {
+    mockRealCalculation = true;
+    const order = {
+      ...makeOrder(),
+      symbol: "PERP_SOL_USDC",
+      type: OrderType.LIMIT,
+      price: 90,
+    };
+    const [tp, sl] = order.child_orders[0].child_orders;
+    tp.trigger_price = 90.009;
+    sl.trigger_price = 89.981;
+    sl.price = 89.981;
+    act(() => {
+      renderer = create(<Probe order={order} />);
+    });
+
+    const summary = renderer.root.findByType(PnlInfo);
+    expect(
+      summary.findAllByType("span").map((node) => node.props.children),
+    ).toEqual(["0.00", "-0.02"]);
+    expect(
+      summary.findAll((node) => node.props.children === "0.50"),
+    ).not.toHaveLength(0);
+    expect(state.formattedOrder).toMatchObject({
+      tp_pnl: "0.009",
+      sl_pnl: "-0.019",
+    });
+  });
+
+  it("preserves a high-precision estimate just below a cent boundary", () => {
+    mockRealCalculation = true;
+    const order = {
+      ...makeOrder(),
+      symbol: mockHighPrecisionSymbol,
+      type: OrderType.LIMIT,
+      price: 1,
+      quantity: 199.999999,
+    };
+    Object.assign(order.child_orders[0].child_orders[0], {
+      type: OrderType.LIMIT,
+      trigger_price: 3.00000001,
+      price: 3.00000001,
+    });
+    act(() => {
+      renderer = create(<Probe order={order} />);
+    });
+
+    const summary = renderer.root.findByType(PnlInfo);
+    expect(summary.findAllByType("span")[0].props.children).toBe("399.99");
+    expect(state.formattedOrder.tp_pnl).toBe("399.99999999999999");
+  });
+
   it("keeps the open dialog or sheet connected to the latest order", () => {
     mockRealCalculation = true;
     const order = makeOrder(true);
@@ -299,7 +421,7 @@ describe.each([false, true])("Bracket edit UI (mobile=%s)", (mobile) => {
     expect(stopLoss().values).toMatchObject({
       trigger_price: "3910",
       order_price: "3880",
-      PnL: -340,
+      PnL: "-340",
     });
   });
 
@@ -458,7 +580,18 @@ describe.each([false, true])("Bracket edit UI (mobile=%s)", (mobile) => {
       sl_order_price: "3880",
     });
 
-    act(() => state.setValue("sl_offset_percentage_from_mark", 0.05));
+    act(() => {
+      state.setValue("sl_offset", 50);
+      state.setValue("sl_offset_percentage", 0.05);
+      state.setValue("sl_offset_from_mark", 50);
+      state.setValue("sl_offset_percentage_from_mark", 0.05);
+    });
+    expect(state.formattedOrder).toMatchObject({
+      sl_trigger_price: "3910",
+      sl_order_price: "3880",
+    });
+
+    act(() => state.setValue("sl_order_price", "3800"));
     expect(state.formattedOrder).toMatchObject({
       sl_trigger_price: "3910",
       sl_order_price: "3800",

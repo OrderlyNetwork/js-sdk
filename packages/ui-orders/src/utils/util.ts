@@ -9,12 +9,15 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import {
+  Decimal,
+  getTPSLEstimatePrice,
+  isActiveTPSLLeg,
+  isConfiguredPendingTPSLLeg,
   isPositionalTPSL,
   getTPSLLeg,
   getTPSLQuantity,
   isEntirePositionTPSL,
 } from "@orderly.network/utils";
-import { Decimal } from "@orderly.network/utils";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;
@@ -175,104 +178,57 @@ export function isGrayCell(status?: string): boolean {
   return status === OrderStatus.CANCELLED;
 }
 
-function findBracketTPSLOrder(order: API.AlgoOrderExt) {
-  if (order.algo_type !== AlgoOrderRootType.BRACKET) {
-    return {
-      tpOrder: undefined,
-      slOrder: undefined,
-    };
+export function calcBracketRoiAndPnL(order: API.AlgoOrderExt, quoteDp = 2) {
+  const parent =
+    order.algo_type === AlgoOrderRootType.BRACKET
+      ? order.child_orders?.[0]
+      : undefined;
+  const orderSide = order.side;
+  const quantity = Number(order.quantity);
+  const referencePrice = Number(
+    order.type === OrderType.MARKET || order.type === OrderType.STOP_MARKET
+      ? order.mark_price
+      : order.price,
+  );
+  if (
+    !parent ||
+    (orderSide !== OrderSide.BUY && orderSide !== OrderSide.SELL) ||
+    !Number.isFinite(quantity) ||
+    quantity <= 0 ||
+    !Number.isFinite(referencePrice) ||
+    referencePrice <= 0
+  ) {
+    return { pnl: { tpPnL: undefined, slPnL: undefined } };
   }
 
-  const innerOrder = order.child_orders?.[0];
-  if (!innerOrder)
-    return {
-      tpOrder: undefined,
-      slOrder: undefined,
-    };
+  const entryPrice = new Decimal(referencePrice)
+    .todp(quoteDp, Decimal.ROUND_UP)
+    .toNumber();
+  const qty = orderSide === OrderSide.BUY ? quantity : -quantity;
+  const estimatePnL = (leg: "tp" | "sl", orderType: AlgoOrderType) => {
+    const child = getTPSLLeg(parent, leg);
+    if (
+      !child ||
+      (!isActiveTPSLLeg(child) &&
+        !isConfiguredPendingTPSLLeg(parent, child, order))
+    ) {
+      return undefined;
+    }
 
-  const tpOrder = innerOrder?.child_orders?.find(
-    (item) => item.algo_type === AlgoOrderType.TAKE_PROFIT,
-  );
+    const price = Number(getTPSLEstimatePrice(child));
+    if (!Number.isFinite(price) || price <= 0) return undefined;
 
-  const slOrder = innerOrder?.child_orders?.find(
-    (item) => item.algo_type === AlgoOrderType.STOP_LOSS,
-  );
-
-  return {
-    tpOrder,
-    slOrder,
+    return utils.priceToPnl(
+      { qty, price, entryPrice, orderSide, orderType },
+      { pnlRoundingMode: Decimal.ROUND_FLOOR },
+    );
   };
-}
-
-export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
-  const defaultCallback = {
-    pnl: {
-      tpPnL: undefined,
-      slPnL: undefined,
-    },
-    // roi: {
-    //   tpRoi: undefined,
-    //   slRoi: undefined,
-    // },
-  };
-  const { tpOrder, slOrder } = findBracketTPSLOrder(order);
-  if (!tpOrder && !slOrder) return defaultCallback;
-
-  if (typeof order.price === undefined || !order.price) return defaultCallback;
-
-  const quantity =
-    order.side === OrderSide.BUY ? order.quantity : order.quantity * -1;
-
-  const tpPnL =
-    tpOrder?.trigger_price &&
-    utils.priceToPnl({
-      qty: quantity,
-      price: tpOrder?.trigger_price,
-      entryPrice: order.price,
-      // @ts-ignore
-      orderSide: order.side,
-      // @ts-ignore
-      orderType: tpOrder.algo_type,
-    });
-  const slPnL =
-    slOrder?.trigger_price &&
-    utils.priceToPnl({
-      qty: quantity,
-      // trigger price
-      price: slOrder?.trigger_price,
-      //
-      entryPrice: order.price,
-      // @ts-ignore
-      orderSide: order.side,
-      // @ts-ignore
-      orderType: slOrder.algo_type,
-    });
-
-  // UI not show ROI, so we don't need to calculate ROI
-  // const tpRoi = tpPnL
-  //   ? utils.calcTPSL_ROI({
-  //       pnl: tpPnL,
-  //       qty: order.quantity,
-  //       price: order.price,
-  //     })
-  //   : undefined;
-  // const slRoi = slPnL
-  //   ? utils.calcTPSL_ROI({
-  //       pnl: slPnL,
-  //       qty: order.quantity,
-  //       price: order.price,
-  //     })
-  //   : undefined;
 
   return {
     pnl: {
-      tpPnL,
-      slPnL,
+      tpPnL: estimatePnL("tp", AlgoOrderType.TAKE_PROFIT),
+      slPnL: estimatePnL("sl", AlgoOrderType.STOP_LOSS),
     },
-    // roi: {
-    //   tpRoi,
-    //   slRoi,
-    // },
   };
 }
 

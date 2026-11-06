@@ -305,6 +305,7 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 function tpslInputHandle(
   inputs: orderEntryInputs,
   lockTrigger?: boolean,
+  unroundedTPSLPnl?: boolean,
 ): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
   const price =
@@ -340,6 +341,7 @@ function tpslInputHandle(
     {
       symbol: config,
       lockTrigger,
+      unroundedTPSLPnl,
     },
   );
 
@@ -358,6 +360,7 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 export const getCalculateHandler = (
   fieldName: keyof OrderlyOrder,
   lockTrigger?: boolean,
+  unroundedTPSLPnl?: boolean,
 ): orderEntryInputHandle => {
   switch (fieldName) {
     case "order_type":
@@ -389,7 +392,7 @@ export const getCalculateHandler = (
     case "tp_order_type":
     case "sl_order_type":
     case "sl_order_price":
-      return (inputs) => tpslInputHandle(inputs, lockTrigger);
+      return (inputs) => tpslInputHandle(inputs, lockTrigger, unroundedTPSLPnl);
 
     default:
       return otherInputHandle;
