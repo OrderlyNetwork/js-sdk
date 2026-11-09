@@ -280,6 +280,49 @@ describe("execution report notifications", () => {
     expect(mocks.play).not.toHaveBeenCalled();
   });
 
+  it("shares one toast per order type for updates without fills", () => {
+    renderHook(() => useExecutionReport());
+    const cancelled = {
+      status: OrderStatus.CANCELLED,
+      total_executed_quantity: 0,
+    };
+    emit(order({ ...cancelled, order_id: 1, type: OrderType.LIMIT }));
+    emit(
+      order({ ...cancelled, order_id: 2, type: OrderType.LIMIT, side: "SELL" }),
+    );
+    emit(order({ ...cancelled, order_id: 3, type: OrderType.MARKET }));
+    advance(100);
+    emit(
+      order({ order_id: 4, type: OrderType.LIMIT, status: OrderStatus.NEW }),
+    );
+    advance(100);
+
+    const ids = mocks.toast.mock.calls.map(([, options]) => options.id);
+    expect(ids).toHaveLength(4);
+    expect(ids[1]).toBe(ids[0]);
+    expect(ids[2]).not.toBe(ids[0]);
+    expect(ids[3]).toBe(ids[0]);
+    expect(mocks.play).not.toHaveBeenCalled();
+  });
+
+  it("keeps one toast per order for fills of the same order type", () => {
+    renderHook(() => useExecutionReport());
+    const filled = {
+      status: OrderStatus.FILLED,
+      total_executed_quantity: 16.94,
+    };
+    emit(order({ ...filled, order_id: 1, type: OrderType.LIMIT }));
+    emit(order({ ...filled, order_id: 2, type: OrderType.LIMIT }));
+    emit(
+      order({ order_id: 3, type: OrderType.LIMIT, total_executed_quantity: 0 }),
+    );
+    advance(100);
+
+    const ids = mocks.toast.mock.calls.map(([, options]) => options.id);
+    expect(new Set(ids).size).toBe(3);
+    expect(mocks.play).toHaveBeenCalledTimes(2);
+  });
+
   it("shows a fully filled IOC order and plays its sound", () => {
     renderHook(() => useExecutionReport());
     emit(order({ status: OrderStatus.FILLED, total_executed_quantity: 16.94 }));

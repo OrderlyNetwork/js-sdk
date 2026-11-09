@@ -134,6 +134,13 @@ export const useExecutionReport = () => {
         playOrderFilledSoundRef.current();
       }
       if (title && msg) {
+        // Fills keep one toast per order so concurrent fills stay visible.
+        // Other updates replace the latest toast of the same order type, so a
+        // bulk cancellation does not stack one toast per order.
+        const orderType = ("algo_type" in data && data.algo_type) || data.type;
+        const toastId = hasFill
+          ? id
+          : `execution-report:${accountId}:type:${orderType}`;
         toast.success(
           <div>
             {title}
@@ -142,7 +149,7 @@ export const useExecutionReport = () => {
               {msg}
             </div>
           </div>,
-          { id },
+          { id: toastId },
         );
       }
     };
