@@ -1497,5 +1497,7 @@
   "notification.pagination": "صفحات الإعلانات",
   "notification.newAnnouncements": "إعلانات جديدة",
   "tradingPoints.points": "النقاط",
-  "prediction.message.connectWallet": "اربط محفظتك للتداول."
+  "prediction.message.connectWallet": "اربط محفظتك للتداول.",
+  "portfolio.setting.orderNotifications": "إشعارات الطلبات",
+  "portfolio.setting.orderNotifications.description": "عرض إشعارات منبثقة عند تحديث حالة الطلبات."
 }

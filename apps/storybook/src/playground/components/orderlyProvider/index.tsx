@@ -7,9 +7,18 @@ import { RouteProvider } from "../../../components/orderlyProvider/rounteProvide
 import { WalletConnectorProvider } from "../../../components/orderlyProvider/walletConnectorProvider";
 import { DEFAULT_WALLET_MODE } from "../../../components/orderlyProvider/walletMode";
 import { useIsRwaRoute } from "../../../orderlyConfig/hooks/useIsRwaRoute";
+import { widgetConfigs } from "../../../orderlyConfig/widgetConfigs";
 import { useEnvFormUrl } from "../../hooks/useEnvFormUrl";
 import { useNav } from "../../hooks/useNav";
 import { usePageTitle } from "../../hooks/usePageTitle";
+
+const playgroundWidgetConfigs = {
+  ...widgetConfigs,
+  setting: {
+    ...widgetConfigs?.setting,
+    showOrderNotifications: true,
+  },
+};
 
 const onLanguageChanged = async (lang: LocaleCode) => {
   const { pathname, search, hash } = window.location;
@@ -41,6 +50,7 @@ export const OrderlyProvider: React.FC = () => {
             brokerName={brokerName}
             env={env}
             isRwaRoute={isRwaRoute}
+            widgetConfigs={playgroundWidgetConfigs}
           >
             <ScrollToTop />
             {/* The outlet renders pages and nested route layouts. */}

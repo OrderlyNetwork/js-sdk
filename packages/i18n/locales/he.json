@@ -1497,5 +1497,7 @@
   "notification.pagination": "עמודי ההכרזות",
   "notification.newAnnouncements": "הכרזות חדשות",
   "tradingPoints.points": "נקודות",
-  "prediction.message.connectWallet": "חבר את הארנק שלך כדי לסחור."
+  "prediction.message.connectWallet": "חבר את הארנק שלך כדי לסחור.",
+  "portfolio.setting.orderNotifications": "התראות על פקודות",
+  "portfolio.setting.orderNotifications.description": "הצגת התראות קופצות על עדכונים בסטטוס הפקודות."
 }

@@ -2,7 +2,10 @@ import { FC, PropsWithChildren } from "react";
 // import { registerOrderlyYoutubeLivePlugin } from "@orderly.network/youtube-live-plugin";
 // import { registerOnrampPlugin } from "@orderly.network/onramper-plugin";
 // import { registerFastPlaceOrderPlugin } from "@orderly.network/fast-place-order-plugin";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
+import {
+  OrderlyAppProvider,
+  type OrderlyAppProviderProps,
+} from "@orderly.network/react-app";
 import {
   Arbitrum,
   ARBITRUM_MAINNET_CHAINID,
@@ -25,12 +28,18 @@ import { useRouteContext } from "./rounteProvider";
 
 export type OrderlyAppRootProviderProps = ConfigStoreOptions & {
   isRwaRoute?: boolean;
+  widgetConfigs?: OrderlyAppProviderProps["widgetConfigs"];
 };
 
 export const OrderlyAppRootProvider: FC<
   PropsWithChildren<OrderlyAppRootProviderProps>
 > = (props) => {
-  const { children, isRwaRoute, ...rest } = props;
+  const {
+    children,
+    isRwaRoute,
+    widgetConfigs: appWidgetConfigs = widgetConfigs,
+    ...rest
+  } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
   const symbolList = useSymbolList(isRwaRoute);
@@ -43,7 +52,7 @@ export const OrderlyAppRootProvider: FC<
         restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
         enableSwapDeposit
         onRouteChange={onRouteChange}
-        widgetConfigs={widgetConfigs}
+        widgetConfigs={appWidgetConfigs}
         notification={notification}
         dataAdapter={{ ...dataAdapter, symbolList }}
         plugins={

@@ -2,6 +2,7 @@ import { FC, useCallback, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card, Flex, Switch, Text } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
+import { OrderNotificationsSettingCard } from "./components/orderNotificationsSettingCard";
 import { SoundRadioButton } from "./components/soundRadioButton";
 import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
@@ -64,6 +65,7 @@ export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
         </Flex>
       </Card>
 
+      <OrderNotificationsSettingCard {...props} />
       {(props.hasOrderFilledMedia || props.hasSoundOptions) && (
         <Card
           title={t("portfolio.setting.soundAlerts")}

@@ -1497,5 +1497,7 @@
   "notification.pagination": "Trang thông báo",
   "notification.newAnnouncements": "Thông báo mới",
   "tradingPoints.points": "Điểm",
-  "prediction.message.connectWallet": "Kết nối ví của bạn để giao dịch."
+  "prediction.message.connectWallet": "Kết nối ví của bạn để giao dịch.",
+  "portfolio.setting.orderNotifications": "Thông báo lệnh",
+  "portfolio.setting.orderNotifications.description": "Hiển thị thông báo bật lên khi trạng thái lệnh thay đổi."
 }

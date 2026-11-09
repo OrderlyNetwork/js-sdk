@@ -1497,5 +1497,7 @@
   "notification.pagination": "Páginas de anuncios",
   "notification.newAnnouncements": "Nuevos anuncios",
   "tradingPoints.points": "Puntos",
-  "prediction.message.connectWallet": "Conecta tu billetera para operar."
+  "prediction.message.connectWallet": "Conecta tu billetera para operar.",
+  "portfolio.setting.orderNotifications": "Notificaciones de órdenes",
+  "portfolio.setting.orderNotifications.description": "Mostrar notificaciones emergentes cuando cambie el estado de las órdenes."
 }

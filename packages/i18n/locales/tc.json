@@ -1497,5 +1497,7 @@
   "notification.pagination": "公告分頁",
   "notification.newAnnouncements": "新公告",
   "tradingPoints.points": "積分",
-  "prediction.message.connectWallet": "請連接錢包以進行交易。"
+  "prediction.message.connectWallet": "請連接錢包以進行交易。",
+  "portfolio.setting.orderNotifications": "訂單通知",
+  "portfolio.setting.orderNotifications.description": "以彈出通知顯示訂單狀態更新。"
 }

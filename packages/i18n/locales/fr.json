@@ -1497,5 +1497,7 @@
   "notification.pagination": "Pages d'annonces",
   "notification.newAnnouncements": "Nouvelles annonces",
   "tradingPoints.points": "Points",
-  "prediction.message.connectWallet": "Connectez votre portefeuille pour trader."
+  "prediction.message.connectWallet": "Connectez votre portefeuille pour trader.",
+  "portfolio.setting.orderNotifications": "Notifications d’ordres",
+  "portfolio.setting.orderNotifications.description": "Afficher des notifications contextuelles lors des changements de statut des ordres."
 }

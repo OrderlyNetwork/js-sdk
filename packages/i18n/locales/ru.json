@@ -1497,5 +1497,7 @@
   "notification.pagination": "Страницы объявлений",
   "notification.newAnnouncements": "Новые объявления",
   "tradingPoints.points": "Баллы",
-  "prediction.message.connectWallet": "Подключите кошелёк, чтобы торговать."
+  "prediction.message.connectWallet": "Подключите кошелёк, чтобы торговать.",
+  "portfolio.setting.orderNotifications": "Уведомления об ордерах",
+  "portfolio.setting.orderNotifications.description": "Показывать всплывающие уведомления при изменении статуса ордеров."
 }

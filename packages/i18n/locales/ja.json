@@ -1497,5 +1497,7 @@
   "notification.pagination": "お知らせのページ",
   "notification.newAnnouncements": "新着のお知らせ",
   "tradingPoints.points": "ポイント",
-  "prediction.message.connectWallet": "取引するにはウォレットを接続してください。"
+  "prediction.message.connectWallet": "取引するにはウォレットを接続してください。",
+  "portfolio.setting.orderNotifications": "注文通知",
+  "portfolio.setting.orderNotifications.description": "注文ステータスの更新をポップアップ通知で表示します。"
 }

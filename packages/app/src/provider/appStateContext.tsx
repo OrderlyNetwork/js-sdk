@@ -38,6 +38,15 @@ export type WidgetConfigs = {
    * Function receives the default built-in tabs and context, returns the final tab sequence.
    */
   marketTabs?: MarketCategoryConfig;
+  setting?: {
+    /**
+     * Show the order notifications switch on the settings page. Defaults to false.
+     * The user's stored preference only applies while this is true; otherwise
+     * order status popups are always shown, even if the user previously turned
+     * them off.
+     */
+    showOrderNotifications?: boolean;
+  };
 };
 
 export type AppContextState = {

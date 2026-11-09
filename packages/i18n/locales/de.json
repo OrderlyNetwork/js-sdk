@@ -1497,5 +1497,7 @@
   "notification.pagination": "Ankündigungsseiten",
   "notification.newAnnouncements": "Neue Ankündigungen",
   "tradingPoints.points": "Punkte",
-  "prediction.message.connectWallet": "Verbinde deine Wallet, um zu handeln."
+  "prediction.message.connectWallet": "Verbinde deine Wallet, um zu handeln.",
+  "portfolio.setting.orderNotifications": "Orderbenachrichtigungen",
+  "portfolio.setting.orderNotifications.description": "Pop-up-Benachrichtigungen bei Änderungen des Orderstatus anzeigen."
 }

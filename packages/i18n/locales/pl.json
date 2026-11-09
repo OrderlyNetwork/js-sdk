@@ -1497,5 +1497,7 @@
   "notification.pagination": "Strony ogłoszeń",
   "notification.newAnnouncements": "Nowe ogłoszenia",
   "tradingPoints.points": "Punkty",
-  "prediction.message.connectWallet": "Połącz portfel, aby handlować."
+  "prediction.message.connectWallet": "Połącz portfel, aby handlować.",
+  "portfolio.setting.orderNotifications": "Powiadomienia o zleceniach",
+  "portfolio.setting.orderNotifications.description": "Wyświetlaj wyskakujące powiadomienia o zmianach statusu zleceń."
 }

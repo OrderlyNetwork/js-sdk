@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
+import { useOrderNotificationsEnabled } from "./useOrderNotificationsEnabled";
 
 export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
@@ -25,6 +26,12 @@ export const useExecutionReport = () => {
   const ee = useEventEmitter();
   const { state } = useAccount();
   const accountId = state.accountId;
+  const { enabled: orderNotificationsEnabled } = useOrderNotificationsEnabled();
+  const orderNotificationsEnabledRef = useRef(orderNotificationsEnabled);
+
+  useEffect(() => {
+    orderNotificationsEnabledRef.current = orderNotificationsEnabled;
+  }, [orderNotificationsEnabled]);
 
   const symbolsInfo = useSymbolsInfo();
   const symbolsInfoRef = useRef({});
@@ -133,7 +140,7 @@ export const useExecutionReport = () => {
         }
         playOrderFilledSoundRef.current();
       }
-      if (title && msg) {
+      if (orderNotificationsEnabledRef.current && title && msg) {
         // Fills keep one toast per order so concurrent fills stay visible.
         // Other updates replace the latest toast of the same order type, so a
         // bulk cancellation does not stack one toast per order.

@@ -1497,5 +1497,7 @@
   "notification.pagination": "Сторінки оголошень",
   "notification.newAnnouncements": "Нові оголошення",
   "tradingPoints.points": "Бали",
-  "prediction.message.connectWallet": "Підключіть гаманець, щоб торгувати."
+  "prediction.message.connectWallet": "Підключіть гаманець, щоб торгувати.",
+  "portfolio.setting.orderNotifications": "Сповіщення про ордери",
+  "portfolio.setting.orderNotifications.description": "Показувати спливні сповіщення про зміни статусу ордерів."
 }

@@ -1497,5 +1497,7 @@
   "notification.pagination": "صفحات اطلاعیه‌ها",
   "notification.newAnnouncements": "اطلاعیه‌های جدید",
   "tradingPoints.points": "امتیاز",
-  "prediction.message.connectWallet": "برای معامله، کیف پول خود را متصل کنید."
+  "prediction.message.connectWallet": "برای معامله، کیف پول خود را متصل کنید.",
+  "portfolio.setting.orderNotifications": "اعلان‌های سفارش",
+  "portfolio.setting.orderNotifications.description": "اعلان‌های بازشو را هنگام تغییر وضعیت سفارش‌ها نمایش دهید."
 }

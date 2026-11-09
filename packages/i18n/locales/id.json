@@ -1497,5 +1497,7 @@
   "notification.pagination": "Halaman pengumuman",
   "notification.newAnnouncements": "Pengumuman baru",
   "tradingPoints.points": "Poin",
-  "prediction.message.connectWallet": "Hubungkan dompet Anda untuk bertrading."
+  "prediction.message.connectWallet": "Hubungkan dompet Anda untuk bertrading.",
+  "portfolio.setting.orderNotifications": "Notifikasi order",
+  "portfolio.setting.orderNotifications.description": "Tampilkan notifikasi pop-up saat status order berubah."
 }

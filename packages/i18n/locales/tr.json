@@ -1497,5 +1497,7 @@
   "notification.pagination": "Duyuru sayfaları",
   "notification.newAnnouncements": "Yeni duyurular",
   "tradingPoints.points": "Puanlar",
-  "prediction.message.connectWallet": "İşlem yapmak için cüzdanınızı bağlayın."
+  "prediction.message.connectWallet": "İşlem yapmak için cüzdanınızı bağlayın.",
+  "portfolio.setting.orderNotifications": "Emir bildirimleri",
+  "portfolio.setting.orderNotifications.description": "Emir durumu değiştiğinde açılır bildirimler göster."
 }

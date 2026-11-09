@@ -127,6 +127,9 @@ export const portfolio = {
   "portfolio.setting.soundAlerts": "Sound notification",
   "portfolio.setting.soundAlerts.description":
     "Play a notification sound when an order is filled or canceled.",
+  "portfolio.setting.orderNotifications": "Order notifications",
+  "portfolio.setting.orderNotifications.description":
+    "Show pop-up notifications for order status updates.",
   "portfolio.setting.theme": "Theme",
 };
 
