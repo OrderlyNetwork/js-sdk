@@ -282,6 +282,9 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@binance/w3w-blocknative-connector':
+        specifier: ^1.1.12
+        version: 1.1.12(@web3-onboard/common@2.4.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(bufferutil@4.0.9)(debug@4.4.3(supports-color@8.1.1))(encoding@0.1.13)(tsx@4.21.0)(utf-8-validate@5.0.10)(yaml@2.9.0)
       '@orderly.network/affiliate':
         specifier: workspace:*
         version: link:../../packages/affiliate
@@ -2809,6 +2812,9 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.8.3
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@22.20.1)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@26.1.0(bufferutil@4.0.9)(supports-color@8.1.1)(utf-8-validate@5.0.10))(vite@7.3.5(@types/node@22.20.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/ui-positions:
     dependencies:
@@ -3433,18 +3439,33 @@ importers:
         specifier: ^7.5.5
         version: 7.8.2
     devDependencies:
+      '@testing-library/react':
+        specifier: ^14.2.1
+        version: 14.3.1(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ^18.2.38
         version: 18.3.23
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.23)
+      jsdom:
+        specifier: ^20.0.3
+        version: 20.0.3(bufferutil@4.0.9)(supports-color@8.1.1)(utf-8-validate@5.0.10)
       react:
         specifier: ^18.2.0
         version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(@swc/core@1.13.2(@swc/helpers@0.5.17))(jiti@2.7.0)(postcss@8.5.26)(supports-color@8.1.1)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.9.0)
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@22.20.1)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@20.0.3(bufferutil@4.0.9)(supports-color@8.1.1)(utf-8-validate@5.0.10))(vite@7.3.5(@types/node@22.20.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/wallet-connector-privy:
     dependencies:
@@ -17359,7 +17380,7 @@ snapshots:
       '@binance/w3w-types': 1.1.4
       '@binance/w3w-utils': 1.1.8
       eip1193-provider: 1.0.1(bufferutil@4.0.9)(debug@4.4.3(supports-color@8.1.1))(utf-8-validate@5.0.10)
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -17412,7 +17433,7 @@ snapshots:
 
   '@binance/w3w-types@1.1.4':
     dependencies:
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
 
   '@binance/w3w-utils@1.1.4':
     dependencies:
@@ -17431,7 +17452,7 @@ snapshots:
   '@binance/w3w-utils@1.1.8':
     dependencies:
       '@binance/w3w-types': 1.1.4
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       hash.js: 1.1.7
       js-base64: 3.7.7
 
@@ -33713,6 +33734,36 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.16.5
       '@vitest/browser-playwright': 4.1.10(bufferutil@4.0.9)(playwright@1.57.0)(utf-8-validate@5.0.10)(vite@7.3.5(@types/node@22.16.5)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/coverage-v8': 4.1.10(@vitest/browser@4.1.10)(vitest@4.1.10)
+      jsdom: 20.0.3(bufferutil@4.0.9)(supports-color@8.1.1)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - msw
+
+  vitest@4.1.10(@types/node@22.20.1)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@20.0.3(bufferutil@4.0.9)(supports-color@8.1.1)(utf-8-validate@5.0.10))(vite@7.3.5(@types/node@22.20.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0)):
+    dependencies:
+      '@vitest/expect': 4.1.10
+      '@vitest/mocker': 4.1.10(vite@7.3.5(@types/node@22.20.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))
+      '@vitest/pretty-format': 4.1.10
+      '@vitest/runner': 4.1.10
+      '@vitest/snapshot': 4.1.10
+      '@vitest/spy': 4.1.10
+      '@vitest/utils': 4.1.10
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.4
+      std-env: 4.1.0
+      tinybench: 2.9.0
+      tinyexec: 1.0.2
+      tinyglobby: 0.2.17
+      tinyrainbow: 3.1.0
+      vite: 7.3.5(@types/node@22.20.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 22.20.1
+      '@vitest/browser-playwright': 4.1.10(bufferutil@4.0.9)(playwright@1.57.0)(utf-8-validate@5.0.10)(vite@7.3.5(@types/node@22.20.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.1.10)
       '@vitest/coverage-v8': 4.1.10(@vitest/browser@4.1.10)(vitest@4.1.10)
       jsdom: 20.0.3(bufferutil@4.0.9)(supports-color@8.1.1)(utf-8-validate@5.0.10)
     transitivePeerDependencies:

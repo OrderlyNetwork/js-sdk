@@ -501,3 +501,127 @@ describe.each(["main", "sub"])("%s account TP/SL policy", (account) => {
     });
   });
 });
+
+describe("TP/SL stream trigger locks", () => {
+  beforeEach(() => {
+    mockUpdateAlgoOrder.mockReset().mockResolvedValue({ success: true });
+    mockNormalOrders = [];
+    mockMarkPrice = 4000;
+    const parent = createOrder();
+    Object.assign(parent.child_orders[0], {
+      trigger_time: 123,
+      root_algo_order_id: 20,
+    });
+    mockOrders = [
+      {
+        algo_order_id: 20,
+        algo_type: "BRACKET",
+        symbol: parent.symbol,
+        child_orders: [parent],
+      },
+    ];
+  });
+
+  it("blocks an existing TradingView callback after the next snapshot triggers its leg", async () => {
+    const root = mockOrders[0];
+    const parent = root.child_orders[0];
+    const triggeredChild = parent.child_orders[0];
+    mockOrders = [
+      {
+        ...root,
+        child_orders: [
+          {
+            ...parent,
+            child_orders: [{ ...triggeredChild, trigger_time: undefined }],
+          },
+        ],
+      },
+    ];
+    const { result, rerender } = renderHook(() => useOrderStream({}));
+    const updateFromOpenChart = result.current[1].updateTPSLOrder;
+    mockOrders = [root];
+    rerender();
+
+    await expect(
+      updateFromOpenChart(20, [
+        { order_id: 10, child_orders: [{ order_id: 11, trigger_price: 4105 }] },
+      ]),
+    ).rejects.toThrow(/cannot be changed/);
+    expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { includes: [AlgoOrderRootType.STOP] },
+    { excludes: [AlgoOrderRootType.BRACKET] },
+  ])(
+    "keeps subaccount TP/SL updates guarded when the list uses %j",
+    async (filters) => {
+      const { result } = renderHook(() =>
+        useSubAccountAlgoOrderStream(filters, { accountId: "sub" }),
+      );
+      const [, { updateAlgoOrder, updateTPSLOrder }] = result.current;
+      expect(result.current[0]).toEqual([]);
+
+      await expect(
+        updateAlgoOrder("11", {
+          trigger_price: "4105",
+        } as OrderEntity),
+      ).rejects.toThrow(/cannot be changed/);
+      expect(() =>
+        updateTPSLOrder(20, [
+          {
+            order_id: 10,
+            child_orders: [{ order_id: 11, trigger_price: 4105 }],
+          },
+        ]),
+      ).toThrow(/cannot be changed/);
+      expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
+
+      const expectedUpdate = {
+        order_id: 20,
+        child_orders: [
+          { order_id: 10, child_orders: [{ order_id: 11, price: 4120 }] },
+        ],
+      };
+      await updateAlgoOrder("11", {
+        trigger_price: "4100.00",
+        order_price: "4120",
+      } as OrderEntity);
+      await updateTPSLOrder(20, [
+        {
+          order_id: 10,
+          child_orders: [
+            { order_id: 11, trigger_price: "4100.00", price: "4120" },
+          ],
+        },
+      ]);
+      expect(mockUpdateAlgoOrder.mock.calls).toEqual([
+        [expectedUpdate],
+        [expectedUpdate],
+      ]);
+    },
+  );
+
+  it("guards direct subaccount edits and strips an unchanged trigger from the request", async () => {
+    const { result } = renderHook(() =>
+      useSubAccountAlgoOrderStream({}, { accountId: "sub" }),
+    );
+    await expect(
+      result.current[1].updateAlgoOrder("11", {
+        trigger_price: "4105",
+      } as OrderEntity),
+    ).rejects.toThrow(/cannot be changed/);
+    expect(mockUpdateAlgoOrder).not.toHaveBeenCalled();
+
+    await result.current[1].updateAlgoOrder("11", {
+      trigger_price: "4100.00",
+      order_price: "4120",
+    } as OrderEntity);
+    expect(mockUpdateAlgoOrder).toHaveBeenCalledWith({
+      order_id: 20,
+      child_orders: [
+        { order_id: 10, child_orders: [{ order_id: 11, price: 4120 }] },
+      ],
+    });
+  });
+});

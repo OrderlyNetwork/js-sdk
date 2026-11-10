@@ -6,22 +6,15 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import {
-  Connector,
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useSwitchChain,
-} from "wagmi";
+import { Connector, useSwitchChain } from "wagmi";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import {
   getWalletConnectErrorMessage,
-  isWalletConnectCancellation,
   WALLET_CONNECT_ERROR,
-  WALLET_CONNECT_PROVIDER_CANCEL,
 } from "../../connectEvents";
 import { WalletConnectType } from "../../types";
+import { useWagmiConnection } from "./useWagmiConnection";
 
 interface WagmiWalletContextValue {
   connectors: Connector[];
@@ -29,7 +22,11 @@ interface WagmiWalletContextValue {
   wallet: any;
   connectedChain: { id: number; namespace: ChainNamespace } | null;
   setChain: (chainId: number) => Promise<any>;
-  disconnect: () => void;
+  /**
+   * Ends the local connection immediately; the connector's (possibly slow,
+   * network-bound) cleanup keeps running in the background.
+   */
+  disconnect: () => Promise<void>;
   isConnected: boolean;
 }
 
@@ -42,7 +39,7 @@ const disabledWagmiWalletValue: WagmiWalletContextValue = {
   connectedChain: null,
   setChain: () =>
     Promise.reject(new Error("Wagmi wallet connector is disabled")),
-  disconnect: () => {},
+  disconnect: () => Promise.resolve(),
   isConnected: false,
 };
 
@@ -65,45 +62,27 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [wallet, setWallet] = useState<undefined | any>(undefined);
-  const { connect: connectWagmi, connectors: wagmiConnectors } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { connector, isConnected, address, chainId } = useAccount();
+  const {
+    connector,
+    address,
+    chainId,
+    connectors: wagmiConnectors,
+    isConnected,
+    connect,
+    disconnect,
+  } = useWagmiConnection();
   const { switchChain } = useSwitchChain();
   const ee = useEventEmitter();
 
-  const connect = useCallback(
-    (args: any) => {
-      connectWagmi(args, {
-        onError: (error) => {
-          if (isWalletConnectCancellation(error)) {
-            ee.emit(WALLET_CONNECT_PROVIDER_CANCEL, {
-              walletType: WalletConnectType.EVM,
-            });
-            return;
-          }
-
-          ee.emit(WALLET_CONNECT_ERROR, {
-            walletType: WalletConnectType.EVM,
-            message: getWalletConnectErrorMessage(
-              error,
-              "Failed to connect to the wallet.",
-            ),
-          });
-        },
-      });
-    },
-    [connectWagmi, ee],
-  );
-
   const connectedChain = useMemo(() => {
-    if (chainId) {
+    if (chainId && isConnected) {
       return {
         id: chainId,
         namespace: ChainNamespace.evm,
       };
     }
     return null;
-  }, [chainId]);
+  }, [chainId, isConnected]);
 
   const setChain = useCallback(
     (chainId: number) => {
@@ -138,8 +117,12 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
+    let active = true;
     providerPromise
       .then((provider) => {
+        if (!active) {
+          return;
+        }
         setWallet({
           label: connector.name,
           icon: "",
@@ -159,6 +142,9 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
         });
       })
       .catch((error) => {
+        if (!active) {
+          return;
+        }
         setWallet(undefined);
         ee.emit(WALLET_CONNECT_ERROR, {
           walletType: WalletConnectType.EVM,
@@ -168,6 +154,9 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
           ),
         });
       });
+    return () => {
+      active = false;
+    };
   }, [address, chainId, connectedChain, connector, ee, isConnected]);
 
   const connectors = useMemo(() => {
@@ -182,7 +171,7 @@ const EnabledWagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     () => ({
       connectors,
       connect,
-      wallet,
+      wallet: isConnected ? wallet : undefined,
       connectedChain,
       setChain,
       disconnect,

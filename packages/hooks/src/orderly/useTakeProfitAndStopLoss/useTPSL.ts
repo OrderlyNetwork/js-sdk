@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { produce } from "immer";
 import { omit } from "ramda";
 import {
@@ -18,17 +18,19 @@ import {
   getTPSLQuantity,
   isActiveTPSLLeg,
   isTPSLTriggered,
+  isTPSLTriggerLocked,
 } from "@orderly.network/utils";
 import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
 import { useOrderlyContext } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { OrderValidationItem } from "../../services/orderCreator/interface";
+import { revalidateTPSLOrderUpdates } from "../../services/orderCreator/tpslOrderUpdates";
 import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositionOrderCreator";
 import { useSubAccountMutation } from "../../subAccount";
 import { useMutation } from "../../useMutation";
 import { useMarkPrice } from "../useMarkPrice";
 import { useSymbolsInfo } from "../useSymbolsInfo";
-import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
+import { refreshTPSLValues, tpslCalculateHelper } from "./tp_slUtils";
 
 export type TPSLComputedData = {
   /**
@@ -118,7 +120,10 @@ export const useTaskProfitAndStopLossInternal = (
      * Update the take profit and stop loss order, this will merge the new data with the old one
      */
     setValue: (key: string, value: number | string | boolean) => void;
-    setValues: (values: Partial<ComputedAlgoOrder>) => void;
+    setValues: (
+      values: Partial<ComputedAlgoOrder>,
+      syncPrices?: boolean,
+    ) => void;
     // getOrderEntity: () => AlgoOrderEntity<AlgoOrderRootType.TP_SL|AlgoOrderRootType.POSITIONAL_TP_SL>;
     /**
      * Submit the TP/SL order
@@ -219,15 +224,21 @@ export const useTaskProfitAndStopLossInternal = (
 
   useEffect(() => {
     if (!isEditing || !options?.defaultOrder) return;
-    const order: ComputedAlgoOrder = {};
+    const order: ComputedAlgoOrder = {
+      algo_order_id: options.defaultOrder.algo_order_id,
+      quantity:
+        options.defaultOrder.quantity === 0
+          ? Math.abs(position.position_qty)
+          : options.defaultOrder.quantity,
+    };
     for (const leg of ["tp", "sl"] as const) {
       const child = options.defaultOrder.child_orders?.find(
         (item) =>
           item.algo_type === (leg === "tp" ? "TAKE_PROFIT" : "STOP_LOSS"),
       );
-      if (isActiveTPSLLeg(child)) {
-        order[`${leg}_trigger_price`] = child!.trigger_price;
-      }
+      order[`${leg}_trigger_price`] = isActiveTPSLLeg(child)
+        ? child!.trigger_price
+        : undefined;
       order[`${leg}_order_type`] =
         child?.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
       order[`${leg}_order_price`] =
@@ -235,118 +246,63 @@ export const useTaskProfitAndStopLossInternal = (
           ? child.price?.toString()
           : undefined;
     }
-    setValues(order);
-  }, []);
+    setValues(order, true);
+  }, [options?.defaultOrder?.algo_order_id, isEditing]);
 
   const editingOrder = isEditing ? options?.defaultOrder : undefined;
-  const _setOrderValue = (
-    key: string,
-    value: number | string | boolean,
-    options?: {
-      ignoreValidate?: boolean;
-    },
+  const latestEditingOrder = useRef(editingOrder);
+  latestEditingOrder.current = editingOrder;
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const getCalculationInputs = (
+    leg: "tp" | "sl",
+    values: ComputedAlgoOrder,
   ) => {
-    // console.log("[updateOrder:]", key, value);
-
-    setOrder((prev) => {
-      const leg = key.startsWith("tp_")
-        ? "tp"
-        : key.startsWith("sl_")
-          ? "sl"
-          : undefined;
-      const child =
-        editingOrder && leg ? getTPSLLeg(editingOrder, leg) : undefined;
-      const triggered = child && isTPSLTriggered(child);
-      const quantity = triggered
-        ? getTPSLQuantity(child)
-        : Number(prev.quantity);
-      const side = triggered
-        ? child.side === OrderSide.BUY
-          ? OrderSide.SELL
-          : OrderSide.BUY
-        : position.position_qty! > 0
-          ? OrderSide.BUY
-          : OrderSide.SELL;
-
-      // if (key === "sl_pnl") {
-      //   value = value ? `-${value}` : "";
-      // }
-
-      const newValue = tpslCalculateHelper(
-        key,
-        {
-          key,
-          value,
-          entryPrice: position.average_open_price!,
-          qty: side === OrderSide.BUY ? (quantity ?? 0) : -(quantity ?? 0),
-          orderSide: side,
-          markPrice: markPrice ?? position.average_open_price!, // use mark price as the default value
-          values: prev as Partial<OrderlyOrder>,
-        },
-        {
-          symbol: symbolInfo,
-        },
-      );
-
-      if (triggered && quantity == null && leg) {
-        newValue[`${leg}_pnl`] = "";
-      }
-      const newValueAll = {
-        ...prev,
-        ...newValue,
-        ignoreValidate: options?.ignoreValidate,
-      };
-      interactiveValidate(
-        newValueAll as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-      );
-      return {
-        ...prev,
-        ...newValue,
-        ignoreValidate: options?.ignoreValidate,
-      };
-    });
+    const child = editingOrder && getTPSLLeg(editingOrder, leg);
+    const triggered = child && isTPSLTriggered(child);
+    const quantity = triggered
+      ? getTPSLQuantity(child)
+      : Number(values.quantity);
+    const side = triggered
+      ? child.side === OrderSide.BUY
+        ? OrderSide.SELL
+        : OrderSide.BUY
+      : position.position_qty! > 0
+        ? OrderSide.BUY
+        : OrderSide.SELL;
+    return {
+      values: values as Partial<OrderlyOrder>,
+      entryPrice: position.average_open_price!,
+      markPrice: markPrice ?? position.average_open_price!,
+      qty: (quantity ?? 0) * (side === OrderSide.BUY ? 1 : -1),
+      orderSide: side,
+    };
   };
 
-  const setOrderValue = async (
-    key: string,
-    value: number | string | boolean,
-    options?: {
-      ignoreValidate?: boolean;
-    },
-  ) => {
-    // console.log("-------->>>>>", key, value);
-    if (key === "quantity") {
-      setOrder((prev) => ({ ...prev, quantity: value as string }));
-
-      if (typeof order.sl_trigger_price !== "undefined") {
-        _setOrderValue("sl_trigger_price", order.sl_trigger_price, {
-          ignoreValidate: true,
-        });
-      }
-      if (typeof order.sl_order_price !== "undefined") {
-        _setOrderValue("sl_order_price", order.sl_order_price, {
-          ignoreValidate: true,
-        });
-      }
-
-      if (typeof order.tp_trigger_price !== "undefined") {
-        _setOrderValue("tp_trigger_price", order.tp_trigger_price, {
-          ignoreValidate: true,
-        });
-      }
-      if (typeof order.tp_order_price !== "undefined") {
-        _setOrderValue("tp_order_price", order.tp_order_price, {
-          ignoreValidate: true,
-        });
-      }
-
-      // TODO: need to optimizations code
-      _setOrderValue(key, value, options);
-
-      return;
-    }
-
-    _setOrderValue(key, value, options);
+  const setOrderValue = (key: string, value: number | string | boolean) => {
+    setOrder((prev) => {
+      const leg = key.startsWith("tp_") ? "tp" : "sl";
+      const latest = latestEditingOrder.current;
+      const changes = tpslCalculateHelper(
+        key,
+        { ...getCalculationInputs(leg, prev), key, value },
+        {
+          symbol: symbolInfo,
+          lockTrigger: isTPSLTriggerLocked(
+            latest,
+            latest && getTPSLLeg(latest, leg),
+          ),
+        },
+      );
+      const next = { ...prev, ...changes } as ComputedAlgoOrder;
+      interactiveValidate(next as AlgoOrderEntity<AlgoOrderRootType.TP_SL>);
+      return next;
+    });
   };
 
   /**
@@ -416,15 +372,11 @@ export const useTaskProfitAndStopLossInternal = (
           ? triggerPriceEmpty ||
             Number(currentTriggerPrice) !== Number(child.trigger_price)
           : !triggerPriceEmpty);
-      if (
-        editingOrder &&
-        editingOrder.is_triggered === true &&
-        child &&
-        !triggerPriceChanged
-      ) {
+      const locked = isTPSLTriggerLocked(editingOrder, child);
+      if (locked && child && !triggerPriceChanged) {
         result[leg] = true;
       }
-      if (editingOrder?.is_triggered === true && triggerPriceChanged) {
+      if (locked && triggerPriceChanged) {
         lockedTriggerErrors[`${leg}_trigger_price`] =
           triggeredTPSLTriggerPriceError;
       }
@@ -444,14 +396,28 @@ export const useTaskProfitAndStopLossInternal = (
       : errors;
   };
 
-  const setValues = (values: Partial<ComputedAlgoOrder>) => {
-    const keys = Object.keys(values);
-    keys.forEach((key) => {
-      setOrderValue(
-        key as UpdateOrderKey,
-        values[key as keyof ComputedAlgoOrder] as number | string,
-      );
-    });
+  const setValues = (
+    values: Partial<ComputedAlgoOrder>,
+    syncPrices = false,
+  ) => {
+    if (syncPrices) {
+      const changes = { ...values };
+      const latest = latestEditingOrder.current;
+      for (const leg of ["tp", "sl"] as const) {
+        const key = `${leg}_trigger_price` as const;
+        const child = latest && getTPSLLeg(latest, leg);
+        if (key in changes && isTPSLTriggerLocked(latest, child)) {
+          changes[key] = isActiveTPSLLeg(child)
+            ? child?.trigger_price
+            : undefined;
+        }
+      }
+      setOrder((prev) => ({ ...prev, ...changes }));
+      return;
+    }
+    for (const key of Object.keys(values) as (keyof ComputedAlgoOrder)[]) {
+      setOrderValue(key, values[key] as string | number);
+    }
   };
 
   const validate = (
@@ -535,15 +501,26 @@ export const useTaskProfitAndStopLossInternal = (
      */
     accountId?: string;
   }) => {
-    const defaultOrder = options?.defaultOrder;
+    const defaultOrder = latestEditingOrder.current;
     const orderId = defaultOrder?.algo_order_id;
+    if (!mounted.current || editingOrder?.algo_order_id !== orderId)
+      return Promise.reject(false);
 
     // A default order does not turn an explicitly non-editing flow into an update.
-    if (!isEditing || !orderId) {
+    if (!editingOrder || !orderId) {
       return createOrder(params);
     }
 
-    return updateOrder(orderId!, params);
+    for (const leg of ["tp", "sl"] as const) {
+      const child = getTPSLLeg(defaultOrder, leg);
+      if (!child || !isTPSLTriggerLocked(defaultOrder, child)) continue;
+      const trigger = isActiveTPSLLeg(child) ? child.trigger_price : undefined;
+      if (Number(order[`${leg}_trigger_price`] || 0) !== Number(trigger || 0)) {
+        throw new SDKError(triggeredTPSLTriggerPriceError.message);
+      }
+    }
+
+    return updateOrder(editingOrder, defaultOrder, params);
   };
 
   const createOrder = (params?: { accountId?: string }) => {
@@ -575,7 +552,8 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   const updateOrder = (
-    orderId: number,
+    baseline: API.AlgoOrder,
+    latest: API.AlgoOrder,
     params?: { accountId?: string },
   ): Promise<any> => {
     const orderCreator =
@@ -584,28 +562,43 @@ export const useTaskProfitAndStopLossInternal = (
     const [updatedOrderEntity, orderEntity] = orderCreator.crateUpdateOrder(
       // @ts-ignore
       order,
-      options?.defaultOrder,
+      baseline,
       valueConfig,
     );
+    const changes = updatedOrderEntity.child_orders;
+    const childOrders =
+      baseline === latest
+        ? changes
+        : revalidateTPSLOrderUpdates(changes, latest);
 
-    if (updatedOrderEntity.child_orders.length === 0) {
+    if (childOrders.length === 0) {
       return Promise.resolve("Not any order needs to update");
     }
 
+    const orderId = latest.algo_order_id;
     const needDelete =
       orderEntity.child_orders.filter(
         (order) =>
           typeof order.is_activated === "boolean" && !order.is_activated,
       ).length === orderEntity.child_orders.length;
 
-    if (needDelete) {
+    const latestHasRemainingLeg = latest.child_orders?.some(
+      (child) =>
+        isActiveTPSLLeg(child) &&
+        !childOrders.some(
+          (change) =>
+            change.order_id === child.algo_order_id &&
+            change.is_activated === false,
+        ),
+    );
+    if (needDelete && !latestHasRemainingLeg) {
       return deleteOrder(orderId, order.symbol!);
     }
 
     return doUpdateOrder(
       {
         order_id: orderId,
-        ...updatedOrderEntity,
+        child_orders: childOrders,
       },
       {},
       params,
@@ -613,7 +606,15 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   return [
-    omit(["ignoreValidate"], order) as ComputedAlgoOrder,
+    {
+      ...omit(["ignoreValidate"], order),
+      ...refreshTPSLValues("tp", getCalculationInputs("tp", order), {
+        symbol: symbolInfo,
+      }),
+      ...refreshTPSLValues("sl", getCalculationInputs("sl", order), {
+        symbol: symbolInfo,
+      }),
+    } as ComputedAlgoOrder,
     {
       submit,
       deleteOrder,

@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "کل حجم معاملات ۲۴ ساعته در Orderly Network.",
   "markets.symbolInfoBar.predFundingRate": "نرخ تأمین تخمینی",
   "markets.symbolInfoBar.predFundingRate.tooltip": "نرخ‌های تأمین پرداخت بین لانگ و شورت است. در صورت مثبت بودن، لانگ به شورت می‌پردازد؛ در صورت منفی، برعکس.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} فقط با مارجین ایزوله در یک لیستینگ بدون مجوز پشتیبانی می‌شود و مستقل توسط {{brokerName}} مستقر و اداره می‌شود. از ریسک‌هایی مانند نقدینگی کم، نوسان بالا و خطر لیکوییدیشن بالاتر آگاه باشید.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} به‌طور مستقل توسط {{brokerName}} مستقر شده است. فقط مارجین ایزوله. مراقب نقدینگی کم، نوسان بالا و ریسک لیکوییدیشن باشید.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} یک بازار پیش از عرضه است که {{brokerName}} آن را به‌طور مستقل راه‌اندازی کرده است. فقط مارجین ایزوله. توکن هنوز عرضه نشده است. در دوره پیش از عرضه کارمزد تأمین مالی دریافت نمی‌شود. مراقب نقدشوندگی پایین، نوسان زیاد و ریسک لیکویید شدن باشید.",
   "portfolio.feeTier": "سطح کارمزد",
   "portfolio.apiKeys": "کلیدهای API",
   "portfolio.setting": "تنظیمات",
@@ -328,7 +328,6 @@
   "prediction.probability": "احتمال صعود",
   "prediction.lastPrice": "آخرین قیمت",
   "prediction.volumeShort": "حجم",
-  "prediction.column.last&probability": "آخر/احتمال صعود",
   "prediction.column.time&volume": "زمان/حجم",
   "prediction.markPrice.tooltip": "قیمت نشان پیش‌بینی. در طول معاملات با قیمت شاخص پیش‌بینی برابر است و در تسویه به 0، 0.5 یا 1 تبدیل می‌شود. نزولی به‌صورت 1 منهای قیمت نشان صعودی نمایش داده می‌شود.",
   "prediction.orderBook": "دفتر سفارش‌ها",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "بارگذاری ناموفق بود. در حال تلاش مجدد…",
   "prediction.noData": "هنوز داده‌ای وجود ندارد",
   "prediction.chart.priceToBeat": "قیمت مرجع",
-  "prediction.chart.priceToBeatHint": "قیمت مرجع، قیمت شاخص BTC در ابتدای این دور است.",
+  "prediction.chart.priceToBeatHint": "قیمت مرجع، میانگین ۶۰ ثانیه‌ای قیمت شاخص BTC در ابتدای این دور است.",
   "prediction.chart.currentPriceHint": "قیمت فعلی، قیمت لحظه‌ای شاخص BTC و صرفاً جهت اطلاع است. این قیمت تسویه نیست.",
   "prediction.chart.priceMode": "نمودار قیمت",
   "prediction.chart.chartMode": "نمودار کندل",
@@ -1497,5 +1496,8 @@
   "notification.retry": "تلاش مجدد",
   "notification.pagination": "صفحات اطلاعیه‌ها",
   "notification.newAnnouncements": "اطلاعیه‌های جدید",
-  "tradingPoints.points": "امتیاز"
+  "tradingPoints.points": "امتیاز",
+  "prediction.message.connectWallet": "برای معامله، کیف پول خود را متصل کنید.",
+  "portfolio.setting.orderNotifications": "اعلان‌های سفارش",
+  "portfolio.setting.orderNotifications.description": "اعلان‌های بازشو را هنگام تغییر وضعیت سفارش‌ها نمایش دهید."
 }

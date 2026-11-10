@@ -5,6 +5,8 @@ interface DesktopDepthSelectProps {
   depths: string[];
   value?: string;
   onChange?: (depth: number) => void;
+  /** Hides the caret and keeps the dropdown closed. */
+  readOnly?: boolean;
 }
 
 export const DesktopDepthSelect: FC<DesktopDepthSelectProps> = (props) => {
@@ -21,6 +23,13 @@ export const DesktopDepthSelect: FC<DesktopDepthSelectProps> = (props) => {
         options={options}
         size={"xs"}
         value={props.value}
+        {...(props.readOnly
+          ? {
+              open: false,
+              showCaret: false,
+              classNames: { trigger: "oui-cursor-default" },
+            }
+          : {})}
         onValueChange={(value: any) => {
           props.onChange?.(value);
         }}

@@ -6,6 +6,8 @@ import {
   deriveBinaryMarkets,
   getBinaryMarketIdentity,
   parseBinaryRoundSymbol,
+  parseIndexPriceSymbol,
+  resolveIndexPriceSourceSymbol,
   selectBinaryRoundFallback,
 } from "./binaryMarkets";
 
@@ -278,4 +280,63 @@ test("fallback includes T0 as live and T1 as expired even for delisted history",
       expired,
     );
   }
+});
+
+test("price feed prefers the Predict settlement index and falls back during rollout", () => {
+  assert.equal(
+    resolveIndexPriceSourceSymbol({
+      index_price_symbol: "PERP_BTC_USDC",
+      settlement_index_symbol: "SPOT_BTCTWAP60S_USDC",
+    }),
+    "SPOT_BTCTWAP60S_USDC",
+  );
+  assert.equal(
+    resolveIndexPriceSourceSymbol({ index_price_symbol: "PERP_BTC_USDC" }),
+    "PERP_BTC_USDC",
+  );
+  assert.equal(
+    resolveIndexPriceSourceSymbol(undefined, "PERP_ETH_USDC"),
+    "PERP_ETH_USDC",
+  );
+  assert.equal(resolveIndexPriceSourceSymbol(undefined), "");
+});
+
+test("index symbols parse in both the perp and Predict TWAP formats", () => {
+  const btc = { base: "BTC", quote: "USDC", perpSymbol: "PERP_BTC_USDC" };
+  assert.deepEqual(parseIndexPriceSymbol("PERP_BTC_USDC"), btc);
+  assert.deepEqual(parseIndexPriceSymbol("SPOT_BTCTWAP60S_USDC"), btc);
+  assert.deepEqual(parseIndexPriceSymbol("SPOT_ETHTWAP30S_USDT"), {
+    base: "ETH",
+    quote: "USDT",
+    perpSymbol: "PERP_ETH_USDT",
+  });
+  for (const invalid of [
+    "SPOT_BTC_USDC",
+    "SPOT_TWAP60S_USDC",
+    "SPOT_BTCTWAPS_USDC",
+    "PERP_BTC",
+    "perp_btc_usdc",
+    "",
+    undefined,
+    null,
+  ]) {
+    assert.equal(parseIndexPriceSymbol(invalid), null, String(invalid));
+  }
+});
+
+test("market identity is the same whichever index format the row returns", () => {
+  const perpRow = row("BTC", 5, now);
+  const twapRow = { ...perpRow, index_price_symbol: "SPOT_BTCTWAP60S_USDC" };
+  const perpIdentity = getBinaryMarketIdentity(perpRow);
+  const twapIdentity = getBinaryMarketIdentity(twapRow);
+  assert.equal(perpIdentity?.id, "PERP_BTC5M_USDC");
+  assert.equal(twapIdentity?.id, perpIdentity?.id);
+  assert.equal(twapIdentity?.indexPriceSymbol, "SPOT_BTCTWAP60S_USDC");
+  assert.equal(
+    getBinaryMarketIdentity({
+      ...perpRow,
+      index_price_symbol: "SPOT_ETHTWAP60S_USDC",
+    }),
+    null,
+  );
 });

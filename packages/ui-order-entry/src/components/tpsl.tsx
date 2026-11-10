@@ -451,7 +451,7 @@ const TPSLInputRow: React.FC<{
         }}
         onChange={props.onChange as any}
         quote={"USDC"}
-        quote_dp={2}
+        quote_dp={props.quote_dp}
         type={props.type}
         values={{
           PnL: props.values.PnL,

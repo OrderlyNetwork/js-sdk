@@ -22,7 +22,12 @@ export const subscribeBinaryIndexPrices = (
   indexSymbol: string,
   onPoint: (point: PredictionChartPoint) => void,
 ) => {
-  const symbol = indexSymbol.replace("PERP", "SPOT");
+  // Only a leading legacy `PERP_BTC_USDC` maps to its `SPOT_BTC_USDC` index
+  // topic; everything else (Predict `SPOT_BTCTWAP60S_USDC`) passes through
+  // unchanged, so a "PERP" substring inside a symbol is never rewritten.
+  const symbol = indexSymbol.startsWith("PERP_")
+    ? `SPOT_${indexSymbol.slice("PERP_".length)}`
+    : indexSymbol;
   let stopped = false;
   const unsubscribe = stream.subscribe(`${symbol}@indexprice`, {
     // The default WS formatter strips the envelope containing the timestamp.

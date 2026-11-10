@@ -34,6 +34,8 @@ export type OneTapOrdersArgs = {
   selectedConfig: BinaryInfoRow | undefined;
   balance: number;
   accountReady: boolean;
+  /** Whether a wallet is connected; disconnected users get a connect prompt. */
+  walletConnected: boolean;
   hasFeeConfig: boolean;
   isRegionRestricted: boolean;
   onActiveTab: (
@@ -65,6 +67,7 @@ export const useOneTapOrders = ({
   selectedConfig,
   balance,
   accountReady,
+  walletConnected,
   hasFeeConfig,
   isRegionRestricted,
   onActiveTab,
@@ -111,6 +114,8 @@ export const useOneTapOrders = ({
       );
       let requiredFrozen: number | undefined;
       const blockReason = (() => {
+        if (!walletConnected && !accountReady)
+          return "prediction.message.connectWallet";
         if (displayPrice == null)
           return "prediction.message.noExecutableQuotes";
         if (!isOrderTradable(selectedSymbol))
@@ -185,6 +190,7 @@ export const useOneTapOrders = ({
       protectionPrice,
       selectedSymbol,
       selectedConfig,
+      walletConnected,
     ],
   );
   const placeOneTapOrder = useCallback(

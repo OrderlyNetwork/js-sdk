@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Общий объем торгов за 24 часа в сети Orderly.",
   "markets.symbolInfoBar.predFundingRate": "Расч. ставка фандинга",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Ставки фандинга - это платежи между трейдерами, которые находятся в длинной и короткой позициях. Когда ставка положительная, длинные позиции платят коротким позициям. Когда отрицательная, короткие позиции платят длинным.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} — листинг без разрешительной процедуры, поддерживается только изолированная маржа, развёрнут и эксплуатируется независимо {{brokerName}}. Учитывайте повышенные риски: низкая ликвидность, высокая волатильность и повышенный риск ликвидации.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} независимо развёрнут {{brokerName}}. Только изолированная маржа. Учитывайте низкую ликвидность, высокую волатильность и риск ликвидации.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} — рынок предварительного запуска, развёрнутый {{brokerName}} независимо. Доступна только изолированная маржа. Токен ещё не запущен. В период предварительного запуска плата за финансирование не взимается. Учитывайте низкую ликвидность, высокую волатильность и риск ликвидации.",
   "portfolio.feeTier": "Уровень комиссии",
   "portfolio.apiKeys": "API ключи",
   "portfolio.setting": "Настройки",
@@ -328,7 +328,6 @@
   "prediction.probability": "Вероятность роста",
   "prediction.lastPrice": "Последняя цена",
   "prediction.volumeShort": "Объём",
-  "prediction.column.last&probability": "Посл./Вероят. роста",
   "prediction.column.time&volume": "Время/Объем",
   "prediction.markPrice.tooltip": "Цена маркировки Прогноза. Во время торговли она равна индексной цене Прогноза; при расчёте становится 0, 0,5 или 1. «Вниз» отображается как 1 минус цена маркировки «Вверх».",
   "prediction.orderBook": "Книга ордеров",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Не удалось загрузить. Повторная попытка…",
   "prediction.noData": "Данных пока нет",
   "prediction.chart.priceToBeat": "Целевая цена",
-  "prediction.chart.priceToBeatHint": "Целевая цена — это индексная цена BTC на начало этого раунда.",
+  "prediction.chart.priceToBeatHint": "Целевая цена — это средняя за 60 секунд индексная цена BTC на начало этого раунда.",
   "prediction.chart.currentPriceHint": "Текущая цена — это индексная цена BTC в реальном времени, приведена для справки. Она не является ценой расчёта.",
   "prediction.chart.priceMode": "График цены",
   "prediction.chart.chartMode": "Свечной график",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Повторить",
   "notification.pagination": "Страницы объявлений",
   "notification.newAnnouncements": "Новые объявления",
-  "tradingPoints.points": "Баллы"
+  "tradingPoints.points": "Баллы",
+  "prediction.message.connectWallet": "Подключите кошелёк, чтобы торговать.",
+  "portfolio.setting.orderNotifications": "Уведомления об ордерах",
+  "portfolio.setting.orderNotifications.description": "Показывать всплывающие уведомления при изменении статуса ордеров."
 }

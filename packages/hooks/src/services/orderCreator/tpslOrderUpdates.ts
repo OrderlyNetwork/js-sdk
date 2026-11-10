@@ -3,6 +3,7 @@ import {
   canChangeTPSLOrderType,
   isConfiguredPendingTPSLLeg,
   isPositionalTPSL,
+  isTPSLTriggerLocked,
 } from "@orderly.network/utils";
 import { AlgoOrderUpdateEntity } from "./baseAlgoCreator";
 
@@ -60,6 +61,9 @@ const assertTypeChange = (
     );
   }
 };
+
+const triggerPriceLockedError = () =>
+  new Error("Trigger price cannot be changed after TP/SL is triggered");
 
 /** Build minimal updates, allowing an inactive leg to change execution type. */
 export function createTPSLOrderUpdates(
@@ -148,9 +152,12 @@ export function createTPSLOrderUpdates(
     const update: AlgoOrderUpdateEntity = { order_id: orderId };
     if (typeChanged) update.order_type = nextType;
     const nextTriggerPrice = Number(next.trigger_price);
-    if (
-      (oldOrder.is_activated === false && !configuredPendingLeg) ||
-      Number(oldOrder.trigger_price) !== nextTriggerPrice
+    const triggerChanged = Number(oldOrder.trigger_price) !== nextTriggerPrice;
+    if (isTPSLTriggerLocked(oldValue, oldOrder)) {
+      if (triggerChanged) throw triggerPriceLockedError();
+    } else if (
+      triggerChanged ||
+      (oldOrder.is_activated === false && !configuredPendingLeg)
     ) {
       update.trigger_price = nextTriggerPrice;
     }
@@ -245,9 +252,12 @@ export function sanitizeTPSLChildUpdates(
       if (!Number.isFinite(triggerPrice) || triggerPrice <= 0) {
         throw new Error("A TP/SL trigger price must be positive and finite");
       }
-      if (
-        (old.is_activated === false && !configuredPendingLeg) ||
-        Number(old.trigger_price) !== triggerPrice
+      const triggerChanged = Number(old.trigger_price) !== triggerPrice;
+      if (isTPSLTriggerLocked(parent, old)) {
+        if (triggerChanged) throw triggerPriceLockedError();
+      } else if (
+        triggerChanged ||
+        (old.is_activated === false && !configuredPendingLeg)
       ) {
         update.trigger_price = triggerPrice;
       }
@@ -269,4 +279,20 @@ export function sanitizeTPSLChildUpdates(
     }
     return Object.keys(update).length > 1 ? [update] : [];
   });
+}
+
+/** Recheck an existing edit against the latest order without adding new fields to it. */
+export function revalidateTPSLOrderUpdates(
+  updates: AlgoOrderUpdateEntity[],
+  latest: API.AlgoOrder,
+  ancestor?: API.AlgoOrder,
+): AlgoOrderUpdateEntity[] {
+  return sanitizeTPSLChildUpdates(
+    updates.map(({ order_type, ...update }) => ({
+      ...update,
+      type: order_type,
+    })),
+    latest,
+    ancestor,
+  );
 }

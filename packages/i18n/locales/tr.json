@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Orderly Network'te 24 saatlik toplam işlem hacmi.",
   "markets.symbolInfoBar.predFundingRate": "Tah. fonlama oranı",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Fonlama oranları, uzun ve kısa pozisyonlardaki işlemciler arasındaki ödemelerdir. Pozitif olduğunda, uzun pozisyonlar kısa pozisyonlara fonlama öder. Negatif olduğunda, kısa pozisyonlar uzun pozisyonlara fonlama öder.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}}, yalnızca izole marj destekleyen izinsiz bir listelemedir; {{brokerName}} tarafından bağımsız olarak dağıtılmakta ve işletilmektedir. Düşük likidite, yüksek oynaklık ve artan tasfiye riski dahil yükselmiş risklerin farkında olun.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}}, {{brokerName}} tarafından bağımsız olarak dağıtılmıştır. Yalnızca izole marj. Düşük likidite, yüksek oynaklık ve tasfiye riskine dikkat edin.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}}, {{brokerName}} tarafından bağımsız olarak devreye alınan bir lansman öncesi piyasadır. Yalnızca izole marjin desteklenir. Token henüz piyasaya sürülmedi. Lansman öncesi dönemde fonlama ücreti alınmaz. Düşük likiditeye, yüksek volatiliteye ve likidasyon riskine dikkat edin.",
   "portfolio.feeTier": "Ücret seviyesi",
   "portfolio.apiKeys": "API Anahtarları",
   "portfolio.setting": "Ayar",
@@ -328,7 +328,6 @@
   "prediction.probability": "Yükseliş olasılığı",
   "prediction.lastPrice": "Son fiyat",
   "prediction.volumeShort": "Hacim",
-  "prediction.column.last&probability": "Son/Yüks. olas.",
   "prediction.column.time&volume": "Zaman/Hacim",
   "prediction.markPrice.tooltip": "Tahmin işaret fiyatı. İşlem sırasında Tahmin endeks fiyatına eşittir; uzlaşımda 0, 0,5 veya 1 olur. Aşağı, 1 eksi Yukarı işaret fiyatı olarak görüntülenir.",
   "prediction.orderBook": "Emir defteri",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Yükleme başarısız. Yeniden deneniyor…",
   "prediction.noData": "Henüz veri yok",
   "prediction.chart.priceToBeat": "Aşılacak fiyat",
-  "prediction.chart.priceToBeatHint": "Aşılacak fiyat, bu turun başlangıcındaki BTC endeks fiyatıdır.",
+  "prediction.chart.priceToBeatHint": "Aşılacak fiyat, bu turun başlangıcındaki 60 saniyelik ortalama BTC endeks fiyatıdır.",
   "prediction.chart.currentPriceHint": "Güncel fiyat, yalnızca bilgi amaçlı gerçek zamanlı BTC endeks fiyatıdır. Uzlaşma fiyatı değildir.",
   "prediction.chart.priceMode": "Fiyat grafiği",
   "prediction.chart.chartMode": "Mum grafiği",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Yeniden dene",
   "notification.pagination": "Duyuru sayfaları",
   "notification.newAnnouncements": "Yeni duyurular",
-  "tradingPoints.points": "Puanlar"
+  "tradingPoints.points": "Puanlar",
+  "prediction.message.connectWallet": "İşlem yapmak için cüzdanınızı bağlayın.",
+  "portfolio.setting.orderNotifications": "Emir bildirimleri",
+  "portfolio.setting.orderNotifications.description": "Emir durumu değiştiğinde açılır bildirimler göster."
 }

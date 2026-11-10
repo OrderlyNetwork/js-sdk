@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Orderly Networkでの24時間の総取引量。",
   "markets.symbolInfoBar.predFundingRate": "推定資金調達レート",
   "markets.symbolInfoBar.predFundingRate.tooltip": "資金調達レートは、ロングポジションとショートポジションの間の支払いです。ポジティブの場合、ロングポジションがショートポジションに資金を支払います。ネガティブの場合、ショートポジションがロングポジションに資金を支払います。",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} は許可不要で上場した銘柄で、アイソレート証拠金のみに対応しています。{{brokerName}} が独自にデプロイ・運営しています。流動性の低さ、高ボラティリティ、清算リスクの上昇など、リスクが高まることにご注意ください。",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} は {{brokerName}} が独自にデプロイしています。アイソレート証拠金のみ対応。低い流動性、高ボラティリティ、清算リスクにご注意ください。",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} は、{{brokerName}} が独自に展開したプレローンチ市場です。分離マージンのみ利用できます。トークンはまだローンチされていません。プレローンチ期間中は資金調達料が発生しません。流動性の低さ、高いボラティリティ、清算リスクにご注意ください。",
   "portfolio.feeTier": "手数料ティア",
   "portfolio.apiKeys": "APIキー",
   "portfolio.setting": "設定",
@@ -328,7 +328,6 @@
   "prediction.probability": "上昇確率",
   "prediction.lastPrice": "最新価格",
   "prediction.volumeShort": "出来高",
-  "prediction.column.last&probability": "最終/上昇確率",
   "prediction.column.time&volume": "時間/出来高",
   "prediction.markPrice.tooltip": "予測のマーク価格。取引中は予測指数価格と一致し、決済時には 0、0.5 または 1 になります。下落側は 1 から上昇側のマーク価格を差し引いた値で表示されます。",
   "prediction.orderBook": "オーダーブック",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "読み込みに失敗しました。再試行中…",
   "prediction.noData": "データはまだありません",
   "prediction.chart.priceToBeat": "基準価格",
-  "prediction.chart.priceToBeatHint": "基準価格は本ラウンド開始時のBTC指数価格です。",
+  "prediction.chart.priceToBeatHint": "基準価格は本ラウンド開始時のBTC指数価格の60秒平均です。",
   "prediction.chart.currentPriceHint": "現在価格はリアルタイムのBTC指数価格であり、参考値です。確定価格ではありません。",
   "prediction.chart.priceMode": "価格チャート",
   "prediction.chart.chartMode": "ローソク足チャート",
@@ -1497,5 +1496,8 @@
   "notification.retry": "再試行",
   "notification.pagination": "お知らせのページ",
   "notification.newAnnouncements": "新着のお知らせ",
-  "tradingPoints.points": "ポイント"
+  "tradingPoints.points": "ポイント",
+  "prediction.message.connectWallet": "取引するにはウォレットを接続してください。",
+  "portfolio.setting.orderNotifications": "注文通知",
+  "portfolio.setting.orderNotifications.description": "注文ステータスの更新をポップアップ通知で表示します。"
 }

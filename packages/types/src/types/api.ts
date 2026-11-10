@@ -217,7 +217,21 @@ export declare namespace API {
     outcome?: "UP" | "DOWN" | "TIE" | null;
     settlement_price_per_share?: number | null;
     result_committed_at?: number | null;
+    /**
+     * Underlying index symbol, currently `PERP_{underlying}_USDC` (e.g.
+     * `PERP_BTC_USDC`). Used to identify the market family and scope orders.
+     * The backend may later return the Predict index format here
+     * (`SPOT_{underlying}TWAP60S_USDC`, e.g. `SPOT_BTCTWAP60S_USDC`); parse it
+     * with a helper that accepts both formats rather than matching `PERP_`.
+     */
     index_price_symbol: string;
+    /**
+     * Predict Index the round's S0/S1 are captured from, e.g.
+     * `SPOT_BTCTWAP60S_USDC` (60s TWAP of the BTC index). Usable as-is for
+     * `GET /v1/public/index_price` and the `{symbol}@indexprice` WS topic.
+     * Optional: replicas deployed before the field omit it.
+     */
+    settlement_index_symbol?: string;
     fee_model: string;
     quote_min?: number;
     quote_max?: number;

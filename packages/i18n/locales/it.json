@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Volume totale di trading nelle ultime 24 ore su Orderly Network.",
   "markets.symbolInfoBar.predFundingRate": "Tasso di fin. stim.",
   "markets.symbolInfoBar.predFundingRate.tooltip": "I tassi di finanziamento sono pagamenti tra trader long e short. Quando positivo, le posizioni long pagano il finanziamento alle posizioni short. Quando negativo, le posizioni short pagano alle posizioni long.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} è una quotazione senza autorizzazione supportata solo con margine isolato, distribuita e gestita in modo indipendente da {{brokerName}}. Si prega di considerare i rischi elevati, tra cui bassa liquidità, alta volatilità e maggiore rischio di liquidazione.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} è distribuito in modo indipendente da {{brokerName}}. Solo margine isolato. Attenzione a bassa liquidità, alta volatilità e rischio di liquidazione.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} è un mercato di pre-lancio attivato in modo indipendente da {{brokerName}}. È supportato solo il margine isolato. Il token non è ancora stato lanciato. Durante il pre-lancio non si applicano commissioni di finanziamento. Fai attenzione alla bassa liquidità, all’alta volatilità e al rischio di liquidazione.",
   "portfolio.feeTier": "Livello commissioni",
   "portfolio.apiKeys": "Chiavi API",
   "portfolio.setting": "Impostazioni",
@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilità di rialzo",
   "prediction.lastPrice": "Ultimo prezzo",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Ultimo/Prob. rialzo",
   "prediction.column.time&volume": "Ora/Volume",
   "prediction.markPrice.tooltip": "Prezzo di marking di Previsione. Durante la negoziazione coincide con il prezzo indice di Previsione; al regolamento diventa 0, 0,5 o 1. Il ribasso mostra 1 meno il prezzo di marking del rialzo.",
   "prediction.orderBook": "Libro degli ordini",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Caricamento non riuscito. Nuovo tentativo…",
   "prediction.noData": "Ancora nessun dato",
   "prediction.chart.priceToBeat": "Prezzo da battere",
-  "prediction.chart.priceToBeatHint": "Il prezzo da battere è il prezzo indice del BTC all'inizio di questo round.",
+  "prediction.chart.priceToBeatHint": "Il prezzo da battere è la media a 60 secondi del prezzo indice del BTC all'inizio di questo round.",
   "prediction.chart.currentPriceHint": "Il prezzo attuale è il prezzo indice del BTC in tempo reale, solo come riferimento. Non è il prezzo di regolamento.",
   "prediction.chart.priceMode": "Grafico del prezzo",
   "prediction.chart.chartMode": "Grafico a candele",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Riprova",
   "notification.pagination": "Pagine degli annunci",
   "notification.newAnnouncements": "Nuovi annunci",
-  "tradingPoints.points": "Punti"
+  "tradingPoints.points": "Punti",
+  "prediction.message.connectWallet": "Connetti il tuo wallet per fare trading.",
+  "portfolio.setting.orderNotifications": "Notifiche sugli ordini",
+  "portfolio.setting.orderNotifications.description": "Mostra notifiche popup quando cambia lo stato degli ordini."
 }

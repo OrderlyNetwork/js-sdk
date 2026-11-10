@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Total volume trading 24 jam di Orderly Network.",
   "markets.symbolInfoBar.predFundingRate": "Tingkat pend. perkiraan",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Tingkat pendanaan adalah pembayaran antara trader yang long dan short. Ketika positif, posisi long membayar pendanaan ke posisi short. Ketika negatif, posisi short membayar pendanaan ke posisi long.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} adalah pencatatan tanpa izin yang hanya mendukung margin terisolasi, dikerahkan dan dioperasikan secara independen oleh {{brokerName}}. Harap perhatikan risiko yang lebih tinggi, termasuk likuiditas rendah, volatilitas tinggi, dan peningkatan risiko likuidasi.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} dikerahkan secara independen oleh {{brokerName}}. Hanya margin terisolasi. Waspadai likuiditas rendah, volatilitas tinggi, dan risiko likuidasi.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} adalah pasar prapeluncuran yang diluncurkan secara independen oleh {{brokerName}}. Hanya margin terisolasi. Token belum diluncurkan. Tidak ada biaya pendanaan selama prapeluncuran. Waspadai likuiditas rendah, volatilitas tinggi, dan risiko likuidasi.",
   "portfolio.feeTier": "Tingkat biaya",
   "portfolio.apiKeys": "Kunci API",
   "portfolio.setting": "Pengaturan",
@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilitas Naik",
   "prediction.lastPrice": "Harga terakhir",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Terakhir/Prob. Naik",
   "prediction.column.time&volume": "Waktu/Volume",
   "prediction.markPrice.tooltip": "Harga penandaan Prediksi. Selama perdagangan, harganya sama dengan harga indeks Prediksi; saat penyelesaian menjadi 0, 0,5 atau 1. Turun menampilkan 1 dikurangi harga penandaan Naik.",
   "prediction.orderBook": "Buku order",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Gagal memuat. Mencoba ulang…",
   "prediction.noData": "Belum ada data",
   "prediction.chart.priceToBeat": "Harga patokan",
-  "prediction.chart.priceToBeatHint": "Harga patokan adalah harga indeks BTC pada awal ronde ini.",
+  "prediction.chart.priceToBeatHint": "Harga patokan adalah rata-rata 60 detik harga indeks BTC pada awal ronde ini.",
   "prediction.chart.currentPriceHint": "Harga saat ini adalah harga indeks BTC real-time, hanya untuk referensi. Ini bukan harga penyelesaian.",
   "prediction.chart.priceMode": "Grafik harga",
   "prediction.chart.chartMode": "Grafik candlestick",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Coba lagi",
   "notification.pagination": "Halaman pengumuman",
   "notification.newAnnouncements": "Pengumuman baru",
-  "tradingPoints.points": "Poin"
+  "tradingPoints.points": "Poin",
+  "prediction.message.connectWallet": "Hubungkan dompet Anda untuk bertrading.",
+  "portfolio.setting.orderNotifications": "Notifikasi order",
+  "portfolio.setting.orderNotifications.description": "Tampilkan notifikasi pop-up saat status order berubah."
 }

@@ -12,6 +12,7 @@ import {
   sanitizeTPSLChildUpdates,
   TPSLChildUpdate,
 } from "../../services/orderCreator/tpslOrderUpdates";
+import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useSubAccountMutation, useSubAccountQuery } from "../../subAccount";
 import { useEventEmitter } from "../../useEventEmitter";
 import version from "../../version";
@@ -140,8 +141,9 @@ export const useSubAccountAlgoOrderStream = (
     },
   );
 
+  const orderSnapshot = data?.rows;
   const flattenOrders = useMemo(() => {
-    const orders = data?.rows || [];
+    const orders = orderSnapshot ?? [];
 
     if (includes.includes("ALL") && excludes.length === 0) {
       return orders;
@@ -164,7 +166,7 @@ export const useSubAccountAlgoOrderStream = (
     }
 
     return orders;
-  }, [data, includes, excludes]);
+  }, [orderSnapshot, includes, excludes]);
 
   const orders = useMemo(() => {
     if (!flattenOrders) {
@@ -254,7 +256,45 @@ export const useSubAccountAlgoOrderStream = (
   const _updateOrder = useCallback(
     (orderId: string, order: OrderEntity, type: CreateOrderType) => {
       switch (type) {
-        case "algoOrder":
+        case "algoOrder": {
+          const leafChange = {
+            order_id: Number(orderId),
+            price: order.order_price,
+            quantity: order.order_quantity,
+            trigger_price: order.trigger_price,
+          };
+          const findChange = (
+            parent: API.AlgoOrder,
+          ): TPSLChildUpdate[] | undefined => {
+            for (const child of parent.child_orders ?? []) {
+              if (
+                Number(child.algo_order_id) === leafChange.order_id &&
+                ["TAKE_PROFIT", "STOP_LOSS"].includes(child.algo_type)
+              ) {
+                return [leafChange];
+              }
+              const nested = findChange(child);
+              if (nested)
+                return [
+                  { order_id: child.algo_order_id, child_orders: nested },
+                ];
+            }
+          };
+          for (const root of orderSnapshot ?? []) {
+            const changes = findChange(root);
+            if (!changes) continue;
+            try {
+              const child_orders = sanitizeTPSLChildUpdates(changes, root);
+              return child_orders.length
+                ? doUpdateAlgoOrder({
+                    order_id: root.algo_order_id,
+                    child_orders,
+                  })
+                : Promise.resolve();
+            } catch (error) {
+              return Promise.reject(error);
+            }
+          }
           return doUpdateAlgoOrder({
             order_id: orderId,
             price: order.order_price,
@@ -268,26 +308,30 @@ export const useSubAccountAlgoOrderStream = (
             // include margin_mode if present (align with useOrderStream)
             ...(order.margin_mode && { margin_mode: order.margin_mode }),
           });
+        }
         default:
           return doUpdateOrder({ ...order, order_id: orderId });
       }
     },
-    [],
+    [orderSnapshot, doUpdateAlgoOrder, doUpdateOrder],
   );
 
   /**
    * update order
    */
-  const updateOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "normalOrder");
-  }, []);
+  const updateOrder = useCallback(
+    (orderId: string, order: OrderEntity) => {
+      return _updateOrder(orderId, order, "normalOrder");
+    },
+    [_updateOrder],
+  );
 
   /**
    * update algo order
    */
-  const updateAlgoOrder = useCallback((orderId: string, order: OrderEntity) => {
-    return _updateOrder(orderId, order, "algoOrder");
-  }, []);
+  const updateAlgoOrder = useMemoizedFn((orderId: string, order: OrderEntity) =>
+    _updateOrder(orderId, order, "algoOrder"),
+  );
 
   const _cancelOrder = useCallback(
     (orderId: number, type: CreateOrderType, symbol?: string) => {
@@ -352,7 +396,7 @@ export const useSubAccountAlgoOrderStream = (
     [],
   );
 
-  const updateTPSLOrder = useCallback(
+  const updateTPSLOrder = useMemoizedFn(
     (
       /**
        * the root algo order id
@@ -363,7 +407,7 @@ export const useSubAccountAlgoOrderStream = (
       if (!Array.isArray(childOrders)) {
         throw new SDKError("Children orders is required");
       }
-      const original = flattenOrders?.find(
+      const original = orderSnapshot?.find(
         (order: API.AlgoOrder) =>
           Number(order.algo_order_id) === Number(orderId),
       );
@@ -374,7 +418,6 @@ export const useSubAccountAlgoOrderStream = (
         child_orders: changes,
       });
     },
-    [flattenOrders, doUpdateAlgoOrder],
   );
 
   const refresh = useDebouncedCallback(() => {

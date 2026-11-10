@@ -1,16 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import {
-  Flex,
-  Tooltip,
-  Text,
-  cn,
-  EditIcon,
-  useModal,
-  modal,
-} from "@orderly.network/ui";
+import { Flex, Tooltip, Text, cn, EditIcon } from "@orderly.network/ui";
+import { EditBracketOrderModal } from "@orderly.network/ui-tpsl";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 
@@ -26,7 +19,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
     return utils.findTPSLFromOrder(props.order.child_orders[0]);
   }, [props.order]);
 
-  const { pnl } = calcBracketRoiAndPnL(order);
+  const { pnl } = calcBracketRoiAndPnL(order, quote_dp);
 
   if (!tp_trigger_price && !sl_trigger_price) {
     return "--";
@@ -44,7 +37,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
                 <Text intensity={80}>{`${t("tpsl.tpPnl")}:`} &nbsp;</Text>
               }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
-              dp={quote_dp}
+              dp={2}
               color="buy"
               showIdentifier
             >
@@ -58,7 +51,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
                 <Text intensity={80}>{`${t("tpsl.slPnl")}:`} &nbsp;</Text>
               }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
-              dp={quote_dp}
+              dp={2}
               color="sell"
             >
               {pnl.slPnL}
@@ -82,20 +75,23 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
 const EditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
   const { order } = props;
 
-  const onEdit = () => {
-    modal.show("EditBracketOrderDialogId", {
-      order,
-    });
-  };
-
+  const [open, setOpen] = useState(false);
   return (
-    <EditIcon
-      size={16}
-      className="oui-text-base-contrast oui-cursor-pointer"
-      onClick={() => {
-        onEdit();
-      }}
-    />
+    <>
+      <EditIcon
+        size={16}
+        className="oui-text-base-contrast oui-cursor-pointer"
+        onClick={() => setOpen(true)}
+      />
+      {open && (
+        <EditBracketOrderModal
+          mode="dialog"
+          open={open}
+          onOpenChange={setOpen}
+          order={order}
+        />
+      )}
+    </>
   );
 };
 

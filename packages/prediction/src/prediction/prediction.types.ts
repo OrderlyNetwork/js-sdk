@@ -29,6 +29,7 @@ export type OneTapBlockReason =
   | "prediction.message.roundNotTradable"
   | "prediction.message.regionRestricted"
   | "prediction.message.orderFailed"
+  | "prediction.message.connectWallet"
   | "prediction.message.insufficientBalance"
   | "prediction.message.belowMinimumNotional"
   | "prediction.message.fundingUnavailable"

@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Orderly Network에서의 24시간 총 거래량.",
   "markets.symbolInfoBar.predFundingRate": "예상 자금 비율",
   "markets.symbolInfoBar.predFundingRate.tooltip": "자금 비율은 롱과 숏 포지션 트레이더 간의 지불입니다. 양수일 때는 롱 포지션이 숏 포지션에 자금을 지불합니다. 음수일 때는 숏 포지션이 롱 포지션에 자금을 지불합니다.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}}은(는) 무허가 상장 종목으로 격리 마진만 지원하며, {{brokerName}}이 독립적으로 배포 및 운영합니다. 유동성 부족, 높은 변동성, 청산 위험 증가 등 상대적으로 높은 위험에 유의하시기 바랍니다.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}}은(는) {{brokerName}}이 독립적으로 배포했습니다. 격리 마진만 지원합니다. 낮은 유동성, 높은 변동성 및 청산 위험에 유의하세요.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}}은(는) {{brokerName}}이(가) 독립적으로 배포한 사전 출시 시장입니다. 격리 마진만 지원합니다. 토큰은 아직 출시되지 않았습니다. 사전 출시 기간에는 펀딩 수수료가 부과되지 않습니다. 낮은 유동성, 높은 변동성 및 청산 위험에 유의하세요.",
   "portfolio.feeTier": "수수료 등급",
   "portfolio.apiKeys": "API 키",
   "portfolio.setting": "설정",
@@ -328,7 +328,6 @@
   "prediction.probability": "상승 확률",
   "prediction.lastPrice": "최근 가격",
   "prediction.volumeShort": "거래량",
-  "prediction.column.last&probability": "현재가/상승 확률",
   "prediction.column.time&volume": "시간/거래량",
   "prediction.markPrice.tooltip": "예측 마크 가격. 거래 중에는 예측 지수 가격과 동일하며 정산 시 0, 0.5 또는 1이 됩니다. 하락은 1에서 상승 마크 가격을 뺀 값으로 표시됩니다.",
   "prediction.orderBook": "오더북",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "로드에 실패했습니다. 재시도 중…",
   "prediction.noData": "아직 데이터가 없습니다",
   "prediction.chart.priceToBeat": "기준 가격",
-  "prediction.chart.priceToBeatHint": "기준 가격은 이 라운드 시작 시의 BTC 지수 가격입니다.",
+  "prediction.chart.priceToBeatHint": "기준 가격은 이 라운드 시작 시의 BTC 지수 가격 60초 평균입니다.",
   "prediction.chart.currentPriceHint": "현재 가격은 실시간 BTC 지수 가격으로 참고용이며, 정산 가격이 아닙니다.",
   "prediction.chart.priceMode": "가격 차트",
   "prediction.chart.chartMode": "캔들 차트",
@@ -1497,5 +1496,8 @@
   "notification.retry": "재시도",
   "notification.pagination": "공지 페이지",
   "notification.newAnnouncements": "새 공지",
-  "tradingPoints.points": "포인트"
+  "tradingPoints.points": "포인트",
+  "prediction.message.connectWallet": "거래하려면 지갑을 연결하세요.",
+  "portfolio.setting.orderNotifications": "주문 알림",
+  "portfolio.setting.orderNotifications.description": "주문 상태가 변경되면 팝업 알림을 표시합니다."
 }

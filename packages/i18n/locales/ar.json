@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "إجمالي حجم التداول خلال 24 ساعة على شبكة Orderly.",
   "markets.symbolInfoBar.predFundingRate": "معدل التمويل التقديري",
   "markets.symbolInfoBar.predFundingRate.tooltip": "معدلات التمويل مدفوعات بين المتداولين في مراكز طويلة وقصيرة. عندما تكون موجبة، تدفع المراكز الطويلة للقصيرة. عندما تكون سالبة، تدفع المراكز القصيرة للطويلة.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} إدراج بلا إذن مسبق مدعوم بهامش معزول فقط، ويُنشر ويُشغَّل بشكل مستقل من قِبل {{brokerName}}. يرجى العلم بمخاطر أعلى، بما في ذلك سيولة منخفضة، وتقلّب مرتفع، وزيادة مخاطر التصفية.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} منشور بشكل مستقل من قِبل {{brokerName}}. الهامش المعزول فقط. احذر من السيولة المنخفضة والتقلّب المرتفع ومخاطر التصفية.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} سوق ما قبل الإطلاق أطلقته {{brokerName}} بشكل مستقل. الهامش المعزول فقط. لم يُطلق الرمز بعد. لا تُفرض رسوم تمويل خلال فترة ما قبل الإطلاق. احذر من انخفاض السيولة وارتفاع التقلبات ومخاطر التصفية.",
   "portfolio.feeTier": "شريحة الرسوم",
   "portfolio.apiKeys": "مفاتيح API",
   "portfolio.setting": "الإعدادات",
@@ -328,7 +328,6 @@
   "prediction.probability": "احتمال الصعود",
   "prediction.lastPrice": "آخر سعر",
   "prediction.volumeShort": "الحجم",
-  "prediction.column.last&probability": "الأخير/احتمال الصعود",
   "prediction.column.time&volume": "الوقت/الحجم",
   "prediction.markPrice.tooltip": "سعر العلامة للتوقعات. أثناء التداول يساوي سعر المؤشر للتوقعات؛ وعند التسوية يصبح 0 أو 0.5 أو 1. يُعرض الهبوط كـ 1 ناقص سعر علامة الصعود.",
   "prediction.orderBook": "دفتر الأوامر",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "فشل التحميل. جارٍ إعادة المحاولة…",
   "prediction.noData": "لا توجد بيانات بعد",
   "prediction.chart.priceToBeat": "السعر المراد تجاوزه",
-  "prediction.chart.priceToBeatHint": "السعر المراد تجاوزه هو سعر مؤشر BTC عند بدء هذه الجولة.",
+  "prediction.chart.priceToBeatHint": "السعر المراد تجاوزه هو متوسط سعر مؤشر BTC لمدة 60 ثانية عند بدء هذه الجولة.",
   "prediction.chart.currentPriceHint": "السعر الحالي هو سعر مؤشر BTC اللحظي للاسترشاد فقط، وهو ليس سعر التسوية.",
   "prediction.chart.priceMode": "مخطط السعر",
   "prediction.chart.chartMode": "مخطط الشموع اليابانية",
@@ -1497,5 +1496,8 @@
   "notification.retry": "إعادة المحاولة",
   "notification.pagination": "صفحات الإعلانات",
   "notification.newAnnouncements": "إعلانات جديدة",
-  "tradingPoints.points": "النقاط"
+  "tradingPoints.points": "النقاط",
+  "prediction.message.connectWallet": "اربط محفظتك للتداول.",
+  "portfolio.setting.orderNotifications": "إشعارات الطلبات",
+  "portfolio.setting.orderNotifications.description": "عرض إشعارات منبثقة عند تحديث حالة الطلبات."
 }

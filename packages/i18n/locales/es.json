@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Volumen total de trading de 24 horas en la Red Orderly.",
   "markets.symbolInfoBar.predFundingRate": "Tasa de fin. est.",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Las tasas de financiamiento son pagos entre traders que están en largo y corto. Cuando es positiva, las posiciones largas pagan financiamiento a las posiciones cortas. Cuando es negativa, las posiciones cortas pagan financiamiento a las posiciones largas.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} es un listing sin permiso que solo admite margen aislado, desplegado y operado de forma independiente por {{brokerName}}. Tenga en cuenta los riesgos elevados, como baja liquidez, alta volatilidad y mayor riesgo de liquidación.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} está desplegado de forma independiente por {{brokerName}}. Solo margen aislado. Tenga cuidado con la baja liquidez, la alta volatilidad y el riesgo de liquidación.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} es un mercado de prelanzamiento desplegado de forma independiente por {{brokerName}}. Solo se admite margen aislado. El token aún no se ha lanzado. No se cobran comisiones de financiación durante el prelanzamiento. Ten en cuenta la baja liquidez, la alta volatilidad y el riesgo de liquidación.",
   "portfolio.feeTier": "Nivel de comisión",
   "portfolio.apiKeys": "Claves API",
   "portfolio.setting": "Configuración",
@@ -328,7 +328,6 @@
   "prediction.probability": "Probabilidad de alza",
   "prediction.lastPrice": "Último precio",
   "prediction.volumeShort": "Vol",
-  "prediction.column.last&probability": "Último/Prob. alza",
   "prediction.column.time&volume": "Hora/Volumen",
   "prediction.markPrice.tooltip": "Precio de marcación de Predicción. Durante la negociación coincide con el precio índice de Predicción; en la liquidación pasa a ser 0, 0,5 o 1. La baja muestra 1 menos el precio de marcación del alza.",
   "prediction.orderBook": "Libro de órdenes",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Error al cargar. Reintentando…",
   "prediction.noData": "Aún no hay datos",
   "prediction.chart.priceToBeat": "Precio a superar",
-  "prediction.chart.priceToBeatHint": "El precio a superar es el precio índice de BTC al inicio de esta ronda.",
+  "prediction.chart.priceToBeatHint": "El precio a superar es el promedio de 60 segundos del precio índice de BTC al inicio de esta ronda.",
   "prediction.chart.currentPriceHint": "El precio actual es el precio índice de BTC en tiempo real, solo como referencia. No es el precio de liquidación.",
   "prediction.chart.priceMode": "Gráfico de precio",
   "prediction.chart.chartMode": "Gráfico de velas",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Reintentar",
   "notification.pagination": "Páginas de anuncios",
   "notification.newAnnouncements": "Nuevos anuncios",
-  "tradingPoints.points": "Puntos"
+  "tradingPoints.points": "Puntos",
+  "prediction.message.connectWallet": "Conecta tu billetera para operar.",
+  "portfolio.setting.orderNotifications": "Notificaciones de órdenes",
+  "portfolio.setting.orderNotifications.description": "Mostrar notificaciones emergentes cuando cambie el estado de las órdenes."
 }

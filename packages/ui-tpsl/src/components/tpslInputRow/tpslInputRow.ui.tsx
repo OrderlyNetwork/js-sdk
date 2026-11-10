@@ -91,6 +91,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
               }}
             />
             <PnlInputWidget
+              offsetReadOnly={props.disableTriggerEditing}
               disabled={
                 !!props.disableTriggerEditing &&
                 (values.order_type !== OrderType.LIMIT || !values.trigger_price)
@@ -100,7 +101,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
                 props.onChange(key, value as string);
               }}
               quote={"USDC"}
-              quote_dp={2}
+              quote_dp={props.quote_dp}
               values={values}
             />
           </Grid>
@@ -169,7 +170,14 @@ const RenderROI: React.FC<{
 }> = (props) => {
   const { t } = useTranslation();
   const { price, pnl, roi, dp, className, orderType } = props;
-  if (!roi || !price || !pnl) {
+  if (
+    !price ||
+    roi == null ||
+    !Number.isFinite(roi) ||
+    pnl == null ||
+    pnl === "" ||
+    !Number.isFinite(Number(pnl))
+  ) {
     return null;
   }
   return (

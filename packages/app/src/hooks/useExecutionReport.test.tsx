@@ -7,7 +7,14 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
-import { useExecutionReport } from "./useExecutionReport";
+import {
+  ORDERLY_ORDER_SOUND_ALERT_KEY,
+  useExecutionReport,
+} from "./useExecutionReport";
+import {
+  ORDERLY_ORDER_NOTIFICATIONS_KEY,
+  useOrderNotificationsEnabled,
+} from "./useOrderNotificationsEnabled";
 
 const mocks = vi.hoisted(() => {
   const listeners = new Set<(data: unknown) => void>();
@@ -15,6 +22,12 @@ const mocks = vi.hoisted(() => {
     accountId: "account-a" as string | undefined,
     baseDp: 2 as number | undefined,
     brokers: {},
+    storage: {} as Record<string, unknown>,
+    setStorage: vi.fn(),
+    useLocalStorage: vi.fn(),
+    widgetConfigs: undefined as
+      | { setting?: { showOrderNotifications?: boolean } }
+      | undefined,
     listeners,
     ee: {
       on: vi.fn((_event: string, handler: (data: unknown) => void) => {
@@ -44,10 +57,24 @@ vi.mock("@orderly.network/hooks", () => ({
     ),
   useOrderlyContext: () => ({ notification: undefined }),
   useAllBrokers: () => [mocks.brokers],
-  useLocalStorage: (_key: string, value: unknown) => [value],
+  useLocalStorage: (key: string, value: unknown) => {
+    mocks.useLocalStorage(key, value);
+    return [
+      key in mocks.storage ? mocks.storage[key] : value,
+      mocks.setStorage,
+    ];
+  },
   // A changing play callback must not reset pending order notifications.
-  useAudioPlayer: () => ({ play: () => mocks.play() }),
+  useAudioPlayer: (_src: string, { enabled }: { enabled: boolean }) => ({
+    play: () => {
+      if (enabled) mocks.play();
+    },
+  }),
   formatSymbolWithBroker: (symbol: string) => symbol,
+}));
+
+vi.mock("../provider/appStateContext", () => ({
+  useAppContext: () => ({ widgetConfigs: mocks.widgetConfigs }),
 }));
 
 vi.mock("@orderly.network/i18n", () => ({
@@ -146,6 +173,8 @@ beforeEach(() => {
   mocks.listeners.clear();
   mocks.accountId = "account-a";
   mocks.baseDp = 2;
+  mocks.storage = { [ORDERLY_ORDER_SOUND_ALERT_KEY]: true };
+  mocks.widgetConfigs = undefined;
 });
 
 afterEach(() => {
@@ -239,7 +268,112 @@ describe("IOC execution report messages", () => {
   });
 });
 
+const showOrderNotificationsSwitch = () => {
+  mocks.widgetConfigs = { setting: { showOrderNotifications: true } };
+};
+
+describe("useOrderNotificationsEnabled", () => {
+  it.each([
+    {
+      widgetConfigs: undefined,
+      stored: false,
+      configurable: false,
+      enabled: true,
+    },
+    {
+      widgetConfigs: { setting: {} },
+      stored: false,
+      configurable: false,
+      enabled: true,
+    },
+    {
+      widgetConfigs: { setting: { showOrderNotifications: true } },
+      stored: false,
+      configurable: true,
+      enabled: false,
+    },
+    {
+      widgetConfigs: { setting: { showOrderNotifications: true } },
+      stored: undefined,
+      configurable: true,
+      enabled: true,
+    },
+  ])(
+    "returns configurable=$configurable enabled=$enabled for stored=$stored",
+    ({ widgetConfigs, stored, configurable, enabled }) => {
+      mocks.widgetConfigs = widgetConfigs;
+      if (stored !== undefined) {
+        mocks.storage[ORDERLY_ORDER_NOTIFICATIONS_KEY] = stored;
+      }
+      const { result } = renderHook(() => useOrderNotificationsEnabled());
+
+      expect(result.current.configurable).toBe(configurable);
+      expect(result.current.enabled).toBe(enabled);
+    },
+  );
+
+  it("persists the preference under a stable storage key", () => {
+    renderHook(() => useOrderNotificationsEnabled());
+
+    // Renaming this key would silently reset every user's saved preference.
+    expect(mocks.useLocalStorage).toHaveBeenCalledWith(
+      "orderly_order_notifications_enabled",
+      true,
+    );
+  });
+});
+
 describe("execution report notifications", () => {
+  it.each([
+    { toastEnabled: true, soundEnabled: true },
+    { toastEnabled: true, soundEnabled: false },
+    { toastEnabled: false, soundEnabled: true },
+    { toastEnabled: false, soundEnabled: false },
+  ])(
+    "controls toast ($toastEnabled) and sound ($soundEnabled) independently",
+    ({ toastEnabled, soundEnabled }) => {
+      showOrderNotificationsSwitch();
+      mocks.storage[ORDERLY_ORDER_NOTIFICATIONS_KEY] = toastEnabled;
+      mocks.storage[ORDERLY_ORDER_SOUND_ALERT_KEY] = soundEnabled;
+      renderHook(() => useExecutionReport());
+      emit(order());
+      advance(100);
+
+      expect(mocks.toast).toHaveBeenCalledTimes(Number(toastEnabled));
+      expect(mocks.play).toHaveBeenCalledTimes(Number(soundEnabled));
+    },
+  );
+
+  it("ignores a stored disabled preference while the switch is hidden", () => {
+    mocks.storage[ORDERLY_ORDER_NOTIFICATIONS_KEY] = false;
+    renderHook(() => useExecutionReport());
+    emit(order());
+    advance(100);
+
+    expect(mocks.toast).toHaveBeenCalledTimes(1);
+  });
+
+  it("uses the latest toast preference without resetting pending fills or sound history", () => {
+    showOrderNotificationsSwitch();
+    const { rerender } = renderHook(() => useExecutionReport());
+    emit(order());
+    advance(50);
+    mocks.storage[ORDERLY_ORDER_NOTIFICATIONS_KEY] = false;
+    rerender();
+    advance(50);
+    expect(mocks.toast).not.toHaveBeenCalled();
+    expect(mocks.play).toHaveBeenCalledTimes(1);
+
+    mocks.storage[ORDERLY_ORDER_NOTIFICATIONS_KEY] = true;
+    rerender();
+    advance(100);
+    expect(mocks.toast).not.toHaveBeenCalled();
+    emit(order());
+    advance(100);
+    expect(mocks.toast).toHaveBeenCalledTimes(1);
+    expect(mocks.play).toHaveBeenCalledTimes(1);
+  });
+
   it.each([predictionSymbol, perpSymbol])(
     "coalesces NEW, PARTIAL_FILLED and CANCELLED for %s and plays one fill sound",
     (symbol) => {
@@ -278,6 +412,49 @@ describe("execution report notifications", () => {
     advance(100);
     expect(mocks.toast).toHaveBeenCalledTimes(1);
     expect(mocks.play).not.toHaveBeenCalled();
+  });
+
+  it("shares one toast per order type for updates without fills", () => {
+    renderHook(() => useExecutionReport());
+    const cancelled = {
+      status: OrderStatus.CANCELLED,
+      total_executed_quantity: 0,
+    };
+    emit(order({ ...cancelled, order_id: 1, type: OrderType.LIMIT }));
+    emit(
+      order({ ...cancelled, order_id: 2, type: OrderType.LIMIT, side: "SELL" }),
+    );
+    emit(order({ ...cancelled, order_id: 3, type: OrderType.MARKET }));
+    advance(100);
+    emit(
+      order({ order_id: 4, type: OrderType.LIMIT, status: OrderStatus.NEW }),
+    );
+    advance(100);
+
+    const ids = mocks.toast.mock.calls.map(([, options]) => options.id);
+    expect(ids).toHaveLength(4);
+    expect(ids[1]).toBe(ids[0]);
+    expect(ids[2]).not.toBe(ids[0]);
+    expect(ids[3]).toBe(ids[0]);
+    expect(mocks.play).not.toHaveBeenCalled();
+  });
+
+  it("keeps one toast per order for fills of the same order type", () => {
+    renderHook(() => useExecutionReport());
+    const filled = {
+      status: OrderStatus.FILLED,
+      total_executed_quantity: 16.94,
+    };
+    emit(order({ ...filled, order_id: 1, type: OrderType.LIMIT }));
+    emit(order({ ...filled, order_id: 2, type: OrderType.LIMIT }));
+    emit(
+      order({ order_id: 3, type: OrderType.LIMIT, total_executed_quantity: 0 }),
+    );
+    advance(100);
+
+    const ids = mocks.toast.mock.calls.map(([, options]) => options.id);
+    expect(new Set(ids).size).toBe(3);
+    expect(mocks.play).toHaveBeenCalledTimes(2);
   });
 
   it("shows a fully filled IOC order and plays its sound", () => {

@@ -49,7 +49,6 @@ export const prediction = {
   "prediction.lastPrice": "Last price",
   "prediction.volumeShort": "Vol",
   /** Combined compact-panel headers, perps `Last/24h %` style. */
-  "prediction.column.last&probability": "Last/Up prob.",
   "prediction.column.time&volume": "Time/Vol",
   "prediction.markPrice.tooltip":
     "Binary mark price. During trading it equals the Binary index price; at settlement it becomes 0, 0.5 or 1. DOWN displays 1 minus the UP mark price.",
@@ -77,7 +76,7 @@ export const prediction = {
   "prediction.noData": "No data yet",
   "prediction.chart.priceToBeat": "Price to beat",
   "prediction.chart.priceToBeatHint":
-    "Price to beat is the BTC index price at the start of this round.",
+    "Price to beat is the 60-second average BTC index price at the start of this round.",
   "prediction.chart.currentPriceHint":
     "Current price is the real-time BTC index price for reference only. It is not the settlement price.",
   "prediction.chart.priceMode": "Price chart",
@@ -115,6 +114,7 @@ export const prediction = {
   "prediction.closed": "Closed",
   "prediction.invalidOrder": "Enter a valid price and available quantity.",
   "prediction.message.orderFailed": "Order was not accepted. Please try again.",
+  "prediction.message.connectWallet": "Connect your wallet to trade.",
   "prediction.rounds.unavailable":
     "No prediction rounds are available right now. Please try again later.",
   "prediction.estimatedFee": "Est. fee",

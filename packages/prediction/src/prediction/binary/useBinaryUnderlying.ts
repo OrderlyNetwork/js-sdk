@@ -62,7 +62,11 @@ export const fetchIndexPriceRange = async (
 };
 
 export type UseBinaryUnderlyingArgs = {
-  /** e.g. `PERP_BTC_USDC`; the WS layer maps it to the SPOT index topic. */
+  /**
+   * Price feed index, e.g. `SPOT_BTCTWAP60S_USDC` (Binary info
+   * settlement_index_symbol), or legacy `PERP_BTC_USDC` which the WS layer
+   * maps to the `SPOT_BTC_USDC` topic.
+   */
   indexSymbol: string;
   /** Round start (T0) in epoch seconds; the per-round line window anchor. */
   roundStartSec: number | undefined;

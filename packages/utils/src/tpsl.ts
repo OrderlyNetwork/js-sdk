@@ -82,6 +82,18 @@ export function isTPSLTriggered(order: TPSLOrderState): boolean {
   );
 }
 
+/** A triggered TP/SL parent locks both legs. A leaf trigger locks only that leaf. */
+export function isTPSLTriggerLocked(
+  parent?: TPSLOrderState,
+  child?: TPSLOrderState,
+): boolean {
+  const parentTriggered =
+    parent &&
+    ["TP_SL", "POSITIONAL_TP_SL"].includes(parent.algo_type ?? "") &&
+    isTPSLTriggered({ ...parent, child_orders: undefined });
+  return !!parentTriggered || !!(child && isTPSLTriggered(child));
+}
+
 const hasTPSLParent = (
   parent: TPSLOrderState,
   ancestor?: TPSLOrderState,

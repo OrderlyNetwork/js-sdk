@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { MenuItem } from "@orderly.network/ui";
+import { inputFormatter, MenuItem } from "@orderly.network/ui";
 import type {
   InputFormatter,
   InputFormatterOptions,
@@ -76,7 +76,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const { mode, setMode, tipsEle } = usePnlInputContext();
 
   const [tipVisible, setTipVisible] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const [draft, setDraft] = useState<{ key: PNL_Keys; value: string }>();
 
   const key = useMemo<PNL_Keys>(() => {
     switch (mode) {
@@ -93,25 +93,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     }
   }, [mode, type]);
 
-  const [innerValue, setInnerValue] = useState<string>(
-    values[mode as keyof PNL_Values],
-  );
-
-  // const value = useMemo(() => {
-  //   // console.log("mode", mode, values);
-  //   const value = values[mode as keyof PNL_Values];
-  //   // if (isFocused) {
-  //   //   return value;
-  //   // }
-  //   return value;
-  // }, [values, mode, isFocused]);
-
-  useEffect(() => {
-    if (isFocused) {
-      return;
-    }
-    setInnerValue(values[mode as keyof PNL_Values]);
-  }, [values, mode, isFocused]);
+  const value = draft?.key === key ? draft.value : values[mode];
 
   const modes = useMemo<MenuItem[]>(() => {
     return [
@@ -160,33 +142,23 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
-    // console.log("onValueChange", value);
-    // if (!isFocused) {
-    //   props.onChange(key, value);
-    // } else {
-    //   setInnerValue(value);
-    // }
-    setInnerValue(value);
+    setDraft({ key, value });
+    if (value === "-") return;
     const outgoing = key === "sl_pnl" ? normalizeSlPnlForStore(value) : value;
     props.onChange(key, outgoing);
   };
 
   const onFocus = () => {
-    // updateTips();
     setTipVisible(true);
-    setIsFocused(true);
   };
 
   /**
    * hide tips when input is blurred
    */
   const onBlur = () => {
-    // setTips(undefined);
     setTipVisible(false);
-    setIsFocused(false);
-    const outgoing =
-      key === "sl_pnl" ? normalizeSlPnlForStore(innerValue) : innerValue;
-    props.onChange(key, outgoing);
+    setDraft(undefined);
+    percentageSuffix.current = "";
   };
 
   const formatter = (options: {
@@ -194,7 +166,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     mode: PnLMode;
     type: "TP" | "SL";
   }): InputFormatter => {
-    const { dp = 2 } = options;
+    const dp = mode === PnLMode.PnL ? 2 : (options.dp ?? 2);
     return {
       onRenderBefore: (
         value: string | number,
@@ -208,7 +180,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           value = value.startsWith("-") ? value : "-" + value;
         }
 
-        if (value === "" || value === "-") return "";
+        if (value === "" || value === "-") {
+          return mode === PnLMode.PnL ? "" : value;
+        }
         // if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
         //   return commify(value);
         // }
@@ -233,19 +207,36 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           ) {
             return value;
           }
-          return `${new Decimal(normalized).mul(100).todp(2, 4).toString()}${percentageSuffix.current}`;
+          const sign = normalized.startsWith("-") ? "-" : "";
+          return `${sign}${new Decimal(normalized).abs().mul(100).todp(2, 4).toString()}${percentageSuffix.current}`;
         } else if (
           mode === PnLMode.OFFSET ||
           mode === PnLMode.OFFSET_FROM_MARK
         ) {
-          value = todpIfNeed(value, dp);
+          const decimalValue =
+            /e/i.test(value) && Number.isFinite(Number(value))
+              ? new Decimal(value).toFixed()
+              : value;
+          value = todpIfNeed(decimalValue, dp);
         } else {
           // value = new Decimal(value).todp(2).toString();
         }
 
         return `${value}`;
       },
-      onSendBefore: (value: string) => {
+      onSendBefore: (value: string, options: InputFormatterOptions) => {
+        const negativeOffset = mode !== PnLMode.PnL && value.startsWith("-");
+        value = inputFormatter.numberFormatter.onSendBefore(
+          negativeOffset ? value.slice(1) : value,
+          options,
+        );
+        if (negativeOffset) {
+          value = `-${value}`;
+          if (value === "-") {
+            percentageSuffix.current = "";
+            return value;
+          }
+        }
         if (/^\-?0{2,}$/.test(value)) {
           return "0";
         }
@@ -265,13 +256,14 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             if (isNaN(Number(value))) {
               return value;
             }
-            value = new Decimal(value).div(100).toString();
-            value = `${value}${percentageSuffix.current}`;
+            const sign = negativeOffset ? "-" : "";
+            value = `${sign}${new Decimal(value).abs().div(100).toString()}${percentageSuffix.current}`;
           }
-        } else if (mode === PnLMode.PnL && type === "SL") {
-          value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);
+          if (mode === PnLMode.PnL && type === "SL" && !value.startsWith("-")) {
+            value = `-${value}`;
+          }
         }
 
         if (value === "" || value === "-") return "";
@@ -287,11 +279,13 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     modeLabelMap,
     formatter,
     onModeChange: (mode: PnLMode) => {
+      setDraft(undefined);
+      percentageSuffix.current = "";
       setMode(mode);
     },
     onFocus,
     onBlur,
-    value: innerValue,
+    value,
     onValueChange,
     quote_dp,
     tips: tipVisible ? tipsEle : undefined,
