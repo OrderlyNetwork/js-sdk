@@ -49,7 +49,10 @@ export const useBinaryRounds = ({
   symbol,
   onSymbolSelect,
 }: UseBinaryRoundsArgs) => {
-  const { rows, isLoading, error } = usePredictionMarkets({ enabled: active });
+  const { rows, isLoading, error } = usePredictionMarkets({
+    enabled: active,
+    refreshOnWake: true,
+  });
 
   /** Retain only the requested contract after it leaves the snapshot. */
   const [acceptedRow, setAcceptedRow] = useState<BinaryInfoRow>();

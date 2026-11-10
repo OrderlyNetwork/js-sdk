@@ -6,6 +6,7 @@ import { deriveBinaryMarkets } from "../binary/binaryMarkets";
 import {
   startBinaryRoundClock,
   subscribeBinaryTime,
+  subscribeBinaryWake,
 } from "../binary/binaryRoundClock";
 import type {
   UsePredictionMarketsOptions,
@@ -15,8 +16,11 @@ import type {
 /** Shared metadata; page selection and form state belong to the page. */
 export const usePredictionMarkets = ({
   enabled = true,
-}: UsePredictionMarketsOptions = {}): PredictionMarketsState => {
-  const { data, error, isLoading } = useQuery<BinaryInfoRow[]>(
+  refreshOnWake = false,
+}: UsePredictionMarketsOptions & {
+  refreshOnWake?: boolean;
+} = {}): PredictionMarketsState => {
+  const { data, error, isLoading, mutate } = useQuery<BinaryInfoRow[]>(
     enabled ? "/v1/public/binary/info" : null,
     {
       refreshInterval: enabled ? 30_000 : 0,
@@ -24,6 +28,20 @@ export const usePredictionMarkets = ({
       keepPreviousData: true,
     },
   );
+  useEffect(() => {
+    if (!enabled || !refreshOnWake) return;
+    let pending = false;
+    return subscribeBinaryWake(() => {
+      if (pending) return;
+      pending = true;
+      // Another observer of this shared SWR key can own its focus revalidation.
+      void mutate()
+        .catch(() => undefined)
+        .finally(() => {
+          pending = false;
+        });
+    });
+  }, [enabled, refreshOnWake, mutate]);
   const rows = useMemo(() => (enabled ? (data ?? []) : []), [data, enabled]);
   const [now, setNow] = useState(getTimestamp);
   useEffect(

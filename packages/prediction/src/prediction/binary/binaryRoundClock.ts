@@ -1,28 +1,35 @@
 import { subscribeTimestampOffset } from "@orderly.network/net";
 import type { BinaryInfoRow } from "./binaryInfo";
 
-/** Offset changes and page wakeups both invalidate locally scheduled boundaries. */
-export function subscribeBinaryTime(listener: () => void): () => void {
-  const unsubscribeOffset = subscribeTimestampOffset(listener);
+/** Listen for focus and visibility changes that leave the page visible. */
+export function subscribeBinaryWake(listener: () => void): () => void {
   if (
     typeof window === "undefined" ||
     typeof document === "undefined" ||
     typeof window.addEventListener !== "function" ||
     typeof document.addEventListener !== "function"
   ) {
-    return unsubscribeOffset;
+    return () => {};
   }
   const onWake = () => {
     if (document.visibilityState === "visible") listener();
   };
-  // Restoring the device clock can restore the old offset as well. Wake the
-  // observer even when its next valid response leaves that offset unchanged.
   window.addEventListener("focus", onWake);
   document.addEventListener("visibilitychange", onWake);
   return () => {
-    unsubscribeOffset();
     window.removeEventListener("focus", onWake);
     document.removeEventListener("visibilitychange", onWake);
+  };
+}
+
+/** Offset changes and page wakeups both invalidate locally scheduled boundaries. */
+export function subscribeBinaryTime(listener: () => void): () => void {
+  const unsubscribeOffset = subscribeTimestampOffset(listener);
+  // A wakeup can leave the server timestamp offset unchanged.
+  const unsubscribeWake = subscribeBinaryWake(listener);
+  return () => {
+    unsubscribeOffset();
+    unsubscribeWake();
   };
 }
 

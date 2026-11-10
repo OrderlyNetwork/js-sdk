@@ -26,6 +26,7 @@ const row: BinaryInfoRow = {
   s0: 50_000,
 };
 const rows = [row];
+const refresh = vi.fn(async () => rows);
 
 vi.mock("@orderly.network/hooks", () => ({
   useSWRConfig: () => ({ cache: new Map() }),
@@ -33,6 +34,7 @@ vi.mock("@orderly.network/hooks", () => ({
   useQuery: (url: string | null) => ({
     data: url === "/v1/public/binary/info" ? rows : undefined,
     isLoading: false,
+    mutate: refresh,
   }),
   useLocalStorage: (_key: string, initial: unknown) => useState(initial),
 }));
