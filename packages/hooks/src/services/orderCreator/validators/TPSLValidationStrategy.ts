@@ -22,11 +22,6 @@ const formatPrice = (price: number, quote_dp: number): number => {
   return new Decimal(price).toDecimalPlaces(quote_dp).toNumber();
 };
 
-type TPSLValidationConfig = ValuesDepConfig & {
-  /** Skip only the stage-specific trigger-to-mark check for selected legs. */
-  skipTPSLTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
-};
-
 /**
  * Strategy for validating Take Profit / Stop Loss orders
  * Consolidates validation logic from baseBracketOrderCreator and baseAlgoCreator
@@ -51,7 +46,7 @@ export class TPSLValidationStrategy implements IValidationStrategy<
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
       >
     >,
-    config: TPSLValidationConfig,
+    config: ValuesDepConfig,
   ): OrderValidationResult {
     const result: OrderValidationResult = Object.create(null);
 

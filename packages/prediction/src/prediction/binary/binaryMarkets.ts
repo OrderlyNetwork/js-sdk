@@ -4,8 +4,44 @@ import type { BinaryInfoRow } from "./binaryInfo";
 
 export type BinaryMarket = PredictionMarket;
 
-/** Underlying index symbol such as `PERP_BTC_USDC`; shared with productScope. */
-export const INDEX_SYMBOL_PATTERN = /^PERP_([A-Z0-9]+)_([A-Z0-9]+)$/;
+/**
+ * Binary info `index_price_symbol` formats: the current underlying perp index
+ * (`PERP_BTC_USDC`) and the Predict TWAP index the backend may switch to
+ * (`SPOT_BTCTWAP60S_USDC`). The TWAP branch is explicit so its suffix never
+ * leaks into the base; other SPOT symbols are rejected.
+ */
+const INDEX_SYMBOL_PATTERN =
+  /^(?:PERP_([A-Z0-9]+)|SPOT_([A-Z0-9]+?)TWAP\d+S)_([A-Z0-9]+)$/;
+
+/**
+ * Parse an underlying index symbol in either supported format into its
+ * base/quote and the underlying perp market symbol (`PERP_{base}_{quote}`),
+ * so callers stay independent of which format the backend returns.
+ */
+export function parseIndexPriceSymbol(symbol?: string | null) {
+  const match = symbol ? INDEX_SYMBOL_PATTERN.exec(symbol) : null;
+  if (!match) return null;
+  const base = match[1] ?? match[2];
+  const quote = match[3];
+  return { base, quote, perpSymbol: `PERP_${base}_${quote}` };
+}
+
+/**
+ * Index symbol the round chart reads prices from (REST history and the
+ * `{symbol}@indexprice` WS topic): the Predict Index S0/S1 are captured from
+ * (`settlement_index_symbol`, e.g. `SPOT_BTCTWAP60S_USDC`), falling back to
+ * the underlying index while the field is missing during rollout.
+ */
+export const resolveIndexPriceSourceSymbol = (
+  row:
+    | Pick<BinaryInfoRow, "index_price_symbol" | "settlement_index_symbol">
+    | undefined,
+  fallbackIndexSymbol?: string,
+) =>
+  row?.settlement_index_symbol ||
+  row?.index_price_symbol ||
+  fallbackIndexSymbol ||
+  "";
 
 const PERIODS = new Set([5, 10, 15]);
 
@@ -26,10 +62,10 @@ export function getBinaryMarketIdentity(row: BinaryInfoRow) {
   if (row.product_type !== "BINARY" || row.fee_model !== "BINARY_PROBABILITY") {
     return null;
   }
-  const match = INDEX_SYMBOL_PATTERN.exec(row.index_price_symbol);
+  const index = parseIndexPriceSymbol(row.index_price_symbol);
   const minutes = (row.expire_at - row.observation_start_at) / 60_000;
-  if (!match || !PERIODS.has(minutes)) return null;
-  const [, base, quote] = match;
+  if (!index || !PERIODS.has(minutes)) return null;
+  const { base, quote } = index;
   const period = `${minutes}M`;
   const symbol = parseBinaryRoundSymbol(row.symbol);
   if (

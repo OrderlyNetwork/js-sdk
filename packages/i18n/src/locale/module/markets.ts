@@ -82,9 +82,9 @@ export const markets = {
     "Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions.",
 
   "markets.symbolInfoBar.riskNotice.content":
-    "{{symbolWithBroker}} is a permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk.",
+    "{{symbolWithBroker}} is independently deployed by {{brokerName}}. Isolated margin only. Beware of low liquidity, high volatility, and liquidation risk.",
   "markets.symbolInfoBar.riskNotice.preLaunch.content":
-    "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+    "{{symbolWithBroker}} is a pre-launch market independently deployed by {{brokerName}}. Isolated margin only. The token has not launched. No funding fees during pre-launch. Beware of low liquidity, high volatility, and liquidation risk.",
 };
 
 export type Markets = typeof markets;

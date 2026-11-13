@@ -138,9 +138,12 @@ export type OrderEntryReturn = {
   /**
    * Raw merge setter for externally computed bundles (e.g. Advanced TPSL).
    *
-   * Unlike `setValues`, this intentionally skips `calculate()` to avoid overwriting computed TPSL fields.
+   * Pass `refreshDerivedTPSL` to refresh estimates from the merged prices.
    */
-  setValuesRaw: (values: Partial<FullOrderState>) => void;
+  setValuesRaw: (
+    values: Partial<FullOrderState>,
+    refreshDerivedTPSL?: boolean,
+  ) => void;
   symbolInfo: API.SymbolExt;
   /**
    * Meta state including validation and submission status.
@@ -235,11 +238,6 @@ const useOrderEntry = (
   const lastOrderTypeExt = useRef<OrderType>();
   const lastLevel = useRef<OrderLevel>();
   const fundingRates = useFundingRatesStore();
-
-  const calculateTPSL_baseOn = useRef<{ tp: string; sl: string }>({
-    tp: "",
-    sl: "",
-  });
 
   const actions = useMarkPriceActions();
   const symbolConfig = useSymbolsInfo();
@@ -546,21 +544,12 @@ const useOrderEntry = (
     }
 
     if (
+      markPrice &&
       (formattedOrder.order_type === OrderType.MARKET ||
-        formattedOrder.order_type === OrderType.STOP_MARKET) &&
-      markPrice
+        formattedOrder.order_type === OrderType.STOP_MARKET ||
+        hasTPSL(formattedOrder))
     ) {
-      const baseOn = new Set<string>();
-      if (lastChangedField.current) {
-        baseOn.add(lastChangedField.current);
-      }
-      if (calculateTPSL_baseOn.current.tp) {
-        baseOn.add(calculateTPSL_baseOn.current.tp);
-      }
-      if (calculateTPSL_baseOn.current.sl) {
-        baseOn.add(calculateTPSL_baseOn.current.sl);
-      }
-      orderEntryActions.onMarkPriceChange(markPrice, Array.from(baseOn));
+      orderEntryActions.onMarkPriceChange(markPrice, lastChangedField.current);
     }
   }, [markPrice, formattedOrder.order_type, formattedOrder.symbol, symbol]);
 
@@ -641,12 +630,6 @@ const useOrderEntry = (
     }
 
     if (shouldUpdateLastChangedField) {
-      if (key.startsWith("tp_")) {
-        calculateTPSL_baseOn.current.tp = key;
-      } else if (key.startsWith("sl_")) {
-        calculateTPSL_baseOn.current.sl = key;
-      }
-
       lastChangedField.current = key;
     }
   };
@@ -671,7 +654,10 @@ const useOrderEntry = (
     }
   };
 
-  const setValuesRaw = (values: Partial<FullOrderState>) => {
+  const setValuesRaw = (
+    values: Partial<FullOrderState>,
+    refreshDerivedTPSL = false,
+  ) => {
     if (
       !Object.keys(values).every((key) =>
         canSetTPSLPrice(
@@ -684,7 +670,10 @@ const useOrderEntry = (
       return;
     }
 
-    const newValues = setValuesRawInternal(values);
+    const newValues = setValuesRawInternal(
+      values,
+      refreshDerivedTPSL ? prepareData().markPrice : undefined,
+    );
     if (newValues) {
       interactiveValidate(newValues);
     }

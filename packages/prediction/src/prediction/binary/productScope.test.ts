@@ -28,3 +28,24 @@ test("scope matches all periods and rounds for the same underlying", () => {
     true,
   );
 });
+
+test("scope accepts the Predict TWAP index format for the underlying", () => {
+  assert.equal(
+    matchesPredictionUnderlying(
+      "PERP_BTC5M2609301200_USDC",
+      "SPOT_BTCTWAP60S_USDC",
+    ),
+    true,
+  );
+  assert.equal(
+    matchesPredictionUnderlying(
+      "PERP_ETH5M2609301200_USDC",
+      "SPOT_BTCTWAP60S_USDC",
+    ),
+    false,
+  );
+  assert.equal(
+    matchesPredictionUnderlying("PERP_BTC5M2609301200_USDC", "SPOT_BTC_USDC"),
+    false,
+  );
+});

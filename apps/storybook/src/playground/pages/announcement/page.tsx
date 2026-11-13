@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useTranslation } from "@orderly.network/i18n";
 import { ChevronLeftIcon, Text, useScreen } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout/baseLayout";
@@ -9,13 +9,16 @@ export default function AnnouncementPage() {
   const { isMobile } = useScreen();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { search } = useLocation();
   const { onRouteChange } = useNav();
 
   const onBack = () => {
     if (window.history.state?.idx > 0) {
       navigate(-1);
     } else {
-      onRouteChange({ href: "/", name: "trading" });
+      const params = new URLSearchParams(search);
+      params.delete("source");
+      onRouteChange({ href: `/?${params.toString()}`, name: "trading" });
     }
   };
 

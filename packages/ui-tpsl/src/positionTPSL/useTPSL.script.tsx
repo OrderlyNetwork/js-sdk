@@ -24,9 +24,10 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
+import { getTPSLLeg, isTPSLTriggerLocked } from "@orderly.network/utils";
 import { PositionTPSLConfirm } from "./positionTpslConfirm";
 import {
-  getChangedTPSLEditableOrderValues,
+  getTPSLPriceSyncChanges,
   getTPSLEditableOrderValues,
   isTPSLOrderTypeLocked,
 } from "./tpslOrderSync";
@@ -160,33 +161,60 @@ export const useTPSLBuilder = (
     () => (isEditing && order ? getTPSLEditableOrderValues(order) : undefined),
     [isEditing, order],
   );
-  const previousExternalOrderValues = useRef(externalOrderValues);
+  const previousExternalOrder = useRef<{
+    id: number | undefined;
+    values: NonNullable<typeof externalOrderValues>;
+  }>();
   const disableTPOrderTypeSelector =
     !!isEditing && isTPSLOrderTypeLocked(order, "tp");
   const disableSLOrderTypeSelector =
     !!isEditing && isTPSLOrderTypeLocked(order, "sl");
-  const parentTriggered = !!isEditing && order?.is_triggered === true;
-  const disableTPTriggerEditing = parentTriggered;
-  const disableSLTriggerEditing = parentTriggered;
-  const disableQuantityEditing = parentTriggered;
+  const editingOrder = isEditing ? order : undefined;
+  const disableTPTriggerEditing = isTPSLTriggerLocked(
+    editingOrder,
+    editingOrder && getTPSLLeg(editingOrder, "tp"),
+  );
+  const disableSLTriggerEditing = isTPSLTriggerLocked(
+    editingOrder,
+    editingOrder && getTPSLLeg(editingOrder, "sl"),
+  );
+  const disableQuantityEditing = isTPSLTriggerLocked(editingOrder);
 
   useEffect(() => {
     if (!externalOrderValues) {
-      previousExternalOrderValues.current = undefined;
+      previousExternalOrder.current = undefined;
       return;
     }
 
-    const previousValues = previousExternalOrderValues.current;
-    previousExternalOrderValues.current = externalOrderValues;
+    const id = order?.algo_order_id;
+    const previous = previousExternalOrder.current;
+    previousExternalOrder.current = { id, values: externalOrderValues };
+    // The hook initializes prices for the first snapshot and when the order changes.
+    if (!previous || previous.id !== id) return;
 
-    const changes = previousValues
-      ? getChangedTPSLEditableOrderValues(previousValues, externalOrderValues)
-      : externalOrderValues;
+    const changes = getTPSLPriceSyncChanges(
+      previous.values,
+      externalOrderValues,
+      tpslOrder,
+      {
+        tp: disableTPTriggerEditing
+          ? externalOrderValues.tp_trigger_price
+          : undefined,
+        sl: disableSLTriggerEditing
+          ? externalOrderValues.sl_trigger_price
+          : undefined,
+      },
+    );
 
-    if (Object.keys(changes).length > 0) {
-      setValues(changes);
-    }
-  }, [externalOrderValues, setValues]);
+    if (Object.keys(changes).length > 0) setValues(changes, true);
+  }, [
+    externalOrderValues,
+    order?.algo_order_id,
+    disableTPTriggerEditing,
+    disableSLTriggerEditing,
+    setValues,
+    tpslOrder,
+  ]);
 
   const slPriceError = useTpslPriceChecker({
     slPrice: tpslOrder.sl_trigger_price?.toString() ?? undefined,
@@ -325,10 +353,13 @@ export const useTPSLBuilder = (
     } else {
       setValue("sl_trigger_price", triggerPrice);
     }
-    if (options.qty) {
+  }, [type, triggerPrice, withTriggerPrice]);
+
+  useEffect(() => {
+    if (withTriggerPrice && triggerPrice && options.qty) {
       setValue("quantity", options.qty);
     }
-  }, [type, triggerPrice, options.qty]);
+  }, [withTriggerPrice, triggerPrice, options.qty]);
 
   const cancel = (): Promise<void> => {
     if (order?.algo_order_id && order?.symbol) {

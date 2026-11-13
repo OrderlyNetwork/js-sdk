@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Tổng khối lượng giao dịch 24 giờ trên Mạng Orderly.",
   "markets.symbolInfoBar.predFundingRate": "Tỷ lệ tài trợ ước t.",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Tỷ lệ tài trợ là khoản thanh toán giữa các nhà giao dịch mua và bán. Khi dương, vị thế mua trả tài trợ cho vị thế bán. Khi âm, vị thế bán trả tài trợ cho vị thế mua.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} là mã niêm yết không cần cấp phép, chỉ hỗ trợ ký quỹ biệt lập, được triển khai và vận hành độc lập bởi {{brokerName}}. Xin lưu ý các rủi ro cao hơn, bao gồm thanh khoản thấp, biến động cao và rủi ro thanh lý tăng.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} được triển khai độc lập bởi {{brokerName}}. Chỉ hỗ trợ ký quỹ biệt lập. Hãy lưu ý thanh khoản thấp, biến động cao và rủi ro thanh lý.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} là thị trường trước khi ra mắt do {{brokerName}} triển khai độc lập. Chỉ hỗ trợ ký quỹ cô lập. Token chưa ra mắt. Không có phí tài trợ trong giai đoạn trước khi ra mắt. Hãy lưu ý thanh khoản thấp, biến động cao và rủi ro thanh lý.",
   "portfolio.feeTier": "Cấp phí",
   "portfolio.apiKeys": "Khóa API",
   "portfolio.setting": "Cài đặt",
@@ -328,7 +328,6 @@
   "prediction.probability": "Xác suất Lên",
   "prediction.lastPrice": "Giá gần nhất",
   "prediction.volumeShort": "KL",
-  "prediction.column.last&probability": "Gần nhất/Xác suất Lên",
   "prediction.column.time&volume": "Thời gian/Khối lượng",
   "prediction.markPrice.tooltip": "Giá đánh dấu của Dự đoán. Trong phiên giao dịch bằng với giá chỉ số của Dự đoán; khi quyết toán sẽ thành 0, 0,5 hoặc 1. Xuống hiển thị bằng 1 trừ đi giá đánh dấu của Lên.",
   "prediction.orderBook": "Sổ lệnh",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Tải không thành công. Đang thử lại…",
   "prediction.noData": "Chưa có dữ liệu",
   "prediction.chart.priceToBeat": "Giá cần vượt",
-  "prediction.chart.priceToBeatHint": "Giá cần vượt là giá chỉ số BTC tại thời điểm bắt đầu phiên này.",
+  "prediction.chart.priceToBeatHint": "Giá cần vượt là giá chỉ số BTC trung bình 60 giây tại thời điểm bắt đầu phiên này.",
   "prediction.chart.currentPriceHint": "Giá hiện tại là giá chỉ số BTC theo thời gian thực, chỉ để tham khảo. Đây không phải giá quyết toán.",
   "prediction.chart.priceMode": "Biểu đồ giá",
   "prediction.chart.chartMode": "Biểu đồ nến",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Thử lại",
   "notification.pagination": "Trang thông báo",
   "notification.newAnnouncements": "Thông báo mới",
-  "tradingPoints.points": "Điểm"
+  "tradingPoints.points": "Điểm",
+  "prediction.message.connectWallet": "Kết nối ví của bạn để giao dịch.",
+  "portfolio.setting.orderNotifications": "Thông báo lệnh",
+  "portfolio.setting.orderNotifications.description": "Hiển thị thông báo bật lên khi trạng thái lệnh thay đổi."
 }

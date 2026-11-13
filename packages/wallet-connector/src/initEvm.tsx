@@ -23,7 +23,11 @@ export type ConnectorInitOptions = Optional<
 export interface WalletConnectorProviderProps {
   apiKey?: string;
   options?: ConnectorInitOptions;
-  // skip board configuration if already initialized
+  /**
+   * Skip board configuration if already initialized.
+   * Onboard instances initialized outside this provider do not select the
+   * requested network for Binance Wallet on the first connection.
+   */
   skipInit?: boolean;
 }
 

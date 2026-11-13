@@ -29,6 +29,7 @@ const input = (): OneTapOrdersArgs => ({
   selectedConfig: undefined,
   balance: 100,
   accountReady: true,
+  walletConnected: true,
   hasFeeConfig: true,
   isRegionRestricted: false,
   onActiveTab: vi.fn(),
@@ -121,6 +122,12 @@ it.each(["up", "down"] as const)(
 );
 
 it.each([
+  [
+    "wallet",
+    { walletConnected: false, accountReady: false },
+    10,
+    "connectWallet",
+  ],
   [
     "missing quotes",
     { protectionPrice: () => undefined },

@@ -142,6 +142,14 @@ test("resolveIndexPriceDp lets the override constants win over the tick", () => 
   assert.equal(INDEX_PRICE_DP_OVERRIDES.PERP_BTC_USDC, 2);
 });
 
+test("resolveIndexPriceDp resolves Predict TWAP symbols via the underlying perp", () => {
+  assert.equal(
+    resolveIndexPriceDp("SPOT_BTCTWAP60S_USDC", undefined),
+    INDEX_PRICE_DP_OVERRIDES.PERP_BTC_USDC,
+  );
+  assert.equal(resolveIndexPriceDp("SPOT_SOLTWAP60S_USDC", 0.001), 3);
+});
+
 test("resolveIndexPriceDp falls back to 2 dp without tick or override", () => {
   assert.equal(resolveIndexPriceDp("PERP_ETH_USDC", undefined), 2);
   assert.equal(resolveIndexPriceDp(undefined, undefined), 2);

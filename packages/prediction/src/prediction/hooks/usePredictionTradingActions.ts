@@ -1,3 +1,4 @@
+import { AccountStatusEnum } from "@orderly.network/types";
 import type { BinaryInfoRow } from "../binary/binaryInfo";
 import type { BinaryOrderBook } from "../binary/useBinaryOrderbook";
 import { useOneTapOrders } from "./tradingActions/useOneTapOrders";
@@ -103,6 +104,7 @@ export const usePredictionTradingActions = ({
     selectedConfig,
     balance: resources.balance,
     accountReady,
+    walletConnected: accountState.status > AccountStatusEnum.NotConnected,
     hasFeeConfig,
     isRegionRestricted,
     onActiveTab,

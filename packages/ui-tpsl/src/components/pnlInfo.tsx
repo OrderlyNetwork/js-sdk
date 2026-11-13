@@ -3,25 +3,33 @@ import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal, checkIsNaN } from "@orderly.network/utils";
 
-type Props = {
+type PnlValues = {
   tp_pnl?: string | number;
   sl_pnl?: string | number;
+};
+
+type Props = PnlValues & {
+  riskRewardPnl?: PnlValues;
   className?: string;
 };
 
 export const PnlInfo = (props: Props) => {
   const { t } = useTranslation();
   const { tp_pnl, sl_pnl } = props;
+  const { tp_pnl: riskRewardTpPnl, sl_pnl: riskRewardSlPnl } =
+    props.riskRewardPnl ?? props;
   const riskRatio = useMemo(() => {
     const defaultNode = <Text className="oui-text-base-contrast-36">-- x</Text>;
-    if (tp_pnl === undefined || sl_pnl === undefined) {
+    if (
+      riskRewardTpPnl === undefined ||
+      riskRewardSlPnl === undefined ||
+      checkIsNaN(riskRewardTpPnl) ||
+      checkIsNaN(riskRewardSlPnl)
+    ) {
       return defaultNode;
     }
-    if (checkIsNaN(tp_pnl) || checkIsNaN(sl_pnl)) {
-      return defaultNode;
-    }
-    const tpDecimal = new Decimal(tp_pnl);
-    const slDecimal = new Decimal(sl_pnl);
+    const tpDecimal = new Decimal(riskRewardTpPnl);
+    const slDecimal = new Decimal(riskRewardSlPnl);
     if (slDecimal.isZero() || tpDecimal.isZero()) {
       return defaultNode;
     }
@@ -32,8 +40,7 @@ export const PnlInfo = (props: Props) => {
         <Text className="oui-text-base-contrast-36">x</Text>
       </Flex>
     );
-    return defaultNode;
-  }, [tp_pnl, sl_pnl]);
+  }, [riskRewardTpPnl, riskRewardSlPnl]);
   return (
     <Flex
       direction={"column"}
@@ -55,12 +62,12 @@ export const PnlInfo = (props: Props) => {
           size="2xs"
           dp={2}
         >
-          {tp_pnl ? Number(tp_pnl) : "--"}
+          {checkIsNaN(tp_pnl) ? "--" : Number(tp_pnl)}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"} className="oui-w-full">
         <Text size="2xs">{t("tpsl.totalEstSlPnl")}</Text>
-        {sl_pnl ? (
+        {!checkIsNaN(sl_pnl) ? (
           <Text.numeral
             suffix={
               <Text className="oui-text-base-contrast-36 oui-ms-1">USDC</Text>

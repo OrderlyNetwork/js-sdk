@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "24 uur totaal handelsvolume op het Orderly Network.",
   "markets.symbolInfoBar.predFundingRate": "Gesch. financieringsrente",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Financieringsrentes zijn betalingen tussen handelaren die long en short zijn. Bij positief betalen long posities financiering aan short posities. Bij negatief betalen short posities aan long posities.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} is een vergunningsvrije notering die alleen geïsoleerde marge ondersteunt, onafhankelijk uitgerold en beheerd door {{brokerName}}. Let op de verhoogde risico's, waaronder lage liquiditeit, hoge volatiliteit en verhoogd liquidatierisico.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} is onafhankelijk uitgerold door {{brokerName}}. Alleen geïsoleerde marge. Let op lage liquiditeit, hoge volatiliteit en liquidatierisico.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is een markt vóór de lancering die onafhankelijk is uitgerold door {{brokerName}}. Alleen geïsoleerde marge. De token is nog niet gelanceerd. Tijdens de periode vóór de lancering gelden geen financieringskosten. Houd rekening met lage liquiditeit, hoge volatiliteit en het risico op liquidatie.",
   "portfolio.feeTier": "Kostenniveau",
   "portfolio.apiKeys": "API-sleutels",
   "portfolio.setting": "Instellingen",
@@ -328,7 +328,6 @@
   "prediction.probability": "Up-waarschijnlijkheid",
   "prediction.lastPrice": "Laatste prijs",
   "prediction.volumeShort": "Vol.",
-  "prediction.column.last&probability": "Laatste/Up-waarsch.",
   "prediction.column.time&volume": "Tijd/Volume",
   "prediction.markPrice.tooltip": "Markeringsprijs van Voorspelling. Tijdens de handel is deze gelijk aan de indexprijs van Voorspelling; bij afwikkeling wordt deze 0, 0,5 of 1. Omlaag toont 1 min de markeringsprijs van Omhoog.",
   "prediction.orderBook": "Orderboek",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Laden mislukt. Opnieuw proberen…",
   "prediction.noData": "Nog geen gegevens",
   "prediction.chart.priceToBeat": "Te kloppen prijs",
-  "prediction.chart.priceToBeatHint": "De te kloppen prijs is de BTC-indexprijs aan het begin van deze ronde.",
+  "prediction.chart.priceToBeatHint": "De te kloppen prijs is de 60-secondengemiddelde BTC-indexprijs aan het begin van deze ronde.",
   "prediction.chart.currentPriceHint": "De huidige prijs is de realtime BTC-indexprijs, alleen ter referentie. Het is niet de vereffeningsprijs.",
   "prediction.chart.priceMode": "Prijsgrafiek",
   "prediction.chart.chartMode": "Candlestickgrafiek",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Opnieuw proberen",
   "notification.pagination": "Aankondigingspagina's",
   "notification.newAnnouncements": "Nieuwe aankondigingen",
-  "tradingPoints.points": "Punten"
+  "tradingPoints.points": "Punten",
+  "prediction.message.connectWallet": "Verbind je wallet om te handelen.",
+  "portfolio.setting.orderNotifications": "Ordermeldingen",
+  "portfolio.setting.orderNotifications.description": "Toon pop-upmeldingen wanneer de orderstatus verandert."
 }

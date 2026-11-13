@@ -4,6 +4,7 @@ import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
 import { merge } from "lodash";
+import { initWithBinanceConnectChain } from "./binanceConnectChain";
 
 // initialize the module with options
 const binance = binanceModule({ options: { lng: "en" } });
@@ -52,7 +53,7 @@ export const initConfig: (
 
   const mergedOptions = merge(defaultOptions, options);
 
-  return init(mergedOptions);
+  return initWithBinanceConnectChain(mergedOptions, init);
 };
 
 export enum SolanaChainIdEnum {

@@ -56,6 +56,9 @@ export const blockReasonLabels = (): Record<OneTapBlockReason, string> => ({
     "prediction.message.regionRestricted",
   ),
   "prediction.message.orderFailed": i18n.t("prediction.message.orderFailed"),
+  "prediction.message.connectWallet": i18n.t(
+    "prediction.message.connectWallet",
+  ),
   "prediction.message.insufficientBalance": i18n.t(
     "prediction.message.insufficientBalance",
   ),

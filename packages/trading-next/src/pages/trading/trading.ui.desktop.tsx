@@ -6,10 +6,12 @@ import React, { useEffect, useMemo } from "react";
 import {
   useBadgeBySymbol,
   useGetRwaSymbolOpenStatus,
+  useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { LayoutModel, LayoutStrategy } from "@orderly.network/layout-core";
 import { LayoutHost } from "@orderly.network/layout-core";
+import { useSymbolInfoBarRiskNoticeDismissal } from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
 import { Box, cn } from "@orderly.network/ui";
 import {
@@ -91,13 +93,21 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const animating = props.animating ?? false;
   const setAnimating = props.setAnimating ?? NOOP;
 
-  const { brokerName } = useBadgeBySymbol(props.symbol);
+  const { brokerId, brokerName } = useBadgeBySymbol(props.symbol);
+  const symbolsInfo = useSymbolsInfo();
+  const isPreTge = Boolean(symbolsInfo[props.symbol]?.("is_pretge"));
+  const [riskNoticeDismissed] = useSymbolInfoBarRiskNoticeDismissal(
+    props.symbol,
+    isPreTge,
+  );
+  const showRiskNotice =
+    Boolean(brokerId ?? brokerName) && riskNoticeDismissed !== true;
 
   const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
   const { t } = useTranslation();
   const symbolInfoBarHeight = useMemo(() => {
     let height = 56;
-    if (brokerName) {
+    if (showRiskNotice) {
       height += 46;
       height += 8;
     }
@@ -105,7 +115,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       height += 48;
     }
     return height;
-  }, [showCountdown, brokerName]);
+  }, [showCountdown, showRiskNotice]);
 
   const { isRwa, open } = useGetRwaSymbolOpenStatus(props.symbol);
   useEffect(() => {

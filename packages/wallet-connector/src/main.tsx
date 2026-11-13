@@ -29,11 +29,10 @@ export const Main: React.FC<
       });
     }
     newNamespace.current = ChainNamespace.evm;
-    const evmOption = options.autoSelect
-      ? {
-          autoSelect: options.autoSelect,
-        }
-      : undefined;
+    const evmOption = {
+      chainId: options.chainId,
+      autoSelect: options.autoSelect,
+    };
 
     return evm
       .connect(evmOption)

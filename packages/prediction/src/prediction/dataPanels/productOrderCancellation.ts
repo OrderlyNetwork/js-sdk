@@ -5,7 +5,7 @@ import { matchesPredictionUnderlying } from "../binary/productScope";
 
 export type ProductOrderInstrument = "all" | "perps" | "prediction";
 export type BinaryCancelAllOptions = {
-  /** Underlying PERP symbol, for example PERP_BTC_USDC; includes all its rounds. */
+  /** Underlying index in either format (`PERP_BTC_USDC` / `SPOT_BTCTWAP60S_USDC`); includes all its rounds. */
   underlyingSymbol?: string;
 };
 

@@ -7,12 +7,12 @@ import {
 
 export type TPSLEditableOrderValues = {
   quantity: number | string;
-  tp_trigger_price: number | string;
+  tp_trigger_price: string;
   tp_order_type: OrderType;
-  tp_order_price: number | string;
-  sl_trigger_price: number | string;
+  tp_order_price: string;
+  sl_trigger_price: string;
   sl_order_type: OrderType;
-  sl_order_price: number | string;
+  sl_order_price: string;
 };
 
 const editableKeys = [
@@ -27,18 +27,13 @@ const editableKeys = [
 
 type TPSLLeg = "tp" | "sl";
 
-const getOrderType = (child?: API.AlgoOrder): OrderType | undefined => {
-  if (!child) return undefined;
-  return child.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
-};
-
 /** Use the execution type configured on this server-owned child. */
 export function getTPSLEditOrderType(
   order: API.AlgoOrder | undefined,
   leg: TPSLLeg,
 ): OrderType {
-  if (!order) return OrderType.MARKET;
-  return getOrderType(getTPSLLeg(order, leg)) ?? OrderType.MARKET;
+  const child = order && getTPSLLeg(order, leg);
+  return child?.type === OrderType.LIMIT ? OrderType.LIMIT : OrderType.MARKET;
 }
 
 /** Keep the UI consistent with the SDK's parent and child activation policy. */
@@ -84,17 +79,38 @@ export function getTPSLEditableOrderValues(
   };
 }
 
-export function getChangedTPSLEditableOrderValues(
-  previous: TPSLEditableOrderValues,
-  next: TPSLEditableOrderValues,
-): Partial<TPSLEditableOrderValues> {
-  return editableKeys.reduce<Partial<TPSLEditableOrderValues>>(
-    (changes, key) => {
-      if (!Object.is(previous[key], next[key])) {
-        Object.assign(changes, { [key]: next[key] });
-      }
-      return changes;
-    },
-    {},
-  );
+/** Keep a local price draft when the same field changes in the order stream. */
+export function getTPSLPriceSyncChanges<
+  T extends Partial<TPSLEditableOrderValues>,
+>(
+  previous: T,
+  next: T,
+  draft: Partial<
+    Record<keyof TPSLEditableOrderValues, string | number>
+  > = previous,
+  lockedTriggers: Partial<Record<TPSLLeg, string | number>> = {},
+): Partial<T> {
+  const changes: Partial<T> = {};
+  for (const key of editableKeys) {
+    if (!(key in next)) continue;
+    const previousValue = previous[key];
+    const nextValue = next[key];
+    const leg = key.startsWith("tp_") ? "tp" : "sl";
+    const lockTrigger =
+      key.endsWith("_trigger_price") && lockedTriggers[leg] !== undefined;
+    const executionTypeChanged =
+      key.endsWith("_order_price") &&
+      previous[`${leg}_order_type`] !== next[`${leg}_order_type`];
+    const hasPriceDraft =
+      key.endsWith("_price") &&
+      String(draft[key] ?? "") !== String(previousValue ?? "");
+    const shouldSync =
+      lockTrigger ||
+      executionTypeChanged ||
+      (!hasPriceDraft && previousValue !== nextValue);
+    if (shouldSync && String(draft[key] ?? "") !== String(nextValue ?? "")) {
+      Object.assign(changes, { [key]: nextValue });
+    }
+  }
+  return changes;
 }

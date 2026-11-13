@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "24-godzinny całkowity wolumen handlu w sieci Orderly.",
   "markets.symbolInfoBar.predFundingRate": "Szac. stopa finansowania",
   "markets.symbolInfoBar.predFundingRate.tooltip": "Stopy finansowania to płatności między traderami, którzy są długo i krótko. Gdy jest dodatnia, długie pozycje płacą krótkim pozycjom finansowanie. Gdy jest ujemna, krótkie pozycje płacą długim pozycjom.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} to notowanie bez zezwolenia obsługiwane wyłącznie z marginem izolowanym, wdrożone i prowadzone niezależnie przez {{brokerName}}. Proszę mieć na uwadze podwyższone ryzyko, w tym niską płynność, wysoką zmienność i zwiększone ryzyko likwidacji.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} jest wdrożony niezależnie przez {{brokerName}}. Tylko margin izolowany. Uważaj na niską płynność, wysoką zmienność i ryzyko likwidacji.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} to rynek przedpremierowy uruchomiony niezależnie przez {{brokerName}}. Dostępny jest tylko izolowany depozyt zabezpieczający. Token nie został jeszcze wprowadzony na rynek. W okresie przedpremierowym nie są pobierane opłaty za finansowanie. Uważaj na niską płynność, wysoką zmienność i ryzyko likwidacji.",
   "portfolio.feeTier": "Poziom opłat",
   "portfolio.apiKeys": "Klucze API",
   "portfolio.setting": "Ustawienia",
@@ -328,7 +328,6 @@
   "prediction.probability": "Prawdopodobieństwo wzrostu",
   "prediction.lastPrice": "Ostatnia cena",
   "prediction.volumeShort": "Wol.",
-  "prediction.column.last&probability": "Ost./Prawdop. wzrostu",
   "prediction.column.time&volume": "Czas/Wolumen",
   "prediction.markPrice.tooltip": "Cena znacznika Prognozy. Podczas handlu jest równa cenie indeksu Prognozy; przy rozliczeniu staje się 0, 0,5 lub 1. Spadek wyświetla 1 minus cena znacznika Wzrostu.",
   "prediction.orderBook": "Arkusz zleceń",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "Nie udało się załadować. Ponawianie…",
   "prediction.noData": "Brak danych",
   "prediction.chart.priceToBeat": "Cena do pobicia",
-  "prediction.chart.priceToBeatHint": "Cena do pobicia to indeksowa cena BTC na początku tej rundy.",
+  "prediction.chart.priceToBeatHint": "Cena do pobicia to 60-sekundowa średnia indeksowa cena BTC na początku tej rundy.",
   "prediction.chart.currentPriceHint": "Cena bieżąca to indeksowa cena BTC w czasie rzeczywistym, podana wyłącznie informacyjnie. Nie jest ceną rozliczenia.",
   "prediction.chart.priceMode": "Wykres ceny",
   "prediction.chart.chartMode": "Wykres świecowy",
@@ -1497,5 +1496,8 @@
   "notification.retry": "Spróbuj ponownie",
   "notification.pagination": "Strony ogłoszeń",
   "notification.newAnnouncements": "Nowe ogłoszenia",
-  "tradingPoints.points": "Punkty"
+  "tradingPoints.points": "Punkty",
+  "prediction.message.connectWallet": "Połącz portfel, aby handlować.",
+  "portfolio.setting.orderNotifications": "Powiadomienia o zleceniach",
+  "portfolio.setting.orderNotifications.description": "Wyświetlaj wyskakujące powiadomienia o zmianach statusu zleceń."
 }

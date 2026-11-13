@@ -51,6 +51,8 @@ export type ValuesDepConfig = {
   estSlippage?: number | null;
   /** [ask0, bid0] */
   askAndBid?: number[];
+  /** Skip the trigger-to-mark check for unchanged triggers on executed TP/SL legs. */
+  skipTPSLTriggerPriceAgainstMark?: Partial<Record<"tp" | "sl", boolean>>;
 };
 
 export interface OrderCreator<T> {

@@ -27,6 +27,7 @@ export type PNL_Values = {
 export type BuilderProps = {
   type: "TP" | "SL";
   disabled?: boolean;
+  offsetReadOnly?: boolean;
 
   quote_dp?: number;
   onChange: (key: string, value: number | string) => void;
@@ -41,6 +42,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     PnLMode.PERCENTAGE,
   );
   const [focus, setFocus] = useState(true);
+  const [draft, setDraft] = useState<{ key: string; value: string }>();
+  const readOnly = !!props.offsetReadOnly && mode !== PnLMode.PnL;
 
   const { t } = useTranslation();
 
@@ -57,7 +60,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       default:
         return `${type.toLowerCase()}_pnl`;
     }
-  }, [mode]);
+  }, [mode, type]);
 
   const value = useMemo(() => {
     return values[mode as keyof PNL_Values];
@@ -110,7 +113,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
-    if (!props.disabled) {
+    if (!props.disabled && !readOnly) {
+      setDraft({ key, value });
+      if (value === "-") return;
       props.onChange(key, value);
     }
   };
@@ -119,7 +124,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     dp?: number;
     mode: PnLMode;
   }): InputFormatter => {
-    const { dp = 2 } = options;
+    const dp = mode === PnLMode.PnL ? 2 : (options.dp ?? 2);
     return {
       onRenderBefore: (
         value: string | number,
@@ -134,7 +139,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           // }
         }
 
-        if (value === "" || value === "-") return "";
+        if (value === "" || value === "-") return value;
         // if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
         //   return commify(value);
         // }
@@ -145,12 +150,14 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         ) {
           try {
             // fix value is invalid decimal string, like "-"
-            return `${new Decimal(
+            const sign = value.startsWith("-") ? "-" : "";
+            return `${sign}${new Decimal(
               value.replace(
                 new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
                 "",
               ),
             )
+              .abs()
               .mul(100)
               .todp(2, 4)
               .toString()}${percentageSuffix.current}`;
@@ -161,7 +168,11 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           mode === PnLMode.OFFSET ||
           mode === PnLMode.OFFSET_FROM_MARK
         ) {
-          value = todpIfNeed(value, dp);
+          const decimalValue =
+            /e/i.test(value) && Number.isFinite(Number(value))
+              ? new Decimal(value).toFixed()
+              : value;
+          value = todpIfNeed(decimalValue, dp);
         } else {
           // value = new Decimal(value).todp(2).toString();
         }
@@ -169,6 +180,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         return `${value}`;
       },
       onSendBefore: (value: string) => {
+        if (value === "-" && mode !== PnLMode.PnL) {
+          percentageSuffix.current = "";
+          return value;
+        }
         if (/^\-?0{2,}$/.test(value)) {
           return "0";
         }
@@ -189,17 +204,23 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             }
             // fix value is invalid decimal string, like "1-46.35"
             try {
-              value = new Decimal(value).div(100).toString();
+              const sign = value.startsWith("-") ? "-" : "";
+              value = `${sign}${new Decimal(value).abs().div(100).toString()}`;
             } catch {
               value = "";
             }
             value = `${value}${percentageSuffix.current}`;
           }
-        } else if (mode === PnLMode.PnL && type === "SL" && focus) {
-          // not need to add "-", because the value is already negative
-          value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);
+          if (
+            mode === PnLMode.PnL &&
+            type === "SL" &&
+            focus &&
+            !value.startsWith("-")
+          ) {
+            value = `-${value}`;
+          }
         }
 
         if (value === "" || value === "-") return "";
@@ -277,15 +298,27 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     formatter,
     onModeChange: (mode: PnLMode) => {
       if (!props.disabled) {
+        setDraft(undefined);
+        percentageSuffix.current = "";
         setMode(mode);
       }
     },
     disabled: props.disabled,
-    value,
+    readOnly,
+    value:
+      focus && !props.disabled && !readOnly && draft?.key === key
+        ? draft.value
+        : value,
     pnl: values[PnLMode.PnL],
     onValueChange,
     quote_dp: props.quote_dp,
-    setFocus,
+    setFocus: (focused: boolean) => {
+      if (!focused) {
+        setDraft(undefined);
+        percentageSuffix.current = "";
+      }
+      setFocus(focused);
+    },
   };
 };
 

@@ -5,7 +5,7 @@ import {
   OrderType,
   PositionType,
 } from "@orderly.network/types";
-import { isPositionalTPSL, isTPSLTriggered } from "@orderly.network/utils";
+import { isPositionalTPSL, isTPSLTriggerLocked } from "@orderly.network/utils";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { TPSLValidationStrategy } from "./validators/TPSLValidationStrategy";
 
@@ -27,10 +27,19 @@ export function validateTPSLChild(
   const triggerPriceUnchanged =
     changes.trigger_price == null ||
     Number(changes.trigger_price) === Number(order.trigger_price);
+  const locked = isTPSLTriggerLocked(parent, order);
+  if (locked && !triggerPriceUnchanged) {
+    return {
+      trigger_price: {
+        type: -1,
+        message: "Trigger price cannot be changed after TP/SL is triggered",
+      },
+    };
+  }
   const skipTriggerPriceAgainstMark =
     effectiveType === OrderType.LIMIT &&
     !typeChanged &&
-    (parent?.is_triggered === true || isTPSLTriggered(order)) &&
+    locked &&
     triggerPriceUnchanged;
   const errors = new TPSLValidationStrategy().validate(
     {

@@ -1,5 +1,11 @@
 import { act, renderHook } from "@testing-library/react-hooks";
-import { MarginMode, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  MarginMode,
+  OrderLevel,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
+import { createMockSymbolConfig as mockCreateSymbolConfig } from "../../../services/orderCreator/__test__/testHelpers";
 import {
   DEFAULT_USDC_BORROW_LIMIT,
   USDCBorrowLimitExceededError,
@@ -24,6 +30,8 @@ const mockFormattedOrder = {
 const mockCreateOrder = jest.fn();
 const mockValidate = jest.fn();
 const mockGenerateOrder = jest.fn();
+let mockRealOrderEntry = false;
+let mockMarkPrice = 100;
 let mockOrderbookUpdate: ((data: unknown) => void) | undefined;
 const mockPositionRows: Array<{
   symbol: string;
@@ -65,18 +73,19 @@ jest.mock("../../../orderly/orderlyHooks", () => ({
     refresh: jest.fn(),
   }),
   useSymbolsInfo: () => ({
-    [mockSymbol]: () => ({
-      symbol: mockSymbol,
-      base_dp: 4,
-      quote_dp: 2,
-      base_tick: 0.0001,
-      price_range: 0.05,
-    }),
+    [mockSymbol]: () =>
+      mockCreateSymbolConfig({
+        symbol: mockSymbol,
+        base_dp: 4,
+        quote_dp: 2,
+        base_tick: 0.0001,
+        price_range: 0.05,
+      }),
   }),
 }));
 
 jest.mock("../../../orderly/useMarkPrice/useMarkPriceStore", () => ({
-  useMarkPriceActions: () => ({ getMarkPriceBySymbol: () => 100 }),
+  useMarkPriceActions: () => ({ getMarkPriceBySymbol: () => mockMarkPrice }),
 }));
 
 jest.mock("../../../orderly/useOrderStream/useOrderStream", () => ({
@@ -121,16 +130,21 @@ jest.mock("../../../utils/order/orderPrice", () => ({
   getOrderReferencePriceFromOrder: jest.fn(() => 100),
 }));
 jest.mock("../useOrderEntry.internal", () => ({
-  useOrderEntryNextInternal: () => ({
-    formattedOrder: mockFormattedOrder,
-    setValue: jest.fn(),
-    setValues: jest.fn(),
-    setValuesRaw: jest.fn(),
-    validate: mockValidate,
-    generateOrder: mockGenerateOrder,
-    reset: jest.fn(),
-    onMarkPriceChange: jest.fn(),
-  }),
+  useOrderEntryNextInternal: (...args: unknown[]) =>
+    mockRealOrderEntry
+      ? jest
+          .requireActual("../useOrderEntry.internal")
+          .useOrderEntryNextInternal(...args)
+      : {
+          formattedOrder: mockFormattedOrder,
+          setValue: jest.fn(),
+          setValues: jest.fn(),
+          setValuesRaw: jest.fn(),
+          validate: mockValidate,
+          generateOrder: mockGenerateOrder,
+          reset: jest.fn(),
+          onMarkPriceChange: jest.fn(),
+        },
 }));
 jest.mock("../useRwaLeverageSync", () => ({
   useRwaLeverageSync: jest.fn(),
@@ -394,5 +408,231 @@ describe("useOrderEntry USDC borrow limit submission guard", () => {
     expect(
       result.current.helper.getProjectedUSDCBorrow(mockGeneratedOrder),
     ).toBeCloseTo(50_000.06, 8);
+  });
+});
+
+describe("useOrderEntry TP/SL price refresh", () => {
+  beforeEach(() => {
+    mockRealOrderEntry = true;
+    mockMarkPrice = 2400;
+    mockOrderbookUpdate = undefined;
+  });
+
+  afterEach(() => {
+    mockRealOrderEntry = false;
+    mockMarkPrice = 100;
+  });
+
+  it("keeps Limit drafts across quantity, main price, mark and same-batch BBO refresh", () => {
+    const { result, rerender } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_type: OrderType.LIMIT,
+          order_price: "2400",
+          order_quantity: "2",
+          order_type_ext: OrderType.ASK,
+          level: OrderLevel.ONE,
+          sl_order_type: OrderType.LIMIT,
+        },
+      }),
+    );
+    act(() => result.current.setValue("sl_offset_percentage", 0.02));
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2352",
+      sl_order_price: "2352",
+    });
+
+    act(() => {
+      result.current.setValue("sl_trigger_price", "2360");
+      result.current.setValue("sl_order_price", "2340");
+      result.current.setValue("order_quantity", "3");
+    });
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2360",
+      sl_order_price: "2340",
+      sl_pnl: -180,
+    });
+
+    act(() => result.current.setValue("order_price", "2450"));
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2360",
+      sl_order_price: "2340",
+      sl_pnl: -330,
+    });
+
+    mockMarkPrice = 2500;
+    rerender();
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2360",
+      sl_order_price: "2340",
+      sl_offset_from_mark: 140,
+    });
+
+    act(() => {
+      result.current.setValue("sl_order_price", "2330");
+      mockOrderbookUpdate?.({ asks: [[2470, 10]], bids: [[2469, 10]] });
+    });
+    expect(result.current.formattedOrder).toMatchObject({
+      order_price: "2470",
+      sl_trigger_price: "2360",
+      sl_order_price: "2330",
+      sl_pnl: -420,
+    });
+  });
+
+  it("does not replay an old Market offset after a batch clears or replaces the trigger", () => {
+    const { result, rerender } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_type: OrderType.MARKET,
+          order_quantity: "2",
+          sl_order_type: OrderType.MARKET,
+        },
+      }),
+    );
+    act(() => result.current.setValue("sl_offset_from_mark", 50));
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("2350");
+    act(() => result.current.setValues({ sl_trigger_price: "" }));
+    mockMarkPrice = 2450;
+    rerender();
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("");
+
+    act(() => result.current.setValue("sl_offset_from_mark", 50));
+    act(() => result.current.setValues({ sl_trigger_price: "2370" }));
+    mockMarkPrice = 2500;
+    rerender();
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2370",
+      sl_offset_from_mark: 130,
+    });
+  });
+
+  it("keeps locked triggers in both batch and raw updates", () => {
+    const { result } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_price: "2400",
+          order_quantity: "2",
+          sl_order_type: OrderType.LIMIT,
+          sl_trigger_price: "2360",
+          sl_order_price: "2340",
+        },
+        lockedTPSLTriggers: { sl: "2360" },
+      }),
+    );
+    act(() =>
+      result.current.setValues({
+        sl_trigger_price: "2355",
+        sl_offset_percentage: "0.04",
+      }),
+    );
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2360",
+      sl_order_price: "2340",
+    });
+    act(() =>
+      result.current.setValuesRaw(
+        {
+          sl_trigger_price: "2355",
+          sl_order_price: "2310",
+        },
+        true,
+      ),
+    );
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2360",
+      sl_order_price: "2310",
+      sl_offset: 40,
+    });
+  });
+
+  it("recomputes signed offsets immediately when changing the order side", () => {
+    const { result } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_price: "2400",
+          order_quantity: "2",
+          side: OrderSide.BUY,
+          tp_order_type: OrderType.LIMIT,
+          tp_trigger_price: "2500",
+          tp_order_price: "2490",
+        },
+      }),
+    );
+    expect(result.current.formattedOrder).toMatchObject({
+      tp_offset: 100,
+      tp_offset_percentage: 0.0417,
+    });
+
+    act(() => result.current.setValue("side", OrderSide.SELL));
+    expect(result.current.formattedOrder).toMatchObject({
+      tp_trigger_price: "2500",
+      tp_order_price: "2490",
+      tp_offset: -100,
+      tp_offset_percentage: -0.0417,
+      tp_offset_from_mark: -100,
+      tp_offset_percentage_from_mark: -0.0417,
+    });
+
+    act(() => result.current.setValues({ side: OrderSide.BUY }));
+    expect(result.current.formattedOrder).toMatchObject({
+      tp_offset: 100,
+      tp_offset_percentage: 0.0417,
+      tp_offset_from_mark: 100,
+      tp_offset_percentage_from_mark: 0.0417,
+    });
+  });
+
+  it("preserves a Market mark offset when switching order sides", () => {
+    const { result, rerender } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_type: OrderType.MARKET,
+          order_quantity: "2",
+          sl_order_type: OrderType.MARKET,
+        },
+      }),
+    );
+
+    act(() => result.current.setValue("sl_offset_from_mark", 50));
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("2350");
+
+    act(() => result.current.setValue("side", OrderSide.SELL));
+    act(() => result.current.setValue("side", OrderSide.BUY));
+    mockMarkPrice = 2450;
+    rerender();
+
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2400",
+      sl_offset_from_mark: 50,
+    });
+  });
+
+  it("keeps a hand-entered Market trigger fixed until the next calculation input", () => {
+    const { result, rerender } = renderHook(() =>
+      useOrderEntry(mockSymbol, {
+        initialOrder: {
+          order_type: OrderType.MARKET,
+          order_quantity: "2",
+          sl_order_type: OrderType.MARKET,
+        },
+      }),
+    );
+    act(() => result.current.setValue("sl_offset_from_mark", 50));
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("2350");
+    mockMarkPrice = 2450;
+    rerender();
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("2400");
+
+    act(() => result.current.setValue("sl_trigger_price", "2380"));
+    mockMarkPrice = 2500;
+    rerender();
+    expect(result.current.formattedOrder).toMatchObject({
+      sl_trigger_price: "2380",
+      sl_offset_from_mark: 120,
+    });
+
+    act(() => result.current.setValue("sl_offset_from_mark", 50));
+    expect(result.current.formattedOrder.sl_trigger_price).toBe("2450");
   });
 });

@@ -26,6 +26,7 @@ export const PNLInput = (props: PNLInputProps) => {
     value,
     pnl,
     disabled,
+    readOnly,
   } = props;
 
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -59,6 +60,7 @@ export const PNLInput = (props: PNLInputProps) => {
       align={"right"}
       value={value}
       disabled={disabled}
+      readOnly={readOnly}
       data-testid={props.testId}
       autoComplete={"off"}
       onValueChange={onValueChange}
@@ -74,7 +76,8 @@ export const PNLInput = (props: PNLInputProps) => {
         prefix: "oui-text-base-contrast-54 oui-text-2xs",
         root: cn(
           "oui-outline-line-12 focus-within:oui-outline-primary-light",
-          disabled && "oui-bg-base-6 oui-opacity-50 oui-cursor-not-allowed",
+          (disabled || readOnly) &&
+            "oui-bg-base-6 oui-opacity-50 oui-cursor-not-allowed",
         ),
       }}
       onFocus={() => {

@@ -4,6 +4,7 @@ import { i18n, useLocaleCode } from "@orderly.network/i18n";
 import { parseNumber } from "@orderly.network/ui";
 import { Decimal, formatNum } from "@orderly.network/utils";
 import { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
+import { parseIndexPriceSymbol } from "./binary/binaryMarkets";
 
 export { ROUND_INTERVAL_SECONDS } from "./binary/binaryInfo";
 
@@ -55,14 +56,19 @@ function cachedDateTimeFormat(
 }
 
 /**
- * Display-dp overrides for underlying index prices, keyed by the binary
- * row's index_price_symbol. They win over the tick-derived dp: BTC's 0.1
- * tick would collapse to 1 dp, but the index feed carries 2 decimals and
- * the product wants them shown.
+ * Display-dp overrides for underlying index prices, keyed by the underlying
+ * perp symbol (`PERP_{base}_{quote}`); index symbols in the Predict format
+ * (`SPOT_BTCTWAP60S_USDC`) are normalized to it first. They win over the
+ * tick-derived dp: BTC's 0.1 tick would collapse to 1 dp, but the index feed
+ * carries 2 decimals and the product wants them shown.
  */
 export const INDEX_PRICE_DP_OVERRIDES: Record<string, number> = {
   PERP_BTC_USDC: 2,
 };
+
+/** Perp market symbol for an index symbol in either format; unknown input passes through. */
+const toUnderlyingPerpSymbol = (indexPriceSymbol: string) =>
+  parseIndexPriceSymbol(indexPriceSymbol)?.perpSymbol ?? indexPriceSymbol;
 
 /**
  * Decimal places for underlying index prices, mirroring the perp display
@@ -78,7 +84,8 @@ export function resolveIndexPriceDp(
 ): number {
   let dp = 2;
   if (indexPriceSymbol) {
-    const override = INDEX_PRICE_DP_OVERRIDES[indexPriceSymbol];
+    const override =
+      INDEX_PRICE_DP_OVERRIDES[toUnderlyingPerpSymbol(indexPriceSymbol)];
     if (typeof override === "number") dp = override;
     else if (quoteTick != null && Number.isFinite(quoteTick) && quoteTick > 0)
       dp = new Decimal(quoteTick).decimalPlaces();
@@ -108,7 +115,7 @@ export function useIndexPriceFormatter(
   const symbolsInfo = useSymbolsInfo();
   return useMemo(() => {
     const quoteTick = indexPriceSymbol
-      ? symbolsInfo[indexPriceSymbol]?.("quote_tick")
+      ? symbolsInfo[toUnderlyingPerpSymbol(indexPriceSymbol)]?.("quote_tick")
       : undefined;
     const dp = resolveIndexPriceDp(
       indexPriceSymbol,

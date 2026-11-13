@@ -167,6 +167,7 @@ export const PredictionOrderBook: React.FC<
     symbolInfo: predictionSymbolInfo(base, quote, baseTick, quoteTick),
     onItemClick: (item: number[]) => selectPrice(item[0]),
     showMarkPrice: false,
+    showSpread: false,
     cellHeight: CELL_HEIGHT,
   };
 

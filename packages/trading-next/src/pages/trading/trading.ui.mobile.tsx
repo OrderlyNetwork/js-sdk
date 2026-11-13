@@ -172,6 +172,7 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
       <Flex mx={1}>
         <SymbolInfoBarRiskNotice
           visible={isCommunityListed}
+          symbol={props.symbol}
           symbolWithBroker={symbolWithBroker}
           brokerName={brokerNameRaw ?? brokerName ?? ""}
           isPreTge={isPreTge}

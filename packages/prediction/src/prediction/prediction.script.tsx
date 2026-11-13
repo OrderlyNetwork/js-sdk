@@ -41,7 +41,8 @@ export const usePredictionScript = (
   const selectedSymbol = rounds.selectedRow?.symbol;
 
   const underlying = useBinaryUnderlying({
-    indexSymbol: rounds.underlyingSymbol,
+    // Read prices from the same Predict Index S0/S1 are settled on.
+    indexSymbol: rounds.indexPriceSourceSymbol,
     roundStartSec: rounds.selectedRow ? rounds.selectedRound : undefined,
     expireAtMs: rounds.selectedRow?.expire_at,
     active: active && activeLive && !!rounds.selectedRow,

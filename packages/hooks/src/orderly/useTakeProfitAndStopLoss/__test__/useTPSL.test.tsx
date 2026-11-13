@@ -355,14 +355,14 @@ describe("useTPSLOrder create and edit routing", () => {
   );
 
   it.each([
-    ["tp_offset", 200],
-    ["tp_offset_percentage", 0.05],
-    ["tp_offset_from_mark", 200],
-    ["tp_offset_percentage_from_mark", 0.05],
-    ["tp_pnl", 400],
+    ["tp_offset", 200, 4110],
+    ["tp_offset_percentage", 0.05, 4110],
+    ["tp_offset_from_mark", 200, 4110],
+    ["tp_offset_percentage_from_mark", 0.05, 4110],
+    ["tp_pnl", 400, 4200],
   ])(
-    "edits triggered Limit price through %s without changing the trigger",
-    async (key, value) => {
+    "applies %s = %s to the triggered Limit leg with execution price %s",
+    async (key, value, expectedPrice) => {
       const defaultOrder = {
         ...existingFullOrder,
         is_triggered: true,
@@ -391,18 +391,147 @@ describe("useTPSLOrder create and edit routing", () => {
       });
 
       expect(Number(result.current[0].tp_trigger_price)).toBe(4100);
-      expect(Number(result.current[0].tp_order_price)).toBe(4200);
+      expect(Number(result.current[0].tp_order_price)).toBe(expectedPrice);
       await act(async () => {
         await expect(result.current[1].validate()).resolves.toBeDefined();
         await result.current[1].submit();
       });
-      expect(mockUpdateOrder).toHaveBeenCalledWith(
-        { order_id: 10, child_orders: [{ order_id: 11, price: 4200 }] },
-        {},
-        undefined,
-      );
+      if (key === "tp_pnl") {
+        expect(mockUpdateOrder).toHaveBeenCalledWith(
+          {
+            order_id: 10,
+            child_orders: [{ order_id: 11, price: expectedPrice }],
+          },
+          {},
+          undefined,
+        );
+      } else {
+        expect(mockUpdateOrder).not.toHaveBeenCalled();
+      }
     },
   );
+
+  it("does not write back an untouched sibling that changed after confirmation opened", async () => {
+    const original: API.AlgoOrder = {
+      ...existingFullOrder,
+      child_orders: [
+        {
+          ...existingFullOrder.child_orders[0],
+          type: OrderType.LIMIT,
+          price: 4130,
+        },
+        {
+          ...existingFullOrder.child_orders[1],
+          type: OrderType.LIMIT,
+          price: 3890,
+        },
+      ],
+    };
+    const { result, rerender } = renderHook(
+      ({ defaultOrder }) =>
+        useTaskProfitAndStopLossInternal(
+          {
+            symbol: "PERP_ETH_USDC",
+            position_qty: 2,
+            average_open_price: 4000,
+          },
+          { defaultOrder, isEditing: true, positionType: PositionType.FULL },
+        ),
+      { initialProps: { defaultOrder: original } },
+    );
+    await act(async () => {
+      result.current[1].setValue("sl_order_price", "3880");
+    });
+    const submitFromConfirmation = result.current[1].submit;
+    rerender({
+      defaultOrder: {
+        ...original,
+        child_orders: [
+          { ...original.child_orders[0], price: 4140 },
+          original.child_orders[1],
+        ],
+      },
+    });
+    await submitFromConfirmation();
+
+    expect(mockUpdateOrder).toHaveBeenCalledWith(
+      { order_id: 10, child_orders: [{ order_id: 12, price: 3880 }] },
+      {},
+      undefined,
+    );
+  });
+
+  it("does not delete a parent when another leg activates before confirmation", async () => {
+    const original: API.AlgoOrder = {
+      ...existingFullOrder,
+      child_orders: [
+        existingFullOrder.child_orders[0],
+        { ...existingFullOrder.child_orders[1], is_activated: false },
+      ],
+    };
+    const { result, rerender } = renderHook(
+      ({ defaultOrder }) =>
+        useTaskProfitAndStopLossInternal(
+          {
+            symbol: "PERP_ETH_USDC",
+            position_qty: 2,
+            average_open_price: 4000,
+          },
+          { defaultOrder, isEditing: true, positionType: PositionType.FULL },
+        ),
+      { initialProps: { defaultOrder: original } },
+    );
+    await act(async () => {
+      result.current[1].setValue("tp_trigger_price", "");
+    });
+    const submitFromConfirmation = result.current[1].submit;
+    rerender({ defaultOrder: existingFullOrder });
+    await submitFromConfirmation();
+
+    expect(mockDeleteOrder).not.toHaveBeenCalled();
+    expect(mockUpdateOrder).toHaveBeenCalledWith(
+      { order_id: 10, child_orders: [{ order_id: 11, is_activated: false }] },
+      {},
+      undefined,
+    );
+  });
+
+  it("validates equal Limit trigger and execution prices after the first SL offset", async () => {
+    mockMarkPrice = 2400;
+    const { result } = renderHook(() =>
+      useTaskProfitAndStopLossInternal(
+        { symbol: "PERP_ETH_USDC", position_qty: 2, average_open_price: 2400 },
+        { isEditing: false, positionType: PositionType.FULL },
+      ),
+    );
+    await act(async () => {
+      result.current[1].setValue("sl_order_type", OrderType.LIMIT);
+      result.current[1].setValue("sl_offset_percentage", 0.02);
+    });
+    expect(result.current[0]).toMatchObject({
+      sl_trigger_price: "2352",
+      sl_order_price: "2352",
+    });
+    await act(async () => {
+      await expect(result.current[1].validate()).resolves.toBeDefined();
+    });
+  });
+
+  it("ignores PnL and offset edits on a triggered Market leg", async () => {
+    const defaultOrder = { ...existingFullOrder, is_triggered: true };
+    const { result } = renderHook(() =>
+      useTaskProfitAndStopLossInternal(
+        { symbol: "PERP_ETH_USDC", position_qty: 2, average_open_price: 4000 },
+        { defaultOrder, isEditing: true, positionType: PositionType.FULL },
+      ),
+    );
+    await act(async () => {
+      result.current[1].setValue("tp_offset_percentage", 0.05);
+      result.current[1].setValue("tp_pnl", 400);
+    });
+    expect(result.current[0].tp_trigger_price).toBe(4100);
+    expect(result.current[0].tp_order_price).toBeUndefined();
+  });
 
   it.each([
     { activated: true, trigger: 3901 },
@@ -426,24 +555,35 @@ describe("useTPSLOrder create and edit routing", () => {
           existingFullOrder.child_orders[1],
         ],
       } as API.AlgoOrder;
-      const { result } = renderHook(() =>
-        useTaskProfitAndStopLossInternal(
-          {
-            symbol: "PERP_ETH_USDC",
-            position_qty: 2,
-            average_open_price: 4000,
-          },
-          {
-            defaultOrder: triggeredLimitOrder,
-            isEditing: true,
-            positionType: PositionType.FULL,
-          },
-        ),
+      const openOrder = {
+        ...triggeredLimitOrder,
+        is_triggered: false,
+        child_orders: [
+          { ...triggeredLimitOrder.child_orders[0], is_triggered: false },
+          triggeredLimitOrder.child_orders[1],
+        ],
+      };
+      const { result, rerender } = renderHook(
+        ({ defaultOrder }) =>
+          useTaskProfitAndStopLossInternal(
+            {
+              symbol: "PERP_ETH_USDC",
+              position_qty: 2,
+              average_open_price: 4000,
+            },
+            { defaultOrder, isEditing: true, positionType: PositionType.FULL },
+          ),
+        { initialProps: { defaultOrder: openOrder } },
       );
 
       act(() => {
-        result.current[1].setValues({ tp_trigger_price: trigger });
+        result.current[1].setValues({ tp_trigger_price: trigger }, true);
       });
+      const submitFromOpenConfirmation = result.current[1].submit;
+      rerender({ defaultOrder: triggeredLimitOrder as typeof openOrder });
+      await expect(submitFromOpenConfirmation()).rejects.toThrow(
+        /cannot be changed/,
+      );
 
       let validationError: unknown;
       await act(async () => {

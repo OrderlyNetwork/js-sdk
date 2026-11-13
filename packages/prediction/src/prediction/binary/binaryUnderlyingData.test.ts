@@ -64,6 +64,37 @@ const createStream = () => {
   };
 };
 
+test("Predict index symbols subscribe to their own topic unchanged", () => {
+  const stream = createStream();
+  const points: PredictionChartPoint[] = [];
+  const stop = subscribeBinaryIndexPrices(
+    stream,
+    "SPOT_BTCTWAP60S_USDC",
+    (point) => points.push(point),
+  );
+  assert.equal(stream.topic(), "SPOT_BTCTWAP60S_USDC@indexprice");
+  stream.emit({
+    ts: t0,
+    data: { symbol: "SPOT_BTC_USDC", price: 68_000 },
+  });
+  stream.emit({
+    ts: t0 + 1_000,
+    data: { symbol: "SPOT_BTCTWAP60S_USDC", price: 68_001.5 },
+  });
+  assert.deepEqual(points, [{ timestamp: t0 + 1_000, price: 68_001.5 }]);
+  stop();
+  assert.equal(stream.unsubscribed(), true);
+});
+
+test("a PERP substring outside the legacy prefix is never rewritten", () => {
+  const stream = createStream();
+  const stop = subscribeBinaryIndexPrices(stream, "SPOT_SUPERPERP_USDC", () => {
+    throw new Error("unexpected point");
+  });
+  assert.equal(stream.topic(), "SPOT_SUPERPERP_USDC@indexprice");
+  stop();
+});
+
 test("unchanged index messages keep the line populated and open new minute candles", () => {
   const stream = createStream();
   const points: PredictionChartPoint[] = [];

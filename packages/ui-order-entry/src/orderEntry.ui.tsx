@@ -368,27 +368,30 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     if (order.side !== formattedOrder.side) {
       manualSetOrderValue("side", order.side);
     }
-    setOrderValuesRaw({
-      position_type: order.position_type,
-      tp_order_type: order.tp_order_type,
-      tp_pnl: order.tp_pnl,
-      tp_offset: order.tp_offset,
-      tp_offset_percentage: order.tp_offset_percentage,
-      tp_offset_from_mark: order.tp_offset_from_mark,
-      tp_offset_percentage_from_mark: order.tp_offset_percentage_from_mark,
-      tp_ROI: order.tp_ROI,
-      tp_trigger_price: order.tp_trigger_price,
-      tp_order_price: order.tp_order_price,
-      sl_order_type: order.sl_order_type,
-      sl_trigger_price: order.sl_trigger_price,
-      sl_order_price: order.sl_order_price,
-      sl_pnl: order.sl_pnl,
-      sl_offset: order.sl_offset,
-      sl_offset_percentage: order.sl_offset_percentage,
-      sl_offset_from_mark: order.sl_offset_from_mark,
-      sl_offset_percentage_from_mark: order.sl_offset_percentage_from_mark,
-      sl_ROI: order.sl_ROI,
-    });
+    setOrderValuesRaw(
+      {
+        position_type: order.position_type,
+        tp_order_type: order.tp_order_type,
+        tp_pnl: order.tp_pnl,
+        tp_offset: order.tp_offset,
+        tp_offset_percentage: order.tp_offset_percentage,
+        tp_offset_from_mark: order.tp_offset_from_mark,
+        tp_offset_percentage_from_mark: order.tp_offset_percentage_from_mark,
+        tp_ROI: order.tp_ROI,
+        tp_trigger_price: order.tp_trigger_price,
+        tp_order_price: order.tp_order_price,
+        sl_order_type: order.sl_order_type,
+        sl_trigger_price: order.sl_trigger_price,
+        sl_order_price: order.sl_order_price,
+        sl_pnl: order.sl_pnl,
+        sl_offset: order.sl_offset,
+        sl_offset_percentage: order.sl_offset_percentage,
+        sl_offset_from_mark: order.sl_offset_from_mark,
+        sl_offset_percentage_from_mark: order.sl_offset_percentage_from_mark,
+        sl_ROI: order.sl_ROI,
+      },
+      true,
+    );
     setShowTPSLAdvanced(false);
     setHasAdvancedTPSLResult(true);
   };

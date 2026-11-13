@@ -25,7 +25,8 @@ export type OrderlyAppProviderProps = PropsWithChildren<
 
 const EMPTY_PLUGINS: (OrderlyPlugin | PluginRegistrationFn)[] = [];
 
-// Cannot be called outside of Provider because useExecutionReport requires useOrderlyContext.
+// Must render inside OrderlyConfigProvider (useOrderlyContext) and
+// AppStateProvider (widgetConfigs gate the order notifications preference).
 const ExecutionReportListener: React.FC = () => {
   useExecutionReport();
   return null;
@@ -85,7 +86,6 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
             plugins={pluginsList}
             pluginState={pluginState}
           >
-            <ExecutionReportListener />
             <AppStateProvider
               onChainChanged={onChainChanged}
               defaultChain={defaultChain}
@@ -94,6 +94,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
               widgetConfigs={widgetConfigs}
               features={features}
             >
+              <ExecutionReportListener />
               <UILocaleProvider locale={uiLocale}>
                 <TooltipProvider delayDuration={300}>
                   <ModalProvider>{props.children}</ModalProvider>

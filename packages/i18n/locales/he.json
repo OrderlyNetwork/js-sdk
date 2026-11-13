@@ -196,8 +196,8 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "סך נפח המסחר ב‑24 השעות ברשת Orderly.",
   "markets.symbolInfoBar.predFundingRate": "שיעור מימון משוער",
   "markets.symbolInfoBar.predFundingRate.tooltip": "שיעורי המימון הם תשלומים בין לונג לשורט. כשחיובי, לונג משלם לשורט; כששלילי, השורט משלם ללונג.",
-  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} הוא רישום ללא הרשאות שנתמך רק במרג׳ין מבודד, ומופעל באופן עצמאי על ידי {{brokerName}}. שימו לב לסיכונים גבוהים יותר כולל נזילות נמוכה, תנודתיות גבוהה וסיכון חיסול מוגבר.",
-  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} is a Pre-launch permissionless listing supported on Isolated Margin only, deployed and operated independently by {{brokerName}}. The underlying token has not yet launched. Please be aware of elevated risks, including low liquidity, high volatility, and increased liquidation risk. No funding fee is charged during the pre-launch phase.",
+  "markets.symbolInfoBar.riskNotice.content": "{{symbolWithBroker}} נפרס באופן עצמאי על ידי {{brokerName}}. מרג׳ין מבודד בלבד. היזהרו מנזילות נמוכה, תנודתיות גבוהה וסיכון חיסול.",
+  "markets.symbolInfoBar.riskNotice.preLaunch.content": "{{symbolWithBroker}} הוא שוק טרום השקה שנפרס באופן עצמאי על ידי {{brokerName}}. מרווח מבודד בלבד. הטוקן טרם הושק. אין עמלות מימון בתקופת טרום ההשקה. יש להיזהר מנזילות נמוכה, מתנודתיות גבוהה ומסיכון לחיסול פוזיציות.",
   "portfolio.feeTier": "שכבת עמלה",
   "portfolio.apiKeys": "מפתחות API",
   "portfolio.setting": "הגדרות",
@@ -328,7 +328,6 @@
   "prediction.probability": "הסתברות עלייה",
   "prediction.lastPrice": "מחיר אחרון",
   "prediction.volumeShort": "נפח",
-  "prediction.column.last&probability": "אחרון/הסת׳ עלייה",
   "prediction.column.time&volume": "זמן/נפח",
   "prediction.markPrice.tooltip": "מחיר סימון של חיזוי. במהלך המסחר הוא שווה למחיר האינדקס של חיזוי; בהסדר הופך ל־0, ל־0.5 או ל־1. ירידה מוצגת כ־1 פחות מחיר הסימון של עלייה.",
   "prediction.orderBook": "ספר פקודות",
@@ -349,7 +348,7 @@
   "prediction.chart.historyError": "הטעינה נכשלה. מנסה שוב…",
   "prediction.noData": "אין נתונים עדיין",
   "prediction.chart.priceToBeat": "מחיר לשבירה",
-  "prediction.chart.priceToBeatHint": "מחיר לשבירה הוא מדד ה-BTC בתחילת סבב זה.",
+  "prediction.chart.priceToBeatHint": "מחיר לשבירה הוא ממוצע 60 השניות של מדד ה-BTC בתחילת סבב זה.",
   "prediction.chart.currentPriceHint": "המחיר הנוכחי הוא מדד ה-BTC בזמן אמת, לעיון בלבד. זהו אינו מחיר הסליקה.",
   "prediction.chart.priceMode": "גרף מחירים",
   "prediction.chart.chartMode": "גרף נרות",
@@ -1497,5 +1496,8 @@
   "notification.retry": "נסה שוב",
   "notification.pagination": "עמודי ההכרזות",
   "notification.newAnnouncements": "הכרזות חדשות",
-  "tradingPoints.points": "נקודות"
+  "tradingPoints.points": "נקודות",
+  "prediction.message.connectWallet": "חבר את הארנק שלך כדי לסחור.",
+  "portfolio.setting.orderNotifications": "התראות על פקודות",
+  "portfolio.setting.orderNotifications.description": "הצגת התראות קופצות על עדכונים בסטטוס הפקודות."
 }

@@ -40,6 +40,12 @@ export const ORDERLY_ORDER_SOUND_OPTION_KEY = "orderly_order_sound_option";
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
 const ORDER_ENTRY_EST_LIQ_ACTIVE_WINDOW_MS = 3 * 1000;
+const emptyTPSLPrices = {
+  tp_trigger_price: "",
+  tp_order_price: "",
+  sl_trigger_price: "",
+  sl_order_price: "",
+};
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   /** Active user window for treating estLiqPrice as coming from an actively edited order. */
@@ -133,8 +139,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const cancelTP_SL = () => {
     // if(formattedOrder.)
     setOrderValues({
-      tp_trigger_price: "",
-      sl_trigger_price: "",
+      ...emptyTPSLPrices,
       position_type: PositionType.PARTIAL,
     });
   };
@@ -169,8 +174,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         // cancelTP_SL();
 
         const data: Record<string, unknown> = {
-          tp_trigger_price: "",
-          sl_trigger_price: "",
+          ...emptyTPSLPrices,
           [key]: value,
         };
 

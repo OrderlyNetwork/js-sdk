@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "2.4.0",
+  "version": "2.4.1",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",
@@ -61,6 +61,7 @@
     "@solana/wallet-adapter-phantom": "^0.9.29",
     "@solana/web3.js": "^1.95.3",
     "@uiw/react-split": "5.9.3",
+    "@binance/w3w-blocknative-connector": "^1.1.12",
     "@web3-onboard/core": "2.24.0",
     "@web3-onboard/injected-wallets": "^2.11.3",
     "@web3-onboard/react": "^2.11.0",

@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+import { OrderNotificationsSettingCard } from "./components/orderNotificationsSettingCard";
 import { SoundRadioButton } from "./components/soundRadioButton";
 import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
@@ -175,6 +176,7 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
         </Flex>
       </Card>
 
+      <OrderNotificationsSettingCard {...props} mobile />
       {(props.hasOrderFilledMedia || props.hasSoundOptions) && (
         <Card
           // @ts-ignore

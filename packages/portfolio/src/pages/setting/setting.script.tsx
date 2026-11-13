@@ -7,7 +7,10 @@ import {
   useLocalStorage,
   useOrderlyContext,
 } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+import {
+  useAppContext,
+  useOrderNotificationsEnabled,
+} from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast, useOrderlyTheme } from "@orderly.network/ui";
 
@@ -24,6 +27,11 @@ export type SettingScriptReturns = ReturnType<typeof useSettingScript>;
 export const useSettingScript = () => {
   const { data } = useAccountInfo();
   const { wrongNetwork, disabledConnect } = useAppContext();
+  const {
+    configurable: showOrderNotifications,
+    enabled: orderNotificationsEnabled,
+    setEnabled: setOrderNotificationsEnabled,
+  } = useOrderNotificationsEnabled();
   const [update] = useMutation("/v1/client/maintenance_config");
   const [checked, setChecked] = useState(false);
   const { notification } = useOrderlyContext();
@@ -83,6 +91,9 @@ export const useSettingScript = () => {
     setMaintainConfig,
     isSetting: false,
     canTouch,
+    showOrderNotifications,
+    orderNotificationsEnabled,
+    setOrderNotificationsEnabled,
     soundAlert,
     setSoundAlert,
     hasOrderFilledMedia: Boolean(notification?.orderFilled?.media),

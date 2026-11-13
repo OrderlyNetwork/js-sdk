@@ -161,7 +161,79 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   container.remove();
+  vi.restoreAllMocks();
   vi.useRealTimers();
+});
+
+it("refreshes the live target on wake even when another observer owns the snapshot key", async () => {
+  const visibility = vi.spyOn(document, "visibilityState", "get");
+  visibility.mockReturnValue("visible");
+  const selected: BinaryInfoDetail = {
+    ...expired,
+    outcome: "UP",
+    result_committed_at: T0,
+    s1: 101,
+    settlement_price_per_share: 1,
+  };
+  snapshotRows = [selected, live];
+  cache.set(INFO_KEY, { data: snapshotRows });
+  detailRequest = () => Promise.resolve(selected);
+
+  function SnapshotObserver() {
+    useSWR(INFO_KEY, { revalidateOnFocus: false });
+    return null;
+  }
+  function LiveRoundProbe() {
+    const { canGoToLiveRound, goToLiveRound } = useBinaryRounds({
+      active: true,
+      symbol: selected.symbol,
+      onSymbolSelect: mocks.select,
+    });
+    return canGoToLiveRound ? (
+      <button onClick={goToLiveRound}>Go to live market</button>
+    ) : null;
+  }
+  await act(async () => {
+    root.render(
+      <SWRConfig value={{ provider: () => cache, fetcher }}>
+        <SnapshotObserver />
+        <LiveRoundProbe />
+      </SWRConfig>,
+    );
+  });
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(50);
+  });
+  expect(container.querySelector("button")).not.toBeNull();
+  const snapshotRequests = () =>
+    fetcher.mock.calls.filter(([key]) => key === INFO_KEY).length;
+  const beforeSleep = snapshotRequests();
+  visibility.mockReturnValue("hidden");
+  await act(async () => {
+    document.dispatchEvent(new Event("visibilitychange"));
+    await vi.advanceTimersByTimeAsync(600_001);
+  });
+  expect(snapshotRequests()).toBe(beforeSleep);
+  expect(container.querySelector("button")).toBeNull();
+
+  const current: BinaryInfoDetail = {
+    ...live,
+    symbol: "PERP_BTC5M2610130155_USDC",
+    observation_start_at: T0 + 600_000,
+    expire_at: T0 + 900_000,
+  };
+  snapshotRows = [selected, current];
+  visibility.mockReturnValue("visible");
+  await act(async () => {
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new Event("focus"));
+    await vi.advanceTimersByTimeAsync(1_000);
+  });
+  expect(snapshotRequests()).toBe(beforeSleep + 1);
+  const button = container.querySelector("button");
+  expect(button).not.toBeNull();
+  act(() => button?.click());
+  expect(mocks.select).toHaveBeenCalledExactlyOnceWith(current.symbol);
 });
 
 it.each([true, false])(
