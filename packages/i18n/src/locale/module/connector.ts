@@ -68,6 +68,7 @@ export const connector = {
   "connector.privy.google": "Google",
   "connector.privy.twitter": "X / Twitter",
   "connector.privy.telegram": "Telegram",
+  "connector.privy.discord": "Discord",
   "connector.privy.myWallet": "My wallet",
   "connector.privy.addEvmWallet": "Add Evm wallet",
   "connector.privy.addSolanaWallet": "Add Solana wallet",
