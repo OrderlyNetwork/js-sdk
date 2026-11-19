@@ -9,6 +9,24 @@ import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useMarketMap } from "./useMarket/market.store";
 import { useOpenInterest } from "./useOpenInterest";
 
+const get24hChange = (open?: number | string, close?: number | string) => {
+  if (
+    open === undefined ||
+    open === null ||
+    close === undefined ||
+    close === null
+  ) {
+    return {};
+  }
+
+  const diff = new Decimal(close).minus(open);
+
+  return {
+    change: Number(open) === 0 ? undefined : diff.div(open).toNumber(),
+    "24h_change": diff.toNumber(),
+  };
+};
+
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
     throw new SDKError("Symbol is required");
@@ -61,7 +79,13 @@ export const useTickerStream = (symbol: string) => {
 
   const value = useMemo(() => {
     if (!info) return null;
-    if (!ticker || ticker.symbol !== symbol) return info;
+    // calculate the initial change from the REST data until the first ticker arrives
+    if (!ticker || ticker.symbol !== symbol) {
+      return {
+        ...info,
+        ...get24hChange(info["24h_open"], info["24h_close"]),
+      };
+    }
 
     const config: any = {
       ...info,
@@ -92,17 +116,10 @@ export const useTickerStream = (symbol: string) => {
     }
 
     if (ticker.close !== undefined && ticker.open !== undefined) {
-      config["change"] = new Decimal(ticker.close)
-        .minus(ticker.open)
-        .div(ticker.open)
-        .toNumber();
-
-      config["24h_change"] = new Decimal(ticker.close)
-        .minus(ticker.open)
-        .toNumber();
+      Object.assign(config, get24hChange(ticker.open, ticker.close));
     }
     return config;
-  }, [info, symbol, ticker, openInterest, marketMap]);
+  }, [info, symbol, ticker, markPrice, indexPrice, openInterest, marketMap]);
 
   return value as API.MarketInfo & { change?: number; "24h_change"?: number };
 };
