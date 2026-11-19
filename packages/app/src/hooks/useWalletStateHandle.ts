@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  parseJSON,
   useConfig,
   useEventEmitter,
   useStorageChain,
@@ -247,7 +248,9 @@ export const useWalletStateHandle = (options: {
 
     windowGuard(() => {
       const localAddress = keyStore.getAddress();
-      const walletInfo = JSON.parse(localStorage.getItem(WALLET_KEY) ?? "{}");
+      const walletInfo = parseJSON<{ label?: string }>(
+        localStorage.getItem(WALLET_KEY),
+      );
 
       /**
        * if locale address is exist, restore account state
@@ -261,7 +264,7 @@ export const useWalletStateHandle = (options: {
       if (
         localAddress &&
         account.address !== localAddress &&
-        walletInfo.label
+        walletInfo?.label
       ) {
         connect({
           autoSelect: {
@@ -293,6 +296,8 @@ export const useWalletStateHandle = (options: {
 
     if (hasOAuthConnectIntent()) return;
     if (unsupported || !connectedChain) return;
+    // wait until the connector has provided a complete wallet snapshot
+    if (!currentChain) return;
     if (isManualConnect.current) return;
 
     const linkData = getLinkDeviceData();
@@ -306,20 +311,24 @@ export const useWalletStateHandle = (options: {
       currentWalletAddress !== account.address &&
       !linkData
     ) {
-      account.setAddress(currentWalletAddress, {
-        provider: connectedWallet?.provider,
-        chain: {
-          id: praseChainIdToNumber(currentChain!.id),
-          namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
-        },
-        wallet: {
-          name: connectedWallet?.label ?? "",
-        },
-        additionalInfo: connectedWallet?.additionalInfo ?? {},
-      });
+      account
+        .setAddress(currentWalletAddress, {
+          provider: connectedWallet?.provider,
+          chain: {
+            id: praseChainIdToNumber(currentChain.id),
+            namespace: currentChain.namespace.toUpperCase() as ChainNamespace,
+          },
+          wallet: {
+            name: connectedWallet?.label ?? "",
+          },
+          additionalInfo: connectedWallet?.additionalInfo ?? {},
+        })
+        .catch((error) => {
+          console.error("Failed to restore wallet account", error);
+        });
       track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",
-        network: currentChain!.namespace.toUpperCase() as ChainNamespace,
+        network: currentChain.namespace.toUpperCase() as ChainNamespace,
       });
 
       // save wallet connector info to local storage
@@ -330,15 +339,15 @@ export const useWalletStateHandle = (options: {
             label: connectedWallet?.label ?? "",
           }),
         );
-        setStorageChain(currentChain!.id);
+        setStorageChain(currentChain.id);
       });
     }
 
     /**
      * switch chainId
      */
-    if (currentChain?.id !== account.chainId) {
-      account.switchChainId(currentChain?.id!);
+    if (currentChain.id !== account.chainId) {
+      account.switchChainId(currentChain.id);
 
       // emit chain changed event
       // options.onChainChanged?.(currentChainId!, isTestnet(networkId));
