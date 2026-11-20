@@ -505,16 +505,23 @@ export class WS extends EventEmitter {
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
       (callback as WSMessageHandler).onUnsubscribe,
+      (callback as WSMessageHandler).onMessage,
     );
 
     if (this.privateSocket?.readyState !== WebSocket.OPEN) {
       this._pendingPrivateSubscribe.push([params, callback]);
       return () => {
+        const index = this._pendingPrivateSubscribe.findIndex(
+          ([p, cb]) => p === params && cb === callback,
+        );
+        if (index !== -1) {
+          this._pendingPrivateSubscribe.splice(index, 1);
+        }
         this.unsubscribePrivate(subscribeMessage);
       };
     }
 
-    const topic = subscribeMessage.topic || subscribeMessage.event;
+    const topic = this.getTopicKeyFromParams(subscribeMessage);
 
     const handler = this._eventPrivateHandlers.get(topic);
     const callbacks = {
@@ -560,6 +567,12 @@ export class WS extends EventEmitter {
 
       if (!once) {
         return () => {
+          const index = this._pendingPublicSubscribe.findIndex(
+            ([p, cb]) => p === params && cb === callback,
+          );
+          if (index !== -1) {
+            this._pendingPublicSubscribe.splice(index, 1);
+          }
           this.unsubscribePublic(subscribeMessage);
         };
       }
@@ -679,7 +692,7 @@ export class WS extends EventEmitter {
     webSocket: WebSocket,
     handlerMap: Map<string, Topics>,
   ) {
-    const topic = parmas.topic || parmas.event;
+    const topic = this.getTopicKeyFromParams(parmas);
     const handler = handlerMap.get(topic);
 
     // console.log("unsubscribe", topic);
@@ -689,7 +702,9 @@ export class WS extends EventEmitter {
         const unsubscribeMessage = handler!.callback[0].onUnsubscribe(topic);
 
         //
-        webSocket.send(JSON.stringify(unsubscribeMessage));
+        if (webSocket?.readyState === WebSocket.OPEN) {
+          webSocket.send(JSON.stringify(unsubscribeMessage));
+        }
         handlerMap.delete(topic);
         //post unsubscribe message
       } else {
